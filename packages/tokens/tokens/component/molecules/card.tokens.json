@@ -1,0 +1,157 @@
+{
+  "$description": "Split component source for component.card.",
+  "component": {
+    "card": {
+      "$description": "ForgeCard surface, border, elevation, tone, and responsive padding variants. Container-query mechanics remain local.",
+      "background": {
+        "$value": "{color.bg.surface}"
+      },
+      "border": {
+        "$value": "{color.border.default}"
+      },
+      "border-width": {
+        "$value": "{border-width.thin}"
+      },
+      "radius": {
+        "$value": "{radius.lg}"
+      },
+      "shadow": {
+        "$value": "{shadow.md}"
+      },
+      "padding": {
+        "sm": {
+          "block": {
+            "$value": "{spacing.2}"
+          },
+          "inline": {
+            "$value": "{spacing.3}"
+          },
+          "wide-block": {
+            "$value": "{spacing.3}"
+          },
+          "wide-inline": {
+            "$value": "{spacing.4}"
+          }
+        },
+        "md": {
+          "block": {
+            "$value": "{spacing.3}"
+          },
+          "inline": {
+            "$value": "{spacing.4}"
+          },
+          "wide-block": {
+            "$value": "{spacing.4}"
+          },
+          "wide-inline": {
+            "$value": "{spacing.6}"
+          }
+        },
+        "lg": {
+          "block": {
+            "$value": "{spacing.4}"
+          },
+          "inline": {
+            "$value": "{spacing.6}"
+          },
+          "wide-block": {
+            "$value": "{spacing.6}"
+          },
+          "wide-inline": {
+            "$value": "{spacing.8}"
+          }
+        }
+      },
+      "tone": {
+        "primary": {
+          "background": {
+            "$value": "{color.primary.muted}"
+          },
+          "text": {
+            "$value": "{color.primary.text}"
+          },
+          "border": {
+            "$value": "{color.primary.subtle}"
+          }
+        },
+        "secondary": {
+          "background": {
+            "$value": "{color.secondary.muted}"
+          },
+          "text": {
+            "$value": "{color.secondary.text}"
+          },
+          "border": {
+            "$value": "{color.secondary.subtle}"
+          }
+        },
+        "tertiary": {
+          "background": {
+            "$value": "{color.tertiary.muted}"
+          },
+          "text": {
+            "$value": "{color.tertiary.text}"
+          },
+          "border": {
+            "$value": "{color.tertiary.subtle}"
+          }
+        },
+        "success": {
+          "background": {
+            "$value": "{color.success.muted}"
+          },
+          "text": {
+            "$value": "{color.success.text}"
+          },
+          "border": {
+            "$value": "{color.success.subtle}"
+          }
+        },
+        "warning": {
+          "background": {
+            "$value": "{color.warning.muted}"
+          },
+          "text": {
+            "$value": "{color.warning.text}"
+          },
+          "border": {
+            "$value": "{color.warning.subtle}"
+          }
+        },
+        "info": {
+          "background": {
+            "$value": "{color.info.muted}"
+          },
+          "text": {
+            "$value": "{color.info.text}"
+          },
+          "border": {
+            "$value": "{color.info.subtle}"
+          }
+        },
+        "error": {
+          "background": {
+            "$value": "{color.error.muted}"
+          },
+          "text": {
+            "$value": "{color.error.text}"
+          },
+          "border": {
+            "$value": "{color.error.subtle}"
+          }
+        },
+        "critical": {
+          "background": {
+            "$value": "{color.critical.muted}"
+          },
+          "text": {
+            "$value": "{color.critical.text}"
+          },
+          "border": {
+            "$value": "{color.critical.subtle}"
+          }
+        }
+      }
+    }
+  }
+}

@@ -10,12 +10,12 @@ les adaptateurs de framework générés : la même entrée s'applique à Vue, R
 
 ## Lire le contrat
 
-La source de la vérité est [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
+La source de la vérité est [`packages/tokens/tokens/component/<atomic-level>/`](../../../packages/tokens/tokens/component/<atomic-level>/).
 Son chemin correspond directement à une propriété personnalisée CSS et à une variable Figma :
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
@@ -265,7 +265,7 @@ pour tester les remplacements du consommateur, modifiez `apps/storybook/design-t
 ## Liste de contrôle de transfert Figma
 
 1. Créez le `Mission Platform / Component` collection variable avec les modes Clair et Foncé.
-2. Importez les chemins des composants depuis `component.tokens.json`, en préservant les segments de composant, de variante, d'emplacement et d'état.
+2. Importez les chemins des composants depuis `component/<atomic-level>/`, en préservant les segments de composant, de variante, d'emplacement et d'état.
 3. Liez les variables des composants aux variables primitives/sémantiques correspondantes plutôt que de copier les valeurs brutes de couleur ou d'échelle.
 4. Créez les propriétés des composants pour les variantes et tailles documentées ; créez des variantes d'état uniquement pour les États répertoriés dans l'inventaire.
 5. Conservez les formules de mise en page, les points d'arrêt des fenêtres, le comportement du canevas et le comportement DOM/accessibilité en dehors de la collection de variables visuelles.

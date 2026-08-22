@@ -11,7 +11,7 @@
     min-height: 30rem;
 
     &--disabled {
-      opacity: var(--mp-component-form-disabled-opacity);
+      opacity: var(--mp-form-disabled-opacity);
       pointer-events: none;
     }
 
@@ -19,7 +19,7 @@
     &__palette-list {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
       margin: 0;
       padding: 0;
       list-style: none;
@@ -37,18 +37,18 @@
     &__palette-add {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-tight);
+      gap: var(--mp-form-gap-tight);
       width: 100%;
-      padding: var(--mp-component-form-padding-default) var(--mp-component-form-padding-section);
-      border: var(--mp-component-form-border-width) solid var(--mp-component-form-border-default);
-      border-radius: var(--mp-component-form-radius-small);
-      background-color: var(--mp-component-form-surface-muted);
+      padding: var(--mp-form-padding-default) var(--mp-form-padding-section);
+      border: var(--mp-form-border-width) solid var(--mp-form-border-default);
+      border-radius: var(--mp-form-radius-small);
+      background-color: var(--mp-form-surface-muted);
       cursor: pointer;
       text-align: left;
-      color: var(--mp-component-form-text-default);
+      color: var(--mp-form-text-default);
 
       &:hover:not(:disabled) {
-        border-color: var(--mp-component-form-border-selected);
+        border-color: var(--mp-form-border-selected);
       }
     }
 
@@ -56,24 +56,24 @@
     &__panel {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-section);
-      padding: var(--mp-component-form-padding-section) 0;
+      gap: var(--mp-form-gap-section);
+      padding: var(--mp-form-padding-section) 0;
     }
 
     &__field-list,
     &__nested {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
       margin: 0;
       padding: 0;
       list-style: none;
     }
 
     &__nested {
-      margin-left: var(--mp-component-form-padding-large);
-      padding: var(--mp-component-form-padding-default);
-      border-left: var(--mp-component-form-border-focus-width) solid var(--mp-component-form-border-default);
+      margin-left: var(--mp-form-padding-large);
+      padding: var(--mp-form-padding-default);
+      border-left: var(--mp-form-border-focus-width) solid var(--mp-form-border-default);
     }
 
     // A generous drop target: at least three field-rows tall so dropping a field
@@ -88,10 +88,10 @@
       align-items: center;
       justify-content: center;
       min-height: 4rem;
-      border: var(--mp-component-form-border-focus-width) dashed var(--mp-component-form-border-default);
-      border-radius: var(--mp-component-form-radius-default);
+      border: var(--mp-form-border-focus-width) dashed var(--mp-form-border-default);
+      border-radius: var(--mp-form-radius-default);
       text-align: center;
-      padding: var(--mp-component-form-padding-section);
+      padding: var(--mp-form-padding-section);
       list-style: none;
     }
 
@@ -105,7 +105,7 @@
     &__step {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
     }
 
     &__step-heading {
@@ -115,27 +115,27 @@
     &__field {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
       list-style: none;
-      border: var(--mp-component-form-border-width) solid var(--mp-component-form-border-default);
-      border-radius: var(--mp-component-form-radius-small);
-      background-color: var(--mp-component-form-surface-default);
+      border: var(--mp-form-border-width) solid var(--mp-form-border-default);
+      border-radius: var(--mp-form-radius-small);
+      background-color: var(--mp-form-surface-default);
       cursor: grab;
       transition:
-        opacity var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing),
-        border-color var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing),
-        box-shadow var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing),
-        transform var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing);
+        opacity var(--mp-form-transition-duration) var(--mp-form-transition-easing),
+        border-color var(--mp-form-transition-duration) var(--mp-form-transition-easing),
+        box-shadow var(--mp-form-transition-duration) var(--mp-form-transition-easing),
+        transform var(--mp-form-transition-duration) var(--mp-form-transition-easing);
 
       &--selected {
-        border-color: var(--mp-component-form-border-selected);
-        box-shadow: var(--mp-component-form-focus-ring);
+        border-color: var(--mp-form-border-selected);
+        box-shadow: var(--mp-form-focus-ring);
       }
 
       // The source row while it is being dragged: dimmed and slightly shrunk so
       // its in-flight state reads clearly without collapsing the layout.
       &--dragging {
-        opacity: var(--mp-component-form-drag-opacity);
+        opacity: var(--mp-form-drag-opacity);
         transform: scale(0.98);
       }
 
@@ -143,12 +143,12 @@
       // field will become, so the author previews the exact landing result.
       &--ghost {
         border-style: dashed;
-        border-color: var(--mp-component-form-border-selected);
-        background-color: var(--mp-component-form-surface-muted);
-        opacity: var(--mp-component-form-ghost-opacity);
+        border-color: var(--mp-form-border-selected);
+        background-color: var(--mp-form-surface-muted);
+        opacity: var(--mp-form-ghost-opacity);
         cursor: default;
-        animation: mp-form-builder-ghost-in var(--mp-component-form-transition-duration)
-          var(--mp-component-form-transition-easing);
+        animation: mp-form-builder-ghost-in var(--mp-form-transition-duration)
+          var(--mp-form-transition-easing);
       }
 
       &:active {
@@ -159,64 +159,64 @@
     &__field-row {
       display: flex;
       align-items: center;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
     }
 
     &__field-select {
       display: flex;
       flex: 1;
       align-items: center;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
       min-width: 0;
-      padding: var(--mp-component-form-padding-default) var(--mp-component-form-padding-section);
+      padding: var(--mp-form-padding-default) var(--mp-form-padding-section);
       border: none;
       background: transparent;
       cursor: pointer;
       text-align: left;
-      color: var(--mp-component-form-text-default);
+      color: var(--mp-form-text-default);
     }
 
     &__field-handle {
-      color: var(--mp-component-form-text-muted);
+      color: var(--mp-form-text-muted);
     }
 
     &__field-type {
       margin-left: auto;
-      color: var(--mp-component-form-text-muted);
-      font-family: var(--mp-component-form-font-family-mono);
-      font-size: var(--mp-component-form-font-size-extra-small);
+      color: var(--mp-form-text-muted);
+      font-family: var(--mp-form-font-family-mono);
+      font-size: var(--mp-form-font-size-extra-small);
     }
 
     &__field-actions {
       display: flex;
       align-items: center;
-      gap: var(--mp-component-form-gap-tight);
-      padding-right: var(--mp-component-form-padding-default);
+      gap: var(--mp-form-gap-tight);
+      padding-right: var(--mp-form-padding-default);
     }
 
     &__field-action,
     &__field-remove {
       flex-shrink: 0;
-      padding: var(--mp-component-form-padding-tight) var(--mp-component-form-padding-default);
+      padding: var(--mp-form-padding-tight) var(--mp-form-padding-default);
       border: none;
       background: transparent;
       cursor: pointer;
-      color: var(--mp-component-form-text-muted);
-      border-radius: var(--mp-component-form-radius-small);
+      color: var(--mp-form-text-muted);
+      border-radius: var(--mp-form-radius-small);
 
       &:hover:not(:disabled) {
-        color: var(--mp-component-form-text-default);
-        background-color: var(--mp-component-form-surface-muted);
+        color: var(--mp-form-text-default);
+        background-color: var(--mp-form-surface-muted);
       }
 
       &:focus-visible {
-        outline: var(--mp-component-form-border-focus-width) solid var(--mp-component-form-border-focus);
+        outline: var(--mp-form-border-focus-width) solid var(--mp-form-border-focus);
         outline-offset: 2px;
       }
     }
 
     &__field-remove:hover:not(:disabled) {
-      color: var(--mp-component-form-text-invalid);
+      color: var(--mp-form-text-invalid);
     }
 
     // ── Inspector ──────────────────────────────────────────────────────────────
@@ -224,7 +224,7 @@
     &__properties {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-section);
+      gap: var(--mp-form-gap-section);
     }
 
     &__inspector-title {
@@ -235,13 +235,13 @@
     &__numeric {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
     }
 
     &__option-row {
       display: grid;
       grid-template-columns: 1fr 1fr auto;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
       align-items: end;
     }
 
@@ -249,30 +249,30 @@
     &__condition {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-default);
-      padding: var(--mp-component-form-padding-section);
+      gap: var(--mp-form-gap-default);
+      padding: var(--mp-form-padding-section);
       margin: 0;
-      border: var(--mp-component-form-border-width) solid var(--mp-component-form-border-default);
-      border-radius: var(--mp-component-form-radius-default);
+      border: var(--mp-form-border-width) solid var(--mp-form-border-default);
+      border-radius: var(--mp-form-radius-default);
     }
 
     &__condition-legend {
-      padding: 0 var(--mp-component-form-padding-tight);
-      font-size: var(--mp-component-form-font-size-small);
-      font-weight: var(--mp-component-form-font-weight-medium);
-      color: var(--mp-component-form-text-secondary);
+      padding: 0 var(--mp-form-padding-tight);
+      font-size: var(--mp-form-font-size-small);
+      font-weight: var(--mp-form-font-weight-medium);
+      color: var(--mp-form-text-secondary);
     }
 
     &__condition-body {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
     }
 
     &__condition-rule {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr auto;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
       align-items: end;
     }
 
@@ -280,10 +280,10 @@
     &__step-config {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-default);
-      padding: var(--mp-component-form-padding-section);
-      border: var(--mp-component-form-border-width) solid var(--mp-component-form-border-default);
-      border-radius: var(--mp-component-form-radius-default);
+      gap: var(--mp-form-gap-default);
+      padding: var(--mp-form-padding-section);
+      border: var(--mp-form-border-width) solid var(--mp-form-border-default);
+      border-radius: var(--mp-form-radius-default);
     }
   }
 

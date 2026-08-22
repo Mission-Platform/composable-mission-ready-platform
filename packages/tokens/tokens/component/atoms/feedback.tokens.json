@@ -1,0 +1,472 @@
+{
+  "$description": "Split component source for component.feedback.",
+  "component": {
+    "feedback": {
+      "$description": "Badges, tags, status icons, progress, skeletons, spinners, and alert/status treatments.",
+      "success": {
+        "background": {
+          "$value": "{color.success.subtle}"
+        },
+        "text": {
+          "$value": "{color.success.text}"
+        },
+        "border": {
+          "$value": "{color.success.default}"
+        }
+      },
+      "warning": {
+        "background": {
+          "$value": "{color.warning.subtle}"
+        },
+        "text": {
+          "$value": "{color.warning.text}"
+        },
+        "border": {
+          "$value": "{color.warning.default}"
+        }
+      },
+      "info": {
+        "background": {
+          "$value": "{color.info.subtle}"
+        },
+        "text": {
+          "$value": "{color.info.text}"
+        },
+        "border": {
+          "$value": "{color.info.default}"
+        }
+      },
+      "danger": {
+        "background": {
+          "$value": "{color.danger.subtle}"
+        },
+        "text": {
+          "$value": "{color.danger.text}"
+        },
+        "border": {
+          "$value": "{color.danger.default}"
+        }
+      },
+      "neutral": {
+        "background": {
+          "$value": "{color.bg.muted}"
+        },
+        "text": {
+          "$value": "{color.text.secondary}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        }
+      },
+      "badge": {
+        "$description": "ForgeBadge visual contract. Tone aliases preserve the original badge palette; size, gap, and radius slots cover the BEM variants while display and wrapping remain local.",
+        "neutral": {
+          "background": {
+            "$value": "{color.default.muted}"
+          },
+          "text": {
+            "$value": "{color.default.text}"
+          }
+        },
+        "primary": {
+          "background": {
+            "$value": "{color.primary.muted}"
+          },
+          "text": {
+            "$value": "{color.primary.text}"
+          }
+        },
+        "secondary": {
+          "background": {
+            "$value": "{color.secondary.muted}"
+          },
+          "text": {
+            "$value": "{color.secondary.text}"
+          }
+        },
+        "tertiary": {
+          "background": {
+            "$value": "{color.tertiary.muted}"
+          },
+          "text": {
+            "$value": "{color.tertiary.text}"
+          }
+        },
+        "success": {
+          "background": {
+            "$value": "{color.success.muted}"
+          },
+          "text": {
+            "$value": "{color.success.text}"
+          }
+        },
+        "warning": {
+          "background": {
+            "$value": "{color.warning.muted}"
+          },
+          "text": {
+            "$value": "{color.warning.text}"
+          }
+        },
+        "info": {
+          "background": {
+            "$value": "{color.info.muted}"
+          },
+          "text": {
+            "$value": "{color.info.text}"
+          }
+        },
+        "error": {
+          "background": {
+            "$value": "{color.error.muted}"
+          },
+          "text": {
+            "$value": "{color.error.text}"
+          }
+        },
+        "critical": {
+          "background": {
+            "$value": "{color.critical.muted}"
+          },
+          "text": {
+            "$value": "{color.critical.text}"
+          }
+        },
+        "gap": {
+          "$value": "{spacing.1}"
+        },
+        "radius": {
+          "default": {
+            "$value": "{radius.sm}"
+          },
+          "pill": {
+            "$value": "{radius.full}"
+          }
+        },
+        "font-family": {
+          "$value": "{font.family.sans}"
+        },
+        "line-height": {
+          "$value": "{line-height.tight}"
+        },
+        "size": {
+          "2xs": {
+            "font-size": {
+              "$value": "{size.font.2xs}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.2xs}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.2xs}"
+            }
+          },
+          "xs": {
+            "font-size": {
+              "$value": "{size.font.xs}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.xs}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.xs}"
+            }
+          },
+          "sm": {
+            "font-size": {
+              "$value": "{size.font.sm}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.sm}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.sm}"
+            }
+          },
+          "md": {
+            "font-size": {
+              "$value": "{size.font.md}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.md}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.md}"
+            }
+          },
+          "lg": {
+            "font-size": {
+              "$value": "{size.font.lg}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.lg}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.lg}"
+            }
+          },
+          "xl": {
+            "font-size": {
+              "$value": "{size.font.xl}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.xl}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.xl}"
+            }
+          },
+          "2xl": {
+            "font-size": {
+              "$value": "{size.font.2xl}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.2xl}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.2xl}"
+            }
+          }
+        }
+      },
+      "progress": {
+        "$description": "Progress-bar track and fill roles. Fill aliases preserve the existing tone-to-theme mapping.",
+        "gap": {
+          "$value": "{spacing.1}"
+        },
+        "track": {
+          "background": {
+            "$value": "{color.bg.muted}"
+          },
+          "radius": {
+            "$value": "{radius.full}"
+          }
+        },
+        "fill": {
+          "neutral": {
+            "$value": "{color.default.default}"
+          },
+          "primary": {
+            "$value": "{color.primary.default}"
+          },
+          "secondary": {
+            "$value": "{color.secondary.default}"
+          },
+          "tertiary": {
+            "$value": "{color.tertiary.default}"
+          },
+          "success": {
+            "$value": "{color.success.default}"
+          },
+          "warning": {
+            "$value": "{color.warning.default}"
+          },
+          "info": {
+            "$value": "{color.info.default}"
+          },
+          "error": {
+            "$value": "{color.error.default}"
+          },
+          "critical": {
+            "$value": "{color.critical.default}"
+          }
+        }
+      },
+      "skeleton": {
+        "$description": "Skeleton placeholder fills, shimmer, and shape radii.",
+        "background": {
+          "default": {
+            "$value": "{color.bg.muted}"
+          },
+          "primary": {
+            "$value": "{color.primary.muted}"
+          },
+          "secondary": {
+            "$value": "{color.secondary.muted}"
+          },
+          "tertiary": {
+            "$value": "{color.tertiary.muted}"
+          },
+          "success": {
+            "$value": "{color.success.muted}"
+          },
+          "warning": {
+            "$value": "{color.warning.muted}"
+          },
+          "info": {
+            "$value": "{color.info.muted}"
+          },
+          "error": {
+            "$value": "{color.error.muted}"
+          },
+          "critical": {
+            "$value": "{color.critical.muted}"
+          }
+        },
+        "shimmer": {
+          "$value": "{color.skeleton.shimmer}"
+        },
+        "radius": {
+          "default": {
+            "$value": "{radius.sm}"
+          },
+          "line": {
+            "$value": "{radius.sm}"
+          },
+          "circle": {
+            "$value": "{radius.full}"
+          },
+          "block": {
+            "$value": "{radius.md}"
+          }
+        }
+      },
+      "spinner": {
+        "$description": "Spinner foreground colors, size dimensions, radius, and available border widths.",
+        "color": {
+          "neutral": {
+            "$value": "{color.default.default}"
+          },
+          "primary": {
+            "$value": "{color.primary.default}"
+          },
+          "secondary": {
+            "$value": "{color.secondary.default}"
+          },
+          "tertiary": {
+            "$value": "{color.tertiary.default}"
+          },
+          "success": {
+            "$value": "{color.success.default}"
+          },
+          "warning": {
+            "$value": "{color.warning.default}"
+          },
+          "info": {
+            "$value": "{color.info.default}"
+          },
+          "error": {
+            "$value": "{color.error.default}"
+          },
+          "critical": {
+            "$value": "{color.critical.default}"
+          }
+        },
+        "radius": {
+          "$value": "{radius.full}"
+        },
+        "size": {
+          "2xs": {
+            "$value": "{size.height.2xs}"
+          },
+          "xs": {
+            "$value": "{size.height.xs}"
+          },
+          "sm": {
+            "$value": "{size.height.sm}"
+          },
+          "md": {
+            "$value": "{size.height.md}"
+          },
+          "lg": {
+            "$value": "{size.height.lg}"
+          },
+          "xl": {
+            "$value": "{size.height.xl}"
+          },
+          "2xl": {
+            "$value": "{size.height.2xl}"
+          }
+        },
+        "border-width": {
+          "2xs": {
+            "$value": "{border-width.thick}"
+          },
+          "xs": {
+            "$value": "{border-width.thick}"
+          },
+          "sm": {
+            "$value": "{border-width.thick}"
+          },
+          "md": {
+            "$value": "{border-width.heavy}"
+          },
+          "lg": {
+            "$value": "{border-width.heavy}"
+          }
+        }
+      },
+      "status": {
+        "$description": "Status-icon foreground colors and size dimensions.",
+        "color": {
+          "neutral": {
+            "$value": "{color.default.default}"
+          },
+          "primary": {
+            "$value": "{color.primary.default}"
+          },
+          "secondary": {
+            "$value": "{color.secondary.default}"
+          },
+          "tertiary": {
+            "$value": "{color.tertiary.default}"
+          },
+          "success": {
+            "$value": "{color.success.default}"
+          },
+          "warning": {
+            "$value": "{color.warning.default}"
+          },
+          "info": {
+            "$value": "{color.info.default}"
+          },
+          "error": {
+            "$value": "{color.error.default}"
+          },
+          "critical": {
+            "$value": "{color.critical.default}"
+          }
+        },
+        "size": {
+          "2xs": {
+            "$value": "{size.height.2xs}"
+          },
+          "xs": {
+            "$value": "{size.height.xs}"
+          },
+          "sm": {
+            "$value": "{size.height.sm}"
+          },
+          "md": {
+            "$value": "{size.height.md}"
+          },
+          "lg": {
+            "$value": "{size.height.lg}"
+          },
+          "xl": {
+            "$value": "{size.height.xl}"
+          },
+          "2xl": {
+            "$value": "{size.height.2xl}"
+          }
+        }
+      },
+      "opacity": {
+        "disabled": {
+          "$value": "{opacity.disabled}"
+        },
+        "loading": {
+          "$value": "{opacity.subtle}"
+        }
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}"
+        },
+        "easing": {
+          "$value": "{easing.linear}"
+        }
+      }
+    }
+  }
+}

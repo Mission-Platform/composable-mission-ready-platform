@@ -14,23 +14,23 @@
 
 @layer mp.components {
   .forge-collapse {
-    border: var(--mp-component-collapse-border-width) solid var(--mp-component-collapse-border);
-    border-radius: var(--mp-component-collapse-radius);
-    background-color: var(--mp-component-collapse-surface);
+    border: var(--mp-collapse-border-width) solid var(--mp-collapse-border);
+    border-radius: var(--mp-collapse-radius);
+    background-color: var(--mp-collapse-surface);
     overflow: hidden;
 
     &--disabled {
       pointer-events: none;
-      background-color: var(--mp-component-collapse-disabled-surface);
-      border-color: var(--mp-component-collapse-disabled-border);
+      background-color: var(--mp-collapse-disabled-surface);
+      border-color: var(--mp-collapse-disabled-border);
 
       .forge-collapse__summary {
-        color: var(--mp-component-collapse-disabled-text);
+        color: var(--mp-collapse-disabled-text);
         cursor: not-allowed;
       }
 
       .forge-collapse__content {
-        color: var(--mp-component-collapse-disabled-text);
+        color: var(--mp-collapse-disabled-text);
       }
     }
 
@@ -42,25 +42,25 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--mp-component-collapse-summary-padding-block) var(--mp-component-collapse-summary-padding-inline);
+      padding: var(--mp-collapse-summary-padding-block) var(--mp-collapse-summary-padding-inline);
       cursor: pointer;
-      color: var(--mp-component-collapse-summary-text);
-      font-weight: var(--mp-component-collapse-summary-font-weight);
+      color: var(--mp-collapse-summary-text);
+      font-weight: var(--mp-collapse-summary-font-weight);
       list-style: none;
       user-select: none;
-      gap: var(--mp-component-collapse-summary-gap);
+      gap: var(--mp-collapse-summary-gap);
 
       &::-webkit-details-marker {
         display: none;
       }
 
       &:hover {
-        background-color: var(--mp-component-collapse-summary-surface-hover);
+        background-color: var(--mp-collapse-summary-surface-hover);
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-component-collapse-summary-focus-ring);
+        box-shadow: var(--mp-collapse-summary-focus-ring);
       }
     }
 
@@ -73,17 +73,17 @@
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
-      transition: transform var(--mp-component-collapse-transition-duration)
-        var(--mp-component-collapse-transition-easing);
+      transition: transform var(--mp-collapse-transition-duration)
+        var(--mp-collapse-transition-easing);
     }
 
     &__content {
-      padding: var(--mp-component-collapse-content-padding-block) var(--mp-component-collapse-content-padding-inline);
-      color: var(--mp-component-collapse-content-text);
-      border-top: var(--mp-component-collapse-content-border-width) solid var(--mp-component-collapse-content-border);
+      padding: var(--mp-collapse-content-padding-block) var(--mp-collapse-content-padding-inline);
+      color: var(--mp-collapse-content-text);
+      border-top: var(--mp-collapse-content-border-width) solid var(--mp-collapse-content-border);
       opacity: 1;
-      transition: opacity var(--mp-component-collapse-transition-duration)
-        var(--mp-component-collapse-transition-easing);
+      transition: opacity var(--mp-collapse-transition-duration)
+        var(--mp-collapse-transition-easing);
 
       @starting-style {
         opacity: 0;
@@ -108,14 +108,14 @@
         )
     {
       &--#{$name} {
-        border-color: var(--mp-component-collapse-tone-#{$family}-border);
+        border-color: var(--mp-collapse-tone-#{$family}-border);
 
         .forge-collapse__summary {
-          color: var(--mp-component-collapse-tone-#{$family}-text);
+          color: var(--mp-collapse-tone-#{$family}-text);
         }
 
         .forge-collapse__content {
-          border-top-color: var(--mp-component-collapse-tone-#{$family}-border);
+          border-top-color: var(--mp-collapse-tone-#{$family}-border);
         }
       }
     }

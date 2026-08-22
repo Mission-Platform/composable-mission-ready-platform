@@ -3,13 +3,6 @@
   "color": {
     "$description": "Primitive colour swatches in OKLab: the absolute black/white anchors, two named base/primary helpers, and the 10-/11-step hue ramps (50 = lightest, 900/950 = darkest). These are raw values — components consume the semantic theme tokens (theme-light/theme-dark.tokens.json), not these directly.",
     "$type": "color",
-    "black": {
-      "$value": {
-        "colorSpace": "oklab",
-        "components": [0, 0, 0]
-      },
-      "$description": "Absolute black (OKLab L=0)."
-    },
     "white": {
       "$value": {
         "colorSpace": "oklab",
@@ -23,20 +16,6 @@
         "components": [0.95719, -0.0013, -0.00318]
       },
       "$description": "light theme base surface — L=0.877"
-    },
-    "primary-light": {
-      "$value": {
-        "colorSpace": "oklab",
-        "components": [0.98726, -0.00112, 0.00379]
-      },
-      "$description": "Near-white tint used as a light on-primary / primary surface helper."
-    },
-    "primary-dark": {
-      "$value": {
-        "colorSpace": "oklab",
-        "components": [0.53595, -0.0031, -0.00256]
-      },
-      "$description": "Mid-tone neutral used as a primary helper on dark surfaces."
     },
     "neutral": {
       "$description": "Greyscale ramp — surfaces, borders and text in both themes.",
@@ -127,12 +106,6 @@
           "components": [0.69329, 0.08175, -0.16438]
         }
       },
-      "400": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.59022, 0.09338, -0.21023]
-        }
-      },
       "500": {
         "$value": {
           "colorSpace": "oklab",
@@ -196,24 +169,6 @@
           "components": [0.83508, -0.14058, -0.02123]
         }
       },
-      "500": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.70668, -0.11874, -0.0178]
-        }
-      },
-      "600": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.57223, -0.09562, -0.01416]
-        }
-      },
-      "700": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.45828, -0.07565, -0.01163]
-        }
-      },
       "800": {
         "$value": {
           "colorSpace": "oklab",
@@ -248,12 +203,6 @@
           "components": [0.93569, -0.04395, 0.01619]
         }
       },
-      "200": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.86789, -0.09291, 0.03825]
-        }
-      },
       "300": {
         "$value": {
           "colorSpace": "oklab",
@@ -264,24 +213,6 @@
         "$value": {
           "colorSpace": "oklab",
           "components": [0.72422, -0.15499, 0.07987]
-        }
-      },
-      "500": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.62912, -0.1407, 0.07657]
-        }
-      },
-      "600": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.52749, -0.11801, 0.06495]
-        }
-      },
-      "700": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.42422, -0.0939, 0.05145]
         }
       },
       "800": {
@@ -311,12 +242,6 @@
           "components": [0.956, -0.00136, 0.05519]
         }
       },
-      "200": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.9112, -0.00053, 0.11091]
-        }
-      },
       "300": {
         "$value": {
           "colorSpace": "oklab",
@@ -333,24 +258,6 @@
         "$value": {
           "colorSpace": "oklab",
           "components": [0.74688, 0.07957, 0.15033]
-        }
-      },
-      "600": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.64634, 0.10852, 0.13026]
-        }
-      },
-      "700": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.53942, 0.11422, 0.10649]
-        }
-      },
-      "800": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.4615, 0.10102, 0.08762]
         }
       },
       "900": {
@@ -386,30 +293,6 @@
           "components": [0.80966, 0.10393, 0.02141]
         }
       },
-      "400": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.71919, 0.16436, 0.03924]
-        }
-      },
-      "500": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.64503, 0.2066, 0.06096]
-        }
-      },
-      "600": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.58584, 0.21167, 0.06708]
-        }
-      },
-      "700": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.51426, 0.18923, 0.05762]
-        }
-      },
       "800": {
         "$value": {
           "colorSpace": "oklab",
@@ -437,12 +320,6 @@
           "components": [0.95626, -0.04069, -0.0176]
         }
       },
-      "200": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.91666, -0.06994, -0.03267]
-        }
-      },
       "300": {
         "$value": {
           "colorSpace": "oklab",
@@ -453,24 +330,6 @@
         "$value": {
           "colorSpace": "oklab",
           "components": [0.79712, -0.11412, -0.07002]
-        }
-      },
-      "500": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.71484, -0.10272, -0.07252]
-        }
-      },
-      "600": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.60891, -0.0828, -0.07383]
-        }
-      },
-      "700": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.51976, -0.06829, -0.06396]
         }
       },
       "800": {
@@ -512,30 +371,6 @@
           "components": [0.80966, 0.10393, 0.02141]
         }
       },
-      "400": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.71919, 0.16436, 0.03924]
-        }
-      },
-      "500": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.64503, 0.2066, 0.06096]
-        }
-      },
-      "600": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.58584, 0.21167, 0.06708]
-        }
-      },
-      "700": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.51426, 0.18923, 0.05762]
-        }
-      },
       "800": {
         "$value": {
           "colorSpace": "oklab",
@@ -575,30 +410,6 @@
           "components": [0.69315, 0.11853, 0.04514]
         }
       },
-      "400": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.57395, 0.1544, 0.06926]
-        }
-      },
-      "500": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.47905, 0.15153, 0.07536]
-        }
-      },
-      "600": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.40625, 0.13047, 0.06567]
-        }
-      },
-      "700": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.34504, 0.10971, 0.05478]
-        }
-      },
       "800": {
         "$value": {
           "colorSpace": "oklab",
@@ -626,48 +437,6 @@
           "components": [0.9542, 0.00951, 0.03592]
         }
       },
-      "200": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.90146, 0.02411, 0.06885]
-        }
-      },
-      "300": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.83657, 0.04686, 0.1067]
-        }
-      },
-      "400": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.75764, 0.08908, 0.13175]
-        }
-      },
-      "500": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.70487, 0.1259, 0.13789]
-        }
-      },
-      "600": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.64607, 0.1464, 0.12779]
-        }
-      },
-      "700": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.55343, 0.13625, 0.108]
-        }
-      },
-      "800": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.4698, 0.11379, 0.08669]
-        }
-      },
       "900": {
         "$value": {
           "colorSpace": "oklab",
@@ -687,42 +456,6 @@
         "$value": {
           "colorSpace": "oklab",
           "components": [0.92994, 0.00163, -0.03339]
-        }
-      },
-      "200": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.86986, 0.00438, -0.06207]
-        }
-      },
-      "300": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.7853, 0.00856, -0.10378]
-        }
-      },
-      "400": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.68011, 0.01911, -0.15714]
-        }
-      },
-      "500": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.5854, 0.02528, -0.20248]
-        }
-      },
-      "600": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.51057, 0.0279, -0.22836]
-        }
-      },
-      "700": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.45678, 0.02624, -0.21297]
         }
       },
       "800": {
@@ -750,42 +483,6 @@
         "$value": {
           "colorSpace": "oklab",
           "components": [0.94335, 0.01182, -0.02583]
-        }
-      },
-      "200": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.89427, 0.02169, -0.05041]
-        }
-      },
-      "300": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.81116, 0.0405, -0.09284]
-        }
-      },
-      "400": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.70897, 0.06357, -0.14592]
-        }
-      },
-      "500": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.60563, 0.08454, -0.20193]
-        }
-      },
-      "600": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.54134, 0.09638, -0.22697]
-        }
-      },
-      "700": {
-        "$value": {
-          "colorSpace": "oklab",
-          "components": [0.49067, 0.09263, -0.22274]
         }
       },
       "800": {

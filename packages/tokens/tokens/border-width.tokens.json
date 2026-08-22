@@ -3,7 +3,6 @@
   "border-width": {
     "$description": "Named border widths. Values are rem relative to the 14px root.",
     "$type": "dimension",
-    "none": { "$value": "0", "$description": "0 — no border." },
     "thin": { "$value": "0.071rem", "$description": "≈1px — default hairline border (inputs, cards, dividers)." },
     "thick": { "$value": "0.143rem", "$description": "≈2px — emphasis / focus / selected borders." },
     "heavy": { "$value": "0.214rem", "$description": "≈3px — strong emphasis (e.g. active indicators / accents)." }

@@ -10,18 +10,18 @@
   .forge-tag {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-component-tag-gap);
-    border-radius: var(--mp-component-tag-radius);
-    font-family: var(--mp-component-tag-font-family);
-    line-height: var(--mp-component-tag-line-height);
+    gap: var(--mp-tag-gap);
+    border-radius: var(--mp-tag-radius);
+    font-family: var(--mp-tag-font-family);
+    line-height: var(--mp-tag-line-height);
     white-space: nowrap;
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
-        padding: var(--mp-component-tag-size-#{$size}-padding-block)
-          var(--mp-component-tag-size-#{$size}-padding-inline);
-        font-size: var(--mp-component-tag-size-#{$size}-font-size);
+        padding: var(--mp-tag-size-#{$size}-padding-block)
+          var(--mp-tag-size-#{$size}-padding-inline);
+        font-size: var(--mp-tag-size-#{$size}-font-size);
       }
     }
 
@@ -45,16 +45,16 @@
         )
     {
       &--#{$name} {
-        background-color: var(--mp-component-tag-#{$name}-background);
-        color: var(--mp-component-tag-#{$name}-text);
+        background-color: var(--mp-tag-#{$name}-background);
+        color: var(--mp-tag-#{$name}-text);
       }
     }
 
     /* States */
     &--disabled {
       pointer-events: none;
-      background-color: var(--mp-component-tag-disabled-background);
-      color: var(--mp-component-tag-disabled-text);
+      background-color: var(--mp-tag-disabled-background);
+      color: var(--mp-tag-disabled-text);
     }
 
     &__label {
@@ -70,7 +70,7 @@
       background: transparent;
       cursor: pointer;
       color: inherit;
-      border-radius: var(--mp-component-tag-radius);
+      border-radius: var(--mp-tag-radius);
       line-height: 1;
 
       svg {
@@ -81,11 +81,11 @@
       }
 
       &:hover {
-        opacity: var(--mp-component-tag-remove-hover-opacity);
+        opacity: var(--mp-tag-remove-hover-opacity);
       }
 
       &:focus-visible {
-        outline: var(--mp-component-tag-border-width-focus) solid currentcolor;
+        outline: var(--mp-tag-border-width-focus) solid currentcolor;
         outline-offset: 1px;
       }
     }

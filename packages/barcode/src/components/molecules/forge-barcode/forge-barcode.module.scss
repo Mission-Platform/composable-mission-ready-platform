@@ -20,13 +20,13 @@
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--mp-component-code-barcode-figure-gap);
+    gap: var(--mp-code-barcode-figure-gap);
   }
 
   .forge-barcode__actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: var(--mp-component-code-barcode-actions-gap);
+    gap: var(--mp-code-barcode-actions-gap);
   }
 }

@@ -1,0 +1,363 @@
+{
+  "$description": "Split component source for component.layout.",
+  "component": {
+    "layout": {
+      "$description": "Container and layout templates expose inherited surface, text, spacing, and responsive structure tokens; grid formulas remain local.",
+      "surface": {
+        "default": {
+          "$value": "{color.bg.base}"
+        },
+        "raised": {
+          "$value": "{color.bg.raised}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        }
+      },
+      "padding": {
+        "$value": "{spacing.md}"
+      },
+      "gap": {
+        "$value": "{spacing.md}"
+      },
+      "demo": {
+        "padding": {
+          "$value": "{spacing.4}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "radius": {
+          "$value": "{radius.md}"
+        },
+        "surface-sunken": {
+          "$value": "{color.bg.sunken}"
+        },
+        "surface-raised": {
+          "$value": "{color.bg.raised}"
+        },
+        "text": {
+          "$value": "{color.text.primary}"
+        }
+      },
+      "grid": {
+        "$description": "ForgeGrid demo container and cell chrome; grid track formulas and inline layout styles remain local.",
+        "container": {
+          "padding": {
+            "$value": "{spacing.4}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          }
+        },
+        "cell": {
+          "padding-block": {
+            "$value": "{spacing.2}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.4}"
+          },
+          "padding-wide": {
+            "$value": "{spacing.4}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "surface": {
+            "$value": "{color.bg.raised}"
+          },
+          "text": {
+            "$value": "{color.text.primary}"
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          }
+        }
+      },
+      "masonry": {
+        "$description": "ForgeMasonry demo item chrome; column flow, break safety, and dynamic gap calculations remain local.",
+        "gap": {
+          "$value": "{spacing.4}"
+        },
+        "demo": {
+          "padding": {
+            "$value": "{spacing.4}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          },
+          "surface": {
+            "$value": "{color.bg.raised}"
+          },
+          "text": {
+            "$value": "{color.text.primary}"
+          }
+        }
+      },
+      "hero": {
+        "$description": "ForgeHero responsive spacing and radius; alignment, media positioning, and content layout formulas remain local.",
+        "radius": {
+          "$value": "{radius.xl}"
+        },
+        "padding": {
+          "2xs": {
+            "block": {
+              "$value": "{spacing.4}"
+            },
+            "inline": {
+              "$value": "{spacing.4}"
+            }
+          },
+          "xs": {
+            "block": {
+              "$value": "{spacing.6}"
+            },
+            "inline": {
+              "$value": "{spacing.5}"
+            }
+          },
+          "sm": {
+            "block": {
+              "$value": "{spacing.8}"
+            },
+            "inline": {
+              "$value": "{spacing.6}"
+            }
+          },
+          "md": {
+            "block": {
+              "$value": "{spacing.16}"
+            },
+            "inline": {
+              "$value": "{spacing.8}"
+            },
+            "wide-block": {
+              "$value": "{spacing.20}"
+            },
+            "wide-inline": {
+              "$value": "{spacing.12}"
+            }
+          },
+          "lg": {
+            "block": {
+              "$value": "{spacing.24}"
+            },
+            "inline": {
+              "$value": "{spacing.10}"
+            },
+            "wide-block": {
+              "$value": "{spacing.24}"
+            },
+            "wide-inline": {
+              "$value": "{spacing.16}"
+            }
+          },
+          "xl": {
+            "block": {
+              "$value": "{spacing.24}"
+            },
+            "inline": {
+              "$value": "{spacing.12}"
+            },
+            "wide-block": {
+              "$value": "{spacing.24}"
+            },
+            "wide-inline": {
+              "$value": "{spacing.20}"
+            }
+          },
+          "2xl": {
+            "block": {
+              "$value": "{spacing.24}"
+            },
+            "inline": {
+              "$value": "{spacing.16}"
+            },
+            "wide-block": {
+              "$value": "{spacing.24}"
+            },
+            "wide-inline": {
+              "$value": "{spacing.24}"
+            }
+          }
+        },
+        "content": {
+          "gap": {
+            "default": {
+              "$value": "{spacing.4}"
+            },
+            "wide": {
+              "$value": "{spacing.6}"
+            }
+          }
+        },
+        "actions": {
+          "gap": {
+            "default": {
+              "$value": "{spacing.3}"
+            },
+            "wide": {
+              "$value": "{spacing.4}"
+            }
+          },
+          "margin-top": {
+            "$value": "{spacing.2}"
+          }
+        },
+        "text": {
+          "inverse": {
+            "$value": "{color.text.inverse}"
+          }
+        },
+        "overlay": {
+          "$value": "{color.bg.scrim}"
+        }
+      },
+      "stack": {
+        "$description": "ForgeStack demo container/item chrome; the component's flex direction, gap, alignment, and sizing formulas remain local or inline.",
+        "container": {
+          "padding": {
+            "$value": "{spacing.4}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          }
+        },
+        "item": {
+          "padding-block": {
+            "$value": "{spacing.2}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.4}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          },
+          "surface": {
+            "$value": "{color.surface.raised}"
+          },
+          "text": {
+            "$value": "{color.text.primary}"
+          }
+        }
+      },
+      "application": {
+        "$description": "ForgeApplicationLayout shell chrome. Sidebar positioning, breakpoint behavior, dimensions, and stacking remain local; these aliases cover surfaces, separators, overlay treatment, status colours, status padding, and status motion.",
+        "surface": {
+          "default": {
+            "$value": "{color.bg.base}"
+          },
+          "sidebar": {
+            "$value": "{color.bg.surface}"
+          }
+        },
+        "text": {
+          "status": {
+            "$value": "{color.text.on-primary}"
+          }
+        },
+        "border": {
+          "sidebar": {
+            "$value": "{color.border.default}"
+          }
+        },
+        "border-width": {
+          "sidebar": {
+            "$value": "{border-width.thin}"
+          }
+        },
+        "shadow": {
+          "overlay": {
+            "$value": "{shadow.lg}"
+          }
+        },
+        "scrim": {
+          "default": {
+            "$value": "{color.bg.scrim}"
+          }
+        },
+        "status": {
+          "background": {
+            "info": {
+              "$value": "{color.info.default}"
+            },
+            "warning": {
+              "$value": "{color.warning.default}"
+            },
+            "error": {
+              "$value": "{color.danger.default}"
+            }
+          }
+        },
+        "padding": {
+          "status-block": {
+            "$value": "{spacing.2}"
+          },
+          "status-inline": {
+            "$value": "{spacing.4}"
+          },
+          "status-inline-wide": {
+            "$value": "{spacing.6}"
+          }
+        },
+        "typography": {
+          "font-family": {
+            "$value": "{font.family.sans}"
+          },
+          "font-size": {
+            "$value": "{font.size.sm}"
+          },
+          "font-weight": {
+            "$value": "{font.weight.medium}"
+          },
+          "line-height": {
+            "$value": "{line-height.snug}"
+          },
+          "letter-spacing": {
+            "$value": "{letter-spacing.normal}"
+          }
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.moderate}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        }
+      }
+    }
+  }
+}

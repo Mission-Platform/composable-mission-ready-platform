@@ -1,0 +1,249 @@
+{
+  "$description": "Split component source for component.media.",
+  "component": {
+    "media": {
+      "$description": "Avatar, responsive image/video, background video, device mock, chat, and media surfaces.",
+      "surface": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "placeholder": {
+          "$value": "{color.bg.muted}"
+        },
+        "overlay": {
+          "$value": "{color.bg.scrim}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "inverse": {
+          "$value": "{color.text.inverse}"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        }
+      },
+      "radius": {
+        "$value": "{radius.lg}"
+      },
+      "shadow": {
+        "$value": "{shadow.md}"
+      },
+      "avatar": {
+        "$description": "ForgeAvatar fallback fills, presence colours, and outline roles. Pixel dimensions remain local because the avatar scale is not the control-height scale.",
+        "surface": {
+          "neutral": {
+            "$value": "{color.default.default}"
+          },
+          "primary": {
+            "$value": "{color.primary.default}"
+          },
+          "secondary": {
+            "$value": "{color.secondary.default}"
+          },
+          "tertiary": {
+            "$value": "{color.tertiary.default}"
+          },
+          "success": {
+            "$value": "{color.success.default}"
+          },
+          "warning": {
+            "$value": "{color.warning.default}"
+          },
+          "info": {
+            "$value": "{color.info.default}"
+          },
+          "error": {
+            "$value": "{color.error.default}"
+          },
+          "critical": {
+            "$value": "{color.critical.default}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.on-primary}"
+          }
+        },
+        "border": {
+          "status": {
+            "$value": "{color.bg.surface}"
+          }
+        },
+        "radius": {
+          "circle": {
+            "$value": "{radius.full}"
+          },
+          "square": {
+            "$value": "{radius.md}"
+          },
+          "status": {
+            "$value": "{radius.full}"
+          }
+        },
+        "status": {
+          "online": {
+            "$value": "{color.success.default}"
+          },
+          "offline": {
+            "$value": "{color.border.default}"
+          },
+          "away": {
+            "$value": "{color.warning.default}"
+          },
+          "busy": {
+            "$value": "{color.danger.default}"
+          }
+        }
+      },
+      "video": {
+        "$description": "Responsive video surface; sizing, aspect ratio, object-fit, and playback behavior remain local/native.",
+        "surface": {
+          "default": {
+            "$value": "{color.bg.sunken}"
+          }
+        }
+      },
+      "background": {
+        "$description": "Background-video content chrome; positioning and playback behavior remain local.",
+        "padding": {
+          "$value": "{spacing.8}"
+        }
+      },
+      "device": {
+        "$description": "ForgeDeviceMock frame chrome. Em-based dimensions and orientation geometry remain local so the size prop scales the complete device.",
+        "screen": {
+          "surface": {
+            "$value": "{color.bg.surface}"
+          },
+          "text": {
+            "$value": "{color.text.primary}"
+          }
+        },
+        "frame": {
+          "surface": {
+            "$value": "{color.text.primary}"
+          },
+          "shadow-handheld": {
+            "$value": "{shadow.xl}"
+          },
+          "shadow-desktop": {
+            "$value": "{shadow.xl}"
+          },
+          "shadow-browser": {
+            "$value": "{shadow.lg}"
+          }
+        },
+        "detail": {
+          "surface": {
+            "$value": "{color.text.tertiary}"
+          }
+        },
+        "browser": {
+          "surface": {
+            "$value": "{color.bg.surface}"
+          },
+          "chrome": {
+            "$value": "{color.bg.muted}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "radius": {
+            "$value": "{radius.xl}"
+          },
+          "address-text": {
+            "$value": "{color.text.secondary}"
+          },
+          "address-surface": {
+            "$value": "{color.bg.surface}"
+          },
+          "address-radius": {
+            "$value": "{radius.full}"
+          },
+          "control-surface": {
+            "$value": "{color.border.strong}"
+          },
+          "control-radius": {
+            "$value": "{radius.full}"
+          }
+        },
+        "camera-radius": {
+          "$value": "{radius.full}"
+        }
+      },
+      "chat-area": {
+        "$description": "ForgeChatArea conversation surface, optional header/footer chrome, message-list rhythm, and responsive padding. Scrolling, auto-scroll, slot presence, and message rendering remain local.",
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "radius": {
+          "$value": "{radius.lg}"
+        },
+        "header": {
+          "padding-block": {
+            "$value": "{spacing.3}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.4}"
+          },
+          "padding-block-wide": {
+            "$value": "{spacing.4}"
+          },
+          "padding-inline-wide": {
+            "$value": "{spacing.6}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          }
+        },
+        "log": {
+          "padding": {
+            "$value": "{spacing.4}"
+          },
+          "padding-wide": {
+            "$value": "{spacing.6}"
+          }
+        },
+        "messages": {
+          "gap": {
+            "$value": "{spacing.3}"
+          },
+          "gap-wide": {
+            "$value": "{spacing.4}"
+          }
+        },
+        "footer": {
+          "padding-block": {
+            "$value": "{spacing.3}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.4}"
+          },
+          "padding-block-wide": {
+            "$value": "{spacing.4}"
+          },
+          "padding-inline-wide": {
+            "$value": "{spacing.6}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          }
+        }
+      }
+    }
+  }
+}

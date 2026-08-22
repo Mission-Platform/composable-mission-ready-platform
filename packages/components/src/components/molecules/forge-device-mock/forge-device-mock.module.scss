@@ -18,7 +18,7 @@
     flex-direction: column;
     align-items: center;
     box-sizing: border-box;
-    color: var(--mp-component-media-device-screen-text);
+    color: var(--mp-media-device-screen-text);
     line-height: 1.4;
 
     *,
@@ -32,17 +32,17 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: var(--mp-component-media-device-screen-surface);
-      color: var(--mp-component-media-device-screen-text);
+      background-color: var(--mp-media-device-screen-surface);
+      color: var(--mp-media-device-screen-text);
     }
 
     /* ─── Mobile ─────────────────────────────────────────────────────────── */
     &--mobile {
       width: 17em;
       padding: 0.9em;
-      background-color: var(--mp-component-media-device-frame-surface);
+      background-color: var(--mp-media-device-frame-surface);
       border-radius: 2.6em;
-      box-shadow: var(--mp-component-media-device-frame-shadow-handheld);
+      box-shadow: var(--mp-media-device-frame-shadow-handheld);
 
       .forge-device-mock__frame {
         width: 100%;
@@ -62,7 +62,7 @@
         z-index: 1;
         width: 6em;
         height: 1.3em;
-        background-color: var(--mp-component-media-device-frame-surface);
+        background-color: var(--mp-media-device-frame-surface);
         border-bottom-right-radius: 0.8em;
         border-bottom-left-radius: 0.8em;
         transform: translateX(-50%);
@@ -91,9 +91,9 @@
     &--tablet {
       width: 26em;
       padding: 1.4em 1.1em;
-      background-color: var(--mp-component-media-device-frame-surface);
+      background-color: var(--mp-media-device-frame-surface);
       border-radius: 1.4em;
-      box-shadow: var(--mp-component-media-device-frame-shadow-handheld);
+      box-shadow: var(--mp-media-device-frame-shadow-handheld);
 
       .forge-device-mock__frame {
         width: 100%;
@@ -108,8 +108,8 @@
         left: 50%;
         width: 0.5em;
         height: 0.5em;
-        background-color: var(--mp-component-media-device-detail-surface);
-        border-radius: var(--mp-component-media-device-camera-radius);
+        background-color: var(--mp-media-device-detail-surface);
+        border-radius: var(--mp-media-device-camera-radius);
         transform: translateX(-50%);
       }
 
@@ -129,9 +129,9 @@
         width: 44em;
         height: 27.5em;
         padding: 0.9em;
-        background-color: var(--mp-component-media-device-frame-surface);
+        background-color: var(--mp-media-device-frame-surface);
         border-radius: 0.9em;
-        box-shadow: var(--mp-component-media-device-frame-shadow-desktop);
+        box-shadow: var(--mp-media-device-frame-shadow-desktop);
       }
 
       .forge-device-mock__screen {
@@ -147,13 +147,13 @@
       .forge-device-mock__neck {
         width: 6em;
         height: 2.2em;
-        background-color: var(--mp-component-media-device-detail-surface);
+        background-color: var(--mp-media-device-detail-surface);
       }
 
       .forge-device-mock__base {
         width: 14em;
         height: 0.9em;
-        background-color: var(--mp-component-media-device-detail-surface);
+        background-color: var(--mp-media-device-detail-surface);
         border-radius: 0 0 0.5em 0.5em;
       }
     }
@@ -163,18 +163,18 @@
       width: 44em;
       align-items: stretch;
       overflow: hidden;
-      background-color: var(--mp-component-media-device-browser-surface);
-      border: var(--mp-component-media-device-browser-border-width) solid var(--mp-component-media-device-browser-border);
-      border-radius: var(--mp-component-media-device-browser-radius);
-      box-shadow: var(--mp-component-media-device-frame-shadow-browser);
+      background-color: var(--mp-media-device-browser-surface);
+      border: var(--mp-media-device-browser-border-width) solid var(--mp-media-device-browser-border);
+      border-radius: var(--mp-media-device-browser-radius);
+      box-shadow: var(--mp-media-device-frame-shadow-browser);
 
       .forge-device-mock__chrome {
         display: flex;
         gap: 0.8em;
         align-items: center;
         padding: 0.6em 0.9em;
-        background-color: var(--mp-component-media-device-browser-chrome);
-        border-bottom: var(--mp-component-media-device-browser-border-width) solid var(--mp-component-media-device-browser-border);
+        background-color: var(--mp-media-device-browser-chrome);
+        border-bottom: var(--mp-media-device-browser-border-width) solid var(--mp-media-device-browser-border);
       }
 
       .forge-device-mock__controls {
@@ -186,8 +186,8 @@
       .forge-device-mock__control {
         width: 0.8em;
         height: 0.8em;
-        background-color: var(--mp-component-media-device-browser-control-surface);
-        border-radius: var(--mp-component-media-device-browser-control-radius);
+        background-color: var(--mp-media-device-browser-control-surface);
+        border-radius: var(--mp-media-device-browser-control-radius);
       }
 
       .forge-device-mock__address {
@@ -195,12 +195,12 @@
         padding: 0.3em 0.8em;
         overflow: hidden;
         font-size: 0.85em;
-        color: var(--mp-component-media-device-browser-address-text);
+        color: var(--mp-media-device-browser-address-text);
         text-overflow: ellipsis;
         white-space: nowrap;
-        background-color: var(--mp-component-media-device-browser-address-surface);
-        border: var(--mp-component-media-device-browser-border-width) solid var(--mp-component-media-device-browser-border);
-        border-radius: var(--mp-component-media-device-browser-address-radius);
+        background-color: var(--mp-media-device-browser-address-surface);
+        border: var(--mp-media-device-browser-border-width) solid var(--mp-media-device-browser-border);
+        border-radius: var(--mp-media-device-browser-address-radius);
       }
 
       .forge-device-mock__frame {

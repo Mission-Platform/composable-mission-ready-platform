@@ -1,0 +1,191 @@
+{
+  "$description": "Split component source for component.calendar.",
+  "component": {
+    "calendar": {
+      "$description": "ForgeCalendar surface, navigation, day-state, range-preview, and size roles. Grid geometry and date behavior remain local.",
+      "surface": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "hover": {
+          "$value": "{color.bg.muted}"
+        },
+        "selected": {
+          "$value": "{color.primary.default}"
+        },
+        "range": {
+          "$value": "{color.primary.default}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "secondary": {
+          "$value": "{color.text.secondary}"
+        },
+        "muted": {
+          "$value": "{color.text.tertiary}"
+        },
+        "selected": {
+          "$value": "{color.text.on-primary}"
+        },
+        "range": {
+          "$value": "{color.primary.default}"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        },
+        "focus": {
+          "$value": "{color.border.focus}"
+        },
+        "width": {
+          "$value": "{border-width.thin}"
+        },
+        "focus-width": {
+          "$value": "{border-width.thick}"
+        }
+      },
+      "radius": {
+        "default": {
+          "$value": "{radius.lg}"
+        },
+        "control": {
+          "$value": "{radius.sm}"
+        }
+      },
+      "shadow": {
+        "$value": "{shadow.md}"
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}"
+        },
+        "easing": {
+          "$value": "{easing.standard}"
+        }
+      },
+      "header-gap": {
+        "$value": "{spacing.2}"
+      },
+      "label-gap": {
+        "$value": "{spacing.1}"
+      },
+      "label-padding": {
+        "block": {
+          "$value": "{spacing.1}"
+        },
+        "inline": {
+          "$value": "{spacing.2}"
+        }
+      },
+      "popup-padding": {
+        "$value": "{spacing.2}"
+      },
+      "font-weight": {
+        "medium": {
+          "$value": "{font.weight.medium}"
+        },
+        "selected": {
+          "$value": "{font.weight.semibold}"
+        }
+      },
+      "range-opacity": {
+        "$value": "12%"
+      },
+      "preview-opacity": {
+        "$value": "8%"
+      },
+      "preview-end-opacity": {
+        "$value": "20%"
+      },
+      "disabled-opacity": {
+        "$value": 0.3
+      },
+      "outside-opacity": {
+        "$value": 0.6
+      },
+      "size": {
+        "2xs": {
+          "padding": {
+            "$value": "{size.pad-inline.2xs}"
+          },
+          "cell-height": {
+            "$value": "{size.height.2xs}"
+          },
+          "font-size": {
+            "$value": "{size.font.2xs}"
+          }
+        },
+        "xs": {
+          "padding": {
+            "$value": "{size.pad-inline.xs}"
+          },
+          "cell-height": {
+            "$value": "{size.height.xs}"
+          },
+          "font-size": {
+            "$value": "{size.font.xs}"
+          }
+        },
+        "sm": {
+          "padding": {
+            "$value": "{size.pad-inline.sm}"
+          },
+          "cell-height": {
+            "$value": "{size.height.sm}"
+          },
+          "font-size": {
+            "$value": "{size.font.sm}"
+          }
+        },
+        "md": {
+          "padding": {
+            "$value": "{size.pad-inline.md}"
+          },
+          "cell-height": {
+            "$value": "{size.height.md}"
+          },
+          "font-size": {
+            "$value": "{size.font.md}"
+          }
+        },
+        "lg": {
+          "padding": {
+            "$value": "{size.pad-inline.lg}"
+          },
+          "cell-height": {
+            "$value": "{size.height.lg}"
+          },
+          "font-size": {
+            "$value": "{size.font.lg}"
+          }
+        },
+        "xl": {
+          "padding": {
+            "$value": "{size.pad-inline.xl}"
+          },
+          "cell-height": {
+            "$value": "{size.height.xl}"
+          },
+          "font-size": {
+            "$value": "{size.font.xl}"
+          }
+        },
+        "2xl": {
+          "padding": {
+            "$value": "{size.pad-inline.2xl}"
+          },
+          "cell-height": {
+            "$value": "{size.height.2xl}"
+          },
+          "font-size": {
+            "$value": "{size.font.2xl}"
+          }
+        }
+      }
+    }
+  }
+}

@@ -3,14 +3,6 @@
   "z-index": {
     "$description": "Named stacking levels, ascending. Use these instead of magic numbers so overlapping surfaces layer predictably.",
     "$type": "number",
-    "base": { "$value": 0, "$description": "0 — base content / in-flow elements." },
-    "raised": { "$value": 1, "$description": "1 — slightly raised in-flow elements (e.g. hovered cells)." },
-    "dropdown": { "$value": 1000, "$description": "1000 — dropdowns, select menus, autocompletes." },
-    "sticky": { "$value": 1100, "$description": "1100 — sticky/affixed headers and table headers." },
-    "overlay": { "$value": 1200, "$description": "1200 — scrims / backdrops behind dialogs and drawers." },
-    "modal": { "$value": 1300, "$description": "1300 — modal dialogs and drawers." },
-    "popover": { "$value": 1400, "$description": "1400 — popovers and menus that must sit above modals." },
-    "toast": { "$value": 1500, "$description": "1500 — toasts / notifications; always on top." },
-    "tooltip": { "$value": 1600, "$description": "1600 — tooltips; sit above everything else." }
+    "dropdown": { "$value": 1000, "$description": "1000 — dropdowns, select menus, autocompletes." }
   }
 }

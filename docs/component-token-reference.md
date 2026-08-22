@@ -5,19 +5,43 @@ the generated framework adapters: the same entry applies to Vue, React, Solid, S
 
 ## Reading the contract
 
-The source of truth is [`packages/tokens/tokens/component.tokens.json`](../packages/tokens/tokens/component.tokens.json).
-Its path maps directly to a CSS custom property and a Figma variable:
+The source of truth is the recursive component source tree under
+[`packages/tokens/tokens/component/`](../packages/tokens/tokens/component/), grouped by atomic level
+(`atoms/`, `molecules/`, `organisms/`, and `templates/`). Each source is independently generated, while all sources
+preserve the same stable `component.*` DTCG contract:
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
+
+The DTCG path is also the Figma and runtime override path; only the generated CSS name drops the `component` wrapper.
+For example, `component.button.primary.background.hover` is emitted as `--mp-button-primary-background-hover`. A
+source ID such as `component/atoms/button` identifies the file that owns the contract, not a new DTCG path.
 
 Component values alias the existing primitive and semantic theme documents. Consequently, the Figma collection has
 **Light** and **Dark** modes without duplicating component tokens. Runtime light/dark behavior continues to use
 `color-scheme`, `light-dark()`, `[data-theme]`, and `.theme-*` subtree pins. Consumers and Storybook may override any
-leaf below `component` in `overrides.tokens.json`; an override is applied after the generated token stylesheet.
+leaf below `component` in `overrides.tokens.json`; an override is applied after the generated token stylesheet. Overrides
+continue to use `component.*` keys even though CSS custom properties use the layer namespace.
+
+## Source and generated output layout
+
+Every visual contract has one owner under the atomic source tree. The generator discovers new files recursively, so a
+new source does not require a descriptor registration:
+
+```text
+packages/tokens/tokens/component/<atomic-level>/<source>.tokens.json
+  -> packages/tokens/src/generated/scss/component/<atomic-level>/_<source>.scss
+  -> packages/tokens/src/generated/scss/component/<atomic-level>/_<source>-vars.scss
+  -> packages/tokens/src/generated/ts/component/<atomic-level>/<source>.ts
+```
+
+The generated SCSS and TypeScript barrels include every component source in deterministic source-ID order. Component
+files may reuse shared contracts such as `button`, `field`, `input`, `navigation`, and `overlay`; composed components
+must not duplicate those token paths. Behavior-only components, inherited-only glyphs, and layout/DOM formulas remain
+outside the visual token contract unless an inventory entry assigns them visual ownership.
 
 ### Semantic slots and state vocabulary
 
@@ -48,6 +72,13 @@ packages/*/src/components/**/*.module.scss
 | Co-located stories    |   246 | Three recursive Markdown/tree helper sources intentionally have no standalone story  |
 | CSS modules           |   219 | Local visual style modules; inline email and inherited contracts are also documented |
 | Packages              |    20 | Every package containing a component source                                          |
+
+The post-audit generated surface contains **2,841 token leaves**: 132 active, 2,161 protected, and 548 ambiguous;
+there are no remaining candidates. The cleanup removed 189 unreachable leaves in total: the 185 candidates from the
+review report plus 4 net second-order palette leaves (6 removed, 2 restored as reachable `.500` leaves) exposed after alias closure. This reduction affects generated
+primitive, semantic, typography, and structural exports only; retained `component.*` paths and their
+`--mp-<layer>-*` names are unchanged. The three unresolved aliases (`color.surface.raised`, `radius.2xs`, and
+`font.weight.light`) predate this audit and remain unchanged.
 
 Classification is per source, not per package:
 
@@ -85,86 +116,86 @@ Every bullet below is one inventory entry. Unless a story is marked `story: miss
 
 ### Molecules — `packages/components/src/components/molecules/`
 
-| Component                 | Classification   | Contract                                       | Appearance props / states                                              |
-| ------------------------- | ---------------- | ---------------------------------------------- | ---------------------------------------------------------------------- |
-| `forge-accordion`         | visual           | `component.surface` + `component.navigation`   | items, expanded; default/hover/focus-visible/expanded/disabled         |
-| `forge-alert-banner`      | visual           | `component.feedback` + `component.overlay`     | status, dismissible; default/hover/focus-visible                       |
-| `forge-breadcrumb`        | visual           | `component.navigation`                         | items; default/hover/selected/focus-visible                            |
-| `forge-button-group`      | visual           | `component.button-group`                       | orientation, attached, variant, gap; default/focus-visible/disabled    |
-| `forge-card`              | visual           | `component.surface`                            | variant, padding; default/hover/selected                               |
-| `forge-chat-bubble`       | visual           | `component.media` + `component.surface`        | author, direction/status; default/selected                             |
-| `forge-collapse`          | visual           | `component.collapse`                           | open, variant, disabled; default/hover/focus-visible/expanded/disabled  |
-| `forge-device-mock`       | visual           | `component.media.device`                       | device, orientation, size; default                                    |
-| `forge-dropdown`          | visual           | `component.overlay` + `component.navigation`   | open, placement; default/expanded/focus-visible                        |
-| `forge-grid`              | visual           | `component.layout.grid`                         | columns, gap, padding; default                                        |
-| `forge-in-view`           | visual           | `component.layout`                             | threshold; inherited child contract                                    |
-| `forge-language-switcher` | inherited-visual | `component.navigation` + child select contract | locale; default/expanded/selected                                      |
-| `forge-list`              | visual           | `component.surface`                            | variant, gap; default/selected                                         |
-| `forge-masonry`           | visual           | `component.layout.masonry`                      | columns, gap, padding; default                                        |
-| `forge-menu-item`         | visual           | `component.navigation`                         | active/disabled; default/hover/focus-visible/selected/disabled         |
-| `forge-menu`              | visual           | `component.navigation`                         | open/orientation; default/expanded                                     |
+| Component                 | Classification   | Contract                                       | Appearance props / states                                                                   |
+| ------------------------- | ---------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `forge-accordion`         | visual           | `component.surface` + `component.navigation`   | items, expanded; default/hover/focus-visible/expanded/disabled                              |
+| `forge-alert-banner`      | visual           | `component.feedback` + `component.overlay`     | status, dismissible; default/hover/focus-visible                                            |
+| `forge-breadcrumb`        | visual           | `component.navigation`                         | items; default/hover/selected/focus-visible                                                 |
+| `forge-button-group`      | visual           | `component.button-group`                       | orientation, attached, variant, gap; default/focus-visible/disabled                         |
+| `forge-card`              | visual           | `component.surface`                            | variant, padding; default/hover/selected                                                    |
+| `forge-chat-bubble`       | visual           | `component.media` + `component.surface`        | author, direction/status; default/selected                                                  |
+| `forge-collapse`          | visual           | `component.collapse`                           | open, variant, disabled; default/hover/focus-visible/expanded/disabled                      |
+| `forge-device-mock`       | visual           | `component.media.device`                       | device, orientation, size; default                                                          |
+| `forge-dropdown`          | visual           | `component.overlay` + `component.navigation`   | open, placement; default/expanded/focus-visible                                             |
+| `forge-grid`              | visual           | `component.layout.grid`                        | columns, gap, padding; default                                                              |
+| `forge-in-view`           | visual           | `component.layout`                             | threshold; inherited child contract                                                         |
+| `forge-language-switcher` | inherited-visual | `component.navigation` + child select contract | locale; default/expanded/selected                                                           |
+| `forge-list`              | visual           | `component.surface`                            | variant, gap; default/selected                                                              |
+| `forge-masonry`           | visual           | `component.layout.masonry`                     | columns, gap, padding; default                                                              |
+| `forge-menu-item`         | visual           | `component.navigation`                         | active/disabled; default/hover/focus-visible/selected/disabled                              |
+| `forge-menu`              | visual           | `component.navigation`                         | open/orientation; default/expanded                                                          |
 | `forge-navbar-item`       | visual           | `component.navigation.navbar-item`             | active, dropdown, variant, disabled; default/hover/focus-visible/selected/expanded/disabled |
-| `forge-pagination`        | visual           | `component.navigation`                         | page, size; default/hover/focus-visible/selected/disabled              |
-| `forge-popover`           | visual           | `component.overlay`                            | open, placement; default/expanded/focus-visible                        |
-| `forge-tabs`              | visual           | `component.navigation`                         | orientation, active tab; default/hover/focus-visible/selected/disabled |
-| `forge-timeline`          | visual           | `component.timeline`                          | status, orientation, outlined marker; default/selected                  |
-| `forge-toast`             | visual           | `component.overlay` + `component.feedback`     | status, duration; default/loading                                      |
-| `forge-tooltip`           | visual           | `component.overlay`                            | open, placement; default/expanded                                      |
-| `forge-window-popout`     | visual           | `component.overlay.window-popout`              | open, size; default/hover/focus-visible/selected                        |
+| `forge-pagination`        | visual           | `component.navigation`                         | page, size; default/hover/focus-visible/selected/disabled                                   |
+| `forge-popover`           | visual           | `component.overlay`                            | open, placement; default/expanded/focus-visible                                             |
+| `forge-tabs`              | visual           | `component.navigation`                         | orientation, active tab; default/hover/focus-visible/selected/disabled                      |
+| `forge-timeline`          | visual           | `component.timeline`                           | status, orientation, outlined marker; default/selected                                      |
+| `forge-toast`             | visual           | `component.overlay` + `component.feedback`     | status, duration; default/loading                                                           |
+| `forge-tooltip`           | visual           | `component.overlay`                            | open, placement; default/expanded                                                           |
+| `forge-window-popout`     | visual           | `component.overlay.window-popout`              | open, size; default/hover/focus-visible/selected                                            |
 
 ### Organisms and templates — `packages/components/src/components/{organisms,templates}/`
 
-| Component                  | Classification   | Contract                                                        | Appearance props / states                                                            |
-| -------------------------- | ---------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `forge-carousel`           | visual           | `component.navigation.carousel`                                 | slides, controls, autoplay, tone; default/hover/focus-visible/selected/disabled     |
-| `forge-chat-area`          | visual           | `component.media.chat-area`                                      | size, header/footer slots, auto-scroll; default/loading                              |
-| `forge-dialog`             | visual           | `component.overlay`                                             | open, title/footer; default/expanded/focus-visible                                   |
-| `forge-drawer`             | visual           | `component.overlay.drawer`                                      | open, placement/size, resize; default/hover/active/expanded                          |
-| `forge-menubar`            | visual           | `component.navigation.menubar`                                  | items, bordered, size; default/hover/focus-visible/expanded/disabled                 |
-| `forge-modal`              | visual           | `component.overlay`                                             | open, size, header/footer; default/expanded/focus-visible                            |
-| `forge-navbar`             | visual           | `component.navigation.navbar`                  | items, responsive mode; default/hover/focus-visible/selected                         |
-| `forge-table`              | visual           | `component.data.table`                                           | columns, size, caption, striped/bordered/hoverable, tone, loading; default/hover/focus-visible/loading |
-| `forge-theme-composer`     | visual           | `component.surface` + `component.field`                         | theme values; default/invalid                                                        |
-| `forge-theme-provider`     | visual           | `component.layout`                                              | theme mode; default/light/dark                                                       |
-| `forge-toast-container`    | visual           | `component.overlay`                                             | placement; default/loading                                                           |
-| `forge-tree-view-item`     | inherited-visual | `component.navigation` + `component.surface`                    | expanded, selected, disabled; default/hover/focus-visible/expanded/selected/disabled |
-| `forge-tree-view`          | visual           | `component.data.tree`                                            | nodes, size, defaultOpen, label renderer; default/hover/focus-visible/expanded/selected |
-| `forge-virtual-list`       | visual           | `component.data.virtual-list`                                    | items, size, itemHeight, height, overscan, row renderer; default/selected             |
-| `forge-virtual-log-viewer` | visual           | `component.code.virtual-log-viewer`                              | level/filter, columns, follow-tail; default/hover/focus-visible/warn/error/fatal     |
-| `forge-virtual-table`      | visual           | `component.data.virtual-table` + `component.data.table`          | columns, size, rowHeight, height, overscan, striped/bordered, sort; default/hover/focus-visible |
-| `forge-virtual-tabs`       | visual           | `component.navigation.tabs`                                      | variant, active tab, closable/addable; default/hover/focus-visible/selected/disabled |
-| `forge-virtual-tree-view`  | visual           | `component.data.virtual-tree`                                   | nodes, size, itemHeight, height, overscan, defaultOpen, row renderer; default/hover/focus-visible/expanded |
-| `forge-hero`               | visual           | `component.layout.hero`                         | media, alignment, size, overlay; default                              |
+| Component                  | Classification   | Contract                                                | Appearance props / states                                                                                  |
+| -------------------------- | ---------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `forge-carousel`           | visual           | `component.navigation.carousel`                         | slides, controls, autoplay, tone; default/hover/focus-visible/selected/disabled                            |
+| `forge-chat-area`          | visual           | `component.media.chat-area`                             | size, header/footer slots, auto-scroll; default/loading                                                    |
+| `forge-dialog`             | visual           | `component.overlay`                                     | open, title/footer; default/expanded/focus-visible                                                         |
+| `forge-drawer`             | visual           | `component.overlay.drawer`                              | open, placement/size, resize; default/hover/active/expanded                                                |
+| `forge-menubar`            | visual           | `component.navigation.menubar`                          | items, bordered, size; default/hover/focus-visible/expanded/disabled                                       |
+| `forge-modal`              | visual           | `component.overlay`                                     | open, size, header/footer; default/expanded/focus-visible                                                  |
+| `forge-navbar`             | visual           | `component.navigation.navbar`                           | items, responsive mode; default/hover/focus-visible/selected                                               |
+| `forge-table`              | visual           | `component.data.table`                                  | columns, size, caption, striped/bordered/hoverable, tone, loading; default/hover/focus-visible/loading     |
+| `forge-theme-composer`     | visual           | `component.surface` + `component.field`                 | theme values; default/invalid                                                                              |
+| `forge-theme-provider`     | visual           | `component.layout`                                      | theme mode; default/light/dark                                                                             |
+| `forge-toast-container`    | visual           | `component.overlay`                                     | placement; default/loading                                                                                 |
+| `forge-tree-view-item`     | inherited-visual | `component.navigation` + `component.surface`            | expanded, selected, disabled; default/hover/focus-visible/expanded/selected/disabled                       |
+| `forge-tree-view`          | visual           | `component.data.tree`                                   | nodes, size, defaultOpen, label renderer; default/hover/focus-visible/expanded/selected                    |
+| `forge-virtual-list`       | visual           | `component.data.virtual-list`                           | items, size, itemHeight, height, overscan, row renderer; default/selected                                  |
+| `forge-virtual-log-viewer` | visual           | `component.code.virtual-log-viewer`                     | level/filter, columns, follow-tail; default/hover/focus-visible/warn/error/fatal                           |
+| `forge-virtual-table`      | visual           | `component.data.virtual-table` + `component.data.table` | columns, size, rowHeight, height, overscan, striped/bordered, sort; default/hover/focus-visible            |
+| `forge-virtual-tabs`       | visual           | `component.navigation.tabs`                             | variant, active tab, closable/addable; default/hover/focus-visible/selected/disabled                       |
+| `forge-virtual-tree-view`  | visual           | `component.data.virtual-tree`                           | nodes, size, itemHeight, height, overscan, defaultOpen, row renderer; default/hover/focus-visible/expanded |
+| `forge-hero`               | visual           | `component.layout.hero`                                 | media, alignment, size, overlay; default                                                                   |
 
 ## Specialized Forge packages
 
-| Package / level          | Component                      | Classification   | Contract                                     | Appearance props / states                                             |
-| ------------------------ | ------------------------------ | ---------------- | -------------------------------------------- | --------------------------------------------------------------------- |
-| `barcode/molecules`      | `forge-barcode`                | visual           | `component.code.barcode`                      | value, format, size; default/loading/invalid                          |
-| `breakpoints/atoms`      | `forge-hide-at`                | behavior-only    | none                                         | `min`, `max`; viewport visibility only                                |
-| `breakpoints/atoms`      | `forge-show-at`                | behavior-only    | none                                         | `min`, `max`; viewport visibility only                                |
-| `breakpoints/molecules`  | `forge-breakpoint-debug`       | visual           | `component.debug.breakpoint`                  | breakpoint display; default                                           |
-| `code-scanner/organisms` | `forge-code-scanner`           | visual           | `component.code.scanner`                      | camera/format, scanning; default/loading/invalid                      |
-| `content/atoms`          | `forge-code-block`             | visual           | `component.code`                             | language, copy; default/selected                                      |
-| `content/atoms`          | `forge-mermaid`                | visual           | `component.code`                             | diagram source, loading/error; default/loading/invalid                |
-| `content/atoms`          | `forge-wysiwyg-toolbar-button` | visual           | `component.button` + `component.icon`        | command, active; default/hover/active/focus-visible/disabled/selected |
-| `content/molecules`      | `forge-markdown`               | visual           | `component.typography` + `component.code`    | size, links; default/invalid                                          |
-| `content/molecules`      | `markdown-block`               | inherited-visual | `component.typography` + child contracts     | token, size; inherited                                                |
-| `content/molecules`      | `markdown-inline`              | inherited-visual | `component.typography`                       | token, links; inherited/hover/selected                                |
+| Package / level          | Component                      | Classification   | Contract                                               | Appearance props / states                                             |
+| ------------------------ | ------------------------------ | ---------------- | ------------------------------------------------------ | --------------------------------------------------------------------- |
+| `barcode/molecules`      | `forge-barcode`                | visual           | `component.code.barcode`                               | value, format, size; default/loading/invalid                          |
+| `breakpoints/atoms`      | `forge-hide-at`                | behavior-only    | none                                                   | `min`, `max`; viewport visibility only                                |
+| `breakpoints/atoms`      | `forge-show-at`                | behavior-only    | none                                                   | `min`, `max`; viewport visibility only                                |
+| `breakpoints/molecules`  | `forge-breakpoint-debug`       | visual           | `component.debug.breakpoint`                           | breakpoint display; default                                           |
+| `code-scanner/organisms` | `forge-code-scanner`           | visual           | `component.code.scanner`                               | camera/format, scanning; default/loading/invalid                      |
+| `content/atoms`          | `forge-code-block`             | visual           | `component.code`                                       | language, copy; default/selected                                      |
+| `content/atoms`          | `forge-mermaid`                | visual           | `component.code`                                       | diagram source, loading/error; default/loading/invalid                |
+| `content/atoms`          | `forge-wysiwyg-toolbar-button` | visual           | `component.button` + `component.icon`                  | command, active; default/hover/active/focus-visible/disabled/selected |
+| `content/molecules`      | `forge-markdown`               | visual           | `component.typography` + `component.code`              | size, links; default/invalid                                          |
+| `content/molecules`      | `markdown-block`               | inherited-visual | `component.typography` + child contracts               | token, size; inherited                                                |
+| `content/molecules`      | `markdown-inline`              | inherited-visual | `component.typography`                                 | token, links; inherited/hover/selected                                |
 | `content/molecules`      | `forge-wysiwyg-block-controls` | visual           | `component.editor.block-controls` + `component.button` | block selection; default/hover/focus-visible/selected                 |
-| `content/molecules`      | `forge-wysiwyg-block-menu`     | visual           | `component.editor.block-menu` + `component.overlay`   | open; default/expanded/selected                                       |
-| `content/molecules`      | `forge-wysiwyg-status-bar`     | visual           | `component.editor.status-bar`                         | status; default/invalid/loading                                       |
-| `content/molecules`      | `forge-wysiwyg-toolbar`        | visual           | `component.editor.toolbar` + `component.button`       | commands; default/disabled                                            |
-| `content/organisms`      | `forge-monaco-editor`          | visual           | `component.editor.monaco` + `component.code`          | language, read-only; default/disabled/invalid                         |
-| `content/organisms`      | `forge-wysiwyg-editor`         | visual           | `component.editor.wysiwyg` + `component.code`        | editable, invalid; default/focus-visible/invalid/disabled             |
-| `float/molecules`        | `forge-alert-banner`           | visual           | `component.feedback` + `component.overlay`   | status, dismissible; default/focus-visible                            |
-| `float/molecules`        | `forge-dropdown`               | visual           | `component.overlay` + `component.navigation` | open; default/expanded/selected                                       |
-| `float/molecules`        | `forge-popover`                | visual           | `component.overlay`                          | open; default/expanded                                                |
-| `float/molecules`        | `forge-toast`                  | visual           | `component.overlay` + `component.feedback`   | status; default/loading                                               |
-| `float/molecules`        | `forge-tooltip`                | visual           | `component.overlay`                          | open; default/expanded                                                |
-| `float/organisms`        | `forge-dialog`                 | visual           | `component.overlay`                          | open, title/footer; default/expanded/focus-visible                    |
-| `float/organisms`        | `forge-modal`                  | visual           | `component.overlay`                          | open, size, header/footer; default/expanded/focus-visible             |
-| `float/organisms`        | `forge-toast-container`        | visual           | `component.overlay`                          | placement; default/loading                                            |
+| `content/molecules`      | `forge-wysiwyg-block-menu`     | visual           | `component.editor.block-menu` + `component.overlay`    | open; default/expanded/selected                                       |
+| `content/molecules`      | `forge-wysiwyg-status-bar`     | visual           | `component.editor.status-bar`                          | status; default/invalid/loading                                       |
+| `content/molecules`      | `forge-wysiwyg-toolbar`        | visual           | `component.editor.toolbar` + `component.button`        | commands; default/disabled                                            |
+| `content/organisms`      | `forge-monaco-editor`          | visual           | `component.editor.monaco` + `component.code`           | language, read-only; default/disabled/invalid                         |
+| `content/organisms`      | `forge-wysiwyg-editor`         | visual           | `component.editor.wysiwyg` + `component.code`          | editable, invalid; default/focus-visible/invalid/disabled             |
+| `float/molecules`        | `forge-alert-banner`           | visual           | `component.feedback` + `component.overlay`             | status, dismissible; default/focus-visible                            |
+| `float/molecules`        | `forge-dropdown`               | visual           | `component.overlay` + `component.navigation`           | open; default/expanded/selected                                       |
+| `float/molecules`        | `forge-popover`                | visual           | `component.overlay`                                    | open; default/expanded                                                |
+| `float/molecules`        | `forge-toast`                  | visual           | `component.overlay` + `component.feedback`             | status; default/loading                                               |
+| `float/molecules`        | `forge-tooltip`                | visual           | `component.overlay`                                    | open; default/expanded                                                |
+| `float/organisms`        | `forge-dialog`                 | visual           | `component.overlay`                                    | open, title/footer; default/expanded/focus-visible                    |
+| `float/organisms`        | `forge-modal`                  | visual           | `component.overlay`                                    | open, size, header/footer; default/expanded/focus-visible             |
+| `float/organisms`        | `forge-toast-container`        | visual           | `component.overlay`                                    | placement; default/loading                                            |
 
 ### Forms — `packages/forms/src/components/`
 
@@ -260,7 +291,8 @@ to test consumer overrides, edit `apps/storybook/design-tokens/overrides.tokens.
 ## Figma handoff checklist
 
 1. Create the `Mission Platform / Component` variable collection with Light and Dark modes.
-2. Import the component paths from `component.tokens.json`, preserving component, variant, slot, and state segments.
+2. Import the component paths from the `component/<atomic-level>/` source tree, preserving component, variant, slot,
+   and state segments.
 3. Bind component variables to the corresponding primitive/semantic variables rather than copying raw colour or scale values.
 4. Create component properties for the documented variants and sizes; create state variants only for states listed in the inventory.
 5. Keep layout formulas, viewport breakpoints, canvas behavior, and DOM/accessibility behavior outside the visual variable collection.

@@ -1,0 +1,86 @@
+{
+  "$description": "Split component source for component.timeline.",
+  "component": {
+    "timeline": {
+      "$description": "Timeline marker, outlined state, connectors, orientation rhythm, and content spacing. Item order, alternating placement, and scroll behavior remain local.",
+      "marker": {
+        "size": {
+          "$value": "0.875rem"
+        },
+        "default": {
+          "$value": "{color.primary.default}"
+        },
+        "outline-width": {
+          "$value": "{spacing.1}"
+        },
+        "outline-surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "outlined-surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "radius": {
+          "$value": "{radius.full}"
+        }
+      },
+      "line": {
+        "width": {
+          "$value": "{border-width.thick}"
+        },
+        "surface": {
+          "$value": "{color.border.default}"
+        }
+      },
+      "gutter": {
+        "$value": "{spacing.6}"
+      },
+      "vertical": {
+        "gap": {
+          "$value": "{spacing.4}"
+        }
+      },
+      "horizontal": {
+        "gap": {
+          "$value": "{spacing.3}"
+        }
+      },
+      "content": {
+        "gap": {
+          "$value": "{spacing.1}"
+        },
+        "body-margin-top": {
+          "$value": "{spacing.1}"
+        }
+      },
+      "variant": {
+        "default": {
+          "$value": "{color.default.default}"
+        },
+        "primary": {
+          "$value": "{color.primary.default}"
+        },
+        "secondary": {
+          "$value": "{color.secondary.default}"
+        },
+        "tertiary": {
+          "$value": "{color.tertiary.default}"
+        },
+        "success": {
+          "$value": "{color.success.default}"
+        },
+        "warning": {
+          "$value": "{color.warning.default}"
+        },
+        "information": {
+          "$value": "{color.information.default}"
+        },
+        "error": {
+          "$value": "{color.error.default}"
+        },
+        "critical": {
+          "$value": "{color.critical.default}"
+        }
+      }
+    }
+  }
+}

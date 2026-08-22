@@ -20,9 +20,9 @@
   }
 
   .forge-navbar {
-    background-color: var(--mp-component-navigation-navbar-surface);
-    border-bottom: var(--mp-component-navigation-navbar-border-width) solid
-      var(--mp-component-navigation-navbar-border);
+    background-color: var(--mp-navigation-navbar-surface);
+    border-bottom: var(--mp-navigation-navbar-border-width) solid
+      var(--mp-navigation-navbar-border);
     z-index: 100;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
@@ -39,33 +39,33 @@
     &__container {
       display: flex;
       align-items: center;
-      height: var(--mp-component-navigation-navbar-container-height);
-      padding: 0 var(--mp-component-navigation-navbar-container-padding-default);
-      gap: var(--mp-component-navigation-navbar-container-gap-default);
+      height: var(--mp-navigation-navbar-container-height);
+      padding: 0 var(--mp-navigation-navbar-container-padding-default);
+      gap: var(--mp-navigation-navbar-container-gap-default);
       max-width: 100%;
 
       @include bp.bp-up('sm') {
-        padding: 0 var(--mp-component-navigation-navbar-container-padding-wide);
-        gap: var(--mp-component-navigation-navbar-container-gap-wide);
+        padding: 0 var(--mp-navigation-navbar-container-padding-wide);
+        gap: var(--mp-navigation-navbar-container-gap-wide);
       }
 
       @container forge-navbar (width >= 60rem) {
-        padding: 0 var(--mp-component-navigation-navbar-container-padding-widest);
-        gap: var(--mp-component-navigation-navbar-container-gap-widest);
+        padding: 0 var(--mp-navigation-navbar-container-padding-widest);
+        gap: var(--mp-navigation-navbar-container-gap-widest);
       }
     }
 
     &__start {
       display: flex;
       align-items: center;
-      gap: var(--mp-component-navigation-navbar-start-gap);
+      gap: var(--mp-navigation-navbar-start-gap);
       flex-shrink: 0;
     }
 
     &__center {
       display: flex;
       align-items: center;
-      gap: var(--mp-component-navigation-navbar-center-gap-default);
+      gap: var(--mp-navigation-navbar-center-gap-default);
       flex: 1;
 
       > forge-slot {
@@ -73,11 +73,11 @@
       }
 
       @include bp.bp-up('sm') {
-        gap: var(--mp-component-navigation-navbar-center-gap-wide);
+        gap: var(--mp-navigation-navbar-center-gap-wide);
       }
 
       @container forge-navbar (width >= 60rem) {
-        gap: var(--mp-component-navigation-navbar-center-gap-widest);
+        gap: var(--mp-navigation-navbar-center-gap-widest);
       }
 
       &--start {
@@ -96,7 +96,7 @@
     &__end {
       display: flex;
       align-items: center;
-      gap: var(--mp-component-navigation-navbar-end-gap);
+      gap: var(--mp-navigation-navbar-end-gap);
       flex-shrink: 0;
 
       > forge-slot {
@@ -114,59 +114,59 @@
       flex-direction: column;
       justify-content: center;
       margin-left: auto;
-      gap: var(--mp-component-navigation-navbar-hamburger-gap);
-      width: var(--mp-component-navigation-navbar-hamburger-size);
-      height: var(--mp-component-navigation-navbar-hamburger-size);
-      padding: var(--mp-component-navigation-navbar-hamburger-padding);
+      gap: var(--mp-navigation-navbar-hamburger-gap);
+      width: var(--mp-navigation-navbar-hamburger-size);
+      height: var(--mp-navigation-navbar-hamburger-size);
+      padding: var(--mp-navigation-navbar-hamburger-padding);
       background: none;
       border: none;
-      border-radius: var(--mp-component-navigation-navbar-hamburger-radius);
+      border-radius: var(--mp-navigation-navbar-hamburger-radius);
       cursor: pointer;
-      color: var(--mp-component-navigation-navbar-hamburger-text);
+      color: var(--mp-navigation-navbar-hamburger-text);
       flex-shrink: 0;
 
       &:hover {
-        background-color: var(--mp-component-navigation-navbar-hamburger-surface-hover);
+        background-color: var(--mp-navigation-navbar-hamburger-surface-hover);
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-component-navigation-navbar-hamburger-focus-ring);
+        box-shadow: var(--mp-navigation-navbar-hamburger-focus-ring);
       }
     }
 
     &__hamburger-bar {
       display: block;
       width: 100%;
-      height: var(--mp-component-navigation-navbar-hamburger-bar-height);
+      height: var(--mp-navigation-navbar-hamburger-bar-height);
       border-radius: 1px;
-      background-color: var(--mp-component-navigation-navbar-hamburger-bar-color);
+      background-color: var(--mp-navigation-navbar-hamburger-bar-color);
     }
   }
 
   .forge-navbar__mobile-nav {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-navigation-navbar-mobile-nav-gap);
-    padding: var(--mp-component-navigation-navbar-mobile-nav-padding-block)
-      var(--mp-component-navigation-navbar-mobile-nav-padding-inline);
+    gap: var(--mp-navigation-navbar-mobile-nav-gap);
+    padding: var(--mp-navigation-navbar-mobile-nav-padding-block)
+      var(--mp-navigation-navbar-mobile-nav-padding-inline);
     height: 100%;
   }
 
   .forge-navbar__mobile-nav-items {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-navigation-navbar-mobile-nav-items-gap);
+    gap: var(--mp-navigation-navbar-mobile-nav-items-gap);
     flex: 1;
   }
 
   .forge-navbar__mobile-nav-end {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-navigation-navbar-mobile-nav-end-gap);
-    padding-top: var(--mp-component-navigation-navbar-mobile-nav-end-padding-top);
-    border-top: var(--mp-component-navigation-navbar-border-width) solid
-      var(--mp-component-navigation-navbar-border);
+    gap: var(--mp-navigation-navbar-mobile-nav-end-gap);
+    padding-top: var(--mp-navigation-navbar-mobile-nav-end-padding-top);
+    border-top: var(--mp-navigation-navbar-border-width) solid
+      var(--mp-navigation-navbar-border);
   }
 
   /* Collapse into the mobile drawer. The transition point is configurable via

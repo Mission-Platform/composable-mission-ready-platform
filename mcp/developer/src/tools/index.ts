@@ -173,9 +173,15 @@ export function registerTools(server: McpServer): void {
   server.registerTool(
     'get_tokens',
     {
-      description: 'reads Mission Platform design tokens (optionally one category) from @mission-platform/tokens.',
+      description:
+        'Reads Mission Platform DTCG design tokens from @mission-platform/tokens. Select a top-level category, a split component source such as component/atoms/button, or omit the filter for the complete merged document.',
       inputSchema: {
-        category: z.string().optional().describe('Token category (e.g. palette, spacing, typography).'),
+        category: z
+          .string()
+          .optional()
+          .describe(
+            'Optional category or normalized source ID (e.g. palette, spacing, typography, component, component/atoms/button).',
+          ),
       },
     },
     async (args) => {

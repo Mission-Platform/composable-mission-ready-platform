@@ -12,7 +12,7 @@
   .forge-number-stepper {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-input-field-gap);
+    gap: var(--mp-input-field-gap);
 
     &__label {
       display: flex;
@@ -33,24 +33,24 @@
     }
 
     &__required {
-      color: var(--mp-component-field-required);
+      color: var(--mp-field-required);
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: stretch;
-      border: var(--mp-component-input-border-width) solid var(--mp-component-input-border-default);
-      border-radius: var(--mp-component-input-radius);
-      background-color: var(--mp-component-input-surface-default);
+      border: var(--mp-input-border-width) solid var(--mp-input-border-default);
+      border-radius: var(--mp-input-radius);
+      background-color: var(--mp-input-surface-default);
       overflow: hidden;
       transition:
         border-color 150ms ease,
         box-shadow 150ms ease;
 
       &:focus-within {
-        border-color: var(--mp-component-input-border-focus-visible);
-        box-shadow: var(--mp-component-input-focus-ring);
+        border-color: var(--mp-input-border-focus-visible);
+        box-shadow: var(--mp-input-focus-ring);
       }
     }
 
@@ -58,12 +58,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: var(--mp-component-input-number-button-width);
+      width: var(--mp-input-number-button-width);
       flex-shrink: 0;
       border: none;
-      background-color: var(--mp-component-input-number-button-background-default);
-      color: var(--mp-component-input-number-button-text);
-      font-size: var(--mp-component-input-number-button-font-size);
+      background-color: var(--mp-input-number-button-background-default);
+      color: var(--mp-input-number-button-text);
+      font-size: var(--mp-input-number-button-font-size);
       line-height: 1;
       cursor: pointer;
       user-select: none;
@@ -71,11 +71,11 @@
 
       &:disabled {
         cursor: not-allowed;
-        opacity: var(--mp-component-input-number-button-disabled-opacity);
+        opacity: var(--mp-input-number-button-disabled-opacity);
       }
 
       &:hover:not(:disabled) {
-        background-color: var(--mp-component-input-number-button-background-hover);
+        background-color: var(--mp-input-number-button-background-hover);
       }
     }
 
@@ -87,42 +87,42 @@
       outline: none;
       background: transparent;
       text-align: center;
-      color: var(--mp-component-input-text-default);
-      font-family: var(--mp-component-input-font-family);
-      line-height: var(--mp-component-input-line-height);
+      color: var(--mp-input-text-default);
+      font-family: var(--mp-input-font-family);
+      line-height: var(--mp-input-line-height);
 
       &::placeholder {
-        color: var(--mp-component-input-text-placeholder);
+        color: var(--mp-input-text-placeholder);
       }
     }
 
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-number-stepper__field {
-        padding: var(--mp-component-input-size-#{$size}-padding-block) var(--mp-component-input-size-#{$size}-padding-inline);
-        font-size: var(--mp-component-input-size-#{$size}-font-size);
+        padding: var(--mp-input-size-#{$size}-padding-block) var(--mp-input-size-#{$size}-padding-inline);
+        font-size: var(--mp-input-size-#{$size}-font-size);
       }
     }
 
     &--error .forge-number-stepper__wrapper {
-      border-color: var(--mp-component-input-border-invalid);
+      border-color: var(--mp-input-border-invalid);
 
       &:focus-within {
-        box-shadow: var(--mp-component-input-focus-ring-invalid);
+        box-shadow: var(--mp-input-focus-ring-invalid);
       }
     }
 
     &--disabled {
-      opacity: var(--mp-component-input-opacity-disabled);
+      opacity: var(--mp-input-opacity-disabled);
       pointer-events: none;
 
       .forge-number-stepper__wrapper {
-        background-color: var(--mp-component-input-surface-disabled);
+        background-color: var(--mp-input-surface-disabled);
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-component-input-text-invalid);
+      color: var(--mp-input-text-invalid);
       margin: 0;
     }
 

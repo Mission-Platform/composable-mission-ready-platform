@@ -1,0 +1,569 @@
+{
+  "$description": "Split component source for component.input.",
+  "component": {
+    "input": {
+      "$description": "Text, textarea, date, number, search, phone, OTP, colour, and file controls. Sizes use 2xs through 2xl.",
+      "surface": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "disabled": {
+          "$value": "{color.bg.muted}"
+        },
+        "invalid": {
+          "$value": "{color.danger.subtle}"
+        },
+        "selected": {
+          "$value": "{color.primary.subtle}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "secondary": {
+          "$value": "{color.text.secondary}"
+        },
+        "placeholder": {
+          "$value": "{color.text.tertiary}"
+        },
+        "disabled": {
+          "$value": "{color.text.disabled}"
+        },
+        "invalid": {
+          "$value": "{color.danger.text}"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        },
+        "hover": {
+          "$value": "{color.border.strong}"
+        },
+        "focus-visible": {
+          "$value": "{color.border.focus}"
+        },
+        "invalid": {
+          "$value": "{color.danger.default}"
+        },
+        "disabled": {
+          "$value": "{color.border.default}"
+        }
+      },
+      "focus-ring": {
+        "$value": "{shadow.focus-primary}"
+      },
+      "focus-ring-invalid": {
+        "$value": "{shadow.focus-danger}"
+      },
+      "border-width": {
+        "$value": "{border-width.thin}"
+      },
+      "padding": {
+        "inline": {
+          "$value": "{size.pad-inline.md}"
+        },
+        "block": {
+          "$value": "{size.pad-block.md}"
+        }
+      },
+      "gap": {
+        "$value": "{size.gap.sm}"
+      },
+      "field-gap": {
+        "$value": "{spacing.1}"
+      },
+      "extension-gap": {
+        "$value": "{spacing.2}"
+      },
+      "font-family": {
+        "$value": "{font.family.sans}"
+      },
+      "line-height": {
+        "$value": "{line-height.normal}"
+      },
+      "radius": {
+        "$value": "{size.radius.md}"
+      },
+      "opacity": {
+        "disabled": {
+          "$value": "{opacity.disabled}"
+        }
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}"
+        },
+        "easing": {
+          "$value": "{easing.standard}"
+        }
+      },
+      "size": {
+        "2xs": {
+          "font-size": {
+            "$value": "{size.font.2xs}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.2xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xs}"
+          }
+        },
+        "xs": {
+          "font-size": {
+            "$value": "{size.font.xs}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.xs}"
+          }
+        },
+        "sm": {
+          "font-size": {
+            "$value": "{size.font.sm}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.sm}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.sm}"
+          }
+        },
+        "md": {
+          "font-size": {
+            "$value": "{size.font.md}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.md}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.md}"
+          }
+        },
+        "lg": {
+          "font-size": {
+            "$value": "{size.font.lg}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.lg}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.lg}"
+          }
+        },
+        "xl": {
+          "font-size": {
+            "$value": "{size.font.xl}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.xl}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.xl}"
+          }
+        },
+        "2xl": {
+          "font-size": {
+            "$value": "{size.font.2xl}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.2xl}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xl}"
+          }
+        }
+      },
+      "file": {
+        "$description": "ForgeFileInput browse button and dropzone roles; native input clipping remains structural.",
+        "gap": {
+          "stack": {
+            "$value": "{spacing.1}"
+          },
+          "row": {
+            "$value": "{spacing.3}"
+          },
+          "dropzone": {
+            "$value": "{spacing.2}"
+          }
+        },
+        "surface": {
+          "default": {
+            "$value": "{color.bg.surface}"
+          },
+          "hover": {
+            "$value": "{color.bg.muted}"
+          },
+          "disabled": {
+            "$value": "{color.bg.muted}"
+          },
+          "active": {
+            "$value": "{color.primary.subtle}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.primary}"
+          },
+          "muted": {
+            "$value": "{color.text.tertiary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          },
+          "link": {
+            "$value": "{color.primary.text}"
+          },
+          "link-hover": {
+            "$value": "{color.text.primary}"
+          },
+          "error": {
+            "$value": "{color.danger.text}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.border.default}"
+          },
+          "hover": {
+            "$value": "{color.border.strong}"
+          },
+          "active": {
+            "$value": "{color.primary.default}"
+          },
+          "invalid": {
+            "$value": "{color.danger.default}"
+          }
+        },
+        "border-width": {
+          "default": {
+            "$value": "{border-width.thin}"
+          },
+          "dropzone": {
+            "$value": "{border-width.thick}"
+          }
+        },
+        "radius": {
+          "button": {
+            "$value": "{radius.md}"
+          },
+          "dropzone": {
+            "$value": "{radius.lg}"
+          }
+        },
+        "font-weight": {
+          "$value": "{font.weight.medium}"
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.fast}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        },
+        "padding": {
+          "dropzone-block": {
+            "$value": "{spacing.8}"
+          },
+          "dropzone-inline": {
+            "$value": "{spacing.4}"
+          }
+        },
+        "required": {
+          "$value": "{color.danger.default}"
+        },
+        "size": {
+          "2xs": {
+            "font-size": {
+              "$value": "{size.font.2xs}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.2xs}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.2xs}"
+            }
+          },
+          "xs": {
+            "font-size": {
+              "$value": "{size.font.xs}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.xs}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.xs}"
+            }
+          },
+          "sm": {
+            "font-size": {
+              "$value": "{size.font.sm}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.sm}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.sm}"
+            }
+          },
+          "md": {
+            "font-size": {
+              "$value": "{size.font.md}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.md}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.md}"
+            }
+          },
+          "lg": {
+            "font-size": {
+              "$value": "{size.font.lg}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.lg}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.lg}"
+            }
+          },
+          "xl": {
+            "font-size": {
+              "$value": "{size.font.xl}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.xl}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.xl}"
+            }
+          },
+          "2xl": {
+            "font-size": {
+              "$value": "{size.font.2xl}"
+            },
+            "padding-block": {
+              "$value": "{size.pad-block.2xl}"
+            },
+            "padding-inline": {
+              "$value": "{size.pad-inline.2xl}"
+            }
+          }
+        }
+      },
+      "location": {
+        "$description": "ForgeLocationInput fieldset and composed-coordinate state roles.",
+        "gap": {
+          "stack": {
+            "$value": "{spacing.2}"
+          },
+          "row": {
+            "$value": "{spacing.2}"
+          },
+          "legend": {
+            "$value": "{spacing.1}"
+          }
+        },
+        "required": {
+          "$value": "{color.danger.default}"
+        },
+        "text": {
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          },
+          "error": {
+            "$value": "{color.danger.text}"
+          }
+        }
+      },
+      "number": {
+        "$description": "ForgeNumberStepper button and field-specific roles; the shared input contract owns the wrapper states.",
+        "button": {
+          "background": {
+            "default": {
+              "$value": "{color.bg.muted}"
+            },
+            "hover": {
+              "$value": "{color.border.default}"
+            }
+          },
+          "text": {
+            "$value": "{color.text.primary}"
+          },
+          "font-size": {
+            "$value": "{font.size.lg}"
+          },
+          "width": {
+            "$value": "2.25rem"
+          },
+          "disabled-opacity": {
+            "$value": 0.4
+          }
+        }
+      },
+      "otp": {
+        "$description": "ForgeOtpInput cell surface, state, and canonical cell-size roles.",
+        "gap": {
+          "$value": "{spacing.2}"
+        },
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "text": {
+          "$value": "{color.text.primary}"
+        },
+        "border": {
+          "default": {
+            "$value": "{color.border.default}"
+          },
+          "focus": {
+            "$value": "{color.primary.default}"
+          }
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "radius": {
+          "$value": "{radius.md}"
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        },
+        "font-family": {
+          "$value": "{font.family.sans}"
+        },
+        "font-weight": {
+          "$value": "{font.weight.semibold}"
+        },
+        "disabled-opacity": {
+          "$value": 0.5
+        },
+        "size": {
+          "2xs": {
+            "cell": {
+              "$value": "2rem"
+            },
+            "font-size": {
+              "$value": "{size.font.sm}"
+            }
+          },
+          "xs": {
+            "cell": {
+              "$value": "2.25rem"
+            },
+            "font-size": {
+              "$value": "{size.font.md}"
+            }
+          },
+          "sm": {
+            "cell": {
+              "$value": "2.5rem"
+            },
+            "font-size": {
+              "$value": "{size.font.md}"
+            }
+          },
+          "md": {
+            "cell": {
+              "$value": "3rem"
+            },
+            "font-size": {
+              "$value": "{size.font.lg}"
+            }
+          },
+          "lg": {
+            "cell": {
+              "$value": "3.5rem"
+            },
+            "font-size": {
+              "$value": "{size.font.xl}"
+            }
+          },
+          "xl": {
+            "cell": {
+              "$value": "4rem"
+            },
+            "font-size": {
+              "$value": "{size.font.2xl}"
+            }
+          },
+          "2xl": {
+            "cell": {
+              "$value": "4.5rem"
+            },
+            "font-size": {
+              "$value": "{size.font.2xl}"
+            }
+          }
+        }
+      },
+      "phone": {
+        "$description": "ForgePhoneInput composed country, dial-code, status, and validation roles.",
+        "country-border": {
+          "$value": "{color.border.default}"
+        },
+        "dial-padding": {
+          "$value": "{spacing.2}"
+        },
+        "dial-text": {
+          "$value": "{color.text.secondary}"
+        },
+        "status-padding": {
+          "$value": "{spacing.2}"
+        },
+        "status-muted": {
+          "$value": "{color.text.tertiary}"
+        },
+        "status-valid": {
+          "$value": "{color.success.default}"
+        },
+        "status-invalid": {
+          "$value": "{color.danger.default}"
+        },
+        "disabled-opacity": {
+          "$value": 0.5
+        }
+      },
+      "search": {
+        "$description": "ForgeSearchInput affordance, clear-button, spinner, and size roles.",
+        "gap": {
+          "$value": "{spacing.1}"
+        },
+        "icon-text": {
+          "$value": "{color.text.tertiary}"
+        },
+        "clear-text": {
+          "default": {
+            "$value": "{color.text.tertiary}"
+          },
+          "hover": {
+            "$value": "{color.text.primary}"
+          }
+        },
+        "clear-radius": {
+          "$value": "{radius.full}"
+        },
+        "spinner": {
+          "size": {
+            "$value": "14px"
+          },
+          "border-width": {
+            "$value": "{border-width.thick}"
+          },
+          "radius": {
+            "$value": "{radius.full}"
+          },
+          "duration": {
+            "$value": "0.6s"
+          }
+        }
+      }
+    }
+  }
+}

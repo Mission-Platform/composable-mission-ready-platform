@@ -1,0 +1,41 @@
+{
+  "$description": "Split component source for component.icon.",
+  "component": {
+    "icon": {
+      "$description": "All 106 icon glyph components inherit currentColor and consumer-controlled size. Do not create a token per glyph.",
+      "color": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "muted": {
+          "$value": "{color.text.tertiary}"
+        },
+        "disabled": {
+          "$value": "{color.text.disabled}"
+        },
+        "selected": {
+          "$value": "{color.primary.default}"
+        }
+      },
+      "size": {
+        "$value": "{size.icon.md}"
+      },
+      "opacity": {
+        "disabled": {
+          "$value": "{opacity.disabled}"
+        },
+        "muted": {
+          "$value": "{opacity.muted}"
+        }
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}"
+        },
+        "easing": {
+          "$value": "{easing.standard}"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,259 @@
+{
+  "$description": "Split component source for component.editor.",
+  "component": {
+    "editor": {
+      "$description": "WYSIWYG and Monaco editor chrome. Editing, scrolling, positioning, and third-party renderer behavior remain local; these slots expose editor-owned visual surfaces, states, and typography.",
+      "block-controls": {
+        "$description": "Per-block selection outline and floating alignment/move control bar.",
+        "selection": {
+          "border": {
+            "$value": "{color.primary.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "radius": {
+            "$value": "{radius.sm}"
+          }
+        },
+        "bar": {
+          "surface": {
+            "$value": "{color.bg.raised}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          },
+          "shadow": {
+            "$value": "{shadow.sm}"
+          }
+        },
+        "gap": {
+          "$value": "{spacing.micro}"
+        },
+        "padding": {
+          "$value": "{spacing.micro}"
+        }
+      },
+      "block-menu": {
+        "$description": "Block-format trigger, menu panel, menu items, and keyboard/active states.",
+        "trigger": {
+          "gap": {
+            "$value": "{spacing.2xs}"
+          },
+          "padding-block": {
+            "$value": "{spacing.2xs}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.xs}"
+          },
+          "text": {
+            "$value": "{color.text.primary}"
+          },
+          "surface": {
+            "default": {
+              "$value": "transparent"
+            },
+            "hover": {
+              "$value": "{color.bg.muted}"
+            }
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "radius": {
+            "$value": "{radius.sm}"
+          },
+          "focus": {
+            "border": {
+              "$value": "{color.primary.default}"
+            },
+            "border-width": {
+              "$value": "{border-width.thick}"
+            }
+          },
+          "opacity": {
+            "disabled": {
+              "$value": "{opacity.disabled}"
+            }
+          }
+        },
+        "list": {
+          "gap": {
+            "$value": "{spacing.micro}"
+          },
+          "padding": {
+            "$value": "{spacing.2xs}"
+          },
+          "surface": {
+            "$value": "{color.bg.surface}"
+          },
+          "text": {
+            "$value": "{color.text.primary}"
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          }
+        },
+        "item": {
+          "padding-block": {
+            "$value": "{spacing.2xs}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.sm}"
+          },
+          "text": {
+            "default": {
+              "$value": "{color.text.primary}"
+            },
+            "active": {
+              "$value": "{color.primary.default}"
+            }
+          },
+          "surface": {
+            "default": {
+              "$value": "transparent"
+            },
+            "hover": {
+              "$value": "{color.bg.muted}"
+            }
+          },
+          "radius": {
+            "$value": "{radius.sm}"
+          },
+          "focus": {
+            "border": {
+              "$value": "{color.primary.default}"
+            },
+            "border-width": {
+              "$value": "{border-width.thick}"
+            }
+          },
+          "active-font-weight": {
+            "$value": "{font.weight.semibold}"
+          }
+        }
+      },
+      "status-bar": {
+        "$description": "Compact editor statistics/status strip. Alignment and item content remain component behavior/layout.",
+        "gap": {
+          "$value": "{spacing.md}"
+        },
+        "padding-block": {
+          "$value": "{spacing.2xs}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.sm}"
+        },
+        "text": {
+          "$value": "{color.text.tertiary}"
+        },
+        "font-size": {
+          "$value": "{font.size.status}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        }
+      },
+      "toolbar": {
+        "$description": "WYSIWYG formatting toolbar and group separators; button interaction states are owned by ForgeButton.",
+        "gap": {
+          "$value": "{spacing.xs}"
+        },
+        "padding": {
+          "$value": "{spacing.xs}"
+        },
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "group": {
+          "gap": {
+            "$value": "{spacing.2xs}"
+          },
+          "padding-inline-end": {
+            "$value": "{spacing.xs}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          }
+        }
+      },
+      "monaco": {
+        "$description": "Monaco host container chrome; Monaco's own editor DOM and theme remain third-party/runtime behavior.",
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "radius": {
+          "$value": "{radius.md}"
+        }
+      },
+      "wysiwyg": {
+        "$description": "WYSIWYG editor shell and editable surface chrome.",
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "text": {
+          "$value": "{color.text.primary}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "radius": {
+          "$value": "{radius.md}"
+        },
+        "disabled-opacity": {
+          "$value": "{opacity.content-disabled}"
+        },
+        "surface-padding": {
+          "$value": "{spacing.sm}"
+        },
+        "line-height": {
+          "$value": "{size.leading.md}"
+        },
+        "focus": {
+          "color": {
+            "$value": "{color.primary.default}"
+          },
+          "width": {
+            "$value": "{border-width.thick}"
+          }
+        },
+        "placeholder": {
+          "$value": "{color.text.tertiary}"
+        },
+        "code-block-margin": {
+          "$value": "{spacing.sm}"
+        }
+      }
+    }
+  }
+}

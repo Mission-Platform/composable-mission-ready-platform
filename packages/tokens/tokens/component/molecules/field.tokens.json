@@ -1,0 +1,34 @@
+{
+  "$description": "Split component source for component.field.",
+  "component": {
+    "field": {
+      "$description": "Shared form-field label, hint, error, field-set, builder, wizard, and schema-form regions.",
+      "label": {
+        "$value": "{typography.label}"
+      },
+      "helper-text": {
+        "$value": "{typography.caption}"
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "invalid": {
+          "$value": "{color.danger.text}"
+        },
+        "disabled": {
+          "$value": "{color.text.disabled}"
+        }
+      },
+      "gap": {
+        "$value": "{spacing.xs}"
+      },
+      "error": {
+        "$value": "{color.danger.text}"
+      },
+      "required": {
+        "$value": "{color.danger.default}"
+      }
+    }
+  }
+}

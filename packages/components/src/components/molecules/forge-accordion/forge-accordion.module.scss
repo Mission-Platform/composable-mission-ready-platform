@@ -14,26 +14,26 @@
 
 @layer mp.components {
   .forge-accordion {
-    border: var(--mp-component-collapse-border-width) solid var(--mp-component-collapse-border);
-    border-radius: var(--mp-component-collapse-radius);
+    border: var(--mp-collapse-border-width) solid var(--mp-collapse-border);
+    border-radius: var(--mp-collapse-radius);
     overflow: hidden;
 
     &__item {
-      background-color: var(--mp-component-collapse-surface);
+      background-color: var(--mp-collapse-surface);
 
       & + .forge-accordion__item {
-        border-top: var(--mp-component-collapse-border-width) solid var(--mp-component-collapse-border);
+        border-top: var(--mp-collapse-border-width) solid var(--mp-collapse-border);
       }
 
       &--disabled {
-        background-color: var(--mp-component-collapse-disabled-surface);
+        background-color: var(--mp-collapse-disabled-surface);
 
         .forge-accordion__summary {
-          color: var(--mp-component-collapse-disabled-text);
+          color: var(--mp-collapse-disabled-text);
           cursor: not-allowed;
 
           &:hover {
-            background-color: var(--mp-component-collapse-disabled-surface);
+            background-color: var(--mp-collapse-disabled-surface);
           }
         }
       }
@@ -43,24 +43,24 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--mp-component-collapse-summary-padding-block) var(--mp-component-collapse-summary-padding-inline);
+      padding: var(--mp-collapse-summary-padding-block) var(--mp-collapse-summary-padding-inline);
       cursor: pointer;
-      color: var(--mp-component-collapse-summary-text);
+      color: var(--mp-collapse-summary-text);
       list-style: none;
       user-select: none;
-      gap: var(--mp-component-collapse-summary-gap);
+      gap: var(--mp-collapse-summary-gap);
 
       &::-webkit-details-marker {
         display: none;
       }
 
       &:hover {
-        background-color: var(--mp-component-collapse-summary-surface-hover);
+        background-color: var(--mp-collapse-summary-surface-hover);
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-component-collapse-summary-focus-ring);
+        box-shadow: var(--mp-collapse-summary-focus-ring);
       }
     }
 
@@ -71,11 +71,11 @@
     }
 
     &__content {
-      padding: var(--mp-component-collapse-content-padding-block) var(--mp-component-collapse-content-padding-inline);
-      border-top: var(--mp-component-collapse-content-border-width) solid var(--mp-component-collapse-content-border);
+      padding: var(--mp-collapse-content-padding-block) var(--mp-collapse-content-padding-inline);
+      border-top: var(--mp-collapse-content-border-width) solid var(--mp-collapse-content-border);
       opacity: 1;
-      transition: opacity var(--mp-component-collapse-transition-duration)
-        var(--mp-component-collapse-transition-easing);
+      transition: opacity var(--mp-collapse-transition-duration)
+        var(--mp-collapse-transition-easing);
 
       @starting-style {
         opacity: 0;
@@ -100,15 +100,15 @@
         )
     {
       &--#{$name} {
-        border-color: var(--mp-component-collapse-tone-#{$family}-border);
+        border-color: var(--mp-collapse-tone-#{$family}-border);
 
         .forge-accordion__item + .forge-accordion__item,
         .forge-accordion__content {
-          border-top-color: var(--mp-component-collapse-tone-#{$family}-border);
+          border-top-color: var(--mp-collapse-tone-#{$family}-border);
         }
 
         .forge-accordion__summary {
-          color: var(--mp-component-collapse-tone-#{$family}-text);
+          color: var(--mp-collapse-tone-#{$family}-text);
         }
       }
     }

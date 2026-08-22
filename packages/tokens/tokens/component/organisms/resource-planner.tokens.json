@@ -1,0 +1,208 @@
+{
+  "$description": "Split component source for component.resource-planner.",
+  "component": {
+    "resource-planner": {
+      "$description": "ForgeResourcePlanner visual contract for resource rows, timeline chrome, bookings, capacity status, and selection. Timeline sizing, scrolling, virtualization, drag/resize behavior, and resource data remain local.",
+      "container": {
+        "gap": {
+          "$value": "{spacing.3}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "radius": {
+          "$value": "{radius.lg}"
+        },
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "padding": {
+          "$value": "{spacing.3}"
+        }
+      },
+      "toolbar": {
+        "gap": {
+          "$value": "{spacing.2}"
+        }
+      },
+      "control": {
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "radius": {
+          "$value": "{radius.sm}"
+        },
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "text": {
+          "$value": "{color.text.primary}"
+        },
+        "padding-block": {
+          "$value": "{spacing.1}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.2}"
+        },
+        "selected-surface": {
+          "$value": "{color.primary.default}"
+        },
+        "selected-text": {
+          "$value": "{color.text.on-primary}"
+        },
+        "focus-ring": {
+          "$value": "{color.border.focus}"
+        }
+      },
+      "viewport": {
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        }
+      },
+      "header": {
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        }
+      },
+      "resource": {
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "padding": {
+          "$value": "{spacing.2}"
+        },
+        "gap": {
+          "$value": "{spacing.1}"
+        },
+        "secondary-text": {
+          "$value": "{color.text.secondary}"
+        },
+        "heading-weight": {
+          "$value": "{font.weight.semibold}"
+        }
+      },
+      "timeline": {
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "selected-ring": {
+          "$value": "{color.primary.default}"
+        },
+        "header-padding": {
+          "$value": "{spacing.2}"
+        },
+        "header-text": {
+          "$value": "{color.text.secondary}"
+        },
+        "header-font-size": {
+          "$value": "{font.size.sm}"
+        }
+      },
+      "row": {
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        }
+      },
+      "capacity": {
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "font-size": {
+          "$value": "{font.size.xs}"
+        },
+        "unavailable-surface": {
+          "$value": "{color.bg.muted}"
+        },
+        "conflict-surface": {
+          "$value": "{color.error.default}"
+        }
+      },
+      "booking": {
+        "radius": {
+          "$value": "{radius.sm}"
+        },
+        "surface": {
+          "$value": "{color.primary.default}"
+        },
+        "conflict-surface": {
+          "$value": "{color.error.default}"
+        },
+        "text": {
+          "$value": "{color.text.on-primary}"
+        },
+        "padding-block": {
+          "$value": "{spacing.1}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.2}"
+        },
+        "height-inset": {
+          "$value": "{spacing.4}"
+        },
+        "focus-ring": {
+          "$value": "{color.border.focus}"
+        }
+      },
+      "selection": {
+        "border": {
+          "$value": "{color.primary.default}"
+        },
+        "border-width": {
+          "$value": "1px"
+        },
+        "border-style": {
+          "$value": "dashed"
+        },
+        "surface": {
+          "$value": "{color.primary.default}"
+        },
+        "height-inset": {
+          "$value": "{spacing.2}"
+        }
+      },
+      "current-time": {
+        "width": {
+          "$value": "2px"
+        },
+        "surface": {
+          "$value": "{color.error.default}"
+        }
+      },
+      "empty": {
+        "text": {
+          "$value": "{color.text.secondary}"
+        }
+      }
+    }
+  }
+}

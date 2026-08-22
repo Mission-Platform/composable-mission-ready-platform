@@ -10,12 +10,12 @@ los adaptadores de marco generados: la misma entrada se aplica a Vue, React, Sol
 
 ## leyendo el contrato
 
-La fuente de la verdad es [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
+La fuente de la verdad es [`packages/tokens/tokens/component/<atomic-level>/`](../../../packages/tokens/tokens/component/<atomic-level>/).
 Su ruta se asigna directamente a una propiedad personalizada de CSS y una variable de Figma:
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
@@ -265,7 +265,7 @@ para probar las anulaciones del consumidor, edite `apps/storybook/design-tokens/
 ## Lista de verificación de transferencia de Figma
 
 1. Crea el `Mission Platform / Component` colección variable con modos Claro y Oscuro.
-2. Importe las rutas de los componentes desde `component.tokens.json`, preservando los segmentos de componente, variante, ranura y estado.
+2. Importe las rutas de los componentes desde `component/<atomic-level>/`, preservando los segmentos de componente, variante, ranura y estado.
 3. Vincule las variables de los componentes a las variables primitivas/semánticas correspondientes en lugar de copiar colores sin formato o valores de escala.
 4. Cree propiedades de componentes para las variantes y tamaños documentados; cree variantes de estado solo para los estados enumerados en el inventario.
 5. Mantenga las fórmulas de diseño, los puntos de interrupción de la ventana gráfica, el comportamiento del lienzo y el comportamiento de DOM/accesibilidad fuera de la colección de variables visuales.

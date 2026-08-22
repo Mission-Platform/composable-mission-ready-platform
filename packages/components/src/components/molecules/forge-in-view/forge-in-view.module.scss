@@ -16,11 +16,11 @@
     align-items: center;
     justify-content: center;
     min-height: 8rem;
-    padding: var(--mp-component-in-view-padding);
-    border-radius: var(--mp-component-in-view-radius);
-    background: var(--mp-component-in-view-surface);
-    color: var(--mp-component-in-view-text);
-    font-weight: var(--mp-component-in-view-font-weight);
+    padding: var(--mp-in-view-padding);
+    border-radius: var(--mp-in-view-radius);
+    background: var(--mp-in-view-surface);
+    color: var(--mp-in-view-text);
+    font-weight: var(--mp-in-view-font-weight);
   }
 
   .in-view-spacer {

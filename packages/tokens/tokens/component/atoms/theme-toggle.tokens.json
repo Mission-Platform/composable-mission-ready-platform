@@ -1,0 +1,58 @@
+{
+  "$description": "Split component source for component.theme-toggle.",
+  "component": {
+    "theme-toggle": {
+      "$description": "ForgeThemeToggle focus indicator and label typography; button surface, border, spacing, and motion reuse the button contract.",
+      "focus": {
+        "width": {
+          "$value": "{border-width.thick}"
+        },
+        "offset": {
+          "$value": "2px"
+        }
+      },
+      "label": {
+        "font-family": {
+          "$value": "{font.family.sans}"
+        },
+        "font-size": {
+          "$value": "{font.size.sm}"
+        },
+        "font-weight": {
+          "$value": "{font.weight.medium}"
+        },
+        "line-height": {
+          "$value": "{line-height.snug}"
+        },
+        "letter-spacing": {
+          "$value": "{letter-spacing.normal}"
+        }
+      },
+      "icon": {
+        "color": {
+          "default": {
+            "$value": "{color.text.secondary}"
+          }
+        },
+        "size": {
+          "$value": "{font.size.lg}"
+        }
+      },
+      "border": {
+        "color": {
+          "hover": {
+            "$value": "{color.border.strong}"
+          }
+        }
+      },
+      "padding": {
+        "block": {
+          "$value": "{spacing.2}"
+        },
+        "inline": {
+          "$value": "{spacing.3}"
+        }
+      }
+    }
+  }
+}

@@ -12,7 +12,7 @@
   .forge-phone-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-input-field-gap);
+    gap: var(--mp-input-field-gap);
 
     &__label {
       display: flex;
@@ -33,24 +33,24 @@
     }
 
     &__required {
-      color: var(--mp-component-field-required);
+      color: var(--mp-field-required);
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: stretch;
-      border: var(--mp-component-input-border-width) solid var(--mp-component-input-border-default);
-      border-radius: var(--mp-component-input-radius);
-      background-color: var(--mp-component-input-surface-default);
+      border: var(--mp-input-border-width) solid var(--mp-input-border-default);
+      border-radius: var(--mp-input-radius);
+      background-color: var(--mp-input-surface-default);
       overflow: hidden;
       transition:
         border-color 150ms ease,
         box-shadow 150ms ease;
 
       &:focus-within {
-        border-color: var(--mp-component-input-border-focus-visible);
-        box-shadow: var(--mp-component-input-focus-ring);
+        border-color: var(--mp-input-border-focus-visible);
+        box-shadow: var(--mp-input-focus-ring);
       }
     }
 
@@ -61,15 +61,15 @@
       flex-shrink: 0;
       width: 11rem;
       max-width: 45%;
-      border-right: var(--mp-component-input-border-width) solid var(--mp-component-input-phone-country-border);
+      border-right: var(--mp-input-border-width) solid var(--mp-input-phone-country-border);
     }
 
     &__dial {
       display: flex;
       align-items: center;
-      padding-left: var(--mp-component-input-phone-dial-padding);
-      color: var(--mp-component-input-phone-dial-text);
-      font-family: var(--mp-component-input-font-family);
+      padding-left: var(--mp-input-phone-dial-padding);
+      color: var(--mp-input-phone-dial-text);
+      font-family: var(--mp-input-font-family);
       user-select: none;
     }
 
@@ -80,60 +80,60 @@
       border: none;
       outline: none;
       background: transparent;
-      color: var(--mp-component-input-text-default);
-      font-family: var(--mp-component-input-font-family);
-      line-height: var(--mp-component-input-line-height);
+      color: var(--mp-input-text-default);
+      font-family: var(--mp-input-font-family);
+      line-height: var(--mp-input-line-height);
 
       &::placeholder {
-        color: var(--mp-component-input-text-placeholder);
+        color: var(--mp-input-text-placeholder);
       }
     }
 
     &__status {
       display: flex;
       align-items: center;
-      padding-right: var(--mp-component-input-phone-status-padding);
-      color: var(--mp-component-input-phone-status-muted);
+      padding-right: var(--mp-input-phone-status-padding);
+      color: var(--mp-input-phone-status-muted);
       user-select: none;
     }
 
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-phone-input__field {
-        padding: var(--mp-component-input-size-#{$size}-padding-block) var(--mp-component-input-size-#{$size}-padding-inline);
-        font-size: var(--mp-component-input-size-#{$size}-font-size);
+        padding: var(--mp-input-size-#{$size}-padding-block) var(--mp-input-size-#{$size}-padding-inline);
+        font-size: var(--mp-input-size-#{$size}-font-size);
       }
     }
 
     &--valid .forge-phone-input__status {
-      color: var(--mp-component-input-phone-status-valid);
+      color: var(--mp-input-phone-status-valid);
     }
 
     &--error {
       .forge-phone-input__wrapper {
-        border-color: var(--mp-component-input-border-invalid);
+        border-color: var(--mp-input-border-invalid);
 
         &:focus-within {
-          box-shadow: var(--mp-component-input-focus-ring-invalid);
+          box-shadow: var(--mp-input-focus-ring-invalid);
         }
       }
 
       .forge-phone-input__status {
-        color: var(--mp-component-input-phone-status-invalid);
+        color: var(--mp-input-phone-status-invalid);
       }
     }
 
     &--disabled {
-      opacity: var(--mp-component-input-phone-disabled-opacity);
+      opacity: var(--mp-input-phone-disabled-opacity);
       pointer-events: none;
 
       .forge-phone-input__wrapper {
-        background-color: var(--mp-component-input-surface-disabled);
+        background-color: var(--mp-input-surface-disabled);
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-component-input-text-invalid);
+      color: var(--mp-input-text-invalid);
       margin: 0;
     }
 

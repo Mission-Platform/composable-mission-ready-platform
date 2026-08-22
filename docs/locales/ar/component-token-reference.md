@@ -10,12 +10,12 @@
 
 ## قراءة العقد
 
-مصدر الحقيقة [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
+مصدر الحقيقة [`packages/tokens/tokens/component/<atomic-level>/`](../../../packages/tokens/tokens/component/<atomic-level>/).
 يتم تعيين مساره مباشرة إلى خاصية CSS المخصصة ومتغير Figma:
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
@@ -265,7 +265,7 @@ packages/*/src/components/**/*.module.scss
 ## قائمة التحقق من تسليم Figma
 
 1. قم بإنشاء `Mission Platform / Component` مجموعة متغيرة مع أوضاع الضوء والظلام.
-2. قم باستيراد مسارات المكونات من `component.tokens.json`الحفاظ على أجزاء المكون والمتغير والفتحة والحالة.
+2. قم باستيراد مسارات المكونات من `component/<atomic-level>/`الحفاظ على أجزاء المكون والمتغير والفتحة والحالة.
 3. قم بربط متغيرات المكونات بالمتغيرات البدائية/الدلالية المقابلة بدلاً من نسخ قيم اللون أو المقياس الخام.
 4. إنشاء خصائص المكونات للمتغيرات والأحجام الموثقة؛ إنشاء متغيرات الحالة فقط للحالات المدرجة في المخزون.
 5. احتفظ بصيغ التخطيط ونقاط توقف إطار العرض وسلوك اللوحة وسلوك DOM/إمكانية الوصول خارج مجموعة المتغيرات المرئية.

@@ -3,14 +3,14 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: var(--mp-component-editor-wysiwyg-border-width) solid var(--mp-component-editor-wysiwyg-border);
-    border-radius: var(--mp-component-editor-wysiwyg-radius);
-    background-color: var(--mp-component-editor-wysiwyg-surface);
-    color: var(--mp-component-editor-wysiwyg-text);
+    border: var(--mp-editor-wysiwyg-border-width) solid var(--mp-editor-wysiwyg-border);
+    border-radius: var(--mp-editor-wysiwyg-radius);
+    background-color: var(--mp-editor-wysiwyg-surface);
+    color: var(--mp-editor-wysiwyg-text);
   }
 
   .wysiwyg--disabled {
-    opacity: var(--mp-component-editor-wysiwyg-disabled-opacity);
+    opacity: var(--mp-editor-wysiwyg-disabled-opacity);
     pointer-events: none;
   }
 
@@ -25,26 +25,26 @@
 
   .wysiwyg__surface {
     flex: 1 1 auto;
-    padding: var(--mp-component-editor-wysiwyg-surface-padding);
+    padding: var(--mp-editor-wysiwyg-surface-padding);
     overflow-y: auto;
-    line-height: var(--mp-component-editor-wysiwyg-line-height);
+    line-height: var(--mp-editor-wysiwyg-line-height);
     outline: none;
   }
 
   .wysiwyg__surface:focus-visible {
-    box-shadow: inset 0 0 0 var(--mp-component-editor-wysiwyg-focus-width)
-      var(--mp-component-editor-wysiwyg-focus-color);
+    box-shadow: inset 0 0 0 var(--mp-editor-wysiwyg-focus-width)
+      var(--mp-editor-wysiwyg-focus-color);
   }
 
   .wysiwyg__surface[data-placeholder]:empty::before {
     content: attr(data-placeholder);
-    color: var(--mp-component-editor-wysiwyg-placeholder);
+    color: var(--mp-editor-wysiwyg-placeholder);
     pointer-events: none;
   }
 
   // A non-editable, portalled code block sits as an atomic block in the flow.
   .wysiwyg__surface [data-mp-code-block] {
-    margin: var(--mp-component-editor-wysiwyg-code-block-margin) 0;
+    margin: var(--mp-editor-wysiwyg-code-block-margin) 0;
     user-select: none;
   }
 }

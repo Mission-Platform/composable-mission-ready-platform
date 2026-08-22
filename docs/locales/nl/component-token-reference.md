@@ -10,12 +10,12 @@ de gegenereerde raamwerkadapters: hetzelfde item is van toepassing op Vue, React
 
 ## Het contract lezen
 
-De bron van de waarheid is [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
+De bron van de waarheid is [`packages/tokens/tokens/component/<atomic-level>/`](../../../packages/tokens/tokens/component/<atomic-level>/).
 Het pad verwijst rechtstreeks naar een aangepaste CSS-eigenschap en een Figma-variabele:
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
@@ -265,7 +265,7 @@ Bewerk dit om consumentenoverschrijvingen te testen `apps/storybook/design-token
 ## Controlelijst voor overdracht van Figma
 
 1. Maak de `Mission Platform / Component` variabele collectie met lichte en donkere modi.
-2. Importeer de componentpaden uit `component.tokens.json`, met behoud van component-, variant-, slot- en statussegmenten.
+2. Importeer de componentpaden uit `component/<atomic-level>/`, met behoud van component-, variant-, slot- en statussegmenten.
 3. Bind componentvariabelen aan de corresponderende primitieve/semantische variabelen in plaats van ruwe kleur- of schaalwaarden te kopiëren.
 4. Maak componenteigenschappen voor de gedocumenteerde varianten en maten; maak alleen staatsvarianten voor staten die in de inventaris staan ​​vermeld.
 5. Houd lay-outformules, viewport-breekpunten, canvasgedrag en DOM/toegankelijkheidsgedrag buiten de verzameling visuele variabelen.

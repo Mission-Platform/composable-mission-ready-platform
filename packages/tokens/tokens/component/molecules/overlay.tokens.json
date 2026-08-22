@@ -1,0 +1,517 @@
+{
+  "$description": "Split component source for component.overlay.",
+  "component": {
+    "overlay": {
+      "$description": "Alert banners, dropdowns, popovers, tooltips, toasts, drawers, dialogs, modals, and window popouts.",
+      "surface": {
+        "default": {
+          "$value": "{color.bg.overlay}"
+        },
+        "scrim": {
+          "$value": "{color.bg.scrim}"
+        },
+        "loading": {
+          "$value": "{color.bg.loading-overlay}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "inverse": {
+          "$value": "{color.text.inverse}"
+        }
+      },
+      "font-family": {
+        "$value": "{font.family.sans}"
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        },
+        "focus-visible": {
+          "$value": "{color.border.focus}"
+        }
+      },
+      "border-width": {
+        "$value": "{border-width.thin}"
+      },
+      "radius": {
+        "$value": "{radius.xl}"
+      },
+      "padding": {
+        "$value": "{spacing.lg}"
+      },
+      "icon-size": {
+        "$value": "{font.size.xl}"
+      },
+      "dismiss": {
+        "padding": {
+          "$value": "{spacing.1}"
+        },
+        "radius": {
+          "$value": "{radius.sm}"
+        },
+        "focus-width": {
+          "$value": "{border-width.thick}"
+        }
+      },
+      "panel": {
+        "padding-block": {
+          "$value": "{spacing.1}"
+        }
+      },
+      "header": {
+        "gap": {
+          "$value": "{spacing.4}"
+        },
+        "padding-block": {
+          "$value": "{spacing.4}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.6}"
+        }
+      },
+      "body": {
+        "padding": {
+          "$value": "{spacing.6}"
+        }
+      },
+      "footer": {
+        "gap": {
+          "$value": "{spacing.3}"
+        },
+        "padding-block": {
+          "$value": "{spacing.4}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.6}"
+        }
+      },
+      "toast": {
+        "$description": "Toast typography and compact chrome; do not use dialog/modal-scale padding, radius, shadow, or surface values.",
+        "font-size": {
+          "$value": "{size.font.sm}"
+        },
+        "font-weight": {
+          "$value": "{font.weight.semibold}"
+        },
+        "title-gap": {
+          "$value": "{spacing.1}"
+        },
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.primary}"
+          },
+          "message": {
+            "$value": "{color.text.secondary}"
+          }
+        },
+        "gap": {
+          "$value": "{spacing.3}"
+        },
+        "padding-block": {
+          "$value": "{spacing.3}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.4}"
+        },
+        "radius": {
+          "$value": "{radius.md}"
+        },
+        "shadow": {
+          "$value": "{shadow.lg}"
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.fast}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        }
+      },
+      "alert-banner": {
+        "$description": "Alert-banner-specific chrome. These compact values intentionally remain distinct from dialog and modal overlay chrome.",
+        "gap": {
+          "$value": "{spacing.3}"
+        },
+        "padding-block": {
+          "$value": "{spacing.3}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.4}"
+        },
+        "content-gap": {
+          "$value": "{spacing.1}"
+        },
+        "actions-gap": {
+          "$value": "{spacing.2}"
+        },
+        "actions-margin-top": {
+          "$value": "{spacing.2}"
+        },
+        "radius": {
+          "$value": "{radius.md}"
+        },
+        "dismiss": {
+          "opacity": {
+            "$value": "{opacity.interactive}"
+          },
+          "transition-duration": {
+            "$value": "{duration.fast}"
+          },
+          "transition-easing": {
+            "$value": "{easing.standard}"
+          }
+        }
+      },
+      "dropdown": {
+        "$description": "Compact dropdown panel chrome; dimensions and anchor positioning remain local.",
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "radius": {
+          "$value": "{radius.md}"
+        },
+        "shadow": {
+          "$value": "{shadow.md}"
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.fast}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        }
+      },
+      "popover": {
+        "$description": "Compact popover panel chrome; dimensions and anchor positioning remain local.",
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "radius": {
+          "$value": "{radius.lg}"
+        },
+        "shadow": {
+          "$value": "{shadow.lg}"
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.fast}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        }
+      },
+      "dialog": {
+        "$description": "Dialog surface and chrome; panel dimensions and native dialog behavior remain local.",
+        "surface": {
+          "default": {
+            "$value": "{color.bg.surface}"
+          }
+        }
+      },
+      "modal": {
+        "$description": "Modal surface and elevation; panel dimensions and native dialog behavior remain local.",
+        "surface": {
+          "default": {
+            "$value": "{color.bg.surface}"
+          }
+        },
+        "shadow": {
+          "$value": "{shadow.2xl}"
+        },
+        "size": {
+          "2xs": {
+            "$value": "20rem"
+          },
+          "xs": {
+            "$value": "24rem"
+          },
+          "sm": {
+            "$value": "{size.width.sm}"
+          },
+          "md": {
+            "$value": "{size.width.md}"
+          },
+          "lg": {
+            "$value": "51.429rem"
+          },
+          "xl": {
+            "$value": "68.571rem"
+          },
+          "2xl": {
+            "$value": "{size.width.lg}"
+          }
+        }
+      },
+      "shadow": {
+        "$value": "{shadow.xl}"
+      },
+      "focus-ring": {
+        "$value": "{shadow.focus-primary}"
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.moderate}"
+        },
+        "easing": {
+          "$value": "{easing.standard}"
+        }
+      },
+      "tooltip": {
+        "$description": "Compact inverse-tone hint panel — distinct chrome from the neutral overlay surface shared by dialogs/popovers/toasts.",
+        "surface": {
+          "$value": "{color.text.primary}"
+        },
+        "text": {
+          "$value": "{color.text.inverse}"
+        },
+        "radius": {
+          "$value": "{radius.sm}"
+        },
+        "padding-block": {
+          "$value": "{spacing.1}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.3}"
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.fast}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        }
+      },
+      "drawer": {
+        "$description": "Drawer panel, backdrop, header/footer chrome, close affordance, resize handle, and enter/leave motion. Placement, dimensions, and drag mechanics remain local.",
+        "backdrop": {
+          "surface": {
+            "$value": "{color.bg.scrim-soft}"
+          }
+        },
+        "panel": {
+          "surface": {
+            "$value": "{color.bg.surface}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "shadow": {
+            "$value": "{shadow.xl}"
+          }
+        },
+        "header": {
+          "padding-block": {
+            "$value": "{spacing.4}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.6}"
+          },
+          "gap": {
+            "$value": "{spacing.4}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          }
+        },
+        "title": {
+          "font-family": {
+            "$value": "{font.family.sans}"
+          },
+          "font-size": {
+            "$value": "{font.size.lg}"
+          },
+          "font-weight": {
+            "$value": "{font.weight.medium}"
+          },
+          "line-height": {
+            "$value": "{line-height.snug}"
+          },
+          "text": {
+            "$value": "{color.text.primary}"
+          }
+        },
+        "close": {
+          "size": {
+            "$value": "{size.height.sm}"
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          },
+          "surface": {
+            "default": {
+              "$value": "transparent"
+            },
+            "hover": {
+              "$value": "{color.bg.surface}"
+            }
+          },
+          "text": {
+            "default": {
+              "$value": "{color.text.secondary}"
+            },
+            "hover": {
+              "$value": "{color.text.primary}"
+            }
+          },
+          "font-size": {
+            "$value": "{font.size.xl}"
+          },
+          "line-height": {
+            "$value": 1
+          }
+        },
+        "body": {
+          "padding": {
+            "$value": "{spacing.6}"
+          }
+        },
+        "footer": {
+          "gap": {
+            "$value": "{spacing.3}"
+          },
+          "padding-block": {
+            "$value": "{spacing.4}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.6}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          }
+        },
+        "resize-handle": {
+          "size": {
+            "$value": "{spacing.2}"
+          },
+          "surface": {
+            "default": {
+              "$value": "transparent"
+            },
+            "active": {
+              "$value": "{color.border.strong}"
+            }
+          },
+          "transition": {
+            "duration": {
+              "$value": "{duration.fast}"
+            },
+            "easing": {
+              "$value": "{easing.standard}"
+            }
+          }
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.base}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        }
+      },
+      "window-popout": {
+        "$description": "Inline popout wrapper, unavailable-content placeholder, and pop-in/pop-out toggle states. Browser-window lifecycle and content transfer remain local behavior.",
+        "gap": {
+          "$value": "{spacing.2}"
+        },
+        "placeholder": {
+          "padding": {
+            "$value": "{spacing.6}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thick}"
+          },
+          "radius": {
+            "$value": "{radius.lg}"
+          },
+          "surface": {
+            "$value": "{color.bg.muted}"
+          },
+          "min-height": {
+            "$value": "80px"
+          }
+        },
+        "toggle": {
+          "gap": {
+            "$value": "{spacing.1}"
+          },
+          "padding-block": {
+            "$value": "{spacing.1}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.3}"
+          },
+          "border": {
+            "default": {
+              "$value": "{color.border.default}"
+            },
+            "hover": {
+              "$value": "{color.border.strong}"
+            },
+            "selected": {
+              "$value": "{color.primary.default}"
+            },
+            "width": {
+              "$value": "{border-width.thin}"
+            }
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          },
+          "surface": {
+            "default": {
+              "$value": "{color.bg.surface}"
+            },
+            "hover": {
+              "$value": "{color.bg.muted}"
+            },
+            "selected": {
+              "$value": "{color.primary.muted}"
+            }
+          },
+          "text": {
+            "default": {
+              "$value": "{color.text.primary}"
+            },
+            "selected": {
+              "$value": "{color.primary.default}"
+            }
+          },
+          "focus-ring": {
+            "$value": "{shadow.focus-primary}"
+          },
+          "transition": {
+            "duration": {
+              "$value": "{duration.fast}"
+            },
+            "easing": {
+              "$value": "{easing.standard}"
+            }
+          }
+        }
+      }
+    }
+  }
+}

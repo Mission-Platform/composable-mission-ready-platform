@@ -10,12 +10,12 @@ gli adattatori framework generati: vale la stessa voce Vue, React, Solid, Svelte
 
 ## Leggere il contratto
 
-La fonte della verità è [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
+La fonte della verità è [`packages/tokens/tokens/component/<atomic-level>/`](../../../packages/tokens/tokens/component/<atomic-level>/).
 Il suo percorso si associa direttamente a una proprietà personalizzata CSS e a una variabile Figma:
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
@@ -265,7 +265,7 @@ per testare le sostituzioni del consumatore, modifica `apps/storybook/design-tok
 ## Lista di controllo per il trasferimento di Figma
 
 1. Crea il `Mission Platform / Component` raccolta variabile con modalità Chiaro e Scuro.
-2. Importare i percorsi dei componenti da `component.tokens.json`, preservando i segmenti componente, variante, slot e stato.
+2. Importare i percorsi dei componenti da `component/<atomic-level>/`, preservando i segmenti componente, variante, slot e stato.
 3. Associare le variabili dei componenti alle corrispondenti variabili primitive/semantiche anziché copiare i colori grezzi o i valori di scala.
 4. Creare le proprietà dei componenti per le varianti e le dimensioni documentate; creare varianti di stato solo per gli stati elencati nell'inventario.
 5. Mantieni le formule di layout, i punti di interruzione della finestra, il comportamento del canvas e il comportamento DOM/accessibilità al di fuori della raccolta di variabili visive.

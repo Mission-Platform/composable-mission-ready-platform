@@ -12,8 +12,8 @@
 
 @layer mp.forms {
   .forge-slider {
-    --mp-slider-track-height: var(--mp-component-checkable-size-md-track-height);
-    --mp-slider-thumb-size: var(--mp-component-checkable-size-md-thumb-size);
+    --mp-slider-track-height: var(--mp-checkable-size-md-track-height);
+    --mp-slider-thumb-size: var(--mp-checkable-size-md-thumb-size);
 
     display: flex;
     align-items: center;
@@ -22,42 +22,42 @@
 
     /* Sizes — canonical 2xs → 2xl scale (track height + thumb size). */
     &--2xs {
-      --mp-slider-track-height: var(--mp-component-checkable-size-2xs-track-height);
-      --mp-slider-thumb-size: var(--mp-component-checkable-size-2xs-thumb-size);
+      --mp-slider-track-height: var(--mp-checkable-size-2xs-track-height);
+      --mp-slider-thumb-size: var(--mp-checkable-size-2xs-thumb-size);
     }
 
     &--xs {
-      --mp-slider-track-height: var(--mp-component-checkable-size-xs-track-height);
-      --mp-slider-thumb-size: var(--mp-component-checkable-size-xs-thumb-size);
+      --mp-slider-track-height: var(--mp-checkable-size-xs-track-height);
+      --mp-slider-thumb-size: var(--mp-checkable-size-xs-thumb-size);
     }
 
     &--sm {
-      --mp-slider-track-height: var(--mp-component-checkable-size-sm-track-height);
-      --mp-slider-thumb-size: var(--mp-component-checkable-size-sm-thumb-size);
+      --mp-slider-track-height: var(--mp-checkable-size-sm-track-height);
+      --mp-slider-thumb-size: var(--mp-checkable-size-sm-thumb-size);
     }
 
     &--md {
-      --mp-slider-track-height: var(--mp-component-checkable-size-md-track-height);
-      --mp-slider-thumb-size: var(--mp-component-checkable-size-md-thumb-size);
+      --mp-slider-track-height: var(--mp-checkable-size-md-track-height);
+      --mp-slider-thumb-size: var(--mp-checkable-size-md-thumb-size);
     }
 
     &--lg {
-      --mp-slider-track-height: var(--mp-component-checkable-size-lg-track-height);
-      --mp-slider-thumb-size: var(--mp-component-checkable-size-lg-thumb-size);
+      --mp-slider-track-height: var(--mp-checkable-size-lg-track-height);
+      --mp-slider-thumb-size: var(--mp-checkable-size-lg-thumb-size);
     }
 
     &--xl {
-      --mp-slider-track-height: var(--mp-component-checkable-size-xl-track-height);
-      --mp-slider-thumb-size: var(--mp-component-checkable-size-xl-thumb-size);
+      --mp-slider-track-height: var(--mp-checkable-size-xl-track-height);
+      --mp-slider-thumb-size: var(--mp-checkable-size-xl-thumb-size);
     }
 
     &--2xl {
-      --mp-slider-track-height: var(--mp-component-checkable-size-2xl-track-height);
-      --mp-slider-thumb-size: var(--mp-component-checkable-size-2xl-thumb-size);
+      --mp-slider-track-height: var(--mp-checkable-size-2xl-track-height);
+      --mp-slider-thumb-size: var(--mp-checkable-size-2xl-thumb-size);
     }
 
     &--disabled {
-      opacity: var(--mp-component-checkable-opacity-disabled);
+      opacity: var(--mp-checkable-opacity-disabled);
       cursor: not-allowed;
     }
 
@@ -65,8 +65,8 @@
       position: relative;
       flex: 1 1 auto;
       height: var(--mp-slider-track-height);
-      background-color: var(--mp-component-checkable-track-inactive);
-      border-radius: var(--mp-component-checkable-circle-radius);
+      background-color: var(--mp-checkable-track-inactive);
+      border-radius: var(--mp-checkable-circle-radius);
       cursor: pointer;
       touch-action: none;
     }
@@ -79,7 +79,7 @@
       position: absolute;
       inset-block: 0;
       left: 0;
-      background-color: var(--mp-component-checkable-track-selected);
+      background-color: var(--mp-checkable-track-selected);
       border-radius: inherit;
     }
 
@@ -89,14 +89,14 @@
       width: var(--mp-slider-thumb-size);
       height: var(--mp-slider-thumb-size);
       transform: translate(-50%, -50%);
-      background-color: var(--mp-component-checkable-thumb-default);
-      border: var(--mp-component-checkable-border-width-default) solid var(--mp-component-checkable-border-selected);
-      border-radius: var(--mp-component-checkable-circle-radius);
+      background-color: var(--mp-checkable-thumb-default);
+      border: var(--mp-checkable-border-width-default) solid var(--mp-checkable-border-selected);
+      border-radius: var(--mp-checkable-circle-radius);
       cursor: grab;
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-component-checkable-focus-ring);
+        box-shadow: var(--mp-checkable-focus-ring);
       }
 
       &:active {
@@ -106,15 +106,15 @@
 
     &__value {
       position: absolute;
-      bottom: calc(100% + var(--mp-component-checkable-value-offset));
+      bottom: calc(100% + var(--mp-checkable-value-offset));
       left: 50%;
       transform: translateX(-50%);
-      padding: var(--mp-component-checkable-value-padding-block) var(--mp-component-checkable-value-padding-inline);
-      background-color: var(--mp-component-checkable-value-background);
-      color: var(--mp-component-checkable-value-text);
-      border-radius: var(--mp-component-checkable-value-radius);
-      font-family: var(--mp-component-checkable-font-family);
-      font-size: var(--mp-component-checkable-value-font-size);
+      padding: var(--mp-checkable-value-padding-block) var(--mp-checkable-value-padding-inline);
+      background-color: var(--mp-checkable-value-background);
+      color: var(--mp-checkable-value-text);
+      border-radius: var(--mp-checkable-value-radius);
+      font-family: var(--mp-checkable-font-family);
+      font-size: var(--mp-checkable-value-font-size);
       white-space: nowrap;
       pointer-events: none;
     }

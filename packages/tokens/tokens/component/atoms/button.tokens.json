@@ -1,0 +1,633 @@
+{
+  "$description": "Split component source for component.button.",
+  "component": {
+    "button": {
+      "$description": "Button and icon-button contract. Variants are neutral, primary, secondary, tertiary, success, warning, info, error, critical, and ghost; sizes use 2xs through 2xl.",
+      "font-family": {
+        "$value": "{font.family.sans}"
+      },
+      "font-weight": {
+        "$value": "{font.weight.medium}"
+      },
+      "line-height": {
+        "$value": "{line-height.tight}"
+      },
+      "border-width": {
+        "default": {
+          "$value": "{border-width.thin}"
+        }
+      },
+      "spinner": {
+        "border-width": {
+          "$value": "{border-width.thick}"
+        },
+        "radius": {
+          "$value": "{radius.full}"
+        }
+      },
+      "primary": {
+        "background": {
+          "default": {
+            "$value": "{color.primary.default}",
+            "$description": "Primary button fill at rest."
+          },
+          "hover": {
+            "$value": "{color.primary.hover}",
+            "$description": "Primary button fill on hover."
+          },
+          "active": {
+            "$value": "{color.primary.active}",
+            "$description": "Primary button fill while pressed."
+          },
+          "disabled": {
+            "$value": "{color.primary.muted}",
+            "$description": "Primary button fill when disabled."
+          },
+          "loading": {
+            "$value": "{color.primary.default}",
+            "$description": "Primary button fill while loading."
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.on-primary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.primary.default}"
+          },
+          "focus-visible": {
+            "$value": "{color.border.focus}"
+          }
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        },
+        "padding": {
+          "$value": "{size.pad-inline.md}"
+        },
+        "gap": {
+          "$value": "{size.gap.md}"
+        },
+        "radius": {
+          "$value": "{size.radius.md}"
+        },
+        "shadow": {
+          "default": {
+            "$value": "{shadow.sm}"
+          },
+          "active": {
+            "$value": "{shadow.inner}"
+          }
+        },
+        "opacity": {
+          "disabled": {
+            "$value": "{opacity.disabled}"
+          }
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.fast}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        }
+      },
+      "secondary": {
+        "$description": "Secondary button is an outlined treatment with a surface background and stronger border on hover.",
+        "background": {
+          "default": {
+            "$value": "{color.bg.surface}"
+          },
+          "hover": {
+            "$value": "{color.bg.muted}"
+          },
+          "active": {
+            "$value": "{color.bg.sunken}"
+          },
+          "disabled": {
+            "$value": "{color.bg.surface}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.primary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.border.default}"
+          },
+          "hover": {
+            "$value": "{color.border.strong}"
+          },
+          "focus-visible": {
+            "$value": "{color.border.focus}"
+          }
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        },
+        "icon-size": {
+          "$value": "{size.font.lg}"
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.fast}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        }
+      },
+      "neutral": {
+        "$description": "Neutral/default button contract.",
+        "background": {
+          "default": {
+            "$value": "{color.default.default}"
+          },
+          "hover": {
+            "$value": "{color.default.hover}"
+          },
+          "active": {
+            "$value": "{color.default.active}"
+          },
+          "disabled": {
+            "$value": "{color.default.muted}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.on-primary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.border.default}"
+          },
+          "focus-visible": {
+            "$value": "{color.border.focus}"
+          }
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        }
+      },
+      "tertiary": {
+        "$description": "Tertiary button is a transparent, low-emphasis treatment with semantic surface feedback.",
+        "background": {
+          "default": {
+            "$value": "transparent"
+          },
+          "hover": {
+            "$value": "{color.bg.muted}"
+          },
+          "active": {
+            "$value": "{color.bg.sunken}"
+          },
+          "disabled": {
+            "$value": "transparent"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.primary}"
+          },
+          "hover": {
+            "$value": "{color.text.primary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.border.default}"
+          },
+          "focus-visible": {
+            "$value": "{color.border.focus}"
+          }
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        }
+      },
+      "success": {
+        "$description": "Success button contract.",
+        "background": {
+          "default": {
+            "$value": "{color.success.default}"
+          },
+          "hover": {
+            "$value": "{color.success.hover}"
+          },
+          "active": {
+            "$value": "{color.success.hover}"
+          },
+          "disabled": {
+            "$value": "{color.success.muted}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.on-primary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.success.default}"
+          },
+          "focus-visible": {
+            "$value": "{color.border.focus}"
+          }
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        }
+      },
+      "warning": {
+        "$description": "Warning button contract.",
+        "background": {
+          "default": {
+            "$value": "{color.warning.default}"
+          },
+          "hover": {
+            "$value": "{color.warning.hover}"
+          },
+          "active": {
+            "$value": "{color.warning.hover}"
+          },
+          "disabled": {
+            "$value": "{color.warning.muted}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.on-primary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.warning.default}"
+          },
+          "focus-visible": {
+            "$value": "{color.border.focus}"
+          }
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        }
+      },
+      "info": {
+        "$description": "Info button contract.",
+        "background": {
+          "default": {
+            "$value": "{color.info.default}"
+          },
+          "hover": {
+            "$value": "{color.info.hover}"
+          },
+          "active": {
+            "$value": "{color.info.hover}"
+          },
+          "disabled": {
+            "$value": "{color.info.muted}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.on-primary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.info.default}"
+          },
+          "focus-visible": {
+            "$value": "{color.border.focus}"
+          }
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        }
+      },
+      "error": {
+        "$description": "Error button contract.",
+        "background": {
+          "default": {
+            "$value": "{color.error.default}"
+          },
+          "hover": {
+            "$value": "{color.error.hover}"
+          },
+          "active": {
+            "$value": "{color.error.hover}"
+          },
+          "disabled": {
+            "$value": "{color.error.muted}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.on-primary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.error.default}"
+          },
+          "focus-visible": {
+            "$value": "{color.border.focus}"
+          }
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-danger}"
+        }
+      },
+      "critical": {
+        "$description": "Critical button contract.",
+        "background": {
+          "default": {
+            "$value": "{color.critical.default}"
+          },
+          "hover": {
+            "$value": "{color.critical.hover}"
+          },
+          "active": {
+            "$value": "{color.critical.hover}"
+          },
+          "disabled": {
+            "$value": "{color.critical.muted}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.on-primary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.critical.default}"
+          },
+          "focus-visible": {
+            "$value": "{color.border.focus}"
+          }
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-danger}"
+        }
+      },
+      "ghost": {
+        "$description": "Ghost button has a transparent surface and uses semantic text colours.",
+        "background": {
+          "default": {
+            "$value": "transparent"
+          },
+          "hover": {
+            "$value": "{color.bg.muted}"
+          },
+          "active": {
+            "$value": "{color.bg.sunken}"
+          },
+          "disabled": {
+            "$value": "transparent"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.primary}"
+          },
+          "hover": {
+            "$value": "{color.text.primary}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "border": {
+          "default": {
+            "$value": "{color.border.default}"
+          },
+          "focus-visible": {
+            "$value": "{color.border.focus}"
+          }
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        }
+      },
+      "size": {
+        "font": {
+          "$value": "{size.font.md}"
+        },
+        "height": {
+          "$value": "{size.height.md}"
+        },
+        "padding-inline": {
+          "$value": "{size.pad-inline.md}"
+        },
+        "padding-block": {
+          "$value": "{size.pad-block.md}"
+        },
+        "gap": {
+          "$value": "{size.gap.md}"
+        },
+        "radius": {
+          "$value": "{size.radius.md}"
+        },
+        "2xs": {
+          "font-size": {
+            "$value": "{size.font.2xs}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.2xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xs}"
+          }
+        },
+        "xs": {
+          "font-size": {
+            "$value": "{size.font.xs}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.xs}"
+          }
+        },
+        "sm": {
+          "font-size": {
+            "$value": "{size.font.sm}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.sm}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.sm}"
+          }
+        },
+        "md": {
+          "font-size": {
+            "$value": "{size.font.md}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.md}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.md}"
+          }
+        },
+        "lg": {
+          "font-size": {
+            "$value": "{size.font.lg}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.lg}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.lg}"
+          }
+        },
+        "xl": {
+          "font-size": {
+            "$value": "{size.font.xl}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.xl}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.xl}"
+          }
+        },
+        "2xl": {
+          "font-size": {
+            "$value": "{size.font.2xl}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.2xl}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xl}"
+          }
+        }
+      },
+      "icon-button": {
+        "$description": "Icon-button chrome; the icon glyph inherits currentColor and keeps its 1em local sizing.",
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "radius": {
+          "$value": "{radius.sm}"
+        },
+        "color": {
+          "$value": "{color.text.secondary}"
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        },
+        "opacity": {
+          "disabled": {
+            "$value": "{opacity.disabled}"
+          }
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.fast}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        },
+        "size": {
+          "2xs": {
+            "font-size": {
+              "$value": "{size.font.2xs}"
+            },
+            "padding": {
+              "$value": "{size.pad-block.2xs}"
+            }
+          },
+          "xs": {
+            "font-size": {
+              "$value": "{size.font.xs}"
+            },
+            "padding": {
+              "$value": "{size.pad-block.xs}"
+            }
+          },
+          "sm": {
+            "font-size": {
+              "$value": "{size.font.sm}"
+            },
+            "padding": {
+              "$value": "{size.pad-block.sm}"
+            }
+          },
+          "md": {
+            "font-size": {
+              "$value": "{size.font.md}"
+            },
+            "padding": {
+              "$value": "{size.pad-block.md}"
+            }
+          },
+          "lg": {
+            "font-size": {
+              "$value": "{size.font.lg}"
+            },
+            "padding": {
+              "$value": "{size.pad-block.lg}"
+            }
+          },
+          "xl": {
+            "font-size": {
+              "$value": "{size.font.xl}"
+            },
+            "padding": {
+              "$value": "{size.pad-block.xl}"
+            }
+          },
+          "2xl": {
+            "font-size": {
+              "$value": "{size.font.2xl}"
+            },
+            "padding": {
+              "$value": "{size.pad-block.2xl}"
+            }
+          }
+        }
+      }
+    }
+  }
+}

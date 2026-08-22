@@ -49,52 +49,19 @@
     "gap": {
       "$description": "Per-size internal gap between elements (e.g. icon-to-label) in sized controls; also reused as the margin scale.",
       "$type": "dimension",
-      "2xs": { "$value": "0.143rem" },
-      "xs": { "$value": "0.286rem" },
       "sm": { "$value": "0.429rem" },
-      "md": { "$value": "0.571rem" },
-      "lg": { "$value": "0.857rem" },
-      "xl": { "$value": "1.143rem" },
-      "2xl": { "$value": "1.714rem" }
+      "md": { "$value": "0.571rem" }
     },
     "radius": {
       "$description": "Per-size corner radius for sized controls.",
       "$type": "dimension",
-      "2xs": { "$value": "0.143rem" },
-      "xs": { "$value": "0.286rem" },
-      "sm": { "$value": "0.286rem" },
-      "md": { "$value": "0.429rem" },
-      "lg": { "$value": "0.571rem" },
-      "xl": { "$value": "0.714rem" },
-      "2xl": { "$value": "0.857rem" }
+      "md": { "$value": "0.429rem" }
     },
     "icon": {
       "$description": "Per-size icon dimension (square) for sized controls.",
       "$type": "dimension",
-      "2xs": { "$value": "0.643rem" },
-      "xs": { "$value": "0.786rem" },
-      "sm": { "$value": "0.929rem" },
       "md": { "$value": "1rem" },
-      "lg": { "$value": "1.143rem" },
-      "xl": { "$value": "1.286rem" },
-      "2xl": { "$value": "1.714rem" }
-    },
-    "shadow": {
-      "$description": "Per-size elevation shadow (rem-based mirror of the absolute shadow scale) for sized surfaces.",
-      "$type": "shadow",
-      "2xs": { "$value": "0 0.071rem 0.071rem 0 rgb(0 0 0 / 3%)" },
-      "xs": { "$value": "0 0.071rem 0.143rem 0 rgb(0 0 0 / 5%)" },
-      "sm": { "$value": "0 0.071rem 0.214rem 0 rgb(0 0 0 / 10%), 0 0.071rem 0.143rem -0.071rem rgb(0 0 0 / 10%)" },
-      "md": {
-        "$value": "0 0.286rem 0.429rem -0.071rem rgb(0 0 0 / 10%), 0 0.143rem 0.286rem -0.143rem rgb(0 0 0 / 10%)"
-      },
-      "lg": {
-        "$value": "0 0.714rem 1.071rem -0.214rem rgb(0 0 0 / 10%), 0 0.286rem 0.429rem -0.286rem rgb(0 0 0 / 10%)"
-      },
-      "xl": {
-        "$value": "0 1.429rem 1.786rem -0.357rem rgb(0 0 0 / 10%), 0 0.571rem 0.714rem -0.429rem rgb(0 0 0 / 10%)"
-      },
-      "2xl": { "$value": "0 1.786rem 3.571rem -0.857rem rgb(0 0 0 / 25%)" }
+      "lg": { "$value": "1.143rem" }
     },
     "height": {
       "$description": "Per-size control height (e.g. button / input height).",

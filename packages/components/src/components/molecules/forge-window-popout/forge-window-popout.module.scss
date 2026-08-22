@@ -15,7 +15,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-overlay-window-popout-gap);
+    gap: var(--mp-overlay-window-popout-gap);
 
     &__inline {
       width: 100%;
@@ -29,11 +29,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: var(--mp-component-overlay-window-popout-placeholder-padding);
-      border: var(--mp-component-overlay-window-popout-placeholder-border-width) dashed var(--mp-component-overlay-window-popout-placeholder-border);
-      border-radius: var(--mp-component-overlay-window-popout-placeholder-radius);
-      background-color: var(--mp-component-overlay-window-popout-placeholder-surface);
-      min-height: var(--mp-component-overlay-window-popout-placeholder-min-height);
+      padding: var(--mp-overlay-window-popout-placeholder-padding);
+      border: var(--mp-overlay-window-popout-placeholder-border-width) dashed var(--mp-overlay-window-popout-placeholder-border);
+      border-radius: var(--mp-overlay-window-popout-placeholder-radius);
+      background-color: var(--mp-overlay-window-popout-placeholder-surface);
+      min-height: var(--mp-overlay-window-popout-placeholder-min-height);
     }
 
     &__placeholder-text {
@@ -48,32 +48,32 @@
     &__toggle {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-component-overlay-window-popout-toggle-gap);
-      padding: var(--mp-component-overlay-window-popout-toggle-padding-block) var(--mp-component-overlay-window-popout-toggle-padding-inline);
-      border: var(--mp-component-overlay-window-popout-toggle-border-width) solid var(--mp-component-overlay-window-popout-toggle-border-default);
-      border-radius: var(--mp-component-overlay-window-popout-toggle-radius);
-      background: var(--mp-component-overlay-window-popout-toggle-surface-default);
-      color: var(--mp-component-overlay-window-popout-toggle-text-default);
+      gap: var(--mp-overlay-window-popout-toggle-gap);
+      padding: var(--mp-overlay-window-popout-toggle-padding-block) var(--mp-overlay-window-popout-toggle-padding-inline);
+      border: var(--mp-overlay-window-popout-toggle-border-width) solid var(--mp-overlay-window-popout-toggle-border-default);
+      border-radius: var(--mp-overlay-window-popout-toggle-radius);
+      background: var(--mp-overlay-window-popout-toggle-surface-default);
+      color: var(--mp-overlay-window-popout-toggle-text-default);
       cursor: pointer;
       transition:
-        background-color var(--mp-component-overlay-window-popout-toggle-transition-duration) var(--mp-component-overlay-window-popout-toggle-transition-easing),
-        color var(--mp-component-overlay-window-popout-toggle-transition-duration) var(--mp-component-overlay-window-popout-toggle-transition-easing),
-        border-color var(--mp-component-overlay-window-popout-toggle-transition-duration) var(--mp-component-overlay-window-popout-toggle-transition-easing);
+        background-color var(--mp-overlay-window-popout-toggle-transition-duration) var(--mp-overlay-window-popout-toggle-transition-easing),
+        color var(--mp-overlay-window-popout-toggle-transition-duration) var(--mp-overlay-window-popout-toggle-transition-easing),
+        border-color var(--mp-overlay-window-popout-toggle-transition-duration) var(--mp-overlay-window-popout-toggle-transition-easing);
 
       &:hover {
-        background-color: var(--mp-component-overlay-window-popout-toggle-surface-hover);
-        border-color: var(--mp-component-overlay-window-popout-toggle-border-hover);
+        background-color: var(--mp-overlay-window-popout-toggle-surface-hover);
+        border-color: var(--mp-overlay-window-popout-toggle-border-hover);
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-component-overlay-window-popout-toggle-focus-ring);
+        box-shadow: var(--mp-overlay-window-popout-toggle-focus-ring);
       }
 
       &[aria-pressed='true'] {
-        background-color: var(--mp-component-overlay-window-popout-toggle-surface-selected);
-        color: var(--mp-component-overlay-window-popout-toggle-text-selected);
-        border-color: var(--mp-component-overlay-window-popout-toggle-border-selected);
+        background-color: var(--mp-overlay-window-popout-toggle-surface-selected);
+        color: var(--mp-overlay-window-popout-toggle-text-selected);
+        border-color: var(--mp-overlay-window-popout-toggle-border-selected);
       }
     }
   }

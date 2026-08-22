@@ -1,31 +1,31 @@
 @layer mp.content {
   .wysiwyg-block-menu__trigger {
     display: inline-flex;
-    gap: var(--mp-component-editor-block-menu-trigger-gap);
+    gap: var(--mp-editor-block-menu-trigger-gap);
     align-items: center;
     min-width: 8rem;
-    padding: var(--mp-component-editor-block-menu-trigger-padding-block)
-      var(--mp-component-editor-block-menu-trigger-padding-inline);
-    color: var(--mp-component-editor-block-menu-trigger-text);
+    padding: var(--mp-editor-block-menu-trigger-padding-block)
+      var(--mp-editor-block-menu-trigger-padding-inline);
+    color: var(--mp-editor-block-menu-trigger-text);
     font: inherit;
     background-color: transparent;
-    border: var(--mp-component-editor-block-menu-trigger-border-width) solid
-      var(--mp-component-editor-block-menu-trigger-border);
-    border-radius: var(--mp-component-editor-block-menu-trigger-radius);
+    border: var(--mp-editor-block-menu-trigger-border-width) solid
+      var(--mp-editor-block-menu-trigger-border);
+    border-radius: var(--mp-editor-block-menu-trigger-radius);
     cursor: pointer;
 
     &:hover:not(:disabled) {
-      background-color: var(--mp-component-editor-block-menu-trigger-surface-hover);
+      background-color: var(--mp-editor-block-menu-trigger-surface-hover);
     }
 
     &:focus-visible {
-      outline: var(--mp-component-editor-block-menu-trigger-focus-border-width) solid
-        var(--mp-component-editor-block-menu-trigger-focus-border);
+      outline: var(--mp-editor-block-menu-trigger-focus-border-width) solid
+        var(--mp-editor-block-menu-trigger-focus-border);
       outline-offset: 1px;
     }
 
     &:disabled {
-      opacity: var(--mp-component-editor-block-menu-trigger-opacity-disabled);
+      opacity: var(--mp-editor-block-menu-trigger-opacity-disabled);
       cursor: not-allowed;
     }
   }
@@ -38,42 +38,42 @@
   .wysiwyg-block-menu__list {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-editor-block-menu-list-gap);
+    gap: var(--mp-editor-block-menu-list-gap);
     min-width: 10rem;
     margin: 0;
-    padding: var(--mp-component-editor-block-menu-list-padding);
-    color: var(--mp-component-editor-block-menu-list-text);
-    background-color: var(--mp-component-editor-block-menu-list-surface);
-    border-radius: var(--mp-component-editor-block-menu-list-radius);
+    padding: var(--mp-editor-block-menu-list-padding);
+    color: var(--mp-editor-block-menu-list-text);
+    background-color: var(--mp-editor-block-menu-list-surface);
+    border-radius: var(--mp-editor-block-menu-list-radius);
     list-style: none;
   }
 
   .wysiwyg-block-menu__item {
     display: block;
     width: 100%;
-    padding: var(--mp-component-editor-block-menu-item-padding-block)
-      var(--mp-component-editor-block-menu-item-padding-inline);
-    color: var(--mp-component-editor-block-menu-item-text-default);
+    padding: var(--mp-editor-block-menu-item-padding-block)
+      var(--mp-editor-block-menu-item-padding-inline);
+    color: var(--mp-editor-block-menu-item-text-default);
     font: inherit;
     text-align: start;
     background-color: transparent;
     border: none;
-    border-radius: var(--mp-component-editor-block-menu-item-radius);
+    border-radius: var(--mp-editor-block-menu-item-radius);
     cursor: pointer;
 
     &:hover {
-      background-color: var(--mp-component-editor-block-menu-item-surface-hover);
+      background-color: var(--mp-editor-block-menu-item-surface-hover);
     }
 
     &:focus-visible {
-      outline: var(--mp-component-editor-block-menu-item-focus-border-width) solid
-        var(--mp-component-editor-block-menu-item-focus-border);
+      outline: var(--mp-editor-block-menu-item-focus-border-width) solid
+        var(--mp-editor-block-menu-item-focus-border);
       outline-offset: -2px;
     }
   }
 
   .wysiwyg-block-menu__item--active {
-    color: var(--mp-component-editor-block-menu-item-text-active);
-    font-weight: var(--mp-component-editor-block-menu-item-active-font-weight);
+    color: var(--mp-editor-block-menu-item-text-active);
+    font-weight: var(--mp-editor-block-menu-item-active-font-weight);
   }
 }

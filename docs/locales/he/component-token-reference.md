@@ -10,12 +10,12 @@
 
 ## קורא את החוזה
 
-מקור האמת הוא [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
+מקור האמת הוא [`packages/tokens/tokens/component/<atomic-level>/`](../../../packages/tokens/tokens/component/<atomic-level>/).
 הנתיב שלו ממפה ישירות למאפיין מותאם אישית של CSS ולמשתנה Figma:
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
@@ -265,7 +265,7 @@ packages/*/src/components/**/*.module.scss
 ## צ'ק רשימת מסירת Figma
 
 1. צור את `Mission Platform / Component` אוסף משתנה עם מצבי אור וחושך.
-2. ייבא את נתיבי הרכיבים מ `component.tokens.json`, שמירה על מקטעי רכיב, וריאציה, משבצת ומצב.
+2. ייבא את נתיבי הרכיבים מ `component/<atomic-level>/`, שמירה על מקטעי רכיב, וריאציה, משבצת ומצב.
 3. קשר משתני רכיבים למשתנים הפרימיטיביים/סמנטיים המתאימים במקום להעתיק ערכי צבע גולמי או קנה מידה.
 4. צור מאפייני רכיב עבור הגרסאות והגדלים המתועדים; צור גרסאות מצב רק עבור מדינות הרשומות במלאי.
 5. שמור נוסחאות פריסה, נקודות עצירה של נקודת מבט, התנהגות בד והתנהגות DOM/נגישות מחוץ לאוסף המשתנים החזותיים.

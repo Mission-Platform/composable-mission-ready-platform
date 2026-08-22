@@ -6,10 +6,10 @@
   .forge-mermaid {
     min-width: 0;
     overflow-x: auto;
-    padding: var(--mp-component-code-padding);
-    border: var(--mp-component-code-border-default) solid var(--mp-component-code-border-width);
-    border-radius: var(--mp-component-code-radius);
-    background: var(--mp-component-code-surface-default);
+    padding: var(--mp-code-padding);
+    border: var(--mp-code-border-default) solid var(--mp-code-border-width);
+    border-radius: var(--mp-code-radius);
+    background: var(--mp-code-surface-default);
     text-align: center;
 
     svg {
@@ -26,22 +26,22 @@
   .forge-mermaid__error pre {
     margin: 0;
     overflow-x: auto;
-    color: var(--mp-component-code-error-text);
-    font-family: var(--mp-component-code-typography-font-family);
-    font-size: var(--mp-component-code-typography-font-size);
-    line-height: var(--mp-component-code-typography-line-height);
+    color: var(--mp-code-error-text);
+    font-family: var(--mp-code-typography-font-family);
+    font-size: var(--mp-code-typography-font-size);
+    line-height: var(--mp-code-typography-line-height);
     text-align: left;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
 
   .forge-mermaid__error {
-    color: var(--mp-component-code-text-default);
+    color: var(--mp-code-text-default);
     text-align: left;
 
     p {
-      margin: 0 0 var(--mp-component-code-error-margin-bottom);
-      font-weight: var(--mp-component-code-error-font-weight);
+      margin: 0 0 var(--mp-code-error-margin-bottom);
+      font-weight: var(--mp-code-error-font-weight);
     }
   }
 }

@@ -1,0 +1,120 @@
+{
+  "$description": "Split component source for component.time.",
+  "component": {
+    "time": {
+      "$description": "ForgeTimeInput and ForgeTimeRangeInput popover list and action roles.",
+      "popover-padding": {
+        "$value": "{spacing.2}"
+      },
+      "columns-gap": {
+        "$value": "{spacing.1}"
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "secondary": {
+          "$value": "{color.text.secondary}"
+        },
+        "muted": {
+          "$value": "{color.text.tertiary}"
+        },
+        "selected": {
+          "$value": "{color.text.on-primary}"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        },
+        "focus": {
+          "$value": "{color.border.focus}"
+        },
+        "focus-width": {
+          "$value": "{border-width.thick}"
+        }
+      },
+      "surface": {
+        "hover": {
+          "$value": "{color.bg.muted}"
+        },
+        "selected": {
+          "$value": "{color.primary.default}"
+        }
+      },
+      "font-size": {
+        "separator": {
+          "$value": "{font.size.md}"
+        },
+        "header": {
+          "$value": "{font.size.xs}"
+        },
+        "unit": {
+          "$value": "{font.size.sm}"
+        }
+      },
+      "font-weight": {
+        "medium": {
+          "$value": "{font.weight.medium}"
+        },
+        "selected": {
+          "$value": "{font.weight.semibold}"
+        }
+      },
+      "unit-padding": {
+        "block": {
+          "$value": "{spacing.1}"
+        },
+        "inline": {
+          "$value": "{spacing.2}"
+        }
+      },
+      "unit-radius": {
+        "$value": "{radius.sm}"
+      },
+      "done-padding": {
+        "block": {
+          "$value": "{spacing.1}"
+        },
+        "inline": {
+          "$value": "{spacing.3}"
+        }
+      },
+      "done-radius": {
+        "$value": "{radius.md}"
+      },
+      "timezone-gap": {
+        "$value": "{spacing.1}"
+      },
+      "timezone-margin": {
+        "$value": "{spacing.2}"
+      },
+      "panes-gap": {
+        "$value": "{spacing.4}"
+      },
+      "pane-gap": {
+        "$value": "{spacing.1}"
+      },
+      "header-gap": {
+        "$value": "{spacing.1}"
+      },
+      "header-padding": {
+        "$value": "{spacing.1}"
+      },
+      "footer-gap": {
+        "$value": "{spacing.2}"
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}"
+        },
+        "easing": {
+          "$value": "{easing.standard}"
+        }
+      },
+      "done-hover-opacity": {
+        "$value": 0.9
+      }
+    }
+  }
+}

@@ -16,14 +16,14 @@
      * modifier scales them together) and the same leading — otherwise the two
      * columns drift apart and the numbers stop matching their lines.
      */
-    --mp-code-block-line-height: var(--mp-component-code-typography-line-height);
+    --mp-code-block-line-height: var(--mp-code-typography-line-height);
 
-    border: var(--mp-component-code-border-width) solid var(--mp-component-code-border-default);
-    border-radius: var(--mp-component-code-radius);
-    background-color: var(--mp-component-code-surface-default);
+    border: var(--mp-code-border-width) solid var(--mp-code-border-default);
+    border-radius: var(--mp-code-radius);
+    background-color: var(--mp-code-surface-default);
     overflow: hidden;
-    font-family: var(--mp-component-code-typography-font-family);
-    font-size: var(--mp-component-code-typography-font-size);
+    font-family: var(--mp-code-typography-font-family);
+    font-size: var(--mp-code-typography-font-size);
 
     &__header {
       position: sticky;
@@ -32,16 +32,16 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--mp-component-code-header-padding-block) var(--mp-component-code-header-padding-inline);
-      border-bottom: var(--mp-component-code-border-width) solid var(--mp-component-code-header-border);
-      background-color: var(--mp-component-code-header-surface);
-      gap: var(--mp-component-code-header-gap);
+      padding: var(--mp-code-header-padding-block) var(--mp-code-header-padding-inline);
+      border-bottom: var(--mp-code-border-width) solid var(--mp-code-header-border);
+      background-color: var(--mp-code-header-surface);
+      gap: var(--mp-code-header-gap);
     }
 
     &__filename {
-      font-family: var(--mp-component-code-filename-font-family);
-      font-size: var(--mp-component-code-filename-font-size);
-      color: var(--mp-component-code-filename-text);
+      font-family: var(--mp-code-filename-font-family);
+      font-size: var(--mp-code-filename-font-size);
+      color: var(--mp-code-filename-text);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -50,9 +50,9 @@
     }
 
     &__language {
-      font-family: var(--mp-component-code-language-font-family);
-      font-size: var(--mp-component-code-language-font-size);
-      color: var(--mp-component-code-language-text);
+      font-family: var(--mp-code-language-font-family);
+      font-size: var(--mp-code-language-font-size);
+      color: var(--mp-code-language-text);
       text-transform: lowercase;
       flex: 1;
       min-width: 0;
@@ -61,20 +61,20 @@
     &__copy {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-component-code-copy-gap);
-      padding: var(--mp-component-code-copy-padding-block) var(--mp-component-code-copy-padding-inline);
-      border: var(--mp-component-code-copy-border-default) solid var(--mp-component-code-copy-border-width-default);
-      border-radius: var(--mp-component-code-copy-radius);
-      background: var(--mp-component-code-copy-surface-default);
-      color: var(--mp-component-code-copy-text-default);
-      font-family: var(--mp-component-code-copy-font-family);
-      font-size: var(--mp-component-code-copy-font-size);
+      gap: var(--mp-code-copy-gap);
+      padding: var(--mp-code-copy-padding-block) var(--mp-code-copy-padding-inline);
+      border: var(--mp-code-copy-border-default) solid var(--mp-code-copy-border-width-default);
+      border-radius: var(--mp-code-copy-radius);
+      background: var(--mp-code-copy-surface-default);
+      color: var(--mp-code-copy-text-default);
+      font-family: var(--mp-code-copy-font-family);
+      font-size: var(--mp-code-copy-font-size);
       line-height: 1;
       cursor: pointer;
       transition:
-        color var(--mp-component-code-copy-transition-duration) var(--mp-component-code-copy-transition-easing),
-        border-color var(--mp-component-code-copy-transition-duration) var(--mp-component-code-copy-transition-easing),
-        background-color var(--mp-component-code-copy-transition-duration) var(--mp-component-code-copy-transition-easing);
+        color var(--mp-code-copy-transition-duration) var(--mp-code-copy-transition-easing),
+        border-color var(--mp-code-copy-transition-duration) var(--mp-code-copy-transition-easing),
+        background-color var(--mp-code-copy-transition-duration) var(--mp-code-copy-transition-easing);
       white-space: nowrap;
       flex-shrink: 0;
 
@@ -86,13 +86,13 @@
       }
 
       &:hover {
-        color: var(--mp-component-code-copy-text-hover);
-        border-color: var(--mp-component-code-copy-border-hover);
-        background-color: var(--mp-component-code-copy-surface-hover);
+        color: var(--mp-code-copy-text-hover);
+        border-color: var(--mp-code-copy-border-hover);
+        background-color: var(--mp-code-copy-surface-hover);
       }
 
       &:focus-visible {
-        outline: var(--mp-component-code-copy-border-width-focus-visible) solid var(--mp-component-code-copy-border-focus-visible);
+        outline: var(--mp-code-copy-border-width-focus-visible) solid var(--mp-code-copy-border-focus-visible);
         outline-offset: 2px;
       }
     }
@@ -110,9 +110,9 @@
       display: block;
       flex-shrink: 0;
       user-select: none;
-      padding: var(--mp-component-code-gutter-padding-block) var(--mp-component-code-gutter-padding-inline-end) var(--mp-component-code-gutter-padding-block) var(--mp-component-code-gutter-padding-inline-start);
-      color: var(--mp-component-code-gutter-text);
-      font-family: var(--mp-component-code-typography-font-family);
+      padding: var(--mp-code-gutter-padding-block) var(--mp-code-gutter-padding-inline-end) var(--mp-code-gutter-padding-block) var(--mp-code-gutter-padding-inline-start);
+      color: var(--mp-code-gutter-text);
+      font-family: var(--mp-code-typography-font-family);
       font-size: inherit;
       line-height: var(--mp-code-block-line-height);
       font-variant-numeric: tabular-nums;
@@ -126,12 +126,12 @@
 
     &__pre {
       margin: 0;
-      padding: var(--mp-component-code-padding);
+      padding: var(--mp-code-padding);
       background: transparent;
       overflow: visible;
       flex: 1;
       min-width: 0;
-      font-family: var(--mp-component-code-typography-font-family);
+      font-family: var(--mp-code-typography-font-family);
       font-size: inherit;
       line-height: var(--mp-code-block-line-height);
     }
@@ -164,10 +164,10 @@
         )
     {
       &--#{$name} {
-        border-color: var(--mp-component-code-variant-#{$family}-border);
+        border-color: var(--mp-code-variant-#{$family}-border);
 
         .forge-code-block__header {
-          border-bottom-color: var(--mp-component-code-variant-#{$family}-border);
+          border-bottom-color: var(--mp-code-variant-#{$family}-border);
         }
       }
     }

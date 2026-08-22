@@ -10,12 +10,12 @@
 
 ## 계약서 읽기
 
-진실의 근원은 [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
+진실의 근원은 [`packages/tokens/tokens/component/<atomic-level>/`](../../../packages/tokens/tokens/component/<atomic-level>/).
 해당 경로는 CSS 사용자 정의 속성 및 Figma 변수에 직접 매핑됩니다.
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
@@ -265,7 +265,7 @@ packages/*/src/components/**/*.module.scss
 ## Figma 핸드오프 체크리스트
 
 1. 생성 `Mission Platform / Component` 밝은 모드와 어두운 모드를 사용한 변수 컬렉션.
-2. 다음에서 구성 요소 경로를 가져옵니다. `component.tokens.json`, 구성 요소, 변형, 슬롯 및 상태 세그먼트를 유지합니다.
+2. 다음에서 구성 요소 경로를 가져옵니다. `component/<atomic-level>/`, 구성 요소, 변형, 슬롯 및 상태 세그먼트를 유지합니다.
 3. 원시 색상이나 스케일 값을 복사하는 대신 구성 요소 변수를 해당 기본/의미 변수에 바인딩합니다.
 4. 문서화된 변형 및 크기에 대한 구성요소 속성을 생성합니다. 인벤토리에 나열된 상태에 대해서만 상태 변형을 만듭니다.
 5. 시각적 변수 컬렉션 외부에 레이아웃 수식, 뷰포트 중단점, 캔버스 동작 및 DOM/접근성 동작을 유지합니다.

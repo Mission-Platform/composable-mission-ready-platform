@@ -1,0 +1,99 @@
+{
+  "$description": "Split component source for component.debug.",
+  "component": {
+    "debug": {
+      "$description": "Development-only diagnostic surfaces. These tokens describe visible debug chrome without implying runtime component behavior.",
+      "breakpoint": {
+        "$description": "ForgeBreakpointDebug fixed viewport badge. Its always-dark opaque surface preserves readable inverse text in both theme modes; viewport observation and breakpoint calculations remain local.",
+        "surface": {
+          "$value": "rgb(8 6 13 / 85%)"
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.inverse}"
+          },
+          "current": {
+            "$value": "{color.success.muted}"
+          },
+          "active": {
+            "$value": "{color.text.primary}"
+          }
+        },
+        "gap": {
+          "$value": "{spacing.1}"
+        },
+        "padding": {
+          "block": {
+            "$value": "{spacing.1}"
+          },
+          "inline": {
+            "$value": "{spacing.2}"
+          }
+        },
+        "radius": {
+          "$value": "{radius.sm}"
+        },
+        "typography": {
+          "font-family": {
+            "$value": "{font.family.mono}"
+          },
+          "font-size": {
+            "$value": "{size.font.2xs}"
+          },
+          "font-weight": {
+            "$value": "{font.weight.bold}"
+          }
+        },
+        "label": {
+          "margin": {
+            "$value": "{spacing.1}"
+          },
+          "opacity": {
+            "$value": "{opacity.subtle}"
+          }
+        },
+        "separator": {
+          "margin": {
+            "$value": "{spacing.1}"
+          },
+          "opacity": {
+            "$value": "{opacity.content-disabled}"
+          }
+        },
+        "badge": {
+          "padding-block": {
+            "$value": "{size.pad-block.2xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xs}"
+          },
+          "radius": {
+            "$value": "{radius.xs}"
+          },
+          "text": {
+            "$value": "{color.text.inverse}"
+          },
+          "active": {
+            "surface": {
+              "$value": "{color.success.muted}"
+            },
+            "text": {
+              "$value": "{color.text.primary}"
+            }
+          }
+        },
+        "px": {
+          "margin": {
+            "$value": "0.1rem"
+          },
+          "font-size": {
+            "$value": "{size.font.2xs}"
+          },
+          "text": {
+            "$value": "inherit"
+          }
+        }
+      }
+    }
+  }
+}

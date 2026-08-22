@@ -29,6 +29,16 @@ export {
 } from './generators/scss.js';
 export { buildBarrelModule, buildTokenModule } from './generators/typescript.js';
 export { generateTokens } from './generate.js';
+export {
+  collectTokenReachability,
+  writeTokenReachabilityReport,
+  type TokenAliasEdge,
+  type TokenReachabilityOptions,
+  type TokenReachabilityReport,
+  type TokenUsageEvidence,
+  type TokenUsageRecord,
+  type TokenUsageStatus,
+} from './reachability.js';
 
 /**
  * Vite plugin that generates the Mission Platform design-token artefacts from the

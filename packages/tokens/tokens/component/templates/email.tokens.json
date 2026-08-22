@@ -1,0 +1,35 @@
+{
+  "$description": "Split component source for component.email.",
+  "component": {
+    "email": {
+      "$description": "Email components use the same semantic roles when translated to inline email CSS. Email clients do not consume runtime custom properties; the email renderer resolves this contract at generation time.",
+      "surface": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "raised": {
+          "$value": "{color.bg.raised}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "inverse": {
+          "$value": "{color.text.inverse}"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        }
+      },
+      "padding": {
+        "$value": "{spacing.md}"
+      },
+      "radius": {
+        "$value": "{radius.md}"
+      }
+    }
+  }
+}

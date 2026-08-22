@@ -67,8 +67,8 @@
   .forge-toast-enter-active,
   .forge-toast-leave-active {
     transition:
-      opacity var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing),
-      transform var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing);
+      opacity var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
+      transform var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing);
   }
 
   .forge-toast-enter-from,

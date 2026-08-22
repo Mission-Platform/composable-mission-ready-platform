@@ -1,0 +1,48 @@
+{
+  "$description": "Split component source for component.button-group.",
+  "component": {
+    "button-group": {
+      "$description": "Attached and detached button-group chrome. Flex direction, responsive gap formulas, border-radius collapsing, and focus stacking remain local.",
+      "gap": {
+        "none": {
+          "$value": "{spacing.0}"
+        },
+        "xs": {
+          "$value": "{spacing.1}"
+        },
+        "sm": {
+          "$value": "{spacing.2}"
+        },
+        "md": {
+          "$value": "{spacing.3}"
+        }
+      },
+      "border": {
+        "primary": {
+          "$value": "{color.primary.subtle}"
+        },
+        "secondary": {
+          "$value": "{color.secondary.subtle}"
+        },
+        "tertiary": {
+          "$value": "{color.tertiary.subtle}"
+        },
+        "success": {
+          "$value": "{color.success.subtle}"
+        },
+        "warning": {
+          "$value": "{color.warning.subtle}"
+        },
+        "info": {
+          "$value": "{color.info.subtle}"
+        },
+        "error": {
+          "$value": "{color.error.subtle}"
+        },
+        "critical": {
+          "$value": "{color.critical.subtle}"
+        }
+      }
+    }
+  }
+}

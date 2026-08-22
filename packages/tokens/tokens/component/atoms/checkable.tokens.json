@@ -1,0 +1,365 @@
+{
+  "$description": "Split component source for component.checkable.",
+  "component": {
+    "checkable": {
+      "$description": "Checkbox, radio, switch, rating, slider, and range controls.",
+      "thumb": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "selected": {
+          "$value": "{color.primary.default}"
+        },
+        "disabled": {
+          "$value": "{color.text.disabled}"
+        },
+        "on-track": {
+          "$value": "{color.text.on-primary}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "disabled": {
+          "$value": "{color.text.disabled}"
+        }
+      },
+      "font-family": {
+        "$value": "{font.family.sans}"
+      },
+      "glyph-font-size": {
+        "$value": "12px",
+        "$description": "Exact checkmark/minus glyph size used by the checkbox indicator."
+      },
+      "glyph-font-weight": {
+        "$value": "{font.weight.bold}"
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        },
+        "selected": {
+          "$value": "{color.primary.default}"
+        },
+        "focus-visible": {
+          "$value": "{color.border.focus}"
+        },
+        "invalid": {
+          "$value": "{color.danger.default}"
+        }
+      },
+      "border-width": {
+        "default": {
+          "$value": "{border-width.thick}",
+          "$description": "Default control stroke (radio/checkbox/thumb)."
+        },
+        "focus": {
+          "$value": "{border-width.thick}",
+          "$description": "Focus-visible outline width."
+        },
+        "invalid": {
+          "$value": "{border-width.thin}",
+          "$description": "Invalid/error outline width (switch error track)."
+        }
+      },
+      "focus-ring": {
+        "$value": "{shadow.focus-primary}"
+      },
+      "gap": {
+        "inline": {
+          "$value": "{spacing.2}",
+          "$description": "Horizontal gap between control and label (radio, switch row)."
+        },
+        "stack": {
+          "$value": "{spacing.1}",
+          "$description": "Tight stacked gap (switch field column, rating stars)."
+        }
+      },
+      "rating": {
+        "filled": {
+          "$value": "{color.warning.default}"
+        },
+        "empty": {
+          "$value": "{color.border.default}"
+        }
+      },
+      "shadow": {
+        "$value": "{shadow.sm}"
+      },
+      "radius": {
+        "$value": "{radius.sm}"
+      },
+      "circle-radius": {
+        "$value": "{radius.full}"
+      },
+      "control-size": {
+        "$value": "{size.checkable.control}"
+      },
+      "indicator-size": {
+        "$value": "{size.checkable.indicator}"
+      },
+      "value": {
+        "background": {
+          "$value": "{color.text.primary}"
+        },
+        "text": {
+          "$value": "{color.bg.surface}"
+        },
+        "padding-block": {
+          "$value": "{spacing.1}",
+          "$description": "Value badge vertical padding (range/slider)."
+        },
+        "padding-inline": {
+          "$value": "{spacing.2}",
+          "$description": "Value badge horizontal padding (range/slider)."
+        },
+        "radius": {
+          "$value": "{radius.sm}"
+        },
+        "font-size": {
+          "$value": "{size.font.xs}"
+        }
+      },
+      "value-offset": {
+        "$value": "{spacing.1}"
+      },
+      "size": {
+        "2xs": {
+          "track-height": {
+            "$value": "{size.checkable.2xs.slider-track-height}"
+          },
+          "thumb-size": {
+            "$value": "{size.checkable.2xs.slider-thumb-size}"
+          },
+          "rating-font-size": {
+            "$value": "{size.checkable.2xs.rating-font-size}"
+          },
+          "switch": {
+            "width": {
+              "$value": "{size.checkable.2xs.switch.width}"
+            },
+            "height": {
+              "$value": "{size.checkable.2xs.switch.height}"
+            },
+            "padding": {
+              "$value": "{size.checkable.2xs.switch.padding}"
+            },
+            "thumb-size": {
+              "$value": "{size.checkable.2xs.switch.thumb-size}"
+            },
+            "translate": {
+              "$value": "{size.checkable.2xs.switch.translate}"
+            }
+          }
+        },
+        "xs": {
+          "track-height": {
+            "$value": "{size.checkable.xs.slider-track-height}"
+          },
+          "thumb-size": {
+            "$value": "{size.checkable.xs.slider-thumb-size}"
+          },
+          "rating-font-size": {
+            "$value": "{size.checkable.xs.rating-font-size}"
+          },
+          "switch": {
+            "width": {
+              "$value": "{size.checkable.xs.switch.width}"
+            },
+            "height": {
+              "$value": "{size.checkable.xs.switch.height}"
+            },
+            "padding": {
+              "$value": "{size.checkable.xs.switch.padding}"
+            },
+            "thumb-size": {
+              "$value": "{size.checkable.xs.switch.thumb-size}"
+            },
+            "translate": {
+              "$value": "{size.checkable.xs.switch.translate}"
+            }
+          }
+        },
+        "sm": {
+          "track-height": {
+            "$value": "{size.checkable.sm.slider-track-height}"
+          },
+          "thumb-size": {
+            "$value": "{size.checkable.sm.slider-thumb-size}"
+          },
+          "rating-font-size": {
+            "$value": "{size.checkable.sm.rating-font-size}"
+          },
+          "switch": {
+            "width": {
+              "$value": "{size.checkable.sm.switch.width}"
+            },
+            "height": {
+              "$value": "{size.checkable.sm.switch.height}"
+            },
+            "padding": {
+              "$value": "{size.checkable.sm.switch.padding}"
+            },
+            "thumb-size": {
+              "$value": "{size.checkable.sm.switch.thumb-size}"
+            },
+            "translate": {
+              "$value": "{size.checkable.sm.switch.translate}"
+            }
+          }
+        },
+        "md": {
+          "track-height": {
+            "$value": "{size.checkable.md.slider-track-height}"
+          },
+          "thumb-size": {
+            "$value": "{size.checkable.md.slider-thumb-size}"
+          },
+          "rating-font-size": {
+            "$value": "{size.checkable.md.rating-font-size}"
+          },
+          "switch": {
+            "width": {
+              "$value": "{size.checkable.md.switch.width}"
+            },
+            "height": {
+              "$value": "{size.checkable.md.switch.height}"
+            },
+            "padding": {
+              "$value": "{size.checkable.md.switch.padding}"
+            },
+            "thumb-size": {
+              "$value": "{size.checkable.md.switch.thumb-size}"
+            },
+            "translate": {
+              "$value": "{size.checkable.md.switch.translate}"
+            }
+          }
+        },
+        "lg": {
+          "track-height": {
+            "$value": "{size.checkable.lg.slider-track-height}"
+          },
+          "thumb-size": {
+            "$value": "{size.checkable.lg.slider-thumb-size}"
+          },
+          "rating-font-size": {
+            "$value": "{size.checkable.lg.rating-font-size}"
+          },
+          "switch": {
+            "width": {
+              "$value": "{size.checkable.lg.switch.width}"
+            },
+            "height": {
+              "$value": "{size.checkable.lg.switch.height}"
+            },
+            "padding": {
+              "$value": "{size.checkable.lg.switch.padding}"
+            },
+            "thumb-size": {
+              "$value": "{size.checkable.lg.switch.thumb-size}"
+            },
+            "translate": {
+              "$value": "{size.checkable.lg.switch.translate}"
+            }
+          }
+        },
+        "xl": {
+          "track-height": {
+            "$value": "{size.checkable.xl.slider-track-height}"
+          },
+          "thumb-size": {
+            "$value": "{size.checkable.xl.slider-thumb-size}"
+          },
+          "rating-font-size": {
+            "$value": "{size.checkable.xl.rating-font-size}"
+          },
+          "switch": {
+            "width": {
+              "$value": "{size.checkable.xl.switch.width}"
+            },
+            "height": {
+              "$value": "{size.checkable.xl.switch.height}"
+            },
+            "padding": {
+              "$value": "{size.checkable.xl.switch.padding}"
+            },
+            "thumb-size": {
+              "$value": "{size.checkable.xl.switch.thumb-size}"
+            },
+            "translate": {
+              "$value": "{size.checkable.xl.switch.translate}"
+            }
+          }
+        },
+        "2xl": {
+          "track-height": {
+            "$value": "{size.checkable.2xl.slider-track-height}"
+          },
+          "thumb-size": {
+            "$value": "{size.checkable.2xl.slider-thumb-size}"
+          },
+          "rating-font-size": {
+            "$value": "{size.checkable.2xl.rating-font-size}"
+          },
+          "switch": {
+            "width": {
+              "$value": "{size.checkable.2xl.switch.width}"
+            },
+            "height": {
+              "$value": "{size.checkable.2xl.switch.height}"
+            },
+            "padding": {
+              "$value": "{size.checkable.2xl.switch.padding}"
+            },
+            "thumb-size": {
+              "$value": "{size.checkable.2xl.switch.thumb-size}"
+            },
+            "translate": {
+              "$value": "{size.checkable.2xl.switch.translate}"
+            }
+          }
+        }
+      },
+      "track": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "inactive": {
+          "$value": "{color.bg.sunken}"
+        },
+        "unselected": {
+          "$value": "{color.border.default}"
+        },
+        "hover": {
+          "$value": "{color.primary.subtle}"
+        },
+        "disabled": {
+          "$value": "{color.bg.muted}"
+        },
+        "selected": {
+          "$value": "{color.primary.default}"
+        }
+      },
+      "opacity": {
+        "disabled": {
+          "$value": "{opacity.disabled}"
+        }
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}",
+          "$description": "Default checkable motion (radio/checkbox colour and indicator)."
+        },
+        "switch-duration": {
+          "$value": "{duration.moderate}",
+          "$description": "Switch track/thumb motion (200ms)."
+        },
+        "easing": {
+          "$value": "{easing.standard}"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "$description": "Split component source for component.collapse.",
+  "component": {
+    "collapse": {
+      "$description": "Native details disclosure surface, summary interaction states, content divider, disabled treatment, tone variants, and motion. Disclosure behavior and open-state rotation remain local.",
+      "surface": {
+        "$value": "{color.bg.surface}"
+      },
+      "border": {
+        "$value": "{color.border.default}"
+      },
+      "border-width": {
+        "$value": "{border-width.thin}"
+      },
+      "radius": {
+        "$value": "{radius.md}"
+      },
+      "disabled": {
+        "surface": {
+          "$value": "{color.bg.muted}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "text": {
+          "$value": "{color.text.disabled}"
+        }
+      },
+      "summary": {
+        "padding-block": {
+          "$value": "{spacing.3}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.4}"
+        },
+        "gap": {
+          "$value": "{spacing.2}"
+        },
+        "text": {
+          "$value": "{color.text.primary}"
+        },
+        "font-weight": {
+          "$value": "{font.weight.medium}"
+        },
+        "surface-hover": {
+          "$value": "{color.bg.muted}"
+        },
+        "focus-ring": {
+          "$value": "{shadow.focus-primary}"
+        }
+      },
+      "content": {
+        "padding-block": {
+          "$value": "{spacing.3}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.4}"
+        },
+        "text": {
+          "$value": "{color.text.primary}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        }
+      },
+      "tone": {
+        "primary": {
+          "border": {
+            "$value": "{color.primary.subtle}"
+          },
+          "text": {
+            "$value": "{color.primary.text}"
+          }
+        },
+        "secondary": {
+          "border": {
+            "$value": "{color.secondary.subtle}"
+          },
+          "text": {
+            "$value": "{color.secondary.text}"
+          }
+        },
+        "tertiary": {
+          "border": {
+            "$value": "{color.tertiary.subtle}"
+          },
+          "text": {
+            "$value": "{color.tertiary.text}"
+          }
+        },
+        "success": {
+          "border": {
+            "$value": "{color.success.subtle}"
+          },
+          "text": {
+            "$value": "{color.success.text}"
+          }
+        },
+        "warning": {
+          "border": {
+            "$value": "{color.warning.subtle}"
+          },
+          "text": {
+            "$value": "{color.warning.text}"
+          }
+        },
+        "info": {
+          "border": {
+            "$value": "{color.info.subtle}"
+          },
+          "text": {
+            "$value": "{color.info.text}"
+          }
+        },
+        "error": {
+          "border": {
+            "$value": "{color.error.subtle}"
+          },
+          "text": {
+            "$value": "{color.error.text}"
+          }
+        },
+        "critical": {
+          "border": {
+            "$value": "{color.critical.subtle}"
+          },
+          "text": {
+            "$value": "{color.critical.text}"
+          }
+        }
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}"
+        },
+        "easing": {
+          "$value": "{easing.standard}"
+        }
+      }
+    }
+  }
+}

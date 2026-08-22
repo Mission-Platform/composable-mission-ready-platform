@@ -18,18 +18,18 @@
   .forge-alert-banner {
     display: flex;
     align-items: flex-start;
-    gap: var(--mp-component-overlay-alert-banner-gap);
-    padding: var(--mp-component-overlay-alert-banner-padding-block)
-      var(--mp-component-overlay-alert-banner-padding-inline);
-    border: var(--mp-component-overlay-border-width) solid transparent;
-    border-radius: var(--mp-component-overlay-alert-banner-radius);
-    font-family: var(--mp-component-overlay-font-family);
+    gap: var(--mp-overlay-alert-banner-gap);
+    padding: var(--mp-overlay-alert-banner-padding-block)
+      var(--mp-overlay-alert-banner-padding-inline);
+    border: var(--mp-overlay-border-width) solid transparent;
+    border-radius: var(--mp-overlay-alert-banner-radius);
+    font-family: var(--mp-overlay-font-family);
 
     &__icon {
       display: flex;
       flex-shrink: 0;
       margin-top: 1px;
-      font-size: var(--mp-component-overlay-icon-size);
+      font-size: var(--mp-overlay-icon-size);
       line-height: 1;
 
       svg {
@@ -44,15 +44,15 @@
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-overlay-alert-banner-content-gap);
+      gap: var(--mp-overlay-alert-banner-content-gap);
       min-width: 0;
     }
 
     &__actions {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--mp-component-overlay-alert-banner-actions-gap);
-      margin-top: var(--mp-component-overlay-alert-banner-actions-margin-top);
+      gap: var(--mp-overlay-alert-banner-actions-gap);
+      margin-top: var(--mp-overlay-alert-banner-actions-margin-top);
     }
 
     &__dismiss {
@@ -60,16 +60,16 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      padding: var(--mp-component-overlay-dismiss-padding);
-      margin: calc(var(--mp-component-overlay-dismiss-padding) * -1);
+      padding: var(--mp-overlay-dismiss-padding);
+      margin: calc(var(--mp-overlay-dismiss-padding) * -1);
       background: transparent;
       border: 0;
-      border-radius: var(--mp-component-overlay-dismiss-radius);
+      border-radius: var(--mp-overlay-dismiss-radius);
       color: inherit;
       cursor: pointer;
-      opacity: var(--mp-component-overlay-alert-banner-dismiss-opacity);
-      transition: opacity var(--mp-component-overlay-alert-banner-dismiss-transition-duration)
-        var(--mp-component-overlay-alert-banner-dismiss-transition-easing);
+      opacity: var(--mp-overlay-alert-banner-dismiss-opacity);
+      transition: opacity var(--mp-overlay-alert-banner-dismiss-transition-duration)
+        var(--mp-overlay-alert-banner-dismiss-transition-easing);
       line-height: 1;
 
       svg {
@@ -84,7 +84,7 @@
       }
 
       &:focus-visible {
-        outline: var(--mp-component-overlay-dismiss-focus-width) solid currentcolor;
+        outline: var(--mp-overlay-dismiss-focus-width) solid currentcolor;
         outline-offset: 1px;
       }
     }
@@ -108,9 +108,9 @@
         )
     {
       &--#{$name} {
-        background-color: var(--mp-component-feedback-#{$family}-background);
-        border-color: var(--mp-component-feedback-#{$family}-border);
-        color: var(--mp-component-feedback-#{$family}-text);
+        background-color: var(--mp-feedback-#{$family}-background);
+        border-color: var(--mp-feedback-#{$family}-border);
+        color: var(--mp-feedback-#{$family}-text);
       }
     }
   }

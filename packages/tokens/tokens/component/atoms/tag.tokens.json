@@ -1,0 +1,187 @@
+{
+  "$description": "Split component source for component.tag.",
+  "component": {
+    "tag": {
+      "$description": "Compact tone labels and removable selection tags.",
+      "neutral": {
+        "background": {
+          "$value": "{color.default.muted}"
+        },
+        "text": {
+          "$value": "{color.default.text}"
+        }
+      },
+      "primary": {
+        "background": {
+          "$value": "{color.primary.muted}"
+        },
+        "text": {
+          "$value": "{color.primary.text}"
+        }
+      },
+      "secondary": {
+        "background": {
+          "$value": "{color.secondary.muted}"
+        },
+        "text": {
+          "$value": "{color.secondary.text}"
+        }
+      },
+      "tertiary": {
+        "background": {
+          "$value": "{color.tertiary.muted}"
+        },
+        "text": {
+          "$value": "{color.tertiary.text}"
+        }
+      },
+      "success": {
+        "background": {
+          "$value": "{color.success.muted}"
+        },
+        "text": {
+          "$value": "{color.success.text}"
+        }
+      },
+      "warning": {
+        "background": {
+          "$value": "{color.warning.muted}"
+        },
+        "text": {
+          "$value": "{color.warning.text}"
+        }
+      },
+      "info": {
+        "background": {
+          "$value": "{color.info.muted}"
+        },
+        "text": {
+          "$value": "{color.info.text}"
+        }
+      },
+      "error": {
+        "background": {
+          "$value": "{color.error.muted}"
+        },
+        "text": {
+          "$value": "{color.error.text}"
+        }
+      },
+      "critical": {
+        "background": {
+          "$value": "{color.critical.muted}"
+        },
+        "text": {
+          "$value": "{color.critical.text}"
+        }
+      },
+      "disabled": {
+        "background": {
+          "$value": "{color.bg.muted}"
+        },
+        "text": {
+          "$value": "{color.text.disabled}"
+        }
+      },
+      "remove-hover-opacity": {
+        "$value": "{opacity.interactive}"
+      },
+      "radius": {
+        "$value": "{radius.full}"
+      },
+      "gap": {
+        "$value": "{spacing.1}"
+      },
+      "font-family": {
+        "$value": "{font.family.sans}"
+      },
+      "line-height": {
+        "$value": "{line-height.tight}"
+      },
+      "border-width": {
+        "focus": {
+          "$value": "{border-width.thick}"
+        }
+      },
+      "size": {
+        "2xs": {
+          "font-size": {
+            "$value": "{size.font.2xs}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.2xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xs}"
+          }
+        },
+        "xs": {
+          "font-size": {
+            "$value": "{size.font.xs}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.xs}"
+          }
+        },
+        "sm": {
+          "font-size": {
+            "$value": "{size.font.sm}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.sm}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.sm}"
+          }
+        },
+        "md": {
+          "font-size": {
+            "$value": "{size.font.md}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.md}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.md}"
+          }
+        },
+        "lg": {
+          "font-size": {
+            "$value": "{size.font.lg}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.lg}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.lg}"
+          }
+        },
+        "xl": {
+          "font-size": {
+            "$value": "{size.font.xl}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.xl}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.xl}"
+          }
+        },
+        "2xl": {
+          "font-size": {
+            "$value": "{size.font.2xl}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.2xl}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xl}"
+          }
+        }
+      }
+    }
+  }
+}

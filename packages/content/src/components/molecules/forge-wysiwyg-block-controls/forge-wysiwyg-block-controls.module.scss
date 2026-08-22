@@ -3,9 +3,9 @@
     position: absolute;
     z-index: 1;
     box-sizing: border-box;
-    border: var(--mp-component-editor-block-controls-selection-border-width) dashed
-      var(--mp-component-editor-block-controls-selection-border);
-    border-radius: var(--mp-component-editor-block-controls-selection-radius);
+    border: var(--mp-editor-block-controls-selection-border-width) dashed
+      var(--mp-editor-block-controls-selection-border);
+    border-radius: var(--mp-editor-block-controls-selection-radius);
     pointer-events: none;
   }
 
@@ -14,14 +14,14 @@
     top: 2px;
     right: 2px;
     display: inline-flex;
-    gap: var(--mp-component-editor-block-controls-gap);
+    gap: var(--mp-editor-block-controls-gap);
     align-items: center;
-    padding: var(--mp-component-editor-block-controls-padding);
-    background-color: var(--mp-component-editor-block-controls-bar-surface);
-    border: var(--mp-component-editor-block-controls-bar-border-width) solid
-      var(--mp-component-editor-block-controls-bar-border);
-    border-radius: var(--mp-component-editor-block-controls-bar-radius);
-    box-shadow: var(--mp-component-editor-block-controls-bar-shadow);
+    padding: var(--mp-editor-block-controls-padding);
+    background-color: var(--mp-editor-block-controls-bar-surface);
+    border: var(--mp-editor-block-controls-bar-border-width) solid
+      var(--mp-editor-block-controls-bar-border);
+    border-radius: var(--mp-editor-block-controls-bar-radius);
+    box-shadow: var(--mp-editor-block-controls-bar-shadow);
     pointer-events: auto;
   }
 

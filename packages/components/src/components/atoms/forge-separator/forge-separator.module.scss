@@ -14,13 +14,13 @@
   .forge-separator {
     border: 0;
     background: transparent;
-    color: var(--mp-component-surface-separator-label);
+    color: var(--mp-surface-separator-label);
   }
 
   .forge-separator--horizontal {
     width: 100%;
-    border-top-width: var(--mp-component-surface-separator-line-width);
-    border-top-color: var(--mp-component-surface-separator-line);
+    border-top-width: var(--mp-surface-separator-line-width);
+    border-top-color: var(--mp-surface-separator-line);
 
     &.forge-separator--solid {
       border-top-style: solid;
@@ -39,9 +39,9 @@
     align-self: stretch;
     height: auto;
     min-height: 1em;
-    margin-inline: var(--mp-separator-spacing, var(--mp-component-surface-separator-margin-default));
-    border-left-width: var(--mp-component-surface-separator-line-width);
-    border-left-color: var(--mp-component-surface-separator-line);
+    margin-inline: var(--mp-separator-spacing, var(--mp-surface-separator-margin-default));
+    border-left-width: var(--mp-surface-separator-line-width);
+    border-left-color: var(--mp-surface-separator-line);
 
     &.forge-separator--solid {
       border-left-style: solid;
@@ -59,14 +59,14 @@
   .forge-separator--labelled {
     display: flex;
     align-items: center;
-    gap: var(--mp-component-surface-separator-label-gap);
+    gap: var(--mp-surface-separator-label-gap);
     width: 100%;
   }
 
   .forge-separator__line {
     flex: 1 1 auto;
-    border-top-width: var(--mp-component-surface-separator-line-width);
-    border-top-color: var(--mp-component-surface-separator-line);
+    border-top-width: var(--mp-surface-separator-line-width);
+    border-top-color: var(--mp-surface-separator-line);
   }
 
   .forge-separator--labelled.forge-separator--solid .forge-separator__line {
@@ -83,20 +83,20 @@
 
   .forge-separator__label {
     flex: 0 0 auto;
-    font-family: var(--mp-component-surface-separator-label-font-family);
-    font-size: var(--mp-component-surface-separator-label-font-size);
-    line-height: var(--mp-component-surface-separator-label-line-height);
-    color: var(--mp-component-surface-separator-label);
+    font-family: var(--mp-surface-separator-label-font-family);
+    font-size: var(--mp-surface-separator-label-font-size);
+    line-height: var(--mp-surface-separator-label-line-height);
+    color: var(--mp-surface-separator-label);
     white-space: nowrap;
   }
 
   /* Spacing — applied along the main axis for the relevant orientation. */
   $spacing-map: (
-    'none': var(--mp-component-surface-separator-margin-none),
-    'sm': var(--mp-component-surface-separator-margin-sm),
-    'md': var(--mp-component-surface-separator-margin-md),
-    'lg': var(--mp-component-surface-separator-margin-lg),
-    'xl': var(--mp-component-surface-separator-margin-xl),
+    'none': var(--mp-surface-separator-margin-none),
+    'sm': var(--mp-surface-separator-margin-sm),
+    'md': var(--mp-surface-separator-margin-md),
+    'lg': var(--mp-surface-separator-margin-lg),
+    'xl': var(--mp-surface-separator-margin-xl),
   );
 
   @each $name, $value in $spacing-map {
@@ -107,6 +107,6 @@
 
   .forge-separator--horizontal,
   .forge-separator--labelled {
-    margin-block: var(--mp-separator-spacing, var(--mp-component-surface-separator-margin-default));
+    margin-block: var(--mp-separator-spacing, var(--mp-surface-separator-margin-default));
   }
 }

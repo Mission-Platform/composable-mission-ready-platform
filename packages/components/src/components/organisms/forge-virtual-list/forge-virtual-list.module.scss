@@ -16,14 +16,14 @@
     align-items: center;
     box-sizing: border-box;
     height: 100%;
-    padding: var(--mp-component-data-virtual-list-row-padding-block)
-      var(--mp-component-data-virtual-list-row-padding-inline);
-    border-bottom: var(--mp-component-data-virtual-list-row-border-width)
-      solid var(--mp-component-data-virtual-list-row-border);
-    color: var(--mp-component-data-virtual-list-row-text);
+    padding: var(--mp-data-virtual-list-row-padding-block)
+      var(--mp-data-virtual-list-row-padding-inline);
+    border-bottom: var(--mp-data-virtual-list-row-border-width)
+      solid var(--mp-data-virtual-list-row-border);
+    color: var(--mp-data-virtual-list-row-text);
   }
 
   .virtual-list-demo-row--alt {
-    background: var(--mp-component-data-virtual-list-row-alternate-surface);
+    background: var(--mp-data-virtual-list-row-alternate-surface);
   }
 }

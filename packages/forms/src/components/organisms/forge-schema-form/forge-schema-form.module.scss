@@ -8,23 +8,23 @@
   .forge-schema-form {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-form-gap-large);
+    gap: var(--mp-form-gap-large);
 
     &--disabled {
-      opacity: var(--mp-component-form-disabled-opacity);
+      opacity: var(--mp-form-disabled-opacity);
       pointer-events: none;
     }
 
     &__fields {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-large);
+      gap: var(--mp-form-gap-large);
     }
 
     &__datetime {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
       padding: 0;
       margin: 0;
       border: 0;
@@ -32,28 +32,28 @@
 
     &__datetime-legend {
       padding: 0;
-      margin-bottom: var(--mp-component-form-gap-tight);
+      margin-bottom: var(--mp-form-gap-tight);
     }
 
     &__datetime-controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
     }
 
     &__datetime-hint {
       margin: 0;
-      color: var(--mp-component-form-text-muted);
+      color: var(--mp-form-text-muted);
 
       &--error {
-        color: var(--mp-component-form-text-invalid);
+        color: var(--mp-form-text-invalid);
       }
     }
 
     &__code {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-form-gap-default);
+      gap: var(--mp-form-gap-default);
       padding: 0;
       margin: 0;
       border: 0;
@@ -61,56 +61,56 @@
 
     &__code-legend {
       padding: 0;
-      margin-bottom: var(--mp-component-form-gap-tight);
+      margin-bottom: var(--mp-form-gap-tight);
     }
 
     &__code-hint {
       margin: 0;
-      color: var(--mp-component-form-text-muted);
+      color: var(--mp-form-text-muted);
 
       &--error {
-        color: var(--mp-component-form-text-invalid);
+        color: var(--mp-form-text-invalid);
       }
     }
 
     &__actions {
       display: flex;
       justify-content: flex-end;
-      gap: var(--mp-component-form-gap-default);
-      padding-top: var(--mp-component-form-padding-default);
-      border-top: var(--mp-component-form-border-width) solid var(--mp-component-form-border-default);
+      gap: var(--mp-form-gap-default);
+      padding-top: var(--mp-form-padding-default);
+      border-top: var(--mp-form-border-width) solid var(--mp-form-border-default);
     }
 
     &__button {
-      padding: var(--mp-component-form-padding-default) var(--mp-component-form-padding-large);
-      border: var(--mp-component-form-border-width) solid transparent;
-      border-radius: var(--mp-component-form-radius-default);
+      padding: var(--mp-form-padding-default) var(--mp-form-padding-large);
+      border: var(--mp-form-border-width) solid transparent;
+      border-radius: var(--mp-form-radius-default);
       cursor: pointer;
       transition:
-        opacity var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing),
-        background-color var(--mp-component-form-transition-duration) var(--mp-component-form-transition-easing);
+        opacity var(--mp-form-transition-duration) var(--mp-form-transition-easing),
+        background-color var(--mp-form-transition-duration) var(--mp-form-transition-easing);
 
       &:focus-visible {
-        outline: var(--mp-component-form-border-focus-width) solid var(--mp-component-form-border-focus);
+        outline: var(--mp-form-border-focus-width) solid var(--mp-form-border-focus);
         outline-offset: 2px;
       }
 
       &--primary {
-        background-color: var(--mp-component-form-primary);
-        color: var(--mp-component-form-text-inverse);
+        background-color: var(--mp-form-primary);
+        color: var(--mp-form-text-inverse);
 
         &:hover {
-          opacity: var(--mp-component-form-primary-hover-opacity);
+          opacity: var(--mp-form-primary-hover-opacity);
         }
       }
 
       &--secondary {
         background: transparent;
-        border-color: var(--mp-component-form-border-default);
-        color: var(--mp-component-form-text-default);
+        border-color: var(--mp-form-border-default);
+        color: var(--mp-form-text-default);
 
         &:hover {
-          background-color: var(--mp-component-form-surface-muted);
+          background-color: var(--mp-form-surface-muted);
         }
       }
     }

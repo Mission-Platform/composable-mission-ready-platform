@@ -11,11 +11,11 @@
 @layer mp.forms {
   .forge-field-set {
     min-width: 0;
-    padding: var(--mp-component-field-set-padding);
+    padding: var(--mp-field-set-padding);
     margin: 0;
-    background-color: var(--mp-component-field-set-surface);
-    border: var(--mp-component-field-set-border-width) solid var(--mp-component-field-set-border);
-    border-radius: var(--mp-component-field-set-radius);
+    background-color: var(--mp-field-set-surface);
+    border: var(--mp-field-set-border-width) solid var(--mp-field-set-border);
+    border-radius: var(--mp-field-set-radius);
 
     &--flush {
       padding: 0;
@@ -25,17 +25,17 @@
     }
 
     &__legend {
-      padding: 0 var(--mp-component-field-set-legend-padding);
+      padding: 0 var(--mp-field-set-legend-padding);
     }
 
     &__description {
-      margin: 0 0 var(--mp-component-field-set-description-margin);
+      margin: 0 0 var(--mp-field-set-description-margin);
     }
 
     &__content {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-field-set-content-gap);
+      gap: var(--mp-field-set-content-gap);
     }
   }
 }

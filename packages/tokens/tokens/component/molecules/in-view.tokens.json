@@ -1,0 +1,23 @@
+{
+  "$description": "Split component source for component.in-view.",
+  "component": {
+    "in-view": {
+      "$description": "ForgeInView demo content chrome. IntersectionObserver behavior and reveal animation styles remain local.",
+      "padding": {
+        "$value": "{spacing.4}"
+      },
+      "radius": {
+        "$value": "{radius.lg}"
+      },
+      "surface": {
+        "$value": "{color.primary.subtle}"
+      },
+      "text": {
+        "$value": "{color.primary.text}"
+      },
+      "font-weight": {
+        "$value": "{font.weight.semibold}"
+      }
+    }
+  }
+}

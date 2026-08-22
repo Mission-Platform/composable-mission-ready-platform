@@ -12,8 +12,8 @@
 @layer mp.components {
   .forge-skeleton {
     display: block;
-    background-color: var(--mp-component-feedback-skeleton-background-default);
-    border-radius: var(--mp-component-feedback-skeleton-radius-default);
+    background-color: var(--mp-feedback-skeleton-background-default);
+    border-radius: var(--mp-feedback-skeleton-radius-default);
     position: relative;
     overflow: hidden;
 
@@ -24,7 +24,7 @@
       background: linear-gradient(
         90deg,
         transparent 0%,
-        var(--mp-component-feedback-skeleton-shimmer) 50%,
+        var(--mp-feedback-skeleton-shimmer) 50%,
         transparent 100%
       );
       animation: mp-skeleton-shimmer 1.6s ease-in-out infinite;
@@ -34,28 +34,28 @@
     &--line {
       width: 100%;
       height: 1em;
-      border-radius: var(--mp-component-feedback-skeleton-radius-line);
+      border-radius: var(--mp-feedback-skeleton-radius-line);
     }
 
     &--circle {
       width: 2.5rem;
       height: 2.5rem;
-      border-radius: var(--mp-component-feedback-skeleton-radius-circle);
+      border-radius: var(--mp-feedback-skeleton-radius-circle);
     }
 
     &--block {
       width: 100%;
       height: 8rem;
-      border-radius: var(--mp-component-feedback-skeleton-radius-block);
+      border-radius: var(--mp-feedback-skeleton-radius-block);
     }
 
     /**
      * Colour variants — tint the placeholder fill. `neutral` is omitted so it
-     * keeps the plain grey (`--mp-component-feedback-skeleton-background-default`).
+     * keeps the plain grey (`--mp-feedback-skeleton-background-default`).
      */
     @each $name in ('primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical') {
       &--#{$name} {
-        background-color: var(--mp-component-feedback-skeleton-background-#{$name});
+        background-color: var(--mp-feedback-skeleton-background-#{$name});
       }
     }
   }

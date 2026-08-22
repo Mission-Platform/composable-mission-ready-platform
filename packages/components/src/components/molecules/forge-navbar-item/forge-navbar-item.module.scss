@@ -18,46 +18,46 @@
   .forge-navbar-item {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-component-navigation-navbar-item-gap);
-    padding: var(--mp-component-navigation-navbar-item-padding-block)
-      var(--mp-component-navigation-navbar-item-padding-inline);
-    border-radius: var(--mp-component-navigation-navbar-item-radius);
-    color: var(--mp-component-navigation-navbar-item-text-default);
+    gap: var(--mp-navigation-navbar-item-gap);
+    padding: var(--mp-navigation-navbar-item-padding-block)
+      var(--mp-navigation-navbar-item-padding-inline);
+    border-radius: var(--mp-navigation-navbar-item-radius);
+    color: var(--mp-navigation-navbar-item-text-default);
     background: none;
     border: none;
     cursor: pointer;
     text-decoration: none;
     white-space: nowrap;
     user-select: none;
-    font-family: var(--mp-component-navigation-navbar-item-font-family);
-    font-weight: var(--mp-component-navigation-navbar-item-font-weight);
+    font-family: var(--mp-navigation-navbar-item-font-family);
+    font-weight: var(--mp-navigation-navbar-item-font-weight);
     transition:
-      background-color var(--mp-component-navigation-navbar-item-transition-duration)
-        var(--mp-component-navigation-navbar-item-transition-easing),
-      color var(--mp-component-navigation-navbar-item-transition-duration)
-        var(--mp-component-navigation-navbar-item-transition-easing);
+      background-color var(--mp-navigation-navbar-item-transition-duration)
+        var(--mp-navigation-navbar-item-transition-easing),
+      color var(--mp-navigation-navbar-item-transition-duration)
+        var(--mp-navigation-navbar-item-transition-easing);
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-component-navigation-navbar-item-focus-ring);
+      box-shadow: var(--mp-navigation-navbar-item-focus-ring);
     }
 
     &--active {
-      background-color: var(--mp-component-navigation-navbar-item-surface-active);
-      color: var(--mp-component-navigation-navbar-item-text-active);
+      background-color: var(--mp-navigation-navbar-item-surface-active);
+      color: var(--mp-navigation-navbar-item-text-active);
     }
 
     &--open {
-      background-color: var(--mp-component-navigation-navbar-item-surface-open);
-      color: var(--mp-component-navigation-navbar-item-text-open);
+      background-color: var(--mp-navigation-navbar-item-surface-open);
+      color: var(--mp-navigation-navbar-item-text-open);
     }
 
     @mixin tone($family) {
       &--#{$family} {
-        color: var(--mp-component-navigation-navbar-item-tone-#{$family}-text);
+        color: var(--mp-navigation-navbar-item-tone-#{$family}-text);
 
         &:hover:not(.forge-navbar-item--disabled) {
-          background-color: var(--mp-component-navigation-navbar-item-tone-#{$family}-surface-hover);
+          background-color: var(--mp-navigation-navbar-item-tone-#{$family}-surface-hover);
         }
       }
     }
@@ -72,20 +72,20 @@
     @include tone('critical');
 
     &--disabled {
-      opacity: var(--mp-component-navigation-navbar-item-opacity-disabled);
+      opacity: var(--mp-navigation-navbar-item-opacity-disabled);
       cursor: not-allowed;
       pointer-events: none;
     }
 
     &:hover:not(.forge-navbar-item--disabled) {
-      background-color: var(--mp-component-navigation-navbar-item-surface-hover);
-      color: var(--mp-component-navigation-navbar-item-text-hover);
+      background-color: var(--mp-navigation-navbar-item-surface-hover);
+      color: var(--mp-navigation-navbar-item-text-hover);
     }
 
     &__chevron {
       flex-shrink: 0;
       display: inline-flex;
-      color: var(--mp-component-navigation-navbar-item-chevron);
+      color: var(--mp-navigation-navbar-item-chevron);
     }
   }
 
@@ -95,17 +95,17 @@
     left: 0;
     z-index: 10;
     list-style: none;
-    margin: var(--mp-component-navigation-navbar-item-dropdown-margin) 0 0;
-    padding: var(--mp-component-navigation-navbar-item-dropdown-padding) 0;
+    margin: var(--mp-navigation-navbar-item-dropdown-margin) 0 0;
+    padding: var(--mp-navigation-navbar-item-dropdown-padding) 0;
     min-width: 180px;
 
     /* Never exceed the viewport so an edge-anchored menu stays on-screen on mobile. */
-    max-width: calc(100vw - var(--mp-component-navigation-navbar-item-dropdown-viewport-gutter));
-    background-color: var(--mp-component-navigation-navbar-item-dropdown-surface);
-    border: var(--mp-component-navigation-navbar-item-dropdown-border-width)
-      solid var(--mp-component-navigation-navbar-item-dropdown-border);
-    border-radius: var(--mp-component-navigation-navbar-item-dropdown-radius);
-    box-shadow: var(--mp-component-navigation-navbar-item-dropdown-shadow);
+    max-width: calc(100vw - var(--mp-navigation-navbar-item-dropdown-viewport-gutter));
+    background-color: var(--mp-navigation-navbar-item-dropdown-surface);
+    border: var(--mp-navigation-navbar-item-dropdown-border-width)
+      solid var(--mp-navigation-navbar-item-dropdown-border);
+    border-radius: var(--mp-navigation-navbar-item-dropdown-radius);
+    box-shadow: var(--mp-navigation-navbar-item-dropdown-shadow);
   }
 
   .forge-navbar-item__dropdown-item-wrapper {
@@ -116,37 +116,37 @@
   .forge-navbar-item__dropdown-item {
     display: flex;
     align-items: center;
-    gap: var(--mp-component-navigation-navbar-item-dropdown-item-gap);
+    gap: var(--mp-navigation-navbar-item-dropdown-item-gap);
     width: 100%;
-    padding: var(--mp-component-navigation-navbar-item-dropdown-item-padding-block)
-      var(--mp-component-navigation-navbar-item-dropdown-item-padding-inline);
-    color: var(--mp-component-navigation-navbar-item-dropdown-item-text);
+    padding: var(--mp-navigation-navbar-item-dropdown-item-padding-block)
+      var(--mp-navigation-navbar-item-dropdown-item-padding-inline);
+    color: var(--mp-navigation-navbar-item-dropdown-item-text);
     background: none;
     border: none;
     cursor: pointer;
     text-decoration: none;
     text-align: left;
     white-space: nowrap;
-    font-family: var(--mp-component-navigation-navbar-item-font-family);
+    font-family: var(--mp-navigation-navbar-item-font-family);
     transition:
-      background-color var(--mp-component-navigation-navbar-item-transition-duration)
-        var(--mp-component-navigation-navbar-item-transition-easing),
-      color var(--mp-component-navigation-navbar-item-transition-duration)
-        var(--mp-component-navigation-navbar-item-transition-easing);
+      background-color var(--mp-navigation-navbar-item-transition-duration)
+        var(--mp-navigation-navbar-item-transition-easing),
+      color var(--mp-navigation-navbar-item-transition-duration)
+        var(--mp-navigation-navbar-item-transition-easing);
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-component-navigation-navbar-item-dropdown-item-focus-ring);
+      box-shadow: var(--mp-navigation-navbar-item-dropdown-item-focus-ring);
     }
 
     &--disabled {
-      color: var(--mp-component-navigation-navbar-item-dropdown-item-text-disabled);
+      color: var(--mp-navigation-navbar-item-dropdown-item-text-disabled);
       cursor: not-allowed;
       pointer-events: none;
     }
 
     &:hover:not(.forge-navbar-item__dropdown-item--disabled) {
-      background-color: var(--mp-component-navigation-navbar-item-dropdown-item-surface-hover);
+      background-color: var(--mp-navigation-navbar-item-dropdown-item-surface-hover);
     }
   }
 

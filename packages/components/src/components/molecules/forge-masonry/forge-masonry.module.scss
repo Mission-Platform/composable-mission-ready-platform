@@ -41,11 +41,11 @@
 
   .masonry-demo-item {
     break-inside: avoid;
-    margin-bottom: var(--mp-masonry-gap, var(--mp-component-layout-masonry-gap));
-    padding: var(--mp-component-layout-masonry-demo-padding);
-    border: var(--mp-component-layout-masonry-demo-border-width) solid var(--mp-component-layout-masonry-demo-border);
-    border-radius: var(--mp-component-layout-masonry-demo-radius);
-    background: var(--mp-component-layout-masonry-demo-surface);
-    color: var(--mp-component-layout-masonry-demo-text);
+    margin-bottom: var(--mp-masonry-gap, var(--mp-layout-masonry-gap));
+    padding: var(--mp-layout-masonry-demo-padding);
+    border: var(--mp-layout-masonry-demo-border-width) solid var(--mp-layout-masonry-demo-border);
+    border-radius: var(--mp-layout-masonry-demo-radius);
+    background: var(--mp-layout-masonry-demo-surface);
+    color: var(--mp-layout-masonry-demo-text);
   }
 }

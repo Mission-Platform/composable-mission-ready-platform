@@ -1,0 +1,176 @@
+{
+  "$description": "Split component source for component.surface.",
+  "component": {
+    "surface": {
+      "$description": "Cards, panels, separators, tables, lists, grids, stacks, masonry, timelines, and layout surfaces.",
+      "background": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "raised": {
+          "$value": "{color.bg.raised}"
+        },
+        "sunken": {
+          "$value": "{color.bg.sunken}"
+        },
+        "muted": {
+          "$value": "{color.bg.muted}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "secondary": {
+          "$value": "{color.text.secondary}"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        },
+        "strong": {
+          "$value": "{color.border.strong}"
+        },
+        "selected": {
+          "$value": "{color.primary.default}"
+        }
+      },
+      "separator": {
+        "$description": "Separator line, label, and spacing roles.",
+        "line": {
+          "$value": "{color.border.default}"
+        },
+        "line-width": {
+          "$value": "{border-width.thin}"
+        },
+        "label": {
+          "$value": "{color.text.secondary}"
+        },
+        "label-font-family": {
+          "$value": "{font.family.sans}"
+        },
+        "label-font-size": {
+          "$value": "{font.size.sm}"
+        },
+        "label-line-height": {
+          "$value": "{line-height.tight}"
+        },
+        "label-gap": {
+          "$value": "{spacing.3}"
+        },
+        "margin": {
+          "none": {
+            "$value": "{spacing.0}"
+          },
+          "sm": {
+            "$value": "{spacing.2}"
+          },
+          "md": {
+            "$value": "{spacing.4}"
+          },
+          "lg": {
+            "$value": "{spacing.6}"
+          },
+          "xl": {
+            "$value": "{spacing.8}"
+          },
+          "default": {
+            "$value": "{spacing.4}"
+          }
+        }
+      },
+      "quote": {
+        "$description": "ForgeQuote chrome. Text italics and composed typography variants remain local or are owned by ForgeTypography.",
+        "gap": {
+          "$value": "{spacing.3}"
+        },
+        "attribution-gap": {
+          "$value": "{spacing.2}"
+        },
+        "attribution-marker": {
+          "$value": "{color.text.tertiary}"
+        },
+        "bordered-padding": {
+          "$value": "{spacing.4}"
+        },
+        "bordered-border-width": {
+          "$value": "{border-width.heavy}"
+        },
+        "default-padding": {
+          "$value": "{spacing.5}"
+        },
+        "default-radius": {
+          "$value": "{radius.lg}"
+        },
+        "background": {
+          "neutral": {
+            "$value": "{color.bg.muted}"
+          },
+          "primary": {
+            "$value": "{color.primary.muted}"
+          },
+          "secondary": {
+            "$value": "{color.secondary.muted}"
+          },
+          "tertiary": {
+            "$value": "{color.tertiary.muted}"
+          },
+          "success": {
+            "$value": "{color.success.muted}"
+          },
+          "warning": {
+            "$value": "{color.warning.muted}"
+          },
+          "info": {
+            "$value": "{color.info.muted}"
+          },
+          "error": {
+            "$value": "{color.error.muted}"
+          },
+          "critical": {
+            "$value": "{color.critical.muted}"
+          }
+        },
+        "border": {
+          "primary": {
+            "$value": "{color.primary.default}"
+          },
+          "secondary": {
+            "$value": "{color.secondary.default}"
+          },
+          "tertiary": {
+            "$value": "{color.tertiary.default}"
+          },
+          "success": {
+            "$value": "{color.success.default}"
+          },
+          "warning": {
+            "$value": "{color.warning.default}"
+          },
+          "info": {
+            "$value": "{color.info.default}"
+          },
+          "error": {
+            "$value": "{color.error.default}"
+          },
+          "critical": {
+            "$value": "{color.critical.default}"
+          }
+        }
+      },
+      "radius": {
+        "$value": "{radius.lg}"
+      },
+      "padding": {
+        "$value": "{spacing.md}"
+      },
+      "gap": {
+        "$value": "{spacing.md}"
+      },
+      "shadow": {
+        "$value": "{shadow.md}"
+      }
+    }
+  }
+}

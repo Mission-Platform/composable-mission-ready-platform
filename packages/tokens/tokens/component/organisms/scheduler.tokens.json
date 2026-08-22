@@ -1,0 +1,286 @@
+{
+  "$description": "Split component source for component.scheduler.",
+  "component": {
+    "scheduler": {
+      "$description": "ForgeScheduler visual contract for calendar grids, event cards, month/year views, and event-form rhythm. Calendar calculations, scrolling, drag/resize behavior, and event data remain local.",
+      "container": {
+        "gap": {
+          "$value": "{spacing.3}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "radius": {
+          "$value": "{radius.lg}"
+        },
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "padding": {
+          "$value": "{spacing.3}"
+        }
+      },
+      "toolbar": {
+        "gap": {
+          "$value": "{spacing.2}"
+        }
+      },
+      "navigation": {
+        "gap": {
+          "$value": "{spacing.1}"
+        },
+        "title-margin": {
+          "$value": "{spacing.2}"
+        }
+      },
+      "view-switcher": {
+        "gap": {
+          "$value": "{spacing.1}"
+        }
+      },
+      "grid": {
+        "surface": {
+          "$value": "{color.bg.surface}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-subtle": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        }
+      },
+      "day-heading": {
+        "gap": {
+          "$value": "{spacing.1}"
+        },
+        "padding": {
+          "$value": "{spacing.2}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "surface": {
+          "$value": "transparent"
+        },
+        "text": {
+          "$value": "{color.text.primary}"
+        },
+        "today-text": {
+          "$value": "{color.primary.default}"
+        },
+        "today-weight": {
+          "$value": "{font.weight.semibold}"
+        }
+      },
+      "weekday": {
+        "font-size": {
+          "$value": "{font.size.xs}"
+        },
+        "text": {
+          "$value": "{color.text.tertiary}"
+        }
+      },
+      "day-number": {
+        "font-size": {
+          "$value": "{font.size.lg}"
+        }
+      },
+      "hour-label": {
+        "padding-inline-end": {
+          "$value": "{spacing.2}"
+        },
+        "font-size": {
+          "$value": "{font.size.xs}"
+        },
+        "text": {
+          "$value": "{color.text.tertiary}"
+        }
+      },
+      "event": {
+        "padding": {
+          "$value": "{spacing.1}"
+        },
+        "border": {
+          "$value": "{color.primary.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "accent-border-width": {
+          "$value": "{border-width.heavy}"
+        },
+        "radius": {
+          "$value": "{radius.sm}"
+        },
+        "surface": {
+          "$value": "{color.primary.subtle}"
+        },
+        "text": {
+          "$value": "{color.text.primary}"
+        },
+        "font-size": {
+          "$value": "{font.size.xs}"
+        },
+        "time-font-family": {
+          "$value": "{font.family.mono}"
+        },
+        "muted-text": {
+          "$value": "{color.text.tertiary}"
+        },
+        "title-weight": {
+          "$value": "{font.weight.medium}"
+        }
+      },
+      "month": {
+        "weekday-padding": {
+          "$value": "{spacing.1}"
+        },
+        "weekday-border": {
+          "$value": "{color.border.default}"
+        },
+        "cell-gap": {
+          "$value": "{spacing.1}"
+        },
+        "cell-padding": {
+          "$value": "{spacing.1}"
+        },
+        "cell-border": {
+          "$value": "{color.border.default}"
+        },
+        "cell-surface": {
+          "$value": "transparent"
+        },
+        "cell-text": {
+          "$value": "{color.text.primary}"
+        },
+        "outside-surface": {
+          "$value": "{color.bg.muted}"
+        },
+        "outside-text": {
+          "$value": "{color.text.secondary}"
+        },
+        "today-ring": {
+          "$value": "{color.primary.default}"
+        },
+        "today-ring-width": {
+          "$value": "{border-width.thick}"
+        },
+        "create-focus-ring": {
+          "$value": "{color.primary.default}"
+        },
+        "create-focus-ring-width": {
+          "$value": "{border-width.thick}"
+        },
+        "create-radius": {
+          "$value": "{radius.sm}"
+        },
+        "create-surface": {
+          "$value": "transparent"
+        },
+        "day-number-font-size": {
+          "$value": "{font.size.sm}"
+        },
+        "events-gap": {
+          "$value": "{spacing.micro}"
+        },
+        "chip-padding-block": {
+          "$value": "1px"
+        },
+        "chip-padding-inline": {
+          "$value": "{spacing.1}"
+        },
+        "chip-radius": {
+          "$value": "{radius.sm}"
+        },
+        "chip-surface": {
+          "$value": "{color.primary.subtle}"
+        },
+        "chip-font-size": {
+          "$value": "{font.size.xs}"
+        },
+        "more-font-size": {
+          "$value": "{font.size.xs}"
+        },
+        "more-text": {
+          "$value": "{color.text.tertiary}"
+        }
+      },
+      "year": {
+        "gap": {
+          "$value": "{spacing.3}"
+        },
+        "mini-gap": {
+          "$value": "{spacing.1}"
+        },
+        "mini-padding": {
+          "$value": "{spacing.2}"
+        },
+        "mini-border": {
+          "$value": "{color.border.default}"
+        },
+        "mini-radius": {
+          "$value": "{radius.md}"
+        },
+        "mini-surface": {
+          "$value": "transparent"
+        },
+        "mini-text": {
+          "$value": "{color.text.primary}"
+        },
+        "title-font-size": {
+          "$value": "{font.size.sm}"
+        },
+        "title-weight": {
+          "$value": "{font.weight.semibold}"
+        },
+        "mini-grid-gap": {
+          "$value": "1px"
+        },
+        "day-font-size": {
+          "$value": "0.625rem"
+        },
+        "day-radius": {
+          "$value": "{radius.full}"
+        },
+        "outside-text": {
+          "$value": "{color.text.secondary}"
+        },
+        "outside-weight": {
+          "$value": "{font.weight.light}"
+        },
+        "busy-surface": {
+          "$value": "{color.primary.subtle}"
+        },
+        "busy-text": {
+          "$value": "{color.primary.default}"
+        },
+        "busy-weight": {
+          "$value": "{font.weight.semibold}"
+        },
+        "today-ring": {
+          "$value": "{color.primary.default}"
+        },
+        "today-ring-width": {
+          "$value": "{border-width.thin}"
+        }
+      },
+      "form": {
+        "gap": {
+          "$value": "{spacing.3}"
+        },
+        "row-gap": {
+          "$value": "{spacing.2}"
+        },
+        "actions-gap": {
+          "$value": "{spacing.2}"
+        }
+      }
+    }
+  }
+}

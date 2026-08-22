@@ -21,7 +21,6 @@
         "$value": "14px",
         "$description": "14px — the root font-size; all rem values in this scale are relative to it."
       },
-      "2xs": { "$value": "0.625rem", "$description": "8.75px — micro labels, legal fine print." },
       "xs": { "$value": "0.75rem", "$description": "10.5px — captions, helper text." },
       "sm": { "$value": "0.875rem", "$description": "12.25px — secondary body, labels, code." },
       "md": { "$value": "1rem", "$description": "14px — default body copy / base font size." },

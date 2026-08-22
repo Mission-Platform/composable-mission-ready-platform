@@ -14,10 +14,10 @@
     display: block;
     width: 100%;
     height: auto;
-    background-color: var(--mp-component-media-video-surface-default);
+    background-color: var(--mp-media-video-surface-default);
 
     &--rounded {
-      border-radius: var(--mp-component-media-radius);
+      border-radius: var(--mp-media-radius);
       overflow: hidden;
     }
   }

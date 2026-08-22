@@ -12,13 +12,13 @@
   .forge-file-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-input-file-gap-stack);
+    gap: var(--mp-input-file-gap-stack);
 
     /* Sizes — canonical 2xs → 2xl scale (browse button padding + font). */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-file-input__button {
-        padding: var(--mp-component-input-file-size-#{$size}-padding-block) var(--mp-component-input-file-size-#{$size}-padding-inline);
-        font-size: var(--mp-component-input-file-size-#{$size}-font-size);
+        padding: var(--mp-input-file-size-#{$size}-padding-block) var(--mp-input-file-size-#{$size}-padding-inline);
+        font-size: var(--mp-input-file-size-#{$size}-font-size);
       }
     }
 
@@ -37,7 +37,7 @@
     }
 
     &__required {
-      color: var(--mp-component-input-file-required);
+      color: var(--mp-input-file-required);
       margin-left: 2px;
     }
 
@@ -56,19 +56,19 @@
     &__row {
       display: flex;
       align-items: center;
-      gap: var(--mp-component-input-file-gap-row);
+      gap: var(--mp-input-file-gap-row);
     }
 
     &__button {
       display: inline-flex;
       align-items: center;
-      padding: var(--mp-component-input-file-size-sm-padding-block) var(--mp-component-input-file-size-sm-padding-inline);
-      font-size: var(--mp-component-input-file-size-sm-font-size);
-      font-weight: var(--mp-component-input-file-font-weight);
-      color: var(--mp-component-input-file-text-default);
-      background-color: var(--mp-component-input-file-surface-default);
-      border: var(--mp-component-input-file-border-width-default) solid var(--mp-component-input-file-border-default);
-      border-radius: var(--mp-component-input-file-radius-button);
+      padding: var(--mp-input-file-size-sm-padding-block) var(--mp-input-file-size-sm-padding-inline);
+      font-size: var(--mp-input-file-size-sm-font-size);
+      font-weight: var(--mp-input-file-font-weight);
+      color: var(--mp-input-file-text-default);
+      background-color: var(--mp-input-file-surface-default);
+      border: var(--mp-input-file-border-width-default) solid var(--mp-input-file-border-default);
+      border-radius: var(--mp-input-file-radius-button);
       cursor: pointer;
       white-space: nowrap;
       transition:
@@ -76,14 +76,14 @@
         border-color 150ms ease;
 
       &--disabled {
-        background-color: var(--mp-component-input-file-surface-disabled);
-        color: var(--mp-component-input-file-text-disabled);
+        background-color: var(--mp-input-file-surface-disabled);
+        color: var(--mp-input-file-text-disabled);
         cursor: not-allowed;
       }
 
       &:hover:not(.forge-file-input__button--disabled) {
-        background-color: var(--mp-component-input-file-surface-hover);
-        border-color: var(--mp-component-input-file-border-hover);
+        background-color: var(--mp-input-file-surface-hover);
+        border-color: var(--mp-input-file-border-hover);
       }
     }
 
@@ -98,11 +98,11 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: var(--mp-component-input-file-gap-dropzone);
-      padding: var(--mp-component-input-file-padding-dropzone-block) var(--mp-component-input-file-padding-dropzone-inline);
-      border: var(--mp-component-input-file-border-width-dropzone) dashed var(--mp-component-input-file-border-default);
-      border-radius: var(--mp-component-input-file-radius-dropzone);
-      background-color: var(--mp-component-input-file-surface-default);
+      gap: var(--mp-input-file-gap-dropzone);
+      padding: var(--mp-input-file-padding-dropzone-block) var(--mp-input-file-padding-dropzone-inline);
+      border: var(--mp-input-file-border-width-dropzone) dashed var(--mp-input-file-border-default);
+      border-radius: var(--mp-input-file-radius-dropzone);
+      background-color: var(--mp-input-file-surface-default);
       transition:
         border-color 150ms ease,
         background-color 150ms ease;
@@ -110,13 +110,13 @@
       text-align: center;
 
       &--active {
-        border-color: var(--mp-component-input-file-border-active);
-        background-color: var(--mp-component-input-file-surface-active);
+        border-color: var(--mp-input-file-border-active);
+        background-color: var(--mp-input-file-surface-active);
       }
     }
 
     &__icon {
-      color: var(--mp-component-input-file-text-muted);
+      color: var(--mp-input-file-text-muted);
       font-size: 2rem;
       line-height: 1;
 
@@ -133,13 +133,13 @@
     }
 
     &__browse-link {
-      color: var(--mp-component-input-file-text-link);
+      color: var(--mp-input-file-text-link);
       cursor: pointer;
-      font-weight: var(--mp-component-input-file-font-weight);
+      font-weight: var(--mp-input-file-font-weight);
       text-decoration: underline;
 
       &:hover {
-        color: var(--mp-component-input-file-text-link-hover);
+        color: var(--mp-input-file-text-link-hover);
       }
     }
 
@@ -150,7 +150,7 @@
     &--error {
       .forge-file-input__button,
       .forge-file-input__dropzone {
-        border-color: var(--mp-component-input-file-border-invalid);
+        border-color: var(--mp-input-file-border-invalid);
       }
     }
 
@@ -161,18 +161,18 @@
       .forge-file-input__name,
       .forge-file-input__drop-text,
       .forge-file-input__file-name {
-        color: var(--mp-component-input-file-text-disabled);
+        color: var(--mp-input-file-text-disabled);
       }
 
       .forge-file-input__dropzone {
-        background-color: var(--mp-component-input-file-surface-disabled);
-        color: var(--mp-component-input-file-text-disabled);
+        background-color: var(--mp-input-file-surface-disabled);
+        color: var(--mp-input-file-text-disabled);
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-component-input-file-text-error);
+      color: var(--mp-input-file-text-error);
       margin: 0;
     }
 

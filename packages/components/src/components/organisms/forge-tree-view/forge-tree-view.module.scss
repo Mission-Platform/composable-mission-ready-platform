@@ -12,9 +12,9 @@
   .tree-view {
     margin: 0;
     padding: 0;
-    font-family: var(--mp-component-data-tree-font-family);
-    font-size: var(--mp-component-data-tree-font-size);
-    color: var(--mp-component-data-tree-text-default);
+    font-family: var(--mp-data-tree-font-family);
+    font-size: var(--mp-data-tree-font-size);
+    color: var(--mp-data-tree-text-default);
     list-style: none;
     user-select: none;
   }
@@ -31,24 +31,24 @@
 
   .tree-node__label {
     display: flex;
-    gap: var(--mp-component-data-tree-label-gap);
+    gap: var(--mp-data-tree-label-gap);
     align-items: center;
-    height: var(--mp-component-data-tree-label-height);
-    padding-right: var(--mp-component-data-tree-label-padding-inline-end);
-    color: var(--mp-component-data-tree-text-default);
+    height: var(--mp-data-tree-label-height);
+    padding-right: var(--mp-data-tree-label-padding-inline-end);
+    color: var(--mp-data-tree-text-default);
     cursor: pointer;
-    border-radius: var(--mp-component-data-tree-label-radius);
+    border-radius: var(--mp-data-tree-label-radius);
     outline: none;
-    transition: background-color var(--mp-component-data-tree-label-transition-duration)
-      var(--mp-component-data-tree-label-transition-easing);
+    transition: background-color var(--mp-data-tree-label-transition-duration)
+      var(--mp-data-tree-label-transition-easing);
 
     &:hover {
-      background-color: var(--mp-component-data-tree-label-hover-surface);
+      background-color: var(--mp-data-tree-label-hover-surface);
     }
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-component-data-tree-label-focus-ring);
+      box-shadow: var(--mp-data-tree-label-focus-ring);
     }
   }
 
@@ -57,24 +57,24 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: var(--mp-component-data-tree-toggle-size);
-    height: var(--mp-component-data-tree-toggle-size);
+    width: var(--mp-data-tree-toggle-size);
+    height: var(--mp-data-tree-toggle-size);
     padding: 0;
-    color: var(--mp-component-data-tree-text-toggle);
+    color: var(--mp-data-tree-text-toggle);
     cursor: pointer;
     background: none;
     border: none;
-    border-radius: var(--mp-component-data-tree-toggle-radius);
-    transition: color var(--mp-component-data-tree-toggle-transition-duration)
-      var(--mp-component-data-tree-toggle-transition-easing);
+    border-radius: var(--mp-data-tree-toggle-radius);
+    transition: color var(--mp-data-tree-toggle-transition-duration)
+      var(--mp-data-tree-toggle-transition-easing);
 
     &:hover {
-      color: var(--mp-component-data-tree-text-toggle-hover);
+      color: var(--mp-data-tree-text-toggle-hover);
     }
   }
 
   .tree-node__toggle--open {
-    color: var(--mp-component-data-tree-text-toggle-open);
+    color: var(--mp-data-tree-text-toggle-open);
   }
 
   .tree-node__spacer {

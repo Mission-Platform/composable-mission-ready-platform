@@ -16,48 +16,48 @@
   .forge-rating {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-component-checkable-gap-stack);
-    color: var(--mp-component-checkable-rating-filled);
+    gap: var(--mp-checkable-gap-stack);
+    color: var(--mp-checkable-rating-filled);
     line-height: 1;
 
     /* Sizes — canonical 2xs → 2xl scale (star glyph font-size). */
     &--2xs {
-      font-size: var(--mp-component-checkable-size-2xs-rating-font-size);
+      font-size: var(--mp-checkable-size-2xs-rating-font-size);
     }
 
     &--xs {
-      font-size: var(--mp-component-checkable-size-xs-rating-font-size);
+      font-size: var(--mp-checkable-size-xs-rating-font-size);
     }
 
     &--sm {
-      font-size: var(--mp-component-checkable-size-sm-rating-font-size);
+      font-size: var(--mp-checkable-size-sm-rating-font-size);
     }
 
     &--md {
-      font-size: var(--mp-component-checkable-size-md-rating-font-size);
+      font-size: var(--mp-checkable-size-md-rating-font-size);
     }
 
     &--lg {
-      font-size: var(--mp-component-checkable-size-lg-rating-font-size);
+      font-size: var(--mp-checkable-size-lg-rating-font-size);
     }
 
     &--xl {
-      font-size: var(--mp-component-checkable-size-xl-rating-font-size);
+      font-size: var(--mp-checkable-size-xl-rating-font-size);
     }
 
     &--2xl {
-      font-size: var(--mp-component-checkable-size-2xl-rating-font-size);
+      font-size: var(--mp-checkable-size-2xl-rating-font-size);
     }
 
     &--disabled {
-      opacity: var(--mp-component-checkable-opacity-disabled);
+      opacity: var(--mp-checkable-opacity-disabled);
       cursor: not-allowed;
     }
 
     &:focus-visible {
       outline: none;
-      border-radius: var(--mp-component-checkable-radius);
-      box-shadow: var(--mp-component-checkable-focus-ring);
+      border-radius: var(--mp-checkable-radius);
+      box-shadow: var(--mp-checkable-focus-ring);
     }
 
     &__star {
@@ -83,7 +83,7 @@
       }
 
       &--empty {
-        color: var(--mp-component-checkable-rating-empty);
+        color: var(--mp-checkable-rating-empty);
       }
 
       &--filled svg {
@@ -95,7 +95,7 @@
       position: absolute;
       inset: 0;
       overflow: hidden;
-      color: var(--mp-component-checkable-rating-filled);
+      color: var(--mp-checkable-rating-filled);
     }
 
     &__hit {

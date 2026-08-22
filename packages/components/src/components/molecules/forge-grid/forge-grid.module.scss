@@ -12,9 +12,9 @@
 
 @layer mp.components {
   .grid-demo-container {
-    padding: var(--mp-component-layout-grid-container-padding);
-    border: var(--mp-component-layout-grid-container-border-width) dashed var(--mp-component-layout-grid-container-border);
-    border-radius: var(--mp-component-layout-grid-container-radius);
+    padding: var(--mp-layout-grid-container-padding);
+    border: var(--mp-layout-grid-container-border-width) dashed var(--mp-layout-grid-container-border);
+    border-radius: var(--mp-layout-grid-container-radius);
 
     @supports (container-type: inline-size) {
       container: grid-demo / inline-size;
@@ -26,15 +26,15 @@
     align-items: center;
     justify-content: center;
     min-height: 3rem;
-    padding: var(--mp-component-layout-grid-cell-padding-block) var(--mp-component-layout-grid-cell-padding-inline);
-    border: var(--mp-component-layout-grid-cell-border-width) solid var(--mp-component-layout-grid-cell-border);
-    border-radius: var(--mp-component-layout-grid-cell-radius);
-    background: var(--mp-component-layout-grid-cell-surface);
-    color: var(--mp-component-layout-grid-cell-text);
+    padding: var(--mp-layout-grid-cell-padding-block) var(--mp-layout-grid-cell-padding-inline);
+    border: var(--mp-layout-grid-cell-border-width) solid var(--mp-layout-grid-cell-border);
+    border-radius: var(--mp-layout-grid-cell-radius);
+    background: var(--mp-layout-grid-cell-surface);
+    color: var(--mp-layout-grid-cell-text);
 
     @container grid-demo (width >= 40rem) {
       min-height: 4.5rem;
-      padding: var(--mp-component-layout-grid-cell-padding-wide);
+      padding: var(--mp-layout-grid-cell-padding-wide);
     }
   }
 }

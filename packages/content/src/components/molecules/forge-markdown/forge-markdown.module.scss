@@ -11,60 +11,60 @@
 
 @layer mp.content {
   .forge-markdown {
-    color: var(--mp-component-markdown-text-default);
-    font-family: var(--mp-component-markdown-typography-font-family);
-    line-height: var(--mp-component-markdown-typography-line-height);
+    color: var(--mp-markdown-text-default);
+    font-family: var(--mp-markdown-typography-font-family);
+    line-height: var(--mp-markdown-typography-line-height);
     overflow-wrap: anywhere;
 
     /* Vertical rhythm between the direct block children. */
     > * + * {
-      margin-top: var(--mp-component-markdown-flow-block-gap);
+      margin-top: var(--mp-markdown-flow-block-gap);
     }
 
     /* Heading wrapper: carries the anchor id + scroll offset for deep links. */
     &__heading {
-      scroll-margin-top: var(--mp-component-markdown-flow-heading-scroll-margin);
+      scroll-margin-top: var(--mp-markdown-flow-heading-scroll-margin);
     }
 
     &__list {
-      margin-left: var(--mp-component-markdown-flow-list-indent);
+      margin-left: var(--mp-markdown-flow-list-indent);
       padding: 0;
 
       > li + li {
-        margin-top: var(--mp-component-markdown-flow-list-item-gap);
+        margin-top: var(--mp-markdown-flow-list-item-gap);
       }
     }
 
     &__list-item {
-      line-height: var(--mp-component-markdown-typography-line-height);
+      line-height: var(--mp-markdown-typography-line-height);
     }
 
     &__task {
-      margin-right: var(--mp-component-markdown-flow-task-gap);
+      margin-right: var(--mp-markdown-flow-task-gap);
       vertical-align: middle;
     }
 
     &__blockquote {
       margin-left: 0;
-      padding: var(--mp-component-markdown-blockquote-padding-block) var(--mp-component-markdown-blockquote-padding-inline);
-      border-left: var(--mp-component-markdown-blockquote-border-width) solid var(--mp-component-markdown-blockquote-border);
-      color: var(--mp-component-markdown-blockquote-text);
+      padding: var(--mp-markdown-blockquote-padding-block) var(--mp-markdown-blockquote-padding-inline);
+      border-left: var(--mp-markdown-blockquote-border-width) solid var(--mp-markdown-blockquote-border);
+      color: var(--mp-markdown-blockquote-text);
     }
 
     &__hr {
       border: none;
-      border-top: var(--mp-component-markdown-rule-border-width) solid var(--mp-component-markdown-rule-border);
+      border-top: var(--mp-markdown-rule-border-width) solid var(--mp-markdown-rule-border);
     }
 
     &__image {
       max-width: 100%;
       height: auto;
-      border-radius: var(--mp-component-markdown-image-radius);
+      border-radius: var(--mp-markdown-image-radius);
     }
 
     /* Inline links inherit the primary tone with an underline on interaction. */
     a {
-      color: var(--mp-component-markdown-text-link);
+      color: var(--mp-markdown-text-link);
       text-decoration: none;
 
       &:hover,

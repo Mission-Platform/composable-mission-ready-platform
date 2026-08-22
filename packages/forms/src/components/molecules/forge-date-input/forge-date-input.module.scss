@@ -12,7 +12,7 @@
   .forge-date-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-input-field-gap);
+    gap: var(--mp-input-field-gap);
 
     &__label {
       display: flex;
@@ -33,23 +33,23 @@
     }
 
     &__required {
-      color: var(--mp-component-field-required);
+      color: var(--mp-field-required);
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: center;
-      border: var(--mp-component-input-border-width) solid var(--mp-component-input-border-default);
-      border-radius: var(--mp-component-input-radius);
-      background-color: var(--mp-component-input-surface-default);
+      border: var(--mp-input-border-width) solid var(--mp-input-border-default);
+      border-radius: var(--mp-input-radius);
+      background-color: var(--mp-input-surface-default);
       transition:
-        border-color var(--mp-component-input-transition-duration) var(--mp-component-input-transition-easing),
-        box-shadow var(--mp-component-input-transition-duration) var(--mp-component-input-transition-easing);
+        border-color var(--mp-input-transition-duration) var(--mp-input-transition-easing),
+        box-shadow var(--mp-input-transition-duration) var(--mp-input-transition-easing);
 
       &:focus-within {
-        border-color: var(--mp-component-input-border-focus-visible);
-        box-shadow: var(--mp-component-input-focus-ring);
+        border-color: var(--mp-input-border-focus-visible);
+        box-shadow: var(--mp-input-focus-ring);
       }
     }
 
@@ -80,28 +80,28 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      color: var(--mp-component-input-text-secondary);
+      color: var(--mp-input-text-secondary);
 
       &--start {
-        margin-inline-start: var(--mp-component-input-extension-gap);
+        margin-inline-start: var(--mp-input-extension-gap);
       }
 
       &--end {
-        margin-inline-end: var(--mp-component-input-extension-gap);
+        margin-inline-end: var(--mp-input-extension-gap);
       }
     }
 
     &__value {
-      color: var(--mp-component-input-text-default);
-      font-family: var(--mp-component-input-font-family);
+      color: var(--mp-input-text-default);
+      font-family: var(--mp-input-font-family);
 
       &--placeholder {
-        color: var(--mp-component-input-text-placeholder);
+        color: var(--mp-input-text-placeholder);
       }
     }
 
     &__icon {
-      color: var(--mp-component-input-text-secondary);
+      color: var(--mp-input-text-secondary);
       display: flex;
       align-items: center;
       flex-shrink: 0;
@@ -117,36 +117,36 @@
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-date-input__trigger {
-        padding: var(--mp-component-input-size-#{$size}-padding-block)
-          var(--mp-component-input-size-#{$size}-padding-inline);
+        padding: var(--mp-input-size-#{$size}-padding-block)
+          var(--mp-input-size-#{$size}-padding-inline);
 
         .forge-date-input__value {
-          font-size: var(--mp-component-input-size-#{$size}-font-size);
+          font-size: var(--mp-input-size-#{$size}-font-size);
         }
       }
     }
 
     /* States */
     &--error .forge-date-input__wrapper {
-      border-color: var(--mp-component-input-border-invalid);
+      border-color: var(--mp-input-border-invalid);
 
       &:focus-within {
-        box-shadow: var(--mp-component-input-focus-ring-invalid);
+        box-shadow: var(--mp-input-focus-ring-invalid);
       }
     }
 
     &--disabled {
-      opacity: var(--mp-component-input-opacity-disabled);
+      opacity: var(--mp-input-opacity-disabled);
       pointer-events: none;
 
       .forge-date-input__wrapper {
-        background-color: var(--mp-component-input-surface-disabled);
+        background-color: var(--mp-input-surface-disabled);
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-component-field-error);
+      color: var(--mp-field-error);
       margin: 0;
     }
 
@@ -157,7 +157,7 @@
     /* Content filling the ForgeDropdown panel (which owns the surface, border,
        shadow, scrolling, and anchored positioning) around the ForgeCalendar. */
     &__calendar {
-      padding: var(--mp-component-calendar-popup-padding);
+      padding: var(--mp-calendar-popup-padding);
       min-width: 280px;
 
       /* Cap to the viewport so the calendar never overflows on small screens. */

@@ -3,14 +3,10 @@
   "opacity": {
     "$description": "Named opacity levels (0 → 1).",
     "$type": "number",
-    "0": { "$value": 0, "$description": "0 — fully transparent." },
-    "hover": { "$value": 0.04, "$description": "0.04 — standard hover overlay." },
-    "press": { "$value": 0.12, "$description": "0.12 — standard press / active overlay." },
     "disabled": { "$value": 0.5, "$description": "0.5 — disabled / inactive controls." },
     "muted": { "$value": 0.65, "$description": "0.65 — muted / secondary text and icons." },
     "interactive": { "$value": 0.7, "$description": "0.7 — reduced opacity for interactive affordances on hover." },
     "subtle": { "$value": 0.85, "$description": "0.85 — subtle de-emphasis (e.g. pending / placeholder states)." },
-    "content-disabled": { "$value": 0.6, "$description": "0.6 — disabled content-editor surfaces." },
-    "full": { "$value": 1, "$description": "1 — fully opaque." }
+    "content-disabled": { "$value": 0.6, "$description": "0.6 — disabled content-editor surfaces." }
   }
 }

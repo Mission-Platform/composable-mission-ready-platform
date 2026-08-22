@@ -1,0 +1,41 @@
+{
+  "$description": "Split component source for component.map.",
+  "component": {
+    "map": {
+      "$description": "MapLibre host and child components. DOM-less map layers, sources, markers, and draw controls inherit the map host contract; third-party canvas pixels remain outside Forge CSS.",
+      "surface": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "popup": {
+          "$value": "{color.bg.overlay}"
+        },
+        "selected": {
+          "$value": "{color.primary.subtle}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "inverse": {
+          "$value": "{color.text.inverse}"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        },
+        "focus-visible": {
+          "$value": "{color.border.focus}"
+        }
+      },
+      "radius": {
+        "$value": "{radius.md}"
+      },
+      "shadow": {
+        "$value": "{shadow.md}"
+      }
+    }
+  }
+}

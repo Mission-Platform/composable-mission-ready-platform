@@ -19,7 +19,7 @@
     flex-direction: column;
     justify-content: center;
     overflow: hidden;
-    border-radius: var(--mp-component-layout-hero-radius);
+    border-radius: var(--mp-layout-hero-radius);
     isolation: isolate;
 
     @supports (container-type: inline-size) {
@@ -28,46 +28,46 @@
 
     /* Vertical padding scale — canonical 2xs → 2xl. */
     &--2xs {
-      padding: var(--mp-component-layout-hero-padding-2xs-block) var(--mp-component-layout-hero-padding-2xs-inline);
+      padding: var(--mp-layout-hero-padding-2xs-block) var(--mp-layout-hero-padding-2xs-inline);
     }
 
     &--xs {
-      padding: var(--mp-component-layout-hero-padding-xs-block) var(--mp-component-layout-hero-padding-xs-inline);
+      padding: var(--mp-layout-hero-padding-xs-block) var(--mp-layout-hero-padding-xs-inline);
     }
 
     &--sm {
-      padding: var(--mp-component-layout-hero-padding-sm-block) var(--mp-component-layout-hero-padding-sm-inline);
+      padding: var(--mp-layout-hero-padding-sm-block) var(--mp-layout-hero-padding-sm-inline);
     }
 
     &--md {
-      padding: var(--mp-component-layout-hero-padding-md-block) var(--mp-component-layout-hero-padding-md-inline);
+      padding: var(--mp-layout-hero-padding-md-block) var(--mp-layout-hero-padding-md-inline);
 
       @container forge-hero (width >= 48rem) {
-        padding: var(--mp-component-layout-hero-padding-md-wide-block) var(--mp-component-layout-hero-padding-md-wide-inline);
+        padding: var(--mp-layout-hero-padding-md-wide-block) var(--mp-layout-hero-padding-md-wide-inline);
       }
     }
 
     &--lg {
-      padding: var(--mp-component-layout-hero-padding-lg-block) var(--mp-component-layout-hero-padding-lg-inline);
+      padding: var(--mp-layout-hero-padding-lg-block) var(--mp-layout-hero-padding-lg-inline);
 
       @container forge-hero (width >= 48rem) {
-        padding: var(--mp-component-layout-hero-padding-lg-wide-block) var(--mp-component-layout-hero-padding-lg-wide-inline);
+        padding: var(--mp-layout-hero-padding-lg-wide-block) var(--mp-layout-hero-padding-lg-wide-inline);
       }
     }
 
     &--xl {
-      padding: var(--mp-component-layout-hero-padding-xl-block) var(--mp-component-layout-hero-padding-xl-inline);
+      padding: var(--mp-layout-hero-padding-xl-block) var(--mp-layout-hero-padding-xl-inline);
 
       @container forge-hero (width >= 48rem) {
-        padding: var(--mp-component-layout-hero-padding-xl-wide-block) var(--mp-component-layout-hero-padding-xl-wide-inline);
+        padding: var(--mp-layout-hero-padding-xl-wide-block) var(--mp-layout-hero-padding-xl-wide-inline);
       }
     }
 
     &--2xl {
-      padding: var(--mp-component-layout-hero-padding-2xl-block) var(--mp-component-layout-hero-padding-2xl-inline);
+      padding: var(--mp-layout-hero-padding-2xl-block) var(--mp-layout-hero-padding-2xl-inline);
 
       @container forge-hero (width >= 48rem) {
-        padding: var(--mp-component-layout-hero-padding-2xl-wide-block) var(--mp-component-layout-hero-padding-2xl-wide-inline);
+        padding: var(--mp-layout-hero-padding-2xl-wide-block) var(--mp-layout-hero-padding-2xl-wide-inline);
       }
     }
 
@@ -93,18 +93,18 @@
       position: absolute;
       inset: 0;
       z-index: -1;
-      background-color: var(--mp-component-layout-hero-overlay);
+      background-color: var(--mp-layout-hero-overlay);
     }
 
     &__content {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-layout-hero-content-gap-default);
+      gap: var(--mp-layout-hero-content-gap-default);
       max-width: 48rem;
       width: 100%;
 
       @container forge-hero (width >= 40rem) {
-        gap: var(--mp-component-layout-hero-content-gap-wide);
+        gap: var(--mp-layout-hero-content-gap-wide);
       }
     }
 
@@ -138,11 +138,11 @@
     &__actions {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--mp-component-layout-hero-actions-gap-default);
-      margin-top: var(--mp-component-layout-hero-actions-margin-top);
+      gap: var(--mp-layout-hero-actions-gap-default);
+      margin-top: var(--mp-layout-hero-actions-margin-top);
 
       @container forge-hero (width >= 40rem) {
-        gap: var(--mp-component-layout-hero-actions-gap-wide);
+        gap: var(--mp-layout-hero-actions-gap-wide);
       }
     }
 
@@ -154,7 +154,7 @@
      * content inherits this colour here.
      */
     &--has-media {
-      color: var(--mp-component-layout-hero-text-inverse);
+      color: var(--mp-layout-hero-text-inverse);
     }
   }
 }

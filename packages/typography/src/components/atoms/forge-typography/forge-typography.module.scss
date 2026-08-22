@@ -15,132 +15,132 @@
 @layer mp.typography {
   .forge-typography {
     margin: 0;
-    font-family: var(--mp-component-typography-base-font-family);
-    line-height: var(--mp-component-typography-base-line-height);
+    font-family: var(--mp-typography-base-font-family);
+    line-height: var(--mp-typography-base-line-height);
 
     /* ── Variants ──────────────────────────────────────────────────────────── */
 
     &--display {
-      margin-bottom: var(--mp-component-typography-variant-display-margin-bottom);
-      font-family: var(--mp-component-typography-variant-display-font-family);
-      font-size: var(--mp-component-typography-variant-display-font-size);
-      font-weight: var(--mp-component-typography-variant-display-font-weight);
-      line-height: var(--mp-component-typography-variant-display-line-height);
-      letter-spacing: var(--mp-component-typography-variant-display-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-display-margin-bottom);
+      font-family: var(--mp-typography-variant-display-font-family);
+      font-size: var(--mp-typography-variant-display-font-size);
+      font-weight: var(--mp-typography-variant-display-font-weight);
+      line-height: var(--mp-typography-variant-display-line-height);
+      letter-spacing: var(--mp-typography-variant-display-letter-spacing);
     }
 
     &--h1 {
-      margin-bottom: var(--mp-component-typography-variant-h1-margin-bottom);
-      font-family: var(--mp-component-typography-variant-h1-font-family);
-      font-size: var(--mp-component-typography-variant-h1-font-size);
-      font-weight: var(--mp-component-typography-variant-h1-font-weight);
-      line-height: var(--mp-component-typography-variant-h1-line-height);
-      letter-spacing: var(--mp-component-typography-variant-h1-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-h1-margin-bottom);
+      font-family: var(--mp-typography-variant-h1-font-family);
+      font-size: var(--mp-typography-variant-h1-font-size);
+      font-weight: var(--mp-typography-variant-h1-font-weight);
+      line-height: var(--mp-typography-variant-h1-line-height);
+      letter-spacing: var(--mp-typography-variant-h1-letter-spacing);
     }
 
     &--h2 {
-      margin-bottom: var(--mp-component-typography-variant-h2-margin-bottom);
-      font-family: var(--mp-component-typography-variant-h2-font-family);
-      font-size: var(--mp-component-typography-variant-h2-font-size);
-      font-weight: var(--mp-component-typography-variant-h2-font-weight);
-      line-height: var(--mp-component-typography-variant-h2-line-height);
-      letter-spacing: var(--mp-component-typography-variant-h2-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-h2-margin-bottom);
+      font-family: var(--mp-typography-variant-h2-font-family);
+      font-size: var(--mp-typography-variant-h2-font-size);
+      font-weight: var(--mp-typography-variant-h2-font-weight);
+      line-height: var(--mp-typography-variant-h2-line-height);
+      letter-spacing: var(--mp-typography-variant-h2-letter-spacing);
     }
 
     &--h3 {
-      margin-bottom: var(--mp-component-typography-variant-h3-margin-bottom);
-      font-family: var(--mp-component-typography-variant-h3-font-family);
-      font-size: var(--mp-component-typography-variant-h3-font-size);
-      font-weight: var(--mp-component-typography-variant-h3-font-weight);
-      line-height: var(--mp-component-typography-variant-h3-line-height);
-      letter-spacing: var(--mp-component-typography-variant-h3-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-h3-margin-bottom);
+      font-family: var(--mp-typography-variant-h3-font-family);
+      font-size: var(--mp-typography-variant-h3-font-size);
+      font-weight: var(--mp-typography-variant-h3-font-weight);
+      line-height: var(--mp-typography-variant-h3-line-height);
+      letter-spacing: var(--mp-typography-variant-h3-letter-spacing);
     }
 
     &--h4 {
-      margin-bottom: var(--mp-component-typography-variant-h4-margin-bottom);
-      font-family: var(--mp-component-typography-variant-h4-font-family);
-      font-size: var(--mp-component-typography-variant-h4-font-size);
-      font-weight: var(--mp-component-typography-variant-h4-font-weight);
-      line-height: var(--mp-component-typography-variant-h4-line-height);
-      letter-spacing: var(--mp-component-typography-variant-h4-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-h4-margin-bottom);
+      font-family: var(--mp-typography-variant-h4-font-family);
+      font-size: var(--mp-typography-variant-h4-font-size);
+      font-weight: var(--mp-typography-variant-h4-font-weight);
+      line-height: var(--mp-typography-variant-h4-line-height);
+      letter-spacing: var(--mp-typography-variant-h4-letter-spacing);
     }
 
     &--h5 {
-      margin-bottom: var(--mp-component-typography-variant-h5-margin-bottom);
-      font-family: var(--mp-component-typography-variant-h5-font-family);
-      font-size: var(--mp-component-typography-variant-h5-font-size);
-      font-weight: var(--mp-component-typography-variant-h5-font-weight);
-      line-height: var(--mp-component-typography-variant-h5-line-height);
-      letter-spacing: var(--mp-component-typography-variant-h5-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-h5-margin-bottom);
+      font-family: var(--mp-typography-variant-h5-font-family);
+      font-size: var(--mp-typography-variant-h5-font-size);
+      font-weight: var(--mp-typography-variant-h5-font-weight);
+      line-height: var(--mp-typography-variant-h5-line-height);
+      letter-spacing: var(--mp-typography-variant-h5-letter-spacing);
     }
 
     &--h6 {
-      margin-bottom: var(--mp-component-typography-variant-h6-margin-bottom);
-      font-family: var(--mp-component-typography-variant-h6-font-family);
-      font-size: var(--mp-component-typography-variant-h6-font-size);
-      font-weight: var(--mp-component-typography-variant-h6-font-weight);
-      line-height: var(--mp-component-typography-variant-h6-line-height);
-      letter-spacing: var(--mp-component-typography-variant-h6-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-h6-margin-bottom);
+      font-family: var(--mp-typography-variant-h6-font-family);
+      font-size: var(--mp-typography-variant-h6-font-size);
+      font-weight: var(--mp-typography-variant-h6-font-weight);
+      line-height: var(--mp-typography-variant-h6-line-height);
+      letter-spacing: var(--mp-typography-variant-h6-letter-spacing);
     }
 
     &--body-lg {
-      margin-bottom: var(--mp-component-typography-variant-body-lg-margin-bottom);
-      font-family: var(--mp-component-typography-variant-body-lg-font-family);
-      font-size: var(--mp-component-typography-variant-body-lg-font-size);
-      font-weight: var(--mp-component-typography-variant-body-lg-font-weight);
-      line-height: var(--mp-component-typography-variant-body-lg-line-height);
-      letter-spacing: var(--mp-component-typography-variant-body-lg-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-body-lg-margin-bottom);
+      font-family: var(--mp-typography-variant-body-lg-font-family);
+      font-size: var(--mp-typography-variant-body-lg-font-size);
+      font-weight: var(--mp-typography-variant-body-lg-font-weight);
+      line-height: var(--mp-typography-variant-body-lg-line-height);
+      letter-spacing: var(--mp-typography-variant-body-lg-letter-spacing);
     }
 
     &--body-md {
-      margin-bottom: var(--mp-component-typography-variant-body-md-margin-bottom);
-      font-family: var(--mp-component-typography-variant-body-md-font-family);
-      font-size: var(--mp-component-typography-variant-body-md-font-size);
-      font-weight: var(--mp-component-typography-variant-body-md-font-weight);
-      line-height: var(--mp-component-typography-variant-body-md-line-height);
-      letter-spacing: var(--mp-component-typography-variant-body-md-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-body-md-margin-bottom);
+      font-family: var(--mp-typography-variant-body-md-font-family);
+      font-size: var(--mp-typography-variant-body-md-font-size);
+      font-weight: var(--mp-typography-variant-body-md-font-weight);
+      line-height: var(--mp-typography-variant-body-md-line-height);
+      letter-spacing: var(--mp-typography-variant-body-md-letter-spacing);
     }
 
     &--body-sm {
-      margin-bottom: var(--mp-component-typography-variant-body-sm-margin-bottom);
-      font-family: var(--mp-component-typography-variant-body-sm-font-family);
-      font-size: var(--mp-component-typography-variant-body-sm-font-size);
-      font-weight: var(--mp-component-typography-variant-body-sm-font-weight);
-      line-height: var(--mp-component-typography-variant-body-sm-line-height);
-      letter-spacing: var(--mp-component-typography-variant-body-sm-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-body-sm-margin-bottom);
+      font-family: var(--mp-typography-variant-body-sm-font-family);
+      font-size: var(--mp-typography-variant-body-sm-font-size);
+      font-weight: var(--mp-typography-variant-body-sm-font-weight);
+      line-height: var(--mp-typography-variant-body-sm-line-height);
+      letter-spacing: var(--mp-typography-variant-body-sm-letter-spacing);
     }
 
     &--body-xs {
-      margin-bottom: var(--mp-component-typography-variant-body-xs-margin-bottom);
-      font-family: var(--mp-component-typography-variant-body-xs-font-family);
-      font-size: var(--mp-component-typography-variant-body-xs-font-size);
-      font-weight: var(--mp-component-typography-variant-body-xs-font-weight);
-      line-height: var(--mp-component-typography-variant-body-xs-line-height);
-      letter-spacing: var(--mp-component-typography-variant-body-xs-letter-spacing);
+      margin-bottom: var(--mp-typography-variant-body-xs-margin-bottom);
+      font-family: var(--mp-typography-variant-body-xs-font-family);
+      font-size: var(--mp-typography-variant-body-xs-font-size);
+      font-weight: var(--mp-typography-variant-body-xs-font-weight);
+      line-height: var(--mp-typography-variant-body-xs-line-height);
+      letter-spacing: var(--mp-typography-variant-body-xs-letter-spacing);
     }
 
     &--label {
-      font-family: var(--mp-component-typography-variant-label-font-family);
-      font-size: var(--mp-component-typography-variant-label-font-size);
-      font-weight: var(--mp-component-typography-variant-label-font-weight);
-      line-height: var(--mp-component-typography-variant-label-line-height);
-      letter-spacing: var(--mp-component-typography-variant-label-letter-spacing);
+      font-family: var(--mp-typography-variant-label-font-family);
+      font-size: var(--mp-typography-variant-label-font-size);
+      font-weight: var(--mp-typography-variant-label-font-weight);
+      line-height: var(--mp-typography-variant-label-line-height);
+      letter-spacing: var(--mp-typography-variant-label-letter-spacing);
     }
 
     &--caption {
-      font-family: var(--mp-component-typography-variant-caption-font-family);
-      font-size: var(--mp-component-typography-variant-caption-font-size);
-      font-weight: var(--mp-component-typography-variant-caption-font-weight);
-      line-height: var(--mp-component-typography-variant-caption-line-height);
-      letter-spacing: var(--mp-component-typography-variant-caption-letter-spacing);
+      font-family: var(--mp-typography-variant-caption-font-family);
+      font-size: var(--mp-typography-variant-caption-font-size);
+      font-weight: var(--mp-typography-variant-caption-font-weight);
+      line-height: var(--mp-typography-variant-caption-line-height);
+      letter-spacing: var(--mp-typography-variant-caption-letter-spacing);
     }
 
     &--code {
-      font-family: var(--mp-component-typography-variant-code-font-family);
-      font-size: var(--mp-component-typography-variant-code-font-size);
-      font-weight: var(--mp-component-typography-variant-code-font-weight);
-      line-height: var(--mp-component-typography-variant-code-line-height);
-      letter-spacing: var(--mp-component-typography-variant-code-letter-spacing);
+      font-family: var(--mp-typography-variant-code-font-family);
+      font-size: var(--mp-typography-variant-code-font-size);
+      font-weight: var(--mp-typography-variant-code-font-weight);
+      line-height: var(--mp-typography-variant-code-line-height);
+      letter-spacing: var(--mp-typography-variant-code-letter-spacing);
     }
 
     /* ── Link ───────────────────────────────────────────────────────────────── */
@@ -152,27 +152,27 @@
      * overrides so an explicit `color` prop still wins.
      */
     &--link {
-      color: var(--mp-component-typography-color-link);
+      color: var(--mp-typography-color-link);
       cursor: pointer;
       text-decoration-thickness: from-font;
       text-underline-offset: 0.15em;
       transition:
-        color var(--mp-component-typography-link-transition-duration)
-          var(--mp-component-typography-link-transition-easing);
+        color var(--mp-typography-link-transition-duration)
+          var(--mp-typography-link-transition-easing);
 
       &:visited {
-        color: var(--mp-component-typography-color-link-visited);
+        color: var(--mp-typography-color-link-visited);
       }
 
       &:hover,
       &:active {
-        color: var(--mp-component-typography-color-link-hover);
+        color: var(--mp-typography-color-link-hover);
       }
 
       &:focus-visible {
         outline: none;
-        border-radius: var(--mp-component-typography-link-radius);
-        box-shadow: var(--mp-component-typography-link-focus-ring);
+        border-radius: var(--mp-typography-link-radius);
+        box-shadow: var(--mp-typography-link-focus-ring);
       }
     }
 
@@ -201,63 +201,63 @@
     /* ── Weight overrides ───────────────────────────────────────────────────── */
 
     &--weight-regular {
-      font-weight: var(--mp-component-typography-override-font-weight-regular);
+      font-weight: var(--mp-typography-override-font-weight-regular);
     }
 
     &--weight-medium {
-      font-weight: var(--mp-component-typography-override-font-weight-medium);
+      font-weight: var(--mp-typography-override-font-weight-medium);
     }
 
     &--weight-semibold {
-      font-weight: var(--mp-component-typography-override-font-weight-semibold);
+      font-weight: var(--mp-typography-override-font-weight-semibold);
     }
 
     &--weight-bold {
-      font-weight: var(--mp-component-typography-override-font-weight-bold);
+      font-weight: var(--mp-typography-override-font-weight-bold);
     }
 
     /* ── Line-height (leading) override ──────────────────────────────────────── */
 
     &--lh-tight {
-      line-height: var(--mp-component-typography-override-line-height-tight);
+      line-height: var(--mp-typography-override-line-height-tight);
     }
 
     &--lh-snug {
-      line-height: var(--mp-component-typography-override-line-height-snug);
+      line-height: var(--mp-typography-override-line-height-snug);
     }
 
     &--lh-normal {
-      line-height: var(--mp-component-typography-override-line-height-normal);
+      line-height: var(--mp-typography-override-line-height-normal);
     }
 
     &--lh-relaxed {
-      line-height: var(--mp-component-typography-override-line-height-relaxed);
+      line-height: var(--mp-typography-override-line-height-relaxed);
     }
 
     &--lh-loose {
-      line-height: var(--mp-component-typography-override-line-height-loose);
+      line-height: var(--mp-typography-override-line-height-loose);
     }
 
     /* ── Color ──────────────────────────────────────────────────────────────── */
 
     &--color-primary {
-      color: var(--mp-component-typography-color-primary);
+      color: var(--mp-typography-color-primary);
     }
 
     &--color-secondary {
-      color: var(--mp-component-typography-color-secondary);
+      color: var(--mp-typography-color-secondary);
     }
 
     &--color-tertiary {
-      color: var(--mp-component-typography-color-tertiary);
+      color: var(--mp-typography-color-tertiary);
     }
 
     &--color-disabled {
-      color: var(--mp-component-typography-color-disabled);
+      color: var(--mp-typography-color-disabled);
     }
 
     &--color-inverse {
-      color: var(--mp-component-typography-color-inverse);
+      color: var(--mp-typography-color-inverse);
     }
 
     /**
@@ -276,7 +276,7 @@
         )
     {
       &--color-#{$name} {
-        color: var(--mp-component-typography-color-#{$name});
+        color: var(--mp-typography-color-#{$name});
       }
     }
 
@@ -356,21 +356,21 @@
     position-anchor: --mp-typography-truncate;
     top: anchor(bottom);
     left: anchor(left);
-    margin-top: var(--mp-component-typography-popup-margin-top);
+    margin-top: var(--mp-typography-popup-margin-top);
     z-index: 700;
-    max-width: var(--mp-component-typography-popup-max-width);
-    padding: var(--mp-component-typography-popup-padding-block)
-      var(--mp-component-typography-popup-padding-inline);
-    background-color: var(--mp-component-typography-popup-surface);
-    color: var(--mp-component-typography-popup-text);
-    border: var(--mp-component-typography-popup-border-width) solid var(--mp-component-typography-popup-border);
-    border-radius: var(--mp-component-typography-popup-radius);
-    box-shadow: var(--mp-component-typography-popup-shadow);
-    font-family: var(--mp-component-typography-popup-font-family);
-    font-size: var(--mp-component-typography-popup-font-size);
-    font-weight: var(--mp-component-typography-popup-font-weight);
-    line-height: var(--mp-component-typography-popup-line-height);
-    letter-spacing: var(--mp-component-typography-popup-letter-spacing);
+    max-width: var(--mp-typography-popup-max-width);
+    padding: var(--mp-typography-popup-padding-block)
+      var(--mp-typography-popup-padding-inline);
+    background-color: var(--mp-typography-popup-surface);
+    color: var(--mp-typography-popup-text);
+    border: var(--mp-typography-popup-border-width) solid var(--mp-typography-popup-border);
+    border-radius: var(--mp-typography-popup-radius);
+    box-shadow: var(--mp-typography-popup-shadow);
+    font-family: var(--mp-typography-popup-font-family);
+    font-size: var(--mp-typography-popup-font-size);
+    font-weight: var(--mp-typography-popup-font-weight);
+    line-height: var(--mp-typography-popup-line-height);
+    letter-spacing: var(--mp-typography-popup-letter-spacing);
     white-space: normal;
     overflow-wrap: break-word;
     pointer-events: none;

@@ -1,0 +1,71 @@
+{
+  "$description": "Split component source for component.markdown.",
+  "component": {
+    "markdown": {
+      "$description": "Markdown document flow chrome. Typography of composed headings and paragraphs remains owned by ForgeTypography; these slots cover renderer-owned rhythm, links, quotes, rules, and images.",
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "link": {
+          "$value": "{color.primary.default}"
+        }
+      },
+      "typography": {
+        "font-family": {
+          "$value": "{font.family.sans}"
+        },
+        "line-height": {
+          "$value": "{line-height.relaxed}"
+        }
+      },
+      "flow": {
+        "block-gap": {
+          "$value": "{spacing.4}"
+        },
+        "list-indent": {
+          "$value": "{spacing.5}"
+        },
+        "list-item-gap": {
+          "$value": "{spacing.2}"
+        },
+        "task-gap": {
+          "$value": "{spacing.2}"
+        },
+        "heading-scroll-margin": {
+          "$value": "{spacing.16}"
+        }
+      },
+      "blockquote": {
+        "padding-block": {
+          "$value": "{spacing.2}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.4}"
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thick}"
+        },
+        "text": {
+          "$value": "{color.text.secondary}"
+        }
+      },
+      "rule": {
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        }
+      },
+      "image": {
+        "radius": {
+          "$value": "{radius.md}"
+        }
+      }
+    }
+  }
+}

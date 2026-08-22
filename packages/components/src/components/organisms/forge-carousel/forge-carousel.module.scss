@@ -21,14 +21,14 @@
     }
 
     &:focus-visible {
-      outline: var(--mp-component-navigation-carousel-focus-border-width) solid var(--mp-component-navigation-carousel-focus-border);
-      outline-offset: var(--mp-component-navigation-carousel-focus-offset);
-      border-radius: var(--mp-component-navigation-carousel-viewport-radius);
+      outline: var(--mp-navigation-carousel-focus-border-width) solid var(--mp-navigation-carousel-focus-border);
+      outline-offset: var(--mp-navigation-carousel-focus-offset);
+      border-radius: var(--mp-navigation-carousel-viewport-radius);
     }
 
     &__viewport {
       overflow: hidden;
-      border-radius: var(--mp-component-navigation-carousel-viewport-radius);
+      border-radius: var(--mp-navigation-carousel-viewport-radius);
       touch-action: pan-y;
       user-select: none;
     }
@@ -36,7 +36,7 @@
     &__track {
       display: flex;
       width: 100%;
-      transition: transform var(--mp-component-navigation-carousel-track-transition-duration) var(--mp-component-navigation-carousel-track-transition-easing);
+      transition: transform var(--mp-navigation-carousel-track-transition-duration) var(--mp-navigation-carousel-track-transition-easing);
     }
 
     &__slide {
@@ -55,19 +55,19 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: var(--mp-component-navigation-carousel-control-size);
-      height: var(--mp-component-navigation-carousel-control-size);
-      border-radius: var(--mp-component-navigation-carousel-control-radius);
-      border: var(--mp-component-navigation-carousel-control-border-width) solid var(--mp-component-navigation-carousel-control-border);
-      background: var(--mp-component-navigation-carousel-control-surface-default);
-      color: var(--mp-component-navigation-carousel-control-text);
-      font-size: var(--mp-component-navigation-carousel-control-font-size);
-      line-height: var(--mp-component-navigation-carousel-control-line-height);
+      width: var(--mp-navigation-carousel-control-size);
+      height: var(--mp-navigation-carousel-control-size);
+      border-radius: var(--mp-navigation-carousel-control-radius);
+      border: var(--mp-navigation-carousel-control-border-width) solid var(--mp-navigation-carousel-control-border);
+      background: var(--mp-navigation-carousel-control-surface-default);
+      color: var(--mp-navigation-carousel-control-text);
+      font-size: var(--mp-navigation-carousel-control-font-size);
+      line-height: var(--mp-navigation-carousel-control-line-height);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: var(--mp-component-navigation-carousel-control-shadow);
+      box-shadow: var(--mp-navigation-carousel-control-shadow);
 
       svg {
         display: block;
@@ -77,28 +77,28 @@
       }
 
       &--prev {
-        left: var(--mp-component-navigation-carousel-control-offset);
+        left: var(--mp-navigation-carousel-control-offset);
       }
 
       &--next {
-        right: var(--mp-component-navigation-carousel-control-offset);
+        right: var(--mp-navigation-carousel-control-offset);
       }
 
       &:disabled {
-        opacity: var(--mp-component-navigation-carousel-control-opacity-disabled);
+        opacity: var(--mp-navigation-carousel-control-opacity-disabled);
         cursor: not-allowed;
       }
 
       &:hover:not(:disabled) {
-        background: var(--mp-component-navigation-carousel-control-surface-hover);
+        background: var(--mp-navigation-carousel-control-surface-hover);
       }
     }
 
     &__indicators {
       display: flex;
       justify-content: center;
-      gap: var(--mp-component-navigation-carousel-indicators-gap);
-      margin-top: var(--mp-component-navigation-carousel-indicators-margin-top);
+      gap: var(--mp-navigation-carousel-indicators-gap);
+      margin-top: var(--mp-navigation-carousel-indicators-margin-top);
     }
 
     &__indicator {
@@ -107,30 +107,30 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: var(--mp-component-navigation-carousel-indicator-target-size);
-      height: var(--mp-component-navigation-carousel-indicator-target-size);
+      width: var(--mp-navigation-carousel-indicator-target-size);
+      height: var(--mp-navigation-carousel-indicator-target-size);
       padding: 0;
       border: none;
-      border-radius: var(--mp-component-navigation-carousel-indicator-radius);
-      background: var(--mp-component-navigation-carousel-indicator-surface-default);
+      border-radius: var(--mp-navigation-carousel-indicator-radius);
+      background: var(--mp-navigation-carousel-indicator-surface-default);
       cursor: pointer;
 
       &::before {
         content: '';
-        width: var(--mp-component-navigation-carousel-indicator-dot-size);
-        height: var(--mp-component-navigation-carousel-indicator-dot-size);
-        border-radius: var(--mp-component-navigation-carousel-indicator-radius);
-        background: var(--mp-component-navigation-carousel-indicator-surface-dot-default);
-        transition: background var(--mp-component-navigation-carousel-indicator-transition-duration) var(--mp-component-navigation-carousel-indicator-transition-easing);
+        width: var(--mp-navigation-carousel-indicator-dot-size);
+        height: var(--mp-navigation-carousel-indicator-dot-size);
+        border-radius: var(--mp-navigation-carousel-indicator-radius);
+        background: var(--mp-navigation-carousel-indicator-surface-dot-default);
+        transition: background var(--mp-navigation-carousel-indicator-transition-duration) var(--mp-navigation-carousel-indicator-transition-easing);
       }
 
       &--active::before {
-        background: var(--mp-component-navigation-carousel-indicator-surface-dot-selected);
+        background: var(--mp-navigation-carousel-indicator-surface-dot-selected);
       }
 
       &:focus-visible {
-        outline: var(--mp-component-navigation-carousel-focus-border-width) solid var(--mp-component-navigation-carousel-focus-border);
-        outline-offset: var(--mp-component-navigation-carousel-focus-offset);
+        outline: var(--mp-navigation-carousel-focus-border-width) solid var(--mp-navigation-carousel-focus-border);
+        outline-offset: var(--mp-navigation-carousel-focus-offset);
       }
     }
 
@@ -140,18 +140,18 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: var(--mp-component-navigation-carousel-autoplay-size);
-      height: var(--mp-component-navigation-carousel-autoplay-size);
-      margin: var(--mp-component-navigation-carousel-autoplay-margin-top) auto 0;
+      width: var(--mp-navigation-carousel-autoplay-size);
+      height: var(--mp-navigation-carousel-autoplay-size);
+      margin: var(--mp-navigation-carousel-autoplay-margin-top) auto 0;
       padding: 0;
-      border: var(--mp-component-navigation-carousel-autoplay-border-width) solid var(--mp-component-navigation-carousel-autoplay-border);
-      border-radius: var(--mp-component-navigation-carousel-autoplay-radius);
-      background: var(--mp-component-navigation-carousel-autoplay-surface-default);
-      color: var(--mp-component-navigation-carousel-autoplay-text);
-      font-size: var(--mp-component-navigation-carousel-autoplay-font-size);
-      line-height: var(--mp-component-navigation-carousel-autoplay-line-height);
+      border: var(--mp-navigation-carousel-autoplay-border-width) solid var(--mp-navigation-carousel-autoplay-border);
+      border-radius: var(--mp-navigation-carousel-autoplay-radius);
+      background: var(--mp-navigation-carousel-autoplay-surface-default);
+      color: var(--mp-navigation-carousel-autoplay-text);
+      font-size: var(--mp-navigation-carousel-autoplay-font-size);
+      line-height: var(--mp-navigation-carousel-autoplay-line-height);
       cursor: pointer;
-      box-shadow: var(--mp-component-navigation-carousel-autoplay-shadow);
+      box-shadow: var(--mp-navigation-carousel-autoplay-shadow);
 
       svg {
         display: block;
@@ -161,12 +161,12 @@
       }
 
       &:hover {
-        background: var(--mp-component-navigation-carousel-autoplay-surface-hover);
+        background: var(--mp-navigation-carousel-autoplay-surface-hover);
       }
 
       &:focus-visible {
-        outline: var(--mp-component-navigation-carousel-focus-border-width) solid var(--mp-component-navigation-carousel-focus-border);
-        outline-offset: var(--mp-component-navigation-carousel-focus-offset);
+        outline: var(--mp-navigation-carousel-focus-border-width) solid var(--mp-navigation-carousel-focus-border);
+        outline-offset: var(--mp-navigation-carousel-focus-offset);
       }
     }
 
@@ -189,12 +189,12 @@
     {
       &--#{$name} {
         .forge-carousel__indicator--active::before {
-          background: var(--mp-component-navigation-carousel-tone-#{$name}-indicator);
+          background: var(--mp-navigation-carousel-tone-#{$name}-indicator);
         }
 
         .forge-carousel__control {
-          color: var(--mp-component-navigation-carousel-tone-#{$name}-control-text);
-          border-color: var(--mp-component-navigation-carousel-tone-#{$name}-control-border);
+          color: var(--mp-navigation-carousel-tone-#{$name}-control-text);
+          border-color: var(--mp-navigation-carousel-tone-#{$name}-control-border);
         }
       }
     }

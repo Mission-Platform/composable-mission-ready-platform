@@ -24,10 +24,11 @@ Value handling:
 The generated file is a build artefact — add it to `.gitignore` /
 `.prettierignore` rather than committing it.
 
-The central Forge component contract lives in
-`packages/tokens/tokens/component.tokens.json`. Component overrides use the
-same stable path below the `component` namespace, so Storybook and consuming
-applications can restyle a component without changing its implementation:
+The Forge component contracts live in the recursive
+`packages/tokens/tokens/component/{atoms,molecules,organisms,templates}/` source
+tree. Component overrides use the same stable path below the `component`
+namespace, so Storybook and consuming applications can restyle a component
+without changing its implementation:
 
 ```jsonc
 {
@@ -45,10 +46,18 @@ applications can restyle a component without changing its implementation:
 }
 ```
 
-The path maps to `--mp-component-button-primary-background-hover`. Keep
-component names, variants, slots, and state names in kebab-case and override
-only documented leaves when matching the Figma contract. The schema accepts
+The stable path maps to `--mp-button-primary-background-hover` in generated CSS;
+the `component` wrapper is omitted only from the CSS namespace. Keep component
+names, variants, slots, and state names in kebab-case and override only
+documented leaves when matching the Figma contract. The schema accepts
 additional nested component paths for forward-compatible consumer contracts.
+
+The token reachability audit removed 189 unreachable base-token leaves (185
+reviewed candidates plus 4 net second-order palette leaves, after restoring 2 reachable `.500` leaves). Overrides for those
+removed leaves no longer affect generated base CSS; repository-owned override
+documents are checked for stale paths, while the permissive schema continues
+to accept forward-compatible external paths. Retained component paths and
+their projected `--mp-<layer>-*` names are unchanged.
 
 ## Usage
 

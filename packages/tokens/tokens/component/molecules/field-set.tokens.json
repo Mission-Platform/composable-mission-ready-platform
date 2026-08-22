@@ -1,0 +1,32 @@
+{
+  "$description": "Split component source for component.field-set.",
+  "component": {
+    "field-set": {
+      "$description": "ForgeFieldSet frame, legend, description, and content spacing roles.",
+      "padding": {
+        "$value": "{spacing.4}"
+      },
+      "surface": {
+        "$value": "{color.bg.surface}"
+      },
+      "border": {
+        "$value": "{color.border.default}"
+      },
+      "border-width": {
+        "$value": "{border-width.thin}"
+      },
+      "radius": {
+        "$value": "{radius.lg}"
+      },
+      "legend-padding": {
+        "$value": "{spacing.1}"
+      },
+      "description-margin": {
+        "$value": "{spacing.3}"
+      },
+      "content-gap": {
+        "$value": "{spacing.3}"
+      }
+    }
+  }
+}

@@ -136,12 +136,14 @@ export function registerTools(server: McpServer): void {
     "get_tokens",
     {
       description:
-        "reads Mission Platform design tokens (optionally one category) from @mission-platform/tokens.",
+        "Reads Mission Platform DTCG design tokens from @mission-platform/tokens. Select a top-level category, a split component source such as component/atoms/button, or omit the filter for the complete merged document.",
       inputSchema: {
         category: z
           .string()
           .optional()
-          .describe("Token category (e.g. palette, spacing, typography)."),
+          .describe(
+            "Optional category or normalized source ID (e.g. palette, spacing, typography, component, component/atoms/button).",
+          ),
       },
     },
     async (args) => {
@@ -170,13 +172,13 @@ export function registerTools(server: McpServer): void {
     "list_token_variables",
     {
       description:
-        "Lists the overridable Mission Platform design-token CSS custom properties (--mp-*) and their descriptions, optionally scoped to one token category (e.g. theme-light, radius, shadow, font).",
+        "Lists overridable Mission Platform design-token CSS custom properties (--mp-*), stable DTCG paths, source IDs, and descriptions. Component properties use --mp-<layer>-* while overrides remain keyed by component.* paths; optionally scope to a category or split source.",
       inputSchema: {
         category: z
           .string()
           .optional()
           .describe(
-            "Token category to scope to (e.g. theme-light, palette, radius, shadow, font, spacing).",
+            "Category or normalized source ID to scope to (e.g. theme-light, palette, radius, shadow, font, spacing, component/atoms/button).",
           ),
       },
     },

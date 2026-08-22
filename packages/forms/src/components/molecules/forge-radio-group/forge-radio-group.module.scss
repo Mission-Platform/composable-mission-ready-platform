@@ -15,11 +15,11 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-checkable-gap-inline);
+    gap: var(--mp-checkable-gap-inline);
 
     &__legend {
       padding: 0;
-      margin-bottom: var(--mp-component-input-field-gap);
+      margin-bottom: var(--mp-input-field-gap);
 
       &--hidden {
         position: absolute;
@@ -35,17 +35,17 @@
     }
 
     &__required {
-      color: var(--mp-component-field-required);
+      color: var(--mp-field-required);
       margin-left: 2px;
     }
 
     &--disabled {
       pointer-events: none;
-      color: var(--mp-component-checkable-text-disabled);
+      color: var(--mp-checkable-text-disabled);
     }
 
     &__error {
-      color: var(--mp-component-field-error);
+      color: var(--mp-field-error);
       margin: 0;
     }
 

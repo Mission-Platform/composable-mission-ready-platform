@@ -9,9 +9,7 @@
         "fontSize": "{font.size.5xl}",
         "fontWeight": "{font.weight.bold}",
         "lineHeight": "{line-height.tight}",
-        "letterSpacing": "{letter-spacing.tight}",
-        "marginBlock": "{spacing.3}",
-        "marginInline": "{spacing.0}"
+        "letterSpacing": "{letter-spacing.tight}"
       }
     },
     "h1": {
@@ -21,9 +19,7 @@
         "fontSize": "{font.size.4xl}",
         "fontWeight": "{font.weight.semibold}",
         "lineHeight": "{line-height.tight}",
-        "letterSpacing": "{letter-spacing.tight}",
-        "marginBlock": "{spacing.3}",
-        "marginInline": "{spacing.0}"
+        "letterSpacing": "{letter-spacing.tight}"
       }
     },
     "h2": {
@@ -33,9 +29,7 @@
         "fontSize": "{font.size.3xl}",
         "fontWeight": "{font.weight.semibold}",
         "lineHeight": "{line-height.tight}",
-        "letterSpacing": "{letter-spacing.tight}",
-        "marginBlock": "{spacing.2}",
-        "marginInline": "{spacing.0}"
+        "letterSpacing": "{letter-spacing.tight}"
       }
     },
     "h3": {
@@ -45,45 +39,32 @@
         "fontSize": "{font.size.2xl}",
         "fontWeight": "{font.weight.medium}",
         "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.tight}",
-        "marginBlock": "{spacing.2}",
-        "marginInline": "{spacing.0}"
+        "letterSpacing": "{letter-spacing.tight}"
       }
     },
     "h4": {
       "$description": "Heading level 4.",
       "$value": {
         "fontFamily": "{font.family.sans}",
-        "fontSize": "{font.size.xl}",
         "fontWeight": "{font.weight.medium}",
         "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.tight}",
-        "marginBlock": "{spacing.2}",
-        "marginInline": "{spacing.0}"
+        "letterSpacing": "{letter-spacing.tight}"
       }
     },
     "h5": {
       "$description": "Heading level 5.",
       "$value": {
         "fontFamily": "{font.family.sans}",
-        "fontSize": "{font.size.lg}",
         "fontWeight": "{font.weight.medium}",
-        "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.normal}",
-        "marginBlock": "{spacing.1}",
-        "marginInline": "{spacing.0}"
+        "lineHeight": "{line-height.snug}"
       }
     },
     "h6": {
       "$description": "Heading level 6.",
       "$value": {
         "fontFamily": "{font.family.sans}",
-        "fontSize": "{font.size.md}",
         "fontWeight": "{font.weight.medium}",
-        "lineHeight": "{line-height.normal}",
-        "letterSpacing": "{letter-spacing.normal}",
-        "marginBlock": "{spacing.1}",
-        "marginInline": "{spacing.0}"
+        "lineHeight": "{line-height.normal}"
       }
     },
     "body-lg": {
@@ -91,11 +72,7 @@
       "$value": {
         "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.lg}",
-        "fontWeight": "{font.weight.regular}",
-        "lineHeight": "{line-height.relaxed}",
-        "letterSpacing": "{letter-spacing.normal}",
-        "marginBlock": "{spacing.1}",
-        "marginInline": "{spacing.0}"
+        "lineHeight": "{line-height.relaxed}"
       }
     },
     "body-md": {
@@ -103,11 +80,7 @@
       "$value": {
         "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.md}",
-        "fontWeight": "{font.weight.regular}",
-        "lineHeight": "{line-height.normal}",
-        "letterSpacing": "{letter-spacing.normal}",
-        "marginBlock": "{spacing.1}",
-        "marginInline": "{spacing.0}"
+        "lineHeight": "{line-height.normal}"
       }
     },
     "body-sm": {
@@ -115,11 +88,7 @@
       "$value": {
         "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.sm}",
-        "fontWeight": "{font.weight.regular}",
-        "lineHeight": "{line-height.normal}",
-        "letterSpacing": "{letter-spacing.normal}",
-        "marginBlock": "{spacing.1}",
-        "marginInline": "{spacing.0}"
+        "lineHeight": "{line-height.normal}"
       }
     },
     "body-xs": {
@@ -127,11 +96,7 @@
       "$value": {
         "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.xs}",
-        "fontWeight": "{font.weight.regular}",
-        "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.wide}",
-        "marginBlock": "{spacing.1}",
-        "marginInline": "{spacing.0}"
+        "lineHeight": "{line-height.snug}"
       }
     },
     "label": {
@@ -154,18 +119,6 @@
         "fontWeight": "{font.weight.regular}",
         "lineHeight": "{line-height.snug}",
         "letterSpacing": "{letter-spacing.wide}",
-        "marginBlock": "{spacing.0}",
-        "marginInline": "{spacing.0}"
-      }
-    },
-    "code": {
-      "$description": "Code — inline and block code.",
-      "$value": {
-        "fontFamily": "{font.family.mono}",
-        "fontSize": "{font.size.sm}",
-        "fontWeight": "{font.weight.regular}",
-        "lineHeight": "{line-height.snug}",
-        "letterSpacing": "{letter-spacing.normal}",
         "marginBlock": "{spacing.0}",
         "marginInline": "{spacing.0}"
       }

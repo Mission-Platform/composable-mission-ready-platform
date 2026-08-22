@@ -12,7 +12,7 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-surface-quote-gap);
+    gap: var(--mp-surface-quote-gap);
 
     &__content {
       margin: 0;
@@ -23,11 +23,11 @@
       display: flex;
       flex-wrap: wrap;
       align-items: baseline;
-      gap: var(--mp-component-surface-quote-attribution-gap);
+      gap: var(--mp-surface-quote-attribution-gap);
 
       &::before {
         content: '—';
-        color: var(--mp-component-surface-quote-attribution-marker);
+        color: var(--mp-surface-quote-attribution-marker);
       }
     }
 
@@ -41,14 +41,14 @@
 
     /* Variants */
     &--bordered {
-      padding-left: var(--mp-component-surface-quote-bordered-padding);
-      border-left: var(--mp-component-surface-quote-bordered-border-width) solid var(--mp-component-surface-quote-border-primary);
+      padding-left: var(--mp-surface-quote-bordered-padding);
+      border-left: var(--mp-surface-quote-bordered-border-width) solid var(--mp-surface-quote-border-primary);
     }
 
     &--default {
-      padding: var(--mp-component-surface-quote-default-padding);
-      background-color: var(--mp-component-surface-quote-background-neutral);
-      border-radius: var(--mp-component-surface-quote-default-radius);
+      padding: var(--mp-surface-quote-default-padding);
+      background-color: var(--mp-surface-quote-background-neutral);
+      border-radius: var(--mp-surface-quote-default-radius);
     }
 
     &--plain {
@@ -74,11 +74,11 @@
     {
       &--tone-#{$name} {
         &.forge-quote--bordered {
-          border-left-color: var(--mp-component-surface-quote-border-#{$name});
+          border-left-color: var(--mp-surface-quote-border-#{$name});
         }
 
         &.forge-quote--default {
-          background-color: var(--mp-component-surface-quote-background-#{$name});
+          background-color: var(--mp-surface-quote-background-#{$name});
         }
       }
     }

@@ -54,20 +54,20 @@
       /* Cap to the viewport so the panel never overflows on small screens. */
       max-width: calc(100vw - var(--mp-spacing-4));
       margin: 0;
-      padding: var(--mp-component-overlay-panel-padding-block) 0;
-      color: var(--mp-component-overlay-text-default);
-      background-color: var(--mp-component-overlay-popover-surface);
-      border: var(--mp-component-overlay-border-width) solid var(--mp-component-overlay-border-default);
-      border-radius: var(--mp-component-overlay-popover-radius);
-      box-shadow: var(--mp-component-overlay-popover-shadow);
+      padding: var(--mp-overlay-panel-padding-block) 0;
+      color: var(--mp-overlay-text-default);
+      background-color: var(--mp-overlay-popover-surface);
+      border: var(--mp-overlay-border-width) solid var(--mp-overlay-border-default);
+      border-radius: var(--mp-overlay-popover-radius);
+      box-shadow: var(--mp-overlay-popover-shadow);
       position-try-fallbacks: flip-block, flip-inline, --mp-popover-shift;
       opacity: 1;
       translate: 0 0;
       transition:
-        opacity var(--mp-component-overlay-popover-transition-duration)
-          var(--mp-component-overlay-popover-transition-easing),
-        translate var(--mp-component-overlay-popover-transition-duration)
-          var(--mp-component-overlay-popover-transition-easing);
+        opacity var(--mp-overlay-popover-transition-duration)
+          var(--mp-overlay-popover-transition-easing),
+        translate var(--mp-overlay-popover-transition-duration)
+          var(--mp-overlay-popover-transition-easing);
 
       @starting-style {
         opacity: 0;

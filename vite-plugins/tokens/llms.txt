@@ -5,7 +5,9 @@ the DTCG (Design Tokens Community Group, https://www.designtokens.org/) sources
 using a self-contained custom generator — no external CLI is involved. The DTCG
 sources are flattened in-process and emitted by focused generator modules
 (`dtcg.ts`, `generators/scss.ts`, `generators/typescript.ts`); one SCSS partial
-and one TypeScript module are produced per source file.
+and one TypeScript module are produced per source file. Component sources are
+discovered recursively, so adding a file under the component source tree does
+not require a generator descriptor.
 
 It replaces the previous standalone generation script: the artefacts are
 produced during `vite build` (and on dev-server start) via the rollup
@@ -23,11 +25,16 @@ DTCG `*.tokens.json` sources (authored against the **v2025.10** schema):
   each carries the `{font.*}` primitives plus `marginBlock`/`marginInline` `{spacing.*}` logical-margin aliases
 - `theme-light.tokens.json`  — light-theme semantic colours (palette `{color.*}` aliases)
 - `theme-dark.tokens.json`   — dark-theme semantic colours (palette `{color.*}` aliases)
+- `component/{atoms,molecules,organisms,templates}/*.tokens.json` — split visual
+  component contracts. The first key below the `component` wrapper is the CSS
+  layer namespace (`component.button.*` emits `--mp-button-*`). Shared
+  contracts are authored once and reused by composed components.
 
 ## Outputs (written to `outDir`)
 
 One SCSS partial per non-theme source (the two themes are merged into one), one
-TS module per source, plus two aggregate barrels:
+TS module per source, plus two aggregate barrels. Component artifacts preserve
+their atomic-level relative path:
 
 - `scss/_<file>.scss`             — a self-contained structural SCSS partial per non-theme source:
   unprefixed `$` variables, then `:root { --mp-*: #{$<token>} }` custom properties (each value
@@ -52,12 +59,34 @@ TS module per source, plus two aggregate barrels:
   `font.font.*` / `font['line-height']`, `themeLight.color.*`). Colours are emitted as `oklab(…)` strings
   and both the composite `typography` `{font.*}`/`{spacing.*}` aliases and the `theme-*` `{color.*}` aliases
   are resolved to their primitive values.
+- `scss/component/<level>/_<file>.scss` and `_<file>-vars.scss` — component
+  partials under the source's atomic level. Their `component.<layer>.*` records
+  emit `$<layer>-*`, `--<prefix>-<layer>-*`, and matching `@property` names;
+  the `component` wrapper is never included in generated CSS names.
+- `ts/component/<level>/<file>.ts` — nested component modules re-exported by
+  the TypeScript barrel with collision-safe source-qualified identifiers.
 - `_tokens.scss`                  — SCSS barrel `@forward`ing every partial **including** `scss/theme`,
   so a single `@use 'generated/tokens'` emits the structural + palette + typography custom properties
   (with their `@property` registrations), re-exports the `$` variables, and applies the `light-dark()` theme
 - `tokens.ts`                     — TypeScript barrel re-exporting every `ts/<file>.ts` module
 
+The generated CSS namespace is not an authoring or override path. Directory and
+record overrides continue to address flattened `component.*` DTCG paths; the
+legacy aggregate `component` override key remains supported while split sources
+are migrated.
+
 Colour values are emitted in the **OKLab** colour space (`oklab(L a b / α)`).
+
+## Post-audit compatibility
+
+The source-driven audit removed 189 unreachable leaves: 185 reviewed candidates and 4 net second-order palette leaves
+(6 removed, 2 restored as reachable `.500` leaves) found during alias closure. The deterministic report contains 2,841 leaves (132 active, 2,161 protected, 548
+ambiguous, zero candidates), and the package build is the only supported way to regenerate `src/generated`.
+
+The generated TypeScript surface intentionally no longer exports those removed primitive, semantic, typography, or
+structural leaves. Retained `component.*` paths, `--mp-<layer>-*`/`$<layer>-*` projections, aliases, and split/legacy
+override selectors are unchanged. `color.surface.raised`, `radius.2xs`, and `font.weight.light` remain the only
+pre-existing unresolved aliases.
 
 > `@property` registrations use a typed `syntax` for `color`/`dimension`/`number`/`fontWeight`/`duration`
 > tokens (with an `initial-value` that resolves to the matching local `$`-variable, e.g.

@@ -35,6 +35,13 @@ pnpm add @mission-platform/tokens
 - **`./scss/size`**: Size utilities.
 - **`./scss/a11y`**: Accessibility helper styles (screen-reader only, focus outlines).
 
+### Compatibility note
+
+The generated TypeScript export surface was intentionally reduced by the token reachability audit: 189 unreachable
+leaves were removed (185 reviewed candidates plus 4 net second-order palette leaves, after restoring 2 reachable `.500` leaves). Retained `component.*` paths,
+layer-based CSS/SCSS names, aliases, and override selectors are unchanged; consumers importing a removed primitive,
+semantic, typography, or structural leaf must update that import.
+
 ---
 
 ## Usage Example

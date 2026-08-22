@@ -1,0 +1,32 @@
+{
+  "sources": [
+    {
+      "sourceId": "component/atoms/button",
+      "document": {
+        "component": {
+          "button": {
+            "primary": {
+              "background": {
+                "default": { "$value": "{color.primary.default}" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "sourceId": "component/molecules/button",
+      "document": {
+        "component": {
+          "button": {
+            "primary": {
+              "background": {
+                "default": { "$value": "{color.primary.hover}" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

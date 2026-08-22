@@ -71,7 +71,9 @@ function formatOverrideValue(value: OverrideValue): string {
 /**
  * Recursively flatten an override document into {@link FlatOverride}s. Keys that
  * start with `$` (DTCG metadata) are skipped; every remaining leaf becomes a
- * `--<prefix>-<path-joined-by-dashes>` custom property.
+ * `--<prefix>-<path-joined-by-dashes>` custom property. Component override
+ * paths retain their `component.*` DTCG wrapper, but generated CSS omits that
+ * wrapper (`component.button.*` becomes `--<prefix>-button-*`).
  */
 export function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride[] {
   const overrides: FlatOverride[] = [];
@@ -80,8 +82,9 @@ export function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatO
       if (key.startsWith('$')) continue;
       const path = [...segments, key];
       if (isOverrideToken(child)) {
+        const cssPath = path[0] === 'component' ? path.slice(1) : path;
         overrides.push({
-          name: `--${prefix}-${path.join('-')}`,
+          name: `--${prefix}-${cssPath.join('-')}`,
           value: formatOverrideValue(child.$value),
           description: child.$description,
         });

@@ -1,0 +1,178 @@
+{
+  "$description": "Split component source for component.color-input.",
+  "component": {
+    "color-input": {
+      "$description": "ForgeColorInput wrapper, swatch, monospace value, state, and size roles.",
+      "gap": {
+        "stack": {
+          "$value": "{spacing.1}"
+        },
+        "inline": {
+          "$value": "{spacing.2}"
+        }
+      },
+      "surface": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "disabled": {
+          "$value": "{color.bg.muted}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "placeholder": {
+          "$value": "{color.text.tertiary}"
+        },
+        "error": {
+          "$value": "{color.danger.text}"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        },
+        "focus": {
+          "$value": "{color.border.focus}"
+        },
+        "invalid": {
+          "$value": "{color.danger.default}"
+        },
+        "width": {
+          "$value": "{border-width.thin}"
+        }
+      },
+      "radius": {
+        "$value": "{radius.md}"
+      },
+      "focus-ring": {
+        "$value": "{shadow.focus-primary}"
+      },
+      "focus-ring-invalid": {
+        "$value": "{shadow.focus-danger}"
+      },
+      "font-family": {
+        "$value": "{font.family.mono}"
+      },
+      "letter-spacing": {
+        "$value": "0.05em"
+      },
+      "hover-opacity": {
+        "$value": "{opacity.subtle}"
+      },
+      "disabled-opacity": {
+        "$value": "{opacity.disabled}"
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}"
+        },
+        "easing": {
+          "$value": "{easing.standard}"
+        }
+      },
+      "size": {
+        "2xs": {
+          "swatch": {
+            "$value": "{size.height.2xs}"
+          },
+          "font-size": {
+            "$value": "{size.font.2xs}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.2xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xs}"
+          }
+        },
+        "xs": {
+          "swatch": {
+            "$value": "{size.height.xs}"
+          },
+          "font-size": {
+            "$value": "{size.font.xs}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.xs}"
+          }
+        },
+        "sm": {
+          "swatch": {
+            "$value": "{size.height.sm}"
+          },
+          "font-size": {
+            "$value": "{size.font.sm}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.sm}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.sm}"
+          }
+        },
+        "md": {
+          "swatch": {
+            "$value": "{size.height.md}"
+          },
+          "font-size": {
+            "$value": "{size.font.md}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.md}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.md}"
+          }
+        },
+        "lg": {
+          "swatch": {
+            "$value": "{size.height.lg}"
+          },
+          "font-size": {
+            "$value": "{size.font.lg}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.lg}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.lg}"
+          }
+        },
+        "xl": {
+          "swatch": {
+            "$value": "{size.height.xl}"
+          },
+          "font-size": {
+            "$value": "{size.font.xl}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.xl}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.xl}"
+          }
+        },
+        "2xl": {
+          "swatch": {
+            "$value": "{size.height.2xl}"
+          },
+          "font-size": {
+            "$value": "{size.font.2xl}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.2xl}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xl}"
+          }
+        }
+      }
+    }
+  }
+}

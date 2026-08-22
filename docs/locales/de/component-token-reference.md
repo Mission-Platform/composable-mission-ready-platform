@@ -10,12 +10,12 @@ die generierten Framework-Adapter: Der gleiche Eintrag gilt für Vue, React, Sol
 
 ## Den Vertrag lesen
 
-Die Quelle der Wahrheit ist [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
+Die Quelle der Wahrheit ist [`packages/tokens/tokens/component/<atomic-level>/`](../../../packages/tokens/tokens/component/<atomic-level>/).
 Sein Pfad wird direkt einer benutzerdefinierten CSS-Eigenschaft und einer Figma-Variablen zugeordnet:
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
@@ -265,7 +265,7 @@ Um Verbraucherüberschreibungen zu testen, bearbeiten Sie sie `apps/storybook/de
 ## Figma-Übergabe-Checkliste
 
 1. Erstellen Sie die `Mission Platform / Component` variable Sammlung mit Hell- und Dunkelmodi.
-2. Importieren Sie die Komponentenpfade aus `component.tokens.json`, wobei Komponenten-, Varianten-, Slot- und Statussegmente erhalten bleiben.
+2. Importieren Sie die Komponentenpfade aus `component/<atomic-level>/`, wobei Komponenten-, Varianten-, Slot- und Statussegmente erhalten bleiben.
 3. Binden Sie Komponentenvariablen an die entsprechenden primitiven/semantischen Variablen, anstatt rohe Farb- oder Skalenwerte zu kopieren.
 4. Komponenteneigenschaften für die dokumentierten Varianten und Größen erstellen; Erstellen Sie Zustandsvarianten nur für die im Inventar aufgeführten Staaten.
 5. Behalten Sie Layoutformeln, Haltepunkte für Ansichtsfenster, Canvas-Verhalten und DOM-/Barrierefreiheitsverhalten außerhalb der visuellen Variablensammlung.

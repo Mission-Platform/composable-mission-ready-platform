@@ -1,0 +1,293 @@
+{
+  "$description": "Split component source for component.select.",
+  "component": {
+    "select": {
+      "$description": "Select and multiselect controls, including language and segment selectors.",
+      "surface": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "hover": {
+          "$value": "{color.bg.raised}"
+        },
+        "expanded": {
+          "$value": "{color.bg.raised}"
+        },
+        "disabled": {
+          "$value": "{color.bg.muted}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "secondary": {
+          "$value": "{color.text.secondary}"
+        },
+        "placeholder": {
+          "$value": "{color.text.tertiary}"
+        },
+        "selected": {
+          "$value": "{color.text.primary}"
+        },
+        "disabled": {
+          "$value": "{color.text.disabled}"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        },
+        "focus-visible": {
+          "$value": "{color.border.focus}"
+        },
+        "expanded": {
+          "$value": "{color.border.focus}"
+        },
+        "invalid": {
+          "$value": "{color.danger.default}"
+        }
+      },
+      "focus-ring": {
+        "$value": "{shadow.focus-primary}"
+      },
+      "focus-ring-invalid": {
+        "$value": "{shadow.focus-danger}"
+      },
+      "radius": {
+        "$value": "{size.radius.md}"
+      },
+      "border-width": {
+        "default": {
+          "$value": "{border-width.thin}"
+        },
+        "focus": {
+          "$value": "{border-width.thick}"
+        }
+      },
+      "shadow": {
+        "$value": "{shadow.md}"
+      },
+      "gap": {
+        "$value": "{size.gap.sm}"
+      },
+      "field-gap": {
+        "$value": "{spacing.1}"
+      },
+      "control-gap": {
+        "$value": "{spacing.2}"
+      },
+      "tag-gap": {
+        "$value": "{spacing.1}"
+      },
+      "extension-padding-start": {
+        "$value": "{spacing.2}"
+      },
+      "extension-padding-end": {
+        "$value": "{spacing.1}"
+      },
+      "option-content-gap": {
+        "$value": "{spacing.2}"
+      },
+      "font-family": {
+        "$value": "{font.family.sans}"
+      },
+      "line-height": {
+        "$value": "{line-height.normal}"
+      },
+      "padding": {
+        "block": {
+          "$value": "{spacing.sm}"
+        },
+        "inline": {
+          "$value": "{spacing.md}"
+        }
+      },
+      "option": {
+        "background": {
+          "default": {
+            "$value": "{color.bg.surface}"
+          },
+          "hover": {
+            "$value": "{color.primary.subtle}"
+          },
+          "selected": {
+            "$value": "{color.primary.muted}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.primary}"
+          },
+          "selected": {
+            "$value": "{color.primary.text}"
+          },
+          "disabled": {
+            "$value": "{color.text.disabled}"
+          }
+        },
+        "font-size": {
+          "$value": "{font.size.sm}"
+        },
+        "font-weight-selected": {
+          "$value": "{font.weight.medium}"
+        },
+        "padding-block": {
+          "$value": "{spacing.2}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.3}"
+        }
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}"
+        },
+        "easing": {
+          "$value": "{easing.standard}"
+        }
+      },
+      "size": {
+        "2xs": {
+          "font-size": {
+            "$value": "{size.font.2xs}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.2xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xs}"
+          }
+        },
+        "xs": {
+          "font-size": {
+            "$value": "{size.font.xs}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.xs}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.xs}"
+          }
+        },
+        "sm": {
+          "font-size": {
+            "$value": "{size.font.sm}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.sm}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.sm}"
+          }
+        },
+        "md": {
+          "font-size": {
+            "$value": "{size.font.md}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.md}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.md}"
+          }
+        },
+        "lg": {
+          "font-size": {
+            "$value": "{size.font.lg}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.lg}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.lg}"
+          }
+        },
+        "xl": {
+          "font-size": {
+            "$value": "{size.font.xl}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.xl}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.xl}"
+          }
+        },
+        "2xl": {
+          "font-size": {
+            "$value": "{size.font.2xl}"
+          },
+          "padding-block": {
+            "$value": "{size.pad-block.2xl}"
+          },
+          "padding-inline": {
+            "$value": "{size.pad-inline.2xl}"
+          }
+        }
+      },
+      "segment": {
+        "$description": "ForgeSegmentControl container and selected-segment roles; width/layout behavior remains local.",
+        "surface": {
+          "default": {
+            "$value": "{color.bg.sunken}"
+          },
+          "selected": {
+            "$value": "{color.bg.surface}"
+          }
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.secondary}"
+          },
+          "hover": {
+            "$value": "{color.text.primary}"
+          },
+          "selected": {
+            "$value": "{color.text.primary}"
+          }
+        },
+        "border": {
+          "$value": "{color.border.default}"
+        },
+        "border-width": {
+          "$value": "{border-width.thin}"
+        },
+        "radius": {
+          "container": {
+            "$value": "{radius.lg}"
+          },
+          "segment": {
+            "$value": "{radius.md}"
+          }
+        },
+        "padding": {
+          "$value": "{spacing.1}"
+        },
+        "gap": {
+          "$value": "{spacing.1}"
+        },
+        "shadow-selected": {
+          "$value": "{shadow.sm}"
+        },
+        "font-family": {
+          "$value": "{font.family.sans}"
+        },
+        "font-weight": {
+          "$value": "{font.weight.medium}"
+        },
+        "disabled-opacity": {
+          "$value": 0.5
+        },
+        "transition": {
+          "duration": {
+            "$value": "{duration.fast}"
+          },
+          "easing": {
+            "$value": "{easing.standard}"
+          }
+        }
+      }
+    }
+  }
+}

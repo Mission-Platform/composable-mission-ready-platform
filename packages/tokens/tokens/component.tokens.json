@@ -798,7 +798,6 @@
       "$description": "ForgeCalendar surface, navigation, day-state, range-preview, and size roles. Grid geometry and date behavior remain local.",
       "surface": {
         "default": { "$value": "{color.bg.surface}" },
-        "flat": { "$value": "transparent" },
         "hover": { "$value": "{color.bg.muted}" },
         "selected": { "$value": "{color.primary.default}" },
         "range": { "$value": "{color.primary.default}" }
@@ -954,7 +953,7 @@
         "focus-width": { "$value": "{border-width.thick}" }
       },
       "surface": { "hover": { "$value": "{color.bg.muted}" }, "selected": { "$value": "{color.primary.default}" } },
-      "font-family": { "sans": { "$value": "{font.family.sans}" }, "mono": { "$value": "{font.family.mono}" } },
+      "font-family": {  },
       "font-size": {
         "separator": { "$value": "{font.size.md}" },
         "header": { "$value": "{font.size.xs}" },
@@ -1121,7 +1120,6 @@
       "radius": { "$value": "{radius.lg}" },
       "shadow": { "$value": "{shadow.md}" },
       "padding": {
-        "none": { "block": { "$value": "{spacing.0}" }, "inline": { "$value": "{spacing.0}" } },
         "sm": {
           "block": { "$value": "{spacing.2}" },
           "inline": { "$value": "{spacing.3}" },
@@ -2733,7 +2731,6 @@
       "$description": "Markdown document flow chrome. Typography of composed headings and paragraphs remains owned by ForgeTypography; these slots cover renderer-owned rhythm, links, quotes, rules, and images.",
       "text": {
         "default": { "$value": "{color.text.primary}" },
-        "secondary": { "$value": "{color.text.secondary}" },
         "link": { "$value": "{color.primary.default}" }
       },
       "typography": {
@@ -2758,8 +2755,7 @@
         "border": { "$value": "{color.border.default}" },
         "border-width": { "$value": "{border-width.thin}" }
       },
-      "image": { "radius": { "$value": "{radius.md}" } },
-      "error": { "font-weight": { "$value": "{font.weight.semibold}" } }
+      "image": { "radius": { "$value": "{radius.md}" } }
     },
     "timeline": {
       "$description": "Timeline marker, outlined state, connectors, orientation rhythm, and content spacing. Item order, alternating placement, and scroll behavior remain local.",
@@ -3411,12 +3407,6 @@
       "border": { "default": { "$value": "{color.border.default}" } },
       "padding": { "$value": "{spacing.md}" },
       "radius": { "$value": "{radius.md}" }
-    },
-    "inherited": {
-      "$description": "Inherited-visual contract for components that render no styled host of their own. Their visual decisions come from children, currentColor, the host canvas, or the parent contract.",
-      "color": { "$value": "{color.text.primary}" },
-      "surface": { "$value": "{color.bg.surface}" },
-      "text": { "$value": "{color.text.primary}" }
     }
   }
 }

@@ -10,12 +10,12 @@
 
 ## 契約書を読む
 
-真実の情報源は[`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json)。
+真実の情報源は[`packages/tokens/tokens/component/<atomic-level>/`](../../../packages/tokens/tokens/component/<atomic-level>/)。
 そのパスは、CSS カスタム プロパティと Figma 変数に直接マップされます。
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
@@ -265,7 +265,7 @@ All 106 icon entries are **inherited-visual**.グリフの使用 `currentColor`;
 ## Figma 引き継ぎチェックリスト
 
 1. `Mission Platform / Component` ライトモードとダークモードによる変数コレクション。
-2. からコンポーネント パスをインポートします。 `component.tokens.json`、コンポーネント、バリアント、スロット、および状態セグメントを保持します。
+2. からコンポーネント パスをインポートします。 `component/<atomic-level>/`、コンポーネント、バリアント、スロット、および状態セグメントを保持します。
 3. 未加工のカラー値やスケール値をコピーするのではなく、コンポーネント変数を対応するプリミティブ/セマンティック変数にバインドします。
 4. 文書化されたバリアントとサイズのコンポーネント プロパティを作成します。インベントリにリストされている状態に対してのみ状態バリアントを作成します。
 5. レイアウト式、ビューポート ブレークポイント、キャンバスの動作、および DOM/アクセシビリティの動作をビジュアル変数コレクションの外に保ちます。

@@ -161,9 +161,49 @@ describe('buildStructuralScss', () => {
 describe('component alias SCSS emission', () => {
   it('converts DTCG aliases to prefixed CSS variables in the vars partial', () => {
     const records = flattenTokens({ component: { button: { background: { $value: '{color.primary.default}' } } } });
-    expect(buildScssVariables(records, 'custom')).toContain(
-      '$component-button-background: var(--custom-color-primary-default);',
+    expect(buildScssVariables(records, 'custom', 'button')).toContain(
+      '$button-background: var(--custom-color-primary-default);',
     );
+  });
+
+  it('projects custom properties and @property registrations to the component layer', () => {
+    const records = flattenTokens({
+      component: { button: { background: { $type: 'color', $value: '#fff' } } },
+    });
+    const scss = buildStructuralScss(records, 'custom', 'button', 'button');
+
+    expect(scss).toContain('--custom-button-background: #{vars.$button-background};');
+    expect(scss).toContain('@property --custom-button-background {');
+    expect(scss).not.toContain('--custom-component-button-background');
+  });
+
+  it('projects aliases targeting another component layer without changing stable DTCG paths', () => {
+    const records = flattenTokens({
+      component: { navigation: { background: { $value: '{component.button.background}' } } },
+    });
+
+    expect(buildScssVariables(records, 'custom', 'navigation', new Set(['button', 'navigation']))).toContain(
+      '$navigation-background: var(--custom-button-background);',
+    );
+  });
+
+  it('keeps retained component custom-property and @property names layer-based', () => {
+    const records = flattenTokens({
+      component: {
+        button: {
+          primary: {
+            background: {
+              hover: { $type: 'color', $value: '#fff' },
+            },
+          },
+        },
+      },
+    });
+    const scss = buildStructuralScss(records, 'mp', 'button', 'button');
+
+    expect(scss).toContain('--mp-button-primary-background-hover: #{vars.$button-primary-background-hover};');
+    expect(scss).toContain('@property --mp-button-primary-background-hover {');
+    expect(scss).not.toContain('--mp-component-button-primary-background-hover');
   });
 });
 

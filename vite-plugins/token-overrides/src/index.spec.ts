@@ -41,6 +41,14 @@ describe('transform', () => {
     const scss = buildTokenOverrideScss({ radius: { md: { $value: '2px' } } }, { prefix: 'acme' });
     expect(scss).toContain('--acme-radius-md: 2px;');
   });
+
+  it('projects component overrides to the owning layer namespace', () => {
+    const flat = flattenOverrides({
+      component: { button: { primary: { $value: '#153fd1' } } },
+    });
+
+    expect(flat).toEqual([{ name: '--mp-button-primary', value: '#153fd1', description: undefined }]);
+  });
 });
 
 describe('tokenOverridesPlugin', () => {

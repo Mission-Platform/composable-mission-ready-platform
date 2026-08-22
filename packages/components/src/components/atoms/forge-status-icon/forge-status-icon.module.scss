@@ -29,9 +29,9 @@
        with the wrapper's font-size instead. */
     @each $size in ('2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl') {
       &--#{$size} {
-        width: var(--mp-component-feedback-status-size-#{$size});
-        height: var(--mp-component-feedback-status-size-#{$size});
-        font-size: var(--mp-component-feedback-status-size-#{$size});
+        width: var(--mp-feedback-status-size-#{$size});
+        height: var(--mp-feedback-status-size-#{$size});
+        font-size: var(--mp-feedback-status-size-#{$size});
       }
     }
 
@@ -41,7 +41,7 @@
      */
     @each $name in ('neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical') {
       &--#{$name} {
-        color: var(--mp-component-feedback-status-color-#{$name});
+        color: var(--mp-feedback-status-color-#{$name});
       }
     }
   }

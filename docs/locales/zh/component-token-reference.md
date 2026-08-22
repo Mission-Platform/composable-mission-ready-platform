@@ -10,12 +10,12 @@
 
 ## 阅读合同
 
-真理的来源是[`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json)。
+真理的来源是[`packages/tokens/tokens/component/<atomic-level>/`](../../../packages/tokens/tokens/component/<atomic-level>/)。
 它的路径直接映射到 CSS 自定义属性和 Figma 变量：
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
@@ -265,7 +265,7 @@ packages/*/src/components/**/*.module.scss
 ## Figma 交接清单
 
 1. 创建 `Mission Platform / Component` 具有浅色和深色模式的变量集合。
-2. 从以下位置导入组件路径 `component.tokens.json`，保留组件、变体、槽和状态段。
+2. 从以下位置导入组件路径 `component/<atomic-level>/`，保留组件、变体、槽和状态段。
 3. 将组件变量绑定到相应的基元/语义变量，而不是复制原始颜色或比例值。
 4. 为记录的变型和尺寸创建组件属性；仅为清单中列出的状态创建状态变体。
 5. 将布局公式、视口断点、画布行为和 DOM/辅助功能行为保留在可视变量集合之外。

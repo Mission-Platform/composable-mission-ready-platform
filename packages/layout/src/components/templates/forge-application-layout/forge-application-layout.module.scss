@@ -20,31 +20,31 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: var(--mp-component-layout-application-surface-default);
+    background-color: var(--mp-layout-application-surface-default);
 
     &__status {
-      transition: background-color var(--mp-component-layout-application-transition-duration)
-        var(--mp-component-layout-application-transition-easing);
+      transition: background-color var(--mp-layout-application-transition-duration)
+        var(--mp-layout-application-transition-easing);
       min-height: 0;
       padding-left: env(safe-area-inset-left);
       padding-right: env(safe-area-inset-right);
 
       &:not(:empty) {
         font-family:
-          var(--mp-component-layout-application-typography-font-family) system-ui,
+          var(--mp-layout-application-typography-font-family) system-ui,
           -apple-system,
           'Segoe UI',
           roboto,
           sans-serif;
-        font-size: var(--mp-component-layout-application-typography-font-size);
-        font-weight: var(--mp-component-layout-application-typography-font-weight);
-        line-height: var(--mp-component-layout-application-typography-line-height);
-        letter-spacing: var(--mp-component-layout-application-typography-letter-spacing);
-        padding: var(--mp-component-layout-application-padding-status-block)
-          var(--mp-component-layout-application-padding-status-inline);
+        font-size: var(--mp-layout-application-typography-font-size);
+        font-weight: var(--mp-layout-application-typography-font-weight);
+        line-height: var(--mp-layout-application-typography-line-height);
+        letter-spacing: var(--mp-layout-application-typography-letter-spacing);
+        padding: var(--mp-layout-application-padding-status-block)
+          var(--mp-layout-application-padding-status-inline);
 
         @include bp.bp-up('xs') {
-          padding-inline: var(--mp-component-layout-application-padding-status-inline-wide);
+          padding-inline: var(--mp-layout-application-padding-status-inline-wide);
         }
       }
     }
@@ -82,16 +82,16 @@
       width: var(--mp-application-layout-sidebar-width, 16rem);
       max-height: calc(100vh - var(--mp-application-layout-sidebar-top, 0px));
       overflow-y: auto;
-      background-color: var(--mp-component-layout-application-surface-sidebar);
+      background-color: var(--mp-layout-application-surface-sidebar);
 
       &--start {
-        border-right: var(--mp-component-layout-application-border-width-sidebar) solid
-          var(--mp-component-layout-application-border-sidebar);
+        border-right: var(--mp-layout-application-border-width-sidebar) solid
+          var(--mp-layout-application-border-sidebar);
       }
 
       &--end {
-        border-left: var(--mp-component-layout-application-border-width-sidebar) solid
-          var(--mp-component-layout-application-border-sidebar);
+        border-left: var(--mp-layout-application-border-width-sidebar) solid
+          var(--mp-layout-application-border-sidebar);
       }
 
       // Overlay variant: when a host forces a breakpoint-collapsed sidebar open,
@@ -106,7 +106,7 @@
         bottom: 0;
         z-index: 90;
         max-height: none;
-        box-shadow: var(--mp-component-layout-application-shadow-overlay);
+        box-shadow: var(--mp-layout-application-shadow-overlay);
 
         &.application-layout__sidebar--start {
           inset-inline-start: 0;
@@ -125,7 +125,7 @@
       position: fixed;
       inset: var(--mp-application-layout-sidebar-top, 0) 0 0;
       z-index: 89;
-      background-color: var(--mp-component-layout-application-scrim-default);
+      background-color: var(--mp-layout-application-scrim-default);
     }
 
     &__content {

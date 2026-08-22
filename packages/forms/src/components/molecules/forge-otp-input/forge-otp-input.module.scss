@@ -10,11 +10,11 @@
 
 @layer mp.forms {
   .forge-otp-input {
-    --mp-otp-cell-size: var(--mp-component-input-otp-size-md-cell);
-    --mp-otp-font-size: var(--mp-component-input-otp-size-md-font-size);
+    --mp-otp-cell-size: var(--mp-input-otp-size-md-cell);
+    --mp-otp-font-size: var(--mp-input-otp-size-md-font-size);
 
     display: inline-flex;
-    gap: var(--mp-component-input-otp-gap);
+    gap: var(--mp-input-otp-gap);
     margin: 0;
     padding: 0;
     border: 0;
@@ -22,38 +22,38 @@
 
     /* Sizes — canonical 2xs → 2xl scale (cell size + glyph font). */
     &--2xs {
-      --mp-otp-cell-size: var(--mp-component-input-otp-size-2xs-cell);
-      --mp-otp-font-size: var(--mp-component-input-otp-size-2xs-font-size);
+      --mp-otp-cell-size: var(--mp-input-otp-size-2xs-cell);
+      --mp-otp-font-size: var(--mp-input-otp-size-2xs-font-size);
     }
 
     &--xs {
-      --mp-otp-cell-size: var(--mp-component-input-otp-size-xs-cell);
-      --mp-otp-font-size: var(--mp-component-input-otp-size-xs-font-size);
+      --mp-otp-cell-size: var(--mp-input-otp-size-xs-cell);
+      --mp-otp-font-size: var(--mp-input-otp-size-xs-font-size);
     }
 
     &--sm {
-      --mp-otp-cell-size: var(--mp-component-input-otp-size-sm-cell);
-      --mp-otp-font-size: var(--mp-component-input-otp-size-sm-font-size);
+      --mp-otp-cell-size: var(--mp-input-otp-size-sm-cell);
+      --mp-otp-font-size: var(--mp-input-otp-size-sm-font-size);
     }
 
     &--md {
-      --mp-otp-cell-size: var(--mp-component-input-otp-size-md-cell);
-      --mp-otp-font-size: var(--mp-component-input-otp-size-md-font-size);
+      --mp-otp-cell-size: var(--mp-input-otp-size-md-cell);
+      --mp-otp-font-size: var(--mp-input-otp-size-md-font-size);
     }
 
     &--lg {
-      --mp-otp-cell-size: var(--mp-component-input-otp-size-lg-cell);
-      --mp-otp-font-size: var(--mp-component-input-otp-size-lg-font-size);
+      --mp-otp-cell-size: var(--mp-input-otp-size-lg-cell);
+      --mp-otp-font-size: var(--mp-input-otp-size-lg-font-size);
     }
 
     &--xl {
-      --mp-otp-cell-size: var(--mp-component-input-otp-size-xl-cell);
-      --mp-otp-font-size: var(--mp-component-input-otp-size-xl-font-size);
+      --mp-otp-cell-size: var(--mp-input-otp-size-xl-cell);
+      --mp-otp-font-size: var(--mp-input-otp-size-xl-font-size);
     }
 
     &--2xl {
-      --mp-otp-cell-size: var(--mp-component-input-otp-size-2xl-cell);
-      --mp-otp-font-size: var(--mp-component-input-otp-size-2xl-font-size);
+      --mp-otp-cell-size: var(--mp-input-otp-size-2xl-cell);
+      --mp-otp-font-size: var(--mp-input-otp-size-2xl-font-size);
     }
 
     &__cell {
@@ -61,26 +61,26 @@
       height: var(--mp-otp-cell-size);
       padding: 0;
       text-align: center;
-      font-family: var(--mp-component-input-otp-font-family);
+      font-family: var(--mp-input-otp-font-family);
       font-size: var(--mp-otp-font-size);
-      font-weight: var(--mp-component-input-otp-font-weight);
-      color: var(--mp-component-input-otp-text);
-      background-color: var(--mp-component-input-otp-surface);
-      border: var(--mp-component-input-otp-border-width) solid var(--mp-component-input-otp-border-default);
-      border-radius: var(--mp-component-input-otp-radius);
+      font-weight: var(--mp-input-otp-font-weight);
+      color: var(--mp-input-otp-text);
+      background-color: var(--mp-input-otp-surface);
+      border: var(--mp-input-otp-border-width) solid var(--mp-input-otp-border-default);
+      border-radius: var(--mp-input-otp-radius);
       transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease;
 
       &:focus {
         outline: none;
-        border-color: var(--mp-component-input-otp-border-focus);
-        box-shadow: var(--mp-component-input-otp-focus-ring);
+        border-color: var(--mp-input-otp-border-focus);
+        box-shadow: var(--mp-input-otp-focus-ring);
       }
     }
 
     &--disabled &__cell {
-      opacity: var(--mp-component-input-otp-disabled-opacity);
+      opacity: var(--mp-input-otp-disabled-opacity);
       cursor: not-allowed;
     }
   }

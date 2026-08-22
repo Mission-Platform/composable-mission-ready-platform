@@ -1,0 +1,68 @@
+{
+  "$description": "Split component source for component.chat-bubble.",
+  "component": {
+    "chat-bubble": {
+      "$description": "ForgeChatBubble message rhythm, bubble chrome, typography, pending treatment, and primary variant. Avatar composition and message alignment remain local.",
+      "gap": {
+        "$value": "{spacing.2}"
+      },
+      "column-gap": {
+        "$value": "{spacing.1}"
+      },
+      "meta": {
+        "gap": {
+          "$value": "{spacing.2}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.1}"
+        }
+      },
+      "body": {
+        "padding-block": {
+          "$value": "{spacing.2}"
+        },
+        "padding-inline": {
+          "$value": "{spacing.3}"
+        },
+        "surface": {
+          "$value": "{color.bg.sunken}"
+        },
+        "text": {
+          "$value": "{color.text.primary}"
+        },
+        "radius": {
+          "$value": "{radius.lg}"
+        },
+        "tail-radius": {
+          "$value": "{radius.xs}"
+        },
+        "font-family": {
+          "$value": "{font.family.sans}"
+        },
+        "font-size": {
+          "$value": "{size.font.sm}"
+        },
+        "line-height": {
+          "$value": "{line-height.normal}"
+        },
+        "font-weight": {
+          "$value": "{font.weight.regular}"
+        }
+      },
+      "primary": {
+        "surface": {
+          "$value": "{color.primary.default}"
+        },
+        "text": {
+          "$value": "{color.text.on-primary}"
+        }
+      },
+      "pending-opacity": {
+        "$value": "{opacity.subtle}"
+      },
+      "footer-padding-inline": {
+        "$value": "{spacing.1}"
+      }
+    }
+  }
+}

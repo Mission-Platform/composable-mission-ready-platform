@@ -28,30 +28,30 @@
     margin: auto auto 0;
     padding: 0;
     overflow: hidden;
-    background-color: var(--mp-component-overlay-modal-surface-default);
+    background-color: var(--mp-overlay-modal-surface-default);
     border: none;
 
     /* Mobile: square bottom corners, rounded top corners only. */
-    border-radius: var(--mp-component-overlay-radius) var(--mp-component-overlay-radius) 0 0;
-    box-shadow: var(--mp-component-overlay-modal-shadow);
+    border-radius: var(--mp-overlay-radius) var(--mp-overlay-radius) 0 0;
+    box-shadow: var(--mp-overlay-modal-shadow);
     opacity: 0;
     translate: 0 0.5rem;
     transition:
-      opacity var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing),
-      translate var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing),
-      overlay var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing)
+      opacity var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
+      translate var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
+      overlay var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
         allow-discrete,
-      display var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing)
+      display var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
         allow-discrete;
 
     &::backdrop {
-      background-color: var(--mp-component-overlay-surface-scrim);
+      background-color: var(--mp-overlay-surface-scrim);
       opacity: 0;
       transition:
-        opacity var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing),
-        overlay var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing)
+        opacity var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
+        overlay var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
           allow-discrete,
-        display var(--mp-component-overlay-transition-duration) var(--mp-component-overlay-transition-easing)
+        display var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
           allow-discrete;
     }
 
@@ -79,18 +79,18 @@
     @include bp.bp-up('sm') {
       margin: auto;
       max-height: calc(100vh - var(--mp-spacing-8));
-      border-radius: var(--mp-component-overlay-radius);
+      border-radius: var(--mp-overlay-radius);
 
       @each $size,
         $max-width
           in (
-            '2xs': var(--mp-component-overlay-modal-size-2xs),
-            'xs': var(--mp-component-overlay-modal-size-xs),
-            'sm': var(--mp-component-overlay-modal-size-sm),
-            'md': var(--mp-component-overlay-modal-size-md),
-            'lg': var(--mp-component-overlay-modal-size-lg),
-            'xl': var(--mp-component-overlay-modal-size-xl),
-            '2xl': var(--mp-component-overlay-modal-size-2xl)
+            '2xs': var(--mp-overlay-modal-size-2xs),
+            'xs': var(--mp-overlay-modal-size-xs),
+            'sm': var(--mp-overlay-modal-size-sm),
+            'md': var(--mp-overlay-modal-size-md),
+            'lg': var(--mp-overlay-modal-size-lg),
+            'xl': var(--mp-overlay-modal-size-xl),
+            '2xl': var(--mp-overlay-modal-size-2xl)
           )
       {
         &--#{$size} {
@@ -109,9 +109,9 @@
       flex-shrink: 0;
       align-items: center;
       justify-content: space-between;
-      gap: var(--mp-component-overlay-header-gap);
-      padding: var(--mp-component-overlay-header-padding-block) var(--mp-component-overlay-header-padding-inline);
-      border-bottom: var(--mp-component-overlay-border-width) solid var(--mp-component-overlay-border-default);
+      gap: var(--mp-overlay-header-gap);
+      padding: var(--mp-overlay-header-padding-block) var(--mp-overlay-header-padding-inline);
+      border-bottom: var(--mp-overlay-border-width) solid var(--mp-overlay-border-default);
     }
 
     &__title {
@@ -120,7 +120,7 @@
 
     &__body {
       flex: 1;
-      padding: var(--mp-component-overlay-body-padding);
+      padding: var(--mp-overlay-body-padding);
       overflow-y: auto;
     }
 
@@ -129,9 +129,9 @@
       flex-shrink: 0;
       align-items: center;
       justify-content: flex-end;
-      gap: var(--mp-component-overlay-footer-gap);
-      padding: var(--mp-component-overlay-footer-padding-block) var(--mp-component-overlay-footer-padding-inline);
-      border-top: var(--mp-component-overlay-border-width) solid var(--mp-component-overlay-border-default);
+      gap: var(--mp-overlay-footer-gap);
+      padding: var(--mp-overlay-footer-padding-block) var(--mp-overlay-footer-padding-inline);
+      border-top: var(--mp-overlay-border-width) solid var(--mp-overlay-border-default);
     }
 
     /* Respect users who prefer reduced motion. */

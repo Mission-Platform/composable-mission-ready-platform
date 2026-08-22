@@ -18,12 +18,12 @@
      * a background, so the control looked invisible until hovered.
      */
     display: inline-block;
-    padding: var(--mp-component-navigation-menu-padding);
-    color: var(--mp-component-navigation-menu-text-default);
-    background-color: var(--mp-component-navigation-menu-surface-default);
-    border: var(--mp-component-navigation-menu-border-width-default) solid
-      var(--mp-component-navigation-menu-border-default);
-    border-radius: var(--mp-component-navigation-menu-radius);
+    padding: var(--mp-navigation-menu-padding);
+    color: var(--mp-navigation-menu-text-default);
+    background-color: var(--mp-navigation-menu-surface-default);
+    border: var(--mp-navigation-menu-border-width-default) solid
+      var(--mp-navigation-menu-border-default);
+    border-radius: var(--mp-navigation-menu-radius);
 
     /* A vertical menu is a stacked panel; a horizontal one is a full-width bar. */
     &--vertical {
@@ -42,7 +42,7 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-navigation-menu-submenu-gap);
+      gap: var(--mp-navigation-menu-submenu-gap);
     }
 
     /*
@@ -53,7 +53,7 @@
     &--horizontal &__list {
       flex-flow: row wrap;
       align-items: center;
-      gap: var(--mp-component-navigation-menu-link-gap);
+      gap: var(--mp-navigation-menu-link-gap);
     }
 
     &--horizontal &__link {
@@ -67,50 +67,50 @@
     &__link {
       display: flex;
       align-items: center;
-      gap: var(--mp-component-navigation-menu-link-gap);
+      gap: var(--mp-navigation-menu-link-gap);
       width: 100%;
-      padding: var(--mp-component-navigation-menu-link-padding-block)
-        var(--mp-component-navigation-menu-link-padding-inline);
-      border-radius: var(--mp-component-navigation-menu-link-radius);
-      color: var(--mp-component-navigation-menu-text-default);
+      padding: var(--mp-navigation-menu-link-padding-block)
+        var(--mp-navigation-menu-link-padding-inline);
+      border-radius: var(--mp-navigation-menu-link-radius);
+      color: var(--mp-navigation-menu-text-default);
 
       /*
        * A resting tint so each row is discernible as an item on the surface. The
        * old rule left the link transparent and only painted on `:hover`, so the
        * item was not visually discoverable at rest.
        */
-      background-color: var(--mp-component-navigation-menu-surface-link-default);
+      background-color: var(--mp-navigation-menu-surface-link-default);
       border: none;
       cursor: pointer;
       text-decoration: none;
       text-align: left;
-      font-family: var(--mp-component-navigation-font-family);
+      font-family: var(--mp-navigation-font-family);
       transition:
-        background-color var(--mp-component-navigation-menu-transition-duration)
-          var(--mp-component-navigation-menu-transition-easing),
-        color var(--mp-component-navigation-menu-transition-duration)
-          var(--mp-component-navigation-menu-transition-easing);
+        background-color var(--mp-navigation-menu-transition-duration)
+          var(--mp-navigation-menu-transition-easing),
+        color var(--mp-navigation-menu-transition-duration)
+          var(--mp-navigation-menu-transition-easing);
 
       &:focus-visible {
-        outline: var(--mp-component-navigation-menu-border-width-focus) solid
-          var(--mp-component-navigation-menu-border-focus);
+        outline: var(--mp-navigation-menu-border-width-focus) solid
+          var(--mp-navigation-menu-border-focus);
         outline-offset: 2px;
       }
 
       &:disabled,
       &[aria-disabled='true'] {
-        color: var(--mp-component-navigation-menu-text-disabled);
+        color: var(--mp-navigation-menu-text-disabled);
         cursor: not-allowed;
         pointer-events: none;
       }
 
       &:hover:not(:disabled, [aria-disabled='true']) {
-        background-color: var(--mp-component-navigation-menu-surface-link-hover);
-        color: var(--mp-component-navigation-menu-text-default);
+        background-color: var(--mp-navigation-menu-surface-link-hover);
+        color: var(--mp-navigation-menu-text-default);
       }
 
       &[aria-expanded='true'] {
-        background-color: var(--mp-component-navigation-menu-surface-link-expanded);
+        background-color: var(--mp-navigation-menu-surface-link-expanded);
       }
     }
 
@@ -124,24 +124,24 @@
 
     &__chevron {
       flex-shrink: 0;
-      color: var(--mp-component-navigation-menu-text-chevron);
-      font-size: var(--mp-component-navigation-menu-chevron-font-size);
+      color: var(--mp-navigation-menu-text-chevron);
+      font-size: var(--mp-navigation-menu-chevron-font-size);
     }
 
     &__submenu {
       list-style: none;
       margin: 0;
-      padding: 0 0 0 var(--mp-component-navigation-menu-submenu-padding-inline-start);
+      padding: 0 0 0 var(--mp-navigation-menu-submenu-padding-inline-start);
       display: flex;
       flex-direction: column;
-      gap: var(--mp-component-navigation-menu-submenu-gap);
+      gap: var(--mp-navigation-menu-submenu-gap);
       opacity: 1;
       translate: 0 0;
       transition:
-        opacity var(--mp-component-navigation-menu-transition-duration)
-          var(--mp-component-navigation-menu-transition-easing),
-        translate var(--mp-component-navigation-menu-transition-duration)
-          var(--mp-component-navigation-menu-transition-easing);
+        opacity var(--mp-navigation-menu-transition-duration)
+          var(--mp-navigation-menu-transition-easing),
+        translate var(--mp-navigation-menu-transition-duration)
+          var(--mp-navigation-menu-transition-easing);
 
       @starting-style {
         opacity: 0;
@@ -149,9 +149,9 @@
       }
 
       &--nested {
-        margin-left: var(--mp-component-navigation-menu-submenu-nested-margin);
-        border-left: var(--mp-component-navigation-menu-border-width-default) solid
-          var(--mp-component-navigation-menu-border-default);
+        margin-left: var(--mp-navigation-menu-submenu-nested-margin);
+        border-left: var(--mp-navigation-menu-border-width-default) solid
+          var(--mp-navigation-menu-border-default);
       }
     }
 
@@ -167,19 +167,19 @@
       inset-inline-start: 0;
       z-index: var(--mp-z-index-dropdown);
       min-width: 12rem;
-      padding: var(--mp-component-navigation-menu-padding);
-      background-color: var(--mp-component-navigation-menu-surface-default);
-      border: var(--mp-component-navigation-menu-border-width-default) solid
-        var(--mp-component-navigation-menu-border-default);
-      border-radius: var(--mp-component-navigation-menu-radius);
-      box-shadow: var(--mp-component-navigation-menu-shadow);
+      padding: var(--mp-navigation-menu-padding);
+      background-color: var(--mp-navigation-menu-surface-default);
+      border: var(--mp-navigation-menu-border-width-default) solid
+        var(--mp-navigation-menu-border-default);
+      border-radius: var(--mp-navigation-menu-radius);
+      box-shadow: var(--mp-navigation-menu-shadow);
 
       &--nested {
         inset-block-start: 0;
         inset-inline-start: 100%;
         margin-left: 0;
-        border-left: var(--mp-component-navigation-menu-border-width-default) solid
-          var(--mp-component-navigation-menu-border-default);
+        border-left: var(--mp-navigation-menu-border-width-default) solid
+          var(--mp-navigation-menu-border-default);
       }
     }
 

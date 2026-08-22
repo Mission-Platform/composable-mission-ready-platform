@@ -18,7 +18,7 @@
   .forge-multiselect {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-select-field-gap);
+    gap: var(--mp-select-field-gap);
 
     &__label {
       &--hidden {
@@ -35,7 +35,7 @@
     }
 
     &__required {
-      color: var(--mp-component-field-required);
+      color: var(--mp-field-required);
       margin-left: 2px;
     }
 
@@ -53,24 +53,24 @@
     }
 
     &__wrapper {
-      border: var(--mp-component-select-border-width-default) solid var(--mp-component-select-border-default);
-      border-radius: var(--mp-component-select-radius);
-      background-color: var(--mp-component-select-surface-default);
+      border: var(--mp-select-border-width-default) solid var(--mp-select-border-default);
+      border-radius: var(--mp-select-radius);
+      background-color: var(--mp-select-surface-default);
       transition:
-        border-color var(--mp-component-select-transition-duration) var(--mp-component-select-transition-easing),
-        box-shadow var(--mp-component-select-transition-duration) var(--mp-component-select-transition-easing);
+        border-color var(--mp-select-transition-duration) var(--mp-select-transition-easing),
+        box-shadow var(--mp-select-transition-duration) var(--mp-select-transition-easing);
       cursor: text;
 
       &:focus-within {
-        border-color: var(--mp-component-select-border-focus-visible);
-        box-shadow: var(--mp-component-select-focus-ring);
+        border-color: var(--mp-select-border-focus-visible);
+        box-shadow: var(--mp-select-focus-ring);
       }
     }
 
     &__control {
       display: flex;
       align-items: center;
-      gap: var(--mp-component-select-control-gap);
+      gap: var(--mp-select-control-gap);
     }
 
     &__tags {
@@ -78,31 +78,31 @@
       flex: 1;
       flex-wrap: wrap;
       align-items: center;
-      gap: var(--mp-component-select-tag-gap);
+      gap: var(--mp-select-tag-gap);
       min-width: 0;
     }
 
     &__input {
       /* Resolved `mp-font-body-md`. */
-      font-family: var(--mp-component-select-font-family);
-      font-size: var(--mp-component-select-size-md-font-size);
-      line-height: var(--mp-component-select-line-height);
+      font-family: var(--mp-select-font-family);
+      font-size: var(--mp-select-size-md-font-size);
+      line-height: var(--mp-select-line-height);
       flex: 1;
       min-width: 80px;
       border: none;
       outline: none;
       background: transparent;
-      color: var(--mp-component-select-text-default);
+      color: var(--mp-select-text-default);
 
       &::placeholder {
-        color: var(--mp-component-select-text-placeholder);
+        color: var(--mp-select-text-placeholder);
       }
     }
 
     &__chevron {
       display: flex;
       align-items: center;
-      color: var(--mp-component-select-text-secondary);
+      color: var(--mp-select-text-secondary);
       pointer-events: none;
       flex-shrink: 0;
     }
@@ -112,7 +112,7 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      color: var(--mp-component-select-text-secondary);
+      color: var(--mp-select-text-secondary);
 
       &:empty {
         display: none;
@@ -129,30 +129,30 @@
 
     &__option {
       /* Resolved `mp-font-body-sm`. */
-      font-family: var(--mp-component-select-font-family);
-      font-size: var(--mp-component-select-size-sm-font-size);
-      line-height: var(--mp-component-select-line-height);
-      padding: var(--mp-component-select-option-padding-block) var(--mp-component-select-option-padding-inline);
-      color: var(--mp-component-select-option-text-default);
+      font-family: var(--mp-select-font-family);
+      font-size: var(--mp-select-size-sm-font-size);
+      line-height: var(--mp-select-line-height);
+      padding: var(--mp-select-option-padding-block) var(--mp-select-option-padding-inline);
+      color: var(--mp-select-option-text-default);
       cursor: pointer;
 
       &--disabled {
-        color: var(--mp-component-select-option-text-disabled);
+        color: var(--mp-select-option-text-disabled);
         cursor: not-allowed;
       }
 
       &:hover:not(.forge-multiselect__option--disabled) {
-        background-color: var(--mp-component-select-option-background-hover);
+        background-color: var(--mp-select-option-background-hover);
       }
     }
 
     &__empty {
       /* Resolved `mp-font-body-sm`. */
-      font-family: var(--mp-component-select-font-family);
-      font-size: var(--mp-component-select-size-sm-font-size);
-      line-height: var(--mp-component-select-line-height);
-      padding: var(--mp-component-select-option-padding-block) var(--mp-component-select-option-padding-inline);
-      color: var(--mp-component-select-text-secondary);
+      font-family: var(--mp-select-font-family);
+      font-size: var(--mp-select-size-sm-font-size);
+      line-height: var(--mp-select-line-height);
+      padding: var(--mp-select-option-padding-block) var(--mp-select-option-padding-inline);
+      color: var(--mp-select-text-secondary);
       font-style: italic;
     }
 
@@ -160,12 +160,12 @@
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
         .forge-multiselect__control {
-          padding: var(--mp-component-select-size-#{$size}-padding-block)
-            var(--mp-component-select-size-#{$size}-padding-inline);
+          padding: var(--mp-select-size-#{$size}-padding-block)
+            var(--mp-select-size-#{$size}-padding-inline);
         }
 
         .forge-multiselect__input {
-          font-size: var(--mp-component-select-size-#{$size}-font-size);
+          font-size: var(--mp-select-size-#{$size}-font-size);
         }
       }
     }
@@ -173,10 +173,10 @@
     /* States */
     &--error {
       .forge-multiselect__wrapper {
-        border-color: var(--mp-component-select-border-invalid);
+        border-color: var(--mp-select-border-invalid);
 
         &:focus-within {
-          box-shadow: var(--mp-component-select-focus-ring-invalid);
+          box-shadow: var(--mp-select-focus-ring-invalid);
         }
       }
     }
@@ -185,18 +185,18 @@
       pointer-events: none;
 
       .forge-multiselect__wrapper {
-        background-color: var(--mp-component-select-surface-disabled);
+        background-color: var(--mp-select-surface-disabled);
         cursor: not-allowed;
       }
 
       .forge-multiselect__input,
       .forge-multiselect__chevron {
-        color: var(--mp-component-select-text-disabled);
+        color: var(--mp-select-text-disabled);
       }
     }
 
     &__error {
-      color: var(--mp-component-field-error);
+      color: var(--mp-field-error);
       margin: 0;
     }
 

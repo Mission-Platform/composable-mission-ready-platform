@@ -10,9 +10,9 @@
 @layer mp.content {
   .forge-monaco-editor {
     width: 100%;
-    border: var(--mp-component-editor-monaco-border-width) solid var(--mp-component-editor-monaco-border);
-    border-radius: var(--mp-component-editor-monaco-radius);
+    border: var(--mp-editor-monaco-border-width) solid var(--mp-editor-monaco-border);
+    border-radius: var(--mp-editor-monaco-radius);
     overflow: hidden;
-    background-color: var(--mp-component-editor-monaco-surface);
+    background-color: var(--mp-editor-monaco-surface);
   }
 }

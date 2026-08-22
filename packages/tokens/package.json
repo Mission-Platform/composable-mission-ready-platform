@@ -25,7 +25,7 @@
     "dist",
     "src/**/*.scss",
     "src/fonts/**/*.ttf",
-    "tokens/*.tokens.json"
+    "tokens/**/*.tokens.json"
   ],
   "scripts": {
     "build": "tsdown",

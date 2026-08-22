@@ -9,9 +9,9 @@
 
 @layer mp.components {
   .virtual-tree {
-    font-family: var(--mp-component-data-virtual-tree-font-family);
-    font-size: var(--mp-component-data-virtual-tree-font-size);
-    color: var(--mp-component-data-virtual-tree-text-default);
+    font-family: var(--mp-data-virtual-tree-font-family);
+    font-size: var(--mp-data-virtual-tree-font-size);
+    color: var(--mp-data-virtual-tree-text-default);
     user-select: none;
     outline: none;
   }
@@ -23,25 +23,25 @@
 
   .virtual-tree__label {
     display: flex;
-    gap: var(--mp-component-data-virtual-tree-label-gap);
+    gap: var(--mp-data-virtual-tree-label-gap);
     align-items: center;
     width: 100%;
     height: 100%;
-    padding-right: var(--mp-component-data-virtual-tree-label-padding-inline-end);
-    color: var(--mp-component-data-virtual-tree-text-default);
+    padding-right: var(--mp-data-virtual-tree-label-padding-inline-end);
+    color: var(--mp-data-virtual-tree-text-default);
     cursor: pointer;
-    border-radius: var(--mp-component-data-virtual-tree-label-radius);
+    border-radius: var(--mp-data-virtual-tree-label-radius);
     outline: none;
-    transition: background-color var(--mp-component-data-virtual-tree-label-transition-duration)
-      var(--mp-component-data-virtual-tree-label-transition-easing);
+    transition: background-color var(--mp-data-virtual-tree-label-transition-duration)
+      var(--mp-data-virtual-tree-label-transition-easing);
 
     &:hover {
-      background-color: var(--mp-component-data-virtual-tree-label-hover-surface);
+      background-color: var(--mp-data-virtual-tree-label-hover-surface);
     }
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-component-data-virtual-tree-label-focus-ring);
+      box-shadow: var(--mp-data-virtual-tree-label-focus-ring);
     }
   }
 
@@ -50,19 +50,19 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: var(--mp-component-data-virtual-tree-toggle-size);
-    height: var(--mp-component-data-virtual-tree-toggle-size);
+    width: var(--mp-data-virtual-tree-toggle-size);
+    height: var(--mp-data-virtual-tree-toggle-size);
     padding: 0;
-    color: var(--mp-component-data-virtual-tree-text-toggle);
+    color: var(--mp-data-virtual-tree-text-toggle);
     cursor: pointer;
     background: none;
     border: none;
-    border-radius: var(--mp-component-data-virtual-tree-toggle-radius);
-    transition: color var(--mp-component-data-virtual-tree-toggle-transition-duration)
-      var(--mp-component-data-virtual-tree-toggle-transition-easing);
+    border-radius: var(--mp-data-virtual-tree-toggle-radius);
+    transition: color var(--mp-data-virtual-tree-toggle-transition-duration)
+      var(--mp-data-virtual-tree-toggle-transition-easing);
 
     &:hover {
-      color: var(--mp-component-data-virtual-tree-text-toggle-hover);
+      color: var(--mp-data-virtual-tree-text-toggle-hover);
     }
   }
 

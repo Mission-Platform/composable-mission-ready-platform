@@ -52,22 +52,22 @@
       min-width: 1px;
       min-height: 1px;
       margin: var(--mp-spacing-1) 0;
-      padding: var(--mp-component-overlay-panel-padding-block) 0;
+      padding: var(--mp-overlay-panel-padding-block) 0;
       overflow-y: auto;
-      color: var(--mp-component-overlay-text-default);
-      background-color: var(--mp-component-overlay-dropdown-surface);
-      border: var(--mp-component-overlay-border-width) solid var(--mp-component-overlay-border-default);
-      border-radius: var(--mp-component-overlay-dropdown-radius);
-      box-shadow: var(--mp-component-overlay-dropdown-shadow);
+      color: var(--mp-overlay-text-default);
+      background-color: var(--mp-overlay-dropdown-surface);
+      border: var(--mp-overlay-border-width) solid var(--mp-overlay-border-default);
+      border-radius: var(--mp-overlay-dropdown-radius);
+      box-shadow: var(--mp-overlay-dropdown-shadow);
       outline: none;
       position-try-fallbacks: flip-block, flip-inline, --mp-dropdown-shift;
       opacity: 1;
       translate: 0 0;
       transition:
-        opacity var(--mp-component-overlay-dropdown-transition-duration)
-          var(--mp-component-overlay-dropdown-transition-easing),
-        translate var(--mp-component-overlay-dropdown-transition-duration)
-          var(--mp-component-overlay-dropdown-transition-easing);
+        opacity var(--mp-overlay-dropdown-transition-duration)
+          var(--mp-overlay-dropdown-transition-easing),
+        translate var(--mp-overlay-dropdown-transition-duration)
+          var(--mp-overlay-dropdown-transition-easing);
 
       @starting-style {
         opacity: 0;

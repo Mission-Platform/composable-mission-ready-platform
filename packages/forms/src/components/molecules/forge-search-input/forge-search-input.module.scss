@@ -16,17 +16,17 @@
     &__wrapper {
       display: flex;
       align-items: center;
-      border: var(--mp-component-input-border-width) solid var(--mp-component-input-border-default);
-      border-radius: var(--mp-component-input-radius);
-      background-color: var(--mp-component-input-surface-default);
+      border: var(--mp-input-border-width) solid var(--mp-input-border-default);
+      border-radius: var(--mp-input-radius);
+      background-color: var(--mp-input-surface-default);
       transition:
         border-color 150ms ease,
         box-shadow 150ms ease;
-      gap: var(--mp-component-input-search-gap);
+      gap: var(--mp-input-search-gap);
 
       &:focus-within {
-        border-color: var(--mp-component-input-border-focus-visible);
-        box-shadow: var(--mp-component-input-focus-ring);
+        border-color: var(--mp-input-border-focus-visible);
+        box-shadow: var(--mp-input-focus-ring);
       }
     }
 
@@ -35,7 +35,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      color: var(--mp-component-input-search-icon-text);
+      color: var(--mp-input-search-icon-text);
     }
 
     &__field {
@@ -43,11 +43,11 @@
       border: none;
       outline: none;
       background: transparent;
-      color: var(--mp-component-input-text-default);
-      font-family: var(--mp-component-input-font-family);
+      color: var(--mp-input-text-default);
+      font-family: var(--mp-input-font-family);
 
       &::placeholder {
-        color: var(--mp-component-input-text-placeholder);
+        color: var(--mp-input-text-placeholder);
       }
 
       /* Remove native search clear button */
@@ -64,18 +64,18 @@
       border: none;
       background: transparent;
       cursor: pointer;
-      color: var(--mp-component-input-search-clear-text-default);
-      border-radius: var(--mp-component-input-search-clear-radius);
+      color: var(--mp-input-search-clear-text-default);
+      border-radius: var(--mp-input-search-clear-radius);
       flex-shrink: 0;
       line-height: 1;
 
       &:hover {
-        color: var(--mp-component-input-search-clear-text-hover);
+        color: var(--mp-input-search-clear-text-hover);
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-component-input-focus-ring);
+        box-shadow: var(--mp-input-focus-ring);
       }
     }
 
@@ -83,22 +83,22 @@
       display: inline-block;
       width: 14px;
       height: 14px;
-      border: var(--mp-component-input-search-spinner-border-width) solid currentcolor;
+      border: var(--mp-input-search-spinner-border-width) solid currentcolor;
       border-top-color: transparent;
-      border-radius: var(--mp-component-input-search-spinner-radius);
-      animation: mp-search-spin var(--mp-component-input-search-spinner-duration) linear infinite;
+      border-radius: var(--mp-input-search-spinner-radius);
+      animation: mp-search-spin var(--mp-input-search-spinner-duration) linear infinite;
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
         .forge-search-input__wrapper {
-          padding: var(--mp-component-input-size-#{$size}-padding-block) var(--mp-component-input-size-#{$size}-padding-inline);
+          padding: var(--mp-input-size-#{$size}-padding-block) var(--mp-input-size-#{$size}-padding-inline);
         }
 
         .forge-search-input__field {
           padding: 0;
-          font-size: var(--mp-component-input-size-#{$size}-font-size);
+          font-size: var(--mp-input-size-#{$size}-font-size);
         }
       }
     }
@@ -107,14 +107,14 @@
       pointer-events: none;
 
       .forge-search-input__wrapper {
-        background-color: var(--mp-component-input-surface-disabled);
+        background-color: var(--mp-input-surface-disabled);
         cursor: not-allowed;
       }
 
       .forge-search-input__field,
       .forge-search-input__search-icon,
       .forge-search-input__clear {
-        color: var(--mp-component-input-text-disabled);
+        color: var(--mp-input-text-disabled);
       }
     }
   }

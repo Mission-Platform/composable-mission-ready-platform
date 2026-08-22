@@ -1,0 +1,139 @@
+{
+  "$description": "Split component source for component.form.",
+  "component": {
+    "form": {
+      "$description": "Shared visual contract for form-builder, form-wizard, and schema-form regions; drag/drop and layout behavior remain local.",
+      "surface": {
+        "default": {
+          "$value": "{color.bg.surface}"
+        },
+        "muted": {
+          "$value": "{color.bg.muted}"
+        }
+      },
+      "text": {
+        "default": {
+          "$value": "{color.text.primary}"
+        },
+        "secondary": {
+          "$value": "{color.text.secondary}"
+        },
+        "muted": {
+          "$value": "{color.text.tertiary}"
+        },
+        "inverse": {
+          "$value": "{color.text.on-primary}"
+        },
+        "invalid": {
+          "$value": "{color.danger.text}"
+        }
+      },
+      "border": {
+        "default": {
+          "$value": "{color.border.default}"
+        },
+        "focus": {
+          "$value": "{color.border.focus}"
+        },
+        "selected": {
+          "$value": "{color.primary.default}"
+        },
+        "invalid": {
+          "$value": "{color.danger.default}"
+        },
+        "width": {
+          "$value": "{border-width.thin}"
+        },
+        "focus-width": {
+          "$value": "{border-width.thick}"
+        }
+      },
+      "primary": {
+        "$value": "{color.primary.default}"
+      },
+      "radius": {
+        "small": {
+          "$value": "{radius.sm}"
+        },
+        "default": {
+          "$value": "{radius.md}"
+        }
+      },
+      "focus-ring": {
+        "$value": "{shadow.focus-primary}"
+      },
+      "gap": {
+        "tight": {
+          "$value": "{spacing.1}"
+        },
+        "default": {
+          "$value": "{spacing.2}"
+        },
+        "section": {
+          "$value": "{spacing.3}"
+        },
+        "large": {
+          "$value": "{spacing.4}"
+        },
+        "wizard": {
+          "$value": "{spacing.6}"
+        }
+      },
+      "padding": {
+        "tight": {
+          "$value": "{spacing.1}"
+        },
+        "default": {
+          "$value": "{spacing.2}"
+        },
+        "section": {
+          "$value": "{spacing.3}"
+        },
+        "large": {
+          "$value": "{spacing.4}"
+        }
+      },
+      "font-family": {
+        "sans": {
+          "$value": "{font.family.sans}"
+        },
+        "mono": {
+          "$value": "{font.family.mono}"
+        }
+      },
+      "font-size": {
+        "small": {
+          "$value": "{font.size.sm}"
+        },
+        "extra-small": {
+          "$value": "{font.size.xs}"
+        }
+      },
+      "font-weight": {
+        "medium": {
+          "$value": "{font.weight.medium}"
+        }
+      },
+      "disabled-opacity": {
+        "$value": "{opacity.disabled}"
+      },
+      "drag-opacity": {
+        "$value": 0.4
+      },
+      "ghost-opacity": {
+        "$value": 0.65
+      },
+      "transition": {
+        "duration": {
+          "$value": "{duration.fast}"
+        },
+        "easing": {
+          "$value": "{easing.standard}"
+        }
+      },
+      "primary-hover-opacity": {
+        "$value": 0.9
+      }
+    }
+  }
+}

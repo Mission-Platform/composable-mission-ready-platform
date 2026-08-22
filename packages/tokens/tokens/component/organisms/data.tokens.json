@@ -1,0 +1,370 @@
+{
+  "$description": "Split component source for component.data.",
+  "component": {
+    "data": {
+      "$description": "Data-dense Forge components. Table, tree, and virtualized list/table/tree contracts cover visual chrome only; scrolling, measurement, row positioning, and disclosure state remain component behavior.",
+      "table": {
+        "$description": "ForgeTable wrapper, loading state, header/cell rhythm, sortable affordance, row treatments, and tone variants. Native table layout, responsive breakpoint selection, and sorting remain local.",
+        "wrapper": {
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          }
+        },
+        "loading": {
+          "surface": {
+            "$value": "{color.bg.loading-overlay}"
+          },
+          "radius": {
+            "$value": "{radius.md}"
+          }
+        },
+        "spinner": {
+          "size": {
+            "$value": "{size.icon.lg}"
+          },
+          "border": {
+            "$value": "{color.primary.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.heavy}"
+          },
+          "radius": {
+            "$value": "{radius.full}"
+          },
+          "animation-duration": {
+            "$value": "0.65s"
+          },
+          "animation-easing": {
+            "$value": "linear"
+          }
+        },
+        "font-size": {
+          "$value": "{size.font.sm}"
+        },
+        "caption": {
+          "padding-block": {
+            "$value": "{spacing.3}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.4}"
+          }
+        },
+        "head": {
+          "surface": {
+            "$value": "{color.bg.muted}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          }
+        },
+        "header": {
+          "padding-block": {
+            "$value": "{spacing.2}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.3}"
+          },
+          "padding-block-wide": {
+            "$value": "{spacing.3}"
+          },
+          "padding-inline-wide": {
+            "$value": "{spacing.4}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "sortable-hover-surface": {
+            "$value": "{color.bg.sunken}"
+          },
+          "sortable-hover-text": {
+            "$value": "{color.text.primary}"
+          },
+          "content-gap": {
+            "$value": "{spacing.1}"
+          }
+        },
+        "sort": {
+          "opacity": {
+            "$value": 0.5
+          },
+          "font-size": {
+            "$value": "0.75em"
+          }
+        },
+        "cell": {
+          "padding-block": {
+            "$value": "{spacing.2}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.3}"
+          },
+          "padding-block-wide": {
+            "$value": "{spacing.3}"
+          },
+          "padding-inline-wide": {
+            "$value": "{spacing.4}"
+          }
+        },
+        "row": {
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "striped-surface": {
+            "$value": "{color.bg.muted}"
+          },
+          "hover-surface": {
+            "$value": "{color.bg.muted}"
+          }
+        },
+        "empty": {
+          "padding-block": {
+            "$value": "{spacing.8}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.4}"
+          }
+        },
+        "bordered": {
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          }
+        },
+        "tone": {
+          "primary": {
+            "head-surface": {
+              "$value": "{color.primary.muted}"
+            },
+            "border": {
+              "$value": "{color.primary.subtle}"
+            }
+          },
+          "secondary": {
+            "head-surface": {
+              "$value": "{color.secondary.muted}"
+            },
+            "border": {
+              "$value": "{color.secondary.subtle}"
+            }
+          },
+          "tertiary": {
+            "head-surface": {
+              "$value": "{color.tertiary.muted}"
+            },
+            "border": {
+              "$value": "{color.tertiary.subtle}"
+            }
+          },
+          "success": {
+            "head-surface": {
+              "$value": "{color.success.muted}"
+            },
+            "border": {
+              "$value": "{color.success.subtle}"
+            }
+          },
+          "warning": {
+            "head-surface": {
+              "$value": "{color.warning.muted}"
+            },
+            "border": {
+              "$value": "{color.warning.subtle}"
+            }
+          },
+          "info": {
+            "head-surface": {
+              "$value": "{color.info.muted}"
+            },
+            "border": {
+              "$value": "{color.info.subtle}"
+            }
+          },
+          "error": {
+            "head-surface": {
+              "$value": "{color.error.muted}"
+            },
+            "border": {
+              "$value": "{color.error.subtle}"
+            }
+          },
+          "critical": {
+            "head-surface": {
+              "$value": "{color.critical.muted}"
+            },
+            "border": {
+              "$value": "{color.critical.subtle}"
+            }
+          }
+        }
+      },
+      "tree": {
+        "$description": "ForgeTreeView recursive tree typography, label row, focus/hover treatment, and disclosure toggle. Recursive rendering, depth, and open-map behavior remain local.",
+        "font-family": {
+          "$value": "{font.family.sans}"
+        },
+        "font-size": {
+          "$value": "{font.size.sm}"
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.primary}"
+          },
+          "toggle": {
+            "$value": "{color.text.secondary}"
+          },
+          "toggle-hover": {
+            "$value": "{color.text.primary}"
+          },
+          "toggle-open": {
+            "$value": "{color.text.primary}"
+          }
+        },
+        "label": {
+          "gap": {
+            "$value": "{spacing.2}"
+          },
+          "height": {
+            "$value": "32px"
+          },
+          "padding-inline-end": {
+            "$value": "{spacing.3}"
+          },
+          "radius": {
+            "$value": "{radius.sm}"
+          },
+          "hover-surface": {
+            "$value": "{color.bg.muted}"
+          },
+          "focus-ring": {
+            "$value": "{shadow.focus-primary}"
+          },
+          "transition-duration": {
+            "$value": "80ms"
+          },
+          "transition-easing": {
+            "$value": "ease"
+          }
+        },
+        "toggle": {
+          "size": {
+            "$value": "20px"
+          },
+          "radius": {
+            "$value": "{radius.sm}"
+          },
+          "transition-duration": {
+            "$value": "80ms"
+          },
+          "transition-easing": {
+            "$value": "ease"
+          }
+        }
+      },
+      "virtual-table": {
+        "$description": "ForgeVirtualTable custom footer demo chrome. Scroll virtualization, sticky header geometry, row sizing, and slot behavior remain local or inline.",
+        "footer": {
+          "gap": {
+            "$value": "{spacing.4}"
+          },
+          "text": {
+            "$value": "{color.text.secondary}"
+          },
+          "accent-text": {
+            "$value": "{color.primary.default}"
+          },
+          "accent-font-weight": {
+            "$value": "{font.weight.semibold}"
+          }
+        }
+      },
+      "virtual-list": {
+        "$description": "ForgeVirtualList Storybook row chrome. Scroll offsets, item height, and absolute positioning remain inline behavior.",
+        "row": {
+          "padding-block": {
+            "$value": "{spacing.2}"
+          },
+          "padding-inline": {
+            "$value": "{spacing.4}"
+          },
+          "border": {
+            "$value": "{color.border.default}"
+          },
+          "border-width": {
+            "$value": "{border-width.thin}"
+          },
+          "text": {
+            "$value": "{color.text.primary}"
+          },
+          "alternate-surface": {
+            "$value": "{color.bg.raised}"
+          }
+        }
+      },
+      "virtual-tree": {
+        "$description": "ForgeVirtualTreeView flattened-tree typography, label row, focus/hover treatment, and disclosure toggle. Flattening, scroll window, depth indentation, and row measurement remain local.",
+        "font-family": {
+          "$value": "{font.family.sans}"
+        },
+        "font-size": {
+          "$value": "{font.size.sm}"
+        },
+        "text": {
+          "default": {
+            "$value": "{color.text.primary}"
+          },
+          "toggle": {
+            "$value": "{color.text.secondary}"
+          },
+          "toggle-hover": {
+            "$value": "{color.text.primary}"
+          }
+        },
+        "label": {
+          "gap": {
+            "$value": "{spacing.2}"
+          },
+          "padding-inline-end": {
+            "$value": "{spacing.3}"
+          },
+          "radius": {
+            "$value": "{radius.sm}"
+          },
+          "hover-surface": {
+            "$value": "{color.bg.muted}"
+          },
+          "focus-ring": {
+            "$value": "{shadow.focus-primary}"
+          },
+          "transition-duration": {
+            "$value": "80ms"
+          },
+          "transition-easing": {
+            "$value": "ease"
+          }
+        },
+        "toggle": {
+          "size": {
+            "$value": "20px"
+          },
+          "radius": {
+            "$value": "{radius.sm}"
+          },
+          "transition-duration": {
+            "$value": "80ms"
+          },
+          "transition-easing": {
+            "$value": "ease"
+          }
+        }
+      }
+    }
+  }
+}

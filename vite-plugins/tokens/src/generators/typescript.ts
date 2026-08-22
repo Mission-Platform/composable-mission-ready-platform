@@ -54,8 +54,12 @@ function resolveNode(node: DtcgGroup, aliasDocument?: DtcgGroup): Record<string,
  * Pass `aliasDocument` for sources whose `$value`s contain DTCG aliases (the
  * composite `typography` source resolves its `{font.*}` references against it).
  */
-export function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?: DtcgGroup): string {
-  const exportName = camelCase(basename);
+export function buildTokenModule(
+  basename: string,
+  document_: DtcgGroup,
+  aliasDocument?: DtcgGroup,
+  exportName = camelCase(basename),
+): string {
   const topGroups = Object.keys(document_).filter((key) => !key.startsWith('$'));
   const resolved = resolveNode(document_, aliasDocument);
   const value = topGroups.length === 1 && topGroups[0] === basename ? resolved[topGroups[0]] : resolved;
@@ -63,7 +67,17 @@ export function buildTokenModule(basename: string, document_: DtcgGroup, aliasDo
 }
 
 /** Build the `tokens.ts` barrel that re-exports every per-file module. */
-export function buildBarrelModule(basenames: string[]): string {
-  const lines = basenames.toSorted().map((basename) => `export * from './ts/${basename}.js';`);
+export interface TokenModuleDescriptor {
+  outputPath: string;
+  exportName?: string;
+}
+
+export function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string {
+  const descriptors = sources.map((source) =>
+    typeof source === 'string' ? { outputPath: source, exportName: undefined } : source,
+  );
+  const lines = descriptors
+    .toSorted((a, b) => a.outputPath.localeCompare(b.outputPath))
+    .map(({ outputPath }) => `export * from './ts/${outputPath}.js';`);
   return `${TS_HEADER}\n\n${lines.join('\n')}\n`;
 }

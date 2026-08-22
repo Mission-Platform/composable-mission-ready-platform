@@ -1,7 +1,7 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { deepMergeTokens, type DtcgGroup, flattenTokens } from './dtcg.js';
+import { camelCase, dashedName, deepMergeTokens, type DtcgGroup, flattenTokens } from './dtcg.js';
 import {
   buildLightDarkThemeScss,
   buildScssVariablesScss,
@@ -42,10 +42,16 @@ type SourceKind = 'structural' | 'typography' | 'component' | 'theme';
 
 /** A single DTCG source file and how its SCSS is rendered. */
 interface SourceDescriptor {
+  /** Stable source identifier relative to the token directory. */
+  sourceId: string;
+  /** Generated path relative to `scss/` and `ts/`, without an extension. */
+  outputPath: string;
   /** Source/output base name (without extension), e.g. `'border-width'`. */
   file: string;
   /** SCSS rendering strategy for this source. */
   kind: SourceKind;
+  /** CSS namespace projected from the first layer under `component`. */
+  cssNamespace?: string;
 }
 
 /**
@@ -55,23 +61,57 @@ interface SourceDescriptor {
  * emitted through the same structural path; the two themes are merged into a
  * single `light-dark()` partial.
  */
-function sourceDescriptors(): SourceDescriptor[] {
+function sourceDescriptors(tokensDirectory: string): SourceDescriptor[] {
+  const fixed = [
+    'border-width',
+    'breakpoint',
+    'font',
+    'motion',
+    'opacity',
+    'palette',
+    'radius',
+    'shadow',
+    'size',
+    'spacing',
+    'z-index',
+    'typography',
+  ].map((file): SourceDescriptor => ({
+    sourceId: file,
+    outputPath: file,
+    file,
+    kind: file === 'typography' ? 'typography' : 'structural',
+  }));
+
+  const componentRoot = join(tokensDirectory, 'component');
+  const componentFiles: string[] = [];
+  function visit(directory: string): void {
+    if (!existsSync(directory)) return;
+    for (const entry of readdirSync(directory, { withFileTypes: true }).toSorted((a, b) =>
+      a.name.localeCompare(b.name),
+    )) {
+      const entryPath = join(directory, entry.name);
+      if (entry.isDirectory()) visit(entryPath);
+      else if (entry.isFile() && entry.name.endsWith('.tokens.json')) componentFiles.push(entryPath);
+    }
+  }
+  visit(componentRoot);
+  const components = componentFiles.map((filePath): SourceDescriptor => {
+    const outputPath = path
+      .relative(tokensDirectory, filePath)
+      .replaceAll('\\', '/')
+      .replace(/\.tokens\.json$/, '');
+    const file = path.basename(outputPath);
+    return { sourceId: outputPath, outputPath, file, kind: 'component' };
+  });
+  if (components.length === 0 && existsSync(join(tokensDirectory, 'component.tokens.json'))) {
+    components.push({ sourceId: 'component', outputPath: 'component', file: 'component', kind: 'component' });
+  }
+
   return [
-    { file: 'border-width', kind: 'structural' },
-    { file: 'breakpoint', kind: 'structural' },
-    { file: 'font', kind: 'structural' },
-    { file: 'motion', kind: 'structural' },
-    { file: 'opacity', kind: 'structural' },
-    { file: 'palette', kind: 'structural' },
-    { file: 'radius', kind: 'structural' },
-    { file: 'shadow', kind: 'structural' },
-    { file: 'size', kind: 'structural' },
-    { file: 'spacing', kind: 'structural' },
-    { file: 'z-index', kind: 'structural' },
-    { file: 'typography', kind: 'typography' },
-    { file: 'component', kind: 'component' },
-    { file: 'theme-light', kind: 'theme' },
-    { file: 'theme-dark', kind: 'theme' },
+    ...fixed,
+    ...components,
+    { sourceId: 'theme-light', outputPath: 'theme-light', file: 'theme-light', kind: 'theme' },
+    { sourceId: 'theme-dark', outputPath: 'theme-dark', file: 'theme-dark', kind: 'theme' },
   ];
 }
 
@@ -87,6 +127,7 @@ interface EmitContext {
   spacingDocument?: DtcgGroup;
   paletteDocument?: DtcgGroup;
   componentAliasDocument?: DtcgGroup;
+  componentNamespaces: ReadonlySet<string>;
 }
 
 /**
@@ -121,22 +162,45 @@ function aliasDocumentFor(descriptor: SourceDescriptor, context: EmitContext): D
  * each non-theme source also yields a CSS-free `_<file>-vars.scss` (the
  * `$`-variables only). Theme SCSS is emitted once by the caller, after the loop.
  */
-function writeSourceArtefacts(descriptor: SourceDescriptor, document_: DtcgGroup, context: EmitContext): void {
+function componentRecords(document_: DtcgGroup, cssNamespace: string) {
+  return flattenTokens(document_).map((record) => ({
+    ...record,
+    path: [cssNamespace, ...record.path.slice(2)],
+    group: cssNamespace,
+  }));
+}
+
+function writeSourceArtefacts(
+  descriptor: SourceDescriptor,
+  document_: DtcgGroup,
+  context: EmitContext,
+  exportName: string,
+): void {
   const { scssDirectory, tsDirectory, prefix } = context;
   if (descriptor.kind === 'structural' || descriptor.kind === 'typography' || descriptor.kind === 'component') {
     const records =
       descriptor.kind === 'typography'
         ? buildTypographyRecords(document_.typography as DtcgGroup, prefix)
-        : flattenTokens(document_);
-    writeFileSync(join(scssDirectory, `_${descriptor.file}-vars.scss`), buildScssVariablesScss(records, prefix));
+        : descriptor.kind === 'component'
+          ? componentRecords(document_, descriptor.cssNamespace as string)
+          : flattenTokens(document_);
+    const outputDirectory = join(scssDirectory, path.dirname(descriptor.outputPath));
+    const outputFile = path.basename(descriptor.outputPath);
+    mkdirSync(outputDirectory, { recursive: true });
     writeFileSync(
-      join(scssDirectory, `_${descriptor.file}.scss`),
-      buildStructuralScss(records, prefix, descriptor.file),
+      join(outputDirectory, `_${outputFile}-vars.scss`),
+      buildScssVariablesScss(records, prefix, descriptor.cssNamespace, context.componentNamespaces),
+    );
+    writeFileSync(
+      join(outputDirectory, `_${outputFile}.scss`),
+      buildStructuralScss(records, prefix, outputFile, descriptor.cssNamespace),
     );
   }
+  const outputDirectory = join(tsDirectory, path.dirname(descriptor.outputPath));
+  mkdirSync(outputDirectory, { recursive: true });
   writeFileSync(
-    join(tsDirectory, `${descriptor.file}.ts`),
-    buildTokenModule(descriptor.file, document_, aliasDocumentFor(descriptor, context)),
+    join(outputDirectory, `${path.basename(descriptor.outputPath)}.ts`),
+    buildTokenModule(descriptor.file, document_, aliasDocumentFor(descriptor, context), exportName),
   );
 }
 
@@ -153,28 +217,59 @@ function writeSourceArtefacts(descriptor: SourceDescriptor, document_: DtcgGroup
 export function generateTokens(options: TokensPluginOptions): void {
   const { tokensDir, outDir: outDirectory, overridesDir, overrides, prefix = 'mp' } = options;
 
-  const descriptors = sourceDescriptors();
+  const descriptors = sourceDescriptors(tokensDir);
 
   const scssDirectory = join(outDirectory, 'scss');
   const tsDirectory = join(outDirectory, 'ts');
+  rmSync(scssDirectory, { force: true, recursive: true });
+  rmSync(tsDirectory, { force: true, recursive: true });
   mkdirSync(scssDirectory, { recursive: true });
   mkdirSync(tsDirectory, { recursive: true });
 
+  const componentNamespace = (document_: DtcgGroup): string => {
+    const component = document_.component;
+    if (typeof component !== 'object' || component === null) {
+      throw new Error('Component token source must contain a component group.');
+    }
+    const layers = Object.keys(component as DtcgGroup).filter((key) => !key.startsWith('$'));
+    if (layers.length !== 1) {
+      throw new Error(`Component token source must own exactly one layer; found ${layers.join(', ') || 'none'}.`);
+    }
+    return layers[0];
+  };
+
+  const componentOverride = (override: DtcgGroup, namespace: string): DtcgGroup => {
+    const component = override.component;
+    if (typeof component !== 'object' || component === null) return override;
+    const layer = (component as DtcgGroup)[namespace];
+    return layer === undefined ? {} : { component: { [namespace]: layer } };
+  };
+
   /** Read and parse a DTCG `<file>.tokens.json` source, merging overrides. */
-  const read = (file: string): DtcgGroup => {
-    const base = JSON.parse(readFileSync(join(tokensDir, `${file}.tokens.json`), 'utf8')) as DtcgGroup;
+  const read = (descriptor: SourceDescriptor): DtcgGroup => {
+    const basePath = join(tokensDir, `${descriptor.sourceId}.tokens.json`);
+    const base = JSON.parse(readFileSync(basePath, 'utf8')) as DtcgGroup;
     let merged = base;
+    const namespace = descriptor.kind === 'component' ? componentNamespace(base) : undefined;
 
     if (overridesDir) {
-      const overridePath = join(overridesDir, `${file}.tokens.json`);
-      if (existsSync(overridePath)) {
-        const override = JSON.parse(readFileSync(overridePath, 'utf8')) as DtcgGroup;
-        merged = deepMergeTokens(merged, override);
+      const sourceOverridePath = join(overridesDir, `${descriptor.sourceId}.tokens.json`);
+      if (existsSync(sourceOverridePath)) {
+        merged = deepMergeTokens(merged, JSON.parse(readFileSync(sourceOverridePath, 'utf8')) as DtcgGroup);
+      }
+      if (descriptor.kind === 'component') {
+        const legacyOverridePath = join(overridesDir, 'component.tokens.json');
+        if (existsSync(legacyOverridePath)) {
+          const legacy = JSON.parse(readFileSync(legacyOverridePath, 'utf8')) as DtcgGroup;
+          merged = deepMergeTokens(merged, componentOverride(legacy, namespace as string));
+        }
       }
     }
 
-    if (overrides && overrides[file]) {
-      merged = deepMergeTokens(merged, overrides[file]);
+    const sourceOverride = overrides?.[descriptor.sourceId] ?? overrides?.[descriptor.file];
+    if (sourceOverride) merged = deepMergeTokens(merged, sourceOverride);
+    if (descriptor.kind === 'component' && overrides?.component) {
+      merged = deepMergeTokens(merged, componentOverride(overrides.component, namespace as string));
     }
 
     return merged;
@@ -184,7 +279,37 @@ export function generateTokens(options: TokensPluginOptions): void {
   // source for the composite typography TS module (font primitives + the
   // logical-margin spacing steps); the palette document is the alias source for
   // the theme TS modules (their semantic `$value`s are palette aliases).
-  const documents = new Map<string, DtcgGroup>(descriptors.map(({ file }) => [file, read(file)]));
+  const documents = new Map<string, DtcgGroup>(
+    descriptors.map((descriptor) => [descriptor.sourceId, read(descriptor)]),
+  );
+  const namespaces = new Set<string>();
+  const reservedNames = new Map<string, unknown>();
+  const reserve = (records: ReturnType<typeof flattenTokens>): void => {
+    for (const record of records) reservedNames.set(dashedName(record), record.value);
+  };
+  for (const descriptor of descriptors.filter(({ kind }) => kind === 'structural' || kind === 'typography')) {
+    reserve(
+      descriptor.kind === 'typography'
+        ? buildTypographyRecords((documents.get(descriptor.sourceId) as DtcgGroup).typography as DtcgGroup, prefix)
+        : flattenTokens(documents.get(descriptor.sourceId) as DtcgGroup),
+    );
+  }
+  const lightTheme = descriptors.find(({ sourceId }) => sourceId === 'theme-light');
+  if (lightTheme) reserve(flattenTokens(documents.get(lightTheme.sourceId) as DtcgGroup));
+  for (const descriptor of descriptors.filter(({ kind }) => kind === 'component')) {
+    const document_ = documents.get(descriptor.sourceId) as DtcgGroup;
+    const namespace = componentNamespace(document_);
+    if (namespaces.has(namespace)) throw new Error(`Duplicate component CSS namespace: ${namespace}`);
+    for (const record of componentRecords(document_, namespace)) {
+      const name = dashedName(record);
+      const reservedValue = reservedNames.get(name);
+      if (reservedValue !== undefined && JSON.stringify(reservedValue) !== JSON.stringify(record.value)) {
+        throw new Error(`Component CSS property collides with a primitive property: ${name}`);
+      }
+    }
+    descriptor.cssNamespace = namespace;
+    namespaces.add(namespace);
+  }
   const fontDocument = documents.get('font');
   const spacingDocument = documents.get('spacing');
   const paletteDocument = documents.get('palette');
@@ -192,12 +317,12 @@ export function generateTokens(options: TokensPluginOptions): void {
   // primitive scales. Merge palette first so the light semantic theme can
   // intentionally take precedence over the palette's same-named groups.
   const componentAliasDescriptors: SourceDescriptor[] = [
-    ...descriptors.filter(({ kind }) => kind !== 'theme' && kind !== 'component'),
-    { file: 'theme-light', kind: 'theme' },
+    ...descriptors.filter(({ kind }) => kind !== 'theme'),
+    descriptors.find(({ sourceId }) => sourceId === 'theme-light') as SourceDescriptor,
   ];
   let componentAliasDocument: DtcgGroup = {};
-  for (const { file } of componentAliasDescriptors) {
-    componentAliasDocument = deepMergeTokens(componentAliasDocument, documents.get(file) as DtcgGroup);
+  for (const { sourceId } of componentAliasDescriptors) {
+    componentAliasDocument = deepMergeTokens(componentAliasDocument, documents.get(sourceId) as DtcgGroup);
   }
 
   // The `@forward`/`@use` references omit the partial's leading underscore, as
@@ -210,9 +335,22 @@ export function generateTokens(options: TokensPluginOptions): void {
     spacingDocument,
     paletteDocument,
     componentAliasDocument,
+    componentNamespaces: namespaces,
   };
+  const basenameCounts = new Map<string, number>();
+  for (const descriptor of descriptors)
+    basenameCounts.set(descriptor.file, (basenameCounts.get(descriptor.file) ?? 0) + 1);
+  const exportNameFor = (descriptor: SourceDescriptor): string =>
+    basenameCounts.get(descriptor.file) === 1
+      ? camelCase(descriptor.file)
+      : camelCase(descriptor.sourceId.replaceAll('/', '-'));
   for (const descriptor of descriptors) {
-    writeSourceArtefacts(descriptor, documents.get(descriptor.file) as DtcgGroup, context);
+    writeSourceArtefacts(
+      descriptor,
+      documents.get(descriptor.sourceId) as DtcgGroup,
+      context,
+      exportNameFor(descriptor),
+    );
   }
 
   // Combined theme partial — `:root { color-scheme: light dark; --mp-color-*:
@@ -232,7 +370,7 @@ export function generateTokens(options: TokensPluginOptions): void {
   // `@property` registrations), re-exports the `$`-variables, and applies the
   // `light-dark()` theme.
   const forwarded = [
-    ...descriptors.filter((descriptor) => descriptor.kind !== 'theme').map((descriptor) => descriptor.file),
+    ...descriptors.filter((descriptor) => descriptor.kind !== 'theme').map((descriptor) => descriptor.outputPath),
     'theme',
   ];
   const barrel = `@charset "UTF-8";
@@ -248,5 +386,10 @@ ${forwarded
   writeFileSync(join(outDirectory, '_tokens.scss'), barrel);
 
   // TypeScript barrel — pure re-export of every per-file module.
-  writeFileSync(join(outDirectory, 'tokens.ts'), buildBarrelModule(descriptors.map((descriptor) => descriptor.file)));
+  writeFileSync(
+    join(outDirectory, 'tokens.ts'),
+    buildBarrelModule(
+      descriptors.map((descriptor) => ({ outputPath: descriptor.outputPath, exportName: exportNameFor(descriptor) })),
+    ),
+  );
 }

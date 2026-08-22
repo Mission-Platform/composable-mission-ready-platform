@@ -15,7 +15,7 @@
        neutral version is a plain flex column with the equivalent gap. */
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-feedback-progress-gap);
+    gap: var(--mp-feedback-progress-gap);
 
     &__header {
       display: flex;
@@ -28,14 +28,14 @@
       display: block;
       width: 100%;
       border: none;
-      border-radius: var(--mp-component-feedback-progress-track-radius);
+      border-radius: var(--mp-feedback-progress-track-radius);
       overflow: hidden;
-      background-color: var(--mp-component-feedback-progress-track-background);
+      background-color: var(--mp-feedback-progress-track-background);
 
       /* WebKit: trough */
       &::-webkit-progress-bar {
-        background-color: var(--mp-component-feedback-progress-track-background);
-        border-radius: var(--mp-component-feedback-progress-track-radius);
+        background-color: var(--mp-feedback-progress-track-background);
+        border-radius: var(--mp-feedback-progress-track-radius);
       }
 
       /**
@@ -44,13 +44,13 @@
        */
       @mixin fill($name) {
         &--#{$name}::-webkit-progress-value {
-          background-color: var(--mp-component-feedback-progress-fill-#{$name});
-          border-radius: var(--mp-component-feedback-progress-track-radius);
+          background-color: var(--mp-feedback-progress-fill-#{$name});
+          border-radius: var(--mp-feedback-progress-track-radius);
         }
 
         &--#{$name}::-moz-progress-bar {
-          background-color: var(--mp-component-feedback-progress-fill-#{$name});
-          border-radius: var(--mp-component-feedback-progress-track-radius);
+          background-color: var(--mp-feedback-progress-fill-#{$name});
+          border-radius: var(--mp-feedback-progress-track-radius);
         }
       }
 
