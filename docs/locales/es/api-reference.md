@@ -224,19 +224,15 @@ paquete en `packages/`, incluidas las fachadas WebAssembly escritas.
 
 ### Paquetes de código y WebAssembly
 
-| Paquete                                     | Propósito                                                                                    |
-| :------------------------------------------ | :------------------------------------------------------------------------------------------- |
-| `@mission-platform/barcode`                 | Codificación/decodificación de códigos de barras 1D de fachada y componente. |
-| `@mission-platform/code-scan-wasm`          | Módulo WebAssembly del escáner de imágenes generadas.                        |
-| `@mission-platform/code-scanner`            | Componente de escaneo de código de imagen y cámara.                          |
-| `@mission-platform/matrix-code`             | Fachada de codificación/decodificación Data Matrix y Azteca.                 |
-| `@mission-platform/matrix-code-decode-wasm` | Módulo WebAssembly decodificador de Matrix Code generado.                    |
-| `@mission-platform/matrix-code-encode-wasm` | Módulo WebAssembly del codificador Matrix Code generado.                     |
-| `@mission-platform/qr-code`                 | Codificación/decodificación QR de fachada y componente.                      |
-| `@mission-platform/qr-code-decode-wasm`     | Módulo WebAssembly decodificador QR generado.                                |
-| `@mission-platform/qr-code-encode-wasm`     | Módulo WebAssembly del codificador QR generado.                              |
-| `@mission-platform/harper`                  | Integración de estilo y gramática de Harper para Mónaco.                     |
-| `@mission-platform/hunspell`                | Envoltorio de corrección ortográfica de Emscripten Hunspell.                 |
+| Paquete                            | Propósito                                                                                    |
+| :--------------------------------- | :------------------------------------------------------------------------------------------- |
+| `@mission-platform/barcode`        | Codificación/decodificación de códigos de barras 1D de fachada y componente. |
+| `@mission-platform/code-scan-wasm` | Módulo WebAssembly del escáner de imágenes generadas.                        |
+| `@mission-platform/code-scanner`   | Componente de escaneo de código de imagen y cámara.                          |
+| `@mission-platform/matrix-code`    | Fachada de codificación/decodificación Data Matrix y Azteca.                 |
+| `@mission-platform/qr-code`        | Codificación/decodificación QR de fachada y componente.                      |
+| `@mission-platform/harper`         | Integración de estilo y gramática de Harper para Mónaco.                     |
+| `@mission-platform/hunspell`       | Envoltorio de corrección ortográfica de Emscripten Hunspell.                 |
 
 ### Forjar objetivos del compilador
 
