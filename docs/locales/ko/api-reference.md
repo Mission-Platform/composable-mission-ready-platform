@@ -188,11 +188,7 @@ WebAssembly 기반 맞춤법 검사.
 | `@mission-platform/code-scan-wasm`          | 생성된 이미지 스캐너 WebAssembly 모듈.       |
 | `@mission-platform/code-scanner`            | 카메라 및 이미지 코드 스캔 구성 요소.         |
 | `@mission-platform/matrix-code`             | 데이터 매트릭스 및 Aztec 인코딩/디코딩 외관.       |
-| `@mission-platform/matrix-code-decode-wasm` | 생성된 매트릭스 코드 디코더 WebAssembly 모듈. |
-| `@mission-platform/matrix-code-encode-wasm` | 생성된 매트릭스 코드 인코더 WebAssembly 모듈. |
 | `@mission-platform/qr-code`                 | QR 인코딩/디코딩 파사드 및 구성요소.            |
-| `@mission-platform/qr-code-decode-wasm`     | QR 디코더 WebAssembly 모듈이 생성되었습니다.          |
-| `@mission-platform/qr-code-encode-wasm`     | QR 인코더 WebAssembly 모듈이 생성되었습니다.          |
 | `@mission-platform/harper`                  | 모나코를 위한 Harper 문법 및 스타일 통합.  |
 | `@mission-platform/hunspell`                | Emscripten Hunspell 철자 검사 래퍼.       |
 

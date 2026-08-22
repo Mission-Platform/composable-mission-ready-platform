@@ -188,11 +188,7 @@ paquet dans `packages/`, y compris les façades typées WebAssembly.
 | `@mission-platform/code-scan-wasm`          | Module WebAssembly du scanner d'images généré.       |
 | `@mission-platform/code-scanner`            | Composant d'analyse de code d'appareil photo et d'image.         |
 | `@mission-platform/matrix-code`             | Façade d'encodage/décodage Data Matrix et Aztec.       |
-| `@mission-platform/matrix-code-decode-wasm` | Module WebAssembly de décodeur de code matriciel généré. |
-| `@mission-platform/matrix-code-encode-wasm` | Module WebAssembly d'encodeur Matrix Code généré. |
 | `@mission-platform/qr-code`                 | QR encodage/décodage de la façade et du composant.            |
-| `@mission-platform/qr-code-decode-wasm`     | Module WebAssembly de décodeur QR généré.          |
-| `@mission-platform/qr-code-encode-wasm`     | Module WebAssembly d'encodeur QR généré.          |
 | `@mission-platform/harper`                  | Intégration de la grammaire et du style Harper pour Monaco.  |
 | `@mission-platform/hunspell`                | Wrapper de vérification orthographique Emscripten Hunspell.       |
 

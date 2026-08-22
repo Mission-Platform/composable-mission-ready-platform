@@ -188,11 +188,7 @@ WebAssembly 支持的拼写检查。
 | `@mission-platform/code-scan-wasm`          |生成图像扫描仪 WebAssembly 模块。       |
 | `@mission-platform/code-scanner`            |摄像头和图像扫码组件。         |
 | `@mission-platform/matrix-code`             | Data Matrix 和 Aztec 编码/解码外观。       |
-| `@mission-platform/matrix-code-decode-wasm` |生成的矩阵代码解码器 WebAssembly 模块。 |
-| `@mission-platform/matrix-code-encode-wasm` |生成的矩阵代码编码器 WebAssembly 模块。 |
 | `@mission-platform/qr-code`                 | QR 编码/解码外观和组件。            |
-| `@mission-platform/qr-code-decode-wasm`     |生成的 QR 解码器 WebAssembly 模块。          |
-| `@mission-platform/qr-code-encode-wasm`     |生成的 QR 编码器 WebAssembly 模块。          |
 | `@mission-platform/harper`                  |摩纳哥的 Harper 语法和风格集成。  |
 | `@mission-platform/hunspell`                | Emscripten Hunspell 拼写检查包装器。       |
 

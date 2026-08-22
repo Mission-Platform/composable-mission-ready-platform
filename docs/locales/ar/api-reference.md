@@ -188,11 +188,7 @@
 | `@mission-platform/code-scan-wasm`          | تم إنشاء وحدة WebAssembly للماسح الضوئي للصور.       |
 | `@mission-platform/code-scanner`            | مكون مسح رمز الكاميرا والصورة.         |
 | `@mission-platform/matrix-code`             | مصفوفة البيانات وواجهة تشفير/فك تشفير الأزتيك.       |
-| `@mission-platform/matrix-code-decode-wasm` | تم إنشاء وحدة فك ترميز رمز المصفوفة WebAssembly. |
-| `@mission-platform/matrix-code-encode-wasm` | تم إنشاء وحدة تشفير رمز المصفوفة WebAssembly. |
 | `@mission-platform/qr-code`                 | QR تشفير/فك تشفير الواجهة والمكون.            |
-| `@mission-platform/qr-code-decode-wasm`     | تم إنشاء وحدة WebAssembly لوحدة فك ترميز QR.          |
-| `@mission-platform/qr-code-encode-wasm`     | تم إنشاء وحدة WebAssembly لتشفير QR.          |
 | `@mission-platform/harper`                  | هاربر قواعد اللغة والتكامل الأسلوبي لموناكو.  |
 | `@mission-platform/hunspell`                | برنامج Emscripten Hunspell للتدقيق الإملائي.       |
 

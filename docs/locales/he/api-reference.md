@@ -188,11 +188,7 @@
 | `@mission-platform/code-scan-wasm`          | מודול WebAssembly של סורק תמונות שנוצר.       |
 | `@mission-platform/code-scanner`            | רכיב סריקת קוד מצלמה ותמונה.         |
 | `@mission-platform/matrix-code`             | מטריצת נתונים ואצטקים מקודדים/פענחים חזית.       |
-| `@mission-platform/matrix-code-decode-wasm` | מודול WebAssembly של מפענח קוד מטריקס. |
-| `@mission-platform/matrix-code-encode-wasm` | מודול WebAssembly של מקודד קוד מטריקס. |
 | `@mission-platform/qr-code`                 | QR קידוד/פענח חזית ורכיב.            |
-| `@mission-platform/qr-code-decode-wasm`     | מודול WebAssembly של מפענח QR שנוצר.          |
-| `@mission-platform/qr-code-encode-wasm`     | מודול WebAssembly של מקודד QR שנוצר.          |
 | `@mission-platform/harper`                  | שילוב דקדוק וסגנון הרפר עבור מונקו.  |
 | `@mission-platform/hunspell`                | עטיפה לבדיקת איות של Emscripten Hunspell.       |
 
