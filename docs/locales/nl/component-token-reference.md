@@ -1,45 +1,64 @@
-# Component-tokenreferentie smeden
+# Forge component-token reference
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+This is the canonical inventory and Figma handoff for Forge-authored components. It is intentionally independent of
+the generated framework adapters: the same entry applies to Vue, React, Solid, Svelte, and Web Components.
 
-> Engelse bron: [docs/component-token-reference.md](../../component-token-reference.md)
-> Taal: Nederlands (nl)
+## Reading the contract
 
-Dit is de canonieke inventaris en Figma-overdracht voor door Forge geschreven componenten. Het is opzettelijk onafhankelijk van
-de gegenereerde raamwerkadapters: hetzelfde item is van toepassing op Vue, React, Solid, Svelteen webcomponenten.
-
-## Het contract lezen
-
-De bron van de waarheid is [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
-Het pad verwijst rechtstreeks naar een aangepaste CSS-eigenschap en een Figma-variabele:
+The source of truth is the recursive component source tree under
+[`packages/tokens/tokens/component/`](../packages/tokens/tokens/component/), grouped by atomic level
+(`atoms/`, `molecules/`, `organisms/`, and `templates/`). Each source is independently generated, while all sources
+preserve the same stable `component.*` DTCG contract:
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
-Componentwaarden vormen een alias voor de bestaande primitieve en semantische themadocumenten. Daarom heeft de Figma-collectie dat ook
-**Licht** en **Donker** modi zonder componenttokens te dupliceren. Runtime licht/donker-gedrag blijft gebruiken
-`color-scheme`, `light-dark()`, `[data-theme]`, En `.theme-*` subboom-pinnen. Consumenten en Storybook kunnen deze overschrijven
-blad hieronder `component` in `overrides.tokens.json`; er wordt een overschrijving toegepast na het gegenereerde token-stylesheet.
+The DTCG path is also the Figma and runtime override path; only the generated CSS name drops the `component` wrapper.
+For example, `component.button.primary.background.hover` is emitted as `--mp-button-primary-background-hover`. A
+source ID such as `component/atoms/button` identifies the file that owns the contract, not a new DTCG path.
 
-### Semantische slots en staatswoordenschat
+Component values alias the existing primitive and semantic theme documents. Consequently, the Figma collection has
+**Light** and **Dark** modes without duplicating component tokens. Runtime light/dark behavior continues to use
+`color-scheme`, `light-dark()`, `[data-theme]`, and `.theme-*` subtree pins. Consumers and Storybook may override any
+leaf below `component` in `overrides.tokens.json`; an override is applied after the generated token stylesheet. Overrides
+continue to use `component.*` keys even though CSS custom properties use the layer namespace.
 
-| Slotfamilie | Figma-rol | Typische toestanden |
+## Source and generated output layout
+
+Every visual contract has one owner under the atomic source tree. The generator discovers new files recursively, so a
+new source does not require a descriptor registration:
+
+```text
+packages/tokens/tokens/component/<atomic-level>/<source>.tokens.json
+  -> packages/tokens/src/generated/scss/component/<atomic-level>/_<source>.scss
+  -> packages/tokens/src/generated/scss/component/<atomic-level>/_<source>-vars.scss
+  -> packages/tokens/src/generated/ts/component/<atomic-level>/<source>.ts
+```
+
+The generated SCSS and TypeScript barrels include every component source in deterministic source-ID order. Component
+files may reuse shared contracts such as `button`, `field`, `input`, `navigation`, and `overlay`; composed components
+must not duplicate those token paths. Behavior-only components, inherited-only glyphs, and layout/DOM formulas remain
+outside the visual token contract unless an inventory entry assigns them visual ownership.
+
+### Semantic slots and state vocabulary
+
+| Slot family                                  | Figma role                                  | Typical states                                                                         |
 | -------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `background` / `surface` / `track` / `thumb` | Vul- of controlevlak | `default`, `hover`, `active`, `disabled`, `loading`, `expanded`, `selected`, `invalid` |
-| `text` / `label` / `helper-text`             | Typografiekleur of benoemde typografiestijl | `default`, `hover`, `disabled`, `selected`, `invalid`                                  |
-| `border` / `focus-ring`                      | Slag- en toetsenbordindicatie | `default`, `hover`, `focus-visible`, `active`, `disabled`, `selected`, `invalid`       |
-| `padding` / `gap` / `radius` / `shadow`      | Geometrie en hoogte | standaard of maatspecifiek |
-| `opacity` / `transition`                     | Minder nadruk en beweging | `disabled`, `loading`, `hover`, `active`                                               |
+| `background` / `surface` / `track` / `thumb` | Fill or control surface                     | `default`, `hover`, `active`, `disabled`, `loading`, `expanded`, `selected`, `invalid` |
+| `text` / `label` / `helper-text`             | Typography colour or named typography style | `default`, `hover`, `disabled`, `selected`, `invalid`                                  |
+| `border` / `focus-ring`                      | Stroke and keyboard indication              | `default`, `hover`, `focus-visible`, `active`, `disabled`, `selected`, `invalid`       |
+| `padding` / `gap` / `radius` / `shadow`      | Geometry and elevation                      | default or size-specific                                                               |
+| `opacity` / `transition`                     | De-emphasis and motion                      | `disabled`, `loading`, `hover`, `active`                                               |
 
-Hieronder worden alleen statussen weergegeven die door een component worden ondersteund. `expanded` wordt gebruikt voor onthulling/selecteer oppervlakken, `selected`
-voor keuzes/tabbladen/navigatie, en `invalid` voor formuliervalidatie; er zijn geen ongebruikte statusvariabelen vereist.
+Only states supported by a component are listed below. `expanded` is used for disclosure/select surfaces, `selected`
+for choices/tabs/navigation, and `invalid` for form validation; no unused state variables are required.
 
-## Inventarisoverzicht
+## Inventory summary
 
-De repository-inventaris is gebaseerd op de volgende smalle bronpaden:
+The repository inventory is based on the following narrow source paths:
 
 ```text
 packages/*/src/components/**/*.tsx
@@ -47,225 +66,233 @@ packages/*/src/components/**/*.stories.tsx
 packages/*/src/components/**/*.module.scss
 ```
 
-| Artefact | Tel | Betekenis |
+| Artifact              | Count | Meaning                                                                              |
 | --------------------- | ----: | ------------------------------------------------------------------------------------ |
-| Component TSX-bronnen |   249 | Niet-verhaal Forge- en e-mailcomponentbronnen |
-| Samengeplaatste verhalen |   246 | Drie recursieve Markdown/tree helper-bronnen hebben opzettelijk geen op zichzelf staand verhaal |
-| CSS-modules |   219 | Lokale visuele stijlmodules; inline e-mail en overgenomen contracten worden ook gedocumenteerd |
-| Pakketten |    20 | Elk pakket dat een componentbron |
+| Component TSX sources |   249 | Non-story Forge and email component sources                                          |
+| Co-located stories    |   246 | Three recursive Markdown/tree helper sources intentionally have no standalone story  |
+| CSS modules           |   219 | Local visual style modules; inline email and inherited contracts are also documented |
+| Packages              |    20 | Every package containing a component source                                          |
 
-Indeling is per bron, niet per pakket:
+The post-audit generated surface contains **2,841 token leaves**: 132 active, 2,161 protected, and 548 ambiguous;
+there are no remaining candidates. The cleanup removed 189 unreachable leaves in total: the 185 candidates from the
+review report plus 4 net second-order palette leaves (6 removed, 2 restored as reachable `.500` leaves) exposed after alias closure. This reduction affects generated
+primitive, semantic, typography, and structural exports only; retained `component.*` paths and their
+`--mp-<layer>-*` names are unchanged. The three unresolved aliases (`color.surface.raised`, `radius.2xs`, and
+`font.weight.light`) predate this audit and remain unchanged.
 
-- **Visueel** — bezit een CSS-module of inline visuele uitvoer en verwijst naar het contract dat wordt weergegeven in de pakkettabel.
-- **Inherited-visual** — geeft geen onafhankelijk gestileerde host weer; het uiterlijk komt van een kind, ouder, `currentColor`,
-  een host/canvas van derden, of het contract van het samengestelde onderdeel.
-- **Alleen gedrag** — regelt het weergave- of viewport-gedrag en neemt zelf geen visuele beslissing.
+Classification is per source, not per package:
 
-Elk opsommingsteken hieronder is één inventarisinvoer. Tenzij een verhaal gemarkeerd is `story: missing`, heeft de component een matching
-`<component>.stories.tsx` naast de bron. Een pakket-/niveaukop levert het stabiele bronpadvoorvoegsel.
+- **Visual** — owns a CSS module or inline visual output and maps to the contract shown in the package table.
+- **Inherited-visual** — renders no independently styled host; its appearance comes from a child, parent, `currentColor`,
+  a third-party host/canvas, or the contract of the composed component.
+- **Behavior-only** — controls rendering or viewport behavior and makes no visual decision of its own.
+
+Every bullet below is one inventory entry. Unless a story is marked `story: missing`, the component has a matching
+`<component>.stories.tsx` beside the source. A package/level heading supplies the stable source path prefix.
 
 ## `@mission-platform/components`
 
-### Atomen — `packages/components/src/components/atoms/`
+### Atoms — `packages/components/src/components/atoms/`
 
-| Onderdeel | Classificatie | Overeenkomst | Uiterlijk rekwisieten / staten |
+| Component                | Classification | Contract                                        | Appearance props / states                                                                   |
 | ------------------------ | -------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `forge-avatar`           | visueel | `component.media`                               | `src`, `initials`, `size`, `shape`, `status`, `variant`; standaard/uitgeschakelde statuskleuren |
-| `forge-background-video` | visueel | `component.media`                               | bron, automatisch afspelen/gedempt/loop; standaard/overlay |
-| `forge-badge`            | visueel | `component.feedback`                            | `variant`, `size`; standaard/uitgeschakeld |
-| `forge-button`           | visueel | `component.button.<variant>`                    | `variant`, `size`, `padding`, `margin`; standaard/hover/actief/focus-zichtbaar/uitgeschakeld/laden |
-| `forge-icon-button`      | visueel | `component.button.<variant>` + `component.icon` | label, `variant`, `size`; standaard/hover/actief/focus-zichtbaar/uitgeschakeld/laden |
-| `forge-progress-bar`     | visueel | `component.feedback`                            | waarde, variant; standaard/laden/uitgeschakeld |
-| `forge-quote`            | visueel | `component.typography` + `component.surface`    | citaat, variant; standaard |
-| `forge-responsive-image` | visueel | `component.media`                               | bron, aspect/fit; standaard/tijdelijke aanduiding |
-| `forge-responsive-video` | visueel | `component.media`                               | bron, bedieningselementen/autoplay; standaard/overlay |
-| `forge-separator`        | visueel | `component.surface`                             | oriëntatie; standaard |
-| `forge-skeleton`         | visueel | `component.feedback`                            | vorm/grootte; laden |
-| `forge-spinner`          | visueel | `component.feedback`                            | maat, variant; laden |
-| `forge-stack`            | visueel | `component.layout`                              | richting, `gap`, uitlijning; standaard |
-| `forge-status-icon`      | visueel | `component.feedback.<status>`                   | status, grootte; standaard/uitgeschakeld |
-| `forge-tag`              | visueel | `component.feedback`                            | variant, maat, afneembaar; standaard/zweven/uitgeschakeld |
-| `forge-theme-toggle`     | visueel | `component.button` + `component.icon`           | thema, grootte; standaard/zweven/actief/geselecteerd |
-| `forge-typography`       | visueel | `component.typography`                          | `as`, typografievariant, kleur; standaard/link/uitgeschakeld |
+| `forge-avatar`           | visual         | `component.media`                               | `src`, `initials`, `size`, `shape`, `status`, `variant`; default/disabled status colours    |
+| `forge-background-video` | visual         | `component.media`                               | source, autoplay/muted/loop; default/overlay                                                |
+| `forge-badge`            | visual         | `component.feedback`                            | `variant`, `size`; default/disabled                                                         |
+| `forge-button`           | visual         | `component.button.<variant>`                    | `variant`, `size`, `padding`, `margin`; default/hover/active/focus-visible/disabled/loading |
+| `forge-icon-button`      | visual         | `component.button.<variant>` + `component.icon` | label, `variant`, `size`; default/hover/active/focus-visible/disabled/loading               |
+| `forge-progress-bar`     | visual         | `component.feedback`                            | value, variant; default/loading/disabled                                                    |
+| `forge-quote`            | visual         | `component.typography` + `component.surface`    | citation, variant; default                                                                  |
+| `forge-responsive-image` | visual         | `component.media`                               | source, aspect/fit; default/placeholder                                                     |
+| `forge-responsive-video` | visual         | `component.media`                               | source, controls/autoplay; default/overlay                                                  |
+| `forge-separator`        | visual         | `component.surface`                             | orientation; default                                                                        |
+| `forge-skeleton`         | visual         | `component.feedback`                            | shape/size; loading                                                                         |
+| `forge-spinner`          | visual         | `component.feedback`                            | size, variant; loading                                                                      |
+| `forge-stack`            | visual         | `component.layout`                              | direction, `gap`, alignment; default                                                        |
+| `forge-status-icon`      | visual         | `component.feedback.<status>`                   | status, size; default/disabled                                                              |
+| `forge-tag`              | visual         | `component.feedback`                            | variant, size, removable; default/hover/disabled                                            |
+| `forge-theme-toggle`     | visual         | `component.button` + `component.icon`           | theme, size; default/hover/active/selected                                                  |
+| `forge-typography`       | visual         | `component.typography`                          | `as`, typography variant, colour; default/link/disabled                                     |
 
-### Moleculen — `packages/components/src/components/molecules/`
+### Molecules — `packages/components/src/components/molecules/`
 
-| Onderdeel | Classificatie | Overeenkomst | Uiterlijk rekwisieten / staten |
-| ------------------------- | ---------------- | ---------------------------------------------- | ---------------------------------------------------------------------- |
-| `forge-accordion`         | visueel | `component.surface` + `component.navigation`   | artikelen, uitgebreid; standaard/hover/focus-zichtbaar/uitgevouwen/uitgeschakeld |
-| `forge-alert-banner`      | visueel | `component.feedback` + `component.overlay`     | status, ontslagbaar; standaard/hover/focus-zichtbaar |
-| `forge-breadcrumb`        | visueel | `component.navigation`                         | artikelen; standaard/zweven/geselecteerd/focus-zichtbaar |
-| `forge-button-group`      | visueel | `component.button-group`                       | oriëntatie, gehecht, variant, opening; standaard/focus-zichtbaar/uitgeschakeld |
-| `forge-card`              | visueel | `component.surface`                            | variant, opvulling; standaard/zweven/geselecteerd |
-| `forge-chat-bubble`       | visueel | `component.media` + `component.surface`        | auteur, regie/status; standaard/geselecteerd |
-| `forge-collapse`          | visueel | `component.collapse`                           | open, variant, uitgeschakeld; standaard/hover/focus-zichtbaar/uitgevouwen/uitgeschakeld |
-| `forge-device-mock`       | visueel | `component.media.device`                       | apparaat, oriëntatie, grootte; standaard |
-| `forge-dropdown`          | visueel | `component.overlay` + `component.navigation`   | open, plaatsing; standaard/uitgebreid/focus-zichtbaar |
-| `forge-grid`              | visueel | `component.layout.grid`                         | kolommen, opening, opvulling; standaard |
-| `forge-in-view`           | visueel | `component.layout`                             | drempelwaarde; erfelijk kindercontract |
-| `forge-language-switcher` | geërfd-visueel | `component.navigation` + kindkeuzecontract | plaats; standaard/uitgebreid/geselecteerd |
-| `forge-list`              | visueel | `component.surface`                            | variant, kloof; standaard/geselecteerd |
-| `forge-masonry`           | visueel | `component.layout.masonry`                      | kolommen, opening, opvulling; standaard |
-| `forge-menu-item`         | visueel | `component.navigation`                         | actief/uitgeschakeld; standaard/hover/focus-zichtbaar/geselecteerd/uitgeschakeld |
-| `forge-menu`              | visueel | `component.navigation`                         | open/oriëntatie; standaard/uitgevouwen |
-| `forge-navbar-item`       | visueel | `component.navigation.navbar-item`             | actief, vervolgkeuzelijst, variant, uitgeschakeld; standaard/hover/focus-zichtbaar/geselecteerd/uitgevouwen/uitgeschakeld |
-| `forge-pagination`        | visueel | `component.navigation`                         | pagina, formaat; standaard/hover/focus-zichtbaar/geselecteerd/uitgeschakeld |
-| `forge-popover`           | visueel | `component.overlay`                            | open, plaatsing; standaard/uitgebreid/focus-zichtbaar |
-| `forge-tabs`              | visueel | `component.navigation`                         | oriëntatie, actief tabblad; standaard/hover/focus-zichtbaar/geselecteerd/uitgeschakeld |
-| `forge-timeline`          | visueel | `component.timeline`                          | status, oriëntatie, omlijnde marker; standaard/geselecteerd |
-| `forge-toast`             | visueel | `component.overlay` + `component.feedback`     | status, duur; standaard/laden |
-| `forge-tooltip`           | visueel | `component.overlay`                            | open, plaatsing; standaard/uitgevouwen |
-| `forge-window-popout`     | visueel | `component.overlay.window-popout`              | open, maat; standaard/hover/focus-zichtbaar/geselecteerd |
+| Component                 | Classification   | Contract                                       | Appearance props / states                                                                   |
+| ------------------------- | ---------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `forge-accordion`         | visual           | `component.surface` + `component.navigation`   | items, expanded; default/hover/focus-visible/expanded/disabled                              |
+| `forge-alert-banner`      | visual           | `component.feedback` + `component.overlay`     | status, dismissible; default/hover/focus-visible                                            |
+| `forge-breadcrumb`        | visual           | `component.navigation`                         | items; default/hover/selected/focus-visible                                                 |
+| `forge-button-group`      | visual           | `component.button-group`                       | orientation, attached, variant, gap; default/focus-visible/disabled                         |
+| `forge-card`              | visual           | `component.surface`                            | variant, padding; default/hover/selected                                                    |
+| `forge-chat-bubble`       | visual           | `component.media` + `component.surface`        | author, direction/status; default/selected                                                  |
+| `forge-collapse`          | visual           | `component.collapse`                           | open, variant, disabled; default/hover/focus-visible/expanded/disabled                      |
+| `forge-device-mock`       | visual           | `component.media.device`                       | device, orientation, size; default                                                          |
+| `forge-dropdown`          | visual           | `component.overlay` + `component.navigation`   | open, placement; default/expanded/focus-visible                                             |
+| `forge-grid`              | visual           | `component.layout.grid`                        | columns, gap, padding; default                                                              |
+| `forge-in-view`           | visual           | `component.layout`                             | threshold; inherited child contract                                                         |
+| `forge-language-switcher` | inherited-visual | `component.navigation` + child select contract | locale; default/expanded/selected                                                           |
+| `forge-list`              | visual           | `component.surface`                            | variant, gap; default/selected                                                              |
+| `forge-masonry`           | visual           | `component.layout.masonry`                     | columns, gap, padding; default                                                              |
+| `forge-menu-item`         | visual           | `component.navigation`                         | active/disabled; default/hover/focus-visible/selected/disabled                              |
+| `forge-menu`              | visual           | `component.navigation`                         | open/orientation; default/expanded                                                          |
+| `forge-navbar-item`       | visual           | `component.navigation.navbar-item`             | active, dropdown, variant, disabled; default/hover/focus-visible/selected/expanded/disabled |
+| `forge-pagination`        | visual           | `component.navigation`                         | page, size; default/hover/focus-visible/selected/disabled                                   |
+| `forge-popover`           | visual           | `component.overlay`                            | open, placement; default/expanded/focus-visible                                             |
+| `forge-tabs`              | visual           | `component.navigation`                         | orientation, active tab; default/hover/focus-visible/selected/disabled                      |
+| `forge-timeline`          | visual           | `component.timeline`                           | status, orientation, outlined marker; default/selected                                      |
+| `forge-toast`             | visual           | `component.overlay` + `component.feedback`     | status, duration; default/loading                                                           |
+| `forge-tooltip`           | visual           | `component.overlay`                            | open, placement; default/expanded                                                           |
+| `forge-window-popout`     | visual           | `component.overlay.window-popout`              | open, size; default/hover/focus-visible/selected                                            |
 
-### Organismen en sjablonen — `packages/components/src/components/{organisms,templates}/`
+### Organisms and templates — `packages/components/src/components/{organisms,templates}/`
 
-| Onderdeel | Classificatie | Overeenkomst | Uiterlijk rekwisieten / staten |
-| -------------------------- | ---------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `forge-carousel`           | visueel | `component.navigation.carousel`                                 | dia's, bedieningselementen, automatisch afspelen, toon; standaard/hover/focus-zichtbaar/geselecteerd/uitgeschakeld |
-| `forge-chat-area`          | visueel | `component.media.chat-area`                                      | grootte, kop-/voettekstvakken, automatisch scrollen; standaard/laden |
-| `forge-dialog`             | visueel | `component.overlay`                                             | open, titel/voettekst; standaard/uitgebreid/focus-zichtbaar |
-| `forge-drawer`             | visueel | `component.overlay.drawer`                                      | openen, plaatsing/grootte, formaat wijzigen; standaard/hover/actief/uitgevouwen |
-| `forge-menubar`            | visueel | `component.navigation.menubar`                                  | items, omrand, grootte; standaard/hover/focus-zichtbaar/uitgevouwen/uitgeschakeld |
-| `forge-modal`              | visueel | `component.overlay`                                             | open, grootte, kop-/voettekst; standaard/uitgebreid/focus-zichtbaar |
-| `forge-navbar`             | visueel | `component.navigation.navbar`                  | items, responsieve modus; standaard/hover/focus-zichtbaar/geselecteerd |
-| `forge-table`              | visueel | `component.data.table`                                           | kolommen, grootte, bijschrift, gestreept/omzoomd/zwevend, toon, laden; standaard/hover/focus-zichtbaar/laden |
-| `forge-theme-composer`     | visueel | `component.surface` + `component.field`                         | themawaarden; standaard/ongeldig |
-| `forge-theme-provider`     | visueel | `component.layout`                                              | themamodus; standaard/licht/donker |
-| `forge-toast-container`    | visueel | `component.overlay`                                             | plaatsing; standaard/laden |
-| `forge-tree-view-item`     | geërfd-visueel | `component.navigation` + `component.surface`                    | uitgebreid, geselecteerd, uitgeschakeld; standaard/hover/focus-zichtbaar/uitgevouwen/geselecteerd/uitgeschakeld |
-| `forge-tree-view`          | visueel | `component.data.tree`                                            | knooppunten, grootte, standaardOpen, labelrenderer; standaard/hover/focus-zichtbaar/uitgevouwen/geselecteerd |
-| `forge-virtual-list`       | visueel | `component.data.virtual-list`                                    | items, grootte, itemHoogte, hoogte, overscan, rij-renderer; standaard/geselecteerd |
-| `forge-virtual-log-viewer` | visueel | `component.code.virtual-log-viewer`                              | niveau/filter, kolommen, follow-tail; default/hover/focus-visible/warn/error/fatal |
-| `forge-virtual-table`      | visueel | `component.data.virtual-table` + `component.data.table`          | kolommen, grootte, rijhoogte, hoogte, overscan, gestreept/omzoomd, sortering; standaard/hover/focus-zichtbaar |
-| `forge-virtual-tabs`       | visueel | `component.navigation.tabs`                                      | variant, actief tabblad, afsluitbaar/toevoegbaar; standaard/hover/focus-zichtbaar/geselecteerd/uitgeschakeld |
-| `forge-virtual-tree-view`  | visueel | `component.data.virtual-tree`                                   | nodes, size, itemHeight, height, overscan, defaultOpen, row renderer; standaard/hover/focus-zichtbaar/uitgevouwen |
-| `forge-hero`               | visueel | `component.layout.hero`                         | media, uitlijning, grootte, overlay; standaard |
+| Component                  | Classification   | Contract                                                | Appearance props / states                                                                                  |
+| -------------------------- | ---------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `forge-carousel`           | visual           | `component.navigation.carousel`                         | slides, controls, autoplay, tone; default/hover/focus-visible/selected/disabled                            |
+| `forge-chat-area`          | visual           | `component.media.chat-area`                             | size, header/footer slots, auto-scroll; default/loading                                                    |
+| `forge-dialog`             | visual           | `component.overlay`                                     | open, title/footer; default/expanded/focus-visible                                                         |
+| `forge-drawer`             | visual           | `component.overlay.drawer`                              | open, placement/size, resize; default/hover/active/expanded                                                |
+| `forge-menubar`            | visual           | `component.navigation.menubar`                          | items, bordered, size; default/hover/focus-visible/expanded/disabled                                       |
+| `forge-modal`              | visual           | `component.overlay`                                     | open, size, header/footer; default/expanded/focus-visible                                                  |
+| `forge-navbar`             | visual           | `component.navigation.navbar`                           | items, responsive mode; default/hover/focus-visible/selected                                               |
+| `forge-table`              | visual           | `component.data.table`                                  | columns, size, caption, striped/bordered/hoverable, tone, loading; default/hover/focus-visible/loading     |
+| `forge-theme-composer`     | visual           | `component.surface` + `component.field`                 | theme values; default/invalid                                                                              |
+| `forge-theme-provider`     | visual           | `component.layout`                                      | theme mode; default/light/dark                                                                             |
+| `forge-toast-container`    | visual           | `component.overlay`                                     | placement; default/loading                                                                                 |
+| `forge-tree-view-item`     | inherited-visual | `component.navigation` + `component.surface`            | expanded, selected, disabled; default/hover/focus-visible/expanded/selected/disabled                       |
+| `forge-tree-view`          | visual           | `component.data.tree`                                   | nodes, size, defaultOpen, label renderer; default/hover/focus-visible/expanded/selected                    |
+| `forge-virtual-list`       | visual           | `component.data.virtual-list`                           | items, size, itemHeight, height, overscan, row renderer; default/selected                                  |
+| `forge-virtual-log-viewer` | visual           | `component.code.virtual-log-viewer`                     | level/filter, columns, follow-tail; default/hover/focus-visible/warn/error/fatal                           |
+| `forge-virtual-table`      | visual           | `component.data.virtual-table` + `component.data.table` | columns, size, rowHeight, height, overscan, striped/bordered, sort; default/hover/focus-visible            |
+| `forge-virtual-tabs`       | visual           | `component.navigation.tabs`                             | variant, active tab, closable/addable; default/hover/focus-visible/selected/disabled                       |
+| `forge-virtual-tree-view`  | visual           | `component.data.virtual-tree`                           | nodes, size, itemHeight, height, overscan, defaultOpen, row renderer; default/hover/focus-visible/expanded |
+| `forge-hero`               | visual           | `component.layout.hero`                                 | media, alignment, size, overlay; default                                                                   |
 
-## Gespecialiseerde Forge-pakketten
+## Specialized Forge packages
 
-| Pakket / niveau | Onderdeel | Classificatie | Overeenkomst | Uiterlijk rekwisieten / staten |
-| ------------------------ | ------------------------------ | ---------------- | -------------------------------------------- | --------------------------------------------------------------------- |
-| `barcode/molecules`      | `forge-barcode`                | visueel | `component.code.barcode`                      | waarde, formaat, grootte; standaard/laden/ongeldig |
-| `breakpoints/atoms`      | `forge-hide-at`                | alleen gedrag | geen | `min`, `max`; alleen zichtbaarheid in viewport |
-| `breakpoints/atoms`      | `forge-show-at`                | alleen gedrag | geen | `min`, `max`; alleen zichtbaarheid in viewport |
-| `breakpoints/molecules`  | `forge-breakpoint-debug`       | visueel | `component.debug.breakpoint`                  | breekpuntweergave; standaard |
-| `code-scanner/organisms` | `forge-code-scanner`           | visueel | `component.code.scanner`                      | camera/formaat, scannen; standaard/laden/ongeldig |
-| `content/atoms`          | `forge-code-block`             | visueel | `component.code`                             | taal, kopiëren; standaard/geselecteerd |
-| `content/atoms`          | `forge-mermaid`                | visueel | `component.code`                             | diagrambron, laden/fout; standaard/laden/ongeldig |
-| `content/atoms`          | `forge-wysiwyg-toolbar-button` | visueel | `component.button` + `component.icon`        | commando, actief; standaard/hover/actief/focus-zichtbaar/uitgeschakeld/geselecteerd |
-| `content/molecules`      | `forge-markdown`               | visueel | `component.typography` + `component.code`    | maat, schakels; standaard/ongeldig |
-| `content/molecules`      | `markdown-block`               | geërfd-visueel | `component.typography` + kindercontracten | token, grootte; geërfd |
-| `content/molecules`      | `markdown-inline`              | geërfd-visueel | `component.typography`                       | token, links; geërfd/zweven/geselecteerd |
-| `content/molecules`      | `forge-wysiwyg-block-controls` | visueel | `component.editor.block-controls` + `component.button` | blok selectie; standaard/hover/focus-zichtbaar/geselecteerd |
-| `content/molecules`      | `forge-wysiwyg-block-menu`     | visueel | `component.editor.block-menu` + `component.overlay`   | open; standaard/uitgebreid/geselecteerd |
-| `content/molecules`      | `forge-wysiwyg-status-bar`     | visueel | `component.editor.status-bar`                         | status; standaard/ongeldig/laden |
-| `content/molecules`      | `forge-wysiwyg-toolbar`        | visueel | `component.editor.toolbar` + `component.button`       | commando's; standaard/uitgeschakeld |
-| `content/organisms`      | `forge-monaco-editor`          | visueel | `component.editor.monaco` + `component.code`          | taal, alleen-lezen; standaard/uitgeschakeld/ongeldig |
-| `content/organisms`      | `forge-wysiwyg-editor`         | visueel | `component.editor.wysiwyg` + `component.code`        | bewerkbaar, ongeldig; standaard/focus-zichtbaar/ongeldig/uitgeschakeld |
-| `float/molecules`        | `forge-alert-banner`           | visueel | `component.feedback` + `component.overlay`   | status, ontslagbaar; standaard/focus-zichtbaar |
-| `float/molecules`        | `forge-dropdown`               | visueel | `component.overlay` + `component.navigation` | open; standaard/uitgebreid/geselecteerd |
-| `float/molecules`        | `forge-popover`                | visueel | `component.overlay`                          | open; standaard/uitgevouwen |
-| `float/molecules`        | `forge-toast`                  | visueel | `component.overlay` + `component.feedback`   | status; standaard/laden |
-| `float/molecules`        | `forge-tooltip`                | visueel | `component.overlay`                          | open; standaard/uitgevouwen |
-| `float/organisms`        | `forge-dialog`                 | visueel | `component.overlay`                          | open, titel/voettekst; standaard/uitgebreid/focus-zichtbaar |
-| `float/organisms`        | `forge-modal`                  | visueel | `component.overlay`                          | open, grootte, kop-/voettekst; standaard/uitgebreid/focus-zichtbaar |
-| `float/organisms`        | `forge-toast-container`        | visueel | `component.overlay`                          | plaatsing; standaard/laden |
+| Package / level          | Component                      | Classification   | Contract                                               | Appearance props / states                                             |
+| ------------------------ | ------------------------------ | ---------------- | ------------------------------------------------------ | --------------------------------------------------------------------- |
+| `barcode/molecules`      | `forge-barcode`                | visual           | `component.code.barcode`                               | value, format, size; default/loading/invalid                          |
+| `breakpoints/atoms`      | `forge-hide-at`                | behavior-only    | none                                                   | `min`, `max`; viewport visibility only                                |
+| `breakpoints/atoms`      | `forge-show-at`                | behavior-only    | none                                                   | `min`, `max`; viewport visibility only                                |
+| `breakpoints/molecules`  | `forge-breakpoint-debug`       | visual           | `component.debug.breakpoint`                           | breakpoint display; default                                           |
+| `code-scanner/organisms` | `forge-code-scanner`           | visual           | `component.code.scanner`                               | camera/format, scanning; default/loading/invalid                      |
+| `content/atoms`          | `forge-code-block`             | visual           | `component.code`                                       | language, copy; default/selected                                      |
+| `content/atoms`          | `forge-mermaid`                | visual           | `component.code`                                       | diagram source, loading/error; default/loading/invalid                |
+| `content/atoms`          | `forge-wysiwyg-toolbar-button` | visual           | `component.button` + `component.icon`                  | command, active; default/hover/active/focus-visible/disabled/selected |
+| `content/molecules`      | `forge-markdown`               | visual           | `component.typography` + `component.code`              | size, links; default/invalid                                          |
+| `content/molecules`      | `markdown-block`               | inherited-visual | `component.typography` + child contracts               | token, size; inherited                                                |
+| `content/molecules`      | `markdown-inline`              | inherited-visual | `component.typography`                                 | token, links; inherited/hover/selected                                |
+| `content/molecules`      | `forge-wysiwyg-block-controls` | visual           | `component.editor.block-controls` + `component.button` | block selection; default/hover/focus-visible/selected                 |
+| `content/molecules`      | `forge-wysiwyg-block-menu`     | visual           | `component.editor.block-menu` + `component.overlay`    | open; default/expanded/selected                                       |
+| `content/molecules`      | `forge-wysiwyg-status-bar`     | visual           | `component.editor.status-bar`                          | status; default/invalid/loading                                       |
+| `content/molecules`      | `forge-wysiwyg-toolbar`        | visual           | `component.editor.toolbar` + `component.button`        | commands; default/disabled                                            |
+| `content/organisms`      | `forge-monaco-editor`          | visual           | `component.editor.monaco` + `component.code`           | language, read-only; default/disabled/invalid                         |
+| `content/organisms`      | `forge-wysiwyg-editor`         | visual           | `component.editor.wysiwyg` + `component.code`          | editable, invalid; default/focus-visible/invalid/disabled             |
+| `float/molecules`        | `forge-alert-banner`           | visual           | `component.feedback` + `component.overlay`             | status, dismissible; default/focus-visible                            |
+| `float/molecules`        | `forge-dropdown`               | visual           | `component.overlay` + `component.navigation`           | open; default/expanded/selected                                       |
+| `float/molecules`        | `forge-popover`                | visual           | `component.overlay`                                    | open; default/expanded                                                |
+| `float/molecules`        | `forge-toast`                  | visual           | `component.overlay` + `component.feedback`             | status; default/loading                                               |
+| `float/molecules`        | `forge-tooltip`                | visual           | `component.overlay`                                    | open; default/expanded                                                |
+| `float/organisms`        | `forge-dialog`                 | visual           | `component.overlay`                                    | open, title/footer; default/expanded/focus-visible                    |
+| `float/organisms`        | `forge-modal`                  | visual           | `component.overlay`                                    | open, size, header/footer; default/expanded/focus-visible             |
+| `float/organisms`        | `forge-toast-container`        | visual           | `component.overlay`                                    | placement; default/loading                                            |
 
-### Formulieren — `packages/forms/src/components/`
+### Forms — `packages/forms/src/components/`
 
-Alle formulierinvoer gebruikt het gedeelde `component.field` label/helper/error-rollen als aanvulling op het onderstaande contract. Inheems
-Controletoestanden zijn alleen vertegenwoordigd als de controle deze ondersteunt.
+All form entries use the shared `component.field` label/helper/error roles in addition to the contract below. Native
+control states are represented only where the control supports them.
 
-| Niveau | Componenten (één vermelding per door komma's gescheiden naam) | Classificatie / contract | Gedeelde verschijning rekwisieten en staten |
+| Level     | Components (one entry per comma-separated name)                                                                                                                                                                                                                                                                                                        | Classification / contract                                                                                                 | Shared appearance props and states                                                                           |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| atomen | `forge-checkbox`, `forge-input`, `forge-radio`, `forge-range-input`, `forge-rating`, `forge-slider`, `forge-switch`, `forge-textarea`                                                                                                                                                                                                                                     | visueel / `component.checkable` voor selectievakje/radio/beoordeling/schuifregelaar/schakelaar; `component.input` voor invoer/bereikinvoer/tekstgebied | `size`, label/waarde rekwisieten; standaard/hover/actief/focus-zichtbaar/uitgeschakeld/ongeldig/geselecteerd waar ondersteund |
-| moleculen | `forge-calendar`, `forge-color-input`, `forge-date-input`, `forge-date-range-input`, `forge-field-set`, `forge-file-input`, `forge-location-input`, `forge-multiselect`, `forge-number-stepper`, `forge-otp-input`, `forge-phone-input`, `forge-radio-group`, `forge-search-input`, `forge-segment-control`, `forge-select`, `forge-time-input`, `forge-time-range-input` | visueel / `component.input`, `component.select`, `component.checkable`, of `component.field` volgens samengestelde controle | `size`, `disabled`, validatie- en selectiehulpmiddelen; standaard/focus-zichtbaar/uitgeschakeld/uitgevouwen/geselecteerd/ongeldig |
-| organismen | `forge-date-time-range-input`, `forge-form-builder`, `forge-form-wizard`, `forge-schema-form-dialog`, `forge-schema-form`                                                                                                                                                                                                                                                 | visueel / `component.field` + samengestelde input/select/overlay contracten | schema, stappen, validatie; standaard/focus-zichtbaar/uitgeschakeld/uitgevouwen/geselecteerd/ongeldig |
+| atoms     | `forge-checkbox`, `forge-input`, `forge-radio`, `forge-range-input`, `forge-rating`, `forge-slider`, `forge-switch`, `forge-textarea`                                                                                                                                                                                                                                     | visual / `component.checkable` for checkbox/radio/rating/slider/switch; `component.input` for input/range-input/textarea  | `size`, label/value props; default/hover/active/focus-visible/disabled/invalid/selected where supported      |
+| molecules | `forge-calendar`, `forge-color-input`, `forge-date-input`, `forge-date-range-input`, `forge-field-set`, `forge-file-input`, `forge-location-input`, `forge-multiselect`, `forge-number-stepper`, `forge-otp-input`, `forge-phone-input`, `forge-radio-group`, `forge-search-input`, `forge-segment-control`, `forge-select`, `forge-time-input`, `forge-time-range-input` | visual / `component.input`, `component.select`, `component.checkable`, or `component.field` according to composed control | `size`, `disabled`, validation and selection props; default/focus-visible/disabled/expanded/selected/invalid |
+| organisms | `forge-date-time-range-input`, `forge-form-builder`, `forge-form-wizard`, `forge-schema-form-dialog`, `forge-schema-form`                                                                                                                                                                                                                                                 | visual / `component.field` + composed input/select/overlay contracts                                                      | schema, steps, validation; default/focus-visible/disabled/expanded/selected/invalid                          |
 
-### Pictogrammen — `packages/icons/src/components/`
+### Icons — `packages/icons/src/components/`
 
-Alle 106 pictogramvermeldingen zijn **overgeërfd-visueel**. Glyphs gebruiken `currentColor`; hun omvang wordt door de consument gecontroleerd of komt overeen met die van de consument
-`component.icon.size`. Ze ontvangen geen variabele per glyph. Elk heeft een co-located verhaal en volgt hetzelfde
-standaard/geselecteerde/uitgeschakelde kleurrollen waarbij de ouder die status weergeeft.
+All 106 icon entries are **inherited-visual**. Glyphs use `currentColor`; their size is consumer-controlled or maps to
+`component.icon.size`. They do not receive a per-glyph variable. Each has a co-located story and follows the same
+default/selected/disabled colour roles where the parent exposes that state.
 
-| Pictogramcategorie | Componenten |
+| Icon category           | Components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| communicatie/berichten | `forge-icon-bell`, `forge-icon-chat`, `forge-icon-mail`, `forge-icon-phone`, `forge-icon-send`                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| communicatie/delen | `forge-icon-share`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| inhoud/redactie | `forge-icon-copy`, `forge-icon-edit`, `forge-icon-eye`, `forge-icon-eye-off`, `forge-icon-redo`, `forge-icon-trash`, `forge-icon-undo`                                                                                                                                                                                                                                                                                                                                                                                       |
-| inhoud/bestanden | `forge-icon-download`, `forge-icon-upload`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| gegevens/filtering | `forge-icon-filter`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| gegevens/tabellen | `forge-icon-sort`, `forge-icon-table`, `forge-icon-table-column-add`, `forge-icon-table-column-remove`, `forge-icon-table-row-add`, `forge-icon-table-row-remove`                                                                                                                                                                                                                                                                                                                                                            |
-| tekenen/transformeren | `forge-icon-draw-circle`, `forge-icon-draw-line`, `forge-icon-draw-polygon`, `forge-icon-draw-square`, `forge-icon-draw-triangle`, `forge-icon-move`, `forge-icon-palette`, `forge-icon-pencil`, `forge-icon-rotate-ccw`, `forge-icon-rotate-cw`, `forge-icon-scale-down`, `forge-icon-scale-up`                                                                                                                                                                                                                             |
-| kaarten/landen | `forge-icon-country-globe`, `forge-icon-flag`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| kaarten/geografie | `forge-icon-geodesic`, `forge-icon-globe`, `forge-icon-language`, `forge-icon-map-pin`                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| kaarten/lagen | `forge-icon-layer`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| kaarten/markeringen | `forge-icon-map-marker-cluster`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| media/opname | `forge-icon-camera`, `forge-icon-image`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| media/afspelen | `forge-icon-pause`, `forge-icon-play`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| communication/messaging | `forge-icon-bell`, `forge-icon-chat`, `forge-icon-mail`, `forge-icon-phone`, `forge-icon-send`                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| communication/sharing   | `forge-icon-share`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| content/editing         | `forge-icon-copy`, `forge-icon-edit`, `forge-icon-eye`, `forge-icon-eye-off`, `forge-icon-redo`, `forge-icon-trash`, `forge-icon-undo`                                                                                                                                                                                                                                                                                                                                                                                       |
+| content/files           | `forge-icon-download`, `forge-icon-upload`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| data/filtering          | `forge-icon-filter`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| data/tables             | `forge-icon-sort`, `forge-icon-table`, `forge-icon-table-column-add`, `forge-icon-table-column-remove`, `forge-icon-table-row-add`, `forge-icon-table-row-remove`                                                                                                                                                                                                                                                                                                                                                            |
+| drawing/transform       | `forge-icon-draw-circle`, `forge-icon-draw-line`, `forge-icon-draw-polygon`, `forge-icon-draw-square`, `forge-icon-draw-triangle`, `forge-icon-move`, `forge-icon-palette`, `forge-icon-pencil`, `forge-icon-rotate-ccw`, `forge-icon-rotate-cw`, `forge-icon-scale-down`, `forge-icon-scale-up`                                                                                                                                                                                                                             |
+| maps/countries          | `forge-icon-country-globe`, `forge-icon-flag`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| maps/geography          | `forge-icon-geodesic`, `forge-icon-globe`, `forge-icon-language`, `forge-icon-map-pin`                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| maps/layers             | `forge-icon-layer`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| maps/markers            | `forge-icon-map-marker-cluster`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| media/capture           | `forge-icon-camera`, `forge-icon-image`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| media/playback          | `forge-icon-pause`, `forge-icon-play`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | navigation/controls     | `forge-icon-arrow`, `forge-icon-chevron`, `forge-icon-chevrons`, `forge-icon-close`, `forge-icon-home`, `forge-icon-join`, `forge-icon-menu`, `forge-icon-minus`, `forge-icon-plus`, `forge-icon-refresh`, `forge-icon-split`                                                                                                                                                                                                                                                                                                |
-| navigatie/links | `forge-icon-external-link`, `forge-icon-link`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| navigatie/zoeken | `forge-icon-search`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| objecten/systeem | `forge-icon-cloud`, `forge-icon-debug`, `forge-icon-heart`, `forge-icon-lightning`, `forge-icon-puzzle`, `forge-icon-qr-code`, `forge-icon-settings`, `forge-icon-star`, `forge-icon-wrench`                                                                                                                                                                                                                                                                                                                                 |
-| route/routebeschrijving | `forge-icon-route`, `forge-icon-waypoint`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| beveiliging/toegang | `forge-icon-lock`, `forge-icon-lock-open`, `forge-icon-user`                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| status/feedback | `forge-icon-alert`, `forge-icon-alert-critical`, `forge-icon-alert-info`, `forge-icon-alert-neutral`, `forge-icon-alert-warning`, `forge-icon-check`, `forge-icon-error`, `forge-icon-info`, `forge-icon-notice`, `forge-icon-warning`                                                                                                                                                                                                                                                                                       |
-| tekst/opmaak | `forge-icon-align-center`, `forge-icon-align-justify`, `forge-icon-align-left`, `forge-icon-align-right`, `forge-icon-blockquote`, `forge-icon-bold`, `forge-icon-bullet-list`, `forge-icon-code-block`, `forge-icon-code-inline`, `forge-icon-heading`, `forge-icon-heading-five`, `forge-icon-heading-four`, `forge-icon-heading-one`, `forge-icon-heading-six`, `forge-icon-heading-three`, `forge-icon-heading-two`, `forge-icon-italic`, `forge-icon-numbered-list`, `forge-icon-strikethrough`, `forge-icon-underline` |
-| tijd/kalender | `forge-icon-calendar`, `forge-icon-clock`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| navigation/links        | `forge-icon-external-link`, `forge-icon-link`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| navigation/search       | `forge-icon-search`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| objects/system          | `forge-icon-cloud`, `forge-icon-debug`, `forge-icon-heart`, `forge-icon-lightning`, `forge-icon-puzzle`, `forge-icon-qr-code`, `forge-icon-settings`, `forge-icon-star`, `forge-icon-wrench`                                                                                                                                                                                                                                                                                                                                 |
+| routing/directions      | `forge-icon-route`, `forge-icon-waypoint`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| security/access         | `forge-icon-lock`, `forge-icon-lock-open`, `forge-icon-user`                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| status/feedback         | `forge-icon-alert`, `forge-icon-alert-critical`, `forge-icon-alert-info`, `forge-icon-alert-neutral`, `forge-icon-alert-warning`, `forge-icon-check`, `forge-icon-error`, `forge-icon-info`, `forge-icon-notice`, `forge-icon-warning`                                                                                                                                                                                                                                                                                       |
+| text/formatting         | `forge-icon-align-center`, `forge-icon-align-justify`, `forge-icon-align-left`, `forge-icon-align-right`, `forge-icon-blockquote`, `forge-icon-bold`, `forge-icon-bullet-list`, `forge-icon-code-block`, `forge-icon-code-inline`, `forge-icon-heading`, `forge-icon-heading-five`, `forge-icon-heading-four`, `forge-icon-heading-one`, `forge-icon-heading-six`, `forge-icon-heading-three`, `forge-icon-heading-two`, `forge-icon-italic`, `forge-icon-numbered-list`, `forge-icon-strikethrough`, `forge-icon-underline` |
+| time/calendar           | `forge-icon-calendar`, `forge-icon-clock`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
-### Andere visuele pakketten
+### Other visual packages
 
-| Pakket / niveau | Onderdeel | Classificatie | Overeenkomst | Uiterlijk rekwisieten / staten |
+| Package / level              | Component                                                                                                                                          | Classification   | Contract                                                     | Appearance props / states                                                                        |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `layout/atoms`               | `forge-container`                                                                                                                                  | visueel | `component.layout`                                           | maximale breedte, vulling; standaard |
-| `layout/templates`           | `forge-application-layout`, `forge-bento-layout`, `forge-f-pattern-layout`, `forge-grid-layout`, `forge-vertical-layout`, `forge-z-pattern-layout` | visueel | `component.layout`                                           | lay-outconfiguratie en gaten; standaard |
-| `map/molecules`              | `forge-map-draw`, `forge-map-layer`, `forge-map-marker`, `forge-map-popup`, `forge-map-source`                                                     | geërfd-visueel | `component.map`                                              | kaartbron/laag/markering/pop-upopties; popup standaard/focus zichtbaar, andere door de host overgenomen |
-| `map/organisms`              | `forge-map-libre`                                                                                                                                  | visueel | `component.map`                                              | bedieningselementen, stijl, pop-up; standaard/laden/geselecteerd |
-| `matrix-code/molecules`      | `forge-matrix-code`                                                                                                                                | visueel | `component.code`                                             | waarde, grootte; standaard/ongeldig/laden |
-| `qr-code/molecules`          | `forge-qr-code`                                                                                                                                    | visueel | `component.code`                                             | waarde, grootte; standaard/ongeldig/laden |
-| `resource-planner/organisms` | `forge-resource-planner`                                                                                                                           | visueel | `component.resource-planner`                                 | middelen, bereik, selectie; standaard/zweven/geselecteerd/focus-zichtbaar/conflict/niet beschikbaar |
-| `scheduler/organisms`        | `forge-scheduler`                                                                                                                                  | visueel | `component.scheduler`                                        | aanbod, evenementen, selectie; standaard/focus-zichtbaar/vandaag/buiten/bezet |
-| `select/atoms`               | `forge-tag`                                                                                                                                        | visueel | `component.feedback`                                         | variant, maat, afneembaar; standaard/zweven/uitgeschakeld |
-| `select/molecules`           | `forge-language-switcher`                                                                                                                          | geërfd-visueel | `component.select` + `component.navigation`                  | plaats; standaard/uitgebreid/geselecteerd |
-| `select/molecules`           | `forge-multiselect`, `forge-select`                                                                                                                | visueel | `component.select` + `component.input` + `component.field`   | maat, opties, model, validatie; standaard/hover/focus-zichtbaar/uitgeschakeld/uitgevouwen/geselecteerd/ongeldig |
-| `theme/atoms`                | `forge-theme-toggle`                                                                                                                               | visueel | `component.button` + `component.icon`                        | modus; standaard/zweven/actief/geselecteerd |
-| `theme/organisms`            | `forge-theme-composer`, `forge-theme-provider`                                                                                                     | visueel | `component.surface` + `component.field` / `component.layout` | themawaarden/modus; standaard/licht/donker/ongeldig |
-| `three/organisms`            | `forge-three-canvas`                                                                                                                               | geërfd-visueel | `component.media`                                            | De afmetingen van de canvashost zijn structureel; geërfd oppervlak |
-| `typography/atoms`           | `forge-typography`                                                                                                                                 | visueel | `component.typography`                                       | variant, kleur, `as`; standaard/link/uitgeschakeld |
-| `vcard`                      | `forge-icalendar`                                                                                                                                  | alleen gedrag | geen | serialiseert kalendergegevens; geen visuele host |
-| `vcard`                      | `forge-vcard`                                                                                                                                      | alleen gedrag | geen | serialiseert contactgegevens; geen visuele host |
+| `layout/atoms`               | `forge-container`                                                                                                                                  | visual           | `component.layout`                                           | max width, padding; default                                                                      |
+| `layout/templates`           | `forge-application-layout`, `forge-bento-layout`, `forge-f-pattern-layout`, `forge-grid-layout`, `forge-vertical-layout`, `forge-z-pattern-layout` | visual           | `component.layout`                                           | layout configuration and gaps; default                                                           |
+| `map/molecules`              | `forge-map-draw`, `forge-map-layer`, `forge-map-marker`, `forge-map-popup`, `forge-map-source`                                                     | inherited-visual | `component.map`                                              | map source/layer/marker/popup options; popup default/focus-visible, others host-inherited        |
+| `map/organisms`              | `forge-map-libre`                                                                                                                                  | visual           | `component.map`                                              | controls, style, popup; default/loading/selected                                                 |
+| `matrix-code/molecules`      | `forge-matrix-code`                                                                                                                                | visual           | `component.code`                                             | value, size; default/invalid/loading                                                             |
+| `qr-code/molecules`          | `forge-qr-code`                                                                                                                                    | visual           | `component.code`                                             | value, size; default/invalid/loading                                                             |
+| `resource-planner/organisms` | `forge-resource-planner`                                                                                                                           | visual           | `component.resource-planner`                                 | resources, range, selection; default/hover/selected/focus-visible/conflict/unavailable           |
+| `scheduler/organisms`        | `forge-scheduler`                                                                                                                                  | visual           | `component.scheduler`                                        | range, events, selection; default/focus-visible/today/outside/busy                               |
+| `select/atoms`               | `forge-tag`                                                                                                                                        | visual           | `component.feedback`                                         | variant, size, removable; default/hover/disabled                                                 |
+| `select/molecules`           | `forge-language-switcher`                                                                                                                          | inherited-visual | `component.select` + `component.navigation`                  | locale; default/expanded/selected                                                                |
+| `select/molecules`           | `forge-multiselect`, `forge-select`                                                                                                                | visual           | `component.select` + `component.input` + `component.field`   | size, options, model, validation; default/hover/focus-visible/disabled/expanded/selected/invalid |
+| `theme/atoms`                | `forge-theme-toggle`                                                                                                                               | visual           | `component.button` + `component.icon`                        | mode; default/hover/active/selected                                                              |
+| `theme/organisms`            | `forge-theme-composer`, `forge-theme-provider`                                                                                                     | visual           | `component.surface` + `component.field` / `component.layout` | theme values/mode; default/light/dark/invalid                                                    |
+| `three/organisms`            | `forge-three-canvas`                                                                                                                               | inherited-visual | `component.media`                                            | canvas host dimensions are structural; inherited surface                                         |
+| `typography/atoms`           | `forge-typography`                                                                                                                                 | visual           | `component.typography`                                       | variant, colour, `as`; default/link/disabled                                                     |
+| `vcard`                      | `forge-icalendar`                                                                                                                                  | behavior-only    | none                                                         | serializes calendar data; no visual host                                                         |
+| `vcard`                      | `forge-vcard`                                                                                                                                      | behavior-only    | none                                                         | serializes contact data; no visual host                                                          |
 
-## E-mailcomponenten
+## Email components
 
-`@mission-platform/email-components` is opgenomen omdat de TSX-bronnen door Forge zijn geschreven. E-mailclients niet
-aangepaste runtime-eigenschappen gebruiken: de renderer zet dezelfde semantische rollen om in inline-waarden. Elke vermelding hieronder
-is visueel en gebruikt `component.email`, met `component.button`, `component.typography`, of `component.media` waar opgemerkt.
+`@mission-platform/email-components` is included because its TSX sources are Forge-authored. Email clients do not
+consume runtime custom properties: the renderer resolves the same semantic roles into inline values. Every entry below
+is visual and uses `component.email`, with `component.button`, `component.typography`, or `component.media` where noted.
 
-| Niveau | Componenten | Overeenkomst |
+| Level     | Components                                                                    | Contract                                                                                                                                                               |
 | --------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| atomen | `email-button`                                                                | `component.email` + `component.button.<variant>`; varianten neutraal/primair/secundair/tertiair/succes/waarschuwing/info/error/critical/ghost; standaard/hover/actief/uitgeschakeld |
-| atomen | `email-divider`, `email-image`, `email-spacer`, `email-typography`            | `component.email` + `component.surface`/`component.media`/`component.typography`; standaard |
-| moleculen | `email-card`, `email-column`, `email-list`, `email-row`, `email-social-links` | `component.email`; standaard/geselecteerd waar links interactief zijn |
-| organismen | `email-footer`, `email-header`, `email-preheader`                             | `component.email` + `component.typography`; standaard |
-| sjablonen | `email-container`, `email-document`, `email-section`                          | `component.email`; standaard/licht/donker bronmodus |
+| atoms     | `email-button`                                                                | `component.email` + `component.button.<variant>`; variants neutral/primary/secondary/tertiary/success/warning/info/error/critical/ghost; default/hover/active/disabled |
+| atoms     | `email-divider`, `email-image`, `email-spacer`, `email-typography`            | `component.email` + `component.surface`/`component.media`/`component.typography`; default                                                                              |
+| molecules | `email-card`, `email-column`, `email-list`, `email-row`, `email-social-links` | `component.email`; default/selected where links are interactive                                                                                                        |
+| organisms | `email-footer`, `email-header`, `email-preheader`                             | `component.email` + `component.typography`; default                                                                                                                    |
+| templates | `email-container`, `email-document`, `email-section`                          | `component.email`; default/light/dark source mode                                                                                                                      |
 
-## Verhaal- en overschrijvingsdekking
+## Story and override coverage
 
-Er zijn 246 verhalen op dezelfde locatie voor 249 samenstellende bronnen. De enige bronnen zonder op zichzelf staande verhalen zijn de
-recursieve helpers `components/organisms/forge-tree-view/forge-tree-view-item`,
-`content/molecules/forge-markdown/markdown-block`, En `content/molecules/forge-markdown/markdown-inline`; hun
-visuele toestanden worden uitgeoefend door hun ouderverhalen en zijn hierboven gedocumenteerd als overgeërfd-visueel.
+There are 246 co-located stories for 249 component sources. The only sources without standalone stories are the
+recursive helpers `components/organisms/forge-tree-view/forge-tree-view-item`,
+`content/molecules/forge-markdown/markdown-block`, and `content/molecules/forge-markdown/markdown-inline`; their
+visual states are exercised by their parent stories and are documented above as inherited-visual.
 
-Het gedeelde Storybook-voorbeeld wordt geladen `@mission-platform/tokens/scss/tokens`, de Storybook-override-plug-in en de
-`theme` mondiaal. Om het contract te inspecteren, stelt u het thema globaal in op licht of donker en gebruikt u de besturingselementen van de componentverhalen;
-Bewerk dit om consumentenoverschrijvingen te testen `apps/storybook/design-tokens/overrides.tokens.json` onder `component` met behulp van een
-`{ "light": "...", "dark": "..." }` waarde. Het overschrijvingsschema is
-[`vite-plugins/token-overrides/schema/token-overrides.schema.json`](../../../vite-plugins/token-overrides/schema/token-overrides.schema.json).
+The shared Storybook preview loads `@mission-platform/tokens/scss/tokens`, the Storybook override plugin, and the
+`theme` global. To inspect the contract, set the theme global to light or dark and use the component stories' controls;
+to test consumer overrides, edit `apps/storybook/design-tokens/overrides.tokens.json` under `component` using a
+`{ "light": "...", "dark": "..." }` value. The override schema is
+[`vite-plugins/token-overrides/schema/token-overrides.schema.json`](../vite-plugins/token-overrides/schema/token-overrides.schema.json).
 
-## Controlelijst voor overdracht van Figma
+## Figma handoff checklist
 
-1. Maak de `Mission Platform / Component` variabele collectie met lichte en donkere modi.
-2. Importeer de componentpaden uit `component.tokens.json`, met behoud van component-, variant-, slot- en statussegmenten.
-3. Bind componentvariabelen aan de corresponderende primitieve/semantische variabelen in plaats van ruwe kleur- of schaalwaarden te kopiëren.
-4. Maak componenteigenschappen voor de gedocumenteerde varianten en maten; maak alleen staatsvarianten voor staten die in de inventaris staan ​​vermeld.
-5. Houd lay-outformules, viewport-breekpunten, canvasgedrag en DOM/toegankelijkheidsgedrag buiten de verzameling visuele variabelen.
+1. Create the `Mission Platform / Component` variable collection with Light and Dark modes.
+2. Import the component paths from the `component/<atomic-level>/` source tree, preserving component, variant, slot,
+   and state segments.
+3. Bind component variables to the corresponding primitive/semantic variables rather than copying raw colour or scale values.
+4. Create component properties for the documented variants and sizes; create state variants only for states listed in the inventory.
+5. Keep layout formulas, viewport breakpoints, canvas behavior, and DOM/accessibility behavior outside the visual variable collection.
