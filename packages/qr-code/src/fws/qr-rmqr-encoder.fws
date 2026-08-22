@@ -1,0 +1,775 @@
+// rMQR encoder graph helpers, loaded by the compact encoder entry.
+import "./qr-common.fws" as q;
+
+fn byte_at(text: string, index: i32) -> i32 {
+  if index < 0 || index >= string_length(text) { return 0; }
+  return string_byte_at(text, index);
+}
+
+fn all_numeric(text: string) -> bool {
+  let index: i32 = 0;
+  while index < string_length(text) {
+    let value: i32 = byte_at(text, index);
+    if value < 48 || value > 57 { return false; }
+    index = index + 1;
+  }
+  return true;
+}
+
+fn numeric_bits(text: string) -> i32 {
+  let result: i32 = 0;
+  let index: i32 = 0;
+  while index + 3 <= string_length(text) {
+    result = result + 10;
+    index = index + 3;
+  }
+  let remaining: i32 = string_length(text) - index;
+  if remaining == 1 { result = result + 4; }
+  if remaining == 2 { result = result + 7; }
+  return result;
+}
+
+fn append_numeric_from(data: string, text: string, index: i32, count: i32) -> string {
+  let remaining: i32 = count - index;
+  if remaining <= 0 { return data; }
+  if remaining == 1 {
+    return q.bits_push_value(data, byte_at(text, index) - 48, 4);
+  }
+  if remaining == 2 {
+    let first: i32 = byte_at(text, index) - 48;
+    let second: i32 = byte_at(text, index + 1) - 48;
+    return q.bits_push_value(data, first * 10 + second, 7);
+  }
+  let a: i32 = byte_at(text, index) - 48;
+  let b: i32 = byte_at(text, index + 1) - 48;
+  let c: i32 = byte_at(text, index + 2) - 48;
+  let next: string = q.bits_push_value(data, a * 100 + b * 10 + c, 10);
+  return append_numeric_from(next, text, index + 3, count);
+}
+
+fn append_numeric(data: string, text: string) -> string {
+  return append_numeric_from(data, text, 0, string_length(text));
+}
+
+fn rmqr_u2(table: string, index: i32) -> i32 {
+  let offset: i32 = index * 2;
+  if offset < 0 || offset + 1 >= string_length(table) { return 0; }
+  let a: i32 = string_byte_at(table, offset) - 48;
+  let b: i32 = string_byte_at(table, offset + 1) - 48;
+  return a * 10 + b;
+}
+
+fn rmqr_u3(table: string, index: i32) -> i32 {
+  let offset: i32 = index * 3;
+  if offset < 0 || offset + 2 >= string_length(table) { return 0; }
+  let a: i32 = string_byte_at(table, offset) - 48;
+  let b: i32 = string_byte_at(table, offset + 1) - 48;
+  let c: i32 = string_byte_at(table, offset + 2) - 48;
+  return a * 100 + b * 10 + c;
+}
+
+fn rmqr_u4(table: string, index: i32) -> i32 {
+  let offset: i32 = index * 4;
+  if offset < 0 || offset + 3 >= string_length(table) { return 0; }
+  let a: i32 = string_byte_at(table, offset) - 48;
+  let b: i32 = string_byte_at(table, offset + 1) - 48;
+  let c: i32 = string_byte_at(table, offset + 2) - 48;
+  let d: i32 = string_byte_at(table, offset + 3) - 48;
+  return a * 1000 + b * 100 + c * 10 + d;
+}
+
+fn rmqr_width(index: i32) -> i32 { return rmqr_u3("043059077099139043059077099139027043059077099139027043059077099139043059077099139043059077099139", index); }
+fn rmqr_height(index: i32) -> i32 { return rmqr_u2("0707070707090909090911111111111113131313131315151515151717171717", index); }
+fn rmqr_capacity(index: i32, high: bool) -> i32 {
+  if high { return rmqr_u4("00240056008001120192005600880136017602640040008801200184023203360056010401600232028004320120020802480384055201680224030404480608", index); }
+  return rmqr_u4("00480096016002240352009601680248033605040056015202480344045606720096021603040424058408480264038405360704101603120448062408001216", index);
+}
+fn rmqr_remainder_bits(index: i32) -> i32 { return rmqr_u2("0003050601020301040502010002070604010604030001040607020102000304", index); }
+fn rmqr_cci_num(index: i32) -> i32 { return rmqr_u2("0405060707050607070804060707080805060707080807070808090708080809", index); }
+fn rmqr_cci_byte(index: i32) -> i32 { return rmqr_u2("0304050506040505060603050506060704050606070706060707070606070708", index); }
+fn rmqr_data_cw(index: i32, high: bool) -> i32 {
+  if high { return rmqr_u3("003007010014024007011017022033005011015023029042007013020029035054015026031048069021028038056076", index); }
+  return rmqr_u3("006012020028044012021031042063007019031043057084014027038053073106033048067088127039056078100152", index);
+}
+fn rmqr_g1_num(index: i32, high: bool) -> i32 {
+  if high { return rmqr_u2("0101010102010101020301010101010301010201010201020204010102010402", index); }
+  return rmqr_u2("0101010101010101010101010101010201010101010201010102020102020204", index);
+}
+fn rmqr_g1_total(index: i32, high: bool) -> i32 {
+  if high { return rmqr_u3("013021032044034021033024033033015031023033044044021041030042037041025037034034039030044040040038", index); }
+  return rmqr_u3("013021032044068021033049066049015031047067044066021041060042056055051074051068066060044061053058", index);
+}
+fn rmqr_g1_data(index: i32, high: bool) -> i32 {
+  if high { return rmqr_u3("003007010014012007011008011011005011007011014014007013010014011013007013010012013010014012014012", index); }
+  return rmqr_u3("006012020028044012021031042031007019031043028042014027038026036035033048033044042039028039033038", index);
+}
+fn rmqr_g2_num(index: i32, high: bool) -> i32 {
+  if high { return rmqr_u2("0000000000000001000000000101010000000001020201000100040100020004", index); }
+  return rmqr_u2("0000000000000000000100000000010000000001010100000100010000000100", index);
+}
+fn rmqr_g2_total(index: i32, high: bool) -> i32 {
+  if high { return rmqr_u3("000000000000000000000025000000000000024034045000000000000043038042026000035000040031000041000039", index); }
+  return rmqr_u3("000000000000000000000000000050000000000000045000000000000043057056000000052000067000000000054000", index);
+}
+fn rmqr_g2_data(index: i32, high: bool) -> i32 {
+  if high { return rmqr_u3("000000000000000000000009000000000000008012015000000000000015012014008000011000014011000013000013", index); }
+  return rmqr_u3("000000000000000000000000000032000000000000029000000000000027037036000000034000043000000000034000", index);
+}
+
+fn rmqr_block_count(index: i32, high: bool) -> i32 {
+  return rmqr_g1_num(index, high) + rmqr_g2_num(index, high);
+}
+
+fn rmqr_block_data_len(index: i32, high: bool, block: i32) -> i32 {
+  let n1: i32 = rmqr_g1_num(index, high);
+  if block < n1 { return rmqr_g1_data(index, high); }
+  return rmqr_g2_data(index, high);
+}
+
+fn rmqr_block_ecc_len(index: i32, high: bool, block: i32) -> i32 {
+  let n1: i32 = rmqr_g1_num(index, high);
+  if block < n1 { return rmqr_g1_total(index, high) - rmqr_g1_data(index, high); }
+  return rmqr_g2_total(index, high) - rmqr_g2_data(index, high);
+}
+
+fn rmqr_block_data_offset(index: i32, high: bool, block: i32) -> i32 {
+  let offset: i32 = 0;
+  let b: i32 = 0;
+  while b < block {
+    offset = offset + rmqr_block_data_len(index, high, b);
+    b = b + 1;
+  }
+  return offset;
+}
+
+fn rmqr_max_block_data(index: i32, high: bool) -> i32 {
+  let n: i32 = rmqr_block_count(index, high);
+  let best: i32 = 0;
+  let b: i32 = 0;
+  while b < n {
+    let len: i32 = rmqr_block_data_len(index, high, b);
+    if len > best { best = len; }
+    b = b + 1;
+  }
+  return best;
+}
+
+fn rmqr_max_block_ecc(index: i32, high: bool) -> i32 {
+  let n: i32 = rmqr_block_count(index, high);
+  let best: i32 = 0;
+  let b: i32 = 0;
+  while b < n {
+    let len: i32 = rmqr_block_ecc_len(index, high, b);
+    if len > best { best = len; }
+    b = b + 1;
+  }
+  return best;
+}
+
+fn rmqr_bit_length(value: i32) -> i32 {
+  if value <= 0 { return 0; }
+  let current: i32 = value;
+  let length: i32 = 0;
+  while current > 0 {
+    current = current / 2;
+    length = length + 1;
+  }
+  return length;
+}
+
+fn rmqr_compute_bch(data: i32) -> i32 {
+  let g: i32 = 7973;
+  let d: i32 = data * 4096;
+  let guard: i32 = 0;
+  while rmqr_bit_length(d) >= 13 {
+    if guard > 40 { return d; }
+    let shift: i32 = rmqr_bit_length(d) - 13;
+    let factor: i32 = 1;
+    let s: i32 = 0;
+    while s < shift {
+      factor = factor * 2;
+      s = s + 1;
+    }
+    d = q.xor_value(d, g * factor, 32);
+    guard = guard + 1;
+  }
+  return d;
+}
+
+fn rmqr_format_information(index: i32, high: bool) -> i32 {
+  let data: i32 = index;
+  if high { data = data + 32; }
+  return data * 4096 + rmqr_compute_bch(data);
+}
+
+fn rmqr_append_bytes(data: string, text: string) -> string {
+  let result: string = data;
+  let index: i32 = 0;
+  let length: i32 = string_length(text);
+  while index < length {
+    result = q.bits_push_value(result, byte_at(text, index), 8);
+    index = index + 1;
+  }
+  return result;
+}
+
+fn rmqr_make_data(text: string, index: i32, capacity: i32, numeric: bool) -> string {
+  let result: string = "";
+  if numeric {
+    result = q.bits_push_value(result, 1, 3);
+    result = q.bits_push_value(result, string_length(text), rmqr_cci_num(index));
+    result = append_numeric(result, text);
+  } else {
+    result = q.bits_push_value(result, 3, 3);
+    result = q.bits_push_value(result, string_length(text), rmqr_cci_byte(index));
+    result = rmqr_append_bytes(result, text);
+  }
+  if string_length(result) + 3 <= capacity {
+    result = q.bits_push_value(result, 0, 3);
+  }
+  return result;
+}
+
+fn rmqr_pack_pad(bits: string, data_cw: i32) -> string {
+  let padded: string = bits;
+  while string_length(padded) - string_length(padded) / 8 * 8 != 0 {
+    padded = q.bits_push(padded, false);
+  }
+  let data: string = q.bits_to_bytes(padded);
+  let pad: i32 = 236;
+  while string_length(data) / 3 < data_cw {
+    data = q.bytes_push(data, pad);
+    if pad == 236 { pad = 17; } else { pad = 236; }
+  }
+  return data;
+}
+
+fn rmqr_ecc_all(data: string, index: i32, high: bool) -> string {
+  let result: string = "";
+  let nblocks: i32 = rmqr_block_count(index, high);
+  let block: i32 = 0;
+  while block < nblocks {
+    let start: i32 = rmqr_block_data_offset(index, high, block);
+    let len: i32 = rmqr_block_data_len(index, high, block);
+    let ecc_len: i32 = rmqr_block_ecc_len(index, high, block);
+    let start_char: i32 = start * 3;
+    let end_sum: i32 = start + len;
+    let end_char: i32 = end_sum * 3;
+    let block_bytes: string = "";
+    if start_char >= 0 && end_char >= start_char && end_char <= string_length(data) {
+      block_bytes = string_slice(data, start_char, end_char);
+    }
+    result = string_concat(result, q.rs_remainder(block_bytes, ecc_len));
+    block = block + 1;
+  }
+  return result;
+}
+
+fn rmqr_interleave_data_bits(data: string, index: i32, high: bool) -> string {
+  let result: string = "";
+  let max_data: i32 = rmqr_max_block_data(index, high);
+  let nblocks: i32 = rmqr_block_count(index, high);
+  let pos: i32 = 0;
+  while pos < max_data {
+    let block: i32 = 0;
+    while block < nblocks {
+      let len: i32 = rmqr_block_data_len(index, high, block);
+      if pos < len {
+        let source: i32 = rmqr_block_data_offset(index, high, block) + pos;
+        result = q.bits_push_value(result, q.bytes_get(data, source), 8);
+      }
+      block = block + 1;
+    }
+    pos = pos + 1;
+  }
+  return result;
+}
+
+fn rmqr_interleave_ecc_bits(all_ecc: string, index: i32, high: bool) -> string {
+  let result: string = "";
+  let max_ecc: i32 = rmqr_max_block_ecc(index, high);
+  let nblocks: i32 = rmqr_block_count(index, high);
+  let pos: i32 = 0;
+  while pos < max_ecc {
+    let block: i32 = 0;
+    let ecc_offset: i32 = 0;
+    while block < nblocks {
+      let ecc_len: i32 = rmqr_block_ecc_len(index, high, block);
+      if pos < ecc_len {
+        result = q.bits_push_value(result, q.bytes_get(all_ecc, ecc_offset + pos), 8);
+      }
+      ecc_offset = ecc_offset + ecc_len;
+      block = block + 1;
+    }
+    pos = pos + 1;
+  }
+  return result;
+}
+
+fn rmqr_final_bits(data: string, index: i32, high: bool) -> string {
+  let all_ecc: string = rmqr_ecc_all(data, index, high);
+  let data_bits: string = rmqr_interleave_data_bits(data, index, high);
+  let ecc_bits: string = rmqr_interleave_ecc_bits(all_ecc, index, high);
+  return string_concat(data_bits, ecc_bits);
+}
+
+fn rmqr_set(modules: u32, reserved: u32, width: i32, height: i32, x: i32, y: i32, on: bool, mark: bool) -> unit {
+  if x < 0 || y < 0 || x >= width || y >= height { return; }
+  let index: i32 = y * width + x;
+  q.bitbuf_set(modules, index, on);
+  if mark { q.bitbuf_set(reserved, index, true); }
+}
+
+fn rmqr_set_free(modules: u32, reserved: u32, width: i32, height: i32, x: i32, y: i32, on: bool) -> unit {
+  if x < 0 || y < 0 || x >= width || y >= height { return; }
+  let index: i32 = y * width + x;
+  if q.bitbuf_get(reserved, index) { return; }
+  q.bitbuf_set(modules, index, on);
+  q.bitbuf_set(reserved, index, true);
+}
+
+fn rmqr_finder_dark(x: i32, y: i32) -> bool {
+  if x >= 7 || y >= 7 { return false; }
+  if x == 0 || x == 6 || y == 0 || y == 6 { return true; }
+  if x >= 2 && x <= 4 {
+    if y >= 2 && y <= 4 { return true; }
+  }
+  return false;
+}
+
+fn rmqr_finder_row(modules: u32, reserved: u32, width: i32, height: i32, y: i32) -> unit {
+  rmqr_set(modules, reserved, width, height, 0, y, rmqr_finder_dark(0, y), true);
+  rmqr_set(modules, reserved, width, height, 1, y, rmqr_finder_dark(1, y), true);
+  rmqr_set(modules, reserved, width, height, 2, y, rmqr_finder_dark(2, y), true);
+  rmqr_set(modules, reserved, width, height, 3, y, rmqr_finder_dark(3, y), true);
+  rmqr_set(modules, reserved, width, height, 4, y, rmqr_finder_dark(4, y), true);
+  rmqr_set(modules, reserved, width, height, 5, y, rmqr_finder_dark(5, y), true);
+  rmqr_set(modules, reserved, width, height, 6, y, rmqr_finder_dark(6, y), true);
+  if y < 8 {
+    rmqr_set(modules, reserved, width, height, 7, y, false, true);
+  }
+}
+
+fn rmqr_finder(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
+  rmqr_finder_row(modules, reserved, width, height, 0);
+  rmqr_finder_row(modules, reserved, width, height, 1);
+  rmqr_finder_row(modules, reserved, width, height, 2);
+  rmqr_finder_row(modules, reserved, width, height, 3);
+  rmqr_finder_row(modules, reserved, width, height, 4);
+  rmqr_finder_row(modules, reserved, width, height, 5);
+  rmqr_finder_row(modules, reserved, width, height, 6);
+  if height >= 9 {
+    rmqr_set(modules, reserved, width, height, 0, 7, false, true);
+    rmqr_set(modules, reserved, width, height, 1, 7, false, true);
+    rmqr_set(modules, reserved, width, height, 2, 7, false, true);
+    rmqr_set(modules, reserved, width, height, 3, 7, false, true);
+    rmqr_set(modules, reserved, width, height, 4, 7, false, true);
+    rmqr_set(modules, reserved, width, height, 5, 7, false, true);
+    rmqr_set(modules, reserved, width, height, 6, 7, false, true);
+    rmqr_set(modules, reserved, width, height, 7, 7, false, true);
+  } else {
+    rmqr_set(modules, reserved, width, height, 7, 7, false, true);
+  }
+}
+
+fn rmqr_sub_dark(local_x: i32, local_y: i32) -> bool {
+  if local_x == 0 || local_x == 4 || local_y == 0 || local_y == 4 { return true; }
+  if local_x == 2 && local_y == 2 { return true; }
+  return false;
+}
+
+fn rmqr_sub_finder(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
+  rmqr_set(modules, reserved, width, height, width - 1, height - 1, rmqr_sub_dark(0, 0), true);
+  rmqr_set(modules, reserved, width, height, width - 2, height - 1, rmqr_sub_dark(1, 0), true);
+  rmqr_set(modules, reserved, width, height, width - 3, height - 1, rmqr_sub_dark(2, 0), true);
+  rmqr_set(modules, reserved, width, height, width - 4, height - 1, rmqr_sub_dark(3, 0), true);
+  rmqr_set(modules, reserved, width, height, width - 5, height - 1, rmqr_sub_dark(4, 0), true);
+  rmqr_set(modules, reserved, width, height, width - 1, height - 2, rmqr_sub_dark(0, 1), true);
+  rmqr_set(modules, reserved, width, height, width - 2, height - 2, rmqr_sub_dark(1, 1), true);
+  rmqr_set(modules, reserved, width, height, width - 3, height - 2, rmqr_sub_dark(2, 1), true);
+  rmqr_set(modules, reserved, width, height, width - 4, height - 2, rmqr_sub_dark(3, 1), true);
+  rmqr_set(modules, reserved, width, height, width - 5, height - 2, rmqr_sub_dark(4, 1), true);
+  rmqr_set(modules, reserved, width, height, width - 1, height - 3, rmqr_sub_dark(0, 2), true);
+  rmqr_set(modules, reserved, width, height, width - 2, height - 3, rmqr_sub_dark(1, 2), true);
+  rmqr_set(modules, reserved, width, height, width - 3, height - 3, rmqr_sub_dark(2, 2), true);
+  rmqr_set(modules, reserved, width, height, width - 4, height - 3, rmqr_sub_dark(3, 2), true);
+  rmqr_set(modules, reserved, width, height, width - 5, height - 3, rmqr_sub_dark(4, 2), true);
+  rmqr_set(modules, reserved, width, height, width - 1, height - 4, rmqr_sub_dark(0, 3), true);
+  rmqr_set(modules, reserved, width, height, width - 2, height - 4, rmqr_sub_dark(1, 3), true);
+  rmqr_set(modules, reserved, width, height, width - 3, height - 4, rmqr_sub_dark(2, 3), true);
+  rmqr_set(modules, reserved, width, height, width - 4, height - 4, rmqr_sub_dark(3, 3), true);
+  rmqr_set(modules, reserved, width, height, width - 5, height - 4, rmqr_sub_dark(4, 3), true);
+  rmqr_set(modules, reserved, width, height, width - 1, height - 5, rmqr_sub_dark(0, 4), true);
+  rmqr_set(modules, reserved, width, height, width - 2, height - 5, rmqr_sub_dark(1, 4), true);
+  rmqr_set(modules, reserved, width, height, width - 3, height - 5, rmqr_sub_dark(2, 4), true);
+  rmqr_set(modules, reserved, width, height, width - 4, height - 5, rmqr_sub_dark(3, 4), true);
+  rmqr_set(modules, reserved, width, height, width - 5, height - 5, rmqr_sub_dark(4, 4), true);
+}
+
+fn rmqr_corners(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
+  rmqr_set(modules, reserved, width, height, 0, height - 1, true, true);
+  rmqr_set(modules, reserved, width, height, 1, height - 1, true, true);
+  rmqr_set(modules, reserved, width, height, 2, height - 1, true, true);
+  if height >= 11 {
+    rmqr_set(modules, reserved, width, height, 0, height - 2, true, true);
+    rmqr_set(modules, reserved, width, height, 1, height - 2, false, true);
+  }
+  rmqr_set(modules, reserved, width, height, width - 1, 0, true, true);
+  rmqr_set(modules, reserved, width, height, width - 2, 0, true, true);
+  rmqr_set(modules, reserved, width, height, width - 1, 1, true, true);
+  rmqr_set(modules, reserved, width, height, width - 2, 1, false, true);
+}
+
+fn rmqr_align_dark(i: i32, j: i32) -> bool {
+  if i == 0 || i == 2 || j == 0 || j == 2 { return true; }
+  return false;
+}
+
+fn rmqr_alignment_at(modules: u32, reserved: u32, width: i32, height: i32, center: i32) -> unit {
+  rmqr_set(modules, reserved, width, height, center - 1, 0, rmqr_align_dark(0, 0), true);
+  rmqr_set(modules, reserved, width, height, center, 0, rmqr_align_dark(0, 1), true);
+  rmqr_set(modules, reserved, width, height, center + 1, 0, rmqr_align_dark(0, 2), true);
+  rmqr_set(modules, reserved, width, height, center - 1, 1, rmqr_align_dark(1, 0), true);
+  rmqr_set(modules, reserved, width, height, center, 1, rmqr_align_dark(1, 1), true);
+  rmqr_set(modules, reserved, width, height, center + 1, 1, rmqr_align_dark(1, 2), true);
+  rmqr_set(modules, reserved, width, height, center - 1, 2, rmqr_align_dark(2, 0), true);
+  rmqr_set(modules, reserved, width, height, center, 2, rmqr_align_dark(2, 1), true);
+  rmqr_set(modules, reserved, width, height, center + 1, 2, rmqr_align_dark(2, 2), true);
+  rmqr_set(modules, reserved, width, height, center - 1, height - 1, rmqr_align_dark(0, 0), true);
+  rmqr_set(modules, reserved, width, height, center, height - 1, rmqr_align_dark(0, 1), true);
+  rmqr_set(modules, reserved, width, height, center + 1, height - 1, rmqr_align_dark(0, 2), true);
+  rmqr_set(modules, reserved, width, height, center - 1, height - 2, rmqr_align_dark(1, 0), true);
+  rmqr_set(modules, reserved, width, height, center, height - 2, rmqr_align_dark(1, 1), true);
+  rmqr_set(modules, reserved, width, height, center + 1, height - 2, rmqr_align_dark(1, 2), true);
+  rmqr_set(modules, reserved, width, height, center - 1, height - 3, rmqr_align_dark(2, 0), true);
+  rmqr_set(modules, reserved, width, height, center, height - 3, rmqr_align_dark(2, 1), true);
+  rmqr_set(modules, reserved, width, height, center + 1, height - 3, rmqr_align_dark(2, 2), true);
+}
+
+fn rmqr_alignments(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
+  if width == 43 { rmqr_alignment_at(modules, reserved, width, height, 21); }
+  if width == 59 {
+    rmqr_alignment_at(modules, reserved, width, height, 19);
+    rmqr_alignment_at(modules, reserved, width, height, 39);
+  }
+  if width == 77 {
+    rmqr_alignment_at(modules, reserved, width, height, 25);
+    rmqr_alignment_at(modules, reserved, width, height, 51);
+  }
+  if width == 99 {
+    rmqr_alignment_at(modules, reserved, width, height, 23);
+    rmqr_alignment_at(modules, reserved, width, height, 49);
+    rmqr_alignment_at(modules, reserved, width, height, 75);
+  }
+  if width == 139 {
+    rmqr_alignment_at(modules, reserved, width, height, 27);
+    rmqr_alignment_at(modules, reserved, width, height, 55);
+    rmqr_alignment_at(modules, reserved, width, height, 83);
+    rmqr_alignment_at(modules, reserved, width, height, 111);
+  }
+}
+
+fn rmqr_timing_horizontal(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
+  let x: i32 = 0;
+  while x < width {
+    let x1: i32 = x + 1;
+    let dark: bool = x1 - x1 / 2 * 2 == 1;
+    rmqr_set_free(modules, reserved, width, height, x, 0, dark);
+    rmqr_set_free(modules, reserved, width, height, x, height - 1, dark);
+    x = x + 1;
+  }
+}
+
+fn rmqr_timing_vertical_col(modules: u32, reserved: u32, width: i32, height: i32, x: i32) -> unit {
+  let y: i32 = 0;
+  while y < height {
+    let y1: i32 = y + 1;
+    let dark: bool = y1 - y1 / 2 * 2 == 1;
+    rmqr_set_free(modules, reserved, width, height, x, y, dark);
+    y = y + 1;
+  }
+}
+
+fn rmqr_timing(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
+  rmqr_timing_horizontal(modules, reserved, width, height);
+  rmqr_timing_vertical_col(modules, reserved, width, height, 0);
+  rmqr_timing_vertical_col(modules, reserved, width, height, width - 1);
+  if width == 43 { rmqr_timing_vertical_col(modules, reserved, width, height, 21); }
+  if width == 59 {
+    rmqr_timing_vertical_col(modules, reserved, width, height, 19);
+    rmqr_timing_vertical_col(modules, reserved, width, height, 39);
+  }
+  if width == 77 {
+    rmqr_timing_vertical_col(modules, reserved, width, height, 25);
+    rmqr_timing_vertical_col(modules, reserved, width, height, 51);
+  }
+  if width == 99 {
+    rmqr_timing_vertical_col(modules, reserved, width, height, 23);
+    rmqr_timing_vertical_col(modules, reserved, width, height, 49);
+    rmqr_timing_vertical_col(modules, reserved, width, height, 75);
+  }
+  if width == 139 {
+    rmqr_timing_vertical_col(modules, reserved, width, height, 27);
+    rmqr_timing_vertical_col(modules, reserved, width, height, 55);
+    rmqr_timing_vertical_col(modules, reserved, width, height, 83);
+    rmqr_timing_vertical_col(modules, reserved, width, height, 111);
+  }
+}
+
+fn rmqr_reserve_format_side1(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
+  rmqr_set(modules, reserved, width, height, 8, 1, false, true);
+  rmqr_set(modules, reserved, width, height, 8, 2, false, true);
+  rmqr_set(modules, reserved, width, height, 8, 3, false, true);
+  rmqr_set(modules, reserved, width, height, 8, 4, false, true);
+  rmqr_set(modules, reserved, width, height, 8, 5, false, true);
+  rmqr_set(modules, reserved, width, height, 9, 1, false, true);
+  rmqr_set(modules, reserved, width, height, 9, 2, false, true);
+  rmqr_set(modules, reserved, width, height, 9, 3, false, true);
+  rmqr_set(modules, reserved, width, height, 9, 4, false, true);
+  rmqr_set(modules, reserved, width, height, 9, 5, false, true);
+  rmqr_set(modules, reserved, width, height, 10, 1, false, true);
+  rmqr_set(modules, reserved, width, height, 10, 2, false, true);
+  rmqr_set(modules, reserved, width, height, 10, 3, false, true);
+  rmqr_set(modules, reserved, width, height, 10, 4, false, true);
+  rmqr_set(modules, reserved, width, height, 10, 5, false, true);
+  rmqr_set(modules, reserved, width, height, 11, 1, false, true);
+  rmqr_set(modules, reserved, width, height, 11, 2, false, true);
+  rmqr_set(modules, reserved, width, height, 11, 3, false, true);
+}
+
+fn rmqr_reserve_format_side2(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
+  let sj: i32 = width - 8;
+  let si: i32 = height - 6;
+  rmqr_set(modules, reserved, width, height, sj + 0, si + 0, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 0, si + 1, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 0, si + 2, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 0, si + 3, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 0, si + 4, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 1, si + 0, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 1, si + 1, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 1, si + 2, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 1, si + 3, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 1, si + 4, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 2, si + 0, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 2, si + 1, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 2, si + 2, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 2, si + 3, false, true);
+  rmqr_set(modules, reserved, width, height, sj + 2, si + 4, false, true);
+  rmqr_set(modules, reserved, width, height, width - 5, height - 6, false, true);
+  rmqr_set(modules, reserved, width, height, width - 4, height - 6, false, true);
+  rmqr_set(modules, reserved, width, height, width - 3, height - 6, false, true);
+}
+
+fn rmqr_reserve_format(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
+  rmqr_reserve_format_side1(modules, reserved, width, height);
+  rmqr_reserve_format_side2(modules, reserved, width, height);
+}
+
+fn rmqr_write_format_side1(modules: u32, reserved: u32, width: i32, height: i32, side1: i32) -> unit {
+  rmqr_set(modules, reserved, width, height, 8, 1, q.bit_test(side1, 0), true);
+  rmqr_set(modules, reserved, width, height, 8, 2, q.bit_test(side1, 1), true);
+  rmqr_set(modules, reserved, width, height, 8, 3, q.bit_test(side1, 2), true);
+  rmqr_set(modules, reserved, width, height, 8, 4, q.bit_test(side1, 3), true);
+  rmqr_set(modules, reserved, width, height, 8, 5, q.bit_test(side1, 4), true);
+  rmqr_set(modules, reserved, width, height, 9, 1, q.bit_test(side1, 5), true);
+  rmqr_set(modules, reserved, width, height, 9, 2, q.bit_test(side1, 6), true);
+  rmqr_set(modules, reserved, width, height, 9, 3, q.bit_test(side1, 7), true);
+  rmqr_set(modules, reserved, width, height, 9, 4, q.bit_test(side1, 8), true);
+  rmqr_set(modules, reserved, width, height, 9, 5, q.bit_test(side1, 9), true);
+  rmqr_set(modules, reserved, width, height, 10, 1, q.bit_test(side1, 10), true);
+  rmqr_set(modules, reserved, width, height, 10, 2, q.bit_test(side1, 11), true);
+  rmqr_set(modules, reserved, width, height, 10, 3, q.bit_test(side1, 12), true);
+  rmqr_set(modules, reserved, width, height, 10, 4, q.bit_test(side1, 13), true);
+  rmqr_set(modules, reserved, width, height, 10, 5, q.bit_test(side1, 14), true);
+  rmqr_set(modules, reserved, width, height, 11, 1, q.bit_test(side1, 15), true);
+  rmqr_set(modules, reserved, width, height, 11, 2, q.bit_test(side1, 16), true);
+  rmqr_set(modules, reserved, width, height, 11, 3, q.bit_test(side1, 17), true);
+}
+
+fn rmqr_write_format_side2(modules: u32, reserved: u32, width: i32, height: i32, side2: i32) -> unit {
+  let sj: i32 = width - 8;
+  let si: i32 = height - 6;
+  rmqr_set(modules, reserved, width, height, sj + 0, si + 0, q.bit_test(side2, 0), true);
+  rmqr_set(modules, reserved, width, height, sj + 0, si + 1, q.bit_test(side2, 1), true);
+  rmqr_set(modules, reserved, width, height, sj + 0, si + 2, q.bit_test(side2, 2), true);
+  rmqr_set(modules, reserved, width, height, sj + 0, si + 3, q.bit_test(side2, 3), true);
+  rmqr_set(modules, reserved, width, height, sj + 0, si + 4, q.bit_test(side2, 4), true);
+  rmqr_set(modules, reserved, width, height, sj + 1, si + 0, q.bit_test(side2, 5), true);
+  rmqr_set(modules, reserved, width, height, sj + 1, si + 1, q.bit_test(side2, 6), true);
+  rmqr_set(modules, reserved, width, height, sj + 1, si + 2, q.bit_test(side2, 7), true);
+  rmqr_set(modules, reserved, width, height, sj + 1, si + 3, q.bit_test(side2, 8), true);
+  rmqr_set(modules, reserved, width, height, sj + 1, si + 4, q.bit_test(side2, 9), true);
+  rmqr_set(modules, reserved, width, height, sj + 2, si + 0, q.bit_test(side2, 10), true);
+  rmqr_set(modules, reserved, width, height, sj + 2, si + 1, q.bit_test(side2, 11), true);
+  rmqr_set(modules, reserved, width, height, sj + 2, si + 2, q.bit_test(side2, 12), true);
+  rmqr_set(modules, reserved, width, height, sj + 2, si + 3, q.bit_test(side2, 13), true);
+  rmqr_set(modules, reserved, width, height, sj + 2, si + 4, q.bit_test(side2, 14), true);
+  rmqr_set(modules, reserved, width, height, width - 5, height - 6, q.bit_test(side2, 15), true);
+  rmqr_set(modules, reserved, width, height, width - 4, height - 6, q.bit_test(side2, 16), true);
+  rmqr_set(modules, reserved, width, height, width - 3, height - 6, q.bit_test(side2, 17), true);
+}
+
+fn rmqr_write_format(modules: u32, reserved: u32, width: i32, height: i32, index: i32, high: bool) -> unit {
+  let value: i32 = rmqr_format_information(index, high);
+  let side1: i32 = q.xor_value(value, 129714, 18);
+  let side2: i32 = q.xor_value(value, 133755, 18);
+  rmqr_write_format_side1(modules, reserved, width, height, side1);
+  rmqr_write_format_side2(modules, reserved, width, height, side2);
+}
+
+fn rmqr_place_cell(modules: u32, reserved: u32, data_area: u32, width: i32, height: i32, x: i32, y: i32, bits: string, bit_index: i32, bit_len: i32, remaining: i32) -> i32 {
+  // returns bit_index in low 16 bits and remaining in high bits via bit_index + remaining*100000
+  if x < 0 || y < 0 || x >= width || y >= height {
+    return bit_index + remaining * 100000;
+  }
+  let index: i32 = y * width + x;
+  if q.bitbuf_get(reserved, index) {
+    return bit_index + remaining * 100000;
+  }
+  if bit_index < bit_len {
+    q.bitbuf_set(modules, index, q.bits_get(bits, bit_index));
+    q.bitbuf_set(data_area, index, true);
+    let next_index: i32 = bit_index + 1;
+    return next_index + remaining * 100000;
+  }
+  if remaining > 0 {
+    q.bitbuf_set(modules, index, false);
+    q.bitbuf_set(data_area, index, true);
+    let next_remaining: i32 = remaining - 1;
+    return bit_index + next_remaining * 100000;
+  }
+  return bit_index + remaining * 100000;
+}
+
+fn rmqr_place(modules: u32, reserved: u32, data_area: u32, width: i32, height: i32, bits: string, remainder_bits: i32) -> unit {
+  let dy: i32 = -1;
+  let bit_index: i32 = 0;
+  let bit_len: i32 = string_length(bits);
+  let cx: i32 = width - 2;
+  let cy: i32 = height - 6;
+  let remaining: i32 = remainder_bits;
+  let steps: i32 = 0;
+  let limit: i32 = width * height * 4 + 8;
+  while steps < limit {
+    if bit_index >= bit_len {
+      if remaining <= 0 { return; }
+    }
+    let state: i32 = rmqr_place_cell(modules, reserved, data_area, width, height, cx, cy, bits, bit_index, bit_len, remaining);
+    bit_index = state - state / 100000 * 100000;
+    remaining = state / 100000;
+    state = rmqr_place_cell(modules, reserved, data_area, width, height, cx - 1, cy, bits, bit_index, bit_len, remaining);
+    bit_index = state - state / 100000 * 100000;
+    remaining = state / 100000;
+    if bit_index >= bit_len {
+      if remaining <= 0 { return; }
+    }
+    if dy < 0 {
+      if cy == 1 {
+        cx = cx - 2;
+        dy = 1;
+      } else {
+        cy = cy + dy;
+      }
+    } else {
+      if cy == height - 2 {
+        cx = cx - 2;
+        dy = -1;
+      } else {
+        cy = cy + dy;
+      }
+    }
+    steps = steps + 1;
+  }
+}
+
+fn rmqr_mask(modules: u32, data_area: u32, width: i32, height: i32) -> unit {
+  let total: i32 = width * height;
+  let index: i32 = 0;
+  while index < total {
+    if q.bitbuf_get(data_area, index) {
+      let x: i32 = index - index / width * width;
+      let y: i32 = index / width;
+      let sum: i32 = y / 2 + x / 3;
+      if sum - sum / 2 * 2 == 0 {
+        let old: bool = q.bitbuf_get(modules, index);
+        q.bitbuf_set(modules, index, !old);
+      }
+    }
+    index = index + 1;
+  }
+}
+
+fn rmqr_patterns(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
+  rmqr_finder(modules, reserved, width, height);
+  rmqr_sub_finder(modules, reserved, width, height);
+  rmqr_corners(modules, reserved, width, height);
+  rmqr_alignments(modules, reserved, width, height);
+  rmqr_timing(modules, reserved, width, height);
+  rmqr_reserve_format(modules, reserved, width, height);
+}
+
+fn rmqr_emit(width: i32, height: i32, index: i32, high: bool, bits: string) -> string {
+  let total: i32 = width * height;
+  let modules: u32 = q.bitbuf_alloc(total);
+  let reserved: u32 = q.bitbuf_alloc(total);
+  let data_area: u32 = q.bitbuf_alloc(total);
+  rmqr_patterns(modules, reserved, width, height);
+  rmqr_place(modules, reserved, data_area, width, height, bits, rmqr_remainder_bits(index));
+  rmqr_mask(modules, data_area, width, height);
+  rmqr_write_format(modules, reserved, width, height, index, high);
+  let packed_bits: string = q.bitbuf_to_bits(modules, total);
+  return string_concat(q.itoa(width), string_concat(",", string_concat(q.itoa(height), string_concat(",", packed_bits))));
+}
+
+fn rmqr_matrix_real(text: string, index: i32, high: bool, numeric: bool) -> string {
+  let capacity: i32 = rmqr_capacity(index, high);
+  let data_bits: string = rmqr_make_data(text, index, capacity, numeric);
+  let data_cw: i32 = rmqr_data_cw(index, high);
+  let packed: string = rmqr_pack_pad(data_bits, data_cw);
+  let final_bits: string = rmqr_final_bits(packed, index, high);
+  let width: i32 = rmqr_width(index);
+  let height: i32 = rmqr_height(index);
+  return rmqr_emit(width, height, index, high, final_bits);
+}
+
+fn rmqr_data_bits(text: string, index: i32, numeric: bool) -> i32 {
+  if numeric {
+    return 3 + rmqr_cci_num(index) + numeric_bits(text);
+  }
+  return 3 + rmqr_cci_byte(index) + string_length(text) * 8;
+}
+
+export fn encode_rmqr_impl(ecc: i32, text: string) -> string {
+  if ecc < 0 || ecc > 3 { return ""; }
+  let high: bool = ecc >= 2;
+  let numeric: bool = all_numeric(text);
+  let selected: i32 = -1;
+  let selected_area: i32 = 1000000000;
+  let selected_width: i32 = 1000000000;
+  let index: i32 = 0;
+  while index < 32 {
+    let capacity: i32 = rmqr_capacity(index, high);
+    let used: i32 = rmqr_data_bits(text, index, numeric);
+    if used <= capacity {
+      let width: i32 = rmqr_width(index);
+      let height: i32 = rmqr_height(index);
+      let area: i32 = width * height;
+      let better: bool = false;
+      if selected < 0 { better = true; }
+      if selected >= 0 {
+        if area < selected_area { better = true; }
+        if area == selected_area {
+          if width < selected_width { better = true; }
+        }
+      }
+      if better {
+        selected = index;
+        selected_area = area;
+        selected_width = width;
+      }
+    }
+    index = index + 1;
+  }
+  if selected < 0 { return ""; }
+  return rmqr_matrix_real(text, selected, high, numeric);
+}

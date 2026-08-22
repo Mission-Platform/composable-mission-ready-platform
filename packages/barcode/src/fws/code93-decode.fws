@@ -1,0 +1,230 @@
+import "./code93-encode.fws" as encode;
+
+fn u32_to_i32_len(value: u32) -> i32 {
+  let remaining: u32 = value;
+  let place: i32 = 1;
+  let result: i32 = 0;
+  while remaining > 0 {
+    let bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+fn modules_len(modules: Array<i32>) -> i32 {
+  return u32_to_i32_len(modules.length());
+}
+
+fn module_mask_from_array(modules: Array<i32>, index: i32, end: i32, result: i32) -> i32 {
+  if index >= end || index >= modules_len(modules) { return result; }
+  let next: i32 = result * 2;
+  if modules[index] == 1 { next = next + 1; }
+  return module_mask_from_array(modules, index + 1, end, next);
+}
+
+fn module_mask_for_string(value: string, index: i32, end: i32, result: i32) -> i32 {
+  if index >= end || index >= string_length(value) { return result; }
+  let next: i32 = result * 2;
+  if string_byte_at(value, index) == 49 { next = next + 1; }
+  return module_mask_for_string(value, index + 1, end, next);
+}
+
+fn code93_value_from_mask(mask: i32) -> i32 {
+  if mask == 276 { return 0; }
+  if mask == 328 { return 1; }
+  if mask == 324 { return 2; }
+  if mask == 322 { return 3; }
+  if mask == 296 { return 4; }
+  if mask == 292 { return 5; }
+  if mask == 290 { return 6; }
+  if mask == 336 { return 7; }
+  if mask == 274 { return 8; }
+  if mask == 266 { return 9; }
+  if mask == 424 { return 10; }
+  if mask == 420 { return 11; }
+  if mask == 418 { return 12; }
+  if mask == 404 { return 13; }
+  if mask == 402 { return 14; }
+  if mask == 394 { return 15; }
+  if mask == 360 { return 16; }
+  if mask == 356 { return 17; }
+  if mask == 354 { return 18; }
+  if mask == 308 { return 19; }
+  if mask == 282 { return 20; }
+  if mask == 344 { return 21; }
+  if mask == 332 { return 22; }
+  if mask == 326 { return 23; }
+  if mask == 300 { return 24; }
+  if mask == 278 { return 25; }
+  if mask == 436 { return 26; }
+  if mask == 434 { return 27; }
+  if mask == 428 { return 28; }
+  if mask == 422 { return 29; }
+  if mask == 406 { return 30; }
+  if mask == 410 { return 31; }
+  if mask == 364 { return 32; }
+  if mask == 358 { return 33; }
+  if mask == 310 { return 34; }
+  if mask == 314 { return 35; }
+  if mask == 302 { return 36; }
+  if mask == 468 { return 37; }
+  if mask == 466 { return 38; }
+  if mask == 458 { return 39; }
+  if mask == 366 { return 40; }
+  if mask == 374 { return 41; }
+  if mask == 430 { return 42; }
+  if mask == 294 { return 43; }
+  if mask == 474 { return 44; }
+  if mask == 470 { return 45; }
+  if mask == 306 { return 46; }
+  return -1;
+}
+
+fn symbol_value(modules: Array<i32>, start: i32) -> i32 {
+  if start + 9 > modules_len(modules) { return -1; }
+  let mask: i32 = module_mask_from_array(modules, start, start + 9, 0);
+  if mask < 0 { return -1; }
+  if mask == module_mask_for_string("101011110", 0, 9, 0) { return 47; }
+  return code93_value_from_mask(mask);
+}
+
+fn decoded_character(value: i32) -> string {
+  if value <= 42 { return encode.code93_character_for_value(value); }
+  if value == 43 { return "$"; }
+  if value == 44 { return "%"; }
+  if value == 45 { return "/"; }
+  if value == 46 { return "+"; }
+  return "";
+}
+
+fn decode_payload(
+  modules: Array<i32>,
+  index: i32,
+  data_length: i32,
+  result: string,
+  c_sum: i32,
+  k_sum: i32,
+  c_weight: i32,
+  k_weight: i32,
+) -> string {
+  if index <= data_length {
+    let symbol: i32 = symbol_value(modules, index * 9);
+    if symbol < 0 || symbol > 46 { return ""; }
+    let character: string = decoded_character(symbol);
+    if string_length(character) == 0 { return ""; }
+    let next_c_weight: i32 = c_weight - 1;
+    if next_c_weight < 1 { next_c_weight = 20; }
+    let next_k_weight: i32 = k_weight - 1;
+    if next_k_weight < 1 { next_k_weight = 15; }
+    return decode_payload(
+      modules,
+      index + 1,
+      data_length,
+      string_concat(result, character),
+      c_sum + symbol * c_weight,
+      k_sum + symbol * k_weight,
+      next_c_weight,
+      next_k_weight,
+    );
+  }
+
+  let check_c: i32 = symbol_value(modules, index * 9);
+  if check_c < 0 || check_c > 46 || check_c != encode.code93_remainder(c_sum, 47) { return ""; }
+  let check_k_index: i32 = index + 1;
+  let check_k: i32 = symbol_value(modules, check_k_index * 9);
+  if check_k < 0 || check_k > 46 || check_k != encode.code93_remainder(k_sum + check_c, 47) { return ""; }
+  let stop_index: i32 = index + 2;
+  if symbol_value(modules, stop_index * 9) != 47 { return ""; }
+  let termination_index: i32 = index + 3;
+  if modules_len(modules) != termination_index * 9 + 1 { return ""; }
+  if modules[termination_index * 9] != 1 { return ""; }
+  return result;
+}
+
+fn decode_sequence(modules: Array<i32>, extended: i32) -> string {
+  let length: i32 = modules_len(modules);
+  if length < 37 { return ""; }
+  if modules[length - 1] != 1 { return ""; }
+  let body_length: i32 = length - 1;
+  if body_length % 9 != 0 { return ""; }
+  let symbol_count: i32 = body_length / 9;
+  if symbol_count < 4 || symbol_value(modules, 0) != 47 { return ""; }
+  let data_length: i32 = symbol_count - 4;
+  let c_weight: i32 = 1;
+  if data_length > 0 { c_weight = encode.code93_remainder(data_length - 1, 20) + 1; }
+  let k_weight: i32 = 1;
+  if data_length > 0 { k_weight = encode.code93_remainder(data_length, 15) + 1; }
+  let decoded: string = decode_payload(modules, 1, data_length, "", 0, 0, c_weight, k_weight);
+  if extended == 1 { return decode_extended_sequence(decoded, 0, ""); }
+  return decoded;
+}
+
+fn extended_code(shift: i32, follower: i32) -> i32 {
+  if shift == 36 && follower >= 65 && follower <= 90 { return follower - 64; }
+  if shift == 37 {
+    if follower == 85 { return 0; }
+    if follower >= 65 && follower <= 69 { return follower - 38; }
+    if follower >= 70 && follower <= 74 { return follower - 11; }
+    if follower == 86 { return 64; }
+    if follower >= 75 && follower <= 79 { return follower + 16; }
+    if follower == 87 { return 96; }
+    if follower >= 80 && follower <= 84 { return follower + 43; }
+    return -1;
+  }
+  if shift == 47 {
+    if follower >= 65 && follower <= 76 { return follower - 32; }
+    if follower == 79 { return 47; }
+    if follower == 90 { return 58; }
+    return -1;
+  }
+  if shift == 43 && follower >= 65 && follower <= 90 { return follower + 32; }
+  return -1;
+}
+
+fn ascii_character(code: i32) -> string {
+  if code >= 0 && code <= 31 {
+    return string_slice("\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000a\u000b\u000c\u000d\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f", code, code + 1);
+  }
+  if code >= 32 && code <= 64 {
+    return string_slice(" !\u0022#$%&'()*+,-./0123456789:;<=>?@", code - 32, code - 31);
+  }
+  if code >= 65 && code <= 90 { return encode.code93_letter(code - 65); }
+  if code >= 91 && code <= 96 {
+    return string_slice("\u005b\u005c\u005d^_\u0060", code - 91, code - 90);
+  }
+  if code >= 97 && code <= 122 {
+    return string_slice("abcdefghijklmnopqrstuvwxyz", code - 97, code - 96);
+  }
+  if code >= 123 && code <= 127 {
+    return string_slice("{|}~\u007f", code - 123, code - 122);
+  }
+  return "";
+}
+
+fn decode_extended_pair(shift: i32, follower: i32) -> string {
+  let code: i32 = extended_code(shift, follower);
+  if code < 0 { return ""; }
+  return ascii_character(code);
+}
+
+fn decode_extended_sequence(value: string, index: i32, result: string) -> string {
+  if index >= string_length(value) { return result; }
+  let code: i32 = string_byte_at(value, index);
+  if code == 36 || code == 37 || code == 43 || code == 47 {
+    if index + 1 >= string_length(value) { return ""; }
+    let decoded: string = decode_extended_pair(code, string_byte_at(value, index + 1));
+    if string_length(decoded) == 0 { return ""; }
+    return decode_extended_sequence(value, index + 2, string_concat(result, decoded));
+  }
+  return decode_extended_sequence(value, index + 1, string_concat(result, string_slice(value, index, index + 1)));
+}
+
+export fn decode_code93_impl(modules: Array<i32>) -> string {
+  return decode_sequence(modules, 0);
+}
+
+export fn decode_code93_extended_impl(modules: Array<i32>) -> string {
+  return decode_sequence(modules, 1);
+}

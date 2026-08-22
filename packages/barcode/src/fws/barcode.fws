@@ -1,3 +1,20 @@
+
+fn u32_to_i32_len(value: u32) -> i32 {
+  let remaining: u32 = value;
+  let place: i32 = 1;
+  let result: i32 = 0;
+  while remaining > 0 {
+    let bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+fn modules_len(modules: Array<i32>) -> i32 {
+  return u32_to_i32_len(modules.length());
+}
 fn is_digit_at(value: string, index: i32) -> bool {
   let code: i32 = string_byte_at(value, index);
   return code >= 48 && code <= 57;
@@ -278,7 +295,15 @@ fn g_digit_from_bits(modules: Array<i32>, start: i32) -> i32 {
 }
 
 export fn decode_ean8(modules: Array<i32>) -> string {
-  if modules.length() != 67 { return ""; }
+  return decode_ean8_row(modules, modules_len(modules));
+}
+
+// Length-aware variant: decode the first `count` sampled modules of an array
+// that may be larger than the symbol (the scanner shares one oversized scratch
+// buffer across formats). Only the fixed guard/data indices below are read.
+export fn decode_ean8_row(modules: Array<i32>, count: i32) -> string {
+  if count != 67 { return ""; }
+  if modules_len(modules) < 67 { return ""; }
   if modules[0] != 1 || modules[1] != 0 || modules[2] != 1 { return ""; }
   if modules[31] != 0 || modules[32] != 1 || modules[33] != 0 || modules[34] != 1 || modules[35] != 0 { return ""; }
   if modules[64] != 1 || modules[65] != 0 || modules[66] != 1 { return ""; }
@@ -315,7 +340,13 @@ fn parity_digit(value: string) -> i32 {
 }
 
 export fn decode_ean13(modules: Array<i32>) -> string {
-  if modules.length() != 95 { return ""; }
+  return decode_ean13_row(modules, modules_len(modules));
+}
+
+// Length-aware EAN-13 decode over the first `count` modules of an oversized array.
+export fn decode_ean13_row(modules: Array<i32>, count: i32) -> string {
+  if count != 95 { return ""; }
+  if modules_len(modules) < 95 { return ""; }
   if modules[0] != 1 || modules[1] != 0 || modules[2] != 1 { return ""; }
   if modules[45] != 0 || modules[46] != 1 || modules[47] != 0 || modules[48] != 1 || modules[49] != 0 { return ""; }
   if modules[92] != 1 || modules[93] != 0 || modules[94] != 1 { return ""; }
@@ -352,7 +383,13 @@ export fn decode_ean13(modules: Array<i32>) -> string {
 }
 
 export fn decode_upca(modules: Array<i32>) -> string {
-  if modules.length() != 95 { return ""; }
+  return decode_upca_row(modules, modules_len(modules));
+}
+
+// Length-aware UPC-A decode over the first `count` modules of an oversized array.
+export fn decode_upca_row(modules: Array<i32>, count: i32) -> string {
+  if count != 95 { return ""; }
+  if modules_len(modules) < 95 { return ""; }
   if modules[0] != 1 || modules[1] != 0 || modules[2] != 1 { return ""; }
   if modules[45] != 0 || modules[46] != 1 || modules[47] != 0 || modules[48] != 1 || modules[49] != 0 { return ""; }
   if modules[92] != 1 || modules[93] != 0 || modules[94] != 1 { return ""; }
@@ -490,7 +527,13 @@ export fn encode_upce(value: string) -> string {
 }
 
 export fn decode_upce(modules: Array<i32>) -> string {
-  if modules.length() != 51 { return ""; }
+  return decode_upce_row(modules, modules_len(modules));
+}
+
+// Length-aware UPC-E decode over the first `count` modules of an oversized array.
+export fn decode_upce_row(modules: Array<i32>, count: i32) -> string {
+  if count != 51 { return ""; }
+  if modules_len(modules) < 51 { return ""; }
   if modules[0] != 1 || modules[1] != 0 || modules[2] != 1 { return ""; }
   if modules[45] != 0 || modules[46] != 1 || modules[47] != 0 || modules[48] != 1 || modules[49] != 0 || modules[50] != 1 { return ""; }
 

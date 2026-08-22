@@ -1,8 +1,9 @@
 # @mission-platform/matrix-code
 
-Dependency-free **2D matrix barcode encoder and decoder** written in Rust, compiled to WebAssembly, and wrapped in a
-typed ES module. Supports **Data Matrix** (ECC 200, square and rectangular), **GS1 Data Matrix** (the same symbol with a
-leading FNC1), and **Aztec Code** (compact).
+Dependency-free **2D matrix barcode encoder and decoder** backed by package-local
+Forge Web Script artifacts and wrapped in a typed ES module. Supports **Data
+Matrix** (ECC 200, square and rectangular), **GS1 Data Matrix** (the same symbol
+with a leading FNC1), and **Aztec Code** (compact).
 
 ## Usage
 
@@ -15,10 +16,10 @@ const code = encodeMatrix('datamatrix', 'https://mission-platform.dev');
 // code.modules -> width * height row-major bits (1 = dark, 0 = light)
 ```
 
-The encoder is **synchronous** and **self-contained**: the compiled wasm binary is inlined into the bundle as a base64
-`data:` URI, so there is no runtime
-`fetch` and `encodeMatrix` works during SSR and in tests with no initialisation step. An async `encodeMatrixAsync` is
-also exported.
+The encoder is **synchronous** and **self-contained**: its package-local FWS
+artifact is loaded without a runtime `fetch`, so `encodeMatrix` works during SSR
+and in tests with no initialisation step. An async `encodeMatrixAsync` is also
+exported.
 
 Decode a symbol back into its payload with `decodeMatrix` (the inverse of
 `encodeMatrix`):
@@ -54,17 +55,13 @@ scope for this encoder and throw a `RangeError`.
 
 ## Architecture
 
-The encoder and decoder live in the `crates/matrix-code-encode` and
-`crates/matrix-code-decode` Rust crates (sharing `crates/matrix-code-common`) and are compiled with `wasm-bindgen` via
-`wasm-pack` (run by the `build:wasm:encode`
-and `build:wasm:decode` Turbo tasks, which emit the runtime + binary into
-`src/generated`). The build inlines the wasm as a base64 `data:` URI through Vite (`assetsInlineLimit`), and strips
-wasm-bindgen's default `new URL(...)` fetch fallback so each binary is embedded exactly once.
-
-Diagnostics are instrumented with [`tracing`](https://docs.rs/tracing); building the crate with its optional `console`
-feature installs a `tracing-wasm`
-subscriber (plus a panic hook) that forwards events to the browser devtools console. The shipped build leaves the
-feature off.
+- `src/fws/` contains the package-local Forge Web Script graphs, handwritten ABI
+  declarations, and focused parity fixtures for the encoder and decoder.
+- `src/encoder/` and `src/decoder/` are typed façades around the direct FWS
+  loaders. They preserve the public matrix-bit contracts and expose synchronous
+  and asynchronous APIs.
+- The package-local artifacts are the complete production implementation; the
+  package does not depend on a generated WebAssembly wrapper package.
 
 ## Building
 
@@ -72,5 +69,5 @@ feature off.
 pnpm exec turbo run build --filter @mission-platform/matrix-code
 ```
 
-This requires the Rust toolchain with the `wasm32-unknown-unknown` target. The pinned `wasm-pack` npm package is
-installed during `pnpm install`.
+The normal workspace installation provides the Forge Web Script compiler and
+runtime packages used to build the package-local artifacts.

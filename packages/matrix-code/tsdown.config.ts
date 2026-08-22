@@ -9,23 +9,15 @@ import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 
 const rootDirectory = import.meta.dirname;
 const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
 /**
- * Workspace `-wasm` packages whose already self-contained (base64-inlined)
- * output is bundled into the matrix-code package so the published artifact stays
- * self-contained with no external runtime dependency.
- */
-const WASM_PACKAGES = [
-  '@mission-platform/matrix-code-encode-wasm',
-  '@mission-platform/matrix-code-decode-wasm',
-] as const;
-
-/**
  * Neutral self-contained encoder/decoder (`dist/index.js` + dts) plus the five
  * forge component framework builds (`dist/{vue,react,solid,svelte,web-components}/`).
+ * Encoding and decoding execute through package-local FWS artifacts only.
  */
 export default [
   defineTsdownLibrary({
@@ -37,12 +29,7 @@ export default [
     unbundle: false,
     clean: true,
     overrides: {
-      // tsdown externalises package.json dependencies by default; force the
-      // self-contained `-wasm` packages into this bundle so the published
-      // artifact needs no external runtime dependency.
-      deps: {
-        alwaysBundle: [...WASM_PACKAGES],
-      },
+      plugins: [forgeWebScriptPlugin({ rootDir: rootDirectory, requireExports: false, selfHostedVmMode: 'aot' })],
     },
   }),
   ...defineTsdownForgeComponents({
@@ -56,8 +43,11 @@ export default [
     ],
     componentsModule,
     name: 'MissionPlatformMatrixCode',
-    external: ['i18next'],
+    external: ['i18next', '@mission-platform/matrix-code'],
     declarationModule: '..',
+    overrides: {
+      plugins: [forgeWebScriptPlugin({ rootDir: rootDirectory, requireExports: false, selfHostedVmMode: 'aot' })],
+    },
   }),
   ...defineTsdownForgeCmsAll({
     rootDir: rootDirectory,

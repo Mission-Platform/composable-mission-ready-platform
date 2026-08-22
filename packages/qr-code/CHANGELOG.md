@@ -45,8 +45,6 @@
   - @mission-platform/icons@2.0.0
   - @mission-platform/vcard@0.2.0
   - @mission-platform/forge@1.0.0
-  - @mission-platform/qr-code-decode-wasm@0.2.0
-  - @mission-platform/qr-code-encode-wasm@0.2.0
 
 ## 1.0.0
 
@@ -74,7 +72,7 @@
 
   ```ts
   // vite.config.ts
-  export default defineFrameworkAppConfig({ framework: "vue" });
+  export default defineFrameworkAppConfig({ framework: 'vue' });
   ```
 
   ```jsonc
@@ -192,8 +190,6 @@
   - @mission-platform/forge@1.0.0
   - @mission-platform/components@2.0.0
   - @mission-platform/icons@1.0.0
-  - @mission-platform/qr-code-encode-wasm@0.2.0
-  - @mission-platform/qr-code-decode-wasm@0.2.0
 
 ## 0.1.1
 

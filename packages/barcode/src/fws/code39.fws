@@ -1,5 +1,22 @@
 // Code 39 standard and full-ASCII encoder graph.
 
+fn u32_to_i32_len(value: u32) -> i32 {
+  let remaining: u32 = value;
+  let place: i32 = 1;
+  let result: i32 = 0;
+  while remaining > 0 {
+    let bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+fn modules_len(modules: Array<i32>) -> i32 {
+  return u32_to_i32_len(modules.length());
+}
+
 fn letter(value: i32) -> string {
   if value == 0 { return "A"; }
   if value == 1 { return "B"; }
@@ -228,27 +245,28 @@ fn decode_symbol(modules: Array<i32>, start: i32) -> string {
 
 fn valid_modules(modules: Array<i32>, index: i32, end: i32) -> bool {
   if index >= end { return true; }
-  if index >= modules.length() { return false; }
+  if index >= modules_len(modules) { return false; }
   let bit: i32 = modules[index];
   if bit != 0 && bit != 1 { return false; }
   return valid_modules(modules, index + 1, end);
 }
 
 fn module_mask(modules: Array<i32>, index: i32, end: i32, result: i32) -> i32 {
-  if index >= end || index >= modules.length() { return result; }
+  if index >= end || index >= modules_len(modules) { return result; }
   let next: i32 = result * 2;
   if modules[index] == 1 { next = next + 1; }
   return module_mask(modules, index + 1, end, next);
 }
 
-fn decode_symbols(modules: Array<i32>, start: i32, result: string) -> string {
-  let length: i32 = modules.length();
+fn decode_symbols(modules: Array<i32>, start: i32, end: i32, result: string) -> string {
+  let length: i32 = end;
+  if length > modules_len(modules) { return ""; }
   if start + 15 > length { return ""; }
   let symbol: string = decode_symbol(modules, start);
   if string_length(symbol) == 0 { return ""; }
   if start + 15 == length { return string_concat(result, symbol); }
   if start + 16 > length || modules[start + 15] != 0 { return ""; }
-  return decode_symbols(modules, start + 16, string_concat(result, symbol));
+  return decode_symbols(modules, start + 16, end, string_concat(result, symbol));
 }
 
 fn has_inner_star(value: string, index: i32) -> bool {
@@ -263,11 +281,11 @@ fn valid_frame_length(length: i32) -> bool {
   return valid_frame_length(length - 16);
 }
 
-fn framed_code39(modules: Array<i32>) -> string {
-  let length: i32 = modules.length();
+fn framed_code39(modules: Array<i32>, length: i32) -> string {
+  if length > modules_len(modules) { return ""; }
   if length < 31 { return ""; }
   if !valid_frame_length(length) { return ""; }
-  let framed: string = decode_symbols(modules, 0, "");
+  let framed: string = decode_symbols(modules, 0, length, "");
   if string_length(framed) < 2 { return ""; }
   if string_byte_at(framed, 0) != 42 || string_byte_at(framed, string_length(framed) - 1) != 42 { return ""; }
   if has_inner_star(framed, 1) { return ""; }
@@ -275,7 +293,11 @@ fn framed_code39(modules: Array<i32>) -> string {
 }
 
 export fn decode_code39(modules: Array<i32>) -> string {
-  return framed_code39(modules);
+  return framed_code39(modules, modules_len(modules));
+}
+
+export fn decode_code39_row(modules: Array<i32>, count: i32) -> string {
+  return framed_code39(modules, count);
 }
 
 fn extended_code(shift: i32, follower: i32) -> i32 {
@@ -339,5 +361,9 @@ fn decode_extended_sequence(value: string, index: i32, result: string) -> string
 }
 
 export fn decode_code39_extended(modules: Array<i32>) -> string {
-  return decode_extended_sequence(framed_code39(modules), 0, "");
+  return decode_extended_sequence(framed_code39(modules, modules_len(modules)), 0, "");
+}
+
+export fn decode_code39_extended_row(modules: Array<i32>, count: i32) -> string {
+  return decode_extended_sequence(framed_code39(modules, count), 0, "");
 }

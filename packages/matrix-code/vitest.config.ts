@@ -7,7 +7,7 @@ export default defineVitestConfig({
   coverageInclude: ['src/**/*.ts', 'src/**/*.tsx'],
   coverageExclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/test-support/**', 'src/**/*.stories.*'],
   overrides: {
-    plugins: [forgeWebScriptPlugin({ root: import.meta.dirname, requireExports: false })],
+    plugins: [forgeWebScriptPlugin({ root: import.meta.dirname, requireExports: false, selfHostedVmMode: 'jit' })],
     esbuild: {
       jsxFactory: 'h',
       jsxFragment: 'Fragment',

@@ -9,13 +9,13 @@ import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 
 /**
- * Workspace `-wasm` packages whose already self-contained (base64-inlined)
- * output is bundled into the qr-code package so the published artifact stays
- * self-contained with no external runtime dependency.
+ * No legacy wrapper package is bundled: all QR encoder and decoder paths use
+ * package-local Forge Web Script artifacts.
  */
-const WASM_PACKAGES = ['@mission-platform/qr-code-encode-wasm', '@mission-platform/qr-code-decode-wasm'] as const;
+const WASM_PACKAGES = [] as const;
 
 /**
  * Neutral self-contained encoder/decoder (`dist/index.js` + dts) plus the five
@@ -31,12 +31,10 @@ export default [
     unbundle: false,
     clean: true,
     overrides: {
-      // tsdown externalises package.json dependencies by default; force the
-      // self-contained `-wasm` packages into this bundle so the published
-      // artifact needs no external runtime dependency.
       deps: {
         alwaysBundle: [...WASM_PACKAGES],
       },
+      plugins: [forgeWebScriptPlugin({ rootDir: import.meta.dirname, requireExports: false })],
     },
   }),
   ...defineTsdownForgeComponents({
@@ -52,6 +50,9 @@ export default [
     name: 'MissionPlatformQrCode',
     // Encoder is consumed through the package's own `.` entry.
     external: ['i18next'],
+    overrides: {
+      plugins: [forgeWebScriptPlugin({ rootDir: import.meta.dirname, requireExports: false })],
+    },
   }),
   ...defineTsdownForgeCmsAll({
     rootDir: import.meta.dirname,

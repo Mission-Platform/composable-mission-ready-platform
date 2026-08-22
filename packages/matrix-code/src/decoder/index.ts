@@ -40,7 +40,8 @@ function decodeWithArtifact(matrix: MatrixCode, erasures?: ArrayLike<number>): s
     return null;
   }
   const artifact = loadMatrixDecoderSync();
-  return unpackPayload(artifact.decode_matrix(symbology, matrix.width, matrix.height, matrix.modules, erasures ?? []));
+  const erasureMask = erasures ?? new Array<number>(matrix.modules.length).fill(0);
+  return unpackPayload(artifact.decode_matrix(symbology, matrix.width, matrix.height, matrix.modules, erasureMask));
 }
 
 /**
@@ -87,5 +88,6 @@ export async function decodeMatrixAsyncWithErasures(
     return null;
   }
   const artifact = await loadMatrixDecoder();
-  return unpackPayload(artifact.decode_matrix(symbology, matrix.width, matrix.height, matrix.modules, erasures ?? []));
+  const erasureMask = erasures ?? new Array<number>(matrix.modules.length).fill(0);
+  return unpackPayload(artifact.decode_matrix(symbology, matrix.width, matrix.height, matrix.modules, erasureMask));
 }

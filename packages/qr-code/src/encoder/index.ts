@@ -1,50 +1,42 @@
-// Public, typed wrapper around the Rust/WebAssembly QR Code encoder.
+// Public, typed wrapper around the package-local Forge Web Script QR encoder.
 //
-// A dependency-free byte-mode QR Code encoder: it encodes an arbitrary UTF-8
-// string as a single byte-mode segment, selects the smallest QR version that
-// fits the data at the requested error-correction level, and chooses the data
-// mask with the lowest penalty score per the QR specification (ISO/IEC 18004).
-//
-// The heavy lifting runs in WebAssembly, compiled from the `crates/qr-code-encode`
-// Rust crate (sharing `crates/qr-code-common`) and published as
-// `@mission-platform/qr-code-encode-wasm`; the decoder counterpart lives in
-// `../decoder`.
-//
-// The `-wasm` package inlines its wasm binary and instantiates it synchronously
-// at import, so the encoders are ready to call with no initialisation step.
-// This module owns the public `encodeQr` / `encodeQrAsync` helpers (plus the
-// compact Micro QR / rMQR variants). It depends only on the shared types —
-// never on the decoder — so the encode path stays pure (the two paths never
-// form an import cycle). `index.ts` re-exports the public encode API.
+// The FWS graph uses byte mode for arbitrary UTF-8 strings, selects the
+// smallest fitting symbol, and chooses the data mask with the lowest penalty.
 
-import {
-  encode as wasmEncode,
-  encode_micro_qr as wasmEncodeMicroQr,
-  encode_rmqr as wasmEncodeRmqr,
-} from '@mission-platform/qr-code-encode-wasm';
+import { load as loadQrCompactEncoder, loadSync as loadQrCompactEncoderSync } from '../fws/qr-compact-encoder.fws';
+import { load as loadQrEncoder, loadSync as loadQrEncoderSync } from '../fws/qr-encoder.fws';
 
 import type { CompactQrMatrix, QrErrorCorrection, QrMatrix } from '../types';
 
-/** Ordinal for each error-correction level, matching the wasm `encode` contract. */
+/** Ordinal for each error-correction level, matching the FWS encoder contract. */
 const ECC_ORDINAL: Record<QrErrorCorrection, number> = { L: 0, M: 1, Q: 2, H: 3 };
 
-/**
- * Unpack the wasm encoder's packed `Uint8Array` (`[version, size, ...modules]`)
- * into a {@link QrMatrix}, throwing when the payload was too long to encode
- * (the wasm `encode` returns `undefined`, so a missing buffer signals overflow).
- */
-function unpack(packed: Uint8Array | undefined): QrMatrix {
-  if (packed === undefined || packed.length === 0) {
+/** Unpack the FWS encoder's `version,size,row-major-bits` result. */
+function unpack(packed: string): QrMatrix {
+  if (packed.length === 0) {
     throw new RangeError('Data too long for a QR Code at the chosen error-correction level');
   }
-  const version = packed[0];
-  const size = packed[1];
+  const firstSeparator = packed.indexOf(',');
+  const secondSeparator = packed.indexOf(',', firstSeparator + 1);
+  const version = Number.parseInt(packed.slice(0, firstSeparator), 10);
+  const size = Number.parseInt(packed.slice(firstSeparator + 1, secondSeparator), 10);
+  const bits = packed.slice(secondSeparator + 1);
+  if (
+    firstSeparator <= 0 ||
+    secondSeparator <= firstSeparator ||
+    !Number.isInteger(version) ||
+    !Number.isInteger(size) ||
+    size <= 0 ||
+    bits.length !== size * size
+  ) {
+    throw new RangeError('Malformed QR Code encoder result');
+  }
   const modules: boolean[][] = [];
-  let offset = 2;
+  let offset = 0;
   for (let y = 0; y < size; y++) {
     const row: boolean[] = new Array<boolean>(size);
     for (let x = 0; x < size; x++) {
-      row[x] = packed[offset++] !== 0;
+      row[x] = bits[offset++] === '1';
     }
     modules.push(row);
   }
@@ -59,7 +51,7 @@ function unpack(packed: Uint8Array | undefined): QrMatrix {
  *   40) QR Code at the chosen error-correction level.
  */
 export function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix {
-  return unpack(wasmEncode(text, ECC_ORDINAL[errorCorrection]));
+  return unpack(loadQrEncoderSync().encode_qr(ECC_ORDINAL[errorCorrection], text));
 }
 
 /**
@@ -69,27 +61,41 @@ export function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M')
  * @throws {RangeError} if the text is too long to fit in the largest (version
  *   40) QR Code at the chosen error-correction level.
  */
-export function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix> {
-  return Promise.resolve(unpack(wasmEncode(text, ECC_ORDINAL[errorCorrection])));
+export async function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix> {
+  const encoder = await loadQrEncoder();
+  return unpack(encoder.encode_qr(ECC_ORDINAL[errorCorrection], text));
 }
 
 /**
- * Unpack a compact-code encoder buffer (`[width, height, ...modules]`) into a
- * {@link CompactQrMatrix}, throwing when the payload did not fit (the wasm entry
- * points return `undefined`, so a missing buffer signals overflow).
+ * Unpack a compact FWS encoder result (`width,height,row-major-bits`) into a
+ * {@link CompactQrMatrix}.
  */
-function unpackCompact(packed: Uint8Array | undefined, kind: string): CompactQrMatrix {
-  if (packed === undefined || packed.length === 0) {
+function unpackCompact(packed: string, kind: string): CompactQrMatrix {
+  if (packed.length === 0) {
     throw new RangeError(`Data too long for a ${kind} at the chosen error-correction level`);
   }
-  const width = packed[0];
-  const height = packed[1];
+  const firstSeparator = packed.indexOf(',');
+  const secondSeparator = packed.indexOf(',', firstSeparator + 1);
+  const width = Number.parseInt(packed.slice(0, firstSeparator), 10);
+  const height = Number.parseInt(packed.slice(firstSeparator + 1, secondSeparator), 10);
+  const bits = packed.slice(secondSeparator + 1);
+  if (
+    firstSeparator <= 0 ||
+    secondSeparator <= firstSeparator ||
+    !Number.isInteger(width) ||
+    !Number.isInteger(height) ||
+    width <= 0 ||
+    height <= 0 ||
+    bits.length !== width * height
+  ) {
+    throw new RangeError(`Malformed ${kind} encoder result`);
+  }
   const modules: boolean[][] = [];
-  let offset = 2;
+  let offset = 0;
   for (let y = 0; y < height; y++) {
     const row: boolean[] = new Array<boolean>(width);
     for (let x = 0; x < width; x++) {
-      row[x] = packed[offset++] !== 0;
+      row[x] = bits[offset++] === '1';
     }
     modules.push(row);
   }
@@ -108,7 +114,7 @@ function unpackCompact(packed: Uint8Array | undefined, kind: string): CompactQrM
  *   chosen level (including any request for level `H`).
  */
 export function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix {
-  return unpackCompact(wasmEncodeMicroQr(text, ECC_ORDINAL[errorCorrection]), 'Micro QR Code');
+  return unpackCompact(loadQrCompactEncoderSync().encode_micro_qr(ECC_ORDINAL[errorCorrection], text), 'Micro QR Code');
 }
 
 /**
@@ -118,8 +124,12 @@ export function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection =
  * @throws {RangeError} if the text is too long for any Micro QR version at the
  *   chosen level (including any request for level `H`).
  */
-export function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix> {
-  return Promise.resolve(unpackCompact(wasmEncodeMicroQr(text, ECC_ORDINAL[errorCorrection]), 'Micro QR Code'));
+export async function encodeMicroQrAsync(
+  text: string,
+  errorCorrection: QrErrorCorrection = 'M',
+): Promise<CompactQrMatrix> {
+  const encoder = await loadQrCompactEncoder();
+  return unpackCompact(encoder.encode_micro_qr(ECC_ORDINAL[errorCorrection], text), 'Micro QR Code');
 }
 
 /**
@@ -135,7 +145,7 @@ export function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrect
  *   chosen level.
  */
 export function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix {
-  return unpackCompact(wasmEncodeRmqr(text, ECC_ORDINAL[errorCorrection]), 'rMQR Code');
+  return unpackCompact(loadQrCompactEncoderSync().encode_rmqr(ECC_ORDINAL[errorCorrection], text), 'rMQR Code');
 }
 
 /**
@@ -146,6 +156,10 @@ export function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M
  * @throws {RangeError} if the text is too long for any rMQR version at the
  *   chosen level.
  */
-export function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix> {
-  return Promise.resolve(unpackCompact(wasmEncodeRmqr(text, ECC_ORDINAL[errorCorrection]), 'rMQR Code'));
+export async function encodeRmqrAsync(
+  text: string,
+  errorCorrection: QrErrorCorrection = 'M',
+): Promise<CompactQrMatrix> {
+  const encoder = await loadQrCompactEncoder();
+  return unpackCompact(encoder.encode_rmqr(ECC_ORDINAL[errorCorrection], text), 'rMQR Code');
 }

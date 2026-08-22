@@ -1,5 +1,22 @@
 // MSI encoder graph with mod-10 validation.
 
+fn u32_to_i32_len(value: u32) -> i32 {
+  let remaining: u32 = value;
+  let place: i32 = 1;
+  let result: i32 = 0;
+  while remaining > 0 {
+    let bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+fn modules_len(modules: Array<i32>) -> i32 {
+  return u32_to_i32_len(modules.length());
+}
+
 
 fn is_digit_at(value: string, index: i32) -> bool {
   let code: i32 = string_byte_at(value, index);
@@ -113,8 +130,8 @@ fn decode_msi_digits(modules: Array<i32>, start: i32, end: i32, result: string) 
   return decode_msi_digits(modules, start + 12, end, string_concat(result, digit_char(number)));
 }
 
-export fn decode_msi(modules: Array<i32>) -> string {
-  let length: i32 = modules.length();
+fn decode_msi_frame(modules: Array<i32>, length: i32) -> string {
+  if length > modules_len(modules) { return ""; }
   if length < 19 { return ""; }
   if modules[0] != 1 || modules[1] != 1 || modules[2] != 0 { return ""; }
   if modules[length - 4] != 1 || modules[length - 3] != 0 || modules[length - 2] != 0 || modules[length - 1] != 1 { return ""; }
@@ -123,4 +140,12 @@ export fn decode_msi(modules: Array<i32>) -> string {
   let digits: string = decode_msi_digits(modules, 3, length - 4, "");
   if string_length(digits) < 1 { return ""; }
   return string_slice(digits, 0, string_length(digits) - 1);
+}
+
+export fn decode_msi(modules: Array<i32>) -> string {
+  return decode_msi_frame(modules, modules_len(modules));
+}
+
+export fn decode_msi_row(modules: Array<i32>, count: i32) -> string {
+  return decode_msi_frame(modules, count);
 }

@@ -1,18 +1,38 @@
-// QR Code decoder façade.
+// QR Code decoder façade backed by the package-local Forge Web Script graph.
 //
 // The decoder recovers the format info, unmasks the data region, reads the
 // codewords and Reed-Solomon-corrects up to the level's error capacity, so it
-// tolerates a damaged matrix. It is compiled from the `crates/qr-code-decode`
-// Rust crate and published as `@mission-platform/qr-code-decode-wasm`.
-//
-// The `-wasm` package inlines its wasm binary and instantiates it synchronously
-// at import, so `decode` is ready to call with no initialisation step. This
-// module owns the public `decodeQr` / `decodeQrAsync` helpers, which `index.ts`
-// re-exports.
+// tolerates a damaged matrix. The graph is loaded lazily on first use.
 
-import { decode as wasmDecode } from '@mission-platform/qr-code-decode-wasm';
+import {
+  load as loadQrDecoder,
+  loadSync as loadQrDecoderSync,
+  type ForgeQrDecoderImports,
+} from '../fws/qr-decoder.fws';
 
-import type { QrMatrix } from '@/types';
+import type { QrMatrix } from '../types';
+
+const textDecoder = new TextDecoder('utf-8', { fatal: true });
+
+/** Adapt the FWS decoder's packed UTF-8 byte string to a JS string result. */
+function decodeUtf8(value: string): string {
+  if (value.length === 0 || value.length % 3 !== 0) return '';
+  const bytes = new Uint8Array(value.length / 3);
+  for (let index = 0; index < bytes.length; index += 1) {
+    const byte = Number.parseInt(value.slice(index * 3, index * 3 + 3), 10);
+    if (!Number.isInteger(byte) || byte < 0 || byte > 255) return '';
+    bytes[index] = byte;
+  }
+  try {
+    return `1${textDecoder.decode(bytes)}`;
+  } catch {
+    return '';
+  }
+}
+
+const decoderImports: ForgeQrDecoderImports = {
+  'qr.decode.utf8': { decode_utf8: decodeUtf8 },
+};
 
 /** Pack a {@link QrMatrix} into the decoder's `[size, ...modules]` buffer. */
 function packMatrix(matrix: QrMatrix): Uint8Array {
@@ -29,8 +49,8 @@ function packMatrix(matrix: QrMatrix): Uint8Array {
 }
 
 /**
- * Decode a {@link QrMatrix} back into its original text, instantiating the
- * WebAssembly decoder synchronously on first use.
+ * Decode a {@link QrMatrix} back into its original text, loading the package-
+ * local FWS decoder synchronously on first use.
  *
  * The decoder recovers the format info, unmasks the data region, reads the
  * codewords, and Reed-Solomon-corrects up to the level's error capacity, so it
@@ -40,15 +60,18 @@ function packMatrix(matrix: QrMatrix): Uint8Array {
  * @returns the decoded text, or `null` when the matrix cannot be decoded.
  */
 export function decodeQr(matrix: QrMatrix): string | null {
-  return wasmDecode(packMatrix(matrix)) ?? null;
+  const result = loadQrDecoderSync(decoderImports).decode_qr(packMatrix(matrix));
+  return result.startsWith('1') ? result.slice(1) : null;
 }
 
 /**
- * Decode a {@link QrMatrix} back into its original text, instantiating the
- * WebAssembly decoder asynchronously on first use.
+ * Decode a {@link QrMatrix} back into its original text, loading the package-
+ * local FWS decoder asynchronously on first use.
  *
  * @returns the decoded text, or `null` when the matrix cannot be decoded.
  */
-export function decodeQrAsync(matrix: QrMatrix): Promise<string | null> {
-  return Promise.resolve(wasmDecode(packMatrix(matrix)) ?? null);
+export async function decodeQrAsync(matrix: QrMatrix): Promise<string | null> {
+  const decoder = await loadQrDecoder(decoderImports);
+  const result = decoder.decode_qr(packMatrix(matrix));
+  return result.startsWith('1') ? result.slice(1) : null;
 }

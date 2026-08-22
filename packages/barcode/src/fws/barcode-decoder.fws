@@ -1,0 +1,167 @@
+import "./barcode-encoder.fws" as ean;
+
+fn u32_to_i32_len(value: u32) -> i32 {
+  let remaining: u32 = value;
+  let place: i32 = 1;
+  let result: i32 = 0;
+  while remaining > 0 {
+    let bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+fn modules_len(modules: Array<i32>) -> i32 {
+  return u32_to_i32_len(modules.length());
+}
+
+fn bits_match(modules: Array<i32>, start: i32, pattern: string) -> bool {
+  return modules[start] + 48 == string_byte_at(pattern, 0) && modules[start + 1] + 48 == string_byte_at(pattern, 1) && modules[start + 2] + 48 == string_byte_at(pattern, 2) && modules[start + 3] + 48 == string_byte_at(pattern, 3) && modules[start + 4] + 48 == string_byte_at(pattern, 4) && modules[start + 5] + 48 == string_byte_at(pattern, 5) && modules[start + 6] + 48 == string_byte_at(pattern, 6);
+}
+
+fn left_digit_from_bits(modules: Array<i32>, start: i32) -> i32 {
+  if bits_match(modules, start, "0001101") { return 0; }
+  if bits_match(modules, start, "0011001") { return 1; }
+  if bits_match(modules, start, "0010011") { return 2; }
+  if bits_match(modules, start, "0111101") { return 3; }
+  if bits_match(modules, start, "0100011") { return 4; }
+  if bits_match(modules, start, "0110001") { return 5; }
+  if bits_match(modules, start, "0101111") { return 6; }
+  if bits_match(modules, start, "0111011") { return 7; }
+  if bits_match(modules, start, "0110111") { return 8; }
+  if bits_match(modules, start, "0001011") { return 9; }
+  return -1;
+}
+
+fn right_digit_from_bits(modules: Array<i32>, start: i32) -> i32 {
+  if bits_match(modules, start, "1110010") { return 0; }
+  if bits_match(modules, start, "1100110") { return 1; }
+  if bits_match(modules, start, "1101100") { return 2; }
+  if bits_match(modules, start, "1000010") { return 3; }
+  if bits_match(modules, start, "1011100") { return 4; }
+  if bits_match(modules, start, "1001110") { return 5; }
+  if bits_match(modules, start, "1010000") { return 6; }
+  if bits_match(modules, start, "1000100") { return 7; }
+  if bits_match(modules, start, "1001000") { return 8; }
+  if bits_match(modules, start, "1110100") { return 9; }
+  return -1;
+}
+
+fn g_digit_from_bits(modules: Array<i32>, start: i32) -> i32 {
+  if bits_match(modules, start, "0100111") { return 0; }
+  if bits_match(modules, start, "0110011") { return 1; }
+  if bits_match(modules, start, "0011011") { return 2; }
+  if bits_match(modules, start, "0100001") { return 3; }
+  if bits_match(modules, start, "0011101") { return 4; }
+  if bits_match(modules, start, "0111001") { return 5; }
+  if bits_match(modules, start, "0000101") { return 6; }
+  if bits_match(modules, start, "0010001") { return 7; }
+  if bits_match(modules, start, "0001001") { return 8; }
+  if bits_match(modules, start, "0010111") { return 9; }
+  return -1;
+}
+
+export fn decode_ean8_impl(modules: Array<i32>) -> string {
+  if modules_len(modules) != 67 { return ""; }
+  if modules[0] != 1 || modules[1] != 0 || modules[2] != 1 { return ""; }
+  if modules[31] != 0 || modules[32] != 1 || modules[33] != 0 || modules[34] != 1 || modules[35] != 0 { return ""; }
+  if modules[64] != 1 || modules[65] != 0 || modules[66] != 1 { return ""; }
+  let first: i32 = left_digit_from_bits(modules, 3);
+  let second: i32 = left_digit_from_bits(modules, 10);
+  let third: i32 = left_digit_from_bits(modules, 17);
+  let fourth: i32 = left_digit_from_bits(modules, 24);
+  let fifth: i32 = right_digit_from_bits(modules, 36);
+  let sixth: i32 = right_digit_from_bits(modules, 43);
+  let seventh: i32 = right_digit_from_bits(modules, 50);
+  let eighth: i32 = right_digit_from_bits(modules, 57);
+  if first < 0 || second < 0 || third < 0 || fourth < 0 || fifth < 0 || sixth < 0 || seventh < 0 || eighth < 0 { return ""; }
+  let result: string = string_concat(string_concat(string_concat(ean.digit_char(first), ean.digit_char(second)), string_concat(ean.digit_char(third), ean.digit_char(fourth))), string_concat(string_concat(ean.digit_char(fifth), ean.digit_char(sixth)), string_concat(ean.digit_char(seventh), ean.digit_char(eighth))));
+  if !ean.valid_ean8(result) { return ""; }
+  return result;
+}
+
+fn parity_matches(value: string, pattern: string) -> bool {
+  return string_byte_at(value, 0) == string_byte_at(pattern, 0) && string_byte_at(value, 1) == string_byte_at(pattern, 1) && string_byte_at(value, 2) == string_byte_at(pattern, 2) && string_byte_at(value, 3) == string_byte_at(pattern, 3) && string_byte_at(value, 4) == string_byte_at(pattern, 4) && string_byte_at(value, 5) == string_byte_at(pattern, 5);
+}
+
+fn parity_digit(value: string) -> i32 {
+  if parity_matches(value, "LLLLLL") { return 0; }
+  if parity_matches(value, "LLGLGG") { return 1; }
+  if parity_matches(value, "LLGGLG") { return 2; }
+  if parity_matches(value, "LLGGGL") { return 3; }
+  if parity_matches(value, "LGLLGG") { return 4; }
+  if parity_matches(value, "LGGLLG") { return 5; }
+  if parity_matches(value, "LGGGLL") { return 6; }
+  if parity_matches(value, "LGLGLG") { return 7; }
+  if parity_matches(value, "LGLGGL") { return 8; }
+  if parity_matches(value, "LGLLGL") { return 9; }
+  return -1;
+}
+
+export fn decode_ean13_impl(modules: Array<i32>) -> string {
+  if modules_len(modules) != 95 { return ""; }
+  if modules[0] != 1 || modules[1] != 0 || modules[2] != 1 { return ""; }
+  if modules[45] != 0 || modules[46] != 1 || modules[47] != 0 || modules[48] != 1 || modules[49] != 0 { return ""; }
+  if modules[92] != 1 || modules[93] != 0 || modules[94] != 1 { return ""; }
+  let first: i32 = left_digit_from_bits(modules, 3);
+  let first_parity: string = "L";
+  if first < 0 { first = g_digit_from_bits(modules, 3); first_parity = "G"; }
+  let second: i32 = left_digit_from_bits(modules, 10);
+  let second_parity: string = "L";
+  if second < 0 { second = g_digit_from_bits(modules, 10); second_parity = "G"; }
+  let third: i32 = left_digit_from_bits(modules, 17);
+  let third_parity: string = "L";
+  if third < 0 { third = g_digit_from_bits(modules, 17); third_parity = "G"; }
+  let fourth: i32 = left_digit_from_bits(modules, 24);
+  let fourth_parity: string = "L";
+  if fourth < 0 { fourth = g_digit_from_bits(modules, 24); fourth_parity = "G"; }
+  let fifth: i32 = left_digit_from_bits(modules, 31);
+  let fifth_parity: string = "L";
+  if fifth < 0 { fifth = g_digit_from_bits(modules, 31); fifth_parity = "G"; }
+  let sixth: i32 = left_digit_from_bits(modules, 38);
+  let sixth_parity: string = "L";
+  if sixth < 0 { sixth = g_digit_from_bits(modules, 38); sixth_parity = "G"; }
+  let parity: string = string_concat(string_concat(string_concat(first_parity, second_parity), string_concat(third_parity, fourth_parity)), string_concat(fifth_parity, sixth_parity));
+  let leading: i32 = parity_digit(parity);
+  let seventh: i32 = right_digit_from_bits(modules, 50);
+  let eighth: i32 = right_digit_from_bits(modules, 57);
+  let ninth: i32 = right_digit_from_bits(modules, 64);
+  let tenth: i32 = right_digit_from_bits(modules, 71);
+  let eleventh: i32 = right_digit_from_bits(modules, 78);
+  let twelfth: i32 = right_digit_from_bits(modules, 85);
+  if leading < 0 || first < 0 || second < 0 || third < 0 || fourth < 0 || fifth < 0 || sixth < 0 || seventh < 0 || eighth < 0 || ninth < 0 || tenth < 0 || eleventh < 0 || twelfth < 0 { return ""; }
+  let result: string = string_concat(string_concat(string_concat(string_concat(ean.digit_char(leading), ean.digit_char(first)), string_concat(ean.digit_char(second), ean.digit_char(third))), string_concat(string_concat(ean.digit_char(fourth), ean.digit_char(fifth)), ean.digit_char(sixth))), string_concat(string_concat(string_concat(ean.digit_char(seventh), ean.digit_char(eighth)), string_concat(ean.digit_char(ninth), ean.digit_char(tenth))), string_concat(ean.digit_char(eleventh), ean.digit_char(twelfth))));
+  if !ean.valid_ean13(result) { return ""; }
+  return result;
+}
+
+export fn decode_upca_impl(modules: Array<i32>) -> string {
+  if modules_len(modules) != 95 { return ""; }
+  if modules[0] != 1 || modules[1] != 0 || modules[2] != 1 { return ""; }
+  if modules[45] != 0 || modules[46] != 1 || modules[47] != 0 || modules[48] != 1 || modules[49] != 0 { return ""; }
+  if modules[92] != 1 || modules[93] != 0 || modules[94] != 1 { return ""; }
+  let first: i32 = left_digit_from_bits(modules, 3);
+  let second: i32 = left_digit_from_bits(modules, 10);
+  let third: i32 = left_digit_from_bits(modules, 17);
+  let fourth: i32 = left_digit_from_bits(modules, 24);
+  let fifth: i32 = left_digit_from_bits(modules, 31);
+  let sixth: i32 = left_digit_from_bits(modules, 38);
+  let seventh: i32 = right_digit_from_bits(modules, 50);
+  let eighth: i32 = right_digit_from_bits(modules, 57);
+  let ninth: i32 = right_digit_from_bits(modules, 64);
+  let tenth: i32 = right_digit_from_bits(modules, 71);
+  let eleventh: i32 = right_digit_from_bits(modules, 78);
+  let twelfth: i32 = right_digit_from_bits(modules, 85);
+  if first < 0 || second < 0 || third < 0 || fourth < 0 || fifth < 0 || sixth < 0 || seventh < 0 || eighth < 0 || ninth < 0 || tenth < 0 || eleventh < 0 || twelfth < 0 { return ""; }
+  let left_first: string = string_concat(ean.digit_char(first), ean.digit_char(second));
+  let left_second: string = string_concat(ean.digit_char(third), ean.digit_char(fourth));
+  let right_first: string = string_concat(ean.digit_char(fifth), ean.digit_char(sixth));
+  let right_second: string = string_concat(ean.digit_char(seventh), ean.digit_char(eighth));
+  let tail_first: string = string_concat(ean.digit_char(ninth), ean.digit_char(tenth));
+  let tail_second: string = string_concat(ean.digit_char(eleventh), ean.digit_char(twelfth));
+  let result: string = string_concat(string_concat(string_concat(left_first, left_second), string_concat(right_first, right_second)), string_concat(tail_first, tail_second));
+  if !ean.valid_ean13(string_concat("0", result)) { return ""; }
+  return result;
+}

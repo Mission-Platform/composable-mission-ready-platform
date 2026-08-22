@@ -19,11 +19,9 @@ import { defineConfig, type Plugin, type UserConfig } from 'vite';
  * `@mission-platform/matrix-code` ships **three** distinct build artifacts from
  * a single Vite config, selected by `--mode`:
  *
- * - **default** — the dependency-free Rust/WebAssembly **encoder + decoder**
- *   (`src/index.ts`), emitted as the self-contained `dist/index.js` with the
- *   compiled wasm inlined as a base64 `data:` URI so `encodeMatrix` /
- *   `decodeMatrix` stay synchronous (SSR- and test-safe). This is the package's
- *   `.` export.
+ * - **default** — the dependency-free package-local FWS **encoder + decoder**
+ *   (`src/index.ts`), emitted as the self-contained `dist/index.js`. This is
+ *   the package's `.` export.
  * - **`vue` / `react`** — the write-once `ForgeMatrixCode` **component** compiled
  *   to native Vue 3 / React by the two-stage compiler in
  *   `@mission-platform/vite-plugin-forge` (Stage 1 generates the per-framework
@@ -47,32 +45,6 @@ const vueTscBin = createRequire(path.join(__dirname, 'vite.config.ts')).resolve(
   paths: [path.join(__dirname, 'node_modules/@mission-platform/forge')],
 });
 
-/**
- * Neutralise the wasm-bindgen glue's default `init()` fallback that resolves the
- * binary via `new URL('<name>_bg.wasm', import.meta.url)`. We always drive
- * initialisation from the inlined `?url` `data:` bytes (see `src/encoder` and
- * `src/decoder`), so that branch is dead code — and left in place the bundler
- * would emit a second reference to the binary. Replacing it with `undefined`
- * removes the loose asset reference while keeping the (unreachable) fallback
- * harmless.
- *
- * The encoder and decoder are compiled into two separate wasm modules
- * (`generated/encode/matrix-code-encode.js` and `generated/decode/matrix-code-decode.js`),
- * so this runs for both.
- */
-function stripWasmUrlFallback(): Plugin {
-  return {
-    name: 'mission-platform:matrix-code-strip-wasm-url-fallback',
-    enforce: 'pre',
-    transform(code, id) {
-      if (!/generated\/(encode|decode)\/matrix-code-(encode|decode)\.js/.test(id)) {
-        return null;
-      }
-      return code.replace(/new URL\('[^']+_bg\.wasm', import\.meta\.url\)/, 'undefined');
-    },
-  };
-}
-
 /** The self-contained encoder/decoder bundle (`dist/index.js`, the `.` export). */
 function defineEncoderConfig(): UserConfig {
   return defineLibraryConfig({
@@ -81,20 +53,11 @@ function defineEncoderConfig(): UserConfig {
       index: 'src/index.ts',
     },
     name: 'MissionPlatformMatrixCode',
-    // The wasm-bindgen runtime + binary are emitted into `src/generated` by
-    // `wasm-pack` (run via the `build:wasm` Turbo task). Keep each entry
-    // self-contained rather than emitting a separate module graph.
+    // Keep the package-local FWS loaders self-contained rather than emitting a
+    // separate module graph.
     preserveModules: false,
     overrides: {
-      plugins: [forgeWebScriptPlugin({ root: __dirname, requireExports: false }), stripWasmUrlFallback()],
-      build: {
-        // Inline the compiled wasm (imported with `?url` from `src/encoder`) as a
-        // base64 `data:` URI rather than emitting a loose asset. This keeps the
-        // encoder synchronous and the bundle self-contained — no runtime `fetch`,
-        // so `encodeMatrix` works during SSR and in tests.
-        assetsInlineLimit: 10 * 1024 * 1024,
-      },
-      assetsInclude: ['**/*.wasm'],
+      plugins: [forgeWebScriptPlugin({ root: __dirname, requireExports: false, selfHostedVmMode: 'aot' })],
     },
   });
 }

@@ -1,3 +1,0 @@
-# @mission-platform/matrix-code-decode-wasm
-
-Generated typed WebAssembly Matrix Code decoder used by `@mission-platform/matrix-code`.

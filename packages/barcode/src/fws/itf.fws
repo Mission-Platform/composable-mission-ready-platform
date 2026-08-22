@@ -1,5 +1,22 @@
 // Interleaved 2 of 5 and ITF-14 encoder graph with GTIN check digits.
 
+fn u32_to_i32_len(value: u32) -> i32 {
+  let remaining: u32 = value;
+  let place: i32 = 1;
+  let result: i32 = 0;
+  while remaining > 0 {
+    let bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+fn modules_len(modules: Array<i32>) -> i32 {
+  return u32_to_i32_len(modules.length());
+}
+
 
 fn pattern(value: i32) -> string {
   if value == 0 { return "nnwwn"; }
@@ -108,33 +125,34 @@ export fn encode_itf14(value: string) -> string {
   return encode_digits(normalized, 0, "1010");
 }
 
-fn valid_bits(modules: Array<i32>, index: i32) -> bool {
-  if index >= modules.length() { return true; }
+fn valid_bits(modules: Array<i32>, index: i32, end: i32) -> bool {
+  if index >= end { return true; }
+  if index >= modules_len(modules) { return false; }
   let bit: i32 = modules[index];
   if bit != 0 && bit != 1 { return false; }
-  return valid_bits(modules, index + 1);
+  return valid_bits(modules, index + 1, end);
 }
 
-fn run_length(modules: Array<i32>, start: i32, bit: i32, length: i32) -> i32 {
-  if start + length >= modules.length() { return length; }
+fn run_length(modules: Array<i32>, end: i32, start: i32, bit: i32, length: i32) -> i32 {
+  if start + length >= end || start + length >= modules_len(modules) { return length; }
   if modules[start + length] != bit { return length; }
-  return run_length(modules, start, bit, length + 1);
+  return run_length(modules, end, start, bit, length + 1);
 }
 
-fn narrowest_run(modules: Array<i32>, index: i32, current: i32) -> i32 {
-  if index >= modules.length() { return current; }
-  let width: i32 = run_length(modules, index, modules[index], 0);
+fn narrowest_run(modules: Array<i32>, end: i32, index: i32, current: i32) -> i32 {
+  if index >= end { return current; }
+  let width: i32 = run_length(modules, end, index, modules[index], 0);
   let next: i32 = current;
   if current == 0 || width < current { next = width; }
-  return narrowest_run(modules, index + width, next);
+  return narrowest_run(modules, end, index + width, next);
 }
 
-fn classify_runs(modules: Array<i32>, index: i32, narrow: i32, result: string) -> string {
-  if index >= modules.length() { return result; }
-  let width: i32 = run_length(modules, index, modules[index], 0);
+fn classify_runs(modules: Array<i32>, end: i32, index: i32, narrow: i32, result: string) -> string {
+  if index >= end { return result; }
+  let width: i32 = run_length(modules, end, index, modules[index], 0);
   let marker: string = "n";
   if width >= narrow * 2 { marker = "w"; }
-  return classify_runs(modules, index + width, narrow, string_concat(result, marker));
+  return classify_runs(modules, end, index + width, narrow, string_concat(result, marker));
 }
 
 fn pattern_matches(value: string, expected: string) -> bool {
@@ -171,13 +189,13 @@ fn decode_pairs(value: string, index: i32, end: i32, result: string) -> string {
   return decode_pairs(value, index + 10, end, string_concat(result, string_concat(first, second)));
 }
 
-fn decode_interleaved(modules: Array<i32>) -> string {
-  let length: i32 = modules.length();
-  if length < 1 || !valid_bits(modules, 0) { return ""; }
+fn decode_interleaved(modules: Array<i32>, length: i32) -> string {
+  if length > modules_len(modules) { return ""; }
+  if length < 1 || !valid_bits(modules, 0, length) { return ""; }
   if modules[0] != 1 || modules[length - 1] != 1 { return ""; }
-  let narrow: i32 = narrowest_run(modules, 0, 0);
+  let narrow: i32 = narrowest_run(modules, length, 0, 0);
   if narrow <= 0 { return ""; }
-  let elements: string = classify_runs(modules, 0, narrow, "");
+  let elements: string = classify_runs(modules, length, 0, narrow, "");
   let element_count: i32 = string_length(elements);
   let body_count: i32 = element_count - 7;
   if element_count < 17 || body_count % 10 != 0 { return ""; }
@@ -190,9 +208,17 @@ fn decode_interleaved(modules: Array<i32>) -> string {
 }
 
 export fn decode_itf(modules: Array<i32>) -> string {
-  return decode_interleaved(modules);
+  return decode_interleaved(modules, modules_len(modules));
+}
+
+export fn decode_itf_row(modules: Array<i32>, count: i32) -> string {
+  return decode_interleaved(modules, count);
 }
 
 export fn decode_itf14(modules: Array<i32>) -> string {
-  return decode_interleaved(modules);
+  return decode_interleaved(modules, modules_len(modules));
+}
+
+export fn decode_itf14_row(modules: Array<i32>, count: i32) -> string {
+  return decode_interleaved(modules, count);
 }

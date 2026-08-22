@@ -2,7 +2,7 @@
   "name": "@mission-platform/matrix-code",
   "version": "2.0.0",
   "license": "BSD-4-Clause",
-  "description": "Dependency-free 2D matrix barcode encoder and decoder (Data Matrix) written in Rust and compiled to WebAssembly, with a typed ES module wrapper and a write-once React/Vue component",
+  "description": "Dependency-free 2D matrix barcode encoder and decoder (Data Matrix, GS1, rectangular, compact Aztec) implemented with package-local Forge Web Script artifacts, a typed ES module wrapper, and a write-once React/Vue component",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -71,8 +71,7 @@
     "@mission-platform/components": "workspace:*",
     "@mission-platform/forge": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/typography": "workspace:*",
-    "@mission-platform/matrix-code-decode-wasm": "workspace:*"
+    "@mission-platform/typography": "workspace:*"
   },
   "peerDependencies": {
     "lit": "^3.0.0",

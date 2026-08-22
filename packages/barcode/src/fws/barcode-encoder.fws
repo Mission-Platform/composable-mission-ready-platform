@@ -1,0 +1,232 @@
+// EAN-8, EAN-13, UPC-A, and UPC-E encoder graph.
+
+fn is_digit_at(value: string, index: i32) -> bool {
+  let code: i32 = string_byte_at(value, index);
+  return code >= 48 && code <= 57;
+}
+
+export fn has_seven_digits(value: string) -> bool {
+  return is_digit_at(value, 0) && is_digit_at(value, 1) && is_digit_at(value, 2) && is_digit_at(value, 3) && is_digit_at(value, 4) && is_digit_at(value, 5) && is_digit_at(value, 6);
+}
+
+export fn has_six_digits(value: string) -> bool {
+  return is_digit_at(value, 0) && is_digit_at(value, 1) && is_digit_at(value, 2) && is_digit_at(value, 3) && is_digit_at(value, 4) && is_digit_at(value, 5);
+}
+
+export fn has_eight_digits(value: string) -> bool {
+  return has_seven_digits(value) && is_digit_at(value, 7);
+}
+
+export fn digit_at(value: string, index: i32) -> i32 {
+  return string_byte_at(value, index) - 48;
+}
+
+export fn ean8_check(value: string) -> i32 {
+  let sum: i32 = digit_at(value, 0) * 3 + digit_at(value, 1) + digit_at(value, 2) * 3 + digit_at(value, 3) + digit_at(value, 4) * 3 + digit_at(value, 5) + digit_at(value, 6) * 3;
+  let remainder: i32 = sum % 10;
+  if remainder == 0 { return 0; }
+  if remainder == 1 { return 9; }
+  if remainder == 2 { return 8; }
+  if remainder == 3 { return 7; }
+  if remainder == 4 { return 6; }
+  if remainder == 5 { return 5; }
+  if remainder == 6 { return 4; }
+  if remainder == 7 { return 3; }
+  if remainder == 8 { return 2; }
+  return 1;
+}
+
+export fn digit_char(value: i32) -> string {
+  if value == 0 { return "0"; }
+  if value == 1 { return "1"; }
+  if value == 2 { return "2"; }
+  if value == 3 { return "3"; }
+  if value == 4 { return "4"; }
+  if value == 5 { return "5"; }
+  if value == 6 { return "6"; }
+  if value == 7 { return "7"; }
+  if value == 8 { return "8"; }
+  return "9";
+}
+
+export fn valid_ean8(value: string) -> bool {
+  let length: i32 = string_length(value);
+  if length == 7 {
+    return has_seven_digits(value);
+  }
+  if length == 8 {
+    if !has_eight_digits(value) { return false; }
+    return digit_at(value, 7) == ean8_check(value);
+  }
+  return false;
+}
+
+fn normalized_ean8(value: string) -> string {
+  if string_length(value) == 7 {
+    return string_concat(value, digit_char(ean8_check(value)));
+  }
+  return value;
+}
+
+export fn left_pattern(value: i32) -> string {
+  if value == 0 { return "0001101"; }
+  if value == 1 { return "0011001"; }
+  if value == 2 { return "0010011"; }
+  if value == 3 { return "0111101"; }
+  if value == 4 { return "0100011"; }
+  if value == 5 { return "0110001"; }
+  if value == 6 { return "0101111"; }
+  if value == 7 { return "0111011"; }
+  if value == 8 { return "0110111"; }
+  return "0001011";
+}
+
+fn right_pattern(value: i32) -> string {
+  if value == 0 { return "1110010"; }
+  if value == 1 { return "1100110"; }
+  if value == 2 { return "1101100"; }
+  if value == 3 { return "1000010"; }
+  if value == 4 { return "1011100"; }
+  if value == 5 { return "1001110"; }
+  if value == 6 { return "1010000"; }
+  if value == 7 { return "1000100"; }
+  if value == 8 { return "1001000"; }
+  return "1110100";
+}
+
+fn left_half(value: string) -> string {
+  let first: string = left_pattern(digit_at(value, 0));
+  let second: string = left_pattern(digit_at(value, 1));
+  let third: string = left_pattern(digit_at(value, 2));
+  let fourth: string = left_pattern(digit_at(value, 3));
+  return string_concat(string_concat(first, second), string_concat(third, fourth));
+}
+
+fn right_half(value: string) -> string {
+  let first: string = right_pattern(digit_at(value, 4));
+  let second: string = right_pattern(digit_at(value, 5));
+  let third: string = right_pattern(digit_at(value, 6));
+  let fourth: string = right_pattern(digit_at(value, 7));
+  return string_concat(string_concat(first, second), string_concat(third, fourth));
+}
+
+export fn encode_ean8_impl(value: string) -> string {
+  if !valid_ean8(value) { return ""; }
+  let normalized: string = normalized_ean8(value);
+  let left: string = left_half(normalized);
+  let right: string = right_half(normalized);
+  return string_concat(string_concat("101", left), string_concat(string_concat("01010", right), "101"));
+}
+
+fn has_eleven_digits(value: string) -> bool {
+  return has_seven_digits(value) && is_digit_at(value, 7) && is_digit_at(value, 8) && is_digit_at(value, 9) && is_digit_at(value, 10);
+}
+
+fn has_twelve_digits(value: string) -> bool {
+  return has_eleven_digits(value) && is_digit_at(value, 11);
+}
+
+fn has_thirteen_digits(value: string) -> bool {
+  return has_twelve_digits(value) && is_digit_at(value, 12);
+}
+
+export fn ean13_check(value: string) -> i32 {
+  let sum: i32 = digit_at(value, 0) + digit_at(value, 1) * 3 + digit_at(value, 2) + digit_at(value, 3) * 3 + digit_at(value, 4) + digit_at(value, 5) * 3 + digit_at(value, 6) + digit_at(value, 7) * 3 + digit_at(value, 8) + digit_at(value, 9) * 3 + digit_at(value, 10) + digit_at(value, 11) * 3;
+  let remainder: i32 = sum % 10;
+  if remainder == 0 { return 0; }
+  if remainder == 1 { return 9; }
+  if remainder == 2 { return 8; }
+  if remainder == 3 { return 7; }
+  if remainder == 4 { return 6; }
+  if remainder == 5 { return 5; }
+  if remainder == 6 { return 4; }
+  if remainder == 7 { return 3; }
+  if remainder == 8 { return 2; }
+  return 1;
+}
+
+export fn valid_ean13(value: string) -> bool {
+  let length: i32 = string_length(value);
+  if length == 12 { return has_twelve_digits(value); }
+  if length == 13 {
+    if !has_thirteen_digits(value) { return false; }
+    return digit_at(value, 12) == ean13_check(value);
+  }
+  return false;
+}
+
+fn normalized_ean13(value: string) -> string {
+  if string_length(value) == 12 { return string_concat(value, digit_char(ean13_check(value))); }
+  return value;
+}
+
+export fn ean13_g_pattern(value: i32) -> string {
+  if value == 0 { return "0100111"; }
+  if value == 1 { return "0110011"; }
+  if value == 2 { return "0011011"; }
+  if value == 3 { return "0100001"; }
+  if value == 4 { return "0011101"; }
+  if value == 5 { return "0111001"; }
+  if value == 6 { return "0000101"; }
+  if value == 7 { return "0010001"; }
+  if value == 8 { return "0001001"; }
+  return "0010111";
+}
+
+fn ean13_parity(value: i32) -> string {
+  if value == 0 { return "LLLLLL"; }
+  if value == 1 { return "LLGLGG"; }
+  if value == 2 { return "LLGGLG"; }
+  if value == 3 { return "LLGGGL"; }
+  if value == 4 { return "LGLLGG"; }
+  if value == 5 { return "LGGLLG"; }
+  if value == 6 { return "LGGGLL"; }
+  if value == 7 { return "LGLGLG"; }
+  if value == 8 { return "LGLGGL"; }
+  return "LGLLGL";
+}
+
+fn ean13_left_pattern(parity: string, value: i32, index: i32) -> string {
+  if string_byte_at(parity, index) == 76 { return left_pattern(value); }
+  return ean13_g_pattern(value);
+}
+
+fn ean13_left_half(value: string) -> string {
+  let parity: string = ean13_parity(digit_at(value, 0));
+  let first: string = ean13_left_pattern(parity, digit_at(value, 1), 0);
+  let second: string = ean13_left_pattern(parity, digit_at(value, 2), 1);
+  let third: string = ean13_left_pattern(parity, digit_at(value, 3), 2);
+  let fourth: string = ean13_left_pattern(parity, digit_at(value, 4), 3);
+  let fifth: string = ean13_left_pattern(parity, digit_at(value, 5), 4);
+  let sixth: string = ean13_left_pattern(parity, digit_at(value, 6), 5);
+  return string_concat(string_concat(string_concat(first, second), string_concat(third, fourth)), string_concat(fifth, sixth));
+}
+
+fn ean13_right_half(value: string) -> string {
+  let first: string = right_pattern(digit_at(value, 7));
+  let second: string = right_pattern(digit_at(value, 8));
+  let third: string = right_pattern(digit_at(value, 9));
+  let fourth: string = right_pattern(digit_at(value, 10));
+  let fifth: string = right_pattern(digit_at(value, 11));
+  let sixth: string = right_pattern(digit_at(value, 12));
+  return string_concat(string_concat(string_concat(first, second), string_concat(third, fourth)), string_concat(fifth, sixth));
+}
+
+export fn encode_ean13_impl(value: string) -> string {
+  if !valid_ean13(value) { return ""; }
+  let normalized: string = normalized_ean13(value);
+  return string_concat(string_concat("101", ean13_left_half(normalized)), string_concat(string_concat("01010", ean13_right_half(normalized)), "101"));
+}
+
+export fn encode_upca_impl(value: string) -> string {
+  let length: i32 = string_length(value);
+  if length == 11 {
+    if !has_eleven_digits(value) { return ""; }
+    return encode_ean13_impl(string_concat("0", value));
+  }
+  if length == 12 {
+    if !has_twelve_digits(value) { return ""; }
+    return encode_ean13_impl(string_concat("0", value));
+  }
+  return "";
+}

@@ -1,0 +1,554 @@
+import capability "qr.decode.utf8" as decode_utf8(value: string) -> string;
+import "./qr-common.fws" as q;
+
+fn bit_value(shift: i32) -> i32 {
+  let result: i32 = 1;
+  let index: i32 = 0;
+  while index < shift {
+    result = result * 2;
+    index = index + 1;
+  }
+  return result;
+}
+
+fn module_bit(packed: Array<i32>, size: i32, x: i32, y: i32) -> bool {
+  if x < 0 || y < 0 || x >= size || y >= size { return false; }
+  let index: i32 = 1 + y * size + x;
+  return packed[index] != 0;
+}
+
+fn reserve_xy(reserved: u32, size: i32, x: i32, y: i32) -> unit {
+  if x < 0 || y < 0 || x >= size || y >= size { return; }
+  q.bitbuf_set(reserved, y * size + x, true);
+}
+
+fn reserve_finder(reserved: u32, size: i32, cx: i32, cy: i32) -> unit {
+  let dy: i32 = -4;
+  while dy <= 4 {
+    let dx: i32 = -4;
+    while dx <= 4 {
+      reserve_xy(reserved, size, cx + dx, cy + dy);
+      dx = dx + 1;
+    }
+    dy = dy + 1;
+  }
+}
+
+fn reserve_alignment(reserved: u32, size: i32, cx: i32, cy: i32) -> unit {
+  let dy: i32 = -2;
+  while dy <= 2 {
+    let dx: i32 = -2;
+    while dx <= 2 {
+      reserve_xy(reserved, size, cx + dx, cy + dy);
+      dx = dx + 1;
+    }
+    dy = dy + 1;
+  }
+}
+
+fn alignment_position(version: i32, index: i32, count: i32, size: i32) -> i32 {
+  if index == 0 { return 6; }
+  let step_numerator: i32 = version * 8 + count * 3 + 5;
+  let step_denominator: i32 = count * 4 - 4;
+  let step: i32 = step_numerator / step_denominator * 2;
+  let last: i32 = size - 7;
+  let distance: i32 = count - 1 - index;
+  return last - step * distance;
+}
+
+fn reserve_timing(reserved: u32, size: i32) -> unit {
+  let index: i32 = 0;
+  while index < size {
+    reserve_xy(reserved, size, 6, index);
+    reserve_xy(reserved, size, index, 6);
+    index = index + 1;
+  }
+}
+
+fn reserve_alignments(reserved: u32, version: i32, size: i32, count: i32) -> unit {
+  let outer: i32 = 0;
+  while outer < count {
+    let inner: i32 = 0;
+    while inner < count {
+      let first_corner: bool = outer == 0 && inner == 0;
+      let second_corner: bool = outer == 0 && inner == count - 1;
+      let third_corner: bool = outer == count - 1 && inner == 0;
+      let skip: bool = first_corner || second_corner || third_corner;
+      if !skip {
+        let x: i32 = alignment_position(version, outer, count, size);
+        let y: i32 = alignment_position(version, inner, count, size);
+        reserve_alignment(reserved, size, x, y);
+      }
+      inner = inner + 1;
+    }
+    outer = outer + 1;
+  }
+}
+
+fn reserve_format_top_left_a(reserved: u32, size: i32) -> unit {
+  let index: i32 = 0;
+  while index <= 5 {
+    reserve_xy(reserved, size, 8, index);
+    index = index + 1;
+  }
+}
+
+fn reserve_format_top_left_b(reserved: u32, size: i32) -> unit {
+  let index: i32 = 9;
+  while index < 15 {
+    reserve_xy(reserved, size, 14 - index, 8);
+    index = index + 1;
+  }
+}
+
+fn reserve_format_bottom_right_low(reserved: u32, size: i32) -> unit {
+  let index: i32 = 0;
+  while index < 8 {
+    reserve_xy(reserved, size, size - 1 - index, 8);
+    index = index + 1;
+  }
+}
+
+fn reserve_format_bottom_right_high(reserved: u32, size: i32) -> unit {
+  let index: i32 = 8;
+  while index < 15 {
+    reserve_xy(reserved, size, 8, size - 15 + index);
+    index = index + 1;
+  }
+}
+
+fn reserve_format(reserved: u32, size: i32) -> unit {
+  reserve_format_top_left_a(reserved, size);
+  reserve_xy(reserved, size, 8, 7);
+  reserve_xy(reserved, size, 8, 8);
+  reserve_xy(reserved, size, 7, 8);
+  reserve_format_top_left_b(reserved, size);
+  reserve_format_bottom_right_low(reserved, size);
+  reserve_format_bottom_right_high(reserved, size);
+  reserve_xy(reserved, size, 8, size - 8);
+}
+
+fn reserve_version(reserved: u32, size: i32, version: i32) -> unit {
+  if version < 7 { return; }
+  let index: i32 = 0;
+  while index < 18 {
+    let a: i32 = size - 11 + index % 3;
+    let b: i32 = index / 3;
+    reserve_xy(reserved, size, a, b);
+    reserve_xy(reserved, size, b, a);
+    index = index + 1;
+  }
+}
+
+fn function_map(version: i32) -> u32 {
+  let size: i32 = version * 4 + 17;
+  let reserved: u32 = q.bitbuf_alloc(size * size);
+  reserve_timing(reserved, size);
+  reserve_finder(reserved, size, 3, 3);
+  reserve_finder(reserved, size, size - 4, 3);
+  reserve_finder(reserved, size, 3, size - 4);
+  let count: i32 = 0;
+  if version > 1 { count = version / 7 + 2; }
+  reserve_alignments(reserved, version, size, count);
+  reserve_format(reserved, size);
+  reserve_version(reserved, size, version);
+  return reserved;
+}
+
+fn format_value(ecc: i32, mask: i32) -> i32 {
+  let data: i32 = q.ecc_format(ecc) * 8 + mask;
+  let rem: i32 = data;
+  let index: i32 = 0;
+  while index < 10 {
+    let high: i32 = rem / 512;
+    rem = rem * 2;
+    if high == 1 { rem = q.xor_value(rem, 1335, 11); }
+    index = index + 1;
+  }
+  let combined: i32 = data * 1024 + rem;
+  return q.xor_value(combined, 21522, 15);
+}
+
+fn count_ones(value: i32, width: i32) -> i32 {
+  let result: i32 = 0;
+  let index: i32 = 0;
+  while index < width {
+    if q.bit_test(value, index) { result = result + 1; }
+    index = index + 1;
+  }
+  return result;
+}
+
+fn read_format(packed: Array<i32>, size: i32) -> i32 {
+  let fmt: i32 = 0;
+  if module_bit(packed, size, 8, 0) { fmt = fmt + 1; }
+  if module_bit(packed, size, 8, 1) { fmt = fmt + 2; }
+  if module_bit(packed, size, 8, 2) { fmt = fmt + 4; }
+  if module_bit(packed, size, 8, 3) { fmt = fmt + 8; }
+  if module_bit(packed, size, 8, 4) { fmt = fmt + 16; }
+  if module_bit(packed, size, 8, 5) { fmt = fmt + 32; }
+  if module_bit(packed, size, 8, 7) { fmt = fmt + 64; }
+  if module_bit(packed, size, 8, 8) { fmt = fmt + 128; }
+  if module_bit(packed, size, 7, 8) { fmt = fmt + 256; }
+  if module_bit(packed, size, 5, 8) { fmt = fmt + 512; }
+  if module_bit(packed, size, 4, 8) { fmt = fmt + 1024; }
+  if module_bit(packed, size, 3, 8) { fmt = fmt + 2048; }
+  if module_bit(packed, size, 2, 8) { fmt = fmt + 4096; }
+  if module_bit(packed, size, 1, 8) { fmt = fmt + 8192; }
+  if module_bit(packed, size, 0, 8) { fmt = fmt + 16384; }
+  let best_pair: i32 = -1;
+  let best_distance: i32 = 99;
+  let ecc: i32 = 0;
+  while ecc < 4 {
+    let mask: i32 = 0;
+    while mask < 8 {
+      let candidate: i32 = format_value(ecc, mask);
+      let distance: i32 = count_ones(q.xor_value(fmt, candidate, 15), 15);
+      if distance < best_distance {
+        best_distance = distance;
+        best_pair = ecc * 8 + mask;
+      }
+      mask = mask + 1;
+    }
+    ecc = ecc + 1;
+  }
+  if best_distance <= 3 { return best_pair; }
+  return -1;
+}
+
+fn gf_inv(a: i32) -> i32 {
+  if a <= 0 { return 0; }
+  let value: i32 = 1;
+  while value < 256 {
+    if q.gf_mul(a, value) == 1 { return value; }
+    value = value + 1;
+  }
+  return 0;
+}
+
+fn gf_pow(a: i32, exp: i32) -> i32 {
+  if exp == 0 { return 1; }
+  let result: i32 = 1;
+  let index: i32 = 0;
+  while index < exp {
+    result = q.gf_mul(result, a);
+    index = index + 1;
+  }
+  return result;
+}
+
+fn poly_eval(poly: u32, len: i32, x: i32) -> i32 {
+  let sum: i32 = 0;
+  let power: i32 = 1;
+  let index: i32 = 0;
+  while index < len {
+    sum = q.xor_value(sum, q.gf_mul(q.mem_get_u8(poly, index), power), 8);
+    power = q.gf_mul(power, x);
+    index = index + 1;
+  }
+  return sum;
+}
+
+fn fill_syndromes(block: u32, length: i32, ecc_len: i32, syndromes: u32) -> bool {
+  let all_zero: bool = true;
+  let syndrome_index: i32 = 0;
+  while syndrome_index < ecc_len {
+    let syndrome: i32 = 0;
+    let alpha: i32 = gf_pow(2, syndrome_index);
+    let codeword_index: i32 = 0;
+    while codeword_index < length {
+      syndrome = q.xor_value(q.gf_mul(syndrome, alpha), q.mem_get_u8(block, codeword_index), 8);
+      codeword_index = codeword_index + 1;
+    }
+    q.mem_set_u8(syndromes, syndrome_index, syndrome);
+    if syndrome != 0 { all_zero = false; }
+    syndrome_index = syndrome_index + 1;
+  }
+  return all_zero;
+}
+
+fn correct_block(block: u32, length: i32, ecc_len: i32) -> bool {
+  let syndromes: u32 = q.mem_alloc_bytes(ecc_len);
+  if fill_syndromes(block, length, ecc_len, syndromes) { return true; }
+
+  let lambda: u32 = q.mem_alloc_bytes(ecc_len + 1);
+  let helper: u32 = q.mem_alloc_bytes(ecc_len + 1);
+  q.mem_set_u8(lambda, 0, 1);
+  q.mem_set_u8(helper, 0, 1);
+  let lambda_len: i32 = 1;
+  let helper_len: i32 = 1;
+  let locator_degree: i32 = 0;
+  let shift: i32 = 1;
+  let previous_delta: i32 = 1;
+  let round: i32 = 0;
+
+  while round < ecc_len {
+    let delta: i32 = q.mem_get_u8(syndromes, round);
+    let discrepancy_term: i32 = 1;
+    while discrepancy_term <= locator_degree {
+      if discrepancy_term < lambda_len {
+        delta = q.xor_value(delta, q.gf_mul(q.mem_get_u8(lambda, discrepancy_term), q.mem_get_u8(syndromes, round - discrepancy_term)), 8);
+      }
+      discrepancy_term = discrepancy_term + 1;
+    }
+    if delta == 0 {
+      shift = shift + 1;
+    } else {
+      let scale: i32 = q.gf_mul(delta, gf_inv(previous_delta));
+      if 2 * locator_degree <= round {
+        let snapshot: u32 = q.mem_alloc_bytes(lambda_len);
+        let snapshot_index: i32 = 0;
+        while snapshot_index < lambda_len {
+          q.mem_set_u8(snapshot, snapshot_index, q.mem_get_u8(lambda, snapshot_index));
+          snapshot_index = snapshot_index + 1;
+        }
+        let snapshot_len: i32 = lambda_len;
+        if shift + helper_len > lambda_len { lambda_len = shift + helper_len; }
+        let promoted_helper_index: i32 = 0;
+        while promoted_helper_index < helper_len {
+          let promoted_offset: i32 = promoted_helper_index + shift;
+          let promoted_old_value: i32 = q.mem_get_u8(lambda, promoted_offset);
+          let promoted_change: i32 = q.gf_mul(scale, q.mem_get_u8(helper, promoted_helper_index));
+          q.mem_set_u8(lambda, promoted_offset, q.xor_value(promoted_old_value, promoted_change, 8));
+          promoted_helper_index = promoted_helper_index + 1;
+        }
+        helper = snapshot;
+        helper_len = snapshot_len;
+        locator_degree = round + 1 - locator_degree;
+        previous_delta = delta;
+        shift = 1;
+      } else {
+        if shift + helper_len > lambda_len { lambda_len = shift + helper_len; }
+        let retained_helper_index: i32 = 0;
+        while retained_helper_index < helper_len {
+          let retained_offset: i32 = retained_helper_index + shift;
+          let retained_old_value: i32 = q.mem_get_u8(lambda, retained_offset);
+          let retained_change: i32 = q.gf_mul(scale, q.mem_get_u8(helper, retained_helper_index));
+          q.mem_set_u8(lambda, retained_offset, q.xor_value(retained_old_value, retained_change, 8));
+          retained_helper_index = retained_helper_index + 1;
+        }
+        shift = shift + 1;
+      }
+    }
+    round = round + 1;
+  }
+
+  let errors: i32 = locator_degree;
+  if 2 * errors > ecc_len { return false; }
+  let positions: u32 = q.mem_alloc_bytes(errors);
+  let position_count: i32 = 0;
+  let alpha_inv: i32 = gf_inv(2);
+  let root_index: i32 = 0;
+  while root_index < length {
+    let x_inverse: i32 = gf_pow(alpha_inv, root_index);
+    if poly_eval(lambda, lambda_len, x_inverse) == 0 {
+      if position_count < errors {
+        q.mem_set_u8(positions, position_count, length - 1 - root_index);
+        position_count = position_count + 1;
+      }
+    }
+    root_index = root_index + 1;
+  }
+  if position_count != errors { return false; }
+
+  let omega: u32 = q.mem_alloc_bytes(ecc_len);
+  let omega_index: i32 = 0;
+  while omega_index < ecc_len {
+    let omega_sum: i32 = 0;
+    let omega_term: i32 = 0;
+    while omega_term <= omega_index {
+      if omega_term < lambda_len {
+        omega_sum = q.xor_value(omega_sum, q.gf_mul(q.mem_get_u8(lambda, omega_term), q.mem_get_u8(syndromes, omega_index - omega_term)), 8);
+      }
+      omega_term = omega_term + 1;
+    }
+    q.mem_set_u8(omega, omega_index, omega_sum);
+    omega_index = omega_index + 1;
+  }
+
+  let error_index: i32 = 0;
+  while error_index < position_count {
+    let position: i32 = q.mem_get_u8(positions, error_index);
+    let distance_from_high: i32 = length - 1 - position;
+    let xi: i32 = gf_pow(2, distance_from_high);
+    let xi_inv: i32 = gf_inv(xi);
+    let omega_value: i32 = poly_eval(omega, ecc_len, xi_inv);
+    let derivative: i32 = 0;
+    let power: i32 = 1;
+    let deriv_index: i32 = 1;
+    while deriv_index < lambda_len {
+      if deriv_index % 2 == 1 {
+        derivative = q.xor_value(derivative, q.gf_mul(q.mem_get_u8(lambda, deriv_index), power), 8);
+      }
+      power = q.gf_mul(power, xi_inv);
+      deriv_index = deriv_index + 1;
+    }
+    if derivative == 0 { return false; }
+    let magnitude: i32 = q.gf_mul(q.gf_mul(xi, omega_value), gf_inv(derivative));
+    let corrected_old_value: i32 = q.mem_get_u8(block, position);
+    q.mem_set_u8(block, position, q.xor_value(corrected_old_value, magnitude, 8));
+    error_index = error_index + 1;
+  }
+
+  let verify: u32 = q.mem_alloc_bytes(ecc_len);
+  return fill_syndromes(block, length, ecc_len, verify);
+}
+
+fn extract_codewords(packed: Array<i32>, size: i32, mask: i32, reserved: u32, raw_codewords: i32, codewords: u32) -> bool {
+  let total_bits: i32 = raw_codewords * 8;
+  let bit_index: i32 = 0;
+  let right: i32 = size - 1;
+  while right >= 1 {
+    if right == 6 { right = 5; }
+    let vertical: i32 = 0;
+    while vertical < size {
+      let pair: i32 = 0;
+      while pair < 2 {
+        let x: i32 = right - pair;
+        let right_plus_one: i32 = right + 1;
+        let upward: bool = right_plus_one % 4 == 0;
+        let y: i32 = vertical;
+        if upward { y = size - 1 - vertical; }
+        let module_index: i32 = y * size + x;
+        if !q.bitbuf_get(reserved, module_index) && bit_index < total_bits {
+          let dark: bool = module_bit(packed, size, x, y);
+          if q.mask_condition(mask, x, y) { dark = !dark; }
+          if dark {
+            let byte_index: i32 = bit_index / 8;
+            let bit_in_byte: i32 = bit_index - byte_index * 8;
+            let shift: i32 = 7 - bit_in_byte;
+            let old_value: i32 = q.mem_get_u8(codewords, byte_index);
+            q.mem_set_u8(codewords, byte_index, old_value + bit_value(shift));
+          }
+          bit_index = bit_index + 1;
+        }
+        pair = pair + 1;
+      }
+      vertical = vertical + 1;
+    }
+    right = right - 2;
+  }
+  return bit_index >= total_bits;
+}
+
+fn deinterleave_and_correct(codewords: u32, version: i32, ecc: i32, out: u32) -> bool {
+  let number_blocks: i32 = q.block_count(ecc, version);
+  let block_ecc_length: i32 = q.ecc_per_block(ecc, version);
+  let raw_codewords: i32 = q.total_codewords(version);
+  if number_blocks <= 0 || block_ecc_length <= 0 || raw_codewords <= 0 { return false; }
+  let number_short_blocks: i32 = number_blocks - raw_codewords % number_blocks;
+  let short_block_length: i32 = raw_codewords / number_blocks;
+  let columns: i32 = short_block_length + 1;
+  let pad_column: i32 = short_block_length - block_ecc_length;
+  let blocks: u32 = q.mem_alloc_bytes(number_blocks * columns);
+  let stream: i32 = 0;
+  let column: i32 = 0;
+  while column < columns {
+    let block_index: i32 = 0;
+    while block_index < number_blocks {
+      let skip: bool = column == pad_column && block_index < number_short_blocks;
+      if !skip {
+        if stream >= raw_codewords { return false; }
+        let destination: i32 = block_index * columns + column;
+        q.mem_set_u8(blocks, destination, q.mem_get_u8(codewords, stream));
+        stream = stream + 1;
+      }
+      block_index = block_index + 1;
+    }
+    column = column + 1;
+  }
+
+  let assembled: u32 = q.mem_alloc_bytes(columns);
+  let data_offset: i32 = 0;
+  let output_block_index: i32 = 0;
+  while output_block_index < number_blocks {
+    let is_short: bool = output_block_index < number_short_blocks;
+    let write_index: i32 = 0;
+    let output_column: i32 = 0;
+    while output_column < columns {
+      let drop_pad: bool = is_short && output_column == pad_column;
+      if !drop_pad {
+        let value: i32 = q.mem_get_u8(blocks, output_block_index * columns + output_column);
+        q.mem_set_u8(assembled, write_index, value);
+        write_index = write_index + 1;
+      }
+      output_column = output_column + 1;
+    }
+    if !correct_block(assembled, write_index, block_ecc_length) { return false; }
+    let data_length: i32 = write_index - block_ecc_length;
+    let data_index: i32 = 0;
+    while data_index < data_length {
+      q.mem_set_u8(out, data_offset + data_index, q.mem_get_u8(assembled, data_index));
+      data_index = data_index + 1;
+    }
+    data_offset = data_offset + data_length;
+    output_block_index = output_block_index + 1;
+  }
+  return true;
+}
+
+fn read_bits(data: u32, length: i32, position: i32, count: i32) -> i32 {
+  if position < 0 || count < 0 || position + count > length * 8 { return -1; }
+  let value: i32 = 0;
+  let bit_index: i32 = 0;
+  while bit_index < count {
+    let absolute: i32 = position + bit_index;
+    let byte_index: i32 = absolute / 8;
+    let offset: i32 = absolute - byte_index * 8;
+    let bit: i32 = 0;
+    if q.bit_test(q.mem_get_u8(data, byte_index), 7 - offset) { bit = 1; }
+    value = value * 2 + bit;
+    bit_index = bit_index + 1;
+  }
+  return value;
+}
+
+fn parse_bytes(data: u32, length: i32, version: i32) -> string {
+  let position: i32 = 0;
+  let mode: i32 = read_bits(data, length, position, 4);
+  if mode != 4 { return ""; }
+  position = position + 4;
+  let count: i32 = read_bits(data, length, position, q.count_bits(version));
+  if count < 0 { return ""; }
+  position = position + q.count_bits(version);
+  if position + count * 8 > length * 8 { return ""; }
+  if count == 0 { return "1"; }
+  let payload: string = "";
+  let index: i32 = 0;
+  while index < count {
+    let value: i32 = read_bits(data, length, position, 8);
+    if value < 0 { return ""; }
+    payload = q.bytes_push(payload, value);
+    position = position + 8;
+    index = index + 1;
+  }
+  return decode_utf8(payload);
+}
+
+export fn decode_qr(packed: Array<i32>) -> string {
+  if packed.length() < 1 { return ""; }
+  let size: i32 = packed[0];
+  let size_delta: i32 = size - 17;
+  if size < 21 || size_delta % 4 != 0 { return ""; }
+  let expected: u32 = 1;
+  let expected_modules: i32 = size * size;
+  let expected_index: i32 = 0;
+  while expected_index < expected_modules {
+    expected = expected + 1;
+    expected_index = expected_index + 1;
+  }
+  if packed.length() < expected { return ""; }
+  let version: i32 = size_delta / 4;
+  let format: i32 = read_format(packed, size);
+  if format < 0 { return ""; }
+  let ecc: i32 = format / 8;
+  let mask: i32 = format - ecc * 8;
+  let reserved: u32 = function_map(version);
+  let raw_codewords: i32 = q.total_codewords(version);
+  let codewords: u32 = q.mem_alloc_bytes(raw_codewords);
+  if !extract_codewords(packed, size, mask, reserved, raw_codewords, codewords) { return ""; }
+  let data_length: i32 = q.data_codewords(ecc, version);
+  let data: u32 = q.mem_alloc_bytes(data_length);
+  if !deinterleave_and_correct(codewords, version, ecc, data) { return ""; }
+  return parse_bytes(data, data_length, version);
+}

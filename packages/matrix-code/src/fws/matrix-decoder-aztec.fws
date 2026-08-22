@@ -1,0 +1,269 @@
+// Compact Aztec extraction and high-level decoding.
+import "./matrix-decoder-core.fws" as dec;
+import "./matrix-decoder-rs.fws" as rs;
+
+fn total_aztec_bits(layers: i32) -> i32 {
+  return 88 * layers + 16 * layers * layers;
+}
+
+fn aztec_word_size(layers: i32) -> i32 {
+  if layers <= 2 { return 6; }
+  return 8;
+}
+
+fn extract_mode_message(size: i32, modules: Array<i32>) -> string {
+  let center: i32 = size / 2;
+  let radius: i32 = 5;
+  let bits: string = dec.bits_zeros(28);
+  let index: i32 = 0;
+  while index < 7 {
+    let offset: i32 = center - 3 + index;
+    let top_row: i32 = center - radius;
+    let top: i32 = top_row * size + offset;
+    bits = dec.bit_array_set(bits, index, dec.module_bit(modules, top));
+    let right: i32 = offset * size + center + radius;
+    bits = dec.bit_array_set(bits, index + 7, dec.module_bit(modules, right));
+    let bottom_row: i32 = center + radius;
+    let bottom: i32 = bottom_row * size + offset;
+    bits = dec.bit_array_set(bits, 20 - index, dec.module_bit(modules, bottom));
+    let left: i32 = offset * size + center - radius;
+    bits = dec.bit_array_set(bits, 27 - index, dec.module_bit(modules, left));
+    index = index + 1;
+  }
+  return bits;
+}
+
+fn bits_to_nibbles(bits: string) -> string {
+  let words: string = dec.dzeros(7);
+  let index: i32 = 0;
+  while index < 7 {
+    let value: i32 = 0;
+    let bit: i32 = 0;
+    while bit < 4 {
+      value = value * 2;
+      if dec.bit_array_get(bits, index * 4 + bit) {
+        value = value + 1;
+      }
+      bit = bit + 1;
+    }
+    words = dec.dset(words, index, value);
+    index = index + 1;
+  }
+  return words;
+}
+
+fn extract_message_bits(size: i32, modules: Array<i32>, erasures: Array<i32>, layers: i32, total_bits: i32) -> string {
+  let message: string = dec.bits_zeros(total_bits);
+  let erased: string = dec.bits_zeros(total_bits);
+  let has_erasures: bool = true;
+  let row_offset: i32 = 0;
+  let layer: i32 = 0;
+  while layer < layers {
+    let layer_span: i32 = layers - layer;
+    let row_size: i32 = layer_span * 4 + 9;
+    let j: i32 = 0;
+    while j < row_size {
+      let column_offset: i32 = j * 2;
+      let k: i32 = 0;
+      while k < 2 {
+        let top_x: i32 = layer * 2 + k;
+        let top_y: i32 = layer * 2 + j;
+        let right_x: i32 = layer * 2 + j;
+        let right_y: i32 = size - 1 - layer * 2 - k;
+        let bottom_x: i32 = size - 1 - layer * 2 - k;
+        let bottom_y: i32 = size - 1 - layer * 2 - j;
+        let left_x: i32 = size - 1 - layer * 2 - j;
+        let left_y: i32 = layer * 2 + k;
+
+        let i_top: i32 = row_offset + column_offset + k;
+        let i_right: i32 = row_offset + row_size * 2 + column_offset + k;
+        let i_bottom: i32 = row_offset + row_size * 4 + column_offset + k;
+        let i_left: i32 = row_offset + row_size * 6 + column_offset + k;
+
+        message = dec.bit_array_set(message, i_top, dec.module_bit(modules, top_y * size + top_x));
+        message = dec.bit_array_set(message, i_right, dec.module_bit(modules, right_y * size + right_x));
+        message = dec.bit_array_set(message, i_bottom, dec.module_bit(modules, bottom_y * size + bottom_x));
+        message = dec.bit_array_set(message, i_left, dec.module_bit(modules, left_y * size + left_x));
+
+        if has_erasures {
+          if dec.erasure_bit(erasures, top_y * size + top_x) { erased = dec.bit_array_set(erased, i_top, true); }
+          if dec.erasure_bit(erasures, right_y * size + right_x) { erased = dec.bit_array_set(erased, i_right, true); }
+          if dec.erasure_bit(erasures, bottom_y * size + bottom_x) { erased = dec.bit_array_set(erased, i_bottom, true); }
+          if dec.erasure_bit(erasures, left_y * size + left_x) { erased = dec.bit_array_set(erased, i_left, true); }
+        }
+        k = k + 1;
+      }
+      j = j + 1;
+    }
+    row_offset = row_offset + row_size * 8;
+    layer = layer + 1;
+  }
+  return string_concat(message, string_concat("|", erased));
+}
+
+fn unstuff_bits(stuffed: string, word_size: i32) -> string {
+  let ones_prefix: i32 = dec.pow2(word_size - 1) - 1;
+  let bits: string = "";
+  let index: i32 = 0;
+  let length: i32 = string_length(stuffed);
+  while index + word_size <= length {
+    let word: i32 = 0;
+    let bit: i32 = 0;
+    while bit < word_size {
+      word = word * 2;
+      if dec.bit_array_get(stuffed, index + bit) {
+        word = word + 1;
+      }
+      bit = bit + 1;
+    }
+    let prefix: i32 = word / 2;
+    if prefix == 0 {
+      let z: i32 = 0;
+      while z < word_size - 1 {
+        bits = string_concat(bits, "0");
+        z = z + 1;
+      }
+    } else {
+      if prefix == ones_prefix {
+        let z2: i32 = 0;
+        while z2 < word_size - 1 {
+          bits = string_concat(bits, "1");
+          z2 = z2 + 1;
+        }
+      } else {
+        let b: i32 = 0;
+        while b < word_size {
+          if dec.bit_array_get(stuffed, index + b) {
+            bits = string_concat(bits, "1");
+          } else {
+            bits = string_concat(bits, "0");
+          }
+          b = b + 1;
+        }
+      }
+    }
+    index = index + word_size;
+  }
+  return bits;
+}
+
+fn read_bits(bits: string, offset: i32, count: i32) -> i32 {
+  let value: i32 = 0;
+  let index: i32 = 0;
+  while index < count {
+    value = value * 2;
+    if dec.bit_array_get(bits, offset + index) {
+      value = value + 1;
+    }
+    index = index + 1;
+  }
+  return value;
+}
+
+fn decode_binary_payload(bits: string) -> string {
+  let length: i32 = string_length(bits);
+  if length < 10 { return ""; }
+  if read_bits(bits, 0, 5) != 31 { return ""; }
+  let short_len: i32 = read_bits(bits, 5, 5);
+  let offset: i32 = 10;
+  let count: i32 = short_len;
+  if short_len == 0 {
+    if length < 21 { return ""; }
+    count = read_bits(bits, 10, 11);
+    offset = 21;
+  }
+  let output: string = "";
+  let index: i32 = 0;
+  while index < count {
+    if offset + 8 > length { return ""; }
+    output = string_concat(output, dec.byte_char3(read_bits(bits, offset, 8)));
+    offset = offset + 8;
+    index = index + 1;
+  }
+  return output;
+}
+
+export fn decode_aztec(width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>) -> string {
+  if width != height { return ""; }
+  let size: i32 = width;
+  if size < 15 { return ""; }
+  let size_rem: i32 = size - 11;
+  if size_rem - size_rem / 4 * 4 != 0 { return ""; }
+  let layers: i32 = size_rem / 4;
+  if layers < 1 { return ""; }
+  if layers > 4 { return ""; }
+
+  let mode_bits: string = extract_mode_message(size, modules);
+  let mode_words: string = bits_to_nibbles(mode_bits);
+  let mode_erased: string = dec.dzeros(7);
+  let corrected_mode: string = rs.rs_correct(mode_words, 5, 19, 16, mode_erased);
+  if string_length(corrected_mode) == 0 { return ""; }
+  let data_bits_mode: i32 = dec.dget(corrected_mode, 0) * 16 + dec.dget(corrected_mode, 1);
+  let parsed_layers: i32 = data_bits_mode / 64 + 1;
+  let data_words: i32 = data_bits_mode - data_bits_mode / 64 * 64 + 1;
+  if parsed_layers != layers { return ""; }
+  if data_words <= 0 { return ""; }
+
+  let word_size: i32 = aztec_word_size(layers);
+  let total_bits: i32 = total_aztec_bits(layers);
+  let total_words: i32 = total_bits / word_size;
+  if data_words > total_words { return ""; }
+
+  let extracted: string = extract_message_bits(size, modules, erasures, layers, total_bits);
+  let split: i32 = 0;
+  while split < string_length(extracted) {
+    if string_byte_at(extracted, split) == 124 {
+      let message: string = string_slice(extracted, 0, split);
+      let message_erasures: string = string_slice(extracted, split + 1, string_length(extracted));
+      let start_pad: i32 = total_bits - total_bits / word_size * word_size;
+      let words: string = dec.dzeros(total_words);
+      let word_erased: string = dec.dzeros(total_words);
+      let index: i32 = 0;
+      while index < total_words {
+        let value: i32 = 0;
+        let offset: i32 = 0;
+        let erased_word: bool = false;
+        while offset < word_size {
+          let bit_index: i32 = start_pad + index * word_size + offset;
+          value = value * 2;
+          if dec.bit_array_get(message, bit_index) {
+            value = value + 1;
+          }
+          if dec.bit_array_get(message_erasures, bit_index) {
+            erased_word = true;
+          }
+          offset = offset + 1;
+        }
+        words = dec.dset(words, index, value);
+        if erased_word {
+          word_erased = dec.dset(word_erased, index, 1);
+        }
+        index = index + 1;
+      }
+      let ecc_words: i32 = total_words - data_words;
+      let primitive: i32 = 67;
+      let field_size: i32 = 64;
+      if word_size == 8 {
+        primitive = 301;
+        field_size = 256;
+      }
+      let corrected: string = rs.rs_correct(words, ecc_words, primitive, field_size, word_erased);
+      if string_length(corrected) == 0 { return ""; }
+      let stuffed: string = "";
+      let w: i32 = 0;
+      while w < data_words {
+        let value2: i32 = dec.dget(corrected, w);
+        let shift: i32 = word_size - 1;
+        while shift >= 0 {
+          stuffed = dec.bits_push(stuffed, dec.bit_test(value2, shift));
+          shift = shift - 1;
+        }
+        w = w + 1;
+      }
+      let payload_bits: string = unstuff_bits(stuffed, word_size);
+      return decode_binary_payload(payload_bits);
+    }
+    split = split + 1;
+  }
+  return "";
+}

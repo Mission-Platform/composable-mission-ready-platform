@@ -1,5 +1,22 @@
 // Pharmacode encoder graph for values from 3 through 131070.
 
+fn u32_to_i32_len(value: u32) -> i32 {
+  let remaining: u32 = value;
+  let place: i32 = 1;
+  let result: i32 = 0;
+  while remaining > 0 {
+    let bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+fn modules_len(modules: Array<i32>) -> i32 {
+  return u32_to_i32_len(modules.length());
+}
+
 
 fn is_digit_at(value: string, index: i32) -> bool {
   let code: i32 = string_byte_at(value, index);
@@ -44,41 +61,42 @@ export fn encode_pharmacode(value: string) -> string {
   return render_bars(bar_widths(parsed), 0);
 }
 
-fn valid_bits(modules: Array<i32>, index: i32) -> bool {
-  if index >= modules.length() { return true; }
+fn valid_bits(modules: Array<i32>, index: i32, end: i32) -> bool {
+  if index >= end { return true; }
+  if index >= modules_len(modules) { return false; }
   let bit: i32 = modules[index];
   if bit != 0 && bit != 1 { return false; }
-  return valid_bits(modules, index + 1);
+  return valid_bits(modules, index + 1, end);
 }
 
-fn run_length(modules: Array<i32>, start: i32, bit: i32, length: i32) -> i32 {
-  if start + length >= modules.length() { return length; }
+fn run_length(modules: Array<i32>, end: i32, start: i32, bit: i32, length: i32) -> i32 {
+  if start + length >= end || start + length >= modules_len(modules) { return length; }
   if modules[start + length] != bit { return length; }
-  return run_length(modules, start, bit, length + 1);
+  return run_length(modules, end, start, bit, length + 1);
 }
 
-fn narrowest_run(modules: Array<i32>, index: i32, current: i32) -> i32 {
-  if index >= modules.length() { return current; }
-  let width: i32 = run_length(modules, index, modules[index], 0);
+fn narrowest_run(modules: Array<i32>, end: i32, index: i32, current: i32) -> i32 {
+  if index >= end { return current; }
+  let width: i32 = run_length(modules, end, index, modules[index], 0);
   let next: i32 = current;
   if current == 0 || width < current { next = width; }
-  return narrowest_run(modules, index + width, next);
+  return narrowest_run(modules, end, index + width, next);
 }
 
-fn pharmacode_value(modules: Array<i32>, index: i32, narrow: i32, result: i32, bars: i32) -> i32 {
-  if index >= modules.length() {
+fn pharmacode_value(modules: Array<i32>, end: i32, index: i32, narrow: i32, result: i32, bars: i32) -> i32 {
+  if index >= end {
     if bars == 0 || result < 3 || result > 131070 { return -1; }
     return result;
   }
   let bit: i32 = modules[index];
-  let width: i32 = run_length(modules, index, bit, 0);
+  let width: i32 = run_length(modules, end, index, bit, 0);
   if bit == 1 {
     let next: i32 = result * 2 + 1;
     if width >= narrow * 2 { next = result * 2 + 2; }
     if next > 131070 { return -1; }
-    return pharmacode_value(modules, index + width, narrow, next, bars + 1);
+    return pharmacode_value(modules, end, index + width, narrow, next, bars + 1);
   }
-  return pharmacode_value(modules, index + width, narrow, result, bars);
+  return pharmacode_value(modules, end, index + width, narrow, result, bars);
 }
 
 fn digit_char(value: i32) -> string {
@@ -99,11 +117,19 @@ fn decimal(value: i32) -> string {
   return string_concat(decimal(value / 10), digit_char(value % 10));
 }
 
-export fn decode_pharmacode(modules: Array<i32>) -> string {
-  if modules.length() == 0 || !valid_bits(modules, 0) { return ""; }
-  let narrow: i32 = narrowest_run(modules, 0, 0);
+fn decode_pharmacode_frame(modules: Array<i32>, length: i32) -> string {
+  if length > modules_len(modules) || length == 0 || !valid_bits(modules, 0, length) { return ""; }
+  let narrow: i32 = narrowest_run(modules, length, 0, 0);
   if narrow <= 0 { return ""; }
-  let parsed: i32 = pharmacode_value(modules, 0, narrow, 0, 0);
+  let parsed: i32 = pharmacode_value(modules, length, 0, narrow, 0, 0);
   if parsed < 0 { return ""; }
   return decimal(parsed);
+}
+
+export fn decode_pharmacode(modules: Array<i32>) -> string {
+  return decode_pharmacode_frame(modules, modules_len(modules));
+}
+
+export fn decode_pharmacode_row(modules: Array<i32>, count: i32) -> string {
+  return decode_pharmacode_frame(modules, count);
 }

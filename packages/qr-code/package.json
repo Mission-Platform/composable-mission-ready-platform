@@ -2,7 +2,7 @@
   "name": "@mission-platform/qr-code",
   "version": "2.0.0",
   "license": "BSD-4-Clause",
-  "description": "Dependency-free QR Code encoder and decoder written in Rust and compiled to WebAssembly, with a typed ES module wrapper and a write-once React/Vue component",
+  "description": "Dependency-free QR Code encoder and decoder backed by package-local Forge Web Script artifacts, with a typed ES module wrapper and a write-once React/Vue component",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -76,8 +76,6 @@
     "@mission-platform/forge": "workspace:*",
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/typography": "workspace:*",
-    "@mission-platform/qr-code-decode-wasm": "workspace:*",
-    "@mission-platform/qr-code-encode-wasm": "workspace:*",
     "@mission-platform/vcard": "workspace:*"
   },
   "peerDependencies": {
@@ -118,6 +116,7 @@
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-forge": "workspace:*",
+    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
     "@mission-platform/forge-plugin-react": "workspace:*",
     "@mission-platform/forge-plugin-solid": "workspace:*",
     "@mission-platform/forge-plugin-svelte": "workspace:*",
@@ -151,6 +150,7 @@
     "tsdown": "catalog:build",
     "typescript": "catalog:typescript",
     "vitest": "catalog:testing",
-    "vue": "catalog:vue"
+    "vue": "catalog:vue",
+    "@mission-platform/forge-web-script": "workspace:*"
   }
 }

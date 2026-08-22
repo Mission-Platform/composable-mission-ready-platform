@@ -1,4 +1,21 @@
 // Code 128 and GS1-128 encoder graph.
+
+fn u32_to_i32_len(value: u32) -> i32 {
+  let remaining: u32 = value;
+  let place: i32 = 1;
+  let result: i32 = 0;
+  while remaining > 0 {
+    let bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+fn modules_len(modules: Array<i32>) -> i32 {
+  return u32_to_i32_len(modules.length());
+}
 //
 // The graph mirrors the Rust encoder's two selection rules: even-length digit
 // payloads use Code C, while all other printable ASCII payloads use Code B.
@@ -227,15 +244,16 @@ fn ascii_character(code: i32) -> string {
   return "";
 }
 
-fn valid_modules(modules: Array<i32>, index: i32) -> bool {
-  if index >= modules.length() { return true; }
+fn valid_modules(modules: Array<i32>, index: i32, end: i32) -> bool {
+  if index >= end { return true; }
+  if index >= modules_len(modules) { return false; }
   let bit: i32 = modules[index];
   if bit != 0 && bit != 1 { return false; }
-  return valid_modules(modules, index + 1);
+  return valid_modules(modules, index + 1, end);
 }
 
 fn module_mask_from_array(modules: Array<i32>, index: i32, end: i32, result: i32) -> i32 {
-  if index >= end || index >= modules.length() { return result; }
+  if index >= end || index >= modules_len(modules) { return result; }
   let next: i32 = result * 2;
   if modules[index] == 1 { next = next + 1; }
   return module_mask_from_array(modules, index + 1, end, next);
@@ -306,12 +324,12 @@ fn decode_data(modules: Array<i32>, start: i32, end: i32, code_set: i32, checksu
   );
 }
 
-fn decode_code128_frame(modules: Array<i32>) -> string {
-  let length: i32 = modules.length();
+fn decode_code128_frame(modules: Array<i32>, length: i32) -> string {
+  if length > modules_len(modules) { return ""; }
   if length < 35 { return ""; }
   let symbol_region_length: i32 = length - 13;
   if symbol_region_length % 11 != 0 { return ""; }
-  if !valid_modules(modules, 0) { return ""; }
+  if !valid_modules(modules, 0, length) { return ""; }
   if module_mask_from_array(modules, length - 13, length, 0) != module_mask(render_symbol(106), 0, 13, 0) { return ""; }
 
   let start: i32 = decode_symbol(modules, 0, 0);
@@ -323,9 +341,18 @@ fn decode_code128_frame(modules: Array<i32>) -> string {
 }
 
 export fn decode_code128(modules: Array<i32>) -> string {
-  return decode_code128_frame(modules);
+  return decode_code128_frame(modules, modules_len(modules));
+}
+
+export fn decode_code128_row(modules: Array<i32>, count: i32) -> string {
+  return decode_code128_frame(modules, count);
 }
 
 export fn decode_gs1_128(modules: Array<i32>) -> string {
-  return decode_code128_frame(modules);
+  return decode_code128_frame(modules, modules_len(modules));
 }
+
+export fn decode_gs1_128_row(modules: Array<i32>, count: i32) -> string {
+  return decode_code128_frame(modules, count);
+}
+

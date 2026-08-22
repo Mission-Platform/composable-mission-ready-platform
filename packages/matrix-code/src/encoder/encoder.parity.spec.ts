@@ -11,7 +11,7 @@ interface GoldenVector {
   readonly modules: string;
 }
 
-// Genuine Rust encoder oracle outputs (from @mission-platform/matrix-code-encode-wasm).
+// Committed encoder oracle outputs captured from the Rust implementation.
 // Captured via encode(symbology, data) → [width, height, ...modules].join('').
 const GOLDEN_VECTORS: readonly GoldenVector[] = [
   {
@@ -72,7 +72,7 @@ describe('encodeMatrix parity against Rust golden vectors', () => {
     });
   }
 
-  it('round-trips all golden vectors through the retained Rust decoder', () => {
+  it('round-trips all golden vectors through the FWS decoder', () => {
     for (const golden of GOLDEN_VECTORS) {
       const code = encodeMatrix(golden.symbology, golden.data);
       expect(decodeMatrix(code)).toBe(golden.data);

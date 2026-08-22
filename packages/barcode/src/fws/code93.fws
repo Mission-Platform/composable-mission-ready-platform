@@ -1,5 +1,22 @@
 // Code 93 standard and full-ASCII encoder graph with weighted check symbols.
 
+fn u32_to_i32_len(value: u32) -> i32 {
+  let remaining: u32 = value;
+  let place: i32 = 1;
+  let result: i32 = 0;
+  while remaining > 0 {
+    let bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+fn modules_len(modules: Array<i32>) -> i32 {
+  return u32_to_i32_len(modules.length());
+}
+
 fn letter(value: i32) -> string {
   if value == 0 { return "A"; }
   if value == 1 { return "B"; }
@@ -230,7 +247,7 @@ fn pattern(value: i32) -> string {
 }
 
 fn module_mask_from_array(modules: Array<i32>, index: i32, end: i32, result: i32) -> i32 {
-  if index >= end || index >= modules.length() { return result; }
+  if index >= end || index >= modules_len(modules) { return result; }
   let next: i32 = result * 2;
   if modules[index] == 1 { next = next + 1; }
   return module_mask_from_array(modules, index + 1, end, next);
@@ -294,8 +311,8 @@ fn code93_value_from_mask(mask: i32) -> i32 {
   return -1;
 }
 
-fn symbol_value(modules: Array<i32>, start: i32) -> i32 {
-  if start + 9 > modules.length() { return -1; }
+fn symbol_value(modules: Array<i32>, end: i32, start: i32) -> i32 {
+  if start + 9 > end || start + 9 > modules_len(modules) { return -1; }
   let mask: i32 = module_mask_from_array(modules, start, start + 9, 0);
   if mask < 0 { return -1; }
   if mask == module_mask_for_string("101011110", 0, 9, 0) { return 47; }
@@ -313,6 +330,7 @@ fn decoded_character(value: i32) -> string {
 
 fn decode_payload(
   modules: Array<i32>,
+  end: i32,
   index: i32,
   data_length: i32,
   result: string,
@@ -322,7 +340,7 @@ fn decode_payload(
   k_weight: i32,
 ) -> string {
   if index <= data_length {
-    let symbol: i32 = symbol_value(modules, index * 9);
+    let symbol: i32 = symbol_value(modules, end, index * 9);
     if symbol < 0 || symbol > 46 { return ""; }
     let character: string = decoded_character(symbol);
     if string_length(character) == 0 { return ""; }
@@ -332,6 +350,7 @@ fn decode_payload(
     if next_k_weight < 1 { next_k_weight = 15; }
     return decode_payload(
       modules,
+      end,
       index + 1,
       data_length,
       string_concat(result, character),
@@ -342,33 +361,33 @@ fn decode_payload(
     );
   }
 
-  let check_c: i32 = symbol_value(modules, index * 9);
+  let check_c: i32 = symbol_value(modules, end, index * 9);
   if check_c < 0 || check_c > 46 || check_c != remainder(c_sum, 47) { return ""; }
   let check_k_index: i32 = index + 1;
-  let check_k: i32 = symbol_value(modules, check_k_index * 9);
+  let check_k: i32 = symbol_value(modules, end, check_k_index * 9);
   if check_k < 0 || check_k > 46 || check_k != remainder(k_sum + check_c, 47) { return ""; }
   let stop_index: i32 = index + 2;
-  if symbol_value(modules, stop_index * 9) != 47 { return ""; }
+  if symbol_value(modules, end, stop_index * 9) != 47 { return ""; }
   let termination_index: i32 = index + 3;
-  if modules.length() != termination_index * 9 + 1 { return ""; }
+  if end != termination_index * 9 + 1 { return ""; }
   if modules[termination_index * 9] != 1 { return ""; }
   return result;
 }
 
-fn decode_sequence(modules: Array<i32>, extended: i32) -> string {
-  let length: i32 = modules.length();
+fn decode_sequence(modules: Array<i32>, extended: i32, length: i32) -> string {
+  if length > modules_len(modules) { return ""; }
   if length < 37 { return ""; }
   if modules[length - 1] != 1 { return ""; }
   let body_length: i32 = length - 1;
   if body_length % 9 != 0 { return ""; }
   let symbol_count: i32 = body_length / 9;
-  if symbol_count < 4 || symbol_value(modules, 0) != 47 { return ""; }
+  if symbol_count < 4 || symbol_value(modules, length, 0) != 47 { return ""; }
   let data_length: i32 = symbol_count - 4;
   let c_weight: i32 = 1;
   if data_length > 0 { c_weight = remainder(data_length - 1, 20) + 1; }
   let k_weight: i32 = 1;
   if data_length > 0 { k_weight = remainder(data_length, 15) + 1; }
-  let decoded: string = decode_payload(modules, 1, data_length, "", 0, 0, c_weight, k_weight);
+  let decoded: string = decode_payload(modules, length, 1, data_length, "", 0, 0, c_weight, k_weight);
   if extended == 1 { return decode_extended_sequence(decoded, 0, ""); }
   return decoded;
 }
@@ -434,9 +453,17 @@ fn decode_extended_sequence(value: string, index: i32, result: string) -> string
 }
 
 export fn decode_code93(modules: Array<i32>) -> string {
-  return decode_sequence(modules, 0);
+  return decode_sequence(modules, 0, modules_len(modules));
+}
+
+export fn decode_code93_row(modules: Array<i32>, count: i32) -> string {
+  return decode_sequence(modules, 0, count);
 }
 
 export fn decode_code93_extended(modules: Array<i32>) -> string {
-  return decode_sequence(modules, 1);
+  return decode_sequence(modules, 1, modules_len(modules));
+}
+
+export fn decode_code93_extended_row(modules: Array<i32>, count: i32) -> string {
+  return decode_sequence(modules, 1, count);
 }

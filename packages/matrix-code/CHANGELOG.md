@@ -45,8 +45,6 @@
   - @mission-platform/components@3.0.0
   - @mission-platform/icons@2.0.0
   - @mission-platform/forge@1.0.0
-  - @mission-platform/matrix-code-decode-wasm@0.2.0
-  - @mission-platform/matrix-code-encode-wasm@0.2.0
 
 ## 1.0.0
 
@@ -138,9 +136,9 @@
   `vite.config.ts`), stories, and documentation. Formatting-only; no runtime or API changes.
 
 - ffa5129: relicense the project from MIT to BSD-4-Clause
-- d920693: move wasm-pack builds onto crate workspace members and make `-wasm` packages self-contained tsdown libraries
+- d920693: move matrix codec execution to package-local Forge Web Script artifacts
 
-  Each wasm-pack crate is now a private pnpm/turbo workspace member (`@mission-platform/<crate>-crate`) that runs `wasm-pack build --target bundler --no-pack` into `packages/<crate>-wasm/src/wasm` (turbo-cached cargo output). The published `@mission-platform/<crate>-wasm` package is now a `tsdown` library: a small `src/index.ts` wrapper inlines the `_bg.wasm` binary as base64, instantiates it synchronously at import, and re-exports the crate's typed functions ready to use — so `@mission-platform/<crate>-wasm` ships a single self-contained `dist/index.js` with no external `.wasm` and no async init. Consuming packages (`barcode`, `qr-code`, `matrix-code`, `code-scanner`) now import these ready functions and bundle the `-wasm` dist, so their `init*` helpers are backwards-compatible no-ops and their own inline-wasm plugins are removed.
+  Matrix encoding and decoding now load bounded package-local FWS graphs through generated synchronous and asynchronous loaders. The public package no longer depends on generated matrix WebAssembly wrapper packages.
 
 - f67e304: migrate library builds to tsdown
 
@@ -192,17 +190,15 @@
   - @mission-platform/forge@1.0.0
   - @mission-platform/components@2.0.0
   - @mission-platform/icons@1.0.0
-  - @mission-platform/matrix-code-encode-wasm@0.2.0
-  - @mission-platform/matrix-code-decode-wasm@0.2.0
 
 ## 0.2.0
 
 ### Minor Changes
 
-- 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder written in Rust (compiled to
-  WebAssembly) with a typed ES module wrapper. The initial release supports Data Matrix (ECC 200, single-data-region
-  square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of module bits. The wasm
-  is inlined as a base64 `data:` URI so the encoder is synchronous and works during SSR and in tests.
+- 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder backed by package-local
+  Forge Web Script artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
+  single-data-region square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of
+  module bits. The artifact loader is synchronous and works during SSR and in tests.
 
 ### Patch Changes
 
@@ -314,10 +310,10 @@
 
 ### Minor Changes
 
-- 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder written in Rust (compiled to
-  WebAssembly) with a typed ES module wrapper. The initial release supports Data Matrix (ECC 200, single-data-region
-  square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of module bits. The wasm
-  is inlined as a base64 `data:` URI so the encoder is synchronous and works during SSR and in tests.
+- 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder backed by package-local
+  Forge Web Script artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
+  single-data-region square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of
+  module bits. The artifact loader is synchronous and works during SSR and in tests.
 
 ### Patch Changes
 
@@ -429,10 +425,10 @@
 
 ### Minor Changes
 
-- 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder written in Rust (compiled to
-  WebAssembly) with a typed ES module wrapper. The initial release supports Data Matrix (ECC 200, single-data-region
-  square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of module bits. The wasm
-  is inlined as a base64 `data:` URI so the encoder is synchronous and works during SSR and in tests.
+- 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder backed by package-local
+  Forge Web Script artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
+  single-data-region square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of
+  module bits. The artifact loader is synchronous and works during SSR and in tests.
 
 ### Patch Changes
 
@@ -544,10 +540,10 @@
 
 ### Minor Changes
 
-- 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder written in Rust (compiled to
-  WebAssembly) with a typed ES module wrapper. The initial release supports Data Matrix (ECC 200, single-data-region
-  square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of module bits. The wasm
-  is inlined as a base64 `data:` URI so the encoder is synchronous and works during SSR and in tests.
+- 3a3ba6c: Add `@mission-platform/matrix-code`: a dependency-free 2D matrix barcode encoder backed by package-local
+  Forge Web Script artifacts and wrapped in a typed ES module. The initial release supports Data Matrix (ECC 200,
+  single-data-region square symbols 10×10–26×26) via `encodeMatrix`/`encodeMatrixAsync`, returning a square grid of
+  module bits. The artifact loader is synchronous and works during SSR and in tests.
 
 ### Patch Changes
 

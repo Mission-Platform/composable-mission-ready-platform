@@ -1,0 +1,172 @@
+// Shared matrix decoder primitives.
+// Arrays stay at the ABI boundary. Internal buffers use fixed-width decimal
+// digit strings so the linked decoder graph remains allocation-stable.
+
+fn digit_char(value: i32) -> string {
+  if value == 0 { return "0"; }
+  if value == 1 { return "1"; }
+  if value == 2 { return "2"; }
+  if value == 3 { return "3"; }
+  if value == 4 { return "4"; }
+  if value == 5 { return "5"; }
+  if value == 6 { return "6"; }
+  if value == 7 { return "7"; }
+  if value == 8 { return "8"; }
+  return "9";
+}
+
+fn decoder_itoa(value: i32) -> string {
+  if value < 10 { return digit_char(value); }
+  let quotient: i32 = value / 10;
+  let remainder: i32 = value - quotient * 10;
+  return string_concat(decoder_itoa(quotient), digit_char(remainder));
+}
+
+export fn decoder_digits(value: i32) -> string {
+  if value < 0 { return "000"; }
+  if value < 10 { return string_concat("00", decoder_itoa(value)); }
+  if value < 100 { return string_concat("0", decoder_itoa(value)); }
+  return decoder_itoa(value);
+}
+
+export fn xor16(a: i32, b: i32) -> i32 {
+  let result: i32 = 0;
+  let place: i32 = 1;
+  let left: i32 = a;
+  let right: i32 = b;
+  let index: i32 = 0;
+  while index < 16 {
+    let lbit: i32 = left - left / 2 * 2;
+    let rbit: i32 = right - right / 2 * 2;
+    let mixed: i32 = lbit + rbit - 2 * lbit * rbit;
+    result = result + mixed * place;
+    left = left / 2;
+    right = right / 2;
+    place = place * 2;
+    index = index + 1;
+  }
+  return result;
+}
+
+export fn pow2(value: i32) -> i32 {
+  let result: i32 = 1;
+  let index: i32 = 0;
+  while index < value {
+    result = result * 2;
+    index = index + 1;
+  }
+  return result;
+}
+
+export fn bit_test(value: i32, shift: i32) -> bool {
+  let high: i32 = pow2(shift + 1);
+  let low: i32 = pow2(shift);
+  return value / low - value / high * 2 == 1;
+}
+
+export fn byte_char3(value: i32) -> string {
+  return decoder_digits(value);
+}
+
+export fn bits_push(data: string, on: bool) -> string {
+  if on { return string_concat(data, "1"); }
+  return string_concat(data, "0");
+}
+
+export fn bits_zeros(count: i32) -> string {
+  let result: string = "";
+  let index: i32 = 0;
+  while index < count {
+    result = string_concat(result, "0");
+    index = index + 1;
+  }
+  return result;
+}
+
+export fn dzeros(count: i32) -> string {
+  let result: string = "";
+  let index: i32 = 0;
+  while index < count {
+    result = string_concat(result, "000");
+    index = index + 1;
+  }
+  return result;
+}
+
+export fn dget(data: string, index: i32) -> i32 {
+  let offset: i32 = index * 3;
+  if index < 0 { return 0; }
+  if offset + 2 >= string_length(data) { return 0; }
+  let b0: i32 = string_byte_at(data, offset) - 48;
+  let b1: i32 = string_byte_at(data, offset + 1) - 48;
+  let b2: i32 = string_byte_at(data, offset + 2) - 48;
+  return b0 * 100 + b1 * 10 + b2;
+}
+
+export fn dset(data: string, index: i32, value: i32) -> string {
+  let offset: i32 = index * 3;
+  let head: string = string_slice(data, 0, offset);
+  let tail: string = string_slice(data, offset + 3, string_length(data));
+  return string_concat(string_concat(head, decoder_digits(value)), tail);
+}
+
+export fn qdigits(value: i32) -> string {
+  if value < 0 { return "9999"; }
+  if value < 10 { return string_concat("000", decoder_itoa(value)); }
+  if value < 100 { return string_concat("00", decoder_itoa(value)); }
+  if value < 1000 { return string_concat("0", decoder_itoa(value)); }
+  return decoder_itoa(value);
+}
+
+export fn qzeros(count: i32) -> string {
+  let result: string = "";
+  let index: i32 = 0;
+  while index < count {
+    result = string_concat(result, "0000");
+    index = index + 1;
+  }
+  return result;
+}
+
+export fn qget(data: string, index: i32) -> i32 {
+  let offset: i32 = index * 4;
+  if index < 0 { return 0 - 1; }
+  if offset + 3 >= string_length(data) { return 0 - 1; }
+  let b0: i32 = string_byte_at(data, offset) - 48;
+  let b1: i32 = string_byte_at(data, offset + 1) - 48;
+  let b2: i32 = string_byte_at(data, offset + 2) - 48;
+  let b3: i32 = string_byte_at(data, offset + 3) - 48;
+  return b0 * 1000 + b1 * 100 + b2 * 10 + b3;
+}
+
+export fn qset(data: string, index: i32, value: i32) -> string {
+  let offset: i32 = index * 4;
+  let head: string = string_slice(data, 0, offset);
+  let tail: string = string_slice(data, offset + 4, string_length(data));
+  return string_concat(string_concat(head, qdigits(value)), tail);
+}
+
+export fn bit_array_get(data: string, index: i32) -> bool {
+  if index < 0 { return false; }
+  if index >= string_length(data) { return false; }
+  return string_byte_at(data, index) == 49;
+}
+
+export fn bit_array_set(data: string, index: i32, value: bool) -> string {
+  let character: string = "0";
+  if value { character = "1"; }
+  let head: string = string_slice(data, 0, index);
+  let tail: string = string_slice(data, index + 1, string_length(data));
+  return string_concat(string_concat(head, character), tail);
+}
+
+export fn module_bit(modules: Array<i32>, index: i32) -> bool {
+  if index < 0 { return false; }
+  return modules[index] == 1;
+}
+
+export fn erasure_bit(erasures: Array<i32>, index: i32) -> bool {
+  if index < 0 { return false; }
+  return erasures[index] != 0;
+}
+

@@ -1,10 +1,10 @@
 // Matrix decoder ABI graph.
 //
-// The graph owns the symbology dispatch boundary. The registered TypeScript
-// decoder performs the codeword and Reed-Solomon work so the same implementation
-// can also be used by scanner adapters that provide erasure masks. The packed
-// string is returned unchanged by this small ABI stage; an empty result denotes
-// an unsupported symbology.
+// Each implementation is statically linked into this dispatcher. The public
+// adapter supplies validated numeric module and erasure arrays and receives an
+// ASCII decimal triplet stream containing the recovered UTF-8 bytes.
+import "./matrix-decoder-datamatrix.fws" as datamatrix;
+import "./matrix-decoder-aztec.fws" as aztec;
 
 export enum MatrixSymbologyId {
   DataMatrix = 0,
@@ -13,12 +13,12 @@ export enum MatrixSymbologyId {
   Aztec = 3,
 }
 
-export fn decode_matrix(symbology: MatrixSymbologyId, packed: string, erasures: string) -> string {
+export fn decode_matrix(symbology: MatrixSymbologyId, width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>) -> string {
   switch symbology {
-    case DataMatrix: return packed;
-    case Gs1DataMatrix: return packed;
-    case DataMatrixRectangular: return packed;
-    case Aztec: return packed;
+    case DataMatrix: return datamatrix.decode_datamatrix(0, width, height, modules, erasures);
+    case Gs1DataMatrix: return datamatrix.decode_datamatrix(1, width, height, modules, erasures);
+    case DataMatrixRectangular: return datamatrix.decode_datamatrix(2, width, height, modules, erasures);
+    case Aztec: return aztec.decode_aztec(width, height, modules, erasures);
     default: return "";
   }
 }

@@ -1,0 +1,12 @@
+// Thin dispatcher combining the split Data Matrix placement-map tables.
+import "./matrix-decoder-datamatrix-map-square-a.fws" as square_a;
+import "./matrix-decoder-datamatrix-map-square-b.fws" as square_b;
+import "./matrix-decoder-datamatrix-map-rect.fws" as rect;
+
+export fn mapping_map(rows: i32, cols: i32) -> string {
+  let a: string = square_a.square_map_a(rows, cols);
+  if string_length(a) > 0 { return a; }
+  let b: string = square_b.square_map_b(rows, cols);
+  if string_length(b) > 0 { return b; }
+  return rect.rect_map(rows, cols);
+}

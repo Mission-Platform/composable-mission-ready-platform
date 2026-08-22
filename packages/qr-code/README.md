@@ -1,7 +1,7 @@
 # @mission-platform/qr-code
 
-A dependency-free **QR Code encoder _and_ decoder** written in
-[Rust](https://www.rust-lang.org/) and compiled to **WebAssembly**, exposed through a small, fully typed ES module
+A dependency-free **QR Code encoder _and_ decoder** backed by package-local
+Forge Web Script artifacts and exposed through a small, fully typed ES module
 wrapper.
 
 The **encoder** supports byte mode (which can represent any text/URL), automatic version selection and lowest-penalty
@@ -26,9 +26,10 @@ const matrix = encodeQr('https://mission-platform.dev', 'M');
 const text = decodeQr(matrix); // 'https://mission-platform.dev', or null
 ```
 
-`encodeQr` / `decodeQr` instantiate the wasm binary **synchronously** on first use, so they are safe to call from render
-paths. In a bundled build the wasm is inlined as a base64 `data:` URI, so the module is self-contained and needs no
-runtime `fetch`. Async variants, `encodeQrAsync` / `decodeQrAsync`, are also exported.
+`encodeQr` / `decodeQr` load their package-local FWS graphs **synchronously** on
+first use, so they are safe to call from render paths. Async variants,
+`encodeQrAsync` / `decodeQrAsync`, are also exported and use the corresponding
+asynchronous graph loaders.
 
 `encodeQr` throws a `RangeError` when the payload is too long to fit the largest (version 40) QR Code at the chosen
 error-correction level. `decodeQr` returns
@@ -55,38 +56,31 @@ encodeQr(formats.iCalEvent({ title: 'Launch', start: new Date('2026-07-14T09:00:
 ```
 
 Available builders: `url`, `wifi`, `email`, `sms`, `phone`, `geo`, `vCard`,
-`meCard`, and `iCalEvent`. Each returns a plain `string` and touches no wasm, so they are cheap and synchronous.
+`meCard`, and `iCalEvent`. Each returns a plain `string` and touches no FWS
+graph, so they are cheap and synchronous.
 
 ## Architecture
 
-- `crates/qr-code/` (workspace top level) — the Rust crate, built with **`wasm-bindgen`**, split into focused modules:
-  - `lib.rs` — the `wasm-bindgen` surface (`encode` / `decode` / `build_info`).
-  - `tables.rs` — version/capacity tables and sizing helpers.
-  - `gf.rs` — GF (256) Reed-Solomon: encode-parity multiply/divisor/remainder plus the error corrector used on decode.
-  - `builder.rs` — the matrix builder + data-mask selection (shared with the decoder's data-module traversal).
-  - `encode.rs` / `decode.rs` — the encode and decode entry points.
-- `src/generated/` — emitted by **`wasm-pack build --target web`** (the
-  `wasm-bindgen` JS runtime, the `qr-code_bg.wasm` binary, and its typings). This is produced by the **`build:wasm`
-  Turbo task**, whose command invokes
-  `wasm-pack` directly via Turborepo's `experimentalTaskCommand` (no wrapper script). The directory is a build artifact
-  and is git-ignored.
-- `src/index.ts` — the typed façade: it imports the generated runtime and the wasm binary (via Vite's `?url`, inlined as
-  base64 at build time), instantiates it, and unpacks the output into a `QrMatrix`.
-- `vite.config.ts` — raises `assetsInlineLimit` so the wasm is inlined as a
-  `data:` URI (keeping the encoder synchronous and the bundle self-contained), and strips the generated glue's dead
-  `new URL(...)` init fallback so the binary is embedded exactly once.
+- `src/fws/qr-encoder.fws` — the standard QR byte-mode encoder graph.
+- `src/fws/qr-compact-encoder.fws` — the Micro QR and rMQR encoder graph.
+- `src/fws/qr-decoder.fws` — the packed square-matrix decoder graph.
+- `src/encoder` and `src/decoder` — typed façades that load the graphs lazily
+  through `loadSync()` or `load()` and normalize their compact packed ABI.
+- `crates/qr-code-*` — retained Rust algorithm crates used by `code-scan` and
+  native scanner tests; they are not runtime dependencies of this package.
 
 ## Building
 
-The Rust → wasm step is driven by Turbo (it runs before the type-check, bundle and declaration steps):
+The FWS graphs are compiled by the package build through the Forge Web Script
+Vite plugin:
 
 ```sh
 pnpm exec turbo run build --filter @mission-platform/qr-code
 ```
 
-Prerequisites: a Rust toolchain with the `wasm32-unknown-unknown` target and the pinned `wasm-pack` npm dependency:
+For scanner development, the retained Rust crates additionally require a Rust
+toolchain and the workspace's normal Cargo prerequisites:
 
 ```sh
-rustup target add wasm32-unknown-unknown
 pnpm install
 ```

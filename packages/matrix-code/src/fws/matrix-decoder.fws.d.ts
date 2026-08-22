@@ -1,12 +1,10 @@
-export type MatrixSymbologyId = 0 | 1 | 2 | 3;
+import type { ForgeWebScriptLoadOptions } from '@mission-platform/forge-web-script-runtime';
+
+export type MatrixDecoderSymbologyId = 0 | 1 | 2 | 3;
 
 export interface ForgeMatrixDecoderExports {
-  /**
-   * Decodes a validated symbol and returns its UTF-8 payload as ASCII decimal
-   * triplets. An empty string denotes an invalid or unrecoverable symbol.
-   */
   readonly decode_matrix: (
-    symbology: MatrixSymbologyId,
+    symbology: MatrixDecoderSymbologyId,
     width: number,
     height: number,
     modules: ArrayLike<number>,
@@ -14,6 +12,12 @@ export interface ForgeMatrixDecoderExports {
   ) => string;
 }
 
-export const manifest: Readonly<Record<string, unknown>>;
-export function load(): Promise<ForgeMatrixDecoderExports>;
-export function loadSync(): ForgeMatrixDecoderExports;
+export declare const artifactPath: string;
+export declare const moduleUrl: string;
+export declare function load(options?: ForgeWebScriptLoadOptions): Promise<ForgeMatrixDecoderExports>;
+export declare function loadSync(options?: ForgeWebScriptLoadOptions): ForgeMatrixDecoderExports;
+export declare const manifest: {
+  readonly moduleName: string;
+  readonly linkMode: 'static';
+  readonly linkedModules?: readonly string[];
+};
