@@ -1,45 +1,64 @@
-# Forge 구성 요소 토큰 참조
+# Forge component-token reference
 
-정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
+This is the canonical inventory and Figma handoff for Forge-authored components. It is intentionally independent of
+the generated framework adapters: the same entry applies to Vue, React, Solid, Svelte, and Web Components.
 
-> 영어 원문: [docs/component-token-reference.md](../../component-token-reference.md)
-> 언어: 한국어 (ko)
+## Reading the contract
 
-이는 Forge에서 작성한 구성 요소에 대한 표준 인벤토리 및 Figma 핸드오프입니다. 의도적으로 독립되어 있습니다.
-생성된 프레임워크 어댑터: 동일한 항목이 다음에 적용됩니다. Vue, React, Solid, Svelte및 웹 구성 요소.
-
-## 계약서 읽기
-
-진실의 근원은 [`packages/tokens/tokens/component.tokens.json`](../../../packages/tokens/tokens/component.tokens.json).
-해당 경로는 CSS 사용자 정의 속성 및 Figma 변수에 직접 매핑됩니다.
+The source of truth is the recursive component source tree under
+[`packages/tokens/tokens/component/`](../packages/tokens/tokens/component/), grouped by atomic level
+(`atoms/`, `molecules/`, `organisms/`, and `templates/`). Each source is independently generated, while all sources
+preserve the same stable `component.*` DTCG contract:
 
 ```text
 component.<component>.<variant?>.<slot>.<state?>
-  -> --mp-component-<component>-<variant?>-<slot>-<state?>
+  -> --mp-<component>-<variant?>-<slot>-<state?>
   -> Mission Platform / Component / <component> / <variant?> / <slot> / <state?>
 ```
 
-구성 요소 값은 기존 기본 및 의미 테마 문서의 별칭을 지정합니다. 결과적으로 Figma 컬렉션은
-**Light** 및 **Dark** 모드는 구성 요소 토큰을 복제하지 않습니다. 런타임 밝음/어두움 동작이 계속 사용됩니다.
-`color-scheme`, `light-dark()`, `[data-theme]`, 그리고 `.theme-*` 하위 트리 핀. 소비자와 스토리북은 무엇이든 재정의할 수 있습니다.
-아래의 잎 `component` ~에 `overrides.tokens.json`; 생성된 토큰 스타일시트 뒤에 재정의가 적용됩니다.
+The DTCG path is also the Figma and runtime override path; only the generated CSS name drops the `component` wrapper.
+For example, `component.button.primary.background.hover` is emitted as `--mp-button-primary-background-hover`. A
+source ID such as `component/atoms/button` identifies the file that owns the contract, not a new DTCG path.
 
-### 의미론적 슬롯과 상태 어휘
+Component values alias the existing primitive and semantic theme documents. Consequently, the Figma collection has
+**Light** and **Dark** modes without duplicating component tokens. Runtime light/dark behavior continues to use
+`color-scheme`, `light-dark()`, `[data-theme]`, and `.theme-*` subtree pins. Consumers and Storybook may override any
+leaf below `component` in `overrides.tokens.json`; an override is applied after the generated token stylesheet. Overrides
+continue to use `component.*` keys even though CSS custom properties use the layer namespace.
 
-| 슬롯 제품군 | 피그마 역할 | 일반적인 상태 |
+## Source and generated output layout
+
+Every visual contract has one owner under the atomic source tree. The generator discovers new files recursively, so a
+new source does not require a descriptor registration:
+
+```text
+packages/tokens/tokens/component/<atomic-level>/<source>.tokens.json
+  -> packages/tokens/src/generated/scss/component/<atomic-level>/_<source>.scss
+  -> packages/tokens/src/generated/scss/component/<atomic-level>/_<source>-vars.scss
+  -> packages/tokens/src/generated/ts/component/<atomic-level>/<source>.ts
+```
+
+The generated SCSS and TypeScript barrels include every component source in deterministic source-ID order. Component
+files may reuse shared contracts such as `button`, `field`, `input`, `navigation`, and `overlay`; composed components
+must not duplicate those token paths. Behavior-only components, inherited-only glyphs, and layout/DOM formulas remain
+outside the visual token contract unless an inventory entry assigns them visual ownership.
+
+### Semantic slots and state vocabulary
+
+| Slot family                                  | Figma role                                  | Typical states                                                                         |
 | -------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `background` / `surface` / `track` / `thumb` | 채우기 또는 제어 표면 | `default`, `hover`, `active`, `disabled`, `loading`, `expanded`, `selected`, `invalid` |
-| `text` / `label` / `helper-text`             | 타이포그래피 색상 ​​또는 명명된 타이포그래피 스타일 | `default`, `hover`, `disabled`, `selected`, `invalid`                                  |
-| `border` / `focus-ring`                      | 스트로크 및 키보드 표시 | `default`, `hover`, `focus-visible`, `active`, `disabled`, `selected`, `invalid`       |
-| `padding` / `gap` / `radius` / `shadow`      | 기하학과 고도 | 기본값 또는 크기별 |
-| `opacity` / `transition`                     | 디엠퍼시스 및 모션 | `disabled`, `loading`, `hover`, `active`                                               |
+| `background` / `surface` / `track` / `thumb` | Fill or control surface                     | `default`, `hover`, `active`, `disabled`, `loading`, `expanded`, `selected`, `invalid` |
+| `text` / `label` / `helper-text`             | Typography colour or named typography style | `default`, `hover`, `disabled`, `selected`, `invalid`                                  |
+| `border` / `focus-ring`                      | Stroke and keyboard indication              | `default`, `hover`, `focus-visible`, `active`, `disabled`, `selected`, `invalid`       |
+| `padding` / `gap` / `radius` / `shadow`      | Geometry and elevation                      | default or size-specific                                                               |
+| `opacity` / `transition`                     | De-emphasis and motion                      | `disabled`, `loading`, `hover`, `active`                                               |
 
-구성 요소에서 지원하는 상태만 아래에 나열되어 있습니다. `expanded` 공개/선택 표면에 사용됩니다. `selected`
-선택/탭/탐색 `invalid` 양식 유효성 검사를 위해; 사용되지 않은 상태 변수는 필요하지 않습니다.
+Only states supported by a component are listed below. `expanded` is used for disclosure/select surfaces, `selected`
+for choices/tabs/navigation, and `invalid` for form validation; no unused state variables are required.
 
-## 재고 요약
+## Inventory summary
 
-리포지토리 인벤토리는 다음과 같은 좁은 소스 경로를 기반으로 합니다.
+The repository inventory is based on the following narrow source paths:
 
 ```text
 packages/*/src/components/**/*.tsx
@@ -47,225 +66,233 @@ packages/*/src/components/**/*.stories.tsx
 packages/*/src/components/**/*.module.scss
 ```
 
-| 유물 | 카운트 | 의미 |
+| Artifact              | Count | Meaning                                                                              |
 | --------------------- | ----: | ------------------------------------------------------------------------------------ |
-| 구성요소 TSX 소스 |   249 | Non-story Forge 및 이메일 구성요소 소스 |
-| 함께 위치한 이야기 ​​|   246 | 3개의 재귀 마크다운/트리 도우미 소스에는 의도적으로 독립형 스토리가 없습니다. |
-| CSS 모듈 |   219 | 로컬 비주얼 스타일 모듈 인라인 이메일 및 상속된 계약도 문서화되어 있습니다 |
-| 패키지 |    20 | 구성요소 소스를 포함하는 모든 패키지 |
+| Component TSX sources |   249 | Non-story Forge and email component sources                                          |
+| Co-located stories    |   246 | Three recursive Markdown/tree helper sources intentionally have no standalone story  |
+| CSS modules           |   219 | Local visual style modules; inline email and inherited contracts are also documented |
+| Packages              |    20 | Every package containing a component source                                          |
 
-분류는 패키지가 아닌 소스별로 이루어집니다.
+The post-audit generated surface contains **2,841 token leaves**: 132 active, 2,161 protected, and 548 ambiguous;
+there are no remaining candidates. The cleanup removed 189 unreachable leaves in total: the 185 candidates from the
+review report plus 4 net second-order palette leaves (6 removed, 2 restored as reachable `.500` leaves) exposed after alias closure. This reduction affects generated
+primitive, semantic, typography, and structural exports only; retained `component.*` paths and their
+`--mp-<layer>-*` names are unchanged. The three unresolved aliases (`color.surface.raised`, `radius.2xs`, and
+`font.weight.light`) predate this audit and remain unchanged.
 
-- **시각적** — CSS 모듈 또는 인라인 시각적 출력을 소유하고 패키지 테이블에 표시된 계약에 매핑됩니다.
-- **상속된 시각적** — 독립적인 스타일의 호스트를 렌더링하지 않습니다. 그 모습은 아이, 부모, `currentColor`,
-  타사 호스트/캔버스 또는 구성된 구성 요소의 계약.
-- **동작 전용** — 렌더링 또는 뷰포트 동작을 제어하고 자체적으로 시각적 결정을 내리지 않습니다.
+Classification is per source, not per package:
 
-아래의 모든 글머리 기호는 하나의 인벤토리 항목입니다. 스토리가 표시되지 않는 한 `story: missing`, 구성요소에 일치하는 항목이 있습니다.
-`<component>.stories.tsx` 소스 옆에. 패키지/레벨 제목은 안정적인 소스 경로 접두사를 제공합니다.
+- **Visual** — owns a CSS module or inline visual output and maps to the contract shown in the package table.
+- **Inherited-visual** — renders no independently styled host; its appearance comes from a child, parent, `currentColor`,
+  a third-party host/canvas, or the contract of the composed component.
+- **Behavior-only** — controls rendering or viewport behavior and makes no visual decision of its own.
+
+Every bullet below is one inventory entry. Unless a story is marked `story: missing`, the component has a matching
+`<component>.stories.tsx` beside the source. A package/level heading supplies the stable source path prefix.
 
 ## `@mission-platform/components`
 
-### 원자 — `packages/components/src/components/atoms/`
+### Atoms — `packages/components/src/components/atoms/`
 
-| 구성요소 | 분류 | 계약 | 외관 소품/상태 |
+| Component                | Classification | Contract                                        | Appearance props / states                                                                   |
 | ------------------------ | -------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `forge-avatar`           | 시각적 | `component.media`                               | `src`, `initials`, `size`, `shape`, `status`, `variant`; 기본/비활성화 상태 색상 |
-| `forge-background-video` | 시각적 | `component.media`                               | 소스, 자동 재생/음소거/루프; 기본/오버레이 |
-| `forge-badge`            | 시각적 | `component.feedback`                            | `variant`, `size`; 기본값/비활성화 |
-| `forge-button`           | 시각적 | `component.button.<variant>`                    | `variant`, `size`, `padding`, `margin`; 기본/호버/활성/초점 표시/비활성화/로딩 |
-| `forge-icon-button`      | 시각적 | `component.button.<variant>` + `component.icon` | 상표, `variant`, `size`; 기본/호버/활성/초점 표시/비활성화/로딩 |
-| `forge-progress-bar`     | 시각적 | `component.feedback`                            | 값, 변형; 기본값/로딩/비활성화 |
-| `forge-quote`            | 시각적 | `component.typography` + `component.surface`    | 인용, 변형; 기본값 |
-| `forge-responsive-image` | 시각적 | `component.media`                               | 소스, 측면/맞춤; 기본값/자리 표시자 |
-| `forge-responsive-video` | 시각적 | `component.media`                               | 소스, 컨트롤/자동 재생; 기본/오버레이 |
-| `forge-separator`        | 시각적 | `component.surface`                             | 정위; 기본값 |
-| `forge-skeleton`         | 시각적 | `component.feedback`                            | 모양/크기; 로딩 |
-| `forge-spinner`          | 시각적 | `component.feedback`                            | 크기, 변형; 로딩 |
-| `forge-stack`            | 시각적 | `component.layout`                              | 방향, `gap`, 정렬; 기본값 |
-| `forge-status-icon`      | 시각적 | `component.feedback.<status>`                   | 상태, 크기; 기본값/비활성화 |
-| `forge-tag`              | 시각적 | `component.feedback`                            | 변형, 크기, 제거 가능; 기본/호버/비활성화 |
-| `forge-theme-toggle`     | 시각적 | `component.button` + `component.icon`           | 테마, 크기; 기본/호버/활성/선택됨 |
-| `forge-typography`       | 시각적 | `component.typography`                          | `as`, 타이포그래피 변형, 색상; 기본/링크/비활성화 |
+| `forge-avatar`           | visual         | `component.media`                               | `src`, `initials`, `size`, `shape`, `status`, `variant`; default/disabled status colours    |
+| `forge-background-video` | visual         | `component.media`                               | source, autoplay/muted/loop; default/overlay                                                |
+| `forge-badge`            | visual         | `component.feedback`                            | `variant`, `size`; default/disabled                                                         |
+| `forge-button`           | visual         | `component.button.<variant>`                    | `variant`, `size`, `padding`, `margin`; default/hover/active/focus-visible/disabled/loading |
+| `forge-icon-button`      | visual         | `component.button.<variant>` + `component.icon` | label, `variant`, `size`; default/hover/active/focus-visible/disabled/loading               |
+| `forge-progress-bar`     | visual         | `component.feedback`                            | value, variant; default/loading/disabled                                                    |
+| `forge-quote`            | visual         | `component.typography` + `component.surface`    | citation, variant; default                                                                  |
+| `forge-responsive-image` | visual         | `component.media`                               | source, aspect/fit; default/placeholder                                                     |
+| `forge-responsive-video` | visual         | `component.media`                               | source, controls/autoplay; default/overlay                                                  |
+| `forge-separator`        | visual         | `component.surface`                             | orientation; default                                                                        |
+| `forge-skeleton`         | visual         | `component.feedback`                            | shape/size; loading                                                                         |
+| `forge-spinner`          | visual         | `component.feedback`                            | size, variant; loading                                                                      |
+| `forge-stack`            | visual         | `component.layout`                              | direction, `gap`, alignment; default                                                        |
+| `forge-status-icon`      | visual         | `component.feedback.<status>`                   | status, size; default/disabled                                                              |
+| `forge-tag`              | visual         | `component.feedback`                            | variant, size, removable; default/hover/disabled                                            |
+| `forge-theme-toggle`     | visual         | `component.button` + `component.icon`           | theme, size; default/hover/active/selected                                                  |
+| `forge-typography`       | visual         | `component.typography`                          | `as`, typography variant, colour; default/link/disabled                                     |
 
-### 분자 — `packages/components/src/components/molecules/`
+### Molecules — `packages/components/src/components/molecules/`
 
-| 구성요소 | 분류 | 계약 | 외관 소품/상태 |
-| ------------------------- | ---------------- | ---------------------------------------------- | ---------------------------------------------------------------------- |
-| `forge-accordion`         | 시각적 | `component.surface` + `component.navigation`   | 항목, 확장됨; 기본/호버/초점 표시/확장/비활성화 |
-| `forge-alert-banner`      | 시각적 | `component.feedback` + `component.overlay`     | 상태, 해고 가능; 기본/호버/포커스 표시 |
-| `forge-breadcrumb`        | 시각적 | `component.navigation`                         | 품목; 기본/호버/선택/초점 표시 |
-| `forge-button-group`      | 시각적 | `component.button-group`                       | 방향, 부착, 변형, 간격; 기본/초점 표시/비활성화 |
-| `forge-card`              | 시각적 | `component.surface`                            | 변형, 패딩; 기본/호버/선택됨 |
-| `forge-chat-bubble`       | 시각적 | `component.media` + `component.surface`        | 작성자, 방향/상태; 기본값/선택됨 |
-| `forge-collapse`          | 시각적 | `component.collapse`                           | 개방형, 변형, 비활성화됨; 기본/호버/초점 표시/확장/비활성화 |
-| `forge-device-mock`       | 시각적 | `component.media.device`                       | 장치, 방향, 크기; 기본값 |
-| `forge-dropdown`          | 시각적 | `component.overlay` + `component.navigation`   | 개방, 배치; 기본/확장/포커스 표시 |
-| `forge-grid`              | 시각적 | `component.layout.grid`                         | 열, 간격, 패딩; 기본값 |
-| `forge-in-view`           | 시각적 | `component.layout`                             | 한계점; 상속자 계약 |
-| `forge-language-switcher` | 상속된 시각적 | `component.navigation` + 아동 선택 계약 | 장소; 기본/확장/선택됨 |
-| `forge-list`              | 시각적 | `component.surface`                            | 변형, 간격; 기본값/선택됨 |
-| `forge-masonry`           | 시각적 | `component.layout.masonry`                      | 열, 간격, 패딩; 기본값 |
-| `forge-menu-item`         | 시각적 | `component.navigation`                         | 활성/비활성화; 기본/호버/초점 표시/선택/비활성화 |
-| `forge-menu`              | 시각적 | `component.navigation`                         | 개방/방향; 기본/확장 |
-| `forge-navbar-item`       | 시각적 | `component.navigation.navbar-item`             | 활성, 드롭다운, 변형, 비활성화; 기본/호버/초점 표시/선택/확장/비활성화 |
-| `forge-pagination`        | 시각적 | `component.navigation`                         | 페이지, 크기; 기본/호버/초점 표시/선택/비활성화 |
-| `forge-popover`           | 시각적 | `component.overlay`                            | 개방, 배치; 기본/확장/포커스 표시 |
-| `forge-tabs`              | 시각적 | `component.navigation`                         | 방향, 활성 탭; 기본/호버/초점 표시/선택/비활성화 |
-| `forge-timeline`          | 시각적 | `component.timeline`                          | 상태, 방향, 윤곽선 표시; 기본값/선택됨 |
-| `forge-toast`             | 시각적 | `component.overlay` + `component.feedback`     | 상태, 기간; 기본값/로딩 |
-| `forge-tooltip`           | 시각적 | `component.overlay`                            | 개방, 배치; 기본/확장 |
-| `forge-window-popout`     | 시각적 | `component.overlay.window-popout`              | 개방형, 크기; 기본/호버/초점 표시/선택됨 |
+| Component                 | Classification   | Contract                                       | Appearance props / states                                                                   |
+| ------------------------- | ---------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `forge-accordion`         | visual           | `component.surface` + `component.navigation`   | items, expanded; default/hover/focus-visible/expanded/disabled                              |
+| `forge-alert-banner`      | visual           | `component.feedback` + `component.overlay`     | status, dismissible; default/hover/focus-visible                                            |
+| `forge-breadcrumb`        | visual           | `component.navigation`                         | items; default/hover/selected/focus-visible                                                 |
+| `forge-button-group`      | visual           | `component.button-group`                       | orientation, attached, variant, gap; default/focus-visible/disabled                         |
+| `forge-card`              | visual           | `component.surface`                            | variant, padding; default/hover/selected                                                    |
+| `forge-chat-bubble`       | visual           | `component.media` + `component.surface`        | author, direction/status; default/selected                                                  |
+| `forge-collapse`          | visual           | `component.collapse`                           | open, variant, disabled; default/hover/focus-visible/expanded/disabled                      |
+| `forge-device-mock`       | visual           | `component.media.device`                       | device, orientation, size; default                                                          |
+| `forge-dropdown`          | visual           | `component.overlay` + `component.navigation`   | open, placement; default/expanded/focus-visible                                             |
+| `forge-grid`              | visual           | `component.layout.grid`                        | columns, gap, padding; default                                                              |
+| `forge-in-view`           | visual           | `component.layout`                             | threshold; inherited child contract                                                         |
+| `forge-language-switcher` | inherited-visual | `component.navigation` + child select contract | locale; default/expanded/selected                                                           |
+| `forge-list`              | visual           | `component.surface`                            | variant, gap; default/selected                                                              |
+| `forge-masonry`           | visual           | `component.layout.masonry`                     | columns, gap, padding; default                                                              |
+| `forge-menu-item`         | visual           | `component.navigation`                         | active/disabled; default/hover/focus-visible/selected/disabled                              |
+| `forge-menu`              | visual           | `component.navigation`                         | open/orientation; default/expanded                                                          |
+| `forge-navbar-item`       | visual           | `component.navigation.navbar-item`             | active, dropdown, variant, disabled; default/hover/focus-visible/selected/expanded/disabled |
+| `forge-pagination`        | visual           | `component.navigation`                         | page, size; default/hover/focus-visible/selected/disabled                                   |
+| `forge-popover`           | visual           | `component.overlay`                            | open, placement; default/expanded/focus-visible                                             |
+| `forge-tabs`              | visual           | `component.navigation`                         | orientation, active tab; default/hover/focus-visible/selected/disabled                      |
+| `forge-timeline`          | visual           | `component.timeline`                           | status, orientation, outlined marker; default/selected                                      |
+| `forge-toast`             | visual           | `component.overlay` + `component.feedback`     | status, duration; default/loading                                                           |
+| `forge-tooltip`           | visual           | `component.overlay`                            | open, placement; default/expanded                                                           |
+| `forge-window-popout`     | visual           | `component.overlay.window-popout`              | open, size; default/hover/focus-visible/selected                                            |
 
-### 유기체 및 템플릿 — `packages/components/src/components/{organisms,templates}/`
+### Organisms and templates — `packages/components/src/components/{organisms,templates}/`
 
-| 구성요소 | 분류 | 계약 | 외관 소품/상태 |
-| -------------------------- | ---------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `forge-carousel`           | 시각적 | `component.navigation.carousel`                                 | 슬라이드, 컨트롤, 자동 재생, 톤; 기본/호버/초점 표시/선택/비활성화 |
-| `forge-chat-area`          | 시각적 | `component.media.chat-area`                                      | 크기, 머리글/바닥글 슬롯, 자동 스크롤; 기본값/로딩 |
-| `forge-dialog`             | 시각적 | `component.overlay`                                             | 열기, 제목/바닥글; 기본/확장/포커스 표시 |
-| `forge-drawer`             | 시각적 | `component.overlay.drawer`                                      | 열기, 배치/크기, 크기 조정; 기본/호버/활성/확장 |
-| `forge-menubar`            | 시각적 | `component.navigation.menubar`                                  | 항목, 테두리, 크기; 기본/호버/초점 표시/확장/비활성화 |
-| `forge-modal`              | 시각적 | `component.overlay`                                             | 열기, 크기, 머리글/바닥글; 기본/확장/포커스 표시 |
-| `forge-navbar`             | 시각적 | `component.navigation.navbar`                  | 항목, 반응형 모드; 기본/호버/초점 표시/선택됨 |
-| `forge-table`              | 시각적 | `component.data.table`                                           | 열, 크기, 캡션, 줄무늬/테두리/호버 가능, 톤, 로딩; 기본/호버/초점 표시/로딩 |
-| `forge-theme-composer`     | 시각적 | `component.surface` + `component.field`                         | 테마 값; 기본값/잘못됨 |
-| `forge-theme-provider`     | 시각적 | `component.layout`                                              | 테마 모드; 기본/밝음/어두움 |
-| `forge-toast-container`    | 시각적 | `component.overlay`                                             | 놓기; 기본값/로딩 |
-| `forge-tree-view-item`     | 상속된 시각적 | `component.navigation` + `component.surface`                    | 확장, 선택, 비활성화; 기본/호버/초점 표시/확장/선택/비활성화 |
-| `forge-tree-view`          | 시각적 | `component.data.tree`                                            | 노드, 크기, defaultOpen, 라벨 렌더러; 기본/호버/초점 표시/확장/선택 |
-| `forge-virtual-list`       | 시각적 | `component.data.virtual-list`                                    | 항목, 크기, itemHeight, 높이, 오버스캔, 행 렌더러; 기본값/선택됨 |
-| `forge-virtual-log-viewer` | 시각적 | `component.code.virtual-log-viewer`                              | 레벨/필터, 열, 후속 꼬리; 기본/호버/초점 표시/경고/오류/치명 |
-| `forge-virtual-table`      | 시각적 | `component.data.virtual-table` + `component.data.table`          | 열, 크기, rowHeight, 높이, 오버스캔, 줄무늬/테두리, 정렬; 기본/호버/포커스 표시 |
-| `forge-virtual-tabs`       | 시각적 | `component.navigation.tabs`                                      | 변형, 활성 탭, 닫기/추가 가능; 기본/호버/초점 표시/선택/비활성화 |
-| `forge-virtual-tree-view`  | 시각적 | `component.data.virtual-tree`                                   | 노드, 크기, itemHeight, 높이, 오버스캔, defaultOpen, 행 렌더러; 기본/호버/초점 표시/확장 |
-| `forge-hero`               | 시각적 | `component.layout.hero`                         | 미디어, 정렬, 크기, 오버레이; 기본값 |
+| Component                  | Classification   | Contract                                                | Appearance props / states                                                                                  |
+| -------------------------- | ---------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `forge-carousel`           | visual           | `component.navigation.carousel`                         | slides, controls, autoplay, tone; default/hover/focus-visible/selected/disabled                            |
+| `forge-chat-area`          | visual           | `component.media.chat-area`                             | size, header/footer slots, auto-scroll; default/loading                                                    |
+| `forge-dialog`             | visual           | `component.overlay`                                     | open, title/footer; default/expanded/focus-visible                                                         |
+| `forge-drawer`             | visual           | `component.overlay.drawer`                              | open, placement/size, resize; default/hover/active/expanded                                                |
+| `forge-menubar`            | visual           | `component.navigation.menubar`                          | items, bordered, size; default/hover/focus-visible/expanded/disabled                                       |
+| `forge-modal`              | visual           | `component.overlay`                                     | open, size, header/footer; default/expanded/focus-visible                                                  |
+| `forge-navbar`             | visual           | `component.navigation.navbar`                           | items, responsive mode; default/hover/focus-visible/selected                                               |
+| `forge-table`              | visual           | `component.data.table`                                  | columns, size, caption, striped/bordered/hoverable, tone, loading; default/hover/focus-visible/loading     |
+| `forge-theme-composer`     | visual           | `component.surface` + `component.field`                 | theme values; default/invalid                                                                              |
+| `forge-theme-provider`     | visual           | `component.layout`                                      | theme mode; default/light/dark                                                                             |
+| `forge-toast-container`    | visual           | `component.overlay`                                     | placement; default/loading                                                                                 |
+| `forge-tree-view-item`     | inherited-visual | `component.navigation` + `component.surface`            | expanded, selected, disabled; default/hover/focus-visible/expanded/selected/disabled                       |
+| `forge-tree-view`          | visual           | `component.data.tree`                                   | nodes, size, defaultOpen, label renderer; default/hover/focus-visible/expanded/selected                    |
+| `forge-virtual-list`       | visual           | `component.data.virtual-list`                           | items, size, itemHeight, height, overscan, row renderer; default/selected                                  |
+| `forge-virtual-log-viewer` | visual           | `component.code.virtual-log-viewer`                     | level/filter, columns, follow-tail; default/hover/focus-visible/warn/error/fatal                           |
+| `forge-virtual-table`      | visual           | `component.data.virtual-table` + `component.data.table` | columns, size, rowHeight, height, overscan, striped/bordered, sort; default/hover/focus-visible            |
+| `forge-virtual-tabs`       | visual           | `component.navigation.tabs`                             | variant, active tab, closable/addable; default/hover/focus-visible/selected/disabled                       |
+| `forge-virtual-tree-view`  | visual           | `component.data.virtual-tree`                           | nodes, size, itemHeight, height, overscan, defaultOpen, row renderer; default/hover/focus-visible/expanded |
+| `forge-hero`               | visual           | `component.layout.hero`                                 | media, alignment, size, overlay; default                                                                   |
 
-## 전문 Forge 패키지
+## Specialized Forge packages
 
-| 패키지/레벨 | 구성요소 | 분류 | 계약 | 외관 소품/상태 |
-| ------------------------ | ------------------------------ | ---------------- | -------------------------------------------- | --------------------------------------------------------------------- |
-| `barcode/molecules`      | `forge-barcode`                | 시각적 | `component.code.barcode`                      | 값, 형식, 크기; 기본값/로딩/잘못됨 |
-| `breakpoints/atoms`      | `forge-hide-at`                | 행동 전용 | 없음 | `min`, `max`; 뷰포트 가시성만 |
-| `breakpoints/atoms`      | `forge-show-at`                | 행동 전용 | 없음 | `min`, `max`; 뷰포트 가시성만 |
-| `breakpoints/molecules`  | `forge-breakpoint-debug`       | 시각적 | `component.debug.breakpoint`                  | 중단점 표시; 기본값 |
-| `code-scanner/organisms` | `forge-code-scanner`           | 시각적 | `component.code.scanner`                      | 카메라/포맷, 스캐닝; 기본값/로딩/잘못됨 |
-| `content/atoms`          | `forge-code-block`             | 시각적 | `component.code`                             | 언어, 사본; 기본값/선택됨 |
-| `content/atoms`          | `forge-mermaid`                | 시각적 | `component.code`                             | 다이어그램 소스, 로드/오류; 기본값/로딩/잘못됨 |
-| `content/atoms`          | `forge-wysiwyg-toolbar-button` | 시각적 | `component.button` + `component.icon`        | 명령, 활성; 기본/호버/활성/초점 표시/비활성화/선택됨 |
-| `content/molecules`      | `forge-markdown`               | 시각적 | `component.typography` + `component.code`    | 크기, 링크; 기본값/잘못됨 |
-| `content/molecules`      | `markdown-block`               | 상속된 시각적 | `component.typography` + 아동 계약 | 토큰, 크기; 상속 |
-| `content/molecules`      | `markdown-inline`              | 상속된 시각적 | `component.typography`                       | 토큰, 링크; 상속됨/호버/선택됨 |
-| `content/molecules`      | `forge-wysiwyg-block-controls` | 시각적 | `component.editor.block-controls` + `component.button` | 블록 선택; 기본/호버/초점 표시/선택됨 |
-| `content/molecules`      | `forge-wysiwyg-block-menu`     | 시각적 | `component.editor.block-menu` + `component.overlay`   | 열려 있는; 기본/확장/선택됨 |
-| `content/molecules`      | `forge-wysiwyg-status-bar`     | 시각적 | `component.editor.status-bar`                         | 상태; 기본값/잘못됨/로딩 |
-| `content/molecules`      | `forge-wysiwyg-toolbar`        | 시각적 | `component.editor.toolbar` + `component.button`       | 명령; 기본값/비활성화 |
-| `content/organisms`      | `forge-monaco-editor`          | 시각적 | `component.editor.monaco` + `component.code`          | 언어, 읽기 전용; 기본값/비활성화/잘못됨 |
-| `content/organisms`      | `forge-wysiwyg-editor`         | 시각적 | `component.editor.wysiwyg` + `component.code`        | 편집 가능, 유효하지 않음; 기본/포커스 표시/잘못/비활성화 |
-| `float/molecules`        | `forge-alert-banner`           | 시각적 | `component.feedback` + `component.overlay`   | 상태, 해고 가능; 기본/포커스 표시 |
-| `float/molecules`        | `forge-dropdown`               | 시각적 | `component.overlay` + `component.navigation` | 열려 있는; 기본/확장/선택됨 |
-| `float/molecules`        | `forge-popover`                | 시각적 | `component.overlay`                          | 열려 있는; 기본/확장 |
-| `float/molecules`        | `forge-toast`                  | 시각적 | `component.overlay` + `component.feedback`   | 상태; 기본값/로딩 |
-| `float/molecules`        | `forge-tooltip`                | 시각적 | `component.overlay`                          | 열려 있는; 기본/확장 |
-| `float/organisms`        | `forge-dialog`                 | 시각적 | `component.overlay`                          | 열기, 제목/바닥글; 기본/확장/포커스 표시 |
-| `float/organisms`        | `forge-modal`                  | 시각적 | `component.overlay`                          | 열기, 크기, 머리글/바닥글; 기본/확장/포커스 표시 |
-| `float/organisms`        | `forge-toast-container`        | 시각적 | `component.overlay`                          | 놓기; 기본값/로딩 |
+| Package / level          | Component                      | Classification   | Contract                                               | Appearance props / states                                             |
+| ------------------------ | ------------------------------ | ---------------- | ------------------------------------------------------ | --------------------------------------------------------------------- |
+| `barcode/molecules`      | `forge-barcode`                | visual           | `component.code.barcode`                               | value, format, size; default/loading/invalid                          |
+| `breakpoints/atoms`      | `forge-hide-at`                | behavior-only    | none                                                   | `min`, `max`; viewport visibility only                                |
+| `breakpoints/atoms`      | `forge-show-at`                | behavior-only    | none                                                   | `min`, `max`; viewport visibility only                                |
+| `breakpoints/molecules`  | `forge-breakpoint-debug`       | visual           | `component.debug.breakpoint`                           | breakpoint display; default                                           |
+| `code-scanner/organisms` | `forge-code-scanner`           | visual           | `component.code.scanner`                               | camera/format, scanning; default/loading/invalid                      |
+| `content/atoms`          | `forge-code-block`             | visual           | `component.code`                                       | language, copy; default/selected                                      |
+| `content/atoms`          | `forge-mermaid`                | visual           | `component.code`                                       | diagram source, loading/error; default/loading/invalid                |
+| `content/atoms`          | `forge-wysiwyg-toolbar-button` | visual           | `component.button` + `component.icon`                  | command, active; default/hover/active/focus-visible/disabled/selected |
+| `content/molecules`      | `forge-markdown`               | visual           | `component.typography` + `component.code`              | size, links; default/invalid                                          |
+| `content/molecules`      | `markdown-block`               | inherited-visual | `component.typography` + child contracts               | token, size; inherited                                                |
+| `content/molecules`      | `markdown-inline`              | inherited-visual | `component.typography`                                 | token, links; inherited/hover/selected                                |
+| `content/molecules`      | `forge-wysiwyg-block-controls` | visual           | `component.editor.block-controls` + `component.button` | block selection; default/hover/focus-visible/selected                 |
+| `content/molecules`      | `forge-wysiwyg-block-menu`     | visual           | `component.editor.block-menu` + `component.overlay`    | open; default/expanded/selected                                       |
+| `content/molecules`      | `forge-wysiwyg-status-bar`     | visual           | `component.editor.status-bar`                          | status; default/invalid/loading                                       |
+| `content/molecules`      | `forge-wysiwyg-toolbar`        | visual           | `component.editor.toolbar` + `component.button`        | commands; default/disabled                                            |
+| `content/organisms`      | `forge-monaco-editor`          | visual           | `component.editor.monaco` + `component.code`           | language, read-only; default/disabled/invalid                         |
+| `content/organisms`      | `forge-wysiwyg-editor`         | visual           | `component.editor.wysiwyg` + `component.code`          | editable, invalid; default/focus-visible/invalid/disabled             |
+| `float/molecules`        | `forge-alert-banner`           | visual           | `component.feedback` + `component.overlay`             | status, dismissible; default/focus-visible                            |
+| `float/molecules`        | `forge-dropdown`               | visual           | `component.overlay` + `component.navigation`           | open; default/expanded/selected                                       |
+| `float/molecules`        | `forge-popover`                | visual           | `component.overlay`                                    | open; default/expanded                                                |
+| `float/molecules`        | `forge-toast`                  | visual           | `component.overlay` + `component.feedback`             | status; default/loading                                               |
+| `float/molecules`        | `forge-tooltip`                | visual           | `component.overlay`                                    | open; default/expanded                                                |
+| `float/organisms`        | `forge-dialog`                 | visual           | `component.overlay`                                    | open, title/footer; default/expanded/focus-visible                    |
+| `float/organisms`        | `forge-modal`                  | visual           | `component.overlay`                                    | open, size, header/footer; default/expanded/focus-visible             |
+| `float/organisms`        | `forge-toast-container`        | visual           | `component.overlay`                                    | placement; default/loading                                            |
 
-### 양식 — `packages/forms/src/components/`
+### Forms — `packages/forms/src/components/`
 
-모든 양식 항목은 공유를 사용합니다. `component.field` 아래 계약 외에 라벨/도우미/오류 역할이 추가됩니다. 네이티브
-컨트롤 상태는 컨트롤이 지원하는 경우에만 표시됩니다.
+All form entries use the shared `component.field` label/helper/error roles in addition to the contract below. Native
+control states are represented only where the control supports them.
 
-| 레벨 | 구성 요소(쉼표로 구분된 이름당 하나의 항목) | 분류/계약 | 공유 모양 소품 및 상태 |
+| Level     | Components (one entry per comma-separated name)                                                                                                                                                                                                                                                                                                        | Classification / contract                                                                                                 | Shared appearance props and states                                                                           |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| 원자 | `forge-checkbox`, `forge-input`, `forge-radio`, `forge-range-input`, `forge-rating`, `forge-slider`, `forge-switch`, `forge-textarea`                                                                                                                                                                                                                                     | 시각적 / `component.checkable` 체크박스/라디오/등급/슬라이더/스위치용; `component.input` 입력/범위 입력/텍스트 영역 | `size`, 라벨/값 소품; 기본/호버/활성/초점 표시/비활성화/무효/지원되는 경우 선택됨 |
-| 분자 | `forge-calendar`, `forge-color-input`, `forge-date-input`, `forge-date-range-input`, `forge-field-set`, `forge-file-input`, `forge-location-input`, `forge-multiselect`, `forge-number-stepper`, `forge-otp-input`, `forge-phone-input`, `forge-radio-group`, `forge-search-input`, `forge-segment-control`, `forge-select`, `forge-time-input`, `forge-time-range-input` | 시각적 / `component.input`, `component.select`, `component.checkable`, 또는 `component.field` 구성된 제어에 따라 | `size`, `disabled`, 검증 및 선택 소품; 기본/포커스 표시/비활성화/확장/선택/무효 |
-| 유기체 | `forge-date-time-range-input`, `forge-form-builder`, `forge-form-wizard`, `forge-schema-form-dialog`, `forge-schema-form`                                                                                                                                                                                                                                                 | 시각적 / `component.field` + 입력/선택/오버레이 계약 구성 | 스키마, 단계, 유효성 검사; 기본/포커스 표시/비활성화/확장/선택/무효 |
+| atoms     | `forge-checkbox`, `forge-input`, `forge-radio`, `forge-range-input`, `forge-rating`, `forge-slider`, `forge-switch`, `forge-textarea`                                                                                                                                                                                                                                     | visual / `component.checkable` for checkbox/radio/rating/slider/switch; `component.input` for input/range-input/textarea  | `size`, label/value props; default/hover/active/focus-visible/disabled/invalid/selected where supported      |
+| molecules | `forge-calendar`, `forge-color-input`, `forge-date-input`, `forge-date-range-input`, `forge-field-set`, `forge-file-input`, `forge-location-input`, `forge-multiselect`, `forge-number-stepper`, `forge-otp-input`, `forge-phone-input`, `forge-radio-group`, `forge-search-input`, `forge-segment-control`, `forge-select`, `forge-time-input`, `forge-time-range-input` | visual / `component.input`, `component.select`, `component.checkable`, or `component.field` according to composed control | `size`, `disabled`, validation and selection props; default/focus-visible/disabled/expanded/selected/invalid |
+| organisms | `forge-date-time-range-input`, `forge-form-builder`, `forge-form-wizard`, `forge-schema-form-dialog`, `forge-schema-form`                                                                                                                                                                                                                                                 | visual / `component.field` + composed input/select/overlay contracts                                                      | schema, steps, validation; default/focus-visible/disabled/expanded/selected/invalid                          |
 
-### 아이콘 — `packages/icons/src/components/`
+### Icons — `packages/icons/src/components/`
 
-106개의 아이콘 항목은 모두 **상속된 시각적**입니다. 글리프 사용 `currentColor`; 크기는 소비자가 제어하거나 다음에 매핑됩니다.
-`component.icon.size`. 문자 모양별 변수를 받지 않습니다. 각각은 같은 위치에 있는 이야기를 갖고 있으며 동일한 내용을 따릅니다.
-부모가 해당 상태를 노출하는 기본/선택/비활성화 색상 역할입니다.
+All 106 icon entries are **inherited-visual**. Glyphs use `currentColor`; their size is consumer-controlled or maps to
+`component.icon.size`. They do not receive a per-glyph variable. Each has a co-located story and follows the same
+default/selected/disabled colour roles where the parent exposes that state.
 
-| 아이콘 카테고리 | 구성요소 |
+| Icon category           | Components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 커뮤니케이션/메시징 | `forge-icon-bell`, `forge-icon-chat`, `forge-icon-mail`, `forge-icon-phone`, `forge-icon-send`                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| 소통/나눔 | `forge-icon-share`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| 내용/편집 | `forge-icon-copy`, `forge-icon-edit`, `forge-icon-eye`, `forge-icon-eye-off`, `forge-icon-redo`, `forge-icon-trash`, `forge-icon-undo`                                                                                                                                                                                                                                                                                                                                                                                       |
-| 콘텐츠/파일 | `forge-icon-download`, `forge-icon-upload`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| 데이터/필터링 | `forge-icon-filter`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| 데이터/테이블 | `forge-icon-sort`, `forge-icon-table`, `forge-icon-table-column-add`, `forge-icon-table-column-remove`, `forge-icon-table-row-add`, `forge-icon-table-row-remove`                                                                                                                                                                                                                                                                                                                                                            |
-| 그리기/변형 | `forge-icon-draw-circle`, `forge-icon-draw-line`, `forge-icon-draw-polygon`, `forge-icon-draw-square`, `forge-icon-draw-triangle`, `forge-icon-move`, `forge-icon-palette`, `forge-icon-pencil`, `forge-icon-rotate-ccw`, `forge-icon-rotate-cw`, `forge-icon-scale-down`, `forge-icon-scale-up`                                                                                                                                                                                                                             |
-| 지도/국가 | `forge-icon-country-globe`, `forge-icon-flag`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 지도/지리 | `forge-icon-geodesic`, `forge-icon-globe`, `forge-icon-language`, `forge-icon-map-pin`                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| 맵/레이어 | `forge-icon-layer`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| 지도/마커 | `forge-icon-map-marker-cluster`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| 미디어/캡처 | `forge-icon-camera`, `forge-icon-image`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| 미디어/재생 | `forge-icon-pause`, `forge-icon-play`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| 네비게이션/컨트롤 | `forge-icon-arrow`, `forge-icon-chevron`, `forge-icon-chevrons`, `forge-icon-close`, `forge-icon-home`, `forge-icon-join`, `forge-icon-menu`, `forge-icon-minus`, `forge-icon-plus`, `forge-icon-refresh`, `forge-icon-split`                                                                                                                                                                                                                                                                                                |
-| 탐색/링크 | `forge-icon-external-link`, `forge-icon-link`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 탐색/검색 | `forge-icon-search`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| 객체/시스템 | `forge-icon-cloud`, `forge-icon-debug`, `forge-icon-heart`, `forge-icon-lightning`, `forge-icon-puzzle`, `forge-icon-qr-code`, `forge-icon-settings`, `forge-icon-star`, `forge-icon-wrench`                                                                                                                                                                                                                                                                                                                                 |
-| 라우팅/방향 | `forge-icon-route`, `forge-icon-waypoint`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| 보안/액세스 | `forge-icon-lock`, `forge-icon-lock-open`, `forge-icon-user`                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| 상태/피드백 | `forge-icon-alert`, `forge-icon-alert-critical`, `forge-icon-alert-info`, `forge-icon-alert-neutral`, `forge-icon-alert-warning`, `forge-icon-check`, `forge-icon-error`, `forge-icon-info`, `forge-icon-notice`, `forge-icon-warning`                                                                                                                                                                                                                                                                                       |
-| 텍스트/서식 | `forge-icon-align-center`, `forge-icon-align-justify`, `forge-icon-align-left`, `forge-icon-align-right`, `forge-icon-blockquote`, `forge-icon-bold`, `forge-icon-bullet-list`, `forge-icon-code-block`, `forge-icon-code-inline`, `forge-icon-heading`, `forge-icon-heading-five`, `forge-icon-heading-four`, `forge-icon-heading-one`, `forge-icon-heading-six`, `forge-icon-heading-three`, `forge-icon-heading-two`, `forge-icon-italic`, `forge-icon-numbered-list`, `forge-icon-strikethrough`, `forge-icon-underline` |
-| 시간/캘린더 | `forge-icon-calendar`, `forge-icon-clock`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| communication/messaging | `forge-icon-bell`, `forge-icon-chat`, `forge-icon-mail`, `forge-icon-phone`, `forge-icon-send`                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| communication/sharing   | `forge-icon-share`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| content/editing         | `forge-icon-copy`, `forge-icon-edit`, `forge-icon-eye`, `forge-icon-eye-off`, `forge-icon-redo`, `forge-icon-trash`, `forge-icon-undo`                                                                                                                                                                                                                                                                                                                                                                                       |
+| content/files           | `forge-icon-download`, `forge-icon-upload`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| data/filtering          | `forge-icon-filter`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| data/tables             | `forge-icon-sort`, `forge-icon-table`, `forge-icon-table-column-add`, `forge-icon-table-column-remove`, `forge-icon-table-row-add`, `forge-icon-table-row-remove`                                                                                                                                                                                                                                                                                                                                                            |
+| drawing/transform       | `forge-icon-draw-circle`, `forge-icon-draw-line`, `forge-icon-draw-polygon`, `forge-icon-draw-square`, `forge-icon-draw-triangle`, `forge-icon-move`, `forge-icon-palette`, `forge-icon-pencil`, `forge-icon-rotate-ccw`, `forge-icon-rotate-cw`, `forge-icon-scale-down`, `forge-icon-scale-up`                                                                                                                                                                                                                             |
+| maps/countries          | `forge-icon-country-globe`, `forge-icon-flag`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| maps/geography          | `forge-icon-geodesic`, `forge-icon-globe`, `forge-icon-language`, `forge-icon-map-pin`                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| maps/layers             | `forge-icon-layer`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| maps/markers            | `forge-icon-map-marker-cluster`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| media/capture           | `forge-icon-camera`, `forge-icon-image`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| media/playback          | `forge-icon-pause`, `forge-icon-play`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| navigation/controls     | `forge-icon-arrow`, `forge-icon-chevron`, `forge-icon-chevrons`, `forge-icon-close`, `forge-icon-home`, `forge-icon-join`, `forge-icon-menu`, `forge-icon-minus`, `forge-icon-plus`, `forge-icon-refresh`, `forge-icon-split`                                                                                                                                                                                                                                                                                                |
+| navigation/links        | `forge-icon-external-link`, `forge-icon-link`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| navigation/search       | `forge-icon-search`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| objects/system          | `forge-icon-cloud`, `forge-icon-debug`, `forge-icon-heart`, `forge-icon-lightning`, `forge-icon-puzzle`, `forge-icon-qr-code`, `forge-icon-settings`, `forge-icon-star`, `forge-icon-wrench`                                                                                                                                                                                                                                                                                                                                 |
+| routing/directions      | `forge-icon-route`, `forge-icon-waypoint`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| security/access         | `forge-icon-lock`, `forge-icon-lock-open`, `forge-icon-user`                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| status/feedback         | `forge-icon-alert`, `forge-icon-alert-critical`, `forge-icon-alert-info`, `forge-icon-alert-neutral`, `forge-icon-alert-warning`, `forge-icon-check`, `forge-icon-error`, `forge-icon-info`, `forge-icon-notice`, `forge-icon-warning`                                                                                                                                                                                                                                                                                       |
+| text/formatting         | `forge-icon-align-center`, `forge-icon-align-justify`, `forge-icon-align-left`, `forge-icon-align-right`, `forge-icon-blockquote`, `forge-icon-bold`, `forge-icon-bullet-list`, `forge-icon-code-block`, `forge-icon-code-inline`, `forge-icon-heading`, `forge-icon-heading-five`, `forge-icon-heading-four`, `forge-icon-heading-one`, `forge-icon-heading-six`, `forge-icon-heading-three`, `forge-icon-heading-two`, `forge-icon-italic`, `forge-icon-numbered-list`, `forge-icon-strikethrough`, `forge-icon-underline` |
+| time/calendar           | `forge-icon-calendar`, `forge-icon-clock`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
-### 기타 시각적 패키지
+### Other visual packages
 
-| 패키지/레벨 | 구성요소 | 분류 | 계약 | 외관 소품/상태 |
+| Package / level              | Component                                                                                                                                          | Classification   | Contract                                                     | Appearance props / states                                                                        |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
-| `layout/atoms`               | `forge-container`                                                                                                                                  | 시각적 | `component.layout`                                           | 최대 너비, 패딩; 기본값 |
-| `layout/templates`           | `forge-application-layout`, `forge-bento-layout`, `forge-f-pattern-layout`, `forge-grid-layout`, `forge-vertical-layout`, `forge-z-pattern-layout` | 시각적 | `component.layout`                                           | 레이아웃 구성 및 격차; 기본값 |
-| `map/molecules`              | `forge-map-draw`, `forge-map-layer`, `forge-map-marker`, `forge-map-popup`, `forge-map-source`                                                     | 상속된 시각적 | `component.map`                                              | 지도 소스/레이어/마커/팝업 옵션; 팝업 기본/포커스 표시, 기타 호스트 상속 |
-| `map/organisms`              | `forge-map-libre`                                                                                                                                  | 시각적 | `component.map`                                              | 컨트롤, 스타일, 팝업; 기본/로딩/선택됨 |
-| `matrix-code/molecules`      | `forge-matrix-code`                                                                                                                                | 시각적 | `component.code`                                             | 가치, 크기; 기본값/잘못됨/로딩 |
-| `qr-code/molecules`          | `forge-qr-code`                                                                                                                                    | 시각적 | `component.code`                                             | 가치, 크기; 기본값/잘못됨/로딩 |
-| `resource-planner/organisms` | `forge-resource-planner`                                                                                                                           | 시각적 | `component.resource-planner`                                 | 자원, 범위, 선택; 기본/호버/선택/초점 표시/충돌/사용할 수 없음 |
-| `scheduler/organisms`        | `forge-scheduler`                                                                                                                                  | 시각적 | `component.scheduler`                                        | 범위, 이벤트, 선택; 기본/초점 표시/오늘/외부/바쁨 |
-| `select/atoms`               | `forge-tag`                                                                                                                                        | 시각적 | `component.feedback`                                         | 변형, 크기, 제거 가능; 기본/호버/비활성화 |
-| `select/molecules`           | `forge-language-switcher`                                                                                                                          | 상속된 시각적 | `component.select` + `component.navigation`                  | 장소; 기본/확장/선택됨 |
-| `select/molecules`           | `forge-multiselect`, `forge-select`                                                                                                                | 시각적 | `component.select` + `component.input` + `component.field`   | 크기, 옵션, 모델, 검증; 기본/호버/초점 표시/비활성화/확장/선택/무효 |
-| `theme/atoms`                | `forge-theme-toggle`                                                                                                                               | 시각적 | `component.button` + `component.icon`                        | 방법; 기본/호버/활성/선택됨 |
-| `theme/organisms`            | `forge-theme-composer`, `forge-theme-provider`                                                                                                     | 시각적 | `component.surface` + `component.field` / `component.layout` | 테마 값/모드; 기본값/밝음/어두움/잘못됨 |
-| `three/organisms`            | `forge-three-canvas`                                                                                                                               | 상속된 시각적 | `component.media`                                            | 캔버스 호스트 크기는 구조적입니다. 상속된 표면 |
-| `typography/atoms`           | `forge-typography`                                                                                                                                 | 시각적 | `component.typography`                                       | 변형, 색상, `as`; 기본/링크/비활성화 |
-| `vcard`                      | `forge-icalendar`                                                                                                                                  | 행동 전용 | 없음 | 달력 데이터를 직렬화합니다. 시각적 호스트 없음 |
-| `vcard`                      | `forge-vcard`                                                                                                                                      | 행동 전용 | 없음 | 연락처 데이터를 직렬화합니다. 시각적 호스트 없음 |
+| `layout/atoms`               | `forge-container`                                                                                                                                  | visual           | `component.layout`                                           | max width, padding; default                                                                      |
+| `layout/templates`           | `forge-application-layout`, `forge-bento-layout`, `forge-f-pattern-layout`, `forge-grid-layout`, `forge-vertical-layout`, `forge-z-pattern-layout` | visual           | `component.layout`                                           | layout configuration and gaps; default                                                           |
+| `map/molecules`              | `forge-map-draw`, `forge-map-layer`, `forge-map-marker`, `forge-map-popup`, `forge-map-source`                                                     | inherited-visual | `component.map`                                              | map source/layer/marker/popup options; popup default/focus-visible, others host-inherited        |
+| `map/organisms`              | `forge-map-libre`                                                                                                                                  | visual           | `component.map`                                              | controls, style, popup; default/loading/selected                                                 |
+| `matrix-code/molecules`      | `forge-matrix-code`                                                                                                                                | visual           | `component.code`                                             | value, size; default/invalid/loading                                                             |
+| `qr-code/molecules`          | `forge-qr-code`                                                                                                                                    | visual           | `component.code`                                             | value, size; default/invalid/loading                                                             |
+| `resource-planner/organisms` | `forge-resource-planner`                                                                                                                           | visual           | `component.resource-planner`                                 | resources, range, selection; default/hover/selected/focus-visible/conflict/unavailable           |
+| `scheduler/organisms`        | `forge-scheduler`                                                                                                                                  | visual           | `component.scheduler`                                        | range, events, selection; default/focus-visible/today/outside/busy                               |
+| `select/atoms`               | `forge-tag`                                                                                                                                        | visual           | `component.feedback`                                         | variant, size, removable; default/hover/disabled                                                 |
+| `select/molecules`           | `forge-language-switcher`                                                                                                                          | inherited-visual | `component.select` + `component.navigation`                  | locale; default/expanded/selected                                                                |
+| `select/molecules`           | `forge-multiselect`, `forge-select`                                                                                                                | visual           | `component.select` + `component.input` + `component.field`   | size, options, model, validation; default/hover/focus-visible/disabled/expanded/selected/invalid |
+| `theme/atoms`                | `forge-theme-toggle`                                                                                                                               | visual           | `component.button` + `component.icon`                        | mode; default/hover/active/selected                                                              |
+| `theme/organisms`            | `forge-theme-composer`, `forge-theme-provider`                                                                                                     | visual           | `component.surface` + `component.field` / `component.layout` | theme values/mode; default/light/dark/invalid                                                    |
+| `three/organisms`            | `forge-three-canvas`                                                                                                                               | inherited-visual | `component.media`                                            | canvas host dimensions are structural; inherited surface                                         |
+| `typography/atoms`           | `forge-typography`                                                                                                                                 | visual           | `component.typography`                                       | variant, colour, `as`; default/link/disabled                                                     |
+| `vcard`                      | `forge-icalendar`                                                                                                                                  | behavior-only    | none                                                         | serializes calendar data; no visual host                                                         |
+| `vcard`                      | `forge-vcard`                                                                                                                                      | behavior-only    | none                                                         | serializes contact data; no visual host                                                          |
 
-## 이메일 구성 요소
+## Email components
 
-`@mission-platform/email-components` TSX 소스가 Forge에서 작성되었기 때문에 포함되었습니다. 이메일 클라이언트는 그렇지 않습니다
-런타임 사용자 정의 속성 사용: 렌더러는 동일한 의미 체계 역할을 인라인 값으로 확인합니다. 아래의 모든 항목
-시각적이며 `component.email`, 와 함께 `component.button`, `component.typography`, 또는 `component.media` 언급된 곳.
+`@mission-platform/email-components` is included because its TSX sources are Forge-authored. Email clients do not
+consume runtime custom properties: the renderer resolves the same semantic roles into inline values. Every entry below
+is visual and uses `component.email`, with `component.button`, `component.typography`, or `component.media` where noted.
 
-| 레벨 | 구성 요소 | 계약 |
+| Level     | Components                                                                    | Contract                                                                                                                                                               |
 | --------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 원자 | `email-button`                                                                | `component.email` + `component.button.<variant>`; 변형 중립/기본/보조/3차/성공/경고/정보/오류/중요/유령; 기본/호버/활성/비활성화 |
-| 원자 | `email-divider`, `email-image`, `email-spacer`, `email-typography`            | `component.email` + `component.surface`/`component.media`/`component.typography`; 기본값 |
-| 분자 | `email-card`, `email-column`, `email-list`, `email-row`, `email-social-links` | `component.email`; 링크가 대화형인 경우 기본/선택됨 |
-| 유기체 | `email-footer`, `email-header`, `email-preheader`                             | `component.email` + `component.typography`; 기본값 |
-| 템플릿 | `email-container`, `email-document`, `email-section`                          | `component.email`; 기본/밝은/어두운 소스 모드 |
+| atoms     | `email-button`                                                                | `component.email` + `component.button.<variant>`; variants neutral/primary/secondary/tertiary/success/warning/info/error/critical/ghost; default/hover/active/disabled |
+| atoms     | `email-divider`, `email-image`, `email-spacer`, `email-typography`            | `component.email` + `component.surface`/`component.media`/`component.typography`; default                                                                              |
+| molecules | `email-card`, `email-column`, `email-list`, `email-row`, `email-social-links` | `component.email`; default/selected where links are interactive                                                                                                        |
+| organisms | `email-footer`, `email-header`, `email-preheader`                             | `component.email` + `component.typography`; default                                                                                                                    |
+| templates | `email-container`, `email-document`, `email-section`                          | `component.email`; default/light/dark source mode                                                                                                                      |
 
-## 스토리 및 오버라이드 적용 범위
+## Story and override coverage
 
-249개의 구성 요소 소스에 대해 246개의 동일한 위치에 있는 스토리가 있습니다. 독립된 이야기가 없는 유일한 출처는
-재귀 도우미 `components/organisms/forge-tree-view/forge-tree-view-item`,
-`content/molecules/forge-markdown/markdown-block`, 그리고 `content/molecules/forge-markdown/markdown-inline`; 그들의
-시각적 상태는 상위 스토리에 의해 실행되며 위에 상속된 시각적 상태로 문서화되어 있습니다.
+There are 246 co-located stories for 249 component sources. The only sources without standalone stories are the
+recursive helpers `components/organisms/forge-tree-view/forge-tree-view-item`,
+`content/molecules/forge-markdown/markdown-block`, and `content/molecules/forge-markdown/markdown-inline`; their
+visual states are exercised by their parent stories and are documented above as inherited-visual.
 
-공유된 Storybook 미리보기가 로드됩니다. `@mission-platform/tokens/scss/tokens`, Storybook 재정의 플러그인 및
-`theme` 글로벌. 계약을 검사하려면 전역 테마를 밝거나 어둡게 설정하고 구성 요소 스토리의 컨트롤을 사용하세요.
-소비자 재정의를 테스트하려면 편집하세요. `apps/storybook/design-tokens/overrides.tokens.json` 아래에 `component` 사용하여
-`{ "light": "...", "dark": "..." }` 값. 재정의 스키마는 다음과 같습니다.
-[`vite-plugins/token-overrides/schema/token-overrides.schema.json`](../../../vite-plugins/token-overrides/schema/token-overrides.schema.json).
+The shared Storybook preview loads `@mission-platform/tokens/scss/tokens`, the Storybook override plugin, and the
+`theme` global. To inspect the contract, set the theme global to light or dark and use the component stories' controls;
+to test consumer overrides, edit `apps/storybook/design-tokens/overrides.tokens.json` under `component` using a
+`{ "light": "...", "dark": "..." }` value. The override schema is
+[`vite-plugins/token-overrides/schema/token-overrides.schema.json`](../vite-plugins/token-overrides/schema/token-overrides.schema.json).
 
-## Figma 핸드오프 체크리스트
+## Figma handoff checklist
 
-1. 생성 `Mission Platform / Component` 밝은 모드와 어두운 모드를 사용한 변수 컬렉션.
-2. 다음에서 구성 요소 경로를 가져옵니다. `component.tokens.json`, 구성 요소, 변형, 슬롯 및 상태 세그먼트를 유지합니다.
-3. 원시 색상이나 스케일 값을 복사하는 대신 구성 요소 변수를 해당 기본/의미 변수에 바인딩합니다.
-4. 문서화된 변형 및 크기에 대한 구성요소 속성을 생성합니다. 인벤토리에 나열된 상태에 대해서만 상태 변형을 만듭니다.
-5. 시각적 변수 컬렉션 외부에 레이아웃 수식, 뷰포트 중단점, 캔버스 동작 및 DOM/접근성 동작을 유지합니다.
+1. Create the `Mission Platform / Component` variable collection with Light and Dark modes.
+2. Import the component paths from the `component/<atomic-level>/` source tree, preserving component, variant, slot,
+   and state segments.
+3. Bind component variables to the corresponding primitive/semantic variables rather than copying raw colour or scale values.
+4. Create component properties for the documented variants and sizes; create state variants only for states listed in the inventory.
+5. Keep layout formulas, viewport breakpoints, canvas behavior, and DOM/accessibility behavior outside the visual variable collection.
