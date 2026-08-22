@@ -228,19 +228,15 @@ WebAssembly を利用したスペルチェック。
 
 ### コードと WebAssembly パッケージ
 
-| パッケージ                                       | 目的                                        |
-| :------------------------------------------ | :---------------------------------------- |
-| `@mission-platform/barcode`                 | 1D バーコードは、ファサードとコンポーネントをエンコード/デコードします。    |
-| `@mission-platform/code-scan-wasm`          | 生成されたイメージ スキャナー WebAssembly モジュール。        |
-| `@mission-platform/code-scanner`            | カメラおよび画像コードスキャンコンポーネント。                   |
-| `@mission-platform/matrix-code`             | Data Matrix と Aztec はファサードをエンコード/デコードします。 |
-| `@mission-platform/matrix-code-decode-wasm` | 生成されたマトリックス コード デコーダー WebAssembly モジュール。  |
-| `@mission-platform/matrix-code-encode-wasm` | 生成されたマトリックス コード エンコーダー WebAssembly モジュール。 |
-| `@mission-platform/qr-code`                 | ファサードとコンポーネントを QR エンコード/デコードします。          |
-| `@mission-platform/qr-code-decode-wasm`     | 生成された QR デコーダー WebAssembly モジュール。         |
-| `@mission-platform/qr-code-encode-wasm`     | 生成された QR エンコーダ WebAssembly モジュール。         |
-| `@mission-platform/harper`                  | Harper の文法とスタイルをモナコに統合。                   |
-| `@mission-platform/hunspell`                | Emscripten Hunspell スペルチェック ラッパー。         |
+| パッケージ                              | 目的                                        |
+| :--------------------------------- | :---------------------------------------- |
+| `@mission-platform/barcode`        | 1D バーコードは、ファサードとコンポーネントをエンコード/デコードします。    |
+| `@mission-platform/code-scan-wasm` | 生成されたイメージ スキャナー WebAssembly モジュール。        |
+| `@mission-platform/code-scanner`   | カメラおよび画像コードスキャンコンポーネント。                   |
+| `@mission-platform/matrix-code`    | Data Matrix と Aztec はファサードをエンコード/デコードします。 |
+| `@mission-platform/qr-code`        | ファサードとコンポーネントを QR エンコード/デコードします。          |
+| `@mission-platform/harper`         | Harper の文法とスタイルをモナコに統合。                   |
+| `@mission-platform/hunspell`       | Emscripten Hunspell スペルチェック ラッパー。         |
 
 ### Forge コンパイラ ターゲット
 
