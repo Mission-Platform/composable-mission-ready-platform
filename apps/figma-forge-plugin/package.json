@@ -1,0 +1,35 @@
+{
+  "name": "@mission-platform/figma-forge-plugin",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Figma main-thread extraction and Forge source generation plugin.",
+  "type": "module",
+  "scripts": {
+    "build:check": "vue-tsc --project tsconfig.app.json --noEmit",
+    "build": "pnpm --filter @mission-platform/forge-figma build:bundle && pnpm --filter @mission-platform/forge-figma build:types && pnpm --filter @mission-platform/forge-figma-bridge build && pnpm build:ui && pnpm build:main",
+    "build:main": "vite build --mode main",
+    "build:ui": "vite build --mode ui",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --check ."
+  },
+  "dependencies": {
+    "@mission-platform/forge-figma": "workspace:*",
+    "@mission-platform/forge-figma-bridge": "workspace:*",
+    "vue": "catalog:vue"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@vitejs/plugin-vue": "catalog:vue",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "typescript": "catalog:typescript",
+    "vitest": "catalog:testing",
+    "vite": "catalog:vite",
+    "vue-tsc": "catalog:vue",
+    "sass-embedded": "catalog:vite"
+  }
+}

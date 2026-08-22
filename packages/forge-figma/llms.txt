@@ -1,0 +1,21 @@
+# @mission-platform/forge-figma
+
+Framework-neutral Figma design model, Forge component mappings, token resolution, and export contracts.
+
+## Installation
+
+Add it to a consuming workspace member:
+
+```json
+{
+  "dependencies": {
+    "@mission-platform/forge-figma": "workspace:*"
+  }
+}
+```
+
+## Usage
+
+```ts
+import { forgeFigma } from '@mission-platform/forge-figma';
+```

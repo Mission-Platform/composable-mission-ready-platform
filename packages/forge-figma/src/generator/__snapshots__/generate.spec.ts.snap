@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateForgeExportBundle > generates deterministic neutral source for mapped and unmapped layers 1`] = `
+[
+  "checkout-panel.tsx",
+  "checkout-panel.module.scss",
+  "assets/hero.png",
+]
+`;
