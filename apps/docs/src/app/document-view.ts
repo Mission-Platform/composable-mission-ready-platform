@@ -1,13 +1,13 @@
 import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
 
-import { descriptionForSlug, getDocument, titleForSlug } from '../documentation';
+import { descriptionForSlug, documentationSourceRoots, getDocument, titleForSlug } from '../documentation';
 import { resolveDocumentationLocale } from '../i18n';
 import { useMarkdown } from '../composables/use-markdown';
 import { createElement } from './dom';
 
 function slugFromRoute(route: MpResolvedLocation): string {
   const value = route.params.slug;
-  return Array.isArray(value) ? value.join('/') : value ?? 'overview';
+  return Array.isArray(value) ? value.join('/') : (value ?? 'overview');
 }
 
 interface MarkdownElement extends HTMLElement {
@@ -44,16 +44,24 @@ export class DocsDocumentElement extends HTMLElement {
         createElement<HTMLParagraphElement>('p', {}, [`No documentation exists for “${slug}”.`]),
       ]);
       missing.className = 'docs-document__missing';
-      const back = createElement<HTMLElement & { setRouter?: (value: MpRouterAdapter) => void }>('forge-router-link', {
-        to: '/',
-      }, ['Back to the documentation home']);
+      const back = createElement<HTMLElement & { setRouter?: (value: MpRouterAdapter) => void }>(
+        'forge-router-link',
+        {
+          to: '/',
+        },
+        ['Back to the documentation home'],
+      );
       back.setRouter?.(this.router!);
       missing.append(back);
       this.append(missing);
       return;
     }
 
-    const { toc, resolveHref } = useMarkdown(document.source, slug, locale);
+    const { toc, resolveHref } = useMarkdown(document.source, slug, locale, {
+      currentRoot: document.sourceRoot,
+      roots: documentationSourceRoots,
+      hasDocument: (target, targetLocale) => getDocument(target, targetLocale) !== undefined,
+    });
     const article = createElement<HTMLElement>('article');
     article.className = 'docs-document__content markdown-body';
     article.addEventListener('click', (event) => {

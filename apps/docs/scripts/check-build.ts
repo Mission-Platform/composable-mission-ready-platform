@@ -1,12 +1,18 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import { buildIncludedRoutes, canonicalForSlug, collectDocumentSlugs, DEFAULT_SLUG } from '../src/route-inventory.ts';
+import {
+  buildIncludedRoutes,
+  canonicalForSlug,
+  collectDocumentSlugs,
+  DEFAULT_SLUG,
+  discoverDocumentationRoots,
+} from '../src/route-inventory.ts';
 
 const appDirectory = path.resolve(import.meta.dirname, '..');
 const repoRoot = path.resolve(appDirectory, '../..');
 const outputDirectory = path.join(appDirectory, 'dist');
-const documentSlugs = collectDocumentSlugs(path.join(repoRoot, 'docs'));
+const documentSlugs = collectDocumentSlugs(discoverDocumentationRoots(repoRoot));
 const routes = buildIncludedRoutes(documentSlugs);
 const assetsDirectory = path.join(outputDirectory, 'assets');
 const assetNames = await readdir(assetsDirectory);
@@ -56,14 +62,19 @@ function assertContains(html: string, snippet: string, label: string): void {
   }
 }
 
-// Pick a real nested documentation route (e.g. `/configs/index` or `/fr/configs/index`).
-const nestedRoute =
-  routes.find((route) => route !== '/' && route.slice(1).includes('/')) ?? routes.find((route) => route !== '/') ?? routes[0];
+// Check a representative package-owned route so this verification cannot pass
+// while package pages are only available through the client-side fallback.
+const nestedRoute = '/packages/barcode/index';
+if (!routes.includes(nestedRoute)) {
+  throw new Error(`Docs build inventory is missing the representative package route ${nestedRoute}`);
+}
 
 const { locale: nestedLocale, slug: nestedSlug } = parseLocaleAndSlug(nestedRoute);
 const expectedCanonical = canonicalForSlug(nestedSlug, nestedLocale);
 const nestedHtmlPath =
-  nestedRoute === '/' ? path.join(outputDirectory, 'index.html') : path.join(outputDirectory, nestedRoute.slice(1), 'index.html');
+  nestedRoute === '/'
+    ? path.join(outputDirectory, 'index.html')
+    : path.join(outputDirectory, nestedRoute.slice(1), 'index.html');
 const nestedHtml = await requiredFile(nestedHtmlPath);
 
 // ─── Activation target ───────────────────────────────────────────────────────
@@ -107,7 +118,10 @@ if (!/<script\b[^>]*\btype=["']module["'][^>]*>/.test(nestedHtml)) {
 // and highlight.js. Check the compiled output rather than source filenames,
 // which are intentionally collapsed into a hashed Vite asset.
 const documentStylesheet = await requiredFile(
-  path.join(outputDirectory, new URL(nestedStylesheets[0], 'https://docs.mission-platform.test/').pathname.replace(/^\//, '')),
+  path.join(
+    outputDirectory,
+    new URL(nestedStylesheets[0], 'https://docs.mission-platform.test/').pathname.replace(/^\//, ''),
+  ),
 );
 assertContains(documentStylesheet, '--mp-', 'Compiled design tokens stylesheet');
 assertContains(documentStylesheet, 'docs-app', 'Compiled docs app stylesheet');
@@ -135,17 +149,26 @@ for (const component of ['forge-application-layout', 'forge-navbar', 'forge-sele
 const forgeModules = [
   {
     label: 'forge-navbar',
-    module: path.join(repoRoot, 'packages/components/dist/web-components/components/organisms/forge-navbar/forge-navbar.js'),
+    module: path.join(
+      repoRoot,
+      'packages/components/dist/web-components/components/organisms/forge-navbar/forge-navbar.js',
+    ),
     expected: ['../../../styles/size.css', './forge-navbar.css'],
   },
   {
     label: 'forge-application-layout',
-    module: path.join(repoRoot, 'packages/layout/dist/web-components/components/templates/forge-application-layout/forge-application-layout.js'),
+    module: path.join(
+      repoRoot,
+      'packages/layout/dist/web-components/components/templates/forge-application-layout/forge-application-layout.js',
+    ),
     expected: ['./forge-application-layout.css'],
   },
   {
     label: 'forge-select',
-    module: path.join(repoRoot, 'packages/select/dist/web-components/components/molecules/forge-select/forge-select.js'),
+    module: path.join(
+      repoRoot,
+      'packages/select/dist/web-components/components/molecules/forge-select/forge-select.js',
+    ),
     expected: ['./forge-select.css'],
   },
 ] as const;
@@ -171,7 +194,10 @@ await assertStylesheetAssets(homeHtml, 'Prerendered homepage');
 const translatedRoute = routes.find((route) => route.startsWith('/fr/'));
 if (translatedRoute) {
   const translatedHtml = await requiredFile(path.join(outputDirectory, translatedRoute.slice(1), 'index.html'));
-  const translatedStylesheets = await assertStylesheetAssets(translatedHtml, `Prerendered translated route ${translatedRoute}`);
+  const translatedStylesheets = await assertStylesheetAssets(
+    translatedHtml,
+    `Prerendered translated route ${translatedRoute}`,
+  );
   if (translatedStylesheets.join('\n') !== nestedStylesheets.join('\n')) {
     throw new Error(`Translated route ${translatedRoute} does not retain the same stylesheet assets as ${nestedRoute}`);
   }
@@ -179,8 +205,8 @@ if (translatedRoute) {
 
 const sitemap = await requiredFile(path.join(outputDirectory, 'sitemap.xml'));
 const robots = await requiredFile(path.join(outputDirectory, 'robots.txt'));
-if (!sitemap.includes('<urlset') || !sitemap.includes('configs/')) {
-  throw new Error('Sitemap does not include nested documentation URLs');
+if (!sitemap.includes('<urlset') || !sitemap.includes('configs/') || !sitemap.includes('packages/barcode/index')) {
+  throw new Error('Sitemap does not include project and package documentation URLs');
 }
 if (!robots.includes('/search')) {
   throw new Error('robots.txt does not disallow /search');

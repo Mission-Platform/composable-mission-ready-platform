@@ -2,7 +2,7 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> 영어 원문: [docs/store-authoring.md](../../store-authoring.md)
+> docs/store-authoring.md: [docs/store-authoring.md](../../store-authoring.md)
 > 언어: 한국어 (ko)
 
 저장소는 패키지 내의 공유된 구성 요소 간 상태를 관리하는 데 사용됩니다. 애플리케이션 수준 저장소(예: Pinia 또는
@@ -28,19 +28,19 @@ src/stores/
 패키지 저장소는 프레임워크별 종속성을 방지합니다. 대신, 관찰 가능한 간단한 패턴을 따릅니다.
 
 1. **비공개 상태**: 모듈 범위 내에서 상태를 유지합니다(일반 TypeScript 값).
-2. **스냅샷 액세스**: `getSnapshot()` 현재 상태를 검색하는 함수입니다.
-3. **구독**: `subscribe(listener)` 목록에 콜백을 추가하고 구독 취소를 반환하는 함수
+2. **스냅샷 액세스**: 현재 상태를 검색하기 위해 `getSnapshot()` 함수를 제공합니다.
+3. **구독**: 목록에 콜백을 추가하고 구독 취소를 반환하는 `subscribe(listener)` 함수를 제공합니다.
    기능.
 4. **변경자**: 상태를 업데이트하는 기능을 제공합니다. 이 기능은 업데이트 후 모든 리스너에게 알려야 합니다.
 
 ## 저작 규칙
 
-1. **프레임워크 불가지론**: 다음에서 가져오지 마세요. `vue`, `react`, 또는 `@mission-platform/forge` 저장소 모듈 내부의 후크
+1. **프레임워크 불가지론**: 저장소 모듈 내부의 `vue`, `react` 또는 `@mission-platform/forge` 후크에서 가져오지 마세요.
    그 자체.
 2. **명시적 유형**: 항상 저장소 상태에 대한 인터페이스를 정의하고 내보내십시오.
-3. **SSR 안전**: 브라우저 API에 대한 액세스를 보호합니다(예: `localStorage`) 따라서 저장소는 다음과 같이 초기화될 수 있습니다. Node.js
+3. **SSR 안전성**: 저장소가 Node.js에서 초기화될 수 있도록 브라우저 API(예: `localStorage`)에 대한 액세스를 보호합니다.
    환경.
-4. **필수 테스트**: 모든 매장에는 같은 위치에 있어야 합니다. `.spec.ts` 파일.
+4. **필수 테스트**: 모든 매장에는 같은 위치에 `.spec.ts` 파일이 있어야 합니다.
 
 ## 예시 매장
 
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## 구성 요소의 저장소 소비
 
-한 번 쓰기 구성 요소 내에서 저장소를 사용하려면 다음을 사용하여 연결하세요. `useState` 그리고 `useEffect` ~에서 `@mission-platform/forge`:
+1회 쓰기 구성 요소 내에서 저장소를 사용하려면 `@mission-platform/forge`에서 `useState` 및 `useEffect`을 사용하여 이를 연결합니다.
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

@@ -8,15 +8,8 @@
   "workers_dev": true,
   "build": {
     "cwd": "../../",
-    "watch_dir": [
-      "./packages/**/src/*",
-      "./packages/*-wasm/src/**",
-      "./packages/**/src/wasm/**",
-      "./crates/**",
-      "./apps/docs/src/**",
-      "./docs/**"
-    ],
-    "command": "export PATH=\"$HOME/.cargo/bin:$PATH\" && if ! command -v rustup >/dev/null 2>&1; then curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal; fi && if [ -f \"$HOME/.cargo/env\" ]; then . \"$HOME/.cargo/env\"; fi && export PATH=\"$HOME/.cargo/bin:$PATH\" && if ! rustup run stable rustc --version >/dev/null 2>&1; then rustup toolchain install stable --profile minimal --no-self-update; fi && rustup target add wasm32-unknown-unknown --toolchain stable && export RUSTUP_TOOLCHAIN=stable && pnpm exec turbo run build --filter=@mission-platform/docs"
+    "watch_dir": ["./packages/**/src/*", "./apps/docs/src/**", "./docs/**"],
+    "command": "pnpm exec turbo run build --filter=@mission-platform/docs"
   },
   "assets": {
     "not_found_handling": "single-page-application",

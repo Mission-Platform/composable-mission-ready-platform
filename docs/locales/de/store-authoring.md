@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/store-authoring.md](../../store-authoring.md)
+> docs/store-authoring.md: [docs/store-authoring.md](../../store-authoring.md)
 > Sprache: Deutsch (de)
 
 Stores werden verwendet, um den gemeinsamen, komponentenübergreifenden Status innerhalb eines Pakets zu verwalten. Im Gegensatz zu Stores auf Anwendungsebene (wie Pinia oder
@@ -11,7 +11,7 @@ Einmal beschreibbare Komponenten, um sie unabhängig vom Host-Framework über Fo
 
 ## Verzeichnislayout
 
-Jeder Speicher MUSS sich in einem eigenen benannten Unterverzeichnis befinden `src/stores/`, begleitet von einer am selben Ort befindlichen Testdatei und a
+Jeder Speicher MUSS sich in einem eigenen benannten Unterverzeichnis innerhalb von `src/stores/` befinden, begleitet von einer am selben Ort befindlichen Testdatei und einer
 lokales Fass.
 
 ```text
@@ -27,20 +27,20 @@ src/stores/
 
 Paketspeicher vermeiden Framework-spezifische Abhängigkeiten. Stattdessen folgen sie einem einfachen beobachtbaren Muster:
 
-1. **Privater Status**: Behalten Sie den Status innerhalb des Modulbereichs bei (einfach). TypeScript Werte).
-2. **Snapshot-Zugriff**: Stellen Sie a bereit `getSnapshot()` Funktion zum Abrufen des aktuellen Status.
-3. **Abonnement**: Geben Sie a an `subscribe(listener)` Funktion, die einer Liste einen Rückruf hinzufügt und eine Abmeldung zurückgibt
+1. **Privater Status**: Behalten Sie den Status innerhalb des Modulbereichs bei (einfache TypeScript-Werte).
+2. **Snapshot-Zugriff**: Stellen Sie eine `getSnapshot()`-Funktion bereit, um den aktuellen Status abzurufen.
+3. **Abonnement**: Stellen Sie eine `subscribe(listener)`-Funktion bereit, die einen Rückruf zu einer Liste hinzufügt und eine Abmeldung zurückgibt
    Funktion.
 4. **Mutatoren**: Stellen Funktionen zum Aktualisieren des Status bereit, die alle Listener nach der Aktualisierung benachrichtigen MÜSSEN.
 
 ## Autorenregeln
 
-1. **Framework-Agnostiker**: Nicht importieren aus `vue`, `react`, oder `@mission-platform/forge` Haken im Store-Modul
+1. **Framework-unabhängig**: Importieren Sie nicht aus `vue`-, `react`- oder `@mission-platform/forge`-Hooks innerhalb des Store-Moduls
    sich selbst.
 2. **Explizite Typen**: Definieren und exportieren Sie immer eine Schnittstelle für den Status des Geschäfts.
-3. **SSR-Sicherheit**: Zugriff auf Browser-APIs schützen (z. B. `localStorage`) So kann der Store in a initialisiert werden Node.js
+3. **SSR-Sicherheit**: Schützen Sie den Zugriff auf Browser-APIs (z. B. `localStorage`), damit der Store in einer Node.js initialisiert werden kann
    Umgebung.
-4. **Obligatorische Tests**: Jedes Geschäft muss über einen Co-Location verfügen `.spec.ts` Datei.
+4. **Obligatorische Tests**: Jeder Shop muss über eine am selben Ort befindliche `.spec.ts`-Datei verfügen.
 
 ## Beispielshop
 
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Verbrauchende Speicher in Komponenten
 
-Um einen Speicher innerhalb einer einmal beschreibbaren Komponente zu verwenden, überbrücken Sie ihn mit `useState` Und `useEffect` aus `@mission-platform/forge`:
+Um einen Speicher innerhalb einer einmal beschreibbaren Komponente zu verwenden, überbrücken Sie ihn mit `useState` und `useEffect` von `@mission-platform/forge`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

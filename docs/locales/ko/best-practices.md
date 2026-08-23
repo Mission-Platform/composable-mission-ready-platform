@@ -2,7 +2,7 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> 영어 원문: [docs/best-practices.md](../../best-practices.md)
+> docs/best-practices.md: [docs/best-practices.md](../../best-practices.md)
 > 언어: 한국어 (ko)
 
 이 문서에서는 Mission Platform 모노레포의 핵심 원칙, 아키텍처 및 코딩 표준을 간략하게 설명합니다. 그것
@@ -67,7 +67,7 @@ done
 
 - **Composition API**만 사용하세요.
 - 선호하다 `ref()` 대부분의 주에서는 일관성을 유지합니다.
-- 복잡한 스테이트풀 로직을 **컴포저블**로 추출합니다(`useXxx`).
+- **컴포저블**로 복잡한 스테이트풀(Stateful) 로직 추출(`useXxx`).
 - 모든 부작용(감시자, 간격, 이벤트 리스너)이 적절하게 정리되었는지 확인합니다. `onUnmounted`.
 
 ## 모노레포 워크플로

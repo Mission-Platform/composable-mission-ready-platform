@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/architecture.md](../../architecture.md)
+> docs/architecture.md: [docs/architecture.md](../../architecture.md)
 > Idioma: Español (es)
 
 Mission Platform está diseñada para ofrecer la máxima reutilización y flexibilidad entre marcos. Este documento explica la
@@ -16,7 +16,7 @@ internacionalización, componentes UI).
 
 ### La regla de oro: dirección de la dependencia
 
-Se aplica un flujo de dependencia unidireccional estricto en todo el monorepo para evitar dependencias circulares y mantener una relación clara.
+Se aplica un estricto flujo de dependencia unidireccional en todo el monorepo para evitar dependencias circulares y mantener una relación clara.
 límites:
 
 ```mermaid
@@ -36,8 +36,8 @@ graph TD
    monorepo.
 2. **Paquetes (`packages/`)**: Proporciona lógica y componentes reutilizables. Pueden depender unos de otros pero nunca de
    aplicaciones.
-3. ** Complementos de Forge (`forge-plugins/`)**: Destinos de salida del compilador: complementos del marco y destinos de CMS. Pueden depender de
-   `vite-plugins/` y `configs/`, y nunca en `apps/` o sobre los hermanos de cada uno; un adaptador CMS depende sólo de
+3. **Complementos de Forge (`forge-plugins/`)**: Destinos de salida del compilador: complementos del marco y destinos de CMS. Pueden depender de
+   `vite-plugins/` y `configs/`, y nunca en `apps/` o sobre los hermanos del otro; un adaptador CMS depende sólo de
    `forge-cms-plugin-api`.
 4. **Configuraciones (`configs/`)**: Configuración de herramientas compartidas (ESLint, TypeScript, etc.). Son la base y dependen de
    nada dentro del monorepo.
@@ -65,7 +65,8 @@ y `forge-cms-webflow` cada uno posee una plataforma. Un destino CMS *compone* un
 cualquier plataforma se empareja con cualquier marco y la salida aterriza en `dist/cms/<cms>/<framework>/**`.
 
 Para conocer la canalización completa, los consumidores de componentes y ganchos, la proyección de CMS y la guía de extensión, consulte
-[Canalización del compilador Forge](forge-compiler.md). Para la vista de orquestación de compilación, consulte [Sistema de construcción](build-system.md).
+[Canalización del compilador Forge](../../../vite-plugins/forge/docs/locales/es/reference/compiler.md). Para la vista de orquestación de compilación, consulte
+[Sistema de construcción](build-system.md).
 
 ## Sistema de tokens de diseño
 
@@ -80,9 +81,14 @@ La coherencia visual se mantiene a través de un sofisticado sistema de tokens d
 
 Los servicios de aplicaciones centrales, como el enrutamiento y la internacionalización, están diseñados para ser independientes del marco.
 
-- **`@mission-platform/router`**: Define rutas como una estructura de datos simple (`MpRoute`). Adaptadores para Vue traducir estos
-  en instancias de enrutador específicas del marco y elementos componibles.
-- **`@mission-platform/i18n`**: Una envoltura alrededor `i18next` que proporciona un universal `createForgeI18N` fábrica.
+- **`@mission-platform/router`**: Proporciona destinos de ruta estructurados, ayudantes de URL/ubicación pura y marcadores de compilador como
+  como `MpLink`, `useMpRoute`, `useMpRouter`, y `MpRouterView`. No tiene marco de interfaz de usuario ni tiempo de ejecución de biblioteca de enrutador
+  dependencias y nunca posee la tabla de rutas de una aplicación.
+- **Forjar objetivos de enrutador**: `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, y
+  `-web-components` baje esos marcadores al enrutador nativo seleccionado por la aplicación consumidora. Las aplicaciones retienen
+  propiedad de definiciones de rutas nativas, proveedores, guardias, cargadores e instancias de enrutador; el objetivo solo suministra
+  capacidades de consumo.
+- **`@mission-platform/i18n`**: Un envoltorio alrededor `i18next` que proporciona un universal `createForgeI18N` fábrica.
   Los adaptadores específicos del marco proporcionan `useI18n` ganchos y componentes para Vue y React.
 
 ## Estrategia de construcción e implementación
@@ -105,5 +111,5 @@ Lógica especializada para proxy API y servicio de activos SPA.
 ## Resumen
 
 La arquitectura de Mission Platform prioriza el aislamiento, la seguridad de tipos y la flexibilidad del marco. Al desacoplar el núcleo
-Lógica del marco de la interfaz de usuario y al aplicar una estricta dirección de dependencia, la plataforma garantiza la mantenibilidad a largo plazo.
+lógica del marco de la interfaz de usuario y al aplicar una estricta dirección de dependencia, la plataforma garantiza la mantenibilidad a largo plazo
 y escalabilidad para ecosistemas de aplicaciones complejos.

@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/build-system.md](../../build-system.md)
+> docs/build-system.md: [docs/build-system.md](../../build-system.md)
 > Langue: Français (fr)
 
 Ce document explique l'architecture et les mécanismes du système de construction de Mission Platform. Il est conçu pour les hautes
@@ -57,7 +57,7 @@ les cadres sont choisis indépendamment, `storyblok × vue` et `astro × solid` 
 Les builds CMS émettent vers `dist/cms/<cms>/<framework>/**`, avec des manifestes et autres side-cars de plate-forme reflétés dans
 `dist/cms/<cms>/`. Les cibles qui nécessitent un runtime hydraté (Astro, Webflow) co-générent une arborescence d'îlots à partir de la limite
 plugin framework dans la même version. La répartition complète des responsabilités et les limites des étapes sont décrites dans
-[Pipeline du compilateur Forge](forge-compiler.md).
+[Pipeline du compilateur Forge](../../../vite-plugins/forge/docs/locales/fr/reference/compiler.md).
 
 ## Contrat de construction
 

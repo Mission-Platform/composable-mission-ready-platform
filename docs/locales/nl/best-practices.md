@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/best-practices.md](../../best-practices.md)
+> docs/best-practices.md: [docs/best-practices.md](../../best-practices.md)
 > Taal: Nederlands (nl)
 
 Dit document schetst de kernprincipes, architectuur en coderingsnormen voor de monorepo van Mission Platform. Het
@@ -37,7 +37,7 @@ ontdekt en geeft de verhalen weer die naast hun componenten leven.
   de conventie in [Ontwerp van atomaire componenten](atomic-component-design.md).
 - Controleer het gedrag van componenten over de hele linie Vue, React, Svelte, Soliden Webcomponenten door de
   `STORYBOOK_FRAMEWORK` omgevingsvariabele. Elke modus moet dezelfde neutrale verhaalinventaris gebruiken; een vermist
-  Framework-artefact is een pakket-/exportfout, en geen reden om dat verhaal eruit te filteren.
+  Framework-artefact is een pakket-/exportfout, geen reden om dat verhaal eruit te filteren.
 
 De volledige statische validatielus is:
 
@@ -88,7 +88,7 @@ Consistente codestijl wordt afgedwongen via ESLint En Prettier.
 
 ## Prestatie-optimalisatie
 
-- **Codesplitsen**: gebruik dynamisch `import()` voor niet-kritieke functies en grote bibliotheken.
+- **Code splitsen**: gebruik dynamisch `import()` voor niet-kritieke functies en grote bibliotheken.
 - **Asset-optimalisatie**: geef de voorkeur aan moderne afbeeldingsformaten (WebP/AVIF) en zorg ervoor dat alle statische assets worden gecomprimeerd.
 - **Reactiviteit Overhead**: Gebruik `shallowRef` voor grote objecten die geen diepe reactiviteit vereisen.
 

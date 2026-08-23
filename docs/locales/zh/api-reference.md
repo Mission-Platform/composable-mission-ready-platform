@@ -1,11 +1,15 @@
-# API参考
+# 包API目录
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/api-reference.md](../../api-reference.md)
+> docs/api-reference.md: [docs/api-reference.md](../../api-reference.md)
 > 语言: 简体中文 (zh)
 
-任务平台核心包和框架适配器的技术参考。
+这个项目范围的页面是包功能和兼容性的目录
+合同。规范安装、使用、限制和 API 详细信息
+每个包裹都位于该包裹旁边 `packages/*/docs/`, `configs/*/docs/`，
+和 `forge-plugins/*/docs/`。生成的 API 引用必须添加到所属的 API 引用中
+包而不是这个页面。
 
 > **进口始终是裸露的。** 框架运输 `@mission-platform/*` 包暴露单个 `.`
 > 入口处由 `mp:vue`, `mp:react`, `mp:solid`， 和 `mp:web-component` 出口
@@ -31,16 +35,63 @@
 | `toVueComponent`   |适配器|将锻造组件转换为 Vue 3 个组件（来自 `@mission-platform/forge/vue`).   |
 | `toReactComponent` |适配器|将锻造组件转换为 React 组件（来自 `@mission-platform/forge/react`). |
 
+### @mission-platform/vite-plugin-forge
+
+编译器驱动程序接受显式 `FrameworkOutputPlugin` 实例；确实如此
+不提供框架注册表。 `defineViteForgeComponents` 和
+`defineTsdownForgeComponents` （加上钩子和 CMS 助手）共享一个进程内
+`ForgeCompilerService` 对于一个构建或观看会话。
+
+|能力|描述 |
+|:-----------|:------------|
+|服务生命周期|跨构建重用源、图、解析源、语义 IR 和目标工件状态；完成后处理一次性服务，关闭时处理观察者服务。 |
+|缓存键 |源/依赖/配置指纹，编译器和路由器选项， `tsconfig` `baseUrl`/`paths`、目标 ID、插件标识/版本以及相关条件。 |
+|观看失效|更改的文件使反向图依赖项无效，包括传递组件和钩子条目；不相关的目标快照仍然可重用。 |
+|诊断/报告 |报告阶段计时、缓存命中/未命中计数、受影响的文件、警告、错误和发出的工件计数。错误会阻碍晋升。 |
+|工件清单 |在原子升级之前列出目标范围的条目、模块、声明、源映射、资产和校验和。 |
+|扩展点|实施并通过 `FrameworkOutputPlugin` 来自调用者拥有的 `forge-plugin-*` 包裹;不要将目标分支添加到中性驱动程序。 |
+
+通过项目配置别名 `tsconfig.json` (`baseUrl` 和
+`paths`); Vite 和 tsdown 图准备使用相同的别名事实。路由器
+选择、路由器插件和条件通过组件转发
+钩子助手。未来的工作人员/守护进程可能会坐在服务合同后面，但是
+支持的实施目前正在进行中。
+
 ### @mission-platform/router
 
-与框架无关的路由原语和适配器。
+框架中立的路由契约、纯匹配助手和编译器标记
+共享包。应用程序拥有路由记录和本机路由器实例；的
+应用程序选择的 Forge 路由器目标提供运行时功能。
 
-|出口|类型 |描述 |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        |类型 |用于定义路由树的接口。                                                                              |
-| `defineRoutes`   |功能|定义和验证路由树的助手。                                                                       |
-| `createMpRouter` |适配器|创建一个 Vue- 兼容路由器（暴露于 `@mission-platform/router` 当 `mp:vue` 条件处于活动状态）。 |
-| `useMpRoute`     |钩|访问当前路由状态（特定于适配器）。                                                                   |
+|出口/包装|类型 |描述 |
+|:-----------------|:-----|:------------|
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` |类型 |路由记录、参数、查询/哈希状态、元数据和导航目标。 |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` |功能|无需 DOM 或框架运行时即可定义路由树和解析路径。 |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` |类型 |导航结果/事件、防护、可插入历史记录和适配器合约。 |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` |编译器标记 |共享包消耗的中性链接、路由状态、导航、分辨率和出口功能。 |
+| `@mission-platform/forge-router-*` |锻造目标 |独立选择本机路由器目标 Vue 路由器， React 路由器、SolidJS 路由器、SvelteKit、RedwoodSDK 和 Web 组件。 |
+
+运行时包拥有自己的历史记录和反应状态；中性包从不导入 UI 框架。对于 Web 组件，
+注册元素一次并通过 DOM 属性而不是序列化属性传递复杂目标：
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
 
 ## 用户界面与设计
 
@@ -171,7 +222,8 @@ WebAssembly 支持的拼写检查。
 | `@mission-platform/map`            | MapLibre 地图组件和可组合项。                      |
 | `@mission-platform/observers`      |交集、突变和性能观察者可组合项。 |
 | `@mission-platform/phone-number`   |键入 WebAssembly 电话号码解析和格式化。        |
-| `@mission-platform/router`         |框架中立的路由原语和适配器。            |
+| `@mission-platform/router`         |框架中立的路由契约和编译器功能。 |
+| `@mission-platform/forge-router-web-components` | Web 组件路由器目标和无框架运行时。 |
 | `@mission-platform/rxjs`           | RxJS 可观察对象和订阅可组合对象。                 |
 | `@mission-platform/scheduler`     |调度程序 UI、重复周期和日历布局域逻辑。 |
 | `@mission-platform/vcard`         | RFC 6350 vCard 和 RFC 5545 iCalendar 数据和组件。  |
@@ -185,7 +237,6 @@ WebAssembly 支持的拼写检查。
 |套餐 |目的|
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 |一维条形码编码/解码外观和组件。    |
-| `@mission-platform/code-scan-wasm`          |生成图像扫描仪 WebAssembly 模块。       |
 | `@mission-platform/code-scanner`            |摄像头和图像扫码组件。         |
 | `@mission-platform/matrix-code`             | Data Matrix 和 Aztec 编码/解码外观。       |
 | `@mission-platform/qr-code`                 | QR 编码/解码外观和组件。            |
@@ -196,7 +247,7 @@ WebAssembly 支持的拼写检查。
 
 这些住在 `forge-plugins/` 而不是 `packages/`。 **框架**插件决定哪个运行时是中立组件
 降低至； **CMS** 目标决定将其投影到哪个内容平台。两个轴组成，因此任何 CMS
-目标可以绑定到任何框架插件。看 [Forge 编译器管道](forge-compiler.md).
+目标可以绑定到任何框架插件。请参阅 [Forge 编译器管道](../../../vite-plugins/forge/docs/locales/zh/reference/compiler.md).
 
 |套餐 |目的|
 |:-------------------------------------------------|:--------------------------------------------------------------------------------|

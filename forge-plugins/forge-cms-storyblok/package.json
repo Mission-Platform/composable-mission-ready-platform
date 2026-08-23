@@ -22,6 +22,7 @@
     "dist"
   ],
   "scripts": {
+    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build": "tsdown",
     "test": "vitest run",
     "lint": "eslint .",

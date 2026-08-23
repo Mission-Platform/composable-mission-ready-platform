@@ -2,16 +2,16 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/util-authoring.md](../../util-authoring.md)
+> docs/util-authoring.md: [docs/util-authoring.md](../../util-authoring.md)
 > Idioma: Español (es)
 
 Las utilidades (utils) son funciones auxiliares puras e independientes del marco. Deben estar libres de importaciones de marcos de UI y, a menos que
-requerido y documentado explícitamente, libre de API DOM. Esto garantiza que puedan utilizarse en cualquier contexto, incluido
+explícitamente requerido y documentado, libre de API DOM. Esto garantiza que puedan utilizarse en cualquier contexto, incluido
 Lógica y trabajadores del lado del servidor.
 
 ## Diseño del directorio
 
-Cada utilidad DEBE residir en su propio subdirectorio con nombre dentro `src/utils/`, acompañado de un archivo de prueba ubicado en el mismo lugar y
+Cada utilidad DEBE residir en su propio subdirectorio con nombre dentro de `src/utils/`, acompañada de un archivo de prueba ubicado conjuntamente y
 un barril local.
 
 ```text
@@ -27,10 +27,10 @@ src/utils/
 
 1. **Pureza**: Prefiere funciones puras que no tengan efectos secundarios. Dada la misma entrada, siempre deben devolver el
    misma salida.
-2. **Sin ganchos de interfaz de usuario**: nunca importar `vue`, `react`, o `@mission-platform/forge` ganchos en una utilidad. Lógica que requiere
+2. **Sin ganchos de interfaz de usuario**: nunca importe ganchos `vue`, `react` o `@mission-platform/forge` en una utilidad. Lógica que requiere
    la reactividad pertenece a [Componibles](composable-authoring.md).
-3. **Escritura explícita**: proporcione información completa TypeScript tipos para todos los argumentos y valores de retorno.
-4. **Pruebas obligatorias**: Cada utilidad debe tener una ubicación compartida `.spec.ts` archivo.
+3. **Escritura explícita**: proporcione tipos TypeScript completos para todos los argumentos y valores de retorno.
+4. **Pruebas obligatorias**: cada utilidad debe tener un archivo `.spec.ts` ubicado en el mismo lugar.
 5. **Responsabilidad única**: cada carpeta de utilidades debe centrarse en una tarea específica y específica.
 
 ## Ejemplo básico

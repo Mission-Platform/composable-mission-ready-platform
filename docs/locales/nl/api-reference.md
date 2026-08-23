@@ -1,11 +1,15 @@
-# API-referentie
+# Pakket-API-directory
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/api-reference.md](../../api-reference.md)
+> docs/api-reference.md: [docs/api-reference.md](../../api-reference.md)
 > Taal: Nederlands (nl)
 
-Technische referentie voor de Mission Platform-kernpakketten en framework-adapters.
+Deze projectbrede pagina is een directory met pakketmogelijkheden en compatibiliteit
+contracten. De canonieke installatie, het gebruik, de beperkingen en API-details voor
+elk pakket bevindt zich naast dat pakket eronder `packages/*/docs/`, `configs/*/docs/`,
+En `forge-plugins/*/docs/`. Gegenereerde API-referenties moeten worden toegevoegd aan het bezit
+pakket in plaats van deze pagina.
 
 > **Invoer is altijd kaal.** Kaderverzending `@mission-platform/*` pakketten tonen een single `.`
 > ingang bewaakt door de `mp:vue`, `mp:react`, `mp:solid`, En `mp:web-component` exporteren
@@ -31,16 +35,63 @@ De basis van de "write-once"-architectuur, die een raamwerkneutrale JSX-runtime 
 | `toVueComponent`   | Adapter | Converteert een smederijcomponent naar een Vue 3 componenten (vanaf `@mission-platform/forge/vue`).   |
 | `toReactComponent` | Adapter | Converteert een smederijcomponent naar een React onderdeel (van `@mission-platform/forge/react`). |
 
+### @mission-platform/vite-plugin-forge
+
+Het compilerstuurprogramma accepteert expliciete `FrameworkOutputPlugin` instanties; dat doet het
+geen kaderregister bieden. `defineViteForgeComponents` En
+`defineTsdownForgeComponents` (plus de hook- en CMS-helpers) delen een in-process
+`ForgeCompilerService` voor één bouw- of kijksessie.
+
+| Vermogen | Beschrijving |
+|:-----------|:------------|
+| Levenscyclus van diensten | Hergebruik de status van bron, grafiek, ontlede bron, semantische IR en doelartefact in verschillende builds; verwijder one-shot-services na voltooiing en watcher-services bij afsluiting. |
+| Cachesleutels | Bron/afhankelijkheid/configuratie-vingerafdrukken, compiler- en routeropties, `tsconfig` `baseUrl`/`paths`, doel-ID, identiteit/versie van de plug-in en relevante voorwaarden. |
+| Bekijk ongeldigverklaring | Gewijzigde bestanden maken de afhankelijke functies van de omgekeerde grafiek ongeldig, inclusief transitieve componenten en hook-items; niet-gerelateerde doelsnapshots blijven herbruikbaar. |
+| Diagnostiek/rapport | Rapporteert fasetiming, aantal treffers/missers in de cache, getroffen bestanden, waarschuwingen, fouten en aantallen uitgezonden artefacten. Fouten blokkeren promotie. |
+| Artefactmanifest | Geeft een overzicht van doelgerichte vermeldingen, modules, declaraties, bronkaarten, activa en controlesommen vóór atomaire promotie. |
+| Verlengingspunt | Implementeren en doorgeven van een `FrameworkOutputPlugin` van een beller die eigendom is `forge-plugin-*` pakket; voeg geen doeltakken toe aan de neutrale driver. |
+
+Configureer aliassen via het project `tsconfig.json` (`baseUrl` En
+`paths`); Vite en tsdown-grafiekvoorbereiding gebruiken dezelfde aliasfeiten. Router
+selectie, routerplug-ins en voorwaarden worden doorgestuurd via component en
+haak helpers. Een toekomstige werker/daemon kan achter het servicecontract zitten, maar
+de ondersteunde implementatie is momenteel in uitvoering.
+
 ### @mission-platform/router
 
-Framework-agnostische routeringsprimitieven en adapters.
+Kaderneutrale routecontracten, pure matching-helpers en compilermarkeringen voor
+gedeelde pakketten. Applicaties beschikken over routerecords en eigen routerinstances; de
+Het door de applicatie geselecteerde Forge-routerdoel levert de runtime-mogelijkheden.
 
-| Exporteren | Typ | Beschrijving |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        | Typ | Interface voor het definiëren van routebomen.                                                                              |
-| `defineRoutes`   | Functie | Helper bij het definiëren en valideren van routebomen.                                                                       |
-| `createMpRouter` | Adapter | Creëert een Vue-compatibele router (blootgesteld aan `@mission-platform/router` wanneer de `mp:vue` voorwaarde is actief). |
-| `useMpRoute`     | Haak | Toegang tot de huidige routestatus (adapterspecifiek).                                                                   |
+| Exporteren/verpakken | Typ | Beschrijving |
+|:-----------------|:-----|:------------|
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | Soorten | Routerecords, parameters, query-/hashstatus, metagegevens en navigatiedoelen. |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` | Functies | Definieer routebomen en los paden op zonder een DOM- of framework-runtime. |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | Soorten | Navigatieresultaten/gebeurtenissen, bewakers, inplugbare geschiedenis en adaptercontracten. |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Compilermarkeringen | Neutrale link-, routestatus-, navigatie-, resolutie- en outlet-mogelijkheden die worden gebruikt door gedeelde pakketten. |
+| `@mission-platform/forge-router-*` | Doelen smeden | Onafhankelijk geselecteerde native routerdoelen voor Vue Router, React Router, SolidJS Router, SvelteKit, RedwoodSDK en webcomponenten. |
+
+Runtimepakketten hebben een eigen geschiedenis en reactieve status; het neutrale pakket importeert nooit een UI-framework. Voor webcomponenten,
+registreer de elementen één keer en geef complexe doelen door via DOM-eigenschappen in plaats van geserialiseerde attributen:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
 
 ## Gebruikersinterface en ontwerp
 
@@ -82,7 +133,7 @@ Internationaliseringssysteem gebaseerd op i18next.
 
 | Exporteren | Beschrijving |
 |:------------------|:----------------------------------------------------------|
-| `createForgeI18N` | Initialiseert de i18n-instantie met platformstandaarden.     |
+| `createForgeI18N` | Initialiseert de i18n-instantie met platformstandaardwaarden.     |
 | `useI18n`         | Hook voor vertalingen en locale-omschakeling in componenten. |
 
 ### @mission-platform/seo
@@ -130,7 +181,7 @@ Kaderneutrale D3.js-integratie.
 
 ### @mission-platform/hunspell
 
-Spellingcontrole door WebAssembly.
+Door WebAssembly aangedreven spellingcontrole.
 
 | Exporteren | Beschrijving |
 |:---------------|:--------------------------------------------------------|
@@ -171,9 +222,10 @@ inpakken `packages/`, inclusief de getypte WebAssembly gevels.
 | `@mission-platform/map`            | MapLibre kaartcomponenten en composables.                      |
 | `@mission-platform/observers`      | Composables voor snijpunten, mutaties en prestatiewaarnemers. |
 | `@mission-platform/phone-number`   | Getypte WebAssembly-parsering en opmaak van telefoonnummers.        |
-| `@mission-platform/router`         | Kaderneutrale routeringsprimitieven en adapters.            |
+| `@mission-platform/router`         | Kaderneutrale routecontracten en compilermogelijkheden. |
+| `@mission-platform/forge-router-web-components` | Web Components-routerdoel en framework-vrije runtime. |
 | `@mission-platform/rxjs`           | RxJS waarneembare en abonnementscomposables.                 |
-| `@mission-platform/scheduler`     | Scheduler UI, herhaling en kalenderindeling domeinlogica. |
+| `@mission-platform/scheduler`     | Scheduler UI, herhaling en agenda-indeling domeinlogica. |
 | `@mission-platform/vcard`         | RFC 6350 vCard- en RFC 5545 iCalendar-gegevens en componenten.  |
 | `@mission-platform/content`       | Inhoud AST, bouwers, Monaco, Markdown en WYSIWYG-componenten. |
 | `@mission-platform/seo`            | Metagegevens, Open Graph en samengestelde gegevens met gestructureerde gegevens.        |
@@ -185,7 +237,6 @@ inpakken `packages/`, inclusief de getypte WebAssembly gevels.
 | Pakket | Doel |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | 1D-barcode codeert/decodeert gevel en onderdeel.    |
-| `@mission-platform/code-scan-wasm`          | Gegenereerde afbeeldingsscanner WebAssembly-module.       |
 | `@mission-platform/code-scanner`            | Component voor het scannen van camera- en beeldcodes.         |
 | `@mission-platform/matrix-code`             | Data Matrix en Azteekse codeer-/decodeerfaçade.       |
 | `@mission-platform/qr-code`                 | QR codeert/decodeert gevel en component.            |
@@ -194,9 +245,9 @@ inpakken `packages/`, inclusief de getypte WebAssembly gevels.
 
 ### Smeed compilerdoelen
 
-Deze wonen in `forge-plugins/` in plaats van `packages/`. Een **framework**-plug-in bepaalt welke runtime een neutraal onderdeel is
+Deze wonen erin `forge-plugins/` in plaats van `packages/`. Een **framework**-plug-in bepaalt welke runtime een neutraal onderdeel is
 wordt verlaagd tot; een **CMS**-doel bepaalt op welk contentplatform het wordt geprojecteerd. De twee assen vormen elkaar, dus elk CMS
-target kan aan elke framework-plug-in worden gekoppeld. Zien [Forge Compiler-pijplijn](forge-compiler.md).
+target kan aan elke framework-plug-in worden gekoppeld. Zie de [Forge Compiler-pijplijn](../../../vite-plugins/forge/docs/locales/nl/reference/compiler.md).
 
 | Pakket | Doel |
 |:-------------------------------------------------|:--------------------------------------------------------------------------------|

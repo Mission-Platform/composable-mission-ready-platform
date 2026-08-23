@@ -2,11 +2,11 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/composable-authoring.md](../../composable-authoring.md)
+> docs/composable-authoring.md: [docs/composable-authoring.md](../../composable-authoring.md)
 > 语言: 简体中文 (zh)
 
 可组合性是在任务平台中封装和重用反应式逻辑的主要方式。为了保证这些
-逻辑单元可跨所有受支持的 UI 框架移植，它们使用以下方法编写为 **一次写入** 模块
+逻辑单元可跨所有受支持的 UI 框架移植，它们使用以下方式编写为 **一次写入** 模块
 框架中立的钩子由 `@mission-platform/forge`.
 
 ## 目录布局
@@ -53,6 +53,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);

@@ -2,7 +2,7 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> المصدر الإنجليزي: [docs/configs/index.md](../../../configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > اللغة: العربية (ar)
 
 تستخدم منصة المهمة حزم التكوين المركزية في `configs/` الدليل لضمان الاتساق عبر
@@ -15,18 +15,22 @@
 
 ## ملخص الحزمة
 
+وثائق حزمة التكوين مملوكة لكل حزمة. الروابط أدناه
+هي روابط لملفات المستودع اليوم وتصبح مسارات ذات مساحة أسماء الحزمة في
+موقع التوثيق:
+
 | الحزمة | الغرض | سطح التكوين الأساسي |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](eslint-config.md) | مستوي ESLint قواعد JS/TS و Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | الإعدادات الافتراضية لتنسيق المستودع. | `prettier.config.js` |
-| `@mission-platform/typescript-config` | TypeScript الإعدادات المسبقة للمترجم. | `tsconfig.json` |
-| `@mission-platform/stylelint-config` | بطانة CSS وSCSS. | `stylelint.config.mjs` |
-| `@mission-platform/vite-config` | Vite و Vitest مساعدي التكوين. | `vite.config.ts` |
-| `@mission-platform/tsdown-config` | مساعدو تجميع المكتبة. | `tsdown.config.ts` |
-| `@mission-platform/postcss-config` | خط أنابيب PostCSS المشترك. | `postcss.config.mjs` |
-| `@mission-platform/i18n-config` | الإعدادات المحلية والاستخراج المشتركة. | `i18next.config.ts` |
-| `@mission-platform/storybook-framework` | إطار عمل القصص المصورة المحدد للبيئة. | `.storybook/main.ts` |
-| [تكوين العمال](workers-config.md) | اتفاقيات عامل Cloudflare. | `wrangler.jsonc` |
+| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/ar/index.md) | مستوي ESLint قواعد JS/TS و Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/ar/index.md) | الإعدادات الافتراضية لتنسيق المستودع. | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/ar/index.md) | TypeScript الإعدادات المسبقة للمترجم. | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/ar/index.md) | بطانة CSS وSCSS. | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/ar/index.md) | Vite و Vitest مساعدي التكوين. | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/ar/index.md) | مساعدو تجميع المكتبة. | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/ar/index.md) | خط أنابيب PostCSS المشترك. | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/ar/index.md) | الإعدادات المحلية والاستخراج المشتركة. | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/ar/index.md) | إطار عمل القصص المصورة المحدد للبيئة. | `.storybook/main.ts` |
+| [تكوين العمال](workers-config.md) | اتفاقيات Cloudflare Worker عبر مساحة العمل. | `wrangler.jsonc` |
 
 ## الأدوات الأساسية
 
@@ -63,7 +67,7 @@ import { defineAppConfig, defineLibraryConfig } from '@mission-platform/vite-con
 
 ### بوستCSS (`@mission-platform/postcss-config`)
 
-يشارك مسار البرنامج المساعد PostCSS (بما في ذلك Autoprefixer) لضمان معالجة CSS بشكل متسق بغض النظر عن المكان
+يشارك مسار البرنامج المساعد PostCSS (بما في ذلك Autoprefixer) لضمان معالجة CSS باستمرار بغض النظر عن المكان
 تم تأليفه.
 
 ## نمط الاستخدام

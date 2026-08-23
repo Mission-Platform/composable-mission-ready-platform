@@ -30,7 +30,7 @@ interface CollisionFixture {
 const repositoryRoot = path.resolve(import.meta.dirname, '../../..');
 const componentDirectory = path.join(repositoryRoot, 'packages/tokens/tokens/component');
 const monolithPath = path.join(repositoryRoot, 'packages/tokens/tokens/component.tokens.json');
-const referencePath = path.join(repositoryRoot, 'docs/component-token-reference.md');
+const referencePath = path.join(repositoryRoot, 'packages/tokens/docs/reference/component-tokens.md');
 const manifestPath = path.join(componentDirectory, 'component-sources.manifest.json');
 const collisionFixturePath = path.join(import.meta.dirname, 'fixtures/component-source-collision.fixture.json');
 

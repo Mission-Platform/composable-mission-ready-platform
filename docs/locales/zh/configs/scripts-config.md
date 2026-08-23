@@ -2,11 +2,16 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
 > 语言: 简体中文 (zh)
 
-任务平台在根目录中维护一组共享实用程序脚本 `scripts/` 目录，由
-`@mission-platform/scripts` 包裹。
+本指南有意保留在项目文档层中： `scripts/`
+包含存储库编排而不是可发布的工作空间包。
+特定于包和应用程序的命令保留在其旁边记录
+拥有工作空间。
+
+任务平台在根目录中维护一组共享实用程序脚本
+`scripts/` 目录，由根工作区工具管理。
 
 ## 概述
 

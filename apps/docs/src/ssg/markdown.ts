@@ -6,11 +6,8 @@
 import { marked, type Tokens } from 'marked';
 import hljs from 'highlight.js';
 
-import {
-  DEFAULT_LOCALE,
-  documentPath,
-  type DocumentationLocale,
-} from './site-constants.ts';
+import { DEFAULT_LOCALE, documentPath, type DocumentationLocale } from './site-constants.ts';
+import { docsDirectoryForRoot, qualifiedSlug, type DocumentationSourceRoot } from '../documentation-sources.ts';
 
 export interface TocItem {
   id: string;
@@ -25,8 +22,13 @@ export interface RenderedMarkdown {
   description: string;
 }
 
-const DEFAULT_DESCRIPTION =
-  'Documentation for the Mission Platform — a composable, mission-ready monorepo.';
+export interface MarkdownLinkContext {
+  readonly currentRoot?: DocumentationSourceRoot;
+  readonly roots?: readonly DocumentationSourceRoot[];
+  readonly hasDocument?: (slug: string, locale: DocumentationLocale) => boolean;
+}
+
+const DEFAULT_DESCRIPTION = 'Documentation for the Mission Platform — a composable, mission-ready monorepo.';
 const DESCRIPTION_MAX_LENGTH = 160;
 
 function slugify(text: string): string {
@@ -87,9 +89,28 @@ export function resolveInternalHref(
   href: string,
   currentSlug: string,
   locale: DocumentationLocale = DEFAULT_LOCALE,
+  context: MarkdownLinkContext = {},
 ): string | undefined {
   const [pathPart, hash] = href.split('#');
   if (!/\.md$/i.test(pathPart)) return undefined;
+
+  if (context.currentRoot !== undefined && context.roots !== undefined) {
+    const root = context.currentRoot;
+    const localSlug = root.routePrefix === '' ? currentSlug : currentSlug.slice(`${root.routePrefix}/`.length);
+    const currentFile = [...docsDirectoryForRoot(root).split('/'), ...localSlug.split('/')];
+    currentFile[currentFile.length - 1] = `${currentFile[currentFile.length - 1]}.md`;
+    const target = [...currentFile.slice(0, -1), ...pathSegments(pathPart.replace(/\.md$/i, '').split('/'))];
+    const targetPath = normalizeSegments(target);
+    const owner = context.roots.find((candidate) => {
+      const prefix = `${docsDirectoryForRoot(candidate)}/`;
+      return targetPath.startsWith(prefix);
+    });
+    if (owner === undefined) return undefined;
+    const targetDocument = targetPath.slice(`${docsDirectoryForRoot(owner)}/`.length);
+    const slug = qualifiedSlug(owner, targetDocument);
+    if (context.hasDocument !== undefined && !context.hasDocument(slug, locale)) return undefined;
+    return `${documentPath(slug, locale)}${hash ? `#${hash}` : ''}`;
+  }
 
   const baseSegments = currentSlug.includes('/') ? currentSlug.split('/').slice(0, -1) : [];
   const segments = [...baseSegments];
@@ -105,6 +126,19 @@ export function resolveInternalHref(
 
   const slug = segments.join('/');
   return `${documentPath(slug, locale)}${hash ? `#${hash}` : ''}`;
+}
+
+function pathSegments(segments: readonly string[]): string[] {
+  return segments.filter((segment) => segment !== '' && segment !== '.');
+}
+
+function normalizeSegments(segments: readonly string[]): string {
+  const normalized: string[] = [];
+  for (const segment of segments) {
+    if (segment === '..') normalized.pop();
+    else if (segment !== '.') normalized.push(segment);
+  }
+  return normalized.join('/');
 }
 
 function buildToc(markdown: string): TocItem[] {
@@ -148,6 +182,7 @@ export function renderDocumentationMarkdown(
   source: string,
   slug: string,
   locale: DocumentationLocale = DEFAULT_LOCALE,
+  context: MarkdownLinkContext = {},
 ): RenderedMarkdown {
   const toc = buildToc(source);
   const title = extractTitle(source, slug.split('/').pop() ?? slug);
@@ -157,7 +192,9 @@ export function renderDocumentationMarkdown(
   const renderer = new marked.Renderer();
 
   renderer.heading = ({ tokens, depth, text }: Tokens.Heading): string => {
-    const label = plainText(tokens ? tokens.map((token) => ('text' in token ? String(token.text ?? '') : '')).join('') || text : text);
+    const label = plainText(
+      tokens ? tokens.map((token) => ('text' in token ? String(token.text ?? '') : '')).join('') || text : text,
+    );
     const base = slugify(label || text);
     const count = headingCounts.get(base) ?? 0;
     headingCounts.set(base, count + 1);
@@ -166,8 +203,9 @@ export function renderDocumentationMarkdown(
   };
 
   renderer.link = ({ href, title: linkTitle, tokens }: Tokens.Link): string => {
-    const label = tokens?.map((token) => ('text' in token ? String(token.text ?? '') : token.raw ?? '')).join('') ?? '';
-    const internal = href ? resolveInternalHref(href, slug, locale) : undefined;
+    const label =
+      tokens?.map((token) => ('text' in token ? String(token.text ?? '') : (token.raw ?? ''))).join('') ?? '';
+    const internal = href ? resolveInternalHref(href, slug, locale, context) : undefined;
     const resolved = internal ?? href ?? '';
     const titleAttribute = linkTitle ? ` title="${escapeHtml(linkTitle)}"` : '';
     const internalAttribute = internal ? ' data-internal="true"' : '';

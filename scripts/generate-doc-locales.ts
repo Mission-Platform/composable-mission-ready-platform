@@ -1,25 +1,49 @@
 /**
- * Generate localized documentation trees under docs/locales/<locale>/.
+ * Generate localized documentation trees beside each canonical docs root.
  *
  * Strategy:
- * - Keep English Markdown in docs/ as the canonical source.
+ * - Keep English Markdown as the canonical source under each docs root.
  * - Split each page into fenced code vs non-fence segments; never send fences to MT.
  * - Within non-fence segments, protect inline code, link targets, package names, and
  *   CLI tokens; translate the remaining human-language text.
- * - Translate headings while preserving exact `#` markers and heading count.
- * - Write honest provenance notes (machine-assisted, not human-reviewed).
+ * - Prefer remote machine translation (`DOCS_TRANSLATE_REMOTE=1`) for shipping output.
+ * - Offline mode (`DOCS_TRANSLATE_OFFLINE=1`) is explicitly non-shipping and always
+ *   stamps an unshippable marker that validation rejects.
  *
  * Usage (from repo root):
- *   node --experimental-strip-types scripts/generate-doc-locales.ts
- *   node --experimental-strip-types scripts/generate-doc-locales.ts --locale=de --slug=overview
+ *   DOCS_TRANSLATE_REMOTE=1 node --experimental-strip-types scripts/generate-doc-locales.ts
+ *   DOCS_TRANSLATE_REMOTE=1 node --experimental-strip-types scripts/generate-doc-locales.ts --locale=de --slug=overview
+ *   DOCS_TRANSLATE_REMOTE=1 node --experimental-strip-types scripts/generate-doc-locales.ts --resume
  */
+import { createHash } from 'node:crypto';
+import { existsSync, writeSync } from 'node:fs';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+import {
+  DOCUMENTATION_LOCALES,
+  UNSHIPPABLE_OFFLINE_MARKER,
+  isAcceptableTranslation,
+  protectInline,
+  rewriteRelativeLinks,
+  splitFenceSegments,
+  type DocumentationLocale,
+} from './doc-locales-lib.ts';
+import {
+  discoverDocumentationRoots,
+  qualifiedSlug,
+  type DocumentationSourceRoot,
+} from './documentation-sources.ts';
+
+/** Line-buffered logging so redirected resume runs remain observable. */
+function logLine(message: string): void {
+  writeSync(1, `${message}\n`);
+}
 
 const root = resolve(import.meta.dirname, '..');
-const docsRoot = join(root, 'docs');
-const locales = ['ar', 'de', 'es', 'fr', 'he', 'it', 'ja', 'ko', 'nl', 'zh'] as const;
-type Locale = (typeof locales)[number];
+const locales = DOCUMENTATION_LOCALES;
+type Locale = DocumentationLocale;
 
 const localeNames: Record<Locale, string> = {
   ar: 'العربية',
@@ -63,8 +87,83 @@ const labels: Record<Locale, { source: string; locale: string }> = {
 const args = process.argv.slice(2);
 const onlyLocale = args.find((value) => value.startsWith('--locale='))?.slice('--locale='.length) as Locale | undefined;
 const onlySlug = args.find((value) => value.startsWith('--slug='))?.slice('--slug='.length);
+const onlyPackage = args.find((value) => value.startsWith('--package='))?.slice('--package='.length);
+const resume = args.includes('--resume');
+const force = args.includes('--force');
+
+const remoteEnabled = process.env.DOCS_TRANSLATE_REMOTE === '1';
+const offlineEnabled = process.env.DOCS_TRANSLATE_OFFLINE === '1';
 
 const sleep = (ms: number) => new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
+
+const cacheDirectory = join(root, 'node_modules', '.cache', 'doc-locales');
+const cacheFilePath =
+  process.env.DOCS_TRANSLATE_CACHE_FILE ??
+  join(cacheDirectory, onlyLocale ? `translation-cache-${onlyLocale}.json` : 'translation-cache.json');
+const memoryCache = new Map<string, string>();
+const translationHosts = ['clients1', 'clients2', 'clients3', 'clients4', 'clients5'] as const;
+let hostCursor = 0;
+let consecutiveFailures = 0;
+type ProviderName = 'google' | 'mymemory';
+
+interface ProviderGate {
+  queue: Promise<void>;
+  lastCallAt: number;
+  minIntervalMs: number;
+  inFlight: number;
+  maxInFlight: number;
+  waiters: Array<() => void>;
+}
+
+const providerGates: Record<ProviderName, ProviderGate> = {
+  google: { queue: Promise.resolve(), lastCallAt: 0, minIntervalMs: 70, inFlight: 0, maxInFlight: 3, waiters: [] },
+  mymemory: { queue: Promise.resolve(), lastCallAt: 0, minIntervalMs: 60, inFlight: 0, maxInFlight: 3, waiters: [] },
+};
+
+async function withProviderSlot<T>(provider: ProviderName, work: () => Promise<T>): Promise<T> {
+  const gate = providerGates[provider];
+  while (gate.inFlight >= gate.maxInFlight) {
+    await new Promise<void>((resolveWait) => {
+      gate.waiters.push(resolveWait);
+    });
+  }
+  gate.inFlight += 1;
+  try {
+    const wait = Math.max(0, gate.minIntervalMs - (Date.now() - gate.lastCallAt));
+    if (wait > 0) await sleep(wait);
+    gate.lastCallAt = Date.now();
+    return await work();
+  } finally {
+    gate.inFlight -= 1;
+    const next = gate.waiters.shift();
+    if (next) next();
+  }
+}
+
+async function loadDiskCache(): Promise<void> {
+  if (!existsSync(cacheFilePath)) return;
+  try {
+    const raw = JSON.parse(await readFile(cacheFilePath, 'utf8')) as Record<string, string>;
+    for (const [key, value] of Object.entries(raw)) {
+      if (typeof value === 'string') memoryCache.set(key, value);
+    }
+  } catch {
+    // Corrupt cache files are ignored; remote generation rebuilds entries.
+  }
+}
+
+let cacheDirty = false;
+async function persistDiskCache(): Promise<void> {
+  if (!cacheDirty) return;
+  await mkdir(cacheDirectory, { recursive: true });
+  const payload = Object.fromEntries([...memoryCache.entries()].toSorted(([left], [right]) => left.localeCompare(right)));
+  await writeFile(cacheFilePath, `${JSON.stringify(payload)}\n`, 'utf8');
+  cacheDirty = false;
+}
+
+function cacheKey(locale: Locale, text: string): string {
+  return `${locale}:${createHash('sha1').update(text).digest('hex')}`;
+}
 
 async function collectMarkdown(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -78,64 +177,30 @@ async function collectMarkdown(directory: string): Promise<string[]> {
   return paths.sort();
 }
 
-type Protected = { token: string; value: string };
+interface DocumentationPage {
+  readonly sourcePath: string;
+  readonly sourceRoot: DocumentationSourceRoot;
+  readonly localSlug: string;
+  readonly qualifiedSlug: string;
+}
 
-const TOKEN_PREFIX = 'MPTOKEN';
-
-type Segment = { kind: 'fence'; text: string } | { kind: 'text'; text: string };
-
-function splitFenceSegments(source: string): Segment[] {
-  const segments: Segment[] = [];
-  const pattern = /```[\s\S]*?```/g;
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-  while ((match = pattern.exec(source)) !== null) {
-    if (match.index > lastIndex) {
-      segments.push({ kind: 'text', text: source.slice(lastIndex, match.index) });
+async function collectDocumentationPages(documentationRoots: readonly DocumentationSourceRoot[]): Promise<DocumentationPage[]> {
+  const pages: DocumentationPage[] = [];
+  for (const sourceRoot of documentationRoots) {
+    for (const sourcePath of await collectMarkdown(sourceRoot.rootDirectory)) {
+      const localSlug = relative(sourceRoot.rootDirectory, sourcePath).replace(/\.md$/u, '').replaceAll('\\', '/');
+      pages.push({
+        sourcePath,
+        sourceRoot,
+        localSlug,
+        qualifiedSlug: qualifiedSlug(sourceRoot, localSlug),
+      });
     }
-    segments.push({ kind: 'fence', text: match[0] });
-    lastIndex = match.index + match[0].length;
   }
-  if (lastIndex < source.length) {
-    segments.push({ kind: 'text', text: source.slice(lastIndex) });
-  }
-  return segments;
+  return pages.toSorted((left, right) => left.qualifiedSlug.localeCompare(right.qualifiedSlug));
 }
 
-function protectInline(source: string): { text: string; protectedParts: Protected[] } {
-  const protectedParts: Protected[] = [];
-  let index = 0;
-  const stash = (value: string): string => {
-    // Keep placeholders as a single ASCII word. Punctuation-based sentinels
-    // such as 「0」 are rewritten as localized quotation marks by MT engines.
-    const token = `${TOKEN_PREFIX}${String(index).padStart(4, '0')}`;
-    index += 1;
-    protectedParts.push({ token, value });
-    return token;
-  };
-
-  let text = source;
-  // Inline code first.
-  text = text.replaceAll(/`[^`\n]+`/g, (match) => stash(match));
-  // Markdown images/links: protect destination, leave visible text for translation.
-  text = text.replaceAll(/(!?\[[^\]]*\])\(([^)]+)\)/g, (_match, label: string, href: string) => {
-    return `${label}(${stash(href)})`;
-  });
-  // Autolinks / bare HTML-ish tags.
-  text = text.replaceAll(/<https?:\/\/[^>]+>/g, (match) => stash(match));
-  text = text.replaceAll(/<\/?[a-zA-Z][^>]*>/g, (match) => stash(match));
-  // Package names.
-  text = text.replaceAll(/@mission-platform\/[A-Za-z0-9._/-]+/g, (match) => stash(match));
-  // Common CLI / tooling tokens.
-  text = text.replaceAll(
-    /\b(?:pnpm|npm|npx|node|cargo|turbo|wrangler|vite|vitest|eslint|prettier|stylelint|typescript|vue|react|svelte|solid)\b/gi,
-    (match) => stash(match),
-  );
-
-  return { text, protectedParts };
-}
-
-function chunkText(text: string, maxChars = 1400): string[] {
+function chunkText(text: string, maxChars = 1800): string[] {
   if (text.length <= maxChars) return [text];
   const chunks: string[] = [];
   let remaining = text;
@@ -151,70 +216,177 @@ function chunkText(text: string, maxChars = 1400): string[] {
   return chunks;
 }
 
-const translationCache = new Map<string, string>();
+/**
+ * Deterministic non-shipping offline path. Intentionally leaves English prose
+ * mostly intact and stamps an unshippable marker so validation always fails.
+ */
+function offlineTranslate(text: string, _locale: Locale): string {
+  return text;
+}
 
-async function translateRaw(text: string, locale: Locale, attempt = 1): Promise<string> {
-  const trimmed = text.trim();
-  if (!trimmed) return text;
-  // Skip pure punctuation / placeholders / whitespace-only / non-linguistic remnants.
-  if (!/[A-Za-z]{2,}/.test(trimmed)) return text;
+function myMemoryLocale(locale: Locale): string {
+  if (locale === 'zh') return 'zh-CN';
+  return locale;
+}
 
-  const cacheKey = `${locale}::${text}`;
-  const cached = translationCache.get(cacheKey);
-  if (cached !== undefined) return cached;
+function wrapPreservingWhitespace(source: string, translated: string): string {
+  const leading = source.match(/^\s*/)?.[0] ?? '';
+  const trailing = source.match(/\s*$/)?.[0] ?? '';
+  return `${leading}${translated.trim()}${trailing}`;
+}
 
-  const params = new URLSearchParams({
-    client: 'gtx',
-    sl: 'en',
-    tl: locale,
-    dt: 't',
-    q: text,
-  });
-  const url = `https://translate.googleapis.com/translate_a/single?${params.toString()}`;
+async function translateViaGoogle(text: string, locale: Locale, attempt: number): Promise<string> {
+  return withProviderSlot('google', async () => {
+    const params = new URLSearchParams({
+      client: 'dict-chrome-ex',
+      sl: 'en',
+      tl: locale,
+      dt: 't',
+      q: text,
+    });
+    const host = translationHosts[(hostCursor + attempt - 1) % translationHosts.length] ?? 'clients1';
+    const url = `https://${host}.google.com/translate_a/t?${params.toString()}`;
 
-  try {
     const response = await fetch(url, {
+      signal: AbortSignal.timeout(20_000),
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; MissionPlatformDocs/1.0)',
         Accept: 'application/json',
       },
     });
     if (!response.ok) {
-      if ((response.status === 429 || response.status >= 500) && attempt < 8) {
-        await sleep(400 * attempt);
-        return translateRaw(text, locale, attempt + 1);
-      }
-      throw new Error(`translate HTTP ${response.status} for locale=${locale}`);
+      const error = new Error(`Google translation HTTP ${response.status} for locale=${locale}`) as Error & {
+        status?: number;
+      };
+      error.status = response.status;
+      throw error;
     }
-    const data = (await response.json()) as unknown;
-    if (!Array.isArray(data) || !Array.isArray(data[0])) {
-      throw new TypeError(`unexpected translate payload for locale=${locale}`);
-    }
-    const translated = data[0]
-      .map((part) => (Array.isArray(part) && typeof part[0] === 'string' ? part[0] : ''))
-      .join('');
 
-    const leading = text.match(/^\s*/)?.[0] ?? '';
-    const trailing = text.match(/\s*$/)?.[0] ?? '';
-    const result = `${leading}${translated.trim()}${trailing}`;
-    translationCache.set(cacheKey, result);
+    const data = (await response.json()) as unknown;
+    if (!Array.isArray(data) || (typeof data[0] !== 'string' && !Array.isArray(data[0]))) {
+      throw new TypeError(`unexpected Google translate payload for locale=${locale}`);
+    }
+    const translated =
+      typeof data[0] === 'string'
+        ? data.join('')
+        : data[0].map((part) => (Array.isArray(part) && typeof part[0] === 'string' ? part[0] : '')).join('');
+    hostCursor = (hostCursor + 1) % translationHosts.length;
+    return wrapPreservingWhitespace(text, translated);
+  });
+}
+
+async function translateViaMyMemory(text: string, locale: Locale): Promise<string> {
+  // MyMemory free GET requests are most reliable under ~450 characters.
+  if (text.trim().length > 450) {
+    const parts = chunkText(text, 450);
+    const translatedParts: string[] = [];
+    for (const part of parts) {
+      translatedParts.push(await translateViaMyMemory(part, locale));
+    }
+    return translatedParts.join('');
+  }
+
+  return withProviderSlot('mymemory', async () => {
+    const params = new URLSearchParams({
+      q: text,
+      langpair: `en|${myMemoryLocale(locale)}`,
+    });
+    const response = await fetch(`https://api.mymemory.translated.net/get?${params.toString()}`, {
+      signal: AbortSignal.timeout(20_000),
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; MissionPlatformDocs/1.0)',
+        Accept: 'application/json',
+      },
+    });
+    if (!response.ok) {
+      const error = new Error(`MyMemory translation HTTP ${response.status} for locale=${locale}`) as Error & {
+        status?: number;
+      };
+      error.status = response.status;
+      throw error;
+    }
+    const data = (await response.json()) as {
+      responseStatus?: number;
+      responseData?: { translatedText?: string };
+      quotaFinished?: boolean;
+    };
+    if (data.quotaFinished) {
+      const error = new Error(`MyMemory quota finished for locale=${locale}`) as Error & { status?: number };
+      error.status = 429;
+      throw error;
+    }
+    if (data.responseStatus !== 200 || typeof data.responseData?.translatedText !== 'string') {
+      throw new TypeError(`unexpected MyMemory payload for locale=${locale}`);
+    }
+    const translated = data.responseData.translatedText;
+    if (translated.trim() === text.trim() && /[A-Za-z]{4,}/.test(text)) {
+      const error = new Error(`MyMemory returned untranslated text for locale=${locale}`) as Error & { status?: number };
+      error.status = 502;
+      throw error;
+    }
+    return wrapPreservingWhitespace(text, translated);
+  });
+}
+
+async function translateRawRemoteOnce(text: string, locale: Locale, attempt: number): Promise<string> {
+  // Prefer Google (larger chunks, fewer round-trips). Fall back to MyMemory only
+  // when Google is rate-limited or unavailable.
+  try {
+    return await translateViaGoogle(text, locale, attempt);
+  } catch (googleError) {
+    const status =
+      typeof googleError === 'object' && googleError && 'status' in googleError
+        ? Number((googleError as { status?: number }).status)
+        : 0;
+    if (status === 429 || status >= 500 || status === 0 || attempt > 1) {
+      try {
+        return await translateViaMyMemory(text, locale);
+      } catch {
+        throw googleError;
+      }
+    }
+    throw googleError;
+  }
+}
+
+async function translateRawRemote(text: string, locale: Locale, attempt = 1): Promise<string> {
+  const key = cacheKey(locale, text);
+  const cached = memoryCache.get(key);
+  if (cached !== undefined) return cached;
+
+  try {
+    const result = await translateRawRemoteOnce(text, locale, attempt);
+    consecutiveFailures = Math.max(0, consecutiveFailures - 1);
+    memoryCache.set(key, result);
+    cacheDirty = true;
     return result;
   } catch (error) {
-    if (attempt < 8) {
-      await sleep(350 * attempt);
-      return translateRaw(text, locale, attempt + 1);
+    const status = typeof error === 'object' && error && 'status' in error ? Number((error as { status?: number }).status) : 0;
+    const retryable = status === 429 || status >= 500 || status === 0;
+    if (retryable && attempt < 12) {
+      consecutiveFailures += 1;
+      hostCursor = (hostCursor + 1) % translationHosts.length;
+      const backoff = Math.min(12_000, 300 * 2 ** Math.min(attempt, 5) + consecutiveFailures * 80);
+      await sleep(backoff);
+      return translateRawRemote(text, locale, attempt + 1);
     }
-    throw error;
+    throw error instanceof Error ? error : new Error(String(error));
   }
+}
+
+async function translateRaw(text: string, locale: Locale): Promise<string> {
+  const trimmed = text.trim();
+  if (!trimmed) return text;
+  // Skip pure punctuation / placeholders / whitespace-only / non-linguistic remnants.
+  if (!/[A-Za-z]{2,}/.test(trimmed)) return text;
+
+  if (remoteEnabled) return translateRawRemote(text, locale);
+  return offlineTranslate(text, locale);
 }
 
 async function translatePlainText(text: string, locale: Locale): Promise<string> {
   const chunks = chunkText(text);
-  const translatedChunks: string[] = [];
-  for (const chunk of chunks) {
-    translatedChunks.push(await translateRaw(chunk, locale));
-    await sleep(20);
-  }
+  const translatedChunks = await Promise.all(chunks.map((chunk) => translateRaw(chunk, locale)));
   return translatedChunks.join('');
 }
 
@@ -237,40 +409,52 @@ async function translateUnprotectedText(text: string, locale: Locale): Promise<s
 }
 
 /** Translate only human text; protected spans never cross the MT boundary. */
-async function translateProtectedText(source: string, locale: Locale): Promise<string> {
+export async function translateProtectedText(source: string, locale: Locale): Promise<string> {
   const { text, protectedParts } = protectInline(source);
-  const partsByToken = new Map(protectedParts.map((part) => [part.token, part.value]));
-  const tokenPattern = new RegExp(String.raw`${TOKEN_PREFIX}\d{4}`, 'g');
-  let cursor = 0;
-  let translated = '';
-  let match: RegExpExecArray | null;
-
-  while ((match = tokenPattern.exec(text)) !== null) {
-    let before = text.slice(cursor, match.index);
-    let openingDelimiter = '';
-    if (before.endsWith('`')) {
-      openingDelimiter = '`';
-      before = before.slice(0, -1);
-    }
-    translated += await translateUnprotectedText(before, locale);
-    translated += openingDelimiter;
-    const token = match[0];
-    const value = partsByToken.get(token);
-    if (value === undefined) throw new Error(`Unknown protected placeholder: ${token}`);
-    translated += value;
-    cursor = match.index + token.length;
-
-    // Keep Markdown delimiters outside the MT boundary as well. In RTL/CJK
-    // locales, a bare closing parenthesis/backtick may otherwise become a
-    // locale punctuation character and corrupt a link or inline-code span.
-    while (text[cursor] === ')' || text[cursor] === '`') {
-      translated += text[cursor];
-      cursor += 1;
-    }
+  if (protectedParts.length === 0) {
+    return translateUnprotectedText(text, locale);
   }
 
-  translated += await translateUnprotectedText(text.slice(cursor), locale);
-  return translated;
+  // Translate the full protected string in as few MT calls as possible. ASCII
+  // placeholders (MPDOCTOKEN0001) survive the backends we use; restoring them
+  // afterwards is far cheaper than one request per interstitial fragment.
+  // Protected targets and inline code make the complete string safe to send in
+  // one request: labels remain translatable while technical spans survive as
+  // placeholders. Avoid splitting around every link, which serializes dozens
+  // of requests on generated reference pages.
+  let translated = await translatePlainText(text, locale);
+
+  // Some engines insert spaces inside placeholders — normalize before restore.
+  translated = translated.replaceAll(/MPDOCTOKEN\s*(\d{4})/gi, (_match, digits: string) => `MPDOCTOKEN${digits}`);
+
+  let fallbackText: string | undefined;
+  for (const part of [...protectedParts].toSorted((left, right) => right.token.length - left.token.length)) {
+    if (!translated.includes(part.token)) {
+      // Fallback: translate only the non-token spans if a placeholder was lost.
+      const partsByToken = new Map(protectedParts.map((entry) => [entry.token, entry.value]));
+      const tokenPattern = /MPDOCTOKEN\d{4}/g;
+      let cursor = 0;
+      let rebuilt = '';
+      let match: RegExpExecArray | null;
+      while ((match = tokenPattern.exec(text)) !== null) {
+        rebuilt += await translateUnprotectedText(text.slice(cursor, match.index), locale);
+        const value = partsByToken.get(match[0]);
+        if (value === undefined) throw new Error(`Unknown protected placeholder: ${match[0]}`);
+        rebuilt += value;
+        cursor = match.index + match[0].length;
+      }
+      rebuilt += await translateUnprotectedText(text.slice(cursor), locale);
+      fallbackText = rebuilt;
+      break;
+    }
+    translated = translated.replaceAll(part.token, part.value);
+  }
+
+  translated = fallbackText ?? translated;
+  for (const part of protectedParts) {
+    if (!translated.includes(part.value)) translated = `${translated} ${part.value}`;
+  }
+  return translated.replaceAll(/\]\s+\(/g, '](');
 }
 
 async function translateHeadingLine(line: string, locale: Locale): Promise<string> {
@@ -287,7 +471,6 @@ async function translateHeadingLine(line: string, locale: Locale): Promise<strin
 async function translateTextSegment(segment: string, locale: Locale): Promise<string> {
   if (!segment.trim()) return segment;
 
-  // Preserve exact leading/trailing newlines of the segment for fence adjacency.
   const leadingMatch = segment.match(/^\n*/);
   const trailingMatch = segment.match(/\n*$/);
   const leading = leadingMatch?.[0] ?? '';
@@ -297,84 +480,56 @@ async function translateTextSegment(segment: string, locale: Locale): Promise<st
 
   const lines = core.split('\n');
   const translatedLines: string[] = [];
-  let paragraphBuffer: string[] = [];
+  let textBuffer: string[] = [];
+  let textBufferLength = 0;
 
-  const flushParagraph = async () => {
-    if (paragraphBuffer.length === 0) return;
-    const paragraph = paragraphBuffer.join('\n');
-    paragraphBuffer = [];
-    translatedLines.push(await translateProtectedText(paragraph, locale));
+  const flushText = async () => {
+    if (textBuffer.length === 0) return;
+    translatedLines.push(await translateProtectedText(textBuffer.join('\n'), locale));
+    textBuffer = [];
+    textBufferLength = 0;
   };
 
   for (const line of lines) {
     if (/^#{1,6}\s+/.test(line)) {
-      await flushParagraph();
+      await flushText();
       translatedLines.push(await translateHeadingLine(line, locale));
       continue;
     }
     if (line.trim() === '') {
-      await flushParagraph();
-      translatedLines.push('');
+      textBuffer.push(line);
+      textBufferLength += 1;
       continue;
     }
     // Keep table separator rows untouched.
     if (/^\s*\|?(?:\s*:?-+:?\s*\|)+\s*:?-+:?\s*\|?\s*$/.test(line)) {
-      await flushParagraph();
+      await flushText();
       translatedLines.push(line);
       continue;
     }
-    paragraphBuffer.push(line);
+    if (textBufferLength > 0 && textBufferLength + line.length + 1 > 1800) await flushText();
+    textBuffer.push(line);
+    textBufferLength += line.length + 1;
   }
-  await flushParagraph();
+  await flushText();
 
-  // Ensure we didn't accidentally drop blank-line structure beyond the core split.
   return `${leading}${translatedLines.join('\n')}${trailing}`;
-}
-
-function rewriteRelativeLinks(markdown: string, sourcePath: string, outputPath: string): string {
-  return markdown.replaceAll(/(!?\[[^\]]*\]\()([^)]+)(\))/g, (full, label: string, href: string, close: string) => {
-    if (/^(https?:|mailto:|#)/.test(href)) return full;
-    const hashIndex = href.indexOf('#');
-    const pathPart = hashIndex === -1 ? href : href.slice(0, hashIndex);
-    const anchor = hashIndex === -1 ? '' : href.slice(hashIndex);
-    if (!pathPart) return full;
-    const target = resolve(dirname(sourcePath), pathPart);
-    let rewrittenTarget = target;
-    const isDocsMarkdown = target.startsWith(docsRoot + '/') && target.endsWith('.md') && !target.includes('/locales/');
-    if (isDocsMarkdown) {
-      const relativeSlugPath = relative(docsRoot, target);
-      const localeSegment = relative(join(docsRoot, 'locales'), outputPath).split('/')[0];
-      if (localeSegment) {
-        rewrittenTarget = join(docsRoot, 'locales', localeSegment, relativeSlugPath);
-      }
-    }
-    const newPath = relative(dirname(outputPath), rewrittenTarget).replaceAll('\\', '/');
-    return `${label}${newPath}${anchor}${close}`;
-  });
 }
 
 async function translateMarkdownBody(body: string, locale: Locale): Promise<string> {
   const segments = splitFenceSegments(body);
-  const out: string[] = [];
-  for (const segment of segments) {
-    if (segment.kind === 'fence') {
-      out.push(segment.text);
-      continue;
-    }
-    out.push(await translateTextSegment(segment.text, locale));
-  }
+  const out = await Promise.all(
+    segments.map((segment) => (segment.kind === 'fence' ? segment.text : translateTextSegment(segment.text, locale))),
+  );
 
   let restored = out.join('');
-  // Safety net: never allow a closing fence to glue onto the next heading/paragraph.
   restored = restored.replaceAll(/```(#{1,6}\s)/g, '```\n\n$1');
   restored = restored.replaceAll(/```(\S)/g, (match, next: string, offset: number, whole: string) => {
-    // Opening fences look like ```lang at line starts; only fix mid-stream glues after a prior newline content.
     const before = whole.slice(Math.max(0, offset - 1), offset);
     if (before === '\n' || before === '') return match;
     return `\`\`\`\n\n${next}`;
   });
 
-  // Normalize only non-fence prose whitespace, then force original fences back byte-for-byte.
   const originalFences = body.match(/```[\s\S]*?```/g) ?? [];
   const parts = restored.split(/```[\s\S]*?```/g);
   const normalizedParts = parts.map((part) => part.replaceAll(/\n{4,}/g, '\n\n\n').replaceAll(/[ \t]+\n/g, '\n'));
@@ -385,9 +540,9 @@ async function translateMarkdownBody(body: string, locale: Locale): Promise<stri
           .join('')
       : restored.replaceAll(/\n{4,}/g, '\n\n\n');
 
-  // Final pass: repair any whitespace corruption in markdown links
-  // introduced by MT engines translating label text.
-  restored = restored.replaceAll(/\]\s+\(/g, '](');
+  restored = splitFenceSegments(restored)
+    .map((segment) => (segment.kind === 'fence' ? segment.text : segment.text.replaceAll(/\]\s+\(/g, '](')))
+    .join('');
 
   return restored;
 }
@@ -416,35 +571,116 @@ async function mapPool<T, R>(items: T[], concurrency: number, worker: (item: T) 
   return results;
 }
 
+function isGeneratedReference(sourcePath: string): boolean {
+  return sourcePath.includes(`${join('reference', 'generated')}`);
+}
+
+async function shouldSkipExisting(
+  outputPath: string,
+  canonical: string,
+  locale: Locale,
+): Promise<boolean> {
+  if (force || !resume || !existsSync(outputPath)) return false;
+  try {
+    const existing = await readFile(outputPath, 'utf8');
+    return isAcceptableTranslation(locale, canonical, existing, {
+      checkProseQuality: !isGeneratedReference(outputPath),
+    });
+  } catch {
+    return false;
+  }
+}
+
 async function main(): Promise<void> {
-  const sourcePaths = await collectMarkdown(docsRoot);
+  if (!remoteEnabled && !offlineEnabled) {
+    throw new Error(
+      [
+        'Refusing to generate documentation locales without an explicit translation backend.',
+        'Set DOCS_TRANSLATE_REMOTE=1 for shipping machine translation, or',
+        'DOCS_TRANSLATE_OFFLINE=1 for non-shipping placeholders that fail validation.',
+      ].join(' '),
+    );
+  }
+  if (remoteEnabled && offlineEnabled) {
+    throw new Error('Set only one of DOCS_TRANSLATE_REMOTE=1 or DOCS_TRANSLATE_OFFLINE=1.');
+  }
+
+  if (remoteEnabled) await loadDiskCache();
+
+  const documentationRoots = discoverDocumentationRoots(root);
+  const sourcePages = await collectDocumentationPages(documentationRoots);
   const targetLocales = onlyLocale ? locales.filter((locale) => locale === onlyLocale) : [...locales];
   if (onlyLocale && targetLocales.length === 0) {
     throw new Error(`Unknown locale: ${onlyLocale}`);
   }
 
+  const sourceCacheSeed = new Map<string, string>();
+  const jobs: { page: DocumentationPage; locale: Locale; sourceBytes: number }[] = [];
+  for (const page of sourcePages) {
+    if (onlyPackage && page.sourceRoot.routePrefix !== onlyPackage) continue;
+    if (onlySlug && page.qualifiedSlug !== onlySlug && page.localSlug !== onlySlug) continue;
+    const source = await readFile(page.sourcePath, 'utf8');
+    sourceCacheSeed.set(page.sourcePath, source);
+    const sourceBytes = Buffer.byteLength(source, 'utf8');
+    for (const locale of targetLocales) jobs.push({ page, locale, sourceBytes });
+  }
+  // Translate short hand-authored guides before large generated API pages so the
+  // bulk of user-facing docs land first and cache warms on repeated phrases.
+  jobs.sort((left, right) => {
+    const leftGenerated = isGeneratedReference(left.page.sourcePath) ? 1 : 0;
+    const rightGenerated = isGeneratedReference(right.page.sourcePath) ? 1 : 0;
+    if (leftGenerated !== rightGenerated) return leftGenerated - rightGenerated;
+    if (left.sourceBytes !== right.sourceBytes) return left.sourceBytes - right.sourceBytes;
+    return `${left.page.qualifiedSlug}:${left.locale}`.localeCompare(`${right.page.qualifiedSlug}:${right.locale}`);
+  });
+
   let written = 0;
-  for (const sourcePath of sourcePaths) {
-    const relativeSlug = relative(docsRoot, sourcePath).replace(/\.md$/u, '').replaceAll('\\', '/');
-    if (onlySlug && relativeSlug !== onlySlug) continue;
+  let skipped = 0;
+  let processed = 0;
+  const failures: string[] = [];
+  const sourceCache = new Map<string, string>(sourceCacheSeed);
 
-    const source = await readFile(sourcePath, 'utf8');
-    const title = englishTitle(source, relativeSlug);
+  // Page jobs run in parallel; provider gates limit the actual MT fan-out.
+  const concurrency = remoteEnabled ? 6 : 8;
+  await mapPool(jobs, concurrency, async ({ page, locale }) => {
+    let source = sourceCache.get(page.sourcePath);
+    if (source === undefined) {
+      source = await readFile(page.sourcePath, 'utf8');
+      sourceCache.set(page.sourcePath, source);
+    }
+    const title = englishTitle(source, page.localSlug);
     const body = source.replace(/^#\s+.+\n*/m, '');
+    const generatedReference = isGeneratedReference(page.sourcePath);
+    const outputPath = join(page.sourceRoot.rootDirectory, 'locales', locale, `${page.localSlug}.md`);
 
-    await mapPool(targetLocales, 4, async (locale) => {
-      const outputPath = join(docsRoot, 'locales', locale, `${relativeSlug}.md`);
-      process.stdout.write(`translating ${locale}/${relativeSlug}...\n`);
+    if (await shouldSkipExisting(outputPath, source, locale)) {
+      skipped += 1;
+      logLine(`skip ${locale}/${page.qualifiedSlug} (acceptable existing translation)`);
+      return;
+    }
+
+    logLine(`translating ${locale}/${page.qualifiedSlug}...`);
+    try {
       const localizedTitle = await translateTitle(title, locale);
-      const localizedBody = rewriteRelativeLinks(await translateMarkdownBody(body, locale), sourcePath, outputPath);
-      const { source: sourceLabel, locale: localeLabel } = labels[locale];
-      const sourceLink = relative(dirname(outputPath), sourcePath).replaceAll('\\', '/');
+      const localizedBody = rewriteRelativeLinks(
+        await translateMarkdownBody(body, locale),
+        page.sourcePath,
+        outputPath,
+        documentationRoots,
+        locale,
+      );
+      const { locale: localeLabel } = labels[locale];
+      const sourceLink = relative(dirname(outputPath), page.sourcePath).replaceAll('\\', '/');
+      const sourceLabel = page.sourceRoot.workspaceDirectory
+        ? `${page.sourceRoot.workspaceDirectory}/docs/${page.localSlug}.md`
+        : `docs/${page.localSlug}.md`;
       const content = [
         `# ${localizedTitle}`,
         '',
+        ...(offlineEnabled ? [UNSHIPPABLE_OFFLINE_MARKER, ''] : []),
         provenance[locale],
         '',
-        `> ${sourceLabel}: [docs/${relativeSlug}.md](${sourceLink})`,
+        `> ${sourceLabel}: [${sourceLabel}](${sourceLink})`,
         `> ${localeLabel}: ${localeNames[locale]} (${locale})`,
         '',
         localizedBody.replace(/^\n+/, ''),
@@ -452,13 +688,47 @@ async function main(): Promise<void> {
         .join('\n')
         .replaceAll(/\n{3,}/g, '\n\n');
 
+      // Shipping remote output must satisfy the same quality gates as validation.
+      if (remoteEnabled) {
+        const acceptable = isAcceptableTranslation(locale, source, content, {
+          checkProseQuality: !generatedReference,
+        });
+        if (!acceptable) {
+          const message = `${locale}/${page.qualifiedSlug}: remote translation failed quality checks`;
+          failures.push(message);
+          logLine(`fail ${message}`);
+          return;
+        }
+      }
+
       await mkdir(dirname(outputPath), { recursive: true });
       await writeFile(outputPath, content.endsWith('\n') ? content : `${content}\n`);
       written += 1;
-    });
-  }
+      processed += 1;
+      logLine(`wrote ${locale}/${page.qualifiedSlug}`);
+      if (remoteEnabled && processed % 15 === 0) await persistDiskCache();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      failures.push(`${locale}/${page.qualifiedSlug}: ${message}`);
+      logLine(`fail ${locale}/${page.qualifiedSlug}: ${message}`);
+    }
+  });
 
-  console.log(`Wrote ${written} localized documentation pages.`);
+  if (remoteEnabled) await persistDiskCache();
+  logLine(
+    `Wrote ${written} localized documentation pages${skipped > 0 ? ` (skipped ${skipped} acceptable existing)` : ''}.`,
+  );
+  if (offlineEnabled) {
+    logLine('Offline placeholders include UNSHIPPABLE_OFFLINE_TRANSLATION and will fail validate-doc-locales.');
+  }
+  if (failures.length > 0) {
+    throw new Error(`Locale generation completed with ${failures.length} failure(s):\n${failures.slice(0, 50).join('\n')}`);
+  }
 }
 
-await main();
+// Re-export pure helpers used by unit tests.
+export { protectInline, rewriteRelativeLinks, splitFenceSegments } from './doc-locales-lib.ts';
+
+if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  await main();
+}

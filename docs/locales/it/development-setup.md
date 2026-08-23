@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/development-setup.md](../../development-setup.md)
+> docs/development-setup.md: [docs/development-setup.md](../../development-setup.md)
 > Lingua: Italiano (it)
 
 Questa guida fornisce un tutorial passo passo per configurare il tuo ambiente locale per contribuire alla Mission Platform.
@@ -15,12 +15,11 @@ Prima di clonare il repository, assicurati che il tuo sistema soddisfi i seguent
 ### Requisiti di sistema
 
 | Strumento | Versione richiesta | Scopo |
-| :------------ | :---------------- | :---------------------------------------------------- |
-| **Node.js** | `24.19.0`         | Ambiente runtime (LTS attivo) |
-| **pnpm**      | `11.21.0`         | Gestore di pacchetti e orchestratore dell'area di lavoro |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0`        | Ambiente runtime (LTS attivo) |
+| **pnpm**    | `11.21.0`        | Gestore di pacchetti e orchestratore dell'area di lavoro |
 | **Git** | Ultima stabile | Controllo della versione |
-| **Ruggine** | Catena di strumenti stabile | Test nativi e sviluppo di crate Rust/WASM |
-| **pacchetto wasm** | `0.15.0` tramite pnpm | Packaging di casse Rust come aree di lavoro WebAssembly digitate |
+| **Ruggine** | Catena di strumenti stabile | Sviluppo opzionale di benchmark Rust autonomo |
 | **Docker** | Ultima stabile | Necessario solo per la build Emscripten Hunspell |
 
 ### Gestione delle versioni (consigliato)
@@ -38,13 +37,6 @@ Abilitare **pnpm** utilizzando Corepack:
 ```bash
 corepack enable
 corepack prepare pnpm@11.21.0 --activate
-```
-
-Installa il target Rust quando lavori sulle casse Rust. Il packager WebAssembly viene fornito dal file bloccato `wasm-pack` npm
-dipendenza durante `pnpm install`:
-
-```bash
-rustup target add wasm32-unknown-unknown
 ```
 
 ## Configurazione iniziale
@@ -77,10 +69,9 @@ Esegui un test del fumo per assicurarti che il sistema di build e l'ambiente sia
 pnpm exec turbo run build --filter @mission-platform/forge...
 ```
 
-IL `...` crea anche le dipendenze Forge richieste dal pacchetto. Le casse del decoder e dell'encoder antiruggine vengono testate
-nativamente con `cargo test`; loro
-`wasm-pack` le uscite vengono scritte nel corrispondente `packages/*-wasm/`
-workspace dall'attività del pacchetto del crate, che è il contratto di pacchetto/build archiviato utilizzato da Turborepo.
+IL `...` crea anche le dipendenze Forge richieste dal pacchetto. Il
+lo scanner di codice neutro è compilato dal grafico Forge Web Script; non è così
+richiedono una ruggine o `wasm-pack` passo di costruzione.
 
 ## Flusso di lavoro di sviluppo
 
@@ -119,7 +110,7 @@ done
 
 I pacchetti supportati da Forge pubblicano la corrispondenza `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, E `mp:web-component` condizioni. La condizione attiva deve essere
-configurato dal bundler consumatore; Vedere [il riferimento del compilatore](forge-compiler.md)
+configurato dal bundler consumatore; Vedere [il riferimento del compilatore](../../../vite-plugins/forge/docs/locales/it/reference/compiler.md)
 per il plugin di destinazione e la pipeline di dichiarazione.
 
 ### Sviluppo di applicazioni
@@ -159,8 +150,7 @@ pnpm install
 
 ### Errori di creazione WASM
 
-Se la creazione dei pacchetti Rust/WASM non riesce, controlla che la toolchain Rust stabile e
-`wasm32-unknown-unknown` target vengono installati, quindi eseguiti `pnpm install` per ripristinare l'appuntato `wasm-pack` npm dipendenza.
-IL
-`@mission-platform/hunspell` La build di Emscripten richiede inoltre che Docker sia in esecuzione; vengono costruite le altre casse Rust
-con la toolchain locale di Rust.
+Se la creazione di un artefatto Forge Web Script non riesce, controlla la diagnostica del compilatore
+e verificare il profilo di collegamento statico o dinamico selezionato. IL
+`@mission-platform/hunspell` La build di Emscripten richiede inoltre che Docker
+correre.

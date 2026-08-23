@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/overview.md](../../overview.md)
+> docs/overview.md: [docs/overview.md](../../overview.md)
 > Taal: Nederlands (nl)
 
 Mission Platform is een samenstelbaar, pakketgestuurd, raamwerkneutraal componentenplatform dat is ontworpen om te bouwen
@@ -23,8 +23,8 @@ zorgt voor een consistente gebruikerservaring in de hele productsuite.
 
 ### Multiframework per ontwerp
 
-Mission Platform introduceert een raamwerkneutraal ontwikkelingsparadigma. Met behulp van de `@mission-platform/forge` JSX-dialect,
-ontwikkelaars kunnen componenten één keer schrijven en deze compileren naar native uitvoer Vue 3, React, Solid, Svelteen Web
+Mission Platform introduceert een raamwerkneutraal ontwikkelingsparadigma. Met behulp van het `@mission-platform/forge` JSX-dialect,
+ontwikkelaars kunnen componenten één keer schrijven en deze compileren naar native uitvoer voor Vue 3, React, Solid, Svelte en Web
 Componenten. Dit maakt de codebase toekomstbestendig en maakt naadloze integratie in diverse frontend-omgevingen mogelijk.
 
 ### Typeveilige basis
@@ -37,24 +37,24 @@ snelheid en codekwaliteit.
 
 | Kenmerk | Beschrijving |
 |:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
-| **Forge JSX-runtime** | Een raamwerkneutraal JSX-dialect: één keer schrijven en daarna bouwen Vue 3, React, Svelte, Soliden webcomponenten zonder runtime-overhead. |
+| **Forge JSX-runtime** | Een raamwerkneutraal JSX-dialect: één keer schrijven en bouwen voor Vue 3, React, Svelte, Solid en webcomponenten zonder runtime-overhead. |
 | **Componentenbibliotheek** | Een uitgebreide set lay-out, typografie en interactieve componenten, één keer geschreven voor meerdere raamwerken.                           |
-| **Ontwerpfiches** | Een DTCG-compatibel tokensysteem dat SCSS genereert en TypeScript artefacten voor consistente thema's.                                     |
+| **Ontwerpfiches** | Een DTCG-compatibel tokensysteem dat SCSS- en TypeScript-artefacten genereert voor consistente thema's.                                     |
 | **Agnostische routering** | Een typeveilig routeringssysteem dat onafhankelijk van het UI-framework werkt.                                                               |
-| **Universeel I18n** | Een raamwerk-agnostische internationaliseringswrapper gebaseerd op i18next met dedicated Vue En React adapters.                              |
+| **Universeel I18n** | Een framework-agnostische internationaliseringswrapper gebaseerd op i18next met speciale Vue- en React-adapters.                              |
 | **Wasm-hulpprogramma's** | Hoogwaardige hulpprogramma's voor het scannen van streepjescodes, spellingcontrole en meer, mogelijk gemaakt door WebAssembly.                                     |
 
 ## Technologie stapel
 
 Mission Platform is gebouwd op een moderne, krachtige stack:
 
-- **JSX smeden (`@mission-platform/forge`)**: Het primaire UI-framework — een raamwerkneutrale JSX-runtime waarin alle
+- **Forge JSX (`@mission-platform/forge`)**: het primaire UI-framework — een raamwerkneutrale JSX-runtime waarin alle
   gedeelde componenten (alles behalve de apps) zijn geschreven.
-- **Vue 3**: Het raamwerk waarin de applicaties zich bevinden `apps/` zijn gebouwd met, en een van de vele native renderdoelen voor
+- **Vue 3**: het raamwerk waarmee de toepassingen in `apps/` zijn gebouwd, en een van de vele native renderdoelen waarvoor
   Smeed componenten.
-- **TypeScript**: De standaard voor alle broncode.
-- **Vite**: De bouwtool die snelle HMR en geoptimaliseerde productiebundels mogelijk maakt.
-- **pnpm Werkruimten**: efficiënt afhankelijkheidsbeheer met gedeelde lockfiles.
+- **TypeScript**: de standaard voor alle broncode.
+- **Vite**: de bouwtool die snelle HMR en geoptimaliseerde productiebundels mogelijk maakt.
+- **pnpm-werkruimten**: efficiënt afhankelijkheidsbeheer met gedeelde lockfiles.
 - **Turborepo**: hoogwaardige taakorkestratie en caching.
 - **Cloudflare Workers/Pages**: het primaire implementatiedoel voor applicaties en API's.
 - **Verhalenboek**: de werkbank voor componentontwikkeling en visuele tests.
@@ -63,18 +63,18 @@ Mission Platform is gebouwd op een moderne, krachtige stack:
 
 De repository is georganiseerd in verschillende afzonderlijke gebieden:
 
-- **`apps/`**: inzetbare applicaties (bijv. `my-care-notes`, `website`) die pakketten samenstellen tot producten.
-- **`packages/`**: De belangrijkste bouwstenen, inclusief `@mission-platform/components`, `@mission-platform/router`, En
+- **`apps/`**: inzetbare toepassingen (bijvoorbeeld `my-care-notes`, `website`) die pakketten in producten samenstellen.
+- **`packages/`**: de kernbouwstenen, waaronder `@mission-platform/components`, `@mission-platform/router` en
   `@mission-platform/i18n`.
-- **`configs/`**: Gedeelde configuraties voor ESLint, Prettier, TypeScript, En Vite.
-- **`vite-plugins/`**: Aangepaste buildtime-tools voor ontwerptokens, Forge-compilatie en SEO.
-- **`workers/`**: Cloudflare Workers die backend-logica en SPA-servicemogelijkheden bieden.
+- **`configs/`**: gedeelde configuraties voor ESLint, Prettier, TypeScript en Vite.
+- **`vite-plugins/`**: aangepaste buildtime-tools voor ontwerptokens, Forge-compilatie en SEO.
+- **`workers/`**: Cloudflare Workers die backend-logica en SPA-bedieningsmogelijkheden bieden.
 
 ## Volgende stappen
 
 Raadpleeg de volgende handleidingen om te beginnen met ontwikkelen op het Mission Platform:
 
-- **[Ontwikkeling instellen](development-setup.md)**: Bereid uw omgeving voor en installeer afhankelijkheden.
+- **[Ontwikkeling instellen](development-setup.md)**: bereid uw omgeving voor en installeer afhankelijkheden.
 - **[Architectuur](architecture.md)**: Diepe duik in de ontwerpprincipes en de afhankelijkheidsstroom van het platform.
 - **[Structuur van de werkruimte](workspace-structure.md)**: Begrijp de mapindeling en pakketconventies.
 - **[Testen](testing.md)**: Leer meer over onze teststrategieën en tools.

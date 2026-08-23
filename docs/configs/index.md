@@ -10,18 +10,22 @@ Packages and applications consume these configurations by extending them in thei
 
 ## Package Summary
 
+Configuration package documentation is owned by each package. The links below
+are repository file links today and become package-namespaced routes in the
+documentation site:
+
 | Package | Purpose | Primary configuration surface |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](./eslint-config.md) | Flat ESLint rules for JS/TS and Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | Repository formatting defaults. | `prettier.config.js` |
-| `@mission-platform/typescript-config` | TypeScript compiler presets. | `tsconfig.json` |
-| `@mission-platform/stylelint-config` | CSS and SCSS linting. | `stylelint.config.mjs` |
-| `@mission-platform/vite-config` | Vite and Vitest configuration helpers. | `vite.config.ts` |
-| `@mission-platform/tsdown-config` | Library bundling helpers. | `tsdown.config.ts` |
-| `@mission-platform/postcss-config` | Shared PostCSS pipeline. | `postcss.config.mjs` |
-| `@mission-platform/i18n-config` | Shared locale and extraction settings. | `i18next.config.ts` |
-| `@mission-platform/storybook-framework` | Environment-selected Storybook framework preset. | `.storybook/main.ts` |
-| [Workers Configuration](./workers-config.md) | Cloudflare Worker conventions. | `wrangler.jsonc` |
+| [`@mission-platform/eslint-config`](../../configs/eslint-config/docs/index.md) | Flat ESLint rules for JS/TS and Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../configs/prettier-config/docs/index.md) | Repository formatting defaults. | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../configs/typescript-config/docs/index.md) | TypeScript compiler presets. | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../configs/stylelint-config/docs/index.md) | CSS and SCSS linting. | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../configs/vite-config/docs/index.md) | Vite and Vitest configuration helpers. | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../configs/tsdown-config/docs/index.md) | Library bundling helpers. | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../configs/postcss-config/docs/index.md) | Shared PostCSS pipeline. | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../configs/i18n-config/docs/index.md) | Shared locale and extraction settings. | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../configs/storybook-framework/docs/index.md) | Environment-selected Storybook framework preset. | `.storybook/main.ts` |
+| [Workers Configuration](./workers-config.md) | Cross-workspace Cloudflare Worker conventions. | `wrangler.jsonc` |
 
 ## Core Tooling
 

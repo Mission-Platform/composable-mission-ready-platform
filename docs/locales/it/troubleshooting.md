@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/troubleshooting.md](../../troubleshooting.md)
+> docs/troubleshooting.md: [docs/troubleshooting.md](../../troubleshooting.md)
 > Lingua: Italiano (it)
 
 Questa guida fornisce soluzioni per problemi comuni riscontrati durante lo sviluppo, la creazione e la distribuzione all'interno della Missione
@@ -24,8 +24,8 @@ Piattaforma monorepo. È strutturato come una **guida pratica** per la diagnosi 
 
 - **CSS critici in linea**: assicurati che gli stili richiesti per i contenuti sopra la piega siano incorporati.
 - **Ottimizzazione immagine**: utilizza i formati WebP/AVIF e fornisci `srcset` per immagini reattive.
-- **Precaricamento risorse**: utilizzare `<link rel="preload">` per l'immagine LCP o i font critici.
-- **Riduci al minimo il lavoro del thread principale**: rinvia l'utilizzo di JavaScript non essenziale `async` O `defer`.
+- **Precaricamento risorse**: utilizzare `<link rel="preload">` per l'immagine LCP o i caratteri critici.
+- **Riduci al minimo il lavoro del thread principale**: rinvia JavaScript non essenziale utilizzando `async` o `defer`.
 
 ### Perdite di memoria
 
@@ -61,13 +61,13 @@ rm -rf .turbo
 
 ### Modulo non trovato/Risoluzione dell'area di lavoro
 
-**Problema**: TypeScript O Vite impossibile trovare un pacchetto definito nell'area di lavoro.
+**Problema**: TypeScript o Vite non riescono a trovare un pacchetto definito nello spazio di lavoro.
 
 **Soluzioni**:
 
-1. Verificare che il pacchetto sia elencato nell'area di lavoro di consumo `package.json`.
-2. Assicurarsi che la versione corrisponda (`workspace:*` è consigliato).
-3. Corri `pnpm install` per aggiornare i collegamenti simbolici.
+1. Verificare che il pacchetto sia elencato nell'`package.json` dell'area di lavoro di consumo.
+2. Assicurarsi che la versione corrisponda (si consiglia `workspace:*`).
+3. Eseguire `pnpm install` per aggiornare i collegamenti simbolici.
 4. Se i problemi persistono, prova una pulizia approfondita:
 ```bash
    pnpm -r exec rm -rf node_modules
@@ -76,7 +76,7 @@ rm -rf .turbo
 
 ### Digitare Errori in CI ma non Locale
 
-**Problema**: la compilazione non riesce in CI con TypeScript errori che non vengono visualizzati nel tuo IDE.
+**Problema**: la compilazione non riesce nell'elemento della configurazione con errori TypeScript che non vengono visualizzati nell'IDE.
 
 **Soluzione**: esegui il controllo del tipo localmente nell'intero spazio di lavoro.
 
@@ -95,11 +95,11 @@ Ciò garantisce che tutti i limiti del pacchetto siano rispettati correttamente 
 **Diagnosi**:
 
 1. Verificare che il server MCP sia creato: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
-2. Controlla se il server si avvia manualmente: `node mcp/developer/dist/index.js`.
+2. Controllare se il server si avvia manualmente: `node mcp/developer/dist/index.js`.
 
 **Soluzioni**:
 
-- Assicurati di utilizzare il percorso assoluto per il file node binario e lo script nella configurazione del client.
+- Assicurati di utilizzare il percorso assoluto del file binario node e dello script nella configurazione del client.
 - Controllare i registri del server MCP per messaggi di errore specifici (ad esempio, variabili di ambiente mancanti).
 
 ## Modelli di errore comuni
@@ -119,7 +119,7 @@ const name = user?.profile?.name ?? 'Guest';
 
 ### "Rifiuto di una promessa non gestita"
 
-**Causa**: una funzione asincrona ha generato un errore che non è stato rilevato. **Correzione**: racchiude sempre le chiamate asincrone `try/catch` blocchi.
+**Causa**: una funzione asincrona ha generato un errore che non è stato rilevato. **Correzione**: racchiude sempre le chiamate asincrone nei blocchi `try/catch`.
 
 ```typescript
 try {

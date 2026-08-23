@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/build-system.md](../../build-system.md)
+> docs/build-system.md: [docs/build-system.md](../../build-system.md)
 > Idioma: Español (es)
 
 Este documento explica la arquitectura y la mecánica del sistema de construcción de Mission Platform. Está diseñado para altas
@@ -57,7 +57,7 @@ el marco se elige de forma independiente, `storyblok × vue` y `astro × solid` 
 Las compilaciones de CMS emiten a `dist/cms/<cms>/<framework>/**`, con manifiestos y otros sidecares de plataforma reflejados en
 `dist/cms/<cms>/`. Los objetivos que necesitan un tiempo de ejecución hidratado (Astro, Webflow) cogeneran un árbol de isla a partir del límite.
 complemento de framework en la misma compilación. La división completa de responsabilidades y los límites de las etapas se describen en
-[Canalización del compilador Forge](forge-compiler.md).
+[Canalización del compilador Forge](../../../vite-plugins/forge/docs/locales/es/reference/compiler.md).
 
 ## contrato de construcción
 
@@ -71,7 +71,7 @@ pnpm build:force                 # the same aggregate build, ignoring Turbo's ca
 pnpm exec turbo run build --filter @mission-platform/components
 ```
 
-Los paquetes Forge también conservan alias de compatibilidad reducida para reconstruir un objetivo:
+Los paquetes Forge también conservan alias de compatibilidad reducidos para reconstruir un objetivo:
 
 ```bash
 pnpm --filter @mission-platform/components run build:forge
@@ -130,9 +130,9 @@ Turborepo almacena en caché los siguientes artefactos:
 
 - `dist/**`: Construyó artefactos JS/CSS.
 - `.vite/**`: Vitecaché interno.
-- `coverage/**`: Informes de cobertura de pruebas.
+- `coverage/**`: Informes de cobertura de prueba.
 
-Para omitir el caché y forzar una nueva compilación, use el `--force` bandera:
+Para omitir el caché y forzar una compilación nueva, use el `--force` bandera:
 
 ```bash
 pnpm build:force

@@ -5,8 +5,11 @@ import {
   buildIncludedRoutes,
   collectDocumentSlugs,
   DEFAULT_SLUG,
+  discoverDocumentationRoots,
+  rootForSlug,
+  localSlug,
 } from '../src/route-inventory.ts';
-import { renderDocumentationMarkdown, renderTocHtml } from '../src/ssg/markdown.ts';
+import { renderDocumentationMarkdown, renderTocHtml, type MarkdownLinkContext } from '../src/ssg/markdown.ts';
 import { buildDocumentSeo, serializeDocsHead } from '../src/ssg/seo.ts';
 import {
   DEFAULT_LOCALE,
@@ -17,9 +20,9 @@ import {
 
 const appDirectory = path.resolve(import.meta.dirname, '..');
 const repoRoot = path.resolve(appDirectory, '../..');
-const documentsDirectory = path.join(repoRoot, 'docs');
+const documentationRoots = discoverDocumentationRoots(repoRoot);
 const outputDirectory = path.join(appDirectory, 'dist');
-const documentSlugs = collectDocumentSlugs(documentsDirectory);
+const documentSlugs = collectDocumentSlugs(documentationRoots);
 const routes = buildIncludedRoutes(documentSlugs);
 
 const localeSet = new Set<string>(SUPPORTED_LOCALES);
@@ -34,18 +37,39 @@ function parseLocaleAndSlug(url: string): { locale: DocumentationLocale; slug: s
   return { locale: DEFAULT_LOCALE, slug: segments.join('/') || DEFAULT_SLUG };
 }
 
-async function markdownFor(locale: DocumentationLocale, slug: string): Promise<string | undefined> {
-  const englishPath = path.join(documentsDirectory, `${slug}.md`);
+
+async function markdownFor(
+  locale: DocumentationLocale,
+  slug: string,
+): Promise<{ source: string; context: MarkdownLinkContext } | undefined> {
+  const root = rootForSlug(slug, documentationRoots);
+  if (root === undefined) return undefined;
+  const relativeSlug = localSlug(root, slug);
+  const englishPath = path.join(root.rootDirectory, `${relativeSlug}.md`);
   if (locale !== DEFAULT_LOCALE) {
-    const localizedPath = path.join(documentsDirectory, 'locales', locale, `${slug}.md`);
+    const localizedPath = path.join(root.rootDirectory, 'locales', locale, `${relativeSlug}.md`);
     try {
-      return await readFile(localizedPath, 'utf8');
+      return {
+        source: await readFile(localizedPath, 'utf8'),
+        context: {
+          currentRoot: root,
+          roots: documentationRoots,
+          hasDocument: (target) => documentSlugs.includes(target),
+        },
+      };
     } catch {
       // Fall back to English source when a translation file is missing.
     }
   }
   try {
-    return await readFile(englishPath, 'utf8');
+    return {
+      source: await readFile(englishPath, 'utf8'),
+      context: {
+        currentRoot: root,
+        roots: documentationRoots,
+        hasDocument: (target) => documentSlugs.includes(target),
+      },
+    };
   } catch {
     return undefined;
   }
@@ -94,10 +118,10 @@ function renderDocumentBody(options: {
 
 async function renderRoute(url: string, assetTags: string): Promise<string> {
   const { locale, slug } = parseLocaleAndSlug(url);
-  const source = await markdownFor(locale, slug);
-  const exists = source !== undefined;
+  const markdown = await markdownFor(locale, slug);
+  const exists = markdown !== undefined;
   const rendered = exists
-    ? renderDocumentationMarkdown(source, slug, locale)
+    ? renderDocumentationMarkdown(markdown.source, slug, locale, markdown.context)
     : {
         html: `<h1>Page not found</h1><p>No documentation exists for “${slug}”.</p>`,
         toc: [],

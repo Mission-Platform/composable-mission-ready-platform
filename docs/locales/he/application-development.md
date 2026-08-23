@@ -2,7 +2,7 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> מקור באנגלית: [docs/application-development.md](../../application-development.md)
+> docs/application-development.md: [docs/application-development.md](../../application-development.md)
 > שפה: עברית (he)
 
 מדריך זה מסביר כיצד להפעיל, לבדוק ולפרוס את היישומים ב `apps/`. יישומים מורכבים לשימוש חוזר
@@ -71,7 +71,7 @@ pnpm --filter @mission-platform/my-care-notes deploy:staging
 pnpm --filter @mission-platform/service-monitor deploy:staging
 ```
 
-לְהִשְׁתַמֵשׁ `wrangler secret put` לסודות. שמור כריכות וברירות מחדל לא סודיות `wrangler.jsonc`, ואמת את ה
+לְהִשְׁתַמֵשׁ `wrangler secret put` לסודות. שמור כריכות וברירות מחדל לא סודיות `wrangler.jsonc`, ואמת את
 הסביבה שנבחרה לפני הפריסה.
 
 ## מדריכים קשורים

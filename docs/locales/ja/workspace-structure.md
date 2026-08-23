@@ -2,15 +2,15 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> 英語の原典: [docs/workspace-structure.md](../../workspace-structure.md)
+> docs/workspace-structure.md: [docs/workspace-structure.md](../../workspace-structure.md)
 > 言語: 日本語 (ja)
 
-このドキュメントは、Mission Platform のモノリポジトリのレイアウト、ディレクトリの目的、および内部的なリポジトリに関する技術リファレンスを提供します。
+このドキュメントは、Mission Platform モノリポジトリのレイアウト、ディレクトリの目的、および内部的なリポジトリに関する技術リファレンスを提供します。
 パッケージの規約。
 
 ## モノリポジトリのレイアウト リファレンス
 
-ミッションプラットフォームの用途 pnpm ワークスペースと Turborepo を使用してマルチパッケージ環境を管理します。リポジトリが整理されている
+Mission Platform は、pnpm ワークスペースと Turborepo を使用してマルチパッケージ環境を管理します。リポジトリが整理されている
 機能層に分割します。
 
 ```text
@@ -29,43 +29,43 @@ composable_mission_ready_platform/
 
 ## プライマリディレクトリ
 
-### 1. `apps/` （申請）
+### 1. `apps/` (アプリケーション)
 
-アプリケーションは、機能を構成する展開可能なユニットです。 `packages/` ディレクトリ。彼らは通常プライベートです
+アプリケーションは、`packages/` ディレクトリから機能を構成する展開可能な単位です。彼らは通常プライベートです
 レジストリに公開されることはありません。
 
-- **`docs/`**: Vite + Vue Markdown コーパスのドキュメント サイト。
+- **`docs/`**: Markdown コーパスの Vite + Vue ドキュメント サイト。
 - **`my-care-notes/`**: 主力のケアノート アプリケーション。
 - **`service-monitor/`**: Durable Object によってサポートされる RedwoodSDK サービス健全性ダッシュボード。
 - **`website/`**: Mission Platform のマーケティングおよび製品 Web サイト。
-- **`storybook/`**: コンポーネント ワークベンチとビジュアル テスト スイート。
+- **`storybook/`**: コンポーネント ワークベンチおよびビジュアル テスト スイート。
 
-### 2. `packages/` (積み木)
+### 2. `packages/` (ビルディングブロック)
 
 アプリによって使用される、再利用可能なバージョン管理されたライブラリ。これらは、可能な限りフレームワークに依存しないように設計されています。
 
 - **`@mission-platform/forge`**: フレームワークに依存しない JSX ランタイムとアダプター。
-- **`@mission-platform/components`**: マルチフレームワークコンポーネントライブラリ。
-- **`@mission-platform/forms`** そして **`@mission-platform/forms-core`**: スキーマ駆動のフォーム プリミティブ。
-- **`@mission-platform/content`** そして **`@mission-platform/email-renderer`**: コンテンツとレンダリング パイプライン。
-- **`@mission-platform/tokens`**: 信頼できるトークンのソースを設計します。
-- **`@mission-platform/router`** そして **`@mission-platform/i18n`**: フレームワークに依存しないルーティングとローカリゼーション。
-- **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**、 そして
-  **`@mission-platform/qr-code`**: Wasm ベースのスキャンおよびエンコード パッケージ。
+- **`@mission-platform/components`**: マルチフレームワーク コンポーネント ライブラリ。
+- **`@mission-platform/forms`** および **`@mission-platform/forms-core`**: スキーマ駆動のフォーム プリミティブ。
+- **`@mission-platform/content`** および **`@mission-platform/email-renderer`**: コンテンツとレンダリング パイプライン。
+- **`@mission-platform/tokens`**: 信頼できるデザイン トークン ソース。
+- **`@mission-platform/router`** および **`@mission-platform/i18n`**: フレームワークに依存しないルーティングとローカリゼーション。
+- **`@mission-platform/barcode`**、**`@mission-platform/code-scanner`**、**`@mission-platform/matrix-code`**、および
+  **`@mission-platform/qr-code`**: Wasm 支援のスキャンおよびエンコード パッケージ。
 
-### 3. `configs/` (ツーリング基盤)
+### 3. `configs/` (ツール財団)
 
 すべてのワークスペース間で一貫性を確保する共有構成。このディレクトリ内のパッケージは通常、次のように使用されます。
-`devDependencies`.
+`devDependencies`。
 
-- **`eslint-config/`**, **`prettier-config/`**、 そして **`stylelint-config/`**: リンティングとフォーマットのルール。
-- **`typescript-config/`**: ベース `tsconfig.json` のファイル Node、DOM、ライブラリ、およびフレームワークのコンシューマ。
-- **`tsdown-config/`** そして **`vite-config/`**: 共通ライブラリ、アプリ、 Vite、 そして Vitest パターンを構築します。
-- **`i18n-config/`** そして **`storybook-framework/`**: 共有ロケール抽出とフレームワークワークベンチ設定。
+- **`eslint-config/`**、**`prettier-config/`**、**`stylelint-config/`**: リンティングとフォーマットのルール。
+- **`typescript-config/`**: Node、DOM、ライブラリ、およびフレームワーク コンシューマ用のベース `tsconfig.json` ファイル。
+- **`tsdown-config/`** および **`vite-config/`**: 共通ライブラリ、アプリ、Vite、および Vitest ビルド パターン。
+- **`i18n-config/`** および **`storybook-framework/`**: 共有ロケール抽出およびフレームワーク ワークベンチ設定。
 
-### 4. `vite-plugins/` (拡張機能のビルド)
+### 4. `vite-plugins/` (ビルド拡張機能)
 
-を拡張するカスタム プラグイン Vite ビルドプロセス。
+Vite ビルド プロセスを拡張するカスタム プラグイン。
 
 - **`forge/`**: Forge コンポーネント用のマルチステージ コンパイラ。
 - **`tokens/`**: DTCG トークン定義からコード アーティファクトを生成します。
@@ -76,12 +76,12 @@ composable_mission_ready_platform/
 サーバー側ロジックと最適化されたアセット配信のための Cloudflare Workers。
 
 - **`api-proxy/`**: 承認された API ルートへの制限付き読み取り専用アクセスを提供します。
-- **`email-sender/`**: ローカルの MailPit 支援の電子メール ショーケース ワーカー。
-- **`forge-spa/`**: 静的アセットを提供します。 `ASSETS`-バインディング SPA フォールバック。
+- **`email-sender/`**: ローカルの MailPit を利用した電子メール ショーケース ワーカー。
+- **`forge-spa/`**: `ASSETS` バインディング SPA フォールバックを使用して静的アセットを提供します。
 
-デプロイ可能なアプリケーション ワーカーは次のように構成されます。 `apps/website/wrangler.jsonc`,
-`apps/my-care-notes/wrangler.jsonc`、 そして `apps/service-monitor/wrangler.jsonc`。の
-`api-proxy` そして `forge-spa` パッケージはスタンドアロンではなくバンドルされた依存関係です Wrangler 展開。
+デプロイ可能なアプリケーション ワーカーは `apps/website/wrangler.jsonc` によって構成されます。
+`apps/my-care-notes/wrangler.jsonc`、`apps/service-monitor/wrangler.jsonc`。の
+`api-proxy` および `forge-spa` パッケージは、スタンドアロンの Wrangler 展開ではなく、バンドルされた依存関係です。
 
 ## パッケージの内部規約
 
@@ -92,17 +92,17 @@ composable_mission_ready_platform/
 ソース コードは機能タイプごとに編成されています。
 
 - **`components/`**: UI ロジック (SFC または TSX)。
-- **`composables/`**: リアクティブロジックとフック。
+- **`composables/`**: リアクティブ ロジックとフック。
 - **`utils/`**: 純粋な関数とフレームワークに依存しないヘルパー。
 - **`locales/`**: JSON/YAML 翻訳ファイル。
 - **`styles/`**: SCSS 部分と設計システムの統合。
 
 ### バレルエクスポートパターン
 
-内のすべてのディレクトリ `src/` が含まれている必要があります `index.ts` (バレルファイル)。
+`src/` 内のすべてのディレクトリには `index.ts` (バレル ファイル) が含まれている必要があります。
 
-- サブディレクトリは、ローカル経由で内部シンボルをエクスポートします。 `index.ts`。
-- 根 `src/index.ts` ワークスペース メンバー全体のパブリック エントリ ポイントとして機能します。
+- サブディレクトリは、ローカルの `index.ts` を介して内部シンボルをエクスポートします。
+- ルート `src/index.ts` は、ワークスペース メンバー全体のパブリック エントリ ポイントとして機能します。
 
 ## ルート構成レジストリ
 
@@ -110,29 +110,29 @@ composable_mission_ready_platform/
 
 |ファイル |目的 |
 |:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml`   |ワークスペース境界、メンバー グロブ、および依存関係カタログを定義します。 |
-| `turbo.json`            |ビルド パイプラインとタスク キャッシュを調整します。                    |
-| `package.json`          |ルートレベルのスクリプトとモノリポジトリ全体の devDependency。                |
+| `pnpm-workspace.yaml` |ワークスペース境界、メンバー グロブ、および依存関係カタログを定義します。 |
+| `turbo.json` |ビルド パイプラインとタスク キャッシュを調整します。                    |
+| `package.json` |ルートレベルのスクリプトとモノリポジトリ全体の devDependency。                |
 | `commitlint.config.mjs` |従来のコミット仕様を強制します。                     |
 
 ## 依存関係とワークスペースの管理
 
-ミッションプラットフォームは、 `workspace:*` 内部依存関係のプロトコル。これにより、パッケージは常に
+Mission Platform は、内部依存関係に `workspace:*` プロトコルを使用します。これにより、パッケージは常に
 開発中の他のワークスペース メンバーのローカル バージョン。
 
 ### PNPM カタログ
 
-リポジトリは ** を利用しますpnpm カタログ** (定義: `pnpm-workspace.yaml`) 依存関係のバージョンを一元管理する
+リポジトリは **pnpm カタログ** (`pnpm-workspace.yaml` で定義) を利用して、依存関係のバージョンを一元管理します。
 モノレポ。これにより、バージョンのドリフトが防止され、メンテナンスが簡素化されます。
 
 ### タスクの実行
 
-クロスワークスペースタスクはルート経由で実行されます `package.json` ターボレポを使用して:
+クロスワークスペース タスクは、Turborepo を使用してルート `package.json` 経由で実行されます。
 
 - `pnpm build`: すべてのワークスペースを正しい依存関係の順序で構築します。
-- `pnpm test`: すべてのワークスペースに対してテスト スイートを実行します。 `test` タスク。使用 `pnpm exec turbo run test --affected` のために
+- `pnpm test`: `test` タスクを使用して、すべてのワークスペースのテスト スイートを実行します。 `pnpm exec turbo run test --affected` を使用して、
   変更されたワークスペースの CI スコープ。
-- `pnpm lint`： 走る ESLint ワークスペース全体で。
-- `pnpm lint:style`： 走る Stylelint アプリとパッケージのスタイル用。
-- `pnpm format`: でフォーマットを確認します Prettier.
+- `pnpm lint`: ワークスペース全体で ESLint を実行します。
+- `pnpm lint:style`: アプリとパッケージのスタイルに対して Stylelint を実行します。
+- `pnpm format`: Prettier でフォーマットをチェックします。
 - `pnpm i18n:extract`: カタログを所有するワークスペースの翻訳キーを抽出します。

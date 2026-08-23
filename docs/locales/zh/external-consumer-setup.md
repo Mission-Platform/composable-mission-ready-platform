@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/external-consumer-setup.md](../../external-consumer-setup.md)
+> docs/external-consumer-setup.md: [docs/external-consumer-setup.md](../../external-consumer-setup.md)
 > 语言: 简体中文 (zh)
 
 本指南解释了如何在位于主 monorepo 之外的项目中使用 Mission Platform 包。它专注于使用特定于框架的构建和管理设计令牌。
@@ -26,7 +26,7 @@
 
 ### 1. Vite 配置
 
-如果您正在使用 Vite，您可以使用以下辅助函数 `@mission-platform/vite-config` 自动设置正确的解析条件。
+如果您正在使用 Vite，您可以使用以下辅助函数 `@mission-platform/vite-config` 自动设置正确的解析条件。无框架应用程序应选择 `mp:web-component`;不要安装或配置 Vue 该目标的插件。
 
 ```ts
 import { defineConfig } from 'vite';
@@ -34,8 +34,8 @@ import { frameworkResolveConditions } from '@mission-platform/vite-config';
 
 export default defineConfig({
   resolve: {
-    // This places 'mp:vue' at the top of the condition list
-    conditions: frameworkResolveConditions('mp:vue'),
+    // This places the Web Components build at the top of the condition list.
+    conditions: frameworkResolveConditions('web-component'),
   },
 });
 ```
@@ -46,9 +46,9 @@ export default defineConfig({
 
 ```json
 {
-  "extends": "@mission-platform/typescript-config/framework-vue",
+  "extends": "@mission-platform/typescript-config/framework-web-component",
   "compilerOptions": {
-    "customConditions": ["mp:vue"]
+    "customConditions": ["mp:web-component"]
   }
 }
 ```
@@ -58,7 +58,7 @@ export default defineConfig({
 从注册表安装所需的软件包：
 
 ```bash
-pnpm add @mission-platform/components @mission-platform/tokens
+pnpm add @mission-platform/components @mission-platform/tokens @mission-platform/router @mission-platform/forge-router-web-components
 ```
 
 ### 对等依赖性
@@ -67,8 +67,13 @@ pnpm add @mission-platform/components @mission-platform/tokens
 
 ```bash
 # Example for a Vue 3 project
-pnpm add vue vue-router @mission-platform/i18n
+pnpm add @mission-platform/i18n
 ```
+
+中性路由器包没有框架或路由器库运行时依赖性。安装选择的本机路由器
+您的应用程序和匹配的 Forge 目标（`@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`， 或者 `-web-components`)。应用程序拥有路由定义、提供者、守卫、加载器和本机
+路由器实例；可重用包仅导入以下功能 `@mission-platform/router`.
 
 ## 组件使用
 
@@ -84,6 +89,33 @@ import { ForgeButton } from '@mission-platform/components';
 </template>
 ```
 
+### 无框架路由
+
+使用内存历史记录进行测试和预渲染，或省略 `history` 在浏览器中使用浏览器历史记录。注册路由器
+元素一次；当路由目标包含参数、查询值或哈希时，将路由目标分配为属性：
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/'),
+  routes: [
+    { path: '/', redirect: '/docs/intro' },
+    { path: '/docs/*', name: 'doc', component: () => document.createTextNode('Docs') },
+  ],
+});
+setForgeRouter(router);
+
+const outlet = document.querySelector('forge-router-outlet');
+outlet?.setRouter(router);
+```
+
 ## 设计代币定制
 
 Mission Platform 使用 CSS 自定义属性（变量）来设计令牌。您可以在应用程序的根样式表中全局覆盖这些标记。
@@ -93,6 +125,7 @@ Mission Platform 使用 CSS 自定义属性（变量）来设计令牌。您可�
 :root {
   /* Override the brand primary color */
   --mp-color-brand-primary: #007bff;
+  
   /* Override a spacing token */
   --mp-spacing-md: 1.5rem;
 }

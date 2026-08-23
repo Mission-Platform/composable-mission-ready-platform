@@ -2,11 +2,16 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> 영어 원문: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
 > 언어: 한국어 (ko)
 
-Mission Platform은 루트에 공유 유틸리티 스크립트 세트를 유지합니다. `scripts/` 디렉토리에 의해 관리됨
-`@mission-platform/scripts` 패키지.
+이 가이드는 의도적으로 프로젝트 문서 계층에 남아 있습니다. `scripts/`
+게시 가능한 작업공간 패키지가 아닌 저장소 오케스트레이션을 포함합니다.
+패키지 및 애플리케이션별 명령은 해당 명령 옆에 문서화되어 있습니다.
+작업 공간을 소유하고 있습니다.
+
+Mission Platform은 루트에 공유 유틸리티 스크립트 세트를 유지합니다.
+`scripts/` 루트 작업공간 도구로 관리되는 디렉토리입니다.
 
 ## 개요
 
@@ -18,7 +23,7 @@ Mission Platform은 루트에 공유 유틸리티 스크립트 세트를 유지�
 ### i18n 추출(`i18n:extract`)
 
 번역을 소유한 각 앱이나 패키지는 다음을 제공합니다. `i18n:extract` 스크립트와 `i18next.config.ts`. 명령은 다음과 같습니다
-각 작업공간 아래의 네임스페이스 번들 `locales/<locale>/` 예배 규칙서. 구성된 모든 작업공간에 대해 추출을 실행합니다.
+각 작업공간 아래의 네임스페이스 번들 `locales/<locale>/` 예배 규칙서. 다음에서 구성된 모든 작업 영역에 대해 추출을 실행합니다.
 저장소 루트:
 
 ```bash

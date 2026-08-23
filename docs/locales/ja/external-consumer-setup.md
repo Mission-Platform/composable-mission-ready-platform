@@ -2,7 +2,7 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> 英語の原典: [docs/external-consumer-setup.md](../../external-consumer-setup.md)
+> docs/external-consumer-setup.md: [docs/external-consumer-setup.md](../../external-consumer-setup.md)
 > 言語: 日本語 (ja)
 
 このガイドでは、メインのモノリポジトリの外部にあるプロジェクトで Mission Platform パッケージを使用する方法について説明します。フレームワーク固有のビルドの使用とデザイン トークンの管理に重点を置いています。
@@ -26,7 +26,7 @@ Mission Platform コンポーネントは、次を使用して一度作成され
 
 ### 1. Vite 構成
 
-使用している場合 Viteからヘルパー関数を使用できます。 `@mission-platform/vite-config` 正しい解決条件を自動的に設定します。
+使用している場合 Viteからヘルパー関数を使用できます。 `@mission-platform/vite-config` 正しい解決条件を自動的に設定します。フレームワークフリーのアプリでは、 `mp:web-component`;をインストールまたは設定しないでください。 Vue そのターゲット用のプラグイン。
 
 ```ts
 import { defineConfig } from 'vite';
@@ -34,8 +34,8 @@ import { frameworkResolveConditions } from '@mission-platform/vite-config';
 
 export default defineConfig({
   resolve: {
-    // This places 'mp:vue' at the top of the condition list
-    conditions: frameworkResolveConditions('mp:vue'),
+    // This places the Web Components build at the top of the condition list.
+    conditions: frameworkResolveConditions('web-component'),
   },
 });
 ```
@@ -46,9 +46,9 @@ export default defineConfig({
 
 ```json
 {
-  "extends": "@mission-platform/typescript-config/framework-vue",
+  "extends": "@mission-platform/typescript-config/framework-web-component",
   "compilerOptions": {
-    "customConditions": ["mp:vue"]
+    "customConditions": ["mp:web-component"]
   }
 }
 ```
@@ -58,7 +58,7 @@ export default defineConfig({
 レジストリから必要なパッケージをインストールします。
 
 ```bash
-pnpm add @mission-platform/components @mission-platform/tokens
+pnpm add @mission-platform/components @mission-platform/tokens @mission-platform/router @mission-platform/forge-router-web-components
 ```
 
 ### ピアの依存関係
@@ -67,8 +67,13 @@ pnpm add @mission-platform/components @mission-platform/tokens
 
 ```bash
 # Example for a Vue 3 project
-pnpm add vue vue-router @mission-platform/i18n
+pnpm add @mission-platform/i18n
 ```
+
+ニュートラル ルーター パッケージには、フレームワークやルーターとライブラリのランタイム依存関係はありません。で選択したネイティブルーターをインストールします
+アプリケーションと一致する Forge ターゲット (`@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`、 または `-web-components`)。アプリケーションは、ルート定義、プロバイダー、ガード、ローダー、およびネイティブ
+ルーターインスタンス。再利用可能なパッケージは、からの機能のみをインポートします `@mission-platform/router`.
 
 ## コンポーネントの使用法
 
@@ -84,6 +89,33 @@ import { ForgeButton } from '@mission-platform/components';
 </template>
 ```
 
+### フレームワークフリーのルーティング
+
+テストとプリレンダリングにメモリ履歴を使用するか、省略します。 `history` ブラウザでブラウザ履歴を使用します。ルーターを登録する
+要素は一度だけ。ルート ターゲットにパラメータ、クエリ値、またはハッシュが含まれている場合は、ルート ターゲットをプロパティとして割り当てます。
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/'),
+  routes: [
+    { path: '/', redirect: '/docs/intro' },
+    { path: '/docs/*', name: 'doc', component: () => document.createTextNode('Docs') },
+  ],
+});
+setForgeRouter(router);
+
+const outlet = document.querySelector('forge-router-outlet');
+outlet?.setRouter(router);
+```
+
 ## デザイントークンのカスタマイズ
 
 Mission Platform は、デザイン トークンに CSS カスタム プロパティ (変数) を使用します。これらのトークンは、アプリケーションのルート スタイルシートでグローバルにオーバーライドできます。
@@ -93,6 +125,7 @@ Mission Platform は、デザイン トークンに CSS カスタム プロパ�
 :root {
   /* Override the brand primary color */
   --mp-color-brand-primary: #007bff;
+  
   /* Override a spacing token */
   --mp-spacing-md: 1.5rem;
 }

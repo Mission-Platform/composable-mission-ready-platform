@@ -2,7 +2,7 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> 英語の原典: [docs/development-setup.md](../../development-setup.md)
+> docs/development-setup.md: [docs/development-setup.md](../../development-setup.md)
 > 言語: 日本語 (ja)
 
 このガイドでは、Mission Platform に貢献するためにローカル環境をセットアップするためのステップバイステップのチュートリアルを提供します。
@@ -15,12 +15,11 @@
 ### システム要件
 
 |ツール |必要なバージョン |目的 |
-| :------------ | :---------------- | :---------------------------------------------------- |
-| **Node.js** | `24.19.0`         |ランタイム環境 (アクティブ LTS) |
-| **pnpm**      | `11.21.0`         |パッケージ マネージャーとワークスペース オーケストレーター |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0`        |ランタイム環境 (アクティブ LTS) |
+| **pnpm**    | `11.21.0`        |パッケージ マネージャーとワークスペース オーケストレーター |
 | **Git** |最新の安定版 |バージョン管理 |
-| **錆** |安定したツールチェーン |ネイティブ テストと Rust/WASM クレート開発 |
-| **wasm-pack** | `0.15.0` 経由 pnpm | Rust クレートを型指定された WebAssembly ワークスペースとしてパッケージ化する |
+| **錆** |安定したツールチェーン |オプションのスタンドアロン Rust ベンチマーク開発 |
 | **ドッカー** |最新の安定版 | Emscripten Hunspell ビルドにのみ必要 |
 
 ### バージョン管理 (推奨)
@@ -38,13 +37,6 @@ nvm use
 ```bash
 corepack enable
 corepack prepare pnpm@11.21.0 --activate
-```
-
-Rust クレートで作業する場合は、Rust ターゲットをインストールします。 WebAssembly パッケージャーは、固定された `wasm-pack` npm
-間の依存関係 `pnpm install`:
-
-```bash
-rustup target add wasm32-unknown-unknown
 ```
 
 ## 初期セットアップ
@@ -77,10 +69,9 @@ pnpm install
 pnpm exec turbo run build --filter @mission-platform/forge...
 ```
 
-の `...` また、パッケージに必要な Forge の依存関係も構築します。 Rustのデコーダとエンコーダのクレートがテストされています
-ネイティブに `cargo test`;彼らの
-`wasm-pack` 出力は対応するファイルに書き込まれます。 `packages/*-wasm/`
-クレートのパッケージ タスクによるワークスペース。これは、Turborepo によって使用されるチェックインされたパッケージ/ビルド コントラクトです。
+の `...` また、パッケージに必要な Forge の依存関係も構築します。の
+ニュートラル コード スキャナーは、Forge Web Script グラフからコンパイルされます。そうではありません
+Rust が必要か、 `wasm-pack` ビルドステップ。
 
 ## 開発ワークフロー
 
@@ -119,7 +110,7 @@ done
 
 Forge-backed パッケージがマッチングを公開 `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`、 そして `mp:web-component` 条件。アクティブな条件は次のとおりです。
-使用するバンドラーによって構成されます。見る [コンパイラリファレンス](forge-compiler.md)
+使用するバンドラーによって構成されます。見る [コンパイラリファレンス](../../../vite-plugins/forge/docs/locales/ja/reference/compiler.md)
 ターゲットプラグインと宣言パイプライン用。
 
 ### アプリケーション開発
@@ -159,8 +150,7 @@ pnpm install
 
 ### WASM ビルドの失敗
 
-Rust/WASM パッケージのビルドに失敗した場合は、安定した Rust ツールチェーンと
-`wasm32-unknown-unknown` ターゲットがインストールされてから実行します `pnpm install` 固定されたものを復元するには `wasm-pack` npm 依存。
-の
-`@mission-platform/hunspell` Emscripten ビルドでは、さらに Docker が実行されている必要があります。他の Rust クレートはビルドします
-ローカルの Rust ツールチェーンを使用します。
+Forge Web Script アーティファクトのビルドに失敗した場合は、コンパイラ診断を検査してください
+選択した静的リンク プロファイルまたは動的リンク プロファイルを確認します。の
+`@mission-platform/hunspell` Emscripten ビルドにはさらに Docker が必要です。
+走ってください。

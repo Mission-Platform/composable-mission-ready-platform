@@ -1,11 +1,15 @@
-# הפניה ל-API
+# ספריית API של חבילה
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> מקור באנגלית: [docs/api-reference.md](../../api-reference.md)
+> docs/api-reference.md: [docs/api-reference.md](../../api-reference.md)
 > שפה: עברית (he)
 
-התייחסות טכנית לחבילות הליבה של Mission Platform ומתאמי מסגרת.
+דף זה הכולל את הפרויקט הוא ספרייה של יכולות ותאימות של החבילות
+חוזים. ההתקנה הקנונית, השימוש, המגבלות ופרטי ה-API עבור
+כל חבילה נמצאת ליד החבילה הזו מתחת `packages/*/docs/`, `configs/*/docs/`,
+ו `forge-plugins/*/docs/`. יש להוסיף הפניות ל-API שנוצרו לבעלות
+חבילה ולא דף זה.
 
 > **היבוא תמיד חשוף.** משלוח מסגרת `@mission-platform/*` חבילות חושפות יחיד `.`
 > הכניסה נשמרת על ידי `mp:vue`, `mp:react`, `mp:solid`, ו `mp:web-component` ייצוא
@@ -28,19 +32,66 @@
 | `useMemo`          | הוק | וו זיכרונות נייטרלי מסגרת.                                                     |
 | `useRef`           | הוק | וו התייחסות ניטרלי למסגרת.                                                       |
 | `useContext`       | הוק | וו הקשר ניטרלי למסגרת.                                                         |
-| `toVueComponent`   | מתאם | ממירה רכיב חישול ל-a Vue 3 רכיבים (מ `@mission-platform/forge/vue`).   |
-| `toReactComponent` | מתאם | ממירה רכיב חישול ל-a React רכיב (מ `@mission-platform/forge/react`). |
+| `toVueComponent`   | מתאם | ממיר רכיב חישול ל-a Vue 3 רכיבים (מ `@mission-platform/forge/vue`).   |
+| `toReactComponent` | מתאם | ממיר רכיב חישול ל-a React רכיב (מ `@mission-platform/forge/react`). |
+
+### @mission-platform/vite-plugin-forge
+
+מנהל ההדרים מקבל מפורש `FrameworkOutputPlugin` מקרים; זה כן
+לא לספק רישום מסגרת. `defineViteForgeComponents` ו
+`defineTsdownForgeComponents` (בתוספת ה-hook ו-CMS עוזרים) לשתף בתהליך
+`ForgeCompilerService` לסשן בנייה או צפייה אחד.
+
+| יכולת | תיאור |
+|:-----------|:------------|
+| מחזור חיי שירות | שימוש חוזר במקור, גרף, מקור מנותח, סמנטי-IR, ומצב חפץ מטרה על פני בנייה; להיפטר משירותים חד-פעמיים לאחר סיום ושירותי צופה בסגירה. |
+| מפתחות מטמון | טביעות אצבע של מקור/תלות/תצורה, אפשרויות מהדר ונתב, `tsconfig` `baseUrl`/`paths`, מזהה יעד, זהות/גרסה של הפלאגין ותנאים רלוונטיים. |
+| פסילת צפה | קבצים שהשתנו מבטלים את התלויים בגרף הפוך, כולל כניסות רכיבים טרנזיטיביים והוק; צילומי מטרה לא קשורים נשארים לשימוש חוזר. |
+| אבחון/דוח | מדווח על תזמון שלב, ספירת כניסות/חמצות במטמון, קבצים מושפעים, אזהרות, שגיאות וספירת חפצים שנפלטו. שגיאות חוסמות קידום. |
+| מניפסט חפץ | מפרט ערכים בהיקף יעד, מודולים, הצהרות, מפות מקור, נכסים וסיכומי ביקורת לפני קידום אטומי. |
+| נקודת הרחבה | ליישם ולהעביר א `FrameworkOutputPlugin` ממתקשר בבעלות מתקשר `forge-plugin-*` חֲבִילָה; אל תוסיף ענפי יעד לנהג הנייטרלי. |
+
+הגדר כינויים דרך הפרויקט `tsconfig.json` (`baseUrl` ו
+`paths`); Vite והכנת גרף tsdown משתמשים באותן עובדות כינוי. נתב
+בחירה, תוספים של נתב ותנאים מועברים דרך רכיב ו
+עוזרי וו. עובד/דמון עתידי עשוי לשבת מאחורי חוזה השירות, אבל
+היישום הנתמך נמצא כעת בתהליך.
 
 ### @mission-platform/router
 
-פרימיטיבים ומתאמים של ניתוב אגנוסטיים למסגרת.
+חוזי מסלול ניטרליים למסגרת, עוזרי התאמה טהורים וסמני מהדר עבור
+חבילות משותפות. יישומים משלהם רשומות נתיב ומופעי נתב מקוריים; את
+לזייף יעד הנתב שנבחר על ידי האפליקציה מספק את יכולות זמן הריצה.
 
-| ייצוא | הקלד | תיאור |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        | הקלד | ממשק להגדרת עצי מסלול.                                                                              |
-| `defineRoutes`   | פונקציה | עוזר להגדיר ולאמת עצי מסלול.                                                                       |
-| `createMpRouter` | מתאם | יוצר א Vue-נתב תואם (נחשף מ `@mission-platform/router` כאשר ה `mp:vue` המצב פעיל). |
-| `useMpRoute`     | הוק | גישה למצב המסלול הנוכחי (ספציפי למתאם).                                                                   |
+| ייצוא / חבילה | הקלד | תיאור |
+|:-----------------|:-----|:------------|
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | סוגים | רשומות מסלול, פרמטרים, מצב שאילתה/hash, מטא נתונים ויעדי ניווט. |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` | פונקציות | הגדר עצי נתיב ופתור נתיבים ללא זמן ריצה של DOM או מסגרת. |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | סוגים | תוצאות/אירועים של ניווט, שומרים, היסטוריה ניתנת לחיבור וחוזי מתאם. |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | סמני מהדר | יכולות קישור ניטרלי, מצב מסלול, ניווט, רזולוציה ושקע הנצרכות על ידי חבילות משותפות. |
+| `@mission-platform/forge-router-*` | לזייף מטרות | יעדי נתב מקוריים שנבחרו באופן עצמאי עבור Vue נתב, React נתב, נתב SolidJS, SvelteKit, RedwoodSDK ורכיבי אינטרנט. |
+
+חבילות זמן ריצה משלהן היסטוריה ומצב תגובתי; החבילה הנייטרלית לעולם לא מייבאת מסגרת ממשק משתמש. עבור רכיבי אינטרנט,
+רשום את האלמנטים פעם אחת והעביר יעדים מורכבים דרך מאפייני DOM במקום תכונות מסודרות:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
 
 ## ממשק משתמש ועיצוב
 
@@ -59,7 +110,7 @@
 
 | ייצוא | הקלד | תיאור |
 |:-----------------|:----------|:-----------------------------------------------------------|
-| `useBreakpoints` | הוק | מחזיר סטטוס נקודת שבירה תגובתי.                        |
+| `useBreakpoints` | הוק | מחזיר מצב נקודת שבירה תגובתי.                        |
 | `ShowIf`         | רכיב | מעבד ילדים רק כאשר תנאי נקודת שבירה תואם. |
 | `HideIf`         | רכיב | מסתיר ילדים כאשר תנאי נקודת שבירה תואם.        |
 
@@ -169,9 +220,10 @@
 | `@mission-platform/d3`             | D3 בחירת מחזור חיים כלי עזר ושוליים.       |
 | `@mission-platform/i18n`           | עוזרי שילוב של i18next מדינה ומסגרת.              |
 | `@mission-platform/map`            | רכיבי מפה ורכיבי מפה של MapLibre.                      |
-| `@mission-platform/observers`      | חומרי חיבור לצומת, מוטציה וביצועי צופה. |
+| `@mission-platform/observers`      | חומרי חיבור לצומת, מוטציה וביצועים של צופה בביצועים. |
 | `@mission-platform/phone-number`   | ניתוח ועיצוב מספרי טלפון של WebAssembly.        |
-| `@mission-platform/router`         | פרימיטיבים ומתאמים לניתוב ניטרליים למסגרת.            |
+| `@mission-platform/router`         | חוזי מסלול ניטרליים מסגרת ויכולות מהדר. |
+| `@mission-platform/forge-router-web-components` | רכיבי אינטרנט לנתב יעד וזמן ריצה ללא מסגרת. |
 | `@mission-platform/rxjs`           | RxJS ניתנים לצפייה ורכיבי מנוי.                 |
 | `@mission-platform/scheduler`     | לוגיקה של תחום של מתזמן, מחזוריות ופריסה של לוח שנה. |
 | `@mission-platform/vcard`         | נתונים ורכיבים של RFC 6350 vCard ו-RFC 5545 iCalendar.  |
@@ -184,8 +236,7 @@
 
 | חבילה | מטרה |
 |:--------------------------------------------|:--------------------------------------------------|
-| `@mission-platform/barcode`                 | קידוד/פענוח ברקוד 1D חזית ורכיב.    |
-| `@mission-platform/code-scan-wasm`          | מודול WebAssembly של סורק תמונות שנוצר.       |
+| `@mission-platform/barcode`                 | ברקוד 1D קידוד/פענוח חזית ורכיב.    |
 | `@mission-platform/code-scanner`            | רכיב סריקת קוד מצלמה ותמונה.         |
 | `@mission-platform/matrix-code`             | מטריצת נתונים ואצטקים מקודדים/פענחים חזית.       |
 | `@mission-platform/qr-code`                 | QR קידוד/פענח חזית ורכיב.            |
@@ -194,9 +245,9 @@
 
 ### לזייף יעדי מהדר
 
-אלה חיים ב `forge-plugins/` במקום `packages/`. תוסף **מסגרת** מחליט באיזה זמן ריצה הוא רכיב ניטרלי
-מורד ל; יעד **CMS** מחליט על איזו פלטפורמת תוכן הוא מוקרן. שני הצירים מרכיבים, אז כל CMS
-target עשוי להיות קשור לכל תוסף מסגרת. לִרְאוֹת [Forge Compiler Pipeline](forge-compiler.md).
+אלה חיים ב `forge-plugins/` במקום `packages/`. תוסף **מסגרת** מחליט באיזה זמן ריצה רכיב ניטרלי
+מורד ל; יעד **CMS** מחליט לאיזו פלטפורמת תוכן הוא מוקרן. שני הצירים מרכיבים, אז כל CMS
+target עשוי להיות קשור לכל תוסף מסגרת. ראה את [Forge Compiler Pipeline](../../../vite-plugins/forge/docs/locales/he/reference/compiler.md).
 
 | חבילה | מטרה |
 |:-------------------------------------------------|:--------------------------------------------------------------------------------|
@@ -207,7 +258,7 @@ target עשוי להיות קשור לכל תוסף מסגרת. לִרְאוֹת
 | `@mission-platform/forge-plugin-svelte`          | Svelte יעד פלט 5.                                                         |
 | `@mission-platform/forge-plugin-web-components`  | יעד פלט של רכיבי אינטרנט.                                                   |
 | `@mission-platform/forge-cms-plugin-api`         | `CmsOutputPlugin` חוזה, מודל תוכן ניטרלי, מנהל מערכת ניהול תוכן ובניית עוזרים. |
-| `@mission-platform/forge-cms-storyblok`          | אובייקטים מרכיבי Storyblok, עטיפות בלוק, ו `components.json`.              |
+| `@mission-platform/forge-cms-storyblok`          | אובייקטים של רכיבי Storyblok, עטיפות בלוק, ו `components.json`.              |
 | `@mission-platform/forge-cms-astro`              | סטָטִי `.astro` תבניות ו `client:load` איי מסגרת.                  |
 | `@mission-platform/forge-cms-ghost`              | חלקי כידון רפאים וא `config.custom` קטע נושא.                 |
 | `@mission-platform/forge-cms-jekyll`             | נוזל ג'קיל כולל, `_data` סכימה, וא `_config.yml` קֶטַע.           |
@@ -217,7 +268,7 @@ target עשוי להיות קשור לכל תוסף מסגרת. לִרְאוֹת
 
 | ייצוא | הקלד | תיאור |
 |:---------------------------|:---------|:--------------------------------------------------------------------------------|
-| `analyzeContentComponent`  | פונקציה | מקרין אביזרים של רכיב ניטרלי על מודל התוכן ניטרלי הפלטפורמה.  |
+| `analyzeContentComponent`  | פונקציה | מקרין אביזרי רכיב ניטרלי על מודל התוכן ניטרלי הפלטפורמה.  |
 | `ContentComponent`         | הקלד | הוזמן `ContentField`s, חריצים, וה `interactive` דֶגֶל.                    |
 | `ContentFieldKind`         | הקלד | `text`, `richtext`, `number`, `boolean`, `option`, `asset`, `link`, `children`. |
 | `CmsOutputPlugin`          | הקלד | חוזה היעד: תוסף מסגרת קשור בתוספת ארבעת הפולטים.          |

@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/build-system.md](../../build-system.md)
+> docs/build-system.md: [docs/build-system.md](../../build-system.md)
 > 语言: 简体中文 (zh)
 
 本文档解释了任务平台构建系统的架构和机制。它是专为高
@@ -27,7 +27,7 @@
 
 大多数库包位于 `packages/` 使用 **tsdown** 进行编译。
 
-- **速度**：建立在**Rolldown**（基于 Rust 的 Rollup 的后继者）之上，提供近乎即时的构建。
+- **速度**：建立在**Rolldown**（基于 Rust 的 Rollup 的继承者）之上，提供近乎即时的构建。
 - **分拆**：软件包是用 `unbundle: true`，保留原来的模块结构 `dist/`。这个
   确保消费者应用程序中实现最佳的树摇动和更好的调试。
 - **CSS 线程**：自定义插件将提取的样式表重新链接回其所属的 JS 模块，确保
@@ -49,7 +49,7 @@ Forge 包构建在正常情况下添加了一个中立的编译器前端 `tsdown
 源代码生成、声明、运行时外部及其本机 Vite/tsdown 适配器。
 
 内容平台输出是通过配置的第二个正交轴 `@mission-platform/forge-cms-plugin-api`。一个
-消费者通行证 `defineTsdownForgeCms` （或者 `defineTsdownForgeCmsAll`) 的列表 `CmsOutputPlugin` 实例，每个
+消费者通行证 `defineTsdownForgeCms` （或者 `defineTsdownForgeCmsAll`) 的清单 `CmsOutputPlugin` 实例，每个
 它_组成_一个框架插件—— `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`,
 `forgeAstroCms({ packageName, plugin })`、Ghost、Jekyll 和 Webflow 等。因为平台和
 框架是独立选择的， `storyblok × vue` 和 `astro × solid` 是配置而不是新代码。
@@ -57,7 +57,7 @@ Forge 包构建在正常情况下添加了一个中立的编译器前端 `tsdown
 CMS 构建发出至 `dist/cms/<cms>/<framework>/**`，清单和其他平台边车镜像到
 `dist/cms/<cms>/`。需要水合运行时的目标（Astro、Webflow）从绑定中共同生成一棵岛树
 框架插件到同一构建中。完整的责任划分和阶段边界描述于
-[Forge 编译器管道](forge-compiler.md).
+[Forge 编译器管道](../../../vite-plugins/forge/docs/locales/zh/reference/compiler.md).
 
 ## 建造合同
 
@@ -84,7 +84,7 @@ pnpm --filter @mission-platform/components run build:web-components
 
 别名使用相同类型的运行程序 `build`;它们不包含独立的 `tsdown` 实施。 `build:forge`
 选择中性目标，而框架别名选择相应的框架目录。特定于封装
-CMS 工件模式命令在暴露的地方仍然可用，包括共享 Storyblok 资产命令和
+CMS 工件模式命令在公开的地方仍然可用，包括共享 Storyblok 资产命令和
 每个框架的 Storyblok 包装器命令。
 
 ### 舞台及推广
@@ -98,7 +98,7 @@ CMS 工件模式命令在暴露的地方仍然可用，包括共享 Storyblok �
   保留已存在的不相关的中立、框架、电子邮件和 CMS 输出 `dist`。运行程序确定 CMS 选择器的范围
   （例如 `FORGE_CMS_STORYBLOK_TARGET`) 到所请求的框架旁边 `FORGE_FRAMEWORK_TARGET`，所以一个包的 CMS
   接线（`forgeStoryblokCmsTargets`等）实际上在同一阶段重建匹配的包装器而不是
-  默默地退出晋升。提升仅清除阶段重新生成的 CMS 包装器子树；它从来没有
+  默默地退出晋升。提升仅清除该阶段重新生成的CMS包装器子树；它从来没有
   删除当前构建未重建的同级 CMS 包装器。
 - CMS 共享资产，例如 Storyblok 架构和 `components.json` 有一个共享的目的地并且未被删除
   后期框架推广。

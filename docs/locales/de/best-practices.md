@@ -2,11 +2,11 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/best-practices.md](../../best-practices.md)
+> docs/best-practices.md: [docs/best-practices.md](../../best-practices.md)
 > Sprache: Deutsch (de)
 
-Dieses Dokument beschreibt die Grundprinzipien, Architektur und Codierungsstandards für das Mission Platform Monorepo. Es
-dient als **Erklärung**, warum wir bestimmten Mustern folgen, und als **Leitlinie** für die tägliche Entwicklung.
+Dieses Dokument beschreibt die Kernprinzipien, Architektur und Codierungsstandards für das Mission Platform Monorepo. Es
+dient als **Erklärung** dafür, warum wir bestimmten Mustern folgen, und als **Leitlinie** für die tägliche Entwicklung.
 
 ## Grundprinzipien
 
@@ -61,7 +61,7 @@ Der gesamte neue Quellcode muss eingeschrieben werden TypeScript (`.ts`) oder Vu
 
 Wenn möglich, erstellen Sie UI-Komponenten mithilfe von `@mission-platform/forge` Dialekt. Dadurch können Komponenten sein
 zusammengestellt und verwendet Vue, React, Svelte, Solidund Webkomponenten, ohne die Kernlogik neu zu schreiben. Konfigurieren Sie die
-Verbraucher-Resolver mit dem Matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, oder `mp:web-component` Zustand.
+Consumer-Resolver mit dem Matching `mp:vue`, `mp:react`, `mp:svelte`, `mp:solid`, oder `mp:web-component` Zustand.
 
 ### Reaktivitätsmuster (Vue 3)
 
@@ -102,6 +102,6 @@ Ein konsistenter Codestil wird durch erzwungen ESLint Und Prettier.
 ## Verwandte Ressourcen
 
 - [Testleitfaden](testing.md)
-- [Best Practices für Frameworks](framework-best-practices.md)
+- [Best Practices für das Framework](framework-best-practices.md)
 - [Arbeitsbereichsstruktur](workspace-structure.md)
 - [Fehlerbehebung](troubleshooting.md)

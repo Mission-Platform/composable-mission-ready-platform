@@ -2,7 +2,7 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> 영어 원문: [docs/architecture.md](../../architecture.md)
+> docs/architecture.md: [docs/architecture.md](../../architecture.md)
 > 언어: 한국어 (ko)
 
 Mission Platform은 재사용성과 프레임워크 간 유연성을 극대화하도록 설계되었습니다. 이 문서에서는
@@ -44,7 +44,7 @@ graph TD
 
 ## 프레임워크 중립 엔진: Forge
 
-미션플랫폼의 핵심은 `@mission-platform/forge`, 구성 요소에 대한 프레임워크 중립적인 저작 모델 및
+미션플랫폼의 핵심은 `@mission-platform/forge`, 구성 요소에 대한 프레임워크 중립적인 작성 모델 및
 컴포저블. `@mission-platform/vite-plugin-forge` 중립 컴파일러 드라이버입니다. 소스를 구문 분석하고 정규화합니다.
 의미론적 IR을 구축하고, 공유 분석 및 최적화를 실행하고, 명시적으로 제공된
 `FrameworkOutputPlugin`.
@@ -54,18 +54,19 @@ graph TD
 드라이버의 중앙 프레임워크 이미터나 문자열-프레임워크 레지스트리가 없습니다. 패키지 빌드 구성에서 다음을 선택합니다.
 게시하는 플러그인 인스턴스이므로 대상 구현 종속성은 프레임워크 경계에 유지됩니다.
 
-결과 흐름은 **구문 분석/정규화 → 중립 최적화 → 의미적 IR → 목표 감소 → 목표 최적화 → 생성 →
+결과 흐름은 **구문 분석/정규화 → 중립 최적화 → 의미적 IR → 목표 하강 → 목표 최적화 → 생성 →
 네이티브 빌드**. 기본 빌드는 선택한 플러그인에 의해 수행됩니다. Vite 또는 tsdown 어댑터도 제공합니다.
 대상의 선언, 외부 및 출력 규칙.
 
 두 번째 직교 축은 동일한 중립 구성 요소를 **콘텐츠 플랫폼**에 투영합니다.
-`@mission-platform/forge-cms-plugin-api` 플랫폼 중립적인 콘텐츠 모델을 소유하고 있으며 `CmsOutputPlugin` 계약, 그리고
+`@mission-platform/forge-cms-plugin-api` 플랫폼 중립적인 콘텐츠 모델을 소유하고 있으며, `CmsOutputPlugin` 계약, 그리고
 일반 드라이버; 어댑터 패키지 `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
 그리고 `forge-cms-webflow` 각자 하나의 플랫폼을 소유하고 있습니다. CMS 대상은 프레임워크 플러그인을 교체하는 대신 프레임워크 플러그인을 *구성*하므로
 모든 프레임워크와 모든 플랫폼이 쌍을 이루며 출력은 `dist/cms/<cms>/<framework>/**`.
 
 전체 파이프라인, 구성 요소 및 후크 소비자, CMS 프로젝션 및 확장 지침은 다음을 참조하세요.
-[Forge 컴파일러 파이프라인](forge-compiler.md). 빌드 오케스트레이션 보기는 다음을 참조하세요. [시스템 구축](build-system.md).
+[Forge 컴파일러 파이프라인](../../../vite-plugins/forge/docs/locales/ko/reference/compiler.md). 빌드 오케스트레이션 보기는 다음을 참조하세요.
+[시스템 구축](build-system.md).
 
 ## 디자인 토큰 시스템
 
@@ -80,8 +81,13 @@ graph TD
 
 라우팅 및 국제화와 같은 핵심 애플리케이션 서비스는 프레임워크에 구애받지 않도록 설계되었습니다.
 
-- **`@mission-platform/router`**: 경로를 일반 데이터 구조로 정의합니다(`MpRoute`). 어댑터 Vue 이것을 번역하다
-  프레임워크별 라우터 인스턴스 및 컴포저블에 추가됩니다.
+- **`@mission-platform/router`**: 구조화된 경로 대상, 순수 URL/위치 도우미 및 컴파일러 마커를 제공합니다.
+  ~로 `MpLink`, `useMpRoute`, `useMpRouter`, 그리고 `MpRouterView`. UI 프레임워크나 라우터 라이브러리 런타임이 없습니다.
+  종속성이 있으며 애플리케이션의 경로 테이블을 소유하지 않습니다.
+- **Forge 라우터 대상**: `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, 그리고
+  `-web-components` 해당 마커를 소비 애플리케이션에서 선택한 기본 라우터로 낮춥니다. 애플리케이션 유지
+  기본 경로 정의, 공급자, 가드, 로더 및 라우터 인스턴스의 소유권 대상은 공급만
+  소비능력.
 - **`@mission-platform/i18n`**: 래퍼 `i18next` 보편적인 것을 제공하는 `createForgeI18N` 공장.
   프레임워크별 어댑터는 다음을 제공합니다. `useI18n` 후크 및 구성 요소 Vue 그리고 React.
 

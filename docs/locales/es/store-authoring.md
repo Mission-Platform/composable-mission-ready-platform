@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/store-authoring.md](../../store-authoring.md)
+> docs/store-authoring.md: [docs/store-authoring.md](../../store-authoring.md)
 > Idioma: Español (es)
 
 Las tiendas se utilizan para gestionar el estado compartido entre componentes dentro de un paquete. A diferencia de las tiendas a nivel de aplicaciones (como Pinia o
@@ -11,7 +11,7 @@ componentes de escritura única para consumirlos a través de ganchos de Forge i
 
 ## Diseño del directorio
 
-Cada tienda DEBE residir en su propio subdirectorio con nombre dentro `src/stores/`, acompañado de un archivo de prueba ubicado en el mismo lugar y un
+Cada almacén DEBE residir en su propio subdirectorio con nombre dentro de `src/stores/`, acompañado de un archivo de prueba ubicado conjuntamente y un
 barril local.
 
 ```text
@@ -27,20 +27,20 @@ src/stores/
 
 Las tiendas de paquetes evitan dependencias específicas del marco. En cambio, siguen un patrón observable simple:
 
-1. **Estado privado**: Mantenga el estado dentro del alcance del módulo (simple TypeScript valores).
-2. **Acceso a instantáneas**: proporcione una `getSnapshot()` función para recuperar el estado actual.
-3. **Suscripción**: proporcione una `subscribe(listener)` función que agrega una devolución de llamada a una lista y devuelve una cancelación de suscripción
+1. **Estado privado**: mantenga el estado dentro del alcance del módulo (valores TypeScript simples).
+2. **Acceso a instantáneas**: proporcione una función `getSnapshot()` para recuperar el estado actual.
+3. **Suscripción**: proporcione una función `subscribe(listener)` que agregue una devolución de llamada a una lista y devuelva una cancelación de suscripción.
    función.
 4. **Mutadores**: proporcionan funciones para actualizar el estado, que DEBEN notificar a todos los oyentes después de la actualización.
 
 ## Reglas de creación
 
-1. **Independiente del marco**: no importar desde `vue`, `react`, o `@mission-platform/forge` ganchos dentro del módulo de tienda
+1. **Independiente del marco**: no importe desde los ganchos `vue`, `react` o `@mission-platform/forge` dentro del módulo de tienda.
    mismo.
 2. **Tipos explícitos**: siempre defina y exporte una interfaz para el estado de la tienda.
-3. **Seguridad SSR**: protege el acceso a las API del navegador (p. ej., `localStorage`) para que la tienda se pueda inicializar en un Node.js
+3. **Seguridad SSR**: proteja el acceso a las API del navegador (por ejemplo, `localStorage`) para que la tienda se pueda inicializar en Node.js.
    ambiente.
-4. **Pruebas obligatorias**: cada tienda debe tener una ubicación compartida `.spec.ts` archivo.
+4. **Prueba obligatoria**: Cada tienda debe tener un archivo `.spec.ts` ubicado en el mismo lugar.
 
 ## Tienda de ejemplo
 
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Consumir tiendas en componentes
 
-Para usar una tienda dentro de un componente de escritura única, conéctela usando `useState` y `useEffect` de `@mission-platform/forge`:
+Para usar una tienda dentro de un componente de escritura única, conéctela usando `useState` y `useEffect` desde `@mission-platform/forge`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

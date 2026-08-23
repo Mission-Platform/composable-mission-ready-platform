@@ -2,11 +2,16 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
 > Sprache: Deutsch (de)
 
-Die Mission Platform verwaltet eine Reihe gemeinsamer Dienstprogrammskripts im Stammverzeichnis `scripts/` Verzeichnis, verwaltet von der
-`@mission-platform/scripts` Paket.
+Dieser Leitfaden bleibt absichtlich in der Projektdokumentationsebene: `scripts/`
+enthält eine Repository-Orchestrierung und kein veröffentlichbares Arbeitsbereichspaket.
+Paket- und anwendungsspezifische Befehle bleiben weiterhin dokumentiert
+Arbeitsplatz besitzen.
+
+Die Mission Platform verwaltet eine Reihe gemeinsam genutzter Dienstprogrammskripte im Stammverzeichnis
+`scripts/` Verzeichnis, das vom Root-Workspace-Tool verwaltet wird.
 
 ## Überblick
 
@@ -67,6 +72,6 @@ Beim Hinzufügen eines neuen freigegebenen Skripts:
 
 - Legen Sie es in die `scripts/` Verzeichnis.
 - Verwenden TypeScript wo möglich.
-- Wenn das Skript von externen Paketen abhängt, fügen Sie diese dem Arbeitsbereich des Besitzers hinzu `package.json`.
+- Wenn das Skript von externen Paketen abhängt, fügen Sie diese dem Arbeitsbereich des Eigentümers hinzu `package.json`.
 - Dokumentieren Sie den Zweck und die Verwendung des Skripts in dieser Datei.
 - Fügen Sie einen entsprechenden Eintrag im Stammverzeichnis hinzu `package.json` wenn es sich um ein häufig verwendetes Dienstprogramm handelt.

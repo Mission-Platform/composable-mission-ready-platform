@@ -9,14 +9,13 @@ Before cloning the repository, ensure your system meets the following requiremen
 
 ### System Requirements
 
-| Tool          | Required Version  | Purpose                                               |
-| :------------ | :---------------- | :---------------------------------------------------- |
-| **Node.js**   | `24.19.0`         | Runtime environment (Active LTS)                      |
-| **pnpm**      | `11.21.0`         | Package manager and workspace orchestrator            |
-| **Git**       | Latest stable     | Version control                                       |
-| **Rust**      | Stable toolchain  | Native tests and Rust/WASM crate development          |
-| **wasm-pack** | `0.15.0` via pnpm | Packaging Rust crates as typed WebAssembly workspaces |
-| **Docker**    | Latest stable     | Required only for the Emscripten Hunspell build       |
+| Tool        | Required Version | Purpose                                         |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0`        | Runtime environment (Active LTS)                |
+| **pnpm**    | `11.21.0`        | Package manager and workspace orchestrator      |
+| **Git**     | Latest stable    | Version control                                 |
+| **Rust**    | Stable toolchain | Optional standalone Rust benchmark development  |
+| **Docker**  | Latest stable    | Required only for the Emscripten Hunspell build |
 
 ### Version Management (Recommended)
 
@@ -33,13 +32,6 @@ Enable **pnpm** using Corepack:
 ```bash
 corepack enable
 corepack prepare pnpm@11.21.0 --activate
-```
-
-Install the Rust target when working on Rust crates. The WebAssembly packager is provided by the pinned `wasm-pack` npm
-dependency during `pnpm install`:
-
-```bash
-rustup target add wasm32-unknown-unknown
 ```
 
 ## Initial Setup
@@ -72,10 +64,9 @@ Run a smoke test to ensure the build system and environment are correctly config
 pnpm exec turbo run build --filter @mission-platform/forge...
 ```
 
-The `...` also builds the Forge dependencies required by the package. Rust decoder and encoder crates are tested
-natively with `cargo test`; their
-`wasm-pack` outputs are written into the corresponding `packages/*-wasm/`
-workspace by the crate's package task, which is the checked-in package/build contract used by Turborepo.
+The `...` also builds the Forge dependencies required by the package. The
+neutral code scanner is compiled from its Forge Web Script graph; it does not
+require a Rust or `wasm-pack` build step.
 
 ## Development Workflow
 
@@ -114,7 +105,7 @@ done
 
 Forge-backed packages publish matching `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, and `mp:web-component` conditions. The active condition must be
-configured by the consuming bundler; see [the compiler reference](forge-compiler.md)
+configured by the consuming bundler; see [the compiler reference](../vite-plugins/forge/docs/reference/compiler.md)
 for the target plugin and declaration pipeline.
 
 ### Application Development
@@ -154,8 +145,7 @@ pnpm install
 
 ### WASM Build Failures
 
-If Rust/WASM packages fail to build, check that the stable Rust toolchain and
-`wasm32-unknown-unknown` target are installed, then run `pnpm install` to restore the pinned `wasm-pack` npm dependency.
-The
-`@mission-platform/hunspell` Emscripten build additionally requires Docker to be running; the other Rust crates build
-with the local Rust toolchain.
+If a Forge Web Script artifact fails to build, inspect its compiler diagnostics
+and verify the selected static or dynamic link profile. The
+`@mission-platform/hunspell` Emscripten build additionally requires Docker to
+be running.

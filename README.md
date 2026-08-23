@@ -47,6 +47,8 @@ The Mission Platform is a monorepo managed with pnpm workspaces. It follows a co
 - **[Testing](docs/testing.md)**: Comprehensive testing strategies and tools
 - **[Build System](docs/build-system.md)**: Overview of the build system and configuration
 - **[API Reference](docs/api-reference.md)**: References for all Mission Platform packages and framework adapters
+- **[Package documentation](DOCUMENTATION.md#documentation-ownership)**: Package-owned installation, usage, API, and
+  contributor guides
 - **[Troubleshooting](docs/troubleshooting.md)**: Common issues and solutions for debugging and performance optimization
 - **[Circular Dependencies](docs/circular-dependencies.md)**: Identifying and resolving circular dependency issues
 - **[Migration Guide](docs/migration-guides/vue2-to-vue3.md)**: Step-by-step guide for migrating from Vue 2 to Vue 3

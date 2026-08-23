@@ -42,6 +42,7 @@
     "dist"
   ],
   "scripts": {
+    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build": "tsdown",
     "bench": "FORGE_BENCH_RUN=1 FORGE_BENCH_IMPLEMENTATION=oxc FORGE_BENCH_OUTPUT=benchmarks/oxc-comparison.json vitest run src/compiler/benchmark.spec.ts --reporter=dot",
     "bench:baseline": "FORGE_BENCH_RUN=1 FORGE_BENCH_IMPLEMENTATION=typescript vitest run src/compiler/benchmark.spec.ts --reporter=dot",

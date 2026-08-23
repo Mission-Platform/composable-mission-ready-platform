@@ -1,13 +1,17 @@
-# APIリファレンス
+# パッケージAPIディレクトリ
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> 英語の原典: [docs/api-reference.md](../../api-reference.md)
+> docs/api-reference.md: [docs/api-reference.md](../../api-reference.md)
 > 言語: 日本語 (ja)
 
-Mission Platform コア パッケージとフレームワーク アダプターのテクニカル リファレンス。
+このプロジェクト全体のページは、パッケージの機能と互換性のディレクトリです。
+契約。の正規インストール、使用法、制限事項、および API の詳細
+各パッケージはそのパッケージの隣に存在します `packages/*/docs/`, `configs/*/docs/`、
+そして `forge-plugins/*/docs/`。生成された API 参照は、所有者に追加する必要があります
+このページではなくパッケージを参照してください。
 
-> **インポートは常にベアです。** フレームワークの出荷 `@mission-platform/*` パッケージは単一の `.`
+> **インポートは常にベアです。** フレームワークの出荷 `@mission-platform/*` パッケージは単一のを公開します `.`
 > 入口はによって守られています `mp:vue`, `mp:react`, `mp:solid`、 そして `mp:web-component` 輸出
 > 条件。フレームワークを **1 回** — 経由で選択します `resolve.conditions` （見る `defineFrameworkAppConfig` /
 > `frameworkResolveConditions` から `@mission-platform/vite-config`) そして `customConditions` (経由して
@@ -31,22 +35,69 @@ Mission Platform コア パッケージとフレームワーク アダプター�
 | `toVueComponent`   |アダプター | forge コンポーネントを Vue 3成分(から `@mission-platform/forge/vue`).   |
 | `toReactComponent` |アダプター | forge コンポーネントを React コンポーネント（から `@mission-platform/forge/react`). |
 
+### @mission-platform/vite-plugin-forge
+
+コンパイラ ドライバは明示的なパラメータを受け入れます。 `FrameworkOutputPlugin` インスタンス;それはあります
+フレームワークレジストリは提供しません。 `defineViteForgeComponents` そして
+`defineTsdownForgeComponents` (さらにフックと CMS ヘルパー) インプロセスを共有します
+`ForgeCompilerService` 1 回のビルドまたは監視セッションの場合。
+
+|能力 |説明 |
+|:-----------|:------------|
+|サービスのライフサイクル |ソース、グラフ、解析されたソース、セマンティック IR、およびターゲット アーティファクトの状態をビルド間で再利用します。完了後にワンショット サービスを破棄し、終了時にウォッチャー サービスを破棄します。 |
+|キャッシュキー |ソース/依存関係/構成フィンガープリント、コンパイラーおよびルーターのオプション、 `tsconfig` `baseUrl`/`paths`、ターゲット ID、プラグイン ID/バージョン、および関連する条件。 |
+|ウォッチの無効化 |変更されたファイルは、推移コンポーネントやフック エントリなどの逆グラフ依存関係を無効にします。無関係なターゲット スナップショットは引き続き再利用可能です。 |
+|診断/レポート |フェーズのタイミング、キャッシュのヒット/ミス数、影響を受けるファイル、警告、エラー、生成されたアーティファクトの数をレポートします。エラーによりプロモーションがブロックされます。 |
+|アーティファクトマニフェスト |アトミック プロモーションの前に、ターゲット スコープのエントリ、モジュール、宣言、ソース マップ、アセット、およびチェックサムをリストします。 |
+|拡張ポイント |を実装して渡す `FrameworkOutputPlugin` 発信者が所有するものから `forge-plugin-*` パッケージ;ターゲット ブランチをニュートラル ドライバーに追加しないでください。 |
+
+プロジェクトを通じてエイリアスを構成する `tsconfig.json` (`baseUrl` そして
+`paths`); Vite および tsdown グラフの準備では、同じエイリアス ファクトが使用されます。ルーター
+選択、ルータープラグイン、および条件は、コンポーネントおよび
+フックヘルパー。将来のワーカー/デーモンはサービス コントラクトの背後に存在する可能性がありますが、
+サポートされている実装は現在進行中です。
+
 ### @mission-platform/router
 
-フレームワークに依存しないルーティング プリミティブとアダプター。
+フレームワークに依存しないルート コントラクト、純粋なマッチング ヘルパー、およびコンパイラ マーカー
+共有パッケージ。アプリケーションはルート レコードとネイティブ ルーター インスタンスを所有します。の
+アプリケーションによって選択された Forge ルーター ターゲットは、ランタイム機能を提供します。
 
-|エクスポート |タイプ |説明 |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        |タイプ |ルートツリーを定義するためのインターフェイス。                                                                              |
-| `defineRoutes`   |機能 |ルート ツリーを定義および検証するためのヘルパー。                                                                       |
-| `createMpRouter` |アダプター |を作成します Vue-互換ルーター（から露出） `@mission-platform/router` いつ `mp:vue` 状態はアクティブです)。 |
-| `useMpRoute`     |フック |現在のルート状態にアクセスします (アダプター固有)。                                                                   |
+|エクスポート / パッケージ |タイプ |説明 |
+|:-----------------|:-----|:------------|
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` |種類 |ルート レコード、パラメータ、クエリ/ハッシュ状態、メタデータ、およびナビゲーション ターゲット。 |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` |機能 | DOM やフレームワーク ランタイムを使用せずにルート ツリーを定義し、パスを解決します。 |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` |種類 |ナビゲーションの結果/イベント、ガード、プラグ可能履歴、アダプター コントラクト。 |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` |コンパイラマーカー |共有パッケージによって消費されるニュートラル リンク、ルート状態、ナビゲーション、解決、およびアウトレット機能。 |
+| `@mission-platform/forge-router-*` |ターゲットを鍛造する |独立して選択されたネイティブ ルーター ターゲット Vue ルーター、 React ルーター、SolidJS ルーター、SvelteKit、RedwoodSDK、および Web コンポーネント。 |
+
+ランタイム パッケージには独自の履歴と反応状態が含まれます。中立パッケージは UI フレームワークをインポートしません。 Web コンポーネントの場合、
+要素を一度登録し、シリアル化された属性ではなく DOM プロパティを通じて複雑なターゲットを渡します。
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
 
 ## UIとデザイン
 
 ### @mission-platform/tokens
 
-色、タイポグラフィ、間隔のデザイントークンを一元化。
+色、タイポグラフィー、間隔のデザイントークンを一元化。
 
 |エクスポート |説明 |
 |:--------------|:--------------------------------------------------------------------------|
@@ -91,7 +142,7 @@ i18next に基づく国際化システム。
 
 |エクスポート |説明 |
 |:---------|:----------------------------------------------------------------------|
-| `useSeo` |ページタイトル、メタタグ、Open Graph データを宣言的に設定するためのフック。 |
+| `useSeo` |ページ タイトル、メタ タグ、および Open Graph データを宣言的に設定するためのフック。 |
 
 ### @mission-platform/map
 
@@ -156,7 +207,7 @@ WebAssembly を利用したスペルチェック。
 | `@mission-platform/forge`      |フレームワークに依存しない JSX ランタイムとアダプター。                   |
 | `@mission-platform/components` |ライトワンス UI コンポーネント。                                     |
 | `@mission-platform/icons`      |ライトワンス SVG アイコン コンポーネント。                               |
-| `@mission-platform/layouts`    |アプリケーション、コンテナ、およびレスポンシブ レイアウトのコンポーネント。     |
+| `@mission-platform/layouts`    |アプリケーション、コンテナー、およびレスポンシブ レイアウトのコンポーネント。     |
 | `@mission-platform/forms`      |スキーマ フォームとビジュアル フォーム ビルダー コンポーネント。              |
 | `@mission-platform/forms-core` |スキーマ導出、検証、およびフォームビルダードメインロジック。 |
 | `@mission-platform/tokens`     | CSS カスタム プロパティと SCSS デザイン トークン。                 |
@@ -171,7 +222,8 @@ WebAssembly を利用したスペルチェック。
 | `@mission-platform/map`            | MapLibre マップ コンポーネントとコンポーザブル。                      |
 | `@mission-platform/observers`      |交差、突然変異、およびパフォーマンス オブザーバー コンポーザブル。 |
 | `@mission-platform/phone-number`   |入力された WebAssembly 電話番号の解析と書式設定。        |
-| `@mission-platform/router`         |フレームワークに依存しないルーティング プリミティブとアダプター。            |
+| `@mission-platform/router`         |フレームワークに依存しないルート コントラクトとコンパイラ機能。 |
+| `@mission-platform/forge-router-web-components` | Web コンポーネント ルーター ターゲットとフレームワークフリーのランタイム。 |
 | `@mission-platform/rxjs`           | RxJS オブザーバブルおよびサブスクリプション コンポーザブル。                 |
 | `@mission-platform/scheduler`     |スケジューラ UI、繰り返し、およびカレンダー レイアウトのドメイン ロジック。 |
 | `@mission-platform/vcard`         | RFC 6350 vCard および RFC 5545 iCalendar データとコンポーネント。  |
@@ -185,7 +237,6 @@ WebAssembly を利用したスペルチェック。
 |パッケージ |目的 |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | 1D バーコードは、ファサードとコンポーネントをエンコード/デコードします。    |
-| `@mission-platform/code-scan-wasm`          |生成されたイメージ スキャナー WebAssembly モジュール。       |
 | `@mission-platform/code-scanner`            |カメラおよび画像コードスキャンコンポーネント。         |
 | `@mission-platform/matrix-code`             | Data Matrix と Aztec はファサードをエンコード/デコードします。       |
 | `@mission-platform/qr-code`                 |ファサードとコンポーネントを QR エンコード/デコードします。            |
@@ -196,7 +247,7 @@ WebAssembly を利用したスペルチェック。
 
 これらはに住んでいます `forge-plugins/` それよりも `packages/`。 **フレームワーク** プラグインは、どのランタイムを中立コンポーネントにするかを決定します
 に引き下げられます。 **CMS** ターゲットは、どのコンテンツ プラットフォームに投影されるかを決定します。 2 つの軸が構成されるため、どの CMS でも
-target は任意のフレームワーク プラグインにバインドできます。見る [Forge コンパイラ パイプライン](forge-compiler.md).
+target は任意のフレームワーク プラグインにバインドできます。を参照してください。 [Forge コンパイラ パイプライン](../../../vite-plugins/forge/docs/locales/ja/reference/compiler.md).
 
 |パッケージ |目的 |
 |:-------------------------------------------------|:--------------------------------------------------------------------------------|

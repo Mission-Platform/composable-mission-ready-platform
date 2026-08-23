@@ -2,7 +2,7 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> מקור באנגלית: [docs/configs/index.md](../../../configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > שפה: עברית (he)
 
 פלטפורמת המשימה משתמשת בחבילות תצורה מרכזיות ב- `configs/` ספרייה כדי להבטיח עקביות על פני
@@ -11,22 +11,26 @@
 ## סקירה כללית
 
 ריכוז תצורות מאפשר מקור יחיד של אמת עבור כללי כלי עבודה, תהליכי בנייה וסגנון קוד.
-חבילות ויישומים צורכים את התצורות הללו על ידי הרחבתן בקבצי התצורה המקומיים שלהם.
+חבילות ויישומים צורכים תצורות אלה על ידי הרחבתן בקבצי התצורה המקומיים שלהם.
 
 ## סיכום חבילה
 
+תיעוד חבילת התצורה נמצא בבעלות כל חבילה. הקישורים למטה
+הם קישורי קבצי מאגר כיום והופכים למסלולים עם רווחי שמות ב-
+אתר תיעוד:
+
 | חבילה | מטרה | משטח תצורה ראשי |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](eslint-config.md) | שָׁטוּחַ ESLint כללים עבור JS/TS ו Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | ברירת המחדל של עיצוב מאגר. | `prettier.config.js` |
-| `@mission-platform/typescript-config` | TypeScript הגדרות מראש של מהדר. | `tsconfig.json` |
-| `@mission-platform/stylelint-config` | מוך CSS ו- SCSS. | `stylelint.config.mjs` |
-| `@mission-platform/vite-config` | Vite ו Vitest עוזרי תצורה. | `vite.config.ts` |
-| `@mission-platform/tsdown-config` | עוזרי צרור ספריות. | `tsdown.config.ts` |
-| `@mission-platform/postcss-config` | צינור PostCSS משותף. | `postcss.config.mjs` |
-| `@mission-platform/i18n-config` | הגדרות מיקום וחילוץ משותפות. | `i18next.config.ts` |
-| `@mission-platform/storybook-framework` | מסגרת של Storybook שנבחרה בסביבה. | `.storybook/main.ts` |
-| [תצורת עובדים](workers-config.md) | מוסכמות Cloudflare Worker. | `wrangler.jsonc` |
+| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/he/index.md) | שָׁטוּחַ ESLint כללים עבור JS/TS ו Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/he/index.md) | ברירת המחדל של עיצוב מאגר. | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/he/index.md) | TypeScript הגדרות מראש של מהדר. | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/he/index.md) | מוך CSS ו-SCSS. | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/he/index.md) | Vite ו Vitest עוזרי תצורה. | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/he/index.md) | עוזרי צרור ספרייה. | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/he/index.md) | צינור PostCSS משותף. | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/he/index.md) | הגדרות מקומיות וחילוץ משותפות. | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/he/index.md) | מסגרת של ספר סיפורים שנבחרה בסביבה. | `.storybook/main.ts` |
+| [תצורת עובדים](workers-config.md) | מוסכמות Cloudflare Worker חוצה סביבות עבודה. | `wrangler.jsonc` |
 
 ## כלי ליבה
 
@@ -72,7 +76,7 @@ import { defineAppConfig, defineLibraryConfig } from '@mission-platform/vite-con
 
 1. הוסף את חבילת התצורה בתור א `devDependency` ב `package.json`.
 2. צור קובץ תצורה מקומי (לדוגמה, `eslint.config.js`).
-3. ייבא וייצא/הרחב את תצורת הבסיס.
+3. ייבא וייצא/הרחיב את תצורת הבסיס.
 
 ```js
 // Example: eslint.config.js

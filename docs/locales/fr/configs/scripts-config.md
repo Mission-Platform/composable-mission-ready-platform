@@ -2,11 +2,16 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
 > Langue: Français (fr)
 
-La plateforme de mission conserve un ensemble de scripts utilitaires partagés à la racine `scripts/` répertoire, géré par le
-`@mission-platform/scripts` emballer.
+Ce guide reste intentionnellement au niveau de la documentation du projet : `scripts/`
+contient une orchestration de référentiel plutôt qu'un package d'espace de travail publiable.
+Les commandes spécifiques aux packages et aux applications restent documentées à côté de leur
+posséder un espace de travail.
+
+La plateforme de mission conserve un ensemble de scripts utilitaires partagés à la racine
+`scripts/` répertoire, géré par les outils de l'espace de travail racine.
 
 ## Aperçu
 

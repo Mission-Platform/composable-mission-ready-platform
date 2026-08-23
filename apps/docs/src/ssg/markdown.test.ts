@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { renderDocumentationMarkdown, resolveInternalHref } from './markdown';
+import type { DocumentationSourceRoot } from '../documentation-sources';
 
 describe('ssg markdown pipeline', () => {
   it('renders valid heading hierarchy without the regex placeholder nesting bug', () => {
@@ -27,5 +28,33 @@ describe('ssg markdown pipeline', () => {
 
   it('resolves parent-relative links against the current slug directory', () => {
     expect(resolveInternalHref('../overview.md', 'configs/index', 'ja')).toBe('/ja/overview');
+  });
+
+  it('resolves package-local and package-to-project links using owning roots', () => {
+    const project: DocumentationSourceRoot = {
+      kind: 'project',
+      rootDirectory: '/repo/docs',
+      routePrefix: '',
+      workspaceDirectory: '',
+    };
+    const barcode: DocumentationSourceRoot = {
+      kind: 'package',
+      rootDirectory: '/repo/packages/barcode/docs',
+      routePrefix: 'packages/barcode',
+      workspaceDirectory: 'packages/barcode',
+      packageName: '@mission-platform/barcode',
+    };
+    const context = {
+      currentRoot: barcode,
+      roots: [project, barcode],
+      hasDocument: (slug: string) => ['packages/barcode/reference', 'overview'].includes(slug),
+    };
+
+    expect(resolveInternalHref('./reference.md', 'packages/barcode/index', 'fr', context)).toBe(
+      '/fr/packages/barcode/reference',
+    );
+    expect(resolveInternalHref('../../../../docs/overview.md', 'packages/barcode/index', 'fr', context)).toBe(
+      '/fr/overview',
+    );
   });
 });

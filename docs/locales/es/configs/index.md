@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/configs/index.md](../../../configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > Idioma: Español (es)
 
 La Mission Platform utiliza paquetes de configuración centralizados en el `configs/` directorio para garantizar la coherencia entre
@@ -15,18 +15,22 @@ Los paquetes y aplicaciones consumen estas configuraciones extendiéndolas en su
 
 ## Resumen del paquete
 
+La documentación del paquete de configuración es propiedad de cada paquete. Los enlaces a continuación
+son enlaces de archivos de repositorio hoy en día y se convierten en rutas con espacios de nombres de paquetes en el
+sitio de documentación:
+
 | Paquete | Propósito | Superficie de configuración primaria |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](eslint-config.md) | Departamento ESLint reglas para JS/TS y Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | Valores predeterminados de formato del repositorio. | `prettier.config.js` |
-| `@mission-platform/typescript-config` | TypeScript ajustes preestablecidos del compilador. | `tsconfig.json` |
-| `@mission-platform/stylelint-config` | Linting CSS y SCSS. | `stylelint.config.mjs` |
-| `@mission-platform/vite-config` | Vite y Vitest ayudantes de configuración. | `vite.config.ts` |
-| `@mission-platform/tsdown-config` | Ayudantes de agrupación de bibliotecas. | `tsdown.config.ts` |
-| `@mission-platform/postcss-config` | Tubería PostCSS compartida. | `postcss.config.mjs` |
-| `@mission-platform/i18n-config` | Configuración local y de extracción compartida. | `i18next.config.ts` |
-| `@mission-platform/storybook-framework` | Marco preestablecido de Storybook seleccionado por el entorno. | `.storybook/main.ts` |
-| [Configuración de trabajadores](workers-config.md) | Convenciones de trabajadores de Cloudflare. | `wrangler.jsonc` |
+| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/es/index.md) | Departamento ESLint reglas para JS/TS y Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/es/index.md) | Valores predeterminados de formato del repositorio. | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/es/index.md) | TypeScript ajustes preestablecidos del compilador. | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/es/index.md) | Linting CSS y SCSS. | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/es/index.md) | Vite y Vitest ayudantes de configuración. | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/es/index.md) | Ayudantes de agrupación de bibliotecas. | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/es/index.md) | Tubería PostCSS compartida. | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/es/index.md) | Configuración local y de extracción compartida. | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/es/index.md) | Marco preestablecido de Storybook seleccionado por el entorno. | `.storybook/main.ts` |
+| [Configuración de trabajadores](workers-config.md) | Convenciones de trabajadores de Cloudflare entre espacios de trabajo. | `wrangler.jsonc` |
 
 ## Herramientas centrales
 
@@ -86,7 +90,7 @@ export default [
 
 ## Elegir una configuración
 
-Utilice el paquete propietario de la preocupación en lugar de copiar reglas en un espacio de trabajo. Archivos de compilación de aplicaciones y bibliotecas
+Utilice el paquete propietario de la empresa en lugar de copiar reglas en un espacio de trabajo. Archivos de compilación de aplicaciones y bibliotecas
 puede agregar anulaciones locales, pero los valores predeterminados compartidos deben permanecer en `configs/`. Para un nuevo paquete, comience con el paquete
 scaffold y luego ejecute las comprobaciones del espacio de trabajo:
 

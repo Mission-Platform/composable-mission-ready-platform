@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/store-authoring.md](../../store-authoring.md)
+> docs/store-authoring.md: [docs/store-authoring.md](../../store-authoring.md)
 > Langue: Français (fr)
 
 Les magasins sont utilisés pour gérer l’état partagé entre composants au sein d’un package. Contrairement aux magasins au niveau des applications (comme Pinia ou
@@ -11,7 +11,7 @@ composants à écriture unique pour les consommer via des hooks Forge quel que s
 
 ## Disposition du répertoire
 
-Chaque magasin DOIT résider dans son propre sous-répertoire nommé au sein `src/stores/`, accompagné d'un dossier de test colocalisé et d'un
+Chaque magasin DOIT résider dans son propre sous-répertoire nommé dans `src/stores/`, accompagné d'un fichier de test colocalisé et d'un
 baril local.
 
 ```text
@@ -27,20 +27,20 @@ src/stores/
 
 Les magasins de packages évitent les dépendances spécifiques au framework. Au lieu de cela, ils suivent un modèle observable simple :
 
-1. **État privé** : conserver l'état dans la portée du module (plaine TypeScript valeurs).
-2. **Accès aux instantanés** : fournissez un `getSnapshot()` fonction pour récupérer l’état actuel.
-3. **Abonnement** : fournissez un `subscribe(listener)` fonction qui ajoute un rappel à une liste et renvoie un désabonnement
+1. **État privé** : conserver l'état dans la portée du module (valeurs TypeScript simples).
+2. **Accès aux instantanés** : fournissez une fonction `getSnapshot()` pour récupérer l'état actuel.
+3. **Abonnement** : fournissez une fonction `subscribe(listener)` qui ajoute un rappel à une liste et renvoie un désabonnement
    fonction.
 4. **Mutateurs** : fournissent des fonctions pour mettre à jour l'état, qui DOIVENT notifier tous les auditeurs après la mise à jour.
 
 ## Règles de création
 
-1. **Agnostique du framework** : ne pas importer depuis `vue`, `react`, ou `@mission-platform/forge` crochets à l'intérieur du module magasin
+1. **Agnostique du framework** : n'importez pas à partir des hooks `vue`, `react` ou `@mission-platform/forge` à l'intérieur du module de magasin.
    lui-même.
 2. **Types explicites** : définissez et exportez toujours une interface pour l'état du magasin.
-3. **Sécurité SSR** : protégez l'accès aux API du navigateur (par exemple, `localStorage`) afin que le magasin puisse être initialisé dans un Node.js
+3. **Sécurité SSR** : protégez l'accès aux API du navigateur (par exemple, `localStorage`) afin que le magasin puisse être initialisé dans un Node.js.
    environnement.
-4. **Tests obligatoires** : Chaque magasin doit avoir un `.spec.ts` déposer.
+4. **Tests obligatoires** : Chaque magasin doit avoir un fichier `.spec.ts` colocalisé.
 
 ## Exemple de magasin
 
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Consommer des magasins dans les composants
 
-Pour utiliser un magasin dans un composant à écriture unique, reliez-le à l'aide `useState` et `useEffect` depuis `@mission-platform/forge`:
+Pour utiliser un magasin dans un composant à écriture unique, reliez-le à l'aide de `useState` et `useEffect` à partir de `@mission-platform/forge` :
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

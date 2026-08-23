@@ -2,11 +2,11 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/composable-authoring.md](../../composable-authoring.md)
+> docs/composable-authoring.md: [docs/composable-authoring.md](../../composable-authoring.md)
 > Langue: Français (fr)
 
 Les composables sont le principal moyen d'encapsuler et de réutiliser la logique réactive au sein de la plateforme de mission. Pour assurer ces
-les unités logiques sont portables dans tous les frameworks d'interface utilisateur pris en charge, elles sont créées en tant que modules **à écriture unique** à l'aide du
+les unités de logique sont portables dans tous les frameworks d'interface utilisateur pris en charge, elles sont créées en tant que modules **à écriture unique** à l'aide du
 crochets neutres en termes de cadre fournis par `@mission-platform/forge`.
 
 ## Disposition du répertoire
@@ -53,6 +53,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);

@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/application-development.md](../../application-development.md)
+> docs/application-development.md: [docs/application-development.md](../../application-development.md)
 > Lingua: Italiano (it)
 
 Questa guida pratica spiega come eseguire, testare e distribuire le applicazioni in `apps/`. Le applicazioni sono riutilizzabili
@@ -13,7 +13,7 @@ copiato in un'app.
 
 | Applicazione | Sviluppo locale | Costruisci | Distribuzione |
 |:---|:---|:---|:---|
-| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` | Visualizza l'anteprima o distribuisci tramite il relativo lavoratore di hosting |
+| `@mission-platform/docs` | `pnpm --filter @mission-platform/docs dev` | `pnpm --filter @mission-platform/docs build` | Anteprima o distribuzione tramite il relativo lavoratore di hosting |
 | `@mission-platform/website` | `pnpm --filter @mission-platform/website dev` | `pnpm --filter @mission-platform/website build` | `pnpm --filter @mission-platform/website deploy:staging` |
 | `@mission-platform/my-care-notes` | `pnpm --filter @mission-platform/my-care-notes dev` | `pnpm --filter @mission-platform/my-care-notes build` | `pnpm --filter @mission-platform/my-care-notes deploy:staging` |
 | `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |

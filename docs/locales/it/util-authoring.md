@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/util-authoring.md](../../util-authoring.md)
+> docs/util-authoring.md: [docs/util-authoring.md](../../util-authoring.md)
 > Lingua: Italiano (it)
 
 Le utilità (utils) sono funzioni di supporto pure e indipendenti dal framework. Dovrebbero essere esenti da importazioni del framework dell'interfaccia utente e, a meno che
@@ -11,7 +11,7 @@ logica e lavoratori lato server.
 
 ## Disposizione della rubrica
 
-Ogni utilità DOVREBBE risiedere nella propria sottodirectory denominata all'interno `src/utils/`, accompagnato da un file di test co-localizzato e
+Ciascuna utilità DOVREBBE risiedere nella propria sottodirectory denominata all'interno di `src/utils/`, accompagnata da un file di test co-localizzato e
 una botte locale.
 
 ```text
@@ -27,10 +27,10 @@ src/utils/
 
 1. **Purezza**: preferisci funzioni pure che non abbiano effetti collaterali. Dato lo stesso input, dovrebbero sempre restituire il file
    stessa uscita.
-2. **Nessun hook dell'interfaccia utente**: non importare mai `vue`, `react`, O `@mission-platform/forge` hook in un'utilità. Richiede logica
+2. **Nessun hook dell'interfaccia utente**: non importare mai gli hook `vue`, `react` o `@mission-platform/forge` in un'utilità. Richiede logica
    la reattività appartiene [Componenti componibili](composable-authoring.md).
-3. **Digitazione esplicita**: fornire il testo completo TypeScript tipi per tutti gli argomenti e i valori restituiti.
-4. **Test obbligatorio**: ogni utilità deve avere un file co-locato `.spec.ts` file.
+3. **Digitazione esplicita**: fornisce tipi TypeScript completi per tutti gli argomenti e i valori restituiti.
+4. **Test obbligatorio**: ogni utilità deve avere un file `.spec.ts` co-localizzato.
 5. **Responsabilità unica**: ciascuna cartella util dovrebbe concentrarsi su un'attività specifica e ristretta.
 
 ## Esempio di base

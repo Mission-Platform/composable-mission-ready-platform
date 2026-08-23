@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/development-setup.md](../../development-setup.md)
+> docs/development-setup.md: [docs/development-setup.md](../../development-setup.md)
 > Taal: Nederlands (nl)
 
 Deze handleiding biedt een stapsgewijze handleiding voor het opzetten van uw lokale omgeving om bij te dragen aan het Mission Platform.
@@ -15,12 +15,11 @@ Voordat u de repository gaat klonen, moet u ervoor zorgen dat uw systeem aan de 
 ### Systeemvereisten
 
 | Gereedschap | Vereiste versie | Doel |
-| :------------ | :---------------- | :---------------------------------------------------- |
-| **Node.js** | `24.19.0`         | Runtime-omgeving (actieve LTS) |
-| **pnpm**      | `11.21.0`         | Pakketbeheerder en werkruimteorkestrator |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0`        | Runtime-omgeving (actieve LTS) |
+| **pnpm**    | `11.21.0`        | Pakketbeheerder en werkruimteorkestrator |
 | **Git** | Laatste stabiele | Versiebeheer |
-| **Roest** | Stabiele gereedschapsketen | Native tests en ontwikkeling van Rust/WASM-kratten |
-| **wasm-pakket** | `0.15.0` via pnpm | Verpakking Roestkratten zoals getypt WebAssembly-werkplekken |
+| **Roest** | Stabiele gereedschapsketen | Optionele standalone Rust-benchmarkontwikkeling |
 | **Dokker** | Laatste stabiele | Alleen vereist voor de Emscripten Hunspell-build |
 
 ### Versiebeheer (aanbevolen)
@@ -38,13 +37,6 @@ Inschakelen **pnpm** bij gebruik van Corepack:
 ```bash
 corepack enable
 corepack prepare pnpm@11.21.0 --activate
-```
-
-Installeer het roestdoel wanneer je aan roestkratten werkt. De WebAssembly-pakketer wordt geleverd door het vastgezette `wasm-pack` npm
-afhankelijkheid tijdens `pnpm install`:
-
-```bash
-rustup target add wasm32-unknown-unknown
 ```
 
 ## Initiële installatie
@@ -77,10 +69,9 @@ Voer een rooktest uit om er zeker van te zijn dat het bouwsysteem en de omgeving
 pnpm exec turbo run build --filter @mission-platform/forge...
 ```
 
-De `...` bouwt ook de Forge-afhankelijkheden die door het pakket vereist zijn. Roestdecoder en encoderkratten zijn getest
-van nature mee `cargo test`; hun
-`wasm-pack` uitgangen worden naar de overeenkomstige geschreven `packages/*-wasm/`
-werkruimte door de pakkettaak van het krat, het ingecheckte pakket/build-contract dat door Turborepo wordt gebruikt.
+De `...` bouwt ook de Forge-afhankelijkheden die door het pakket vereist zijn. De
+neutrale codescanner is samengesteld uit de Forge Web Script-grafiek; dat is niet het geval
+vereisen een Roest of `wasm-pack` stap bouwen.
 
 ## Ontwikkelingsworkflow
 
@@ -119,7 +110,7 @@ done
 
 Door Forge ondersteunde pakketten publiceren matching `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, En `mp:web-component` voorwaarden. De actieve voorwaarde moet zijn
-geconfigureerd door de verbruikende bundelaar; zien [de compilerreferentie](forge-compiler.md)
+geconfigureerd door de verbruikende bundelaar; zien [de compilerreferentie](../../../vite-plugins/forge/docs/locales/nl/reference/compiler.md)
 voor de doelplug-in en declaratiepijplijn.
 
 ### Applicatieontwikkeling
@@ -159,8 +150,7 @@ pnpm install
 
 ### WASM-buildfouten
 
-Als Rust/WASM-pakketten niet kunnen worden gebouwd, controleer dan of de stabiele Rust-toolchain en
-`wasm32-unknown-unknown` target zijn geïnstalleerd en vervolgens uitgevoerd `pnpm install` om het vastgezette te herstellen `wasm-pack` npm afhankelijkheid.
-De
-`@mission-platform/hunspell` Emscripten build vereist bovendien dat Docker actief is; de andere Rustkratten worden gebouwd
-met de lokale Rust-toolchain.
+Als een Forge Web Script-artefact niet kan worden gebouwd, controleer dan de diagnostische gegevens van de compiler
+en verifieer het geselecteerde statische of dynamische linkprofiel. De
+`@mission-platform/hunspell` Voor het bouwen van Emscripten is Docker bovendien vereist
+rennen.

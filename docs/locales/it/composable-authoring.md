@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/composable-authoring.md](../../composable-authoring.md)
+> docs/composable-authoring.md: [docs/composable-authoring.md](../../composable-authoring.md)
 > Lingua: Italiano (it)
 
 I componenti componibili rappresentano il modo principale per incapsulare e riutilizzare la logica reattiva all'interno della Mission Platform. Per garantire questi
@@ -28,7 +28,7 @@ src/composables/
 1. **Utilizza Forge Hooks**: importa solo primitive reattive (ad es. `useState`, `useEffect`, `useMemo`, `useRef`) da
    `@mission-platform/forge`. Non importare mai direttamente da `vue` O `react`.
 2. **Convenzione sui nomi**: i nomi componibili devono utilizzare kebab-case ed essere preceduti da `use-` (e.g., `use-media-query`).
-3. **Sicurezza SSR**: garantisce che la logica sia sicura per il rendering lato server. Proteggi qualsiasi accesso alle API solo del browser come `window`,
+3. **Sicurezza SSR**: garantisce che la logica sia sicura per il rendering lato server. Proteggi qualsiasi accesso alle API solo browser come `window`,
    `document`, O `localStorage`.
 4. **Nessun componente UI**: i componenti componibili dovrebbero concentrarsi sulla logica. Non restituire o manipolare direttamente i componenti dell'interfaccia utente; invece,
    restituire stato, riferimenti o callback.
@@ -53,6 +53,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);

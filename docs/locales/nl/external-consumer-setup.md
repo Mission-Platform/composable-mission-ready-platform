@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/external-consumer-setup.md](../../external-consumer-setup.md)
+> docs/external-consumer-setup.md: [docs/external-consumer-setup.md](../../external-consumer-setup.md)
 > Taal: Nederlands (nl)
 
 In deze handleiding wordt uitgelegd hoe u Mission Platform-pakketten kunt gebruiken in projecten die zich buiten de hoofdmonorepo bevinden. Het richt zich op het gebruik van raamwerkspecifieke builds en het beheren van ontwerptokens.
@@ -26,7 +26,7 @@ Om de juiste bundel te selecteren, moet u uw buildtool configureren en TypeScrip
 
 ### 1. Vite Configuratie
 
-Als u gebruikt Vite, kunt u de helpfuncties van gebruiken `@mission-platform/vite-config` om automatisch de juiste oplossingsvoorwaarden in te stellen.
+Als u gebruikt Vite, kunt u de helpfuncties van gebruiken `@mission-platform/vite-config` om automatisch de juiste oplossingsvoorwaarden in te stellen. Een raamwerkvrije app zou moeten selecteren `mp:web-component`; installeer of configureer geen Vue plug-in voor dat doel.
 
 ```ts
 import { defineConfig } from 'vite';
@@ -34,8 +34,8 @@ import { frameworkResolveConditions } from '@mission-platform/vite-config';
 
 export default defineConfig({
   resolve: {
-    // This places 'mp:vue' at the top of the condition list
-    conditions: frameworkResolveConditions('mp:vue'),
+    // This places the Web Components build at the top of the condition list.
+    conditions: frameworkResolveConditions('web-component'),
   },
 });
 ```
@@ -46,9 +46,9 @@ Om ervoor te zorgen dat de TypeScript Language Service (LSP) lost typen op voor 
 
 ```json
 {
-  "extends": "@mission-platform/typescript-config/framework-vue",
+  "extends": "@mission-platform/typescript-config/framework-web-component",
   "compilerOptions": {
-    "customConditions": ["mp:vue"]
+    "customConditions": ["mp:web-component"]
   }
 }
 ```
@@ -58,7 +58,7 @@ Om ervoor te zorgen dat de TypeScript Language Service (LSP) lost typen op voor 
 Installeer de vereiste pakketten vanuit uw register:
 
 ```bash
-pnpm add @mission-platform/components @mission-platform/tokens
+pnpm add @mission-platform/components @mission-platform/tokens @mission-platform/router @mission-platform/forge-router-web-components
 ```
 
 ### Afhankelijkheden van leeftijdsgenoten
@@ -67,8 +67,13 @@ De meeste Mission Platform-pakketten externaliseren hun runtime-afhankelijkheden
 
 ```bash
 # Example for a Vue 3 project
-pnpm add vue vue-router @mission-platform/i18n
+pnpm add @mission-platform/i18n
 ```
+
+Het neutrale routerpakket heeft geen runtime-afhankelijkheden van het raamwerk of de routerbibliotheek. Installeer de native router die is geselecteerd door
+uw toepassing en het bijbehorende Forge-doel (`@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`, of `-web-components`). De applicatie is eigenaar van routedefinities, providers, bewakers, laders en de native
+routerinstantie; herbruikbare pakketten importeren alleen mogelijkheden van `@mission-platform/router`.
 
 ## Componentgebruik
 
@@ -84,6 +89,33 @@ import { ForgeButton } from '@mission-platform/components';
 </template>
 ```
 
+### Framework-vrije routering
+
+Gebruik geheugengeschiedenis voor tests en pre-rendering, of laat het achterwege `history` in een browser om de browsergeschiedenis te gebruiken. Router registreren
+elementen één keer; wijs routedoelen toe als eigenschappen wanneer ze params, querywaarden of hashes bevatten:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/'),
+  routes: [
+    { path: '/', redirect: '/docs/intro' },
+    { path: '/docs/*', name: 'doc', component: () => document.createTextNode('Docs') },
+  ],
+});
+setForgeRouter(router);
+
+const outlet = document.querySelector('forge-router-outlet');
+outlet?.setRouter(router);
+```
+
 ## Aanpassing van ontwerptokens
 
 Mission Platform gebruikt CSS Custom Properties (variabelen) voor ontwerptokens. U kunt deze tokens globaal overschrijven in het hoofdstijlblad van uw toepassing.
@@ -93,6 +125,7 @@ Mission Platform gebruikt CSS Custom Properties (variabelen) voor ontwerptokens.
 :root {
   /* Override the brand primary color */
   --mp-color-brand-primary: #007bff;
+  
   /* Override a spacing token */
   --mp-spacing-md: 1.5rem;
 }

@@ -8,22 +8,23 @@ import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 import {
   buildSitemapUrls,
   collectDocumentSlugs,
+  discoverDocumentationRoots,
   SITE_ORIGIN,
 } from './src/route-inventory.ts';
 
 // The docs site renders the canonical Markdown that lives in the monorepo
-// `docs/` directory (outside this app's root). Allow Vite's dev server to read
-// from the repository root so `import.meta.glob('../../../docs/**/*.md')`
-// resolves during development as well as the production build.
+// `docs/` and package-owned `docs/` directories (outside this app's root).
+// Allow Vite's dev server to read from the repository root so the direct
+// multi-root import in src/documentation.ts works in development as well.
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(currentDirectory, '../..');
-const documentsDirectory = path.join(repoRoot, 'docs');
+const documentationRoots = discoverDocumentationRoots(repoRoot);
 
 // ─── SEO / prerender route inventory ─────────────────────────────────────────
 // Keep the route list shared by Vite's SEO files and the memory-history
 // prerender script. The runtime documentation manifest remains the source of
 // page content; this build-time list only determines emitted URLs.
-const documentSlugs = collectDocumentSlugs(documentsDirectory);
+const documentSlugs = collectDocumentSlugs(documentationRoots);
 
 // One sitemap entry per canonical URL. The root/default document gets top
 // priority; every other page is slightly lower.

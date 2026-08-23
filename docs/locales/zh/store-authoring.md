@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/store-authoring.md](../../store-authoring.md)
+> docs/store-authoring.md: [docs/store-authoring.md](../../store-authoring.md)
 > 语言: 简体中文 (zh)
 
 存储用于管理包内共享的跨组件状态。与应用程序级商店（如 Pinia 或
@@ -11,7 +11,7 @@ Redux），任务平台中的包存储被设计为**框架中立的可观察模�
 
 ## 目录布局
 
-每个存储必须驻留在其自己的命名子目录中 `src/stores/`，并附有一个位于同一位置的测试文件和一个
+每个存储必须驻留在 `src/stores/` 内自己命名的子目录中，并附有一个共同定位的测试文件和一个
 当地桶。
 
 ```text
@@ -27,20 +27,20 @@ src/stores/
 
 包存储避免了特定于框架的依赖关系。相反，它们遵循一个简单的可观察模式：
 
-1. **私有状态**：将状态保留在模块范围内（简单 TypeScript 值）。
+1. **私有状态**：将状态保留在模块范围内（普通 TypeScript 值）。
 2. **快照访问**：提供 `getSnapshot()` 函数来检索当前状态。
-3. **订阅**：提供 `subscribe(listener)` 向列表添加回调并返回取消订阅的函数
+3. **订阅**：提供`subscribe(listener)`函数，向列表添加回调并返回取消订阅
    功能。
 4. **Mutators**：提供更新状态的函数，更新后必须通知所有监听者。
 
 ## 创作规则
 
-1. **与框架无关**：不要从以下位置导入 `vue`, `react`， 或者 `@mission-platform/forge` 商店模块内的挂钩
+1. **与框架无关**：不要从存储模块内的 `vue`、`react` 或 `@mission-platform/forge` 挂钩导入
    本身。
 2. **显式类型**：始终为商店状态定义和导出接口。
-3. **SSR 安全**：保护对浏览器 API 的访问（例如， `localStorage`) 所以可以在 a 中初始化商店 Node.js
+3. **SSR 安全**：保护对浏览器 API（例如 `localStorage`）的访问，以便可以在 Node.js 中初始化存储
    环境。
-4. **强制测试**：每家商店必须有一个位于同一地点的 `.spec.ts` 文件。
+4. **强制测试**：每个商店都必须有一个位于同一位置的 `.spec.ts` 文件。
 
 ## 示例商店
 
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## 消费组件中的存储
 
-要在一次写入组件中使用存储，请使用以下命令桥接它 `useState` 和 `useEffect` 从 `@mission-platform/forge`:
+要在一次写入组件中使用存储，请使用 `@mission-platform/forge` 中的 `useState` 和 `useEffect` 桥接它：
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

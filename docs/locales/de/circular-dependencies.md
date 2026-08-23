@@ -2,11 +2,11 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/circular-dependencies.md](../../circular-dependencies.md)
+> docs/circular-dependencies.md: [docs/circular-dependencies.md](../../circular-dependencies.md)
 > Sprache: Deutsch (de)
 
 Dieses Dokument erläutert die Auswirkungen zirkulärer Abhängigkeiten innerhalb des Mission Platform Monorepo und bietet eine **Anleitung
-Anleitung** zum Erkennen, Beheben und Verhindern dieser Probleme. Es dient sowohl als **Erklärung** der Monorepo-Gesundheit als auch als
+Leitfaden** zum Erkennen, Beheben und Verhindern dieser Probleme. Es dient sowohl als **Erklärung** der Monorepo-Gesundheit als auch als
 technisches Rezept für Refactoring.
 
 ## Was sind zirkuläre Abhängigkeiten?
@@ -74,7 +74,7 @@ das `UserService` lauscht.
 Wenn zwei Pakete so eng miteinander verbunden sind, dass sie ständig die Interna des anderen benötigen, handelt es sich möglicherweise tatsächlich um ein Paket
 einzelne logische Einheit. Erwägen Sie, sie in einem Paket zusammenzuführen.
 
-## Best Practices zur Prävention
+## Best Practices für die Prävention
 
 1. **Folgen Sie dem einseitigen Ablauf**: Halten Sie sich strikt daran `Apps → Packages → Configs` Abhängigkeitsrichtung.
 2. **Autoren-Framework-neutrale Logik**: Verwendung `@mission-platform/forge` für die Kernlogik, um Framework-spezifische Zyklen zu vermeiden.

@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/architecture.md](../../architecture.md)
+> docs/architecture.md: [docs/architecture.md](../../architecture.md)
 > Taal: Nederlands (nl)
 
 Mission Platform is ontworpen voor maximale herbruikbaarheid en cross-framework-flexibiliteit. In dit document wordt uitgelegd
@@ -11,7 +11,7 @@ architecturale principes, de raamwerkneutrale engine en de bouwsystemen die het 
 ## Architecturale blauwdruk
 
 Het platform volgt een **samenstelbare, pakketgestuurde architectuur**. Dit betekent dat toepassingen niet monolithisch zijn;
-in plaats daarvan zijn ze ‘samengesteld’ uit vele kleinere, onafhankelijke pakketten die elk een specifiek probleem behandelen (bijvoorbeeld routering,
+in plaats daarvan zijn ze "samengesteld" uit vele kleinere, onafhankelijke pakketten die elk een specifiek probleem behandelen (bijvoorbeeld routering,
 internationalisering, UI-componenten).
 
 ### De gouden regel: richting van afhankelijkheid
@@ -51,7 +51,7 @@ bouwt semantische IR, voert gedeelde analyse en optimalisatie uit en verzendt na
 
 Framework-pakketten zoals `@mission-platform/forge-plugin-react` En `@mission-platform/forge-plugin-vue` eigen doel
 verlaging, doeloptimalisatie, het genereren van native bronnen, diagnostiek, runtime-metagegevens en Vite/tsdown-adapters. Daar
-Er is geen centrale raamwerkzender of string-naar-framework-register in het stuurprogramma. Configuraties voor pakketopbouw selecteren de
+Er is geen centrale framework-emitter of string-naar-framework-register in het stuurprogramma. Configuraties voor pakketopbouw selecteren de
 plugin-instanties die ze publiceren, zodat de afhankelijkheden van de doelimplementatie op de raamwerkgrens blijven.
 
 De resulterende stroom is **parseren/normaliseren → neutraal optimaliseren → semantische IR → doel lager → doel optimaliseren → genereren →
@@ -65,7 +65,8 @@ En `forge-cms-webflow` elk een platform. Een CMS-doel *componeert* een framework
 elk platform koppelt met elk raamwerk en de uitvoer komt terecht `dist/cms/<cms>/<framework>/**`.
 
 Zie voor de volledige pijplijn-, component- en hook-consumenten, CMS-projectie en uitbreidingsrichtlijnen
-[Forge Compiler-pijplijn](forge-compiler.md). Zie voor de build-orkestratieweergave [Bouw systeem](build-system.md).
+[Forge Compiler-pijplijn](../../../vite-plugins/forge/docs/locales/nl/reference/compiler.md). Zie voor de build-orkestratieweergave
+[Bouw systeem](build-system.md).
 
 ## Ontwerptokensysteem
 
@@ -80,8 +81,13 @@ Visuele consistentie wordt gehandhaafd via een geavanceerd ontwerptokensysteem d
 
 Kernapplicatiediensten zoals routing en internationalisering zijn ontworpen om raamwerk-agnostisch te zijn.
 
-- **`@mission-platform/router`**: Definieert routes als een eenvoudige datastructuur (`MpRoute`). Adapters voor Vue vertaal deze
-  in raamwerkspecifieke routerinstances en composables.
+- **`@mission-platform/router`**: Biedt gestructureerde routedoelen, pure URL/locatie-helpers en compilermarkeringen zoals
+  als `MpLink`, `useMpRoute`, `useMpRouter`, En `MpRouterView`. Het heeft geen UI-framework of router-bibliotheek runtime
+  afhankelijkheden en is nooit eigenaar van de routetabel van een applicatie.
+- **Routerdoelen smeden**: `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, En
+  `-web-components` verlaag die markeringen naar de native router die is geselecteerd door de verbruikende applicatie. Toepassingen behouden
+  eigendom van eigen routedefinities, providers, bewakers, laders en routerinstanties; het doelwit levert alleen maar
+  consumptiemogelijkheden.
 - **`@mission-platform/i18n`**: Een wikkel eromheen `i18next` dat zorgt voor een universeel `createForgeI18N` fabriek.
   Framework-specifieke adapters bieden `useI18n` haken en onderdelen voor Vue En React.
 
@@ -89,7 +95,7 @@ Kernapplicatiediensten zoals routing en internationalisering zijn ontworpen om r
 
 ### Taakorkestratie met Turborepo
 
-Turborepo verzorgt het zware werk van het bouwen, testen en pluizen van de monorepo. Het maakt gebruik van een globale cache
+Turborepo verzorgt het zware werk van het bouwen, testen en pluizen van de monorepo. Het gebruikt een globale cache om
 ervoor zorgen dat taken alleen worden uitgevoerd als hun input is veranderd.
 
 ### Vite-Aangedreven constructies

@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/build-system.md](../../build-system.md)
+> docs/build-system.md: [docs/build-system.md](../../build-system.md)
 > Taal: Nederlands (nl)
 
 Dit document legt de architectuur en werking van het bouwsysteem van het Mission Platform uit. Het is ontworpen voor hoge
@@ -14,7 +14,7 @@ Het Mission Platform maakt gebruik van een gelaagd bouwsysteem dat taakorkestrat
 
 ### 1. Taakorkestratie (Turborepo)
 
-**Turborepo** is de orkestrator van het hoogste niveau. Het beheert de afhankelijkheidsgrafiek tussen werkruimten en biedt caching
+**Turborepo** is de orkestrator op het hoogste niveau. Het beheert de afhankelijkheidsgrafiek tussen werkruimten en biedt caching
 alle taken.
 
 - **Pijplijn gedefinieerd in `turbo.json`**: Taken zoals `build`, `test`, En `lint` zijn gedefinieerd met hun afhankelijkheden
@@ -27,7 +27,7 @@ alle taken.
 
 De meeste bibliotheekpakketten in `packages/` gebruik **tsdown** voor compilatie.
 
-- **Snelheid**: gebouwd bovenop **Rolldown** (de op Rust gebaseerde opvolger van Rollup), waardoor builds vrijwel onmiddellijk mogelijk zijn.
+- **Snelheid**: gebouwd bovenop **Rolldown** (de op Rust gebaseerde opvolger van Rollup), waardoor vrijwel onmiddellijke builds mogelijk zijn.
 - **Ontbundeling**: pakketten worden gebouwd met `unbundle: true`, met behoud van de oorspronkelijke modulestructuur `dist/`. Dit
   zorgt voor optimaal boomschudden en betere foutopsporing in consumententoepassingen.
 - **CSS Threading**: een aangepaste plug-in koppelt geëxtraheerde stylesheets opnieuw aan hun eigen JS-modules, zodat
@@ -57,7 +57,7 @@ raamwerk worden onafhankelijk gekozen, `storyblok × vue` En `astro × solid` zi
 CMS-builds emitteren naar `dist/cms/<cms>/<framework>/**`, met manifesten en andere perronzijspannen erin gespiegeld
 `dist/cms/<cms>/`. Doelen die een gehydrateerde runtime nodig hebben (Astro, Webflow) genereren samen een eilandboom vanaf de grens
 framework-plug-in in dezelfde build. De volledige verantwoordelijkheidsverdeling en fasegrenzen worden beschreven in
-[Forge Compiler-pijplijn](forge-compiler.md).
+[Forge Compiler-pijplijn](../../../vite-plugins/forge/docs/locales/nl/reference/compiler.md).
 
 ## Contract opbouwen
 
@@ -94,11 +94,11 @@ genegeerd door Turbo's input en wordt nooit gepubliceerd. Een succesvolle build 
 
 - **Aggregaatmodus** vervangt atomair het volledige Forge-eigendom `dist` boom. Verouderde neutrale, framework- en CMS-bestanden
   worden daarom verwijderd in plaats van per ongeluk de export te bevredigen.
-- **Gerichte modus** vervangt atomair alleen de geselecteerde framework-subboom (en de bijbehorende CMS-wrapper-subboom),
+- **Gerichte modus** vervangt atomair alleen de geselecteerde substructuur van het raamwerk (en de bijbehorende CMS-wrapper-subboom),
   het behouden van niet-gerelateerde neutrale, raamwerk-, e-mail- en CMS-uitvoer die al aanwezig is `dist`. De runner gebruikt de CMS-selector
   (bijv. `FORGE_CMS_STORYBLOK_TARGET`) aan het gevraagde raamwerk ernaast `FORGE_FRAMEWORK_TARGET`, dus het CMS van een pakket
   bedrading (`forgeStoryblokCmsTargets`, etc.) bouwt de overeenkomende wrapper feitelijk opnieuw op in dezelfde fase in plaats van dat hij dat was
-  stilletjes uit de promotie gestopt. Door promotie wordt alleen een CMS-wrapper-substructuur gewist die door de fase opnieuw is gegenereerd; het nooit
+  stilletjes gestopt met promotie. Door promotie wordt alleen een CMS-wrapper-substructuur gewist die door de fase opnieuw is gegenereerd; het nooit
   verwijdert een zuster-CMS-wrapper die door de huidige build niet opnieuw is opgebouwd.
 - Gedeelde CMS-middelen zoals Storyblok-schema's en `components.json` een gedeelde bestemming hebben en niet worden verwijderd door a
   latere kaderpromotie.
@@ -164,7 +164,7 @@ de componentenbibliotheek `build:watch` taak ernaast (via de taak's `with` sleut
 ### Productie (`build` taak)
 
 Turborepo voert builds uit in topologische volgorde. Een pakket wordt pas gebouwd nadat al zijn interne afhankelijkheden zijn vervuld
-succesvol gebouwd. De uitvoer in `dist/` is wat uiteindelijk wordt gepubliceerd of ingezet.
+succesvol gebouwd. De uitvoer binnen `dist/` is wat uiteindelijk wordt gepubliceerd of ingezet.
 
 ## Geavanceerd: WASM-integratie
 

@@ -2,6 +2,7 @@ import { marked, type Tokens } from 'marked';
 
 import { documentPath } from '../documentation';
 import { DEFAULT_LOCALE, type DocumentationLocale } from '../i18n';
+import { docsDirectoryForRoot, qualifiedSlug, type DocumentationSourceRoot } from '../documentation-sources';
 
 /** A single entry in a document's table of contents. */
 export interface TocItem {
@@ -43,9 +44,27 @@ export function resolveInternalHref(
   href: string,
   currentSlug: string,
   locale: DocumentationLocale = DEFAULT_LOCALE,
+  context: MarkdownLinkContext = {},
 ): string | undefined {
   const [pathPart, hash] = href.split('#');
   if (!/\.md$/i.test(pathPart)) return undefined;
+
+  if (context.currentRoot !== undefined && context.roots !== undefined) {
+    const root = context.currentRoot;
+    const localSlug = root.routePrefix === '' ? currentSlug : currentSlug.slice(`${root.routePrefix}/`.length);
+    const currentFile = [...docsDirectoryForRoot(root).split('/'), ...localSlug.split('/')];
+    currentFile[currentFile.length - 1] = `${currentFile[currentFile.length - 1]}.md`;
+    const targetPath = normalizeSegments([
+      ...currentFile.slice(0, -1),
+      ...pathSegments(pathPart.replace(/\.md$/i, '').split('/')),
+    ]);
+    const owner = context.roots.find((candidate) => targetPath.startsWith(`${docsDirectoryForRoot(candidate)}/`));
+    if (owner === undefined) return undefined;
+    const targetDocument = targetPath.slice(`${docsDirectoryForRoot(owner)}/`.length);
+    const slug = qualifiedSlug(owner, targetDocument);
+    if (context.hasDocument !== undefined && !context.hasDocument(slug, locale)) return undefined;
+    return `${documentPath(slug, locale)}${hash ? `#${hash}` : ''}`;
+  }
 
   const baseSegments = currentSlug.includes('/') ? currentSlug.split('/').slice(0, -1) : [];
   const segments = [...baseSegments];
@@ -61,6 +80,25 @@ export function resolveInternalHref(
 
   const slug = segments.join('/');
   return `${documentPath(slug, locale)}${hash ? `#${hash}` : ''}`;
+}
+
+function pathSegments(segments: readonly string[]): string[] {
+  return segments.filter((segment) => segment !== '' && segment !== '.');
+}
+
+function normalizeSegments(segments: readonly string[]): string {
+  const normalized: string[] = [];
+  for (const segment of segments) {
+    if (segment === '..') normalized.pop();
+    else if (segment !== '.') normalized.push(segment);
+  }
+  return normalized.join('/');
+}
+
+export interface MarkdownLinkContext {
+  readonly currentRoot?: DocumentationSourceRoot;
+  readonly roots?: readonly DocumentationSourceRoot[];
+  readonly hasDocument?: (slug: string, locale: DocumentationLocale) => boolean;
 }
 
 /**
@@ -98,13 +136,14 @@ export function useMarkdown(
   source: MarkdownSource,
   slug: MarkdownSource,
   locale: DocumentationLocale | (() => DocumentationLocale) = DEFAULT_LOCALE,
+  context: MarkdownLinkContext = {},
 ): { toc: MarkdownValue<TocItem[]>; resolveHref: MarkdownValue<(href: string) => string | undefined> } {
   const markdown = readValue(source);
   const currentSlug = readValue(slug);
   const currentLocale = readValue(locale);
   const toc = { value: buildToc(markdown) };
   const resolveHref = {
-    value: (href: string): string | undefined => resolveInternalHref(href, currentSlug, currentLocale),
+    value: (href: string): string | undefined => resolveInternalHref(href, currentSlug, currentLocale, context),
   };
   return { toc, resolveHref };
 }

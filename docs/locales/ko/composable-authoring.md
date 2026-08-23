@@ -2,7 +2,7 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> 영어 원문: [docs/composable-authoring.md](../../composable-authoring.md)
+> docs/composable-authoring.md: [docs/composable-authoring.md](../../composable-authoring.md)
 > 언어: 한국어 (ko)
 
 컴포저블은 미션 플랫폼 내에서 반응형 로직을 캡슐화하고 재사용하는 기본 방법입니다. 이를 보장하려면
@@ -27,7 +27,7 @@ src/composables/
 
 1. **Forge Hooks 사용**: 반응성 프리미티브만 가져옵니다(예: `useState`, `useEffect`, `useMemo`, `useRef`) ~에서
    `@mission-platform/forge`. 절대 직접 수입하지 마세요. `vue` 또는 `react`.
-2. **명명 규칙**: 구성 가능한 이름은 kebab-case를 사용해야 하며 접두사가 붙습니다. `use-` (e.g., `use-media-query`).
+2. **명명 규칙**: 구성 가능한 이름은 kebab-case를 사용해야 하며 접두사로 다음이 추가되어야 합니다. `use-` (e.g., `use-media-query`).
 3. **SSR 안전**: 서버 측 렌더링에 대한 논리가 안전한지 확인합니다. 다음과 같은 브라우저 전용 API에 대한 액세스를 보호하세요. `window`,
    `document`, 또는 `localStorage`.
 4. **UI 구성요소 없음**: 컴포저블은 로직에 중점을 두어야 합니다. UI 구성요소를 직접 반환하거나 조작하지 마세요. 대신에
@@ -53,6 +53,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);

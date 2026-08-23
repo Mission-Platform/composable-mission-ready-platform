@@ -1,28 +1,28 @@
-# Vue 2 ~ Vue 3 마이그레이션 가이드
+# Vue 2에서 Vue 3으로 마이그레이션 가이드
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> 영어 원문: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
+> docs/migration-guides/vue2-to-vue3.md: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
 > 언어: 한국어 (ko)
 
-이 가이드에서는 기존 마이그레이션 방법을 설명합니다. Vue 2개의 코드베이스 Vue 미션 플랫폼 모노레포 내 3개.
+이 가이드에서는 Mission Platform monorepo 내에서 기존 Vue 2 코드베이스를 Vue 3으로 마이그레이션하는 방법을 설명합니다.
 
 ## 개요
 
-미션 플랫폼은 Vue 3은 Composition API를 사용하고 `<script setup>` 통사론. 마이그레이션에는 다른 곳으로 이사하는 것도 포함됩니다
+미션 플랫폼은 Composition API 및 `<script setup>` 구문과 함께 Vue 3을 사용합니다. 마이그레이션에는 다른 곳으로 이사하는 것도 포함됩니다
 옵션 API에서 구성 요소 수명 주기 및 반응성 패턴을 업데이트합니다.
 
-## 전제조건
+## 전제 조건
 
 마이그레이션하기 전에 패키지가 플랫폼의 종속성 규칙을 따르는지 확인하세요.
 
-- 수입품 없음 `apps/`.
-- 모든 공유 로직은 다음 위치에 있어야 합니다. `packages/`.
-- 구성은 다음에서 제공되어야 합니다. `configs/`.
+- `apps/`에서 가져오기가 없습니다.
+- 모든 공유 로직은 `packages/`에 있어야 합니다.
+- 구성은 `configs/`에서 이루어져야 합니다.
 
 ## 1단계: 빌드 구성 업데이트
 
-귀하의 `package.json` 그리고 `vite.config.ts` 타겟팅하고 있습니다 Vue 3.
+`package.json` 및 `vite.config.ts`이 Vue를 대상으로 하는지 확인하세요. 3.
 
 ```ts
 // vite.config.ts
@@ -36,11 +36,11 @@ export default defineConfig(defineAppConfig({
 
 ## 2단계: 옵션 API를 컴포지션 API로 변환
 
-교체 Vue 2 옵션 API(`data`, `methods`, `computed`) 와 함께 Vue 3 컴포지션 API.
+Vue 2 옵션 API(`data`, `methods`, `computed`)를 Vue 3 구성 API로 바꿉니다.
 
 ### 참조할 데이터
 
-~ 안에 Vue 2, 상태는 `data()` 기능. ~ 안에 Vue 3, 사용 `ref()` 또는 `reactive()`.
+Vue 2에서는 상태가 `data()` 함수에 정의되었습니다. Vue 3에서는 `ref()` 또는 `reactive()`를 사용합니다.
 
 **Vue 2:**
 
@@ -64,7 +64,7 @@ const count = ref(0);
 
 ### 함수에 대한 방법
 
-메소드는 일반 함수가 됩니다. `<script setup>` 차단하다.
+메소드는 `<script setup>` 블록에서 일반 함수가 됩니다.
 
 **Vue 2:**
 
@@ -88,15 +88,15 @@ const increment = () => {
 
 수명 주기 후크의 이름이 바뀌었으므로 가져와야 합니다.
 
-| Vue 2                      | Vue 3                                     |
+| Vue 2 | Vue 3 |
 |:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` | 사용 `setup()` / `<script setup>` 직접 |
-| `beforeMount`              | `onBeforeMount`                           |
-| `mounted`                  | `onMounted`                               |
-| `beforeUpdate`             | `onBeforeUpdate`                          |
-| `updated`                  | `onUpdated`                               |
-| `beforeDestroy`            | `onBeforeUnmount`                         |
-| `destroyed`                | `onUnmounted`                             |
+| `beforeCreate` / `created` | `setup()` / `<script setup>` 직접 사용 |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 예:
 
@@ -108,9 +108,9 @@ onMounted(() => {
 });
 ```
 
-## 4단계: 채택 `<script setup>`
+## 4단계: `<script setup>` 채택
 
-Mission Platform의 모든 신규 및 마이그레이션 구성 요소는 다음을 사용해야 합니다. `<script setup>` 구문 TypeScript.
+Mission Platform의 모든 신규 및 마이그레이션 구성 요소는 TypeScript과 함께 `<script setup>` 구문을 사용해야 합니다.
 
 ```vue
 <template>
@@ -129,11 +129,11 @@ const increment = () => count.value++;
 
 ### V-모델
 
-~ 안에 Vue 3, 기본 소품 이름 `v-model` ~이다 `modelValue` 그리고 이벤트는 `update:modelValue`.
+Vue 3에서 `v-model`의 기본 소품 이름은 `modelValue`이고 이벤트는 `update:modelValue`입니다.
 
 ### 참조 액세스
 
-`this.$refs` 더 이상 사용되지 않습니다. ref와 동일한 이름으로 ref를 정의합니다. `ref` 요소의 속성입니다.
+`this.$refs`은 더 이상 사용되지 않습니다. 요소의 `ref` 속성과 동일한 이름으로 참조를 정의합니다.
 
 ```vue
 <template>

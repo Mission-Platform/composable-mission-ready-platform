@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/util-authoring.md](../../util-authoring.md)
+> docs/util-authoring.md: [docs/util-authoring.md](../../util-authoring.md)
 > Sprache: Deutsch (de)
 
 Dienstprogramme (utils) sind reine, Framework-unabhängige Hilfsfunktionen. Sie sollten frei von UI-Framework-Importen sein und, sofern nicht
@@ -11,7 +11,7 @@ serverseitige Logik und Worker.
 
 ## Verzeichnislayout
 
-Jedes Dienstprogramm SOLLTE sich in einem eigenen benannten Unterverzeichnis befinden `src/utils/`, begleitet von einer am selben Ort befindlichen Testdatei und
+Jedes Dienstprogramm SOLLTE sich in einem eigenen benannten Unterverzeichnis innerhalb von `src/utils/` befinden, begleitet von einer am selben Ort befindlichen Testdatei und
 ein lokales Fass.
 
 ```text
@@ -27,10 +27,10 @@ src/utils/
 
 1. **Reinheit**: Bevorzugen Sie reine Funktionen, die keine Nebenwirkungen haben. Bei gleicher Eingabe sollten sie immer Folgendes zurückgeben
    gleiche Ausgabe.
-2. **Keine UI-Hooks**: Niemals importieren `vue`, `react`, oder `@mission-platform/forge` Hooks in einem Dienstprogramm. Logik erfordert
+2. **Keine UI-Hooks**: Importieren Sie niemals `vue`-, `react`- oder `@mission-platform/forge`-Hooks in ein Dienstprogramm. Logik erfordert
    Reaktivität gehört dazu [Composables](composable-authoring.md).
-3. **Explizite Typisierung**: Vollständige Angabe TypeScript Typen für alle Argumente und Rückgabewerte.
-4. **Obligatorische Tests**: Für jedes Versorgungsunternehmen muss ein Co-Standort vorhanden sein `.spec.ts` Datei.
+3. **Explizite Typisierung**: Stellen Sie vollständige TypeScript-Typen für alle Argumente und Rückgabewerte bereit.
+4. **Obligatorische Tests**: Jedes Dienstprogramm muss über eine am selben Ort befindliche `.spec.ts`-Datei verfügen.
 5. **Einzelne Verantwortung**: Jeder Util-Ordner sollte sich auf eine bestimmte, eng begrenzte Aufgabe konzentrieren.
 
 ## Grundlegendes Beispiel

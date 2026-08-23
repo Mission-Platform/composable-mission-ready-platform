@@ -70,6 +70,8 @@ packages/<name>/
 │   │   └── date-validator/         # date-validator.ts + .spec.ts
 │   ├── locales/                    # i18n JSON files
 │   └── index.ts                    # Package public API (barrel)
+├── docs/                           # Package-owned guides and generated API reference
+│   └── reference/generated/        # Regenerated during prebuild
 ├── llms.txt                        # Technical overview for LLMs
 ├── package.json
 ├── tsconfig.json
@@ -121,10 +123,10 @@ context during bootstrap. The initial targets are `@mission-platform/forge-route
 For a framework-free package or app, select the Forge Web Components condition in both build and TypeScript configs:
 
 ```ts
-import { frameworkResolveConditions } from '@mission-platform/vite-config';
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
 
 export default {
-  resolve: { conditions: frameworkResolveConditions('web-component') },
+  resolve: { conditions: frameworkResolveConditions("web-component") },
 };
 ```
 
@@ -142,6 +144,17 @@ package's APIs, components, and behavior, enabling AI assistants to better under
 - **Title**: Use the scoped package name.
 - **Components/APIs**: Table or list of available symbols with their props and responsibilities.
 - **Examples**: Short code snippets for common use cases.
+
+## Package documentation ownership
+
+Package-specific installation, usage, limitations, contributor workflows, and API reference pages belong in the
+package's `docs/` directory, not in the repository-wide `docs/` tree. The docs site ingests these files directly and
+publishes them under a stable package namespace such as `/packages/barcode/index` or `/configs/eslint-config/index`.
+Project-wide concepts, architecture, workspace workflows, and cross-package troubleshooting remain in root `docs/`.
+
+Generated API pages live under `docs/reference/generated/` and are refreshed by the package `prebuild` hook; do not edit
+those files manually. To preview package documentation through the site, run the docs app build or use the all-workspace
+extractor described in the docs app README.
 
 ## Publishing
 

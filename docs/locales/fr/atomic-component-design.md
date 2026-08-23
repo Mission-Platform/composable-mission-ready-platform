@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/atomic-component-design.md](../../atomic-component-design.md)
+> docs/atomic-component-design.md: [docs/atomic-component-design.md](../../atomic-component-design.md)
 > Langue: Français (fr)
 
 Mission Platform utilise un système **Atomic Design** pour organiser les composants en niveaux hiérarchiques de complexité. Chaque
@@ -15,7 +15,7 @@ Les composants sont classés en cinq niveaux en fonction de leur portée et de l
 
 | Niveau | Dossier | Descriptif |
 |:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Atomes** | `src/components/atoms/`     | Les plus petites primitives de l'interface utilisateur (par exemple, `ForgeButton`, `ForgeInput`, `ForgeBadge`). Ce sont généralement des unités fonctionnelles qui ne peuvent pas être décomposées davantage sans perdre leur objectif. |
+| **Atomes** | `src/components/atoms/`     | Les plus petites primitives de l'interface utilisateur (par exemple, `ForgeButton`, `ForgeInput`, `ForgeBadge`). Il s’agit généralement d’unités fonctionnelles qui ne peuvent être décomposées davantage sans perdre leur objectif. |
 | **Molécules** | `src/components/molecules/` | Compositions simples d'atomes (par exemple, `ForgeSearchInput`, `ForgeFieldSet`). Ils fonctionnent ensemble comme une unité.                                                                    |
 | **Organismes** | `src/components/organisms/` | Sections d'interface utilisateur complexes composées d'atomes, de molécules et d'autres organismes (par exemple, `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
 | **Modèles** | `src/components/templates/` | Mises en page au niveau de la page qui définissent la structure du contenu (par exemple, `ForgeHero`, `ForgeAppLayout`). Ils utilisent souvent des emplacements pour définir où le contenu doit être placé.                     |

@@ -1,35 +1,35 @@
-# Best Practices für Frameworks
+# Best Practices für das Framework
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/framework-best-practices.md](../../framework-best-practices.md)
+> docs/framework-best-practices.md: [docs/framework-best-practices.md](../../framework-best-practices.md)
 > Sprache: Deutsch (de)
 
 Dieses Dokument bietet Anleitungen zu idiomatischen Mustern, Reaktivitätsmodellen und Leistungsoptimierungen für die von der Mission Platform unterstützten Frameworks. Es dient als **Erläuterung** unserer Multi-Framework-Strategie und als Referenz für die Framework-spezifische Entwicklung.
 
 ## Multi-Framework-Strategie
 
-Die Kernphilosophie der Mission Platform besteht darin, einmal zu erstellen und überall zu rendern. Dies wird erreicht durch **@mission-platform/forge**, das primäre Framework der Plattform: eine Framework-neutrale JSX-Laufzeit, in der alle gemeinsam genutzten Komponenten (alles außer den Apps) erstellt und von der aus sie nahtlos gerendert werden Vue 3, Reactund andere unterstützte Umgebungen.
+Die Kernphilosophie der Mission Platform besteht darin, einmal zu erstellen und überall zu rendern. Dies wird durch **@mission-platform/forge** erreicht, das primäre Framework der Plattform: eine Framework-neutrale JSX-Laufzeit, in der alle gemeinsam genutzten Komponenten (alles außer den Apps) erstellt und von der aus sie nahtlos in Vue 3, React und anderen unterstützten Umgebungen gerendert werden.
 
 ### Der Forge-Dialekt
 Erstellen Sie beim Erstellen gemeinsam genutzter Pakete Komponenten mithilfe der neutralen Grundelemente von Forge:
-- **JSX Factory**: Verwenden `h` Und `Fragment` aus `@mission-platform/forge`.
-- **Neutrale Haken**: Verwenden `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`, Und `useId`.
-- **Primitive**: Verwenden `Slot`, `Teleport`, `Transition`, Und `Dynamic` für komplexe UI-Strukturen.
+- **JSX Factory**: Verwenden Sie `h` und `Fragment` von `@mission-platform/forge`.
+- **Neutrale Hooks**: Verwenden Sie `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback` und `useId`.
+- **Grundelemente**: Verwenden Sie `Slot`, `Teleport`, `Transition` und `Dynamic` für komplexe UI-Strukturen.
 
 ## Vue 3
 
-Vue 3 ist das Framework, in dem sich die Anwendungen befinden `apps/` werden mit erstellt und sind das primäre native Renderziel für Forge-Komponenten. Gemeinsam genutzte Komponenten selbst werden in Forge JSX erstellt und nicht direkt in Vue.
+Vue 3 ist das Framework, mit dem die Anwendungen in `apps/` erstellt werden, und das primäre native Renderziel für Forge-Komponenten. Gemeinsam genutzte Komponenten selbst werden in Forge JSX erstellt und nicht direkt in Vue.
 
 ### Idiomatische Muster
-- **Kompositions-API**: Verwenden `<script setup lang="ts">` für alle neuen Komponenten.
-- **Forge-Integration**: Neutrale Komponenten mit umwickeln `toVueComponent` aus `@mission-platform/forge/vue`.
-- **Composables**: Zustandsbehaftete Logik extrahieren in `useXxx` Funktionen zur Förderung der Wiederverwendbarkeit.
+- **Composition API**: Verwenden Sie `<script setup lang="ts">` für alle neuen Komponenten.
+- **Forge-Integration**: Neutrale Komponenten mit `toVueComponent` aus `@mission-platform/forge/vue` umschließen.
+- **Composables**: Stateful-Logik in `useXxx`-Funktionen extrahieren, um die Wiederverwendbarkeit zu fördern.
 
 ### Leistungsoptimierungen
-- **Geringe Reaktivität**: Verwenden `shallowRef` oder `shallowReactive` für große, komplexe Datensätze, um Proxy-Overhead zu vermeiden.
-- **v-memo**: Verwenden `v-memo` in Vorlagen, um teure Teilbaumaktualisierungen basierend auf Abhängigkeitsänderungen zu überspringen.
-- **markRaw**: Bibliotheksinstanzen von Drittanbietern (z. B. Chart.js, Mapbox) einbinden `markRaw` zu verhindern Vue von dem Versuch, sie reaktiv zu machen.
+- **Geringe Reaktivität**: Verwenden Sie `shallowRef` oder `shallowReactive` für große, komplexe Datensätze, um Proxy-Overhead zu vermeiden.
+- **v-memo**: Verwenden Sie `v-memo` in Vorlagen, um teure Teilbaumaktualisierungen basierend auf Abhängigkeitsänderungen zu überspringen.
+- **markRaw**: Wickeln Sie Bibliotheksinstanzen von Drittanbietern (z. B. Chart.js, Mapbox) in `markRaw` ein, um zu verhindern, dass Vue versucht, sie reaktiv zu machen.
 
 ## React
 
@@ -37,12 +37,12 @@ React wird über den Forge-Laufzeitadapter unterstützt, hauptsächlich für ext
 
 ### Idiomatische Muster
 - **Funktionskomponenten**: Verwenden Sie Funktionskomponenten mit Haken.
-- **Forge-Integration**: Neutrale Komponenten mit umwickeln `toReactComponent` aus `@mission-platform/forge/react`.
+- **Forge-Integration**: Neutrale Komponenten mit `toReactComponent` aus `@mission-platform/forge/react` umschließen.
 - **Hooks-Disziplin**: Befolgen Sie strikt die „Hooks-Regeln“, um vorhersehbares Verhalten sicherzustellen.
 
 ### Leistungsoptimierungen
-- **Auswendiglernen**: Verwenden `React.memo`, `useMemo`, Und `useCallback` um die referenzielle Identität beizubehalten und unnötige erneute Renderings zu vermeiden.
-- **Gleichzeitige Funktionen**: Nutzung `useTransition` oder `useDeferredValue` für nicht dringende UI-Updates, damit der Hauptthread reaktionsfähig bleibt.
+- **Memoisierung**: Verwenden Sie `React.memo`, `useMemo` und `useCallback`, um die referenzielle Identität beizubehalten und unnötige erneute Renderings zu vermeiden.
+- **Gleichzeitige Funktionen**: Nutzen Sie `useTransition` oder `useDeferredValue` für nicht dringende UI-Updates, um die Reaktionsfähigkeit des Hauptthreads aufrechtzuerhalten.
 
 ## Andere Frameworks
 

@@ -170,7 +170,7 @@ owns lowering and native compilation. Output lands in
 See [`@mission-platform/components`](../../packages/components) for a reference
 consumer that ships multiple target bundles from one neutral source, and
 [`llms.txt`](./llms.txt) for the API-oriented summary. The complete architecture
-explanation is [`docs/forge-compiler.md`](../../docs/forge-compiler.md).
+explanation is [`docs/reference/compiler.md`](docs/reference/compiler.md).
 
 ## Service, cache, and watch behavior
 

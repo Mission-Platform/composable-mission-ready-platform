@@ -16,6 +16,7 @@
     "dist"
   ],
   "scripts": {
+    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build": "tsdown",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

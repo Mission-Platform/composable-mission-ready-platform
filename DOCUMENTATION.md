@@ -5,10 +5,11 @@ workspaces.
 
 ## Browsing the Documentation
 
-All documents under `docs/` can be read directly on GitHub, or browsed in a dedicated documentation site: the **
+Project guidance under `docs/` can be read directly on GitHub, or browsed in a dedicated documentation site: the **
 `@mission-platform/docs`** app (`apps/docs`). It is a Vite + Vue 3 single-page app that renders the canonical Markdown
-in `docs/` at build time, with grouped sidebar navigation, per-page table of contents, syntax-highlighted code, and
-in-app cross-links, and client-enhanced Mermaid diagrams with readable Markdown fallbacks.
+from the project `docs/` tree and package-owned `docs/` trees at build time, with grouped sidebar navigation, per-page
+table of contents, syntax-highlighted code, and in-app cross-links, and client-enhanced Mermaid diagrams with readable
+Markdown fallbacks.
 
 ```bash
 # Start the documentation site locally
@@ -28,6 +29,20 @@ English copy in a locale directory.
 
 Supported documentation locales are `en`, `ar`, `de`, `es`, `fr`, `he`, `it`, `ja`, `ko`, `nl`, and `zh`. English keeps
 the existing unprefixed URLs; translated pages use the same relative slug below their locale directory.
+
+## Documentation Ownership
+
+The repository has two documentation tiers:
+
+- **Project guidance** lives in the root `docs/` tree. It covers architecture, workspace workflows, application
+  development, testing, and cross-package troubleshooting.
+- **Package documentation** lives beside its owner under `packages/*/docs/`, `configs/*/docs/`,
+  `forge-plugins/*/docs/`, `vite-plugins/*/docs/`, `workers/*/docs/`, or another publishable workspace. It covers
+  installation, exports, examples, limitations, API reference, and contributor workflows for that package.
+
+Package pages use `docs/index.md` as their entry point. Hand-authored guides live under `docs/guides/`, reference pages
+under `docs/reference/`, and localized pages under `docs/locales/<locale>/` within the owning package. The root API page is
+a cross-package directory; it is not a substitute for package-owned API documentation.
 
 ## Documentation Structure
 
@@ -73,23 +88,26 @@ the existing unprefixed URLs; translated pages use the same relative slug below 
 
 #### Tooling & Configs
 
-- **[docs/configs/index.md](docs/configs/index.md)**: Overview of centralized configuration packages
-- **[docs/configs/eslint-config.md](docs/configs/eslint-config.md)**: Centralized ESLint configuration
-- **[docs/configs/scripts-config.md](docs/configs/scripts-config.md)**: Utility scripts configuration and usage
-- **[docs/configs/workers-config.md](docs/configs/workers-config.md)**: Cloudflare Workers configuration guidelines
+- **[docs/configs/index.md](docs/configs/index.md)**: Project-wide directory of configuration packages
+- **[configs/eslint-config/docs/index.md](configs/eslint-config/docs/index.md)**: ESLint package usage and development
+- **[configs/typescript-config/docs/index.md](configs/typescript-config/docs/index.md)**: TypeScript preset usage and development
+- **[configs/vite-config/docs/index.md](configs/vite-config/docs/index.md)**: Vite/Vitest helper usage and development
+- **[configs/*/docs/index.md](configs/)**: Documentation owned by each configuration package
+- **[docs/configs/workers-config.md](docs/configs/workers-config.md)**: Cross-workspace Cloudflare Worker guidance
 
 ### Advanced Documentation
 
 #### Architecture
 
 - **[docs/architecture.md](docs/architecture.md)**: Detailed architecture documentation
-- **[docs/forge-compiler.md](docs/forge-compiler.md)**: Maintainer-focused explanation of the strict Forge compiler
-  pipeline, explicit target-plugin ownership, native build adapters, and component, hook, and Storyblok consumers
+- **[vite-plugins/forge/docs/reference/compiler.md](vite-plugins/forge/docs/reference/compiler.md)**: Maintainer-focused explanation of the cross-package strict Forge
+  compiler pipeline, explicit target-plugin ownership, native build adapters, and component, hook, and Storyblok consumers
 
 #### API Reference
 
-- **[docs/api-reference.md](docs/api-reference.md)**: References for all Mission Platform packages and framework
-  adapters
+- **[docs/api-reference.md](docs/api-reference.md)**: Project-wide package directory and compatibility overview; detailed
+  usage and API references live beside each package under `packages/*/docs/`, `configs/*/docs/`, and
+  `forge-plugins/*/docs/`
 
 #### Migration Guides
 

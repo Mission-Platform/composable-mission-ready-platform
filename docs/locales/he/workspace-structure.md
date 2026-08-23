@@ -2,7 +2,7 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> מקור באנגלית: [docs/workspace-structure.md](../../workspace-structure.md)
+> docs/workspace-structure.md: [docs/workspace-structure.md](../../workspace-structure.md)
 > שפה: עברית (he)
 
 מסמך זה מספק התייחסות טכנית לפריסת מונורופו של פלטפורמת המשימה, למטרות ספרייה ופנימיות
@@ -10,7 +10,7 @@
 
 ## הפניה לפריסת Monorepo
 
-פלטפורמת המשימה משתמשת pnpm סביבות עבודה ו-Turborepo לניהול סביבה מרובת חבילות. המאגר מאורגן
+Mission Platform משתמשת בסביבות עבודה pnpm וב-Turborepo לניהול סביבת חבילות מרובת. המאגר מאורגן
 לשכבות פונקציונליות:
 
 ```text
@@ -31,10 +31,10 @@ composable_mission_ready_platform/
 
 ### 1. `apps/` (יישומים)
 
-יישומים הם יחידות ניתנות לפריסה המרכיבות פונקציונליות מה- `packages/` מַדרִיך. הם בדרך כלל פרטיים
+יישומים הם יחידות ניתנות לפריסה המרכיבות פונקציונליות מספריית `packages/`. הם בדרך כלל פרטיים
 ומעולם לא פורסם לרישום.
 
-- **`docs/`**: ה Vite + Vue אתר תיעוד עבור קורפוס Markdown.
+- **`docs/`**: אתר התיעוד Vite + Vue עבור קורפוס Markdown.
 - **`my-care-notes/`**: אפליקציית הדגל של הערות טיפול.
 - **`service-monitor/`**: לוח המחוונים הבריאותי של השירות RedwoodSDK מגובה באובייקט עמיד.
 - **`website/`**: אתר השיווק והמוצר של Mission Platform.
@@ -44,13 +44,13 @@ composable_mission_ready_platform/
 
 ספריות ניתנות לשימוש חוזר עם גרסאות הנצרכות על ידי אפליקציות. אלה נועדו להיות אגנוסטיים למסגרת במידת האפשר.
 
-- **`@mission-platform/forge`**: זמן הריצה והמתאמים של JSX ניטרליים למסגרת.
+- **`@mission-platform/forge`**: זמן הריצה ומתאמים של JSX ניטרליים למסגרת.
 - **`@mission-platform/components`**: ספריית רכיבי ריבוי המסגרות.
-- **`@mission-platform/forms`** ו**`@mission-platform/forms-core`**: פרימיטיביים של צורות מונעי סכמה.
-- **`@mission-platform/content`** ו**`@mission-platform/email-renderer`**: צינורות תוכן ועיבוד.
+- **`@mission-platform/forms`** ו-**`@mission-platform/forms-core`**: פרימיטיביים של צורות מונעי סכמה.
+- **`@mission-platform/content`** ו-**`@mission-platform/email-renderer`**: צינורות תוכן ועיבוד.
 - **`@mission-platform/tokens`**: עיצוב אסימון מקור האמת.
-- **`@mission-platform/router`** ו**`@mission-platform/i18n`**: ניתוב ולוקליזציה ניטרליים במסגרת.
-- **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**, ו
+- **`@mission-platform/router`** ו-**`@mission-platform/i18n`**: ניתוב ולוקליזציה ניטרליים במסגרת.
+- **`@mission-platform/barcode`**, **`@mission-platform/code-scanner`**, **`@mission-platform/matrix-code`**, וכן
   **`@mission-platform/qr-code`**: חבילות סריקה וקידוד בגיבוי Wasm.
 
 ### 3. `configs/` (קרן כלי עבודה)
@@ -58,50 +58,50 @@ composable_mission_ready_platform/
 תצורות משותפות המבטיחות עקביות בכל סביבות העבודה. חבילות בספרייה זו משמשות בדרך כלל כ
 `devDependencies`.
 
-- **`eslint-config/`**, **`prettier-config/`**, ו**`stylelint-config/`**: כללי מוך ועיצוב.
-- **`typescript-config/`**: בסיס `tsconfig.json` קבצים עבור Nodeצרכני DOM, ספריה ומסגרת.
-- **`tsdown-config/`** ו**`vite-config/`**: ספרייה משותפת, אפליקציה, Vite, ו Vitest לבנות דפוסים.
-- **`i18n-config/`** ו**`storybook-framework/`**: חילוץ מקומי והגדרות שולחן עבודה משותף.
+- **`eslint-config/`**, **`prettier-config/`** ו-**`stylelint-config/`**: כללי ריפוד ועיצוב.
+- **`typescript-config/`**: קובצי בסיס `tsconfig.json` עבור צרכני Node, DOM, ספרייה ומסגרת.
+- **`tsdown-config/`** ו-**`vite-config/`**: תבניות בנייה נפוצות של ספרייה, אפליקציה, Vite ו-Vitest.
+- **`i18n-config/`** ו-**`storybook-framework/`**: חילוץ מקומי והגדרות מסגרת עבודה משותפות.
 
-### 4. `vite-plugins/` (בניית הרחבות)
+### 4. `vite-plugins/` (תוספי בנייה)
 
-תוספים מותאמים אישית שמרחיבים את Vite תהליך בנייה.
+תוספים מותאמים אישית שמרחיבים את תהליך הבנייה של Vite.
 
 - **`forge/`**: המהדר הרב-שלבי לרכיבי Forge.
 - **`tokens/`**: יוצר חפצי קוד מהגדרות אסימון DTCG.
-- **`i18n/`**: מטפל בטעינת מיקום וחילוץ סטטי.
+- **`i18n/`**: מטפל בטעינת מיקום ובחילוץ סטטי.
 
-### 5. `workers/` (שירותי אדג')
+### 5. `workers/` (שירותי Edge)
 
 Cloudflare Workers להיגיון בצד השרת ואספקת נכסים אופטימלית.
 
-- **`api-proxy/`**: מספק גישת קריאה מוגבלת למסלולי API מאושרים.
-- **`email-sender/`**: עובד חלון ראווה של דוא"ל מקומי מגובת MailPit.
-- **`forge-spa/`**: משרת נכסים סטטיים עם an `ASSETS`-נספח ספא מחייב.
+- **`api-proxy/`**: מספק גישת קריאה מוגבלת לנתיבי API מאושרים.
+- **`email-sender/`**: עובד חלון ראווה של דוא"ל מקומי המגובה באימייל.
+- **`forge-spa/`**: משרת נכסים סטטיים עם ספא מחייב `ASSETS`.
 
-יישום הניתן לפריסה עובדים מוגדרים על ידי `apps/website/wrangler.jsonc`,
-`apps/my-care-notes/wrangler.jsonc`, ו `apps/service-monitor/wrangler.jsonc`. ה
-`api-proxy` ו `forge-spa` חבילות הן תלות מצורפות ולא עצמאיות Wrangler פריסות.
+יישום Workers הניתנים לפריסה מוגדרים על ידי `apps/website/wrangler.jsonc`,
+`apps/my-care-notes/wrangler.jsonc`, ו-`apps/service-monitor/wrangler.jsonc`. ה
+חבילות `api-proxy` ו-`forge-spa` הן תלות מאגדת ולא פריסות Wrangler עצמאיות.
 
 ## אמנות חבילה פנימית
 
 כדי לשמור על סביבה צפויה, כל החבילות והאפליקציות עוקבות אחר פריסה פנימית סטנדרטית.
 
-### תֶקֶן `src/` הִיֵרַרכִיָה
+### היררכיה `src/` סטנדרטית
 
 קוד המקור מאורגן לפי סוג פונקציונלי:
 
-- **`components/`**: לוגיקה של ממשק המשתמש (SFCs או TSX).
-- **`composables/`**: הגיון תגובתי וווים.
+- **`components/`**: לוגיקה של ממשק משתמש (SFCs או TSX).
+- **`composables/`**: היגיון ריאקטיבי וווים.
 - **`utils/`**: פונקציות טהורות ועוזרים אגנוסטיים למסגרת.
 - **`locales/`**: קובצי תרגום JSON/YAML.
 - **`styles/`**: חלקי SCSS ושילובי מערכות עיצוב.
 
-### דפוס יצוא חבית
+### דפוס ייצוא חבית
 
-כל ספרייה בפנים `src/` חייב להכיל `index.ts` (קובץ חבית).
+כל ספרייה בתוך `src/` חייבת להכיל `index.ts` (קובץ חבית).
 
-- ספריות משנה מייצאות את הסמלים הפנימיים שלהן דרך המקומית שלהן `index.ts`.
+- ספריות משנה מייצאות את הסמלים הפנימיים שלהן דרך `index.ts` המקומית.
 - השורש `src/index.ts` משמש כנקודת הכניסה הציבורית עבור כל חבר סביבת העבודה.
 
 ## רישום תצורת שורש
@@ -110,29 +110,29 @@ Cloudflare Workers להיגיון בצד השרת ואספקת נכסים אופ
 
 | קובץ | מטרה |
 |:------------------------|:---------------------------------------------------------------------|
-| `pnpm-workspace.yaml`   | מגדיר את גבולות סביבת העבודה, גלובס חברים וקטלוגים של תלות. |
-| `turbo.json`            | מתזמר את צינור הבנייה ושמירה במטמון.                    |
-| `package.json`          | סקריפטים ברמת השורש ותלות מונורפואית.                |
+| `pnpm-workspace.yaml` | מגדיר את גבולות סביבת העבודה, גלובס חברים וקטלוגים של תלות. |
+| `turbo.json` | מתזמר את צינור הבנייה ושמירה במטמון.                    |
+| `package.json` | סקריפטים ברמת השורש ותלות מונורפואית.                |
 | `commitlint.config.mjs` | אוכף את מפרט ה-Conventional Commits.                     |
 
 ## ניהול תלות ומרחב עבודה
 
-פלטפורמת המשימה משתמשת ב- `workspace:*` פרוטוקול לתלות פנימית. זה מבטיח שחבילות תמיד משתמשות ב-
+Mission Platform משתמשת בפרוטוקול `workspace:*` עבור תלות פנימית. זה מבטיח שחבילות תמיד משתמשות ב-
 גרסה מקומית של חברי סביבת עבודה אחרים במהלך הפיתוח.
 
 ### PNPM קטלוגים
 
-המאגר ממנף את **pnpm קטלוגים** (מוגדר ב `pnpm-workspace.yaml`) לרכז גרסאות תלות על פני
-המונורפו. זה מונע סחף של גרסאות ומפשט את התחזוקה.
+המאגר ממנף **קטלוגים pnpm** (מוגדרים ב-`pnpm-workspace.yaml`) כדי לרכז גרסאות תלות על פני
+המונורפו. זה מונע סחף של גרסאות ומקל על תחזוקה.
 
 ### ביצוע משימה
 
-משימות חוצות סביבות עבודה מבוצעות דרך השורש `package.json` באמצעות Turborepo:
+משימות חוצות סביבות עבודה מבוצעות באמצעות השורש `package.json` באמצעות Turborepo:
 
 - `pnpm build`: בנה את כל סביבות העבודה בסדר התלות הנכון.
-- `pnpm test`: הפעל את חבילות הבדיקה עבור כל סביבות העבודה עם א `test` מְשִׁימָה. לְהִשְׁתַמֵשׁ `pnpm exec turbo run test --affected` עבור
+- `pnpm test`: הפעל את חבילות הבדיקה עבור כל סביבות העבודה עם משימת `test`. השתמש ב-`pnpm exec turbo run test --affected` עבור
   היקף ה-CI של סביבת העבודה שהשתנה.
-- `pnpm lint`: לרוץ ESLint על פני חללי העבודה.
-- `pnpm lint:style`: לרוץ Stylelint עבור סגנונות אפליקציות וחבילות.
+- `pnpm lint`: הפעל את ESLint על פני סביבות העבודה.
+- `pnpm lint:style`: הפעל את Stylelint עבור סגנונות אפליקציות וחבילות.
 - `pnpm format`: בדוק עיצוב עם Prettier.
 - `pnpm i18n:extract`: חלץ מפתחות תרגום עבור סביבות עבודה שיש בבעלותם קטלוגים.

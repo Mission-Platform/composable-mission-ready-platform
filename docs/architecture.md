@@ -60,7 +60,8 @@ and `forge-cms-webflow` each own one platform. A CMS target *composes* a framewo
 any platform pairs with any framework and the output lands in `dist/cms/<cms>/<framework>/**`.
 
 For the complete pipeline, component and hook consumers, CMS projection, and extension guidance, see
-[Forge Compiler Pipeline](forge-compiler.md). For the build orchestration view, see [Build System](build-system.md).
+[Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md). For the build orchestration view, see
+[Build System](build-system.md).
 
 ## Design Token System
 

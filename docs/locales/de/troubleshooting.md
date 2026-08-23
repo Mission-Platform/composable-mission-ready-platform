@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/troubleshooting.md](../../troubleshooting.md)
+> docs/troubleshooting.md: [docs/troubleshooting.md](../../troubleshooting.md)
 > Sprache: Deutsch (de)
 
 Dieser Leitfaden bietet Lösungen für häufige Probleme, die während der Entwicklung, Erstellung und Bereitstellung innerhalb der Mission auftreten
@@ -10,7 +10,7 @@ Plattform-Monorepo. Es ist als **Anleitung** zur Diagnose und Lösung technische
 
 ## Leistungsprobleme
 
-### Langsames LCP (größte inhaltsreiche Farbe)
+### Langsames LCP (Größter Contentful Paint)
 
 **Problem**: LCP liegt über dem 2,5-Sekunden-Schwellenwert für eine „Gut“-Bewertung.
 
@@ -23,9 +23,9 @@ Plattform-Monorepo. Es ist als **Anleitung** zur Diagnose und Lösung technische
 **Lösungen**:
 
 - **Inline-kritisches CSS**: Stellen Sie sicher, dass die für „above-the-fold“-Inhalte erforderlichen Stile inline sind.
-- **Bildoptimierung**: WebP/AVIF-Formate verwenden und bereitstellen `srcset` für responsive Bilder.
-- **Vorabladen von Ressourcen**: Verwenden `<link rel="preload">` für das LCP-Bild oder kritische Schriftarten.
-- **Haupt-Thread-Arbeit minimieren**: Nicht unbedingt erforderliche JavaScript-Verwendung zurückstellen `async` oder `defer`.
+- **Bildoptimierung**: Verwenden Sie WebP/AVIF-Formate und stellen Sie `srcset` für responsive Bilder bereit.
+- **Ressourcenvorladen**: Verwenden Sie `<link rel="preload">` für das LCP-Bild oder kritische Schriftarten.
+- **Hauptthread-Arbeit minimieren**: Nicht unbedingt erforderliches JavaScript mithilfe von `async` oder `defer` zurückstellen.
 
 ### Speicherlecks
 
@@ -61,13 +61,13 @@ rm -rf .turbo
 
 ### Modul nicht gefunden/Arbeitsbereichsauflösung
 
-**Problem**: TypeScript oder Vite Es kann kein Paket gefunden werden, das im Arbeitsbereich definiert ist.
+**Problem**: TypeScript oder Vite kann kein Paket finden, das im Arbeitsbereich definiert ist.
 
 **Lösungen**:
 
-1. Stellen Sie sicher, dass das Paket im konsumierenden Arbeitsbereich aufgeführt ist `package.json`.
+1. Stellen Sie sicher, dass das Paket im `package.json` des konsumierenden Arbeitsbereichs aufgeführt ist.
 2. Stellen Sie sicher, dass die Version übereinstimmt (`workspace:*` wird empfohlen).
-3. Laufen `pnpm install` um symbolische Links zu aktualisieren.
+3. Führen Sie `pnpm install` aus, um symbolische Links zu aktualisieren.
 4. Wenn die Probleme weiterhin bestehen, versuchen Sie es mit einer gründlichen Reinigung:
 ```bash
    pnpm -r exec rm -rf node_modules
@@ -76,7 +76,7 @@ rm -rf .turbo
 
 ### Geben Sie Fehler in CI ein, aber nicht in „Lokal“.
 
-**Problem**: Build schlägt in CI mit fehl TypeScript Fehler, die nicht in Ihrer IDE angezeigt werden.
+**Problem**: Build schlägt in CI mit TypeScript-Fehlern fehl, die nicht in Ihrer IDE angezeigt werden.
 
 **Lösung**: Führen Sie die Typprüfung lokal im gesamten Arbeitsbereich aus.
 
@@ -99,7 +99,7 @@ Dadurch wird sichergestellt, dass alle Paketgrenzen korrekt berücksichtigt werd
 
 **Lösungen**:
 
-- Stellen Sie sicher, dass Sie den absoluten Pfad zum verwenden node Binärdatei und das Skript in Ihrer Client-Konfiguration.
+– Stellen Sie sicher, dass Sie den absoluten Pfad zur node-Binärdatei und zum Skript in Ihrer Client-Konfiguration verwenden.
 - Überprüfen Sie die MCP-Serverprotokolle auf bestimmte Fehlermeldungen (z. B. fehlende Umgebungsvariablen).
 
 ## Häufige Fehlermuster
@@ -107,7 +107,7 @@ Dadurch wird sichergestellt, dass alle Paketgrenzen korrekt berücksichtigt werd
 ### „Eigenschaft von undefiniert kann nicht gelesen werden“
 
 **Ursache**: Zugriff auf Eigenschaften eines Null- oder undefinierten Objekts, oft bevor die Daten vollständig geladen wurden. **Fix**: Verwenden
-optionale Verkettung (`?.`) oder Standardwerte angeben.
+optionale Verkettung (`?.`) oder Standardwerte bereitstellen.
 
 ```typescript
 // Instead of:
@@ -119,7 +119,7 @@ const name = user?.profile?.name ?? 'Guest';
 
 ### „Unbehandelte Versprechensablehnung“
 
-**Ursache**: Eine asynchrone Funktion hat einen Fehler ausgegeben, der nicht abgefangen wurde. **Fix**: Asynchrone Aufrufe immer einschließen `try/catch` Blöcke.
+**Ursache**: Eine asynchrone Funktion hat einen Fehler ausgegeben, der nicht abgefangen wurde. **Fix**: Asynchrone Aufrufe immer in `try/catch`-Blöcke einschließen.
 
 ```typescript
 try {

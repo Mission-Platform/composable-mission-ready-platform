@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/composable-authoring.md](../../composable-authoring.md)
+> docs/composable-authoring.md: [docs/composable-authoring.md](../../composable-authoring.md)
 > Taal: Nederlands (nl)
 
 Composables zijn de belangrijkste manier om reactieve logica binnen het Mission Platform in te kapselen en opnieuw te gebruiken. Om deze te garanderen
@@ -12,7 +12,7 @@ raamwerkneutrale haken geleverd door `@mission-platform/forge`.
 ## Directory-indeling
 
 Elke composable MOET zich in zijn eigen benoemde submap bevinden `src/composables/`, vergezeld van een co-located test
-vijl en een lokaal vat.
+bestand en een lokaal vat.
 
 ```text
 src/composables/
@@ -28,7 +28,7 @@ src/composables/
 1. **Gebruik Forge Hooks**: importeer alleen reactieve primitieven (bijv. `useState`, `useEffect`, `useMemo`, `useRef`) van
    `@mission-platform/forge`. Importeer nooit rechtstreeks uit `vue` of `react`.
 2. **Naamgevingsconventie**: samengestelde namen moeten kebab-case gebruiken en worden voorafgegaan door `use-` (e.g., `use-media-query`).
-3. **SSR-veiligheid**: Zorg ervoor dat de logica veilig is voor server-side rendering. Bewaak elke toegang tot API's die alleen voor browsers beschikbaar zijn, zoals `window`,
+3. **SSR-veiligheid**: Zorg ervoor dat de logica veilig is voor server-side rendering. Bewaak elke toegang tot browser-only API's zoals `window`,
    `document`, of `localStorage`.
 4. **Geen UI-componenten**: Composables moeten zich richten op logica. Retourneer of manipuleer UI-componenten niet rechtstreeks; in plaats daarvan,
    retourstatus, refs of callbacks.
@@ -36,7 +36,7 @@ src/composables/
 
 ## Basisvoorbeeld
 
-Hier is een typisch write-once composable dat een gebeurtenislistener beheert.
+Hier is een typische write-once-composable die een gebeurtenislistener beheert.
 
 ```ts
 import { type MpRef, useEffect } from '@mission-platform/forge';
@@ -53,6 +53,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);

@@ -1,21 +1,42 @@
 // Loads the canonical Markdown corpus and its translated counterparts from the
-// monorepo at build time. The English tree remains the source of truth for the
-// slug inventory; every translated tree must contain the same slugs.
+// monorepo at build time. The English trees remain the source of truth for the
+// slug inventory; incomplete translations fall back to their owning English page.
 
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type DocumentationLocale } from './i18n';
+import { parseDocumentationModulePath, qualifiedSlug, type DocumentationSourceRoot } from './documentation-sources';
 
-const rawModules = import.meta.glob('../../../docs/**/*.md', {
-  query: '?raw',
-  import: 'default',
-  eager: true,
-}) as Record<string, string>;
+const rawModules = import.meta.glob(
+  [
+    '../../../docs/**/*.md',
+    '../../../packages/**/docs/**/*.md',
+    '../../../configs/**/docs/**/*.md',
+    '../../../forge-plugins/**/docs/**/*.md',
+    '../../../vite-plugins/**/docs/**/*.md',
+    '../../../workers/**/docs/**/*.md',
+    '../../../extensions/**/docs/**/*.md',
+  ],
+  {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  },
+) as Record<string, string>;
 
-const DOCS_PREFIX = '../../../docs/';
-const LOCALE_PATH = /\/locales\/([^/]+)\//;
+const packageManifests = import.meta.glob(
+  [
+    '../../../packages/**/package.json',
+    '../../../configs/**/package.json',
+    '../../../forge-plugins/**/package.json',
+    '../../../vite-plugins/**/package.json',
+    '../../../workers/**/package.json',
+    '../../../extensions/**/package.json',
+  ],
+  { eager: true, import: 'default' },
+) as Record<string, { readonly name?: string }>;
 
 /** A single documentation page. */
 export interface DocumentEntry {
-  /** Route-friendly identifier, e.g. `overview` or `configs/eslint-config`. */
+  /** Route-friendly identifier, e.g. `overview` or `packages/barcode/index`. */
   slug: string;
   /** Locale of the Markdown source. */
   locale: DocumentationLocale;
@@ -25,6 +46,10 @@ export interface DocumentEntry {
   description: string;
   /** Raw Markdown source. */
   source: string;
+  /** Canonical source root that owns this page. */
+  sourceRoot: DocumentationSourceRoot;
+  /** Published package name, when this is package-owned documentation. */
+  packageName?: string;
 }
 
 /** A labelled group of documents rendered together in the sidebar. */
@@ -32,6 +57,8 @@ export interface NavGroup {
   key: NavGroupKey;
   label: string;
   items: string[];
+  /** Package name shown as the section heading for package-owned pages. */
+  packageName?: string;
 }
 
 export type NavGroupKey =
@@ -42,23 +69,11 @@ export type NavGroupKey =
   | 'quality'
   | 'troubleshooting'
   | 'reference'
+  | 'packages'
   | 'additional';
 
 /** Slug served at the site root. */
 export const DEFAULT_SLUG = 'overview';
-
-function toSlug(modulePath: string): string {
-  const relative = modulePath.slice(DOCS_PREFIX.length);
-  const localized = relative.match(/^locales\/[^/]+\/(.*)$/);
-  return (localized?.[1] ?? relative).replace(/\.md$/, '');
-}
-
-function localeFromPath(modulePath: string): DocumentationLocale {
-  const locale = modulePath.match(LOCALE_PATH)?.[1];
-  return locale && (SUPPORTED_LOCALES as readonly string[]).includes(locale)
-    ? (locale as DocumentationLocale)
-    : DEFAULT_LOCALE;
-}
 
 function titleFromSlug(slug: string): string {
   const last = slug.split('/').pop() ?? slug;
@@ -125,14 +140,23 @@ function buildManifest(): Record<DocumentationLocale, Record<string, DocumentEnt
   >;
 
   for (const [modulePath, source] of Object.entries(rawModules)) {
-    const locale = localeFromPath(modulePath);
-    const slug = toSlug(modulePath);
+    const packagePrefix = modulePath.match(/^(.*)\/docs\//u)?.[1];
+    const packageManifest = packagePrefix === undefined ? undefined : packageManifests[`${packagePrefix}/package.json`];
+    const parsed = parseDocumentationModulePath(modulePath, packageManifest?.name);
+    if (parsed === undefined) continue;
+    const { locale, sourceRoot } = parsed;
+    const slug = qualifiedSlug(sourceRoot, parsed.documentPath);
+    if (manifest[locale][slug] !== undefined) {
+      throw new Error(`Duplicate documentation slug ${slug} for locale ${locale}.`);
+    }
     manifest[locale][slug] = {
       slug,
       locale,
       source,
       title: extractTitle(source, titleFromSlug(slug)),
       description: extractDescription(source, DEFAULT_DESCRIPTION),
+      sourceRoot,
+      ...(sourceRoot.packageName === undefined ? {} : { packageName: sourceRoot.packageName }),
     };
   }
 
@@ -140,14 +164,15 @@ function buildManifest(): Record<DocumentationLocale, Record<string, DocumentEnt
   if (englishSlugs.size === 0) throw new Error('The English documentation manifest is empty.');
 
   for (const locale of SUPPORTED_LOCALES) {
-    const localizedSlugs = new Set(Object.keys(manifest[locale]));
-    const missing = [...englishSlugs].filter((slug) => !localizedSlugs.has(slug));
-    const extra = [...localizedSlugs].filter((slug) => !englishSlugs.has(slug));
-    if (missing.length > 0 || extra.length > 0) {
-      throw new Error(
-        `Documentation locale ${locale} does not match English slugs. ` +
-          `Missing: ${missing.join(', ') || 'none'}; extra: ${extra.join(', ') || 'none'}`,
-      );
+    if (locale === DEFAULT_LOCALE) continue;
+    for (const slug of englishSlugs) {
+      // Package translations are allowed to land independently. Until a
+      // translation exists, serve the canonical English source at the stable
+      // locale route so navigation, search, and SSG inventories stay complete.
+      if (manifest[locale][slug] === undefined) {
+        const english = manifest[DEFAULT_LOCALE][slug];
+        manifest[locale][slug] = { ...english, locale };
+      }
     }
   }
 
@@ -160,6 +185,11 @@ export const documentsByLocale = buildManifest();
 /** English documents keyed by slug, retained for existing callers. */
 export const documents = documentsByLocale[DEFAULT_LOCALE];
 
+/** Canonical roots represented by the runtime Markdown manifest. */
+export const documentationSourceRoots: readonly DocumentationSourceRoot[] = [
+  ...new Map(Object.values(documents).map((entry) => [entry.sourceRoot.routePrefix, entry.sourceRoot])).values(),
+];
+
 /** Return the complete document set for a locale. */
 export function getDocuments(locale: DocumentationLocale = DEFAULT_LOCALE): Record<string, DocumentEntry> {
   return documentsByLocale[locale];
@@ -168,6 +198,11 @@ export function getDocuments(locale: DocumentationLocale = DEFAULT_LOCALE): Reco
 /** Look up a document by slug. */
 export function getDocument(slug: string, locale: DocumentationLocale = DEFAULT_LOCALE): DocumentEntry | undefined {
   return documentsByLocale[locale][slug];
+}
+
+/** Return the canonical owner of a document slug, independent of locale. */
+export function sourceRootForSlug(slug: string): DocumentationSourceRoot | undefined {
+  return documents[slug]?.sourceRoot;
 }
 
 /** Title for a slug, falling back to a slug-derived label when unknown. */
@@ -227,7 +262,26 @@ function buildNavGroups(): NavGroup[] {
     return { ...group, items };
   }).filter((group) => group.items.length > 0);
 
+  const packageGroups = new Map<string, { packageName?: string; items: string[] }>();
+  for (const entry of Object.values(documents)) {
+    if (entry.sourceRoot.kind !== 'package') continue;
+    const key = entry.sourceRoot.routePrefix;
+    const group = packageGroups.get(key) ?? { packageName: entry.packageName, items: [] };
+    group.items.push(entry.slug);
+    packageGroups.set(key, group);
+  }
+  const packageSlugs = [...packageGroups.values()].flatMap((group) => group.items);
+  for (const [routePrefix, packageGroup] of [...packageGroups.entries()].toSorted(([left], [right]) => left.localeCompare(right))) {
+    groups.push({
+      key: 'packages',
+      label: packageGroup.packageName ?? routePrefix,
+      packageName: packageGroup.packageName,
+      items: packageGroup.items.toSorted(),
+    });
+  }
+
   const leftovers = Object.keys(documents)
+    .filter((slug) => !packageSlugs.includes(slug))
     .filter((slug) => !seen.has(slug))
     .toSorted();
   if (leftovers.length > 0) {

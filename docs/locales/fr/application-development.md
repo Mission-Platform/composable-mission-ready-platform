@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/application-development.md](../../application-development.md)
+> docs/application-development.md: [docs/application-development.md](../../application-development.md)
 > Langue: Français (fr)
 
 Ce guide pratique explique comment exécuter, tester et déployer les applications dans `apps/`. Les applications composent réutilisable
@@ -32,7 +32,7 @@ package sauf si ce package a son propre `wrangler.jsonc`.
    pnpm exec turbo run build --filter @mission-platform/<app>...
    ```
 
-4. Exécutez des tests, des peluches, des vérifications de style et un formatage pour l'espace de travail concerné :
+4. Exécutez des tests, du lint, des vérifications de style et du formatage pour l'espace de travail concerné :
 
 ```bash
    pnpm exec turbo run test lint lint:style format --filter @mission-platform/<app>
@@ -43,7 +43,7 @@ inclus dans le graphique de construction.
 
 ## Documentation statique et création de sites Web
 
-Les documents et applications de sites Web utilisent `vite-ssg`. Une version de production génère des routes statiques à partir du contenu source et
+Les documents et les applications de sites Web utilisent `vite-ssg`. Une version de production génère des routes statiques à partir du contenu source et
 catalogues locaux. Vérifiez la sortie générée avec le package `preview` scénario:
 
 ```bash

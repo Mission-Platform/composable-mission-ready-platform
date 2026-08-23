@@ -2,11 +2,16 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
 > Idioma: Español (es)
 
-Mission Platform mantiene un conjunto de scripts de utilidad compartidos en la raíz `scripts/` directorio, gestionado por el
-`@mission-platform/scripts` paquete.
+Esta guía permanece intencionalmente en el nivel de documentación del proyecto: `scripts/`
+contiene orquestación de repositorio en lugar de un paquete de espacio de trabajo publicable.
+Los comandos específicos de paquetes y aplicaciones permanecen documentados junto a sus
+poseer espacio de trabajo.
+
+Mission Platform mantiene un conjunto de scripts de utilidad compartidos en la raíz
+`scripts/` directorio, administrado por las herramientas del espacio de trabajo raíz.
 
 ## Descripción general
 

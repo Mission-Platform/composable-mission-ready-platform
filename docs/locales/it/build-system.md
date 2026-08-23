@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/build-system.md](../../build-system.md)
+> docs/build-system.md: [docs/build-system.md](../../build-system.md)
 > Lingua: Italiano (it)
 
 Questo documento spiega l'architettura e i meccanismi del sistema di costruzione della Mission Platform. È progettato per l'alto
@@ -30,7 +30,7 @@ La maggior parte dei pacchetti di libreria in `packages/` utilizzare **tsdown** 
 - **Velocità**: basato su **Rolldown** (il successore di Rollup basato su Rust), che fornisce build quasi istantanee.
 - **Unbundling**: i pacchetti vengono creati con `unbundle: true`, preservando la struttura del modulo originale in `dist/`. Questo
   garantisce uno scuotimento ottimale degli alberi e un migliore debug nelle applicazioni consumer.
-- **Threading CSS**: un plug-in personalizzato ricollega i fogli di stile estratti ai relativi moduli JS, garantendo che
+- **Threading CSS**: un plugin personalizzato ricollega i fogli di stile estratti ai moduli JS di proprietà, garantendo che
   l'importazione di un componente inserisce automaticamente i suoi stili.
 
 ### 3. Raggruppamento di applicazioni (Vite)
@@ -57,7 +57,7 @@ quadro sono scelti in modo indipendente, `storyblok × vue` E `astro × solid` s
 Le build CMS vengono inviate a `dist/cms/<cms>/<framework>/**`, con manifesti e altri sidecar della piattaforma specchiati
 `dist/cms/<cms>/`. I target che necessitano di un runtime idratato (Astro, Webflow) cogenerano un albero dell'isola dal limite
 plugin del framework nella stessa build. La suddivisione completa delle responsabilità e i confini delle fasi sono descritti in
-[Pipeline del compilatore Forge](forge-compiler.md).
+[Pipeline del compilatore Forge](../../../vite-plugins/forge/docs/locales/it/reference/compiler.md).
 
 ## Costruisci contratto
 
@@ -92,7 +92,7 @@ comandi wrapper Storyblok per framework.
 Ogni invocazione di Forge scrive in una fase locale del pacchetto univoca sotto `node_modules/.cache/forge-build/`. Il palco è
 ignorato da Turboe non viene mai pubblicato. Una build riuscita viene controllata per l'output prima della promozione:
 
-- La **Modalità aggregata** sostituisce atomicamente l'intera proprietà della Forgia `dist` albero. File neutri, framework e CMS obsoleti
+- **Modalità aggregata** sostituisce atomicamente l'intera proprietà della Forgia `dist` albero. File neutri, framework e CMS obsoleti
   vengono quindi rimossi invece di soddisfare accidentalmente le esportazioni.
 - La **modalità mirata** sostituisce atomicamente solo il sottoalbero del framework selezionato (e il relativo sottoalbero wrapper CMS corrispondente),
   preservando l'output neutro, framework, email e CMS non correlato già presente `dist`. Il runner ha come ambito il selettore CMS
@@ -138,7 +138,7 @@ Per ignorare la cache e forzare una nuova build, utilizzare il file `--force` ba
 pnpm build:force
 ```
 
-Gli alias di compatibilità e le attività in modalità artefatto CMS sono quindi attività del pacchetto Turbo applica ancora il grafico delle dipendenze e
+Gli alias di compatibilità e le attività in modalità artefatto CMS sono attività del pacchetto, quindi Turbo applica ancora il grafico delle dipendenze e
 input della cache specifici del target. Le fasi temporanee non sono output della cache; solo i promossi `dist` l'albero è pubblicato o
 ripristinato dalla cache.
 
@@ -157,7 +157,7 @@ Le configurazioni di build sono centralizzate in `configs/` directory per manten
 
 ### Sviluppo (`dev` compito)
 
-ViteIl server di sviluppo di fornisce la sostituzione del modulo a caldo (HMR). Quando un'app `dev` si avvia l'attività, viene eseguito anche Turborepo
+ViteIl server di sviluppo di fornisce la sostituzione del modulo a caldo (HMR). Quando un'app `dev` viene avviata l'attività, viene eseguito anche Turborepo
 quello della libreria dei componenti `build:watch` task accanto ad esso (tramite task's `with` tasto), quindi modifica in
 `@mission-platform/components` vengono ricompilati automaticamente e ripresi dall'app in esecuzione senza una ricostruzione manuale.
 

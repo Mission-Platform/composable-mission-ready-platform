@@ -49,6 +49,72 @@ describe('transform', () => {
 
     expect(flat).toEqual([{ name: '--mp-button-primary', value: '#153fd1', description: undefined }]);
   });
+
+  it('preserves supported CSS scalar values and finite numbers', () => {
+    const flat = flattenOverrides({
+      font: { family: { sans: { $value: "'Inter', ui-sans-serif, sans-serif" } } },
+      layout: { size: { $value: 'clamp(1rem, 2vw, 3rem)' } },
+      shadow: { sm: { $value: '0 1px 2px rgb(0 0 0 / 12%)' } },
+      weight: { bold: { $value: 700 } },
+    });
+
+    expect(flat.map(({ name, value }) => ({ name, value }))).toEqual([
+      { name: '--mp-font-family-sans', value: "'Inter', ui-sans-serif, sans-serif" },
+      { name: '--mp-layout-size', value: 'clamp(1rem, 2vw, 3rem)' },
+      { name: '--mp-shadow-sm', value: '0 1px 2px rgb(0 0 0 / 12%)' },
+      { name: '--mp-weight-bold', value: '700' },
+    ]);
+  });
+
+  it('rejects malformed runtime documents and values', () => {
+    const malformed = [
+      undefined,
+      [],
+      { radius: '2px' },
+      { $description: 42 },
+      { $schema: 42 },
+      { $value: '2px' },
+      { radius: { md: { $value: true } } },
+      { radius: { md: { $value: { light: '#fff' } } } },
+      { radius: { md: { $value: { light: '#fff', dark: '#000', extra: 'nope' } } } },
+    ];
+
+    for (const value of malformed) {
+      expect(() => flattenOverrides(value as OverrideGroup)).toThrow();
+    }
+  });
+
+  it('rejects CSS injection delimiters in names, values, and comments', () => {
+    expect(() => flattenOverrides({ 'radius;--injected': { $value: '2px' } })).toThrow();
+    expect(() => flattenOverrides({ radius: { md: { $value: '2px; color: red' } } })).toThrow();
+    expect(() => flattenOverrides({ radius: { md: { $value: '2px /* injected */' } } })).toThrow();
+    expect(() =>
+      flattenOverrides({ radius: { md: { $value: '2px', $description: 'safe */\n--injected: red' } } }),
+    ).toThrow();
+    expect(() => flattenOverrides({ radius: { md: { $value: '2px\u0000' } } })).toThrow();
+    expect(() =>
+      flattenOverrides({ radius: { md: { $value: { light: '#fff', dark: 'red;--injected: blue' } } } }),
+    ).toThrow();
+    expect(() =>
+      buildTokenOverrideScss({ radius: { md: { $value: '2px' } } }, { prefix: 'acme;--injected' }),
+    ).toThrow();
+    expect(() =>
+      buildTokenOverrideScss({ radius: { md: { $value: '2px' } } }, { header: '/* banner */ :root {}' }),
+    ).toThrow();
+  });
+
+  it('continues to emit safe unknown token keys for the caller warning path', () => {
+    const scss = buildTokenOverrideScss({ app: { custom: { $value: '2px' } } });
+    expect(scss).toContain('--mp-app-custom: 2px;');
+  });
+
+  it('preserves ordinary punctuation in safe descriptions', () => {
+    const scss = buildTokenOverrideScss({
+      button: { primary: { $value: '#153fd1', $description: 'Use this override; it is Storybook-only.' } },
+    });
+
+    expect(scss).toContain('/* Use this override; it is Storybook-only. */');
+  });
 });
 
 describe('tokenOverridesPlugin', () => {

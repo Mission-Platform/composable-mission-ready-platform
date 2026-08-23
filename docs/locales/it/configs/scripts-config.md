@@ -2,11 +2,16 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
 > Lingua: Italiano (it)
 
-La Mission Platform mantiene una serie di script di utilità condivisa nella root `scripts/` directory, gestita da
-`@mission-platform/scripts` pacchetto.
+Questa guida rimane intenzionalmente nel livello della documentazione del progetto: `scripts/`
+contiene l'orchestrazione del repository anziché un pacchetto di area di lavoro pubblicabile.
+I comandi specifici del pacchetto e dell'applicazione rimangono documentati accanto al loro file
+possedere uno spazio di lavoro.
+
+La Mission Platform mantiene una serie di script di utilità condivisa nella root
+`scripts/` directory, gestita dagli strumenti dell'area di lavoro root.
 
 ## Panoramica
 
@@ -37,7 +42,7 @@ pnpm exec tsx scripts/generate-dev-cert.ts
 ### Verifica della risoluzione quadro (`verify-framework-resolution.mjs`)
 
 Lo verifica `@mission-platform/*` le esportazioni di pacchetti si risolvono correttamente nella build del framework prevista (Vue, React, ecc.)
-in base alle condizioni di esportazione dell'ambiente.
+in base alle condizioni di esportazione dell’ambiente.
 
 ```bash
 node scripts/verify-framework-resolution.mjs

@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/build-system.md](../../build-system.md)
+> docs/build-system.md: [docs/build-system.md](../../build-system.md)
 > Sprache: Deutsch (de)
 
 In diesem Dokument werden die Architektur und die Mechanik des Build-Systems der Mission Platform erläutert. Es ist für hohe Ansprüche konzipiert
@@ -57,7 +57,7 @@ Rahmen werden unabhängig gewählt, `storyblok × vue` Und `astro × solid` Es h
 CMS-Builds senden an `dist/cms/<cms>/<framework>/**`, mit gespiegelten Manifesten und anderen Plattform-Sidecars
 `dist/cms/<cms>/`. Ziele, die eine hydratisierte Laufzeit benötigen (Astro, Webflow), generieren gemeinsam einen Inselbaum aus der Grenze
 Framework-Plugin in denselben Build integrieren. Die vollständige Verantwortungsaufteilung und Phasengrenzen sind in beschrieben
-[Forge-Compiler-Pipeline](forge-compiler.md).
+[Forge-Compiler-Pipeline](../../../vite-plugins/forge/docs/locales/de/reference/compiler.md).
 
 ## Bauvertrag
 
@@ -98,7 +98,7 @@ ignoriert von TurboDie Eingaben werden niemals veröffentlicht. Ein erfolgreiche
   Beibehaltung unabhängiger Neutral-, Framework-, E-Mail- und CMS-Ausgaben, die bereits vorhanden sind `dist`. Der Läufer prüft den CMS-Selektor
   (z.B. `FORGE_CMS_STORYBLOK_TARGET`) auf den gewünschten Rahmen daneben `FORGE_FRAMEWORK_TARGET`, also das CMS eines Pakets
   Verkabelung (`forgeStoryblokCmsTargets`usw.) erstellt den passenden Wrapper tatsächlich in derselben Phase neu, anstatt ihn zu erstellen
-  wurde stillschweigend von der Beförderung ausgeschlossen. Durch die Promotion wird nur ein CMS-Wrapper-Teilbaum gelöscht, der von der Stufe neu generiert wurde. es nie
+  wurde stillschweigend von der Beförderung ausgeschlossen. Bei der Promotion wird nur ein CMS-Wrapper-Teilbaum gelöscht, der von der Stufe neu generiert wurde. es nie
   löscht einen Geschwister-CMS-Wrapper, den der aktuelle Build nicht neu erstellt hat.
 - Gemeinsame CMS-Assets wie Storyblok-Schemata und `components.json` haben ein gemeinsames Ziel und werden nicht von einem gelöscht
   spätere Rahmenförderung.

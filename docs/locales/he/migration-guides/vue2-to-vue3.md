@@ -1,28 +1,28 @@
-# Vue 2 ל Vue 3 מדריך הגירה
+# Vue 2 ל-Vue 3 מדריך הגירה
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> מקור באנגלית: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
+> docs/migration-guides/vue2-to-vue3.md: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
 > שפה: עברית (he)
 
-מדריך זה מתאר כיצד להעביר קיים Vue 2 בסיסי קוד ל Vue 3 בתוך פלטפורמת המשימה monorepo.
+מדריך זה מתאר כיצד להעביר בסיסי קוד קיימים של Vue 2 ל-Vue 3 בתוך מונורופו של פלטפורמת המשימה.
 
 ## סקירה כללית
 
-פלטפורמת המשימה משתמשת Vue 3 עם ה-Composition API ו `<script setup>` תַחבִּיר. הגירה כרוכה בהתרחקות
-מה-API של Options ועדכון דפוסי מחזור חיים ותגובתיות של רכיבים.
+פלטפורמת המשימה משתמשת ב-Vue 3 עם ה-Composition API ותחביר `<script setup>`. הגירה כרוכה בהתרחקות
+מ-API של Options ועדכון דפוסי מחזור חיים ותגובתיות של רכיבים.
 
 ## דרישות מוקדמות
 
 לפני ההעברה, ודא שהחבילה שלך עומדת בכללי התלות של הפלטפורמה:
 
-- אין יבוא מ `apps/`.
-- כל ההיגיון המשותף צריך להתגורר בו `packages/`.
-- התצורה צריכה לבוא מ `configs/`.
+- אין יבוא מ-`apps/`.
+- כל ההיגיון המשותף צריך להיות ב-`packages/`.
+- התצורה צריכה להגיע מ-`configs/`.
 
 ## שלב 1: עדכן את תצורת ה-Build
 
-ודא שלך `package.json` ו `vite.config.ts` מכוונים Vue 3.
+ודא שה-`package.json` וה-`vite.config.ts` שלך מכוונים ל-Vue 3.
 
 ```ts
 // vite.config.ts
@@ -36,11 +36,11 @@ export default defineConfig(defineAppConfig({
 
 ## שלב 2: המר את Options API ל-Composition API
 
-החלף את Vue 2 אפשרויות API (`data`, `methods`, `computed`) עם ה Vue 3 קומפוזיציה API.
+החלף את Vue 2 Options API (`data`, `methods`, `computed`) ב-Vue 3 Composition API.
 
 ### נתונים ל-Refs
 
-ב Vue 2, המדינה הוגדרה ב `data()` פוּנקצִיָה. ב Vue 3, השתמש `ref()` אוֹ `reactive()`.
+ב-Vue 2, המצב הוגדר בפונקציה `data()`. ב-Vue 3, השתמש ב-`ref()` או ב-`reactive()`.
 
 **Vue 2:**
 
@@ -64,7 +64,7 @@ const count = ref(0);
 
 ### שיטות לפונקציות
 
-שיטות הופכות לפונקציות פשוטות ב- `<script setup>` לַחסוֹם.
+שיטות הופכות לפונקציות פשוטות בבלוק `<script setup>`.
 
 **Vue 2:**
 
@@ -88,15 +88,15 @@ const increment = () => {
 
 שמו של ווי מחזור החיים שונה ויש לייבא אותם.
 
-| Vue 2                      | Vue 3                                     |
+| Vue 2 | Vue 3 |
 |:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` | לְהִשְׁתַמֵשׁ `setup()` / `<script setup>` ישירות |
-| `beforeMount`              | `onBeforeMount`                           |
-| `mounted`                  | `onMounted`                               |
-| `beforeUpdate`             | `onBeforeUpdate`                          |
-| `updated`                  | `onUpdated`                               |
-| `beforeDestroy`            | `onBeforeUnmount`                         |
-| `destroyed`                | `onUnmounted`                             |
+| `beforeCreate` / `created` | השתמש ישירות ב-`setup()` / `<script setup>` |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 דוּגמָה:
 
@@ -110,7 +110,7 @@ onMounted(() => {
 
 ## שלב 4: אמץ `<script setup>`
 
-כל הרכיבים החדשים והמועברים בפלטפורמת המשימה צריכים להשתמש ב- `<script setup>` תחביר עם TypeScript.
+כל הרכיבים החדשים והמועברים בפלטפורמת המשימה צריכים להשתמש בתחביר `<script setup>` עם TypeScript.
 
 ```vue
 <template>
@@ -129,11 +129,11 @@ const increment = () => count.value++;
 
 ### דגם V
 
-ב Vue 3, שם אבזר ברירת המחדל עבור `v-model` הוא `modelValue` והאירוע הוא `update:modelValue`.
+ב-Vue 3, שם האביזר המוגדר כברירת מחדל עבור `v-model` הוא `modelValue` והאירוע הוא `update:modelValue`.
 
 ### גישה לשופט
 
-`this.$refs` אינו בשימוש עוד. הגדר שופט עם אותו שם כמו ה- `ref` תכונה על האלמנט.
+`this.$refs` אינו בשימוש עוד. הגדר ref עם אותו שם כמו התכונה `ref` באלמנט.
 
 ```vue
 <template>
@@ -153,7 +153,7 @@ onMounted(() => {
 
 ## שלב 6: אימות
 
-הפעל את הפקודות הבאות כדי להבטיח שההעברה תהיה מוצלחת ותעמוד בתקני הפלטפורמה:
+הפעל את הפקודות הבאות כדי לוודא שההעברה מוצלחת ותעמוד בתקני הפלטפורמה:
 
 ```bash
 # Type-check the package

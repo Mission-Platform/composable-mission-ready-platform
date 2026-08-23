@@ -330,4 +330,4 @@ creates semantic IR and dispatches to target plugins so shipped artifacts use
 the native framework representation without a generic runtime walk.
 
 For the complete responsibility map, diagnostics guidance, consumer flows, and
-target-extension rules, see [`docs/forge-compiler.md`](../../docs/forge-compiler.md).
+target-extension rules, see [the compiler reference](docs/reference/compiler.md).

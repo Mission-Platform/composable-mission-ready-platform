@@ -1,11 +1,15 @@
-# API-Referenz
+# Paket-API-Verzeichnis
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/api-reference.md](../../api-reference.md)
+> docs/api-reference.md: [docs/api-reference.md](../../api-reference.md)
 > Sprache: Deutsch (de)
 
-Technische Referenz für die Mission Platform-Kernpakete und Framework-Adapter.
+Diese projektweite Seite ist ein Verzeichnis der Paketfunktionen und -kompatibilität
+Verträge. Die kanonische Installation, Nutzung, Einschränkungen und API-Details für
+Jedes Paket befindet sich neben dem Paket darunter `packages/*/docs/`, `configs/*/docs/`,
+Und `forge-plugins/*/docs/`. Generierte API-Referenzen müssen dem Besitz hinzugefügt werden
+Paket statt dieser Seite.
 
 > **Importe sind immer leer.** Framework-Versand `@mission-platform/*` Pakete machen ein einzelnes verfügbar `.`
 > Eingang bewacht von der `mp:vue`, `mp:react`, `mp:solid`, Und `mp:web-component` exportieren
@@ -31,16 +35,63 @@ Die Grundlage der „Write-Once“-Architektur, die eine Framework-neutrale JSX-
 | `toVueComponent`   | Adapter | Konvertiert eine Forge-Komponente in eine Vue 3-Komponenten (von `@mission-platform/forge/vue`).   |
 | `toReactComponent` | Adapter | Konvertiert eine Forge-Komponente in eine React Komponente (von `@mission-platform/forge/react`). |
 
+### @mission-platform/vite-plugin-forge
+
+Der Compiler-Treiber akzeptiert explizite `FrameworkOutputPlugin` Instanzen; das tut es
+keine Framework-Registrierung bereitstellen. `defineViteForgeComponents` Und
+`defineTsdownForgeComponents` (sowie der Hook und die CMS-Helfer) teilen sich einen In-Process
+`ForgeCompilerService` für eine Build- oder Watch-Sitzung.
+
+| Fähigkeit | Beschreibung |
+|:-----------|:------------|
+| Service-Lebenszyklus | Verwenden Sie den Status von Quelle, Diagramm, analysierter Quelle, semantischer IR und Zielartefakt über Builds hinweg wieder. Bereitstellung von One-Shot-Diensten nach Fertigstellung und Beobachterdiensten bei Abschluss. |
+| Cache-Schlüssel | Quell-/Abhängigkeits-/Konfigurations-Fingerabdrücke, Compiler- und Router-Optionen, `tsconfig` `baseUrl`/`paths`, Ziel-ID, Plugin-Identität/-Version und relevante Bedingungen. |
+| Ungültigmachung ansehen | Geänderte Dateien machen Reverse-Graph-Abhängige ungültig, einschließlich transitiver Komponenten- und Hook-Einträge; Nicht verwandte Ziel-Snapshots bleiben wiederverwendbar. |
+| Diagnose/Bericht | Meldet Phasenzeit, Cache-Hit/Miss-Zähler, betroffene Dateien, Warnungen, Fehler und ausgegebene Artefakte. Fehler blockieren die Werbung. |
+| Artefaktmanifest | Listet zielbezogene Einträge, Module, Deklarationen, Quellzuordnungen, Assets und Prüfsummen vor der atomaren Heraufstufung auf. |
+| Erweiterungspunkt | Implementieren und übergeben Sie a `FrameworkOutputPlugin` von einem Anrufer im Besitz `forge-plugin-*` Paket; Fügen Sie dem neutralen Treiber keine Zielzweige hinzu. |
+
+Konfigurieren Sie Aliase über das Projekt `tsconfig.json` (`baseUrl` Und
+`paths`); Vite und die tsdown-Grafikvorbereitung verwenden dieselben Alias-Fakten. Router
+Auswahl, Router-Plugins und Bedingungen werden über Komponente und weitergeleitet
+Hakenhelfer. Ein zukünftiger Worker/Daemon kann hinter dem Servicevertrag stehen, aber
+Die unterstützte Implementierung befindet sich derzeit in Bearbeitung.
+
 ### @mission-platform/router
 
-Framework-unabhängige Routing-Primitive und -Adapter.
+Framework-neutrale Routenverträge, reine Matching-Helfer und Compiler-Marker für
+Gemeinsame Pakete. Anwendungen besitzen Routendatensätze und native Router-Instanzen; die
+Das von der Anwendung ausgewählte Forge-Router-Ziel stellt die Laufzeitfunktionen bereit.
 
-| Exportieren | Geben Sie | ein Beschreibung |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        | Geben Sie | ein Schnittstelle zum Definieren von Routenbäumen.                                                                              |
-| `defineRoutes`   | Funktion | Helfer zum Definieren und Validieren von Routenbäumen.                                                                       |
-| `createMpRouter` | Adapter | Erstellt eine Vue-kompatibler Router (freigegeben von `@mission-platform/router` wenn die `mp:vue` Bedingung ist aktiv). |
-| `useMpRoute`     | Haken | Greifen Sie auf den aktuellen Routenstatus zu (adapterspezifisch).                                                                   |
+| Export / Paket | Geben Sie | ein Beschreibung |
+|:-----------------|:-----|:------------|
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | Typen | Routendatensätze, Parameter, Abfrage-/Hash-Status, Metadaten und Navigationsziele. |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` | Funktionen | Definieren Sie Routenbäume und lösen Sie Pfade ohne DOM oder Framework-Laufzeit auf. |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | Typen | Navigationsergebnisse/-ereignisse, Wachen, steckbarer Verlauf und Adapterverträge. |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Compiler-Marker | Neutrale Link-, Routenstatus-, Navigations-, Auflösungs- und Outlet-Funktionen, die von gemeinsam genutzten Paketen genutzt werden. |
+| `@mission-platform/forge-router-*` | Schmiedeziele | Unabhängig ausgewählte native Router-Ziele für Vue Router, React Router, SolidJS-Router, SvelteKit, RedwoodSDK und Webkomponenten. |
+
+Laufzeitpakete besitzen einen eigenen Verlauf und einen reaktiven Status. Das neutrale Paket importiert niemals ein UI-Framework. Für Webkomponenten:
+Registrieren Sie die Elemente einmal und übergeben Sie komplexe Ziele über DOM-Eigenschaften statt über serialisierte Attribute:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
 
 ## Benutzeroberfläche und Design
 
@@ -170,8 +221,9 @@ einpacken `packages/`, einschließlich der typisierten WebAssembly-Fassaden.
 | `@mission-platform/i18n`           | i18next-Status- und Framework-Integrationshelfer.              |
 | `@mission-platform/map`            | MapLibre-Kartenkomponenten und Composables.                      |
 | `@mission-platform/observers`      | Zusammensetzbare Schnitt-, Mutations- und Leistungsbeobachter-Elemente. |
-| `@mission-platform/phone-number`   | Typisierte WebAssembly-Telefonnummernanalyse und -formatierung.        |
-| `@mission-platform/router`         | Frameworkneutrale Routing-Grundelemente und -Adapter.            |
+| `@mission-platform/phone-number`   | Typisiertes Parsen und Formatieren von WebAssembly-Telefonnummern.        |
+| `@mission-platform/router`         | Frameworkneutrale Routenverträge und Compilerfunktionen. |
+| `@mission-platform/forge-router-web-components` | Web Components-Router-Ziel und Framework-freie Laufzeit. |
 | `@mission-platform/rxjs`           | RxJS-Observables und Abonnement-Composables.                 |
 | `@mission-platform/scheduler`     | Planer-Benutzeroberfläche, Wiederholung und Kalenderlayoutdomänenlogik. |
 | `@mission-platform/vcard`         | RFC 6350 vCard- und RFC 5545 iCalendar-Daten und -Komponenten.  |
@@ -185,7 +237,6 @@ einpacken `packages/`, einschließlich der typisierten WebAssembly-Fassaden.
 | Paket | Zweck |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | 1D-Barcode kodiert/dekodiert Fassade und Bauteil.    |
-| `@mission-platform/code-scan-wasm`          | Generiertes Bildscanner-WebAssembly-Modul.       |
 | `@mission-platform/code-scanner`            | Kamera- und Bildcode-Scankomponente.         |
 | `@mission-platform/matrix-code`             | Data Matrix und Aztec kodieren/dekodieren Fassade.       |
 | `@mission-platform/qr-code`                 | QR-Kodierung/Dekodierung von Fassade und Bauteil.            |
@@ -195,8 +246,8 @@ einpacken `packages/`, einschließlich der typisierten WebAssembly-Fassaden.
 ### Forge-Compiler-Ziele
 
 Diese leben darin `forge-plugins/` statt `packages/`. Ein **Framework**-Plugin entscheidet, welche Laufzeit eine neutrale Komponente ist
-wird abgesenkt auf; Ein **CMS**-Ziel entscheidet, auf welche Content-Plattform es projiziert wird. Die beiden Achsen bilden zusammen, also jedes CMS
-Das Ziel kann an ein beliebiges Framework-Plugin gebunden werden. Sehen [Forge-Compiler-Pipeline](forge-compiler.md).
+wird abgesenkt auf; Ein **CMS**-Ziel entscheidet, auf welche Content-Plattform es projiziert wird. Die beiden Achsen bilden also jedes CMS
+Das Ziel kann an ein beliebiges Framework-Plugin gebunden werden. Siehe die [Forge-Compiler-Pipeline](../../../vite-plugins/forge/docs/locales/de/reference/compiler.md).
 
 | Paket | Zweck |
 |:-------------------------------------------------|:--------------------------------------------------------------------------------|

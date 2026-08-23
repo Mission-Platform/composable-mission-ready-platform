@@ -2,7 +2,7 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> المصدر الإنجليزي: [docs/external-consumer-setup.md](../../external-consumer-setup.md)
+> docs/external-consumer-setup.md: [docs/external-consumer-setup.md](../../external-consumer-setup.md)
 > اللغة: العربية (ar)
 
 يشرح هذا الدليل كيفية استهلاك حزم Mission Platform في المشاريع الموجودة خارج monorepo الرئيسي. وهو يركز على استخدام البنيات الخاصة بإطار العمل وإدارة الرموز المميزة للتصميم.
@@ -26,7 +26,7 @@
 
 ### 1. Vite إعدادات
 
-إذا كنت تستخدم Vite، يمكنك استخدام الوظائف المساعدة من `@mission-platform/vite-config` لتعيين شروط الحل الصحيحة تلقائيًا.
+إذا كنت تستخدم Vite، يمكنك استخدام الوظائف المساعدة من `@mission-platform/vite-config` لتعيين شروط الحل الصحيحة تلقائيًا. يجب تحديد تطبيق خالٍ من الإطار `mp:web-component`; لا تقم بتثبيت أو تكوين أ Vue البرنامج المساعد لهذا الهدف.
 
 ```ts
 import { defineConfig } from 'vite';
@@ -34,8 +34,8 @@ import { frameworkResolveConditions } from '@mission-platform/vite-config';
 
 export default defineConfig({
   resolve: {
-    // This places 'mp:vue' at the top of the condition list
-    conditions: frameworkResolveConditions('mp:vue'),
+    // This places the Web Components build at the top of the condition list.
+    conditions: frameworkResolveConditions('web-component'),
   },
 });
 ```
@@ -46,9 +46,9 @@ export default defineConfig({
 
 ```json
 {
-  "extends": "@mission-platform/typescript-config/framework-vue",
+  "extends": "@mission-platform/typescript-config/framework-web-component",
   "compilerOptions": {
-    "customConditions": ["mp:vue"]
+    "customConditions": ["mp:web-component"]
   }
 }
 ```
@@ -58,7 +58,7 @@ export default defineConfig({
 قم بتثبيت الحزم المطلوبة من السجل الخاص بك:
 
 ```bash
-pnpm add @mission-platform/components @mission-platform/tokens
+pnpm add @mission-platform/components @mission-platform/tokens @mission-platform/router @mission-platform/forge-router-web-components
 ```
 
 ### تبعيات الأقران
@@ -67,8 +67,13 @@ pnpm add @mission-platform/components @mission-platform/tokens
 
 ```bash
 # Example for a Vue 3 project
-pnpm add vue vue-router @mission-platform/i18n
+pnpm add @mission-platform/i18n
 ```
+
+لا تحتوي حزمة جهاز التوجيه المحايدة على أي إطار عمل أو تبعيات وقت تشغيل مكتبة جهاز التوجيه. قم بتثبيت جهاز التوجيه الأصلي الذي تم تحديده بواسطة
+تطبيقك وهدف Forge المطابق (`@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`، أو `-web-components`). يمتلك التطبيق تعريفات المسار ومقدمي الخدمة والحراس والمحملين والمحليين
+مثيل جهاز التوجيه؛ تستورد الحزم القابلة لإعادة الاستخدام الإمكانات فقط من `@mission-platform/router`.
 
 ## استخدام المكون
 
@@ -84,6 +89,33 @@ import { ForgeButton } from '@mission-platform/components';
 </template>
 ```
 
+### التوجيه بدون إطار
+
+استخدم سجل الذاكرة للاختبارات والعرض المسبق، أو قم بحذفه `history` في المتصفح لاستخدام سجل المتصفح. تسجيل جهاز التوجيه
+العناصر مرة واحدة؛ تعيين أهداف المسار كخصائص عندما تحتوي على معلمات أو قيم استعلام أو تجزئة:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/'),
+  routes: [
+    { path: '/', redirect: '/docs/intro' },
+    { path: '/docs/*', name: 'doc', component: () => document.createTextNode('Docs') },
+  ],
+});
+setForgeRouter(router);
+
+const outlet = document.querySelector('forge-router-outlet');
+outlet?.setRouter(router);
+```
+
 ## تخصيص تصميم الرمز المميز
 
 يستخدم Mission Platform خصائص CSS المخصصة (المتغيرات) لرموز التصميم. يمكنك تجاوز هذه الرموز المميزة عالميًا في ورقة الأنماط الجذرية لتطبيقك.
@@ -93,6 +125,7 @@ import { ForgeButton } from '@mission-platform/components';
 :root {
   /* Override the brand primary color */
   --mp-color-brand-primary: #007bff;
+  
   /* Override a spacing token */
   --mp-spacing-md: 1.5rem;
 }

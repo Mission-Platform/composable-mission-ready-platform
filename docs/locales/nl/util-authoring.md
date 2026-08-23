@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/util-authoring.md](../../util-authoring.md)
+> docs/util-authoring.md: [docs/util-authoring.md](../../util-authoring.md)
 > Taal: Nederlands (nl)
 
 Hulpprogramma's (utils) zijn pure, raamwerk-agnostische hulpfuncties. Ze moeten vrij zijn van import van UI-frameworks en, tenzij
@@ -11,7 +11,7 @@ server-side logica en werkers.
 
 ## Directory-indeling
 
-Elk hulpprogramma MOET zich in zijn eigen benoemde submap bevinden `src/utils/`, vergezeld van een co-located testbestand en
+Elk hulpprogramma MOET zich in zijn eigen benoemde submap binnen `src/utils/` bevinden, vergezeld van een co-located testbestand en
 een lokaal vat.
 
 ```text
@@ -27,10 +27,10 @@ src/utils/
 
 1. **Zuiverheid**: geef de voorkeur aan pure functies die geen bijwerkingen hebben. Gegeven dezelfde invoer moeten ze altijd de
    dezelfde uitgang.
-2. **Geen UI-hooks**: importeer nooit `vue`, `react`, of `@mission-platform/forge` haken in een util. Logica vereist
+2. **Geen UI-hooks**: importeer nooit `vue`-, `react`- of `@mission-platform/forge`-hooks in een util. Logica vereist
    reactiviteit hoort erbij [Composables](composable-authoring.md).
-3. **Expliciet typen**: Geef volledig op TypeScript typen voor alle argumenten en retourwaarden.
-4. **Verplicht testen**: Elke util moet een co-locatie hebben `.spec.ts` bestand.
+3. **Expliciet typen**: geef volledige TypeScript-typen op voor alle argumenten en retourneerwaarden.
+4. **Verplicht testen**: elk hulpprogramma moet een medegelocaliseerd `.spec.ts`-bestand hebben.
 5. **Eén verantwoordelijkheid**: elke util-map moet zich richten op een specifieke, beperkte taak.
 
 ## Basisvoorbeeld

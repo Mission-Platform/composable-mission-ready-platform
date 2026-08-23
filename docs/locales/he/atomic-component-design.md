@@ -2,7 +2,7 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> מקור באנגלית: [docs/atomic-component-design.md](../../atomic-component-design.md)
+> docs/atomic-component-design.md: [docs/atomic-component-design.md](../../atomic-component-design.md)
 > שפה: עברית (he)
 
 Mission Platform משתמשת במערכת **Atomic Design** כדי לארגן רכיבים לרמות היררכיות של מורכבות. כל
@@ -19,7 +19,7 @@ Mission Platform משתמשת במערכת **Atomic Design** כדי לארגן �
 | **מולקולות** | `src/components/molecules/` | הרכבים פשוטים של אטומים (למשל, `ForgeSearchInput`, `ForgeFieldSet`). הם מתפקדים יחד כיחידה.                                                                    |
 | **אורגניזמים** | `src/components/organisms/` | חלקי ממשק משתמש מורכבים המורכבים מאטומים, מולקולות ואורגניזמים אחרים (למשל, `ForgeNavbar`, `ForgeTable`, `ForgeModal`).                                                       |
 | **תבניות** | `src/components/templates/` | פריסות ברמת הדף שמגדירות את מבנה התוכן (למשל, `ForgeHero`, `ForgeAppLayout`). לעתים קרובות הם משתמשים במשבצות כדי להגדיר היכן יש למקם את התוכן.                     |
-| **דפים** | `src/components/pages/`     | מופעים ספציפיים של תבניות המאוכלסות בתוכן ובנתונים קונקרטיים (למשל, `AccountSettingsPage`).                                                                        |
+| **דפים** | `src/components/pages/`     | מופעים ספציפיים של תבניות המאוכלסות בתוכן ונתונים קונקרטיים (למשל, `AccountSettingsPage`).                                                                        |
 
 ## פריסת תיקיית רכיבים
 
@@ -77,7 +77,7 @@ const meta = {
 
 1. **ניטרליות המסגרת**: לעולם אל תפריד בין המחבר Vue ו React גרסאות. לְהִשְׁתַמֵשׁ `@mission-platform/forge`.
 2. **מתן שמות**: רכיבים צריכים להשתמש ב- `Base` קידומת (למשל, `ForgeCard`) אלא אם הם יישומים ספציפיים.
-3. **בטיחות סוג**: ייצוא א `*Properties` ממשק לאביזרים של הרכיב.
+3. **בטיחות סוג**: ייצוא א `*Properties` ממשק עבור האביזרים של הרכיב.
 4. **בדיקה**: מיקום משותף `.spec.ts` נדרש עבור כל רכיב.
 5. **פיגומים**: השתמש ב- `scaffold_component` כלי MCP כדי להבטיח את מבנה הספריות והלוח הנכון.
 

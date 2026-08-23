@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/architecture.md](../../architecture.md)
+> docs/architecture.md: [docs/architecture.md](../../architecture.md)
 > Langue: Français (fr)
 
 Mission Platform est conçu pour une réutilisabilité maximale et une flexibilité inter-framework. Ce document explique le
@@ -52,7 +52,7 @@ crée une IR sémantique, exécute une analyse et une optimisation partagées et
 Des packages-cadres tels que `@mission-platform/forge-plugin-react` et `@mission-platform/forge-plugin-vue` propre cible
 abaissement, optimisation de la cible, génération de sources natives, diagnostics, métadonnées d'exécution et Vite/tsdown adaptateurs. Là
 il n'y a pas d'émetteur de framework central ni de registre chaîne à framework dans le pilote. Les configurations de build de package sélectionnent le
-les instances de plugin qu'ils publient, de sorte que les dépendances d'implémentation cibles restent à la limite du framework.
+instances de plugin qu'ils publient, de sorte que les dépendances d'implémentation cibles restent à la limite du framework.
 
 Le flux résultant est **analyser/normaliser → optimiser neutre → IR sémantique → cible inférieure → optimiser la cible → générer →
 version native**. La construction native est effectuée par le plugin sélectionné Vite ou un adaptateur tsdown, qui fournit également le
@@ -65,7 +65,8 @@ et `forge-cms-webflow` chacun possède une plateforme. Une cible CMS *compose* u
 n'importe quelle plate-forme s'associe à n'importe quel framework et le résultat arrive dans `dist/cms/<cms>/<framework>/**`.
 
 Pour obtenir le pipeline complet, les consommateurs de composants et de hooks, la projection CMS et les conseils d'extension, voir
-[Pipeline du compilateur Forge](forge-compiler.md). Pour la vue d'orchestration de build, voir [Construire un système](build-system.md).
+[Pipeline du compilateur Forge](../../../vite-plugins/forge/docs/locales/fr/reference/compiler.md). Pour la vue d'orchestration de build, voir
+[Construire un système](build-system.md).
 
 ## Système de jetons de conception
 
@@ -74,15 +75,20 @@ La cohérence visuelle est maintenue grâce à un système de jetons de concepti
 - **Standard DTCG** : les jetons sont créés au format W3C Design Tokens Community Group (v2025.10).
 - **Espace colorimétrique OKLab** : les primitives utilisent l'espace colorimétrique OKLab pour des dégradés et des thèmes perceptuellement uniformes.
 - **Artefacts automatisés** : `@mission-platform/vite-plugin-tokens` génère automatiquement des variables SCSS, CSS personnalisé
-  propriétés, et TypeScript constantes à partir d’une seule source de vérité.
+  propriétés, et TypeScript constantes à partir d’une source unique de vérité.
 
 ## Routage indépendant du framework et I18n
 
 Les services d'application de base tels que le routage et l'internationalisation sont conçus pour être indépendants du framework.
 
-- **`@mission-platform/router`** : Définit les itinéraires comme une structure de données simple (`MpRoute`). Adaptateurs pour Vue traduisez-les
-  en instances de routeur et composables spécifiques au framework.
-- **`@mission-platform/i18n`** : Un emballage autour `i18next` qui fournit un universel `createForgeI18N` usine.
+- **`@mission-platform/router`** : Fournit des cibles d'itinéraire structurées, des aides d'URL/emplacement pures et des marqueurs de compilateur tels que
+  comme `MpLink`, `useMpRoute`, `useMpRouter`, et `MpRouterView`. Il n'a pas de framework d'interface utilisateur ni de runtime de bibliothèque de routeur
+  dépendances et ne possède jamais la table de routage d’une application.
+- **Cibles du routeur Forge** : `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, et
+  `-web-components` abaissez ces marqueurs vers le routeur natif sélectionné par l’application consommatrice. Les candidatures sont conservées
+  propriété des définitions de routes natives, des fournisseurs, des gardes, des chargeurs et des instances de routeur ; la cible fournit uniquement
+  capacités de consommation.
+-**`@mission-platform/i18n`** : Un emballage autour `i18next` qui fournit un universel `createForgeI18N` usine.
   Les adaptateurs spécifiques au framework fournissent `useI18n` crochets et composants pour Vue et React.
 
 ## Stratégie de construction et de déploiement
@@ -100,10 +106,10 @@ Chaque package et application utilise Vite pour les versions de développement e
 ### Déploiement Cloudflare
 
 Les applications sont principalement déployées sur **Cloudflare Pages**, avec **Cloudflare Workers** (sous `workers/`) fournir
-logique spécialisée pour le proxy d'API et le service d'actifs SPA.
+logique spécialisée pour le proxy API et le service d'actifs SPA.
 
 ## Résumé
 
 L'architecture de la plateforme de mission donne la priorité à l'isolement, à la sécurité des types et à la flexibilité du cadre. En découplant le noyau
-logique du cadre de l'interface utilisateur et appliquant une direction de dépendance stricte, la plate-forme garantit une maintenabilité à long terme
+logique du cadre d'interface utilisateur et appliquant une direction de dépendance stricte, la plate-forme garantit une maintenabilité à long terme
 et l'évolutivité pour les écosystèmes d'applications complexes.

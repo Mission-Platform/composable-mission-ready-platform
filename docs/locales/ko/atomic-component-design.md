@@ -2,7 +2,7 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> 영어 원문: [docs/atomic-component-design.md](../../atomic-component-design.md)
+> docs/atomic-component-design.md: [docs/atomic-component-design.md](../../atomic-component-design.md)
 > 언어: 한국어 (ko)
 
 Mission Platform은 **Atomic Design** 시스템을 사용하여 구성 요소를 계층적 복잡성 수준으로 구성합니다. 매
@@ -44,7 +44,7 @@ src/components/
 
 ## 스토리 규칙
 
-스토리북 스토리는 구성요소와 같은 위치에 배치되어야 하며 깔끔한 제목을 유지하기 위해 엄격한 제목 규칙을 따라야 합니다.
+스토리북 스토리는 해당 구성 요소와 같은 위치에 있어야 하며 깔끔한 제목을 유지하기 위해 엄격한 제목 규칙을 따라야 합니다.
 사이드바 구조.
 
 ### 파일 이름
@@ -59,7 +59,7 @@ src/components/
 <Level>/<Category>/<Component>
 ```
 
-- **레벨**: 대문자로 표시된 복수형(예: `Atoms`, `Molecules`).
+- **수준**: 대문자로 표시된 복수형(예: `Atoms`, `Molecules`).
 - **카테고리**: 기능별 분류(예: `Forms`, `Navigation`, `Display`, `Feedback`).
 - **구성요소**: PascalCase 구성요소 이름(예: `ForgeButton`).
 

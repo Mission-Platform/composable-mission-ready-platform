@@ -1,11 +1,15 @@
-# API 참조
+# 패키지 API 디렉토리
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> 영어 원문: [docs/api-reference.md](../../api-reference.md)
+> docs/api-reference.md: [docs/api-reference.md](../../api-reference.md)
 > 언어: 한국어 (ko)
 
-Mission Platform 핵심 패키지 및 프레임워크 어댑터에 대한 기술 참조입니다.
+이 프로젝트 전체 페이지는 패키지 기능 및 호환성 디렉터리입니다.
+계약. 정식 설치, 사용법, 제한 사항 및 API 세부 정보
+각 패키지는 해당 패키지 옆에 있습니다. `packages/*/docs/`, `configs/*/docs/`,
+그리고 `forge-plugins/*/docs/`. 생성된 API 참조를 소유 항목에 추가해야 합니다.
+이 페이지보다는 패키지를 선택하세요.
 
 > **가져오기는 항상 베어입니다.** 프레임워크 배송 `@mission-platform/*` 패키지는 단일을 노출합니다. `.`
 > 출입문은 다음과 같이 보호됩니다. `mp:vue`, `mp:react`, `mp:solid`, 그리고 `mp:web-component` 수출
@@ -23,7 +27,7 @@ Mission Platform 핵심 패키지 및 프레임워크 어댑터에 대한 기술
 | 수출 | 유형 | 설명 |
 |:-------------------|:---------|:----------------------------------------------------------------------------------------|
 | `h`, `Fragment`    | 기능 | 구성요소 작성을 위한 JSX 팩토리 및 단편입니다.                                      |
-| `useState`         | 후크 | 프레임워크 중립적 상태 후크.                                                           |
+| `useState`         | 후크 | 프레임워크 중립적인 상태 후크.                                                           |
 | `useEffect`        | 후크 | 프레임워크 중립 효과 후크.                                                          |
 | `useMemo`          | 후크 | 프레임워크 중립적인 메모 후크.                                                     |
 | `useRef`           | 후크 | 프레임워크 중립적인 참조 후크.                                                       |
@@ -31,16 +35,63 @@ Mission Platform 핵심 패키지 및 프레임워크 어댑터에 대한 기술
 | `toVueComponent`   | 어댑터 | 단조 구성요소를 Vue 3개 구성요소(에서 `@mission-platform/forge/vue`).   |
 | `toReactComponent` | 어댑터 | 단조 구성요소를 React 구성 요소(에서 `@mission-platform/forge/react`). |
 
+### @mission-platform/vite-plugin-forge
+
+컴파일러 드라이버는 명시적 허용 `FrameworkOutputPlugin` 인스턴스; 그렇죠
+프레임워크 레지스트리를 제공하지 마세요. `defineViteForgeComponents` 그리고
+`defineTsdownForgeComponents` (후크 및 CMS 도우미 포함) 진행 중인 프로세스를 공유합니다.
+`ForgeCompilerService` 하나의 빌드 또는 시청 세션 동안.
+
+| 능력 | 설명 |
+|:-----------|:------------|
+| 서비스 수명주기 | 빌드 전체에서 소스, 그래프, 구문 분석된 소스, 의미 체계 IR 및 대상 아티팩트 상태를 재사용합니다. 완료 후 일회성 서비스를 폐기하고 감시자 서비스를 종료합니다. |
+| 캐시 키 | 소스/종속성/구성 지문, 컴파일러 및 라우터 옵션, `tsconfig` `baseUrl`/`paths`, 대상 ID, 플러그인 ID/버전 및 관련 조건. |
+| 무효화 보기 | 변경된 파일은 전이적 구성 요소 및 후크 항목을 포함한 역방향 그래프 종속 항목을 무효화합니다. 관련되지 않은 대상 스냅샷은 재사용 가능한 상태로 유지됩니다. |
+| 진단/보고서 | 단계 타이밍, 캐시 적중/실패 수, 영향을 받은 파일, 경고, 오류 및 방출된 아티팩트 수를 보고합니다. 오류로 인해 승격이 차단됩니다. |
+| 유물 매니페스트 | 원자성 승격 전에 대상 범위 항목, 모듈, 선언, 소스 맵, 자산 및 체크섬을 나열합니다. |
+| 확장점 | 구현하고 통과 `FrameworkOutputPlugin` 발신자 소유의 것에서 `forge-plugin-*` 패키지; 중립 드라이버에 대상 분기를 추가하지 마십시오. |
+
+프로젝트를 통해 별칭 구성 `tsconfig.json` (`baseUrl` 그리고
+`paths`); Vite 및 tsdown 그래프 준비는 동일한 별칭 사실을 사용합니다. 라우터
+선택, 라우터 플러그인 및 조건은 구성 요소를 통해 전달되며
+후크 도우미. 미래의 작업자/데몬은 서비스 계약 뒤에 있을 수 있지만,
+지원되는 구현이 현재 진행 중입니다.
+
 ### @mission-platform/router
 
-프레임워크에 구애받지 않는 라우팅 기본 요소 및 어댑터.
+프레임워크 중립 경로 계약, 순수 일치 도우미 및 컴파일러 마커
+공유 패키지. 애플리케이션은 경로 레코드와 기본 라우터 인스턴스를 소유합니다. 는
+애플리케이션이 선택한 Forge 라우터 대상은 런타임 기능을 제공합니다.
 
-| 수출 | 유형 | 설명 |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        | 유형 | 경로 트리를 정의하기 위한 인터페이스입니다.                                                                              |
-| `defineRoutes`   | 기능 | 경로 트리를 정의하고 유효성을 검사하는 도우미입니다.                                                                       |
-| `createMpRouter` | 어댑터 | 생성 Vue-호환 라우터(에서 노출됨 `@mission-platform/router` 언제 `mp:vue` 조건이 활성 상태입니다). |
-| `useMpRoute`     | 후크 | 현재 경로 상태에 액세스합니다(어댑터별).                                                                   |
+| 수출/패키지 | 유형 | 설명 |
+|:-----------------|:-----|:------------|
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | 유형 | 경로 레코드, 매개변수, 쿼리/해시 상태, 메타데이터 및 탐색 대상. |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` | 기능 | DOM 또는 프레임워크 런타임 없이 경로 트리를 정의하고 경로를 확인하세요. |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | 유형 | 탐색 결과/이벤트, 가드, 플러그형 기록 및 어댑터 계약. |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | 컴파일러 마커 | 공유 패키지에서 사용되는 중립 링크, 경로 상태, 탐색, 확인 및 콘센트 기능입니다. |
+| `@mission-platform/forge-router-*` | 위조 대상 | 독립적으로 선택된 기본 라우터 대상 Vue 라우터, React 라우터, SolidJS 라우터, SvelteKit, RedwoodSDK 및 웹 구성 요소. |
+
+런타임 패키지는 자체 기록과 반응 상태를 가지고 있습니다. 중립 패키지는 UI 프레임워크를 가져오지 않습니다. 웹 구성요소의 경우,
+요소를 한 번 등록하고 직렬화된 속성 대신 DOM 속성을 통해 복잡한 대상을 전달합니다.
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
 
 ## UI 및 디자인
 
@@ -78,7 +129,7 @@ Mission Platform 핵심 패키지 및 프레임워크 어댑터에 대한 기술
 
 ### @mission-platform/i18n
 
-i18next를 기반으로 한 국제화 시스템.
+i18next 기반의 국제화 시스템.
 
 | 수출 | 설명 |
 |:------------------|:----------------------------------------------------------|
@@ -140,7 +191,7 @@ WebAssembly 기반 맞춤법 검사.
 
 ## 추가 자료
 
-- [Vue 2 ~ Vue 3 마이그레이션 가이드](migration-guides/vue2-to-vue3.md)
+- [Vue 2~ Vue 3 마이그레이션 가이드](migration-guides/vue2-to-vue3.md)
 - [프로젝트 구성 개요](configs/index.md)
 - [작업공간 구조](workspace-structure.md)
 
@@ -171,7 +222,8 @@ WebAssembly 기반 맞춤법 검사.
 | `@mission-platform/map`            | MapLibre 지도 구성요소 및 컴포저블.                      |
 | `@mission-platform/observers`      | 교차, 변형, 성능 관찰자 컴포저블 |
 | `@mission-platform/phone-number`   | WebAssembly 전화번호 구문 분석 및 형식 지정.        |
-| `@mission-platform/router`         | 프레임워크 중립적 라우팅 기본 요소 및 어댑터.            |
+| `@mission-platform/router`         | 프레임워크 중립적인 경로 계약 및 컴파일러 기능. |
+| `@mission-platform/forge-router-web-components` | 웹 구성요소 라우터 대상 및 프레임워크가 없는 런타임. |
 | `@mission-platform/rxjs`           | RxJS 관찰 가능 항목 및 구독 컴포저블                 |
 | `@mission-platform/scheduler`     | 스케줄러 UI, 반복 및 달력 레이아웃 도메인 논리. |
 | `@mission-platform/vcard`         | RFC 6350 vCard 및 RFC 5545 iCalendar 데이터 및 구성 요소.  |
@@ -185,7 +237,6 @@ WebAssembly 기반 맞춤법 검사.
 | 패키지 | 목적 |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | 1D 바코드 인코딩/디코딩 외관 및 구성요소.    |
-| `@mission-platform/code-scan-wasm`          | 생성된 이미지 스캐너 WebAssembly 모듈.       |
 | `@mission-platform/code-scanner`            | 카메라 및 이미지 코드 스캔 구성 요소.         |
 | `@mission-platform/matrix-code`             | 데이터 매트릭스 및 Aztec 인코딩/디코딩 외관.       |
 | `@mission-platform/qr-code`                 | QR 인코딩/디코딩 파사드 및 구성요소.            |
@@ -196,7 +247,7 @@ WebAssembly 기반 맞춤법 검사.
 
 이들은 `forge-plugins/` 오히려 `packages/`. **프레임워크** 플러그인은 어떤 런타임이 중립 구성 요소인지 결정합니다.
 으로 낮아졌습니다; **CMS** 대상은 그것이 투영되는 콘텐츠 플랫폼을 결정합니다. 두 개의 축이 구성되므로 모든 CMS
-대상은 모든 프레임워크 플러그인에 바인딩될 수 있습니다. 보다 [Forge 컴파일러 파이프라인](forge-compiler.md).
+대상은 모든 프레임워크 플러그인에 바인딩될 수 있습니다. 참조 [Forge 컴파일러 파이프라인](../../../vite-plugins/forge/docs/locales/ko/reference/compiler.md).
 
 | 패키지 | 목적 |
 |:-------------------------------------------------|:--------------------------------------------------------------------------------|

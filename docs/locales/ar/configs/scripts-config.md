@@ -2,11 +2,16 @@
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> المصدر الإنجليزي: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
 > اللغة: العربية (ar)
 
-تحتفظ Mission Platform بمجموعة من البرامج النصية للأدوات المساعدة المشتركة في الجذر `scripts/` الدليل، الذي يديره
-`@mission-platform/scripts` طَرد.
+يبقى هذا الدليل عمدا في طبقة وثائق المشروع: `scripts/`
+يحتوي على تنسيق المستودع بدلاً من حزمة مساحة عمل قابلة للنشر.
+تظل الأوامر الخاصة بالحزمة والتطبيق موثقة بجانب ملفاتها
+امتلاك مساحة العمل.
+
+تحتفظ Mission Platform بمجموعة من البرامج النصية للأدوات المساعدة المشتركة في الجذر
+`scripts/` الدليل، تتم إدارته بواسطة أدوات مساحة العمل الجذرية.
 
 ## ملخص
 
@@ -37,7 +42,7 @@ pnpm exec tsx scripts/generate-dev-cert.ts
 ### التحقق من دقة الإطار (`verify-framework-resolution.mjs`)
 
 يتحقق من ذلك `@mission-platform/*` يتم حل صادرات الحزمة بشكل صحيح لبناء إطار العمل المقصود (Vue, React، الخ.)
-بناء على ظروف التصدير البيئية.
+استنادا إلى ظروف التصدير البيئية.
 
 ```bash
 node scripts/verify-framework-resolution.mjs

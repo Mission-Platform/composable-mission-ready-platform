@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/development-setup.md](../../development-setup.md)
+> docs/development-setup.md: [docs/development-setup.md](../../development-setup.md)
 > 语言: 简体中文 (zh)
 
 本指南提供了设置本地环境以对任务平台做出贡献的分步教程。
@@ -15,12 +15,11 @@
 ### 系统要求
 
 |工具|所需版本 |目的|
-| :------------ | :---------------- | :---------------------------------------------------- |
-| **Node.js** | `24.19.0`         |运行时环境（主动 LTS）|
-| **pnpm**      | `11.21.0`         |包管理器和工作区编排器 |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0`        |运行时环境（主动 LTS）|
+| **pnpm**    | `11.21.0`        |包管理器和工作区编排器 |
 | **吉特** |最新稳定|版本控制 |
-| **生锈** |稳定的工具链 |本机测试和 Rust/WASM 板条箱开发 |
-| **wasm 包** | `0.15.0` 通过 pnpm |将 Rust 箱子打包为类型化的 WebAssembly 工作区 |
+| **生锈** |稳定的工具链 |可选的独立 Rust 基准测试开发 |
 | **码头工人** |最新稳定|仅 Emscripten Hunspell 构建需要 |
 
 ### 版本管理（推荐）
@@ -38,13 +37,6 @@ nvm use
 ```bash
 corepack enable
 corepack prepare pnpm@11.21.0 --activate
-```
-
-在 Rust 板条箱上工作时安装 Rust 目标。 WebAssembly 打包器由固定的提供 `wasm-pack` npm
-期间的依赖性 `pnpm install`:
-
-```bash
-rustup target add wasm32-unknown-unknown
 ```
 
 ## 初始设置
@@ -77,10 +69,9 @@ pnpm install
 pnpm exec turbo run build --filter @mission-platform/forge...
 ```
 
-这 `...` 还构建包所需的 Forge 依赖项。 Rust 解码器和编码器板条箱经过测试
-原生地与 `cargo test`;他们的
-`wasm-pack` 输出被写入相应的 `packages/*-wasm/`
-板条箱的包任务的工作空间，这是 Turborepo 使用的签入包/构建合同。
+这 `...` 还构建包所需的 Forge 依赖项。的
+中性代码扫描器是根据其 Forge Web Script 图编译的；它没有
+需要 Rust 或 `wasm-pack` 构建步骤。
 
 ## 开发流程
 
@@ -119,7 +110,7 @@ done
 
 Forge 支持的包发布匹配 `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`， 和 `mp:web-component` 状况。活动状态必须是
-由消费捆绑器配置；看 [编译器参考](forge-compiler.md)
+由消费捆绑器配置；看 [编译器参考](../../../vite-plugins/forge/docs/locales/zh/reference/compiler.md)
 用于目标插件和声明管道。
 
 ### 应用开发
@@ -159,8 +150,7 @@ pnpm install
 
 ### WASM 构建失败
 
-如果 Rust/WASM 包构建失败，请检查稳定的 Rust 工具链和
-`wasm32-unknown-unknown` 目标已安装，然后运行 `pnpm install` 恢复固定的 `wasm-pack` npm 依赖性。
-这
-`@mission-platform/hunspell` Emscripten 构建还需要 Docker 运行；其他 Rust 板条箱构建
-使用本地 Rust 工具链。
+如果 Forge Web 脚本工件无法构建，请检查其编译器诊断
+并验证所选的静态或动态链路配置文件。这
+`@mission-platform/hunspell` Emscripten 构建还需要 Docker
+正在跑步。

@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/best-practices.md](../../best-practices.md)
+> docs/best-practices.md: [docs/best-practices.md](../../best-practices.md)
 > Langue: Français (fr)
 
 Ce document décrit les principes fondamentaux, l'architecture et les normes de codage du monorepo Mission Platform. Il

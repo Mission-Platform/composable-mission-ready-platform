@@ -1,28 +1,28 @@
-# Vue 2 à Vue 3 Guide de migration
+# Guide de migration de Vue 2 vers Vue 3
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
+> docs/migration-guides/vue2-to-vue3.md: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
 > Langue: Français (fr)
 
-Ce guide décrit comment migrer des Vue 2 bases de code pour Vue 3 au sein du monorepo Mission Platform.
+Ce guide décrit comment migrer les bases de code Vue 2 existantes vers Vue 3 dans le monorepo Mission Platform.
 
 ## Aperçu
 
-La Plateforme Mission utilise Vue 3 avec l'API Composition et `<script setup>` syntaxe. La migration implique de s'éloigner
+La plateforme de mission utilise Vue 3 avec l'API de composition et la syntaxe `<script setup>`. La migration implique de s'éloigner
 à partir de l'API Options et mettre à jour les modèles de cycle de vie et de réactivité des composants.
 
 ## Conditions préalables
 
 Avant de migrer, assurez-vous que votre package respecte les règles de dépendance de la plateforme :
 
-- Aucune importation de `apps/`.
+- Aucune importation depuis `apps/`.
 - Toute la logique partagée doit résider dans `packages/`.
 - La configuration doit provenir de `configs/`.
 
 ## Étape 1 : Mettre à jour la configuration de la build
 
-Assurez-vous que votre `package.json` et `vite.config.ts` ciblent Vue 3.
+Assurez-vous que vos `package.json` et `vite.config.ts` ciblent Vue 3.
 
 ```ts
 // vite.config.ts
@@ -36,13 +36,13 @@ export default defineConfig(defineAppConfig({
 
 ## Étape 2 : Convertir l'API d'options en API de composition
 
-Remplacez le Vue 2 API d'options (`data`, `methods`, `computed`) avec le Vue 3 API de composition.
+Remplacez l'API d'options Vue 2 (`data`, `methods`, `computed`) par l'API de composition Vue 3.
 
 ### Données vers les références
 
-Dans Vue 2, l’État a été défini dans le `data()` fonction. Dans Vue 3, utilisez `ref()` ou `reactive()`.
+Dans Vue 2, l'état a été défini dans la fonction `data()`. Dans Vue 3, utilisez `ref()` ou `reactive()`.
 
-**Vue 2:**
+**Vue 2 :**
 
 ```js
 export default {
@@ -54,7 +54,7 @@ export default {
 }
 ```
 
-**Vue 3:**
+**Vue 3 :**
 
 ```ts
 import { ref } from 'vue';
@@ -64,9 +64,9 @@ const count = ref(0);
 
 ### Méthodes vers les fonctions
 
-Les méthodes deviennent de simples fonctions dans le `<script setup>` bloc.
+Les méthodes deviennent de simples fonctions dans le bloc `<script setup>`.
 
-**Vue 2:**
+**Vue 2 :**
 
 ```js
 methods: {
@@ -76,7 +76,7 @@ methods: {
 }
 ```
 
-**Vue 3:**
+**Vue 3 :**
 
 ```ts
 const increment = () => {
@@ -88,15 +88,15 @@ const increment = () => {
 
 Les hooks de cycle de vie ont été renommés et doivent être importés.
 
-| Vue 2                      | Vue 3                                     |
+| Vue 2 | Vue 3 |
 |:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` | Utiliser `setup()` / `<script setup>` directement |
-| `beforeMount`              | `onBeforeMount`                           |
-| `mounted`                  | `onMounted`                               |
-| `beforeUpdate`             | `onBeforeUpdate`                          |
-| `updated`                  | `onUpdated`                               |
-| `beforeDestroy`            | `onBeforeUnmount`                         |
-| `destroyed`                | `onUnmounted`                             |
+| `beforeCreate` / `created` | Utiliser directement `setup()` / `<script setup>` |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 Exemple:
 
@@ -108,9 +108,9 @@ onMounted(() => {
 });
 ```
 
-## Étape 4 : Adopter `<script setup>`
+## Étape 4 : Adoptez `<script setup>`
 
-Tous les composants nouveaux et migrés de la plateforme de mission doivent utiliser le `<script setup>` syntaxe avec TypeScript.
+Tous les composants nouveaux et migrés de Mission Platform doivent utiliser la syntaxe `<script setup>` avec TypeScript.
 
 ```vue
 <template>
@@ -129,11 +129,11 @@ const increment = () => count.value++;
 
 ### Modèle en V
 
-Dans Vue 3, le nom de l'accessoire par défaut pour `v-model` est `modelValue` et l'événement est `update:modelValue`.
+Dans Vue 3, le nom de prop par défaut pour `v-model` est `modelValue` et l'événement est `update:modelValue`.
 
 ### Accès réf
 
-`this.$refs` n’est plus utilisé. Define a ref with the same name as the `ref` attribut sur l'élément.
+`this.$refs` n’est plus utilisé. Définissez une référence avec le même nom que l'attribut `ref` sur l'élément.
 
 ```vue
 <template>

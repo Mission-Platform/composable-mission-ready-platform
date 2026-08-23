@@ -2,11 +2,11 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/circular-dependencies.md](../../circular-dependencies.md)
+> docs/circular-dependencies.md: [docs/circular-dependencies.md](../../circular-dependencies.md)
 > Taal: Nederlands (nl)
 
 Dit document legt de impact uit van circulaire afhankelijkheden binnen het Mission Platform monorepo en biedt een **How-to
-gids** voor het detecteren, oplossen en voorkomen ervan. Het dient zowel als een **Verklaring** van monorepo-gezondheid als als een
+gids** voor het detecteren, oplossen en voorkomen ervan. Het dient zowel als **Verklaring** van monorepo-gezondheid als als een
 technisch recept voor refactoring.
 
 ## Wat zijn circulaire afhankelijkheden?
@@ -78,7 +78,7 @@ Als twee pakketten zo nauw met elkaar verbonden zijn dat ze voortdurend elkaars 
 
 1. **Volg de eenrichtingsverkeer**: houd u strikt aan de `Apps → Packages → Configs` afhankelijkheid richting.
 2. **Auteur Framework-neutrale logica**: gebruik `@mission-platform/forge` voor kernlogica om raamwerkspecifieke cycli te vermijden.
-3. **Gebruik werkruimteprotocollen**: altijd gebruiken `workspace:*` om interne afhankelijkheden te waarborgen pnpm correct kan oplossen
+3. **Gebruik werkruimteprotocollen**: altijd gebruiken `workspace:*` om de interne afhankelijkheden te waarborgen pnpm correct kan oplossen
    de grafiek.
 4. **Controleer imports regelmatig**: let op de suggesties voor automatisch importeren in uw IDE, aangezien deze soms
    onbedoelde afhankelijkheden tussen pakketten.

@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/troubleshooting.md](../../troubleshooting.md)
+> docs/troubleshooting.md: [docs/troubleshooting.md](../../troubleshooting.md)
 > Langue: Français (fr)
 
 Ce guide fournit des solutions aux problèmes courants rencontrés lors du développement, de la construction et du déploiement au sein de la mission.
@@ -23,9 +23,9 @@ Plateforme monorepo. Il est structuré sous la forme d'un **guide pratique** pou
 **Solutions** :
 
 - **Inline Critical CSS** : assurez-vous que les styles requis pour le contenu au-dessus de la ligne de flottaison sont intégrés.
-- **Optimisation d'image** : utilisez les formats WebP/AVIF et fournissez `srcset` pour des images réactives.
-- **Préchargement des ressources** : utilisation `<link rel="preload">` pour l'image LCP ou les polices critiques.
-- **Minimiser le travail du thread principal** : différer le JavaScript non essentiel à l'aide `async` ou `defer`.
+- **Optimisation de l'image** : utilisez les formats WebP/AVIF et fournissez `srcset` pour les images réactives.
+- **Préchargement des ressources** : utilisez `<link rel="preload">` pour l'image LCP ou les polices critiques.
+- **Minimiser le travail du thread principal** : différez le JavaScript non essentiel à l'aide de `async` ou `defer`.
 
 ### Fuites de mémoire
 
@@ -61,13 +61,13 @@ rm -rf .turbo
 
 ### Module introuvable/Résolution de l'espace de travail
 
-**Problème**: TypeScript ou Vite Impossible de trouver un package défini dans l'espace de travail.
+**Problème** : TypeScript ou Vite ne trouve pas de package défini dans l'espace de travail.
 
 **Solutions** :
 
-1. Vérifiez que le package est répertorié dans l'espace de travail consommateur. `package.json`.
+1. Vérifiez que le package est répertorié dans `package.json` de l'espace de travail consommateur.
 2. Assurez-vous que la version correspond (`workspace:*` est recommandé).
-3. Courez `pnpm install` pour actualiser les liens symboliques.
+3. Exécutez `pnpm install` pour actualiser les liens symboliques.
 4. Si les problèmes persistent, essayez un nettoyage en profondeur :
 ```bash
    pnpm -r exec rm -rf node_modules
@@ -76,7 +76,7 @@ rm -rf .turbo
 
 ### Tapez les erreurs dans CI mais pas local
 
-**Problème** : La construction échoue dans CI avec TypeScript les erreurs qui n'apparaissent pas dans votre IDE.
+**Problème** : La construction échoue dans CI avec des erreurs TypeScript qui n'apparaissent pas dans votre IDE.
 
 **Solution** : exécutez le vérificateur de type localement sur l'ensemble de l'espace de travail.
 
@@ -95,11 +95,11 @@ Cela garantit que toutes les limites des packages sont correctement respectées 
 **Diagnostic**:
 
 1. Vérifiez que le serveur MCP est construit : `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
-2. Vérifiez si le serveur démarre manuellement : `node mcp/developer/dist/index.js`.
+2. Vérifiez si le serveur démarre manuellement : `node mcp/developer/dist/index.js`.
 
 **Solutions** :
 
-- Assurez-vous que vous utilisez le chemin absolu vers le node binaire et le script dans la configuration de votre client.
+- Assurez-vous que vous utilisez le chemin absolu vers le binaire node et le script dans la configuration de votre client.
 - Vérifiez les journaux du serveur MCP pour des messages d'erreur spécifiques (par exemple, des variables d'environnement manquantes).
 
 ## Modèles d'erreur courants
@@ -107,7 +107,7 @@ Cela garantit que toutes les limites des packages sont correctement respectées 
 ### "Impossible de lire la propriété non définie"
 
 **Cause** : accès aux propriétés d'un objet nul ou non défini, souvent avant la fin du chargement des données. **Correction** : Utiliser
-chaînage optionnel (`?.`) ou fournissez des valeurs par défaut.
+chaînage facultatif (`?.`) ou fournir des valeurs par défaut.
 
 ```typescript
 // Instead of:
@@ -119,7 +119,7 @@ const name = user?.profile?.name ?? 'Guest';
 
 ### "Rejet de promesse non géré"
 
-**Cause** : Une fonction asynchrone a généré une erreur qui n'a pas été détectée. **Correction** : enveloppez toujours les appels asynchrones `try/catch` blocs.
+**Cause** : Une fonction asynchrone a généré une erreur qui n'a pas été détectée. **Correction** : enveloppez toujours les appels asynchrones dans des blocs `try/catch`.
 
 ```typescript
 try {

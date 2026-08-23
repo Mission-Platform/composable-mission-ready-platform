@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/atomic-component-design.md](../../atomic-component-design.md)
+> docs/atomic-component-design.md: [docs/atomic-component-design.md](../../atomic-component-design.md)
 > 语言: 简体中文 (zh)
 
 任务平台使用**原子设计**系统将组件组织成复杂的层次结构。每个

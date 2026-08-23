@@ -19,7 +19,7 @@ export function createSidebar(router: MpRouterAdapter, onNavigate: () => void): 
     item.className = 'docs-sidebar__group';
     const label = createElement<HTMLParagraphElement>('p');
     label.className = 'docs-sidebar__group-label';
-    label.textContent = i18n.t(`nav.groups.${group.key}`);
+    label.textContent = group.packageName ? group.label : i18n.t(`nav.groups.${group.key}`);
     item.append(label);
     const links = createElement<HTMLUListElement>('ul');
     links.className = 'docs-sidebar__links';

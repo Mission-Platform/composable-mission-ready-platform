@@ -2,10 +2,10 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/composable-authoring.md](../../composable-authoring.md)
+> docs/composable-authoring.md: [docs/composable-authoring.md](../../composable-authoring.md)
 > Sprache: Deutsch (de)
 
-Composables sind die primäre Möglichkeit, reaktive Logik innerhalb der Mission Platform zu kapseln und wiederzuverwenden. Um diese zu gewährleisten
+Composables sind die wichtigste Möglichkeit, reaktive Logik innerhalb der Mission Platform zu kapseln und wiederzuverwenden. Um diese zu gewährleisten
 Logikeinheiten sind auf alle unterstützten UI-Frameworks portierbar, sie werden als **einmal beschreibbare** Module mit erstellt
 Framework-neutrale Haken bereitgestellt von `@mission-platform/forge`.
 
@@ -53,6 +53,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);

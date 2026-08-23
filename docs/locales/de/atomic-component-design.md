@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/atomic-component-design.md](../../atomic-component-design.md)
+> docs/atomic-component-design.md: [docs/atomic-component-design.md](../../atomic-component-design.md)
 > Sprache: Deutsch (de)
 
 Mission Platform verwendet ein **Atomic Design**-System, um Komponenten in hierarchische Komplexitätsebenen zu organisieren. Jeder
@@ -11,7 +11,7 @@ Konsistenz über mehrere Frameworks hinweg.
 
 ## Designebenen
 
-Komponenten werden basierend auf ihrem Umfang und ihrer Verantwortung in fünf Ebenen kategorisiert.
+Komponenten werden basierend auf ihrem Umfang und ihrer Verantwortung in fünf Ebenen eingeteilt.
 
 | Ebene | Ordner | Beschreibung |
 |:--------------|:----------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

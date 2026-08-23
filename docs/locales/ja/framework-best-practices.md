@@ -2,34 +2,34 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> 英語の原典: [docs/framework-best-practices.md](../../framework-best-practices.md)
+> docs/framework-best-practices.md: [docs/framework-best-practices.md](../../framework-best-practices.md)
 > 言語: 日本語 (ja)
 
-このドキュメントでは、Mission Platform でサポートされるフレームワークの慣用的なパターン、反応性モデル、およびパフォーマンスの最適化に関するガイダンスを提供します。これは、マルチフレームワーク戦略の **説明** として、またフレームワーク固有の開発の参考として機能します。
+このドキュメントは、Mission Platform でサポートされるフレームワークの慣用的なパターン、反応性モデル、およびパフォーマンスの最適化に関するガイダンスを提供します。これは、マルチフレームワーク戦略の **説明** として、またフレームワーク固有の開発の参考として機能します。
 
 ## マルチフレームワーク戦略
 
-Mission Platform の中心的な哲学は、一度構築すればどこでもレンダリングできるということです。これは ** によって実現されます@mission-platform/forge**、プラットフォームの主要なフレームワーク: すべての共有コンポーネント (アプリを除くすべて) が作成され、そこからシームレスにレンダリングされるフレームワーク中立の JSX ランタイム Vue 3, React、およびその他のサポートされている環境。
+Mission Platform の中心的な哲学は、一度構築すればどこでもレンダリングできるということです。これは、プラットフォームの主要なフレームワークである **@mission-platform/forge** によって実現されます。フレームワークに依存しない JSX ランタイムであり、すべての共有コンポーネント (アプリを除くすべて) が作成され、そこから Vue 3、React、およびその他のサポートされている環境でシームレスにレンダリングされます。
 
 ### 鍛冶の方言
 共有パッケージを構築するときは、Forge のニュートラル プリミティブを使用してコンポーネントを作成します。
-- **JSX ファクトリー**: 使用します `h` そして `Fragment` から `@mission-platform/forge`。
-- **ニュートラルフック**: 使用します `useState`, `useRef`, `useEffect`, `useMemo`, `useCallback`、 そして `useId`。
-- **プリミティブ**: 使用します `Slot`, `Teleport`, `Transition`、 そして `Dynamic` 複雑な UI 構造の場合。
+- **JSX ファクトリー**: `@mission-platform/forge` から `h` および `Fragment` を使用します。
+- **ニュートラル フック**: `useState`、`useRef`、`useEffect`、`useMemo`、`useCallback`、および `useId` を使用します。
+- **プリミティブ**: 複雑な UI 構造には、`Slot`、`Teleport`、`Transition`、および `Dynamic` を使用します。
 
 ## Vue 3
 
-Vue 3 はアプリケーションのフレームワークです。 `apps/` Forge コンポーネントの主要なネイティブ レンダー ターゲットを使用して構築されています。共有コンポーネント自体は、Forge JSX で直接作成されるのではなく、Forge JSX で作成されます。 Vue.
+Vue 3 は、`apps/` のアプリケーションが構築されるフレームワークであり、Forge コンポーネントの主要なネイティブ レンダー ターゲットです。共有コンポーネント自体は、Vue で直接作成されるのではなく、Forge JSX で作成されます。
 
 ### 慣用的なパターン
-- **コンポジション API**: 使用する `<script setup lang="ts">` すべての新しいコンポーネントに適用されます。
-- **Forge Integration**: を使用してニュートラル コンポーネントをラップします。 `toVueComponent` から `@mission-platform/forge/vue`。
-- **コンポーザブル**: ステートフル ロジックを抽出します。 `useXxx` 再利用性を促進する機能。
+- **Composition API**: すべての新しいコンポーネントに `<script setup lang="ts">` を使用します。
+- **Forge Integration**: `@mission-platform/forge/vue` から `toVueComponent` を使用してニュートラル コンポーネントをラップします。
+- **コンポーザブル**: ステートフル ロジックを `useXxx` 関数に抽出して、再利用性を高めます。
 
 ### パフォーマンスの最適化
-- **浅い反応性**: 使用 `shallowRef` または `shallowReactive` 大規模で複雑なデータセットの場合は、プロキシのオーバーヘッドを回避します。
-- **v-memo**: 使用します `v-memo` テンプレート内で、依存関係の変更に基づく高価なサブツリーの更新をスキップします。
-- **markRaw**: サードパーティのライブラリ インスタンス (Chart.js、Mapbox など) をラップします。 `markRaw` 防ぐために Vue 彼らを反応的にしようとすることから。
+- **浅い反応性**: プロキシのオーバーヘッドを避けるために、大規模で複雑なデータセットには `shallowRef` または `shallowReactive` を使用します。
+- **v-memo**: 依存関係の変更に基づく高価なサブツリー更新をスキップするには、テンプレートで `v-memo` を使用します。
+- **markRaw**: サードパーティのライブラリ インスタンス (Chart.js、Mapbox など) を `markRaw` でラップし、Vue がそれらをリアクティブにしようとするのを防ぎます。
 
 ## React
 
@@ -37,19 +37,19 @@ React は、主に外部統合と特定の内部ツールに対して、Forge �
 
 ### 慣用的なパターン
 - **機能コンポーネント**: フック付きの機能コンポーネントを使用します。
-- **Forge Integration**: を使用してニュートラル コンポーネントをラップします。 `toReactComponent` から `@mission-platform/forge/react`。
-- **フックの規律**: 予測可能な動作を確保するために「フックの規則」に厳密に従ってください。
+- **Forge Integration**: `@mission-platform/forge/react` から `toReactComponent` を使用してニュートラル コンポーネントをラップします。
+- **フックの規律**: 予測可能な動作を保証するために「フックの規則」に厳密に従ってください。
 
 ### パフォーマンスの最適化
-- **メモ化**: 使用します `React.memo`, `useMemo`、 そして `useCallback` 参照の同一性を維持し、不必要な再レンダリングを避けるため。
-- **同時機能**: 活用 `useTransition` または `useDeferredValue` メインスレッドの応答性を維持するための緊急ではない UI 更新用。
+- **メモ化**: `React.memo`、`useMemo`、および `useCallback` を使用して、参照の同一性を維持し、不必要な再レンダリングを回避します。
+- **同時機能**: 緊急ではない UI 更新に `useTransition` または `useDeferredValue` を利用して、メイン スレッドの応答性を維持します。
 
 ## その他のフレームワーク
 
 Mission Platform は、Forge アダプターを通じて他のフレームワークにさまざまなレベルのサポートを提供します。
 
 - **SolidJS**: シグナルによるきめ細かい反応性を使用します。反応性を維持するためにプロップの構造化を避けてください。
-- **Svelte 5**: ルーンを活用します (`$state`, `$derived`, `$effect`) 現代の反応性のために。
+- **Svelte 5**: ルーン (`$state`、`$derived`、`$effect`) を活用して現代的な反応性を実現します。
 - **Web コンポーネント (Lit)**: 従来の環境で実行する必要がある、またはフレームワークなしで実行する必要がある移植性の高いコンポーネントを構築する場合に役立ちます。
 
 ## パフォーマンスと反応性モデル
@@ -65,4 +65,4 @@ Mission Platform は、Forge アダプターを通じて他のフレームワー
 ## 関連リソース
 - [ベストプラクティス](best-practices.md)
 - [テストガイド](testing.md)
-- [@mission-platform/forge お読みください](../../../packages/forge/README.md)
+- [@mission-platform/forge の README](../../../packages/forge/README.md)

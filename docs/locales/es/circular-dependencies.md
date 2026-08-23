@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/circular-dependencies.md](../../circular-dependencies.md)
+> docs/circular-dependencies.md: [docs/circular-dependencies.md](../../circular-dependencies.md)
 > Idioma: Español (es)
 
 Este documento explica el impacto de las dependencias circulares dentro del monorepo de Mission Platform y proporciona un **Cómo hacerlo
@@ -16,7 +16,7 @@ Una dependencia circular ocurre cuando dos o más paquetes dependen entre sí, y
 - El paquete A se importa del paquete B.
 - El paquete B se importa del paquete A.
 
-En un monorepo, estos ciclos son particularmente dañinos porque pueden provocar:
+En un monorepo, estos ciclos son particularmente dañinos porque pueden causar:
 
 - **Fallas de compilación**: resolución del gráfico de dependencia (por ejemplo, por Turborepo o pnpm) puede estancarse o fracasar.
 - **Errores de tiempo de ejecución**: un módulo puede inicializarse parcialmente cuando el otro intenta utilizar sus exportaciones.

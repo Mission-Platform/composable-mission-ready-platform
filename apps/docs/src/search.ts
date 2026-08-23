@@ -17,6 +17,8 @@ export interface SearchResult {
   slug: string;
   /** Human-readable document title. */
   title: string;
+  /** Published package owning the page, when the result is package documentation. */
+  packageName?: string;
   /** Text of the best-matching heading inside the document, when one matched. */
   heading?: string;
   /** Anchor id for {@link heading}, so results can deep-link to `/slug#id`. */
@@ -37,6 +39,7 @@ interface Heading {
 interface IndexedDocument {
   slug: string;
   title: string;
+  packageName?: string;
   /** Markdown stripped down to prose, used for excerpt generation. */
   plainText: string;
   /** Lower-cased copy of {@link plainText} for case-insensitive matching. */
@@ -126,7 +129,14 @@ function slugify(text: string): string {
 /** Split text into normalised, stop-word-filtered search tokens. */
 function tokenize(text: string): string[] {
   const matches = text.toLocaleLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
-  return matches.filter((token) => token.length >= MIN_TOKEN_LENGTH && !STOP_WORDS.has(token));
+  return matches.flatMap((token) => {
+    if (/[\u3400-\u9fff]/u.test(token)) {
+      // Han-script text has no word boundaries. Indexing each character keeps
+      // short queries such as `文档` useful inside a contiguous sentence.
+      return [...token].filter((character) => character.length >= MIN_TOKEN_LENGTH);
+    }
+    return token.length >= MIN_TOKEN_LENGTH && !STOP_WORDS.has(token) ? [token] : [];
+  });
 }
 
 /** Reduce Markdown to plain prose suitable for excerpts and body indexing. */
@@ -165,6 +175,7 @@ function indexDocument(entry: DocumentEntry): IndexedDocument {
   return {
     slug: entry.slug,
     title: entry.title,
+    packageName: entry.packageName,
     plainText,
     lowerText: plainText.toLowerCase(),
     headings: extractHeadings(entry.source),
@@ -300,6 +311,7 @@ export function search(
       return {
         slug,
         title: document.title,
+        packageName: document.packageName,
         heading: heading?.text,
         headingId: heading?.id,
         excerpt: buildExcerpt(document, queryTokens),

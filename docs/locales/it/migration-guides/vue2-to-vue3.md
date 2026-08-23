@@ -1,15 +1,15 @@
-# Vue 2 a Vue 3 Guida alla migrazione
+# Da Vue 2 a Vue 3 Guida alla migrazione
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
+> docs/migration-guides/vue2-to-vue3.md: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
 > Lingua: Italiano (it)
 
-Questa guida descrive come eseguire la migrazione dei file esistenti Vue 2 basi di codice a Vue 3 all'interno del monorepo Mission Platform.
+Questa guida descrive come migrare le codebase Vue 2 esistenti su Vue 3 all'interno del monorepo Mission Platform.
 
 ## Panoramica
 
-La piattaforma di missione utilizza Vue 3 con l'API di composizione e `<script setup>` sintassi. La migrazione comporta l’allontanamento
+La piattaforma Mission utilizza Vue 3 con l'API di composizione e la sintassi `<script setup>`. La migrazione comporta l’allontanamento
 dall'API delle opzioni e aggiornando il ciclo di vita dei componenti e i modelli di reattività.
 
 ## Prerequisiti
@@ -17,12 +17,12 @@ dall'API delle opzioni e aggiornando il ciclo di vita dei componenti e i modelli
 Prima della migrazione, assicurati che il tuo pacchetto segua le regole di dipendenza della piattaforma:
 
 - Nessuna importazione da `apps/`.
-- Tutta la logica condivisa dovrebbe risiedere in `packages/`.
+- Tutta la logica condivisa deve risiedere in `packages/`.
 - La configurazione dovrebbe provenire da `configs/`.
 
 ## Passaggio 1: aggiorna la configurazione della build
 
-Assicurati che il tuo `package.json` E `vite.config.ts` stanno prendendo di mira Vue 3.
+Assicurati che `package.json` e `vite.config.ts` abbiano come target Vue 3.
 
 ```ts
 // vite.config.ts
@@ -36,11 +36,11 @@ export default defineConfig(defineAppConfig({
 
 ## Passaggio 2: converti l'API delle opzioni nell'API di composizione
 
-Sostituisci il Vue 2 Opzioni API (`data`, `methods`, `computed`) con il Vue 3 API di composizione.
+Sostituire l'API delle opzioni Vue 2 (`data`, `methods`, `computed`) con l'API della composizione Vue 3.
 
 ### Dati ai rif
 
-In Vue 2, lo stato è stato definito nell'art `data()` funzione. In Vue 3, utilizzare `ref()` O `reactive()`.
+In Vue 2, lo stato è stato definito nella funzione `data()`. In Vue 3, utilizzare `ref()` o `reactive()`.
 
 **Vue 2:**
 
@@ -64,7 +64,7 @@ const count = ref(0);
 
 ### Metodi per le funzioni
 
-I metodi diventano semplici funzioni nel file `<script setup>` bloccare.
+I metodi diventano funzioni semplici nel blocco `<script setup>`.
 
 **Vue 2:**
 
@@ -88,15 +88,15 @@ const increment = () => {
 
 Gli hook del ciclo di vita sono stati rinominati e devono essere importati.
 
-| Vue 2                      | Vue 3                                     |
+| Vue 2 | Vue 3 |
 |:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` | Utilizzo `setup()` / `<script setup>` direttamente |
-| `beforeMount`              | `onBeforeMount`                           |
-| `mounted`                  | `onMounted`                               |
-| `beforeUpdate`             | `onBeforeUpdate`                          |
-| `updated`                  | `onUpdated`                               |
-| `beforeDestroy`            | `onBeforeUnmount`                         |
-| `destroyed`                | `onUnmounted`                             |
+| `beforeCreate` / `created` | Utilizzare direttamente `setup()` / `<script setup>` |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 Esempio:
 
@@ -108,9 +108,9 @@ onMounted(() => {
 });
 ```
 
-## Passaggio 4: adotta `<script setup>`
+## Passaggio 4: adottare `<script setup>`
 
-Tutti i componenti nuovi e migrati nella Mission Platform dovrebbero utilizzare il file `<script setup>` sintassi con TypeScript.
+Tutti i componenti nuovi e migrati nella Mission Platform devono utilizzare la sintassi `<script setup>` con TypeScript.
 
 ```vue
 <template>
@@ -129,11 +129,11 @@ const increment = () => count.value++;
 
 ### Modello V
 
-In Vue 3, il nome dell'elica predefinita per `v-model` È `modelValue` e l'evento è `update:modelValue`.
+In Vue 3, il nome prop predefinito per `v-model` è `modelValue` e l'evento è `update:modelValue`.
 
 ### Accesso rif
 
-`this.$refs` non è più utilizzato. Definire un riferimento con lo stesso nome del file `ref` attributo sull'elemento.
+`this.$refs` non è più utilizzato. Definire un riferimento con lo stesso nome dell'attributo `ref` sull'elemento.
 
 ```vue
 <template>

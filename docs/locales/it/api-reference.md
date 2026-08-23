@@ -1,17 +1,21 @@
-# Riferimento API
+# Directory API del pacchetto
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/api-reference.md](../../api-reference.md)
+> docs/api-reference.md: [docs/api-reference.md](../../api-reference.md)
 > Lingua: Italiano (it)
 
-Riferimento tecnico per i pacchetti principali di Mission Platform e gli adattatori framework.
+Questa pagina a livello di progetto è una directory di funzionalità e compatibilità del pacchetto
+contratti. Installazione canonica, utilizzo, limitazioni e dettagli API per
+ogni pacchetto vive accanto a quel pacchetto sotto `packages/*/docs/`, `configs/*/docs/`,
+E `forge-plugins/*/docs/`. I riferimenti API generati devono essere aggiunti al proprietario
+pacchetto anziché questa pagina.
 
 > **Le importazioni sono sempre scarne.** Spedizione quadro `@mission-platform/*` i pacchetti espongono un singolo `.`
 > ingresso custodito dal `mp:vue`, `mp:react`, `mp:solid`, E `mp:web-component` esportazione
 > condizioni. Seleziona il framework **una volta** — via `resolve.conditions` (Vedere `defineFrameworkAppConfig` /
 > `frameworkResolveConditions` da `@mission-platform/vite-config`) E `customConditions` (tramite il
-> `@mission-platform/typescript-config/framework-<name>` preimpostazioni) - quindi importa tutto con bare
+> `@mission-platform/typescript-config/framework-<name>` preset) - quindi importa tutto con bare
 > identificatore del pacchetto. Vedere [Configurazione del consumatore esterno](external-consumer-setup.md).
 
 ## Quadro fondamentale
@@ -31,16 +35,63 @@ La base dell'architettura "write-once", che fornisce un runtime JSX e hook indip
 | `toVueComponent`   | Adattatore | Converte un componente di forgiatura in a Vue 3 componenti (da `@mission-platform/forge/vue`).   |
 | `toReactComponent` | Adattatore | Converte un componente di forgiatura in a React componente (da `@mission-platform/forge/react`). |
 
+### @mission-platform/vite-plugin-forge
+
+Il driver del compilatore accetta esplicitamente `FrameworkOutputPlugin` istanze; lo fa
+non fornire un registro quadro. `defineViteForgeComponents` E
+`defineTsdownForgeComponents` (più gli helper hook e CMS) condividono un file in-process
+`ForgeCompilerService` per una sessione di build o visualizzazione.
+
+| Capacità | Descrizione |
+|:-----------|:------------|
+| Ciclo di vita del servizio | Riutilizzare lo stato dell'origine, del grafico, dell'origine analizzata, dell'IR semantico e dell'artefatto di destinazione nelle build; smaltire i servizi one-shot dopo il completamento e i servizi di osservazione alla chiusura. |
+| Chiavi cache | Impronte digitali di origine/dipendenza/configurazione, opzioni del compilatore e del router, `tsconfig` `baseUrl`/`paths`, ID di destinazione, identità/versione del plug-in e condizioni pertinenti. |
+| Guarda l'invalidazione | I file modificati invalidano i dipendenti del grafico inverso, inclusi i componenti transitivi e le voci di hook; gli snapshot di destinazione non correlati rimangono riutilizzabili. |
+| Diagnostica/rapporto | Riporta i tempi di fase, i conteggi di hit/miss della cache, file interessati, avvisi, errori e conteggi di artefatti emessi. Gli errori bloccano la promozione. |
+| Manifesto dell'artefatto | Elenca voci, moduli, dichiarazioni, mappe di origine, risorse e checksum con ambito di destinazione prima della promozione atomica. |
+| Punto di estensione | Implementare e approvare a `FrameworkOutputPlugin` da un proprietario del chiamante `forge-plugin-*` pacchetto; non aggiungere rami di destinazione al driver neutro. |
+
+Configurare gli alias attraverso il progetto `tsconfig.json` (`baseUrl` E
+`paths`); Vite e la preparazione del grafico tsdown utilizzano gli stessi fatti di alias. Router
+selezione, plug-in del router e condizioni vengono inoltrati tramite il componente e
+aiutanti del gancio. Dietro il contratto di servizio potrebbe esserci un futuro lavoratore/daemon, ma
+l'implementazione supportata è attualmente in corso.
+
 ### @mission-platform/router
 
-Primitive e adattatori di routing indipendenti dal framework.
+Contratti di percorso neutrali rispetto al contesto, aiutanti di corrispondenza puri e marcatori del compilatore per
+pacchetti condivisi. Le applicazioni possiedono record di percorso e istanze di router native; il
+La destinazione del router Forge selezionata dall'applicazione fornisce le funzionalità di runtime.
 
-| Esporta | Digitare | Descrizione |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        | Digitare | Interfaccia per la definizione degli alberi dei percorsi.                                                                              |
-| `defineRoutes`   | Funzione | Aiutante per definire e convalidare gli alberi dei percorsi.                                                                       |
-| `createMpRouter` | Adattatore | Crea un Vue-router compatibile (esposto da `@mission-platform/router` quando il `mp:vue` condizione è attiva). |
-| `useMpRoute`     | Gancio | Accedi allo stato attuale del percorso (specifico dell'adattatore).                                                                   |
+| Esportazione/confezionamento | Digitare | Descrizione |
+|:-----------------|:-----|:------------|
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | Tipi | Record di route, parametri, stato di query/hash, metadati e destinazioni di navigazione. |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` | Funzioni | Definisci alberi di percorsi e risolvi percorsi senza DOM o runtime del framework. |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | Tipi | Risultati/eventi di navigazione, protezioni, cronologia collegabile e contratti dell'adattatore. |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Marcatori del compilatore | Funzionalità di collegamento neutro, stato del percorso, navigazione, risoluzione e outlet consumate dai pacchetti condivisi. |
+| `@mission-platform/forge-router-*` | Forgia obiettivi | Destinazioni router native selezionate in modo indipendente per Vue router, React Router, router SolidJS, SvelteKit, RedwoodSDK e componenti Web. |
+
+I pacchetti runtime possiedono la cronologia e lo stato reattivo; il pacchetto neutro non importa mai un framework dell'interfaccia utente. Per i componenti Web,
+registra gli elementi una volta e passa obiettivi complessi attraverso le proprietà DOM anziché gli attributi serializzati:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
 
 ## Interfaccia utente e design
 
@@ -60,7 +111,7 @@ Utilità reattive e componenti di visibilità.
 | Esporta | Digitare | Descrizione |
 |:-----------------|:----------|:-----------------------------------------------------------|
 | `useBreakpoints` | Gancio | Restituisce lo stato del punto di interruzione reattivo.                        |
-| `ShowIf`         | Componente | Rende i figli solo quando corrisponde una condizione di punto di interruzione. |
+| `ShowIf`         | Componente | Esegue il rendering degli elementi secondari solo quando corrisponde una condizione del punto di interruzione. |
 | `HideIf`         | Componente | Nasconde i figli quando corrisponde una condizione del punto di interruzione.        |
 
 ### @mission-platform/components
@@ -171,7 +222,8 @@ pacchetto dentro `packages/`, incluse le facciate WebAssembly tipizzate.
 | `@mission-platform/map`            | Componenti e componenti di mappe MapLibre.                      |
 | `@mission-platform/observers`      | Componenti componibili di intersezione, mutazione e osservatore di prestazioni. |
 | `@mission-platform/phone-number`   | Analisi e formattazione del numero di telefono WebAssembly digitato.        |
-| `@mission-platform/router`         | Primitive e adattatori di routing indipendenti dal framework.            |
+| `@mission-platform/router`         | Contratti di percorso indipendenti dal contesto e funzionalità del compilatore. |
+| `@mission-platform/forge-router-web-components` | Destinazione router Web Components e runtime senza framework. |
 | `@mission-platform/rxjs`           | Osservabile RxJS e componenti componibili in abbonamento.                 |
 | `@mission-platform/scheduler`     | Interfaccia utente dello strumento di pianificazione, ricorrenza e logica del dominio del layout del calendario. |
 | `@mission-platform/vcard`         | Dati e componenti RFC 6350 vCard e RFC 5545 iCalendar.  |
@@ -185,10 +237,9 @@ pacchetto dentro `packages/`, incluse le facciate WebAssembly tipizzate.
 | Pacchetto | Scopo |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | Codifica/decodifica di codici a barre 1D per facciate e componenti.    |
-| `@mission-platform/code-scan-wasm`          | Modulo WebAssembly dello scanner di immagini generato.       |
 | `@mission-platform/code-scanner`            | Componente per la scansione del codice della fotocamera e dell'immagine.         |
 | `@mission-platform/matrix-code`             | Data Matrix e Aztec codificano/decodificano la facciata.       |
-| `@mission-platform/qr-code`                 | Codifica/decodifica QR facciata e componente.            |
+| `@mission-platform/qr-code`                 | Codifica/decodifica QR di facciate e componenti.            |
 | `@mission-platform/harper`                  | Grammatica Harper e integrazione stilistica per Monaco.  |
 | `@mission-platform/hunspell`                | Emscripten Hunspell wrapper per il controllo ortografico.       |
 
@@ -196,7 +247,7 @@ pacchetto dentro `packages/`, incluse le facciate WebAssembly tipizzate.
 
 Questi vivono dentro `forge-plugins/` piuttosto che `packages/`. Un plugin **framework** decide quale runtime è un componente neutro
 è abbassato a; un target **CMS** decide su quale piattaforma di contenuti viene proiettato. I due assi si compongono, quindi qualsiasi CMS
-target può essere associato a qualsiasi plugin del framework. Vedere [Pipeline del compilatore Forge](forge-compiler.md).
+target può essere associato a qualsiasi plugin del framework. Vedi il [Pipeline del compilatore Forge](../../../vite-plugins/forge/docs/locales/it/reference/compiler.md).
 
 | Pacchetto | Scopo |
 |:-------------------------------------------------|:--------------------------------------------------------------------------------|

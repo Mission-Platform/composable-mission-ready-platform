@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/circular-dependencies.md](../../circular-dependencies.md)
+> docs/circular-dependencies.md: [docs/circular-dependencies.md](../../circular-dependencies.md)
 > 语言: 简体中文 (zh)
 
 本文档解释了 Mission Platform monorepo 中循环依赖关系的影响，并提供了 **操作方法
@@ -20,7 +20,7 @@
 
 - **构建失败**：依赖图解析（例如，通过 Turborepo 或 pnpm) 可能会死锁或失败。
 - **运行时错误**：当另一个模块尝试使用其导出时，一个模块可能会部分初始化。
-- **增加耦合**：包变得不可能单独使用或测试。
+- **增加耦合**：包变得无法单独使用或测试。
 
 ## 检测
 

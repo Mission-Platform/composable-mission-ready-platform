@@ -1,11 +1,15 @@
-# Referencia de API
+# Directorio de API de paquetes
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/api-reference.md](../../api-reference.md)
+> docs/api-reference.md: [docs/api-reference.md](../../api-reference.md)
 > Idioma: Español (es)
 
-Referencia técnica para los paquetes principales y adaptadores de marco de Mission Platform.
+Esta página de todo el proyecto es un directorio de capacidades y compatibilidad de paquetes.
+contratos. La instalación canónica, el uso, las limitaciones y los detalles de API para
+cada paquete vive al lado de ese paquete debajo `packages/*/docs/`, `configs/*/docs/`,
+y `forge-plugins/*/docs/`. Las referencias de API generadas deben agregarse a la propiedad.
+paquete en lugar de esta página.
 
 > **Las importaciones siempre están vacías.** Envío del marco `@mission-platform/*` Los paquetes exponen un solo `.`
 > entrada custodiada por el `mp:vue`, `mp:react`, `mp:solid`, y `mp:web-component` exportar
@@ -18,7 +22,7 @@ Referencia técnica para los paquetes principales y adaptadores de marco de Miss
 
 ### @mission-platform/forge
 
-La base de la arquitectura de "escritura única", que proporciona ganchos y un tiempo de ejecución JSX neutral en el marco.
+La base de la arquitectura de "escritura única", que proporciona ganchos y un tiempo de ejecución JSX neutral en el marco de trabajo.
 
 | Exportar | Tipo | Descripción |
 |:-------------------|:---------|:----------------------------------------------------------------------------------------|
@@ -31,16 +35,63 @@ La base de la arquitectura de "escritura única", que proporciona ganchos y un t
 | `toVueComponent`   | Adaptador | Convierte un componente de forja en un Vue 3 componentes (de `@mission-platform/forge/vue`).   |
 | `toReactComponent` | Adaptador | Convierte un componente de forja en un React componente (de `@mission-platform/forge/react`). |
 
+### @mission-platform/vite-plugin-forge
+
+El controlador del compilador acepta explícitamente `FrameworkOutputPlugin` instancias; lo hace
+no proporciona un registro marco. `defineViteForgeComponents` y
+`defineTsdownForgeComponents` (más el gancho y los ayudantes de CMS) comparten un proceso
+`ForgeCompilerService` para una sesión de construcción o visualización.
+
+| Capacidad | Descripción |
+|:-----------|:------------|
+| Ciclo de vida del servicio | Reutilice el estado de fuente, gráfico, fuente analizada, IR semántica y artefacto de destino en todas las compilaciones; deseche los servicios de una sola vez una vez finalizados y los servicios de vigilancia al cerrar. |
+| Claves de caché | Fuente/dependencia/huellas digitales de configuración, opciones de compilador y enrutador, `tsconfig` `baseUrl`/`paths`, ID de destino, identidad/versión del complemento y condiciones relevantes. |
+| Invalidación de reloj | Los archivos modificados invalidan los dependientes del gráfico inverso, incluidos los componentes transitivos y las entradas de gancho; las instantáneas de destino no relacionadas siguen siendo reutilizables. |
+| Diagnóstico/informe | Informa el tiempo de fase, los recuentos de aciertos y errores de caché, los archivos afectados, las advertencias, los errores y los recuentos de artefactos emitidos. Los errores bloquean la promoción. |
+| Manifiesto de artefacto | Enumera entradas, módulos, declaraciones, mapas de origen, activos y sumas de verificación con alcance objetivo antes de la promoción atómica. |
+| Punto de extensión | Implementar y aprobar un `FrameworkOutputPlugin` de una persona que llama `forge-plugin-*` paquete; no agregue ramas de destino al conductor neutral. |
+
+Configurar alias a través del proyecto. `tsconfig.json` (`baseUrl` y
+`paths`); Vite y la preparación del gráfico tsdown utilizan los mismos hechos de alias. Enrutador
+La selección, los complementos del enrutador y las condiciones se envían a través de componentes y
+ayudantes de gancho. Un futuro trabajador/demonio puede sentarse detrás del contrato de servicio, pero
+la implementación respaldada está actualmente en proceso.
+
 ### @mission-platform/router
 
-Adaptadores y primitivas de enrutamiento independientes del marco.
+Contratos de ruta neutrales en el marco, ayudantes de coincidencia pura y marcadores de compilador para
+paquetes compartidos. Las aplicaciones poseen registros de ruta e instancias de enrutador nativo; el
+El destino del enrutador Forge seleccionado por la aplicación proporciona las capacidades de tiempo de ejecución.
 
-| Exportar | Tipo | Descripción |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        | Tipo | Interfaz para definir árboles de rutas.                                                                              |
-| `defineRoutes`   | Función | Ayudante para definir y validar árboles de rutas.                                                                       |
-| `createMpRouter` | Adaptador | Crea un Vue-enrutador compatible (expuesto desde `@mission-platform/router` cuando el `mp:vue` condición está activa). |
-| `useMpRoute`     | Gancho | Acceda al estado de la ruta actual (específico del adaptador).                                                                   |
+| Exportación/paquete | Tipo | Descripción |
+|:-----------------|:-----|:------------|
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | Tipos | Registros de ruta, parámetros, estado de consulta/hash, metadatos y objetivos de navegación. |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` | Funciones | Defina árboles de rutas y resuelva rutas sin un DOM o tiempo de ejecución de marco. |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | Tipos | Resultados/eventos de navegación, guardias, historial conectable y contratos de adaptador. |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Marcadores del compilador | Capacidades de enlace neutral, estado de ruta, navegación, resolución y salida consumidas por paquetes compartidos. |
+| `@mission-platform/forge-router-*` | Forjar objetivos | Destinos de enrutadores nativos seleccionados independientemente para Vue enrutador, React Enrutador, enrutador SolidJS, SvelteKit, RedwoodSDK y componentes web. |
+
+Los paquetes de tiempo de ejecución tienen su propio historial y estado reactivo; el paquete neutral nunca importa un marco de interfaz de usuario. Para componentes web,
+registre los elementos una vez y pase objetivos complejos a través de propiedades DOM en lugar de atributos serializados:
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
 
 ## Interfaz de usuario y diseño
 
@@ -70,7 +121,7 @@ Componentes de interfaz de usuario compartidos creados una vez y disponibles par
 - **Importar**: siempre `@mission-platform/components`; el activo `mp:<framework>` La condición decide si obtienes el
   Vue 3, React, Solid, o compilación de componentes web.
 - **Subrutas por componente**: `@mission-platform/components/<path>` (e.g.
-  `@mission-platform/components/atoms/forge-badge/forge-badge`) también tiene en cuenta la condición y carga solo el componente de ese componente.
+  `@mission-platform/components/atoms/forge-badge/forge-badge`) también tiene en cuenta las condiciones y carga solo el componente de ese componente.
   trozo.
 - **Componentes**: `ForgeButton`, `ForgeInput`, `ForgeModal`y más.
 
@@ -171,7 +222,8 @@ paquete en `packages/`, incluidas las fachadas WebAssembly escritas.
 | `@mission-platform/map`            | Componentes de mapas MapLibre y elementos componibles.                      |
 | `@mission-platform/observers`      | Componibles de intersección, mutación y observador de rendimiento. |
 | `@mission-platform/phone-number`   | Análisis y formato de números de teléfono de WebAssembly escritos.        |
-| `@mission-platform/router`         | Adaptadores y primitivas de enrutamiento neutrales en el marco de trabajo.            |
+| `@mission-platform/router`         | Contratos de ruta neutrales en el marco y capacidades de compilación. |
+| `@mission-platform/forge-router-web-components` | Destino del enrutador de componentes web y tiempo de ejecución sin marco. |
 | `@mission-platform/rxjs`           | RxJS observables y componibles por suscripción.                 |
 | `@mission-platform/scheduler`     | Lógica de dominio de diseño de calendario, recurrencia y interfaz de usuario del programador. |
 | `@mission-platform/vcard`         | Datos y componentes RFC 6350 vCard y RFC 5545 iCalendar.  |
@@ -185,7 +237,6 @@ paquete en `packages/`, incluidas las fachadas WebAssembly escritas.
 | Paquete | Propósito |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | Codificación/decodificación de códigos de barras 1D de fachada y componente.    |
-| `@mission-platform/code-scan-wasm`          | Módulo WebAssembly del escáner de imágenes generadas.       |
 | `@mission-platform/code-scanner`            | Componente de escaneo de código de imagen y cámara.         |
 | `@mission-platform/matrix-code`             | Fachada de codificación/decodificación Data Matrix y Azteca.       |
 | `@mission-platform/qr-code`                 | Codificación/decodificación QR de fachada y componente.            |
@@ -196,7 +247,7 @@ paquete en `packages/`, incluidas las fachadas WebAssembly escritas.
 
 Estos viven en `forge-plugins/` en vez de `packages/`. Un complemento **framework** decide en qué tiempo de ejecución es un componente neutral
 se reduce a; un destino **CMS** decide en qué plataforma de contenido se proyecta. Los dos ejes se componen, por lo que cualquier CMS
-El objetivo puede estar vinculado a cualquier complemento del marco. Ver [Canalización del compilador Forge](forge-compiler.md).
+El objetivo puede estar vinculado a cualquier complemento del marco. Ver el [Canalización del compilador Forge](../../../vite-plugins/forge/docs/locales/es/reference/compiler.md).
 
 | Paquete | Propósito |
 |:-------------------------------------------------|:--------------------------------------------------------------------------------|
@@ -209,7 +260,7 @@ El objetivo puede estar vinculado a cualquier complemento del marco. Ver [Canali
 | `@mission-platform/forge-cms-plugin-api`         | `CmsOutputPlugin` contrato, modelo de contenido neutral, controlador CMS y ayudantes de compilación. |
 | `@mission-platform/forge-cms-storyblok`          | Objetos de componentes de Storyblok, envoltorios de bloques y `components.json`.              |
 | `@mission-platform/forge-cms-astro`              | Estático `.astro` plantillas y `client:load` islas marco.                  |
-| `@mission-platform/forge-cms-ghost`              | Parciales de manillar Ghost y un `config.custom` fragmento del tema.                 |
+| `@mission-platform/forge-cms-ghost`              | Parciales de manillar Ghost y un `config.custom` Fragmento temático.                 |
 | `@mission-platform/forge-cms-jekyll`             | El líquido Jekyll incluye, `_data` esquema y un `_config.yml` fragmento.           |
 | `@mission-platform/forge-cms-webflow`            | flujo web `declareComponent` componentes del código y un `webflow.json` fragmento de biblioteca. |
 

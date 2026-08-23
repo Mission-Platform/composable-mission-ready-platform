@@ -2,12 +2,12 @@
 
 תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
 
-> מקור באנגלית: [docs/composable-authoring.md](../../composable-authoring.md)
+> docs/composable-authoring.md: [docs/composable-authoring.md](../../composable-authoring.md)
 > שפה: עברית (he)
 
-חומרים קומפוזיציים הם הדרך העיקרית להקיף ולעשות שימוש חוזר בלוגיקה תגובתית בתוך פלטפורמת המשימה. כדי להבטיח את אלה
-יחידות לוגיקה ניתנות לנייד בכל מסגרות ממשק המשתמש הנתמכות, הן נכתבו כמודולים של **כתיבה חד פעמית** באמצעות
-ווים ניטרליים למסגרת מסופקים על ידי `@mission-platform/forge`.
+חומרים קומפוזיציים הם הדרך העיקרית להקיף ולהשתמש מחדש בלוגיקה תגובתית בתוך פלטפורמת המשימה. כדי להבטיח את אלה
+יחידות הלוגיקה ניתנות לנייד בכל מסגרות ממשק המשתמש הנתמכות, הן נכתבו כמודולים של **כתיבה-פעם אחת** באמצעות
+ווים ניטרליים למסגרת הניתנים על ידי `@mission-platform/forge`.
 
 ## פריסת ספרייה
 
@@ -36,7 +36,7 @@ src/composables/
 
 ## דוגמה בסיסית
 
-הנה חומר כתיבה טיפוסי לכתיבה פעם אחת שמנהל מאזין אירועים.
+הנה רכיב כתיבה טיפוסי לכתיבה פעם אחת שמנהל מאזין אירועים.
 
 ```ts
 import { type MpRef, useEffect } from '@mission-platform/forge';
@@ -53,6 +53,7 @@ export function useEventListener(
     }
 
     element.addEventListener(type, listener);
+    
     // Clean up on unmount or dependency change
     return () => {
       element.removeEventListener(type, listener);

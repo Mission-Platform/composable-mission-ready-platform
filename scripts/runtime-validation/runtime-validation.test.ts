@@ -57,7 +57,8 @@ describe('repository inventory', () => {
       '@mission-platform/storybook',
       '@mission-platform/website',
     ]);
-    expect(inventory.storybookPackages).toHaveLength(18);
+    expect(inventory.apps.some((app) => app.name === '@mission-platform/figma-forge-plugin')).toBe(false);
+    expect(inventory.storybookPackages).toHaveLength(22);
     expect(inventory.stories.some((story) => story.id.includes('@mission-platform/components:'))).toBe(true);
     expect(inventory.stories.some((story) => story.exportedStories?.includes('Default'))).toBe(true);
   });
@@ -107,6 +108,8 @@ describe('route discovery', () => {
   });
 
   it('keeps route-file inventory aligned with route discovery', () => {
+    const docsRouteFiles = discoverAppRouteFiles(path.join(repositoryRoot, 'apps/docs'));
+    expect(docsRouteFiles).toContain(path.join(repositoryRoot, 'apps/docs/src/app/router.ts'));
     const serviceMonitorFiles = discoverAppRouteFiles(path.join(repositoryRoot, 'apps/service-monitor'));
     expect(serviceMonitorFiles).toContain(path.join(repositoryRoot, 'apps/service-monitor/src/worker.tsx'));
     const serviceMonitor = discoverInventory(repositoryRoot).apps.find(

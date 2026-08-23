@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/atomic-component-design.md](../../atomic-component-design.md)
+> docs/atomic-component-design.md: [docs/atomic-component-design.md](../../atomic-component-design.md)
 > Lingua: Italiano (it)
 
 Mission Platform utilizza un sistema di **Atomic Design** per organizzare i componenti in livelli gerarchici di complessità. Ogni
@@ -23,7 +23,7 @@ I componenti sono classificati in cinque livelli in base al loro ambito e respon
 
 ## Layout della cartella dei componenti
 
-Ciascun componente risiede nella propria sottodirectory denominata nella cartella del livello appropriato. Questa directory contiene il file
+Ciascun componente risiede nella propria sottodirectory denominata nella cartella di livello appropriato. Questa directory contiene il file
 origine dei componenti, storie, test e stili opzionali.
 
 ```text

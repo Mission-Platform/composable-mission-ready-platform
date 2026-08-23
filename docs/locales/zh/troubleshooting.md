@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/troubleshooting.md](../../troubleshooting.md)
+> docs/troubleshooting.md: [docs/troubleshooting.md](../../troubleshooting.md)
 > 语言: 简体中文 (zh)
 
 本指南提供了任务内开发、构建和部署过程中遇到的常见问题的解决方案
@@ -23,9 +23,9 @@
 **解决方案**：
 
 - **内联关键 CSS**：确保首屏内容所需的样式是内联的。
-- **图像优化**：使用WebP/AVIF格式并提供 `srcset` 对于响应式图像。
-- **资源预加载**：使用 `<link rel="preload">` 对于 LCP 图像或关键字体。
-- **最小化主线程工作**：使用延迟非必要的 JavaScript `async` 或者 `defer`.
+- **图像优化**：使用 WebP/AVIF 格式并为响应式图像提供 `srcset`。
+- **资源预加载**：对 LCP 图像或关键字体使用 `<link rel="preload">`。
+- **最小化主线程工作**：使用 `async` 或 `defer` 推迟非必要的 JavaScript。
 
 ### 内存泄漏
 
@@ -39,7 +39,7 @@
 
 **解决方案**：
 
-- **可组合项中的清理**：始终清除计时器并删除事件侦听器 `onUnmounted`。
+- **可组合项中的清理**：始终清除计时器并删除 `onUnmounted` 中的事件侦听器。
 - **商店管理**：确保在不再需要时清除 Pinia 或其他商店中的反应状态。
 - **处置 Observables**：如果使用 RxJS，请确保取消订阅所有订阅。
 
@@ -61,13 +61,13 @@ rm -rf .turbo
 
 ### 找不到模块/工作区解析
 
-**问题**： TypeScript 或者 Vite 找不到工作区中定义的包。
+**问题**：TypeScript 或 Vite 找不到工作区中定义的包。
 
 **解决方案**：
 
-1. 验证该包是否在使用工作区的列表中列出 `package.json`。
-2. 确保版本匹配（`workspace:*` 推荐）。
-3. 跑步 `pnpm install` 刷新符号链接。
+1. 验证该包是否列在使用工作区的 `package.json` 中。
+2. 确保版本匹配（建议使用`workspace:*`）。
+3. 运行 `pnpm install` 以刷新符号链接。
 4. 如果问题仍然存在，请尝试深度清洁：
 ```bash
    pnpm -r exec rm -rf node_modules
@@ -76,7 +76,7 @@ rm -rf .turbo
 
 ### CI 中存在类型错误，但本地不存在类型错误
 
-**问题**：在 CI 中构建失败 TypeScript IDE 中不会出现的错误。
+**问题**：CI 中的构建失败，并出现 TypeScript 错误，但这些错误不会出现在 IDE 中。
 
 **解决方案**：在整个工作区本地运行类型检查器。
 
@@ -94,12 +94,12 @@ pnpm exec turbo run build:check
 
 **诊断**：
 
-1. 验证MCP服务器是否已构建： `pnpm exec turbo run build --filter @mission-platform/mcp-*`。
-2. 检查服务器是否手动启动： `node mcp/developer/dist/index.js`.
+1. 验证 MCP 服务器是否已构建：`pnpm exec turbo run build --filter @mission-platform/mcp-*`。
+2. 检查服务器是否手动启动：`node mcp/developer/dist/index.js`。
 
 **解决方案**：
 
-- 确保您使用的是绝对路径 node 二进制文件和客户端配置中的脚本。
+- 确保您在客户端配置中使用 node 二进制文件和脚本的绝对路径。
 - 检查 MCP 服务器日志中的特定错误消息（例如，缺少环境变量）。
 
 ## 常见错误模式
@@ -107,7 +107,7 @@ pnpm exec turbo run build:check
 ### “无法读取未定义的属性”
 
 **原因**：通常在数据加载完成之前访问 null 或未定义对象的属性。 **修复**：使用
-可选链接（`?.`) 或提供默认值。
+可选链接 (`?.`) 或提供默认值。
 
 ```typescript
 // Instead of:
@@ -119,7 +119,7 @@ const name = user?.profile?.name ?? 'Guest';
 
 ### “未处理的承诺拒绝”
 
-**原因**：异步函数引发了未捕获的错误。 **修复**：始终将异步调用包装在 `try/catch` 块。
+**原因**：异步函数引发了未捕获的错误。 **修复**：始终将异步调用包装在 `try/catch` 块中。
 
 ```typescript
 try {

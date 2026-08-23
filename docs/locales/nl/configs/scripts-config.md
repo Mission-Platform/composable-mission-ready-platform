@@ -2,11 +2,16 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
+> docs/configs/scripts-config.md: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
 > Taal: Nederlands (nl)
 
-Het Mission Platform onderhoudt een reeks gedeelde hulpprogrammascripts in de root `scripts/` directory, beheerd door de
-`@mission-platform/scripts` pakket.
+Deze handleiding blijft opzettelijk in de projectdocumentatielaag: `scripts/`
+bevat repository-orkestratie in plaats van een publiceerbaar werkruimtepakket.
+Pakket- en applicatiespecifieke opdrachten blijven gedocumenteerd naast hun
+werkruimte bezitten.
+
+Het Mission Platform onderhoudt een reeks gedeelde hulpprogrammascripts in de root
+`scripts/` map, beheerd door de root-werkruimtetooling.
 
 ## Overzicht
 
@@ -36,7 +41,7 @@ pnpm exec tsx scripts/generate-dev-cert.ts
 
 ### Kaderresolutieverificatie (`verify-framework-resolution.mjs`)
 
-Verifieert dat `@mission-platform/*` pakketexports worden correct omgezet in de beoogde framework-build (Vue, Reactenz.)
+Bevestigt dat `@mission-platform/*` pakketexports worden correct omgezet in de beoogde framework-build (Vue, Reactenz.)
 gebaseerd op de exportvoorwaarden van het milieu.
 
 ```bash
@@ -55,7 +60,7 @@ pnpm run <script-name>
 
 ### Directe uitvoering
 
-Individueel TypeScript scripts kunnen worden uitgevoerd met behulp van `tsx` of `node --experimental-strip-types`:
+Individueel TypeScript scripts kunnen worden uitgevoerd met `tsx` of `node --experimental-strip-types`:
 
 ```bash
 pnpm exec tsx scripts/<filename>.ts

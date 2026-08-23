@@ -2,12 +2,12 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/package-development.md](../../package-development.md)
+> docs/package-development.md: [docs/package-development.md](../../package-development.md)
 > Langue: Français (fr)
 
 Ce guide décrit comment créer, développer et publier des packages réutilisables dans le monorepo Mission Platform.
-Les packages sont les éléments fondamentaux de la plateforme, résidant dans le `packages/` répertoire et géré via
-pnpm espaces de travail et Turborepo.
+Les packages sont les éléments fondamentaux de la plateforme, résidant dans le répertoire `packages/` et gérés via
+Espaces de travail pnpm et Turborepo.
 
 ## Création d'un nouveau package
 
@@ -16,7 +16,7 @@ les configurations, les scripts et les structures de dossiers suivent les normes
 
 ### 1. Échafaudage avec MCP
 
-Utilisez le `scaffold_package` outil pour générer le squelette.
+Utilisez l'outil `scaffold_package` pour générer le squelette.
 
 ```bash
 # Example: Creating a new 'date-utils' package
@@ -24,17 +24,17 @@ Utilisez le `scaffold_package` outil pour générer le squelette.
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
 ```
 
-Cela génère un résultat conforme à la convention `packages/date-utils/` répertoire avec :
+Cela génère un répertoire `packages/date-utils/` conforme à la convention avec :
 
 - `package.json` avec des scripts prêts pour l'espace de travail et des configurations partagées.
-- `tsconfig.json` étendre les paramètres par défaut de la plateforme.
+- `tsconfig.json` étendant les paramètres par défaut de la plateforme.
 - `vite.config.ts` pour des builds optimisés.
-- `src/index.ts` lime à barillet.
+- Lime barillet `src/index.ts`.
 - `llms.txt` pour la documentation assistée par l'IA.
 
 ### 2. Configuration manuelle (facultatif)
 
-Si vous n'utilisez pas l'outil MCP, assurez-vous que votre `package.json` utilise [pnpm catalogues](https://pnpm.io/catalogs) pour
+Si vous n'utilisez pas l'outil MCP, assurez-vous que votre `package.json` utilise [Catalogues pnpm](https://pnpm.io/catalogs) pour
 gestion des dépendances et suit la convention de dénomination étendue :
 
 ```json
@@ -75,6 +75,8 @@ packages/<name>/
 │   │   └── date-validator/         # date-validator.ts + .spec.ts
 │   ├── locales/                    # i18n JSON files
 │   └── index.ts                    # Package public API (barrel)
+├── docs/                           # Package-owned guides and generated API reference
+│   └── reference/generated/        # Regenerated during prebuild
 ├── llms.txt                        # Technical overview for LLMs
 ├── package.json
 ├── tsconfig.json
@@ -86,11 +88,11 @@ packages/<name>/
 
 ### Règles de création
 
-1. **TypeScript Partout** : tout le code source doit être dans `.ts` ou `.tsx` (en utilisant `@mission-platform/forge`).
+1. **TypeScript Partout** : tout le code source doit être au format `.ts` ou `.tsx` (en utilisant `@mission-platform/forge`).
 2. **Neutralité du framework** : privilégier une logique indépendante du framework. Les composants doivent être créés une fois dans Forge JSX pour cibler
    plusieurs cadres.
-3. **Isolement** : les packages ne doivent jamais être importés depuis `apps/`.
-4. **Test** : Chaque unité (composable, magasin, util, composant) DOIT avoir un `.spec.ts` déposer.
+3. **Isolement** : les packages ne doivent jamais être importés à partir de `apps/`.
+4. **Test** : Chaque unité (composable, magasin, util, composant) DOIT avoir un fichier `.spec.ts` colocalisé.
 
 Pour obtenir des instructions de création détaillées, voir :
 
@@ -101,7 +103,7 @@ Pour obtenir des instructions de création détaillées, voir :
 
 ### Bâtiment
 
-Construisez le package en utilisant Turbo pour garantir que les dépendances sont construites dans le bon ordre :
+Créez le package à l'aide de Turbo pour garantir que les dépendances sont créées dans le bon ordre :
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/<name>
@@ -109,20 +111,55 @@ pnpm exec turbo run build --filter @mission-platform/<name>
 
 ### Essai
 
-Exécutez des tests en utilisant Vitest:
+Exécutez des tests à l'aide de Vitest :
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
 
-## Documents (`llms.txt`)
+### Packages de routeur et cibles de composants Web
 
-Chaque forfait comprend un `llms.txt` fichier à sa racine. Ce fichier fournit une description technique concise du
+Utilisez `@mission-platform/router` pour les cibles de routes structurées, les assistants d'URL purs et les marqueurs de compilateur neutres. Partagé
+les packages ne doivent pas définir ou enregistrer des routes d’application. Les applications sélectionnent une cible de routeur Forge indépendamment de
+leur cible d'interface utilisateur, conservent la propriété des enregistrements de route natifs et des instances de routeur, et lient tout environnement d'exécution spécifique à la cible
+contexte pendant le bootstrap. Les cibles initiales sont `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood` et `-web-components` ; les combinaisons de fonctionnalités non prises en charge doivent rester des diagnostics du compilateur.
+
+Pour un package ou une application sans framework, sélectionnez la condition Forge Web Components dans les configurations build et TypeScript :
+
+```ts
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
+
+export default {
+  resolve: { conditions: frameworkResolveConditions("web-component") },
+};
+```
+
+Pour les applications Web Components, importez le runtime depuis `@mission-platform/forge-router-web-components/runtime`, appelez
+`registerRouterElements()` une fois, appelez `setForgeRouter(appRouter)` après avoir créé le routeur appartenant à l'application, passez structuré
+Valeurs `to` en tant que propriétés DOM et utilisation `MpMemoryHistory` dans les pré-rendus/tests. Un package qui ajoute un routeur réutilisable
+L'élément ou les modifications du comportement des composants Web doivent ajouter une histoire neutre sous `src/**/*.stories.ts` et inclure la cible dans
+l'atelier Storybook des composants Web.
+
+## Documentation (`llms.txt`)
+
+Chaque package inclut un fichier `llms.txt` à sa racine. Ce fichier fournit une description technique concise du
 les API, les composants et le comportement du package, permettant aux assistants IA de mieux comprendre et utiliser le package.
 
 - **Titre** : utilisez le nom du package étendu.
 - **Composants/API** : Tableau ou liste des symboles disponibles avec leurs accessoires et responsabilités.
 - **Exemples** : extraits de code court pour les cas d'utilisation courants.
+
+## Propriété de la documentation du package
+
+L'installation, l'utilisation, les limitations, les flux de travail des contributeurs et les pages de référence de l'API spécifiques au package appartiennent au
+répertoire `docs/` du package, pas dans l'arborescence `docs/` à l'échelle du référentiel. Le site de documentation ingère ces fichiers directement et
+les publie sous un espace de noms de package stable tel que `/packages/barcode/index` ou `/configs/eslint-config/index`.
+Les concepts, l'architecture, les flux de travail de l'espace de travail et le dépannage entre packages à l'échelle du projet restent à la racine `docs/`.
+
+Les pages API générées se trouvent sous `docs/reference/generated/` et sont actualisées par le hook du package `prebuild` ; ne pas modifier
+ces fichiers manuellement. Pour prévisualiser la documentation du package via le site, exécutez la version de l'application Documents ou utilisez l'espace de travail complet
+extracteur décrit dans l'application de documentation README.
 
 ## Édition
 
@@ -133,7 +170,7 @@ La Plateforme Mission utilise [Ensembles de modifications](https://github.com/ch
    pnpm changeset
    ```
    Sélectionnez le package et le type de modification (correctif, mineur, majeur).
-2. **Commit the Changeset** : validez le généré `.changeset/*.md` déposer.
+2. **Commit the Changeset** : validez le fichier `.changeset/*.md` généré.
 3. **Version et publication** : CI/CD gère la publication proprement dite, mais vous pouvez prévisualiser localement les versions avec :
 ```bash
    pnpm changeset version

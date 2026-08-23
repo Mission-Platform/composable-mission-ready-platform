@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/architecture.md](../../architecture.md)
+> docs/architecture.md: [docs/architecture.md](../../architecture.md)
 > Sprache: Deutsch (de)
 
 Mission Platform ist auf maximale Wiederverwendbarkeit und rahmenübergreifende Flexibilität ausgelegt. Dieses Dokument erklärt die
@@ -49,7 +49,7 @@ Composables. `@mission-platform/vite-plugin-forge` ist der neutrale Compiler-Tre
 erstellt semantische IR, führt gemeinsame Analysen und Optimierungen durch und sendet sie an eine explizit angegebene Adresse
 `FrameworkOutputPlugin`.
 
-Framework-Pakete wie `@mission-platform/forge-plugin-react` Und `@mission-platform/forge-plugin-vue` eigenes Ziel
+Framework-Pakete wie z `@mission-platform/forge-plugin-react` Und `@mission-platform/forge-plugin-vue` eigenes Ziel
 Senkung, Zieloptimierung, native Quellgenerierung, Diagnose, Laufzeitmetadaten und Vite/tsdown-Adapter. Da
 Es gibt keinen zentralen Framework-Emitter oder keine String-to-Framework-Registrierung im Treiber. Paketerstellungskonfigurationen wählen die aus
 Plugin-Instanzen, die sie veröffentlichen, sodass Zielimplementierungsabhängigkeiten an der Framework-Grenze bleiben.
@@ -65,7 +65,8 @@ Und `forge-cms-webflow` Jeder besitzt eine Plattform. Ein CMS-Ziel *erstellt* ei
 Jede Plattform paart sich mit jedem Framework und die Ausgabe landet darin `dist/cms/<cms>/<framework>/**`.
 
 Die vollständige Pipeline, Komponenten- und Hook-Konsumenten, CMS-Projektion und Erweiterungsanleitungen finden Sie unter
-[Forge-Compiler-Pipeline](forge-compiler.md). Informationen zur Build-Orchestrierungsansicht finden Sie unter [Build-System](build-system.md).
+[Forge-Compiler-Pipeline](../../../vite-plugins/forge/docs/locales/de/reference/compiler.md). Informationen zur Build-Orchestrierungsansicht finden Sie unter
+[Build-System](build-system.md).
 
 ## Design-Token-System
 
@@ -78,10 +79,15 @@ Die visuelle Konsistenz wird durch ein ausgeklügeltes Design-Token-System gewä
 
 ## Framework-unabhängiges Routing und I18n
 
-Kernanwendungsdienste wie Routing und Internationalisierung sind Framework-unabhängig konzipiert.
+Kernanwendungsdienste wie Routing und Internationalisierung sind so konzipiert, dass sie Framework-unabhängig sind.
 
-- **`@mission-platform/router`**: Definiert Routen als einfache Datenstruktur (`MpRoute`). Adapter für Vue Übersetzen Sie diese
-  in Framework-spezifische Router-Instanzen und Composables.
+- **`@mission-platform/router`**: Bietet strukturierte Routenziele, reine URL-/Standort-Helfer und Compiler-Markierungen wie z
+  als `MpLink`, `useMpRoute`, `useMpRouter`, Und `MpRouterView`. Es gibt kein UI-Framework oder keine Router-Bibliothekslaufzeit
+  Abhängigkeiten und besitzt niemals die Routing-Tabelle einer Anwendung.
+- **Router-Ziele fälschen**: `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, Und
+  `-web-components` Senken Sie diese Markierungen auf den nativen Router, der von der verbrauchenden Anwendung ausgewählt wurde. Bewerbungen bleiben erhalten
+  Besitz nativer Routendefinitionen, Anbieter, Wächter, Lader und Router-Instanzen; Das Ziel liefert nur
+  Verbrauchsmöglichkeiten.
 - **`@mission-platform/i18n`**: Eine Hülle herum `i18next` das sorgt für ein Universelles `createForgeI18N` Fabrik.
   Framework-spezifische Adapter bieten `useI18n` Haken und Komponenten für Vue Und React.
 
@@ -89,7 +95,7 @@ Kernanwendungsdienste wie Routing und Internationalisierung sind Framework-unabh
 
 ### Aufgabenorchestrierung mit Turborepo
 
-Turborepo übernimmt die schwere Arbeit des Aufbaus, Testens und Flusens im gesamten Monorepo. Es verwendet einen globalen Cache, um
+Turborepo übernimmt die schwere Arbeit beim Erstellen, Testen und Flusen im gesamten Monorepo. Es verwendet einen globalen Cache, um
 Stellen Sie sicher, dass Aufgaben nur dann ausgeführt werden, wenn sich ihre Eingaben geändert haben.
 
 ### Vite-Angetriebene Builds

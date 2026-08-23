@@ -895,6 +895,12 @@
     },
     {
       "sourceId": "component/atoms/button",
+      "from": "component.button.spinner.animation-easing",
+      "to": "easing.linear",
+      "resolved": true
+    },
+    {
+      "sourceId": "component/atoms/button",
       "from": "component.button.spinner.border-width",
       "to": "border-width.thick",
       "resolved": true
@@ -2697,6 +2703,12 @@
       "sourceId": "component/atoms/feedback",
       "from": "component.feedback.skeleton.shimmer",
       "to": "color.skeleton.shimmer",
+      "resolved": true
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "from": "component.feedback.spinner.animation-easing",
+      "to": "easing.linear",
       "resolved": true
     },
     {
@@ -19681,13 +19693,14 @@
         "$button-primary-background-hover"
       ],
       "evidence": [
+        "css",
         "docs",
         "override",
         "scss",
         "typescript"
       ],
       "status": "protected",
-      "reason": "Documented component contract branch component.button. Dynamic access protects the component/atoms/button branch. Referenced by a repository runtime override document. References stable DTCG path component.button.primary.background.hover."
+      "reason": "Documented component contract branch component.button. Dynamic access protects the component/atoms/button branch. Referenced by a repository runtime override document. References stable DTCG path component.button.primary.background.hover. Uses generated CSS custom property --mp-button-primary-background-hover."
     },
     {
       "sourceId": "component/atoms/button",
@@ -20498,6 +20511,36 @@
       ],
       "status": "protected",
       "reason": "Documented component contract branch component.button. Dynamic access protects the component/atoms/button branch."
+    },
+    {
+      "sourceId": "component/atoms/button",
+      "path": "component.button.spinner.animation-duration",
+      "generatedNames": [
+        "--mp-button-spinner-animation-duration",
+        "$button-spinner-animation-duration"
+      ],
+      "evidence": [
+        "css",
+        "docs",
+        "typescript"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.button. Dynamic access protects the component/atoms/button branch. Uses generated CSS custom property --mp-button-spinner-animation-duration."
+    },
+    {
+      "sourceId": "component/atoms/button",
+      "path": "component.button.spinner.animation-easing",
+      "generatedNames": [
+        "--mp-button-spinner-animation-easing",
+        "$button-spinner-animation-easing"
+      ],
+      "evidence": [
+        "css",
+        "docs",
+        "typescript"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.button. Dynamic access protects the component/atoms/button branch. Uses generated CSS custom property --mp-button-spinner-animation-easing."
     },
     {
       "sourceId": "component/atoms/button",
@@ -30226,6 +30269,132 @@
     },
     {
       "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.progress.indeterminate-duration",
+      "generatedNames": [
+        "--mp-feedback-progress-indeterminate-duration",
+        "$feedback-progress-indeterminate-duration"
+      ],
+      "evidence": [
+        "css",
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Uses generated CSS custom property --mp-feedback-progress-indeterminate-duration."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.progress.indeterminate-easing",
+      "generatedNames": [
+        "--mp-feedback-progress-indeterminate-easing",
+        "$feedback-progress-indeterminate-easing"
+      ],
+      "evidence": [
+        "css",
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Uses generated CSS custom property --mp-feedback-progress-indeterminate-easing."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.progress.size.2xl",
+      "generatedNames": [
+        "--mp-feedback-progress-size-2xl",
+        "$feedback-progress-size-2xl"
+      ],
+      "evidence": [
+        "docs",
+        "scss"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Dynamic access protects the component/atoms/feedback branch."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.progress.size.2xs",
+      "generatedNames": [
+        "--mp-feedback-progress-size-2xs",
+        "$feedback-progress-size-2xs"
+      ],
+      "evidence": [
+        "docs",
+        "scss"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Dynamic access protects the component/atoms/feedback branch."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.progress.size.lg",
+      "generatedNames": [
+        "--mp-feedback-progress-size-lg",
+        "$feedback-progress-size-lg"
+      ],
+      "evidence": [
+        "docs",
+        "scss"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Dynamic access protects the component/atoms/feedback branch."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.progress.size.md",
+      "generatedNames": [
+        "--mp-feedback-progress-size-md",
+        "$feedback-progress-size-md"
+      ],
+      "evidence": [
+        "docs",
+        "scss"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Dynamic access protects the component/atoms/feedback branch."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.progress.size.sm",
+      "generatedNames": [
+        "--mp-feedback-progress-size-sm",
+        "$feedback-progress-size-sm"
+      ],
+      "evidence": [
+        "docs",
+        "scss"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Dynamic access protects the component/atoms/feedback branch."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.progress.size.xl",
+      "generatedNames": [
+        "--mp-feedback-progress-size-xl",
+        "$feedback-progress-size-xl"
+      ],
+      "evidence": [
+        "docs",
+        "scss"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Dynamic access protects the component/atoms/feedback branch."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.progress.size.xs",
+      "generatedNames": [
+        "--mp-feedback-progress-size-xs",
+        "$feedback-progress-size-xs"
+      ],
+      "evidence": [
+        "docs",
+        "scss"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Dynamic access protects the component/atoms/feedback branch."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
       "path": "component.feedback.progress.track.background",
       "generatedNames": [
         "--mp-feedback-progress-track-background",
@@ -30451,6 +30620,48 @@
     },
     {
       "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.spinner.animation-duration",
+      "generatedNames": [
+        "--mp-feedback-spinner-animation-duration",
+        "$feedback-spinner-animation-duration"
+      ],
+      "evidence": [
+        "css",
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Uses generated CSS custom property --mp-feedback-spinner-animation-duration."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.spinner.animation-easing",
+      "generatedNames": [
+        "--mp-feedback-spinner-animation-easing",
+        "$feedback-spinner-animation-easing"
+      ],
+      "evidence": [
+        "css",
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Uses generated CSS custom property --mp-feedback-spinner-animation-easing."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.spinner.border-width.2xl",
+      "generatedNames": [
+        "--mp-feedback-spinner-border-width-2xl",
+        "$feedback-spinner-border-width-2xl"
+      ],
+      "evidence": [
+        "css",
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Uses generated CSS custom property --mp-feedback-spinner-border-width-2xl."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
       "path": "component.feedback.spinner.border-width.2xs",
       "generatedNames": [
         "--mp-feedback-spinner-border-width-2xs",
@@ -30504,6 +30715,20 @@
       ],
       "status": "protected",
       "reason": "Documented component contract branch component.feedback. Uses generated CSS custom property --mp-feedback-spinner-border-width-sm."
+    },
+    {
+      "sourceId": "component/atoms/feedback",
+      "path": "component.feedback.spinner.border-width.xl",
+      "generatedNames": [
+        "--mp-feedback-spinner-border-width-xl",
+        "$feedback-spinner-border-width-xl"
+      ],
+      "evidence": [
+        "css",
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.feedback. Uses generated CSS custom property --mp-feedback-spinner-border-width-xl."
     },
     {
       "sourceId": "component/atoms/feedback",
@@ -35954,6 +36179,201 @@
       "generatedNames": [
         "--mp-media-avatar-radius-status",
         "$media-avatar-radius-status"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.size.2xl",
+      "generatedNames": [
+        "--mp-media-avatar-size-2xl",
+        "$media-avatar-size-2xl"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.size.2xs",
+      "generatedNames": [
+        "--mp-media-avatar-size-2xs",
+        "$media-avatar-size-2xs"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.size.lg",
+      "generatedNames": [
+        "--mp-media-avatar-size-lg",
+        "$media-avatar-size-lg"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.size.md",
+      "generatedNames": [
+        "--mp-media-avatar-size-md",
+        "$media-avatar-size-md"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.size.sm",
+      "generatedNames": [
+        "--mp-media-avatar-size-sm",
+        "$media-avatar-size-sm"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.size.xl",
+      "generatedNames": [
+        "--mp-media-avatar-size-xl",
+        "$media-avatar-size-xl"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.size.xs",
+      "generatedNames": [
+        "--mp-media-avatar-size-xs",
+        "$media-avatar-size-xs"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.status-border-width",
+      "generatedNames": [
+        "--mp-media-avatar-status-border-width",
+        "$media-avatar-status-border-width"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media. References stable DTCG path component.media.avatar.status-border-width."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.status-size.2xl",
+      "generatedNames": [
+        "--mp-media-avatar-status-size-2xl",
+        "$media-avatar-status-size-2xl"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.status-size.2xs",
+      "generatedNames": [
+        "--mp-media-avatar-status-size-2xs",
+        "$media-avatar-status-size-2xs"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.status-size.lg",
+      "generatedNames": [
+        "--mp-media-avatar-status-size-lg",
+        "$media-avatar-status-size-lg"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.status-size.md",
+      "generatedNames": [
+        "--mp-media-avatar-status-size-md",
+        "$media-avatar-status-size-md"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.status-size.sm",
+      "generatedNames": [
+        "--mp-media-avatar-status-size-sm",
+        "$media-avatar-status-size-sm"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.status-size.xl",
+      "generatedNames": [
+        "--mp-media-avatar-status-size-xl",
+        "$media-avatar-status-size-xl"
+      ],
+      "evidence": [
+        "docs"
+      ],
+      "status": "protected",
+      "reason": "Documented component contract branch component.media."
+    },
+    {
+      "sourceId": "component/atoms/media",
+      "path": "component.media.avatar.status-size.xs",
+      "generatedNames": [
+        "--mp-media-avatar-status-size-xs",
+        "$media-avatar-status-size-xs"
       ],
       "evidence": [
         "docs"
@@ -49050,7 +49470,7 @@
         "docs"
       ],
       "status": "protected",
-      "reason": "Documented component contract branch component.timeline. Uses generated CSS custom property --mp-timeline-marker-size."
+      "reason": "Documented component contract branch component.timeline. References stable DTCG path component.timeline.marker.size. Uses generated CSS custom property --mp-timeline-marker-size."
     },
     {
       "sourceId": "component/molecules/timeline",
@@ -51563,11 +51983,10 @@
         "$easing-linear"
       ],
       "evidence": [
-        "alias",
-        "css"
+        "alias"
       ],
-      "status": "active",
-      "reason": "Required by alias from component/atoms/feedback:component.feedback.transition.easing. Uses generated CSS custom property --mp-easing-linear."
+      "status": "ambiguous",
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Required by alias from component/atoms/button:component.button.spinner.animation-easing. Required by alias from component/atoms/feedback:component.feedback.spinner.animation-easing. Required by alias from component/atoms/feedback:component.feedback.transition.easing."
     },
     {
       "sourceId": "motion",
@@ -54960,9 +55379,9 @@
     }
   ],
   "summary": {
-    "active": 132,
-    "protected": 2161,
-    "ambiguous": 548,
+    "active": 131,
+    "protected": 2191,
+    "ambiguous": 549,
     "candidate": 0
   }
 }

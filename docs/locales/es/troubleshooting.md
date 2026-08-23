@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/troubleshooting.md](../../troubleshooting.md)
+> docs/troubleshooting.md: [docs/troubleshooting.md](../../troubleshooting.md)
 > Idioma: Español (es)
 
 Esta guía proporciona soluciones para problemas comunes encontrados durante el desarrollo, la construcción y la implementación dentro de la Misión.
@@ -24,7 +24,7 @@ Plataforma monorepo. Está estructurado como una **guía práctica** para diagno
 
 - **CSS crítico en línea**: asegúrese de que los estilos necesarios para el contenido de la mitad superior de la página estén integrados.
 - **Optimización de imagen**: utilice formatos WebP/AVIF y proporcione `srcset` para imágenes responsivas.
-- **Precarga de recursos**: uso `<link rel="preload">` para la imagen LCP o fuentes críticas.
+- **Precarga de recursos**: utilice `<link rel="preload">` para la imagen LCP o fuentes críticas.
 - **Minimizar el trabajo del hilo principal**: posponer JavaScript no esencial usando `async` o `defer`.
 
 ### Fugas de memoria
@@ -61,13 +61,13 @@ rm -rf .turbo
 
 ### Módulo no encontrado/Resolución del espacio de trabajo
 
-**Problema**: TypeScript o Vite No se puede encontrar un paquete definido en el espacio de trabajo.
+**Problema**: TypeScript o Vite no pueden encontrar un paquete definido en el espacio de trabajo.
 
 **Soluciones**:
 
-1. Verifique que el paquete aparezca en la lista del espacio de trabajo consumidor. `package.json`.
-2. Asegúrese de que la versión coincida (`workspace:*` se recomienda).
-3. correr `pnpm install` para actualizar los enlaces simbólicos.
+1. Verifique que el paquete aparezca en `package.json` del espacio de trabajo consumidor.
+2. Asegúrese de que la versión coincida (se recomienda `workspace:*`).
+3. Ejecute `pnpm install` para actualizar los enlaces simbólicos.
 4. Si los problemas persisten, intente una limpieza profunda:
 ```bash
    pnpm -r exec rm -rf node_modules
@@ -76,7 +76,7 @@ rm -rf .turbo
 
 ### Errores de tipo en CI pero no locales
 
-**Problema**: la compilación falla en CI con TypeScript errores que no aparecen en su IDE.
+**Problema**: La compilación falla en CI con errores TypeScript que no aparecen en su IDE.
 
 **Solución**: Ejecute el verificador de tipos localmente en todo el espacio de trabajo.
 
@@ -95,11 +95,11 @@ Esto garantiza que todos los límites del paquete se respeten correctamente y qu
 **Diagnóstico**:
 
 1. Verifique que el servidor MCP esté construido: `pnpm exec turbo run build --filter @mission-platform/mcp-*`.
-2. Compruebe si el servidor se inicia manualmente: `node mcp/developer/dist/index.js`.
+2. Verifique si el servidor se inicia manualmente: `node mcp/developer/dist/index.js`.
 
 **Soluciones**:
 
-- Asegúrese de que está utilizando la ruta absoluta al node binario y el script en la configuración de su cliente.
+- Asegúrese de estar utilizando la ruta absoluta al binario node y al script en la configuración de su cliente.
 - Verifique los registros del servidor MCP para detectar mensajes de error específicos (por ejemplo, variables de entorno faltantes).
 
 ## Patrones de errores comunes
@@ -107,7 +107,7 @@ Esto garantiza que todos los límites del paquete se respeten correctamente y qu
 ### "No se puede leer la propiedad de indefinido"
 
 **Causa**: acceder a las propiedades de un objeto nulo o indefinido, a menudo antes de que los datos hayan terminado de cargarse. **Solución**: Usar
-encadenamiento opcional (`?.`) o proporcionar valores predeterminados.
+encadenamiento opcional (`?.`) o proporcione valores predeterminados.
 
 ```typescript
 // Instead of:
@@ -119,7 +119,7 @@ const name = user?.profile?.name ?? 'Guest';
 
 ### "Rechazo de promesa no controlado"
 
-**Causa**: Una función asíncrona arrojó un error que no se detectó. **Solución**: incluir siempre las llamadas asíncronas en `try/catch` bloques.
+**Causa**: Una función asíncrona arrojó un error que no se detectó. **Solución**: siempre envuelve las llamadas asíncronas en bloques `try/catch`.
 
 ```typescript
 try {

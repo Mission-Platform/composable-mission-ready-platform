@@ -1,11 +1,15 @@
-# Référence API
+# Répertoire des API du package
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/api-reference.md](../../api-reference.md)
+> docs/api-reference.md: [docs/api-reference.md](../../api-reference.md)
 > Langue: Français (fr)
 
-Référence technique pour les packages de base et les adaptateurs de framework Mission Platform.
+Cette page à l'échelle du projet est un répertoire des fonctionnalités et de la compatibilité des packages.
+contrats. L'installation canonique, l'utilisation, les limitations et les détails de l'API pour
+chaque package vit à côté de ce package sous `packages/*/docs/`, `configs/*/docs/`,
+et `forge-plugins/*/docs/`. Les références API générées doivent être ajoutées au propriétaire
+package plutôt que cette page.
 
 > **Les importations sont toujours nues.** Framework-shipping `@mission-platform/*` les packages exposent un seul `.`
 > entrée gardée par le `mp:vue`, `mp:react`, `mp:solid`, et `mp:web-component` exporter
@@ -26,21 +30,68 @@ La base de l'architecture « à écriture unique », fournissant un environnemen
 | `useState`         | Crochet | Hook d’état indépendant du framework.                                                           |
 | `useEffect`        | Crochet | Crochet à effet neutre pour le cadre.                                                          |
 | `useMemo`          | Crochet | Crochet de mémorisation indépendant du framework.                                                     |
-| `useRef`           | Crochet | Crochet de référence indépendant du framework.                                                       |
+| `useRef`           | Crochet | Hook de référence indépendant du framework.                                                       |
 | `useContext`       | Crochet | Hook contextuel indépendant du framework.                                                         |
 | `toVueComponent`   | Adaptateur | Convertit un composant de forge en un Vue 3 composants (de `@mission-platform/forge/vue`).   |
 | `toReactComponent` | Adaptateur | Convertit un composant de forge en un React composant (de `@mission-platform/forge/react`). |
 
+### @mission-platform/vite-plugin-forge
+
+Le pilote du compilateur accepte les `FrameworkOutputPlugin` exemples ; ça fait
+ne fournit pas de registre-cadre. `defineViteForgeComponents` et
+`defineTsdownForgeComponents` (plus le hook et les assistants CMS) partagent un processus en cours
+`ForgeCompilerService` pour une session de construction ou de surveillance.
+
+| Capacité | Descriptif |
+|:-----------|:------------|
+| Cycle de vie des services | Réutilisez l’état de la source, du graphique, de la source analysée, de l’IR sémantique et de l’artefact cible dans toutes les versions ; disposez des services ponctuels une fois terminés et des services d'observation à la clôture. |
+| Clés de cache | Empreintes sources/dépendances/configuration, options du compilateur et du routeur, `tsconfig` `baseUrl`/`paths`, ID cible, identité/version du plugin et conditions pertinentes. |
+| Invalidation de la montre | Les fichiers modifiés invalident les dépendants du graphique inversé, y compris les composants transitifs et les entrées de hook ; les instantanés cibles non liés restent réutilisables. |
+| Diagnostic/rapport | Rapporte la synchronisation des phases, le nombre d'échecs/échecs du cache, les fichiers concernés, les avertissements, les erreurs et le nombre d'artefacts émis. Des erreurs bloquent la promotion. |
+| Manifeste d’artefact | Répertorie les entrées, les modules, les déclarations, les cartes sources, les actifs et les sommes de contrôle de portée cible avant la promotion atomique. |
+| Point de rallonge | Mettre en œuvre et adopter un `FrameworkOutputPlugin` d'un appelant appartenant `forge-plugin-*` emballer; n'ajoutez pas de branches cibles au pilote neutre. |
+
+Configurer les alias via le projet `tsconfig.json` (`baseUrl` et
+`paths`); Vite et la préparation du graphique tsdown utilise les mêmes faits d'alias. Routeur
+la sélection, les plugins de routeur et les conditions sont transmis via le composant et
+aides au crochet. Un futur travailleur/démon peut être assis derrière le contrat de service, mais
+la mise en œuvre prise en charge est actuellement en cours.
+
 ### @mission-platform/router
 
-Primitives et adaptateurs de routage indépendants du framework.
+Contrats de route neutres, aides à la correspondance pure et marqueurs du compilateur pour
+forfaits partagés. Les applications possèdent des enregistrements de routage et des instances de routeur natives ; le
+La cible du routeur Forge sélectionnée par l'application fournit les capacités d'exécution.
 
-| Exporter | Tapez | Descriptif |
-|:-----------------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| `MpRoute`        | Tapez | Interface de définition des arborescences de routes.                                                                              |
-| `defineRoutes`   | Fonction | Aide pour définir et valider les arbres de route.                                                                       |
-| `createMpRouter` | Adaptateur | Crée un Vue-routeur compatible (exposé de `@mission-platform/router` quand le `mp:vue` la condition est active). |
-| `useMpRoute`     | Crochet | Accédez à l’état actuel de l’itinéraire (spécifique à l’adaptateur).                                                                   |
+| Exportation/emballage | Tapez | Descriptif |
+|:-----------------|:-----|:------------|
+| `MpRoute`, `MpRouteLocationRaw`, `MpResolvedLocation` | Types | Enregistrements d'itinéraire, paramètres, état de requête/hachage, métadonnées et cibles de navigation. |
+| `defineRoutes`, `matchRoutes`, `resolveLocation` | Fonctions | Définissez des arborescences de routes et résolvez les chemins sans DOM ou framework runtime. |
+| `MpNavigationResult`, `MpRouteGuard`, `MpHistory`, `MpRouterAdapter` | Types | Résultats/événements de navigation, gardes, historique enfichable et contrats d'adaptateur. |
+| `MpLink`, `useMpRoute`, `useMpRouter`, `useMpNavigation`, `MpRouterView` | Marqueurs du compilateur | Capacités de liaison neutre, d’état d’itinéraire, de navigation, de résolution et de sortie consommées par les packages partagés. |
+| `@mission-platform/forge-router-*` | Forger des cibles | Cibles de routeur natives sélectionnées indépendamment pour Vue Routeur, React Routeur, routeur SolidJS, SvelteKit, RedwoodSDK et composants Web. |
+
+Les packages d'exécution possèdent leur propre historique et leur état réactif ; le package neutre n’importe jamais de framework d’interface utilisateur. Pour les composants Web,
+enregistrez les éléments une fois et transmettez les cibles complexes via les propriétés DOM plutôt que les attributs sérialisés :
+
+```ts
+import {
+  MpMemoryHistory,
+  createWebComponentsRouter,
+  registerRouterElements,
+  setForgeRouter,
+} from '@mission-platform/forge-router-web-components/runtime';
+
+registerRouterElements();
+const router = createWebComponentsRouter({
+  history: new MpMemoryHistory('/overview'),
+  routes: [{ path: '/overview', component: () => 'Documentation' }],
+});
+setForgeRouter(router);
+const link = document.createElement('forge-router-link');
+link.to = { path: '/overview', query: { q: 'router' }, hash: 'results' };
+link.router = router;
+```
 
 ## Interface utilisateur et conception
 
@@ -59,7 +110,7 @@ Utilitaires réactifs et composants de visibilité.
 
 | Exporter | Tapez | Descriptif |
 |:-----------------|:----------|:-----------------------------------------------------------|
-| `useBreakpoints` | Crochet | Renvoie l'état du point d'arrêt réactif.                        |
+| `useBreakpoints` | Crochet | Renvoie l’état du point d’arrêt réactif.                        |
 | `ShowIf`         | Composant | Restitue les enfants uniquement lorsqu'une condition de point d'arrêt correspond. |
 | `HideIf`         | Composant | Masque les enfants lorsqu’une condition de point d’arrêt correspond.        |
 
@@ -82,7 +133,7 @@ Système d'internationalisation basé sur i18next.
 
 | Exporter | Descriptif |
 |:------------------|:----------------------------------------------------------|
-| `createForgeI18N` | Initialise l'instance i18n avec les valeurs par défaut de la plateforme.     |
+| `createForgeI18N` | Initialise l'instance i18n avec les paramètres par défaut de la plateforme.     |
 | `useI18n`         | Hook pour les traductions et le changement de paramètres régionaux dans les composants. |
 
 ### @mission-platform/seo
@@ -171,7 +222,8 @@ paquet dans `packages/`, y compris les façades typées WebAssembly.
 | `@mission-platform/map`            | Composants cartographiques et composables MapLibre.                      |
 | `@mission-platform/observers`      | Composables d'intersection, de mutation et d'observateur de performances. |
 | `@mission-platform/phone-number`   | Analyse et formatage du numéro de téléphone WebAssembly saisi.        |
-| `@mission-platform/router`         | Primitives et adaptateurs de routage indépendants du framework.            |
+| `@mission-platform/router`         | Contrats de routage et capacités du compilateur neutres en termes de cadre. |
+| `@mission-platform/forge-router-web-components` | Cible de routeur de composants Web et environnement d'exécution sans framework. |
 | `@mission-platform/rxjs`           | Observables RxJS et composables par abonnement.                 |
 | `@mission-platform/scheduler`     | Logique de domaine de l’interface utilisateur du planificateur, de la récurrence et de la disposition du calendrier. |
 | `@mission-platform/vcard`         | Données et composants RFC 6350 vCard et RFC 5545 iCalendar.  |
@@ -185,7 +237,6 @@ paquet dans `packages/`, y compris les façades typées WebAssembly.
 | Forfait | Objectif |
 |:--------------------------------------------|:--------------------------------------------------|
 | `@mission-platform/barcode`                 | Code-barres 1D encodant/décodant la façade et le composant.    |
-| `@mission-platform/code-scan-wasm`          | Module WebAssembly du scanner d'images généré.       |
 | `@mission-platform/code-scanner`            | Composant d'analyse de code d'appareil photo et d'image.         |
 | `@mission-platform/matrix-code`             | Façade d'encodage/décodage Data Matrix et Aztec.       |
 | `@mission-platform/qr-code`                 | QR encodage/décodage de la façade et du composant.            |
@@ -196,7 +247,7 @@ paquet dans `packages/`, y compris les façades typées WebAssembly.
 
 Ceux-ci vivent dans `forge-plugins/` plutôt que `packages/`. Un plugin **framework** décide quel runtime est un composant neutre
 est abaissé à ; une cible **CMS** décide sur quelle plateforme de contenu elle est projetée. Les deux axes composent, donc n'importe quel CMS
-target peut être lié à n’importe quel plugin de framework. Voir [Pipeline du compilateur Forge](forge-compiler.md).
+target peut être lié à n’importe quel plugin de framework. Voir le [Pipeline du compilateur Forge](../../../vite-plugins/forge/docs/locales/fr/reference/compiler.md).
 
 | Forfait | Objectif |
 |:-------------------------------------------------|:--------------------------------------------------------------------------------|

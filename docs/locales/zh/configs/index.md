@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/configs/index.md](../../../configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > 语言: 简体中文 (zh)
 
 任务平台使用集中配置包 `configs/` 目录以确保一致性
@@ -15,18 +15,22 @@
 
 ## 套餐摘要
 
+配置包文档由每个包拥有。以下链接
+今天是存储库文件链接，并成为包命名空间的路由
+文档站点：
+
 |套餐 |目的|主构型面|
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](eslint-config.md) |平坦的 ESLint JS/TS 的规则和 Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` |存储库格式默认值。 | `prettier.config.js` |
-| `@mission-platform/typescript-config` | TypeScript 编译器预设。 | `tsconfig.json` |
-| `@mission-platform/stylelint-config` | CSS 和 SCSS linting。 | `stylelint.config.mjs` |
-| `@mission-platform/vite-config` | Vite 和 Vitest 配置助手。 | `vite.config.ts` |
-| `@mission-platform/tsdown-config` |图书馆捆绑助手。 | `tsdown.config.ts` |
-| `@mission-platform/postcss-config` |共享 PostCSS 管道。 | `postcss.config.mjs` |
-| `@mission-platform/i18n-config` |共享区域设置和提取设置。 | `i18next.config.ts` |
-| `@mission-platform/storybook-framework` |环境选择的 Storybook 框架预设。 | `.storybook/main.ts` |
-| [工人配置](workers-config.md) | Cloudflare Worker 约定。 | `wrangler.jsonc` |
+| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/zh/index.md) |平坦的 ESLint JS/TS 的规则和 Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/zh/index.md) |存储库格式默认值。 | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/zh/index.md) | TypeScript 编译器预设。 | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/zh/index.md) | CSS 和 SCSS linting。 | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/zh/index.md) | Vite 和 Vitest 配置助手。 | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/zh/index.md) |图书馆捆绑助手。 | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/zh/index.md) |共享 PostCSS 管道。 | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/zh/index.md) |共享区域设置和提取设置。 | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/zh/index.md) |环境选择的 Storybook 框架预设。 | `.storybook/main.ts` |
+| [工人配置](workers-config.md) |跨工作空间 Cloudflare Worker 约定。 | `wrangler.jsonc` |
 
 ## 核心工具
 
@@ -63,7 +67,7 @@ import { defineAppConfig, defineLibraryConfig } from '@mission-platform/vite-con
 
 ### PostCSS (`@mission-platform/postcss-config`)
 
-共享 PostCSS 插件管道（包括 Autoprefixer），以确保无论在何处都能一致地处理 CSS
+共享 PostCSS 插件管道（包括 Autoprefixer）以确保 CSS 得到一致的处理，无论在哪里
 它是创作的。
 
 ## 使用模式

@@ -2,7 +2,7 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> 영어 원문: [docs/build-system.md](../../build-system.md)
+> docs/build-system.md: [docs/build-system.md](../../build-system.md)
 > 언어: 한국어 (ko)
 
 이 문서는 Mission Platform 빌드 시스템의 아키텍처와 메커니즘을 설명합니다. 그것은 높은 것을 위해 설계되었습니다
@@ -17,7 +17,7 @@ Mission Platform은 작업 조정과 개별 작업 공간 컴파일을 분리하
 **Turborepo**는 최상위 오케스트레이터입니다. 작업공간 간의 종속성 그래프를 관리하고 다음에 대한 캐싱을 제공합니다.
 모든 작업.
 
-- **파이프라인은 다음에 정의되어 있습니다. `turbo.json`**: 다음과 같은 작업 `build`, `test`, 그리고 `lint` 종속성을 사용하여 정의됩니다.
+- **파이프라인은 다음에 정의되어 있습니다. `turbo.json`**: 다음과 같은 작업 `build`, `test`, 그리고 `lint` 종속성으로 정의됩니다.
   (예: `build` 에 달려있다 `^build`, 즉 모든 종속성이 먼저 빌드되어야 함을 의미합니다).
 - **해싱**: Turborepo는 소스 파일, 환경 변수 및 전역 종속성을 해시하여 작업이
   캐시에서 출력을 다시 사용할 수 있습니다.
@@ -55,9 +55,9 @@ Forge 패키지 빌드는 중립 컴파일러 프런트 엔드를 일반에 추�
 프레임워크는 독립적으로 선택됩니다. `storyblok × vue` 그리고 `astro × solid` 새 코드가 아닌 구성입니다.
 
 CMS 빌드는 다음으로 내보냅니다. `dist/cms/<cms>/<framework>/**`, 매니페스트 및 기타 플랫폼 사이드카가 미러링됨
-`dist/cms/<cms>/`. 수화 런타임이 필요한 대상(Astro, Webflow)은 경계에서 아일랜드 트리를 공동 생성합니다.
+`dist/cms/<cms>/`. 수화된 런타임(Astro, Webflow)이 필요한 대상은 경계에서 섬 트리를 공동 생성합니다.
 프레임워크 플러그인을 동일한 빌드에 추가합니다. 완전한 책임 분할 및 단계 경계는 다음에 설명되어 있습니다.
-[Forge 컴파일러 파이프라인](forge-compiler.md).
+[Forge 컴파일러 파이프라인](../../../vite-plugins/forge/docs/locales/ko/reference/compiler.md).
 
 ## 계약 구축
 
@@ -71,7 +71,7 @@ pnpm build:force                 # the same aggregate build, ignoring Turbo's ca
 pnpm exec turbo run build --filter @mission-platform/components
 ```
 
-Forge 패키지는 하나의 대상을 재구축하기 위한 씬 호환성 별칭도 유지합니다.
+Forge 패키지는 하나의 대상을 다시 빌드하기 위한 씬 호환성 별칭도 유지합니다.
 
 ```bash
 pnpm --filter @mission-platform/components run build:forge
@@ -150,7 +150,7 @@ pnpm build:force
 | :------------------------------------ | :----------------------------------------------------------- |
 | `@mission-platform/vite-config`       | 공유됨 Vite 앱에 대한 논리 및 Vue- 특정 빌드.          |
 | `@mission-platform/tsdown-config`     | 라이브러리 패키지에 대한 공유 tsdown 논리.                    |
-| `@mission-platform/typescript-config` | 베이스 `tsconfig.json` 앱, 라이브러리, 테스트에 대한 사전 설정입니다. |
+| `@mission-platform/typescript-config` | 베이스 `tsconfig.json` 앱, 라이브러리 및 테스트에 대한 사전 설정. |
 | `@mission-platform/postcss-config`    | 표준화된 CSS 처리(Autoprefixer 등).            |
 
 ## 지역 개발과 생산
@@ -169,5 +169,5 @@ Turborepo는 토폴로지 순서로 빌드를 실행합니다. 패키지는 모�
 ## 고급: WASM 통합
 
 특정 패키지(예: `@mission-platform/hunspell`, 바코드 스캐너)에는 WebAssembly로 컴파일된 Rust 코드가 포함됩니다. 이것들
-빌드는 다음을 사용하는 특수 작업을 통해 조정됩니다. `wasm-pack` 환경의 일관성과 최적의 상태를 보장하기 위해
+빌드는 다음을 사용하는 특수 작업을 통해 조정됩니다. `wasm-pack` 환경의 일관성과 최적성을 보장하기 위해
 성능.

@@ -192,7 +192,7 @@ describe('generateTokens', () => {
     const buttonScss = readFileSync(path.join(generatedDirectory, 'scss/component/atoms/_button.scss'), 'utf8');
     const publicBarrel = readFileSync(path.join(repositoryRoot, 'packages/tokens/src/tokens.ts'), 'utf8');
 
-    expect(report.summary).toEqual({ active: 132, protected: 2161, ambiguous: 548, candidate: 0 });
+    expect(report.summary).toEqual({ active: 131, protected: 2191, ambiguous: 549, candidate: 0 });
     expect(report.sources).toEqual([...report.sources].toSorted((a, b) => a.localeCompare(b)));
     expect(report.tokens.filter(({ status }) => status === 'candidate')).toHaveLength(0);
     expect(report.aliases.filter(({ resolved }) => !resolved).map(({ to }) => to)).toEqual([

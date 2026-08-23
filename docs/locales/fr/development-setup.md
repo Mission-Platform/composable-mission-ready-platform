@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/development-setup.md](../../development-setup.md)
+> docs/development-setup.md: [docs/development-setup.md](../../development-setup.md)
 > Langue: Français (fr)
 
 Ce guide fournit un didacticiel étape par étape pour configurer votre environnement local afin de contribuer à la plateforme de mission.
@@ -15,12 +15,11 @@ Avant de cloner le référentiel, assurez-vous que votre système répond aux ex
 ### Configuration système requise
 
 | Outil | Version requise | Objectif |
-| :------------ | :---------------- | :---------------------------------------------------- |
-| **Node.js** | `24.19.0`         | Environnement d'exécution (Active LTS) |
-| **pnpm**      | `11.21.0`         | Gestionnaire de packages et orchestrateur d'espace de travail |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0`        | Environnement d'exécution (Active LTS) |
+| **pnpm**    | `11.21.0`        | Gestionnaire de packages et orchestrateur d'espace de travail |
 | **Git** | Dernière stable | Contrôle des versions |
-| **Rouille** | Chaîne d'outils stable | Tests natifs et développement de caisses Rust/WASM |
-| **wasm-pack** | `0.15.0` via pnpm | Emballage des caisses Rust en tant qu'espaces de travail WebAssembly typés |
+| **Rouille** | Chaîne d'outils stable | Développement de benchmark Rust autonome en option |
 | **Docker** | Dernière stable | Requis uniquement pour la version Emscripten Hunspell |
 
 ### Gestion des versions (recommandé)
@@ -38,13 +37,6 @@ Activer **pnpm** en utilisant Corepack :
 ```bash
 corepack enable
 corepack prepare pnpm@11.21.0 --activate
-```
-
-Installez la cible Rust lorsque vous travaillez sur des caisses Rust. Le packager WebAssembly est fourni par le fichier épinglé `wasm-pack` npm
-dépendance pendant `pnpm install`:
-
-```bash
-rustup target add wasm32-unknown-unknown
 ```
 
 ## Configuration initiale
@@ -66,7 +58,7 @@ Installez toutes les dépendances de l'espace de travail et configurez les hooks
 pnpm install
 ```
 
-Cette commande déclenche le `prepare` script, qui initialise **Husky** pour le commit linting et garantit tous les
+Cette commande déclenche le `prepare` script, qui initialise **Husky** pour le commit lint et garantit tous les
 les liens des packages sont correctement établis.
 
 ### 3. Vérifiez l'installation
@@ -77,10 +69,9 @@ Exécutez un test de fumée pour vous assurer que le système de build et l'envi
 pnpm exec turbo run build --filter @mission-platform/forge...
 ```
 
-Le `...` construit également les dépendances Forge requises par le package. Les caisses de décodeurs et d'encodeurs Rust sont testées
-nativement avec `cargo test`; leur
-`wasm-pack` les sorties sont écrites dans le fichier correspondant `packages/*-wasm/`
-workspace par la tâche de package de la caisse, qui est le contrat de package/build archivé utilisé par Turborepo.
+Le `...` construit également les dépendances Forge requises par le package. Le
+le scanner de code neutre est compilé à partir de son graphique Forge Web Script ; ce n'est pas le cas
+nécessitent un Rust ou `wasm-pack` étape de construction.
 
 ## Flux de travail de développement
 
@@ -119,7 +110,7 @@ done
 
 Les packages basés sur Forge publient la correspondance `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, et `mp:web-component` conditions. La condition active doit être
-configuré par le bundler consommateur ; voir [la référence du compilateur](forge-compiler.md)
+configuré par le bundler consommateur ; voir [la référence du compilateur](../../../vite-plugins/forge/docs/locales/fr/reference/compiler.md)
 pour le plugin cible et le pipeline de déclaration.
 
 ### Développement d'applications
@@ -159,8 +150,7 @@ pnpm install
 
 ### Échecs de construction WASM
 
-Si la construction des packages Rust/WASM échoue, vérifiez que la chaîne d'outils Rust stable et
-`wasm32-unknown-unknown` la cible est installée, puis exécutez `pnpm install` pour restaurer l'épinglé `wasm-pack` npm dépendance.
-Le
-`@mission-platform/hunspell` La version Emscripten nécessite en outre que Docker soit en cours d'exécution ; les autres caisses Rust construites
-avec la chaîne d'outils Rust locale.
+Si la création d'un artefact Forge Web Script échoue, inspectez les diagnostics de son compilateur.
+et vérifiez le profil de lien statique ou dynamique sélectionné. Le
+`@mission-platform/hunspell` La version Emscripten nécessite également que Docker
+être en train de courir.

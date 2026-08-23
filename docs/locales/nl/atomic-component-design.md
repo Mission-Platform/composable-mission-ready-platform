@@ -2,10 +2,10 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/atomic-component-design.md](../../atomic-component-design.md)
+> docs/atomic-component-design.md: [docs/atomic-component-design.md](../../atomic-component-design.md)
 > Taal: Nederlands (nl)
 
-Mission Platform maakt gebruik van een **Atomic Design**-systeem om componenten in hiërarchische niveaus van complexiteit te ordenen. Elke
+Mission Platform gebruikt een **Atomic Design**-systeem om componenten in hiërarchische niveaus van complexiteit te ordenen. Elke
 component is een "eenmalig schrijven" -eenheid geschreven in het neutrale Forge JSX-dialect (`@mission-platform/forge`), verzekeren
 consistentie binnen meerdere raamwerken.
 
@@ -44,7 +44,7 @@ src/components/
 
 ## Verhaalconventies
 
-Verhalenboekverhalen MOETEN op dezelfde locatie als hun componenten worden geplaatst en een strikte titelconventie volgen om schoon te blijven
+Verhalenboekverhalen MOETEN op dezelfde plek staan als hun componenten en moeten een strikte titelconventie volgen om de inhoud overzichtelijk te houden
 zijbalk structuur.
 
 ### Bestandsnaam
@@ -79,7 +79,7 @@ const meta = {
 2. **Naamgeving**: Componenten moeten de `Base` voorvoegsel (bijv. `ForgeCard`) tenzij het specifieke implementaties zijn.
 3. **Typeveiligheid**: Exporteren `*Properties` interface voor de rekwisieten van de component.
 4. **Testen**: Een co-locatie `.spec.ts` is voor elk onderdeel vereist.
-5. **Steiger**: Gebruik de `scaffold_component` MCP-tool om de juiste directorystructuur en boilerplate te garanderen.
+5. **Steiger**: Gebruik de `scaffold_component` MCP-tool om te zorgen voor de juiste directorystructuur en boilerplate.
 
 ```bash
 # Example: Creating a new 'forge-chip' atom in the 'components' package

@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/application-development.md](../../application-development.md)
+> docs/application-development.md: [docs/application-development.md](../../application-development.md)
 > Taal: Nederlands (nl)
 
 In deze handleiding wordt uitgelegd hoe u de applicaties kunt uitvoeren, testen en implementeren `apps/`. Applicaties zijn herbruikbaar

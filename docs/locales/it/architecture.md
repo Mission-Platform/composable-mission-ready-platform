@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/architecture.md](../../architecture.md)
+> docs/architecture.md: [docs/architecture.md](../../architecture.md)
 > Lingua: Italiano (it)
 
 Mission Platform è progettata per la massima riutilizzabilità e flessibilità tra framework. Questo documento spiega il
@@ -58,14 +58,15 @@ Il flusso risultante è **analizzare/normalizzare → ottimizzazione neutra → 
 build nativa**. La compilazione nativa viene eseguita dal plugin selezionato Vite o l'adattatore tsdown, che fornisce anche il file
 dichiarazioni di destinazione, elementi esterni e convenzioni di output.
 
-Un secondo asse ortogonale proietta gli stessi componenti neutrali su **piattaforme di contenuti**.
+Un secondo asse ortogonale proietta gli stessi componenti neutrali su **piattaforme di contenuto**.
 `@mission-platform/forge-cms-plugin-api` possiede un modello di contenuto neutrale rispetto alla piattaforma, the `CmsOutputPlugin` contratto e a
 driver generico; i pacchetti di adattatori `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
 E `forge-cms-webflow` ognuno possiede una piattaforma. Un target CMS *compone* un plugin framework invece di sostituirne uno, quindi
 qualsiasi piattaforma si accoppia con qualsiasi framework e l'output arriva `dist/cms/<cms>/<framework>/**`.
 
 Per la pipeline completa, i consumatori di componenti e hook, la proiezione CMS e le indicazioni sull'estensione, vedere
-[Pipeline del compilatore Forge](forge-compiler.md). Per la visualizzazione dell'orchestrazione della build, vedere [Costruisci sistema](build-system.md).
+[Pipeline del compilatore Forge](../../../vite-plugins/forge/docs/locales/it/reference/compiler.md). Per la visualizzazione dell'orchestrazione della build, vedere
+[Costruisci sistema](build-system.md).
 
 ## Sistema di token di progettazione
 
@@ -80,9 +81,14 @@ La coerenza visiva viene mantenuta attraverso un sofisticato sistema di token di
 
 I servizi applicativi principali come il routing e l'internazionalizzazione sono progettati per essere indipendenti dal framework.
 
-- **`@mission-platform/router`**: definisce i percorsi come una semplice struttura dati (`MpRoute`). Adattatori per Vue traduci questi
-  in istanze router e componenti componibili specifici del framework.
--**`@mission-platform/i18n`**: Un involucro intorno `i18next` che fornisce un universale `createForgeI18N` fabbrica.
+- **`@mission-platform/router`**: fornisce target di percorso strutturati, helper URL/posizione puri e indicatori del compilatore come tali
+  come `MpLink`, `useMpRoute`, `useMpRouter`, E `MpRouterView`. Non ha un framework UI o un runtime di libreria router
+  dipendenze e non possiede mai la tabella di routing di un'applicazione.
+- **Forgia obiettivi router**: `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, E
+  `-web-components` abbassare tali indicatori sul router nativo selezionato dall'applicazione che lo utilizza. Le applicazioni vengono mantenute
+  proprietà di definizioni di percorsi nativi, fornitori, guardie, caricatori e istanze di router; il bersaglio fornisce solo
+  capacità di consumo.
+- **`@mission-platform/i18n`**: Un involucro intorno `i18next` che fornisce un universale `createForgeI18N` fabbrica.
   Forniscono adattatori specifici del framework `useI18n` ganci e componenti per Vue E React.
 
 ## Strategia di creazione e distribuzione

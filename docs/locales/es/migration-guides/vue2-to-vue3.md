@@ -2,27 +2,27 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
+> docs/migration-guides/vue2-to-vue3.md: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
 > Idioma: Español (es)
 
-Esta guía describe cómo migrar archivos existentes Vue 2 bases de código para Vue 3 dentro del monorepo Mission Platform.
+Esta guía describe cómo migrar las bases de código Vue 2 existentes a Vue 3 dentro del monorepo de Mission Platform.
 
 ## Descripción general
 
-La Plataforma de la Misión utiliza Vue 3 con la API de composición y `<script setup>` sintaxis. Migrar implica alejarse
+Mission Platform utiliza Vue 3 con la API de composición y la sintaxis `<script setup>`. Migrar implica alejarse
 desde la API de opciones y actualizando el ciclo de vida de los componentes y los patrones de reactividad.
 
 ## Requisitos previos
 
 Antes de migrar, asegúrese de que su paquete siga las reglas de dependencia de la plataforma:
 
-- No hay importaciones de `apps/`.
+- No hay importaciones desde `apps/`.
 - Toda la lógica compartida debe residir en `packages/`.
 - La configuración debe provenir de `configs/`.
 
 ## Paso 1: actualizar la configuración de compilación
 
-Asegure su `package.json` y `vite.config.ts` están apuntando Vue 3.
+Asegúrese de que `package.json` y `vite.config.ts` estén orientados a Vue 3.
 
 ```ts
 // vite.config.ts
@@ -36,11 +36,11 @@ export default defineConfig(defineAppConfig({
 
 ## Paso 2: Convertir API de opciones en API de composición
 
-Reemplace el Vue API de 2 opciones (`data`, `methods`, `computed`) con el Vue 3 API de composición.
+Reemplace la API de 2 opciones Vue (`data`, `methods`, `computed`) con la API de composición Vue 3.
 
 ### Datos a referencias
 
-En Vue 2, el estado se definió en el `data()` función. En Vue 3, uso `ref()` o `reactive()`.
+En Vue 2, el estado se definió en la función `data()`. En Vue 3, utilice `ref()` o `reactive()`.
 
 **Vue 2:**
 
@@ -64,7 +64,7 @@ const count = ref(0);
 
 ### Métodos de funciones
 
-Los métodos se convierten en funciones simples en el `<script setup>` bloquear.
+Los métodos se convierten en funciones simples en el bloque `<script setup>`.
 
 **Vue 2:**
 
@@ -88,15 +88,15 @@ const increment = () => {
 
 Se ha cambiado el nombre de los ganchos del ciclo de vida y se deben importar.
 
-| Vue 2                      | Vue 3                                     |
+| Vue 2 | Vue 3 |
 |:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` | Usar `setup()` / `<script setup>` directamente |
-| `beforeMount`              | `onBeforeMount`                           |
-| `mounted`                  | `onMounted`                               |
-| `beforeUpdate`             | `onBeforeUpdate`                          |
-| `updated`                  | `onUpdated`                               |
-| `beforeDestroy`            | `onBeforeUnmount`                         |
-| `destroyed`                | `onUnmounted`                             |
+| `beforeCreate` / `created` | Utilice `setup()` / `<script setup>` directamente |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 Ejemplo:
 
@@ -108,9 +108,9 @@ onMounted(() => {
 });
 ```
 
-## Paso 4: adoptar `<script setup>`
+## Paso 4: Adoptar `<script setup>`
 
-Todos los componentes nuevos y migrados en Mission Platform deben utilizar el `<script setup>` sintaxis con TypeScript.
+Todos los componentes nuevos y migrados en Mission Platform deben usar la sintaxis `<script setup>` con TypeScript.
 
 ```vue
 <template>
@@ -129,11 +129,11 @@ const increment = () => count.value++;
 
 ### modelo V
 
-En Vue 3, el nombre de accesorio predeterminado para `v-model` es `modelValue` y el evento es `update:modelValue`.
+En Vue 3, el nombre de propiedad predeterminado para `v-model` es `modelValue` y el evento es `update:modelValue`.
 
 ### Acceso de referencia
 
-`this.$refs` ya no se usa. Defina una referencia con el mismo nombre que la `ref` atributo en el elemento.
+`this.$refs` ya no se utiliza. Defina una referencia con el mismo nombre que el atributo `ref` en el elemento.
 
 ```vue
 <template>

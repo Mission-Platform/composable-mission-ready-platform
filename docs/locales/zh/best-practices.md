@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/best-practices.md](../../best-practices.md)
+> docs/best-practices.md: [docs/best-practices.md](../../best-practices.md)
 > 语言: 简体中文 (zh)
 
 本文档概述了 Mission Platform monorepo 的核心原则、架构和编码标准。它
@@ -68,7 +68,7 @@ done
 - 专门使用 **Composition API**。
 - 更喜欢 `ref()` 对于大多数状态来说保持一致性。
 - 将复杂的状态逻辑提取到**可组合项**（`useXxx`)。
-- 确保所有副作用（观察者、间隔、事件侦听器）都得到正确清理 `onUnmounted`.
+- 确保所有副作用（观察者、间隔、事件监听器）都得到正确清理 `onUnmounted`.
 
 ## Monorepo工作流程
 

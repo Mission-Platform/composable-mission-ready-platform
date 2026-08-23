@@ -2,7 +2,7 @@
 
 Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
 
-> Fuente en inglés: [docs/application-development.md](../../application-development.md)
+> docs/application-development.md: [docs/application-development.md](../../application-development.md)
 > Idioma: Español (es)
 
 Esta guía práctica explica cómo ejecutar, probar e implementar las aplicaciones en `apps/`. Las aplicaciones se componen de reutilizables.

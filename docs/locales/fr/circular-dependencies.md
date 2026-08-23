@@ -2,7 +2,7 @@
 
 Traduction assistée par machine à partir de la source anglaise canonique. À relire manuellement si besoin. Les noms de paquets, commandes, chemins et identifiants techniques restent inchangés.
 
-> Source anglaise: [docs/circular-dependencies.md](../../circular-dependencies.md)
+> docs/circular-dependencies.md: [docs/circular-dependencies.md](../../circular-dependencies.md)
 > Langue: Français (fr)
 
 Ce document explique l'impact des dépendances circulaires au sein du monorepo Mission Platform et fournit un **Comment faire
@@ -71,7 +71,7 @@ que `UserService` écoute.
 
 ### Stratégie 3 : Consolidation
 
-Si deux packages sont si étroitement couplés qu'ils nécessitent constamment les composants internes l'un de l'autre, ils pourraient en fait être un
+Si deux packages sont si étroitement couplés qu'ils ont constamment besoin des composants internes l'un de l'autre, ils pourraient en fait être un
 une seule unité logique. Pensez à les fusionner en un seul package.
 
 ## Meilleures pratiques de prévention
@@ -80,7 +80,7 @@ une seule unité logique. Pensez à les fusionner en un seul package.
 2. **Logique neutre du cadre d'auteur** : utilisation `@mission-platform/forge` pour la logique de base afin d'éviter les cycles spécifiques au framework.
 3. **Utilisez les protocoles d'espace de travail** : utilisez toujours `workspace:*` pour les dépendances internes afin d'assurer pnpm peut résoudre correctement
    le graphique.
-4. **Auditer régulièrement les importations** : faites attention aux suggestions "d'importation automatique" dans votre IDE, car elles peuvent parfois introduire
+4. **Auditez régulièrement les importations** : faites attention aux suggestions "d'importation automatique" dans votre IDE, car elles peuvent parfois introduire
    dépendances involontaires entre packages.
 
 ## Documentation connexe

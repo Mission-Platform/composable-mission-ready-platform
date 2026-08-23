@@ -1,7 +1,12 @@
 # Shared Utility Scripts
 
-The Mission Platform maintains a set of shared utility scripts in the root `scripts/` directory, managed by the
-`@mission-platform/scripts` package.
+This guide intentionally remains in the project documentation tier: `scripts/`
+contains repository orchestration rather than a publishable workspace package.
+Package- and application-specific commands remain documented beside their
+owning workspace.
+
+The Mission Platform maintains a set of shared utility scripts in the root
+`scripts/` directory, managed by the root workspace tooling.
 
 ## Overview
 

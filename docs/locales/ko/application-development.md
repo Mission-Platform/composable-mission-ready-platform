@@ -2,7 +2,7 @@
 
 정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
 
-> 영어 원문: [docs/application-development.md](../../application-development.md)
+> docs/application-development.md: [docs/application-development.md](../../application-development.md)
 > 언어: 한국어 (ko)
 
 이 방법 가이드에서는 애플리케이션을 실행, 테스트 및 배포하는 방법을 설명합니다. `apps/`. 애플리케이션은 재사용 가능하게 구성됩니다.
@@ -19,7 +19,7 @@
 | `@mission-platform/service-monitor` | `pnpm --filter @mission-platform/service-monitor dev` | `pnpm --filter @mission-platform/service-monitor build` | `pnpm --filter @mission-platform/service-monitor deploy:staging` |
 | `@mission-platform/storybook` | `pnpm --filter @mission-platform/storybook dev` | `pnpm --filter @mission-platform/storybook build` | 구성된 Storybook/Chromatic 작업 흐름 사용 |
 
-응용 프로그램 패키지는 해당 패키지를 소유합니다. Vite 또는 Wrangler 구성. 달리지 마세요 `wrangler deploy` 재사용 가능한 작업자로부터
+애플리케이션 패키지는 해당 패키지를 소유합니다. Vite 또는 Wrangler 구성. 달리지 마세요 `wrangler deploy` 재사용 가능한 작업자로부터
 패키지에 자체 패키지가 없는 경우 `wrangler.jsonc`.
 
 ## 변화를 개발하다

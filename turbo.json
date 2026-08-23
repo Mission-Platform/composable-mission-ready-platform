@@ -43,6 +43,7 @@
         "$TURBO_DEFAULT$",
         "$TURBO_ROOT$/scripts/build-forge.ts",
         "$TURBO_ROOT$/scripts/forge-build.ts",
+        "$TURBO_ROOT$/scripts/extract-package-docs.ts",
         "!**/*.md",
         "!**/dist/**",
         "!**/storybook-static/**",
@@ -51,7 +52,7 @@
         "!**/node_modules/.cache/forge-build/**",
         "!**/.forge-promotion-*/**"
       ],
-      "outputs": ["dist/**", ".vite/**"]
+      "outputs": ["dist/**", ".vite/**", "docs/reference/generated/**"]
     },
     "build:check": {
       "dependsOn": ["^build"],

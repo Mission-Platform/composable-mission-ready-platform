@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/development-setup.md](../../development-setup.md)
+> docs/development-setup.md: [docs/development-setup.md](../../development-setup.md)
 > Sprache: Deutsch (de)
 
 Dieser Leitfaden bietet eine Schritt-für-Schritt-Anleitung zum Einrichten Ihrer lokalen Umgebung, um zur Mission Platform beizutragen.
@@ -15,12 +15,11 @@ Stellen Sie vor dem Klonen des Repositorys sicher, dass Ihr System die folgenden
 ### Systemanforderungen
 
 | Werkzeug | Erforderliche Version | Zweck |
-| :------------ | :---------------- | :---------------------------------------------------- |
-| **Node.js** | `24.19.0`         | Laufzeitumgebung (Aktives LTS) |
-| **pnpm**      | `11.21.0`         | Paketmanager und Arbeitsbereich-Orchestrator |
+| :---------- | :--------------- | :---------------------------------------------- |
+| **Node.js** | `24.19.0`        | Laufzeitumgebung (Aktives LTS) |
+| **pnpm**    | `11.21.0`        | Paketmanager und Arbeitsbereich-Orchestrator |
 | **Git** | Neueste stabile | Versionskontrolle |
-| **Rost** | Stabile Toolchain | Native Tests und Entwicklung von Rust/WASM-Kisten |
-| **wasm-pack** | `0.15.0` über pnpm | Verpacken von Rust-Kisten als typisierte WebAssembly-Arbeitsbereiche |
+| **Rost** | Stabile Toolchain | Optionale eigenständige Rust-Benchmark-Entwicklung |
 | **Docker** | Neueste stabile | Nur für den Emscripten Hunspell-Build erforderlich |
 
 ### Versionsverwaltung (empfohlen)
@@ -38,13 +37,6 @@ Aktivieren **pnpm** mit Corepack:
 ```bash
 corepack enable
 corepack prepare pnpm@11.21.0 --activate
-```
-
-Installieren Sie das Rust-Ziel, wenn Sie an Rust-Kisten arbeiten. Der WebAssembly-Packager wird von pinned bereitgestellt `wasm-pack` npm
-Abhängigkeit während `pnpm install`:
-
-```bash
-rustup target add wasm32-unknown-unknown
 ```
 
 ## Ersteinrichtung
@@ -71,16 +63,15 @@ Paketverknüpfungen sind korrekt eingerichtet.
 
 ### 3. Überprüfen Sie die Installation
 
-Führen Sie einen Rauchtest durch, um sicherzustellen, dass das Build-System und die Umgebung korrekt konfiguriert sind:
+Führen Sie einen Rauchtest durch, um sicherzustellen, dass das Build-System und die Umgebung richtig konfiguriert sind:
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/forge...
 ```
 
-Der `...` erstellt auch die für das Paket erforderlichen Forge-Abhängigkeiten. Rust-Decoder und Encoder-Kisten werden getestet
-nativ mit `cargo test`; ihre
-`wasm-pack` Ausgänge werden in die entsprechenden geschrieben `packages/*-wasm/`
-workspace durch die Paketaufgabe der Kiste, bei der es sich um das eingecheckte Paket/den Build-Vertrag handelt, der von Turborepo verwendet wird.
+Der `...` erstellt auch die für das Paket erforderlichen Forge-Abhängigkeiten. Die
+Der neutrale Codescanner wird aus seinem Forge Web Script-Diagramm kompiliert. das tut es nicht
+erfordern einen Rost oder `wasm-pack` Bauschritt.
 
 ## Entwicklungsworkflow
 
@@ -119,7 +110,7 @@ done
 
 Von Forge unterstützte Pakete veröffentlichen Matching `mp:vue`, `mp:react`, `mp:svelte`,
 `mp:solid`, Und `mp:web-component` Bedingungen. Die aktive Bedingung muss sein
-vom konsumierenden Bundler konfiguriert; sehen [die Compiler-Referenz](forge-compiler.md)
+vom konsumierenden Bundler konfiguriert; sehen [die Compiler-Referenz](../../../vite-plugins/forge/docs/locales/de/reference/compiler.md)
 für das Ziel-Plugin und die Deklarationspipeline.
 
 ### Anwendungsentwicklung
@@ -159,8 +150,7 @@ pnpm install
 
 ### WASM-Build-Fehler
 
-Wenn Rust/WASM-Pakete nicht erstellt werden können, überprüfen Sie, ob die stabile Rust-Toolchain und
-`wasm32-unknown-unknown` Das Ziel wird installiert und dann ausgeführt `pnpm install` um das Angepinnte wiederherzustellen `wasm-pack` npm Abhängigkeit.
-Der
-`@mission-platform/hunspell` Für den Emscripten-Build muss außerdem Docker ausgeführt werden. die anderen Rust-Kisten bauen
-mit der lokalen Rust-Toolchain.
+Wenn die Erstellung eines Forge-Webskript-Artefakts fehlschlägt, überprüfen Sie die Diagnose des Compilers
+und überprüfen Sie das ausgewählte statische oder dynamische Linkprofil. Der
+`@mission-platform/hunspell` Für den Emscripten-Build ist zusätzlich Docker erforderlich
+laufen.

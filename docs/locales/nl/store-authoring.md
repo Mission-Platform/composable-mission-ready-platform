@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/store-authoring.md](../../store-authoring.md)
+> docs/store-authoring.md: [docs/store-authoring.md](../../store-authoring.md)
 > Taal: Nederlands (nl)
 
 Winkels worden gebruikt om de gedeelde, componentoverschrijdende status binnen een pakket te beheren. In tegenstelling tot winkels op applicatieniveau (zoals Pinia of
@@ -11,7 +11,7 @@ write-once-componenten om ze via Forge-hooks te gebruiken, ongeacht het hostfram
 
 ## Directory-indeling
 
-Elke winkel MOET zich in zijn eigen benoemde submap bevinden `src/stores/`, vergezeld van een co-located testbestand en een
+Elke winkel MOET zich in zijn eigen benoemde submap binnen `src/stores/` bevinden, vergezeld van een co-located testbestand en een
 lokaal vat.
 
 ```text
@@ -27,20 +27,20 @@ src/stores/
 
 Pakketwinkels vermijden raamwerkspecifieke afhankelijkheden. In plaats daarvan volgen ze een eenvoudig waarneembaar patroon:
 
-1. **Privéstatus**: houd de status binnen het bereik van de module (gewoon TypeScript waarden).
-2. **Toegang tot momentopname**: geef een `getSnapshot()` functie om de huidige status op te halen.
-3. **Abonnement**: Geef een `subscribe(listener)` functie die een callback aan een lijst toevoegt en een uitschrijving retourneert
+1. **Privéstatus**: houd de status binnen het bereik van de module (gewone TypeScript-waarden).
+2. **Momentopnametoegang**: Geef een `getSnapshot()`-functie op om de huidige status op te halen.
+3. **Abonnement**: geef een `subscribe(listener)`-functie op die een terugbelverzoek aan een lijst toevoegt en een afmelding retourneert
    functie.
 4. **Mutators**: Biedt functies om de status bij te werken, die alle luisteraars na de update MOET informeren.
 
 ## Auteursregels
 
-1. **Framework-agnostisch**: niet importeren uit `vue`, `react`, of `@mission-platform/forge` haken in de winkelmodule
+1. **Framework-agnostisch**: importeer niet vanuit `vue`-, `react`- of `@mission-platform/forge`-haken in de winkelmodule
    zelf.
 2. **Expliciete typen**: definieer en exporteer altijd een interface voor de status van de winkel.
-3. **SSR-veiligheid**: bewaak de toegang tot browser-API's (bijv. `localStorage`) zodat de winkel kan worden geïnitialiseerd in a Node.js
+3. **SSR-veiligheid**: bewaak de toegang tot browser-API's (bijvoorbeeld `localStorage`) zodat de winkel kan worden geïnitialiseerd in een Node.js
    omgeving.
-4. **Verplicht testen**: Elke winkel moet een co-locatie hebben `.spec.ts` bestand.
+4. **Verplicht testen**: Elke winkel moet een co-located `.spec.ts`-bestand hebben.
 
 ## Voorbeeld winkel
 
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Winkels in componenten consumeren
 
-Als u een opslag binnen een eenmalige-schrijfcomponent wilt gebruiken, overbrugt u deze met behulp van `useState` En `useEffect` van `@mission-platform/forge`:
+Om een ​​opslag binnen een eenmalige-schrijfcomponent te gebruiken, moet u deze overbruggen met behulp van `useState` en `useEffect` uit `@mission-platform/forge`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

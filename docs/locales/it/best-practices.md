@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/best-practices.md](../../best-practices.md)
+> docs/best-practices.md: [docs/best-practices.md](../../best-practices.md)
 > Lingua: Italiano (it)
 
 Questo documento delinea i principi fondamentali, l'architettura e gli standard di codifica per il monorepo Mission Platform. Esso
@@ -55,7 +55,7 @@ Tutto il nuovo codice sorgente deve essere scritto TypeScript (`.ts`) O Vue SFC 
 
 - **Modalità rigorosa**: `strict: true` viene applicato ovunque `tsconfig.json` file.
 - **Tipi espliciti**: fornisce tipi espliciti per tutte le API pubbliche, le funzioni esportate e i componenti componibili.
-- **Evitare `any`**: utilizzare tipi precisi o generici. Se un tipo è veramente sconosciuto, usa `unknown` ed eseguire il restringimento del tipo.
+- **Evitare `any`**: utilizzare tipi precisi o generici. Se un tipo è veramente sconosciuto, utilizzare `unknown` ed eseguire il restringimento del tipo.
 
 ### Componenti neutrali rispetto al contesto
 
@@ -95,7 +95,7 @@ Lo stile di codice coerente viene applicato tramite ESLint E Prettier.
 ## Test e documentazione
 
 - **Sviluppo basato sui test**: ogni nuova funzionalità o correzione di bug deve essere accompagnata da test unitari (`.spec.ts`).
-- **Documentazione Diátaxis**: Documentazione scritta seguendo il framework Diátaxis (Tutorial, How-to, Reference,
+- **Documentazione Diátaxis**: Documentazione scritta seguendo il framework Diátaxis (Tutorial, Istruzioni, Riferimenti,
   Spiegazione).
 - **TSDoc**: utilizza TSDoc/JSDoc per tutti i metodi e le proprietà rivolti al pubblico per potenziare l'intelligenza IDE.
 

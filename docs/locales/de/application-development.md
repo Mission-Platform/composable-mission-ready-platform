@@ -2,7 +2,7 @@
 
 Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
 
-> Englische Quelle: [docs/application-development.md](../../application-development.md)
+> docs/application-development.md: [docs/application-development.md](../../application-development.md)
 > Sprache: Deutsch (de)
 
 In dieser Anleitung wird erläutert, wie Sie die Anwendungen ausführen, testen und bereitstellen `apps/`. Anwendungen sind wiederverwendbar

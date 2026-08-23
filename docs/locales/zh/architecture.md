@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/architecture.md](../../architecture.md)
+> docs/architecture.md: [docs/architecture.md](../../architecture.md)
 > 语言: 简体中文 (zh)
 
 Mission Platform 旨在实现最大程度的可重用性和跨框架灵活性。本文档解释了
@@ -65,7 +65,8 @@ Mission Platform 的核心是 `@mission-platform/forge`，一个框架中立的�
 任何平台与任何框架配对，输出落在 `dist/cms/<cms>/<framework>/**`.
 
 有关完整的管道、组件和挂钩使用者、CMS 投影和扩展指南，请参阅
-[Forge 编译器管道](forge-compiler.md)。对于构建编排视图，请参见 [构建系统](build-system.md).
+[Forge 编译器管道](../../../vite-plugins/forge/docs/locales/zh/reference/compiler.md)。对于构建编排视图，请参阅
+[构建系统](build-system.md).
 
 ## 设计代币系统
 
@@ -80,8 +81,13 @@ Mission Platform 的核心是 `@mission-platform/forge`，一个框架中立的�
 
 路由和国际化等核心应用程序服务被设计为与框架无关。
 
-- **`@mission-platform/router`**：将路由定义为普通数据结构（`MpRoute`)。适配器用于 Vue 翻译这些
-  到特定于框架的路由器实例和可组合项。
+- **`@mission-platform/router`**：提供结构化路由目标、纯 URL/位置帮助程序和编译器标记，例如
+  作为 `MpLink`, `useMpRoute`, `useMpRouter`， 和 `MpRouterView`。它没有 UI 框架或路由器库运行时
+  依赖关系并且从不拥有应用程序的路由表。
+- **伪造路由器目标**： `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`， 和
+  `-web-components` 将这些标记降低到消费应用程序选择的本机路由器。应用程序保留
+  本机路由定义、提供者、守卫、加载器和路由器实例的所有权；目标仅提供
+  消费能力。
 - **`@mission-platform/i18n`**：一个包装纸 `i18next` 这提供了一个通用的 `createForgeI18N` 工厂。
   特定于框架的适配器提供 `useI18n` 挂钩和组件 Vue 和 React.
 
@@ -100,7 +106,7 @@ Turborepo 处理整个 monorepo 的构建、测试和 linting 的繁重工作。
 ### Cloudflare 部署
 
 应用程序主要部署到 **Cloudflare Pages**，以及 **Cloudflare Workers**（在 `workers/`) 提供
-API 代理和 SPA 资产服务的专用逻辑。
+用于 API 代理和 SPA 资产服务的专用逻辑。
 
 ## 概括
 

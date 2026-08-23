@@ -1,28 +1,28 @@
-# Vue 2 ل Vue 3 دليل الهجرة
+# Vue 2 إلى Vue 3 دليل الترحيل
 
 ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
 
-> المصدر الإنجليزي: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
+> docs/migration-guides/vue2-to-vue3.md: [docs/migration-guides/vue2-to-vue3.md](../../../migration-guides/vue2-to-vue3.md)
 > اللغة: العربية (ar)
 
-يصف هذا الدليل كيفية ترحيل القائمة Vue 2 قواعد التعليمات البرمجية ل Vue 3 ضمن منصة المهمة monorepo.
+يصف هذا الدليل كيفية ترحيل قواعد التعليمات البرمجية Vue 2 الحالية إلى Vue 3 داخل Mission Platform monorepo.
 
 ## ملخص
 
-تستخدم منصة المهمة Vue 3 مع واجهة برمجة تطبيقات التركيب و `<script setup>` بناء الجملة. الهجرة تنطوي على الابتعاد
+يستخدم Mission Platform Vue 3 مع تركيبة API و`<script setup>`. الهجرة تنطوي على الابتعاد
 من Options API وتحديث دورة حياة المكونات وأنماط التفاعل.
 
 ## المتطلبات الأساسية
 
 قبل الترحيل، تأكد من أن الحزمة الخاصة بك تتبع قواعد تبعية النظام الأساسي:
 
-- لا الواردات من `apps/`.
-- يجب أن يكون كل المنطق المشترك موجودًا `packages/`.
+- لا توجد واردات من `apps/`.
+- يجب أن يكون كل المنطق المشترك موجودًا في `packages/`.
 - يجب أن يأتي التكوين من `configs/`.
 
 ## الخطوة 1: تحديث تكوين البناء
 
-تأكد من الخاص بك `package.json` و `vite.config.ts` يتم استهدافها Vue 3.
+تأكد من أن `package.json` و`vite.config.ts` يستهدفان Vue 3.
 
 ```ts
 // vite.config.ts
@@ -36,11 +36,11 @@ export default defineConfig(defineAppConfig({
 
 ## الخطوة 2: تحويل API الخيارات إلى Composition API
 
-استبدل Vue 2 خيارات واجهة برمجة التطبيقات (`data`, `methods`, `computed`) مع Vue 3 تكوين API.
+استبدل Vue 2 Options API (`data`، `methods`، `computed`) بـ Vue 3 Composition API.
 
 ### البيانات إلى المراجع
 
-في Vue 2، تم تعريف الدولة في `data()` وظيفة. في Vue 3، استخدم `ref()` أو `reactive()`.
+في Vue 2، تم تعريف الحالة في الدالة `data()`. في Vue 3، استخدم `ref()` أو `reactive()`.
 
 **Vue 2:**
 
@@ -64,7 +64,7 @@ const count = ref(0);
 
 ### طرق الوظائف
 
-تصبح الأساليب وظائف واضحة في `<script setup>` حاجز.
+تصبح الطرق وظائف عادية في كتلة `<script setup>`.
 
 **Vue 2:**
 
@@ -88,15 +88,15 @@ const increment = () => {
 
 تمت إعادة تسمية خطافات دورة الحياة ويجب استيرادها.
 
-| Vue 2                      | Vue 3                                     |
+| Vue 2 | Vue 3 |
 |:---------------------------|:------------------------------------------|
-| `beforeCreate` / `created` | يستخدم `setup()` / `<script setup>` مباشرة |
-| `beforeMount`              | `onBeforeMount`                           |
-| `mounted`                  | `onMounted`                               |
-| `beforeUpdate`             | `onBeforeUpdate`                          |
-| `updated`                  | `onUpdated`                               |
-| `beforeDestroy`            | `onBeforeUnmount`                         |
-| `destroyed`                | `onUnmounted`                             |
+| `beforeCreate` / `created` | استخدم `setup()` / `<script setup>` مباشرة |
+| `beforeMount` | `onBeforeMount` |
+| `mounted` | `onMounted` |
+| `beforeUpdate` | `onBeforeUpdate` |
+| `updated` | `onUpdated` |
+| `beforeDestroy` | `onBeforeUnmount` |
+| `destroyed` | `onUnmounted` |
 
 مثال:
 
@@ -110,7 +110,7 @@ onMounted(() => {
 
 ## الخطوة 4: اعتماد `<script setup>`
 
-يجب أن تستخدم كافة المكونات الجديدة والمرحلة في منصة المهمة `<script setup>` بناء الجملة مع TypeScript.
+يجب أن تستخدم كافة المكونات الجديدة والمرحلة في Mission Platform بناء جملة `<script setup>` مع TypeScript.
 
 ```vue
 <template>
@@ -129,11 +129,11 @@ const increment = () => count.value++;
 
 ### نموذج V
 
-في Vue 3، اسم الدعامة الافتراضي لـ `v-model` يكون `modelValue` والحدث هو `update:modelValue`.
+في Vue 3، اسم الخاصية الافتراضي لـ `v-model` هو `modelValue` والحدث هو `update:modelValue`.
 
 ### الوصول إلى المرجع
 
-`this.$refs` لم يعد يستخدم. حدد مرجعًا يحمل نفس اسم `ref` السمة على العنصر.
+لم يعد `this.$refs` مستخدمًا. قم بتعريف مرجع بنفس اسم السمة `ref` على العنصر.
 
 ```vue
 <template>
@@ -153,7 +153,7 @@ onMounted(() => {
 
 ## الخطوة 6: التحقق
 
-قم بتشغيل الأوامر التالية لضمان نجاح الترحيل والتزامه بمعايير النظام الأساسي:
+قم بتشغيل الأوامر التالية لضمان نجاح الترحيل والالتزام بمعايير النظام الأساسي:
 
 ```bash
 # Type-check the package

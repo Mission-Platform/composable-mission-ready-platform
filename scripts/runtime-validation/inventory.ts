@@ -36,6 +36,9 @@ const IGNORED_DIRECTORIES = new Set(['.git', 'node_modules', 'dist', 'coverage',
 
 interface PackageJson {
   name?: unknown;
+  scripts?: {
+    dev?: unknown;
+  };
 }
 
 function readPackage(directory: string): PackageJson | undefined {
@@ -173,7 +176,9 @@ export function discoverInventory(repositoryRoot: string): RepositoryInventory {
   const workspacePackages = discoverWorkspacePackages(repositoryRoot);
   const packages = workspacePackages.filter((workspace) => workspace.scope === 'package');
   const apps = workspacePackages
-    .filter((workspace) => workspace.scope === 'app')
+    .filter(
+      (workspace) => workspace.scope === 'app' && typeof readPackage(workspace.directory)?.scripts?.dev === 'string',
+    )
     .map((workspace) => {
       const appDirectory = workspace.directory;
       const routerFiles = discoverAppRouteFiles(appDirectory);

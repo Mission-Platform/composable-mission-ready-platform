@@ -2,7 +2,7 @@
 
 由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
 
-> 英文原文: [docs/overview.md](../../overview.md)
+> docs/overview.md: [docs/overview.md](../../overview.md)
 > 语言: 简体中文 (zh)
 
 Mission Platform 是一个可组合、包驱动、框架中立的组件平台，旨在构建

@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/store-authoring.md](../../store-authoring.md)
+> docs/store-authoring.md: [docs/store-authoring.md](../../store-authoring.md)
 > Lingua: Italiano (it)
 
 Gli archivi vengono utilizzati per gestire lo stato condiviso tra componenti all'interno di un pacchetto. A differenza degli store a livello di applicazione (come Pinia o
@@ -11,7 +11,7 @@ componenti write-once per consumarli tramite hook Forge indipendentemente dal fr
 
 ## Disposizione della rubrica
 
-Ogni negozio DEVE risiedere nella propria sottodirectory denominata all'interno `src/stores/`, accompagnato da un file di test co-localizzato e da a
+Ciascun negozio DEVE risiedere nella propria sottodirectory denominata all'interno di `src/stores/`, accompagnata da un file di test co-localizzato e da un
 botte locale.
 
 ```text
@@ -27,20 +27,20 @@ src/stores/
 
 Gli archivi di pacchetti evitano dipendenze specifiche del framework. Invece, seguono un semplice modello osservabile:
 
-1. **Stato privato**: mantiene lo stato nell'ambito del modulo (plain TypeScript valori).
-2. **Accesso allo snapshot**: fornire a `getSnapshot()` funzione per recuperare lo stato corrente.
-3. **Abbonamento**: fornire a `subscribe(listener)` funzione che aggiunge una richiamata a un elenco e restituisce un annullamento dell'iscrizione
+1. **Stato privato**: mantiene lo stato nell'ambito del modulo (valori semplici TypeScript).
+2. **Accesso allo snapshot**: fornisce una funzione `getSnapshot()` per recuperare lo stato corrente.
+3. **Sottoscrizione**: fornisce una funzione `subscribe(listener)` che aggiunge una richiamata a un elenco e restituisce un'annullamento dell'iscrizione
    funzione.
 4. **Mutatori**: Fornisce funzioni per aggiornare lo stato, che DEVE avvisare tutti gli ascoltatori dopo l'aggiornamento.
 
 ## Regole di creazione
 
-1. **Indipendente dal framework**: non importare da `vue`, `react`, O `@mission-platform/forge` ganci all'interno del modulo negozio
+1. **Indipendente dal framework**: non importare dagli hook `vue`, `react` o `@mission-platform/forge` all'interno del modulo negozio
    stesso.
 2. **Tipi espliciti**: definisci ed esporta sempre un'interfaccia per lo stato del negozio.
-3. **Sicurezza SSR**: protegge l'accesso alle API del browser (ad es. `localStorage`) quindi il negozio può essere inizializzato in a Node.js
+3. **Sicurezza SSR**: protegge l'accesso alle API del browser (ad esempio, `localStorage`) in modo che lo store possa essere inizializzato in un Node.js
    ambiente.
-4. **Test obbligatori**: ogni negozio deve avere una sede condivisa `.spec.ts` file.
+4. **Test obbligatorio**: ogni negozio deve avere un file `.spec.ts` co-localizzato.
 
 ## Negozio di esempio
 
@@ -69,7 +69,7 @@ export function setTheme(theme: ThemeState['theme']): void {
 
 ## Consumo di negozi nei componenti
 
-Per utilizzare un archivio all'interno di un componente write-once, collegalo utilizzando `useState` E `useEffect` da `@mission-platform/forge`:
+Per utilizzare un archivio all'interno di un componente riscrivibile una sola volta, collegarlo utilizzando `useState` e `useEffect` da `@mission-platform/forge`:
 
 ```tsx
 const [snapshot, setSnapshot] = useState(getThemeSnapshot());

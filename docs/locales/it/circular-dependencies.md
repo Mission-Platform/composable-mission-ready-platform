@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/circular-dependencies.md](../../circular-dependencies.md)
+> docs/circular-dependencies.md: [docs/circular-dependencies.md](../../circular-dependencies.md)
 > Lingua: Italiano (it)
 
 Questo documento spiega l'impatto delle dipendenze circolari all'interno del monorepo di Mission Platform e fornisce un **How-to
@@ -78,7 +78,7 @@ unica unità logica. Valuta la possibilità di unirli in un unico pacchetto.
 
 1. **Segui il flusso unidirezionale**: aderisci rigorosamente al `Apps → Packages → Configs` direzione della dipendenza.
 2. **Logica neutra rispetto al framework dell'autore**: utilizzo `@mission-platform/forge` per la logica di base per evitare cicli specifici del framework.
-3. **Utilizza protocolli Workspace**: utilizzare sempre `workspace:*` per le dipendenze interne da garantire pnpm può risolversi correttamente
+3. **Utilizza protocolli Workspace**: utilizzare sempre `workspace:*` per le dipendenze interne da garantire pnpm può risolvere correttamente
    il grafico.
 4. **Controlla regolarmente le importazioni**: presta attenzione ai suggerimenti di "importazione automatica" nel tuo IDE, poiché a volte possono introdurre
    dipendenze tra pacchetti non intenzionali.

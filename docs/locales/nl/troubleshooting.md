@@ -2,7 +2,7 @@
 
 Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
 
-> Engelse bron: [docs/troubleshooting.md](../../troubleshooting.md)
+> docs/troubleshooting.md: [docs/troubleshooting.md](../../troubleshooting.md)
 > Taal: Nederlands (nl)
 
 Deze gids biedt oplossingen voor veelvoorkomende problemen die zich voordoen tijdens de ontwikkeling, bouw en implementatie binnen de missie
@@ -23,9 +23,9 @@ Platform monorepo. Het is gestructureerd als een **handleiding** voor het diagno
 **Oplossingen**:
 
 - **Inline kritische CSS**: zorg ervoor dat de stijlen die vereist zijn voor inhoud boven de vouw, inline zijn.
-- **Beeldoptimalisatie**: gebruik WebP/AVIF-formaten en bied `srcset` voor responsieve afbeeldingen.
-- **Vooraf laden van bronnen**: gebruik `<link rel="preload">` voor de LCP-afbeelding of kritische lettertypen.
-- **Minimaliseer hoofdthreadwerk**: stel niet-essentiële JavaScript-gebruik uit `async` of `defer`.
+- **Beeldoptimalisatie**: gebruik WebP/AVIF-formaten en bied `srcset` aan voor responsieve afbeeldingen.
+- **Vooraf laden van bronnen**: gebruik `<link rel="preload">` voor de LCP-image of kritische lettertypen.
+- **Minimaliseer hoofdthreadwerk**: stel niet-essentiële JavaScript uit met `async` of `defer`.
 
 ### Geheugenlekken
 
@@ -39,9 +39,9 @@ Platform monorepo. Het is gestructureerd als een **handleiding** voor het diagno
 
 **Oplossingen**:
 
-- **Opschonen in Composables**: Wis altijd timers en verwijder gebeurtenislisteners `onUnmounted`.
+- **Opschonen in Composables**: timers altijd wissen en gebeurtenislisteners verwijderen in `onUnmounted`.
 - **Winkelbeheer**: Zorg ervoor dat de reactieve status in Pinia of andere winkels wordt gewist wanneer deze niet langer nodig is.
-- **Gooi Observables weg**: als u RxJS gebruikt, zorg er dan voor dat alle abonnementen zijn uitgeschreven.
+- **Gooi Observables weg**: Als u RxJS gebruikt, zorg er dan voor dat alle abonnementen zijn uitgeschreven.
 
 ## Problemen met bouwen en werkruimte
 
@@ -65,9 +65,9 @@ rm -rf .turbo
 
 **Oplossingen**:
 
-1. Controleer of het pakket in de verbruikende werkruimte staat `package.json`.
+1. Controleer of het pakket wordt vermeld in de `package.json` van de verbruikende werkruimte.
 2. Zorg ervoor dat de versie overeenkomt (`workspace:*` wordt aanbevolen).
-3. Rennen `pnpm install` om symlinks te vernieuwen.
+3. Voer `pnpm install` uit om symlinks te vernieuwen.
 4. Als het probleem aanhoudt, probeer dan een grondige reiniging:
 ```bash
    pnpm -r exec rm -rf node_modules
@@ -76,7 +76,7 @@ rm -rf .turbo
 
 ### Type fouten in CI maar niet lokaal
 
-**Probleem**: Build mislukt in CI met TypeScript fouten die niet in uw IDE voorkomen.
+**Probleem**: Build mislukt in CI met TypeScript-fouten die niet verschijnen in uw IDE.
 
 **Oplossing**: voer de typecontrole lokaal uit in de gehele werkruimte.
 
@@ -99,7 +99,7 @@ Dit zorgt ervoor dat alle pakketgrenzen correct worden gerespecteerd en dat type
 
 **Oplossingen**:
 
-- Zorg ervoor dat u het absolute pad naar het node binary en het script in uw clientconfiguratie.
+- Zorg ervoor dat u het absolute pad naar het binaire bestand node en het script in uw clientconfiguratie gebruikt.
 - Controleer de MCP-serverlogboeken op specifieke foutmeldingen (bijvoorbeeld ontbrekende omgevingsvariabelen).
 
 ## Veelvoorkomende foutpatronen
@@ -107,7 +107,7 @@ Dit zorgt ervoor dat alle pakketgrenzen correct worden gerespecteerd en dat type
 ### "Kan eigenschap van ongedefinieerd niet lezen"
 
 **Oorzaak**: toegang tot eigenschappen van een null- of ongedefinieerd object, vaak voordat de gegevens volledig zijn geladen. **Oplossing**: Gebruik
-optionele kettingschakeling (`?.`) of geef standaardwaarden op.
+optionele ketening (`?.`) of geef standaardwaarden op.
 
 ```typescript
 // Instead of:
@@ -119,7 +119,7 @@ const name = user?.profile?.name ?? 'Guest';
 
 ### "Onverwerkte belofte afwijzing"
 
-**Oorzaak**: een asynchrone functie heeft een fout gegenereerd die niet is opgemerkt. **Opgelost**: asynchrone oproepen altijd inpakken `try/catch` blokken.
+**Oorzaak**: een asynchrone functie heeft een fout gegenereerd die niet is opgemerkt. **Opgelost**: verpak asynchrone oproepen altijd in `try/catch`-blokken.
 
 ```typescript
 try {

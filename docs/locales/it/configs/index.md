@@ -2,7 +2,7 @@
 
 Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
 
-> Fonte inglese: [docs/configs/index.md](../../../configs/index.md)
+> docs/configs/index.md: [docs/configs/index.md](../../../configs/index.md)
 > Lingua: Italiano (it)
 
 La Mission Platform utilizza pacchetti di configurazione centralizzati in `configs/` directory per garantire la coerenza tra i file
@@ -10,23 +10,27 @@ il monorepo.
 
 ## Panoramica
 
-La centralizzazione delle configurazioni consente un'unica fonte attendibile per le regole degli strumenti, i processi di creazione e lo stile del codice.
+La centralizzazione delle configurazioni consente di avere un'unica fonte attendibile per le regole degli strumenti, i processi di creazione e lo stile del codice.
 I pacchetti e le applicazioni utilizzano queste configurazioni estendendole nei file di configurazione locali.
 
 ## Riepilogo del pacchetto
 
+La documentazione del pacchetto di configurazione è di proprietà di ciascun pacchetto. I link qui sotto
+sono oggi collegamenti a file di repository e diventano percorsi con spazi dei nomi dei pacchetti nel formato
+sito di documentazione:
+
 | Pacchetto | Scopo | Superficie di configurazione primaria |
 |:---|:---|:---|
-| [`@mission-platform/eslint-config`](eslint-config.md) | Piatto ESLint regole per JS/TS e Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | Impostazioni predefinite di formattazione del repository. | `prettier.config.js` |
-| `@mission-platform/typescript-config` | TypeScript preimpostazioni del compilatore. | `tsconfig.json` |
-| `@mission-platform/stylelint-config` | Linting CSS e SCSS. | `stylelint.config.mjs` |
-| `@mission-platform/vite-config` | Vite E Vitest aiutanti di configurazione. | `vite.config.ts` |
-| `@mission-platform/tsdown-config` | Aiutanti per il raggruppamento di biblioteche. | `tsdown.config.ts` |
-| `@mission-platform/postcss-config` | Pipeline PostCSS condivisa. | `postcss.config.mjs` |
-| `@mission-platform/i18n-config` | Impostazioni locali e di estrazione condivise. | `i18next.config.ts` |
-| `@mission-platform/storybook-framework` | Preimpostazione del framework Storybook selezionato dall'ambiente. | `.storybook/main.ts` |
-| [Configurazione dei lavoratori](workers-config.md) | Convenzioni dei lavoratori Cloudflare. | `wrangler.jsonc` |
+| [`@mission-platform/eslint-config`](../../../../configs/eslint-config/docs/locales/it/index.md) | Piatto ESLint regole per JS/TS e Vue. | `eslint.config.js` |
+| [`@mission-platform/prettier-config`](../../../../configs/prettier-config/docs/locales/it/index.md) | Impostazioni predefinite di formattazione del repository. | `prettier.config.js` |
+| [`@mission-platform/typescript-config`](../../../../configs/typescript-config/docs/locales/it/index.md) | TypeScript preimpostazioni del compilatore. | `tsconfig.json` |
+| [`@mission-platform/stylelint-config`](../../../../configs/stylelint-config/docs/locales/it/index.md) | Linting CSS e SCSS. | `stylelint.config.mjs` |
+| [`@mission-platform/vite-config`](../../../../configs/vite-config/docs/locales/it/index.md) | Vite E Vitest aiutanti di configurazione. | `vite.config.ts` |
+| [`@mission-platform/tsdown-config`](../../../../configs/tsdown-config/docs/locales/it/index.md) | Aiutanti per il raggruppamento di biblioteche. | `tsdown.config.ts` |
+| [`@mission-platform/postcss-config`](../../../../configs/postcss-config/docs/locales/it/index.md) | Pipeline PostCSS condivisa. | `postcss.config.mjs` |
+| [`@mission-platform/i18n-config`](../../../../configs/i18n-config/docs/locales/it/index.md) | Impostazioni locali e di estrazione condivise. | `i18next.config.ts` |
+| [`@mission-platform/storybook-framework`](../../../../configs/storybook-framework/docs/locales/it/index.md) | Preimpostazione del framework Storybook selezionato dall'ambiente. | `.storybook/main.ts` |
+| [Configurazione dei lavoratori](workers-config.md) | Convenzioni Cloudflare Worker tra ambienti di lavoro diversi. | `wrangler.jsonc` |
 
 ## Utensili di base
 

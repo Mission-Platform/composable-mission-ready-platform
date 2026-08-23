@@ -2,7 +2,7 @@
 
 正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
 
-> 英語の原典: [docs/best-practices.md](../../best-practices.md)
+> docs/best-practices.md: [docs/best-practices.md](../../best-practices.md)
 > 言語: 日本語 (ja)
 
 このドキュメントでは、Mission Platform モノリポジトリの中心となる原則、アーキテクチャ、およびコーディング標準の概要を説明します。それ
