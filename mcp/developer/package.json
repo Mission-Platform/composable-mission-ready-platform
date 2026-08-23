@@ -33,6 +33,9 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
+    "@mission-platform/forge-web-script": "workspace:*",
+    "@mission-platform/forge-web-script-runtime": "workspace:*",
+    "@mission-platform/forge-web-script-wasm": "workspace:*",
     "@mission-platform/mcp-shared": "workspace:*",
     "@modelcontextprotocol/sdk": "catalog:mcp",
     "zod": "catalog:mcp"

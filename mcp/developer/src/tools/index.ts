@@ -1,13 +1,26 @@
 /**
  * Tool definitions exposed to MCP clients using `@modelcontextprotocol/sdk`.
- * Tools are grouped by the seven workflows this server assists with: component
- * usage, and the creation and development of packages, apps and workers, plus
- * cross-cutting discovery.
+ * Tools are grouped by the Mission Platform workflows this server assists with:
+ * component usage, workspace creation/development, FWS security, and discovery.
  */
 
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { join, relative, resolve } from 'node:path';
 
+import {
+  analyzeForgeWebScript,
+  prepareForgeWebScriptFrontend,
+  type ForgeWebScriptAnalysisOptions,
+} from '@mission-platform/forge-web-script';
+import {
+  runForgeWebScriptSelfHostedLexStage,
+  type ForgeWebScriptSelfHostedRunOptions,
+} from '@mission-platform/forge-web-script-runtime';
+import {
+  verifyForgeWebScriptWasmArtifact,
+  type ForgeWebScriptWasmArtifactManifest,
+  type ForgeWebScriptWasmArtifactMetadata,
+} from '@mission-platform/forge-web-script-wasm';
 import { getGuide, GUIDE_IDS } from '@mission-platform/mcp-shared/knowledge/guides';
 import {
   appFiles,
@@ -30,7 +43,7 @@ import {
   surveyLocales,
   updateTranslation,
 } from '@mission-platform/mcp-shared/repo/locales';
-import { groupDir, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
+import { findRepoRoot, groupDir, resolveRepoPath, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
 import {
   findMember,
   listDocs,
@@ -70,12 +83,12 @@ function resolvePackageTarget(packageName: string): { packageDir: string; relati
   if (nameError) {
     throw new Error(nameError);
   }
-  const packageDir = join(groupDir('packages'), folder);
   const relativePackageDir = `packages/${folder}`;
+  const packageDir = join(groupDir('packages'), folder);
   if (!existsSync(packageDir)) {
     throw new Error(`Package "${relativePackageDir}" does not exist.`);
   }
-  return { packageDir, relativePackageDir, folder };
+  return { packageDir: resolveRepoPath(packageDir, relativePackageDir), relativePackageDir, folder };
 }
 
 function normalizeUnitName(raw: string): string {
@@ -85,13 +98,187 @@ function normalizeUnitName(raw: string): string {
     .toLowerCase();
 }
 
+const MAX_SOURCE_BYTES = 256 * 1024;
+const MAX_MANIFEST_BYTES = 1 * 1024 * 1024;
+const MAX_ARTIFACT_BYTES = 16 * 1024 * 1024;
+const MAX_WORKSPACE_FILES = 100;
+
+const analysisLimitsSchema = z
+  .object({
+    maxFindings: z.number().int().min(1).max(10_000).optional(),
+    maxCallDepth: z.number().int().min(1).max(10_000).optional(),
+    maxLoopIterations: z.number().int().min(1).max(10_000_000).optional(),
+    maxAllocationBytes: z.number().int().min(1).max(1_073_741_824).optional(),
+    maxAsyncTasks: z.number().int().min(1).max(100_000).optional(),
+    maxRegexInputLength: z.number().int().min(1).max(10_000_000).optional(),
+  })
+  .optional();
+
+const analysisPolicySchema = z
+  .object({
+    profile: z.enum(['development', 'strict']).optional(),
+    allowedCapabilities: z.array(z.string().trim().min(1).max(128)).max(128).optional(),
+    limits: analysisLimitsSchema,
+  })
+  .optional();
+
+const targetFeaturesSchema = z
+  .object({
+    simd: z.boolean().optional(),
+    tailCall: z.boolean().optional(),
+    memory64: z.boolean().optional(),
+    threads: z.boolean().optional(),
+    atomics: z.boolean().optional(),
+  })
+  .optional();
+
+function repoPath(path: string, label: string): string {
+  return resolveRepoPath(path, label);
+}
+
+function readBoundedBytes(path: string, limit: number, label: string): Uint8Array {
+  const size = statSync(path).size;
+  if (size > limit) throw new Error(`${label} exceeds the ${limit} byte safety limit.`);
+  return new Uint8Array(readFileSync(path));
+}
+
+function readBoundedText(path: string, limit: number, label: string): string {
+  return new TextDecoder().decode(readBoundedBytes(path, limit, label));
+}
+
+function collectFwsFiles(target: string, maxFiles: number): string[] {
+  const files: string[] = [];
+  const visit = (directory: string, depth: number): void => {
+    if (depth > 32 || files.length >= maxFiles) return;
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      if (entry.isSymbolicLink()) continue;
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) visit(path, depth + 1);
+      else if (entry.isFile() && entry.name.endsWith('.fws')) {
+        files.push(path);
+        if (files.length >= maxFiles) return;
+      }
+    }
+  };
+  if (statSync(target).isFile()) {
+    if (!target.endsWith('.fws')) throw new Error('sourcePath must point to a .fws file or directory.');
+    return [target];
+  }
+  visit(target, 0);
+  return files.toSorted();
+}
+
+function fwsAnalysisOptions(
+  policy: z.infer<typeof analysisPolicySchema>,
+  targetFeatures: z.infer<typeof targetFeaturesSchema>,
+): ForgeWebScriptAnalysisOptions {
+  const normalizedPolicy: ForgeWebScriptAnalysisOptions['policy'] =
+    policy === undefined
+      ? undefined
+      : {
+          ...(policy.profile === undefined ? {} : { profile: policy.profile }),
+          ...(policy.allowedCapabilities === undefined ? {} : { allowedCapabilities: policy.allowedCapabilities }),
+          ...(policy.limits === undefined
+            ? {}
+            : {
+                limits: {
+                  ...(policy.limits.maxFindings === undefined ? {} : { maxFindings: policy.limits.maxFindings }),
+                  ...(policy.limits.maxCallDepth === undefined ? {} : { maxCallDepth: policy.limits.maxCallDepth }),
+                  ...(policy.limits.maxLoopIterations === undefined
+                    ? {}
+                    : { maxLoopIterations: policy.limits.maxLoopIterations }),
+                  ...(policy.limits.maxAllocationBytes === undefined
+                    ? {}
+                    : { maxAllocationBytes: policy.limits.maxAllocationBytes }),
+                  ...(policy.limits.maxAsyncTasks === undefined ? {} : { maxAsyncTasks: policy.limits.maxAsyncTasks }),
+                  ...(policy.limits.maxRegexInputLength === undefined
+                    ? {}
+                    : { maxRegexInputLength: policy.limits.maxRegexInputLength }),
+                },
+              }),
+        };
+  const normalizedTargetFeatures: ForgeWebScriptAnalysisOptions['targetFeatures'] =
+    targetFeatures === undefined
+      ? undefined
+      : {
+          ...(targetFeatures.simd === undefined ? {} : { simd: targetFeatures.simd }),
+          ...(targetFeatures.tailCall === undefined ? {} : { tailCall: targetFeatures.tailCall }),
+          ...(targetFeatures.memory64 === undefined ? {} : { memory64: targetFeatures.memory64 }),
+          ...(targetFeatures.threads === undefined ? {} : { threads: targetFeatures.threads }),
+          ...(targetFeatures.atomics === undefined ? {} : { atomics: targetFeatures.atomics }),
+        };
+  return {
+    ...(normalizedPolicy === undefined ? {} : { policy: normalizedPolicy }),
+    ...(normalizedTargetFeatures === undefined ? {} : { targetFeatures: normalizedTargetFeatures }),
+  };
+}
+
+function analyzeSource(source: string, fileName: string, options: ForgeWebScriptAnalysisOptions) {
+  const frontend = prepareForgeWebScriptFrontend({
+    source,
+    fileName,
+    compilerVersion: 'mcp-analysis',
+    requestedCapabilities: options.policy?.allowedCapabilities,
+    analysis: options,
+  });
+  const analysis = analyzeForgeWebScript(frontend, options);
+  return { fileName, diagnostics: frontend.diagnostics, analysis };
+}
+
+function record(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function readManifest(path: string): ForgeWebScriptWasmArtifactManifest {
+  let value: unknown;
+  try {
+    value = JSON.parse(readBoundedText(path, MAX_MANIFEST_BYTES, 'Manifest'));
+  } catch (error) {
+    throw new Error(`Manifest is not valid JSON: ${error instanceof Error ? error.message : String(error)}`);
+  }
+  if (
+    !record(value) ||
+    !Array.isArray(value.exports) ||
+    !Array.isArray(value.imports) ||
+    !Array.isArray(value.requiredCapabilities) ||
+    !record(value.memory)
+  )
+    throw new Error('Manifest must contain exports, imports, requiredCapabilities, and memory arrays/objects.');
+  return value as unknown as ForgeWebScriptWasmArtifactManifest;
+}
+
+function artifactMetadata(
+  metadata: z.infer<typeof artifactMetadataSchema> | undefined,
+  manifest: ForgeWebScriptWasmArtifactManifest,
+): ForgeWebScriptWasmArtifactMetadata {
+  return {
+    compilerVersion: metadata?.compilerVersion ?? 'mcp-verification',
+    optimization: metadata?.optimization ?? 'debug',
+    sourceFiles: metadata?.sourceFiles ?? [],
+    ...(metadata?.sourceHash === undefined ? {} : { sourceHash: metadata.sourceHash }),
+    ...(metadata?.graphHash === undefined ? { graphHash: manifest.graphHash } : { graphHash: metadata.graphHash }),
+    ...(metadata?.targetFeatures === undefined ? {} : { targetFeatures: metadata.targetFeatures }),
+  };
+}
+
+const artifactMetadataSchema = z
+  .object({
+    compilerVersion: z.string().max(256).optional(),
+    optimization: z.enum(['debug', 'release']).optional(),
+    sourceFiles: z.array(z.string().max(1024)).max(MAX_WORKSPACE_FILES).optional(),
+    sourceHash: z.string().max(128).optional(),
+    graphHash: z.string().max(128).optional(),
+    targetFeatures: targetFeaturesSchema,
+  })
+  .optional();
+
 export function registerTools(server: McpServer): void {
   // ---- Discovery & guidance -------------------------------------------------
   server.registerTool(
     'get_guide',
     {
       description:
-        'Return a curated, repository-specific guide for a Mission Platform workflow (component usage, package/app/worker creation & development, conventions, overview).',
+        'Return a curated, repository-specific guide for a Mission Platform workflow, including FWS authoring, security, Wasm verification, and forensics.',
       inputSchema: {
         area: z.string().describe('The workflow to explain.'),
       },
@@ -106,6 +293,236 @@ export function registerTools(server: McpServer): void {
         return text(`Unknown area "${area}". One of: ${GUIDE_IDS.join(', ')}`);
       }
       return text(guide.body);
+    },
+  );
+
+  // ---- Forge Web Script security workflows ---------------------------------
+  server.registerTool(
+    'fws_analyze_source',
+    {
+      description:
+        'Run canonical FWS source analysis and return frontend diagnostics, stable findings, facts, and policy. Accepts bounded inline source or a repository-rooted .fws path; it never executes guest code.',
+      inputSchema: {
+        source: z.string().max(MAX_SOURCE_BYTES).optional().describe('Inline FWS source, capped at 256 KiB.'),
+        sourcePath: z.string().max(1024).optional().describe('Repository-rooted .fws file to read.'),
+        fileName: z.string().max(1024).optional().describe('Logical source name for inline source.'),
+        policy: analysisPolicySchema,
+        targetFeatures: targetFeaturesSchema,
+      },
+    },
+    async (args) => {
+      if (args.source === undefined && args.sourcePath === undefined)
+        return toolError(new Error('Provide either bounded inline "source" or a repository-rooted "sourcePath".'));
+      if (args.source !== undefined && args.sourcePath !== undefined)
+        return toolError(new Error('Provide only one of "source" and "sourcePath".'));
+      try {
+        const fileName = args.fileName?.trim() || '<mcp-input>.fws';
+        const source =
+          args.source ?? readBoundedText(repoPath(args.sourcePath as string, 'sourcePath'), MAX_SOURCE_BYTES, 'Source');
+        if (new TextEncoder().encode(source).byteLength > MAX_SOURCE_BYTES)
+          throw new Error(`Source exceeds the ${MAX_SOURCE_BYTES} byte safety limit.`);
+        return json(analyzeSource(source, fileName, fwsAnalysisOptions(args.policy, args.targetFeatures)));
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'fws_analyze_workspace',
+    {
+      description:
+        'Analyze bounded .fws files below a repository-rooted path using the canonical FWS analyzer. Symlinks are skipped, file count and source size are capped, and no code is executed.',
+      inputSchema: {
+        sourcePath: z.string().max(1024).describe('Repository-rooted .fws file or directory.'),
+        maxFiles: z
+          .number()
+          .int()
+          .min(1)
+          .max(MAX_WORKSPACE_FILES)
+          .optional()
+          .describe('Maximum files to inspect (default 100).'),
+        policy: analysisPolicySchema,
+        targetFeatures: targetFeaturesSchema,
+      },
+    },
+    async (args) => {
+      try {
+        const target = repoPath(args.sourcePath, 'sourcePath');
+        const files = collectFwsFiles(target, args.maxFiles ?? MAX_WORKSPACE_FILES);
+        const options = fwsAnalysisOptions(args.policy, args.targetFeatures);
+        const results = files.map((file) =>
+          analyzeSource(readBoundedText(file, MAX_SOURCE_BYTES, 'Source'), file, options),
+        );
+        return json({
+          root: relative(resolve(findRepoRoot()), target) || '.',
+          fileCount: results.length,
+          truncated: files.length >= (args.maxFiles ?? MAX_WORKSPACE_FILES),
+          results,
+        });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'fws_inspect_manifest',
+    {
+      description:
+        'Read a bounded, repository-rooted FWS ABI manifest and return its safe structural summary. This is inspection only and does not instantiate Wasm.',
+      inputSchema: {
+        manifestPath: z.string().max(1024).describe('Repository-rooted JSON manifest path.'),
+      },
+    },
+    async (args) => {
+      try {
+        const manifest = readManifest(repoPath(args.manifestPath, 'manifestPath'));
+        return json({
+          format: manifest.format,
+          moduleName: manifest.moduleName,
+          graphHash: manifest.graphHash,
+          targetFeatures: manifest.targetFeatures,
+          requiredCapabilities: manifest.requiredCapabilities,
+          imports: manifest.imports.map(({ capability, alias, function: declaration }) => ({
+            capability,
+            alias,
+            function: declaration.name,
+            parameters: declaration.parameters.map(({ type, reference }) => ({
+              type,
+              ...(reference === undefined ? {} : { reference }),
+            })),
+            result: declaration.result,
+          })),
+          exports: manifest.exports.map(({ name, parameters, result, resultReference }) => ({
+            name,
+            parameters: parameters.map(({ type, reference }) => ({
+              type,
+              ...(reference === undefined ? {} : { reference }),
+            })),
+            result,
+            ...(resultReference === undefined ? {} : { resultReference }),
+          })),
+          memory: manifest.memory,
+          iteratorCount: manifest.iteratorDescriptors?.length ?? 0,
+          hasAsyncContract: manifest.async !== undefined,
+        });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'fws_verify_artifact',
+    {
+      description:
+        'Verify a bounded Wasm artifact against a repository-rooted FWS manifest, deterministic metadata, target features, and capability policy. This never executes the artifact or host imports.',
+      inputSchema: {
+        artifactPath: z.string().max(1024).describe('Repository-rooted Wasm binary path.'),
+        manifestPath: z.string().max(1024).describe('Repository-rooted ABI manifest JSON path.'),
+        metadata: artifactMetadataSchema,
+        expectedContentHash: z.string().max(128).optional(),
+        expectedSourceHash: z.string().max(128).optional(),
+        policy: z
+          .object({
+            profile: z.enum(['development', 'strict']).optional(),
+            allowedCapabilities: z.array(z.string().trim().min(1).max(128)).max(128).optional(),
+            maxBytes: z.number().int().min(1).max(MAX_ARTIFACT_BYTES).optional(),
+            maxCustomSectionBytes: z
+              .number()
+              .int()
+              .min(1)
+              .max(4 * 1024 * 1024)
+              .optional(),
+            allowedCustomSections: z.array(z.string().max(128)).max(32).optional(),
+          })
+          .optional(),
+      },
+    },
+    async (args) => {
+      try {
+        const manifest = readManifest(repoPath(args.manifestPath, 'manifestPath'));
+        const wasm = readBoundedBytes(repoPath(args.artifactPath, 'artifactPath'), MAX_ARTIFACT_BYTES, 'Artifact');
+        const result = verifyForgeWebScriptWasmArtifact({
+          wasm,
+          fileName: args.artifactPath,
+          manifest,
+          metadata: artifactMetadata(args.metadata, manifest),
+          ...(args.expectedContentHash === undefined ? {} : { expectedContentHash: args.expectedContentHash }),
+          ...(args.expectedSourceHash === undefined ? {} : { expectedSourceHash: args.expectedSourceHash }),
+          policy: args.policy,
+        });
+        return json(result);
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'fws_run_trace',
+    {
+      description:
+        'Capture a bounded deterministic trace from the built-in capability-denied FWS self-hosted lex/parser probe. It accepts only bounded source, never arbitrary Wasm, commands, filesystem reads, or host capability bindings.',
+      inputSchema: {
+        source: z.string().max(MAX_SOURCE_BYTES).optional().describe('Inline FWS source, capped at 256 KiB.'),
+        sourcePath: z.string().max(1024).optional().describe('Repository-rooted .fws file to read.'),
+        mode: z
+          .enum(['interpret', 'jit', 'aot'])
+          .optional()
+          .describe('Bounded probe execution mode (default interpret).'),
+        maxSteps: z.number().int().min(1).max(1_000_000).optional().describe('Hard per-stage step cap.'),
+        capture: z.enum(['summary', 'events', 'snapshot']).optional(),
+        maxEvents: z.number().int().min(0).max(4096).optional(),
+        maxTraceBytes: z.number().int().min(0).max(1_048_576).optional(),
+        maxSnapshotBytes: z.number().int().min(0).max(65_536).optional(),
+        replayId: z.string().max(128).optional(),
+      },
+    },
+    async (args) => {
+      if (args.source === undefined && args.sourcePath === undefined)
+        return toolError(new Error('Provide either bounded inline "source" or a repository-rooted "sourcePath".'));
+      if (args.source !== undefined && args.sourcePath !== undefined)
+        return toolError(new Error('Provide only one of "source" and "sourcePath".'));
+      try {
+        const source =
+          args.source ?? readBoundedText(repoPath(args.sourcePath as string, 'sourcePath'), MAX_SOURCE_BYTES, 'Source');
+        if (new TextEncoder().encode(source).byteLength > MAX_SOURCE_BYTES)
+          throw new Error(`Source exceeds the ${MAX_SOURCE_BYTES} byte safety limit.`);
+        const traceOptions = {
+          capture: args.capture ?? 'events',
+          ...(args.maxEvents === undefined ? {} : { maxEvents: args.maxEvents }),
+          ...(args.maxTraceBytes === undefined ? {} : { maxTraceBytes: args.maxTraceBytes }),
+          ...(args.maxSnapshotBytes === undefined ? {} : { maxSnapshotBytes: args.maxSnapshotBytes }),
+          ...(args.replayId === undefined ? {} : { replayId: args.replayId }),
+        } as const;
+        const options: ForgeWebScriptSelfHostedRunOptions = {
+          ...(args.maxSteps === undefined ? {} : { maxSteps: args.maxSteps }),
+          trace: traceOptions,
+        };
+        const report = runForgeWebScriptSelfHostedLexStage(
+          { source, fileName: args.sourcePath ?? '<mcp-input>.fws', compilerVersion: 'mcp-trace' },
+          args.mode ?? 'interpret',
+          options,
+        );
+        return json({
+          safe: true,
+          execution: 'capability-denied-self-hosted-probe',
+          mode: args.mode ?? 'interpret',
+          steps: report.steps,
+          parity: report.parity,
+          trace: (report as { readonly trace?: unknown }).trace,
+          stages: report.stageReports?.map((stage) => ({
+            stage: stage.stage,
+            steps: stage.steps,
+            parity: stage.parity,
+            trace: (stage as { readonly trace?: unknown }).trace,
+          })),
+        });
+      } catch (error) {
+        return toolError(error);
+      }
     },
   );
 

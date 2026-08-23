@@ -30,6 +30,18 @@ function json(value: unknown) {
   return text(JSON.stringify(value, null, 2));
 }
 
+function toolError(error: unknown) {
+  return {
+    content: [
+      {
+        type: "text" as const,
+        text: error instanceof Error ? error.message : String(error),
+      },
+    ],
+    isError: true,
+  };
+}
+
 export function registerTools(server: McpServer): void {
   server.registerTool(
     "get_setup_guide",
@@ -150,7 +162,7 @@ export function registerTools(server: McpServer): void {
       try {
         return json(readTokens(args.category));
       } catch (error) {
-        return text(error instanceof Error ? error.message : String(error));
+        return toolError(error);
       }
     },
   );
@@ -186,7 +198,7 @@ export function registerTools(server: McpServer): void {
       try {
         return json(listOverridableTokenVariables(args.category));
       } catch (error) {
-        return text(error instanceof Error ? error.message : String(error));
+        return toolError(error);
       }
     },
   );
@@ -202,7 +214,7 @@ export function registerTools(server: McpServer): void {
       try {
         return json(readTokenOverrideSchema());
       } catch (error) {
-        return text(error instanceof Error ? error.message : String(error));
+        return toolError(error);
       }
     },
   );
@@ -225,24 +237,24 @@ export function registerTools(server: McpServer): void {
       },
     },
     async (args) => {
-      let document: OverrideGroup;
       try {
-        document = JSON.parse(args.tokens) as OverrideGroup;
+        const document = JSON.parse(args.tokens) as OverrideGroup;
+        const scss = buildTokenOverrideScss(document, { prefix: args.prefix });
+        const { unknownKeys } = validateOverrideDocument(document, args.prefix);
+        if (unknownKeys.length === 0) return text(scss);
+        const warning = [
+          `/* WARNING: ${unknownKeys.length} override key(s) don't match any known`,
+          `   @mission-platform/tokens variable (possible typos or app-specific tokens):`,
+          ...unknownKeys.map((name) => `     ${name}`),
+          `   Use get_token_override_schema or list_token_variables to see valid keys. */`,
+        ].join("\n");
+        return text(`${warning}\n\n${scss}`);
       } catch (error) {
-        return text(
-          `Invalid JSON: ${error instanceof Error ? error.message : String(error)}`,
-        );
+        if (error instanceof SyntaxError) {
+          return toolError(`Invalid JSON: ${error.message}`);
+        }
+        return toolError(error);
       }
-      const scss = buildTokenOverrideScss(document, { prefix: args.prefix });
-      const { unknownKeys } = validateOverrideDocument(document, args.prefix);
-      if (unknownKeys.length === 0) return text(scss);
-      const warning = [
-        `/* WARNING: ${unknownKeys.length} override key(s) don't match any known`,
-        `   @mission-platform/tokens variable (possible typos or app-specific tokens):`,
-        ...unknownKeys.map((name) => `     ${name}`),
-        `   Use get_token_override_schema or list_token_variables to see valid keys. */`,
-      ].join("\n");
-      return text(`${warning}\n\n${scss}`);
     },
   );
 }

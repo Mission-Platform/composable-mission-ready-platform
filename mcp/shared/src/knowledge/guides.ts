@@ -1,6 +1,6 @@
 /**
- * Curated, task-focused guidance for the seven workflows this server assists
- * with. The text is distilled from the repository's own documentation
+ * Curated, task-focused guidance for the Mission Platform workflows this server
+ * assists with. The text is distilled from the repository's own documentation
  * (`docs/`, `AGENTS.md`, `CONTRIBUTING.md`) and the observed conventions of the
  * existing workspaces, so the advice matches how the monorepo actually works.
  */
@@ -24,7 +24,11 @@ export type GuideId =
   | "framework-solid"
   | "framework-web-components"
   | "external-setup"
-  | "design-token-overrides";
+  | "design-token-overrides"
+  | "fws-authoring"
+  | "fws-security"
+  | "fws-artifact-verification"
+  | "fws-forensics";
 
 export interface Guide {
   id: GuideId;
@@ -609,6 +613,97 @@ match a known \`--mp-*\` token — usually typos.
 - Prefer overriding **semantic** tokens (\`--mp-color-primary-default\`,
   \`--mp-radius-md\`) over primitives so the whole component library follows.`;
 
+const FWS_AUTHORING = `# Forge Web Script (FWS) Authoring
+
+Forge Web Script (**FWS**) is the canonical name of the typed, ownership-safe
+language. If a request says “FMS”, correct it to FWS; do not invent a separate
+language or toolchain.
+
+## Type, ownership, and ABI rules
+- FWS is statically typed. Keep function parameters, returns, calls, numeric
+  conversions, and collection element types explicit and compatible.
+- Values crossing a module or host boundary have an ownership contract:
+  \`borrowed\` values remain valid only for the call, \`owned\` values have one
+  responsible releaser, and \`shared\` values require the declared shared
+  contract. Never release a borrowed value or use an owned value after release.
+- \`string\` and \`bytes\` use checked pointer-length pairs in Wasm linear
+  memory. Prove that pointer and length are non-negative, representable, and
+  within the allocation before reading or writing.
+- The ABI manifest is authoritative for exports, imports, representations,
+  memory layout, iterators, async boundaries, and required capabilities. Do not
+  hand-edit generated adapters to bypass it.
+
+## Required workflow
+1. Run \`fws_analyze_source\` or \`fws_analyze_workspace\` and inspect every
+   blocking finding, including its evidence and source range.
+2. Compile with the intended policy and run \`fws_verify_artifact\` on the
+   resulting Wasm and manifest. Strict/release output must fail closed.
+3. Only then suggest release code. Keep host effects as explicit declared
+   capabilities; FWS has no ambient filesystem, network, DOM, or Node access.`;
+
+const FWS_SECURITY = `# FWS Security and Threat Boundaries
+
+FWS enforces a typed memory/ownership model and explicit capability imports;
+these are compiler and runtime guarantees, not a claim that arbitrary host
+implementations are safe. Capability imports are deny-by-default and must be
+allowed by the source policy, manifest, artifact verifier, and runtime binding.
+
+## Analysis expectations
+The canonical analysis report checks control-flow and initialization facts,
+pointer-length ranges, ownership transitions, integer/range overflow,
+collection and iterator bounds, recursion/loops/allocations/async limits,
+capability allow-lists, taint flows, and unsafe host-boundary patterns. A
+property that cannot be proven is conservatively rejected in strict mode.
+
+Findings use stable \`FWS-*\` codes, severity, UTF-16-compatible source spans,
+evidence, remediation hints, and optional OWASP/CWE tags. Treat warnings as
+review obligations and errors as release blockers under the strict profile.
+
+## OWASP/CWE boundary
+Tags help map a finding to risks such as injection, unrestricted resource
+consumption, broken access control, or memory safety; they do not certify the
+host. Review capability implementations, JavaScript glue, browsers, and the
+Wasm engine separately. Never add ambient I/O or dynamic code execution to FWS
+to “solve” a finding.`;
+
+const FWS_ARTIFACT_VERIFICATION = `# FWS Wasm Artifact Verification
+
+\`WebAssembly.validate\` is necessary but not sufficient. The FWS verifier also
+performs bounded structural inspection and compares the artifact with its
+manifest, deterministic metadata, target profile, and policy.
+
+It checks the Wasm magic/version and section structure, exact capability import
+names/signatures, export names/signatures, one linear memory and its limits,
+address width, shared-memory policy, required target features, iterator/async
+contracts, recognized custom metadata, source/graph/content hashes, and the
+generated ESM adapter's checked pointer-length and cleanup paths. Optimized and
+unoptimized variants are checked independently when both are available.
+
+Use \`fws_inspect_manifest\` to understand a manifest and
+\`fws_verify_artifact\` to obtain the canonical structured result. A mutated,
+forged, unexpectedly imported/exported, or metadata-inconsistent artifact must
+not be shipped, even if an engine accepts its binary form. Strict verification
+returns no release artifact on blocking findings.`;
+
+const FWS_FORENSICS = `# FWS Bounded Forensics
+
+FWS traces are deterministic, source-mapped, and bounded. They contain sequence
+numbers, instruction/call locations, capability decisions, redacted values,
+memory/range and ownership events, traps, resource counters, termination, and a
+trace hash. Replay identifiers and artifact/source hashes correlate a run
+without exposing wall-clock data or unrestricted memory.
+
+Use \`fws_run_trace\` only for the built-in capability-denied self-hosted
+lex/parser probe. It is not an arbitrary Wasm executor: it accepts bounded
+source, fixed execution limits, no host bindings, and capped events/bytes (with
+optional bounded snapshots). A denied capability or guest trap is useful
+evidence, not permission to retry with ambient imports.
+
+Interpret \`droppedEvents\`, step-limit termination, and resource counters as
+bounded-observation facts. Redaction failures must remain non-fatal, and trace
+output must never be used to read raw secrets or request filesystem paths.
+Follow the sequence **analyze → compile → verify → bounded trace → remediate**.`;
+
 const FRAMEWORK_VUE = `# Vue 3 Best Practices
 
 ## Patterns
@@ -752,6 +847,14 @@ const GUIDES: Record<GuideId, Guide> = {
     title: "Design Token Overrides",
     body: DESIGN_TOKEN_OVERRIDES,
   },
+  "fws-authoring": { id: "fws-authoring", title: "FWS Authoring", body: FWS_AUTHORING },
+  "fws-security": { id: "fws-security", title: "FWS Security", body: FWS_SECURITY },
+  "fws-artifact-verification": {
+    id: "fws-artifact-verification",
+    title: "FWS Wasm Artifact Verification",
+    body: FWS_ARTIFACT_VERIFICATION,
+  },
+  "fws-forensics": { id: "fws-forensics", title: "FWS Bounded Forensics", body: FWS_FORENSICS },
 };
 
 export const GUIDE_IDS = Object.keys(GUIDES) as GuideId[];

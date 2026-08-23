@@ -22,6 +22,64 @@ function guideBody(id: GuideId): string {
 
 export function registerPrompts(server: McpServer): void {
   server.registerPrompt(
+    'fws-authoring',
+    {
+      description: 'Guide an assistant to author statically typed, ownership-safe Forge Web Script (FWS).',
+      argsSchema: {
+        task: z.string().optional().describe('The FWS feature or function to author.'),
+      },
+    },
+    (args) =>
+      userMessage(
+        `${guideBody('fws-authoring')}\n\n---\nTask: Author FWS for ${args.task ?? '(the requested behavior)'}. Keep types, ownership, pointer-length contracts, and explicit capabilities visible. Run fws_analyze_source before proposing release code.`,
+      ),
+  );
+
+  server.registerPrompt(
+    'fws-secure-review',
+    {
+      description: 'Review FWS source and capability boundaries using canonical security findings.',
+      argsSchema: {
+        sourcePath: z.string().optional().describe('Repository-rooted .fws path, if known.'),
+      },
+    },
+    (args) =>
+      userMessage(
+        `${guideBody('fws-security')}\n\n---\nTask: Perform a conservative FWS security review${args.sourcePath ? ` of \`${args.sourcePath}\`` : ''}. Use fws_analyze_source or fws_analyze_workspace, report stable findings with evidence and remediation, and distinguish compiler guarantees from host responsibilities. Do not execute source or call ambient capabilities.`,
+      ),
+  );
+
+  server.registerPrompt(
+    'fws-compile-verify',
+    {
+      description: 'Guide the analyze, compile, and Wasm artifact verification workflow for FWS release output.',
+      argsSchema: {
+        sourcePath: z.string().optional().describe('Repository-rooted .fws path, if known.'),
+        profile: z.enum(['development', 'strict']).optional().describe('Analysis policy profile (strict for release).'),
+      },
+    },
+    (args) =>
+      userMessage(
+        `${guideBody('fws-artifact-verification')}\n\n---\nTask: Compile and verify FWS${args.sourcePath ? ` from \`${args.sourcePath}\`` : ''} under the ${args.profile ?? 'strict'} policy. First run canonical analysis, then compile, inspect the manifest, and run fws_verify_artifact on every returned Wasm variant. Do not treat WebAssembly.validate alone as sufficient and never bypass a blocking finding.`,
+      ),
+  );
+
+  server.registerPrompt(
+    'fws-forensic-debug',
+    {
+      description: 'Interpret bounded, redacted FWS forensic traces without enabling arbitrary execution.',
+      argsSchema: {
+        sourcePath: z.string().optional().describe('Repository-rooted .fws path, if known.'),
+        replayId: z.string().optional().describe('Stable replay identifier.'),
+      },
+    },
+    (args) =>
+      userMessage(
+        `${guideBody('fws-forensics')}\n\n---\nTask: Investigate the FWS behavior${args.sourcePath ? ` from \`${args.sourcePath}\`` : ''}${args.replayId ? ` for replay \`${args.replayId}\`` : ''}. Use fws_run_trace only with its bounded capability-denied self-hosted probe, interpret source locations, caps, traps, and hashes, and propose remediation after analysis. Do not request arbitrary commands, Wasm instantiation, host imports, secrets, or unrestricted snapshots.`,
+      ),
+  );
+
+  server.registerPrompt(
     'use-component',
     {
       description: 'Guide the assistant to correctly use a Mission Platform component in an app.',

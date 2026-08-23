@@ -57,6 +57,11 @@ describe('tools', () => {
       'add_locale',
       'remove_locale',
       'update_translation',
+      'fws_analyze_source',
+      'fws_analyze_workspace',
+      'fws_inspect_manifest',
+      'fws_verify_artifact',
+      'fws_run_trace',
     ]) {
       assert.ok(names.has(expected), `missing tool ${expected}`);
     }
@@ -71,6 +76,160 @@ describe('tools', () => {
     const body = await callTool('get_guide', { area: 'atomic-component-design' });
     assert.match(body, /Atomic Component Design/);
     assert.match(body, /Atoms\/Forms\/ForgeInput/);
+  });
+
+  it('returns authoritative FWS guidance with the terminology correction', async () => {
+    const body = await callTool('get_guide', { area: 'fws-authoring' });
+    assert.match(body, /Forge Web Script \(FWS\)/);
+    assert.match(body, /borrowed/);
+    assert.match(body, /FMS.*FWS/);
+    const security = await callTool('get_guide', { area: 'fws-security' });
+    assert.match(security, /deny-by-default/);
+    assert.match(security, /OWASP/);
+    const artifact = await callTool('get_guide', { area: 'fws-artifact-verification' });
+    assert.match(artifact, /WebAssembly\.validate/);
+    const forensics = await callTool('get_guide', { area: 'fws-forensics' });
+    assert.match(forensics, /capability-denied/);
+  });
+
+  it('analyzes bounded source through the canonical FWS report', async () => {
+    const body = await callTool('fws_analyze_source', {
+      source: 'export fn answer() -> i32 { return 42; }',
+      policy: { profile: 'strict', allowedCapabilities: [] },
+    });
+    const result = JSON.parse(body) as { analysis: { findings: unknown[]; policy: { profile: string } } };
+    assert.equal(result.analysis.findings.length, 0);
+    assert.equal(result.analysis.policy.profile, 'strict');
+  });
+
+  it('preserves FWS analysis defaults while accepting partial policy limits and target features', async () => {
+    const omitted = JSON.parse(
+      await callTool('fws_analyze_source', { source: 'export fn answer() -> i32 { return 42; }' }),
+    ) as {
+      analysis: {
+        policy: {
+          profile: string;
+          allowedCapabilities: string[];
+          limits: Record<string, number>;
+          blockingSeverities: string[];
+        };
+      };
+    };
+    assert.deepEqual(omitted.analysis.policy, {
+      profile: 'strict',
+      allowedCapabilities: [],
+      limits: {
+        maxFindings: 1000,
+        maxCallDepth: 256,
+        maxLoopIterations: 1_000_000,
+        maxAllocationBytes: 64 * 1024 * 1024,
+        maxAsyncTasks: 1024,
+        maxRegexInputLength: 1_000_000,
+      },
+      blockingSeverities: ['error'],
+    });
+
+    const populated = JSON.parse(
+      await callTool('fws_analyze_source', {
+        source: 'export fn answer() -> i32 { return 42; }',
+        policy: {
+          profile: 'development',
+          allowedCapabilities: ['scheduler.microtask'],
+          limits: { maxCallDepth: 17, maxAsyncTasks: 8 },
+        },
+        targetFeatures: { simd: true, memory64: false },
+      }),
+    ) as {
+      analysis: {
+        findings: unknown[];
+        policy: {
+          profile: string;
+          allowedCapabilities: string[];
+          limits: Record<string, number>;
+          blockingSeverities: string[];
+        };
+      };
+    };
+    assert.equal(populated.analysis.findings.length, 0);
+    assert.deepEqual(populated.analysis.policy, {
+      profile: 'development',
+      allowedCapabilities: ['scheduler.microtask'],
+      limits: {
+        maxFindings: 1000,
+        maxCallDepth: 17,
+        maxLoopIterations: 1_000_000,
+        maxAllocationBytes: 64 * 1024 * 1024,
+        maxAsyncTasks: 8,
+        maxRegexInputLength: 1_000_000,
+      },
+      blockingSeverities: ['error'],
+    });
+  });
+
+  it('rejects traversal, oversized limits, malformed inputs, and arbitrary trace requests', async () => {
+    const traversal = await client.callTool({
+      name: 'fws_analyze_source',
+      arguments: { sourcePath: '../outside.fws' },
+    });
+    assert.equal(traversal.isError, true);
+
+    const oversized = await client.callTool({
+      name: 'fws_analyze_source',
+      arguments: { source: 'x'.repeat(256 * 1024 + 1) },
+    });
+    assert.equal(oversized.isError, true);
+
+    const malformed = await client.callTool({
+      name: 'fws_inspect_manifest',
+      arguments: { manifestPath: 'package.json' },
+    });
+    assert.equal(malformed.isError, true);
+
+    const arbitrary = await client.callTool({
+      name: 'fws_run_trace',
+      arguments: { artifactPath: 'package.json', maxSteps: 0 },
+    });
+    assert.equal(arbitrary.isError, true);
+
+    const multibyteOversized = await client.callTool({
+      name: 'fws_run_trace',
+      arguments: {
+        source: `/** ${'é'.repeat(131_073)} */ export fn answer() -> i32 { return 42; }`,
+      },
+    });
+    assert.equal(multibyteOversized.isError, true);
+
+    const tracePrefix = '/** ';
+    const traceSuffix = ' */ export fn answer() -> i32 { return 42; }';
+    const traceBudget = 256 * 1024 - new TextEncoder().encode(tracePrefix + traceSuffix).byteLength;
+    const atByteLimit = `${tracePrefix}${'é'.repeat(Math.floor(traceBudget / 2))}${traceBudget % 2 ? ' ' : ''}${traceSuffix}`;
+    assert.equal(new TextEncoder().encode(atByteLimit).byteLength, 256 * 1024);
+    const multibyteAtLimit = await client.callTool({
+      name: 'fws_run_trace',
+      arguments: { source: atByteLimit },
+    });
+    assert.notEqual(multibyteAtLimit.isError, true);
+  });
+
+  it('captures only a capped, capability-denied FWS trace', async () => {
+    const body = await callTool('fws_run_trace', {
+      source: 'export fn answer() -> i32 { return 42; }',
+      mode: 'interpret',
+      maxSteps: 1_000_000,
+      maxEvents: 4,
+      maxTraceBytes: 4096,
+      capture: 'summary',
+    });
+    const result = JSON.parse(body) as {
+      safe: boolean;
+      execution: string;
+      mode: string;
+      steps: number;
+    };
+    assert.equal(result.safe, true);
+    assert.equal(result.execution, 'capability-denied-self-hosted-probe');
+    assert.equal(result.mode, 'interpret');
+    assert.ok(result.steps <= 1_000_000);
   });
 
   it('lists components from the components package with atomic level', async () => {
@@ -242,15 +401,42 @@ describe('resources', () => {
     const typed = contents as { text: string }[];
     assert.match(typed[0]?.text ?? '', /Conventions/);
   });
+
+  it('publishes FWS guides as shared resources', async () => {
+    const { resources } = await client.listResources();
+    const uris = new Set(resources.map((resource) => resource.uri));
+    for (const id of ['fws-authoring', 'fws-security', 'fws-artifact-verification', 'fws-forensics'])
+      assert.ok(uris.has(`mission://guide/${id}`), `missing FWS guide resource ${id}`);
+  });
 });
 
 describe('prompts', () => {
   it('lists the workflow prompts', async () => {
     const { prompts } = await client.listPrompts();
     const names = new Set(prompts.map((prompt) => prompt.name));
-    for (const expected of ['use-component', 'create-package', 'develop-package', 'create-app', 'create-worker']) {
+    for (const expected of [
+      'fws-authoring',
+      'fws-secure-review',
+      'fws-compile-verify',
+      'fws-forensic-debug',
+      'use-component',
+      'create-package',
+      'develop-package',
+      'create-app',
+      'create-worker',
+    ]) {
       assert.ok(names.has(expected), `missing prompt ${expected}`);
     }
+  });
+
+  it('builds a secure FWS compile/verify prompt', async () => {
+    const result = await client.getPrompt({
+      name: 'fws-compile-verify',
+      arguments: { sourcePath: 'examples/demo.fws', profile: 'strict' },
+    });
+    const messages = result.messages as { content: { text: string } }[];
+    assert.match(messages[0]?.content.text ?? '', /analysis.*compile/i);
+    assert.match(messages[0]?.content.text ?? '', /WebAssembly\.validate|fws_verify_artifact/);
   });
 
   it('builds a create-package prompt with the name substituted', async () => {

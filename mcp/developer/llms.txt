@@ -1,8 +1,8 @@
 # @mission-platform/mcp-developer
 
 Model Context Protocol (MCP) server that helps AI assistants develop inside the
-Mission Platform monorepo. No runtime dependencies; compiled via Turborepo and
-run from its built output on Node.js 24+ (`node mcp/developer/dist/index.js`).
+Mission Platform monorepo. Compiled via Turborepo and run from its built output
+on Node.js 24+ (`node mcp/developer/dist/index.js`).
 Speaks JSON-RPC 2.0 over stdio.
 
 ## What it is for
@@ -18,6 +18,9 @@ Give an AI assistant grounded, repo-specific help with core workflows:
 7. App development — compose packages; deploy via Cloudflare/forge-spa.
 8. Worker creation — scaffold a `workers/<name>` Cloudflare Worker.
 9. Worker development — typed `fetch` handler; keep workers thin.
+10. Forge Web Script (FWS) — author, analyze, verify, and safely debug the
+    statically typed ownership/capability-constrained language. “FMS” is a
+    terminology error; use FWS.
 
 ## Capabilities
 
@@ -26,16 +29,24 @@ Give an AI assistant grounded, repo-specific help with core workflows:
   `get_member_info`, `scaffold_package`, `scaffold_app`, `scaffold_worker`,
   `scaffold_crate`, `scaffold_component`, `scaffold_composable`, `scaffold_store`,
   `scaffold_util`, `list_locales`, `add_locale`, `remove_locale`,
-  `update_translation`.
+  `update_translation`, `fws_analyze_source`, `fws_analyze_workspace`,
+  `fws_inspect_manifest`, `fws_verify_artifact`, `fws_run_trace`.
 - Resources: `mission://guide/<id>`, `mission://inventory`, `mission://docs/<slug>`.
-- Prompts: `use-component`, `create-package`, `develop-package`, `create-app`,
-  `develop-app`, `create-worker`, `develop-worker`.
+- FWS guides: `mission://guide/fws-authoring`, `fws-security`,
+  `fws-artifact-verification`, `fws-forensics`.
+- Prompts: `fws-authoring`, `fws-secure-review`, `fws-compile-verify`,
+  `fws-forensic-debug`, `use-component`, `create-package`, `develop-package`,
+  `create-app`, `develop-app`, `create-worker`, `develop-worker`.
 
 ## Safety
 
 All repo inspection is read-only. Scaffolding tools and the i18n locale tools
 (`add_locale`, `remove_locale`, `update_translation`) are dry-run unless
 `apply: true`; scaffolding never overwrites existing files/folders.
+FWS tools are root-bounded and size-capped. Analysis and verification delegate
+to canonical FWS packages; `fws_run_trace` uses only the bounded,
+capability-denied self-hosted probe. It never executes arbitrary Wasm, commands,
+filesystem reads, or host imports, and trace values are redacted and capped.
 
 ## Run
 

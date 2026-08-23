@@ -1,4 +1,4 @@
-# @mission-platform/mcp
+# @mission-platform/mcp-developer
 
 ## 0.1.1
 

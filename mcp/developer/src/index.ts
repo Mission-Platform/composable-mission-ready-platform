@@ -4,7 +4,7 @@
  *
  * Assembles the server core with all tools, resources and prompts, then serves
  * the Model Context Protocol over stdio. Build with `pnpm build` (Turborepo
- * runs `tsc`) and run the compiled output with `node dist/index.js`.
+ * runs `tsdown`) and run the compiled output with `node dist/index.js`.
  */
 import { realpathSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -18,7 +18,7 @@ import { registerPrompts } from './prompts/index.ts';
 import { registerTools } from './tools/index.ts';
 
 export function createServer(): McpServer {
-  const server = new McpServer({ name: 'mission-platform-mcp', version: '0.1.0' });
+  const server = new McpServer({ name: 'mission-platform-mcp', version: '0.1.1' });
   registerTools(server);
   registerResources(server);
   registerPrompts(server);

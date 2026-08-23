@@ -9,12 +9,12 @@
  * under `locales/` or (legacy) `src/locales/`. Everything here is
  * side-effect-free unless an explicit write function is called.
  */
-import {existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync} from 'node:fs';
+import {lstatSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {basename, extname, join} from 'node:path';
 
 import yaml from 'js-yaml';
 
-import {groupDir, type WorkspaceGroup} from './paths.ts';
+import {groupDir, resolveRepoPath, type WorkspaceGroup} from './paths.ts';
 import {findMember} from './scanner.ts';
 
 /** The source-of-truth locale every app falls back to. */
@@ -56,6 +56,20 @@ function isYamlFile(name: string): boolean {
   return name.endsWith('.yaml') || name.endsWith('.yml');
 }
 
+function safeExistingPath(path: string, label: string): string | undefined {
+  try {
+    return resolveRepoPath(path, label);
+  } catch {
+    return undefined;
+  }
+}
+
+function validateWriteTargets(paths: string[], label: string): void {
+  for (const path of paths) {
+    resolveRepoPath(path, `${label} target`, {allowMissing: true});
+  }
+}
+
 /** Whether `code` is a syntactically valid locale code. */
 export function isValidLocaleCode(code: string): boolean {
   return LOCALE_PATTERN.test(code);
@@ -69,15 +83,20 @@ interface LayoutProbe {
 
 /** Probe a single directory for a nested or flat locale layout. */
 function probeLayout(dir: string, defaultLocale: string): LayoutProbe | undefined {
-  if (!existsSync(dir) || !statSync(dir).isDirectory()) {
+  if (!lstatSync(dir).isDirectory()) {
     return undefined;
   }
   const nestedCodes: string[] = [];
   const namespaces = new Set<string>();
   const flatCodes: string[] = [];
   for (const entry of readdirSync(dir, {withFileTypes: true})) {
+    if (entry.isSymbolicLink()) continue;
     if (entry.isDirectory()) {
-      const localeFiles = readdirSync(join(dir, entry.name)).filter((file) => isYamlFile(file));
+      const localeDir = safeExistingPath(join(dir, entry.name), 'locale directory');
+      if (!localeDir) continue;
+      const localeFiles = readdirSync(localeDir, {withFileTypes: true})
+        .filter((file) => file.isFile() && isYamlFile(file.name))
+        .map((file) => file.name);
       if (localeFiles.length > 0) {
         nestedCodes.push(entry.name);
         for (const file of localeFiles) {
@@ -110,7 +129,11 @@ function probeLayout(dir: string, defaultLocale: string): LayoutProbe | undefine
 }
 
 function readFlatFile(path: string): Record<string, unknown> | undefined {
-  if (!existsSync(path)) {
+  try {
+    if (!lstatSync(path).isFile()) {
+      return undefined;
+    }
+  } catch {
     return undefined;
   }
   try {
@@ -138,7 +161,8 @@ export function resolveMemberLocales(
   }
   const folder = member.relativeDir.split('/')[1] ?? name;
   for (const candidate of ['locales', 'src/locales']) {
-    const dir = join(member.dir, candidate);
+    const dir = safeExistingPath(join(member.dir, candidate), 'locales directory');
+    if (!dir) continue;
     const probe = probeLayout(dir, defaultLocale);
     if (probe) {
       const rest = probe.codes.filter((code) => code !== defaultLocale).toSorted();
@@ -162,7 +186,7 @@ export function memberDir(group: WorkspaceGroup, name: string): string {
   if (!member) {
     throw new Error(`No "${name}" in ${group}/.`);
   }
-  return member.dir;
+  return resolveRepoPath(member.dir, 'member directory');
 }
 
 /** Path to a single locale's file(s). */
@@ -180,17 +204,17 @@ function flatLocalePath(resolved: ResolvedLocales, code: string): string {
  */
 export function readLocale(resolved: ResolvedLocales, code: string): Record<string, unknown> {
   if (resolved.layout === 'nested') {
-    const dir = join(resolved.localesDir, code);
+    const dir = safeExistingPath(join(resolved.localesDir, code), 'locale directory');
     const out: Record<string, unknown> = {};
-    if (!existsSync(dir)) {
+    if (!dir) {
       return out;
     }
-    for (const file of readdirSync(dir)) {
-      if (!isYamlFile(file)) {
+    for (const entry of readdirSync(dir, {withFileTypes: true})) {
+      if (!entry.isFile() || !isYamlFile(entry.name)) {
         continue;
       }
-      const namespace = basename(file, extname(file));
-      const parsed = readFlatFile(join(dir, file));
+      const namespace = basename(entry.name, extname(entry.name));
+      const parsed = readFlatFile(join(dir, entry.name));
       if (parsed) {
         out[namespace] = parsed;
       }
@@ -318,6 +342,7 @@ export function addLocale(
       message: `Dry run — no files written. Pass "apply": true to create locale "${code}" (${files.length} file(s), fill=${options.fill}). Then translate the values and run the app's "format:write" script.`,
     };
   }
+  validateWriteTargets(files.map((file) => file.path), 'locale');
   for (const file of files) {
     mkdirSync(join(file.path, '..'), {recursive: true});
     writeFileSync(file.path, file.content, 'utf8');
@@ -360,6 +385,7 @@ export function removeLocale(resolved: ResolvedLocales, code: string, apply: boo
       message: `Dry run — nothing deleted. Pass "apply": true to remove locale "${code}" (${relatives.join(', ')}).`,
     };
   }
+  validateWriteTargets(targets.map((target) => target.path), 'locale removal');
   for (const target of targets) {
     rmSync(target.path, {recursive: true, force: true});
   }
@@ -419,6 +445,7 @@ export function updateTranslation(request: UpdateTranslationRequest): WriteResul
         message: `Dry run — no files written. Pass "apply": true to update ${keys.length} key(s) in ${relative}.`,
       };
     }
+    validateWriteTargets([path], 'translation');
     mkdirSync(join(path, '..'), {recursive: true});
     writeFileSync(path, content, 'utf8');
     return {
@@ -446,6 +473,7 @@ export function updateTranslation(request: UpdateTranslationRequest): WriteResul
       message: `Dry run — no files written. Pass "apply": true to update ${keys.length} key(s) in ${relative}.`,
     };
   }
+  validateWriteTargets([path], 'translation');
   writeFileSync(path, content, 'utf8');
   return {
     applied: true,
@@ -462,8 +490,8 @@ export function surveyLocales(group: WorkspaceGroup): {
   layout: LocaleLayout;
   locales: string[];
 }[] {
-  const base = groupDir(group);
-  if (!existsSync(base)) {
+  const base = safeExistingPath(groupDir(group), `${group} workspace group`);
+  if (!base) {
     return [];
   }
   const out: {
@@ -473,7 +501,7 @@ export function surveyLocales(group: WorkspaceGroup): {
     locales: string[];
   }[] = [];
   for (const entry of readdirSync(base, {withFileTypes: true})) {
-    if (!entry.isDirectory()) {
+    if (!entry.isDirectory() || entry.isSymbolicLink()) {
       continue;
     }
     try {

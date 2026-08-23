@@ -3,10 +3,10 @@
  * of each workspace group and reading their `package.json` manifests, docs and
  * `llms.txt` files.
  */
-import {existsSync, readdirSync, readFileSync, statSync} from 'node:fs';
+import {lstatSync, readdirSync, readFileSync} from 'node:fs';
 import {join} from 'node:path';
 
-import {docsDir, groupDir, WORKSPACE_GROUPS, type WorkspaceGroup} from './paths.ts';
+import {docsDir, groupDir, resolveRepoPath, WORKSPACE_GROUPS, type WorkspaceGroup} from './paths.ts';
 
 export interface PackageManifest {
   name?: string;
@@ -42,10 +42,13 @@ export function readJson<T = unknown>(path: string): T {
 }
 
 function safeReadManifest(dir: string): PackageManifest | undefined {
-  const manifestPath = join(dir, 'package.json');
-  if (!existsSync(manifestPath)) {
+  let manifestPath: string;
+  try {
+    manifestPath = resolveRepoPath(join(dir, 'package.json'), 'package manifest');
+  } catch {
     return undefined;
   }
+  if (!lstatSync(manifestPath).isFile()) return undefined;
   try {
     return readJson<PackageManifest>(manifestPath);
   } catch {
@@ -72,19 +75,27 @@ function toMember(group: WorkspaceGroup, dir: string, manifest: PackageManifest)
 
 /** List every member of a single workspace group that has a `package.json`. */
 export function listGroup(group: WorkspaceGroup): WorkspaceMember[] {
-  const base = groupDir(group);
-  if (!existsSync(base)) {
+  let base: string;
+  try {
+    base = resolveRepoPath(groupDir(group), `${group} workspace group`);
+  } catch {
     return [];
   }
   const members: WorkspaceMember[] = [];
-  for (const entry of readdirSync(base)) {
-    const dir = join(base, entry);
-    if (!statSync(dir).isDirectory()) {
+  for (const entry of readdirSync(base, {withFileTypes: true})) {
+    if (!entry.isDirectory()) {
       continue;
     }
-    const manifest = safeReadManifest(dir);
+    const dir = join(base, entry.name);
+    let safeDir: string;
+    try {
+      safeDir = resolveRepoPath(dir, `${group} workspace member`);
+    } catch {
+      continue;
+    }
+    const manifest = safeReadManifest(safeDir);
     if (manifest) {
-      members.push(toMember(group, dir, manifest));
+      members.push(toMember(group, safeDir, manifest));
     }
   }
   return members.sort((a, b) => a.name.localeCompare(b.name));
@@ -111,29 +122,40 @@ export function readMemberDetails(member: WorkspaceMember): {
   readme?: string;
 } {
   const manifest = safeReadManifest(member.dir) ?? {};
-  const llmsPath = join(member.dir, 'llms.txt');
-  const readmePath = join(member.dir, 'README.md');
+  const readRegularText = (name: string): string | undefined => {
+    try {
+      const path = resolveRepoPath(join(member.dir, name), `member ${name}`);
+      return lstatSync(path).isFile() ? readFileSync(path, 'utf8') : undefined;
+    } catch {
+      return undefined;
+    }
+  };
   return {
     manifest,
-    llms: existsSync(llmsPath) ? readFileSync(llmsPath, 'utf8') : undefined,
-    readme: existsSync(readmePath) ? readFileSync(readmePath, 'utf8') : undefined,
+    llms: readRegularText('llms.txt'),
+    readme: readRegularText('README.md'),
   };
 }
 
 /** List the markdown files available under `docs/`. */
 export function listDocs(): { slug: string; path: string }[] {
-  const base = docsDir();
+  let base: string;
+  try {
+    base = resolveRepoPath(docsDir(), 'documentation directory');
+  } catch {
+    return [];
+  }
   const results: { slug: string; path: string }[] = [];
   const walk = (dir: string, prefix: string): void => {
-    if (!existsSync(dir)) {
-      return;
-    }
-    for (const entry of readdirSync(dir)) {
-      const full = join(dir, entry);
-      if (statSync(full).isDirectory()) {
-        walk(full, `${prefix}${entry}/`);
-      } else if (entry.endsWith('.md')) {
-        results.push({slug: `${prefix}${entry.replace(/\.md$/, '')}`, path: full});
+    for (const entry of readdirSync(dir, {withFileTypes: true})) {
+      if (entry.isSymbolicLink()) {
+        continue;
+      }
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(full, `${prefix}${entry.name}/`);
+      } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        results.push({slug: `${prefix}${entry.name.replace(/\.md$/, '')}`, path: full});
       }
     }
   };

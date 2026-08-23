@@ -18,7 +18,7 @@ import { registerTools } from "./tools/index.ts";
 export function createServer(): McpServer {
   const server = new McpServer({
     name: "mission-platform-mcp-consumer",
-    version: "0.1.0",
+    version: "0.1.1",
   });
   registerTools(server);
   registerResources(server);

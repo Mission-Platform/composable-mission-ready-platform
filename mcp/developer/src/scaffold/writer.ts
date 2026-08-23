@@ -12,7 +12,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-import { groupDir, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
+import { groupDir, resolveRepoPath, type WorkspaceGroup } from '@mission-platform/mcp-shared/repo/paths';
 
 export interface ScaffoldRequest {
   group: WorkspaceGroup;
@@ -67,8 +67,8 @@ export function writeScaffold(request: ScaffoldRequest): ScaffoldResult {
     throw new Error(nameError);
   }
 
-  const targetDir = join(groupDir(group), name);
   const relativeDir = `${group}/${name}`;
+  const targetDir = resolveRepoPath(join(groupDir(group), name), relativeDir, { allowMissing: true });
   const fileList = Object.keys(files).sort();
 
   if (existsSync(targetDir)) {
@@ -85,8 +85,11 @@ export function writeScaffold(request: ScaffoldRequest): ScaffoldResult {
     };
   }
 
-  for (const [relativePath, contents] of Object.entries(files)) {
-    const fullPath = join(targetDir, relativePath);
+  const targets = Object.keys(files).map((relativePath) =>
+    resolveRepoPath(join(targetDir, relativePath), `${relativeDir}/${relativePath}`, { allowMissing: true }),
+  );
+  for (const [index, contents] of Object.values(files).entries()) {
+    const fullPath = targets[index] as string;
     mkdirSync(dirname(fullPath), { recursive: true });
     writeFileSync(fullPath, contents, 'utf8');
   }
@@ -105,15 +108,23 @@ export function writeScaffold(request: ScaffoldRequest): ScaffoldResult {
  * Barrel updates append an export line when missing (or create the barrel).
  */
 export function writeIntoPackage(request: PackageWriteRequest): ScaffoldResult {
-  const { packageDir, relativePackageDir, files, apply } = request;
+  const { relativePackageDir, files, apply } = request;
   const barrelUpdates = request.barrelUpdates ?? [];
-
-  if (!existsSync(packageDir)) {
+  if (!existsSync(request.packageDir)) {
     throw new Error(`Package directory "${relativePackageDir}" does not exist.`);
   }
+  const packageDir = resolveRepoPath(request.packageDir, relativePackageDir);
 
   const fileList = Object.keys(files).sort();
-  const collisions = fileList.filter((relativePath) => existsSync(join(packageDir, relativePath)));
+  const fileTargets = fileList.map((relativePath) =>
+    resolveRepoPath(join(packageDir, relativePath), `${relativePackageDir}/${relativePath}`, { allowMissing: true }),
+  );
+  const barrelTargets = barrelUpdates.map((update) =>
+    resolveRepoPath(join(packageDir, update.relativePath), `${relativePackageDir}/${update.relativePath}`, {
+      allowMissing: true,
+    }),
+  );
+  const collisions = fileTargets.filter((path) => existsSync(path));
   if (collisions.length > 0) {
     throw new Error(
       `Refusing to overwrite existing file(s) in ${relativePackageDir}: ${collisions.join(', ')}. Choose another name.`,
@@ -133,14 +144,14 @@ export function writeIntoPackage(request: PackageWriteRequest): ScaffoldResult {
     };
   }
 
-  for (const [relativePath, contents] of Object.entries(files)) {
-    const fullPath = join(packageDir, relativePath);
+  for (const [index, contents] of Object.values(files).entries()) {
+    const fullPath = fileTargets[index] as string;
     mkdirSync(dirname(fullPath), { recursive: true });
     writeFileSync(fullPath, contents, 'utf8');
   }
 
-  for (const update of barrelUpdates) {
-    applyBarrelUpdate(packageDir, update);
+  for (const [index, update] of barrelUpdates.entries()) {
+    applyBarrelUpdate(packageDir, update, barrelTargets[index] as string);
   }
 
   return {
@@ -153,8 +164,10 @@ export function writeIntoPackage(request: PackageWriteRequest): ScaffoldResult {
   };
 }
 
-function applyBarrelUpdate(packageDir: string, update: BarrelUpdate): void {
-  const fullPath = join(packageDir, update.relativePath);
+function applyBarrelUpdate(packageDir: string, update: BarrelUpdate, validatedPath?: string): void {
+  const fullPath = validatedPath ?? resolveRepoPath(join(packageDir, update.relativePath), `barrel ${update.relativePath}`, {
+    allowMissing: true,
+  });
   const line = update.exportLine.trim();
   mkdirSync(dirname(fullPath), { recursive: true });
 
