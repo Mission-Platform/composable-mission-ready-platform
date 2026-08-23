@@ -1,0 +1,413 @@
+// Shared scanner primitives: format tags, result encoding, and linear-memory helpers.
+// Arrays stay at the ABI boundary. Large image/bitmap buffers live in guest memory.
+
+// Result wire format consumed by the TypeScript adapter:
+//   ""              -> not located
+//   "L" + format    -> located but undecodable (format is one ASCII digit 0-6)
+//   "D" + format + value -> located and decoded
+// Multi-scan joins decoded entries with ASCII RS (0x1e).
+
+export fn format_digit(format: i32) -> string {
+  if format == 0 { return "0"; }
+  if format == 1 { return "1"; }
+  if format == 2 { return "2"; }
+  if format == 3 { return "3"; }
+  if format == 4 { return "4"; }
+  if format == 5 { return "5"; }
+  return "6";
+}
+
+export fn result_none() -> string {
+  return "";
+}
+
+export fn result_located(format: i32) -> string {
+  return string_concat("L", format_digit(format));
+}
+
+export fn result_decoded(format: i32, value: string) -> string {
+  return string_concat(string_concat("D", format_digit(format)), value);
+}
+
+export fn result_is_none(result: string) -> bool {
+  return string_length(result) == 0;
+}
+
+export fn result_is_decoded(result: string) -> bool {
+  return string_length(result) >= 2 && string_byte_at(result, 0) == 68;
+}
+
+export fn result_is_located(result: string) -> bool {
+  return string_length(result) >= 2 && string_byte_at(result, 0) == 76;
+}
+
+export fn result_format(result: string) -> i32 {
+  if string_length(result) < 2 { return -1; }
+  return string_byte_at(result, 1) - 48;
+}
+
+export fn result_value(result: string) -> string {
+  if !result_is_decoded(result) { return ""; }
+  return string_slice(result, 2, string_length(result));
+}
+
+export fn multi_separator() -> string {
+  return "\u001E";
+}
+
+export fn multi_append(list: string, entry: string) -> string {
+  if string_length(entry) == 0 { return list; }
+  if string_length(list) == 0 { return entry; }
+  return string_concat(string_concat(list, multi_separator()), entry);
+}
+
+// Return whether a tagged result already appears as one complete RS-delimited
+// entry. Comparing complete entries (rather than payloads) keeps the format
+// part of the deduplication key, matching the native scanner's (format,value)
+// identity. Scanner payloads are not permitted to contain the result-list
+// separator, so a linear scan is sufficient and keeps the ABI allocation-free.
+export fn multi_contains(list: string, entry: string) -> bool {
+  let entry_length: i32 = string_length(entry);
+  if entry_length == 0 { return true; }
+  let list_length: i32 = string_length(list);
+  let start: i32 = 0;
+  while start < list_length {
+    let end: i32 = start;
+    while end < list_length && string_byte_at(list, end) != 30 {
+      end = end + 1;
+    }
+    if end - start == entry_length {
+      let index: i32 = 0;
+      let equal: bool = true;
+      while index < entry_length {
+        if string_byte_at(list, start + index) != string_byte_at(entry, index) {
+          equal = false;
+        }
+        index = index + 1;
+      }
+      if equal { return true; }
+    }
+    start = end + 1;
+  }
+  return false;
+}
+
+export fn u32_from_i32(value: i32) -> u32 {
+  if value <= 0 { return 0; }
+  let remaining: i32 = value;
+  let place: u32 = 1;
+  let result: u32 = 0;
+  while remaining > 0 {
+    if remaining - remaining / 2 * 2 == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place + place;
+  }
+  return result;
+}
+
+export fn i32_from_u32(value: u32) -> i32 {
+  let remaining: u32 = value;
+  let place: i32 = 1;
+  let result: i32 = 0;
+  while remaining > 0 {
+    let bit: u32 = remaining - remaining / 2 * 2;
+    if bit == 1 { result = result + place; }
+    remaining = remaining / 2;
+    place = place * 2;
+  }
+  return result;
+}
+
+export fn array_len_i32(values: Array<i32>) -> i32 {
+  return i32_from_u32(values.length());
+}
+
+export fn mem_alloc_bytes(nbytes: i32) -> u32 {
+  let aligned: i32 = nbytes;
+  if aligned < 4 { aligned = 4; }
+  let rem: i32 = aligned - aligned / 4 * 4;
+  if rem != 0 { aligned = aligned + 4 - rem; }
+  let size: u32 = u32_from_i32(aligned);
+  let ptr: u32 = memory_alloc(size);
+  let offset: u32 = 0;
+  while offset < size {
+    memory_store_u32(ptr + offset, 0);
+    offset = offset + 4;
+  }
+  return ptr;
+}
+
+export fn mem_get_u8(ptr: u32, index: i32) -> i32 {
+  if index < 0 { return 0; }
+  let word_index: i32 = index / 4;
+  let byte_index: i32 = index - word_index * 4;
+  let addr: u32 = ptr + u32_from_i32(word_index * 4);
+  let word: u32 = memory_load_u32(addr);
+  let shifted: u32 = word;
+  let b: i32 = 0;
+  while b < byte_index {
+    shifted = shifted / 256;
+    b = b + 1;
+  }
+  let value: u32 = shifted - shifted / 256 * 256;
+  return i32_from_u32(value);
+}
+
+export fn mem_set_u8(ptr: u32, index: i32, value: i32) -> unit {
+  if index < 0 { return; }
+  let word_index: i32 = index / 4;
+  let byte_index: i32 = index - word_index * 4;
+  let addr: u32 = ptr + u32_from_i32(word_index * 4);
+  let word: u32 = memory_load_u32(addr);
+  let v: i32 = value;
+  if v < 0 { v = 0; }
+  if v > 255 { v = 255; }
+  let tmp: u32 = word;
+  let part0: u32 = tmp - tmp / 256 * 256;
+  let bytes0: i32 = i32_from_u32(part0);
+  tmp = tmp / 256;
+  let part1: u32 = tmp - tmp / 256 * 256;
+  let bytes1: i32 = i32_from_u32(part1);
+  tmp = tmp / 256;
+  let part2: u32 = tmp - tmp / 256 * 256;
+  let bytes2: i32 = i32_from_u32(part2);
+  tmp = tmp / 256;
+  let part3: u32 = tmp - tmp / 256 * 256;
+  let bytes3: i32 = i32_from_u32(part3);
+  if byte_index == 0 { bytes0 = v; }
+  if byte_index == 1 { bytes1 = v; }
+  if byte_index == 2 { bytes2 = v; }
+  if byte_index == 3 { bytes3 = v; }
+  let out: u32 = u32_from_i32(bytes0)
+    + u32_from_i32(bytes1) * 256
+    + u32_from_i32(bytes2) * 65536
+    + u32_from_i32(bytes3) * 16777216;
+  memory_store_u32(addr, out);
+}
+
+export fn abs_i32(value: i32) -> i32 {
+  if value < 0 { return 0 - value; }
+  return value;
+}
+
+export fn min_i32(a: i32, b: i32) -> i32 {
+  if a < b { return a; }
+  return b;
+}
+
+export fn max_i32(a: i32, b: i32) -> i32 {
+  if a > b { return a; }
+  return b;
+}
+
+export fn clamp_i32(value: i32, lo: i32, hi: i32) -> i32 {
+  if value < lo { return lo; }
+  if value > hi { return hi; }
+  return value;
+}
+
+export fn digit_char(value: i32) -> string {
+  if value == 0 { return "0"; }
+  if value == 1 { return "1"; }
+  if value == 2 { return "2"; }
+  if value == 3 { return "3"; }
+  if value == 4 { return "4"; }
+  if value == 5 { return "5"; }
+  if value == 6 { return "6"; }
+  if value == 7 { return "7"; }
+  if value == 8 { return "8"; }
+  return "9";
+}
+
+fn itoa_inner(value: i32) -> string {
+  if value < 10 { return digit_char(value); }
+  return string_concat(itoa_inner(value / 10), digit_char(value - value / 10 * 10));
+}
+
+export fn itoa(value: i32) -> string {
+  if value < 0 { return string_concat("-", itoa_inner(0 - value)); }
+  return itoa_inner(value);
+}
+
+export fn byte_digits(value: i32) -> string {
+  let v: i32 = value;
+  if v < 0 { v = 0; }
+  if v > 255 { v = 255; }
+  if v < 10 { return string_concat("00", itoa_inner(v)); }
+  if v < 100 { return string_concat("0", itoa_inner(v)); }
+  return itoa_inner(v);
+}
+
+export fn bytes_push(data: string, value: i32) -> string {
+  return string_concat(data, byte_digits(value));
+}
+
+export fn bytes_get(data: string, index: i32) -> i32 {
+  let offset: i32 = index * 3;
+  if offset < 0 || offset + 2 >= string_length(data) { return 0; }
+  let b0: i32 = string_byte_at(data, offset) - 48;
+  let b1: i32 = string_byte_at(data, offset + 1) - 48;
+  let b2: i32 = string_byte_at(data, offset + 2) - 48;
+  return b0 * 100 + b1 * 10 + b2;
+}
+
+export fn bytes_len(data: string) -> i32 {
+  return string_length(data) / 3;
+}
+
+// Map a single byte value to its ASCII string char (printable + common controls).
+// Returns "" for bytes with no representation here.
+export fn ascii_char_of(value: i32) -> string {
+  return ascii_char(value);
+}
+
+// ASCII-only decode of decimal-triplet payloads.
+export fn ascii_from_triplets(payload: string) -> string {
+  let length: i32 = bytes_len(payload);
+  if length == 0 { return ""; }
+  let result: string = "";
+  let index: i32 = 0;
+  while index < length {
+    let value: i32 = bytes_get(payload, index);
+    if value < 32 && value != 29 && value != 30 && value != 28 {
+      if value != 10 && value != 13 { return ""; }
+    }
+    if value > 126 { return ""; }
+    result = string_concat(result, ascii_char(value));
+    index = index + 1;
+  }
+  return result;
+}
+
+fn ascii_char(value: i32) -> string {
+  if value == 32 { return " "; }
+  if value == 33 { return "!"; }
+  if value == 34 { return "\""; }
+  if value == 35 { return "#"; }
+  if value == 36 { return "$"; }
+  if value == 37 { return "%"; }
+  if value == 38 { return "&"; }
+  if value == 39 { return "'"; }
+  if value == 40 { return "("; }
+  if value == 41 { return ")"; }
+  if value == 42 { return "*"; }
+  if value == 43 { return "+"; }
+  if value == 44 { return ","; }
+  if value == 45 { return "-"; }
+  if value == 46 { return "."; }
+  if value == 47 { return "/"; }
+  if value >= 48 && value <= 57 { return digit_char(value - 48); }
+  if value == 58 { return ":"; }
+  if value == 59 { return ";"; }
+  if value == 60 { return "<"; }
+  if value == 61 { return "="; }
+  if value == 62 { return ">"; }
+  if value == 63 { return "?"; }
+  if value == 64 { return "@"; }
+  if value >= 65 && value <= 90 { return upper_char(value - 65); }
+  if value == 91 { return "["; }
+  if value == 92 { return "\\"; }
+  if value == 93 { return "]"; }
+  if value == 94 { return "^"; }
+  if value == 95 { return "_"; }
+  if value == 96 { return "`"; }
+  if value >= 97 && value <= 122 { return lower_char(value - 97); }
+  if value == 123 { return "{"; }
+  if value == 124 { return "|"; }
+  if value == 125 { return "}"; }
+  if value == 126 { return "~"; }
+  if value == 10 { return "\n"; }
+  if value == 13 { return "\r"; }
+  if value == 28 { return "\u001c"; }
+  if value == 29 { return "\u001d"; }
+  if value == 30 { return "\u001E"; }
+  return "";
+}
+
+fn upper_char(index: i32) -> string {
+  if index == 0 { return "A"; }
+  if index == 1 { return "B"; }
+  if index == 2 { return "C"; }
+  if index == 3 { return "D"; }
+  if index == 4 { return "E"; }
+  if index == 5 { return "F"; }
+  if index == 6 { return "G"; }
+  if index == 7 { return "H"; }
+  if index == 8 { return "I"; }
+  if index == 9 { return "J"; }
+  if index == 10 { return "K"; }
+  if index == 11 { return "L"; }
+  if index == 12 { return "M"; }
+  if index == 13 { return "N"; }
+  if index == 14 { return "O"; }
+  if index == 15 { return "P"; }
+  if index == 16 { return "Q"; }
+  if index == 17 { return "R"; }
+  if index == 18 { return "S"; }
+  if index == 19 { return "T"; }
+  if index == 20 { return "U"; }
+  if index == 21 { return "V"; }
+  if index == 22 { return "W"; }
+  if index == 23 { return "X"; }
+  if index == 24 { return "Y"; }
+  return "Z";
+}
+
+fn lower_char(index: i32) -> string {
+  if index == 0 { return "a"; }
+  if index == 1 { return "b"; }
+  if index == 2 { return "c"; }
+  if index == 3 { return "d"; }
+  if index == 4 { return "e"; }
+  if index == 5 { return "f"; }
+  if index == 6 { return "g"; }
+  if index == 7 { return "h"; }
+  if index == 8 { return "i"; }
+  if index == 9 { return "j"; }
+  if index == 10 { return "k"; }
+  if index == 11 { return "l"; }
+  if index == 12 { return "m"; }
+  if index == 13 { return "n"; }
+  if index == 14 { return "o"; }
+  if index == 15 { return "p"; }
+  if index == 16 { return "q"; }
+  if index == 17 { return "r"; }
+  if index == 18 { return "s"; }
+  if index == 19 { return "t"; }
+  if index == 20 { return "u"; }
+  if index == 21 { return "v"; }
+  if index == 22 { return "w"; }
+  if index == 23 { return "x"; }
+  if index == 24 { return "y"; }
+  return "z";
+}
+
+// Fixed-point geometry helpers (8 fractional bits).
+export fn FX_SCALE() -> i32 { return 256; }
+
+export fn fx_from_i32(value: i32) -> i32 {
+  return value * FX_SCALE();
+}
+
+export fn fx_to_i32(value: i32) -> i32 {
+  if value >= 0 {
+    let rounded: i32 = value + 128;
+    return rounded / 256;
+  }
+  let rounded_neg: i32 = value - 128;
+  return rounded_neg / 256;
+}
+
+export fn fx_mul(a: i32, b: i32) -> i32 {
+  return a * b / 256;
+}
+
+export fn fx_div(a: i32, b: i32) -> i32 {
+  if b == 0 { return 0; }
+  return a * 256 / b;
+}
+
+export fn safe_div_i32(a: i32, b: i32) -> i32 {
+  if b == 0 { return 0; }
+  return a / b;
+}

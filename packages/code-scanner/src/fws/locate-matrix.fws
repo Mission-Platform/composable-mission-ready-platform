@@ -1,0 +1,420 @@
+// Data Matrix and Aztec locators via dense bounds + dimension search.
+import "./common.fws" as c;
+import "./image.fws" as img;
+
+// Standard square Data Matrix sizes (even values 10..144 subset used for search).
+fn dm_size_at(index: i32) -> i32 {
+  if index == 0 { return 10; }
+  if index == 1 { return 12; }
+  if index == 2 { return 14; }
+  if index == 3 { return 16; }
+  if index == 4 { return 18; }
+  if index == 5 { return 20; }
+  if index == 6 { return 22; }
+  if index == 7 { return 24; }
+  if index == 8 { return 26; }
+  if index == 9 { return 32; }
+  if index == 10 { return 36; }
+  if index == 11 { return 40; }
+  if index == 12 { return 44; }
+  if index == 13 { return 48; }
+  if index == 14 { return 52; }
+  if index == 15 { return 64; }
+  if index == 16 { return 72; }
+  if index == 17 { return 80; }
+  if index == 18 { return 88; }
+  if index == 19 { return 96; }
+  if index == 20 { return 104; }
+  if index == 21 { return 120; }
+  if index == 22 { return 132; }
+  if index == 23 { return 144; }
+  return 0;
+}
+
+fn dm_size_count() -> i32 {
+  return 24;
+}
+
+// Rectangular DM candidates: packs width in high 16 bits, height in low 16 bits... use parallel tables.
+fn dm_rect_w(index: i32) -> i32 {
+  if index == 0 { return 8; }
+  if index == 1 { return 12; }
+  if index == 2 { return 16; }
+  if index == 3 { return 8; }
+  if index == 4 { return 12; }
+  if index == 5 { return 16; }
+  if index == 6 { return 8; }
+  if index == 7 { return 12; }
+  if index == 8 { return 16; }
+  if index == 9 { return 24; }
+  if index == 10 { return 24; }
+  if index == 11 { return 32; }
+  if index == 12 { return 32; }
+  if index == 13 { return 32; }
+  if index == 14 { return 32; }
+  if index == 15 { return 48; }
+  return 0;
+}
+
+fn dm_rect_h(index: i32) -> i32 {
+  if index == 0 { return 18; }
+  if index == 1 { return 26; }
+  if index == 2 { return 36; }
+  if index == 3 { return 32; }
+  if index == 4 { return 36; }
+  if index == 5 { return 36; }
+  if index == 6 { return 48; }
+  if index == 7 { return 48; }
+  if index == 8 { return 48; }
+  if index == 9 { return 36; }
+  if index == 10 { return 48; }
+  if index == 11 { return 48; }
+  if index == 12 { return 36; }
+  if index == 13 { return 48; }
+  if index == 14 { return 64; }
+  if index == 15 { return 64; }
+  return 0;
+}
+
+fn dm_rect_count() -> i32 {
+  return 16;
+}
+
+// L-finder check: left column and bottom row mostly dark.
+fn dm_l_finder_ok(modules: Array<i32>, mw: i32, mh: i32) -> bool {
+  let dark_left: i32 = 0;
+  let y: i32 = 0;
+  while y < mh {
+    if modules[y * mw + 0] == 1 {
+      dark_left = dark_left + 1;
+    }
+    y = y + 1;
+  }
+  let dark_bottom: i32 = 0;
+  let x: i32 = 0;
+  while x < mw {
+    let bottom: i32 = mh - 1;
+    let bindex: i32 = bottom * mw + x;
+    if modules[bindex] == 1 {
+      dark_bottom = dark_bottom + 1;
+    }
+    x = x + 1;
+  }
+  if dark_left * 4 < mh * 3 {
+    return false;
+  }
+  if dark_bottom * 4 < mw * 3 {
+    return false;
+  }
+  return true;
+}
+
+// Clock-track (timing) validation used to disambiguate the module dimensions.
+// A Data Matrix carries an alternating clock track along its top row and right
+// column (dark at even columns / odd rows respectively). Checking only the solid
+// L finder is not enough: a *smaller* candidate size sampled from a larger symbol
+// still sees a solid left column and bottom row, so the locator would lock onto
+// the wrong dimensions and every decode would fail. Requiring the clock track to
+// alternate rejects those mis-sized candidates. A small tolerance keeps mildly
+// noisy captures decodable while still separating the correct size (near 100%
+// agreement) from an incorrect one (near random ~50%).
+fn dm_timing_ok(modules: Array<i32>, mw: i32, mh: i32) -> bool {
+  let total: i32 = mw + mh;
+  let matches: i32 = 0;
+  let j: i32 = 0;
+  while j < mw {
+    let expected: i32 = 0;
+    if j - j / 2 * 2 == 0 { expected = 1; }
+    if modules[j] == expected { matches = matches + 1; }
+    j = j + 1;
+  }
+  let i: i32 = 0;
+  while i < mh {
+    let expected: i32 = 0;
+    if i - i / 2 * 2 == 1 { expected = 1; }
+    if modules[i * mw + mw - 1] == expected { matches = matches + 1; }
+    i = i + 1;
+  }
+  return matches * 5 >= total * 4;
+}
+
+// meta: [width, height, origin_x, origin_y, kind] kind 0=square 1=rect
+export fn locate_datamatrix_modules(
+  bits: u32,
+  width: i32,
+  height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  meta: Array<i32>
+) -> i32 {
+  if c.array_len_i32(meta) < 5 {
+    return 0;
+  }
+  let bound_ok: i32 = img.dense_dark_bounds(bits, width, height, meta);
+  if bound_ok == 0 {
+    return 0;
+  }
+  let x0: i32 = meta[0];
+  let y0: i32 = meta[1];
+  let x1: i32 = meta[2];
+  let y1: i32 = meta[3];
+  let bw: i32 = x1 - x0;
+  let bh: i32 = y1 - y0;
+  if bw < 8 || bh < 8 {
+    return 0;
+  }
+
+  // Square first.
+  let i: i32 = 0;
+  while i < dm_size_count() {
+    let size: i32 = dm_size_at(i);
+    let pad: i32 = 0;
+    while pad <= 3 {
+      let ew: i32 = bw - pad * 2;
+      let eh: i32 = bh - pad * 2;
+      if ew >= size && eh >= size {
+        let module_x_fx: i32 = c.fx_div(c.fx_from_i32(ew), c.fx_from_i32(size));
+        let module_y_fx: i32 = c.fx_div(c.fx_from_i32(eh), c.fx_from_i32(size));
+        if module_x_fx >= c.FX_SCALE() && module_y_fx >= c.FX_SCALE() {
+          let filled: i32 = img.sample_module_grid(
+            bits,
+            width,
+            height,
+            c.fx_from_i32(x0 + pad),
+            c.fx_from_i32(y0 + pad),
+            module_x_fx,
+            0,
+            0,
+            module_y_fx,
+            size,
+            size,
+            modules
+          );
+          if filled == size * size {
+            if dm_l_finder_ok(modules, size, size) && dm_timing_ok(modules, size, size) {
+              img.clear_array(erasures, size * size);
+              meta[0] = size;
+              meta[1] = size;
+              meta[2] = x0 + pad;
+              meta[3] = y0 + pad;
+              meta[4] = 0;
+              return 1;
+            }
+          }
+        }
+      }
+      pad = pad + 1;
+    }
+    i = i + 1;
+  }
+
+  // Rectangular.
+  i = 0;
+  while i < dm_rect_count() {
+    let mw: i32 = dm_rect_w(i);
+    let mh: i32 = dm_rect_h(i);
+    // Try both orientations.
+    let swap: i32 = 0;
+    while swap < 2 {
+      let tw: i32 = mw;
+      let th: i32 = mh;
+      if swap == 1 {
+        tw = mh;
+        th = mw;
+      }
+      let pad: i32 = 0;
+      while pad <= 3 {
+        let ew: i32 = bw - pad * 2;
+        let eh: i32 = bh - pad * 2;
+        if ew >= tw && eh >= th {
+          let module_x_fx: i32 = c.fx_div(c.fx_from_i32(ew), c.fx_from_i32(tw));
+          let module_y_fx: i32 = c.fx_div(c.fx_from_i32(eh), c.fx_from_i32(th));
+          if module_x_fx >= c.FX_SCALE() && module_y_fx >= c.FX_SCALE() {
+            let filled: i32 = img.sample_module_grid(
+              bits,
+              width,
+              height,
+              c.fx_from_i32(x0 + pad),
+              c.fx_from_i32(y0 + pad),
+              module_x_fx,
+              0,
+              0,
+              module_y_fx,
+              tw,
+              th,
+              modules
+            );
+            if filled == tw * th {
+              if dm_l_finder_ok(modules, tw, th) && dm_timing_ok(modules, tw, th) {
+                img.clear_array(erasures, tw * th);
+                meta[0] = tw;
+                meta[1] = th;
+                meta[2] = x0 + pad;
+                meta[3] = y0 + pad;
+                meta[4] = 1;
+                return 1;
+              }
+            }
+          }
+        }
+        pad = pad + 1;
+      }
+      swap = swap + 1;
+    }
+    i = i + 1;
+  }
+  return 0;
+}
+
+// Aztec compact/full sizes: layers map to 15+4*layers modules (compact) or 19+4*layers.
+fn aztec_size_for_layers(layers: i32, compact: bool) -> i32 {
+  if layers < 1 {
+    return 0;
+  }
+  if compact {
+    if layers > 4 {
+      return 0;
+    }
+    return 11 + 4 * layers;
+  }
+  if layers > 32 {
+    return 0;
+  }
+  return 15 + 4 * layers;
+}
+
+// The Aztec central bullseye is a set of concentric square rings that alternate
+// dark/light around a dark centre module (Chebyshev distance 0 dark, 1 light,
+// 2 dark, 3 light). Like the Data Matrix clock track, this pattern is what fixes
+// the module dimensions: a mis-sized candidate sampled from a real symbol keeps
+// a dark-ish centre but its rings no longer alternate cleanly, so the weak
+// "centre plus a couple of lights" heuristic used previously would lock onto the
+// wrong size and every decode would fail. A per-ring tolerance keeps mildly noisy
+// captures decodable while still rejecting wrong dimensions.
+fn aztec_ring_matches(modules: Array<i32>, size: i32, cx: i32, cy: i32, d: i32, expected: i32) -> i32 {
+  let matches: i32 = 0;
+  let x: i32 = cx - d;
+  while x <= cx + d {
+    if x >= 0 && x < size {
+      let top: i32 = cy - d;
+      if top >= 0 && modules[top * size + x] == expected { matches = matches + 1; }
+      let bottom: i32 = cy + d;
+      if bottom < size && modules[bottom * size + x] == expected { matches = matches + 1; }
+    }
+    x = x + 1;
+  }
+  let y: i32 = cy - d + 1;
+  while y <= cy + d - 1 {
+    if y >= 0 && y < size {
+      let left: i32 = cx - d;
+      if left >= 0 && modules[y * size + left] == expected { matches = matches + 1; }
+      let right: i32 = cx + d;
+      if right < size && modules[y * size + right] == expected { matches = matches + 1; }
+    }
+    y = y + 1;
+  }
+  return matches;
+}
+
+fn aztec_bullseye_ok(modules: Array<i32>, size: i32) -> bool {
+  let cx: i32 = size / 2;
+  let cy: i32 = size / 2;
+  if modules[cy * size + cx] != 1 {
+    return false;
+  }
+  let total: i32 = 0;
+  let matches: i32 = 0;
+  let d: i32 = 1;
+  while d <= 3 {
+    let expected: i32 = 0;
+    if d - d / 2 * 2 == 0 { expected = 1; }
+    matches = matches + aztec_ring_matches(modules, size, cx, cy, d, expected);
+    total = total + 8 * d;
+    d = d + 1;
+  }
+  return matches * 10 >= total * 9;
+}
+
+// meta: [width, height, origin_x, origin_y, compact_flag]
+export fn locate_aztec_modules(
+  bits: u32,
+  width: i32,
+  height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  meta: Array<i32>
+) -> i32 {
+  if c.array_len_i32(meta) < 5 {
+    return 0;
+  }
+  let bound_ok: i32 = img.dense_dark_bounds(bits, width, height, meta);
+  if bound_ok == 0 {
+    return 0;
+  }
+  let x0: i32 = meta[0];
+  let y0: i32 = meta[1];
+  let x1: i32 = meta[2];
+  let y1: i32 = meta[3];
+  let bw: i32 = x1 - x0;
+  let bh: i32 = y1 - y0;
+  if bw < 15 || bh < 15 {
+    return 0;
+  }
+
+  let compact_flag: i32 = 0;
+  while compact_flag < 2 {
+    let compact: bool = compact_flag == 1;
+    let layers: i32 = 1;
+    let max_layers: i32 = 32;
+    if compact {
+      max_layers = 4;
+    }
+    while layers <= max_layers {
+      let size: i32 = aztec_size_for_layers(layers, compact);
+      let pad: i32 = 0;
+      while pad <= 3 {
+        let effective_w: i32 = bw - pad * 2;
+        let effective_h: i32 = bh - pad * 2;
+        if effective_w >= size && effective_h >= size {
+          let module_x_fx: i32 = c.fx_div(c.fx_from_i32(effective_w), c.fx_from_i32(size));
+          let module_y_fx: i32 = c.fx_div(c.fx_from_i32(effective_h), c.fx_from_i32(size));
+          // Mild horizontal shear moves each subsequent row by a small
+          // fraction of a module. The façade fixture uses the same scale as
+          // the QR affine sampler, so a 1/128 slope is a useful bounded fit.
+          let shear_x_fx: i32 = module_x_fx / 128;
+          if module_x_fx >= c.FX_SCALE() && module_y_fx >= c.FX_SCALE() {
+            let filled: i32 = img.sample_module_grid(
+              bits,
+              width,
+              height,
+              c.fx_from_i32(x0 + pad),
+              c.fx_from_i32(y0 + pad),
+              module_x_fx,
+              0,
+              shear_x_fx,
+              module_y_fx,
+              size,
+              size,
+              modules
+            );
+            if filled == size * size {
+              if aztec_bullseye_ok(modules, size) {
+                img.clear_array(erasures, size * size);
+                meta[0] = size;
+                meta[1] = size;
+                meta[2] = x0 + pad;
+                meta[3] = y0 + pad;
+                meta[4] = compact_flag;
+                return 1;
+              }
+            }
+          }
+        }
+        pad = pad + 1;
+      }
+      layers = layers + 1;
+    }
+    compact_flag = compact_flag + 1;
+  }
+  return 0;
+}

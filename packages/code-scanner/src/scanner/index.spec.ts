@@ -67,8 +67,8 @@ const QR_DEGRADATION: Degradation = {
  * The Data Matrix locator now recovers the symbol at **any rotation** (Phase 3):
  * a corner-based affine locator handles moderate rotation and shear, and a
  * straighten-and-retry fallback recovers the symbol at steep angles before the
- * tuned upright pipeline samples it (see `crates/code-scan/src/datamatrix.rs` and
- * `estimate_angle`/`orientation`). So the profile now carries a strong rotation
+ * tuned upright pipeline samples it (see `src/fws/locate-matrix.fws` and its
+ * orientation helpers). So the profile now carries a strong rotation
  * on top of an aspect stretch, skew and corner morph; noise it handles well.
  */
 const DATA_MATRIX_DEGRADATION: Degradation = {
@@ -88,7 +88,7 @@ const DATA_MATRIX_DEGRADATION: Degradation = {
 /**
  * The compact Aztec locator finds the central bullseye by its nine-run finder
  * signature, then samples an *axis-aligned* module grid (see
- * `crates/code-scan/src/aztec.rs`), so like an upright grid it tolerates noise,
+ * `src/fws/locate-matrix.fws`), so like an upright grid it tolerates noise,
  * a slight aspect stretch and a small skew/morph, but not rotation. A mild
  * profile (no rotation) keeps it readable.
  */
@@ -500,12 +500,12 @@ describe('scanImageData — Data Matrix codes', () => {
 
 describe('scanImageData — 1D barcodes', () => {
   // The symbology precedence the scanner's decode stage applies — it returns the
-  // first that reads. Mirrors `BARCODE_SYMBOLOGIES` in the Rust `crates/code-scan`
-  // `scan_and_decode` (decoding now runs in the scanner wasm).
+  // first that reads. Mirrors `BARCODE_SYMBOLOGIES` in the FWS
+  // `scan_and_decode` graph.
   const scannerOrder: BarcodeSymbology[] = ['code128', 'code39', 'ean13', 'ean8', 'upca', 'itf', 'codabar'];
 
   // The scanner resolves the UPC-A/EAN-13 overlap by the number-system digit
-  // (mirrors `disambiguate_symbology` in Rust): an EAN-13 whose number-system
+  // (mirrors the FWS symbology disambiguation): an EAN-13 whose number-system
   // digit is `0` *is* a UPC-A, so it is reported as the 12-digit UPC-A form (the
   // EAN-13 value with its leading zero stripped). Genuine EAN-13 is unchanged.
   function disambiguate(symbology: BarcodeSymbology, value: string): string {
@@ -635,20 +635,14 @@ describe('scanImageDataAsync', () => {
   it('normalizes initialization failures into Promise rejections', async () => {
     vi.resetModules();
     const failure = new Error('scanner initialization failed');
-    const instance = vi.spyOn(WebAssembly, 'Instance').mockImplementation(
-      class {
-        constructor() {
-          throw failure;
-        }
-      } as typeof WebAssembly.Instance,
-    );
+    const instantiate = vi.spyOn(WebAssembly, 'instantiate').mockRejectedValue(failure);
 
     const { scanImageDataAsync: freshScanImageDataAsync } = await import('./index');
     await expect(freshScanImageDataAsync({ width: 1, height: 1, data: new Uint8ClampedArray(4) })).rejects.toBe(
       failure,
     );
 
-    instance.mockRestore();
+    instantiate.mockRestore();
   });
 
   it('decodes a QR code after asynchronous initialisation', async () => {

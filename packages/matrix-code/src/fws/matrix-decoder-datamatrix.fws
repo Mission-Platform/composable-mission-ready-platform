@@ -3,6 +3,11 @@ import "./matrix-decoder-core.fws" as dec;
 import "./matrix-decoder-rs.fws" as rs;
 import "./matrix-decoder-datamatrix-map.fws" as placement_map;
 
+fn dm_safe_div(a: i32, b: i32) -> i32 {
+  if b == 0 { return 0; }
+  return a / b;
+}
+
 fn square_data(size: i32) -> i32 {
   if size == 10 { return 3; }
   if size == 12 { return 5; }
@@ -13,6 +18,21 @@ fn square_data(size: i32) -> i32 {
   if size == 22 { return 30; }
   if size == 24 { return 36; }
   if size == 26 { return 44; }
+  if size == 32 { return 62; }
+  if size == 36 { return 86; }
+  if size == 40 { return 114; }
+  if size == 44 { return 144; }
+  if size == 48 { return 174; }
+  if size == 52 { return 204; }
+  if size == 64 { return 280; }
+  if size == 72 { return 368; }
+  if size == 80 { return 456; }
+  if size == 88 { return 576; }
+  if size == 96 { return 696; }
+  if size == 104 { return 816; }
+  if size == 120 { return 1050; }
+  if size == 132 { return 1304; }
+  if size == 144 { return 1558; }
   return 0;
 }
 
@@ -26,7 +46,35 @@ fn square_ecc(size: i32) -> i32 {
   if size == 22 { return 20; }
   if size == 24 { return 24; }
   if size == 26 { return 28; }
+  if size == 32 { return 36; }
+  if size == 36 { return 42; }
+  if size == 40 { return 48; }
+  if size == 44 { return 56; }
+  if size == 48 { return 68; }
+  if size == 52 { return 84; }
+  if size == 64 { return 112; }
+  if size == 72 { return 144; }
+  if size == 80 { return 192; }
+  if size == 88 { return 224; }
+  if size == 96 { return 272; }
+  if size == 104 { return 336; }
+  if size == 120 { return 408; }
+  if size == 132 { return 496; }
+  if size == 144 { return 620; }
   return 0;
+}
+
+fn square_grid(size: i32) -> i32 {
+  if size <= 26 { return 1; }
+  if size <= 52 { return 2; }
+  if size <= 104 { return 4; }
+  return 6;
+}
+
+fn square_region(size: i32) -> i32 {
+  let grid: i32 = square_grid(size);
+  if grid <= 0 { return 0; }
+  return dm_safe_div(size, grid) - 2;
 }
 
 fn rect_match(width: i32, height: i32, w: i32, h: i32) -> bool {
@@ -118,24 +166,225 @@ fn validate_border(width: i32, height: i32, modules: Array<i32>) -> bool {
 }
 
 fn map_get(map: string, index: i32) -> i32 {
-  // Encoder maps store 3-digit values; 999 marks unused cells.
-  let offset: i32 = index * 3;
-  if offset + 2 >= string_length(map) { return 999; }
-  let b0: i32 = string_byte_at(map, offset) - 48;
-  let b1: i32 = string_byte_at(map, offset + 1) - 48;
-  let b2: i32 = string_byte_at(map, offset + 2) - 48;
-  return b0 * 100 + b1 * 10 + b2;
+  return map_get_stride(map, index, 3);
+}
+
+fn map_get_stride(map: string, index: i32, stride: i32) -> i32 {
+  let offset: i32 = index * stride;
+  if offset + stride > string_length(map) { return 99999; }
+  let value: i32 = 0;
+  let digit: i32 = 0;
+  while digit < stride {
+    value = value * 10 + string_byte_at(map, offset + digit) - 48;
+    digit = digit + 1;
+  }
+  return value;
+}
+
+fn placement_stride(rows: i32, cols: i32) -> i32 {
+  if rows * cols <= 1000 { return 4; }
+  return 5;
+}
+
+fn placement_digit(value: i32) -> string {
+  if value == 0 { return "0"; }
+  if value == 1 { return "1"; }
+  if value == 2 { return "2"; }
+  if value == 3 { return "3"; }
+  if value == 4 { return "4"; }
+  if value == 5 { return "5"; }
+  if value == 6 { return "6"; }
+  if value == 7 { return "7"; }
+  if value == 8 { return "8"; }
+  return "9";
+}
+
+fn placement_itoa(value: i32) -> string {
+  if value < 10 { return placement_digit(value); }
+  let quotient: i32 = value / 10;
+  let remainder: i32 = value - quotient * 10;
+  return string_concat(placement_itoa(quotient), placement_digit(remainder));
+}
+
+fn placement_digits(value: i32, stride: i32) -> string {
+  let digits: string = placement_itoa(value);
+  let padding: i32 = stride - string_length(digits);
+  let prefix: string = "";
+  let index: i32 = 0;
+  while index < padding {
+    prefix = string_concat(prefix, "0");
+    index = index + 1;
+  }
+  return string_concat(prefix, digits);
+}
+
+fn placement_empty(count: i32, stride: i32) -> string {
+  let marker: string = "9999";
+  if stride == 5 { marker = "99999"; }
+  let result: string = "";
+  let index: i32 = 0;
+  while index < count {
+    result = string_concat(result, marker);
+    index = index + 1;
+  }
+  return result;
+}
+
+fn placement_string_set(map: string, index: i32, value: string, stride: i32) -> string {
+  let offset: i32 = index * stride;
+  let head: string = string_slice(map, 0, offset);
+  let tail: string = string_slice(map, offset + stride, string_length(map));
+  return string_concat(string_concat(head, value), tail);
+}
+
+fn placement_unset(map: string, index: i32, stride: i32) -> bool {
+  let marker: i32 = 9999;
+  if stride == 5 { marker = 99999; }
+  return map_get_stride(map, index, stride) == marker;
+}
+
+fn placement_set(map: string, rows: i32, cols: i32, raw_row: i32, raw_col: i32, position: i32, bit: i32, stride: i32) -> string {
+  let row: i32 = raw_row;
+  let col: i32 = raw_col;
+  if row < 0 {
+    row = row + rows;
+    let row_remainder: i32 = rows - rows / 8 * 8 + 4;
+    if row_remainder >= 8 { row_remainder = row_remainder - 8; }
+    col = col + 4 - row_remainder;
+  }
+  if col < 0 {
+    col = col + cols;
+    let col_remainder: i32 = cols - cols / 8 * 8 + 4;
+    if col_remainder >= 8 { col_remainder = col_remainder - 8; }
+    row = row + 4 - col_remainder;
+  }
+  let index: i32 = row * cols + col;
+  if !placement_unset(map, index, stride) { return map; }
+  return placement_string_set(map, index, placement_digits(position * 8 + bit - 1, stride), stride);
+}
+
+fn placement_utah(map: string, rows: i32, cols: i32, row: i32, col: i32, position: i32, stride: i32) -> string {
+  let result: string = placement_set(map, rows, cols, row - 2, col - 2, position, 1, stride);
+  result = placement_set(result, rows, cols, row - 2, col - 1, position, 2, stride);
+  result = placement_set(result, rows, cols, row - 1, col - 2, position, 3, stride);
+  result = placement_set(result, rows, cols, row - 1, col - 1, position, 4, stride);
+  result = placement_set(result, rows, cols, row - 1, col, position, 5, stride);
+  result = placement_set(result, rows, cols, row, col - 2, position, 6, stride);
+  result = placement_set(result, rows, cols, row, col - 1, position, 7, stride);
+  result = placement_set(result, rows, cols, row, col, position, 8, stride);
+  return result;
+}
+
+fn placement_corner(map: string, rows: i32, cols: i32, kind: i32, position: i32, stride: i32) -> string {
+  let result: string = map;
+  if kind == 1 {
+    result = placement_set(result, rows, cols, rows - 1, 0, position, 1, stride);
+    result = placement_set(result, rows, cols, rows - 1, 1, position, 2, stride);
+    result = placement_set(result, rows, cols, rows - 1, 2, position, 3, stride);
+    result = placement_set(result, rows, cols, 0, cols - 2, position, 4, stride);
+    result = placement_set(result, rows, cols, 0, cols - 1, position, 5, stride);
+    result = placement_set(result, rows, cols, 1, cols - 1, position, 6, stride);
+    result = placement_set(result, rows, cols, 2, cols - 1, position, 7, stride);
+    result = placement_set(result, rows, cols, 3, cols - 1, position, 8, stride);
+  }
+  if kind == 2 {
+    result = placement_set(result, rows, cols, rows - 3, 0, position, 1, stride);
+    result = placement_set(result, rows, cols, rows - 2, 0, position, 2, stride);
+    result = placement_set(result, rows, cols, rows - 1, 0, position, 3, stride);
+    result = placement_set(result, rows, cols, 0, cols - 4, position, 4, stride);
+    result = placement_set(result, rows, cols, 0, cols - 3, position, 5, stride);
+    result = placement_set(result, rows, cols, 0, cols - 2, position, 6, stride);
+    result = placement_set(result, rows, cols, 0, cols - 1, position, 7, stride);
+    result = placement_set(result, rows, cols, 1, cols - 1, position, 8, stride);
+  }
+  if kind == 3 {
+    result = placement_set(result, rows, cols, rows - 3, 0, position, 1, stride);
+    result = placement_set(result, rows, cols, rows - 2, 0, position, 2, stride);
+    result = placement_set(result, rows, cols, rows - 1, 0, position, 3, stride);
+    result = placement_set(result, rows, cols, 0, cols - 2, position, 4, stride);
+    result = placement_set(result, rows, cols, 0, cols - 1, position, 5, stride);
+    result = placement_set(result, rows, cols, 1, cols - 1, position, 6, stride);
+    result = placement_set(result, rows, cols, 2, cols - 1, position, 7, stride);
+    result = placement_set(result, rows, cols, 3, cols - 1, position, 8, stride);
+  }
+  if kind == 4 {
+    result = placement_set(result, rows, cols, rows - 1, 0, position, 1, stride);
+    result = placement_set(result, rows, cols, rows - 1, cols - 1, position, 2, stride);
+    result = placement_set(result, rows, cols, 0, cols - 3, position, 3, stride);
+    result = placement_set(result, rows, cols, 0, cols - 2, position, 4, stride);
+    result = placement_set(result, rows, cols, 0, cols - 1, position, 5, stride);
+    result = placement_set(result, rows, cols, 1, cols - 3, position, 6, stride);
+    result = placement_set(result, rows, cols, 1, cols - 2, position, 7, stride);
+    result = placement_set(result, rows, cols, 1, cols - 1, position, 8, stride);
+  }
+  return result;
+}
+
+fn default_placement_map(rows: i32, cols: i32) -> string {
+  let stride: i32 = placement_stride(rows, cols);
+  let map: string = placement_empty(rows * cols, stride);
+  let position: i32 = 0;
+  let row: i32 = 4;
+  let col: i32 = 0;
+  while row < rows || col < cols {
+    if row == rows && col == 0 {
+      map = placement_corner(map, rows, cols, 1, position, stride);
+      position = position + 1;
+    }
+    if row == rows - 2 && col == 0 && cols - cols / 4 * 4 != 0 {
+      map = placement_corner(map, rows, cols, 2, position, stride);
+      position = position + 1;
+    }
+    if row == rows - 2 && col == 0 && cols - cols / 8 * 8 == 4 {
+      map = placement_corner(map, rows, cols, 3, position, stride);
+      position = position + 1;
+    }
+    if row == rows + 4 && col == 2 && cols - cols / 8 * 8 == 0 {
+      map = placement_corner(map, rows, cols, 4, position, stride);
+      position = position + 1;
+    }
+
+    while row < rows && col >= 0 && placement_unset(map, row * cols + col, stride) {
+      map = placement_utah(map, rows, cols, row, col, position, stride);
+      position = position + 1;
+      row = row - 2;
+      col = col + 2;
+    }
+    row = row + 1;
+    col = col + 3;
+
+    while row >= 0 && col < cols && placement_unset(map, row * cols + col, stride) {
+      map = placement_utah(map, rows, cols, row, col, position, stride);
+      position = position + 1;
+      row = row + 2;
+      col = col - 2;
+    }
+    row = row + 3;
+    col = col + 1;
+  }
+  return map;
 }
 
 fn dm_mapping_map(rows: i32, cols: i32) -> string {
-  return placement_map.mapping_map(rows, cols);
+  let map: string = placement_map.mapping_map(rows, cols);
+  if string_length(map) > 0 { return map; }
+  if rows != cols { return ""; }
+  return default_placement_map(rows, cols);
 }
 
-fn extract_with_map(width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>, region_rows: i32, region_cols: i32, grid_cols: i32, total: i32, map: string) -> string {
+fn extract_with_map(width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>, region_rows: i32, region_cols: i32, grid_rows: i32, grid_cols: i32, total: i32, map: string) -> string {
   if string_length(map) == 0 { return ""; }
-  let mapping_rows: i32 = region_rows;
-  let mapping_cols: i32 = region_cols * grid_cols;
-  if string_length(map) != mapping_rows * mapping_cols * 3 { return ""; }
+  if region_rows <= 0 || region_cols <= 0 { return ""; }
+  let safe_region_rows: i32 = region_rows;
+  if safe_region_rows < 1 { safe_region_rows = 1; }
+  let safe_region_cols: i32 = region_cols;
+  if safe_region_cols < 1 { safe_region_cols = 1; }
+  let mapping_rows: i32 = safe_region_rows * grid_rows;
+  let mapping_cols: i32 = safe_region_cols * grid_cols;
+  let map_stride: i32 = 3;
+  if string_length(map) == mapping_rows * mapping_cols * 4 { map_stride = 4; }
+  if string_length(map) == mapping_rows * mapping_cols * 5 { map_stride = 5; }
+  if string_length(map) != mapping_rows * mapping_cols * map_stride { return ""; }
   let block: string = dec.dzeros(total);
   let erased: string = dec.dzeros(total);
   let has_erasures: bool = true;
@@ -143,15 +392,21 @@ fn extract_with_map(width: i32, height: i32, modules: Array<i32>, erasures: Arra
   while mapping_row < mapping_rows {
     let mapping_col: i32 = 0;
     while mapping_col < mapping_cols {
-      let region_col: i32 = mapping_col / region_cols;
-      let inner_col: i32 = mapping_col - region_col * region_cols;
-      let region_span: i32 = region_cols + 2;
+      let region_row: i32 = dm_safe_div(mapping_row, safe_region_rows);
+      let inner_row: i32 = mapping_row - region_row * safe_region_rows;
+      let region_col: i32 = dm_safe_div(mapping_col, safe_region_cols);
+      let inner_col: i32 = mapping_col - region_col * safe_region_cols;
+      let row_span: i32 = safe_region_rows + 2;
+      let region_span: i32 = safe_region_cols + 2;
       let x: i32 = region_col * region_span + 1 + inner_col;
-      let y: i32 = mapping_row + 1;
+      let y: i32 = region_row * row_span + 1 + inner_row;
       let module_index: i32 = y * width + x;
       let map_index: i32 = mapping_row * mapping_cols + mapping_col;
-      let bit_index: i32 = map_get(map, map_index);
-      if bit_index != 999 {
+      let bit_index: i32 = map_get_stride(map, map_index, map_stride);
+      let empty: i32 = 999;
+      if map_stride == 4 { empty = 9999; }
+      if map_stride == 5 { empty = 99999; }
+      if bit_index != empty {
         let codeword: i32 = bit_index / 8;
         let bit_in_word: i32 = bit_index - codeword * 8;
         let shift: i32 = 7 - bit_in_word;
@@ -223,11 +478,11 @@ fn decode_ascii(codewords: string) -> string {
   return output;
 }
 
-fn decode_with_layout(width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>, region_rows: i32, region_cols: i32, grid_cols: i32, data: i32, ecc: i32) -> string {
+fn decode_with_layout(width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>, region_rows: i32, region_cols: i32, grid_rows: i32, grid_cols: i32, data: i32, ecc: i32) -> string {
   if !validate_border(width, height, modules) { return ""; }
   let total: i32 = data + ecc;
-  let map: string = dm_mapping_map(region_rows, region_cols * grid_cols);
-  let extracted: string = extract_with_map(width, height, modules, erasures, region_rows, region_cols, grid_cols, total, map);
+  let map: string = dm_mapping_map(region_rows * grid_rows, region_cols * grid_cols);
+  let extracted: string = extract_with_map(width, height, modules, erasures, region_rows, region_cols, grid_rows, grid_cols, total, map);
   if string_length(extracted) == 0 { return ""; }
   let split: i32 = 0;
   while split < string_length(extracted) {
@@ -253,12 +508,13 @@ export fn decode_datamatrix(mode: i32, width: i32, height: i32, modules: Array<i
     let ecc: i32 = rect_ecc(width, height);
     if region_rows == 0 { return ""; }
     if data == 0 { return ""; }
-    return decode_with_layout(width, height, modules, erasures, region_rows, region_cols, grid_cols, data, ecc);
+    return decode_with_layout(width, height, modules, erasures, region_rows, region_cols, 1, grid_cols, data, ecc);
   }
   if width != height { return ""; }
   let data2: i32 = square_data(width);
   let ecc2: i32 = square_ecc(width);
   if data2 == 0 { return ""; }
-  let region: i32 = width - 2;
-  return decode_with_layout(width, height, modules, erasures, region, region, 1, data2, ecc2);
+  let grid: i32 = square_grid(width);
+  let region: i32 = square_region(width);
+  return decode_with_layout(width, height, modules, erasures, region, region, grid, grid, data2, ecc2);
 }

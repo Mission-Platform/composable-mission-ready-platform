@@ -1,0 +1,131 @@
+// GS1 DataBar locator/decoder retained in the scanner graph.
+import "./common.fws" as c;
+import "./image.fws" as img;
+import "./databar-rss14.fws" as rss14;
+
+// Locate DataBar-like 1D/stacked region. meta: [modules, rows, x0, y0, module_px]
+export fn locate_databar_modules(
+  bits: u32,
+  width: i32,
+  height: i32,
+  modules: Array<i32>,
+  meta: Array<i32>
+) -> i32 {
+  if c.array_len_i32(meta) < 5 {
+    return 0;
+  }
+  let bound_ok: i32 = img.dense_dark_bounds(bits, width, height, meta);
+  if bound_ok == 0 {
+    return 0;
+  }
+  let x0: i32 = meta[0];
+  let y0: i32 = meta[1];
+  let x1: i32 = meta[2];
+  let y1: i32 = meta[3];
+  let bw: i32 = x1 - x0;
+  let bh: i32 = y1 - y0;
+  if bw < 40 || bh < 1 {
+    return 0;
+  }
+  let mid_y: i32 = y0 + bh / 2;
+  let module_px: i32 = estimate_pitch(bits, width, height, x0, x1, mid_y);
+  if module_px < 1 {
+    module_px = 1;
+  }
+  let sample_x0: i32 = c.max_i32(0, x0 - module_px);
+  let sample_x1: i32 = c.min_i32(width, x1 + module_px);
+  let sample_width: i32 = sample_x1 - sample_x0;
+  let cols: i32 = c.safe_div_i32(sample_width, module_px);
+  let rows: i32 = c.max_i32(1, c.safe_div_i32(bh, module_px));
+  if cols < 30 {
+    return 0;
+  }
+  if cols * rows > c.array_len_i32(modules) {
+    rows = 1;
+    if cols > c.array_len_i32(modules) {
+      return 0;
+    }
+  }
+  let filled: i32 = img.sample_module_grid(
+    bits,
+    width,
+    height,
+    c.fx_from_i32(sample_x0),
+    c.fx_from_i32(y0),
+    c.fx_from_i32(module_px),
+    0,
+    0,
+    c.fx_from_i32(module_px),
+    cols,
+    rows,
+    modules
+  );
+  if filled != cols * rows {
+    return 0;
+  }
+  // DataBar finder-ish: require enough transitions on first row.
+  let transitions: i32 = 0;
+  let x: i32 = 1;
+  while x < cols {
+    if modules[x] != modules[x - 1] {
+      transitions = transitions + 1;
+    }
+    x = x + 1;
+  }
+  if transitions < 10 {
+    return 0;
+  }
+  meta[0] = cols;
+  meta[1] = rows;
+  meta[2] = sample_x0;
+  meta[3] = y0;
+  meta[4] = module_px;
+  return 1;
+}
+
+fn estimate_pitch(bits: u32, width: i32, height: i32, x0: i32, x1: i32, y: i32) -> i32 {
+  let x: i32 = x0;
+  while x < x1 && !img.bitmap_get(bits, width, height, x, y) {
+    x = x + 1;
+  }
+  if x >= x1 {
+    return 1;
+  }
+  let min_run: i32 = x1 - x0;
+  let dark: bool = true;
+  let run_start: i32 = x;
+  while x <= x1 {
+    let is_dark: bool = false;
+    if x < x1 {
+      is_dark = img.bitmap_get(bits, width, height, x, y);
+    }
+    if x == x1 || is_dark != dark {
+      let run_w: i32 = x - run_start;
+      if run_w > 0 && run_w < min_run {
+        min_run = run_w;
+      }
+      if x == x1 {
+        x = x1 + 1;
+      } else {
+        dark = is_dark;
+        run_start = x;
+      }
+    } else {
+      x = x + 1;
+    }
+  }
+  if min_run < 1 {
+    return 1;
+  }
+  return min_run;
+}
+
+export fn decode_databar_modules(cols: i32, rows: i32, modules: Array<i32>) -> string {
+  if cols < 30 || rows < 1 {
+    return "";
+  }
+  if c.array_len_i32(modules) < cols * rows {
+    return "";
+  }
+  return rss14.decode_databar_row(modules, cols);
+}

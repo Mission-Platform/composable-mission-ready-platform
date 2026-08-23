@@ -1,0 +1,1 @@
+ZXing PDF417 text compaction corpus 0123456789

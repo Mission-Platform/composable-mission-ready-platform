@@ -1,0 +1,909 @@
+// Image validation, Otsu/adaptive binarisation, ROI crop, rotation, and dense bounds.
+// Bitmap dark pixels are packed as 1 bit per pixel in guest linear memory.
+// Layout helpers avoid structs: callers keep (width, height, ptr) triples.
+// FWS does not support grouping parentheses — use intermediate locals instead.
+import "./common.fws" as c;
+
+export fn MAX_COPY_PIXELS() -> i32 {
+  return 8388608;
+}
+
+export fn checked_image_len(width: i32, height: i32) -> i32 {
+  if width <= 0 || height <= 0 {
+    return -1;
+  }
+  if width > MAX_COPY_PIXELS() || height > MAX_COPY_PIXELS() {
+    return -1;
+  }
+  if width > 4096 || height > 4096 {
+    return -1;
+  }
+  return width * height;
+}
+
+fn bit_nbytes(width: i32, height: i32) -> i32 {
+  let bits: i32 = width * height;
+  let padded: i32 = bits + 7;
+  return padded / 8;
+}
+
+export fn bitmap_alloc(width: i32, height: i32) -> u32 {
+  let nbytes: i32 = bit_nbytes(width, height);
+  return c.mem_alloc_bytes(nbytes);
+}
+
+export fn bitmap_get(bits: u32, width: i32, height: i32, x: i32, y: i32) -> bool {
+  if x < 0 || y < 0 || x >= width || y >= height {
+    return false;
+  }
+  let index: i32 = y * width + x;
+  let byte_index: i32 = index / 8;
+  let bit: i32 = index - byte_index * 8;
+  let value: i32 = c.mem_get_u8(bits, byte_index);
+  return byte_bit(value, bit);
+}
+
+export fn bitmap_set(bits: u32, width: i32, height: i32, x: i32, y: i32, dark: bool) -> unit {
+  if x < 0 || y < 0 || x >= width || y >= height {
+    return;
+  }
+  let index: i32 = y * width + x;
+  let byte_index: i32 = index / 8;
+  let bit: i32 = index - byte_index * 8;
+  let value: i32 = c.mem_get_u8(bits, byte_index);
+  let bit_on: bool = byte_bit(value, bit);
+  let mask: i32 = 1;
+  let shift: i32 = 0;
+  while shift < bit {
+    mask = mask * 2;
+    shift = shift + 1;
+  }
+  if dark {
+    if !bit_on {
+      c.mem_set_u8(bits, byte_index, value + mask);
+    }
+  } else {
+    if bit_on {
+      c.mem_set_u8(bits, byte_index, value - mask);
+    }
+  }
+}
+
+fn byte_bit(value: i32, bit: i32) -> bool {
+  if bit == 0 { return value - value / 2 * 2 == 1; }
+  if bit == 1 { return value / 2 - value / 4 * 2 == 1; }
+  if bit == 2 { return value / 4 - value / 8 * 2 == 1; }
+  if bit == 3 { return value / 8 - value / 16 * 2 == 1; }
+  if bit == 4 { return value / 16 - value / 32 * 2 == 1; }
+  if bit == 5 { return value / 32 - value / 64 * 2 == 1; }
+  if bit == 6 { return value / 64 - value / 128 * 2 == 1; }
+  return value / 128 - value / 256 * 2 == 1;
+}
+
+// Copy host luma array into guest memory. Returns pointer, or 0 on failure.
+export fn luma_copy_from_array(width: i32, height: i32, luma: Array<i32>) -> u32 {
+  let pixels: i32 = checked_image_len(width, height);
+  if pixels < 0 {
+    return 0;
+  }
+  if c.array_len_i32(luma) != pixels {
+    return 0;
+  }
+  let data: u32 = c.mem_alloc_bytes(pixels);
+  let index: i32 = 0;
+  while index < pixels {
+    let value: i32 = luma[index];
+    let v: i32 = value;
+    if v < 0 {
+      v = 0;
+    }
+    if v > 255 {
+      v = 255;
+    }
+    c.mem_set_u8(data, index, v);
+    index = index + 1;
+  }
+  return data;
+}
+
+export fn luma_get(data: u32, width: i32, height: i32, x: i32, y: i32) -> i32 {
+  if x < 0 || y < 0 || x >= width || y >= height {
+    return 255;
+  }
+  return c.mem_get_u8(data, y * width + x);
+}
+
+// Crop luma into a new buffer. Writes width/height into meta[0]/meta[1]. Returns data ptr or 0.
+export fn crop_luma(
+  data: u32,
+  width: i32,
+  height: i32,
+  x: i32,
+  y: i32,
+  w: i32,
+  h: i32,
+  meta: Array<i32>
+) -> u32 {
+  if w <= 0 || h <= 0 {
+    return 0;
+  }
+  if c.array_len_i32(meta) < 2 {
+    return 0;
+  }
+  let x0: i32 = c.clamp_i32(x, 0, width);
+  let y0: i32 = c.clamp_i32(y, 0, height);
+  if x0 >= width || y0 >= height {
+    return 0;
+  }
+  let x1: i32 = c.min_i32(x + w, width);
+  let y1: i32 = c.min_i32(y + h, height);
+  if x1 <= x0 || y1 <= y0 {
+    return 0;
+  }
+  let cw: i32 = x1 - x0;
+  let ch: i32 = y1 - y0;
+  if x0 == 0 && y0 == 0 && cw == width && ch == height {
+    meta[0] = width;
+    meta[1] = height;
+    return data;
+  }
+  let pixels: i32 = checked_image_len(cw, ch);
+  if pixels < 0 || pixels > MAX_COPY_PIXELS() {
+    return 0;
+  }
+  let out: u32 = c.mem_alloc_bytes(pixels);
+  let row: i32 = 0;
+  while row < ch {
+    let col: i32 = 0;
+    while col < cw {
+      let src: i32 = luma_get(data, width, height, x0 + col, y0 + row);
+      c.mem_set_u8(out, row * cw + col, src);
+      col = col + 1;
+    }
+    row = row + 1;
+  }
+  meta[0] = cw;
+  meta[1] = ch;
+  return out;
+}
+
+fn hist_at(hist_ptr: u32, bin: i32) -> i32 {
+  let b0: i32 = c.mem_get_u8(hist_ptr, bin * 4);
+  let b1: i32 = c.mem_get_u8(hist_ptr, bin * 4 + 1);
+  let b2: i32 = c.mem_get_u8(hist_ptr, bin * 4 + 2);
+  let b3: i32 = c.mem_get_u8(hist_ptr, bin * 4 + 3);
+  return b0 + b1 * 256 + b2 * 65536 + b3 * 16777216;
+}
+
+fn hist_set(hist_ptr: u32, bin: i32, value: i32) -> unit {
+  let next: i32 = value;
+  c.mem_set_u8(hist_ptr, bin * 4, next - next / 256 * 256);
+  c.mem_set_u8(hist_ptr, bin * 4 + 1, next / 256 - next / 65536 * 256);
+  c.mem_set_u8(hist_ptr, bin * 4 + 2, next / 65536 - next / 16777216 * 256);
+  c.mem_set_u8(hist_ptr, bin * 4 + 3, next / 16777216);
+}
+
+fn otsu_threshold(data: u32, pixels: i32) -> i32 {
+  let hist: u32 = c.mem_alloc_bytes(256 * 4);
+  let index: i32 = 0;
+  while index < pixels {
+    let value: i32 = c.mem_get_u8(data, index);
+    let count: i32 = hist_at(hist, value);
+    hist_set(hist, value, count + 1);
+    index = index + 1;
+  }
+
+  let total: i32 = pixels;
+  let sum_all: i32 = 0;
+  let t: i32 = 0;
+  while t < 256 {
+    sum_all = sum_all + t * hist_at(hist, t);
+    t = t + 1;
+  }
+
+  let sum_b: i32 = 0;
+  let w_b: i32 = 0;
+  let max_var: i32 = -1;
+  let threshold: i32 = 0;
+  let scaled_total: i32 = total + 127;
+  let weight_scale: i32 = c.max_i32(1, scaled_total / 128);
+  t = 0;
+  while t < 256 {
+    w_b = w_b + hist_at(hist, t);
+    if w_b != 0 {
+      let w_f: i32 = total - w_b;
+      if w_f == 0 {
+        t = 256;
+      } else {
+        sum_b = sum_b + t * hist_at(hist, t);
+        let m_b: i32 = c.safe_div_i32(sum_b, w_b);
+        let sum_f: i32 = sum_all - sum_b;
+        let m_f: i32 = c.safe_div_i32(sum_f, w_f);
+        let diff: i32 = m_b - m_f;
+        let scaled_b: i32 = c.safe_div_i32(w_b, weight_scale);
+        let scaled_f: i32 = c.safe_div_i32(w_f, weight_scale);
+        let var_between: i32 = scaled_b * scaled_f * diff * diff;
+        if var_between > max_var {
+          max_var = var_between;
+          threshold = t;
+        }
+      }
+    }
+    t = t + 1;
+  }
+  return threshold;
+}
+
+// Otsu binarise. Returns bitmap bits pointer, or 0 on failure.
+export fn binarize(data: u32, width: i32, height: i32) -> u32 {
+  let pixels: i32 = checked_image_len(width, height);
+  if pixels < 0 {
+    return 0;
+  }
+  let threshold: i32 = otsu_threshold(data, pixels);
+  let bits: u32 = bitmap_alloc(width, height);
+  let index: i32 = 0;
+  while index < pixels {
+    let value: i32 = c.mem_get_u8(data, index);
+    let x: i32 = index - c.safe_div_i32(index, width) * width;
+    let y: i32 = c.safe_div_i32(index, width);
+    bitmap_set(bits, width, height, x, y, value <= threshold);
+    index = index + 1;
+  }
+  return bits;
+}
+
+export fn binarize_adaptive(data: u32, width: i32, height: i32) -> u32 {
+  let pixels: i32 = checked_image_len(width, height);
+  if pixels < 0 {
+    return 0;
+  }
+  let radius: i32 = c.max_i32(8, c.min_i32(width, height) / 16);
+  let bits: u32 = bitmap_alloc(width, height);
+  let y: i32 = 0;
+  while y < height {
+    let x: i32 = 0;
+    while x < width {
+      let sum: i32 = 0;
+      let count: i32 = 0;
+      let dy: i32 = 0 - radius;
+      while dy <= radius {
+        let dx: i32 = 0 - radius;
+        while dx <= radius {
+          let sx: i32 = x + dx;
+          let sy: i32 = y + dy;
+          if sx >= 0 && sy >= 0 && sx < width && sy < height {
+            sum = sum + luma_get(data, width, height, sx, sy);
+            count = count + 1;
+          }
+          dx = dx + 1;
+        }
+        dy = dy + 1;
+      }
+      let mean: i32 = 128;
+      if count > 0 {
+        mean = c.safe_div_i32(sum, count);
+      }
+      let pixel: i32 = luma_get(data, width, height, x, y);
+      bitmap_set(bits, width, height, x, y, pixel <= mean - 8);
+      x = x + 1;
+    }
+    y = y + 1;
+  }
+  return bits;
+}
+
+// Dense dark bounds. Writes x0,y0,x1,y1 into meta[0..3]. Returns 1 on success.
+export fn dense_dark_bounds(bits: u32, width: i32, height: i32, meta: Array<i32>) -> i32 {
+  if c.array_len_i32(meta) < 4 {
+    return 0;
+  }
+  let min_x: i32 = width;
+  let min_y: i32 = height;
+  let max_x: i32 = -1;
+  let max_y: i32 = -1;
+  let y: i32 = 0;
+  while y < height {
+    let x: i32 = 0;
+    let row_dark: i32 = 0;
+    let row_min_x: i32 = width;
+    let row_max_x: i32 = -1;
+    while x < width {
+      let dark: bool = bitmap_get(bits, width, height, x, y);
+      let connected: bool = false;
+      if dark {
+        connected = bitmap_get(bits, width, height, x - 1, y) || bitmap_get(bits, width, height, x + 1, y);
+      }
+      if connected {
+        row_dark = row_dark + 1;
+        if x < row_min_x {
+          row_min_x = x;
+        }
+        if x > row_max_x {
+          row_max_x = x;
+        }
+      }
+      x = x + 1;
+    }
+    // A perspective-warped symbol can have no row that reaches half of the
+    // complete frame width, especially when the quiet zone is generous. Keep
+    // enough ink to form a candidate while leaving the individual locators'
+    // finder/timing/bullseye validation to reject unrelated texture.
+    if row_dark >= 2 && row_dark * 25 >= width {
+      if row_min_x < min_x {
+        min_x = row_min_x;
+      }
+      if row_max_x > max_x {
+        max_x = row_max_x;
+      }
+      if y < min_y {
+        min_y = y;
+      }
+      if y > max_y {
+        max_y = y;
+      }
+    }
+    y = y + 1;
+  }
+  if max_x < min_x || max_y < min_y {
+    return 0;
+  }
+  meta[0] = min_x;
+  meta[1] = min_y;
+  meta[2] = max_x + 1;
+  meta[3] = max_y + 1;
+  return 1;
+}
+
+// Crop bitmap. Writes width/height into meta[0]/meta[1]. Returns bits ptr or 0.
+export fn crop_bitmap(
+  bits: u32,
+  width: i32,
+  height: i32,
+  x0: i32,
+  y0: i32,
+  x1: i32,
+  y1: i32,
+  meta: Array<i32>
+) -> u32 {
+  if c.array_len_i32(meta) < 2 {
+    return 0;
+  }
+  let cx0: i32 = c.clamp_i32(x0, 0, width);
+  let cy0: i32 = c.clamp_i32(y0, 0, height);
+  let cx1: i32 = c.clamp_i32(x1, 0, width);
+  let cy1: i32 = c.clamp_i32(y1, 0, height);
+  if cx1 <= cx0 || cy1 <= cy0 {
+    return 0;
+  }
+  let cw: i32 = cx1 - cx0;
+  let ch: i32 = cy1 - cy0;
+  let out: u32 = bitmap_alloc(cw, ch);
+  let y: i32 = 0;
+  while y < ch {
+    let x: i32 = 0;
+    while x < cw {
+      let dark: bool = bitmap_get(bits, width, height, cx0 + x, cy0 + y);
+      bitmap_set(out, cw, ch, x, y, dark);
+      x = x + 1;
+    }
+    y = y + 1;
+  }
+  meta[0] = cw;
+  meta[1] = ch;
+  return out;
+}
+
+// Rotate luma by multiples of 90, or approximate arbitrary angle. Writes w/h to meta.
+export fn rotate_luma(data: u32, width: i32, height: i32, angle_deg: i32, meta: Array<i32>) -> u32 {
+  if c.array_len_i32(meta) < 2 {
+    return 0;
+  }
+  if angle_deg == 0 {
+    meta[0] = width;
+    meta[1] = height;
+    return data;
+  }
+  let pixels: i32 = width * height;
+  if angle_deg == 90 || angle_deg == -270 {
+    let out: u32 = c.mem_alloc_bytes(pixels);
+    let y: i32 = 0;
+    while y < height {
+      let x: i32 = 0;
+      while x < width {
+        let dst_index: i32 = x * height + height - 1 - y;
+        let src: i32 = luma_get(data, width, height, x, y);
+        c.mem_set_u8(out, dst_index, src);
+        x = x + 1;
+      }
+      y = y + 1;
+    }
+    meta[0] = height;
+    meta[1] = width;
+    return out;
+  }
+  if angle_deg == 180 || angle_deg == -180 {
+    let out: u32 = c.mem_alloc_bytes(pixels);
+    let y: i32 = 0;
+    while y < height {
+      let x: i32 = 0;
+      while x < width {
+        let dst_index: i32 = height - 1 - y;
+        let dst_index2: i32 = dst_index * width + width - 1 - x;
+        let src: i32 = luma_get(data, width, height, x, y);
+        c.mem_set_u8(out, dst_index2, src);
+        x = x + 1;
+      }
+      y = y + 1;
+    }
+    meta[0] = width;
+    meta[1] = height;
+    return out;
+  }
+  if angle_deg == 270 || angle_deg == -90 {
+    let out: u32 = c.mem_alloc_bytes(pixels);
+    let y: i32 = 0;
+    while y < height {
+      let x: i32 = 0;
+      while x < width {
+        let dst_index: i32 = width - 1 - x;
+        let dst_index2: i32 = dst_index * height + y;
+        let src: i32 = luma_get(data, width, height, x, y);
+        c.mem_set_u8(out, dst_index2, src);
+        x = x + 1;
+      }
+      y = y + 1;
+    }
+    meta[0] = height;
+    meta[1] = width;
+    return out;
+  }
+
+  let angle: i32 = angle_deg;
+  while angle < 0 {
+    angle = angle + 360;
+  }
+  while angle >= 360 {
+    angle = angle - 360;
+  }
+  let cos_fx: i32 = cos_deg_fx(angle);
+  let sin_fx: i32 = sin_deg_fx(angle);
+  let cx: i32 = width / 2;
+  let cy: i32 = height / 2;
+  let ax: i32 = c.abs_i32(c.fx_mul(c.fx_from_i32(width), cos_fx));
+  let ay: i32 = c.abs_i32(c.fx_mul(c.fx_from_i32(height), sin_fx));
+  let ext_x_num: i32 = ax + ay + c.FX_SCALE() - 1;
+  let ext_x: i32 = ext_x_num / 256;
+  let bx: i32 = c.abs_i32(c.fx_mul(c.fx_from_i32(width), sin_fx));
+  let by: i32 = c.abs_i32(c.fx_mul(c.fx_from_i32(height), cos_fx));
+  let ext_y_num: i32 = bx + by + c.FX_SCALE() - 1;
+  let ext_y: i32 = ext_y_num / 256;
+  let out_w: i32 = c.max_i32(1, ext_x);
+  let out_h: i32 = c.max_i32(1, ext_y);
+  let out_pixels: i32 = checked_image_len(out_w, out_h);
+  if out_pixels < 0 {
+    return 0;
+  }
+  let out: u32 = c.mem_alloc_bytes(out_pixels);
+  let ocx: i32 = out_w / 2;
+  let ocy: i32 = out_h / 2;
+  let y: i32 = 0;
+  while y < out_h {
+    let x: i32 = 0;
+    while x < out_w {
+      let dx: i32 = x - ocx;
+      let dy: i32 = y - ocy;
+      let sx_fx: i32 = c.fx_mul(c.fx_from_i32(dx), cos_fx) + c.fx_mul(c.fx_from_i32(dy), sin_fx);
+      let sy_fx: i32 = 0 - c.fx_mul(c.fx_from_i32(dx), sin_fx) + c.fx_mul(c.fx_from_i32(dy), cos_fx);
+      let sx: i32 = c.fx_to_i32(sx_fx) + cx;
+      let sy: i32 = c.fx_to_i32(sy_fx) + cy;
+      let value: i32 = 255;
+      if sx >= 0 && sy >= 0 && sx < width && sy < height {
+        value = luma_get(data, width, height, sx, sy);
+      }
+      c.mem_set_u8(out, y * out_w + x, value);
+      x = x + 1;
+    }
+    y = y + 1;
+  }
+  meta[0] = out_w;
+  meta[1] = out_h;
+  return out;
+}
+
+fn cos_deg_fx(angle: i32) -> i32 {
+  let a: i32 = angle;
+  if a > 180 {
+    a = 360 - a;
+  }
+  if a > 90 {
+    return 0 - cos_deg_fx(180 - a);
+  }
+  return cos_table_fx(a);
+}
+
+fn sin_deg_fx(angle: i32) -> i32 {
+  let a: i32 = angle;
+  if a > 180 {
+    return 0 - sin_deg_fx(360 - a);
+  }
+  if a > 90 {
+    return sin_deg_fx(180 - a);
+  }
+  return sin_table_fx(a);
+}
+
+// 8-bit fixed-point (scale 256) cos/sin lookup for integer degrees 0..90,
+// used both by rotate_luma's arbitrary-angle path and by orientation
+// estimation so the two stay consistent with each other.
+fn cos_table_fx(a: i32) -> i32 {
+  if a == 0 { return 256; }
+  if a == 1 { return 256; }
+  if a == 2 { return 256; }
+  if a == 3 { return 256; }
+  if a == 4 { return 255; }
+  if a == 5 { return 255; }
+  if a == 6 { return 255; }
+  if a == 7 { return 254; }
+  if a == 8 { return 254; }
+  if a == 9 { return 253; }
+  if a == 10 { return 252; }
+  if a == 11 { return 251; }
+  if a == 12 { return 250; }
+  if a == 13 { return 249; }
+  if a == 14 { return 248; }
+  if a == 15 { return 247; }
+  if a == 16 { return 246; }
+  if a == 17 { return 245; }
+  if a == 18 { return 243; }
+  if a == 19 { return 242; }
+  if a == 20 { return 241; }
+  if a == 21 { return 239; }
+  if a == 22 { return 237; }
+  if a == 23 { return 236; }
+  if a == 24 { return 234; }
+  if a == 25 { return 232; }
+  if a == 26 { return 230; }
+  if a == 27 { return 228; }
+  if a == 28 { return 226; }
+  if a == 29 { return 224; }
+  if a == 30 { return 222; }
+  if a == 31 { return 219; }
+  if a == 32 { return 217; }
+  if a == 33 { return 215; }
+  if a == 34 { return 212; }
+  if a == 35 { return 210; }
+  if a == 36 { return 207; }
+  if a == 37 { return 204; }
+  if a == 38 { return 202; }
+  if a == 39 { return 199; }
+  if a == 40 { return 196; }
+  if a == 41 { return 193; }
+  if a == 42 { return 190; }
+  if a == 43 { return 187; }
+  if a == 44 { return 184; }
+  if a == 45 { return 181; }
+  if a == 46 { return 178; }
+  if a == 47 { return 175; }
+  if a == 48 { return 171; }
+  if a == 49 { return 168; }
+  if a == 50 { return 165; }
+  if a == 51 { return 161; }
+  if a == 52 { return 158; }
+  if a == 53 { return 154; }
+  if a == 54 { return 150; }
+  if a == 55 { return 147; }
+  if a == 56 { return 143; }
+  if a == 57 { return 139; }
+  if a == 58 { return 136; }
+  if a == 59 { return 132; }
+  if a == 60 { return 128; }
+  if a == 61 { return 124; }
+  if a == 62 { return 120; }
+  if a == 63 { return 116; }
+  if a == 64 { return 112; }
+  if a == 65 { return 108; }
+  if a == 66 { return 104; }
+  if a == 67 { return 100; }
+  if a == 68 { return 96; }
+  if a == 69 { return 92; }
+  if a == 70 { return 88; }
+  if a == 71 { return 83; }
+  if a == 72 { return 79; }
+  if a == 73 { return 75; }
+  if a == 74 { return 71; }
+  if a == 75 { return 66; }
+  if a == 76 { return 62; }
+  if a == 77 { return 58; }
+  if a == 78 { return 53; }
+  if a == 79 { return 49; }
+  if a == 80 { return 44; }
+  if a == 81 { return 40; }
+  if a == 82 { return 36; }
+  if a == 83 { return 31; }
+  if a == 84 { return 27; }
+  if a == 85 { return 22; }
+  if a == 86 { return 18; }
+  if a == 87 { return 13; }
+  if a == 88 { return 9; }
+  if a == 89 { return 4; }
+  return 0;
+}
+
+fn sin_table_fx(a: i32) -> i32 {
+  if a == 0 { return 0; }
+  if a == 1 { return 4; }
+  if a == 2 { return 9; }
+  if a == 3 { return 13; }
+  if a == 4 { return 18; }
+  if a == 5 { return 22; }
+  if a == 6 { return 27; }
+  if a == 7 { return 31; }
+  if a == 8 { return 36; }
+  if a == 9 { return 40; }
+  if a == 10 { return 44; }
+  if a == 11 { return 49; }
+  if a == 12 { return 53; }
+  if a == 13 { return 58; }
+  if a == 14 { return 62; }
+  if a == 15 { return 66; }
+  if a == 16 { return 71; }
+  if a == 17 { return 75; }
+  if a == 18 { return 79; }
+  if a == 19 { return 83; }
+  if a == 20 { return 88; }
+  if a == 21 { return 92; }
+  if a == 22 { return 96; }
+  if a == 23 { return 100; }
+  if a == 24 { return 104; }
+  if a == 25 { return 108; }
+  if a == 26 { return 112; }
+  if a == 27 { return 116; }
+  if a == 28 { return 120; }
+  if a == 29 { return 124; }
+  if a == 30 { return 128; }
+  if a == 31 { return 132; }
+  if a == 32 { return 136; }
+  if a == 33 { return 139; }
+  if a == 34 { return 143; }
+  if a == 35 { return 147; }
+  if a == 36 { return 150; }
+  if a == 37 { return 154; }
+  if a == 38 { return 158; }
+  if a == 39 { return 161; }
+  if a == 40 { return 165; }
+  if a == 41 { return 168; }
+  if a == 42 { return 171; }
+  if a == 43 { return 175; }
+  if a == 44 { return 178; }
+  if a == 45 { return 181; }
+  if a == 46 { return 184; }
+  if a == 47 { return 187; }
+  if a == 48 { return 190; }
+  if a == 49 { return 193; }
+  if a == 50 { return 196; }
+  if a == 51 { return 199; }
+  if a == 52 { return 202; }
+  if a == 53 { return 204; }
+  if a == 54 { return 207; }
+  if a == 55 { return 210; }
+  if a == 56 { return 212; }
+  if a == 57 { return 215; }
+  if a == 58 { return 217; }
+  if a == 59 { return 219; }
+  if a == 60 { return 222; }
+  if a == 61 { return 224; }
+  if a == 62 { return 226; }
+  if a == 63 { return 228; }
+  if a == 64 { return 230; }
+  if a == 65 { return 232; }
+  if a == 66 { return 234; }
+  if a == 67 { return 236; }
+  if a == 68 { return 237; }
+  if a == 69 { return 239; }
+  if a == 70 { return 241; }
+  if a == 71 { return 242; }
+  if a == 72 { return 243; }
+  if a == 73 { return 245; }
+  if a == 74 { return 246; }
+  if a == 75 { return 247; }
+  if a == 76 { return 248; }
+  if a == 77 { return 249; }
+  if a == 78 { return 250; }
+  if a == 79 { return 251; }
+  if a == 80 { return 252; }
+  if a == 81 { return 253; }
+  if a == 82 { return 254; }
+  if a == 83 { return 254; }
+  if a == 84 { return 255; }
+  if a == 85 { return 255; }
+  if a == 86 { return 255; }
+  if a == 87 { return 256; }
+  if a == 88 { return 256; }
+  if a == 89 { return 256; }
+  return 256;
+}
+
+// Estimate the in-plane rotation (in whole degrees, range [-45, 45]) that
+// straightens the bitmap's dense ink, mirroring the native scanner's
+// `Bitmap::orientation`: sweep candidate angles and keep the one whose
+// axis-aligned bounding box over sampled dark points is smallest. Returns 0
+// when there is no meaningful ink, or when the box is already minimal at 0.
+fn orientation_sample_stride(min_x: i32, min_y: i32, max_x: i32, max_y: i32) -> i32 {
+  let span_x: i32 = max_x - min_x + 1;
+  let span_y: i32 = max_y - min_y + 1;
+  let span: i32 = span_x;
+  if span_y > span {
+    span = span_y;
+  }
+  let stride: i32 = span / 128;
+  if stride < 1 {
+    stride = 1;
+  }
+  return stride;
+}
+
+fn orientation_point_count(bits: u32, width: i32, height: i32, min_x: i32, min_y: i32, max_x: i32, max_y: i32, stride: i32) -> i32 {
+  let count: i32 = 0;
+  let y: i32 = min_y;
+  while y <= max_y {
+    let x: i32 = min_x;
+    while x <= max_x {
+      if bitmap_get(bits, width, height, x, y) {
+        count = count + 1;
+      }
+      x = x + stride;
+    }
+    y = y + stride;
+  }
+  return count;
+}
+
+fn orientation_area_for_angle(bits: u32, width: i32, height: i32, min_x: i32, min_y: i32, max_x: i32, max_y: i32, stride: i32, angle: i32) -> i32 {
+  let cos_fx: i32 = cos_deg_fx(angle);
+  let sin_fx: i32 = sin_deg_fx(angle);
+  let min_u: i32 = 1000000000;
+  let max_u: i32 = -1000000000;
+  let min_v: i32 = 1000000000;
+  let max_v: i32 = -1000000000;
+  let y: i32 = min_y;
+  while y <= max_y {
+    let x: i32 = min_x;
+    while x <= max_x {
+      if bitmap_get(bits, width, height, x, y) {
+        let u_fx: i32 = c.fx_mul(c.fx_from_i32(x), cos_fx) + c.fx_mul(c.fx_from_i32(y), sin_fx);
+        let v_fx: i32 = 0 - c.fx_mul(c.fx_from_i32(x), sin_fx) + c.fx_mul(c.fx_from_i32(y), cos_fx);
+        if u_fx < min_u { min_u = u_fx; }
+        if u_fx > max_u { max_u = u_fx; }
+        if v_fx < min_v { min_v = v_fx; }
+        if v_fx > max_v { max_v = v_fx; }
+      }
+      x = x + stride;
+    }
+    y = y + stride;
+  }
+  let du: i32 = c.fx_to_i32(max_u - min_u);
+  let dv: i32 = c.fx_to_i32(max_v - min_v);
+  return du * dv;
+}
+
+export fn estimate_orientation_deg(bits: u32, width: i32, height: i32, meta: Array<i32>) -> i32 {
+  let bounds_ok: i32 = dense_dark_bounds(bits, width, height, meta);
+  if bounds_ok == 0 {
+    return 0;
+  }
+  let min_x: i32 = meta[0];
+  let min_y: i32 = meta[1];
+  let max_x: i32 = meta[2] - 1;
+  let max_y: i32 = meta[3] - 1;
+  let stride: i32 = orientation_sample_stride(min_x, min_y, max_x, max_y);
+  let count: i32 = orientation_point_count(bits, width, height, min_x, min_y, max_x, max_y, stride);
+  if count < 16 {
+    return 0;
+  }
+  let best_angle: i32 = 0;
+  let best_area: i32 = 2147483647;
+  let angle: i32 = 0;
+  while angle < 90 {
+    let area: i32 = orientation_area_for_angle(bits, width, height, min_x, min_y, max_x, max_y, stride, angle);
+    if area < best_area {
+      best_area = area;
+      best_angle = angle;
+    }
+    angle = angle + 1;
+  }
+  let result: i32 = best_angle;
+  if result > 45 {
+    result = result - 90;
+  }
+  // Matches the native approximately 3 degree "meaningfully rotated" threshold.
+  if c.abs_i32(result) < 3 {
+    return 0;
+  }
+  return result;
+}
+
+export fn fill_modules_from_bitmap(
+  bits: u32,
+  width: i32,
+  height: i32,
+  modules: Array<i32>
+) -> i32 {
+  let total: i32 = width * height;
+  if c.array_len_i32(modules) < total {
+    return -1;
+  }
+  let y: i32 = 0;
+  while y < height {
+    let x: i32 = 0;
+    while x < width {
+      let value: i32 = 0;
+      if bitmap_get(bits, width, height, x, y) {
+        value = 1;
+      }
+      modules[y * width + x] = value;
+      x = x + 1;
+    }
+    y = y + 1;
+  }
+  return total;
+}
+
+export fn clear_array(values: Array<i32>, length: i32) -> unit {
+  let index: i32 = 0;
+  let limit: i32 = length;
+  if c.array_len_i32(values) < limit {
+    limit = c.array_len_i32(values);
+  }
+  while index < limit {
+    values[index] = 0;
+    index = index + 1;
+  }
+}
+
+// Sample a module grid from a bitmap into modules[]. Returns filled count or -1.
+export fn sample_module_grid(
+  bits: u32,
+  width: i32,
+  height: i32,
+  origin_x_fx: i32,
+  origin_y_fx: i32,
+  axis_x_x_fx: i32,
+  axis_x_y_fx: i32,
+  axis_y_x_fx: i32,
+  axis_y_y_fx: i32,
+  modules_w: i32,
+  modules_h: i32,
+  modules: Array<i32>
+) -> i32 {
+  let total: i32 = modules_w * modules_h;
+  if c.array_len_i32(modules) < total {
+    return -1;
+  }
+  let my: i32 = 0;
+  while my < modules_h {
+    let mx: i32 = 0;
+    while mx < modules_w {
+      let center_x_fx: i32 = c.fx_mul(axis_x_x_fx, 128) + c.fx_mul(axis_y_x_fx, 128);
+      let center_y_fx: i32 = c.fx_mul(axis_x_y_fx, 128) + c.fx_mul(axis_y_y_fx, 128);
+      let px_fx: i32 = origin_x_fx
+        + c.fx_mul(c.fx_from_i32(mx), axis_x_x_fx)
+        + c.fx_mul(c.fx_from_i32(my), axis_y_x_fx)
+        + center_x_fx;
+      let py_fx: i32 = origin_y_fx
+        + c.fx_mul(c.fx_from_i32(mx), axis_x_y_fx)
+        + c.fx_mul(c.fx_from_i32(my), axis_y_y_fx)
+        + center_y_fx;
+      let px: i32 = c.fx_to_i32(px_fx);
+      let py: i32 = c.fx_to_i32(py_fx);
+      let value: i32 = 0;
+      if bitmap_get(bits, width, height, px, py) {
+        value = 1;
+      }
+      modules[my * modules_w + mx] = value;
+      mx = mx + 1;
+    }
+    my = my + 1;
+  }
+  return total;
+}

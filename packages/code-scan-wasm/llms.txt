@@ -1,4 +1,0 @@
-# @mission-platform/code-scan-wasm
-
-Generated typed WebAssembly image scanner used by `@mission-platform/code-scanner`.
-Use the scanner package for the supported component and composable API.

@@ -12,7 +12,7 @@
   .forge-code-scanner {
     display: inline-flex;
     flex-direction: column;
-    gap: var(--mp-component-code-scanner-gap-root);
+    gap: var(--mp-code-scanner-gap-root);
     max-width: 100%;
   }
 
@@ -23,8 +23,8 @@
     width: 100%;
     max-width: 20rem;
     overflow: hidden;
-    background: var(--mp-component-code-scanner-viewport-surface);
-    border-radius: var(--mp-component-code-scanner-viewport-radius);
+    background: var(--mp-code-scanner-viewport-surface);
+    border-radius: var(--mp-code-scanner-viewport-radius);
   }
 
   .forge-code-scanner__video {
@@ -41,7 +41,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--mp-component-code-scanner-placeholder-text);
+    color: var(--mp-code-scanner-placeholder-text);
   }
 
   // Centred scan-window guide, sized (via inline width/height) to the region of
@@ -53,15 +53,15 @@
     left: 50%;
     box-sizing: border-box;
     pointer-events: none;
-    border: var(--mp-component-code-scanner-reticle-border-width) solid var(--mp-component-code-scanner-reticle-border);
-    border-radius: var(--mp-component-code-scanner-reticle-radius);
+    border: var(--mp-code-scanner-reticle-border-width) solid var(--mp-code-scanner-reticle-border);
+    border-radius: var(--mp-code-scanner-reticle-radius);
     transform: translate(-50%, -50%);
   }
 
   .forge-code-scanner__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--mp-component-code-scanner-gap-actions);
+    gap: var(--mp-code-scanner-gap-actions);
   }
 
   // The hidden native file input; the visible trigger is the styled button.
@@ -80,10 +80,10 @@
   .forge-code-scanner__result {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-component-code-scanner-gap-result);
-    padding: var(--mp-component-code-scanner-result-padding-block) var(--mp-component-code-scanner-result-padding-inline);
-    background: var(--mp-component-code-scanner-result-surface);
-    border-radius: var(--mp-component-code-scanner-result-radius);
+    gap: var(--mp-code-scanner-gap-result);
+    padding: var(--mp-code-scanner-result-padding-block) var(--mp-code-scanner-result-padding-inline);
+    background: var(--mp-code-scanner-result-surface);
+    border-radius: var(--mp-code-scanner-result-radius);
     word-break: break-all;
   }
 }

@@ -11,90 +11,50 @@ import {
   solidJsxPlugin,
   sveltePlugin,
 } from '@mission-platform/vite-plugin-forge';
+import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { defineConfig, type Plugin, type UserConfig } from 'vite';
 
-/**
- * `@mission-platform/code-scanner` ships **three** distinct build artifacts from
- * a single Vite config, selected by `--mode`:
- *
- * - **default** — the dependency-free Rust/WebAssembly **scanner** façade
- *   (`src/index.ts`), emitted as `dist/index.js` with the compiled wasm inlined
- *   as a base64 `data:` URI so `scanImageData` stays synchronous (SSR- and
- *   test-safe). The sibling decoder packages (`@mission-platform/qr-code`,
- *   `-/matrix-code`, `-/barcode`) are kept external — each ships its own inlined
- *   wasm. This is the package's `.` export.
- * - **`vue` / `react`** — the write-once `ForgeCodeScanner` **component** compiled
- *   to native Vue 3 / React by the two-stage compiler in
- *   `@mission-platform/vite-plugin-forge`. These are the package's `./vue` /
- *   `./react` exports. The component consumes the scanner through the package's
- *   own `.` entry (`@mission-platform/code-scanner`, kept external), reuses
- *   `ForgeButton` from `@mission-platform/components`, and imports
- *   `ForgeTypography` from `@mission-platform/typography`.
- */
-
+/** FWS roots used to compile the self-contained scanner graph. */
 const componentsModule = path.resolve(__dirname, 'src/components/index.ts');
 const cacheRoot = path.resolve(__dirname, 'node_modules/.cache');
+const scannerProjectRoots = [
+  path.resolve(__dirname, 'src/fws'),
+  path.resolve(__dirname, '../qr-code/src/fws'),
+  path.resolve(__dirname, '../matrix-code/src/fws'),
+  path.resolve(__dirname, '../barcode/src/fws'),
+];
 
-/**
- * The `vue-tsc` CLI used to emit the Vue build's declarations. It ships as a
- * dependency of `@mission-platform/forge` (a transitive dependency here), so it is
- * resolved from the jsx package directory rather than assumed hoisted.
- */
+/** Resolve the Vue declaration compiler from the Forge dependency tree. */
 const vueTscBin = createRequire(path.join(__dirname, 'vite.config.ts')).resolve('vue-tsc/bin/vue-tsc.js', {
   paths: [path.join(__dirname, 'node_modules/@mission-platform/forge')],
 });
 
-/**
- * Strip the wasm-bindgen glue's default `init()` fallback that resolves the
- * binary via `new URL('<name>_bg.wasm', import.meta.url)`. We always drive
- * initialisation from the inlined `?url` `data:` bytes (see `src/scanner`), so
- * that branch is dead code — and left in place Vite would inline the wasm a
- * *second* time (once for the `?url` import, once for this URL), doubling the
- * bundle. Removing the reference keeps exactly one inlined copy.
- */
-function stripWasmUrlFallback(): Plugin {
-  return {
-    name: 'mission-platform:code-scan-strip-wasm-url-fallback',
-    enforce: 'pre',
-    transform(code, id) {
-      if (!/generated\/scan\/code-scan\.js/.test(id)) {
-        return null;
-      }
-      return code.replace(
-        /\n\s*if \(module_or_path === undefined\) \{\s*module_or_path = new URL\('[^']+_bg\.wasm', import\.meta\.url\);\s*\}\n/,
-        '\n',
-      );
-    },
-  };
+function scannerForgePlugin(linkProfile: 'static' | 'dynamic'): Plugin {
+  return forgeWebScriptPlugin({
+    root: __dirname,
+    projectRoots: scannerProjectRoots,
+    crossProjectLinkMode: linkProfile,
+    defaultLinkMode: 'static',
+    linkProfile,
+    optimization: linkProfile === 'static' ? 'release' : 'debug',
+    targetFeatures: { simd: true },
+    requireExports: false,
+    requestedCapabilities: (fileName) => (fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
+  });
 }
 
-/** The self-contained scanner bundle (`dist/index.js`, the `.` export). */
-function defineScannerConfig(): UserConfig {
+/** The neutral self-contained scanner bundle (`dist/index.js`, the `.` export). */
+function defineScannerConfig(linkProfile: 'static' | 'dynamic' = 'static'): UserConfig {
   return defineLibraryConfig({
     rootDir: __dirname,
-    entry: {
-      index: 'src/index.ts',
-    },
+    entry: { index: 'src/index.ts' },
     name: 'MissionPlatformCodeScanner',
-    // The wasm-bindgen runtime + binary are emitted into `src/generated` by
-    // `wasm-pack` (run via the `build:wasm` Turbo task). Keep the entry
-    // self-contained rather than emitting a separate module graph.
+    // Static FWS links flatten the scanner and decoder graph into one artifact.
     preserveModules: false,
-    // The decoders are consumed through their own packages (each ships its own
-    // inlined wasm), so keep them external rather than re-inlining three binaries.
-    external: ['@mission-platform/qr-code', '@mission-platform/matrix-code', '@mission-platform/barcode'],
     overrides: {
-      plugins: [stripWasmUrlFallback()],
-      build: {
-        // Inline the compiled wasm (imported with `?url` from `src/scanner`) as a
-        // base64 `data:` URI rather than emitting a loose asset. This keeps the
-        // scanner synchronous and the bundle self-contained — no runtime `fetch`,
-        // so `scanImageData` works during SSR and in tests. The limit sits
-        // comfortably above the ~55 KB wasm.
-        assetsInlineLimit: 10 * 1024 * 1024,
-      },
-      assetsInclude: ['**/*.wasm'],
+      plugins: [scannerForgePlugin(linkProfile)],
+      build: linkProfile === 'dynamic' ? { outDir: 'dist/dynamic' } : undefined,
     },
   });
 }
@@ -183,6 +143,9 @@ function defineFrameworkConfig(framework: JsxFramework): UserConfig {
 
 export default defineConfig(({ mode }): UserConfig => {
   switch (mode) {
+    case 'dynamic': {
+      return defineScannerConfig('dynamic');
+    }
     case 'react':
     case 'vue':
     case 'solid':

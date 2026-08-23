@@ -9,21 +9,24 @@ import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 import { defineTsdownLibrary } from '@mission-platform/tsdown-config';
 import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 
 const rootDirectory = import.meta.dirname;
 const componentsModule = path.resolve(rootDirectory, 'src/components/index.ts');
 
-/**
- * Workspace `-wasm` package whose already self-contained (base64-inlined) output
- * is bundled into the code-scanner package so the published artifact stays
- * self-contained with no external runtime dependency.
- */
-const WASM_PACKAGES = ['@mission-platform/code-scan-wasm'] as const;
+/** FWS roots flattened into the neutral scanner artifact. */
+const scannerProjectRoots = [
+  path.resolve(rootDirectory, 'src/fws'),
+  path.resolve(rootDirectory, '../qr-code/src/fws'),
+  path.resolve(rootDirectory, '../matrix-code/src/fws'),
+  path.resolve(rootDirectory, '../barcode/src/fws'),
+];
 
 /**
  * Neutral self-contained scanner façade (`dist/index.js` + dts) plus the five
  * forge component framework builds (`dist/{vue,react,solid,web-components}/`).
- * Sibling decoder packages stay external so their inlined wasm is not re-bundled.
+ * The static scanner graph links decoder source modules directly, so no decoder
+ * runtime package is imported by the published neutral entry.
  */
 export default [
   defineTsdownLibrary({
@@ -33,27 +36,37 @@ export default [
     },
     unbundle: false,
     clean: true,
-    external: ['@mission-platform/qr-code', '@mission-platform/matrix-code', '@mission-platform/barcode'],
     overrides: {
-      deps: {
-        alwaysBundle: [...WASM_PACKAGES],
-      },
+      plugins: [
+        forgeWebScriptPlugin({
+          root: rootDirectory,
+          projectRoots: scannerProjectRoots,
+          crossProjectLinkMode: 'static',
+          defaultLinkMode: 'static',
+          linkProfile: 'static',
+          optimization: 'release',
+          requireExports: false,
+          requestedCapabilities: (fileName) => (fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
+        }),
+      ],
     },
   }),
-  ...defineTsdownForgeComponents({
-    rootDir: rootDirectory,
-    frameworks: [
-      forgeReactFramework(),
-      forgeSolidFramework(),
-      forgeSvelteFramework(),
-      forgeWebComponentsFramework(),
-      forgeVueFramework(),
-    ],
-    componentsModule,
-    name: 'MissionPlatformCodeScanner',
-    external: ['i18next'],
-    declarationModule: '..',
-  }),
+  ...(process.env.FORGE_FRAMEWORK_TARGET === 'none'
+    ? []
+    : defineTsdownForgeComponents({
+        rootDir: rootDirectory,
+        frameworks: [
+          forgeReactFramework(),
+          forgeSolidFramework(),
+          forgeSvelteFramework(),
+          forgeWebComponentsFramework(),
+          forgeVueFramework(),
+        ],
+        componentsModule,
+        name: 'MissionPlatformCodeScanner',
+        external: ['i18next'],
+        declarationModule: '..',
+      })),
   ...defineTsdownForgeCmsAll({
     rootDir: rootDirectory,
     componentsModule,

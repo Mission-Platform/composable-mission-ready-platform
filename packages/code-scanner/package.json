@@ -2,7 +2,7 @@
   "name": "@mission-platform/code-scanner",
   "version": "1.1.0",
   "license": "BSD-4-Clause",
-  "description": "Dependency-free image/camera code scanner written in Rust and compiled to WebAssembly: locates and decodes QR, Data Matrix and 1D barcodes from a file upload or a live media stream, with a write-once React/Vue component",
+  "description": "Dependency-free image/camera code scanner backed by a Forge Web Script graph: locates and decodes QR, Data Matrix, Aztec, barcode, PDF417, DataBar and MaxiCode symbols from images or live media streams",
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -40,6 +40,7 @@
     "dist"
   ],
   "scripts": {
+    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build:forge": "node --experimental-strip-types ../../scripts/build-forge.ts --target forge",
     "build:react": "node --experimental-strip-types ../../scripts/build-forge.ts --target react",
     "build:vue": "node --experimental-strip-types ../../scripts/build-forge.ts --target vue",
@@ -68,14 +69,10 @@
     "format:write": "prettier --write ."
   },
   "dependencies": {
-    "@mission-platform/barcode": "workspace:*",
-    "@mission-platform/code-scan-wasm": "workspace:*",
     "@mission-platform/components": "workspace:*",
     "@mission-platform/forge": "workspace:*",
     "@mission-platform/icons": "workspace:*",
-    "@mission-platform/typography": "workspace:*",
-    "@mission-platform/matrix-code": "workspace:*",
-    "@mission-platform/qr-code": "workspace:*"
+    "@mission-platform/typography": "workspace:*"
   },
   "peerDependencies": {
     "lit": "^3.0.0",
@@ -122,6 +119,10 @@
     "@mission-platform/forge-plugin-web-components": "workspace:*",
     "@mission-platform/forge-cms-plugin-api": "workspace:*",
     "@mission-platform/forge-cms-storyblok": "workspace:*",
+    "@mission-platform/barcode": "workspace:*",
+    "@mission-platform/matrix-code": "workspace:*",
+    "@mission-platform/qr-code": "workspace:*",
+    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
     "@storybook/react-vite": "catalog:storybook",
     "@storybook/vue3-vite": "catalog:storybook",
     "@tsdown/css": "catalog:build",

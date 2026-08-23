@@ -1,6 +1,11 @@
 // Shared QR primitives tuned for the single-page (64KiB) FWS linear memory.
 // Prefer doubling string builds and in-place bit buffers over O(n) string rewrites.
 
+export fn safe_div_i32(a: i32, b: i32) -> i32 {
+  if b == 0 { return 0; }
+  return a / b;
+}
+
 export fn digit(value: i32) -> string {
   if value == 0 { return "0"; }
   if value == 1 { return "1"; }

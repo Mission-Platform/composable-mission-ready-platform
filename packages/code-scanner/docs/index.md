@@ -1,7 +1,10 @@
 # @mission-platform/code-scanner
 
-A dependency-free **image / camera code scanner** written in Rust and compiled to WebAssembly. It locates and decodes QR
-codes, Data Matrix, Aztec, 1D barcodes, PDF417, GS1 DataBar, and MaxiCode from image files or live camera streams.
+A dependency-free **image / camera code scanner** compiled from a statically linked
+Forge Web Script graph to WebAssembly. It locates and decodes QR codes, Data
+Matrix, Aztec, 1D barcodes, PDF417, GS1 DataBar, and MaxiCode from image files
+or live camera streams. A dynamic source-module profile is also available for
+deployments that need independently cacheable decoder modules.
 
 ## API Overview
 

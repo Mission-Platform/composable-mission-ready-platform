@@ -50,15 +50,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Keep native Rust coverage in CI alongside the affected Turbo checks.
-      - name: Run code-scan native tests
-        run: cargo test -p mission-platform-code-scan
-
-      # The package-level Turbo task runs the release wasm-pack Node suite when
-      # the code-scan crate or one of its Rust inputs is affected.
-      - name: Run code-scan WASM tests
-        run: pnpm exec turbo run test --affected --filter=@mission-platform/code-scan-crate
-
       - name: Lint all affected workspaces
         run: pnpm exec turbo run lint --affected
 

@@ -1,25 +1,31 @@
-# Code Scanner — Accuracy Improvement Plan
+# Code Scanner — Accuracy Improvement Plan and Migration Record
 
 A plan for raising the read rate of `@mission-platform/code-scanner` on real-world captures (uploads and live camera
-frames), and for consolidating the scan pipeline **entirely into Rust/WebAssembly**.
+frames), and for keeping the scan pipeline inside one statically linked Forge Web Script/WebAssembly artifact.
 
+> **Current implementation:** The scanner is shipped as a statically linked
+> Forge Web Script graph under `src/fws`, with a dynamic source-module profile
+> available for independently cacheable decoder modules. The Rust and crate
+> references retained below are historical migration provenance only; they are
+> not package runtime dependencies or build inputs.
+>
 > **Progress:** Phase 0 (broadened generated-image tests), Phase 1 (move the
-> whole pipeline into Rust) and **Phase 2** (adaptive binarisation + grey
+> whole pipeline into one in-process artifact) and **Phase 2** (adaptive binarisation + grey
 > sub-pixel sampling with Reed–Solomon erasures + the locator↔decoder retry
 > loop) are **done** — see §1, §2 and §4. **Phase 3 is now complete:** the UPC-A /
 > EAN-13 disambiguation (§2 item 5), Data Matrix + 1D rotation/skew tolerance
 > (item 4), the Aztec locator (item 6) and multi-symbol + ROI scanning (item 7)
 > have all landed.
 
-Before Phase 1, the implementation split the pipeline:
+The original implementation split the pipeline:
 
-- **Locate + sample** ran in Rust (`crates/code-scan`): `binarize` → per-symbology locators in `qr.rs`, `datamatrix.rs`,
-  `barcode.rs`. The wasm `scan` entry point returned a **tagged buffer** `[format, ...payload]` — it did **not** decode.
-- **Decode** ran in JavaScript (`packages/code-scanner/src/scanner/index.ts`): it unpacked the tagged buffer and called
-  the _separate_ decoder wasm modules shipped by `@mission-platform/qr-code`, `@mission-platform/matrix-code` and
-  `@mission-platform/barcode`.
+- **Locate + sample** ran in a legacy native/wasm pipeline: `binarize` → per-symbology locators. Its `scan` entry point
+  returned a **tagged buffer** `[format, ...payload]` — it did **not** decode.
+- **Decode** ran in JavaScript and called separate decoder modules.
 
-Phase 1 replaced that with a single Rust `scan_and_decode` call (see §1); the motivation below is kept as the rationale.
+Phase 1 replaced that with a single FWS `scan_and_decode` call (see §1); the
+historical motivation below is kept as rationale, while the current source of
+truth is the FWS graph and its Vitest conformance suite.
 
 ## 1. The core structural problem: the pipeline crossed the wasm↔JS boundary twice
 
@@ -50,24 +56,22 @@ the locator and the decoder cannot cooperate:
   reported as EAN-13 (verified by the new test suite). Decoding in Rust lets the locator carry structural hints (element
   count, guard patterns) to pick the right symbology.
 
-### Target architecture — one Rust call, image in, payload out
+### Target architecture — one FWS call, image in, payload out
 
-> **Status: implemented (Phase 1 done).** The scanner now exports
-> `scan_and_decode`, links the three decoder crates directly, and the JS façade
-> decodes through that single call. The details below record how it was done.
+> **Status: implemented.** The scanner exports `scan_and_decode`, links the
+> decoder FWS graphs directly, and the JS façade decodes through that single
+> call. The details below record the migration rationale.
 
 ```
 image (JS)
-  → wasm code-scan.scan_and_decode()   [Rust: binarise + locate + sample + DECODE]
+  → FWS scanner.scan_and_decode()      [binarise + locate + sample + decode]
   → ScanOutcome { format, value } (JS)
 ```
 
-`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` runs the whole pipeline inside `crates/code-scan` and
-returns the **decoded payload** directly (`value` is `undefined` when a symbol is located but undecodable). The JS
-façade (`scanner/index.ts`) collapsed to a thin marshalling layer that no longer imports
-`@mission-platform/qr-code` / `-/matrix-code` / `-/barcode` at runtime; those packages remain independently publishable
-(their own wasm still exports `decode`
-under the default `wasm-api` feature).
+`scan_and_decode(width, height, luma) -> Option<ScanOutcome>` runs the whole pipeline inside `src/fws/scanner.fws` and
+returns the **decoded payload** directly (`value` is empty when a symbol is located but undecodable). The JS façade
+(`scanner/index.ts`) is a thin marshalling layer that links the QR, matrix, and barcode FWS sources at build time;
+those packages remain independently publishable.
 
 #### Why this is tractable now
 
@@ -376,31 +380,30 @@ false positives. Round-trips are covered by `maxicode-decode/tests/roundtrip.rs`
 baseline 0 (a rotated symbol samples the hexagonal grid incorrectly and RS rejects it — no false positives). A bullseye
 finder that recovers the symbol's rotation before sampling would lift the other three rotations.
 
-### Step 6 — wire the new formats into the JS façade + rebuild wasm _(done)_
+### Step 6 — wire the new formats into the JS façade + build the FWS artifact _(done)_
 
-Steps 3–5 landed PDF417, GS1 DataBar (RSS-14) and MaxiCode in the **native**
-pipeline behind the `FORMAT_PDF417` / `FORMAT_DATABAR` / `FORMAT_MAXICODE` tags, but the shipped wasm and the JS façade
-only knew the original four formats. This step surfaces the new symbologies at runtime:
+Steps 3–5 landed PDF417, GS1 DataBar (RSS-14) and MaxiCode in the scanner
+pipeline behind the `FORMAT_PDF417` / `FORMAT_DATABAR` / `FORMAT_MAXICODE` tags, while the JS façade only knew the
+original four formats. This step surfaces the new symbologies at runtime:
 
 - **`FORMAT_NAMES`** in `src/scanner/index.ts` now maps `4 → 'pdf417'`,
   `5 → 'databar'`, `6 → 'maxicode'`, and the `ScanFormat` union in `src/types.ts`
   gains the same three names — so `scanImageData` / `scanImageDataAsync` (and the
   `*All` / ROI variants) return them like any other format.
-- **The scanner wasm was rebuilt** into `src/generated/scan` via the
-  `build:wasm:scan` Turbo task (`wasm-pack build --target web --release`), so the three new decoders are now linked into
-  the shipped binary. The generated directory is a git-ignored build artifact regenerated on every build.
-- **A smoke suite** (`src/scanner/blackbox.spec.ts`) feeds one representative vendored corpus PNG per new family through
-  **both** public entry points — the synchronous upload path (`scanImageData`) and the asynchronous streaming path
-  (`scanImageDataAsync`) — and asserts the correct `format` **and** value. It uses a tiny dependency-free PNG reader
-  (Node `zlib`) for test images only; the runtime never decodes PNGs. Expected values are compared exactly against the
-  `.txt` sidecar (only trailing CR/LF trimmed), matching the native
-  `blackbox.rs` harness, so payload control characters (GS/RS/FS) are preserved.
+- **The scanner FWS artifact is built** from `src/fws/scanner.fws` by the Forge Web Script Vite plugin. The static profile
+  links the decoder graphs into one self-contained artifact, enables WebAssembly SIMD, and applies aggressive link-time
+  optimization; the dynamic profile keeps explicit decoder module boundaries and caches export dispatch.
+- **The FWS graph and façade suites** (`src/fws/scanner-graph.spec.ts` and
+  `src/scanner/index.spec.ts`) exercise the linked decoder graphs through the
+  scanner ABI and both public entry points, including PDF417, GS1 DataBar,
+  MaxiCode, ROI, multi-result, synchronous, and asynchronous paths. The
+  package-local PDF417 text fixture keeps the conformance case independent of
+  the retired native corpus workspace.
 
-**Result:** `vitest` is green (40 tests, including the 6 new upload+stream cases)
-against the freshly-rebuilt wasm, and the `tsc` build check is clean. The already-supported families remain covered
-exhaustively by `index.spec.ts` (via the JS encoders); this step adds end-to-end façade coverage for the three
-corpus-only symbologies. The per-stage model tiering that guided the whole effort is documented in
-`docs/model-cost-strategy.md`.
+**Result:** `vitest` is green against the FWS artifact and the `tsc` build
+check is clean. The supported families remain covered exhaustively by the
+graph and public façade suites, and the per-stage model tiering that guided the
+effort is documented in `docs/model-cost-strategy.md`.
 
 ### Step 7 — ZXing-style per-digit 1D row decoder for camera UPC/EAN photos _(done)_
 

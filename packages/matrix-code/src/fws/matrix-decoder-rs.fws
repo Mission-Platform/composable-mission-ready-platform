@@ -4,6 +4,11 @@
 import "./matrix-decoder-core.fws" as dec;
 import "./matrix-decoder-galois.fws" as gf;
 
+fn rs_safe_div(a: i32, b: i32) -> i32 {
+  if b == 0 { return 0; }
+  return a / b;
+}
+
 fn syndromes_zero(exp: string, log: string, block: string, ecc: i32) -> bool {
   let syndrome: i32 = 0;
   let length: i32 = string_length(block) / 3;
@@ -143,7 +148,7 @@ fn chien_search(exp: string, log: string, order: i32, length: i32, sigma: string
   let root_index: i32 = 0;
   let sigma_len: i32 = string_length(sigma) / 3;
   while root_index < length {
-    let root_mod: i32 = root_index - root_index / order * order;
+    let root_mod: i32 = root_index - rs_safe_div(root_index, order) * order;
     let inv_exp: i32 = order - root_mod;
     while inv_exp < 0 {
       inv_exp = inv_exp + order;

@@ -50,7 +50,7 @@ fn alignment_position(version: i32, index: i32, count: i32, size: i32) -> i32 {
   if index == 0 { return 6; }
   let step_numerator: i32 = version * 8 + count * 3 + 5;
   let step_denominator: i32 = count * 4 - 4;
-  let step: i32 = step_numerator / step_denominator * 2;
+  let step: i32 = q.safe_div_i32(step_numerator, step_denominator) * 2;
   let last: i32 = size - 7;
   let distance: i32 = count - 1 - index;
   return last - step * distance;
@@ -437,7 +437,7 @@ fn deinterleave_and_correct(codewords: u32, version: i32, ecc: i32, out: u32) ->
   let raw_codewords: i32 = q.total_codewords(version);
   if number_blocks <= 0 || block_ecc_length <= 0 || raw_codewords <= 0 { return false; }
   let number_short_blocks: i32 = number_blocks - raw_codewords % number_blocks;
-  let short_block_length: i32 = raw_codewords / number_blocks;
+  let short_block_length: i32 = q.safe_div_i32(raw_codewords, number_blocks);
   let columns: i32 = short_block_length + 1;
   let pad_column: i32 = short_block_length - block_ecc_length;
   let blocks: u32 = q.mem_alloc_bytes(number_blocks * columns);

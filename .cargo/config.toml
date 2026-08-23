@@ -1,9 +1,7 @@
-# Workspace-wide Cargo configuration for the Mission Platform Rust crates.
+# Cargo configuration shared by the repository's standalone Rust tooling.
 #
-# Crates live under `crates/<name>` and are wired into the root `Cargo.toml`
-# workspace. The shipped wasm is produced with `wasm-pack` (which passes the
-# `wasm32-unknown-unknown` target explicitly), so no default build target is
-# forced here — that keeps native `cargo test` working for the same crates.
+# The scanner runtime is compiled from Forge Web Script sources; this file does
+# not define or package a Rust scanner artifact.
 
 [build]
 # Emit all build artifacts under the workspace-root `target/` directory.

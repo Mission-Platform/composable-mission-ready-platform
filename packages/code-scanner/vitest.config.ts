@@ -1,11 +1,30 @@
 import { resolve } from 'node:path';
 
 import { defineVitestConfig } from '@mission-platform/vite-config/vitest';
+import forgeWebScriptPlugin from '@mission-platform/vite-plugin-forge-web-script';
 
 export default defineVitestConfig({
   coverageInclude: ['src/**/*.ts', 'src/**/*.tsx'],
   coverageExclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/test-support/**', 'src/**/*.stories.*'],
   overrides: {
+    plugins: [
+      forgeWebScriptPlugin({
+        root: import.meta.dirname,
+        projectRoots: [
+          resolve(import.meta.dirname, 'src/fws'),
+          resolve(import.meta.dirname, '../qr-code/src/fws'),
+          resolve(import.meta.dirname, '../matrix-code/src/fws'),
+          resolve(import.meta.dirname, '../barcode/src/fws'),
+        ],
+        crossProjectLinkMode: 'static',
+        defaultLinkMode: 'static',
+        linkProfile: 'static',
+        optimization: 'release',
+        targetFeatures: { simd: true },
+        requireExports: false,
+        requestedCapabilities: (fileName) => (fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
+      }),
+    ],
     esbuild: {
       jsxFactory: 'h',
       jsxFragment: 'Fragment',

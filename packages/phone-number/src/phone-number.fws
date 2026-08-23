@@ -1,8 +1,21 @@
+/**
+ * Returns true when the region code equals the expected value.
+ *
+ * @param region Candidate ISO region code.
+ * @param expected Expected ISO region code.
+ * @returns true when both codes match and the region has length 2.
+ */
 export fn region_is(region: string, expected: string) -> bool {
   if string_length(region) != 2 { return false; }
   return string_starts_with(region, expected);
 }
 
+/**
+ * Maps a supported region code to its international dialing country code.
+ *
+ * @param region ISO region code such as "US" or "GB".
+ * @returns Country calling code, or 0 when the region is unsupported.
+ */
 export fn country_code_for_region(region: string) -> i32 {
   if region_is(region, "US") || region_is(region, "CA") { return 1; }
   if region_is(region, "GB") { return 44; }
@@ -17,6 +30,12 @@ export fn country_code_for_region(region: string) -> i32 {
   return 0;
 }
 
+/**
+ * Maps a country calling code to a representative ISO region.
+ *
+ * @param code International dialing country code.
+ * @returns Region code such as "US", or an empty string when unknown.
+ */
 export fn region_for_country_code(code: i32) -> string {
   if code == 1 { return "US"; }
   if code == 44 { return "GB"; }
@@ -31,6 +50,12 @@ export fn region_for_country_code(code: i32) -> string {
   return "";
 }
 
+/**
+ * Returns the national trunk prefix used when dialing within a region.
+ *
+ * @param region ISO region code.
+ * @returns National prefix string, or empty when none applies.
+ */
 export fn national_prefix(region: string) -> string {
   if region_is(region, "US") || region_is(region, "CA") { return "1"; }
   if region_is(region, "RU") { return "8"; }
