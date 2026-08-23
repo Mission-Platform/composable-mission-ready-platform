@@ -78,6 +78,8 @@ export function attachForgeWebScriptMonaco(
     return model;
   };
 
+  // Monaco renders the language service's canonical diagnostics, including shared
+  // FWS-ANALYSIS findings; analysis rules are intentionally not duplicated here.
   const setMarkers = (model: monaco.editor.ITextModel): void => {
     const analysis = service.diagnose(modelUri(model));
     const markers: monaco.editor.IMarkerData[] = analysis.diagnostics.map((diagnostic) => {
