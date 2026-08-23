@@ -150,7 +150,9 @@ export function forgeWebScriptPlugin(
               ...(options.projectRoots === undefined
                 ? {}
                 : {
-                    projectRoots: options.projectRoots.map(canonicalFileName),
+                    projectRoots: options.projectRoots.map((projectRoot) =>
+                      canonicalFileName(projectRoot),
+                    ),
                   }),
             },
             graphResolver,
@@ -208,7 +210,9 @@ export function forgeWebScriptPlugin(
       for (const [fileName, result] of compiled) {
         if (
           result.graph?.edges.some(
-            (edge) => edge.resolved === split.fileName || edge.resolved === canonicalChanged,
+            (edge) =>
+              edge.resolved === split.fileName ||
+              edge.resolved === canonicalChanged,
           )
         ) {
           invalidated.add(fileName);

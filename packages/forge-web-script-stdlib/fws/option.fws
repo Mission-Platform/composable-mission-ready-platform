@@ -1,11 +1,24 @@
+/**
+ * Optional value container used across Forge Web Script packages.
+ *
+ * `None` represents the absence of a value. `Some(T)` carries a present value
+ * of type `T`. Prefer `match` over boolean checks when both branches need the
+ * payload.
+ */
 enum Option<T> {
   None,
   Some(T),
 }
 
+/**
+ * Returns true when the option holds a value.
+ *
+ * @param value Option value to inspect.
+ * @returns `true` for `Some`, otherwise `false`.
+ */
 fn is_some<T>(value: Option<T>) -> bool {
-  match value {
+  return match value {
     Option::None => false,
     Option::Some(_) => true,
-  }
+  };
 }

@@ -67,6 +67,34 @@ describe('Forge Web Script graph compiler service', () => {
     service.dispose();
   });
 
+  it('runs source analysis for graph compilation before emitting Wasm', async () => {
+    const result = await graphFor(
+      {
+        '/workspace/app/main.fws': 'export fn main() -> i32 { let values: [i32; 2] = [1, 2]; return values[2]; }',
+      },
+      { projectRoots: ['/workspace/app'] },
+    );
+    const service = createForgeWebScriptCompilerService();
+    const artifact = service.compileGraph({
+      graph: result.graph,
+      entryFileName: '/workspace/app/main.fws',
+      compilerVersion: '0.1.0',
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(artifact.wasm).toBeUndefined();
+    expect(artifact.diagnostics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: 'FWS-ANALYSIS-MEMORY-002',
+          phase: 'analysis',
+          ruleId: 'fws.safety.ranges-and-bounds',
+        }),
+      ]),
+    );
+    service.dispose();
+  });
+
   it('executes calls to qualified exports from a statically linked module', async () => {
     const result = await graphFor(
       {
@@ -141,6 +169,7 @@ describe('Forge Web Script graph compiler service', () => {
     expect(staticArtifact.linkedModules).toEqual(['main', 'helper']);
     staticService.dispose();
   });
+
 
   it('rejects colliding static exports and invalidates graph dependents', async () => {
     const result = await graphFor(

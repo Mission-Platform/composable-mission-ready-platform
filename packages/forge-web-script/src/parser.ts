@@ -100,9 +100,9 @@ class Parser {
       if (this.is('import')) {
         if (this.isNext('capability')) imports.push(this.parseImport());
         else sourceImports.push(this.parseSourceImport());
-      } else if (this.is('struct')) structs.push(this.parseStruct());
-      else if (this.is('enum') || (this.is('export') && this.isNext('enum'))) enums.push(this.parseEnum());
-      else if (this.is('interface')) interfaces.push(this.parseInterface());
+      } else if (this.is('struct')) structs.push(this.parseStruct(documentation));
+      else if (this.is('enum') || (this.is('export') && this.isNext('enum'))) enums.push(this.parseEnum(documentation));
+      else if (this.is('interface')) interfaces.push(this.parseInterface(documentation));
       else if (
         this.is('class') ||
         this.is('constructor') ||
@@ -225,13 +225,15 @@ class Parser {
     return parameters;
   }
 
-  private parseStruct(): ForgeWebScriptStructDeclaration {
+  private parseStruct(documentation?: ForgeWebScriptFunction['documentation']): ForgeWebScriptStructDeclaration {
     const start = this.consume().span;
     const name = this.expectIdentifier('FWS-PARSE-034', 'Expected a struct name.');
     const genericParameters = this.parseGenericParameters();
     this.expect('{', 'FWS-PARSE-035', "Expected '{' after a struct name.");
     const fields: ForgeWebScriptStructField[] = [];
-    while (!this.is('}') && !this.is('eof')) {
+    while (true) {
+      const fieldDocumentation = this.consumeTopLevelTrivia();
+      if (this.is('}') || this.is('eof')) break;
       const fieldStart = this.current().span;
       const fieldName = this.expectIdentifier('FWS-PARSE-036', 'Expected a struct field name.');
       this.expect(':', 'FWS-PARSE-037', "Expected ':' after a struct field name.");
@@ -239,12 +241,19 @@ class Parser {
       const end = this.match(',')
         ? this.previous().span
         : this.expect(';', 'FWS-PARSE-038', "Expected ';' after a struct field.").span;
-      fields.push({ kind: 'struct-field', name: fieldName ?? '<missing>', type, span: mergeSpans(fieldStart, end) });
+      fields.push({
+        kind: 'struct-field',
+        name: fieldName ?? '<missing>',
+        type,
+        ...(fieldDocumentation === undefined ? {} : { documentation: fieldDocumentation }),
+        span: mergeSpans(fieldStart, end),
+      });
     }
     const end = this.expect('}', 'FWS-PARSE-039', "Expected '}' after a struct declaration.").span;
     return {
       kind: 'struct',
       name: name ?? '<missing>',
+      ...(documentation === undefined ? {} : { documentation }),
       genericParameters,
       fields,
       immutable: true,
@@ -252,7 +261,7 @@ class Parser {
     };
   }
 
-  private parseEnum(): ForgeWebScriptEnumDeclaration {
+  private parseEnum(documentation?: ForgeWebScriptFunction['documentation']): ForgeWebScriptEnumDeclaration {
     const start = this.current().span;
     const exported = this.match('export');
     this.expect('enum', 'FWS-PARSE-040', "Expected 'enum' or 'export enum'.");
@@ -263,7 +272,7 @@ class Parser {
     while (!this.is('}') && !this.is('eof')) {
       const variantStart = this.current().span;
       const variantName = this.expectIdentifier('FWS-PARSE-042', 'Expected an enum variant name.');
-      const fields = this.is('(') ? this.parseParameters() : [];
+      const fields = this.is('(') ? this.parseVariantFields() : [];
       let tag = variants.length === 0 ? 0 : (variants.at(-1)?.tag ?? 0) + 1;
       if (this.match('=')) {
         let negative = false;
@@ -288,16 +297,26 @@ class Parser {
         this.expect(',', 'FWS-PARSE-043', "Expected ',' between enum variants.");
     }
     const end = this.expect('}', 'FWS-PARSE-044', "Expected '}' after an enum declaration.").span;
-    return { kind: 'enum', name: name ?? '<missing>', exported, genericParameters, variants, span: mergeSpans(start, end) };
+    return {
+      kind: 'enum',
+      name: name ?? '<missing>',
+      exported,
+      ...(documentation === undefined ? {} : { documentation }),
+      genericParameters,
+      variants,
+      span: mergeSpans(start, end),
+    };
   }
 
-  private parseInterface(): ForgeWebScriptInterfaceDeclaration {
+  private parseInterface(documentation?: ForgeWebScriptFunction['documentation']): ForgeWebScriptInterfaceDeclaration {
     const start = this.consume().span;
     const name = this.expectIdentifier('FWS-PARSE-045', 'Expected an interface name.');
     const genericParameters = this.parseGenericParameters();
     this.expect('{', 'FWS-PARSE-046', "Expected '{' after an interface name.");
     const functions: ForgeWebScriptInterfaceFunction[] = [];
-    while (!this.is('}') && !this.is('eof')) {
+    while (true) {
+      const documentation = this.consumeTopLevelTrivia();
+      if (this.is('}') || this.is('eof')) break;
       const functionStart = this.current().span;
       this.expect('fn', 'FWS-PARSE-047', "Expected 'fn' in an interface declaration.");
       const functionName = this.expectIdentifier('FWS-PARSE-048', 'Expected an interface function name.');
@@ -309,6 +328,7 @@ class Parser {
       functions.push({
         kind: 'interface-function',
         name: functionName ?? '<missing>',
+        ...(documentation === undefined ? {} : { documentation }),
         genericParameters: functionGenerics,
         parameters,
         result,
@@ -316,7 +336,14 @@ class Parser {
       });
     }
     const end = this.expect('}', 'FWS-PARSE-051', "Expected '}' after an interface declaration.").span;
-    return { kind: 'interface', name: name ?? '<missing>', genericParameters, functions, span: mergeSpans(start, end) };
+    return {
+      kind: 'interface',
+      name: name ?? '<missing>',
+      ...(documentation === undefined ? {} : { documentation }),
+      genericParameters,
+      functions,
+      span: mergeSpans(start, end),
+    };
   }
 
   private rejectClassDeclaration(): void {
@@ -362,6 +389,34 @@ class Parser {
     }
     this.expect(')', 'FWS-PARSE-017', "Expected ')'.");
     return parameters;
+  }
+
+  /**
+   * Enum variant payloads accept either named fields (`value: T`) or the
+   * positional bare-type form used by Option/Result (`T`).
+   */
+  private parseVariantFields(): ForgeWebScriptParameter[] {
+    this.expect('(', 'FWS-PARSE-014', "Expected '('.");
+    const fields: ForgeWebScriptParameter[] = [];
+    let index = 0;
+    while (!this.is(')') && !this.is('eof')) {
+      const start = this.current().span;
+      const named =
+        (this.current().kind === 'identifier' || this.current().kind === 'keyword') && this.isNext(':');
+      if (named) {
+        const name = this.expectIdentifier('FWS-PARSE-015', 'Expected a parameter name.');
+        this.expect(':', 'FWS-PARSE-016', "Expected ':' after a parameter name.");
+        const type = this.parseType();
+        fields.push({ kind: 'parameter', name: name ?? '<missing>', type, span: mergeSpans(start, type.span) });
+      } else {
+        const type = this.parseType();
+        fields.push({ kind: 'parameter', name: `_${index}`, type, span: mergeSpans(start, type.span) });
+      }
+      index += 1;
+      if (!this.match(',')) break;
+    }
+    this.expect(')', 'FWS-PARSE-017', "Expected ')'.");
+    return fields;
   }
 
   private parseType(): ForgeWebScriptTypeName {

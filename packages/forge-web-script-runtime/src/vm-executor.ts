@@ -1,6 +1,7 @@
 import { ForgeWebScriptMemory } from './memory.js';
-import { toForgeWebScriptHostError, ForgeWebScriptTrap } from './traps.js';
+import { attachForgeWebScriptTrace, toForgeWebScriptHostError, ForgeWebScriptTrap } from './traps.js';
 import { prepareForgeWebScriptVmWasm } from './vm-wasm.js';
+import { createForgeWebScriptTraceRecorder, summarizeForgeWebScriptVmValue } from './trace.js';
 
 import type {
   ForgeWebScriptVmAotArtifact,
@@ -39,6 +40,7 @@ interface ExecutionState {
   readonly options: ForgeWebScriptVmExecutionOptions;
   readonly memory: ForgeWebScriptMemory;
   steps: number;
+  readonly trace?: ReturnType<typeof createForgeWebScriptTraceRecorder>;
 }
 
 type NumericType = Extract<ForgeWebScriptVmValue, { readonly kind: 'number' }>['type'];
@@ -428,6 +430,18 @@ function findCapability(module: ForgeWebScriptVmModule, name: string): ForgeWebS
   return imported;
 }
 
+function sourceFor(function_: ForgeWebScriptVmFunction, instruction: number) {
+  return function_.debugSpans.find((span) => span.instruction === instruction);
+}
+
+function observe(callback: () => void): void {
+  try {
+    callback();
+  } catch {
+    // Observability must never alter guest behavior.
+  }
+}
+
 function executeFunction(
   function_: ForgeWebScriptVmFunction,
   arguments_: readonly ForgeWebScriptVmValue[],
@@ -448,8 +462,18 @@ function executeFunction(
   let instructionPointer = 0;
   while (instructionPointer < function_.code.length) {
     state.steps += 1;
-    if (state.options.maxSteps !== undefined && state.steps > state.options.maxSteps)
+    observe(() =>
+      state.trace?.recordInstruction(
+        function_.name,
+        instructionPointer,
+        state.steps,
+        sourceFor(function_, instructionPointer),
+      ),
+    );
+    if (state.options.maxSteps !== undefined && state.steps > state.options.maxSteps) {
+      observe(() => state.trace?.recordResource('steps', state.steps, 'limit-exceeded'));
       throw trap('VM execution exceeded the step limit.');
+    }
     const instruction = function_.code[instructionPointer];
     switch (instruction.opcode) {
       case 'const': {
@@ -570,6 +594,7 @@ function executeFunction(
       }
       case 'call': {
         const argumentsForCall = instruction.arguments.map((register) => registers[register]);
+        observe(() => state.trace?.recordCall(instruction.functionName, state.steps));
         const result = executeNamed(instruction.functionName, argumentsForCall, state);
         if (instruction.destination !== undefined) registers[instruction.destination] = result;
         instructionPointer += 1;
@@ -578,12 +603,14 @@ function executeFunction(
       case 'call-capability': {
         const imported = findCapability(state.module, instruction.importName);
         const capability = state.options.capabilities?.[imported.name];
-        if (capability === undefined)
+        if (capability === undefined) {
+          observe(() => state.trace?.recordCapability(imported.capability, 'denied', state.steps));
           throw new ForgeWebScriptTrap(
             'CapabilityDenied',
             `Capability '${imported.capability}' is unavailable.`,
             imported.capability,
           );
+        }
         const capabilityArguments = instruction.arguments.map((register) => registers[register]);
         if (capabilityArguments.length !== imported.parameters.length)
           throw new ForgeWebScriptTrap(
@@ -592,10 +619,21 @@ function executeFunction(
             imported.capability,
           );
         try {
+          observe(() =>
+            state.trace?.recordCapability(
+              imported.capability,
+              'allowed',
+              state.steps,
+              capabilityArguments
+                .map((value) => summarizeForgeWebScriptVmValue(value, state.options.trace?.redact))
+                .join(','),
+            ),
+          );
           const result = capability(...capabilityArguments);
           if (!isValue(result)) throw new Error('Capability returned an invalid VM value.');
           if (instruction.destination !== undefined) registers[instruction.destination] = cloneValue(result);
         } catch (error) {
+          observe(() => state.trace?.recordCapability(imported.capability, 'failed', state.steps));
           throw toForgeWebScriptHostError(error, imported.capability);
         }
         instructionPointer += 1;
@@ -624,9 +662,9 @@ function executeFunction(
   throw trap(`Function '${function_.name}' reached the end without returning.`);
 }
 
-function createMemory(input: Uint8Array | undefined): ForgeWebScriptMemory {
+function createMemory(input: Uint8Array | undefined, trace?: ExecutionState['trace']): ForgeWebScriptMemory {
   const initialPages = Math.max(1, Math.ceil((input?.byteLength ?? PAGE_SIZE) / PAGE_SIZE));
-  const memory = new ForgeWebScriptMemory(undefined, { initialPages });
+  const memory = new ForgeWebScriptMemory(undefined, { initialPages, trace });
   if (input !== undefined) memory.writeBytes(0, input);
   return memory;
 }
@@ -696,7 +734,11 @@ export function createForgeWebScriptVmExecutor(
       if (!fallback) {
         try {
           const prepared = prepare(module, 'aot', { capabilities: options.capabilities });
-          return prepared.execute(functionName, arguments_, { memory: options.memory, maxSteps: options.maxSteps });
+          return prepared.execute(functionName, arguments_, {
+            memory: options.memory,
+            maxSteps: options.maxSteps,
+            trace: options.trace,
+          });
         } catch (error) {
           if (
             !(error instanceof ForgeWebScriptTrap) ||
@@ -722,7 +764,11 @@ export function createForgeWebScriptVmExecutor(
         if (!fallback) {
           try {
             const prepared = prepare(module, 'jit', { capabilities: options.capabilities });
-            return prepared.execute(functionName, arguments_, { memory: options.memory, maxSteps: options.maxSteps });
+            return prepared.execute(functionName, arguments_, {
+              memory: options.memory,
+              maxSteps: options.maxSteps,
+              trace: options.trace,
+            });
           } catch (error) {
             if (
               !(error instanceof ForgeWebScriptTrap) ||
@@ -745,8 +791,10 @@ export function createForgeWebScriptVmExecutor(
     const functionByName = new Map(module.functions.map((function_) => [function_.name, function_]));
     const entry = functionByName.get(functionName);
     if (entry === undefined) throw trap(`Function '${functionName}' does not exist.`);
-    const memory = createMemory(options.memory);
-    const state: ExecutionState = { module, options, memory, steps: 0 };
+    const trace =
+      options.trace === undefined ? undefined : createForgeWebScriptTraceRecorder(options.trace, functionName);
+    const memory = createMemory(options.memory, trace);
+    const state: ExecutionState = { module, options, memory, steps: 0, trace };
     const executeNamed = (
       name: string,
       nestedArguments: readonly ForgeWebScriptVmValue[],
@@ -756,8 +804,48 @@ export function createForgeWebScriptVmExecutor(
       if (nested === undefined) throw trap(`Function '${name}' does not exist.`);
       return executeFunction(nested, nestedArguments, nestedState, executeNamed);
     };
-    const value = executeFunction(entry, arguments_, state, executeNamed);
-    return { value, memory: new Uint8Array(memory.bytes), steps: state.steps, mode: options.mode };
+    try {
+      const value = executeFunction(entry, arguments_, state, executeNamed);
+      const outputMemory = new Uint8Array(memory.bytes);
+      return {
+        value,
+        memory: outputMemory,
+        steps: state.steps,
+        mode: options.mode,
+        ...(trace === undefined
+          ? {}
+          : { trace: trace.finish({ steps: state.steps, memory: outputMemory, termination: 'returned' }) }),
+      };
+    } catch (error) {
+      const outputMemory = new Uint8Array(memory.bytes);
+      if (trace !== undefined) {
+        const trapError = error instanceof ForgeWebScriptTrap ? error : undefined;
+        observe(() =>
+          trace.recordTrap(
+            trapError?.code ?? 'GuestTrap',
+            trapError?.message ?? String(error),
+            state.steps,
+            trapError?.capability,
+          ),
+        );
+        const report = trace.finish({
+          steps: state.steps,
+          memory: outputMemory,
+          termination: trapError?.message.includes('step limit') ? 'step-limit' : 'trapped',
+          ...(trapError === undefined
+            ? { trap: { code: 'GuestTrap', message: String(error) } }
+            : {
+                trap: {
+                  code: trapError.code,
+                  message: trapError.message,
+                  ...(trapError.capability === undefined ? {} : { capability: trapError.capability }),
+                },
+              }),
+        });
+        attachForgeWebScriptTrace(error, report);
+      }
+      throw error;
+    }
   };
   return {
     execute,

@@ -621,7 +621,17 @@ function toPublishDiagnostics(analysis: ForgeWebScriptAnalysis): PublishDiagnost
       code: diagnostic.code,
       source: 'forge-web-script',
       message: diagnostic.message,
-      data: { phase: diagnostic.phase, hint: diagnostic.hint, fileName: diagnostic.fileName },
+      data: {
+        phase: diagnostic.phase,
+        hint: diagnostic.hint,
+        fileName: diagnostic.fileName,
+        ruleId: diagnostic.ruleId,
+        category: diagnostic.category,
+        blocking: diagnostic.blocking,
+        evidence: diagnostic.evidence,
+        owasp: diagnostic.owasp,
+        cwe: diagnostic.cwe,
+      },
     })),
   };
 }

@@ -1,6 +1,7 @@
 export type ForgeWebScriptDiagnosticSeverity = 'error' | 'warning' | 'info';
 
-export type ForgeWebScriptDiagnosticPhase = 'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'emit';
+export type ForgeWebScriptDiagnosticPhase =
+  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 
 export interface ForgeWebScriptSourceSpan {
   readonly start: number;
@@ -19,6 +20,19 @@ export interface ForgeWebScriptDiagnostic {
   readonly fileName: string;
   readonly span: ForgeWebScriptSourceSpan;
   readonly hint?: string;
+  /** Additive metadata for analysis, editor, CI, and security tooling. */
+  readonly ruleId?: string;
+  readonly category?: string;
+  readonly blocking?: boolean;
+  readonly evidence?: readonly ForgeWebScriptDiagnosticEvidence[];
+  readonly owasp?: readonly string[];
+  readonly cwe?: readonly string[];
+}
+
+export interface ForgeWebScriptDiagnosticEvidence {
+  readonly message: string;
+  readonly span?: ForgeWebScriptSourceSpan;
+  readonly value?: string | number | boolean;
 }
 
 export function createDiagnostic(
@@ -29,8 +43,18 @@ export function createDiagnostic(
   span: ForgeWebScriptSourceSpan,
   severity: ForgeWebScriptDiagnosticSeverity = 'error',
   hint?: string,
+  metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>,
 ): ForgeWebScriptDiagnostic {
-  return { code, severity, phase, message, fileName, span, ...(hint === undefined ? {} : { hint }) };
+  return {
+    code,
+    severity,
+    phase,
+    message,
+    fileName,
+    span,
+    ...(hint === undefined ? {} : { hint }),
+    ...(metadata === undefined ? {} : metadata),
+  };
 }
 
 export function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string {

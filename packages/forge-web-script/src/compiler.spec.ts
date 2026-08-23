@@ -89,6 +89,23 @@ describe('Forge Web Script bootstrap compiler', () => {
     const instance = new WebAssembly.Instance(new WebAssembly.Module(first.wasm!), {});
     expect((instance.exports.add as (left: number, right: number) => number)(2, 3)).toBe(5);
     expect(instance.exports.memory).toBeInstanceOf(WebAssembly.Memory);
+    expect(first.artifactVerification).toMatchObject({ verified: true, checkedVariants: ['optimized', 'unoptimized'] });
+  });
+
+  it('verifies a source-level FWS capability import and exported ABI', () => {
+    const artifact = compileForgeWebScript({
+      ...input(
+        `
+import capability "clock.now" as now() -> i64;
+export fn currentTime() -> i64 { return now(); }`,
+        ['clock.now'],
+      ),
+    });
+
+    expect(artifact.diagnostics).toEqual([]);
+    expect(artifact.wasm).toBeInstanceOf(Uint8Array);
+    expect(artifact.artifactVerification).toMatchObject({ verified: true });
+    expect(artifact.manifest?.imports).toEqual([expect.objectContaining({ capability: 'clock.now', alias: 'now' })]);
   });
 
   it('executes while and do while loops, including a do while false condition', () => {

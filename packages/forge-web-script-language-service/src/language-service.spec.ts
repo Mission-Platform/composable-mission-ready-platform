@@ -38,6 +38,35 @@ export fn entry(value: i32) -> i32 { return helper(value); }`;
     service.dispose();
   });
 
+  it('publishes canonical source-analysis findings and metadata for unsafe programs', () => {
+    const service = createForgeWebScriptLanguageService();
+    const unsafe = document(`export fn unsafe() -> i32 {
+  let values: [i32; 2] = [1, 2];
+  return values[2];
+}`);
+    service.openDocument(unsafe);
+
+    const analysis = service.diagnose(unsafe.uri);
+    expect(analysis.valid).toBe(true);
+    expect(analysis.diagnostics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: 'FWS-ANALYSIS-MEMORY-002',
+          phase: 'analysis',
+          ruleId: 'fws.safety.ranges-and-bounds',
+          category: 'memory',
+          blocking: false,
+          owasp: ['A08'],
+          cwe: ['CWE-129'],
+        }),
+      ]),
+    );
+    expect(analysis.analysis?.findings).toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: 'FWS-ANALYSIS-MEMORY-002' })]),
+    );
+    service.dispose();
+  });
+
   it('preserves explicit export requirements and invalidates cached analyses when the policy changes', async () => {
     let requireExports: boolean | undefined = true;
     let notify: ((change: { readonly uri: string; readonly kind: 'changed' }) => void) | undefined;

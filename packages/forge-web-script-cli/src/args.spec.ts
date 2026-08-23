@@ -52,4 +52,27 @@ describe('parseForgeWebScriptCliArgs', () => {
     expect(() => parseForgeWebScriptCliArgs(['check', 'one.fws', 'two.fws'])).toThrow('Exactly one entry');
     expect(() => parseForgeWebScriptCliArgs(['check', 'main.fws', '--vm-mode', 'native'])).toThrow('Invalid VM mode');
   });
+
+  it('accepts structured verification output for CI consumers', () => {
+    expect(parseForgeWebScriptCliArgs(['check', 'main.fws', '--format', 'json'], '/workspace')).toMatchObject({
+      command: 'check',
+      entries: ['/workspace/main.fws'],
+      format: 'json',
+    });
+  });
+
+  it('parses bounded forensic trace options without affecting ordinary commands', () => {
+    expect(
+      parseForgeWebScriptCliArgs(
+        ['trace', 'main.fws', '--trace-capture', 'snapshot', '--max-trace-events', '4', '--max-trace-bytes', '128'],
+        '/workspace',
+      ),
+    ).toMatchObject({
+      command: 'trace',
+      trace: { capture: 'snapshot', maxEvents: 4, maxTraceBytes: 128, maxSnapshotBytes: 4096 },
+    });
+    expect(() => parseForgeWebScriptCliArgs(['trace', 'main.fws', '--max-trace-events', 'unbounded'])).toThrow(
+      'non-negative integer',
+    );
+  });
 });

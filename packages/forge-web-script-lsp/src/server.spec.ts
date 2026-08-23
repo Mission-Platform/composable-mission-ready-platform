@@ -61,6 +61,41 @@ describe('Forge Web Script LSP server', () => {
     server.dispose();
   });
 
+  it('publishes canonical source-analysis metadata for unsafe programs', async () => {
+    const published: Array<{ uri: string; diagnostics: readonly unknown[] }> = [];
+    const server = createForgeWebScriptLspServer({
+      publishDiagnostics: ({ uri: documentUri, diagnostics }) => published.push({ uri: documentUri, diagnostics }),
+    });
+    initialize(server);
+
+    await server.openDocument({
+      uri,
+      version: 1,
+      text: `export fn unsafe() -> i32 {
+  let values: [i32; 2] = [1, 2];
+  return values[2];
+}`,
+    });
+
+    expect(published.at(-1)?.diagnostics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: 'FWS-ANALYSIS-MEMORY-002',
+          source: 'forge-web-script',
+          data: expect.objectContaining({
+            phase: 'analysis',
+            ruleId: 'fws.safety.ranges-and-bounds',
+            category: 'memory',
+            blocking: false,
+            owasp: ['A08'],
+            cwe: ['CWE-129'],
+          }),
+        }),
+      ]),
+    );
+    await server.shutdown();
+  });
+
   it('accepts private helpers in default protocol diagnostics', async () => {
     const published: Array<{ uri: string; diagnostics: readonly unknown[] }> = [];
     const server = createForgeWebScriptLspServer({

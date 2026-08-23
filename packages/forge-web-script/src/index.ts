@@ -1,4 +1,5 @@
 export * from './ast.js';
+export * from './analysis/index.js';
 export * from './cache.js';
 export * from './contracts.js';
 export * from './compiler.js';

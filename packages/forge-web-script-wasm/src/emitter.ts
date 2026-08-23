@@ -26,7 +26,11 @@ import {
 import { buildRegexRuntimeBodies, REGEX_RUNTIME_FUNCTION_COUNT } from './regex-runtime.js';
 import { buildStringRuntimeBodies, STRING_RUNTIME_FUNCTION_COUNT } from './string-runtime.js';
 import { renderForgeWebScriptWasmWat } from './wat.js';
-import { lowerForgeWebScriptWasmFunctionToSsa, type ForgeWebScriptWasmSsaBindings, type ForgeWebScriptWasmSsaValue } from './cfg.js';
+import {
+  lowerForgeWebScriptWasmFunctionToSsa,
+  type ForgeWebScriptWasmSsaBindings,
+  type ForgeWebScriptWasmSsaValue,
+} from './cfg.js';
 
 const STATIC_DATA_START = 1024;
 const encoder = new TextEncoder();
@@ -141,16 +145,12 @@ const COLLECTION_RUNTIME_OPERATION_ORDER = [
 ] as const;
 const COLLECTION_RUNTIME_OPERATIONS: ReadonlySet<string> = new Set(COLLECTION_RUNTIME_OPERATION_ORDER);
 
-function projectPrimitive(type: { readonly name?: string; readonly reference?: string } | undefined): ForgeWebScriptWasmPrimitiveType {
+function projectPrimitive(
+  type: { readonly name?: string; readonly reference?: string } | undefined,
+): ForgeWebScriptWasmPrimitiveType {
   if (type === undefined) return 'i32';
-  if (
-    type.reference === 'Iterator' ||
-    type.reference === 'Iterable' ||
-    type.reference === 'Result'
-  )
-    return 'i32';
-  if (type.reference === 'Option')
-    return 'i64';
+  if (type.reference === 'Iterator' || type.reference === 'Iterable' || type.reference === 'Result') return 'i32';
+  if (type.reference === 'Option') return 'i64';
   if (type.reference !== undefined) return 'i32';
   const name = type.name;
   if (
@@ -170,19 +170,24 @@ function projectPrimitive(type: { readonly name?: string; readonly reference?: s
 }
 
 function projectTypeName(
-  type: { readonly name?: string; readonly reference?: string; readonly span?: ForgeWebScriptWasmSourceSpan } | undefined,
+  type:
+    { readonly name?: string; readonly reference?: string; readonly span?: ForgeWebScriptWasmSourceSpan } | undefined,
   _span: ForgeWebScriptWasmSourceSpan,
 ): ForgeWebScriptWasmTypeName {
-  const aggregate = type as {
-    readonly name?: string;
-    readonly reference?: string;
-    readonly arguments?: readonly ForgeWebScriptWasmTypeName[];
-    readonly length?: number;
-  } | undefined;
+  const aggregate = type as
+    | {
+        readonly name?: string;
+        readonly reference?: string;
+        readonly arguments?: readonly ForgeWebScriptWasmTypeName[];
+        readonly length?: number;
+      }
+    | undefined;
   return {
     name: projectPrimitive(type),
     ...(aggregate?.reference === undefined ? {} : { reference: aggregate.reference }),
-    ...(aggregate?.arguments === undefined ? {} : { arguments: aggregate.arguments.map((argument) => projectTypeName(argument, _span)) }),
+    ...(aggregate?.arguments === undefined
+      ? {}
+      : { arguments: aggregate.arguments.map((argument) => projectTypeName(argument, _span)) }),
     ...(aggregate?.length === undefined ? {} : { length: aggregate.length }),
   };
 }
@@ -215,9 +220,17 @@ function projectExpression(expression: ForgeWebScriptWasmExpression): ForgeWebSc
       right: projectExpression(expression.right),
     };
   if (expression.kind === 'array-literal' || expression.kind === 'vector-literal')
-    return { ...expression, elements: expression.elements.map((element) => projectExpression(element)), type: projectTypeName(expression.type, expression.span) };
+    return {
+      ...expression,
+      elements: expression.elements.map((element) => projectExpression(element)),
+      type: projectTypeName(expression.type, expression.span),
+    };
   if (expression.kind === 'index')
-    return { ...expression, receiver: projectExpression(expression.receiver), index: projectExpression(expression.index) };
+    return {
+      ...expression,
+      receiver: projectExpression(expression.receiver),
+      index: projectExpression(expression.index),
+    };
   return expression;
 }
 
@@ -299,7 +312,9 @@ function lowerIteratorStatements(
           ...statement,
           value: projectExpression(statement.value),
           cases: statement.cases.map((arm) => ({ ...arm, body: lowerIteratorStatements(arm.body) })),
-          ...(statement.defaultCase === undefined ? {} : { defaultCase: lowerIteratorStatements(statement.defaultCase) }),
+          ...(statement.defaultCase === undefined
+            ? {}
+            : { defaultCase: lowerIteratorStatements(statement.defaultCase) }),
         },
       ];
     if (statement.kind === 'while' || statement.kind === 'do-while')
@@ -331,7 +346,13 @@ function lowerIteratorStatements(
         },
       ];
     if (statement.kind === 'assignment')
-      return [{ ...statement, value: projectExpression(statement.value), ...(statement.index === undefined ? {} : { index: projectExpression(statement.index) }) }];
+      return [
+        {
+          ...statement,
+          value: projectExpression(statement.value),
+          ...(statement.index === undefined ? {} : { index: projectExpression(statement.index) }),
+        },
+      ];
     if (statement.kind === 'return')
       return [
         {
@@ -431,8 +452,7 @@ function rewriteStateInStatements(
 ): readonly ForgeWebScriptWasmStatement[] {
   if (from === undefined) return statements;
   return statements.map((statement) => {
-    if (statement.kind === 'let')
-      return { ...statement, value: rewriteStateIdentifier(statement.value, from) };
+    if (statement.kind === 'let') return { ...statement, value: rewriteStateIdentifier(statement.value, from) };
     if (statement.kind === 'assignment')
       return {
         ...statement,
@@ -446,8 +466,7 @@ function rewriteStateInStatements(
       };
     if (statement.kind === 'expression-statement')
       return { ...statement, expression: rewriteStateIdentifier(statement.expression, from) };
-    if (statement.kind === 'yield')
-      return { ...statement, value: rewriteStateIdentifier(statement.value, from) };
+    if (statement.kind === 'yield') return { ...statement, value: rewriteStateIdentifier(statement.value, from) };
     if (statement.kind === 'iterator-loop')
       return {
         ...statement,
@@ -485,9 +504,7 @@ function rewriteStateInStatements(
         ...(statement.initializer === undefined
           ? {}
           : { initializer: rewriteStateInStatements([statement.initializer], from)[0]! }),
-        ...(statement.update === undefined
-          ? {}
-          : { update: rewriteStateInStatements([statement.update], from)[0]! }),
+        ...(statement.update === undefined ? {} : { update: rewriteStateInStatements([statement.update], from)[0]! }),
         body: rewriteStateInStatements(statement.body, from),
       };
     return statement;
@@ -660,9 +677,19 @@ function expressionType(
     if (expression.standardLibrary === 'bytes-length-u32') return 'u32';
     if (expression.standardLibrary === 'bytes-byte-at-u32') return 'u32';
     if (expression.standardLibrary === 'string-starts-with') return 'bool';
-    if (expression.standardLibrary === 'memory-alloc' || expression.standardLibrary === 'memory-load-u32' || expression.standardLibrary === 'memory-realloc') return 'u32';
+    if (
+      expression.standardLibrary === 'memory-alloc' ||
+      expression.standardLibrary === 'memory-load-u32' ||
+      expression.standardLibrary === 'memory-realloc'
+    )
+      return 'u32';
     if (expression.standardLibrary === 'memory-load-f64' || expression.standardLibrary === 'f64-from-u32') return 'f64';
-    if (expression.standardLibrary === 'memory-dealloc' || expression.standardLibrary === 'memory-store-u32' || expression.standardLibrary === 'memory-store-f64') return 'unit';
+    if (
+      expression.standardLibrary === 'memory-dealloc' ||
+      expression.standardLibrary === 'memory-store-u32' ||
+      expression.standardLibrary === 'memory-store-f64'
+    )
+      return 'unit';
     if (expression.standardLibrary !== undefined && COLLECTION_RUNTIME_OPERATIONS.has(expression.standardLibrary)) {
       if (expression.standardLibrary === 'iterator-next') return 'i64';
       return expression.standardLibrary.endsWith('-set') ? 'unit' : 'i32';
@@ -776,43 +803,62 @@ function validateTargetFeatures(
   const check = (feature: keyof ForgeWebScriptTargetFeatures): void => {
     if (required[feature] === true && requested[feature] !== true)
       diagnostics.push({
-        ...backendDiagnostic(fileName, `Target feature "${feature}" is required by the module but is disabled.`, module.span),
+        ...backendDiagnostic(
+          fileName,
+          `Target feature "${feature}" is required by the module but is disabled.`,
+          module.span,
+        ),
         code: 'FWS-FEATURE-001',
         hint: `Enable targetFeatures.${feature} or remove the feature-dependent operation.`,
       });
   };
-  (Object.keys(required).filter((feature) => feature !== 'parallel') as (keyof ForgeWebScriptTargetFeatures)[]).forEach(check);
+  (Object.keys(required).filter((feature) => feature !== 'parallel') as (keyof ForgeWebScriptTargetFeatures)[]).forEach(
+    check,
+  );
   if (requested.threads === true && requested.atomics !== true)
     diagnostics.push({
-      ...backendDiagnostic(fileName, 'Shared-memory execution requires atomics to be enabled in the target profile.', module.span),
+      ...backendDiagnostic(
+        fileName,
+        'Shared-memory execution requires atomics to be enabled in the target profile.',
+        module.span,
+      ),
       code: 'FWS-FEATURE-002',
       hint: 'Set both targetFeatures.threads and targetFeatures.atomics to true.',
     });
   if (requested.atomics === true && requested.threads !== true)
     diagnostics.push({
-      ...backendDiagnostic(fileName, 'Atomic operations require shared-memory execution in the target profile.', module.span),
+      ...backendDiagnostic(
+        fileName,
+        'Atomic operations require shared-memory execution in the target profile.',
+        module.span,
+      ),
       code: 'FWS-FEATURE-003',
       hint: 'Set both targetFeatures.atomics and targetFeatures.threads to true.',
     });
-  if (requested.memory64 === true && module.functions.some((declaration) => /(?:string|bytes|full|prefix|search)-/.test(JSON.stringify(declaration.body))))
+  if (
+    requested.memory64 === true &&
+    module.functions.some((declaration) =>
+      /(?:string|bytes|full|prefix|search)-/.test(JSON.stringify(declaration.body)),
+    )
+  )
     diagnostics.push({
-      ...backendDiagnostic(fileName, 'memory64 is incompatible with legacy 32-bit pointer runtime helpers.', module.span),
+      ...backendDiagnostic(
+        fileName,
+        'memory64 is incompatible with legacy 32-bit pointer runtime helpers.',
+        module.span,
+      ),
       code: 'FWS-FEATURE-004',
       hint: 'Use a core-memory target for string, bytes, and regular-expression helpers.',
     });
   return diagnostics;
 }
 
-function memoryLimits(
-  targetFeatures: ForgeWebScriptTargetFeatures | undefined,
-  requiredBytes: number,
-): number[] {
+function memoryLimits(targetFeatures: ForgeWebScriptTargetFeatures | undefined, requiredBytes: number): number[] {
   const initialPages = Math.max(1, Math.ceil(requiredBytes / 65_536));
   if (targetFeatures?.memory64 === true && targetFeatures.threads === true)
     return [0x01, 0x07, ...unsignedLeb(initialPages), ...unsignedLeb(65_536)];
   if (targetFeatures?.memory64 === true) return [0x01, 0x04, ...unsignedLeb(initialPages)];
-  if (targetFeatures?.threads === true)
-    return [0x01, 0x03, ...unsignedLeb(initialPages), ...unsignedLeb(65_536)];
+  if (targetFeatures?.threads === true) return [0x01, 0x03, ...unsignedLeb(initialPages), ...unsignedLeb(65_536)];
   return [0x01, 0x00, ...unsignedLeb(initialPages)];
 }
 
@@ -827,10 +873,15 @@ function featureCustomSection(targetFeatures: ForgeWebScriptTargetFeatures | und
   return section(0, [...wasmString('fws.target-features'), ...encoder.encode(JSON.stringify(normalized))]);
 }
 
+function metadataCustomSection(metadata: ForgeWebScriptWasmBackendInput['metadata']): number[] {
+  return section(0, [...wasmString('fws.metadata'), ...encoder.encode(JSON.stringify(metadata))]);
+}
+
 function emitWasm(
   module: ForgeWebScriptWasmModule,
   targetFeatures: ForgeWebScriptTargetFeatures | undefined,
   compilerHints: ForgeWebScriptWasmCompilerHints | undefined,
+  metadata: ForgeWebScriptWasmBackendInput['metadata'],
 ): Uint8Array {
   const hasRegexRuntime = module.functions.some((declaration) =>
     /"standardLibrary":"(?:full|prefix|search)/.test(JSON.stringify(declaration.body)),
@@ -910,7 +961,10 @@ function emitWasm(
   const reallocatorType = getTypeIndex([addressType, addressType, addressType], addressType);
   const resetType = getTypeIndex([], 'unit');
   const collectionTypeIndexes = collectionContracts.map(({ parameters, results }) =>
-    getTypeIndex(parameters as readonly ForgeWebScriptWasmPrimitiveType[], (results[0] ?? 'unit') as ForgeWebScriptWasmPrimitiveType),
+    getTypeIndex(
+      parameters as readonly ForgeWebScriptWasmPrimitiveType[],
+      (results[0] ?? 'unit') as ForgeWebScriptWasmPrimitiveType,
+    ),
   );
   const dataEntries: { readonly offset: number; readonly bytes: Uint8Array }[] = [];
   const stringOffsets = new Map<string, { readonly offset: number; readonly bytes: Uint8Array }>();
@@ -965,12 +1019,17 @@ function emitWasm(
   for (const [index, declaration] of module.functions.entries())
     functionIndexes.set(declaration.name, module.imports.length + index);
   const runtimeIndex = module.imports.length + module.functions.length;
-  const allocatorFunctionIndex = runtimeIndex + (hasRegexRuntime ? REGEX_RUNTIME_FUNCTION_COUNT : 0) + (hasStringRuntime ? STRING_RUNTIME_FUNCTION_COUNT : 0);
+  const allocatorFunctionIndex =
+    runtimeIndex +
+    (hasRegexRuntime ? REGEX_RUNTIME_FUNCTION_COUNT : 0) +
+    (hasStringRuntime ? STRING_RUNTIME_FUNCTION_COUNT : 0);
   const collectionBodies = hasCollectionRuntime
     ? buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorFunctionIndex)
     : [];
   const collectionFunctionIndex = (operation: string): number => {
-    const index = COLLECTION_RUNTIME_OPERATION_ORDER.indexOf(operation as (typeof COLLECTION_RUNTIME_OPERATION_ORDER)[number]);
+    const index = COLLECTION_RUNTIME_OPERATION_ORDER.indexOf(
+      operation as (typeof COLLECTION_RUNTIME_OPERATION_ORDER)[number],
+    );
     if (index < 0) throw new Error(`Unknown collection runtime operation "${operation}".`);
     return allocatorFunctionIndex + 3 + index;
   };
@@ -981,20 +1040,7 @@ function emitWasm(
   for (const declaration of module.functions) {
     if (declaration.name === ITER_RESULT_HELPER) {
       // pack (value: i32, done: i32) -> i64 as (done << 32) | value
-      const helperBody = [
-        0,
-        0x20,
-        0x00,
-        0xad,
-        0x20,
-        0x01,
-        0xad,
-        0x42,
-        ...signedLeb(32n),
-        0x86,
-        0x84,
-        0x0b,
-      ];
+      const helperBody = [0, 0x20, 0x00, 0xad, 0x20, 0x01, 0xad, 0x42, ...signedLeb(32n), 0x86, 0x84, 0x0b];
       bodies.push([...unsignedLeb(helperBody.length), ...helperBody]);
       continue;
     }
@@ -1078,7 +1124,11 @@ function emitWasm(
         if (expression.standardLibrary === 'bytes-byte-at' || expression.standardLibrary === 'bytes-byte-at-u32')
           bytesByteAtLocations.set(expression, { pointer: allocateI32(), length: allocateI32(), index: allocateI32() });
         else if (expression.standardLibrary === 'string-byte-at')
-          stringByteAtLocations.set(expression, { pointer: allocateI32(), length: allocateI32(), index: allocateI32() });
+          stringByteAtLocations.set(expression, {
+            pointer: allocateI32(),
+            length: allocateI32(),
+            index: allocateI32(),
+          });
         else if (
           expression.standardLibrary === 'string-length' ||
           expression.standardLibrary === 'bytes-length' ||
@@ -1086,8 +1136,7 @@ function emitWasm(
         )
           pointerLengthLocations.set(expression, { pointer: allocateI32(), length: allocateI32() });
         expression.arguments.forEach(collectExpression);
-      }
-      else if (expression.kind === 'atomic') {
+      } else if (expression.kind === 'atomic') {
         collectExpression(expression.address);
         if (expression.value !== undefined) collectExpression(expression.value);
         if (expression.replacement !== undefined) collectExpression(expression.replacement);
@@ -1101,9 +1150,13 @@ function emitWasm(
         collectionAccessLocations.set(expression, { receiver: allocateI32(), index: allocateI32() });
       }
     };
-    const iteratorSourceExpression = (statement: Extract<ForgeWebScriptWasmStatement, { readonly kind: 'iterator-loop' }>): ForgeWebScriptWasmExpression => {
+    const iteratorSourceExpression = (
+      statement: Extract<ForgeWebScriptWasmStatement, { readonly kind: 'iterator-loop' }>,
+    ): ForgeWebScriptWasmExpression => {
       const iterator = statement.iterator;
-      return iterator.kind === 'call' && iterator.standardLibrary === 'iterator-next' && iterator.arguments[0] !== undefined
+      return iterator.kind === 'call' &&
+        iterator.standardLibrary === 'iterator-next' &&
+        iterator.arguments[0] !== undefined
         ? iterator.arguments[0]
         : iterator;
     };
@@ -1212,7 +1265,12 @@ function emitWasm(
         if (temporary === undefined) throw new Error('Collection literal is missing its temporary handle local.');
         const operation = expression.kind === 'array-literal' ? 'array-new' : 'vector-new';
         body.push(0x41, ...signedLeb(expression.kind === 'array-literal' ? expression.elements.length : 0));
-        body.push(0x10, ...unsignedLeb(collectionFunctionIndex(operation)), 0x21, ...unsignedLeb(temporary.indexes[0]!));
+        body.push(
+          0x10,
+          ...unsignedLeb(collectionFunctionIndex(operation)),
+          0x21,
+          ...unsignedLeb(temporary.indexes[0]!),
+        );
         expression.elements.forEach((element, index) => {
           body.push(0x20, ...unsignedLeb(temporary.indexes[0]!));
           if (expression.kind === 'vector-literal') {
@@ -1285,7 +1343,10 @@ function emitWasm(
         } else {
           emitExpression(expression.receiver, visible);
           emitExpression(expression.index, visible);
-          body.push(0x10, ...unsignedLeb(collectionFunctionIndex(receiver?.reference === 'Array' ? 'array-get' : 'vector-get')));
+          body.push(
+            0x10,
+            ...unsignedLeb(collectionFunctionIndex(receiver?.reference === 'Array' ? 'array-get' : 'vector-get')),
+          );
         }
       } else if (expression.kind === 'identifier') {
         const location = visible.get(expression.name);
@@ -1501,17 +1562,18 @@ function emitWasm(
             }
             for (const argument of expression.arguments) emitExpression(argument, visible);
             const operation = expression.standardLibrary;
-                    const helperOffset = operation === 'string-concat'
-              ? 0
-              : operation.endsWith('length')
-                ? 1
-              : operation.endsWith('byte-at')
-                ? 2
-                : operation.endsWith('starts-with')
-                  ? 3
-                  : operation.endsWith('slice')
-                    ? 4
-                    : 5;
+            const helperOffset =
+              operation === 'string-concat'
+                ? 0
+                : operation.endsWith('length')
+                  ? 1
+                  : operation.endsWith('byte-at')
+                    ? 2
+                    : operation.endsWith('starts-with')
+                      ? 3
+                      : operation.endsWith('slice')
+                        ? 4
+                        : 5;
             body.push(
               0x10,
               ...unsignedLeb(runtimeIndex + (hasRegexRuntime ? REGEX_RUNTIME_FUNCTION_COUNT : 0) + helperOffset),
@@ -1519,9 +1581,8 @@ function emitWasm(
             return;
           }
           if (COLLECTION_RUNTIME_OPERATIONS.has(expression.standardLibrary)) {
-            const receiver = expression.arguments[0]?.kind === 'identifier'
-              ? visible.get(expression.arguments[0].name)
-              : undefined;
+            const receiver =
+              expression.arguments[0]?.kind === 'identifier' ? visible.get(expression.arguments[0].name) : undefined;
             const isArrayLength = expression.standardLibrary === 'array-length' && receiver?.reference === 'Array';
             const isVectorLength = expression.standardLibrary === 'vector-length' && receiver?.reference === 'Vector';
             if (expression.arguments[0] !== undefined && (isArrayLength || isVectorLength)) {
@@ -1633,7 +1694,8 @@ function emitWasm(
       if (location === undefined) throw new Error('Switch is missing its discriminant local.');
       const values = statement.cases.map((arm) => {
         const value = typeof arm.value === 'number' ? arm.value : enumValues.get(arm.value);
-        if (value === undefined || !Number.isInteger(value)) throw new Error(`FWS-DISPATCH-001: Invalid switch case "${String(arm.value)}".`);
+        if (value === undefined || !Number.isInteger(value))
+          throw new Error(`FWS-DISPATCH-001: Invalid switch case "${String(arm.value)}".`);
         return value;
       });
       if (new Set(values).size !== values.length) throw new Error('FWS-DISPATCH-002: Duplicate switch case value.');
@@ -1647,11 +1709,41 @@ function emitWasm(
       body.push(0x02, 0x40);
       if (values.length > 0) {
         if (useBrTable) {
-          body.push(0x20, ...unsignedLeb(location.indexes[0]!), 0x41, ...signedLeb(minimum), 0x48, 0x04, 0x40, 0x0c, 0x00, 0x0b);
-          body.push(0x20, ...unsignedLeb(location.indexes[0]!), 0x41, ...signedLeb(maximum), 0x4a, 0x04, 0x40, 0x0c, 0x00, 0x0b);
+          body.push(
+            0x20,
+            ...unsignedLeb(location.indexes[0]!),
+            0x41,
+            ...signedLeb(minimum),
+            0x48,
+            0x04,
+            0x40,
+            0x0c,
+            0x00,
+            0x0b,
+          );
+          body.push(
+            0x20,
+            ...unsignedLeb(location.indexes[0]!),
+            0x41,
+            ...signedLeb(maximum),
+            0x4a,
+            0x04,
+            0x40,
+            0x0c,
+            0x00,
+            0x0b,
+          );
           body.push(0x02, 0x40);
           for (let index = 0; index < values.length; index += 1) body.push(0x02, 0x40);
-          body.push(0x20, ...unsignedLeb(location.indexes[0]!), 0x41, ...signedLeb(minimum), 0x6b, 0x0e, ...unsignedLeb(tableLength));
+          body.push(
+            0x20,
+            ...unsignedLeb(location.indexes[0]!),
+            0x41,
+            ...signedLeb(minimum),
+            0x6b,
+            0x0e,
+            ...unsignedLeb(tableLength),
+          );
           for (let value = minimum; value <= maximum; value += 1) {
             const caseIndex = values.indexOf(value);
             body.push(...unsignedLeb(caseIndex < 0 ? values.length : values.length - 1 - caseIndex));
@@ -1753,11 +1845,14 @@ function emitWasm(
             body.push(0x20, ...unsignedLeb(location.indexes[0]!));
             emitExpression(statement.index, current);
             emitExpression(statement.value, current);
-            body.push(0x10, ...unsignedLeb(collectionFunctionIndex(location.reference === 'Array' ? 'array-set' : 'vector-set')));
+            body.push(
+              0x10,
+              ...unsignedLeb(collectionFunctionIndex(location.reference === 'Array' ? 'array-set' : 'vector-set')),
+            );
           } else {
             emitExpression(statement.value, current);
             if (location !== undefined)
-            for (const index of location.indexes.toReversed()) body.push(0x21, ...unsignedLeb(index));
+              for (const index of location.indexes.toReversed()) body.push(0x21, ...unsignedLeb(index));
           }
         } else if (statement.kind === 'return') {
           const tailCall =
@@ -1789,7 +1884,9 @@ function emitWasm(
           emitSwitch(statement, current);
         } else if (statement.kind === 'while') {
           emitCopies(ssaPlan.loopInitialBindings.get(statement), ssaPlan.loopHeaders.get(statement));
-          const loopVisible = bindingsToLocations(ssaPlan.loopHeaders.get(statement) ?? ssaPlan.entryBindings.get(statement) ?? new Map());
+          const loopVisible = bindingsToLocations(
+            ssaPlan.loopHeaders.get(statement) ?? ssaPlan.entryBindings.get(statement) ?? new Map(),
+          );
           body.push(0x02, 0x40, 0x03, 0x40);
           emitExpression(statement.condition, loopVisible);
           body.push(0x45, 0x0d, 0x01);
@@ -1868,7 +1965,14 @@ function emitWasm(
       runtimeIndex + (hasRegexRuntime ? REGEX_RUNTIME_FUNCTION_COUNT : 0) + STRING_RUNTIME_FUNCTION_COUNT,
       targetFeatures?.simd === true,
     );
-    for (const runtimeBody of [runtime.concat, runtime.length, runtime.byteAt, runtime.startsWith, runtime.slice, runtime.toI32])
+    for (const runtimeBody of [
+      runtime.concat,
+      runtime.length,
+      runtime.byteAt,
+      runtime.startsWith,
+      runtime.slice,
+      runtime.toI32,
+    ])
       bodies.push([...unsignedLeb(runtimeBody.length), ...runtimeBody]);
   }
   // The global is the high-water mark. Allocation is caller-owned and deterministic;
@@ -2392,22 +2496,8 @@ function emitWasm(
     0x0b,
     0x0b,
   ];
-  const resetBody = [
-    0,
-    0x41,
-    ...signedLeb(globalInitialValue),
-    0x24,
-    0x00,
-    0x0b,
-  ];
-  const memory64ResetBody = [
-    0,
-    0x42,
-    ...signedLeb(globalInitialValue),
-    0x24,
-    0x00,
-    0x0b,
-  ];
+  const resetBody = [0, 0x41, ...signedLeb(globalInitialValue), 0x24, 0x00, 0x0b];
+  const memory64ResetBody = [0, 0x42, ...signedLeb(globalInitialValue), 0x24, 0x00, 0x0b];
   const emittedAllocatorBody = targetFeatures?.memory64 === true ? memory64AllocatorBody : allocatorBody;
   const emittedDeallocatorBody = targetFeatures?.memory64 === true ? memory64DeallocatorBody : deallocatorBody;
   const emittedReallocatorBody = targetFeatures?.memory64 === true ? memory64ReallocatorBody : reallocatorBody;
@@ -2456,7 +2546,8 @@ function emitWasm(
         runtimeIndex +
           (hasRegexRuntime ? REGEX_RUNTIME_FUNCTION_COUNT : 0) +
           (hasStringRuntime ? STRING_RUNTIME_FUNCTION_COUNT : 0) +
-          3 + collectionBodies.length,
+          3 +
+          collectionBodies.length,
       ),
     ],
     [
@@ -2497,7 +2588,9 @@ function emitWasm(
       0x00,
       0x00,
       section(1, [...unsignedLeb(types.length), ...types.flat()]),
-      ...(importEntries.length === 0 ? [] : section(2, [...unsignedLeb(importEntries.length), ...importEntries.flat()])),
+      ...(importEntries.length === 0
+        ? []
+        : section(2, [...unsignedLeb(importEntries.length), ...importEntries.flat()])),
       section(
         3,
         vector(
@@ -2506,7 +2599,14 @@ function emitWasm(
             ...(regexClassType === undefined ? [] : [regexClassType!, regexRunType!, regexEntryType!]),
             ...(stringLengthType === undefined
               ? []
-              : [stringConcatType!, stringLengthType!, stringByteAtType!, stringStartsWithType!, stringSliceType!, stringToI32Type!]),
+              : [
+                  stringConcatType!,
+                  stringLengthType!,
+                  stringByteAtType!,
+                  stringStartsWithType!,
+                  stringSliceType!,
+                  stringToI32Type!,
+                ]),
             allocatorType,
             deallocatorType,
             resetType,
@@ -2515,14 +2615,15 @@ function emitWasm(
           ].flatMap((type) => unsignedLeb(type)),
         ),
       ),
-      section(
-        5,
-        memoryLimits(targetFeatures, globalInitialValue),
-      ),
+      section(5, memoryLimits(targetFeatures, globalInitialValue)),
       section(6, global),
       section(7, [...unsignedLeb(exportEntries.length), ...exportEntries.flat()]),
       section(10, [...unsignedLeb(bodies.length), ...bodies.flat()]),
       featureCustomSection(targetFeatures),
+      metadataCustomSection({
+        ...metadata,
+        sourceFiles: [...metadata.sourceFiles].toSorted(),
+      }),
       ...(encodedDataEntries.length === 0
         ? []
         : section(11, [...unsignedLeb(encodedDataEntries.length), ...encodedDataEntries.flat()])),
@@ -2544,7 +2645,8 @@ function validateReturnPaths(
 ): readonly ForgeWebScriptWasmDiagnostic[] {
   return module.functions.flatMap((declaration) => {
     if (declaration.name === ITER_RESULT_HELPER) return [];
-    if (declaration.result.name === 'unit' || !lowerForgeWebScriptWasmFunctionToSsa(declaration).exitReachable) return [];
+    if (declaration.result.name === 'unit' || !lowerForgeWebScriptWasmFunctionToSsa(declaration).exitReachable)
+      return [];
     return [
       {
         ...backendDiagnostic(
@@ -2581,7 +2683,7 @@ function emitVariant(
   ];
   if (diagnostics.length > 0) return { wat, diagnostics, iteratorExports: lowered.iteratorExports };
   try {
-    const wasm = emitWasm(lowered.module, targetFeatures, compilerHints);
+    const wasm = emitWasm(lowered.module, targetFeatures, compilerHints, metadata);
     if (!WebAssembly.validate(wasm.buffer as ArrayBuffer)) {
       let validationDetail = '';
       try {

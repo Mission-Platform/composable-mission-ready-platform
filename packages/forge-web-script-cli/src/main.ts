@@ -12,7 +12,10 @@ import {
   type ForgeWebScriptLinkConfiguration,
   type ForgeWebScriptModuleResolver,
 } from '@mission-platform/forge-web-script';
-import { runForgeWebScriptSelfHostedLexStage } from '@mission-platform/forge-web-script-runtime';
+import {
+  runForgeWebScriptSelfHostedLexStage,
+  type ForgeWebScriptTraceReport,
+} from '@mission-platform/forge-web-script-runtime';
 
 import {
   FORGE_WEB_SCRIPT_CLI_USAGE,
@@ -97,6 +100,7 @@ async function compileOptions(options: ForgeWebScriptCliOptions): Promise<{
   readonly entryFileName: string;
   readonly artifact: Awaited<ReturnType<ReturnType<typeof createForgeWebScriptCompilerService>['compileGraph']>>;
   readonly diagnostics: readonly ForgeWebScriptDiagnostic[];
+  readonly trace?: ForgeWebScriptTraceReport;
 }> {
   const entryFileName = options.entries[0];
   if (entryFileName === undefined) throw new ForgeWebScriptCliUsageError('Missing entry file.');
@@ -109,8 +113,13 @@ async function compileOptions(options: ForgeWebScriptCliOptions): Promise<{
     createFileResolver(sourceRoots),
     linkConfigurationFor(options, projectRoots),
   );
+  let trace: ForgeWebScriptTraceReport | undefined;
   const service = createForgeWebScriptCompilerService({
-    selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
+    selfHostedRunner: (input, mode) => {
+      const report = runForgeWebScriptSelfHostedLexStage(input, mode, { trace: options.trace });
+      trace = (report as typeof report & { readonly trace?: ForgeWebScriptTraceReport }).trace;
+      return report;
+    },
     selfHostedVmMode: options.vmMode,
   });
   try {
@@ -122,7 +131,12 @@ async function compileOptions(options: ForgeWebScriptCliOptions): Promise<{
       requestedCapabilities: options.capabilities,
       linkConfiguration: linkConfigurationFor(options, projectRoots),
     });
-    return { entryFileName, artifact, diagnostics: uniqueDiagnostics([...graph.diagnostics, ...artifact.diagnostics]) };
+    return {
+      entryFileName,
+      artifact,
+      diagnostics: uniqueDiagnostics([...graph.diagnostics, ...artifact.diagnostics]),
+      trace,
+    };
   } finally {
     service.dispose();
   }
@@ -161,12 +175,28 @@ export async function runForgeWebScriptCli(
     return FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
   }
 
-  if (result.diagnostics.length > 0) io.stderr(formatForgeWebScriptDiagnostics(result.diagnostics));
+  if (options.format === 'json') {
+    io.stdout(
+      JSON.stringify({
+        entryFileName: result.entryFileName,
+        diagnostics: result.diagnostics,
+        verification: result.artifact.artifactVerification,
+        verified: result.artifact.artifactVerification?.verified === true,
+        wasmEmitted: result.artifact.wasm !== undefined,
+        ...(options.command === 'trace' ? { trace: result.trace } : {}),
+      }),
+    );
+  } else if (result.diagnostics.length > 0) io.stderr(formatForgeWebScriptDiagnostics(result.diagnostics));
   const hasErrors = result.diagnostics.some((diagnostic) => diagnostic.severity === 'error');
   if (hasErrors || result.artifact.wasm === undefined || result.artifact.manifest === undefined)
     return FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
   if (options.command === 'check') {
-    io.stdout(`Checked ${result.entryFileName}.`);
+    if (options.format !== 'json') io.stdout(`Checked ${result.entryFileName}.`);
+    return 0;
+  }
+  if (options.command === 'trace') {
+    if (options.format !== 'json')
+      io.stdout(`Trace captured for ${result.entryFileName}: ${result.trace?.traceHash ?? 'unavailable'}.`);
     return 0;
   }
 
@@ -176,7 +206,9 @@ export async function runForgeWebScriptCli(
   );
   try {
     const outputFiles = await writeForgeWebScriptArtifacts(outputDirectory, result.entryFileName, result.artifact);
-    io.stdout(`Compiled ${result.entryFileName} to ${outputDirectory}: ${outputFiles.join(', ')}.`);
+    if (options.format !== 'json')
+      io.stdout(`Compiled ${result.entryFileName} to ${outputDirectory}: ${outputFiles.join(', ')}.`);
+    else io.stdout(JSON.stringify({ entryFileName: result.entryFileName, outputDirectory, outputFiles }));
     return 0;
   } catch (error: unknown) {
     io.stderr(`Unable to write Forge Web Script artifacts: ${error instanceof Error ? error.message : String(error)}`);

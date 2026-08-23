@@ -20,6 +20,7 @@
     "dist"
   ],
   "scripts": {
+    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build": "pnpm run build:bundle && pnpm run build:types",
     "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:bundle": "vite build",

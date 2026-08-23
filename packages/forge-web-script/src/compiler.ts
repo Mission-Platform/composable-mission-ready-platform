@@ -1,8 +1,16 @@
-import { compileForgeWebScriptWasm } from '@mission-platform/forge-web-script-wasm';
+import {
+  compileForgeWebScriptWasm,
+  verifyForgeWebScriptWasmArtifact,
+  type ForgeWebScriptWasmArtifactVerificationDiagnostic,
+  type ForgeWebScriptWasmFeatureRequirements,
+} from '@mission-platform/forge-web-script-wasm';
 
 import { forgeWebScriptWatCacheKey, persistForgeWebScriptDebugArtifacts, persistForgeWebScriptWat } from './cache.js';
 import { createDiagnostic, type ForgeWebScriptDiagnostic } from './diagnostics.js';
+import { analyzeForgeWebScript } from './analysis/analyze.js';
+import type { ForgeWebScriptAnalysisOptions, ForgeWebScriptAnalysisReport } from './analysis/contracts.js';
 import { prepareForgeWebScriptFrontend, prepareForgeWebScriptGraphFrontend } from './frontend.js';
+import { lexForgeWebScript } from './lexer.js';
 import { hashForgeWebScriptModuleGraph } from './graph.js';
 import {
   FORGE_WEB_SCRIPT_ABI_VERSION,
@@ -21,6 +29,7 @@ import type {
   ForgeWebScriptCompilerServiceOptions,
   ForgeWebScriptFrontendResult,
   ForgeWebScriptGraphCompileInput,
+  ForgeWebScriptArtifactVerificationReport,
   ForgeWebScriptIteratorExport,
   ForgeWebScriptSelfHostedStageReport,
 } from './contracts.js';
@@ -35,6 +44,8 @@ interface ForgeWebScriptBackendCompilationResult {
   readonly sourceMap?: string;
   readonly contentHash: string;
   readonly diagnostics: readonly ForgeWebScriptDiagnostic[];
+  readonly metadata: Parameters<typeof compileForgeWebScriptWasm>[0]['metadata'];
+  readonly featureRequirements?: ForgeWebScriptWasmFeatureRequirements;
 }
 
 export type {
@@ -55,6 +66,49 @@ function hashBytes(bytes: Uint8Array): string {
     hash = Math.imul(hash, 16_777_619) >>> 0;
   }
   return hash.toString(16).padStart(8, '0');
+}
+
+function sourceHashForArtifact(source: string, fileName: string): string {
+  const tokens = lexForgeWebScript(source, fileName)
+    .tokens.filter(({ kind }) => kind !== 'comment' && kind !== 'eof')
+    .map(({ kind, text }) => `${kind}\0${text}`)
+    .join('\0');
+  return hashBytes(encoder.encode(tokens));
+}
+
+function analysisOptions(input: ForgeWebScriptCompileInput): ForgeWebScriptAnalysisOptions {
+  const nested = input.analysis ?? {};
+  const policy = nested.policy ?? input.analysisPolicy;
+  const policyWithCapabilities =
+    input.requestedCapabilities === undefined || policy?.allowedCapabilities !== undefined
+      ? policy
+      : { ...policy, allowedCapabilities: input.requestedCapabilities };
+  return {
+    ...nested,
+    ...(input.targetFeatures === undefined ? {} : { targetFeatures: input.targetFeatures }),
+    ...(policyWithCapabilities === undefined ? {} : { policy: policyWithCapabilities }),
+    ...(input.analysisRules === undefined ? {} : { rules: input.analysisRules }),
+    ...(input.analysisSourceMap === undefined ? {} : { sourceMap: input.analysisSourceMap }),
+  };
+}
+
+function artifactVerificationDiagnostic(
+  diagnostic: ForgeWebScriptWasmArtifactVerificationDiagnostic,
+): ForgeWebScriptDiagnostic {
+  return createDiagnostic(
+    diagnostic.fileName,
+    'artifact',
+    diagnostic.code,
+    diagnostic.message,
+    diagnostic.span,
+    diagnostic.severity,
+    diagnostic.hint,
+    {
+      category: 'artifact',
+      blocking: diagnostic.severity === 'error',
+      evidence: diagnostic.evidence,
+    },
+  );
 }
 
 function dynamicLinkMetadata(
@@ -771,14 +825,21 @@ function compileForgeWebScriptModule(
   sourceFiles: readonly string[] = frontend.sourceFiles,
 ): ForgeWebScriptArtifact {
   const diagnostics = [...frontend.diagnostics];
+  const analysis = analyzeForgeWebScript(frontend, analysisOptions(input));
+  diagnostics.push(...analysis.diagnostics);
   input.logger?.log('info', 'compile.start', { fileName: input.fileName });
   const emptyHash = hashBytes(
     encoder.encode(
       `${input.fileName}\0${input.source}\0${input.compilerVersion}\0${input.requireExports ?? true}\0${graphMetadata.graphHash ?? ''}\0${input.logger?.scope ?? ''}\0${JSON.stringify(forgeWebScriptStandardLibraryIdentity(input.standardLibrary))}`,
     ),
   );
-  if (diagnostics.length > 0 || frontend.optimizedModule === undefined || frontend.abi === undefined)
-    return { esmSource: '', declarations: '', contentHash: emptyHash, diagnostics, ...graphMetadata };
+  if (
+    frontend.diagnostics.length > 0 ||
+    analysis.blockingFindings.length > 0 ||
+    frontend.optimizedModule === undefined ||
+    frontend.abi === undefined
+  )
+    return { esmSource: '', declarations: '', contentHash: emptyHash, diagnostics, analysis, ...graphMetadata };
   const optimization = input.optimization ?? (frontend.links.linkProfile === undefined ? 'debug' : 'release');
   const module = frontend.optimizedModule;
   const manifest = frontend.abi;
@@ -811,6 +872,7 @@ function compileForgeWebScriptModule(
         compilerVersion: input.compilerVersion,
         optimization,
         sourceFiles,
+        sourceHash: sourceHashForArtifact(input.source, input.fileName),
         ...(graphMetadata.graphHash === undefined ? {} : { graphHash: graphMetadata.graphHash }),
         ...(input.targetFeatures === undefined ? {} : { targetFeatures: input.targetFeatures }),
         ...(input.compilerHints === undefined ? {} : { compilerHints: input.compilerHints }),
@@ -834,6 +896,50 @@ function compileForgeWebScriptModule(
   const wasm = backend.wasm;
   const wat = backend.wat ?? '';
   const sourceMap = backend.sourceMap;
+  const contentHash = hashBytes(wasm);
+  const dynamicMetadata = dynamicLinkMetadata(manifest, contentHash);
+  const esmSource = createEsmSource(wasm, manifest, backend.iteratorExports ?? [], dynamicMetadata);
+  const rawVerification = verifyForgeWebScriptWasmArtifact({
+    wasm,
+    ...(backend.unoptimizedWasm === undefined ? {} : { unoptimizedWasm: backend.unoptimizedWasm }),
+    fileName: input.fileName,
+    manifest: manifest as unknown as Parameters<typeof verifyForgeWebScriptWasmArtifact>[0]['manifest'],
+    metadata: backend.metadata,
+    targetFeatures: input.targetFeatures,
+    featureRequirements: backend.featureRequirements,
+    ...(backend.iteratorExports === undefined ? {} : { iteratorExports: backend.iteratorExports }),
+    expectedContentHash: backend.contentHash,
+    expectedSourceHash: sourceHashForArtifact(input.source, input.fileName),
+    esmSource,
+    policy: {
+      profile: analysis.policy.profile,
+      allowedCapabilities: analysis.policy.allowedCapabilities,
+    },
+  });
+  const verificationDiagnostics = rawVerification.diagnostics.map(artifactVerificationDiagnostic);
+  const artifactVerification: ForgeWebScriptArtifactVerificationReport = {
+    verified: rawVerification.verified,
+    diagnostics: verificationDiagnostics,
+    contentHash: rawVerification.contentHash,
+    checkedVariants: rawVerification.checkedVariants,
+  };
+  const strictArtifactFailure = analysis.policy.profile === 'strict' && !rawVerification.verified;
+  if (strictArtifactFailure) {
+    input.logger?.log('error', 'compile.failed.artifact-verification', {
+      fileName: input.fileName,
+      diagnostics: verificationDiagnostics.length,
+    });
+    return {
+      esmSource: '',
+      declarations: '',
+      manifest,
+      contentHash,
+      diagnostics: [...diagnostics, ...verificationDiagnostics],
+      analysis,
+      artifactVerification,
+      ...graphMetadata,
+    };
+  }
   const cacheKey = forgeWebScriptWatCacheKey({
     compilerVersion: input.compilerVersion,
     optimization,
@@ -848,6 +954,11 @@ function compileForgeWebScriptModule(
     targetFeatures: input.targetFeatures,
     compilerHints: input.compilerHints,
     loggerScope: input.logger?.scope,
+    analysisPolicy: analysis.policy,
+    analysisRuleIds: analysisOptions(input)
+      .rules?.map(({ id }) => id)
+      .toSorted(),
+    analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
   });
   const debugArtifacts =
     optimization === 'debug'
@@ -868,11 +979,9 @@ function compileForgeWebScriptModule(
       : persistForgeWebScriptDebugArtifacts(cache, cacheKey, debugArtifacts ?? {});
   const watPath = debugPaths.optimizedWatPath ?? persistForgeWebScriptWat(cache, cacheKey, wat);
   input.logger?.log('info', 'compile.complete', { fileName: input.fileName, contentHash: hashBytes(wasm) });
-  const contentHash = hashBytes(wasm);
-  const dynamicMetadata = dynamicLinkMetadata(manifest, contentHash);
   return {
     wasm,
-    esmSource: createEsmSource(wasm, manifest, backend.iteratorExports ?? [], dynamicMetadata),
+    esmSource,
     declarations: createDeclarations(manifest),
     manifest,
     ...(sourceMap === undefined ? {} : { sourceMap }),
@@ -888,7 +997,9 @@ function compileForgeWebScriptModule(
     ...(input.compilerHints === undefined ? {} : { compilerHints: input.compilerHints }),
     optimizationReport: frontend.optimizationReport,
     ...(dynamicMetadata === undefined ? {} : { dynamicLinkMetadata: dynamicMetadata }),
-    diagnostics: [],
+    diagnostics: [...analysis.diagnostics, ...verificationDiagnostics],
+    analysis,
+    artifactVerification,
     ...graphMetadata,
   };
 }
@@ -935,6 +1046,14 @@ function compileForgeWebScriptGraph(input: ForgeWebScriptGraphCompileInput): For
       targetFeatures: input.targetFeatures,
       compilerHints: input.compilerHints,
       logger: input.logger,
+      analysis: {
+        ...(input.analysis ?? {}),
+        sourceFiles:
+          input.analysis?.sourceFiles ?? input.graph.modules.map(({ fileName, source }) => ({ fileName, source })),
+      },
+      analysisPolicy: input.analysisPolicy,
+      analysisRules: input.analysisRules,
+      analysisSourceMap: input.analysisSourceMap,
     },
     frontend,
     {
@@ -1028,6 +1147,7 @@ export function createForgeWebScriptCompilerService(
   let cacheHits = 0;
   let cacheMisses = 0;
   let diagnostics: readonly ForgeWebScriptDiagnostic[] = [];
+  let analysis: ForgeWebScriptAnalysisReport | undefined;
   let selfHosted: ForgeWebScriptSelfHostedStageReport | undefined;
   let selfHostedStages: readonly ForgeWebScriptSelfHostedStageReport[] | undefined;
   const keyFor = (input: ForgeWebScriptCompileInput): string =>
@@ -1035,6 +1155,9 @@ export function createForgeWebScriptCompilerService(
       ...input,
       requestedCapabilities: [...(input.requestedCapabilities ?? [])].toSorted(),
       standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
+      analysisPolicy: input.analysisPolicy ?? input.analysis?.policy,
+      analysisRuleIds: (input.analysisRules ?? input.analysis?.rules)?.map(({ id }) => id).toSorted(),
+      analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
       selfHostedVmMode: options.selfHostedVmMode ?? 'interpret',
     });
   const graphKeyFor = (input: ForgeWebScriptGraphCompileInput): string =>
@@ -1051,6 +1174,9 @@ export function createForgeWebScriptCompilerService(
       standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
       targetFeatures: input.targetFeatures,
       compilerHints: input.compilerHints,
+      analysisPolicy: input.analysisPolicy ?? input.analysis?.policy,
+      analysisRuleIds: (input.analysisRules ?? input.analysis?.rules)?.map(({ id }) => id).toSorted(),
+      analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
       selfHostedVmMode: options.selfHostedVmMode ?? 'interpret',
     });
   const assertActive = (): void => {
@@ -1063,50 +1189,72 @@ export function createForgeWebScriptCompilerService(
     },
     compile(input): ForgeWebScriptArtifact {
       assertActive();
-      const key = keyFor(input);
+      const effectiveInput: ForgeWebScriptCompileInput = {
+        ...input,
+        ...(input.analysisPolicy === undefined && options.analysisPolicy === undefined
+          ? {}
+          : { analysisPolicy: input.analysisPolicy ?? options.analysisPolicy }),
+        ...(input.analysisRules === undefined && options.analysisRules === undefined
+          ? {}
+          : { analysisRules: input.analysisRules ?? options.analysisRules }),
+      };
+      const key = keyFor(effectiveInput);
       const cached = cache.get(key);
-      if (cached !== undefined && !invalidated.has(input.fileName)) {
+      if (cached !== undefined && !invalidated.has(effectiveInput.fileName)) {
         cacheHits += 1;
         diagnostics = cached.artifact.diagnostics;
+        analysis = cached.artifact.analysis;
         return cached.artifact;
       }
       cacheMisses += 1;
-      const stage = runSelfHostedStage(input, options);
+      const stage = runSelfHostedStage(effectiveInput, options);
       selfHosted = stage.report;
       selfHostedStages = stage.stageReports;
-      const artifact = withSelfHostedResult(compiler.compile(input), stage);
-      cache.set(key, { input, artifact });
-      invalidated.delete(input.fileName);
+      const artifact = withSelfHostedResult(compiler.compile(effectiveInput), stage);
+      cache.set(key, { input: effectiveInput, artifact });
+      invalidated.delete(effectiveInput.fileName);
       diagnostics = artifact.diagnostics;
+      analysis = artifact.analysis;
       return artifact;
     },
     compileGraph(input): ForgeWebScriptArtifact {
       assertActive();
-      const key = graphKeyFor(input);
+      const effectiveInput: ForgeWebScriptGraphCompileInput = {
+        ...input,
+        ...(input.analysisPolicy === undefined && options.analysisPolicy === undefined
+          ? {}
+          : { analysisPolicy: input.analysisPolicy ?? options.analysisPolicy }),
+        ...(input.analysisRules === undefined && options.analysisRules === undefined
+          ? {}
+          : { analysisRules: input.analysisRules ?? options.analysisRules }),
+      };
+      const key = graphKeyFor(effectiveInput);
       const cached = graphCache.get(key);
-      const invalidatedGraph = input.graph.modules.some(({ fileName }) => invalidated.has(fileName));
+      const invalidatedGraph = effectiveInput.graph.modules.some(({ fileName }) => invalidated.has(fileName));
       if (cached !== undefined && !invalidatedGraph) {
         cacheHits += 1;
         diagnostics = cached.artifact.diagnostics;
+        analysis = cached.artifact.analysis;
         return cached.artifact;
       }
       cacheMisses += 1;
-      const frontend = prepareForgeWebScriptGraphFrontend(input);
+      const frontend = prepareForgeWebScriptGraphFrontend(effectiveInput);
       const stage = runSelfHostedStage(
         {
           source: frontend.source,
-          fileName: input.entryFileName,
-          compilerVersion: input.compilerVersion,
-          requestedCapabilities: input.requestedCapabilities,
+          fileName: effectiveInput.entryFileName,
+          compilerVersion: effectiveInput.compilerVersion,
+          requestedCapabilities: effectiveInput.requestedCapabilities,
         },
         options,
       );
       selfHosted = stage.report;
       selfHostedStages = stage.stageReports;
-      const artifact = withSelfHostedResult(compileForgeWebScriptGraph(input), stage);
-      graphCache.set(key, { input, artifact });
-      for (const module of input.graph.modules) invalidated.delete(module.fileName);
+      const artifact = withSelfHostedResult(compileForgeWebScriptGraph(effectiveInput), stage);
+      graphCache.set(key, { input: effectiveInput, artifact });
+      for (const module of effectiveInput.graph.modules) invalidated.delete(module.fileName);
       diagnostics = artifact.diagnostics;
+      analysis = artifact.analysis;
       return artifact;
     },
     invalidate(files): void {
@@ -1132,6 +1280,7 @@ export function createForgeWebScriptCompilerService(
         cacheHits,
         cacheMisses,
         invalidatedFiles: [...invalidated].toSorted(),
+        ...(analysis === undefined ? {} : { analysis }),
         ...(selfHosted === undefined ? {} : { selfHosted }),
         ...(selfHostedStages === undefined ? {} : { selfHostedStages }),
       };

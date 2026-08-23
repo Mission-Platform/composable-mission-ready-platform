@@ -3,6 +3,7 @@ import type {
   ForgeWebScriptOwnership,
   ForgeWebScriptSpecialization,
 } from '@mission-platform/forge-web-script';
+import type { ForgeWebScriptTraceOptions, ForgeWebScriptTraceReport } from './trace.js';
 
 export type ForgeWebScriptVmExecutionMode = 'interpret' | 'jit' | 'aot';
 
@@ -150,6 +151,7 @@ export interface ForgeWebScriptVmExecutionOptions {
   readonly memory?: Uint8Array;
   readonly jitCache?: ForgeWebScriptVmJitCache;
   readonly maxSteps?: number;
+  readonly trace?: ForgeWebScriptTraceOptions;
 }
 
 export interface ForgeWebScriptVmExecutionResult {
@@ -157,6 +159,7 @@ export interface ForgeWebScriptVmExecutionResult {
   readonly memory: Uint8Array;
   readonly steps: number;
   readonly mode: ForgeWebScriptVmExecutionMode;
+  readonly trace?: ForgeWebScriptTraceReport;
 }
 
 export interface ForgeWebScriptVmExecutor {

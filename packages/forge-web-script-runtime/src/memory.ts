@@ -1,5 +1,6 @@
 import { ForgeWebScriptTrap } from './traps.js';
 import { createForgeWebScriptLogger, type ForgeWebScriptLogger } from './logging.js';
+import type { ForgeWebScriptTraceRecorder } from './trace.js';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder('utf-8', { fatal: true });
@@ -12,6 +13,7 @@ export interface ForgeWebScriptMemoryOptions {
   readonly shared?: boolean;
   readonly capabilities?: readonly string[];
   readonly logger?: ForgeWebScriptLogger;
+  readonly trace?: ForgeWebScriptTraceRecorder;
 }
 
 export type ForgeWebScriptMemoryAddress = number | bigint;
@@ -29,11 +31,14 @@ export class ForgeWebScriptMemory {
   public readonly addressBits: 32 | 64;
   public readonly shared: boolean;
   private readonly logger: ForgeWebScriptLogger;
+  private readonly trace?: ForgeWebScriptTraceRecorder;
 
   public constructor(memory?: WebAssembly.Memory, options: ForgeWebScriptMemoryOptions = {}) {
     this.addressBits = options.addressBits ?? 32;
-    this.shared = options.shared ?? (typeof SharedArrayBuffer !== 'undefined' && memory?.buffer instanceof SharedArrayBuffer);
+    this.shared =
+      options.shared ?? (typeof SharedArrayBuffer !== 'undefined' && memory?.buffer instanceof SharedArrayBuffer);
     this.logger = (options.logger ?? createForgeWebScriptLogger({ scope: 'fws' })).child('memory');
+    this.trace = options.trace;
     const capabilities = options.capabilities;
     const has = (capability: string, legacyName: string): boolean =>
       capabilities === undefined || capabilities.includes(capability) || capabilities.includes(legacyName);
@@ -82,9 +87,14 @@ export class ForgeWebScriptMemory {
   private normalizeAddress(pointer: ForgeWebScriptMemoryAddress): number {
     if (typeof pointer === 'bigint') {
       if (pointer < 0n || pointer > BigInt(Number.MAX_SAFE_INTEGER))
-        throw new ForgeWebScriptTrap('MemoryOutOfBounds', 'Memory address is outside the supported host range.', undefined, {
-          logger: this.logger,
-        });
+        throw new ForgeWebScriptTrap(
+          'MemoryOutOfBounds',
+          'Memory address is outside the supported host range.',
+          undefined,
+          {
+            logger: this.logger,
+          },
+        );
       return Number(pointer);
     }
     if (!Number.isSafeInteger(pointer) || pointer < 0)
@@ -96,6 +106,11 @@ export class ForgeWebScriptMemory {
 
   public checkRange(pointer: ForgeWebScriptMemoryAddress, length: number): void {
     const offset = this.normalizeAddress(pointer);
+    try {
+      this.trace?.recordRangeCheck(offset, length, 0);
+    } catch {
+      // Trace collection is observational and must never affect guest behavior.
+    }
     if (
       !Number.isSafeInteger(length) ||
       length < 0 ||
@@ -153,9 +168,14 @@ export class ForgeWebScriptMemory {
     const pointer = this.nextPointer;
     const offset = this.normalizeAddress(pointer);
     if (size > Number.MAX_SAFE_INTEGER - offset)
-      throw new ForgeWebScriptTrap('MemoryExhausted', 'Allocation range exceeds the supported address range.', undefined, {
-        logger: this.logger,
-      });
+      throw new ForgeWebScriptTrap(
+        'MemoryExhausted',
+        'Allocation range exceeds the supported address range.',
+        undefined,
+        {
+          logger: this.logger,
+        },
+      );
     if (size > this.bytes.byteLength - offset) {
       const pages = Math.ceil((offset + size - this.bytes.byteLength) / 65_536);
       try {
@@ -171,6 +191,12 @@ export class ForgeWebScriptMemory {
     }
     this.nextPointer = this.addressBits === 64 ? BigInt(offset + size) : offset + size;
     this.allocations.set(offset, size);
+    try {
+      this.trace?.noteAllocation('allocate', size);
+      this.trace?.recordMemory('allocate', offset, size, 0, 'owned');
+    } catch {
+      // Trace collection is observational and must never affect guest behavior.
+    }
     return pointer;
   }
 
@@ -193,9 +219,14 @@ export class ForgeWebScriptMemory {
         logger: this.logger,
       });
     if (newSize > Number.MAX_SAFE_INTEGER - offset)
-      throw new ForgeWebScriptTrap('MemoryExhausted', 'Reallocation range exceeds the supported address range.', undefined, {
-        logger: this.logger,
-      });
+      throw new ForgeWebScriptTrap(
+        'MemoryExhausted',
+        'Reallocation range exceeds the supported address range.',
+        undefined,
+        {
+          logger: this.logger,
+        },
+      );
 
     const end = offset + oldSize;
     const highWater = this.normalizeAddress(this.nextPointer);
@@ -215,6 +246,12 @@ export class ForgeWebScriptMemory {
       }
       this.nextPointer = this.addressBits === 64 ? BigInt(offset + newSize) : offset + newSize;
       this.allocations.set(offset, newSize);
+      try {
+        this.trace?.noteAllocation('reallocate', newSize - oldSize);
+        this.trace?.recordMemory('reallocate', offset, newSize, 0, 'owned');
+      } catch {
+        // Trace collection is observational and must never affect guest behavior.
+      }
       return pointer;
     }
 
@@ -235,6 +272,12 @@ export class ForgeWebScriptMemory {
         { logger: this.logger },
       );
     this.allocations.delete(offset);
+    try {
+      this.trace?.noteAllocation('deallocate', size);
+      this.trace?.recordMemory('deallocate', offset, size, 0, 'owned');
+    } catch {
+      // Trace collection is observational and must never affect guest behavior.
+    }
   }
 }
 

@@ -9,6 +9,7 @@ export * from './collections.js';
 export * from './async.js';
 export * from './self-hosted.js';
 export * from './logging.js';
+export * from './trace.js';
 export * from './threading.js';
 export * from './iterator.js';
 export * from './parallel.js';

@@ -30,6 +30,9 @@ export interface ForgeWebScriptWatCacheKeyInput {
   readonly targetFeatures?: unknown;
   readonly compilerHints?: unknown;
   readonly loggerScope?: string;
+  readonly analysisPolicy?: unknown;
+  readonly analysisRuleIds?: readonly string[];
+  readonly analysisSourceMap?: unknown;
 }
 
 function stableValue(value: unknown): unknown {

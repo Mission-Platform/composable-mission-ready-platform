@@ -27,7 +27,10 @@ import type {
 } from './contracts.js';
 import type { ForgeWebScriptAbiFunction } from './manifest.js';
 
-function abiCarrierType(type: { readonly name: ForgeWebScriptPrimitiveType; readonly reference?: string }): ForgeWebScriptPrimitiveType {
+function abiCarrierType(type: {
+  readonly name: ForgeWebScriptPrimitiveType;
+  readonly reference?: string;
+}): ForgeWebScriptPrimitiveType {
   return type.reference === undefined ? type.name : 'i32';
 }
 
@@ -78,7 +81,10 @@ function uniqueDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): re
 }
 
 function checkedModule(
-  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'root' | 'requestedCapabilities' | 'requireExports'>,
+  input: Pick<
+    ForgeWebScriptCompileInput,
+    'source' | 'fileName' | 'root' | 'requestedCapabilities' | 'requireExports' | 'externalFunctions'
+  >,
 ): { readonly module?: ForgeWebScriptModule; readonly diagnostics: readonly ForgeWebScriptDiagnostic[] } {
   const parsed = parseForgeWebScript(input.source, input.fileName, { root: input.root });
   const checkedDiagnostics =
@@ -87,8 +93,8 @@ function checkedModule(
       : checkForgeWebScript(parsed.module, input.fileName, {
           requestedCapabilities: input.requestedCapabilities,
           requireExports: input.requireExports,
-        })
-          .diagnostics;
+          externalFunctions: input.externalFunctions,
+        }).diagnostics;
   return {
     module: parsed.module,
     diagnostics: uniqueDiagnostics([...parsed.diagnostics, ...checkedDiagnostics]),
@@ -98,7 +104,14 @@ function checkedModule(
 function resultFor(
   input: Pick<
     ForgeWebScriptCompileInput,
-    | 'source' | 'fileName' | 'optimization' | 'standardLibrary' | 'async' | 'targetFeatures' | 'compilerHints' | 'linkProfile'
+    | 'source'
+    | 'fileName'
+    | 'optimization'
+    | 'standardLibrary'
+    | 'async'
+    | 'targetFeatures'
+    | 'compilerHints'
+    | 'linkProfile'
   >,
   module: ForgeWebScriptModule | undefined,
   diagnostics: readonly ForgeWebScriptDiagnostic[],
@@ -145,7 +158,9 @@ export function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput)
   const profile = input.linkProfile ?? input.linkConfiguration?.linkProfile;
   const links: ForgeWebScriptFrontendLinkMetadata = {
     ...emptyLinks(),
-    ...(profile === undefined ? {} : { linkProfile: profile, optimizationProfile: linkOptimizationProfile(undefined, profile) }),
+    ...(profile === undefined
+      ? {}
+      : { linkProfile: profile, optimizationProfile: linkOptimizationProfile(undefined, profile) }),
   };
   return resultFor(input, validation.module, validation.diagnostics, links, [input.fileName]);
 }

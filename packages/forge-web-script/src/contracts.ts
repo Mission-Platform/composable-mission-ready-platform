@@ -1,6 +1,13 @@
-import type { ForgeWebScriptModule } from './ast.js';
+import type { ForgeWebScriptFunction, ForgeWebScriptModule } from './ast.js';
 import type { ForgeWebScriptWatCache } from './cache.js';
 import type { ForgeWebScriptDiagnostic } from './diagnostics.js';
+import type {
+  ForgeWebScriptAnalysisOptions,
+  ForgeWebScriptAnalysisReport,
+  ForgeWebScriptAnalysisRule,
+  ForgeWebScriptAnalysisSourceMap,
+  ForgeWebScriptAnalysisPolicy,
+} from './analysis/index.js';
 import type { ForgeWebScriptLinkConfiguration, ForgeWebScriptModuleGraph } from './graph.js';
 import type { ForgeWebScriptIrModule } from './ir.js';
 import type {
@@ -22,10 +29,7 @@ export type ForgeWebScriptOptimization = 'debug' | 'release';
 export type ForgeWebScriptLinkProfile = 'static' | 'dynamic';
 
 /** Link-time policy recorded alongside the ordinary compiler optimization. */
-export type ForgeWebScriptLinkOptimizationProfile =
-  | 'standard'
-  | 'static-aggressive'
-  | 'dynamic-conservative';
+export type ForgeWebScriptLinkOptimizationProfile = 'standard' | 'static-aggressive' | 'dynamic-conservative';
 
 export interface ForgeWebScriptCompilerLogger {
   readonly scope: string;
@@ -94,6 +98,9 @@ export interface ForgeWebScriptCompilerServiceOptions {
   /** The bounded FWS stage runner. Remaining frontend/backend stages stay seed-backed. */
   readonly selfHostedRunner?: ForgeWebScriptSelfHostedStageRunner;
   readonly selfHostedVmMode?: ForgeWebScriptVmExecutionMode;
+  /** Default source-analysis policy and rules for service consumers. */
+  readonly analysisPolicy?: ForgeWebScriptAnalysisPolicy;
+  readonly analysisRules?: readonly ForgeWebScriptAnalysisRule[];
 }
 
 export type ForgeWebScriptAsyncCapability = 'scheduler.microtask' | 'scheduler.worker';
@@ -115,6 +122,8 @@ export interface ForgeWebScriptCompileInput {
   readonly requireExports?: boolean;
   readonly optimization?: ForgeWebScriptOptimization;
   readonly requestedCapabilities?: readonly string[];
+  /** Imported function signatures supplied by a graph/editor host. */
+  readonly externalFunctions?: readonly ForgeWebScriptFunction[];
   readonly root?: string;
   readonly watCache?: ForgeWebScriptWatCache;
   readonly linkConfiguration?: ForgeWebScriptLinkConfiguration;
@@ -125,6 +134,11 @@ export interface ForgeWebScriptCompileInput {
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
   readonly compilerHints?: ForgeWebScriptCompilerHints;
   readonly logger?: ForgeWebScriptCompilerLogger;
+  /** Analysis is additive; `analysisPolicy` and `analysisRules` are compatibility shortcuts. */
+  readonly analysis?: ForgeWebScriptAnalysisOptions;
+  readonly analysisPolicy?: ForgeWebScriptAnalysisPolicy;
+  readonly analysisRules?: readonly ForgeWebScriptAnalysisRule[];
+  readonly analysisSourceMap?: ForgeWebScriptAnalysisSourceMap;
 }
 
 export interface ForgeWebScriptGraphCompileInput {
@@ -143,6 +157,10 @@ export interface ForgeWebScriptGraphCompileInput {
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
   readonly compilerHints?: ForgeWebScriptCompilerHints;
   readonly logger?: ForgeWebScriptCompilerLogger;
+  readonly analysis?: ForgeWebScriptAnalysisOptions;
+  readonly analysisPolicy?: ForgeWebScriptAnalysisPolicy;
+  readonly analysisRules?: readonly ForgeWebScriptAnalysisRule[];
+  readonly analysisSourceMap?: ForgeWebScriptAnalysisSourceMap;
 }
 
 export interface ForgeWebScriptFrontendLinkMetadata {
@@ -169,6 +187,7 @@ export interface ForgeWebScriptFrontendResult {
   readonly links: ForgeWebScriptFrontendLinkMetadata;
   readonly sourceFiles: readonly string[];
   readonly diagnostics: readonly ForgeWebScriptDiagnostic[];
+  readonly analysis?: ForgeWebScriptAnalysisReport;
 }
 
 /** Input owned by a backend implementation after frontend validation succeeds. */
@@ -186,6 +205,7 @@ export interface ForgeWebScriptDeterministicArtifactMetadata {
   readonly compilerVersion: string;
   readonly optimization: ForgeWebScriptOptimization;
   readonly sourceFiles: readonly string[];
+  readonly sourceHash?: string;
   readonly graphHash?: string;
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
   readonly compilerHints?: ForgeWebScriptCompilerHints;
@@ -232,6 +252,15 @@ export interface ForgeWebScriptArtifact {
   readonly optimizationProfile?: ForgeWebScriptLinkOptimizationProfile;
   readonly dynamicLinkMetadata?: ForgeWebScriptDynamicLinkMetadata;
   readonly diagnostics: readonly ForgeWebScriptDiagnostic[];
+  readonly analysis?: ForgeWebScriptAnalysisReport;
+  readonly artifactVerification?: ForgeWebScriptArtifactVerificationReport;
+}
+
+export interface ForgeWebScriptArtifactVerificationReport {
+  readonly verified: boolean;
+  readonly diagnostics: readonly ForgeWebScriptDiagnostic[];
+  readonly contentHash: string;
+  readonly checkedVariants: readonly ('optimized' | 'unoptimized')[];
 }
 
 export interface ForgeWebScriptCompiler {
@@ -247,6 +276,7 @@ export interface ForgeWebScriptCompilerReport {
   readonly selfHosted?: ForgeWebScriptSelfHostedStageReport;
   /** Additive staged view; `selfHosted` remains the compatibility projection. */
   readonly selfHostedStages?: readonly ForgeWebScriptSelfHostedStageReport[];
+  readonly analysis?: ForgeWebScriptAnalysisReport;
 }
 
 export interface ForgeWebScriptCompilerService extends ForgeWebScriptCompiler {

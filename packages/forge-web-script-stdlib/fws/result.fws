@@ -1,11 +1,23 @@
+/**
+ * Result of a fallible operation.
+ *
+ * `Ok(T)` carries a successful value. `Error(E)` carries a recoverable failure.
+ * Use `match` to handle both variants without exceptions.
+ */
 enum Result<T, E> {
   Ok(T),
   Error(E),
 }
 
+/**
+ * Returns true when the result is successful.
+ *
+ * @param value Result value to inspect.
+ * @returns `true` for `Ok`, otherwise `false`.
+ */
 fn is_ok<T, E>(value: Result<T, E>) -> bool {
-  match value {
+  return match value {
     Result::Ok(_) => true,
     Result::Error(_) => false,
-  }
+  };
 }

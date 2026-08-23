@@ -2,8 +2,8 @@
 
 Forge Web Script v1 language contracts, bootstrap parser, and conformance fixtures.
 
-The authoritative language and capability reference is `docs/forge-web-script.md`
-at the repository root. The public API exports AST, lexer, parser, diagnostics,
+The authoritative language and capability reference is
+`packages/forge-web-script/docs/reference/language.md`. The public API exports AST, lexer, parser, diagnostics,
 ABI manifest, compiler artifact contracts, and bootstrap validation helpers.
 
 ## Installation

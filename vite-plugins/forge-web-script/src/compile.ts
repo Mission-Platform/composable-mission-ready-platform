@@ -17,7 +17,9 @@ import {
   type ForgeWebScriptArtifact,
   type ForgeWebScriptCompilerService,
   type ForgeWebScriptCompileInput,
+  type ForgeWebScriptCompilerHints,
   type ForgeWebScriptSelfHostedStageReport,
+  type ForgeWebScriptTargetFeatures,
   type ForgeWebScriptVmExecutionMode,
   type ForgeWebScriptWatCache,
 } from "@mission-platform/forge-web-script";
@@ -44,6 +46,10 @@ export interface ForgeWebScriptPluginOptions {
   readonly compilerVersion?: string;
   /** Optimization profile passed to the Forge Web Script compiler. */
   readonly optimization?: ForgeWebScriptCompileInput["optimization"];
+  /** WebAssembly target features required by the compiled artifact. */
+  readonly targetFeatures?: ForgeWebScriptTargetFeatures;
+  /** Backend lowering hints applied to the compiled artifact. */
+  readonly compilerHints?: ForgeWebScriptCompilerHints;
   /** Capabilities requested by the source, or a function selecting them per file. */
   readonly requestedCapabilities?:
     readonly string[] | ((fileName: string) => readonly string[] | undefined);
@@ -148,7 +154,15 @@ export function compileForgeWebScriptFile(
     ...(options.optimization === undefined
       ? {}
       : { optimization: options.optimization }),
-    ...(options.linkProfile === undefined ? {} : { linkProfile: options.linkProfile }),
+    ...(options.linkProfile === undefined
+      ? {}
+      : { linkProfile: options.linkProfile }),
+    ...(options.targetFeatures === undefined
+      ? {}
+      : { targetFeatures: options.targetFeatures }),
+    ...(options.compilerHints === undefined
+      ? {}
+      : { compilerHints: options.compilerHints }),
     ...(capabilities === undefined
       ? {}
       : { requestedCapabilities: capabilities }),
@@ -197,7 +211,15 @@ export async function compileForgeWebScriptGraph(
     ...(options.optimization === undefined
       ? {}
       : { optimization: options.optimization }),
-    ...(options.linkProfile === undefined ? {} : { linkProfile: options.linkProfile }),
+    ...(options.linkProfile === undefined
+      ? {}
+      : { linkProfile: options.linkProfile }),
+    ...(options.targetFeatures === undefined
+      ? {}
+      : { targetFeatures: options.targetFeatures }),
+    ...(options.compilerHints === undefined
+      ? {}
+      : { compilerHints: options.compilerHints }),
     ...(capabilities === undefined
       ? {}
       : { requestedCapabilities: capabilities }),

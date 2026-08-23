@@ -88,12 +88,14 @@ export interface ForgeWebScriptStructField {
   readonly name: string;
   readonly type: ForgeWebScriptTypeName;
   readonly ownership?: ForgeWebScriptOwnership;
+  readonly documentation?: ForgeWebScriptDocumentation;
   readonly span: ForgeWebScriptSourceSpan;
 }
 
 export interface ForgeWebScriptStructDeclaration {
   readonly kind: 'struct';
   readonly name: string;
+  readonly documentation?: ForgeWebScriptDocumentation;
   readonly genericParameters: readonly ForgeWebScriptGenericParameter[];
   readonly fields: readonly ForgeWebScriptStructField[];
   readonly immutable: true;
@@ -112,6 +114,7 @@ export interface ForgeWebScriptEnumDeclaration {
   readonly kind: 'enum';
   readonly name: string;
   readonly exported: boolean;
+  readonly documentation?: ForgeWebScriptDocumentation;
   readonly genericParameters: readonly ForgeWebScriptGenericParameter[];
   readonly variants: readonly ForgeWebScriptEnumVariant[];
   readonly span: ForgeWebScriptSourceSpan;
@@ -120,6 +123,7 @@ export interface ForgeWebScriptEnumDeclaration {
 export interface ForgeWebScriptInterfaceFunction {
   readonly kind: 'interface-function';
   readonly name: string;
+  readonly documentation?: ForgeWebScriptDocumentation;
   readonly genericParameters: readonly ForgeWebScriptGenericParameter[];
   readonly parameters: readonly ForgeWebScriptParameter[];
   readonly result: ForgeWebScriptTypeName;
@@ -130,6 +134,7 @@ export interface ForgeWebScriptInterfaceFunction {
 export interface ForgeWebScriptInterfaceDeclaration {
   readonly kind: 'interface';
   readonly name: string;
+  readonly documentation?: ForgeWebScriptDocumentation;
   readonly genericParameters: readonly ForgeWebScriptGenericParameter[];
   readonly functions: readonly ForgeWebScriptInterfaceFunction[];
   readonly span: ForgeWebScriptSourceSpan;

@@ -4,6 +4,12 @@
 // ForgeWebScriptSourceBytes aggregate (len + byte-at); token payload framing is
 // performed by the stage codec after the scan.
 
+/**
+ * Returns true when the byte is ASCII whitespace.
+ *
+ * @param byte Candidate byte value.
+ * @returns true for space, tab, carriage return, or newline.
+ */
 export fn is_ws(byte: i32) -> bool {
   if byte == 9 { return true; }
   if byte == 10 { return true; }

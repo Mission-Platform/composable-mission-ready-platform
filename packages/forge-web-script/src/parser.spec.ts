@@ -132,7 +132,7 @@ describe('Forge Web Script flat source modules', () => {
     expect(manifest.specializations).toEqual([]);
   });
 
-  it('normalizes documentation and associates it only with the following top-level function', () => {
+  it('normalizes documentation and associates it with the following declaration', () => {
     const result = parseForgeWebScript(
       `/** Import documentation must not leak. */
 import capability "clock.now" as now() -> i64;
@@ -164,7 +164,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
         { name: 'custom', text: 'retained as text' },
       ],
     });
-    expect(result.module?.structs[0]).not.toHaveProperty('documentation');
+    expect(result.module?.structs[0].documentation?.description).toBe('Struct documentation must not leak.');
     expect(result.module?.imports[0]).not.toHaveProperty('documentation');
   });
 
@@ -420,6 +420,63 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
     expect(ir.functions[0].documentation?.description).toBe('Returns an answer.');
     expect(createForgeWebScriptAbiManifest(documented.module!)).toEqual(
       createForgeWebScriptAbiManifest(undocumented.module!),
+    );
+  });
+
+  it('retains documentation on public aggregate declarations and interface members', () => {
+    const result = parseForgeWebScript(
+      `/** A pair of values. */
+       struct Pair { /** The first value. */ first: i32; }
+       /** A state value. */
+       export enum State { Ready }
+       /** A comparable value. */
+       interface Comparable { /** Compares two values. */ fn compare(left: i32, right: i32) -> bool; }`,
+      'documented-aggregates.fws',
+    );
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.module?.structs[0].documentation?.description).toBe('A pair of values.');
+    expect(result.module?.structs[0].fields[0].documentation?.description).toBe('The first value.');
+    expect(result.module?.enums[0].documentation?.description).toBe('A state value.');
+    expect(result.module?.interfaces[0].documentation?.description).toBe('A comparable value.');
+    expect(result.module?.interfaces[0].functions[0].documentation?.description).toBe('Compares two values.');
+  });
+
+  it('parses positional bare-type enum variant payloads used by Option and Result', () => {
+    const result = parseForgeWebScript(
+      `/** Optional value container. */
+       export enum Option<T> { None, Some(T), }
+       /** Result of a fallible operation. */
+       enum Result<T, E> { Ok(T), Error(E), }
+       /** Returns true when the option holds a value. */
+       export fn is_some<T>(value: Option<T>) -> bool {
+         return match value {
+           Option::None => false,
+           Option::Some(_) => true,
+         };
+       }`,
+      'bare-variant-payloads.fws',
+    );
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.module?.enums[0]).toMatchObject({
+      name: 'Option',
+      exported: true,
+      documentation: { description: 'Optional value container.' },
+      variants: [
+        { name: 'None', fields: [] },
+        { name: 'Some', fields: [{ name: '_0', type: { reference: 'T' } }] },
+      ],
+    });
+    expect(result.module?.enums[1]).toMatchObject({
+      name: 'Result',
+      variants: [
+        { name: 'Ok', fields: [{ name: '_0', type: { reference: 'T' } }] },
+        { name: 'Error', fields: [{ name: '_0', type: { reference: 'E' } }] },
+      ],
+    });
+    expect(result.module?.functions[0].documentation?.description).toBe(
+      'Returns true when the option holds a value.',
     );
   });
 

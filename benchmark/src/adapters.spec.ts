@@ -44,7 +44,9 @@ describe("benchmark runtime adapters", () => {
       );
       if (mode !== "interpret") {
         expect(initialized.preparation?.preparedArtifactHash).toBeTruthy();
-        expect(initialized.preparation?.preparedArtifactSize).toBeGreaterThan(0);
+        expect(initialized.preparation?.preparedArtifactSize).toBeGreaterThan(
+          0,
+        );
       }
       for (const benchmarkCase of BENCHMARK_CORPUS) {
         const observed = await initialized.execute(benchmarkCase.input);
@@ -59,16 +61,28 @@ describe("benchmark runtime adapters", () => {
     expect(initialized.preparation?.nativeKernels).toBe(true);
     expect(initialized.preparation?.instancePolicy).toBe("reusable-with-reset");
     expect(initialized.preparation?.resetAbi).toBe("fws_reset-v1");
-    const unicode = BENCHMARK_CORPUS.find((benchmarkCase) => benchmarkCase.id === "string:unicode:small");
-    const dataset = BENCHMARK_CORPUS.find((benchmarkCase) => benchmarkCase.id === "dataset:standard:large");
+    const unicode = BENCHMARK_CORPUS.find(
+      (benchmarkCase) => benchmarkCase.id === "string:unicode:small",
+    );
+    const dataset = BENCHMARK_CORPUS.find(
+      (benchmarkCase) => benchmarkCase.id === "dataset:standard:large",
+    );
     expect(unicode).toBeDefined();
     expect(dataset).toBeDefined();
     for (const benchmarkCase of [unicode!, dataset!, unicode!, dataset!])
-      expect(await initialized.execute(benchmarkCase.input), benchmarkCase.id).toEqual(benchmarkCase.expected);
-    expect(() =>
-      initialized.execute({ bytes: Array.from({ length: 70_000 }, () => 1), threshold: 1 }),
-    ).toThrow();
-    expect(await initialized.execute(unicode!.input)).toEqual(unicode!.expected);
+      expect(
+        await initialized.execute(benchmarkCase.input),
+        benchmarkCase.id,
+      ).toEqual(benchmarkCase.expected);
+    expect(
+      initialized.execute({
+        bytes: Array.from({ length: 70_000 }, () => 1),
+        threshold: 1,
+      }),
+    ).toBe(140_000);
+    expect(await initialized.execute(unicode!.input)).toEqual(
+      unicode!.expected,
+    );
   });
 
   it("rejects malformed WASM before it can enter a speed ranking", () => {

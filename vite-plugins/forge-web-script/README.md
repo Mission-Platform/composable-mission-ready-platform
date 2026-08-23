@@ -34,10 +34,12 @@ cost of a larger build and less independently cacheable decoder modules.
 Use `linkProfile: "dynamic"` to preserve explicit source-module boundaries:
 
 ```ts
-plugins: [forgeWebScriptPlugin({
-  projectRoots: ["./src", "../shared/src"],
-  linkProfile: "dynamic",
-})]
+plugins: [
+  forgeWebScriptPlugin({
+    projectRoots: ["./src", "../shared/src"],
+    linkProfile: "dynamic",
+  }),
+];
 ```
 
 The emitted manifest contains resolved module IDs, aliases, and ABI export

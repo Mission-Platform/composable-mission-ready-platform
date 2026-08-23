@@ -344,4 +344,57 @@ describe('Forge Web Script VM', () => {
       ForgeWebScriptTrap,
     );
   });
+
+  it('produces deterministic, source-mapped traces with bounded events', () => {
+    const tracedModule: ForgeWebScriptVmModule = {
+      ...module,
+      functions: module.functions.map((function_) =>
+        function_.name === 'add'
+          ? {
+              ...function_,
+              debugSpans: [{ instruction: 0, fileName: 'main.fws', start: 10, end: 20, line: 2, column: 3 }],
+            }
+          : function_,
+      ),
+    };
+    const options = {
+      mode: 'interpret' as const,
+      trace: { capture: 'events' as const, maxEvents: 1, maxTraceBytes: 256, replayId: 'replay-1' },
+    };
+    const first = createForgeWebScriptVmExecutor().execute(tracedModule, 'add', [number(40), number(2)], options);
+    const second = createForgeWebScriptVmExecutor().execute(tracedModule, 'add', [number(40), number(2)], options);
+    expect(first.value).toEqual(number(42));
+    expect(first.trace?.traceHash).toBe(second.trace?.traceHash);
+    expect(first.trace?.events).toHaveLength(1);
+    expect(first.trace?.counters.droppedEvents).toBeGreaterThan(0);
+    expect(first.trace?.events[0]?.source).toMatchObject({ fileName: 'main.fws', line: 2 });
+  });
+
+  it.each(['interpret', 'jit', 'aot'] as const)('returns a forensic report on the %s path', (mode) => {
+    const result = runForgeWebScriptVmBootstrap(module, 'add', [number(40), number(2)], mode, {
+      trace: { capture: 'summary', sourceHash: module.sourceHash },
+    });
+    expect(result.value).toEqual(number(42));
+    expect(result.trace?.termination).toBe('returned');
+    expect(result.trace?.sourceHash).toBe(module.sourceHash);
+    expect(result.trace?.counters.instructions).toBeGreaterThan(0);
+  });
+
+  it('attaches bounded trap evidence without exposing raw memory', () => {
+    try {
+      createForgeWebScriptVmExecutor().execute(module, 'add', [number(40), number(2)], {
+        mode: 'interpret',
+        maxSteps: 0,
+        trace: { capture: 'snapshot', maxSnapshotBytes: 4, replayId: 'trap-replay' },
+      });
+      throw new Error('expected a step-limit trap');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ForgeWebScriptTrap);
+      const trap = error as ForgeWebScriptTrap;
+      expect(trap.trace?.termination).toBe('step-limit');
+      expect(trap.trace?.replayId).toBe('trap-replay');
+      expect(trap.trace?.snapshot?.byteLength).toBeLessThanOrEqual(4);
+      expect(trap.trace?.trap?.code).toBe('GuestTrap');
+    }
+  });
 });

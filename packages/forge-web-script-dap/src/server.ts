@@ -324,6 +324,18 @@ export function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOp
         respond(request, true, result.body);
         return;
       }
+      if (
+        request.command === 'fwsTraceSummary' ||
+        request.command === 'fwsTraceEvents' ||
+        request.command === 'fwsMemoryState' ||
+        request.command === 'fwsCapabilityCalls' ||
+        request.command === 'fwsTrapEvidence'
+      ) {
+        const result = await sendRuntimeRequest(request.command, isRecord(request.arguments) ? request.arguments : {});
+        if (!result.success) throw new Error(result.message ?? `The runtime rejected ${request.command}.`);
+        respond(request, true, result.body ?? {});
+        return;
+      }
       if (request.command === 'terminate' || request.command === 'disconnect') {
         if (runtime !== undefined) {
           const result = await sendRuntimeRequest(

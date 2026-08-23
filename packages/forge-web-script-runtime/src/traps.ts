@@ -1,4 +1,5 @@
 import type { ForgeWebScriptLogger } from './logging.js';
+import type { ForgeWebScriptTraceReport } from './trace.js';
 
 export type ForgeWebScriptTrapCode =
   | 'CapabilityDenied'
@@ -16,8 +17,14 @@ export interface ForgeWebScriptTrapOptions extends ErrorOptions {
 export class ForgeWebScriptTrap extends Error {
   public readonly code: ForgeWebScriptTrapCode;
   public readonly capability?: string;
+  public trace?: ForgeWebScriptTraceReport;
 
-  public constructor(code: ForgeWebScriptTrapCode, message: string, capability?: string, options?: ForgeWebScriptTrapOptions) {
+  public constructor(
+    code: ForgeWebScriptTrapCode,
+    message: string,
+    capability?: string,
+    options?: ForgeWebScriptTrapOptions,
+  ) {
     super(message, options);
     this.name = 'ForgeWebScriptTrap';
     this.code = code;
@@ -26,7 +33,15 @@ export class ForgeWebScriptTrap extends Error {
   }
 }
 
-export function toForgeWebScriptHostError(error: unknown, capability: string, logger?: ForgeWebScriptLogger): ForgeWebScriptTrap {
+export function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void {
+  if (error instanceof ForgeWebScriptTrap) error.trace = trace;
+}
+
+export function toForgeWebScriptHostError(
+  error: unknown,
+  capability: string,
+  logger?: ForgeWebScriptLogger,
+): ForgeWebScriptTrap {
   if (error instanceof ForgeWebScriptTrap) return error;
   const code = error instanceof Error && error.name.length > 0 ? error.name : 'HOST_ERROR';
   return new ForgeWebScriptTrap(

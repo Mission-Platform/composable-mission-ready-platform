@@ -91,6 +91,11 @@ export type ForgeWebScriptRuntimeCommand =
   | 'stackTrace'
   | 'scopes'
   | 'variables'
+  | 'fwsTraceSummary'
+  | 'fwsTraceEvents'
+  | 'fwsMemoryState'
+  | 'fwsCapabilityCalls'
+  | 'fwsTrapEvidence'
   | 'terminate'
   | 'disconnect';
 
@@ -107,6 +112,21 @@ export interface ForgeWebScriptRuntimeResponse {
   readonly success: boolean;
   readonly body?: unknown;
   readonly message?: string;
+}
+
+export interface ForgeWebScriptDapTraceArguments {
+  readonly maxEvents?: number;
+  readonly maxTraceBytes?: number;
+  readonly maxSnapshotBytes?: number;
+  readonly capture?: 'summary' | 'events' | 'snapshot';
+}
+
+export interface ForgeWebScriptDapTraceRequest extends DapRequest<ForgeWebScriptDapTraceArguments> {
+  readonly command: 'fwsTraceSummary' | 'fwsTraceEvents';
+}
+
+export interface ForgeWebScriptDapForensicRequest extends DapRequest<Record<string, unknown>> {
+  readonly command: 'fwsMemoryState' | 'fwsCapabilityCalls' | 'fwsTrapEvidence';
 }
 
 export interface ForgeWebScriptRuntimeOutputEvent {

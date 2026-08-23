@@ -358,6 +358,7 @@ export interface ForgeWebScriptWasmArtifactMetadata {
   readonly compilerVersion: string;
   readonly optimization: 'debug' | 'release';
   readonly sourceFiles: readonly string[];
+  readonly sourceHash?: string;
   readonly graphHash?: string;
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
   readonly compilerHints?: ForgeWebScriptWasmCompilerHints;

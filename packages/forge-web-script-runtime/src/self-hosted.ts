@@ -31,10 +31,14 @@ import {
   type ForgeWebScriptVmModule,
   type ForgeWebScriptVmValue,
 } from './vm.js';
+import type { ForgeWebScriptTraceOptions, ForgeWebScriptTraceReport } from './trace.js';
 
 export interface ForgeWebScriptSelfHostedRunOptions {
   /** Override parser VM module construction (used to inject deliberate divergence in tests). */
   readonly parserStageVmModuleOptions?: ForgeWebScriptParserStageVmModuleOptions;
+  readonly trace?: ForgeWebScriptTraceOptions;
+  /** Upper bound for each self-hosted stage; never raises the built-in bound. */
+  readonly maxSteps?: number;
 }
 
 export interface ForgeWebScriptSelfHostedVmRun {
@@ -69,16 +73,21 @@ export function runForgeWebScriptSelfHostedLexStage(
   const sourceHash = hashForgeWebScriptSelfHostedSourceIdentity(input.source, input.fileName);
   const module = toVmModule(createForgeWebScriptLexStageVmModule(sourceHash));
   const argument = toVmValue(encodeForgeWebScriptLexStageSource(input.source));
-  const execOptions = { mode, maxSteps: Math.max(1_000_000, input.source.length * 128) } as const;
+  const defaultMaxSteps = Math.max(1_000_000, input.source.length * 128);
+  const execOptions = {
+    mode,
+    maxSteps: Math.min(defaultMaxSteps, Math.max(1, Math.trunc(options.maxSteps ?? defaultMaxSteps))),
+  } as const;
+  const tracedExecOptions = { ...execOptions, ...(options.trace === undefined ? {} : { trace: options.trace }) };
   const result =
     mode === 'aot'
       ? executeForgeWebScriptVmAotArtifact(
           createForgeWebScriptVmAotArtifact(module, input.compilerVersion),
           FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY,
           [argument],
-          execOptions,
+          tracedExecOptions,
         )
-      : executor.execute(module, FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY, [argument], execOptions);
+      : executor.execute(module, FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY, [argument], tracedExecOptions);
   const lexFingerprint = readFingerprint(result.value, 'lex');
   const expectedLexFingerprint = computeForgeWebScriptLexStageFingerprint(input.source);
   const lex = lexForgeWebScript(input.source, input.fileName);
@@ -102,6 +111,9 @@ export function runForgeWebScriptSelfHostedLexStage(
     outputHash: hashForgeWebScriptSelfHostedStagePayload(tokenArtifact),
     expectedOutputHash: hashForgeWebScriptSelfHostedStagePayload(tokenArtifact),
     artifact: tokenArtifact,
+    ...((result as { readonly trace?: ForgeWebScriptTraceReport }).trace === undefined
+      ? {}
+      : { trace: (result as { readonly trace: ForgeWebScriptTraceReport }).trace }),
     stageReports: [parser],
   };
 }
@@ -115,7 +127,11 @@ function runForgeWebScriptSelfHostedParserStage(
   const sourceHash = hashForgeWebScriptSelfHostedSourceIdentity(input.source, input.fileName);
   const module = toVmModule(createForgeWebScriptParserStageVmModule(sourceHash, options.parserStageVmModuleOptions));
   const argument = toVmValue(encodeForgeWebScriptLexStageSource(input.source));
-  const execOptions = { mode, maxSteps: Math.max(1_000_000, input.source.length * 256) } as const;
+  const defaultMaxSteps = Math.max(1_000_000, input.source.length * 256);
+  const execOptions = {
+    mode,
+    maxSteps: Math.min(defaultMaxSteps, Math.max(1, Math.trunc(options.maxSteps ?? defaultMaxSteps))),
+  } as const;
   const result =
     mode === 'aot'
       ? executeForgeWebScriptVmAotArtifact(

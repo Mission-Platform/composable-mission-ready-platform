@@ -1,5 +1,6 @@
-import { toForgeWebScriptHostError, ForgeWebScriptTrap } from './traps.js';
+import { attachForgeWebScriptTrace, toForgeWebScriptHostError, ForgeWebScriptTrap } from './traps.js';
 import { validateForgeWebScriptVmModule } from './vm-executor.js';
+import { createForgeWebScriptTraceRecorder, summarizeForgeWebScriptVmValue } from './trace.js';
 
 import type {
   ForgeWebScriptVmCapabilityImport,
@@ -13,6 +14,7 @@ import type {
   ForgeWebScriptVmValue,
   ForgeWebScriptVmWasmArtifact,
 } from './vm.js';
+import type { ForgeWebScriptTraceOptions } from './trace.js';
 import { FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION, FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION } from './vm.js';
 
 const PAGE_SIZE = 65_536;
@@ -1093,6 +1095,17 @@ export function prepareForgeWebScriptVmWasm(
   let steps = 0;
   let maxSteps: number | undefined;
   let memory: WebAssembly.Memory | undefined;
+  let activeTrace: ReturnType<typeof createForgeWebScriptTraceRecorder> | undefined;
+  let activeFunctionName = '';
+  let activeRedact: ForgeWebScriptTraceOptions['redact'];
+  let traceFinished = false;
+  const observe = (callback: () => void): void => {
+    try {
+      callback();
+    } catch {
+      // Observability must never alter guest behavior.
+    }
+  };
   const functionExports = new Map(
     artifact.module.functions.map((function_, index) => [function_.name, `fws_fn_${index}`]),
   );
@@ -1100,7 +1113,12 @@ export function prepareForgeWebScriptVmWasm(
     instance.exports as Record<string, WebAssembly.ExportValue>;
   const allocate = (size: number): number => {
     const allocator = exports().fws_alloc as (size: number) => number;
-    return allocator(size);
+    const pointer = allocator(size);
+    observe(() => {
+      activeTrace?.noteAllocation('allocate', size);
+      activeTrace?.recordMemory('allocate', pointer, size, steps, 'owned');
+    });
+    return pointer;
   };
   const capabilityImport = (
     imported: ForgeWebScriptVmCapabilityImport,
@@ -1108,12 +1126,14 @@ export function prepareForgeWebScriptVmWasm(
     return (...values) => {
       try {
         const capability = options.capabilities?.[imported.name];
-        if (capability === undefined)
+        if (capability === undefined) {
+          observe(() => activeTrace?.recordCapability(imported.capability, 'denied', steps));
           throw new ForgeWebScriptTrap(
             'CapabilityDenied',
             `Capability '${imported.capability}' is unavailable.`,
             imported.capability,
           );
+        }
         const parameterReps = imported.parameters.map(typeForValue);
         let offset = 0;
         const arguments_: ForgeWebScriptVmValue[] = [];
@@ -1123,6 +1143,14 @@ export function prepareForgeWebScriptVmWasm(
           offset += width;
         }
         const result = capability(...arguments_);
+        observe(() =>
+          activeTrace?.recordCapability(
+            imported.capability,
+            'allowed',
+            steps,
+            arguments_.map((value) => summarizeForgeWebScriptVmValue(value, activeRedact)).join(','),
+          ),
+        );
         if (result === undefined || !['unit', 'bool', 'number', 'bytes', 'aggregate'].includes(result.kind))
           throw new Error('Capability returned an invalid VM value.');
         const resultRepValue = resultRep(imported.result);
@@ -1148,6 +1176,7 @@ export function prepareForgeWebScriptVmWasm(
             : flatValue(result, memory!, allocate);
         return flatTypes(resultRepValue).length > 1 ? flat : flat[0];
       } catch (error) {
+        observe(() => activeTrace?.recordCapability(imported.capability, 'failed', steps));
         pendingTrap =
           error instanceof ForgeWebScriptTrap ? error : toForgeWebScriptHostError(error, imported.capability);
         throw new Error(pendingTrap.message);
@@ -1158,15 +1187,18 @@ export function prepareForgeWebScriptVmWasm(
     [RUNTIME_IMPORT_MODULE]: {
       [STEP_IMPORT]: () => {
         steps += 1;
+        observe(() => activeTrace?.recordInstruction(activeFunctionName, steps - 1, steps));
         return maxSteps !== undefined && steps > maxSteps ? 1 : 0;
       },
       [COMPARE_IMPORT]: (leftPointer: number, leftLength: number, rightPointer: number, rightLength: number) => {
+        observe(() => activeTrace?.recordRangeCheck(leftPointer, leftLength, steps));
         checkedRange(
           leftPointer,
           leftLength,
           memory!,
           'VM WASM comparison received an invalid left pointer-length value.',
         );
+        observe(() => activeTrace?.recordRangeCheck(rightPointer, rightLength, steps));
         checkedRange(
           rightPointer,
           rightLength,
@@ -1180,6 +1212,7 @@ export function prepareForgeWebScriptVmWasm(
         return 1;
       },
       [BYTE_AT_IMPORT]: (pointer: number, length: number, index: number) => {
+        observe(() => activeTrace?.recordRangeCheck(pointer, length, steps));
         checkedRange(pointer, length, memory!, 'VM WASM byte-at received an invalid pointer-length value.');
         if (!Number.isInteger(index) || index < 0 || index >= length) {
           pendingTrap = new ForgeWebScriptTrap(
@@ -1200,6 +1233,9 @@ export function prepareForgeWebScriptVmWasm(
         } else {
           pendingTrap = new ForgeWebScriptTrap('GuestTrap', `${instruction.code}: ${instruction.message}`);
         }
+        observe(() =>
+          activeTrace?.recordTrap(pendingTrap?.code ?? 'GuestTrap', pendingTrap?.message ?? 'VM WASM trap', steps),
+        );
         throw new Error(pendingTrap.message);
       },
     },
@@ -1227,6 +1263,12 @@ export function prepareForgeWebScriptVmWasm(
       throw new ForgeWebScriptTrap('GuestTrap', `Function '${functionName}' received an invalid argument count.`);
     reset();
     maxSteps = executionOptions.maxSteps;
+    activeFunctionName = functionName;
+    activeTrace =
+      executionOptions.trace === undefined
+        ? undefined
+        : createForgeWebScriptTraceRecorder(executionOptions.trace, functionName);
+    activeRedact = executionOptions.trace?.redact;
     try {
       const requiredBytes = executionOptions.memory?.byteLength ?? 0;
       const requiredPages = Math.ceil(requiredBytes / PAGE_SIZE);
@@ -1247,26 +1289,60 @@ export function prepareForgeWebScriptVmWasm(
           : Array.isArray(resultValues)
             ? resultValues
             : [resultValues as number | bigint];
-      return {
+      const result = {
         value: decodeValue(resultRep(function_.result), flatResult, memory!),
         memory: new Uint8Array(memory!.buffer).slice(),
         steps,
         mode,
+        ...(activeTrace === undefined
+          ? {}
+          : {
+              trace: activeTrace.finish({
+                steps,
+                memory: new Uint8Array(memory!.buffer),
+                termination: 'returned',
+              }),
+            }),
       };
+      traceFinished = activeTrace !== undefined;
+      return result;
     } catch (error) {
-      if (pendingTrap !== undefined) throw pendingTrap;
-      if (error instanceof ForgeWebScriptTrap) throw error;
-      throw new ForgeWebScriptTrap(
-        'GuestTrap',
-        error instanceof Error ? error.message : 'VM WASM execution trapped.',
-        undefined,
-        { cause: error },
-      );
+      if (pendingTrap === undefined && error instanceof ForgeWebScriptTrap) pendingTrap = error;
+      if (pendingTrap === undefined)
+        pendingTrap = new ForgeWebScriptTrap(
+          'GuestTrap',
+          error instanceof Error ? error.message : 'VM WASM execution trapped.',
+          undefined,
+          { cause: error },
+        );
+      throw pendingTrap ?? error;
     } finally {
+      if (activeTrace !== undefined && !traceFinished) {
+        const trapError = pendingTrap;
+        const report = activeTrace.finish({
+          steps,
+          memory: new Uint8Array(memory!.buffer),
+          termination: trapError?.message.includes('step limit') ? 'step-limit' : 'trapped',
+          ...(trapError === undefined
+            ? {}
+            : {
+                trap: {
+                  code: trapError.code,
+                  message: trapError.message,
+                  ...(trapError.capability === undefined ? {} : { capability: trapError.capability }),
+                },
+              }),
+        });
+        if (trapError !== undefined) attachForgeWebScriptTrace(trapError, report);
+      }
       try {
         (exports().fws_reset as () => void)();
       } finally {
         maxSteps = undefined;
+        activeTrace = undefined;
+        activeFunctionName = '';
+        activeRedact = undefined;
+        traceFinished = false;
       }
     }
   };

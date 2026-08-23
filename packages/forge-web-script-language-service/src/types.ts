@@ -1,6 +1,8 @@
 import type {
   ForgeWebScriptDiagnosticPhase,
   ForgeWebScriptDiagnosticSeverity,
+  ForgeWebScriptAnalysisEvidence,
+  ForgeWebScriptAnalysisReport,
   ForgeWebScriptImportTypeEnvironment,
   ForgeWebScriptModule,
   ForgeWebScriptSelfHostedStageReport,
@@ -97,6 +99,12 @@ export interface ForgeWebScriptLanguageDiagnostic {
   readonly hint?: string;
   readonly sourceSpan: ForgeWebScriptSourceSpan;
   readonly range: ForgeWebScriptRange;
+  readonly ruleId?: string;
+  readonly category?: string;
+  readonly blocking?: boolean;
+  readonly evidence?: readonly ForgeWebScriptAnalysisEvidence[];
+  readonly owasp?: readonly string[];
+  readonly cwe?: readonly string[];
 }
 
 export type ForgeWebScriptSymbolKind = 'module' | 'function' | 'parameter' | 'local' | 'capability' | 'type';
@@ -205,6 +213,7 @@ export interface ForgeWebScriptAnalysis {
   readonly module?: ForgeWebScriptModule;
   readonly importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment;
   readonly diagnostics: readonly ForgeWebScriptLanguageDiagnostic[];
+  readonly analysis?: ForgeWebScriptAnalysisReport;
   readonly symbols: readonly ForgeWebScriptSymbol[];
   readonly tokens: readonly ForgeWebScriptTokenClassification[];
   readonly selfHosted?: ForgeWebScriptSelfHostedStageReport;

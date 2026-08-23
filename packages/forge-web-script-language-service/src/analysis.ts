@@ -1,5 +1,7 @@
 import {
+  analyzeForgeWebScript as analyzeForgeWebScriptSource,
   createDiagnostic,
+  prepareForgeWebScriptFrontend,
   validateForgeWebScript,
   type ForgeWebScriptDiagnostic,
   type ForgeWebScriptSelfHostedStageReport,
@@ -38,6 +40,27 @@ export function analyzeForgeWebScript(
     ...validation.diagnostics,
     ...(selfHostedResult.diagnostic === undefined ? [] : [selfHostedResult.diagnostic]),
   ];
+  const frontend =
+    validation.module === undefined || validation.diagnostics.length > 0
+      ? undefined
+      : prepareForgeWebScriptFrontend({
+          source: document.text,
+          fileName,
+          compilerVersion: '0.1.0',
+          requireExports: workspaceOptions.requireExports,
+          requestedCapabilities: workspaceOptions.requestedCapabilities,
+          externalFunctions: analysisOptions.importTypeEnvironment?.externalFunctions,
+        });
+  const sourceAnalysis =
+    frontend === undefined || frontend.diagnostics.length > 0
+      ? undefined
+      : analyzeForgeWebScriptSource(frontend, {
+          policy: {
+            profile: 'development',
+            allowedCapabilities: workspaceOptions.requestedCapabilities ?? [],
+          },
+        });
+  const allDiagnostics = [...diagnostics, ...(sourceAnalysis?.diagnostics ?? [])];
   return {
     uri: document.uri,
     version: document.version,
@@ -46,10 +69,11 @@ export function analyzeForgeWebScript(
     ...(analysisOptions.importTypeEnvironment === undefined
       ? {}
       : { importTypeEnvironment: analysisOptions.importTypeEnvironment }),
-    diagnostics: diagnostics.map((diagnostic) => toLanguageDiagnostic(document.text, diagnostic)),
+    diagnostics: allDiagnostics.map((diagnostic) => toLanguageDiagnostic(document.text, diagnostic)),
     symbols: index.symbols,
     tokens,
     ...(selfHostedResult.report === undefined ? {} : { selfHosted: selfHostedResult.report }),
+    ...(sourceAnalysis === undefined ? {} : { analysis: sourceAnalysis }),
   };
 }
 
@@ -102,5 +126,11 @@ function toLanguageDiagnostic(source: string, diagnostic: ForgeWebScriptDiagnost
     ...(diagnostic.hint === undefined ? {} : { hint: diagnostic.hint }),
     sourceSpan: diagnostic.span,
     range: rangeFromSpan(source, diagnostic.span),
+    ...(diagnostic.ruleId === undefined ? {} : { ruleId: diagnostic.ruleId }),
+    ...(diagnostic.category === undefined ? {} : { category: diagnostic.category }),
+    ...(diagnostic.blocking === undefined ? {} : { blocking: diagnostic.blocking }),
+    ...(diagnostic.evidence === undefined ? {} : { evidence: diagnostic.evidence }),
+    ...(diagnostic.owasp === undefined ? {} : { owasp: diagnostic.owasp }),
+    ...(diagnostic.cwe === undefined ? {} : { cwe: diagnostic.cwe }),
   };
 }
