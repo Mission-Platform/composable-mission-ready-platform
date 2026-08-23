@@ -7,7 +7,8 @@ describe('EmailSpacer', () => {
   it('uses an explicit fixed-height table cell', () => {
     const output = renderEmail(EmailSpacer({ spacing: 'lg' }));
 
-    expect(output).toContain('height="24px; 1.714rem"');
+    expect(output).toContain('height="24px"');
+    expect(output).toContain('height: 24px; height: 1.714rem');
     expect(output).toContain('line-height: 0');
   });
 });

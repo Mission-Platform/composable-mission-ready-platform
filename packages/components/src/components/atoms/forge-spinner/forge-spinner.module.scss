@@ -15,7 +15,8 @@
     border-style: solid;
     border-top-color: transparent;
     border-radius: var(--mp-feedback-spinner-radius);
-    animation: mp-spin 0.65s linear infinite;
+    animation: mp-spin var(--mp-feedback-spinner-animation-duration) var(--mp-feedback-spinner-animation-easing)
+      infinite;
     flex-shrink: 0;
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
@@ -27,8 +28,8 @@
           'sm': var(--mp-feedback-spinner-border-width-sm),
           'md': var(--mp-feedback-spinner-border-width-md),
           'lg': var(--mp-feedback-spinner-border-width-lg),
-          'xl': 4px,
-          '2xl': 4px
+          'xl': var(--mp-feedback-spinner-border-width-xl),
+          '2xl': var(--mp-feedback-spinner-border-width-2xl)
         )
     {
       &--#{$size} {

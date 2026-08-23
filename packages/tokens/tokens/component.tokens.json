@@ -10,7 +10,9 @@
       "border-width": { "default": { "$value": "{border-width.thin}" } },
       "spinner": {
         "border-width": { "$value": "{border-width.thick}" },
-        "radius": { "$value": "{radius.full}" }
+        "radius": { "$value": "{radius.full}" },
+        "animation-duration": { "$value": "0.6s" },
+        "animation-easing": { "$value": "{easing.linear}" }
       },
       "primary": {
         "background": {
@@ -360,7 +362,11 @@
       },
       "file": {
         "$description": "ForgeFileInput browse button and dropzone roles; native input clipping remains structural.",
-        "gap": { "stack": { "$value": "{spacing.1}" }, "row": { "$value": "{spacing.3}" }, "dropzone": { "$value": "{spacing.2}" } },
+        "gap": {
+          "stack": { "$value": "{spacing.1}" },
+          "row": { "$value": "{spacing.3}" },
+          "dropzone": { "$value": "{spacing.2}" }
+        },
         "surface": {
           "default": { "$value": "{color.bg.surface}" },
           "hover": { "$value": "{color.bg.muted}" },
@@ -381,32 +387,70 @@
           "active": { "$value": "{color.primary.default}" },
           "invalid": { "$value": "{color.danger.default}" }
         },
-        "border-width": { "default": { "$value": "{border-width.thin}" }, "dropzone": { "$value": "{border-width.thick}" } },
+        "border-width": {
+          "default": { "$value": "{border-width.thin}" },
+          "dropzone": { "$value": "{border-width.thick}" }
+        },
         "radius": { "button": { "$value": "{radius.md}" }, "dropzone": { "$value": "{radius.lg}" } },
         "font-weight": { "$value": "{font.weight.medium}" },
         "transition": { "duration": { "$value": "{duration.fast}" }, "easing": { "$value": "{easing.standard}" } },
         "padding": { "dropzone-block": { "$value": "{spacing.8}" }, "dropzone-inline": { "$value": "{spacing.4}" } },
         "required": { "$value": "{color.danger.default}" },
         "size": {
-          "2xs": { "font-size": { "$value": "{size.font.2xs}" }, "padding-block": { "$value": "{size.pad-block.2xs}" }, "padding-inline": { "$value": "{size.pad-inline.2xs}" } },
-          "xs": { "font-size": { "$value": "{size.font.xs}" }, "padding-block": { "$value": "{size.pad-block.xs}" }, "padding-inline": { "$value": "{size.pad-inline.xs}" } },
-          "sm": { "font-size": { "$value": "{size.font.sm}" }, "padding-block": { "$value": "{size.pad-block.sm}" }, "padding-inline": { "$value": "{size.pad-inline.sm}" } },
-          "md": { "font-size": { "$value": "{size.font.md}" }, "padding-block": { "$value": "{size.pad-block.md}" }, "padding-inline": { "$value": "{size.pad-inline.md}" } },
-          "lg": { "font-size": { "$value": "{size.font.lg}" }, "padding-block": { "$value": "{size.pad-block.lg}" }, "padding-inline": { "$value": "{size.pad-inline.lg}" } },
-          "xl": { "font-size": { "$value": "{size.font.xl}" }, "padding-block": { "$value": "{size.pad-block.xl}" }, "padding-inline": { "$value": "{size.pad-inline.xl}" } },
-          "2xl": { "font-size": { "$value": "{size.font.2xl}" }, "padding-block": { "$value": "{size.pad-block.2xl}" }, "padding-inline": { "$value": "{size.pad-inline.2xl}" } }
+          "2xs": {
+            "font-size": { "$value": "{size.font.2xs}" },
+            "padding-block": { "$value": "{size.pad-block.2xs}" },
+            "padding-inline": { "$value": "{size.pad-inline.2xs}" }
+          },
+          "xs": {
+            "font-size": { "$value": "{size.font.xs}" },
+            "padding-block": { "$value": "{size.pad-block.xs}" },
+            "padding-inline": { "$value": "{size.pad-inline.xs}" }
+          },
+          "sm": {
+            "font-size": { "$value": "{size.font.sm}" },
+            "padding-block": { "$value": "{size.pad-block.sm}" },
+            "padding-inline": { "$value": "{size.pad-inline.sm}" }
+          },
+          "md": {
+            "font-size": { "$value": "{size.font.md}" },
+            "padding-block": { "$value": "{size.pad-block.md}" },
+            "padding-inline": { "$value": "{size.pad-inline.md}" }
+          },
+          "lg": {
+            "font-size": { "$value": "{size.font.lg}" },
+            "padding-block": { "$value": "{size.pad-block.lg}" },
+            "padding-inline": { "$value": "{size.pad-inline.lg}" }
+          },
+          "xl": {
+            "font-size": { "$value": "{size.font.xl}" },
+            "padding-block": { "$value": "{size.pad-block.xl}" },
+            "padding-inline": { "$value": "{size.pad-inline.xl}" }
+          },
+          "2xl": {
+            "font-size": { "$value": "{size.font.2xl}" },
+            "padding-block": { "$value": "{size.pad-block.2xl}" },
+            "padding-inline": { "$value": "{size.pad-inline.2xl}" }
+          }
         }
       },
       "location": {
         "$description": "ForgeLocationInput fieldset and composed-coordinate state roles.",
-        "gap": { "stack": { "$value": "{spacing.2}" }, "row": { "$value": "{spacing.2}" }, "legend": { "$value": "{spacing.1}" } },
+        "gap": {
+          "stack": { "$value": "{spacing.2}" },
+          "row": { "$value": "{spacing.2}" },
+          "legend": { "$value": "{spacing.1}" }
+        },
         "required": { "$value": "{color.danger.default}" },
         "text": { "disabled": { "$value": "{color.text.disabled}" }, "error": { "$value": "{color.danger.text}" } }
       },
       "number": {
         "$description": "ForgeNumberStepper button and field-specific roles; the shared input contract owns the wrapper states.",
         "button": {
-          "background": { "default": { "$value": "{color.bg.muted}" }, "hover": { "$value": "{color.border.default}" } },
+          "background": {
+            "default": { "$value": "{color.bg.muted}" },
+            "hover": { "$value": "{color.border.default}" }
+          },
           "text": { "$value": "{color.text.primary}" },
           "font-size": { "$value": "{font.size.lg}" },
           "width": { "$value": "2.25rem" },
@@ -418,7 +462,10 @@
         "gap": { "$value": "{spacing.2}" },
         "surface": { "$value": "{color.bg.surface}" },
         "text": { "$value": "{color.text.primary}" },
-        "border": { "default": { "$value": "{color.border.default}" }, "focus": { "$value": "{color.primary.default}" } },
+        "border": {
+          "default": { "$value": "{color.border.default}" },
+          "focus": { "$value": "{color.primary.default}" }
+        },
         "border-width": { "$value": "{border-width.thin}" },
         "radius": { "$value": "{radius.md}" },
         "focus-ring": { "$value": "{shadow.focus-primary}" },
@@ -450,9 +497,17 @@
         "$description": "ForgeSearchInput affordance, clear-button, spinner, and size roles.",
         "gap": { "$value": "{spacing.1}" },
         "icon-text": { "$value": "{color.text.tertiary}" },
-        "clear-text": { "default": { "$value": "{color.text.tertiary}" }, "hover": { "$value": "{color.text.primary}" } },
+        "clear-text": {
+          "default": { "$value": "{color.text.tertiary}" },
+          "hover": { "$value": "{color.text.primary}" }
+        },
         "clear-radius": { "$value": "{radius.full}" },
-        "spinner": { "size": { "$value": "14px" }, "border-width": { "$value": "{border-width.thick}" }, "radius": { "$value": "{radius.full}" }, "duration": { "$value": "0.6s" } }
+        "spinner": {
+          "size": { "$value": "14px" },
+          "border-width": { "$value": "{border-width.thick}" },
+          "radius": { "$value": "{radius.full}" },
+          "duration": { "$value": "0.6s" }
+        }
       }
     },
     "select": {
@@ -548,7 +603,11 @@
       "segment": {
         "$description": "ForgeSegmentControl container and selected-segment roles; width/layout behavior remains local.",
         "surface": { "default": { "$value": "{color.bg.sunken}" }, "selected": { "$value": "{color.bg.surface}" } },
-        "text": { "default": { "$value": "{color.text.secondary}" }, "hover": { "$value": "{color.text.primary}" }, "selected": { "$value": "{color.text.primary}" } },
+        "text": {
+          "default": { "$value": "{color.text.secondary}" },
+          "hover": { "$value": "{color.text.primary}" },
+          "selected": { "$value": "{color.text.primary}" }
+        },
         "border": { "$value": "{color.border.default}" },
         "border-width": { "$value": "{border-width.thin}" },
         "radius": { "container": { "$value": "{radius.lg}" }, "segment": { "$value": "{radius.md}" } },
@@ -953,7 +1012,7 @@
         "focus-width": { "$value": "{border-width.thick}" }
       },
       "surface": { "hover": { "$value": "{color.bg.muted}" }, "selected": { "$value": "{color.primary.default}" } },
-      "font-family": {  },
+      "font-family": {},
       "font-size": {
         "separator": { "$value": "{font.size.md}" },
         "header": { "$value": "{font.size.xs}" },
@@ -1487,6 +1546,17 @@
       "progress": {
         "$description": "Progress-bar track and fill roles. Fill aliases preserve the existing tone-to-theme mapping.",
         "gap": { "$value": "{spacing.1}" },
+        "size": {
+          "2xs": { "$value": "2px" },
+          "xs": { "$value": "3px" },
+          "sm": { "$value": "4px" },
+          "md": { "$value": "8px" },
+          "lg": { "$value": "12px" },
+          "xl": { "$value": "16px" },
+          "2xl": { "$value": "20px" }
+        },
+        "indeterminate-duration": { "$value": "1.5s" },
+        "indeterminate-easing": { "$value": "ease-in-out" },
         "track": {
           "background": { "$value": "{color.bg.muted}" },
           "radius": { "$value": "{radius.full}" }
@@ -1552,8 +1622,12 @@
           "xs": { "$value": "{border-width.thick}" },
           "sm": { "$value": "{border-width.thick}" },
           "md": { "$value": "{border-width.heavy}" },
-          "lg": { "$value": "{border-width.heavy}" }
-        }
+          "lg": { "$value": "{border-width.heavy}" },
+          "xl": { "$value": "4px" },
+          "2xl": { "$value": "4px" }
+        },
+        "animation-duration": { "$value": "0.65s" },
+        "animation-easing": { "$value": "{easing.linear}" }
       },
       "status": {
         "$description": "Status-icon foreground colors and size dimensions.",
@@ -2417,7 +2491,7 @@
       "radius": { "$value": "{radius.lg}" },
       "shadow": { "$value": "{shadow.md}" },
       "avatar": {
-        "$description": "ForgeAvatar fallback fills, presence colours, and outline roles. Pixel dimensions remain local because the avatar scale is not the control-height scale.",
+        "$description": "ForgeAvatar fallback fills, presence colours, outline roles, and independently configurable dimensions.",
         "surface": {
           "neutral": { "$value": "{color.default.default}" },
           "primary": { "$value": "{color.primary.default}" },
@@ -2436,12 +2510,31 @@
           "square": { "$value": "{radius.md}" },
           "status": { "$value": "{radius.full}" }
         },
+        "size": {
+          "2xs": { "$value": "20px" },
+          "xs": { "$value": "24px" },
+          "sm": { "$value": "32px" },
+          "md": { "$value": "40px" },
+          "lg": { "$value": "56px" },
+          "xl": { "$value": "80px" },
+          "2xl": { "$value": "96px" }
+        },
         "status": {
           "online": { "$value": "{color.success.default}" },
           "offline": { "$value": "{color.border.default}" },
           "away": { "$value": "{color.warning.default}" },
           "busy": { "$value": "{color.danger.default}" }
-        }
+        },
+        "status-size": {
+          "2xs": { "$value": "5px" },
+          "xs": { "$value": "6px" },
+          "sm": { "$value": "8px" },
+          "md": { "$value": "10px" },
+          "lg": { "$value": "13px" },
+          "xl": { "$value": "18px" },
+          "2xl": { "$value": "22px" }
+        },
+        "status-border-width": { "$value": "2px" }
       },
       "video": {
         "$description": "Responsive video surface; sizing, aspect ratio, object-fit, and playback behavior remain local/native.",

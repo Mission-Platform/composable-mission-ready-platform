@@ -21,9 +21,9 @@ describe('EmailButton', () => {
       EmailButton({ href: 'https://example.com', size: '2xl', variant: 'success', children: 'Get started' }),
     );
 
-    expect(output).toContain('background-color: #287a55; oklab');
-    expect(output).toContain('padding: 16px; 1.143rem 24px; 1.714rem');
-    expect(output).toContain('font-size: 24px; 1.714rem');
+    expect(output).toContain('background-color: #287a55; background-color: oklab');
+    expect(output).toContain('padding: 16px 24px; padding: 1.143rem 1.714rem');
+    expect(output).toContain('font-size: 24px; font-size: 1.714rem');
     expect(output).toContain('>Get started</a>');
     assertCompatibleEmailHtml(output);
   });
@@ -31,8 +31,8 @@ describe('EmailButton', () => {
   it('keeps secondary buttons visibly outlined', () => {
     const output = renderEmail(EmailButton({ href: 'https://example.com', variant: 'secondary' }));
 
-    expect(output).toContain('border: 1px; 0.071rem solid');
-    expect(output).toContain('background-color: #ffffff; oklab');
+    expect(output).toContain('border: 1px solid #5f535d; border: 0.071rem solid oklab');
+    expect(output).toContain('background-color: #ffffff; background-color: oklab');
   });
 
   it.each(['tertiary', 'ghost'] as const)('matches ForgeButton typography and transparent %s treatment', (variant) => {

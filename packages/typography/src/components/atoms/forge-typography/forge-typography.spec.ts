@@ -127,12 +127,26 @@ describe('ForgeTypography authors the same component for React and Vue', () => {
       expect(html).toContain('forge-typography--link');
       // The standalone link variant borrows the body scale…
       expect(html).toContain('forge-typography--body-md');
-      // …and defaults to underlining on hover only.
-      expect(html).toContain('forge-typography--underline-hover');
+      // …and defaults to always-visible underlining so inline links are not
+      // distinguishable by colour alone.
+      expect(html).toContain('forge-typography--underline-always');
       // The link colour must not be shadowed by the default colour class.
       expect(html).not.toContain('forge-typography--color-primary');
     }
   });
+
+  it.each(['always', 'hover', 'none'] as const)(
+    'preserves the explicit `%s` underline mode on both frameworks',
+    async (underline) => {
+      const properties = { variant: 'link', href: '/docs', underline } as const;
+      const react = renderToStaticMarkup(createElement(ReactTypography, properties, 'Docs'));
+      const vue = await renderToString(createSSRApp({ render: () => vueH(VueTypography, properties, () => 'Docs') }));
+
+      for (const html of [react, vue]) {
+        expect(html).toContain(`forge-typography--underline-${underline}`);
+      }
+    },
+  );
 
   it('keeps the variant scale when `href` links a heading on both frameworks', async () => {
     const properties = { variant: 'h3', href: '/releases', underline: 'always' } as const;

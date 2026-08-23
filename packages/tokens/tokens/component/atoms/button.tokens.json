@@ -23,6 +23,12 @@
         },
         "radius": {
           "$value": "{radius.full}"
+        },
+        "animation-duration": {
+          "$value": "0.6s"
+        },
+        "animation-easing": {
+          "$value": "{easing.linear}"
         }
       },
       "primary": {

@@ -1,4 +1,4 @@
-import type { EmailStyle, EmailStyleValue } from './types';
+import type { EmailStyle, EmailStyleValue, EmailStyleValueWithFallback } from './types';
 
 const FORBIDDEN_STYLE_PATTERN = /^(?:(?:--|-(?:webkit|moz|ms|o)-)|(?:flex|grid|var\(|!important\b))/i;
 const FORBIDDEN_PROPERTY_PATTERN =
@@ -9,17 +9,29 @@ function toCssProperty(property: string): string {
   return property.replaceAll(/[A-Z]/g, (character) => `-${character.toLowerCase()}`);
 }
 
-function validateStyleValue(property: string, value: EmailStyleValue): string | undefined {
-  if (value === null || value === undefined || value === '') {
-    return undefined;
-  }
+function isFallbackStyleValue(value: EmailStyleValue): value is EmailStyleValueWithFallback {
+  return typeof value === 'object' && value !== null && 'fallback' in value && 'value' in value;
+}
 
+function validateStylePrimitive(property: string, value: string | number): string {
   const serialized = String(value).trim();
   if (serialized.length === 0 || FORBIDDEN_STYLE_PATTERN.test(serialized)) {
     throw new Error(`Email style "${property}" contains a forbidden value.`);
   }
 
   return serialized;
+}
+
+function validateStyleValue(property: string, value: EmailStyleValue): readonly string[] | undefined {
+  if (value === null || value === undefined || value === '') {
+    return undefined;
+  }
+
+  if (isFallbackStyleValue(value)) {
+    return [validateStylePrimitive(property, value.fallback), validateStylePrimitive(property, value.value)];
+  }
+
+  return [validateStylePrimitive(property, value)];
 }
 
 /** Serialize inline styles in deterministic property order without CSS variables. */
@@ -37,15 +49,23 @@ export function serializeStyle(style: EmailStyle | string): string {
   }
 
   return Object.entries(style)
-    .map(([property, value]) => [toCssProperty(property), validateStyleValue(property, value)] as const)
-    .filter((entry): entry is readonly [string, string] => entry[1] !== undefined)
-    .map(([property, value]) => {
-      if (FORBIDDEN_PROPERTY_PATTERN.test(property)) {
-        throw new Error(`Email style property "${property}" is not supported.`);
+    .flatMap(([property, value]) => {
+      const cssProperty = toCssProperty(property);
+      if (FORBIDDEN_PROPERTY_PATTERN.test(cssProperty)) {
+        throw new Error(`Email style property "${cssProperty}" is not supported.`);
       }
-      return [property, value] as const;
+
+      return (
+        validateStyleValue(property, value)?.map((validatedValue, declarationIndex) => ({
+          declarationIndex,
+          property: cssProperty,
+          value: validatedValue,
+        })) ?? []
+      );
     })
-    .toSorted(([left], [right]) => left.localeCompare(right))
-    .map(([property, value]) => `${property}: ${value}`)
+    .toSorted(
+      (left, right) => left.property.localeCompare(right.property) || left.declarationIndex - right.declarationIndex,
+    )
+    .map(({ property, value }) => `${property}: ${value}`)
     .join('; ');
 }

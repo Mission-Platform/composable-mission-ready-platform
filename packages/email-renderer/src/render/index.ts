@@ -8,5 +8,6 @@ export type {
   EmailProperties,
   EmailStyle,
   EmailStyleValue,
+  EmailStyleValueWithFallback,
   RenderEmailOptions,
 } from './types.js';

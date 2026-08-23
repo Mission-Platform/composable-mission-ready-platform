@@ -234,6 +234,21 @@
         "gap": {
           "$value": "{spacing.1}"
         },
+        "size": {
+          "2xs": { "$value": "2px" },
+          "xs": { "$value": "3px" },
+          "sm": { "$value": "4px" },
+          "md": { "$value": "8px" },
+          "lg": { "$value": "12px" },
+          "xl": { "$value": "16px" },
+          "2xl": { "$value": "20px" }
+        },
+        "indeterminate-duration": {
+          "$value": "1.5s"
+        },
+        "indeterminate-easing": {
+          "$value": "ease-in-out"
+        },
         "track": {
           "background": {
             "$value": "{color.bg.muted}"
@@ -393,7 +408,19 @@
           },
           "lg": {
             "$value": "{border-width.heavy}"
+          },
+          "xl": {
+            "$value": "4px"
+          },
+          "2xl": {
+            "$value": "4px"
           }
+        },
+        "animation-duration": {
+          "$value": "0.65s"
+        },
+        "animation-easing": {
+          "$value": "{easing.linear}"
         }
       },
       "status": {

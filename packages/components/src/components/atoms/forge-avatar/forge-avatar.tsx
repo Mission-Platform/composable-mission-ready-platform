@@ -33,13 +33,13 @@ export interface AvatarProperties {
 
 /** Maps each {@link AvatarSize} onto its pixel dimension. */
 const SIZE_MAP: Record<AvatarSize, string> = {
-  '2xs': '20px',
-  xs: '24px',
-  sm: '32px',
-  md: '40px',
-  lg: '56px',
-  xl: '80px',
-  '2xl': '96px',
+  '2xs': 'var(--mp-media-avatar-size-2xs, 20px)',
+  xs: 'var(--mp-media-avatar-size-xs, 24px)',
+  sm: 'var(--mp-media-avatar-size-sm, 32px)',
+  md: 'var(--mp-media-avatar-size-md, 40px)',
+  lg: 'var(--mp-media-avatar-size-lg, 56px)',
+  xl: 'var(--mp-media-avatar-size-xl, 80px)',
+  '2xl': 'var(--mp-media-avatar-size-2xl, 96px)',
 };
 
 /** Maps each {@link AvatarSize} onto its `--mp-size-font-*` token. */
@@ -55,21 +55,21 @@ const FONT_SIZE_MAP: Record<AvatarSize, string> = {
 
 /** Maps each {@link AvatarSize} onto the presence-dot diameter. */
 const STATUS_SIZE_MAP: Record<AvatarSize, string> = {
-  '2xs': '5px',
-  xs: '6px',
-  sm: '8px',
-  md: '10px',
-  lg: '13px',
-  xl: '18px',
-  '2xl': '22px',
+  '2xs': 'var(--mp-media-avatar-status-size-2xs, 5px)',
+  xs: 'var(--mp-media-avatar-status-size-xs, 6px)',
+  sm: 'var(--mp-media-avatar-status-size-sm, 8px)',
+  md: 'var(--mp-media-avatar-status-size-md, 10px)',
+  lg: 'var(--mp-media-avatar-status-size-lg, 13px)',
+  xl: 'var(--mp-media-avatar-status-size-xl, 18px)',
+  '2xl': 'var(--mp-media-avatar-status-size-2xl, 22px)',
 };
 
 /** Maps each presence state onto its indicator colour token. */
 const STATUS_COLOR_MAP: Record<NonNullable<AvatarStatus>, string> = {
-  online: 'var(--mp-component-media-avatar-status-online)',
-  offline: 'var(--mp-component-media-avatar-status-offline)',
-  away: 'var(--mp-component-media-avatar-status-away)',
-  busy: 'var(--mp-component-media-avatar-status-busy)',
+  online: 'var(--mp-media-avatar-status-online)',
+  offline: 'var(--mp-media-avatar-status-offline)',
+  away: 'var(--mp-media-avatar-status-away)',
+  busy: 'var(--mp-media-avatar-status-busy)',
 };
 
 /**
@@ -77,15 +77,15 @@ const STATUS_COLOR_MAP: Record<NonNullable<AvatarStatus>, string> = {
  * tone reuses the `default` token family (no `neutral` alias).
  */
 const VARIANT_COLOR_MAP: Record<AvatarVariant, string> = {
-  neutral: 'var(--mp-component-media-avatar-surface-neutral)',
-  primary: 'var(--mp-component-media-avatar-surface-primary)',
-  secondary: 'var(--mp-component-media-avatar-surface-secondary)',
-  tertiary: 'var(--mp-component-media-avatar-surface-tertiary)',
-  success: 'var(--mp-component-media-avatar-surface-success)',
-  warning: 'var(--mp-component-media-avatar-surface-warning)',
-  info: 'var(--mp-component-media-avatar-surface-info)',
-  error: 'var(--mp-component-media-avatar-surface-error)',
-  critical: 'var(--mp-component-media-avatar-surface-critical)',
+  neutral: 'var(--mp-media-avatar-surface-neutral)',
+  primary: 'var(--mp-media-avatar-surface-primary)',
+  secondary: 'var(--mp-media-avatar-surface-secondary)',
+  tertiary: 'var(--mp-media-avatar-surface-tertiary)',
+  success: 'var(--mp-media-avatar-surface-success)',
+  warning: 'var(--mp-media-avatar-surface-warning)',
+  info: 'var(--mp-media-avatar-surface-info)',
+  error: 'var(--mp-media-avatar-surface-error)',
+  critical: 'var(--mp-media-avatar-surface-critical)',
 };
 
 /**
@@ -108,8 +108,7 @@ export function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement {
   const avatarStyle: Record<string, string | undefined> = {
     width: dimension,
     height: dimension,
-    borderRadius:
-      shape === 'circle' ? 'var(--mp-component-media-avatar-radius-circle)' : 'var(--mp-component-media-avatar-radius-square)',
+    borderRadius: shape === 'circle' ? 'var(--mp-media-avatar-radius-circle)' : 'var(--mp-media-avatar-radius-square)',
     backgroundColor: src ? undefined : (color ?? VARIANT_COLOR_MAP[variant]),
     fontSize: FONT_SIZE_MAP[size],
     display: 'flex',
@@ -117,7 +116,7 @@ export function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement {
     justifyContent: 'center',
     overflow: 'hidden',
     flexShrink: '0',
-    color: 'var(--mp-component-media-avatar-text-default)',
+    color: 'var(--mp-media-avatar-text-default)',
     fontWeight: 'var(--mp-font-weight-semibold)',
     fontFamily: 'var(--mp-font-family-sans)',
     userSelect: 'none',
@@ -160,9 +159,9 @@ export function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement {
             right: '0',
             width: STATUS_SIZE_MAP[size],
             height: STATUS_SIZE_MAP[size],
-            borderRadius: 'var(--mp-component-media-avatar-radius-status)',
+            borderRadius: 'var(--mp-media-avatar-radius-status)',
             backgroundColor: statusColor,
-            border: '2px solid var(--mp-component-media-avatar-border-status)',
+            border: 'var(--mp-media-avatar-status-border-width, 2px) solid var(--mp-media-avatar-border-status)',
             display: 'block',
           }}
         />

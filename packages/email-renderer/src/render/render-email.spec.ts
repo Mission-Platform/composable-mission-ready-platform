@@ -42,6 +42,32 @@ describe('renderEmail', () => {
     expect(output).not.toContain('display:flex');
   });
 
+  it('serializes fallback style values as ordered duplicate declarations', () => {
+    const output = renderEmail(
+      h(
+        'p',
+        {
+          bgcolor: {
+            fallback: '#514d52',
+            value: 'oklab(0.3 0.01 -0.01)',
+            toString: () => 'oklab(0.3 0.01 -0.01)',
+          },
+          style: {
+            color: {
+              fallback: '#514d52',
+              value: 'oklab(0.3 0.01 -0.01)',
+              toString: () => 'oklab(0.3 0.01 -0.01)',
+            },
+          },
+        },
+        'Content',
+      ),
+    );
+
+    expect(output).toContain('bgcolor="#514d52"');
+    expect(output).toContain('style="color: #514d52; color: oklab(0.3 0.01 -0.01)"');
+  });
+
   it('renders safe Markdown through the same Forge serializer', () => {
     const document = renderMarkdown('# Hello\n\n[Read more](https://example.com)\n\n<script>alert(1)</script>');
     const output = renderEmail(document.node);

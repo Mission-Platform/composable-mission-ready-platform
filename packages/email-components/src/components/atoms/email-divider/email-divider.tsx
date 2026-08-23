@@ -1,6 +1,13 @@
 import { h, type MpElement } from '@mission-platform/forge';
 
-import { borderWidthValue, colorValue, spacingValue, type EmailColor, type EmailSpacingScale } from '@/tokens';
+import {
+  borderWidthValue,
+  combineStyleValues,
+  colorValue,
+  spacingValue,
+  type EmailColor,
+  type EmailSpacingScale,
+} from '@/tokens';
 
 export interface EmailDividerProperties {
   readonly color?: EmailColor;
@@ -20,7 +27,11 @@ export function EmailDivider(properties: Readonly<EmailDividerProperties>): MpEl
         <tr>
           <td
             style={{
-              borderTop: `${borderWidthValue('thin')} solid ${colorValue(properties.color ?? 'border.default')}`,
+              borderTop: combineStyleValues([
+                borderWidthValue('thin'),
+                'solid',
+                colorValue(properties.color ?? 'border.default'),
+              ]),
               fontSize: 0,
               lineHeight: 0,
               paddingTop: spacingValue(properties.spacing ?? 'md'),

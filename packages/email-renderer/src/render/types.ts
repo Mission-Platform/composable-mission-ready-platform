@@ -7,7 +7,13 @@ export type EmailNode = MpElement;
 export type EmailComponent<P extends MpPropertyBag = MpPropertyBag> = MpComponent<P>;
 
 /** Values accepted by the deterministic inline-style serializer. */
-export type EmailStyleValue = number | string | null | undefined;
+export interface EmailStyleValueWithFallback {
+  readonly fallback: string;
+  readonly value: string;
+  toString(): string;
+}
+
+export type EmailStyleValue = number | string | EmailStyleValueWithFallback | null | undefined;
 
 /** A style object whose keys are serialized in lexical order. */
 export type EmailStyle = Readonly<Record<string, EmailStyleValue>>;

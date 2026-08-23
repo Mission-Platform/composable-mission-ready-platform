@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import { toReactComponent } from '@mission-platform/forge/react';
 import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
@@ -7,6 +10,11 @@ import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
 import { ForgeTimeline } from './forge-timeline';
+
+const timelineStyles = readFileSync(
+  path.resolve(process.cwd(), 'src/components/molecules/forge-timeline/forge-timeline.module.scss'),
+  'utf8',
+);
 
 /**
  * Exercises the **neutral** `ForgeTimeline` authored in this package, rendering
@@ -56,5 +64,12 @@ describe('ForgeTimeline authors the same component for React and Vue', () => {
       expect(html).toContain('forge-timeline-item--success');
       expect(html).toContain('forge-timeline-item--outlined');
     }
+  });
+
+  it('keeps timeline token aliases resolvable for consumer overrides', () => {
+    expect(timelineStyles).not.toContain('--mp-timeline-marker-size: var(--mp-timeline-marker-size)');
+    expect(timelineStyles).not.toContain('--mp-timeline-gutter: var(--mp-timeline-gutter)');
+    expect(timelineStyles).toContain('var(--mp-timeline-marker-size)');
+    expect(timelineStyles).toContain('var(--mp-timeline-gutter)');
   });
 });

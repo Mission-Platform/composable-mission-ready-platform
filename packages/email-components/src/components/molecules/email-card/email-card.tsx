@@ -1,6 +1,7 @@
 import { h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import {
+  combineStyleValues,
   colorValue,
   radiusValue,
   spacingValue,
@@ -30,7 +31,7 @@ export function EmailCard(properties: Readonly<EmailCardProperties>): MpElement 
       cellSpacing={0}
       style={{
         backgroundColor: background,
-        border: `1px solid ${borderColor}`,
+        border: combineStyleValues(['1px', 'solid', borderColor]),
         borderRadius: radiusValue(properties.radius ?? 'md'),
       }}
     >

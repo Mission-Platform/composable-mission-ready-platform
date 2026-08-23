@@ -1,5 +1,6 @@
 export {
   borderWidthValue,
+  combineStyleValues,
   colorValue,
   containerWidthValue,
   controlColors,

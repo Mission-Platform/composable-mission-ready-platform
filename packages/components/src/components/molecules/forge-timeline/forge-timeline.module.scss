@@ -13,9 +13,7 @@
 
 @layer mp.components {
   .forge-timeline {
-    --mp-timeline-marker-size: var(--mp-timeline-marker-size);
     --mp-timeline-line-thickness: var(--mp-timeline-line-width);
-    --mp-timeline-gutter: var(--mp-timeline-gutter);
 
     list-style: none;
     margin: 0;

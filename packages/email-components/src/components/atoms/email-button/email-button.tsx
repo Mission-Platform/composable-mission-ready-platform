@@ -3,6 +3,7 @@ import { h, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import {
   borderWidthValue,
+  combineStyleValues,
   colorValue,
   controlColors,
   radiusValue,
@@ -42,7 +43,9 @@ export function EmailButton(properties: Readonly<EmailButtonProperties>): MpElem
             bgcolor={background}
             style={{
               backgroundColor: background,
-              border: colors.border ? `${borderWidthValue('thin')} solid ${colorValue(colors.border)}` : undefined,
+              border: colors.border
+                ? combineStyleValues([borderWidthValue('thin'), 'solid', colorValue(colors.border)])
+                : undefined,
               borderRadius: radiusValue('md'),
             }}
           >
@@ -55,7 +58,7 @@ export function EmailButton(properties: Readonly<EmailButtonProperties>): MpElem
                 display: 'inline-block',
                 fontSize: sizeValue(size, 'font'),
                 lineHeight: typographyStyle('display').lineHeight,
-                padding: `${sizeValue(size, 'pad-block')} ${sizeValue(size, 'pad-inline')}`,
+                padding: combineStyleValues([sizeValue(size, 'pad-block'), sizeValue(size, 'pad-inline')]),
                 textDecoration: 'none',
               }}
             >

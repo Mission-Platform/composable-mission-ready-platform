@@ -34,7 +34,7 @@
         "$value": "{shadow.md}"
       },
       "avatar": {
-        "$description": "ForgeAvatar fallback fills, presence colours, and outline roles. Pixel dimensions remain local because the avatar scale is not the control-height scale.",
+        "$description": "ForgeAvatar fallback fills, presence colours, outline roles, and independently configurable dimensions.",
         "surface": {
           "neutral": {
             "$value": "{color.default.default}"
@@ -85,6 +85,15 @@
             "$value": "{radius.full}"
           }
         },
+        "size": {
+          "2xs": { "$value": "20px" },
+          "xs": { "$value": "24px" },
+          "sm": { "$value": "32px" },
+          "md": { "$value": "40px" },
+          "lg": { "$value": "56px" },
+          "xl": { "$value": "80px" },
+          "2xl": { "$value": "96px" }
+        },
         "status": {
           "online": {
             "$value": "{color.success.default}"
@@ -98,6 +107,18 @@
           "busy": {
             "$value": "{color.danger.default}"
           }
+        },
+        "status-size": {
+          "2xs": { "$value": "5px" },
+          "xs": { "$value": "6px" },
+          "sm": { "$value": "8px" },
+          "md": { "$value": "10px" },
+          "lg": { "$value": "13px" },
+          "xl": { "$value": "18px" },
+          "2xl": { "$value": "22px" }
+        },
+        "status-border-width": {
+          "$value": "2px"
         }
       },
       "video": {

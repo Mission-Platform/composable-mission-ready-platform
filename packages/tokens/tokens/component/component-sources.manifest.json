@@ -5,7 +5,7 @@
     "colocatedStories": 246,
     "cssModules": 219,
     "packages": 20,
-    "sourceOfTruth": "docs/component-token-reference.md",
+    "sourceOfTruth": "packages/tokens/docs/reference/component-tokens.md",
     "classifications": {
       "visual": "Owns a CSS module or inline visual output and maps to a shared contract source.",
       "inheritedVisual": "Uses a child, parent, currentColor, third-party host, or composed contract; no per-glyph source is created.",

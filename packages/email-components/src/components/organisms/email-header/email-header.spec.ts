@@ -13,7 +13,7 @@ describe('email organisms', () => {
 
     expect(output).toContain('Mission Platform');
     expect(output).toContain('Unsubscribe');
-    expect(output).toContain('background-color: #ffffff; oklab');
+    expect(output).toContain('background-color: #ffffff; background-color: oklab');
     assertCompatibleEmailHtml(output);
     expect(preheader).toContain('mso-hide: all');
   });

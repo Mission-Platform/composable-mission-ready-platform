@@ -65,14 +65,15 @@
       @include fill('critical');
 
       &--indeterminate {
-        animation: mp-progress-indeterminate 1.5s ease-in-out infinite;
+        animation: mp-progress-indeterminate var(--mp-feedback-progress-indeterminate-duration)
+          var(--mp-feedback-progress-indeterminate-easing) infinite;
       }
     }
 
     /* Sizes — canonical 2xs → 2xl scale (track thickness). */
-    @each $size, $height in ('2xs': 2px, 'xs': 3px, 'sm': 4px, 'md': 8px, 'lg': 12px, 'xl': 16px, '2xl': 20px) {
+    @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-progress-bar__track {
-        height: $height;
+        height: var(--mp-feedback-progress-size-#{$size});
       }
     }
   }

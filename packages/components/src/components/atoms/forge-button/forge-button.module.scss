@@ -24,14 +24,10 @@
     line-height: var(--mp-button-line-height);
     cursor: pointer;
     transition:
-      background-color var(--mp-button-primary-transition-duration)
-        var(--mp-button-primary-transition-easing),
-      border-color var(--mp-button-primary-transition-duration)
-        var(--mp-button-primary-transition-easing),
-      box-shadow var(--mp-button-primary-transition-duration)
-        var(--mp-button-primary-transition-easing),
-      opacity var(--mp-button-primary-transition-duration)
-        var(--mp-button-primary-transition-easing);
+      background-color var(--mp-button-primary-transition-duration) var(--mp-button-primary-transition-easing),
+      border-color var(--mp-button-primary-transition-duration) var(--mp-button-primary-transition-easing),
+      box-shadow var(--mp-button-primary-transition-duration) var(--mp-button-primary-transition-easing),
+      opacity var(--mp-button-primary-transition-duration) var(--mp-button-primary-transition-easing);
     white-space: nowrap;
     user-select: none;
 
@@ -48,8 +44,7 @@
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
-        padding: var(--mp-button-size-#{$size}-padding-block)
-          var(--mp-button-size-#{$size}-padding-inline);
+        padding: var(--mp-button-size-#{$size}-padding-block) var(--mp-button-size-#{$size}-padding-inline);
         font-size: var(--mp-button-size-#{$size}-font-size);
       }
     }
@@ -66,10 +61,7 @@
       }
 
       &:active:not(:disabled) {
-        background-color: var(
-          --mp-button-#{$name}-background-active,
-          var(--mp-button-#{$name}-background-hover)
-        );
+        background-color: var(--mp-button-#{$name}-background-active, var(--mp-button-#{$name}-background-hover));
       }
     }
 
@@ -163,7 +155,7 @@
       border: var(--mp-button-spinner-border-width) solid currentcolor;
       border-top-color: transparent;
       border-radius: var(--mp-button-spinner-radius);
-      animation: mp-spin 0.6s var(--mp-easing-linear) infinite;
+      animation: mp-spin var(--mp-button-spinner-animation-duration) var(--mp-button-spinner-animation-easing) infinite;
       flex-shrink: 0;
     }
   }

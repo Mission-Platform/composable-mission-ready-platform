@@ -223,7 +223,7 @@ export const TruncatePopup: Story = {
  * for standalone link text, and `href` on **any** variant so a heading or a
  * caption can be a link without leaving its own type scale. Both get the link
  * colour, its hover/active and `:visited` treatment, a visible focus ring, and
- * the chosen `underline` mode (`'hover'` by default). `target="_blank"` adds
+ * the chosen `underline` mode (`'always'` by default). `target="_blank"` adds
  * `rel="noopener noreferrer"` automatically.
  */
 export const Link: Story = {
@@ -264,7 +264,7 @@ export const Link: Story = {
         href="#hover"
         underline="hover"
       >
-        underline=&quot;hover&quot; (default)
+        underline=&quot;hover&quot; (opt-in)
       </ForgeTypography>
       <ForgeTypography
         variant="link"

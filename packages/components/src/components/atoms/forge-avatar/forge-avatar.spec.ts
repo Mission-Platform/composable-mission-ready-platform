@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import { toReactComponent } from '@mission-platform/forge/react';
 import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
@@ -7,6 +10,11 @@ import { createSSRApp, h as vueH } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
 import { ForgeAvatar } from './forge-avatar';
+
+const avatarSource = readFileSync(
+  path.resolve(process.cwd(), 'src/components/atoms/forge-avatar/forge-avatar.tsx'),
+  'utf8',
+);
 
 /**
  * Exercises the **neutral** `ForgeAvatar` authored in this package, rendering it
@@ -47,5 +55,11 @@ describe('ForgeAvatar authors the same component for React and Vue', () => {
       expect(html).toContain('avatar--square');
       expect(html).toContain('AB');
     }
+  });
+
+  it('uses the generated component namespace for avatar overrides', () => {
+    expect(avatarSource).toContain('--mp-media-avatar-surface-primary');
+    expect(avatarSource).toContain('--mp-media-avatar-radius-circle');
+    expect(avatarSource).not.toContain('--mp-component-media-avatar-');
   });
 });

@@ -177,9 +177,9 @@
     }
 
     /*
-     * Underline behaviour. `hover` is the default: links stay distinguishable on
-     * interaction without underlining every link in dense body text, and
-     * `always` is available where colour alone would not be enough.
+     * Underline behaviour. `always` is the default so links stay distinguishable
+     * without relying on colour alone; `hover` and `none` are available for
+     * explicit opt-in treatments.
      */
     &--underline-always {
       text-decoration-line: underline;

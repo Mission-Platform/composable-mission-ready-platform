@@ -1,7 +1,7 @@
 import { escapeHtml, isUrlAttribute, validateUrl } from './escape';
 import { serializeStyle } from './style';
 
-import type { EmailProperties, EmailStyle } from './types';
+import type { EmailProperties, EmailStyle, EmailStyleValueWithFallback } from './types';
 
 const ALLOWED_ATTRIBUTES = new Set([
   'alt',
@@ -44,6 +44,10 @@ function isAllowedAttribute(name: string): boolean {
   return ALLOWED_ATTRIBUTES.has(name) || name.startsWith('aria-') || name.startsWith('data-');
 }
 
+function isFallbackStyleValue(value: unknown): value is EmailStyleValueWithFallback {
+  return typeof value === 'object' && value !== null && 'fallback' in value && 'value' in value;
+}
+
 /** Serialize an allowlisted set of Forge properties in deterministic order. */
 export function serializeAttributes(properties: EmailProperties): string {
   return Object.entries(properties)
@@ -64,7 +68,7 @@ export function serializeAttributes(properties: EmailProperties): string {
         return [name, serializeStyle(value as EmailStyle | string)] as const;
       }
 
-      const stringValue = String(value);
+      const stringValue = isFallbackStyleValue(value) ? value.fallback : String(value);
       return [name, isUrlAttribute(name) ? validateUrl(stringValue, name) : stringValue] as const;
     })
     .filter((attribute): attribute is readonly [string, string] => attribute !== undefined && attribute[1] !== '')

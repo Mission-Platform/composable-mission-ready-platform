@@ -121,7 +121,7 @@ export interface TypographyProperties {
    * `'_blank'`, so an external link never hands the opener over.
    */
   rel?: string;
-  /** When a link draws its underline. Defaults to `'hover'`. */
+  /** When a link draws its underline. Defaults to `'always'`. */
   underline?: TypographyUnderline;
 }
 
@@ -157,7 +157,7 @@ const TAG_MAP: Record<TypographyVariant, string> = {
  * and `href` on **any** variant so a heading or caption can be a link without
  * leaving its own type scale. Either way the element renders as an `<a>` with the
  * link colour, its hover/active and `:visited` treatment, a visible focus ring
- * and the chosen `underline` mode (`'hover'` by default); `target="_blank"` gets
+ * and the chosen `underline` mode (`'always'` by default); `target="_blank"` gets
  * `rel="noopener noreferrer"` automatically. It owns its
  * styling through the co-located CSS Module `forge-typography.module.scss`
  * (carried onto every framework by the two-stage compiler, so the component
@@ -184,7 +184,7 @@ export function ForgeTypography(properties: Readonly<TypographyProperties>): MpE
     href,
     target,
     rel,
-    underline = 'hover',
+    underline = 'always',
   } = properties;
 
   // A link is either declared through the variant (standalone link text) or

@@ -28,7 +28,7 @@ describe('EmailTypography', () => {
   it('renders tokenized body text and escapes content', () => {
     const output = renderEmail(EmailTypography({ children: 'Hello <world>' }));
 
-    expect(output).toContain('<p style="color: #211f22; oklab');
+    expect(output).toContain('<p style="color: #211f22; color: oklab');
     expect(output).toContain('Hello &lt;world&gt;');
     assertCompatibleEmailHtml(output);
   });
@@ -39,7 +39,7 @@ describe('EmailTypography', () => {
     );
 
     expect(output).toContain('align="center"');
-    expect(output).toContain('color: #514d52; oklab');
+    expect(output).toContain('color: #514d52; color: oklab');
   });
 
   it('protects external links opened in a new context', () => {

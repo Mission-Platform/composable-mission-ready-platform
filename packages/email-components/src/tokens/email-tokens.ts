@@ -1,6 +1,6 @@
 import { borderWidth, radius, size, spacing, themeLight, typography } from '@mission-platform/tokens';
 
-import type { EmailStyle } from '@mission-platform/email-renderer';
+import type { EmailStyle, EmailStyleValue, EmailStyleValueWithFallback } from '@mission-platform/email-renderer';
 
 export type EmailTypographyVariant = keyof typeof typography;
 export type EmailSpacingScale = keyof typeof spacing;
@@ -94,8 +94,25 @@ const colorFallbacks: Record<EmailColor, string> = {
   'critical.text': '#ffffff',
 };
 
-function tokenWithFallback(value: string, fallback: string): string {
-  return `${fallback}; ${value}`;
+function tokenWithFallback(value: string, fallback: string): EmailStyleValueWithFallback {
+  return {
+    fallback,
+    toString: () => value,
+    value,
+  };
+}
+
+function isFallbackStyleValue(value: EmailStyleValue): value is EmailStyleValueWithFallback {
+  return typeof value === 'object' && value !== null && 'fallback' in value && 'value' in value;
+}
+
+/** Combine tokenized values while retaining both browser and email declarations. */
+export function combineStyleValues(values: readonly EmailStyleValue[], separator = ' '): EmailStyleValue {
+  const fallback = values
+    .map((value) => (isFallbackStyleValue(value) ? value.fallback : String(value)))
+    .join(separator);
+  const modern = values.map(String).join(separator);
+  return fallback === modern ? modern : tokenWithFallback(modern, fallback);
 }
 
 /** Resolve a shared typography token to literal, inline email declarations. */
@@ -103,20 +120,20 @@ export function typographyStyle(variant: EmailTypographyVariant): EmailStyle {
   const token = typography[variant];
   return {
     fontFamily: token.fontFamily,
-    fontSize: token.fontSize,
-    fontWeight: token.fontWeight,
-    letterSpacing: token.letterSpacing,
+    fontSize: 'fontSize' in token ? token.fontSize : undefined,
+    fontWeight: 'fontWeight' in token ? token.fontWeight : undefined,
+    letterSpacing: 'letterSpacing' in token ? token.letterSpacing : undefined,
     lineHeight: token.lineHeight,
   };
 }
 
 /** Resolve a semantic light-theme color with a conservative email fallback. */
-export function colorValue(color: EmailColor): string {
+export function colorValue(color: EmailColor): EmailStyleValueWithFallback {
   return tokenWithFallback(colorTokens[color], colorFallbacks[color]);
 }
 
 /** Resolve a shared spacing token and retain a pixel fallback for clients with weak rem support. */
-export function spacingValue(scale: EmailSpacingScale): string {
+export function spacingValue(scale: EmailSpacingScale): EmailStyleValue {
   const value = spacing[scale];
   if (value === '0') {
     return value;
@@ -125,7 +142,7 @@ export function spacingValue(scale: EmailSpacingScale): string {
   return tokenWithFallback(value, `${Math.round(rem * 14)}px`);
 }
 
-export function radiusValue(scale: EmailRadiusScale): string {
+export function radiusValue(scale: EmailRadiusScale): EmailStyleValue {
   const value = radius[scale];
   if (value === '0') {
     return value;
@@ -134,17 +151,14 @@ export function radiusValue(scale: EmailRadiusScale): string {
   return tokenWithFallback(value, `${Math.round(rem * 14)}px`);
 }
 
-export function borderWidthValue(scale: keyof typeof borderWidth): string {
+export function borderWidthValue(scale: keyof typeof borderWidth): EmailStyleValue {
   const value = borderWidth[scale];
-  if (value === '0') {
-    return value;
-  }
   const rem = Number.parseFloat(value);
   return tokenWithFallback(value, `${Math.round(rem * 14)}px`);
 }
 
 /** Resolve a control size token to a literal value with a pixel fallback. */
-export function sizeValue(scale: EmailSizeScale, property: 'font' | 'pad-block' | 'pad-inline'): string {
+export function sizeValue(scale: EmailSizeScale, property: 'font' | 'pad-block' | 'pad-inline'): EmailStyleValue {
   const value = size[property][scale];
   return tokenWithFallback(value, `${Math.round(Number.parseFloat(value) * 14)}px`);
 }

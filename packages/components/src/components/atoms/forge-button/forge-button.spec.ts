@@ -85,4 +85,12 @@ describe('ForgeButton authors the same component for React and Vue', () => {
     expect(buttonStyles).toContain("@include transparent('ghost');");
     expect(buttonStyles).toContain('--mp-button-secondary-border-hover');
   });
+
+  it('exposes the loading spinner motion as component token hooks', () => {
+    const spinner = (componentContract.component.button as Record<string, unknown>).spinner as Record<string, unknown>;
+    expect(spinner).toHaveProperty('animation-duration');
+    expect(spinner).toHaveProperty('animation-easing');
+    expect(buttonStyles).toContain('--mp-button-spinner-animation-duration');
+    expect(buttonStyles).toContain('--mp-button-spinner-animation-easing');
+  });
 });
