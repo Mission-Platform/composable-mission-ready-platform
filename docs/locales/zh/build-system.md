@@ -1,69 +1,64 @@
-# 构建系统
+# Build System
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+This document explains the architecture and mechanics of the Mission Platform's build system. It is designed for high
+performance, incremental builds, and multi-framework package distribution.
 
-> 英文原文: [docs/build-system.md](../../build-system.md)
-> 语言: 简体中文 (zh)
+## Core Architecture
 
-本文档解释了任务平台构建系统的架构和机制。它是专为高
-性能、增量构建和多框架包分发。
+The Mission Platform uses a tiered build system that separates task orchestration from individual workspace compilation.
 
-## 核心架构
+### 1. Task Orchestration (Turborepo)
 
-任务平台使用分层构建系统，将任务编排与单个工作区编译分开。
+**Turborepo** is the top-level orchestrator. It manages the dependency graph between workspaces and provides caching for
+all tasks.
 
-### 1. 任务编排（Turborepo）
+- **Pipeline defined in `turbo.json`**: Tasks like `build`, `test`, and `lint` are defined with their dependencies
+  (e.g., `build` depends on `^build`, meaning all dependencies must be built first).
+- **Hashing**: Turborepo hashes source files, environment variables, and global dependencies to determine if a task's
+  output can be re-used from the cache.
+- **Parallelism**: Independent tasks are executed concurrently to maximize CPU utilization.
 
-**Turborepo** 是顶级编排器。它管理工作区之间的依赖关系图并提供缓存
-所有任务。
+### 2. Package Compilation (tsdown)
 
-- **管道定义于 `turbo.json`**：像这样的任务 `build`, `test`， 和 `lint` 是用它们的依赖关系来定义的
-  （例如， `build` 取决于 `^build`，这意味着必须首先构建所有依赖项）。
-- **散列**：Turborepo 对源文件、环境变量和全局依赖项进行散列，以确定任务是否
-  可以重新使用缓存中的输出。
-- **并行性**：同时执行独立任务，以最大限度地提高 CPU 利用率。
+Most library packages in `packages/` use **tsdown** for compilation.
 
-### 2.包编译（tsdown）
+- **Speed**: Built on top of **Rolldown** (the Rust-based successor to Rollup), providing near-instant builds.
+- **Unbundling**: Packages are built with `unbundle: true`, preserving the original module structure in `dist/`. This
+  ensures optimal tree-shaking and better debugging in consumer applications.
+- **CSS Threading**: A custom plugin re-links extracted stylesheets back to their owning JS modules, ensuring that
+  importing a component automatically pulls in its styles.
 
-大多数库包位于 `packages/` 使用 **tsdown** 进行编译。
+### 3. Application Bundling (Vite)
 
-- **速度**：建立在**Rolldown**（基于 Rust 的 Rollup 的后继者）之上，提供近乎即时的构建。
-- **分拆**：软件包是用 `unbundle: true`，保留原来的模块结构 `dist/`。这个
-  确保消费者应用程序中实现最佳的树摇动和更好的调试。
-- **CSS 线程**：自定义插件将提取的样式表重新链接回其所属的 JS 模块，确保
-  导入组件会自动引入其样式。
+Deployable applications in `apps/` use **Vite** for development and production bundling.
 
-### 3.应用程序捆绑（Vite)
+- **Shared Configs**: Apps extend `@mission-platform/vite-config` to ensure consistent PostCSS pipelines and
+  framework-agnostic resolution.
+- **SSR/SSG Support**: Applications like `my-care-notes` use `vite-ssg` for static site generation.
 
-可部署的应用程序在 `apps/` 使用 **Vite** 用于开发和生产捆绑。
+### Forge package builds
 
-- **共享配置**：应用程序扩展 `@mission-platform/vite-config` 确保一致的 PostCSS 管道和
-  与框架无关的解决方案。
-- **SSR/SSG 支持**：诸如此类的应用程序 `my-care-notes` 使用 `vite-ssg` 用于静态站点生成。
+Forge package builds add a neutral compiler front end to the normal `tsdown` or Vite flow. A consuming package imports
+the framework plugins it wants and passes explicit instances to `defineTsdownForgeComponents` or
+`defineTsdownForgeHooks`. The neutral driver creates semantic IR once, then the selected plugin owns target lowering,
+source generation, declarations, runtime externals, and its native Vite/tsdown adapter.
 
-### Forge 包构建
+Content-platform output is a second, orthogonal axis configured through `@mission-platform/forge-cms-plugin-api`. A
+consumer passes `defineTsdownForgeCms` (or `defineTsdownForgeCmsAll`) a list of `CmsOutputPlugin` instances, each of
+which _composes_ a framework plugin — `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`,
+`forgeAstroCms({ packageName, plugin })`, and so on for Ghost, Jekyll, and Webflow. Because the platform and the
+framework are chosen independently, `storyblok × vue` and `astro × solid` are configuration rather than new code.
 
-Forge 包构建在正常情况下添加了一个中立的编译器前端 `tsdown` 或者 Vite 流动。消耗包导入
-它想要的框架插件并将显式实例传递给 `defineTsdownForgeComponents` 或者
-`defineTsdownForgeHooks`。中立驱动程序创建一次语义IR，然后所选插件拥有目标降低，
-源代码生成、声明、运行时外部及其本机 Vite/tsdown 适配器。
+CMS builds emit to `dist/cms/<cms>/<framework>/**`, with manifests and other platform sidecars mirrored into
+`dist/cms/<cms>/`. Targets that need a hydrated runtime (Astro, Webflow) co-generate an island tree from the bound
+framework plugin into the same build. The complete responsibility split and stage boundaries are described in
+[Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
 
-内容平台输出是通过配置的第二个正交轴 `@mission-platform/forge-cms-plugin-api`。一个
-消费者通行证 `defineTsdownForgeCms` （或者 `defineTsdownForgeCmsAll`) 的列表 `CmsOutputPlugin` 实例，每个
-它_组成_一个框架插件—— `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`,
-`forgeAstroCms({ packageName, plugin })`、Ghost、Jekyll 和 Webflow 等。因为平台和
-框架是独立选择的， `storyblok × vue` 和 `astro × solid` 是配置而不是新代码。
+## Build contract
 
-CMS 构建发出至 `dist/cms/<cms>/<framework>/**`，清单和其他平台边车镜像到
-`dist/cms/<cms>/`。需要水合运行时的目标（Astro、Webflow）从绑定中共同生成一棵岛树
-框架插件到同一构建中。完整的责任划分和阶段边界描述于
-[Forge 编译器管道](forge-compiler.md).
-
-## 建造合同
-
-`pnpm build` 是规范的聚合构建。它委托给 Turbo的包级 `build` 任务不设置
-框架选择器，因此每个 Forge 包都会发出其中性输出以及由此配置的每个框架目标
-包。具有 CMS 投影的包会在同一分阶段构建中发出这些投影及其共享的 sidecar。
+`pnpm build` is the canonical aggregate build. It delegates to Turbo's package-level `build` task without setting a
+framework selector, so every Forge package emits its neutral output and every framework target configured by that
+package. Packages with CMS projections emit those projections and their shared sidecars in the same staged build.
 
 ```bash
 pnpm build
@@ -71,7 +66,7 @@ pnpm build:force                 # the same aggregate build, ignoring Turbo's ca
 pnpm exec turbo run build --filter @mission-platform/components
 ```
 
-Forge 软件包还保留了精简兼容性别名，用于重建一个目标：
+Forge packages also retain thin compatibility aliases for rebuilding one target:
 
 ```bash
 pnpm --filter @mission-platform/components run build:forge
@@ -82,92 +77,92 @@ pnpm --filter @mission-platform/components run build:solid
 pnpm --filter @mission-platform/components run build:web-components
 ```
 
-别名使用相同类型的运行程序 `build`;它们不包含独立的 `tsdown` 实施。 `build:forge`
-选择中性目标，而框架别名选择相应的框架目录。特定于封装
-CMS 工件模式命令在暴露的地方仍然可用，包括共享 Storyblok 资产命令和
-每个框架的 Storyblok 包装器命令。
+The aliases use the same typed runner as `build`; they do not contain independent `tsdown` implementations. `build:forge`
+selects the neutral target, while the framework aliases select the corresponding framework directory. Package-specific
+CMS artifact-mode commands remain available where exposed, including the shared Storyblok assets command and the
+per-framework Storyblok wrapper commands.
 
-### 舞台及推广
+### Staging and promotion
 
-每个 Forge 调用都会写入一个独特的本地包阶段 `node_modules/.cache/forge-build/`。舞台是
-被忽略 Turbo的输入并且从未发布。在升级之前会检查成功构建的输出：
+Every Forge invocation writes to a unique package-local stage under `node_modules/.cache/forge-build/`. The stage is
+ignored by Turbo's inputs and is never published. A successful build is checked for output before promotion:
 
-- **聚合模式**自动取代了 Forge 拥有的完整模式 `dist` 树。过时的中性文件、框架文件和 CMS 文件
-  因此被删除而不是意外地满足出口。
-- **目标模式** 仅自动替换选定的框架子树（及其匹配的 CMS 包装器子树），
-  保留已存在的不相关的中立、框架、电子邮件和 CMS 输出 `dist`。运行程序确定 CMS 选择器的范围
-  （例如 `FORGE_CMS_STORYBLOK_TARGET`) 到所请求的框架旁边 `FORGE_FRAMEWORK_TARGET`，所以一个包的 CMS
-  接线（`forgeStoryblokCmsTargets`等）实际上在同一阶段重建匹配的包装器而不是
-  默默地退出晋升。提升仅清除阶段重新生成的 CMS 包装器子树；它从来没有
-  删除当前构建未重建的同级 CMS 包装器。
-- CMS 共享资产，例如 Storyblok 架构和 `components.json` 有一个共享的目的地并且未被删除
-  后期框架推广。
-- 编译器失败、空阶段或升级失败使先前发布的树保持不变并删除
-  临时舞台和宣传目录。
+- **Aggregate mode** atomically replaces the complete Forge-owned `dist` tree. Stale neutral, framework, and CMS files
+  are therefore removed instead of satisfying exports accidentally.
+- **Targeted mode** atomically replaces only the selected framework subtree (and its matching CMS wrapper subtree),
+  preserving unrelated neutral, framework, email, and CMS output already in `dist`. The runner scopes the CMS selector
+  (e.g. `FORGE_CMS_STORYBLOK_TARGET`) to the requested framework alongside `FORGE_FRAMEWORK_TARGET`, so a package's CMS
+  wiring (`forgeStoryblokCmsTargets`, etc.) actually rebuilds the matching wrapper in the same stage instead of it being
+  silently dropped from promotion. Promotion only clears a CMS wrapper subtree that the stage regenerated; it never
+  deletes a sibling CMS wrapper the current build did not rebuild.
+- CMS shared assets such as Storyblok schemas and `components.json` have a shared destination and are not deleted by a
+  later framework promotion.
+- A compiler failure, empty stage, or promotion failure leaves the previous published tree untouched and removes the
+  temporary stage and promotion directory.
 
-已发布的输出仍保持在现有的 `dist` 契约：中性模块和声明、框架目录
-（`vue`, `react`, `svelte`, `solid`, `web-components`)，以及 CMS 预测 `cms/<cms>/<framework>`。打包导出
-地图，包括 `mp:*` 条件和 CMS 子路径，继续针对这些提升的路径进行解析。
+The published output remains under the existing `dist` contract: neutral modules and declarations, framework directories
+(`vue`, `react`, `svelte`, `solid`, `web-components`), and CMS projections under `cms/<cms>/<framework>`. Package export
+maps, including `mp:*` conditions and CMS subpaths, continue to resolve against these promoted paths.
 
-### 打包任务
+### Package tasks
 
-|任务|描述 |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       |通过共享的 Forge 运行程序聚合中立、框架、声明、电子邮件和配置的 CMS 输出。 |
-| `build:forge` |目标中立的 Forge 输出兼容性别名。                                                      |
-| `build:react`, `build:vue`, `build:svelte` |目标框架兼容性别名。                                      |
-| `build:solid`, `build:web-components` |目标框架兼容性别名。                                         |
-| `build:check` |验证工作区的类型而不发布输出。                                               |
-| `build:watch` |在工作区的监视模式下启动增量构建。                                               |
+| Task                                       | Description                                                                                                                  |
+| :----------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| `build`                                    | Aggregate neutral, framework, declaration, email, and configured CMS output through the shared Forge runner. |
+| `build:forge`                              | Targeted neutral Forge output compatibility alias.                                                           |
+| `build:react`, `build:vue`, `build:svelte` | Targeted framework compatibility aliases.                                                                    |
+| `build:solid`, `build:web-components`      | Targeted framework compatibility aliases.                                                                    |
+| `build:check`                              | Validates types for a workspace without publishing output.                                                   |
+| `build:watch`                              | Starts an incremental build in watch mode for a workspace.                                                   |
 
-Turbo 散列目标选择器（`FORGE_BUILD_TARGET` 以及遗留的 Forge/CMS 选择器）以及共享的
-运行器和暂存源。因此，聚合构建和目标构建无法重用彼此的缓存结果。最终的
-`dist/**` 输出被缓存；临时暂存和升级目录被明确排除。
+Turbo hashes the target selectors (`FORGE_BUILD_TARGET` and the legacy Forge/CMS selectors) together with the shared
+runner and staging sources. Consequently, aggregate and targeted builds cannot reuse one another's cached result. Final
+`dist/**` output is cached; temporary staging and promotion directories are explicitly excluded.
 
-### 缓存策略
+### Caching Strategy
 
-Turborepo 缓存以下工件：
+Turborepo caches the following artifacts:
 
-- `dist/**`：构建 JS/CSS 工件。
-- `.vite/**`: Vite的内部缓存。
-- `coverage/**`：测试覆盖率报告。
+- `dist/**`: Built JS/CSS artifacts.
+- `.vite/**`: Vite's internal cache.
+- `coverage/**`: Test coverage reports.
 
-要绕过缓存并强制进行全新构建，请使用 `--force` 旗帜：
+To bypass the cache and force a fresh build, use the `--force` flag:
 
 ```bash
 pnpm build:force
 ```
 
-兼容性别名和 CMS 工件模式任务是包任务，因此 Turbo 仍然应用它们的依赖图并且
-特定于目标的缓存输入。临时阶段不是缓存输出；只有晋升的 `dist` 树已发布或
-从缓存中恢复。
+The compatibility aliases and CMS artifact-mode tasks are package tasks, so Turbo still applies their dependency graph and
+target-specific cache inputs. Temporary stages are not cache outputs; only the promoted `dist` tree is published or
+restored from cache.
 
-## 共享配置
+## Shared Configurations
 
-构建配置集中在 `configs/` 目录以保持整个 monorepo 的一致性。
+Build configurations are centralized in the `configs/` directory to maintain consistency across the monorepo.
 
-|套餐 |目的|
-| :------------------------------------ | :----------------------------------------------------------- |
-| `@mission-platform/vite-config`       |共享 Vite 应用程序的逻辑和 Vue-特定的构建。          |
-| `@mission-platform/tsdown-config`     |库包的共享 tsdown 逻辑。                    |
-| `@mission-platform/typescript-config` |根据 `tsconfig.json` 应用程序、库和测试的预设。 |
-| `@mission-platform/postcss-config`    |标准化 CSS 处理（Autoprefixer 等）。            |
+| Package                               | Purpose                                                                                              |
+| :------------------------------------ | :--------------------------------------------------------------------------------------------------- |
+| `@mission-platform/vite-config`       | Shared Vite logic for apps and Vue-specific builds.                                  |
+| `@mission-platform/tsdown-config`     | Shared tsdown logic for library packages.                                            |
+| `@mission-platform/typescript-config` | Base `tsconfig.json` presets for apps, libraries, and tests.                         |
+| `@mission-platform/postcss-config`    | Standardized CSS processing (Autoprefixer, etc.). |
 
-## 本地开发与生产
+## Local Development vs. Production
 
-### 发展 （`dev` 任务）
+### Development (`dev` task)
 
-Vite的开发服务器提供热模块更换（HMR）。当一个应用程序的 `dev` 任务启动，Turborepo 也运行
-组件库的 `build:watch` 任务旁边（通过任务的 `with` 键），因此编辑为
-`@mission-platform/components` 自动重新编译并由正在运行的应用程序拾取，无需手动重建。
+Vite's development server provides Hot Module Replacement (HMR). When an app's `dev` task starts, Turborepo also runs
+the component library's `build:watch` task alongside it (via the task's `with` key), so edits to
+`@mission-platform/components` are recompiled automatically and picked up by the running app without a manual rebuild.
 
-### 生产 （`build` 任务）
+### Production (`build` task)
 
-Turborepo 按拓扑顺序执行构建。一个包只有在其所有内部依赖关系都建立之后才会构建
-成功构建。输出在 `dist/` 是最终发布或部署的内容。
+Turborepo executes builds in topological order. A package is only built after all its internal dependencies have
+successfully built. The output in `dist/` is what is eventually published or deployed.
 
-## 高级：WASM 集成
+## Advanced: WASM Integration
 
-某些包（例如， `@mission-platform/hunspell`、条形码扫描仪）涉及编译为 WebAssembly 的 Rust 代码。这些
-构建是通过专门的任务来编排的，这些任务使用 `wasm-pack` 确保环境的一致性和最佳性
-性能。
+Certain packages (e.g., `@mission-platform/hunspell`, barcode scanners) involve Rust code compiled to WebAssembly. These
+builds are orchestrated via specialized tasks that use `wasm-pack` to ensure environment consistency and optimal
+performance.
