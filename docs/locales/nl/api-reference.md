@@ -1,6 +1,10 @@
-# API-referentie
+# Package API Directory
 
-Technische referentie voor de Mission Platform-kernpakketten en framework-adapters.
+This project-wide page is a directory of package capabilities and compatibility
+contracts. The canonical installation, usage, limitations, and API details for
+each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
+and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+package rather than this page.
 
 > **Invoer is altijd kaal.** Kaderverzending `@mission-platform/*` pakketten tonen een single `.`
 > ingang bewaakt door de `mp:vue`, `mp:react`, `mp:solid`, En `mp:web-component` exporteren
@@ -225,21 +229,20 @@ inpakken `packages/`, inclusief de getypte WebAssembly gevels.
 
 ### Code- en WebAssembly-pakketten
 
-| Pakket                             | Purpose                                                               |
-| :--------------------------------- | :-------------------------------------------------------------------- |
-| `@mission-platform/barcode`        | 1D-barcode codeert/decodeert gevel en onderdeel.      |
-| `@mission-platform/code-scan-wasm` | Gegenereerde afbeeldingsscanner WebAssembly-module.   |
-| `@mission-platform/code-scanner`   | Component voor het scannen van camera- en beeldcodes. |
-| `@mission-platform/matrix-code`    | Data Matrix en Azteekse codeer-/decodeerfaçade.       |
-| `@mission-platform/qr-code`        | QR codeert/decodeert gevel en component.              |
-| `@mission-platform/harper`         | Harper grammatica en stijlintegratie voor Monaco.     |
-| `@mission-platform/hunspell`       | Emscripten Hunspell-wrapper voor spellingcontrole.    |
+| Pakket                           | Purpose                                                          |
+| :------------------------------- | :--------------------------------------------------------------- |
+| `@mission-platform/barcode`      | 1D-barcode codeert/decodeert gevel en onderdeel. |
+| `@mission-platform/code-scanner` | Camera and image code-scanning component.        |
+| `@mission-platform/matrix-code`  | Data Matrix and Aztec encode/decode façade.      |
+| `@mission-platform/qr-code`      | QR encode/decode façade and component.           |
+| `@mission-platform/harper`       | Harper grammar and style integration for Monaco. |
+| `@mission-platform/hunspell`     | Emscripten Hunspell spell-checking wrapper.      |
 
 ### Smeed compilerdoelen
 
 Deze wonen in `forge-plugins/` in plaats van `packages/`. Een **framework**-plug-in bepaalt welke runtime een neutraal onderdeel is
 wordt verlaagd tot; een **CMS**-doel bepaalt op welk contentplatform het wordt geprojecteerd. De twee assen vormen elkaar, dus elk CMS
-target kan aan elke framework-plug-in worden gekoppeld. Zien [Forge Compiler-pijplijn](forge-compiler.md).
+target kan aan elke framework-plug-in worden gekoppeld. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
 
 | Pakket                                          | Purpose                                                                                               |
 | :---------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
