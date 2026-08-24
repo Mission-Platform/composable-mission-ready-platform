@@ -1,6 +1,10 @@
-# API 참조
+# Package API Directory
 
-Mission Platform 핵심 패키지 및 프레임워크 어댑터에 대한 기술 참조입니다.
+This project-wide page is a directory of package capabilities and compatibility
+contracts. The canonical installation, usage, limitations, and API details for
+each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
+and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+package rather than this page.
 
 > **가져오기는 항상 베어입니다.** 프레임워크 배송 `@mission-platform/*` 패키지는 단일을 노출합니다. `.`
 > 출입문은 다음과 같이 보호됩니다. `mp:vue`, `mp:react`, `mp:solid`, 그리고 `mp:web-component` 수출
@@ -221,20 +225,19 @@ WebAssembly 기반 맞춤법 검사.
 
 ### 코드 및 웹어셈블리 패키지
 
-| 패키지                                | 목적                                            |
-| :--------------------------------- | :-------------------------------------------- |
-| `@mission-platform/barcode`        | 1D 바코드 인코딩/디코딩 외관 및 구성요소.     |
-| `@mission-platform/code-scan-wasm` | 생성된 이미지 스캐너 WebAssembly 모듈.   |
-| `@mission-platform/code-scanner`   | 카메라 및 이미지 코드 스캔 구성 요소.        |
-| `@mission-platform/matrix-code`    | 데이터 매트릭스 및 Aztec 인코딩/디코딩 외관.  |
-| `@mission-platform/qr-code`        | QR 인코딩/디코딩 파사드 및 구성요소.        |
-| `@mission-platform/harper`         | 모나코를 위한 Harper 문법 및 스타일 통합.   |
-| `@mission-platform/hunspell`       | Emscripten Hunspell 철자 검사 래퍼. |
+| 패키지                              | 목적                                                               |
+| :------------------------------- | :--------------------------------------------------------------- |
+| `@mission-platform/barcode`      | 1D 바코드 인코딩/디코딩 외관 및 구성요소.                        |
+| `@mission-platform/code-scanner` | Camera and image code-scanning component.        |
+| `@mission-platform/matrix-code`  | Data Matrix and Aztec encode/decode façade.      |
+| `@mission-platform/qr-code`      | QR encode/decode façade and component.           |
+| `@mission-platform/harper`       | Harper grammar and style integration for Monaco. |
+| `@mission-platform/hunspell`     | Emscripten Hunspell spell-checking wrapper.      |
 
 ### Forge 컴파일러 타겟
 
 이들은 `forge-plugins/` 오히려 `packages/`. **프레임워크** 플러그인은 어떤 런타임이 중립 구성 요소인지 결정합니다. 으로 낮아졌습니다; **CMS** 대상은 그것이 투영되는 콘텐츠 플랫폼을 결정합니다. 두 개의 축이 구성되므로 모든 CMS
-대상은 모든 프레임워크 플러그인에 바인딩될 수 있습니다. 보다 [Forge 컴파일러 파이프라인](forge-compiler.md).
+대상은 모든 프레임워크 플러그인에 바인딩될 수 있습니다. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
 
 | 패키지                                             | 목적                                                                                  |
 | :---------------------------------------------- | :---------------------------------------------------------------------------------- |
