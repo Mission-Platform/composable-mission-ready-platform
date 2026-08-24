@@ -1,6 +1,10 @@
-# API Reference
+# Package API Directory
 
-المرجع الفني للحزم الأساسية ومحولات إطار العمل الخاصة بـ Mission Platform.
+This project-wide page is a directory of package capabilities and compatibility
+contracts. The canonical installation, usage, limitations, and API details for
+each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
+and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+package rather than this page.
 
 > **الواردات دائمًا عارية.** شحن الإطار `@mission-platform/*` حزم تعرض واحدة `.`
 > دخول يحرسه `mp:vue`, `mp:react`, `mp:solid`، و `mp:web-component` تصدير
@@ -225,21 +229,20 @@ link.router = router;
 
 ### حزم التعليمات البرمجية وWebAssembly
 
-| الحزمة                             | الغرض                                                          |
-| :--------------------------------- | :------------------------------------------------------------- |
-| `@mission-platform/barcode`        | واجهة ومكون تشفير/فك تشفير الباركود 1D.        |
-| `@mission-platform/code-scan-wasm` | تم إنشاء وحدة WebAssembly للماسح الضوئي للصور. |
-| `@mission-platform/code-scanner`   | مكون مسح رمز الكاميرا والصورة.                 |
-| `@mission-platform/matrix-code`    | مصفوفة البيانات وواجهة تشفير/فك تشفير الأزتيك. |
-| `@mission-platform/qr-code`        | QR تشفير/فك تشفير الواجهة والمكون.             |
-| `@mission-platform/harper`         | هاربر قواعد اللغة والتكامل الأسلوبي لموناكو.   |
-| `@mission-platform/hunspell`       | برنامج Emscripten Hunspell للتدقيق الإملائي.   |
+| الحزمة                           | الغرض                                                            |
+| :------------------------------- | :--------------------------------------------------------------- |
+| `@mission-platform/barcode`      | واجهة ومكون تشفير/فك تشفير الباركود 1D.          |
+| `@mission-platform/code-scanner` | Camera and image code-scanning component.        |
+| `@mission-platform/matrix-code`  | Data Matrix and Aztec encode/decode façade.      |
+| `@mission-platform/qr-code`      | QR encode/decode façade and component.           |
+| `@mission-platform/harper`       | Harper grammar and style integration for Monaco. |
+| `@mission-platform/hunspell`     | Emscripten Hunspell spell-checking wrapper.      |
 
 ### Forge compiler targets
 
 هؤلاء يعيشون في `forge-plugins/` بدلا من `packages/`. يقرر البرنامج الإضافي **framework** وقت التشغيل الذي يعتبر مكونًا محايدًا
 تم تخفيضه إلى؛ يحدد هدف **CMS** نظام المحتوى الأساسي الذي سيتم عرضه عليه. يتكون المحوران، لذلك أي CMS
-قد يكون الهدف مرتبطًا بأي مكون إضافي لإطار العمل. يرى [صياغة خط أنابيب مترجم](forge-compiler.md).
+قد يكون الهدف مرتبطًا بأي مكون إضافي لإطار العمل. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
 
 | الحزمة                                          | الغرض                                                                                             |
 | :---------------------------------------------- | :------------------------------------------------------------------------------------------------ |
