@@ -1,23 +1,18 @@
-# هندسة منصة المهمة
+# Mission Platform Architecture
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+Mission Platform is engineered for maximum reusability and cross-framework flexibility. This document explains the
+architectural principles, the framework-neutral engine, and the build systems that power the platform.
 
-> المصدر الإنجليزي: [docs/architecture.md](../../architecture.md)
-> اللغة: العربية (ar)
+## Architectural Blueprint
 
-تم تصميم Mission Platform لتحقيق أقصى قدر من قابلية إعادة الاستخدام والمرونة عبر الإطارات. تشرح هذه الوثيقة
-المبادئ المعمارية، والمحرك المحايد للإطار، وأنظمة البناء التي تعمل على تشغيل النظام الأساسي.
+The platform follows a **composable, package-driven architecture**. This means that applications are not monolithic;
+instead, they are "composed" from many smaller, independent packages that each handle a specific concern (e.g., routing,
+internationalisation, UI components).
 
-## المخطط المعماري
+### The Golden Rule: Dependency Direction
 
-تتبع المنصة **بنية قابلة للتركيب وقائمة على الحزمة**. وهذا يعني أن التطبيقات ليست متجانسة؛
-بدلاً من ذلك، فهي "تتكون" من العديد من الحزم الصغيرة والمستقلة التي تعالج كل منها مشكلة معينة (على سبيل المثال، التوجيه،
-التدويل، مكونات واجهة المستخدم).
-
-### القاعدة الذهبية: اتجاه التبعية
-
-يتم فرض تدفق تبعية صارم في اتجاه واحد عبر monorepo لمنع التبعيات الدائرية والحفاظ على الوضوح
-الحدود:
+A strict one-way dependency flow is enforced across the monorepo to prevent circular dependencies and maintain clear
+boundaries:
 
 ```mermaid
 graph TD
@@ -32,78 +27,84 @@ graph TD
     Workers --> Configs
 ```
 
-1. **التطبيقات (`apps/`)**: تستهلك الحزم، Vite الإضافات والعمال. لا يقومون أبدًا بتصدير التعليمات البرمجية إلى أجزاء أخرى من الملف
-   com.monorepo.
-2. ** الحزم (`packages/`)**: توفير منطق ومكونات قابلة لإعادة الاستخدام. يمكنهم الاعتماد على بعضهم البعض ولكن ليس عليهم أبدًا
-   التطبيقات.
-3. ** صياغة الإضافات (`forge-plugins/`)**: أهداف مخرجات المترجم - المكونات الإضافية لإطار العمل وأهداف CMS. قد يعتمدون عليها
-   `vite-plugins/` و `configs/`، وأبدا `apps/` أو على إخوة بعضهم البعض؛ محول CMS يعتمد فقط على
+1. **Applications (`apps/`)**: Consume packages, Vite plugins, and workers. They never export code to other parts of the
+   monorepo.
+2. **Packages (`packages/`)**: Provide reusable logic and components. They can depend on each other but never on
+   applications.
+3. **Forge plugins (`forge-plugins/`)**: Compiler output targets — framework plugins and CMS targets. They may depend on
+   `vite-plugins/` and `configs/`, and never on `apps/` or on each other's siblings; a CMS adapter depends only on
    `forge-cms-plugin-api`.
-4. ** التكوينات (`configs/`)**: إعدادات الأدوات المشتركة (ESLint, TypeScript، إلخ.). هم الأساس ويعتمدون عليه
-   لا شيء داخل monorepo.
+4. **Configs (`configs/`)**: Shared tooling settings (ESLint, TypeScript, etc.). They are the foundation and depend on
+   nothing within the monorepo.
 
-## محرك محايد الإطار: صياغة
+## Framework-Neutral Engine: Forge
 
-قلب منصة المهمة هو `@mission-platform/forge`، نموذج تأليف محايد للإطار للمكونات و
-مواد مركبة. `@mission-platform/vite-plugin-forge` هو برنامج تشغيل المترجم المحايد: يقوم بتوزيع المصدر وتطبيعه،
-يبني IR الدلالي، ويدير التحليل المشترك والتحسين، ويرسل إلى مصدر تم توفيره بشكل صريح
+The heart of Mission Platform is `@mission-platform/forge`, a framework-neutral authoring model for components and
+composables. `@mission-platform/vite-plugin-forge` is the neutral compiler driver: it parses and normalizes source,
+builds semantic IR, runs shared analysis and optimization, and dispatches to an explicitly supplied
 `FrameworkOutputPlugin`.
 
-حزم الإطار مثل `@mission-platform/forge-plugin-react` و `@mission-platform/forge-plugin-vue` الهدف الخاص
-الخفض، وتحسين الهدف، وتوليد المصدر الأصلي، والتشخيصات، وبيانات تعريف وقت التشغيل، و Vite/ محولات tsdown. هناك
-لا يوجد باعث إطار مركزي أو تسجيل سلسلة إلى إطار عمل في برنامج التشغيل. تكوينات بناء الحزمة حدد
-مثيلات البرنامج المساعد التي ينشرونها، لذلك تظل تبعيات التنفيذ المستهدفة عند حدود إطار العمل.
+Framework packages such as `@mission-platform/forge-plugin-react` and `@mission-platform/forge-plugin-vue` own target
+lowering, target optimization, native source generation, diagnostics, runtime metadata, and Vite/tsdown adapters. There
+is no central framework emitter or string-to-framework registry in the driver. Package build configurations select the
+plugin instances they publish, so target implementation dependencies remain at the framework boundary.
 
-التدفق الناتج هو **تحليل/تطبيع → تحسين محايد → IR الدلالي → الهدف السفلي → تحسين الهدف → إنشاء →
-البناء الأصلي **. يتم تنفيذ البناء الأصلي بواسطة البرنامج المساعد المحدد Vite أو محول tsdown، والذي يوفر أيضًا
-إعلانات الهدف، والظواهر الخارجية، واتفاقيات الإخراج.
+The resulting flow is **parse/normalize → neutral optimize → semantic IR → target lower → target optimize → generate →
+native build**. The native build is performed by the selected plugin's Vite or tsdown adapter, which also provides the
+target's declarations, externals, and output conventions.
 
-يعرض المحور المتعامد الثاني نفس المكونات المحايدة على **أنظمة المحتوى**.
-`@mission-platform/forge-cms-plugin-api` تمتلك نموذج محتوى محايد للمنصة، وهو `CmsOutputPlugin` العقد، و أ
-سائق عام حزم المحول `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`،
-و `forge-cms-webflow` كل منها يمتلك منصة واحدة. هدف نظام إدارة المحتوى *يؤلف* مكونًا إضافيًا لإطار العمل بدلاً من استبداله، لذلك
-أي أزواج منصة مع أي إطار ويصل الإخراج `dist/cms/<cms>/<framework>/**`.
+A second, orthogonal axis projects the same neutral components onto **content platforms**.
+`@mission-platform/forge-cms-plugin-api` owns a platform-neutral content model, the `CmsOutputPlugin` contract, and a
+generic driver; the adapter packages `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
+and `forge-cms-webflow` each own one platform. A CMS target _composes_ a framework plugin rather than replacing one, so
+any platform pairs with any framework and the output lands in `dist/cms/<cms>/<framework>/**`.
 
-للحصول على خط الأنابيب الكامل، والمستهلكين المكونين والربط، وإسقاط CMS، وتوجيهات الامتداد، راجع
-[صياغة خط أنابيب مترجم](forge-compiler.md). للحصول على طريقة عرض تزامن البناء، راجع [بناء النظام](build-system.md).
+For the complete pipeline, component and hook consumers, CMS projection, and extension guidance, see
+[Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md). For the build orchestration view, see
+[Build System](build-system.md).
 
-## تصميم نظام رمزي
+## Design Token System
 
-يتم الحفاظ على الاتساق البصري من خلال نظام رمزي متطور للتصميم تتم إدارته بواسطة `@mission-platform/tokens`.
+Visual consistency is maintained through a sophisticated design token system managed by `@mission-platform/tokens`.
 
-- **معيار DTCG**: تم تأليف الرموز المميزة بتنسيق مجموعة W3C Design Tokens Community Group (الإصدار 2025.10).
-- **مساحة ألوان OKLab**: تستخدم البدائيات مساحة ألوان OKLab للتدرجات والموضوعات الموحدة بشكل إدراكي.
-- **التحف الآلية**: `@mission-platform/vite-plugin-tokens` يقوم تلقائيًا بإنشاء متغيرات SCSS، ومتغيرات CSS المخصصة
-  خصائص، و TypeScript الثوابت من مصدر واحد للحقيقة.
+- **DTCG Standard**: Tokens are authored in the W3C Design Tokens Community Group format (v2025.10).
+- **OKLab Colour Space**: Primitives use the OKLab colour space for perceptually uniform gradients and themes.
+- **Automated Artifacts**: `@mission-platform/vite-plugin-tokens` automatically generates SCSS variables, CSS custom
+  properties, and TypeScript constants from a single source of truth.
 
-## إطار التوجيه الملحد وI18n
+## Framework-Agnostic Routing & I18n
 
-تم تصميم خدمات التطبيقات الأساسية مثل التوجيه والتدويل لتكون مستقلة عن إطار العمل.
+Core application services like routing and internationalisation are designed to be framework-agnostic.
 
-- **`@mission-platform/router`**: يحدد المسارات كبنية بيانات عادية (`MpRoute`). محولات ل Vue ترجمة هذه
-  في مثيلات جهاز التوجيه والمواد القابلة للتركيب الخاصة بإطار العمل.
-- **`@mission-platform/i18n`**: غلاف حولها `i18next` الذي يوفر عالمية `createForgeI18N` مصنع.
-  توفر المحولات الخاصة بالإطار `useI18n` السنانير والمكونات ل Vue و React.
+- **`@mission-platform/router`**: Provides structured route targets, pure URL/location helpers, and compiler markers such
+  as `MpLink`, `useMpRoute`, `useMpRouter`, and `MpRouterView`. It has no UI-framework or router-library runtime
+  dependencies and never owns an application's route table.
+- **Forge router targets**: `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, and
+  `-web-components` lower those markers to the native router selected by the consuming application. Applications retain
+  ownership of native route definitions, providers, guards, loaders, and router instances; the target only supplies
+  consumption capabilities.
+- **`@mission-platform/i18n`**: A wrapper around `i18next` that provides a universal `createForgeI18N` factory.
+  Framework-specific adapters provide `useI18n` hooks and components for Vue and React.
 
-## استراتيجية البناء والنشر
+## Build & Deployment Strategy
 
-### تنسيق المهام مع Turborepo
+### Task Orchestration with Turborepo
 
-يتعامل Turborepo مع الرفع الثقيل للبناء والاختبار والبطانة عبر monorepo. ويستخدم ذاكرة تخزين مؤقت عالمية ل
-التأكد من أن المهام يتم تنفيذها فقط عندما تتغير مدخلاتها.
+Turborepo handles the heavy lifting of building, testing, and linting across the monorepo. It uses a global cache to
+ensure that tasks are only executed when their inputs have changed.
 
-### Vite-بنيات مدعومة
+### Vite-Powered Builds
 
-تستخدم كل حزمة وتطبيق Vite للتطوير والإنتاج، والاستفادة من التكوين الأساسي المشترك من
+Each package and app uses Vite for development and production builds, leveraging a shared base configuration from
 `@mission-platform/vite-config`.
 
-### نشر Cloudflare
+### Cloudflare Deployment
 
-يتم نشر التطبيقات بشكل أساسي على **Cloudflare Pages**، مع **Cloudflare Workers** (تحت `workers/`) توفير
-منطق متخصص لوكيل API وخدمة أصول SPA.
+Applications are primarily deployed to **Cloudflare Pages**, with **Cloudflare Workers** (under `workers/`) providing
+specialised logic for API proxying and SPA asset serving.
 
-## ملخص
+## Summary
 
-تعطي بنية Mission Platform الأولوية للعزل وسلامة النوع ومرونة الإطار. عن طريق فصل النواة
-المنطق من إطار عمل واجهة المستخدم وفرض اتجاه تبعية صارم، يضمن النظام الأساسي إمكانية الصيانة على المدى الطويل
-وقابلية التوسع للأنظمة البيئية للتطبيقات المعقدة.
+The Mission Platform architecture prioritises isolation, type safety, and framework flexibility. By decoupling the core
+logic from the UI framework and enforcing a strict dependency direction, the platform ensures long-term maintainability
+and scalability for complex application ecosystems.
