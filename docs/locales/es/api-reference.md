@@ -1,6 +1,10 @@
-# Referencia de API
+# Package API Directory
 
-Referencia técnica para los paquetes principales y adaptadores de marco de Mission Platform.
+This project-wide page is a directory of package capabilities and compatibility
+contracts. The canonical installation, usage, limitations, and API details for
+each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
+and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+package rather than this page.
 
 > **Las importaciones siempre están vacías.** Envío del marco `@mission-platform/*` Los paquetes exponen un solo `.`
 > entrada custodiada por el `mp:vue`, `mp:react`, `mp:solid`, y `mp:web-component` exportar
@@ -224,21 +228,20 @@ paquete en `packages/`, incluidas las fachadas WebAssembly escritas.
 
 ### Paquetes de código y WebAssembly
 
-| Paquete                            | Propósito                                                                                    |
-| :--------------------------------- | :------------------------------------------------------------------------------------------- |
-| `@mission-platform/barcode`        | Codificación/decodificación de códigos de barras 1D de fachada y componente. |
-| `@mission-platform/code-scan-wasm` | Módulo WebAssembly del escáner de imágenes generadas.                        |
-| `@mission-platform/code-scanner`   | Componente de escaneo de código de imagen y cámara.                          |
-| `@mission-platform/matrix-code`    | Fachada de codificación/decodificación Data Matrix y Azteca.                 |
-| `@mission-platform/qr-code`        | Codificación/decodificación QR de fachada y componente.                      |
-| `@mission-platform/harper`         | Integración de estilo y gramática de Harper para Mónaco.                     |
-| `@mission-platform/hunspell`       | Envoltorio de corrección ortográfica de Emscripten Hunspell.                 |
+| Paquete                          | Propósito                                                                                    |
+| :------------------------------- | :------------------------------------------------------------------------------------------- |
+| `@mission-platform/barcode`      | Codificación/decodificación de códigos de barras 1D de fachada y componente. |
+| `@mission-platform/code-scanner` | Camera and image code-scanning component.                                    |
+| `@mission-platform/matrix-code`  | Data Matrix and Aztec encode/decode façade.                                  |
+| `@mission-platform/qr-code`      | QR encode/decode façade and component.                                       |
+| `@mission-platform/harper`       | Harper grammar and style integration for Monaco.                             |
+| `@mission-platform/hunspell`     | Emscripten Hunspell spell-checking wrapper.                                  |
 
 ### Forjar objetivos del compilador
 
 Estos viven en `forge-plugins/` en vez de `packages/`. Un complemento **framework** decide en qué tiempo de ejecución es un componente neutral
 se reduce a; un destino **CMS** decide en qué plataforma de contenido se proyecta. Los dos ejes se componen, por lo que cualquier CMS
-El objetivo puede estar vinculado a cualquier complemento del marco. Ver [Canalización del compilador Forge](forge-compiler.md).
+El objetivo puede estar vinculado a cualquier complemento del marco. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
 
 | Paquete                                         | Propósito                                                                                                            |
 | :---------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
