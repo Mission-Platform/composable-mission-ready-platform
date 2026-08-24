@@ -1,92 +1,32 @@
-# Configuratie en ontwikkeling van werknemers
+# Worker deployment directory
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+Worker implementation documentation belongs beside each publishable worker:
 
-> Engelse bron: [docs/configs/workers-config.md](../../../configs/workers-config.md)
-> Taal: Nederlands (nl)
+- [`@mission-platform/api-proxy`](../../workers/api-proxy/docs/index.md) — constrained read-only API proxy.
+- [`@mission-platform/email-sender`](../../workers/email-sender/docs/index.md) — local MailPit-backed sender.
+- [`@mission-platform/forge-spa`](../../workers/forge-spa/docs/index.md) — shared `ASSETS` SPA fallback handler.
 
-Dit document beschrijft de Cloudflare Workers in de Mission Platform monorepo, hun TypeScript toegangspunten, en de
-configuratiebestanden die worden gebruikt om ze uit te voeren of te implementeren.
+This project page keeps only the cross-workspace deployment map. Worker
+packages own their handler contracts, examples, tests, and build instructions;
+application packages own routes, domains, bindings, and deployment
+environments.
 
-## Werknemersinventaris
+## Application deployment map
 
-Op zichzelf staande werkpakketten vallen onder `workers/`:
+| Application     | Handler                               | Configuration                         | Assets                                            |
+| :-------------- | :------------------------------------ | :------------------------------------ | :------------------------------------------------ |
+| Website         | `workers/forge-spa/dist/index.js`     | `apps/website/wrangler.jsonc`         | `apps/website/dist/`, bound as `ASSETS`           |
+| My Care Notes   | `workers/forge-spa/dist/index.js`     | `apps/my-care-notes/wrangler.jsonc`   | `apps/my-care-notes/dist/`, bound as `ASSETS`     |
+| Service Monitor | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` | `apps/service-monitor/public/`, bound as `ASSETS` |
+| Docs            | Static assets                         | `apps/docs/wrangler.jsonc`            | `apps/docs/dist/`                                 |
 
-| Werknemer | Behandelaar | Configuratie | Doel |
-| :----- | :------ | :------------ | :------ |
-| `api-proxy` | `workers/api-proxy/src/index.ts` | Geen; geconsumeerd als gebundeld pakket | Beperkte alleen-lezen API-proxy |
-| `email-sender` | `workers/email-sender/src/index.ts` | `workers/email-sender/wrangler.jsonc` | Door MailPit ondersteunde e-mailshowcasewerker |
-| `forge-spa` | `workers/forge-spa/src/index.ts` | Geen; geconsumeerd als gebundeld pakket | `ASSETS`-bindende SPA fallback handler |
+Website and My Care Notes consume the shared Forge SPA worker. Service Monitor
+owns its Worker entrypoint and Durable Object binding. The docs site is a
+static Vite deployment and has no Worker entrypoint; Storybook is not a
+deployment target.
 
-De inzetbare applicatiewerkers zijn:
-
-| Toepassing | Behandelaar | Configuratie |
-| :---------- | :------ | :------------ |
-| Website | `workers/forge-spa/dist/index.js` | `apps/website/wrangler.jsonc` |
-| Mijn zorgnotities | `workers/forge-spa/dist/index.js` | `apps/my-care-notes/wrangler.jsonc` |
-| Servicemonitor | `apps/service-monitor/src/worker.tsx` | `apps/service-monitor/wrangler.jsonc` |
-
-`api-proxy` En `forge-spa` heb geen standalone Wrangler configuratiebestanden: hun `src/index.ts` behandelaars zijn
-gebundeld door `tsdown` en waarnaar wordt verwezen door de toepassing Wrangler configuraties of een veeleisende implementatie.
-
-## Bouw systeem
-
-Gebruikerpakketten gebruiken `tsdown` voor bundelen. Gebruik de pakkettaak via Turborepo of pnpm dus de afhankelijkheden van de werkruimte zijn dat wel
-consistent opgelost:
-
-```bash
-pnpm exec turbo run build --filter=@mission-platform/api-proxy
-pnpm exec turbo run build --filter=@mission-platform/forge-spa
-pnpm exec turbo run build --filter=@mission-platform/email-sender
-```
-
-Werknemerstests gebruiken Vitest:
-
-```bash
-pnpm --filter @mission-platform/api-proxy test
-pnpm --filter @mission-platform/email-sender test
-pnpm --filter @mission-platform/forge-spa test
-```
-
-Gebruik `@cloudflare/workers-types` voor handler- en bindingstypes. De gegenereerde bindende verklaringen van de afzender van de e-mail zijn
-geschreven naar `workers/email-sender/src/worker-configuration.d.ts` door zijn `types` script.
-
-## Configuratie en lokale ontwikkeling
-
-Werknemers ontvangen runtimewaarden via de `env` object- en Cloudflare-bindingen. Plaats geen geheimen in bijgehouden
-`wrangler.jsonc` bestanden; gebruik `wrangler secret put` voor gevoelige waarden.
-
-Voor de zelfstandige e-mailafzender voert u het configuratieprogramma uit Wrangler ontwikkelingsserver uit het werkruimtepakket:
-
-```bash
-pnpm --filter @mission-platform/email-sender dev
-```
-
-Voor inzetbare toepassingen gebruikt u de scripts in elk app-pakket. Bijvoorbeeld de Website en Mijn Zorgnotities Wrangler
-bestanden bieden `staging` En `production` omgevingen, terwijl Service Monitor een `staging` omgeving:
-
-```bash
-pnpm --filter @mission-platform/website cf:dev
-pnpm --filter @mission-platform/my-care-notes cf:dev
-pnpm --filter @mission-platform/service-monitor dev
-```
-
-## Inzet
-
-Implementeren vanuit het toepassingspakket waarvan `wrangler.jsonc` is eigenaar van de route en omgeving:
-
-```bash
-pnpm --filter @mission-platform/website deploy:staging
-pnpm --filter @mission-platform/my-care-notes deploy:staging
-pnpm --filter @mission-platform/service-monitor deploy:staging
-```
-
-De zelfstandige werkerpakketten zonder Wrangler configuratie worden niet rechtstreeks geïmplementeerd `wrangler deploy`; bouwen
-hun handlers en implementeer ze via de verbruikende applicatieconfiguratie.
-
-## Beste praktijken
-
-- Bundel afhankelijkheden in de uitvoer van werknemers voor voorspelbare edge-uitvoering.
-- Gebruik de `env` voorwerp doorgegeven aan de `fetch` handler in plaats van globale procesvariabelen.
-- Voorkomen Node.js ingebouwde ins die niet worden ondersteund door de Workers-runtime, zoals `fs` En `child_process`, in arbeidershandlers.
-- Houd de bundels van werknemers klein om koude starts te minimaliseren en binnen de limieten van Cloudflare-middelen te blijven.
+Deploy from the application package whose Wrangler configuration owns the
+route and environment. Keep secrets out of tracked configuration and use
+Cloudflare secret storage for sensitive values. See the application-specific
+deployment scripts and the package-local worker guides for implementation
+details.
