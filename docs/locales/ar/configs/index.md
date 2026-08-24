@@ -1,78 +1,77 @@
-# حزم التكوين
+# Configuration Packages
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+The Mission Platform uses centralized configuration packages in the `configs/` directory to ensure consistency across
+the monorepo.
 
-> المصدر الإنجليزي: [docs/configs/index.md](../../../configs/index.md)
-> اللغة: العربية (ar)
+## Overview
 
-تستخدم منصة المهمة حزم التكوين المركزية في `configs/` الدليل لضمان الاتساق عبر
-مونوريبو.
+Centralizing configurations allows for a single source of truth for tooling rules, build processes, and code style.
+Packages and applications consume these configurations by extending them in their local config files.
 
-## ملخص
+## Package Summary
 
-تسمح التكوينات المركزية بمصدر واحد للحقيقة لقواعد الأدوات وعمليات البناء ونمط التعليمات البرمجية.
-تستهلك الحزم والتطبيقات هذه التكوينات عن طريق توسيعها في ملفات التكوين المحلية الخاصة بها.
+Configuration package documentation is owned by each package. The links below
+are repository file links today and become package-namespaced routes in the
+documentation site:
 
-## ملخص الحزمة
+| Package                                                                                    | Purpose                                                          | Primary configuration surface |
+| :----------------------------------------------------------------------------------------- | :--------------------------------------------------------------- | :---------------------------- |
+| [`@mission-platform/eslint-config`](../../configs/eslint-config/docs/index.md)             | Flat ESLint rules for JS/TS and Vue.             | `eslint.config.js`            |
+| [`@mission-platform/prettier-config`](../../configs/prettier-config/docs/index.md)         | Repository formatting defaults.                  | `prettier.config.js`          |
+| [`@mission-platform/typescript-config`](../../configs/typescript-config/docs/index.md)     | TypeScript compiler presets.                     | `tsconfig.json`               |
+| [`@mission-platform/stylelint-config`](../../configs/stylelint-config/docs/index.md)       | CSS and SCSS linting.                            | `stylelint.config.mjs`        |
+| [`@mission-platform/vite-config`](../../configs/vite-config/docs/index.md)                 | Vite and Vitest configuration helpers.           | `vite.config.ts`              |
+| [`@mission-platform/tsdown-config`](../../configs/tsdown-config/docs/index.md)             | Library bundling helpers.                        | `tsdown.config.ts`            |
+| [`@mission-platform/postcss-config`](../../configs/postcss-config/docs/index.md)           | Shared PostCSS pipeline.                         | `postcss.config.mjs`          |
+| [`@mission-platform/i18n-config`](../../configs/i18n-config/docs/index.md)                 | Shared locale and extraction settings.           | `i18next.config.ts`           |
+| [`@mission-platform/storybook-framework`](../../configs/storybook-framework/docs/index.md) | Environment-selected Storybook framework preset. | `.storybook/main.ts`          |
+| [Workers Configuration](./workers-config.md)                                               | Cross-workspace Cloudflare Worker conventions.   | `wrangler.jsonc`              |
 
-| الحزمة | الغرض | سطح التكوين الأساسي |
-|:---|:---|:---|
-| [`@mission-platform/eslint-config`](eslint-config.md) | مستوي ESLint قواعد JS/TS و Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | الإعدادات الافتراضية لتنسيق المستودع. | `prettier.config.js` |
-| `@mission-platform/typescript-config` | TypeScript الإعدادات المسبقة للمترجم. | `tsconfig.json` |
-| `@mission-platform/stylelint-config` | بطانة CSS وSCSS. | `stylelint.config.mjs` |
-| `@mission-platform/vite-config` | Vite و Vitest مساعدي التكوين. | `vite.config.ts` |
-| `@mission-platform/tsdown-config` | مساعدو تجميع المكتبة. | `tsdown.config.ts` |
-| `@mission-platform/postcss-config` | خط أنابيب PostCSS المشترك. | `postcss.config.mjs` |
-| `@mission-platform/i18n-config` | الإعدادات المحلية والاستخراج المشتركة. | `i18next.config.ts` |
-| `@mission-platform/storybook-framework` | إطار عمل القصص المصورة المحدد للبيئة. | `.storybook/main.ts` |
-| [تكوين العمال](workers-config.md) | اتفاقيات عامل Cloudflare. | `wrangler.jsonc` |
-
-## الأدوات الأساسية
+## Core Tooling
 
 ### ESLint (`@mission-platform/eslint-config`)
 
-توحيد قواعد جودة التعليمات البرمجية في جميع مساحات العمل. يستخدم تنسيق Flat Config ويتضمن دعمًا لـ
-TypeScript, Vue 3، وإمكانية الوصول.
+Standardizes code quality rules across all workspaces. It uses the Flat Config format and includes support for
+TypeScript, Vue 3, and accessibility.
 
 ### Prettier (`@mission-platform/prettier-config`)
 
-يفرض نمطًا ثابتًا من التعليمات البرمجية (علامات التبويب وعلامات الاقتباس والفواصل المنقوطة) عبر monorepo بأكمله.
+Enforces a consistent code style (tabs, quotes, semicolons) across the entire monorepo.
 
 ### TypeScript (`@mission-platform/typescript-config`)
 
-يوفر القاعدة `tsconfig` الإعدادات المسبقة لأهداف مختلفة:
+Provides base `tsconfig` presets for different targets:
 
-- `base`: الافتراضات العامة.
-- `vue`: الأمثل ل Vue 3 سفكس.
-- `node`: الأمثل ل Nodeبيئات .js.
-- `framework-<name>`: يضيف المطابقة `mp:<framework>` شرط التصدير للمستهلكين الخارجيين.
+- `base`: General defaults.
+- `vue`: Optimized for Vue 3 SFCs.
+- `node`: Optimized for Node.js environments.
+- `framework-<name>`: Adds the matching `mp:<framework>` export condition for external consumers.
 
-## بناء النظام
+## Build System
 
 ### Vite (`@mission-platform/vite-config`)
 
-يوفر وظائف المصنع لإنشاء Vite تكوينات لكل من التطبيقات والمكتبات.
+Provides factory functions to create Vite configurations for both applications and libraries.
 
 ```ts
 import { defineAppConfig, defineLibraryConfig } from '@mission-platform/vite-config';
 ```
 
-- `defineAppConfig`: للتطبيقات ذات المستوى الأعلى (SPA، العمال).
-- `defineLibraryConfig`: للحزم المشتركة مع التجميع الأمثل واهتزاز الأشجار.
+- `defineAppConfig`: For top-level applications (SPA, workers).
+- `defineLibraryConfig`: For shared packages with optimal bundling and tree-shaking.
 
-### بوستCSS (`@mission-platform/postcss-config`)
+### PostCSS (`@mission-platform/postcss-config`)
 
-يشارك مسار البرنامج المساعد PostCSS (بما في ذلك Autoprefixer) لضمان معالجة CSS بشكل متسق بغض النظر عن المكان
-تم تأليفه.
+Shares the PostCSS plugin pipeline (including Autoprefixer) to ensure CSS is processed consistently regardless of where
+it is authored.
 
-## نمط الاستخدام
+## Usage Pattern
 
-لاستخدام التكوين في مساحة العمل:
+To use a configuration in a workspace:
 
-1. قم بإضافة حزمة التكوين كـ a `devDependency` في `package.json`.
-2. قم بإنشاء ملف تكوين محلي (على سبيل المثال، `eslint.config.js`).
-3. استيراد وتصدير/توسيع التكوين الأساسي.
+1. Add the configuration package as a `devDependency` in `package.json`.
+2. Create a local configuration file (e.g., `eslint.config.js`).
+3. Import and export/extend the base configuration.
 
 ```js
 // Example: eslint.config.js
@@ -84,11 +83,11 @@ export default [
 ];
 ```
 
-## اختيار التكوين
+## Choosing a configuration
 
-استخدم الحزمة التي تمتلك الاهتمام بدلاً من نسخ القواعد إلى مساحة العمل. ملفات بناء التطبيقات والمكتبة
-قد يضيف تجاوزات محلية، ولكن يجب أن تظل الإعدادات الافتراضية المشتركة كما هي `configs/`. للحصول على حزمة جديدة، ابدأ بالحزمة
-سقالة ثم قم بتشغيل اختبارات مساحة العمل:
+Use the package that owns the concern rather than copying rules into a workspace. Application and library build files
+may add local overrides, but shared defaults should remain in `configs/`. For a new package, start with the package
+scaffold and then run the workspace checks:
 
 ```bash
 pnpm exec turbo run build:check --filter @mission-platform/<name>
