@@ -1,23 +1,18 @@
-# Missieplatformarchitectuur
+# Mission Platform Architecture
 
-Machineondersteunde vertaling van de canonieke Engelse bron. Handmatig nalezen indien nodig. Pakketnamen, opdrachten, paden en technische identificatoren blijven ongewijzigd.
+Mission Platform is engineered for maximum reusability and cross-framework flexibility. This document explains the
+architectural principles, the framework-neutral engine, and the build systems that power the platform.
 
-> Engelse bron: [docs/architecture.md](../../architecture.md)
-> Taal: Nederlands (nl)
+## Architectural Blueprint
 
-Mission Platform is ontworpen voor maximale herbruikbaarheid en cross-framework-flexibiliteit. In dit document wordt uitgelegd
-architecturale principes, de raamwerkneutrale engine en de bouwsystemen die het platform aandrijven.
+The platform follows a **composable, package-driven architecture**. This means that applications are not monolithic;
+instead, they are "composed" from many smaller, independent packages that each handle a specific concern (e.g., routing,
+internationalisation, UI components).
 
-## Architecturale blauwdruk
+### The Golden Rule: Dependency Direction
 
-Het platform volgt een **samenstelbare, pakketgestuurde architectuur**. Dit betekent dat toepassingen niet monolithisch zijn;
-in plaats daarvan zijn ze ‘samengesteld’ uit vele kleinere, onafhankelijke pakketten die elk een specifiek probleem behandelen (bijvoorbeeld routering,
-internationalisering, UI-componenten).
-
-### De gouden regel: richting van afhankelijkheid
-
-Er wordt binnen de monorepo een strikte eenrichtingsafhankelijkheidsstroom afgedwongen om circulaire afhankelijkheden te voorkomen en overzichtelijk te houden
-grenzen:
+A strict one-way dependency flow is enforced across the monorepo to prevent circular dependencies and maintain clear
+boundaries:
 
 ```mermaid
 graph TD
@@ -32,78 +27,84 @@ graph TD
     Workers --> Configs
 ```
 
-1. **Toepassingen (`apps/`)**: Consumptiepakketten, Vite plug-ins en werkers. Ze exporteren nooit code naar andere delen van de
+1. **Applications (`apps/`)**: Consume packages, Vite plugins, and workers. They never export code to other parts of the
    monorepo.
-2. **Pakketten (`packages/`)**: Zorg voor herbruikbare logica en componenten. Ze kunnen van elkaar afhankelijk zijn, maar nooit van elkaar
-   toepassingen.
-3. **Forge-plug-ins (`forge-plugins/`)**: Uitvoerdoelen van de compiler — framework-plug-ins en CMS-doelen. Ze kunnen afhankelijk zijn van
-   `vite-plugins/` En `configs/`, en nooit aan `apps/` of op elkaars broers en zussen; een CMS-adapter is alleen afhankelijk van
+2. **Packages (`packages/`)**: Provide reusable logic and components. They can depend on each other but never on
+   applications.
+3. **Forge plugins (`forge-plugins/`)**: Compiler output targets — framework plugins and CMS targets. They may depend on
+   `vite-plugins/` and `configs/`, and never on `apps/` or on each other's siblings; a CMS adapter depends only on
    `forge-cms-plugin-api`.
-4. **Configuraties (`configs/`)**: Gedeelde gereedschapsinstellingen (ESLint, TypeScriptenz.). Zij vormen de basis en zijn afhankelijk van
-   niets binnen de monorepo.
+4. **Configs (`configs/`)**: Shared tooling settings (ESLint, TypeScript, etc.). They are the foundation and depend on
+   nothing within the monorepo.
 
-## Framework-neutrale engine: Forge
+## Framework-Neutral Engine: Forge
 
-Het hart van Mission Platform is `@mission-platform/forge`, een raamwerkneutraal auteursmodel voor componenten en
-Composables. `@mission-platform/vite-plugin-forge` is de neutrale compilerdriver: het parseert en normaliseert de bron,
-bouwt semantische IR, voert gedeelde analyse en optimalisatie uit en verzendt naar een expliciet geleverde
+The heart of Mission Platform is `@mission-platform/forge`, a framework-neutral authoring model for components and
+composables. `@mission-platform/vite-plugin-forge` is the neutral compiler driver: it parses and normalizes source,
+builds semantic IR, runs shared analysis and optimization, and dispatches to an explicitly supplied
 `FrameworkOutputPlugin`.
 
-Framework-pakketten zoals `@mission-platform/forge-plugin-react` En `@mission-platform/forge-plugin-vue` eigen doel
-verlaging, doeloptimalisatie, het genereren van native bronnen, diagnostiek, runtime-metagegevens en Vite/tsdown-adapters. Daar
-Er is geen centrale raamwerkzender of string-naar-framework-register in het stuurprogramma. Configuraties voor pakketopbouw selecteren de
-plugin-instanties die ze publiceren, zodat de afhankelijkheden van de doelimplementatie op de raamwerkgrens blijven.
+Framework packages such as `@mission-platform/forge-plugin-react` and `@mission-platform/forge-plugin-vue` own target
+lowering, target optimization, native source generation, diagnostics, runtime metadata, and Vite/tsdown adapters. There
+is no central framework emitter or string-to-framework registry in the driver. Package build configurations select the
+plugin instances they publish, so target implementation dependencies remain at the framework boundary.
 
-De resulterende stroom is **parseren/normaliseren → neutraal optimaliseren → semantische IR → doel lager → doel optimaliseren → genereren →
-inheemse bouw**. De native build wordt uitgevoerd door de geselecteerde plug-ins Vite of tsdown-adapter, die ook de
-de declaraties, externe waarden en uitvoerconventies van het doel.
+The resulting flow is **parse/normalize → neutral optimize → semantic IR → target lower → target optimize → generate →
+native build**. The native build is performed by the selected plugin's Vite or tsdown adapter, which also provides the
+target's declarations, externals, and output conventions.
 
-Een tweede, orthogonale as projecteert dezelfde neutrale componenten op **contentplatforms**.
-`@mission-platform/forge-cms-plugin-api` bezit een platformneutraal contentmodel, de `CmsOutputPlugin` overeenkomst, en een
-generiek stuurprogramma; de adapterpakketten `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
-En `forge-cms-webflow` elk een platform. Een CMS-doel *componeert* een framework-plug-in in plaats van er één te vervangen, dus
-elk platform koppelt met elk raamwerk en de uitvoer komt terecht `dist/cms/<cms>/<framework>/**`.
+A second, orthogonal axis projects the same neutral components onto **content platforms**.
+`@mission-platform/forge-cms-plugin-api` owns a platform-neutral content model, the `CmsOutputPlugin` contract, and a
+generic driver; the adapter packages `forge-cms-storyblok`, `forge-cms-astro`, `forge-cms-ghost`, `forge-cms-jekyll`,
+and `forge-cms-webflow` each own one platform. A CMS target _composes_ a framework plugin rather than replacing one, so
+any platform pairs with any framework and the output lands in `dist/cms/<cms>/<framework>/**`.
 
-Zie voor de volledige pijplijn-, component- en hook-consumenten, CMS-projectie en uitbreidingsrichtlijnen
-[Forge Compiler-pijplijn](forge-compiler.md). Zie voor de build-orkestratieweergave [Bouw systeem](build-system.md).
+For the complete pipeline, component and hook consumers, CMS projection, and extension guidance, see
+[Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md). For the build orchestration view, see
+[Build System](build-system.md).
 
-## Ontwerptokensysteem
+## Design Token System
 
-Visuele consistentie wordt gehandhaafd via een geavanceerd ontwerptokensysteem dat wordt beheerd door `@mission-platform/tokens`.
+Visual consistency is maintained through a sophisticated design token system managed by `@mission-platform/tokens`.
 
-- **DTCG-standaard**: tokens zijn geschreven in het W3C Design Tokens Community Group-formaat (v2025.10).
-- **OKLab-kleurruimte**: Primitieven gebruiken de OKLab-kleurruimte voor perceptueel uniforme verlopen en thema's.
-- **Geautomatiseerde artefacten**: `@mission-platform/vite-plugin-tokens` genereert automatisch SCSS-variabelen, CSS aangepast
-  eigenschappen, en TypeScript constanten uit één enkele bron van waarheid.
+- **DTCG Standard**: Tokens are authored in the W3C Design Tokens Community Group format (v2025.10).
+- **OKLab Colour Space**: Primitives use the OKLab colour space for perceptually uniform gradients and themes.
+- **Automated Artifacts**: `@mission-platform/vite-plugin-tokens` automatically generates SCSS variables, CSS custom
+  properties, and TypeScript constants from a single source of truth.
 
-## Framework-agnostische routering en I18n
+## Framework-Agnostic Routing & I18n
 
-Kernapplicatiediensten zoals routing en internationalisering zijn ontworpen om raamwerk-agnostisch te zijn.
+Core application services like routing and internationalisation are designed to be framework-agnostic.
 
-- **`@mission-platform/router`**: Definieert routes als een eenvoudige datastructuur (`MpRoute`). Adapters voor Vue vertaal deze
-  in raamwerkspecifieke routerinstances en composables.
-- **`@mission-platform/i18n`**: Een wikkel eromheen `i18next` dat zorgt voor een universeel `createForgeI18N` fabriek.
-  Framework-specifieke adapters bieden `useI18n` haken en onderdelen voor Vue En React.
+- **`@mission-platform/router`**: Provides structured route targets, pure URL/location helpers, and compiler markers such
+  as `MpLink`, `useMpRoute`, `useMpRouter`, and `MpRouterView`. It has no UI-framework or router-library runtime
+  dependencies and never owns an application's route table.
+- **Forge router targets**: `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`, `-redwood`, and
+  `-web-components` lower those markers to the native router selected by the consuming application. Applications retain
+  ownership of native route definitions, providers, guards, loaders, and router instances; the target only supplies
+  consumption capabilities.
+- **`@mission-platform/i18n`**: A wrapper around `i18next` that provides a universal `createForgeI18N` factory.
+  Framework-specific adapters provide `useI18n` hooks and components for Vue and React.
 
-## Bouw- en implementatiestrategie
+## Build & Deployment Strategy
 
-### Taakorkestratie met Turborepo
+### Task Orchestration with Turborepo
 
-Turborepo verzorgt het zware werk van het bouwen, testen en pluizen van de monorepo. Het maakt gebruik van een globale cache
-ervoor zorgen dat taken alleen worden uitgevoerd als hun input is veranderd.
+Turborepo handles the heavy lifting of building, testing, and linting across the monorepo. It uses a global cache to
+ensure that tasks are only executed when their inputs have changed.
 
-### Vite-Aangedreven constructies
+### Vite-Powered Builds
 
-Elk pakket en elke app gebruikt Vite voor ontwikkelings- en productiebuilds, waarbij gebruik wordt gemaakt van een gedeelde basisconfiguratie van
+Each package and app uses Vite for development and production builds, leveraging a shared base configuration from
 `@mission-platform/vite-config`.
 
-### Cloudflare-implementatie
+### Cloudflare Deployment
 
-Applicaties worden voornamelijk geïmplementeerd op **Cloudflare Pages**, met **Cloudflare Workers** (onder `workers/`) verstrekken
-gespecialiseerde logica voor API-proxying en SPA-activaservice.
+Applications are primarily deployed to **Cloudflare Pages**, with **Cloudflare Workers** (under `workers/`) providing
+specialised logic for API proxying and SPA asset serving.
 
-## Samenvatting
+## Summary
 
-De Mission Platform-architectuur geeft prioriteit aan isolatie, typeveiligheid en raamwerkflexibiliteit. Door de kern te ontkoppelen
-Dankzij de logica van het UI-framework en het afdwingen van een strikte afhankelijkheidsrichting, garandeert het platform onderhoudbaarheid op de lange termijn
-en schaalbaarheid voor complexe applicatie-ecosystemen.
+The Mission Platform architecture prioritises isolation, type safety, and framework flexibility. By decoupling the core
+logic from the UI framework and enforcing a strict dependency direction, the platform ensures long-term maintainability
+and scalability for complex application ecosystems.
