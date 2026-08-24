@@ -8,43 +8,8 @@
 // module provides an ergonomic, fully typed façade with a lazily-instantiated
 // singleton so consumers never touch the raw wasm exports.
 
-import type { ForgePhoneNumberExports, ForgeString } from './phone-number.fws';
+import type { ForgePhoneNumberExports } from './phone-number.fws';
 import { load, loadSync } from './phone-number.fws';
-
-const textEncoder = new TextEncoder();
-const textDecoder = new TextDecoder('utf-8', { fatal: true });
-
-function withInputStrings<T>(
-  wasmExports: ForgePhoneNumberExports,
-  values: readonly string[],
-  callback: (...references: ForgeString[]) => T,
-): T {
-  const allocations = values.map((value) => {
-    const bytes = textEncoder.encode(value);
-    const pointer = wasmExports.fws_alloc(bytes.byteLength);
-    new Uint8Array(wasmExports.memory.buffer).set(bytes, pointer);
-    return { pointer, length: bytes.byteLength } as const;
-  });
-
-  try {
-    return callback(...allocations.map(({ pointer, length }) => [pointer, length] as ForgeString));
-  } finally {
-    for (const { pointer, length } of allocations) wasmExports.fws_dealloc(pointer, length);
-  }
-}
-
-function readString(wasmExports: ForgePhoneNumberExports, value: ForgeString): string {
-  const [pointer, length] = value;
-  return textDecoder.decode(new Uint8Array(wasmExports.memory.buffer, pointer, length));
-}
-
-function invokeString(
-  wasmExports: ForgePhoneNumberExports,
-  values: readonly string[],
-  callback: (...references: ForgeString[]) => ForgeString,
-): string {
-  return withInputStrings(wasmExports, values, (...references) => readString(wasmExports, callback(...references)));
-}
 
 /** Line type of a phone number, mirroring libphonenumber's `PhoneNumberType`. */
 export const PhoneNumberType = {
@@ -107,96 +72,67 @@ export class PhoneNumberUtil {
 
   /** ITU country calling code for a region, or `0` when the region is unknown. */
   getCountryCodeForRegion(region: RegionCode): number {
-    return withInputStrings(this.wasm, [region], (regionReference) =>
-      this.wasm.getCountryCodeForRegion(...regionReference),
-    );
+    return this.wasm.getCountryCodeForRegion(region);
   }
 
   /** Primary region for a calling code, or `undefined` when unknown. */
   getRegionCodeForCountryCode(code: number): RegionCode | undefined {
-    const region = readString(this.wasm, this.wasm.getRegionCodeForCountryCode(code));
+    const region = this.wasm.getRegionCodeForCountryCode(code);
     return region.length > 0 ? region : undefined;
   }
 
   /** Region the number belongs to, or `undefined` when it cannot be resolved. */
   getRegionCodeForNumber(input: string, defaultRegion: RegionCode): RegionCode | undefined {
-    const region = invokeString(this.wasm, [input, defaultRegion], (inputReference, regionReference) =>
-      this.wasm.getRegionCodeForNumber(...inputReference, ...regionReference),
-    );
+    const region = this.wasm.getRegionCodeForNumber(input, defaultRegion);
     return region.length > 0 ? region : undefined;
   }
 
   /** National significant number (country code and trunk prefix removed). */
   getNationalSignificantNumber(input: string, defaultRegion: RegionCode): string {
-    return invokeString(this.wasm, [input, defaultRegion], (inputReference, regionReference) =>
-      this.wasm.getNationalSignificantNumber(...inputReference, ...regionReference),
-    );
+    return this.wasm.getNationalSignificantNumber(input, defaultRegion);
   }
 
   /** Whether the number has a plausible length for its region. */
   isPossibleNumber(input: string, defaultRegion: RegionCode): boolean {
-    return Boolean(
-      withInputStrings(this.wasm, [input, defaultRegion], (inputReference, regionReference) =>
-        this.wasm.isPossibleNumber(...inputReference, ...regionReference),
-      ),
-    );
+    return Boolean(this.wasm.isPossibleNumber(input, defaultRegion));
   }
 
   /** Whether the number is a valid, dialable number for its region. */
   isValidNumber(input: string, defaultRegion: RegionCode): boolean {
-    return Boolean(
-      withInputStrings(this.wasm, [input, defaultRegion], (inputReference, regionReference) =>
-        this.wasm.isValidNumber(...inputReference, ...regionReference),
-      ),
-    );
+    return Boolean(this.wasm.isValidNumber(input, defaultRegion));
   }
 
   /** Whether the number is valid **and** actually belongs to `region`. */
   isValidNumberForRegion(input: string, region: RegionCode): boolean {
-    return Boolean(
-      withInputStrings(this.wasm, [input, region], (inputReference, regionReference) =>
-        this.wasm.isValidNumberForRegion(...inputReference, ...regionReference),
-      ),
-    );
+    return Boolean(this.wasm.isValidNumberForRegion(input, region));
   }
 
   /** Classify the number as fixed line, mobile, both or unknown. */
   getNumberType(input: string, defaultRegion: RegionCode): PhoneNumberType {
-    return withInputStrings(
-      this.wasm,
-      [input, defaultRegion],
-      (inputReference, regionReference) =>
-        this.wasm.getNumberType(...inputReference, ...regionReference) as PhoneNumberType,
-    );
+    return this.wasm.getNumberType(input, defaultRegion) as PhoneNumberType;
   }
 
   /** The ISO 3166-1 alpha-2 region codes supported by the metadata. */
   getSupportedRegions(): RegionCode[] {
-    const joined = readString(this.wasm, this.wasm.getSupportedRegions());
+    const joined = this.wasm.getSupportedRegions();
     return joined.length > 0 ? joined.split(',') : [];
   }
 
   /** A representative example number (E.164 form) for a region, or `undefined`. */
   getExampleNumber(region: RegionCode): string | undefined {
-    const example = invokeString(this.wasm, [region], (regionReference) =>
-      this.wasm.getExampleNumber(...regionReference),
-    );
+    const example = this.wasm.getExampleNumber(region);
     return example.length > 0 ? example : undefined;
   }
 
   /** Render the number in the requested format, or `undefined` when unparsable. */
   format(input: string, defaultRegion: RegionCode, format: PhoneNumberFormat): string | undefined {
-    const formatted = invokeString(this.wasm, [input, defaultRegion], (inputReference, regionReference) =>
-      this.wasm.format(...inputReference, ...regionReference, format),
-    );
+    const formatted = this.wasm.format(input, defaultRegion, format);
     return formatted.length > 0 ? formatted : undefined;
   }
 
   /** Format a (possibly partial) input as the user types it for `region`. */
   formatAsYouType(input: string, region: RegionCode): string {
-    return invokeString(this.wasm, [input, region], (inputReference, regionReference) =>
-      this.wasm.formatAsYouType(...inputReference, ...regionReference),
-    );
+    return this.wasm.formatAsYouType(input, region);
   }
 }
 

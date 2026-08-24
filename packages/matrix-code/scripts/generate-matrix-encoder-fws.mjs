@@ -14,7 +14,6 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outPath = join(root, 'src/fws/matrix-encoder.fws');
 
-
 function makeFieldTables(primitive, size) {
   const order = size - 1;
   const exp = new Array(order * 2).fill(0);
@@ -1304,19 +1303,19 @@ function normalizeFwsArithmetic(graph) {
     ['off * size + (center - r)', 'off * size + center - r'],
     ['(layers - layer) * 4 + 9', 'layers * 4 - layer * 4 + 9'],
     ['(layer * 2 + j) * size + (layer * 2 + k)', 'layer * 2 * size + j * size + layer * 2 + k'],
-    ['(size - 1 - layer * 2 - k) * size + (layer * 2 + j)', 'size * size - size - layer * 2 * size - k * size + layer * 2 + j'],
-    ['(size - 1 - layer * 2 - j) * size + (size - 1 - layer * 2 - k)', 'size * size - size - layer * 2 * size - j * size + size - 1 - layer * 2 - k'],
+    [
+      '(size - 1 - layer * 2 - k) * size + (layer * 2 + j)',
+      'size * size - size - layer * 2 * size - k * size + layer * 2 + j',
+    ],
+    [
+      '(size - 1 - layer * 2 - j) * size + (size - 1 - layer * 2 - k)',
+      'size * size - size - layer * 2 * size - j * size + size - 1 - layer * 2 - k',
+    ],
     ['(layer * 2 + k) * size + (size - 1 - layer * 2 - j)', 'layer * 2 * size + k * size + size - 1 - layer * 2 - j'],
   ];
 
-  let normalized = graph.replaceAll(
-    '4 - (rows + 4 - (rows + 4) / 8 * 8)',
-    'dm_row_wrap_adjust(rows)',
-  );
-  normalized = normalized.replaceAll(
-    '4 - (cols + 4 - (cols + 4) / 8 * 8)',
-    'dm_column_wrap_adjust(cols)',
-  );
+  let normalized = graph.replaceAll('4 - (rows + 4 - (rows + 4) / 8 * 8)', 'dm_row_wrap_adjust(rows)');
+  normalized = normalized.replaceAll('4 - (cols + 4 - (cols + 4) / 8 * 8)', 'dm_column_wrap_adjust(cols)');
   for (const [from, to] of replacements) {
     normalized = normalized.replaceAll(from, to);
   }

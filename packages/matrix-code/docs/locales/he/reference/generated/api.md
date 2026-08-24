@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement
+function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
 `ForgeMatrixCode` - מעבד ברקוד מטריצת דו-ממדית (Data Matrix ECC) הניתן לסריקה
@@ -50,9 +50,9 @@ SVG בלתי תלוי ברזולוציה. `<path>` יחיד נפלט עבור כ
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<MatrixCodeProperties> |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| נכסים | לקריאה בלבד<MatrixCodeProperties> |       |
 
 ### MatrixCodeActions
 
@@ -111,7 +111,7 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 פונקציה **סוג:**
 
 ```typescript
-function decodeMatrix(matrix: MatrixCode): string | null
+function decodeMatrix(matrix: MatrixCode): string | null;
 ```
 
 פענח סמל מטריצה דו-ממדית בחזרה למטען שלו דרך מפענח FWS
@@ -123,16 +123,16 @@ function decodeMatrix(matrix: MatrixCode): string | null
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטריצה ​​| MatrixCode |  |
+| שם        | הקלד       | תיאור |
+| --------- | ---------- | ----- |
+| מטריצה ​​ | MatrixCode |       |
 
 ### decodeMatrixAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>
+function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>;
 ```
 
 Decode a 2D matrix symbol asynchronously through the FWS decoder artifact.
@@ -140,43 +140,43 @@ Decode a 2D matrix symbol asynchronously through the FWS decoder artifact.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטריצה ​​| MatrixCode |  |
+| שם        | הקלד       | תיאור |
+| --------- | ---------- | ----- |
+| מטריצה ​​ | MatrixCode |       |
 
 ### decodeMatrixAsyncWithErasures
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>
+function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>;
 ```
 
 מקביל אסינכרוני של {@link decodeMatrixWithErasures}.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטריצה ​​| MatrixCode |  |
-| מחיקות | מערך כמו<number> |  |
+| שם        | הקלד             | תיאור |
+| --------- | ---------------- | ----- |
+| מטריצה ​​ | MatrixCode       |       |
+| מחיקות    | מערך כמו<number> |       |
 
 ### decodeMatrixWithErasures
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null
+function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null;
 ```
 
 פענוח מטריצה ​​תוך סימון מודולים בעלי ביטחון נמוך כמחיקות ריד-סולומון.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטריצה ​​| MatrixCode |  |
-| מחיקות | מערך כמו<number> |  |
+| שם        | הקלד             | תיאור |
+| --------- | ---------------- | ----- |
+| מטריצה ​​ | MatrixCode       |       |
+| מחיקות    | מערך כמו<number> |       |
 
 ## `src/encoder/index`
 
@@ -185,7 +185,7 @@ function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number
 פונקציה **סוג:**
 
 ```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
+function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
 ```
 
 קידוד `data` לברקוד מטריצה דו-ממדי של `symbology` הנתון, טוען את
@@ -193,22 +193,22 @@ function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סמליות | MatrixSymbology |  |
-| נתונים | מחרוזת |  |
+| שם     | הקלד            | תיאור |
+| ------ | --------------- | ----- |
+| סמליות | MatrixSymbology |       |
+| נתונים | מחרוזת          |       |
 
 #### חוֹזֶה
 
 - **@throws:** אם המטען אינו חוקי עבור הסמליות (ריק, או
-גדול מדי עבור הסמלים הנתמכים).
+  גדול מדי עבור הסמלים הנתמכים).
 
 ### encodeMatrixAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>
+function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
 ```
 
 קידוד `data` לברקוד מטריצה דו-ממדי של `symbology` הנתון, טוען את
@@ -216,10 +216,10 @@ function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<Ma
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סמליות | MatrixSymbology |  |
-| נתונים | מחרוזת |  |
+| שם     | הקלד            | תיאור |
+| ------ | --------------- | ----- |
+| סמליות | MatrixSymbology |       |
+| נתונים | מחרוזת          |       |
 
 #### חוֹזֶה
 
@@ -241,7 +241,7 @@ export interface MatrixCode
 **סוג:** סוג
 
 ```typescript
-export type MatrixSymbology = | 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
+export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
 ```
 
 סמליות המטריצה ​​הדו-ממדית תומך במקודד זה. עבר כטיעון הראשון

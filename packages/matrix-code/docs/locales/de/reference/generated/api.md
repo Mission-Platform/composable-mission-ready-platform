@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/matrix-code
 **Art:** Funktion
 
 ```typescript
-function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement
+function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
 `ForgeMatrixCode` – rendert einen scannbaren 2D-Matrix-Barcode (Data Matrix ECC).
@@ -50,9 +50,9 @@ die Callback-Requisite `onError` (wird aufgerufen, wenn die Codierung fehlschlä
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Schreibgeschützt<MatrixCodeProperties> |  |
+| Name          | Geben Sie                              | ein Beschreibung |
+| ------------- | -------------------------------------- | ---------------- |
+| Eigenschaften | Schreibgeschützt<MatrixCodeProperties> |                  |
 
 ### MatrixCodeAktionen
 
@@ -111,7 +111,7 @@ Form, die zum Zeichnen jedes Moduls des Codes verwendet wird.
 **Art:** Funktion
 
 ```typescript
-function decodeMatrix(matrix: MatrixCode): string | null
+function decodeMatrix(matrix: MatrixCode): string | null;
 ```
 
 Dekodieren Sie ein 2D-Matrixsymbol über den FWS-Decoder zurück in seine Nutzlast
@@ -123,16 +123,16 @@ Module umgedreht, sodass ein leicht beschädigter {@link MatrixCode} immer noch 
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Matrix | MatrixCode |  |
+| Name   | Geben Sie  | ein Beschreibung |
+| ------ | ---------- | ---------------- |
+| Matrix | MatrixCode |                  |
 
 ### decodeMatrixAsync
 
 **Art:** Funktion
 
 ```typescript
-function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>
+function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>;
 ```
 
 Dekodieren Sie ein 2D-Matrixsymbol asynchron durch das FWS-Decoder-Artefakt.
@@ -140,43 +140,43 @@ Siehe {@link decodeMatrix}.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Matrix | MatrixCode |  |
+| Name   | Geben Sie  | ein Beschreibung |
+| ------ | ---------- | ---------------- |
+| Matrix | MatrixCode |                  |
 
 ### decodeMatrixAsyncWithErasures
 
 **Art:** Funktion
 
 ```typescript
-function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>
+function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>;
 ```
 
 Asynchrones Gegenstück zu {@link decodeMatrixWithErasures}.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Matrix | MatrixCode |  |
-| Löschungen | ArrayLike<number> |  |
+| Name       | Geben Sie         | ein Beschreibung |
+| ---------- | ----------------- | ---------------- |
+| Matrix     | MatrixCode        |                  |
+| Löschungen | ArrayLike<number> |                  |
 
 ### decodeMatrixWithErasures
 
 **Art:** Funktion
 
 ```typescript
-function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null
+function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null;
 ```
 
 Dekodieren Sie eine Matrix und markieren Sie Module mit geringer Konfidenz als Reed-Solomon-Löschungen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Matrix | MatrixCode |  |
-| Löschungen | ArrayLike<number> |  |
+| Name       | Geben Sie         | ein Beschreibung |
+| ---------- | ----------------- | ---------------- |
+| Matrix     | MatrixCode        |                  |
+| Löschungen | ArrayLike<number> |                  |
 
 ## `src/encoder/index`
 
@@ -185,7 +185,7 @@ Dekodieren Sie eine Matrix und markieren Sie Module mit geringer Konfidenz als R
 **Art:** Funktion
 
 ```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
+function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
 ```
 
 Codieren Sie `data` in einen 2D-Matrix-Barcode des angegebenen `symbology` und laden Sie den
@@ -193,22 +193,22 @@ Encoder-Artefakt synchron bei der ersten Verwendung fälschen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Symbologie | MatrixSymbologie |  |
-| Daten | Zeichenfolge |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| Symbologie | MatrixSymbologie |                  |
+| Daten      | Zeichenfolge     |                  |
 
 #### Vertrag
 
 - **@throws:** wenn die Nutzlast für die Symbologie ungültig ist (leer oder
-zu groß für die unterstützten Symbole).
+  zu groß für die unterstützten Symbole).
 
 ### encodeMatrixAsync
 
 **Art:** Funktion
 
 ```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>
+function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
 ```
 
 Codieren Sie `data` in einen 2D-Matrix-Barcode des angegebenen `symbology` und laden Sie den
@@ -216,10 +216,10 @@ Encoder-Artefakt asynchron bei der ersten Verwendung fälschen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Symbologie | MatrixSymbologie |  |
-| Daten | Zeichenfolge |  |
+| Name       | Geben Sie        | ein Beschreibung |
+| ---------- | ---------------- | ---------------- |
+| Symbologie | MatrixSymbologie |                  |
+| Daten      | Zeichenfolge     |                  |
 
 #### Vertrag
 
@@ -241,7 +241,7 @@ Ein gepackter Matrix-Barcode: Abmessungen plus eine zeilenweise Liste von Modulb
 **Art:** Typ
 
 ```typescript
-export type MatrixSymbology = | 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
+export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
 ```
 
 Die 2D-Matrixsymbologien, die dieser Encoder unterstützt. Als erstes Argument übergeben

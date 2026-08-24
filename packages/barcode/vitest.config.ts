@@ -9,11 +9,12 @@ export default defineVitestConfig({
   overrides: {
     plugins: [forgeWebScriptPlugin({ root: import.meta.dirname, requireExports: false })],
     // The neutral `ForgeBarcode` is authored in the `@mission-platform/forge`
-    // dialect (the classic `h` factory), so its spec is transformed with that
-    // JSX factory rather than React's automatic runtime.
-    esbuild: {
-      jsxFactory: 'h',
-      jsxFragment: 'Fragment',
+    // dialect, so its spec is transformed with the package's automatic runtime.
+    oxc: {
+      jsx: {
+        runtime: 'automatic',
+        importSource: '@mission-platform/forge',
+      },
     },
     resolve: {
       alias: [

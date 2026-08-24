@@ -28,14 +28,14 @@ function unpackPayload(payload: string): string | null {
 function decodeWithArtifact(matrix: MatrixCode, erasures?: ArrayLike<number>): string | null {
   const symbology = SYMBOLOGY_ID[matrix.symbology];
   if (
-    symbology === undefined
-    || !Number.isInteger(matrix.width)
-    || !Number.isInteger(matrix.height)
-    || matrix.width <= 0
-    || matrix.height <= 0
-    || matrix.modules.length !== matrix.width * matrix.height
-    || matrix.modules.some(module => module !== 0 && module !== 1)
-    || (erasures !== undefined && erasures.length !== matrix.modules.length)
+    symbology === undefined ||
+    !Number.isInteger(matrix.width) ||
+    !Number.isInteger(matrix.height) ||
+    matrix.width <= 0 ||
+    matrix.height <= 0 ||
+    matrix.modules.length !== matrix.width * matrix.height ||
+    matrix.modules.some((module) => module !== 0 && module !== 1) ||
+    (erasures !== undefined && erasures.length !== matrix.modules.length)
   ) {
     return null;
   }
@@ -76,14 +76,14 @@ export async function decodeMatrixAsyncWithErasures(
 ): Promise<string | null> {
   const symbology = SYMBOLOGY_ID[matrix.symbology];
   if (
-    symbology === undefined
-    || !Number.isInteger(matrix.width)
-    || !Number.isInteger(matrix.height)
-    || matrix.width <= 0
-    || matrix.height <= 0
-    || matrix.modules.length !== matrix.width * matrix.height
-    || matrix.modules.some(module => module !== 0 && module !== 1)
-    || (erasures !== undefined && erasures.length !== matrix.modules.length)
+    symbology === undefined ||
+    !Number.isInteger(matrix.width) ||
+    !Number.isInteger(matrix.height) ||
+    matrix.width <= 0 ||
+    matrix.height <= 0 ||
+    matrix.modules.length !== matrix.width * matrix.height ||
+    matrix.modules.some((module) => module !== 0 && module !== 1) ||
+    (erasures !== undefined && erasures.length !== matrix.modules.length)
   ) {
     return null;
   }

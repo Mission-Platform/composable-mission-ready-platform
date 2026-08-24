@@ -6,11 +6,7 @@ import { load as loadMatrixEncoder, loadSync as loadMatrixEncoderSync } from '..
  * The 2D matrix symbologies this encoder supports. Passed as the first argument
  * to {@link encodeMatrix} / {@link encodeMatrixAsync}.
  */
-export type MatrixSymbology =
-  | 'datamatrix'
-  | 'gs1datamatrix'
-  | 'datamatrixrectangular'
-  | 'aztec';
+export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
 
 const SYMBOLOGY_ID = {
   datamatrix: 0,
@@ -60,7 +56,7 @@ export function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCo
   const parts = packed.split(',');
   const width = Number.parseInt(parts[0], 10);
   const height = Number.parseInt(parts[1], 10);
-  const modules = Array.from(parts[2]).map(c => c === '1' ? 1 : 0);
+  const modules = Array.from(parts[2]).map((c) => (c === '1' ? 1 : 0));
   return toMatrixCode(symbology, [width, height, ...modules]);
 }
 
@@ -79,6 +75,6 @@ export async function encodeMatrixAsync(symbology: MatrixSymbology, data: string
   const parts = packed.split(',');
   const width = Number.parseInt(parts[0], 10);
   const height = Number.parseInt(parts[1], 10);
-  const modules = Array.from(parts[2]).map(c => c === '1' ? 1 : 0);
+  const modules = Array.from(parts[2]).map((c) => (c === '1' ? 1 : 0));
   return toMatrixCode(symbology, [width, height, ...modules]);
 }

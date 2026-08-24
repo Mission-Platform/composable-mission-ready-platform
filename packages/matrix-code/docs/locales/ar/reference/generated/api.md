@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement
+function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
 `ForgeMatrixCode` - يعرض باركود مصفوفة ثنائية الأبعاد قابلة للمسح الضوئي (Data Matrix ECC
@@ -50,9 +50,9 @@ SVG مستقلة عن الدقة. يتم إصدار `<path>` واحد لجميع
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MatrixCodeProperties> |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| خصائص | للقراءة فقط<MatrixCodeProperties> |       |
 
 ### MatrixCodeActions
 
@@ -111,7 +111,7 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 **النوع:** الوظيفة
 
 ```typescript
-function decodeMatrix(matrix: MatrixCode): string | null
+function decodeMatrix(matrix: MatrixCode): string | null;
 ```
 
 قم بفك تشفير رمز مصفوفة ثنائية الأبعاد وإعادته إلى حمولته من خلال وحدة فك تشفير FWS
@@ -123,16 +123,16 @@ function decodeMatrix(matrix: MatrixCode): string | null
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | كود المصفوفة |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| مصفوفة | كود المصفوفة |       |
 
 ### com.decodeMatrixAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>
+function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>;
 ```
 
 قم بفك تشفير رمز مصفوفة ثنائية الأبعاد بشكل غير متزامن من خلال أداة فك تشفير FWS.
@@ -140,43 +140,43 @@ function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | كود المصفوفة |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| مصفوفة | كود المصفوفة |       |
 
 ### decodeMatrixAsyncWithErasures
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>
+function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>;
 ```
 
 النظير غير المتزامن لـ {@link decodeMatrixWithErasures}.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | كود المصفوفة |  |
-| المحو | صفيف مثل<number> |  |
+| الاسم  | اكتب             | الوصف |
+| ------ | ---------------- | ----- |
+| مصفوفة | كود المصفوفة     |       |
+| المحو  | صفيف مثل<number> |       |
 
 ### decodeMatrixWithErasures
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null
+function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null;
 ```
 
 قم بفك تشفير مصفوفة أثناء وضع علامة على الوحدات منخفضة الثقة على أنها عمليات مسح لـ Reed-Solomon.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | كود المصفوفة |  |
-| المحو | صفيف مثل<number> |  |
+| الاسم  | اكتب             | الوصف |
+| ------ | ---------------- | ----- |
+| مصفوفة | كود المصفوفة     |       |
+| المحو  | صفيف مثل<number> |       |
 
 ## `src/encoder/index`
 
@@ -185,7 +185,7 @@ function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number
 **النوع:** الوظيفة
 
 ```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
+function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
 ```
 
 قم بتشفير `data` في باركود مصفوفة ثنائية الأبعاد لـ `symbology` المحدد، مع تحميل
@@ -193,22 +193,22 @@ function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الرموز | ماتريكس سيمبولوجي |  |
-| البيانات | سلسلة |  |
+| الاسم    | اكتب              | الوصف |
+| -------- | ----------------- | ----- |
+| الرموز   | ماتريكس سيمبولوجي |       |
+| البيانات | سلسلة             |       |
 
 #### عقد
 
 - **@throws:** إذا كانت الحمولة غير صالحة للرموز (فارغة، أو
-كبير جدًا بالنسبة للرموز المدعومة).
+  كبير جدًا بالنسبة للرموز المدعومة).
 
 ### encodeMatrixAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>
+function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
 ```
 
 قم بتشفير `data` في باركود مصفوفة ثنائية الأبعاد لـ `symbology` المحدد، مع تحميل
@@ -216,10 +216,10 @@ function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<Ma
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الرموز | ماتريكس سيمبولوجي |  |
-| البيانات | سلسلة |  |
+| الاسم    | اكتب              | الوصف |
+| -------- | ----------------- | ----- |
+| الرموز   | ماتريكس سيمبولوجي |       |
+| البيانات | سلسلة             |       |
 
 #### عقد
 
@@ -241,7 +241,7 @@ export interface MatrixCode
 **النوع:** النوع
 
 ```typescript
-export type MatrixSymbology = | 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
+export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
 ```
 
 رموز المصفوفة ثنائية الأبعاد التي يدعمها هذا التشفير. مرت كحجة أولى

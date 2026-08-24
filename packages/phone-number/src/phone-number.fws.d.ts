@@ -6,59 +6,31 @@ export interface ForgePhoneNumberExports {
   readonly fws_dealloc: (pointer: number, size: number) => void;
   readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
   readonly fws_reset: () => void;
-  readonly getCountryCodeForRegion: (regionPointer: number, regionLength: number) => number;
-  readonly getRegionCodeForCountryCode: (code: number) => ForgeString;
+  readonly getCountryCodeForRegion: (region: string) => number;
+  readonly getRegionCodeForCountryCode: (code: number) => string;
   readonly getRegionCodeForNumber: (
-    inputPointer: number,
-    inputLength: number,
-    regionPointer: number,
-    regionLength: number,
-  ) => ForgeString;
+    input: string,
+    region: string,
+  ) => string;
   readonly getNationalSignificantNumber: (
-    inputPointer: number,
-    inputLength: number,
-    regionPointer: number,
-    regionLength: number,
-  ) => ForgeString;
-  readonly isPossibleNumber: (
-    inputPointer: number,
-    inputLength: number,
-    regionPointer: number,
-    regionLength: number,
-  ) => boolean;
-  readonly isValidNumber: (
-    inputPointer: number,
-    inputLength: number,
-    regionPointer: number,
-    regionLength: number,
-  ) => boolean;
-  readonly isValidNumberForRegion: (
-    inputPointer: number,
-    inputLength: number,
-    regionPointer: number,
-    regionLength: number,
-  ) => boolean;
+    input: string,
+    region: string,
+  ) => string;
+  readonly isPossibleNumber: (input: string, region: string) => boolean;
+  readonly isValidNumber: (input: string, region: string) => boolean;
+  readonly isValidNumberForRegion: (input: string, region: string) => boolean;
   readonly getNumberType: (
-    inputPointer: number,
-    inputLength: number,
-    regionPointer: number,
-    regionLength: number,
+    input: string,
+    region: string,
   ) => number;
-  readonly getSupportedRegions: () => ForgeString;
-  readonly getExampleNumber: (regionPointer: number, regionLength: number) => ForgeString;
+  readonly getSupportedRegions: () => string;
+  readonly getExampleNumber: (region: string) => string;
   readonly format: (
-    inputPointer: number,
-    inputLength: number,
-    regionPointer: number,
-    regionLength: number,
+    input: string,
+    region: string,
     format: number,
-  ) => ForgeString;
-  readonly formatAsYouType: (
-    inputPointer: number,
-    inputLength: number,
-    regionPointer: number,
-    regionLength: number,
-  ) => ForgeString;
+  ) => string;
+  readonly formatAsYouType: (input: string, region: string) => string;
 }
 
 export const manifest: Readonly<Record<string, unknown>>;

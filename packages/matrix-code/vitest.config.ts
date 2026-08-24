@@ -8,9 +8,11 @@ export default defineVitestConfig({
   coverageExclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/test-support/**', 'src/**/*.stories.*'],
   overrides: {
     plugins: [forgeWebScriptPlugin({ root: import.meta.dirname, requireExports: false, selfHostedVmMode: 'jit' })],
-    esbuild: {
-      jsxFactory: 'h',
-      jsxFragment: 'Fragment',
+    oxc: {
+      jsx: {
+        runtime: 'automatic',
+        importSource: '@mission-platform/forge',
+      },
     },
     resolve: {
       alias: [

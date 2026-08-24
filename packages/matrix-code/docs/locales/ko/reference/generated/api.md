@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement
+function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
 `ForgeMatrixCode` — 스캔 가능한 2D 매트릭스 바코드를 렌더링합니다(데이터 매트릭스 ECC
@@ -50,9 +50,9 @@ Data Matrix에는 조정 가능한 오류 수정 기능이 없으므로 기호�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MatrixCodeProperties> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 속성 | 읽기 전용<MatrixCodeProperties> |      |
 
 ### MatrixCodeActions
 
@@ -111,7 +111,7 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 **종류:** 기능
 
 ```typescript
-function decodeMatrix(matrix: MatrixCode): string | null
+function decodeMatrix(matrix: MatrixCode): string | null;
 ```
 
 FWS 디코더를 통해 2D 매트릭스 기호를 페이로드로 다시 디코딩합니다.
@@ -123,16 +123,16 @@ FWS 디코더를 통해 2D 매트릭스 기호를 페이로드로 다시 디코�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 매트릭스 | 매트릭스코드 |  |
+| 이름     | 유형         | 설명 |
+| -------- | ------------ | ---- |
+| 매트릭스 | 매트릭스코드 |      |
 
 ### 디코드매트릭스비동기
 
 **종류:** 기능
 
 ```typescript
-function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>
+function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>;
 ```
 
 FWS 디코더 아티팩트를 통해 2D 매트릭스 기호를 비동기적으로 디코딩합니다.
@@ -140,43 +140,43 @@ FWS 디코더 아티팩트를 통해 2D 매트릭스 기호를 비동기적으�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 매트릭스 | 매트릭스코드 |  |
+| 이름     | 유형         | 설명 |
+| -------- | ------------ | ---- |
+| 매트릭스 | 매트릭스코드 |      |
 
 ### decodeMatrixAsyncWithErasures
 
 **종류:** 기능
 
 ```typescript
-function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>
+function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>;
 ```
 
 {@link decodeMatrixWithErasures}의 비동기식 대응물입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 매트릭스 | 매트릭스코드 |  |
-| 삭제 | ArrayLike<number> |  |
+| 이름     | 유형              | 설명 |
+| -------- | ----------------- | ---- |
+| 매트릭스 | 매트릭스코드      |      |
+| 삭제     | ArrayLike<number> |      |
 
 ### DecodeMatrixWithErasures
 
 **종류:** 기능
 
 ```typescript
-function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null
+function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null;
 ```
 
 신뢰도가 낮은 모듈을 리드 솔로몬 삭제로 표시하면서 매트릭스를 디코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 매트릭스 | 매트릭스코드 |  |
-| 삭제 | ArrayLike<number> |  |
+| 이름     | 유형              | 설명 |
+| -------- | ----------------- | ---- |
+| 매트릭스 | 매트릭스코드      |      |
+| 삭제     | ArrayLike<number> |      |
 
 ## `src/encoder/index`
 
@@ -185,7 +185,7 @@ function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number
 **종류:** 기능
 
 ```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
+function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
 ```
 
 `data`을 주어진 `symbology`의 2D 매트릭스 바코드로 인코딩하여
@@ -193,22 +193,22 @@ function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기호 | 매트릭스 기호학 |  |
-| 데이터 | 문자열 |  |
+| 이름   | 유형            | 설명 |
+| ------ | --------------- | ---- |
+| 기호   | 매트릭스 기호학 |      |
+| 데이터 | 문자열          |      |
 
 #### 계약
 
 - **@throws:** 페이로드가 기호에 대해 유효하지 않은 경우(비어 있거나
-지원되는 기호에 비해 너무 큽니다).
+  지원되는 기호에 비해 너무 큽니다).
 
 ### encodeMatrixAsync
 
 **종류:** 기능
 
 ```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>
+function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
 ```
 
 `data`을 주어진 `symbology`의 2D 매트릭스 바코드로 인코딩하여
@@ -216,10 +216,10 @@ function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<Ma
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기호 | 매트릭스 기호학 |  |
-| 데이터 | 문자열 |  |
+| 이름   | 유형            | 설명 |
+| ------ | --------------- | ---- |
+| 기호   | 매트릭스 기호학 |      |
+| 데이터 | 문자열          |      |
 
 #### 계약
 
@@ -241,7 +241,7 @@ export interface MatrixCode
 **종류:** 유형
 
 ```typescript
-export type MatrixSymbology = | 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
+export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
 ```
 
 2D 매트릭스 기호는 이 인코더가 지원합니다. 첫 번째 인수로 전달됨

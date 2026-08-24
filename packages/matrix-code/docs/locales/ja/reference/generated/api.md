@@ -16,11 +16,10 @@
 **種類:** 関数
 
 ```typescript
-function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement
+function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
-`ForgeMatrixCode` — スキャン可能な 2D マトリックス バーコード (データ マトリックス ECC) をレンダリングします。
-200)、中立的な JSX 方言で一度作成され、React に直接コンパイルされます。
+`ForgeMatrixCode` — スキャン可能な 2D マトリックス バーコード (データ マトリックス ECC) をレンダリングします。200)、中立的な JSX 方言で一度作成され、React に直接コンパイルされます。
 または `@mission-platform/vite-plugin-forge` による Vue。
 
 ペイロード (`value`) は、クライアント上で完全にエンコードされます。
@@ -50,9 +49,9 @@ Rust で書かれ、WebAssembly にコンパイルされた依存関係のない
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MatrixCodeProperties> |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| プロパティ | 読み取り専用<MatrixCodeProperties> |      |
 
 ### マトリックスコードアクション
 
@@ -111,7 +110,7 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 **種類:** 関数
 
 ```typescript
-function decodeMatrix(matrix: MatrixCode): string | null
+function decodeMatrix(matrix: MatrixCode): string | null;
 ```
 
 FWS デコーダを通じて 2D マトリックス シンボルをデコードしてペイロードに戻します
@@ -123,16 +122,16 @@ FWS デコーダを通じて 2D マトリックス シンボルをデコード�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|マトリックス |マトリックスコード |  |
+| 名前         | タイプ             | 説明 |
+| ------------ | ------------------ | ---- |
+| マトリックス | マトリックスコード |      |
 
 ### decodeMatrixAsync
 
 **種類:** 関数
 
 ```typescript
-function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>
+function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>;
 ```
 
 FWS デコーダ アーティファクトを通じて 2D マトリックス シンボルを非同期的にデコードします。
@@ -140,43 +139,43 @@ FWS デコーダ アーティファクトを通じて 2D マトリックス シ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|マトリックス |マトリックスコード |  |
+| 名前         | タイプ             | 説明 |
+| ------------ | ------------------ | ---- |
+| マトリックス | マトリックスコード |      |
 
 ### decodeMatrixAsyncWithErasures
 
 **種類:** 関数
 
 ```typescript
-function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>
+function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>;
 ```
 
 {@link decodeMatrixWithErasures} の非同期版。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|マトリックス |マトリックスコード |  |
-|消去 | ArrayLike<number> |  |
+| 名前         | タイプ             | 説明 |
+| ------------ | ------------------ | ---- |
+| マトリックス | マトリックスコード |      |
+| 消去         | ArrayLike<number>  |      |
 
 ### decodeMatrixWithErasures
 
 **種類:** 関数
 
 ```typescript
-function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null
+function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null;
 ```
 
 信頼性の低いモジュールをリードソロモン消去としてマークしながら行列をデコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|マトリックス |マトリックスコード |  |
-|消去 | ArrayLike<number> |  |
+| 名前         | タイプ             | 説明 |
+| ------------ | ------------------ | ---- |
+| マトリックス | マトリックスコード |      |
+| 消去         | ArrayLike<number>  |      |
 
 ## `src/encoder/index`
 
@@ -185,7 +184,7 @@ function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number
 **種類:** 関数
 
 ```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
+function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
 ```
 
 `data` を指定された `symbology` の 2D マトリックス バーコードにエンコードし、
@@ -193,22 +192,22 @@ function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記号論 |行列記号学 |  |
-|データ |文字列 |  |
+| 名前   | タイプ     | 説明 |
+| ------ | ---------- | ---- |
+| 記号論 | 行列記号学 |      |
+| データ | 文字列     |      |
 
 #### 契約
 
 - **@throws:** ペイロードがシンボルに対して無効な場合 (空、または
-サポートされているシンボルに対して大きすぎます)。
+  サポートされているシンボルに対して大きすぎます)。
 
 ### encodeMatrixAsync
 
 **種類:** 関数
 
 ```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>
+function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
 ```
 
 `data` を指定された `symbology` の 2D マトリックス バーコードにエンコードし、
@@ -216,10 +215,10 @@ function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<Ma
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記号論 |行列記号学 |  |
-|データ |文字列 |  |
+| 名前   | タイプ     | 説明 |
+| ------ | ---------- | ---- |
+| 記号論 | 行列記号学 |      |
+| データ | 文字列     |      |
 
 #### 契約
 
@@ -241,7 +240,7 @@ export interface MatrixCode
 **種類：**タイプ
 
 ```typescript
-export type MatrixSymbology = | 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
+export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
 ```
 
 このエンコーダがサポートする 2D マトリックス シンボル。最初の引数として渡されます

@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/matrix-code`.
 **Kind:** function
 
 ```typescript
-function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement
+function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
 `ForgeMatrixCode` — renders a scannable 2D matrix barcode (Data Matrix ECC
@@ -45,9 +45,9 @@ through the co-located CSS Module `forge-matrix-code.module.scss`.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| properties | Readonly<MatrixCodeProperties> |  |
+| Name       | Type                           | Description |
+| ---------- | ------------------------------ | ----------- |
+| properties | Readonly<MatrixCodeProperties> |             |
 
 ### MatrixCodeActions
 
@@ -106,7 +106,7 @@ Shape used to draw each module of the code.
 **Kind:** function
 
 ```typescript
-function decodeMatrix(matrix: MatrixCode): string | null
+function decodeMatrix(matrix: MatrixCode): string | null;
 ```
 
 Decode a 2D matrix symbol back into its payload through the FWS decoder
@@ -118,16 +118,16 @@ flipped modules, so a lightly damaged {@link MatrixCode} still decodes.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| matrix | MatrixCode |  |
+| Name   | Type       | Description |
+| ------ | ---------- | ----------- |
+| matrix | MatrixCode |             |
 
 ### decodeMatrixAsync
 
 **Kind:** function
 
 ```typescript
-function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>
+function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>;
 ```
 
 Decode a 2D matrix symbol asynchronously through the FWS decoder artifact.
@@ -135,43 +135,43 @@ See {@link decodeMatrix}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| matrix | MatrixCode |  |
+| Name   | Type       | Description |
+| ------ | ---------- | ----------- |
+| matrix | MatrixCode |             |
 
 ### decodeMatrixAsyncWithErasures
 
 **Kind:** function
 
 ```typescript
-function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>
+function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>;
 ```
 
 Asynchronous counterpart of {@link decodeMatrixWithErasures}.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| matrix | MatrixCode |  |
-| erasures | ArrayLike<number> |  |
+| Name     | Type              | Description |
+| -------- | ----------------- | ----------- |
+| matrix   | MatrixCode        |             |
+| erasures | ArrayLike<number> |             |
 
 ### decodeMatrixWithErasures
 
 **Kind:** function
 
 ```typescript
-function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null
+function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null;
 ```
 
 Decode a matrix while marking low-confidence modules as Reed-Solomon erasures.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| matrix | MatrixCode |  |
-| erasures | ArrayLike<number> |  |
+| Name     | Type              | Description |
+| -------- | ----------------- | ----------- |
+| matrix   | MatrixCode        |             |
+| erasures | ArrayLike<number> |             |
 
 ## `src/encoder/index`
 
@@ -180,7 +180,7 @@ Decode a matrix while marking low-confidence modules as Reed-Solomon erasures.
 **Kind:** function
 
 ```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
+function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
 ```
 
 Encode `data` into a 2D matrix barcode of the given `symbology`, loading the
@@ -188,22 +188,22 @@ Forge encoder artifact synchronously on first use.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| symbology | MatrixSymbology |  |
-| data | string |  |
+| Name      | Type            | Description |
+| --------- | --------------- | ----------- |
+| symbology | MatrixSymbology |             |
+| data      | string          |             |
 
 #### Contract
 
 - **@throws:** if the payload is invalid for the symbology (empty, or
-too large for the supported symbols).
+  too large for the supported symbols).
 
 ### encodeMatrixAsync
 
 **Kind:** function
 
 ```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>
+function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
 ```
 
 Encode `data` into a 2D matrix barcode of the given `symbology`, loading the
@@ -211,10 +211,10 @@ Forge encoder artifact asynchronously on first use.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| symbology | MatrixSymbology |  |
-| data | string |  |
+| Name      | Type            | Description |
+| --------- | --------------- | ----------- |
+| symbology | MatrixSymbology |             |
+| data      | string          |             |
 
 #### Contract
 
@@ -236,7 +236,7 @@ A packed matrix barcode: dimensions plus a row-major list of module bits
 **Kind:** type
 
 ```typescript
-export type MatrixSymbology = | 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
+export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
 ```
 
 The 2D matrix symbologies this encoder supports. Passed as the first argument

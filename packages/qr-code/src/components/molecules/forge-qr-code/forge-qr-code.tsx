@@ -1,6 +1,6 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
-import { h, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import { type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 import { encodeMicroQr, encodeQr, encodeRmqr } from '@/encoder';
 import { type QrErrorCorrection } from '@/types';

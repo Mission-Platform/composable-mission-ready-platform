@@ -22,9 +22,11 @@ export default defineVitestConfig({
         requestedCapabilities: (fileName) => (fileName.includes('qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
       }),
     ],
-    esbuild: {
-      jsxFactory: 'h',
-      jsxFragment: 'Fragment',
+    oxc: {
+      jsx: {
+        runtime: 'automatic',
+        importSource: '@mission-platform/forge',
+      },
     },
     resolve: {
       alias: [

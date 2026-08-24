@@ -16,11 +16,10 @@
 **种类：**功能
 
 ```typescript
-function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement
+function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement;
 ```
 
-`ForgeMatrixCode` — 呈现可扫描的 2D 矩阵条形码（数据矩阵 ECC
-200)，用中立的 JSX 方言编写一次并直接编译为 React
+`ForgeMatrixCode` — 呈现可扫描的 2D 矩阵条形码（数据矩阵 ECC 200)，用中立的 JSX 方言编写一次并直接编译为 React
 或 Vue by `@mission-platform/vite-plugin-forge`。
 
 有效负载 (`value`) 完全由客户端在客户端上编码
@@ -50,9 +49,9 @@ function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MatrixCodeProperties> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 属性 | 只读<MatrixCodeProperties> |      |
 
 ### 矩阵代码动作
 
@@ -111,7 +110,7 @@ export type MatrixModuleShape = 'square' | 'rounded' | 'dot';
 **种类：**功能
 
 ```typescript
-function decodeMatrix(matrix: MatrixCode): string | null
+function decodeMatrix(matrix: MatrixCode): string | null;
 ```
 
 通过 FWS 解码器将 2D 矩阵符号解码回其有效负载
@@ -123,16 +122,16 @@ function decodeMatrix(matrix: MatrixCode): string | null
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矩阵|矩阵代码 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 矩阵 | 矩阵代码 |      |
 
 ### 解码矩阵异步
 
 **种类：**功能
 
 ```typescript
-function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>
+function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>;
 ```
 
 通过 FWS 解码器工件异步解码 2D 矩阵符号。
@@ -140,43 +139,43 @@ function decodeMatrixAsync(matrix: MatrixCode): Promise<string | null>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矩阵|矩阵代码 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 矩阵 | 矩阵代码 |      |
 
 ### 解码MatrixAsyncWithErasures
 
 **种类：**功能
 
 ```typescript
-function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>
+function decodeMatrixAsyncWithErasures(matrix: MatrixCode, erasures?: ArrayLike<number>): Promise<string | null>;
 ```
 
 {@link debugMatrixWithErasures} 的异步对应项。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矩阵|矩阵代码 |  |
-|删除| ArrayLike<number> |  |
+| 名称 | 类型              | 描述 |
+| ---- | ----------------- | ---- |
+| 矩阵 | 矩阵代码          |      |
+| 删除 | ArrayLike<number> |      |
 
 ### 带擦除的解码矩阵
 
 **种类：**功能
 
 ```typescript
-function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null
+function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number>): string | null;
 ```
 
 解码矩阵，同时将低置信度模块标记为 Reed-Solomon 擦除。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矩阵|矩阵代码 |  |
-|删除| ArrayLike<number> |  |
+| 名称 | 类型              | 描述 |
+| ---- | ----------------- | ---- |
+| 矩阵 | 矩阵代码          |      |
+| 删除 | ArrayLike<number> |      |
 
 ## `src/encoder/index`
 
@@ -185,7 +184,7 @@ function decodeMatrixWithErasures(matrix: MatrixCode, erasures: ArrayLike<number
 **种类：**功能
 
 ```typescript
-function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
+function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode;
 ```
 
 将 `data` 编码为给定 `symbology` 的二维矩阵条形码，加载
@@ -193,22 +192,22 @@ function encodeMatrix(symbology: MatrixSymbology, data: string): MatrixCode
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|符号学|矩阵符号 |  |
-|数据|字符串|  |
+| 名称   | 类型     | 描述 |
+| ------ | -------- | ---- |
+| 符号学 | 矩阵符号 |      |
+| 数据   | 字符串   |      |
 
 #### 合同
 
 - **@throws:** 如果有效负载对于符号系统无效（空，或
-对于支持的符号来说太大）。
+  对于支持的符号来说太大）。
 
 ### 编码矩阵异步
 
 **种类：**功能
 
 ```typescript
-function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>
+function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<MatrixCode>;
 ```
 
 将 `data` 编码为给定 `symbology` 的二维矩阵条形码，加载
@@ -216,10 +215,10 @@ function encodeMatrixAsync(symbology: MatrixSymbology, data: string): Promise<Ma
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|符号学|矩阵符号 |  |
-|数据|字符串|  |
+| 名称   | 类型     | 描述 |
+| ------ | -------- | ---- |
+| 符号学 | 矩阵符号 |      |
+| 数据   | 字符串   |      |
 
 #### 合同
 
@@ -241,7 +240,7 @@ export interface MatrixCode
 **种类：**类型
 
 ```typescript
-export type MatrixSymbology = | 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
+export type MatrixSymbology = 'datamatrix' | 'gs1datamatrix' | 'datamatrixrectangular' | 'aztec';
 ```
 
 该编码器支持的 2D 矩阵符号体系。作为第一个参数传递

@@ -22,7 +22,7 @@ function modulesFromPacked(packed: string): { width: number; height: number; mod
   const parts = packed.split(',');
   const width = Number.parseInt(parts[0], 10);
   const height = Number.parseInt(parts[1], 10);
-  const modules = Array.from(parts[2], bit => (bit === '1' ? 1 : 0));
+  const modules = Array.from(parts[2], (bit) => (bit === '1' ? 1 : 0));
   return { width, height, modules };
 }
 
