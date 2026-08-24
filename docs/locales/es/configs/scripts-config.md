@@ -1,72 +1,72 @@
-# Scripts de utilidades compartidas
+# Shared Utility Scripts
 
-Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
+This guide intentionally remains in the project documentation tier: `scripts/`
+contains repository orchestration rather than a publishable workspace package.
+Package- and application-specific commands remain documented beside their
+owning workspace.
 
-> Fuente en inglés: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
-> Idioma: Español (es)
+The Mission Platform maintains a set of shared utility scripts in the root
+`scripts/` directory, managed by the root workspace tooling.
 
-Mission Platform mantiene un conjunto de scripts de utilidad compartidos en la raíz `scripts/` directorio, gestionado por el
-`@mission-platform/scripts` paquete.
+## Overview
 
-## Descripción general
+These scripts automate common monorepo tasks, such as local development setup and build verification. Translation
+extraction is defined by each app or package and orchestrated from the repository root with Turborepo.
 
-Estos scripts automatizan tareas comunes de monorepo, como la configuración del desarrollo local y la verificación de compilaciones. Traducción
-la extracción está definida por cada aplicación o paquete y orquestada desde la raíz del repositorio con Turborepo.
+## Available Scripts
 
-## Guiones disponibles
+### i18n Extraction (`i18n:extract`)
 
-### Extracción i18n (`i18n:extract`)
-
-Cada aplicación o paquete que posee traducciones proporciona una `i18n:extract` guión y `i18next.config.ts`. El comando escribe
-paquetes de espacios de nombres debajo de cada espacio de trabajo `locales/<locale>/` directorio. Ejecute la extracción para todos los espacios de trabajo configurados desde
-la raíz del repositorio:
+Each app or package that owns translations provides an `i18n:extract` script and `i18next.config.ts`. The command writes
+namespace bundles under each workspace's `locales/<locale>/` directory. Run extraction for all configured workspaces from
+the repository root:
 
 ```bash
 pnpm i18n:extract
 ```
 
-### Generación de certificado de desarrollo (`generate-dev-cert.ts`)
+### Dev Certificate Generation (`generate-dev-cert.ts`)
 
-Genera certificados SSL/TLS locales para desarrollo HTTPS. Esto es útil para probar funciones que requieren una conexión segura.
-contexto (por ejemplo, acceso a la cámara a través de `@mission-platform/code-scanner`).
+Generates local SSL/TLS certificates for HTTPS development. This is useful for testing features that require a secure
+context (e.g., camera access via `@mission-platform/code-scanner`).
 
 ```bash
 pnpm exec tsx scripts/generate-dev-cert.ts
 ```
 
-### Verificación de Resolución Marco (`verify-framework-resolution.mjs`)
+### Framework Resolution Verification (`verify-framework-resolution.mjs`)
 
-Verifica que `@mission-platform/*` las exportaciones de paquetes se resuelven correctamente en la compilación del marco prevista (Vue, React, etc.)
-en función de las condiciones de exportación del entorno.
+Verifies that `@mission-platform/*` package exports correctly resolve to the intended framework build (Vue, React, etc.)
+based on the environment's export conditions.
 
 ```bash
 node scripts/verify-framework-resolution.mjs
 ```
 
-## Métodos de ejecución
+## Execution Methods
 
-### A través del Administrador de paquetes
+### Via Package Manager
 
-La mayoría de los scripts están disponibles como `pnpm` scripts en la raíz `package.json`:
+Most scripts are available as `pnpm` scripts in the root `package.json`:
 
 ```bash
 pnpm run <script-name>
 ```
 
-### Ejecución directa
+### Direct Execution
 
-Individual TypeScript Los scripts se pueden ejecutar usando `tsx` o `node --experimental-strip-types`:
+Individual TypeScript scripts can be run using `tsx` or `node --experimental-strip-types`:
 
 ```bash
 pnpm exec tsx scripts/<filename>.ts
 ```
 
-## Pautas de contribución
+## Contribution Guidelines
 
-Al agregar un nuevo script compartido:
+When adding a new shared script:
 
-- Colóquelo en el `scripts/` directorio.
-- Usar TypeScript donde sea posible.
-- Si el script depende de paquetes externos, agréguelos al espacio de trabajo propietario. `package.json`.
-- Documente el propósito y el uso del script en este archivo.
-- Agregar una entrada correspondiente en la raíz `package.json` si es una utilidad de uso frecuente.
+- Place it in the `scripts/` directory.
+- Use TypeScript where possible.
+- If the script depends on external packages, add them to the owning workspace's `package.json`.
+- Document the script's purpose and usage in this file.
+- Add a corresponding entry in the root `package.json` if it's a frequently used utility.
