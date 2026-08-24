@@ -1,78 +1,77 @@
-# 구성 패키지
+# Configuration Packages
 
-정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
+The Mission Platform uses centralized configuration packages in the `configs/` directory to ensure consistency across
+the monorepo.
 
-> 영어 원문: [docs/configs/index.md](../../../configs/index.md)
-> 언어: 한국어 (ko)
+## Overview
 
-Mission Platform은 중앙 집중식 구성 패키지를 사용합니다. `configs/` 일관성을 보장하기 위한 디렉토리
-모노레포.
+Centralizing configurations allows for a single source of truth for tooling rules, build processes, and code style.
+Packages and applications consume these configurations by extending them in their local config files.
 
-## 개요
+## Package Summary
 
-구성을 중앙 집중화하면 도구 규칙, 빌드 프로세스 및 코드 스타일에 대한 단일 정보 소스가 가능합니다.
-패키지와 애플리케이션은 로컬 구성 파일에서 이러한 구성을 확장하여 사용합니다.
+Configuration package documentation is owned by each package. The links below
+are repository file links today and become package-namespaced routes in the
+documentation site:
 
-## 패키지 요약
+| Package                                                                                    | Purpose                                                          | Primary configuration surface |
+| :----------------------------------------------------------------------------------------- | :--------------------------------------------------------------- | :---------------------------- |
+| [`@mission-platform/eslint-config`](../../configs/eslint-config/docs/index.md)             | Flat ESLint rules for JS/TS and Vue.             | `eslint.config.js`            |
+| [`@mission-platform/prettier-config`](../../configs/prettier-config/docs/index.md)         | Repository formatting defaults.                  | `prettier.config.js`          |
+| [`@mission-platform/typescript-config`](../../configs/typescript-config/docs/index.md)     | TypeScript compiler presets.                     | `tsconfig.json`               |
+| [`@mission-platform/stylelint-config`](../../configs/stylelint-config/docs/index.md)       | CSS and SCSS linting.                            | `stylelint.config.mjs`        |
+| [`@mission-platform/vite-config`](../../configs/vite-config/docs/index.md)                 | Vite and Vitest configuration helpers.           | `vite.config.ts`              |
+| [`@mission-platform/tsdown-config`](../../configs/tsdown-config/docs/index.md)             | Library bundling helpers.                        | `tsdown.config.ts`            |
+| [`@mission-platform/postcss-config`](../../configs/postcss-config/docs/index.md)           | Shared PostCSS pipeline.                         | `postcss.config.mjs`          |
+| [`@mission-platform/i18n-config`](../../configs/i18n-config/docs/index.md)                 | Shared locale and extraction settings.           | `i18next.config.ts`           |
+| [`@mission-platform/storybook-framework`](../../configs/storybook-framework/docs/index.md) | Environment-selected Storybook framework preset. | `.storybook/main.ts`          |
+| [Workers Configuration](./workers-config.md)                                               | Cross-workspace Cloudflare Worker conventions.   | `wrangler.jsonc`              |
 
-| 패키지 | 목적 | 기본 구성 표면 |
-|:---|:---|:---|
-| [`@mission-platform/eslint-config`](eslint-config.md) | 평평한 ESLint JS/TS 규칙 및 Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` | 저장소 형식 기본값. | `prettier.config.js` |
-| `@mission-platform/typescript-config` | TypeScript 컴파일러 사전 설정. | `tsconfig.json` |
-| `@mission-platform/stylelint-config` | CSS 및 SCSS 린트. | `stylelint.config.mjs` |
-| `@mission-platform/vite-config` | Vite 그리고 Vitest 구성 도우미. | `vite.config.ts` |
-| `@mission-platform/tsdown-config` | 라이브러리 번들링 도우미. | `tsdown.config.ts` |
-| `@mission-platform/postcss-config` | 공유 PostCSS 파이프라인. | `postcss.config.mjs` |
-| `@mission-platform/i18n-config` | 공유 로케일 및 추출 설정. | `i18next.config.ts` |
-| `@mission-platform/storybook-framework` | 환경이 선택한 Storybook 프레임워크 사전 설정. | `.storybook/main.ts` |
-| [작업자 구성](workers-config.md) | Cloudflare 작업자 규칙. | `wrangler.jsonc` |
-
-## 핵심 툴링
+## Core Tooling
 
 ### ESLint (`@mission-platform/eslint-config`)
 
-모든 작업 공간에서 코드 품질 규칙을 표준화합니다. Flat Config 형식을 사용하며 다음을 지원합니다.
-TypeScript, Vue 3, 접근성.
+Standardizes code quality rules across all workspaces. It uses the Flat Config format and includes support for
+TypeScript, Vue 3, and accessibility.
 
 ### Prettier (`@mission-platform/prettier-config`)
 
-전체 모노레포에서 일관된 코드 스타일(탭, 따옴표, 세미콜론)을 적용합니다.
+Enforces a consistent code style (tabs, quotes, semicolons) across the entire monorepo.
 
 ### TypeScript (`@mission-platform/typescript-config`)
 
-기반 제공 `tsconfig` 다양한 대상에 대한 사전 설정:
+Provides base `tsconfig` presets for different targets:
 
-- `base`: 일반 기본값입니다.
-- `vue`: 최적화됨 Vue SFC 3개.
-- `node`: 최적화됨 Node.js 환경.
-- `framework-<name>`: 매칭을 추가합니다 `mp:<framework>` 외부 소비자를 위한 수출 조건.
+- `base`: General defaults.
+- `vue`: Optimized for Vue 3 SFCs.
+- `node`: Optimized for Node.js environments.
+- `framework-<name>`: Adds the matching `mp:<framework>` export condition for external consumers.
 
-## 시스템 구축
+## Build System
 
 ### Vite (`@mission-platform/vite-config`)
 
-생성할 수 있는 팩토리 기능을 제공합니다. Vite 애플리케이션과 라이브러리 모두에 대한 구성.
+Provides factory functions to create Vite configurations for both applications and libraries.
 
 ```ts
 import { defineAppConfig, defineLibraryConfig } from '@mission-platform/vite-config';
 ```
 
-- `defineAppConfig`: 최상위 애플리케이션(SPA, 작업자)용입니다.
-- `defineLibraryConfig`: 최적의 번들링 및 트리 쉐이킹을 갖춘 공유 패키지용입니다.
+- `defineAppConfig`: For top-level applications (SPA, workers).
+- `defineLibraryConfig`: For shared packages with optimal bundling and tree-shaking.
 
-### 포스트CSS(`@mission-platform/postcss-config`)
+### PostCSS (`@mission-platform/postcss-config`)
 
-PostCSS 플러그인 파이프라인(Autoprefixer 포함)을 공유하여 CSS가 위치에 관계없이 일관되게 처리되도록 합니다.
-그것은 저작되었습니다.
+Shares the PostCSS plugin pipeline (including Autoprefixer) to ensure CSS is processed consistently regardless of where
+it is authored.
 
-## 사용 패턴
+## Usage Pattern
 
-작업공간에서 구성을 사용하려면 다음 안내를 따르세요.
+To use a configuration in a workspace:
 
-1. 구성 패키지를 다음과 같이 추가합니다. `devDependency` ~에 `package.json`.
-2. 로컬 구성 파일(예: `eslint.config.js`).
-3. 기본 구성을 가져오고 내보내고 확장합니다.
+1. Add the configuration package as a `devDependency` in `package.json`.
+2. Create a local configuration file (e.g., `eslint.config.js`).
+3. Import and export/extend the base configuration.
 
 ```js
 // Example: eslint.config.js
@@ -84,11 +83,11 @@ export default [
 ];
 ```
 
-## 구성 선택
+## Choosing a configuration
 
-규칙을 작업 공간에 복사하는 대신 문제를 소유한 패키지를 사용하십시오. 애플리케이션 및 라이브러리 빌드 파일
-로컬 재정의를 추가할 수 있지만 공유 기본값은 그대로 유지되어야 합니다. `configs/`. 새 패키지의 경우 해당 패키지부터 시작하세요.
-스캐폴드를 실행한 다음 작업 공간 검사를 실행합니다.
+Use the package that owns the concern rather than copying rules into a workspace. Application and library build files
+may add local overrides, but shared defaults should remain in `configs/`. For a new package, start with the package
+scaffold and then run the workspace checks:
 
 ```bash
 pnpm exec turbo run build:check --filter @mission-platform/<name>
