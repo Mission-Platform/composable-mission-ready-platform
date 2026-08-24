@@ -1,95 +1,81 @@
-# הגדרת פיתוח
+# Development Setup
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+This guide provides a step-by-step tutorial for setting up your local environment to contribute to the Mission Platform.
+By the end of this guide, you will have a working monorepo and be able to run the development tools.
 
-> מקור באנגלית: [docs/development-setup.md](../../development-setup.md)
-> שפה: עברית (he)
+## Prerequisites
 
-מדריך זה מספק מדריך שלב אחר שלב להגדרת הסביבה המקומית שלך כדי לתרום לפלטפורמת המשימה.
-בסוף מדריך זה, יהיה לך מונורפוד עובד ותוכל להפעיל את כלי הפיתוח.
+Before cloning the repository, ensure your system meets the following requirements.
 
-## דרישות מוקדמות
+### System Requirements
 
-לפני שיבוט המאגר, ודא שהמערכת שלך עומדת בדרישות הבאות.
+| Tool                        | Required Version | Purpose                                             |
+| :-------------------------- | :--------------- | :-------------------------------------------------- |
+| **Node.js** | `24.19.0`        | Runtime environment (Active LTS) |
+| **pnpm**                    | `11.21.0`        | Package manager and workspace orchestrator          |
+| **Git**                     | Latest stable    | Version control                                     |
+| **Rust**                    | Stable toolchain | Optional standalone Rust benchmark development      |
+| **Docker**                  | Latest stable    | Required only for the Emscripten Hunspell build     |
 
-### דרישות מערכת
+### Version Management (Recommended)
 
-| כלי | גרסה נדרשת | מטרה |
-| :------------ | :---------------- | :---------------------------------------------------- |
-| **Node.js** | `24.19.0`         | סביבת זמן ריצה (Active LTS) |
-| **pnpm**      | `11.21.0`         | מנהל חבילות ומתזמר חללי עבודה |
-| **Git** | היציב האחרון | בקרת גרסה |
-| **חלודה** | שרשרת כלים יציבה | בדיקות מקוריות ופיתוח ארגז חלודה/WASM |
-| **חבילת wasm** | `0.15.0` בְּאֶמצָעוּת pnpm | אריזת ארגזי חלודה כחללי עבודה מוקלדים של WebAssembly |
-| **דוקר** | היציב האחרון | נדרש רק עבור המבנה Emscripten Hunspell |
-
-### ניהול גרסאות (מומלץ)
-
-אנו ממליצים להשתמש ב-**nvm** (Node מנהל הגרסאות) כדי לוודא שאתה משתמש נכון Nodeגרסת .js שצוינה ב-
-שורש `.nvmrc` קוֹבֶץ.
+We recommend using **nvm** (Node Version Manager) to ensure you are using the correct Node.js version specified in the
+root `.nvmrc` file.
 
 ```bash
 nvm install
 nvm use
 ```
 
-אפשר **pnpm** באמצעות Corepack:
+Enable **pnpm** using Corepack:
 
 ```bash
 corepack enable
 corepack prepare pnpm@11.21.0 --activate
 ```
 
-התקן את יעד החלודה בעת עבודה על ארגזי חלודה. מארז WebAssembly מסופק על ידי המוצמד `wasm-pack` npm
-תלות במהלך `pnpm install`:
+## Initial Setup
 
-```bash
-rustup target add wasm32-unknown-unknown
-```
+Follow these steps to initialize the monorepo on your machine.
 
-## הגדרה ראשונית
-
-בצע את השלבים הבאים כדי לאתחל את monorepo במחשב שלך.
-
-### 1. שכפל את המאגר
+### 1. Clone the Repository
 
 ```bash
 git clone git@github.com:Mission-Platform/composable-mission-ready-platform.git
 cd composable-mission-ready-platform
 ```
 
-### 2. התקן תלויות
+### 2. Install Dependencies
 
-התקן את כל התלות בסביבת העבודה והגדר git hooks:
+Install all workspace dependencies and set up git hooks:
 
 ```bash
 pnpm install
 ```
 
-פקודה זו מפעילה את `prepare` סקריפט, המאתחל את **Husky** עבור commit linting ומבטיח את הכל פנימי
-קישורי החבילה הוקמו כהלכה.
+This command triggers the `prepare` script, which initializes **Husky** for commit linting and ensures all internal
+package links are correctly established.
 
-### 3. ודא את ההתקנה
+### 3. Verify the Installation
 
-הפעל בדיקת עשן כדי לוודא שמערכת הבנייה והסביבה מוגדרות כהלכה:
+Run a smoke test to ensure the build system and environment are correctly configured:
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/forge...
 ```
 
-ה `...` גם בונה את התלות של Forge הנדרשת על ידי החבילה. ארגזי מפענח חלודה ומקודד נבדקים
-באופן יליד עם `cargo test`; שֶׁלָהֶם
-`wasm-pack` הפלטים נכתבים לתוך המתאים `packages/*-wasm/`
-סביבת עבודה לפי משימת החבילה של הארגז, שהיא חוזה החבילה/בנייה שנכנסה אליו בשימוש על ידי Turborepo.
+The `...` also builds the Forge dependencies required by the package. The
+neutral code scanner is compiled from its Forge Web Script graph; it does not
+require a Rust or `wasm-pack` build step.
 
-## זרימת עבודה לפיתוח
+## Development Workflow
 
-פלטפורמת המשימה משתמשת ב-**Turborepo** כדי לתזמר משימות בין יישומים וחבילות.
+The Mission Platform uses **Turborepo** to orchestrate tasks across applications and packages.
 
-### פיתוח רכיבים (ספר סיפור)
+### Component Development (Storybook)
 
-Storybook הוא שולחן העבודה העיקרי לבנייה ובדיקה של רכיבים בבידוד. אתה יכול למקד למסגרות ספציפיות
-שימוש במשתני סביבה:
+Storybook is the primary workbench for building and testing components in isolation. You can target specific frameworks
+using environment variables:
 
 ```bash
 # Start Vue 3 Storybook
@@ -108,8 +94,8 @@ pnpm storybook:solid
 pnpm storybook:web-component
 ```
 
-כל חמשת המצבים משתמשים באותו מלאי סיפור ניטרלי. כדי לאמת כל סטטי
-בניית שולחן עבודה במעבר אחד:
+All five modes use the same neutral story inventory. To validate every static
+workbench build in one pass:
 
 ```bash
 for framework in vue react svelte solid web-component; do
@@ -117,36 +103,36 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-חבילות מגובות מזויפות מפרסמות התאמה `mp:vue`, `mp:react`, `mp:svelte`,
-`mp:solid`, ו `mp:web-component` תנאים. המצב הפעיל חייב להיות
-מוגדר על ידי המצרף הצורך; לִרְאוֹת [הפניה מהדר](forge-compiler.md)
-עבור תוסף היעד וצינור ההצהרה.
+Forge-backed packages publish matching `mp:vue`, `mp:react`, `mp:svelte`,
+`mp:solid`, and `mp:web-component` conditions. The active condition must be
+configured by the consuming bundler; see [the compiler reference](../vite-plugins/forge/docs/reference/compiler.md)
+for the target plugin and declaration pipeline.
 
-### פיתוח אפליקציות
+### Application Development
 
-כדי להפעיל אפליקציה ספציפית במצב פיתוח:
+To start a specific application in development mode:
 
 ```bash
 # Start My Care Notes (Vue 3)
 pnpm exec turbo run dev --filter @mission-platform/my-care-notes
 ```
 
-האפליקציה תהיה זמינה בדרך כלל ב- `http://localhost:5173`.
+The application will typically be available at `http://localhost:5173`.
 
-### פקודות נפוצות
+### Common Commands
 
-| משימה | פקודה | תיאור |
+| Task       | Command       | Description                    |
 | :--------- | :------------ | :----------------------------- |
-| **בנייה** | `pnpm build`  | בניית כל האפליקציות והחבילות |
-| **מבחן** | `pnpm test`   | הפעל הכל Vitest סוויטות |
-| **מוך** | `pnpm lint`   | לָרוּץ ESLint מעבר למונורפו |
-| **פורמט** | `pnpm format` | בדוק עיצוב עם Prettier |
+| **Build**  | `pnpm build`  | Build all apps and packages    |
+| **Test**   | `pnpm test`   | Run all Vitest suites          |
+| **Lint**   | `pnpm lint`   | Run ESLint across the monorepo |
+| **Format** | `pnpm format` | Check formatting with Prettier |
 
-## פתרון בעיות
+## Troubleshooting
 
-### ניקוי מטמונים
+### Clearing Caches
 
-אם אתה נתקל בשגיאות בנייה בלתי צפויות, נקה את ה-Turborepo ו Node מטמונים:
+If you encounter unexpected build errors, clear the Turborepo and Node caches:
 
 ```bash
 # Remove Turborepo cache
@@ -157,10 +143,9 @@ pnpm -r exec rm -rf node_modules
 pnpm install
 ```
 
-### כשלים בבניית WASM
+### WASM Build Failures
 
-אם חבילות Rust/WASM לא מצליחות לבנות, בדוק ששרשרת הכלים היציבה של Rust ו
-`wasm32-unknown-unknown` היעד מותקנים ואז הפעל `pnpm install` כדי לשחזר את המוצמד `wasm-pack` npm תלות.
-ה
-`@mission-platform/hunspell` בניית Emscripten מחייבת בנוסף את Docker לפעול; שאר ארגזי החלודה בונים
-עם שרשרת הכלים Rust המקומית.
+If a Forge Web Script artifact fails to build, inspect its compiler diagnostics
+and verify the selected static or dynamic link profile. The
+`@mission-platform/hunspell` Emscripten build additionally requires Docker to
+be running.
