@@ -1,4 +1,4 @@
-import { h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import { type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 
 import { useMap, useSource } from '@/composables';
 

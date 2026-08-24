@@ -1,5 +1,5 @@
 import { ForgeTable } from '@mission-platform/components';
-import { h, type MpElement } from '@mission-platform/forge';
+import { type MpElement } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import { ForgeCodeBlock } from '../../atoms/forge-code-block';

@@ -1,4 +1,4 @@
-import { h, type MpChild, type MpElement } from '@mission-platform/forge';
+import { type MpChild, type MpElement } from '@mission-platform/forge';
 
 import { resolveLabels, type WysiwygLabels } from '../../../utils/labels';
 import { type EditorStats, EMPTY_EDITOR_STATS } from '../../../utils/text-stats';

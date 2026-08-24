@@ -1,4 +1,4 @@
-import { Fragment, h, HtmlContent, type MpElement, useEffect, useId, useRef, useState } from '@mission-platform/forge';
+import { HtmlContent, type MpElement, useEffect, useId, useRef, useState } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 import mermaid from 'mermaid';
 

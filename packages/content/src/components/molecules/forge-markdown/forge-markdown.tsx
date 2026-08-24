@@ -1,4 +1,4 @@
-import { h, type MpElement, useMemo } from '@mission-platform/forge';
+import { type MpElement, useMemo } from '@mission-platform/forge';
 
 import styles from './forge-markdown.module.scss';
 import { MarkdownBlock } from './markdown-block';

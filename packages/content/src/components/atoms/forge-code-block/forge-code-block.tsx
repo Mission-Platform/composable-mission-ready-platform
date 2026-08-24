@@ -1,4 +1,4 @@
-import { h, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import { type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconCopy } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 import type { SizeScale } from '@mission-platform/tokens';

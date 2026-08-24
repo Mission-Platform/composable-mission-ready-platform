@@ -17,11 +17,10 @@
       "node",
       "vitest/globals",
       "@mission-platform/typescript-config/client",
-      "@mission-platform/forge/jsx-globals"
+      "@mission-platform/forge"
     ],
-    "jsx": "react",
-    "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment"
+    "jsx": "react-jsx",
+    "jsxImportSource": "@mission-platform/forge"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx", "src/**/*.stories.tsx"]
 }

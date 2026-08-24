@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeMapLayer, ForgeMapLibre, ForgeMapMarker, ForgeMapPopup, ForgeMapSource } from '@mission-platform/map';

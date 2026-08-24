@@ -1,5 +1,5 @@
 import { ForgeButton } from '@mission-platform/components';
-import { h, type MpChild, type MpElement } from '@mission-platform/forge';
+import { type MpChild, type MpElement } from '@mission-platform/forge';
 
 import styles from './forge-wysiwyg-toolbar-button.module.scss';
 

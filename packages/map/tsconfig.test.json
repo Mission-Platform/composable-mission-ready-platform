@@ -13,10 +13,9 @@
     "verbatimModuleSyntax": false,
     "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
-    "types": ["vite/client", "vitest/globals", "@mission-platform/forge/jsx-globals"],
-    "jsx": "react",
-    "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment"
+    "types": ["vite/client", "vitest/globals"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@mission-platform/forge"
   },
   "include": [
     "src/**/*.ts",

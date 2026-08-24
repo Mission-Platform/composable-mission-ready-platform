@@ -1,12 +1,4 @@
-import {
-  Fragment,
-  h,
-  type MpChild,
-  type MpElement,
-  type MpRenderProperty,
-  Slot,
-  useEffect,
-} from '@mission-platform/forge';
+import { type MpChild, type MpElement, type MpRenderProperty, Slot, useEffect } from '@mission-platform/forge';
 import { palette } from '@mission-platform/tokens';
 
 import { ForgeMapLayer, ForgeMapSource } from '@/components';

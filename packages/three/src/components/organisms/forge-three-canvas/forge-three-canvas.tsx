@@ -1,4 +1,4 @@
-import { h, type MpElement, useRef } from '@mission-platform/forge';
+import { type MpElement, useRef } from '@mission-platform/forge';
 
 import { type ThreeContext, useThree } from '@/composables/use-three';
 

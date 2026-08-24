@@ -1,5 +1,4 @@
 import { ForgeButton } from '@mission-platform/components';
-import { h } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeMapDraw, ForgeMapLibre } from '@mission-platform/map';

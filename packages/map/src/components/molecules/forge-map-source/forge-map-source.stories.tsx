@@ -1,5 +1,3 @@
-import { h } from '@mission-platform/forge';
-
 import { ForgeMapLayer, ForgeMapLibre, ForgeMapSource } from '@mission-platform/map';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 import * as THREE from 'three';
 
 import { ForgeThreeCanvas, type ThreeContext } from '@mission-platform/three';
