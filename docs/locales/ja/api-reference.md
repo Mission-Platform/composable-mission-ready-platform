@@ -1,6 +1,10 @@
-# APIリファレンス
+# Package API Directory
 
-Mission Platform コア パッケージとフレームワーク アダプターのテクニカル リファレンス。
+This project-wide page is a directory of package capabilities and compatibility
+contracts. The canonical installation, usage, limitations, and API details for
+each package live beside that package under `packages/*/docs/`, `configs/*/docs/`,
+and `forge-plugins/*/docs/`. Generated API references must be added to the owning
+package rather than this page.
 
 > **インポートは常にベアです。** フレームワークの出荷 `@mission-platform/*` パッケージは単一の `.`
 > 入口はによって守られています `mp:vue`, `mp:react`, `mp:solid`、 そして `mp:web-component` 輸出
@@ -228,21 +232,20 @@ WebAssembly を利用したスペルチェック。
 
 ### コードと WebAssembly パッケージ
 
-| パッケージ                              | 目的                                        |
-| :--------------------------------- | :---------------------------------------- |
-| `@mission-platform/barcode`        | 1D バーコードは、ファサードとコンポーネントをエンコード/デコードします。    |
-| `@mission-platform/code-scan-wasm` | 生成されたイメージ スキャナー WebAssembly モジュール。        |
-| `@mission-platform/code-scanner`   | カメラおよび画像コードスキャンコンポーネント。                   |
-| `@mission-platform/matrix-code`    | Data Matrix と Aztec はファサードをエンコード/デコードします。 |
-| `@mission-platform/qr-code`        | ファサードとコンポーネントを QR エンコード/デコードします。          |
-| `@mission-platform/harper`         | Harper の文法とスタイルをモナコに統合。                   |
-| `@mission-platform/hunspell`       | Emscripten Hunspell スペルチェック ラッパー。         |
+| パッケージ                            | 目的                                                               |
+| :------------------------------- | :--------------------------------------------------------------- |
+| `@mission-platform/barcode`      | 1D バーコードは、ファサードとコンポーネントをエンコード/デコードします。                           |
+| `@mission-platform/code-scanner` | Camera and image code-scanning component.        |
+| `@mission-platform/matrix-code`  | Data Matrix and Aztec encode/decode façade.      |
+| `@mission-platform/qr-code`      | QR encode/decode façade and component.           |
+| `@mission-platform/harper`       | Harper grammar and style integration for Monaco. |
+| `@mission-platform/hunspell`     | Emscripten Hunspell spell-checking wrapper.      |
 
 ### Forge コンパイラ ターゲット
 
 These live in `forge-plugins/` rather than `packages/`. A **framework** plugin decides which runtime a neutral component
 is lowered to; a **CMS** target decides which content platform it is projected onto. The two axes compose, so any CMS
-target may be bound to any framework plugin. See [Forge Compiler Pipeline](./forge-compiler.md).
+target may be bound to any framework plugin. See the [Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
 
 | パッケージ                                           | 目的                                                                        |
 | :---------------------------------------------- | :------------------------------------------------------------------------ |
