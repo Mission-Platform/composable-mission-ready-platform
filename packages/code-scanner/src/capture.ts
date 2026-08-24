@@ -66,17 +66,30 @@ function fitSize(width: number, height: number): { width: number; height: number
 }
 
 /** Create a 2D drawing context of the given size (`OffscreenCanvas` when available). */
+type CaptureContext = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+
+let captureContext: CaptureContext | undefined;
+
 function createContext(width: number, height: number): CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D {
-  const canvas =
-    typeof OffscreenCanvas === 'function'
-      ? new OffscreenCanvas(width, height)
-      : Object.assign(document.createElement('canvas'), { width, height });
-  const context = canvas.getContext('2d', { willReadFrequently: true }) as
-    CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null;
-  if (context === null) {
-    throw new Error('A 2D canvas context is unavailable in this environment.');
+  if (captureContext === undefined) {
+    const canvas =
+      typeof OffscreenCanvas === 'function'
+        ? new OffscreenCanvas(width, height)
+        : Object.assign(document.createElement('canvas'), { width, height });
+    const context = canvas.getContext('2d', { willReadFrequently: true }) as CaptureContext | null;
+    if (context === null) {
+      throw new Error('A 2D canvas context is unavailable in this environment.');
+    }
+    captureContext = context;
+  } else {
+    if (captureContext.canvas.width !== width) {
+      captureContext.canvas.width = width;
+    }
+    if (captureContext.canvas.height !== height) {
+      captureContext.canvas.height = height;
+    }
   }
-  return context;
+  return captureContext;
 }
 
 /**

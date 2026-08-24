@@ -38,6 +38,7 @@ export function imageDataToLuma(image: ImageLike): LumaImage {
  */
 const DEFAULT_LOW_PERCENTILE = 0.02;
 const DEFAULT_HIGH_PERCENTILE = 0.98;
+const CONTRAST_HISTOGRAM = new Uint32Array(256);
 
 /**
  * Find the luma value at `percentile` (0..1) of a 256-bin `histogram`. Only
@@ -60,6 +61,20 @@ function percentileValue(histogram: Uint32Array, total: number, percentile: numb
     }
   }
   return last;
+}
+
+function stretchLumaInPlace(width: number, height: number, data: Uint8Array, histogram: Uint32Array): LumaImage {
+  const pixels = data.length;
+  const low = percentileValue(histogram, pixels, DEFAULT_LOW_PERCENTILE);
+  const high = percentileValue(histogram, pixels, DEFAULT_HIGH_PERCENTILE);
+  if (high <= low) return { width, height, data };
+
+  const scale = 255 / (high - low);
+  for (let index = 0; index < pixels; index += 1) {
+    const scaled = (data[index] - low) * scale;
+    data[index] = scaled <= 0 ? 0 : scaled >= 255 ? 255 : Math.round(scaled);
+  }
+  return { width, height, data };
 }
 
 /**
@@ -89,16 +104,14 @@ export function contrastStretchLuma(
     return luma;
   }
 
-  const histogram = new Uint32Array(256);
+  const histogram = CONTRAST_HISTOGRAM;
+  histogram.fill(0);
   for (let index = 0; index < pixels; index += 1) {
     histogram[data[index]] += 1;
   }
-
   const low = percentileValue(histogram, pixels, lowPercentile);
   const high = percentileValue(histogram, pixels, highPercentile);
-  if (high <= low) {
-    return luma;
-  }
+  if (high <= low) return luma;
 
   const scale = 255 / (high - low);
   const stretched = new Uint8Array(pixels);
@@ -107,4 +120,22 @@ export function contrastStretchLuma(
     stretched[index] = scaled <= 0 ? 0 : scaled >= 255 ? 255 : Math.round(scaled);
   }
   return { width, height, data: stretched };
+}
+
+/** Convert RGBA pixels and contrast-stretch the result in one pair of passes. */
+export function imageDataToContrastStretchLuma(image: ImageLike): LumaImage {
+  const { width, height, data } = image;
+  const pixels = width * height;
+  const luma = new Uint8Array(pixels);
+  if (pixels === 0) return { width, height, data: luma };
+
+  const histogram = CONTRAST_HISTOGRAM;
+  histogram.fill(0);
+  for (let index = 0; index < pixels; index += 1) {
+    const offset = index * 4;
+    const value = Math.round(0.299 * data[offset] + 0.587 * data[offset + 1] + 0.114 * data[offset + 2]);
+    luma[index] = value;
+    histogram[value] += 1;
+  }
+  return stretchLumaInPlace(width, height, luma, histogram);
 }

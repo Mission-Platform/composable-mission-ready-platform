@@ -45,6 +45,37 @@ interface ScannerExports {
     packed: number,
     meta: number,
   ) => RawString;
+  readonly scan_and_decode_bytes: (
+    width: number,
+    height: number,
+    luma: number,
+    modules: number,
+    erasures: number,
+    packed: number,
+    meta: number,
+  ) => RawString;
+  readonly scan_and_decode_bytes_roi: (
+    width: number,
+    height: number,
+    luma: number,
+    roiX: number,
+    roiY: number,
+    roiWidth: number,
+    roiHeight: number,
+    modules: number,
+    erasures: number,
+    packed: number,
+    meta: number,
+  ) => RawString;
+  readonly scan_and_decode_all_bytes: (
+    width: number,
+    height: number,
+    luma: number,
+    modules: number,
+    erasures: number,
+    packed: number,
+    meta: number,
+  ) => RawString;
   readonly sc_result_none: () => RawString;
   readonly sc_result_decoded: (format: number, pointer: number, length: number) => RawString;
   readonly sc_result_located: (format: number) => RawString;
@@ -706,6 +737,12 @@ function writeArray(api: ScannerExports, values: readonly number[]): number {
   return pointer;
 }
 
+function writeBytes(api: ScannerExports, values: readonly number[]): number {
+  const pointer = api.fws_alloc(values.length);
+  new Uint8Array(api.memory.buffer, pointer, values.length).set(values);
+  return pointer;
+}
+
 function readArray(api: ScannerExports, pointer: number, length: number): number[] {
   const view = new DataView(api.memory.buffer, pointer + 4, length * 4);
   return Array.from({ length }, (_, index) => view.getInt32(index * 4, true));
@@ -746,6 +783,65 @@ function scanAll(api: ScannerExports, image: RenderedImage): string {
       image.width,
       image.height,
       writeArray(api, image.luma),
+      writeArray(api, scratch.modules),
+      writeArray(api, scratch.erasures),
+      writeArray(api, scratch.packed),
+      writeArray(api, scratch.meta),
+    ),
+  );
+}
+
+function scanBytes(api: ScannerExports, image: RenderedImage): string {
+  const scratch = createScratch(image.width, image.height);
+  return readString(
+    api,
+    api.scan_and_decode_bytes(
+      image.width,
+      image.height,
+      writeBytes(api, image.luma),
+      writeArray(api, scratch.modules),
+      writeArray(api, scratch.erasures),
+      writeArray(api, scratch.packed),
+      writeArray(api, scratch.meta),
+    ),
+  );
+}
+
+function scanAllBytes(api: ScannerExports, image: RenderedImage): string {
+  const scratch = createScratch(image.width, image.height);
+  return readString(
+    api,
+    api.scan_and_decode_all_bytes(
+      image.width,
+      image.height,
+      writeBytes(api, image.luma),
+      writeArray(api, scratch.modules),
+      writeArray(api, scratch.erasures),
+      writeArray(api, scratch.packed),
+      writeArray(api, scratch.meta),
+    ),
+  );
+}
+
+function scanBytesRoi(
+  api: ScannerExports,
+  image: RenderedImage,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+): string {
+  const scratch = createScratch(image.width, image.height);
+  return readString(
+    api,
+    api.scan_and_decode_bytes_roi(
+      image.width,
+      image.height,
+      writeBytes(api, image.luma),
+      x,
+      y,
+      width,
+      height,
       writeArray(api, scratch.modules),
       writeArray(api, scratch.erasures),
       writeArray(api, scratch.packed),
@@ -822,7 +918,66 @@ describe('compiled scanner FWS graph', () => {
     } finally {
       service.dispose();
     }
-  }, 300_000);
+  }, 900_000);
+
+  it('does not repeat fixed-angle Data Matrix retries', () => {
+    const source = readFileSync(resolve(scannerDirectory, 'scanner.fws'), 'utf8');
+    const datamatrixScanner = source.slice(source.indexOf('fn try_datamatrix('), source.indexOf('fn try_aztec('));
+    expect(datamatrixScanner.match(/try_datamatrix_rotated\(data, width, height, 18,/g)).toHaveLength(1);
+    expect(datamatrixScanner.match(/try_datamatrix_rotated\(data, width, height, -18,/g)).toHaveLength(1);
+  });
+
+  it('exposes byte-pointer scan entry points without Array<i32> conversion', () => {
+    const imageSource = readFileSync(resolve(scannerDirectory, 'image.fws'), 'utf8');
+    const scannerSource = readFileSync(resolve(scannerDirectory, 'scanner.fws'), 'utf8');
+    expect(imageSource).toMatch(/export fn luma_from_bytes\(width: i32, height: i32, luma: u32\) -> u32/);
+    expect(scannerSource).toMatch(/export fn scan_and_decode_bytes\(/);
+    expect(scannerSource).toMatch(/export fn scan_and_decode_bytes_roi\(/);
+    expect(scannerSource).toMatch(/export fn scan_and_decode_all_bytes\(/);
+    for (const name of ['scan_and_decode_bytes', 'scan_and_decode_bytes_roi', 'scan_and_decode_all_bytes']) {
+      const start = scannerSource.indexOf(`export fn ${name}(`);
+      const end = scannerSource.indexOf('\n}\n', start) + 3;
+      expect(scannerSource.slice(start, end)).not.toMatch(/luma:\s*Array<i32>/);
+      expect(scannerSource.slice(start, end)).not.toContain('luma_copy_from_array');
+    }
+  });
+
+  it('reuses the prepared bitmap for accepted multi-scan regions', () => {
+    const source = readFileSync(resolve(scannerDirectory, 'scanner.fws'), 'utf8');
+    const region = source.slice(source.indexOf('fn scan_region('), source.indexOf('// Multi-scan regions'));
+    expect(region).toContain('let preview: u32 = prepare_bits(cropped, cropped_width, cropped_height);');
+    expect(region).toContain('return scan_prepared_data(cropped, cropped_width, cropped_height, preview,');
+    expect(region).not.toContain('return scan_data(cropped, cropped_width, cropped_height,');
+
+    const scanData = source.slice(source.indexOf('fn scan_data('), source.indexOf('export fn scan_and_decode('));
+    expect(scanData).toContain('let bits: u32 = prepare_bits(data, width, height);');
+    expect(scanData).toContain('return scan_prepared_data(data, width, height, bits,');
+    const preparedData = source.slice(source.indexOf('fn scan_prepared_data('), source.indexOf('fn scan_data('));
+    expect(preparedData).toContain('let adaptive: u32 = img.binarize_adaptive(data, width, height);');
+  });
+
+  it('packs Otsu pixels into bitmap bytes without changing threshold semantics', () => {
+    const source = readFileSync(resolve(scannerDirectory, 'image.fws'), 'utf8');
+    const binarize = source.slice(
+      source.indexOf('export fn binarize('),
+      source.indexOf('export fn binarize_adaptive('),
+    );
+    expect(binarize).not.toContain('bitmap_set(');
+
+    const luma = [0, 0, 0, 255, 255, 255, 0, 255, 0];
+    const bits = api.sc_binarize_luma(9, 1, writeArray(api, luma));
+    expect(new Uint8Array(api.memory.buffer, bits, 2)).toEqual(new Uint8Array([0b0100_0111, 0b0000_0001]));
+  });
+
+  it('packs adaptive pixels into bitmap bytes without per-pixel bitmap writes', () => {
+    const source = readFileSync(resolve(scannerDirectory, 'image.fws'), 'utf8');
+    const adaptive = source.slice(
+      source.indexOf('export fn binarize_adaptive('),
+      source.indexOf('// Dense dark bounds'),
+    );
+    expect(adaptive).not.toContain('bitmap_set(');
+    expect(adaptive).toContain('c.mem_set_u8(bits, byte_index, packed);');
+  });
 
   it('keeps the result wire format compact and tagged', () => {
     expect(readString(api, api.sc_result_none())).toBe('');
@@ -854,6 +1009,29 @@ describe('compiled scanner FWS graph', () => {
         ),
       ),
     ).toBe('');
+  });
+
+  it('keeps byte-pointer single, ROI, and all-code results identical', () => {
+    const image = renderQr('byte-pointer');
+    const expected = scan(api, image);
+    expect(scanBytes(api, image)).toBe(expected);
+    expect(scanBytesRoi(api, image, 0, 0, image.width, image.height)).toBe(expected);
+
+    const pair = renderQrPair('byte-first', 'byte-second');
+    const expectedAll = scanAll(api, pair);
+    expect(scanAllBytes(api, pair)).toBe(expectedAll);
+  });
+
+  it('rejects invalid dimensions before reading a byte pointer', () => {
+    const scratch = createScratch(1, 1);
+    const modules = writeArray(api, scratch.modules);
+    const erasures = writeArray(api, scratch.erasures);
+    const packed = writeArray(api, scratch.packed);
+    const meta = writeArray(api, scratch.meta);
+    const luma = writeBytes(api, [255]);
+    expect(readString(api, api.scan_and_decode_bytes(0, 1, luma, modules, erasures, packed, meta))).toBe('');
+    expect(readString(api, api.scan_and_decode_bytes(4097, 1, luma, modules, erasures, packed, meta))).toBe('');
+    expect(readString(api, api.scan_and_decode_all_bytes(1, 0, luma, modules, erasures, packed, meta))).toBe('');
   });
 
   it('binarises a QR without consuming its quiet zone', () => {

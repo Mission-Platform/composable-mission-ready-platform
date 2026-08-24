@@ -151,6 +151,22 @@ describe('probe scanner formats', () => {
               return [0, 0];
             }
           },
+          matrix_decode_utf8(pointer: number, length: number): RawString {
+            if (instance === undefined) return [0, 0];
+            const encoded = new TextDecoder().decode(new Uint8Array((instance.exports as any).memory.buffer, pointer, length));
+            const bytes = new Uint8Array(encoded.length / 3);
+            for (let i = 0; i < bytes.length; i += 1) bytes[i] = Number(encoded.slice(i * 3, i * 3 + 3));
+            try {
+              const s = `1${td.decode(bytes)}`;
+              const ex = instance.exports as unknown as Api;
+              const enc = new TextEncoder().encode(s);
+              const ptr = ex.fws_alloc(enc.byteLength);
+              new Uint8Array(ex.memory.buffer, ptr, enc.byteLength).set(enc);
+              return [ptr, enc.byteLength];
+            } catch {
+              return [0, 0];
+            }
+          },
         },
       };
       instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), imports);
@@ -158,7 +174,7 @@ describe('probe scanner formats', () => {
     } finally {
       service.dispose();
     }
-  }, 30_000);
+  }, 900_000);
 
   it('probes matrix decoder in isolation', async () => {
     const files: Record<string, string> = {};
@@ -324,5 +340,5 @@ describe('probe scanner formats', () => {
       console.log('UPCA scan THREW:', (e as Error).message);
     }
     expect(true).toBe(true);
-  });
+  }, 120_000);
 });

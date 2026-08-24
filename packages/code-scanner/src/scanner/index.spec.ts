@@ -3,7 +3,14 @@ import { encodeMatrix } from '@mission-platform/matrix-code';
 import { encodeQr, type QrErrorCorrection } from '@mission-platform/qr-code';
 import { describe, expect, it, vi } from 'vitest';
 
-import { scanImageData, scanImageDataAll, scanImageDataAllAsync, scanImageDataAsync } from './index';
+import {
+  createScannerRawPointerSession,
+  createScannerRawPointerSessionAsync,
+  scanImageData,
+  scanImageDataAll,
+  scanImageDataAllAsync,
+  scanImageDataAsync,
+} from './index';
 
 import type { ImageLike } from '../types';
 
@@ -592,6 +599,44 @@ describe('scanImageData — region of interest', () => {
 
     const leftResult = scanImageData(frame, { x: 0, y: 0, width: left.width, height });
     expect(leftResult?.value).toBe('LEFT-CODE');
+  });
+});
+
+describe('scanner raw pointer session', () => {
+  it('loads raw exports, decodes pointer results, and owns reset-scoped allocations', () => {
+    const session = createScannerRawPointerSession();
+    const image = renderCleanQr('RAW-SESSION');
+
+    expect(session.memory).toBeInstanceOf(WebAssembly.Memory);
+    expect(session.scan(image)).toEqual({ format: 'qr', value: 'RAW-SESSION' });
+
+    session.reset();
+    expect(session.scan(image)).toEqual({ format: 'qr', value: 'RAW-SESSION' });
+  });
+
+  it('loads the raw session asynchronously and decodes all results', async () => {
+    const session = await createScannerRawPointerSessionAsync();
+    const image = renderCleanQr('RAW-ASYNC');
+
+    expect(session.scanAll(image)).toEqual([{ format: 'qr', value: 'RAW-ASYNC' }]);
+  });
+
+  it('uses the byte path for ROI scans', () => {
+    const session = createScannerRawPointerSession();
+    const left = renderCleanQr('RAW-LEFT');
+    const gap = 48;
+    const right = renderCleanQr('RAW-RIGHT');
+    const width = left.width + gap + right.width;
+    const height = Math.max(left.height, right.height);
+    const frame = compose(width, height, [
+      { image: left, x: 0, y: 0 },
+      { image: right, x: left.width + gap, y: 0 },
+    ]);
+
+    expect(session.scan(frame, { x: left.width + gap, y: 0, width: right.width, height })).toEqual({
+      format: 'qr',
+      value: 'RAW-RIGHT',
+    });
   });
 });
 

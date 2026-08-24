@@ -339,26 +339,18 @@ fn try_datamatrix(
       return straightened;
     }
   }
-  if angle != 18 && angle != -18 {
-    // A square symbol's dense bounds do not reveal its rotation reliably. Try
-    // the steep-angle capture used by the façade contract after the estimator
-    // so a weak directional signal cannot select the wrong correction.
-    let straightened: string = try_datamatrix_rotated(data, width, height, 18, modules, erasures, meta);
-    if c.result_is_decoded(straightened) {
-      return straightened;
-    }
-    straightened = try_datamatrix_rotated(data, width, height, -18, modules, erasures, meta);
-    if c.result_is_decoded(straightened) {
-      return straightened;
-    }
+  // A square symbol's dense bounds do not reveal its rotation reliably. Try
+  // the steep-angle capture used by the façade contract after the estimator
+  // so a weak directional signal cannot select the wrong correction. Keep
+  // this pair outside the angle guard so estimated ±18° still receive it,
+  // while avoiding a second identical pair for all other estimated angles.
+  let straightened: string = try_datamatrix_rotated(data, width, height, 18, modules, erasures, meta);
+  if c.result_is_decoded(straightened) {
+    return straightened;
   }
-  let steep_retry: string = try_datamatrix_rotated(data, width, height, 18, modules, erasures, meta);
-  if c.result_is_decoded(steep_retry) {
-    return steep_retry;
-  }
-  steep_retry = try_datamatrix_rotated(data, width, height, -18, modules, erasures, meta);
-  if c.result_is_decoded(steep_retry) {
-    return steep_retry;
+  straightened = try_datamatrix_rotated(data, width, height, -18, modules, erasures, meta);
+  if c.result_is_decoded(straightened) {
+    return straightened;
   }
   let sweep_angle: i32 = 1;
   while sweep_angle <= 35 {
@@ -569,22 +561,16 @@ fn scan_bitmap(
   return located;
 }
 
-// Scan an already-copied luma buffer. Keeping this separate from the host-array
-// entry point lets the multi-region path crop one source image and reuse the
-// same decoder scratch arrays for every tile.
-fn scan_data(
+fn scan_prepared_data(
   data: u32,
   width: i32,
   height: i32,
+  bits: u32,
   modules: Array<i32>,
   erasures: Array<i32>,
   packed: Array<i32>,
   meta: Array<i32>
 ) -> string {
-  let bits: u32 = prepare_bits(data, width, height);
-  if bits == 0 {
-    return c.result_none();
-  }
   let result: string = scan_bitmap(bits, width, height, data, modules, erasures, packed, meta);
   if !c.result_is_none(result) && c.result_is_decoded(result) {
     return result;
@@ -603,6 +589,25 @@ fn scan_data(
   return result;
 }
 
+// Scan an already-copied luma buffer. Keeping this separate from the host-array
+// entry point lets the multi-region path crop one source image and reuse the
+// same decoder scratch arrays for every tile.
+fn scan_data(
+  data: u32,
+  width: i32,
+  height: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
+) -> string {
+  let bits: u32 = prepare_bits(data, width, height);
+  if bits == 0 {
+    return c.result_none();
+  }
+  return scan_prepared_data(data, width, height, bits, modules, erasures, packed, meta);
+}
+
 export fn scan_and_decode(
   width: i32,
   height: i32,
@@ -617,6 +622,22 @@ export fn scan_and_decode(
     return c.result_none();
   }
   let data: u32 = img.luma_copy_from_array(width, height, luma);
+  if data == 0 {
+    return c.result_none();
+  }
+  return scan_data(data, width, height, modules, erasures, packed, meta);
+}
+
+export fn scan_and_decode_bytes(
+  width: i32,
+  height: i32,
+  luma: u32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
+) -> string {
+  let data: u32 = img.luma_from_bytes(width, height, luma);
   if data == 0 {
     return c.result_none();
   }
@@ -641,6 +662,36 @@ export fn scan_and_decode_roi(
     return c.result_none();
   }
   let data: u32 = img.luma_copy_from_array(width, height, luma);
+  if data == 0 {
+    return c.result_none();
+  }
+  let cropped: u32 = img.crop_luma(data, width, height, roi_x, roi_y, roi_w, roi_h, meta);
+  if cropped == 0 {
+    return c.result_none();
+  }
+  let cw: i32 = meta[0];
+  let ch: i32 = meta[1];
+  let bits: u32 = prepare_bits(cropped, cw, ch);
+  if bits == 0 {
+    return c.result_none();
+  }
+  return scan_bitmap(bits, cw, ch, cropped, modules, erasures, packed, meta);
+}
+
+export fn scan_and_decode_bytes_roi(
+  width: i32,
+  height: i32,
+  luma: u32,
+  roi_x: i32,
+  roi_y: i32,
+  roi_w: i32,
+  roi_h: i32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
+) -> string {
+  let data: u32 = img.luma_from_bytes(width, height, luma);
   if data == 0 {
     return c.result_none();
   }
@@ -695,15 +746,15 @@ fn scan_region(
     }
     return c.result_none();
   }
-  return scan_data(cropped, cropped_width, cropped_height, modules, erasures, packed, meta);
+  return scan_prepared_data(cropped, cropped_width, cropped_height, preview, modules, erasures, packed, meta);
 }
 
 // Multi-scan regions mirror the native scanner: whole frame, overlapping
 // half-splits, then overlapping quadrants, all in coarsest-first order.
-export fn scan_and_decode_all(
+fn scan_all_data(
+  data: u32,
   width: i32,
   height: i32,
-  luma: Array<i32>,
   modules: Array<i32>,
   erasures: Array<i32>,
   packed: Array<i32>,
@@ -713,7 +764,6 @@ export fn scan_and_decode_all(
   if pixels < 0 {
     return c.result_none();
   }
-  let data: u32 = img.luma_copy_from_array(width, height, luma);
   if data == 0 {
     return c.result_none();
   }
@@ -784,6 +834,42 @@ export fn scan_and_decode_all(
     if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
   }
   return results;
+}
+
+export fn scan_and_decode_all(
+  width: i32,
+  height: i32,
+  luma: Array<i32>,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
+) -> string {
+  let pixels: i32 = img.checked_image_len(width, height);
+  if pixels < 0 {
+    return c.result_none();
+  }
+  let data: u32 = img.luma_copy_from_array(width, height, luma);
+  if data == 0 {
+    return c.result_none();
+  }
+  return scan_all_data(data, width, height, modules, erasures, packed, meta);
+}
+
+export fn scan_and_decode_all_bytes(
+  width: i32,
+  height: i32,
+  luma: u32,
+  modules: Array<i32>,
+  erasures: Array<i32>,
+  packed: Array<i32>,
+  meta: Array<i32>
+) -> string {
+  let data: u32 = img.luma_from_bytes(width, height, luma);
+  if data == 0 {
+    return c.result_none();
+  }
+  return scan_all_data(data, width, height, modules, erasures, packed, meta);
 }
 
 // Test/helper exports for unit specs (unique names to avoid static-link collisions).

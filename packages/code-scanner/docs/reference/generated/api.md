@@ -174,6 +174,26 @@ A single-channel grayscale image: `width * height` luma bytes.
 
 ## `src/scanner/index`
 
+### createScannerRawPointerSession
+
+**Kind:** function
+
+```typescript
+function createScannerRawPointerSession(): ScannerRawPointerSession
+```
+
+No description provided.
+
+### createScannerRawPointerSessionAsync
+
+**Kind:** function
+
+```typescript
+function createScannerRawPointerSessionAsync(): Promise<ScannerRawPointerSession>
+```
+
+No description provided.
+
 ### scanImageData
 
 **Kind:** function
@@ -266,6 +286,16 @@ failures are returned as Promise rejections.
 
 - **@param:** optional region of interest — see {@link scanImageData}.
 - **@returns:** the {@link ScanResult}, or `null` when no code is found.
+
+### ScannerRawPointerSession
+
+**Kind:** interface
+
+```typescript
+export interface ScannerRawPointerSession
+```
+
+No description provided.
 
 ## `src/types`
 

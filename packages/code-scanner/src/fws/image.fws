@@ -106,6 +106,16 @@ export fn luma_copy_from_array(width: i32, height: i32, luma: Array<i32>) -> u32
   return data;
 }
 
+// Validate a caller-owned byte luma buffer without expanding it to Array<i32>.
+// The scanner reads the returned pointer directly for the duration of the scan.
+export fn luma_from_bytes(width: i32, height: i32, luma: u32) -> u32 {
+  let pixels: i32 = checked_image_len(width, height);
+  if pixels < 0 || luma == 0 {
+    return 0;
+  }
+  return luma;
+}
+
 export fn luma_get(data: u32, width: i32, height: i32, x: i32, y: i32) -> i32 {
   if x < 0 || y < 0 || x >= width || y >= height {
     return 255;
@@ -243,12 +253,28 @@ export fn binarize(data: u32, width: i32, height: i32) -> u32 {
   let threshold: i32 = otsu_threshold(data, pixels);
   let bits: u32 = bitmap_alloc(width, height);
   let index: i32 = 0;
+  let byte_index: i32 = 0;
+  let bit: i32 = 0;
+  let bit_mask: i32 = 1;
+  let packed: i32 = 0;
   while index < pixels {
     let value: i32 = c.mem_get_u8(data, index);
-    let x: i32 = index - c.safe_div_i32(index, width) * width;
-    let y: i32 = c.safe_div_i32(index, width);
-    bitmap_set(bits, width, height, x, y, value <= threshold);
+    if value <= threshold {
+      packed = packed + bit_mask;
+    }
+    bit = bit + 1;
+    bit_mask = bit_mask * 2;
+    if bit == 8 {
+      c.mem_set_u8(bits, byte_index, packed);
+      byte_index = byte_index + 1;
+      bit = 0;
+      bit_mask = 1;
+      packed = 0;
+    }
     index = index + 1;
+  }
+  if bit > 0 {
+    c.mem_set_u8(bits, byte_index, packed);
   }
   return bits;
 }
@@ -260,6 +286,10 @@ export fn binarize_adaptive(data: u32, width: i32, height: i32) -> u32 {
   }
   let radius: i32 = c.max_i32(8, c.min_i32(width, height) / 16);
   let bits: u32 = bitmap_alloc(width, height);
+  let byte_index: i32 = 0;
+  let bit: i32 = 0;
+  let bit_mask: i32 = 1;
+  let packed: i32 = 0;
   let y: i32 = 0;
   while y < height {
     let x: i32 = 0;
@@ -285,10 +315,24 @@ export fn binarize_adaptive(data: u32, width: i32, height: i32) -> u32 {
         mean = c.safe_div_i32(sum, count);
       }
       let pixel: i32 = luma_get(data, width, height, x, y);
-      bitmap_set(bits, width, height, x, y, pixel <= mean - 8);
+      if pixel <= mean - 8 {
+        packed = packed + bit_mask;
+      }
+      bit = bit + 1;
+      bit_mask = bit_mask * 2;
+      if bit == 8 {
+        c.mem_set_u8(bits, byte_index, packed);
+        byte_index = byte_index + 1;
+        bit = 0;
+        bit_mask = 1;
+        packed = 0;
+      }
       x = x + 1;
     }
     y = y + 1;
+  }
+  if bit > 0 {
+    c.mem_set_u8(bits, byte_index, packed);
   }
   return bits;
 }

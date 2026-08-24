@@ -20,7 +20,15 @@ export type { ImageLike, Roi, ScanFormat, ScanResult } from './types';
 export { contrastStretchLuma, imageDataToLuma, type LumaImage } from './image';
 
 /** The core scanning façade. */
-export { scanImageData, scanImageDataAll, scanImageDataAllAsync, scanImageDataAsync } from './scanner';
+export {
+  createScannerRawPointerSession,
+  createScannerRawPointerSessionAsync,
+  scanImageData,
+  scanImageDataAll,
+  scanImageDataAllAsync,
+  scanImageDataAsync,
+  type ScannerRawPointerSession,
+} from './scanner';
 
 /**
  * Opt-in diagnostic logging. Enable it (or set `globalThis.__CODE_SCANNER_DEBUG__`

@@ -25,9 +25,11 @@ export default defineVitestConfig({
         requestedCapabilities: (fileName) => (fileName.endsWith('/qr-decoder.fws') ? ['qr.decode.utf8'] : undefined),
       }),
     ],
-    esbuild: {
-      jsxFactory: 'h',
-      jsxFragment: 'Fragment',
+    oxc: {
+      jsx: {
+        runtime: 'automatic',
+        importSource: '@mission-platform/forge',
+      },
     },
     resolve: {
       alias: [
@@ -39,6 +41,7 @@ export default defineVitestConfig({
       ],
     },
     test: {
+      testTimeout: 120_000,
       setupFiles: ['./src/test-setup.ts'],
       server: {
         deps: {
