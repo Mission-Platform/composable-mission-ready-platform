@@ -1,69 +1,64 @@
-# בניית מערכת
+# Build System
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+This document explains the architecture and mechanics of the Mission Platform's build system. It is designed for high
+performance, incremental builds, and multi-framework package distribution.
 
-> מקור באנגלית: [docs/build-system.md](../../build-system.md)
-> שפה: עברית (he)
+## Core Architecture
 
-מסמך זה מסביר את הארכיטקטורה והמכניקה של מערכת הבנייה של פלטפורמת המשימה. זה נועד עבור גבוה
-ביצועים, בנייה מצטברת והפצת חבילות מרובות מסגרות.
+The Mission Platform uses a tiered build system that separates task orchestration from individual workspace compilation.
 
-## ארכיטקטורת ליבה
+### 1. Task Orchestration (Turborepo)
 
-פלטפורמת המשימה משתמשת במערכת בנייה מדורגת המפרידה בין תזמור משימות לבין קומפילציה של סביבת עבודה בודדת.
+**Turborepo** is the top-level orchestrator. It manages the dependency graph between workspaces and provides caching for
+all tasks.
 
-### 1. תזמורת משימות (Turborepo)
+- **Pipeline defined in `turbo.json`**: Tasks like `build`, `test`, and `lint` are defined with their dependencies
+  (e.g., `build` depends on `^build`, meaning all dependencies must be built first).
+- **Hashing**: Turborepo hashes source files, environment variables, and global dependencies to determine if a task's
+  output can be re-used from the cache.
+- **Parallelism**: Independent tasks are executed concurrently to maximize CPU utilization.
 
-**Turborepo** הוא המתזמר ברמה העליונה. הוא מנהל את גרף התלות בין סביבות העבודה ומספק מטמון עבור
-כל המשימות.
+### 2. Package Compilation (tsdown)
 
-- **צינור מוגדר ב `turbo.json`**: משימות כמו `build`, `test`, ו `lint` מוגדרים עם התלות שלהם
-  (למשל, `build` תלוי `^build`, כלומר יש לבנות תחילה את כל התלות).
-- **Hashing**: Turborepo גיבוב קבצי מקור, משתני סביבה ותלות גלובלית כדי לקבוע אם משימה
-  ניתן לעשות שימוש חוזר בפלט מהמטמון.
-- **מקבילות**: משימות עצמאיות מבוצעות במקביל כדי למקסם את ניצול ה-CPU.
+Most library packages in `packages/` use **tsdown** for compilation.
 
-### 2. אוסף חבילות (tsdown)
-
-רוב חבילות הספרייה ב `packages/` השתמש ב-**tsdown** להידור.
-
-- **מהירות**: נבנה על גבי **Rolldown** (היורש של Rollup מבוסס Rust), ומספק בנייה כמעט מיידית.
-- **פירוק**: חבילות בנויות עם `unbundle: true`, שמירה על מבנה המודול המקורי ב `dist/`. זה
+- **Speed**: Built on top of **Rolldown** (the Rust-based successor to Rollup), providing near-instant builds.
+- **Unbundling**: Packages are built with `unbundle: true`, preserving the original module structure in `dist/`. This
   ensures optimal tree-shaking and better debugging in consumer applications.
-- **שרשור CSS**: תוסף מותאם אישית מקשר מחדש את גיליונות הסגנונות שחולצו אל מודולי ה-JS שבבעלותם, ומבטיח כי
+- **CSS Threading**: A custom plugin re-links extracted stylesheets back to their owning JS modules, ensuring that
   importing a component automatically pulls in its styles.
 
-### 3. חבילת יישומים (Vite)
+### 3. Application Bundling (Vite)
 
-יישומים הניתנים לפריסה ב `apps/` השתמש **Vite** לצרור פיתוח וייצור.
+Deployable applications in `apps/` use **Vite** for development and production bundling.
 
-- **הגדרות משותפות**: אפליקציות מתרחבות `@mission-platform/vite-config` כדי להבטיח צינורות PostCSS עקביים ו
-  החלטה אגנוסטית של מסגרת.
-- **תמיכה ב-SSR/SSG**: יישומים כמו `my-care-notes` לְהִשְׁתַמֵשׁ `vite-ssg` ליצירת אתרים סטטיים.
+- **Shared Configs**: Apps extend `@mission-platform/vite-config` to ensure consistent PostCSS pipelines and
+  framework-agnostic resolution.
+- **SSR/SSG Support**: Applications like `my-care-notes` use `vite-ssg` for static site generation.
 
-### Forge בניית חבילות
+### Forge package builds
 
-בניית חבילות Forge מוסיפה חזית מהדר ניטראלית לרגיל `tsdown` אוֹ Vite זְרִימָה. חבילה צורכת מייבאת
-את התוספים למסגרת שהוא רוצה ומעביר אליהם מופעים מפורשים `defineTsdownForgeComponents` אוֹ
-`defineTsdownForgeHooks`. הדרייבר הנייטרלי יוצר IR סמנטי פעם אחת, ואז התוסף שנבחר הוא הבעלים של הורדת יעד,
-יצירת מקור, הצהרות, רכיבים חיצוניים של זמן ריצה והמקור שלו Viteמתאם /tsdown.
+Forge package builds add a neutral compiler front end to the normal `tsdown` or Vite flow. A consuming package imports
+the framework plugins it wants and passes explicit instances to `defineTsdownForgeComponents` or
+`defineTsdownForgeHooks`. The neutral driver creates semantic IR once, then the selected plugin owns target lowering,
+source generation, declarations, runtime externals, and its native Vite/tsdown adapter.
 
-פלט פלטפורמת תוכן הוא ציר שני, אורתוגונלי המוגדר דרכו `@mission-platform/forge-cms-plugin-api`. א
-כרטיס צרכן `defineTsdownForgeCms` (אוֹ `defineTsdownForgeCmsAll`) רשימה של `CmsOutputPlugin` מקרים, כל אחד
-אשר _מרכיב_ תוסף מסגרת - `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`,
-`forgeAstroCms({ packageName, plugin })`, וכן הלאה עבור Ghost, Jekyll ו-Webflow. כי הפלטפורמה וה
-מסגרת נבחרות באופן עצמאי, `storyblok × vue` ו `astro × solid` הם תצורה ולא קוד חדש.
+Content-platform output is a second, orthogonal axis configured through `@mission-platform/forge-cms-plugin-api`. A
+consumer passes `defineTsdownForgeCms` (or `defineTsdownForgeCmsAll`) a list of `CmsOutputPlugin` instances, each of
+which _composes_ a framework plugin — `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`,
+`forgeAstroCms({ packageName, plugin })`, and so on for Ghost, Jekyll, and Webflow. Because the platform and the
+framework are chosen independently, `storyblok × vue` and `astro × solid` are configuration rather than new code.
 
-בונות CMS לפלוט ל `dist/cms/<cms>/<framework>/**`, עם מניפסטים ורכבות צד אחרות של הפלטפורמה משתקפות לתוך
-`dist/cms/<cms>/`. יעדים שזקוקים לזמן ריצה מרופד (Astro, Webflow) יוצרים יחד עץ אי מהתחום
-תוסף מסגרת לאותו build. פיצול האחריות המלא וגבולות השלבים מתוארים ב
-[Forge Compiler Pipeline](forge-compiler.md).
+CMS builds emit to `dist/cms/<cms>/<framework>/**`, with manifests and other platform sidecars mirrored into
+`dist/cms/<cms>/`. Targets that need a hydrated runtime (Astro, Webflow) co-generate an island tree from the bound
+framework plugin into the same build. The complete responsibility split and stage boundaries are described in
+[Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
 
-## בניית חוזה
+## Build contract
 
-`pnpm build` הוא המבנה המצטבר הקנוני. זה מאציל ל Turboברמת החבילה של `build` משימה מבלי להגדיר א
-בורר מסגרת, כך שכל חבילת Forge פולטת את הפלט הנייטרלי שלה וכל יעד מסגרת שהוגדר על ידי זה
-חבילה. חבילות עם תחזיות CMS פולטות את ההקרנות הללו ואת גלגלי הצד המשותפים שלהן באותו מבנה מדורג.
+`pnpm build` is the canonical aggregate build. It delegates to Turbo's package-level `build` task without setting a
+framework selector, so every Forge package emits its neutral output and every framework target configured by that
+package. Packages with CMS projections emit those projections and their shared sidecars in the same staged build.
 
 ```bash
 pnpm build
@@ -71,7 +66,7 @@ pnpm build:force                 # the same aggregate build, ignoring Turbo's ca
 pnpm exec turbo run build --filter @mission-platform/components
 ```
 
-חבילות Forge שומרות גם על כינויי תאימות דקים לבנייה מחדש של יעד אחד:
+Forge packages also retain thin compatibility aliases for rebuilding one target:
 
 ```bash
 pnpm --filter @mission-platform/components run build:forge
@@ -82,92 +77,92 @@ pnpm --filter @mission-platform/components run build:solid
 pnpm --filter @mission-platform/components run build:web-components
 ```
 
-הכינויים משתמשים באותו רץ מוקלד כמו `build`; הם אינם מכילים עצמאיים `tsdown` יישומים. `build:forge`
-בוחר את היעד הנייטרלי, בעוד כינויי המסגרת בוחרים את ספריית המסגרת המתאימה. ספציפי לחבילה
-פקודות מצב artifact CMS נשארות זמינות היכן שהן חשופות, כולל פקודת Storyblok assets המשותפת והפקודה
-פקודות גלישת Storyblok לכל מסגרת.
+The aliases use the same typed runner as `build`; they do not contain independent `tsdown` implementations. `build:forge`
+selects the neutral target, while the framework aliases select the corresponding framework directory. Package-specific
+CMS artifact-mode commands remain available where exposed, including the shared Storyblok assets command and the
+per-framework Storyblok wrapper commands.
 
-### בימוי וקידום
+### Staging and promotion
 
-כל קריאת Forge כותבת לחבילה ייחודית-שלב מקומי מתחת `node_modules/.cache/forge-build/`. הבמה היא
-התעלמו על ידי Turboתשומות של ואינו מתפרסם לעולם. בנייה מוצלחת נבדקת עבור פלט לפני הקידום:
+Every Forge invocation writes to a unique package-local stage under `node_modules/.cache/forge-build/`. The stage is
+ignored by Turbo's inputs and is never published. A successful build is checked for output before promotion:
 
-- **מצב מצטבר** מחליף מבחינה אטומית את הכלי המלא בבעלות Forge `dist` עֵץ. קבצי ניטרליים, מסגרת ו-CMS מיושנים
-  לכן מוסרים במקום לספק יצוא בטעות.
-- **מצב ממוקד** מחליף מבחינה אטומית רק את תת-עץ המסגרת שנבחר (ותת-העץ התואם שלו ל-CMS העטיפה),
-  שמירה על פלט נייטרל, מסגרת, דואר אלקטרוני ו-CMS לא קשור שכבר נמצא `dist`. הרץ חוקר את בורר ה-CMS
-  (למשל `FORGE_CMS_STORYBLOK_TARGET`) למסגרת המבוקשת לצד `FORGE_FRAMEWORK_TARGET`, אז CMS של חבילה
-  חיווט (`forgeStoryblokCmsTargets`, וכו') למעשה בונה מחדש את העטיפה התואמת באותו שלב במקום שהיא תהיה
-  ירד בשקט מקידום. הקידום מנקה רק תת-עץ של עטיפת CMS שהשלב יצר מחדש; זה אף פעם
-  מוחק מעטפת CMS של אח שה-build הנוכחי לא נבנה מחדש.
-- נכסים משותפים של CMS כגון סכימות Storyblok ו `components.json` יש יעד משותף ואינם נמחקים על ידי א
-  קידום מסגרת מאוחר יותר.
-- כשל מהדר, שלב ריק או כשל בקידום מותיר את העץ הקודם שפורסם ללא נגיעה ומסיר את
-  מדריך שלב וקידום זמני.
+- **Aggregate mode** atomically replaces the complete Forge-owned `dist` tree. Stale neutral, framework, and CMS files
+  are therefore removed instead of satisfying exports accidentally.
+- **Targeted mode** atomically replaces only the selected framework subtree (and its matching CMS wrapper subtree),
+  preserving unrelated neutral, framework, email, and CMS output already in `dist`. The runner scopes the CMS selector
+  (e.g. `FORGE_CMS_STORYBLOK_TARGET`) to the requested framework alongside `FORGE_FRAMEWORK_TARGET`, so a package's CMS
+  wiring (`forgeStoryblokCmsTargets`, etc.) actually rebuilds the matching wrapper in the same stage instead of it being
+  silently dropped from promotion. Promotion only clears a CMS wrapper subtree that the stage regenerated; it never
+  deletes a sibling CMS wrapper the current build did not rebuild.
+- CMS shared assets such as Storyblok schemas and `components.json` have a shared destination and are not deleted by a
+  later framework promotion.
+- A compiler failure, empty stage, or promotion failure leaves the previous published tree untouched and removes the
+  temporary stage and promotion directory.
 
-הפלט שפורסם נשאר תחת הקיים `dist` חוזה: מודולים והצהרות ניטרליים, ספריות מסגרת
-(`vue`, `react`, `svelte`, `solid`, `web-components`)ותחזיות CMS תחת `cms/<cms>/<framework>`. ייצוא חבילה
-מפות, כולל `mp:*` תנאים ותת-נתיבי CMS, ממשיכים לפתור נגד נתיבים מקודמים אלה.
+The published output remains under the existing `dist` contract: neutral modules and declarations, framework directories
+(`vue`, `react`, `svelte`, `solid`, `web-components`), and CMS projections under `cms/<cms>/<framework>`. Package export
+maps, including `mp:*` conditions and CMS subpaths, continue to resolve against these promoted paths.
 
-### משימות חבילה
+### Package tasks
 
-| משימה | תיאור |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       | צבר פלט ניטרלי, מסגרת, הצהרה, דואר אלקטרוני ופלט CMS מוגדר דרך ה-Forge runner המשותף. |
-| `build:forge` | כינוי תאימות פלט Forge ממוקד ממוקד.                                                      |
-| `build:react`, `build:vue`, `build:svelte` | כינויים ממוקדים של תאימות מסגרת.                                      |
-| `build:solid`, `build:web-components` | כינויים ממוקדים של תאימות מסגרת.                                         |
-| `build:check` | מאמת סוגים עבור סביבת עבודה מבלי לפרסם פלט.                                               |
-| `build:watch` | מתחיל בנייה מצטברת במצב שעון עבור סביבת עבודה.                                               |
+| Task                                       | Description                                                                                                                  |
+| :----------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| `build`                                    | Aggregate neutral, framework, declaration, email, and configured CMS output through the shared Forge runner. |
+| `build:forge`                              | Targeted neutral Forge output compatibility alias.                                                           |
+| `build:react`, `build:vue`, `build:svelte` | Targeted framework compatibility aliases.                                                                    |
+| `build:solid`, `build:web-components`      | Targeted framework compatibility aliases.                                                                    |
+| `build:check`                              | Validates types for a workspace without publishing output.                                                   |
+| `build:watch`                              | Starts an incremental build in watch mode for a workspace.                                                   |
 
-Turbo גיבוב את בוררי היעד (`FORGE_BUILD_TARGET` ובוררי Forge/CMS מדור קודם) יחד עם המשותף
-מקורות רץ ובימוי. כתוצאה מכך, בנייה מצטברת וממוקדת לא יכולה לעשות שימוש חוזר זה בתוצאה המאוחסנת של זה במטמון. סוֹפִי
-`dist/**` הפלט שמור במטמון; ספריות בימוי וקידום זמניות אינן נכללות במפורש.
+Turbo hashes the target selectors (`FORGE_BUILD_TARGET` and the legacy Forge/CMS selectors) together with the shared
+runner and staging sources. Consequently, aggregate and targeted builds cannot reuse one another's cached result. Final
+`dist/**` output is cached; temporary staging and promotion directories are explicitly excluded.
 
-### אסטרטגיית מטמון
+### Caching Strategy
 
-Turborepo מאחסן את החפצים הבאים:
+Turborepo caches the following artifacts:
 
-- `dist/**`: חפצי JS/CSS בנויים.
-- `.vite/**`: Viteהמטמון הפנימי של.
-- `coverage/**`: דוחות כיסוי מבחן.
+- `dist/**`: Built JS/CSS artifacts.
+- `.vite/**`: Vite's internal cache.
+- `coverage/**`: Test coverage reports.
 
-כדי לעקוף את המטמון ולאלץ בנייה חדשה, השתמש ב- `--force` דֶגֶל:
+To bypass the cache and force a fresh build, use the `--force` flag:
 
 ```bash
 pnpm build:force
 ```
 
-כינויי התאימות ומשימות במצב artifact CMS הן משימות חבילה, אז Turbo עדיין מיישם את גרף התלות שלהם ו
-כניסות מטמון ספציפיות ליעד. שלבים זמניים אינם פלטי מטמון; רק המקודמים `dist` עץ מתפרסם או
-שוחזר מהמטמון.
+The compatibility aliases and CMS artifact-mode tasks are package tasks, so Turbo still applies their dependency graph and
+target-specific cache inputs. Temporary stages are not cache outputs; only the promoted `dist` tree is published or
+restored from cache.
 
-## תצורות משותפות
+## Shared Configurations
 
-תצורות Build מרוכזות ב- `configs/` ספרייה כדי לשמור על עקביות ברחבי המונורפו.
+Build configurations are centralized in the `configs/` directory to maintain consistency across the monorepo.
 
-| חבילה | מטרה |
-| :------------------------------------ | :----------------------------------------------------------- |
-| `@mission-platform/vite-config`       | מְשׁוּתָף Vite היגיון עבור אפליקציות ו Vue-בניינים ספציפיים.          |
-| `@mission-platform/tsdown-config`     | לוגיקה משותפת של tsdown עבור חבילות ספרייה.                    |
-| `@mission-platform/typescript-config` | בָּסִיס `tsconfig.json` הגדרות קבועות מראש עבור אפליקציות, ספריות ובדיקות. |
-| `@mission-platform/postcss-config`    | עיבוד CSS סטנדרטי (Autoprefixer וכו').            |
+| Package                               | Purpose                                                                                              |
+| :------------------------------------ | :--------------------------------------------------------------------------------------------------- |
+| `@mission-platform/vite-config`       | Shared Vite logic for apps and Vue-specific builds.                                  |
+| `@mission-platform/tsdown-config`     | Shared tsdown logic for library packages.                                            |
+| `@mission-platform/typescript-config` | Base `tsconfig.json` presets for apps, libraries, and tests.                         |
+| `@mission-platform/postcss-config`    | Standardized CSS processing (Autoprefixer, etc.). |
 
-## פיתוח מקומי מול ייצור
+## Local Development vs. Production
 
-### פיתוח (`dev` מְשִׁימָה)
+### Development (`dev` task)
 
-Viteשרת הפיתוח של מספק החלפת מודול חם (HMR). כשיש אפליקציה `dev` המשימה מתחילה, גם Turborepo פועל
-של ספריית הרכיבים `build:watch` משימה לצדה (דרך המשימה `with` מפתח), אז עורך ל
-`@mission-platform/components` הידור מחדש אוטומטי ונאסף על ידי האפליקציה הפועלת ללא בנייה מחדש ידנית.
+Vite's development server provides Hot Module Replacement (HMR). When an app's `dev` task starts, Turborepo also runs
+the component library's `build:watch` task alongside it (via the task's `with` key), so edits to
+`@mission-platform/components` are recompiled automatically and picked up by the running app without a manual rebuild.
 
-### הפקה (`build` מְשִׁימָה)
+### Production (`build` task)
 
-Turborepo מבצע בנייה בסדר טופולוגי. חבילה נבנית רק לאחר שיש לכל התלות הפנימית שלה
-נבנה בהצלחה. הפלט ב `dist/` הוא מה שבסופו של דבר מתפרסם או נפרס.
+Turborepo executes builds in topological order. A package is only built after all its internal dependencies have
+successfully built. The output in `dist/` is what is eventually published or deployed.
 
-## מתקדם: שילוב WASM
+## Advanced: WASM Integration
 
-חבילות מסוימות (למשל, `@mission-platform/hunspell`, סורקי ברקוד) כרוכים בקוד Rust שנערך ל-WebAssembly. אלה
-בנייה מתוזמרת באמצעות משימות מיוחדות המשתמשות `wasm-pack` כדי להבטיח עקביות סביבתית ואופטימלית
-ביצועים.
+Certain packages (e.g., `@mission-platform/hunspell`, barcode scanners) involve Rust code compiled to WebAssembly. These
+builds are orchestrated via specialized tasks that use `wasm-pack` to ensure environment consistency and optimal
+performance.
