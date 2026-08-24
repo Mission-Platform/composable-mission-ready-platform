@@ -156,7 +156,7 @@ Round an OKLab/other color-space value to four significant figures per component
 function formatCssValue(value: unknown): string
 ```
 
-Format a token `$value` as a CSS/SCSS literal (colours rounded; everything else verbatim).
+Format a token `$value` as a CSS/SCSS literal (colours rounded; arrays become comma-separated lists).
 
 #### Parameters
 
@@ -201,7 +201,8 @@ function resolveTsValue(value: unknown): string | number
 
 Resolve a DTCG `$value` to the literal JavaScript value used in the generated
 TypeScript module: colours become their `oklab(...)` string, numbers stay
-numbers, and everything else (dimensions, font-family stacks, …) stays a string.
+numbers, arrays become comma-separated lists, and everything else
+(dimensions, font-family stacks, …) stays a string.
 
 #### Parameters
 
@@ -313,9 +314,8 @@ literal `$value` is inlined.
 
 A non-universal `@property` requires a computationally-independent
 `initial-value` (no `var()`, `light-dark()` or relative units), so the
-universal `*` syntax omits it. Everything whose value is a `var()` reference
-(the typography fields) or a non-typeable literal (shadows, easing curves,
-font-family stacks) therefore registers under `*` without an `initial-value`.
+universal `*` syntax omits it. Values whose value is a `var()` reference (the
+typography fields) therefore register under `*` without an `initial-value`.
 
 #### Parameters
 

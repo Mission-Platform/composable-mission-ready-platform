@@ -144,20 +144,23 @@ export function formatCssColor(value: DtcgColorValue): string {
   return value.alpha === undefined ? `${function_})` : `${function_} / ${value.alpha})`;
 }
 
-/** Format a token `$value` as a CSS/SCSS literal (colours rounded; everything else verbatim). */
+/** Format a token `$value` as a CSS/SCSS literal (colours rounded; arrays become comma-separated lists). */
 export function formatCssValue(value: unknown): string {
   if (isColorValue(value)) return formatCssColor(value);
+  if (Array.isArray(value)) return value.map(formatCssValue).join(', ');
   return String(value);
 }
 
 /**
  * Resolve a DTCG `$value` to the literal JavaScript value used in the generated
  * TypeScript module: colours become their `oklab(...)` string, numbers stay
- * numbers, and everything else (dimensions, font-family stacks, …) stays a string.
+ * numbers, arrays become comma-separated lists, and everything else
+ * (dimensions, font-family stacks, …) stays a string.
  */
 export function resolveTsValue(value: unknown): string | number {
   if (isColorValue(value)) return formatColorValue(value);
   if (typeof value === 'number') return value;
+  if (Array.isArray(value)) return formatCssValue(value);
   return String(value);
 }
 

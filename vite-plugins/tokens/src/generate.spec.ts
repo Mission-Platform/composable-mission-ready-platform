@@ -157,13 +157,8 @@ describe('generateTokens', () => {
       path.join(outDirectory, 'scss', 'component', 'molecules', '_navigation-vars.scss'),
       'utf8',
     );
-    const navigationTs = readFileSync(
-      path.join(outDirectory, 'ts', 'component', 'molecules', 'navigation.ts'),
-      'utf8',
-    );
-    expect(navigationScss).toContain(
-      '$navigation-item-background: var(--mp-button-primary-background-default);',
-    );
+    const navigationTs = readFileSync(path.join(outDirectory, 'ts', 'component', 'molecules', 'navigation.ts'), 'utf8');
+    expect(navigationScss).toContain('$navigation-item-background: var(--mp-button-primary-background-default);');
     expect(navigationTs).toContain('"background": "light-color"');
   });
 
@@ -176,7 +171,10 @@ describe('generateTokens', () => {
       tokensDir: path.join(repositoryRoot, 'packages/tokens/tokens'),
     });
     const report = JSON.parse(
-      readFileSync(path.join(repositoryRoot, 'vite-plugins/tokens/src/fixtures/token-reachability.report.json'), 'utf8'),
+      readFileSync(
+        path.join(repositoryRoot, 'vite-plugins/tokens/src/fixtures/token-reachability.report.json'),
+        'utf8',
+      ),
     ) as {
       aliases: Array<{ to: string; resolved: boolean }>;
       sources: string[];
@@ -192,7 +190,7 @@ describe('generateTokens', () => {
     const buttonScss = readFileSync(path.join(generatedDirectory, 'scss/component/atoms/_button.scss'), 'utf8');
     const publicBarrel = readFileSync(path.join(repositoryRoot, 'packages/tokens/src/tokens.ts'), 'utf8');
 
-    expect(report.summary).toEqual({ active: 131, protected: 2191, ambiguous: 549, candidate: 0 });
+    expect(report.summary).toEqual({ active: 135, protected: 2191, ambiguous: 549, candidate: 0 });
     expect(report.sources).toEqual([...report.sources].toSorted((a, b) => a.localeCompare(b)));
     expect(report.tokens.filter(({ status }) => status === 'candidate')).toHaveLength(0);
     expect(report.aliases.filter(({ resolved }) => !resolved).map(({ to }) => to)).toEqual([

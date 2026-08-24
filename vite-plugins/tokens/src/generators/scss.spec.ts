@@ -127,6 +127,21 @@ describe('buildPropertyRule', () => {
     expect(rule).toContain("syntax: '*';");
     expect(rule).not.toContain('initial-value');
   });
+
+  it('registers string lists with interpolated SCSS initial values', () => {
+    const rule = buildPropertyRule(
+      {
+        path: ['font', 'family', 'sans'],
+        group: 'font',
+        type: 'string',
+        value: ['Comfortaa', 'Inter', 'sans-serif'],
+      },
+      'mp',
+      true,
+    );
+    expect(rule).toContain("syntax: '<string>#';");
+    expect(rule).toContain('initial-value: #{vars.$font-family-sans};');
+  });
 });
 
 describe('buildStructuralScss', () => {

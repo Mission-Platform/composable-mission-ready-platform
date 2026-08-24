@@ -122,6 +122,10 @@ describe('value formatters', () => {
     expect(formatCssValue({ colorSpace: 'oklab', components: [0.3345, 0, 0] })).toBe('oklab(0.3345 0 0)');
   });
 
+  it('formats comma-separated string arrays as a CSS list', () => {
+    expect(formatCssValue(['Comfortaa', 'Inter', 'sans-serif'])).toBe('Comfortaa, Inter, sans-serif');
+  });
+
   it('resolves TS values (colours → unrounded string, numbers stay numbers)', () => {
     expect(resolveTsValue({ colorSpace: 'oklab', components: [0.5, 0, 0] })).toBe('oklab(0.5 0 0)');
     expect(resolveTsValue(700)).toBe(700);

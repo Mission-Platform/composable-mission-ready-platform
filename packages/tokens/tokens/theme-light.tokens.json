@@ -7,6 +7,10 @@
         "$value": "{color.forge-light}",
         "$description": "color.forge-light"
       },
+      "inverse": {
+        "$value": "{color.neutral.900}",
+        "$description": "Inverse surface for dark code and site chrome."
+      },
       "forge-alt": {
         "$value": "{color.surface.light-alt}",
         "$description": "color.surface.light-alt"
@@ -88,6 +92,10 @@
       "on-primary": {
         "$value": "{color.white}",
         "$description": "color.white"
+      },
+      "on-inverse": {
+        "$value": "{color.white}",
+        "$description": "Text on the inverse surface."
       },
       "link": {
         "$value": "{color.primary.700}",

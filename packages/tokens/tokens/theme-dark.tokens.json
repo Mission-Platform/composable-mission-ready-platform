@@ -7,6 +7,10 @@
         "$value": "{color.cyan.950}",
         "$description": "color.cyan.950"
       },
+      "inverse": {
+        "$value": "{color.cyan.950}",
+        "$description": "Inverse surface for dark code and site chrome."
+      },
       "forge-alt": {
         "$value": "{color.surface.dark-alt}",
         "$description": "color.surface.dark-alt"
@@ -88,6 +92,10 @@
       "on-primary": {
         "$value": "{color.cyan.900}",
         "$description": "color.cyan.900"
+      },
+      "on-inverse": {
+        "$value": "{color.cyan.50}",
+        "$description": "Text on the inverse surface."
       },
       "link": {
         "$value": "{color.cyan.300}",

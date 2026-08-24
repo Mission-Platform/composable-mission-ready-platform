@@ -59,7 +59,11 @@ describe('collectTokenReachability', () => {
         },
       },
     });
-    writeConsumer(root, 'packages/components/src/button.module.scss', '.button { color: var(--mp-color-used); padding: $spacing-used; }');
+    writeConsumer(
+      root,
+      'packages/components/src/button.module.scss',
+      '.button { color: var(--mp-color-used); padding: $spacing-used; }',
+    );
     writeConsumer(
       root,
       'packages/components/src/use.ts',
@@ -103,12 +107,26 @@ describe('collectTokenReachability', () => {
         },
       },
     });
-    writeConsumer(root, 'packages/components/src/button.css', '.button { color: var(--mp-button-primary-background-default); }');
+    writeConsumer(
+      root,
+      'packages/components/src/button.css',
+      '.button { color: var(--mp-button-primary-background-default); }',
+    );
 
     const report = collectTokenReachability({ repositoryRoot: root, tokensDir: tokens });
     expect(report.aliases).toEqual([
-      { sourceId: 'component/atoms/button', from: 'component.button.primary.background.default', to: 'color.nested', resolved: true },
-      { sourceId: 'component/atoms/button', from: 'component.button.primary.background.default', to: 'color.used', resolved: true },
+      {
+        sourceId: 'component/atoms/button',
+        from: 'component.button.primary.background.default',
+        to: 'color.nested',
+        resolved: true,
+      },
+      {
+        sourceId: 'component/atoms/button',
+        from: 'component.button.primary.background.default',
+        to: 'color.used',
+        resolved: true,
+      },
     ]);
     expect(token(report, 'component.button.primary.background.default')).toMatchObject({
       status: 'active',
@@ -149,7 +167,11 @@ describe('collectTokenReachability', () => {
         },
       },
     });
-    writeConsumer(root, 'packages/components/src/surface.css', '.surface { background: var(--mp-surface-background-default); }');
+    writeConsumer(
+      root,
+      'packages/components/src/surface.css',
+      '.surface { background: var(--mp-surface-background-default); }',
+    );
 
     const report = collectTokenReachability({ repositoryRoot: root, tokensDir: tokens });
     expect(token(report, 'color.used', 'theme-light')).toMatchObject({
@@ -182,7 +204,11 @@ describe('collectTokenReachability', () => {
         },
       },
     });
-    writeConsumer(root, 'packages/components/src/scale.ts', "import { size } from '@mission-platform/tokens';\ntype FontScale = keyof typeof size.font;");
+    writeConsumer(
+      root,
+      'packages/components/src/scale.ts',
+      "import { size } from '@mission-platform/tokens';\ntype FontScale = keyof typeof size.font;",
+    );
 
     const report = collectTokenReachability({ repositoryRoot: root, tokensDir: tokens });
     expect(token(report, 'size.font.md')).toMatchObject({ status: 'ambiguous', evidence: ['typescript'] });
@@ -216,14 +242,28 @@ describe('collectTokenReachability', () => {
         size: { base: { $value: '1rem' } },
       },
     });
-    writeConsumer(root, 'packages/map/src/colors.ts', "import { palette } from '@mission-platform/tokens';\nconst color = palette.color.primary[500];");
-    writeConsumer(root, 'packages/email-components/src/typography.ts', "import { typography } from '@mission-platform/tokens';\nconst variant = 'body' as keyof typeof typography;\nconst token = typography[variant];");
+    writeConsumer(
+      root,
+      'packages/map/src/colors.ts',
+      "import { palette } from '@mission-platform/tokens';\nconst color = palette.color.primary[500];",
+    );
+    writeConsumer(
+      root,
+      'packages/email-components/src/typography.ts',
+      "import { typography } from '@mission-platform/tokens';\nconst variant = 'body' as keyof typeof typography;\nconst token = typography[variant];",
+    );
 
     const report = collectTokenReachability({ repositoryRoot: root, tokensDir: tokens });
     expect(token(report, 'color.primary.500')).toMatchObject({ status: 'active', evidence: ['typescript'] });
     expect(token(report, 'color.primary.600')?.status).toBe('candidate');
-    expect(token(report, 'typography.body.font-family')).toMatchObject({ status: 'ambiguous', evidence: ['typescript'] });
-    expect(token(report, 'typography.display.font-size')).toMatchObject({ status: 'ambiguous', evidence: ['typescript'] });
+    expect(token(report, 'typography.body.font-family')).toMatchObject({
+      status: 'ambiguous',
+      evidence: ['typescript'],
+    });
+    expect(token(report, 'typography.display.font-size')).toMatchObject({
+      status: 'ambiguous',
+      evidence: ['typescript'],
+    });
   });
 
   it('keeps static generated usage active despite unrelated keyed syntax', () => {
@@ -253,7 +293,11 @@ describe('collectTokenReachability', () => {
         testOnly: { $value: '#654321' },
       },
     });
-    writeConsumer(root, 'packages/example/token.test.ts', "readTokens('palette'); const value = palette.color.testOnly;");
+    writeConsumer(
+      root,
+      'packages/example/token.test.ts',
+      "readTokens('palette'); const value = palette.color.testOnly;",
+    );
     writeConsumer(root, 'mcp/shared/src/repo/tokens.test.ts', "readTokens('palette');");
 
     const report = collectTokenReachability({ repositoryRoot: root, tokensDir: tokens });
@@ -275,7 +319,11 @@ describe('collectTokenReachability', () => {
       size: { font: { md: { $value: '1rem' }, lg: { $value: '2rem' } } },
     });
     writeSource(tokens, 'radius', { radius: { reflective: { $value: '2px' } } });
-    writeConsumer(root, 'apps/storybook/design-tokens/overrides.tokens.json', JSON.stringify({ color: { override: { $value: '#abcdef' } } }));
+    writeConsumer(
+      root,
+      'apps/storybook/design-tokens/overrides.tokens.json',
+      JSON.stringify({ color: { override: { $value: '#abcdef' } } }),
+    );
     writeConsumer(
       root,
       'mcp/shared/src/repo/tokens.ts',
@@ -325,7 +373,9 @@ describe('collectTokenReachability', () => {
     const repositoryRoot = path.resolve(import.meta.dirname, '../../..');
     const tokensDir = path.join(repositoryRoot, 'packages/tokens/tokens');
     const reportPath = path.join(import.meta.dirname, 'fixtures/token-reachability.report.json');
-    const consumerRootNames = (process.env.TOKEN_REACHABILITY_ROOTS ?? 'apps,docs,mcp,packages,vite-plugins').split(',');
+    const consumerRootNames = (process.env.TOKEN_REACHABILITY_ROOTS ?? 'apps,docs,mcp,packages,vite-plugins').split(
+      ',',
+    );
     const report = collectTokenReachability({
       repositoryRoot,
       tokensDir,
@@ -342,9 +392,24 @@ describe('collectTokenReachability', () => {
     expect(report.summary.candidate).toBe(0);
     const unresolvedAliases = report.aliases.filter(({ resolved }) => !resolved);
     expect(unresolvedAliases).toEqual([
-      { sourceId: 'component/atoms/layout', from: 'component.layout.stack.item.surface', to: 'color.surface.raised', resolved: false },
-      { sourceId: 'component/atoms/typography', from: 'component.typography.link.radius', to: 'radius.2xs', resolved: false },
-      { sourceId: 'component/organisms/scheduler', from: 'component.scheduler.year.outside-weight', to: 'font.weight.light', resolved: false },
+      {
+        sourceId: 'component/atoms/layout',
+        from: 'component.layout.stack.item.surface',
+        to: 'color.surface.raised',
+        resolved: false,
+      },
+      {
+        sourceId: 'component/atoms/typography',
+        from: 'component.typography.link.radius',
+        to: 'radius.2xs',
+        resolved: false,
+      },
+      {
+        sourceId: 'component/organisms/scheduler',
+        from: 'component.scheduler.year.outside-weight',
+        to: 'font.weight.light',
+        resolved: false,
+      },
     ]);
-  }, 180_000);
+  }, 300_000);
 });

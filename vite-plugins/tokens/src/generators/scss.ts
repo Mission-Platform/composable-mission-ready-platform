@@ -96,7 +96,8 @@ export function buildScssVariables(
  * so a token authored with any of them gets a typed registration. Only types
  * whose values are computationally-independent literals are mapped; everything
  * else (the synthetic `typography` `var()` references, plus `shadow`/`cubicBezier`
- * easing/font-family stacks, which have no single valid `@property` syntax) falls
+ * easing values and aliased values (which have no computationally-independent
+ * `@property` initial value) falls
  * back to the universal `'*'` syntax with no `initial-value` (see
  * {@link buildPropertyRule}).
  */
@@ -105,6 +106,7 @@ const PROPERTY_SYNTAX_BY_TYPE: Record<string, string> = {
   color: '<color>',
   dimension: '<length>',
   number: '<number>',
+  string: '<string>#',
   fontWeight: '<number>',
   duration: '<time>',
   // Additional CSS `@property`-supported data types (forward-looking).
@@ -138,9 +140,8 @@ const SYNTAXES_WITHOUT_INITIAL_VALUE = new Set(['*']);
  *
  * A non-universal `@property` requires a computationally-independent
  * `initial-value` (no `var()`, `light-dark()` or relative units), so the
- * universal `*` syntax omits it. Everything whose value is a `var()` reference
- * (the typography fields) or a non-typeable literal (shadows, easing curves,
- * font-family stacks) therefore registers under `*` without an `initial-value`.
+ * universal `*` syntax omits it. Values whose value is a `var()` reference (the
+ * typography fields) therefore register under `*` without an `initial-value`.
  */
 export function buildPropertyRule(
   record: TokenRecord,
@@ -156,7 +157,11 @@ export function buildPropertyRule(
   const syntax = isAlias(record.value) ? '*' : (PROPERTY_SYNTAX_BY_TYPE[record.type ?? ''] ?? '*');
   const lines = [`@property ${name} {`, `  syntax: '${syntax}';`, '  inherits: true;'];
   if (!SYNTAXES_WITHOUT_INITIAL_VALUE.has(syntax)) {
-    const initialValue = useScssVariable ? `vars.$${tokenName}` : formatCssValue(record.value);
+    const initialValue = useScssVariable
+      ? record.type === 'string'
+        ? `#{vars.$${tokenName}}`
+        : `vars.$${tokenName}`
+      : formatCssValue(record.value);
     lines.push(`  initial-value: ${initialValue};`);
   }
   lines.push('}');

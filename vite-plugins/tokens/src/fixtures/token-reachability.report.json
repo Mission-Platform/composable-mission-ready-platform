@@ -13507,6 +13507,12 @@
     },
     {
       "sourceId": "theme-dark",
+      "from": "color.bg.inverse",
+      "to": "color.cyan.950",
+      "resolved": true
+    },
+    {
+      "sourceId": "theme-dark",
       "from": "color.bg.loading-overlay",
       "to": "color.scrim.black-40",
       "resolved": true
@@ -13909,6 +13915,12 @@
     },
     {
       "sourceId": "theme-dark",
+      "from": "color.text.on-inverse",
+      "to": "color.cyan.50",
+      "resolved": true
+    },
+    {
+      "sourceId": "theme-dark",
       "from": "color.text.on-primary",
       "to": "color.cyan.900",
       "resolved": true
@@ -13971,6 +13983,12 @@
       "sourceId": "theme-light",
       "from": "color.bg.forge-alt",
       "to": "color.surface.light-alt",
+      "resolved": true
+    },
+    {
+      "sourceId": "theme-light",
+      "from": "color.bg.inverse",
+      "to": "color.neutral.900",
       "resolved": true
     },
     {
@@ -14377,6 +14395,12 @@
     },
     {
       "sourceId": "theme-light",
+      "from": "color.text.on-inverse",
+      "to": "color.white",
+      "resolved": true
+    },
+    {
+      "sourceId": "theme-light",
       "from": "color.text.on-primary",
       "to": "color.white",
       "resolved": true
@@ -14775,10 +14799,11 @@
         "$border-width-heavy"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/organisms/data branch. Required by alias from component/atoms/feedback:component.feedback.spinner.border-width.lg. Required by alias from component/atoms/feedback:component.feedback.spinner.border-width.md. Required by alias from component/atoms/surface:component.surface.quote.bordered-border-width. Required by alias from component/organisms/data:component.data.table.spinner.border-width. Required by alias from component/organisms/scheduler:component.scheduler.event.accent-border-width."
+      "reason": "Dependency of an ambiguous component/organisms/data branch. Required by alias from component/atoms/feedback:component.feedback.spinner.border-width.lg. Required by alias from component/atoms/feedback:component.feedback.spinner.border-width.md. Required by alias from component/atoms/surface:component.surface.quote.bordered-border-width. Required by alias from component/organisms/data:component.data.table.spinner.border-width. Required by alias from component/organisms/scheduler:component.scheduler.event.accent-border-width. Uses generated CSS custom property --mp-border-width-heavy."
     },
     {
       "sourceId": "border-width",
@@ -15003,6 +15028,33 @@
     },
     {
       "sourceId": "theme-dark",
+      "path": "color.bg.inverse",
+      "generatedNames": [
+        "--mp-color-bg-inverse",
+        "$color-bg-inverse"
+      ],
+      "evidence": [
+        "alias",
+        "css"
+      ],
+      "status": "active",
+      "reason": "Theme-dark twin of reachable theme-light color.bg.inverse via shared light-dark() CSS name --mp-color-bg-inverse. Uses generated CSS custom property --mp-color-bg-inverse."
+    },
+    {
+      "sourceId": "theme-light",
+      "path": "color.bg.inverse",
+      "generatedNames": [
+        "--mp-color-bg-inverse",
+        "$color-bg-inverse"
+      ],
+      "evidence": [
+        "css"
+      ],
+      "status": "active",
+      "reason": "Uses generated CSS custom property --mp-color-bg-inverse."
+    },
+    {
+      "sourceId": "theme-dark",
       "path": "color.bg.loading-overlay",
       "generatedNames": [
         "--mp-color-bg-loading-overlay",
@@ -15125,10 +15177,11 @@
         "$color-bg-scrim"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "active",
-      "reason": "Theme-dark twin of reachable theme-light color.bg.scrim via shared light-dark() CSS name --mp-color-bg-scrim."
+      "reason": "Theme-dark twin of reachable theme-light color.bg.scrim via shared light-dark() CSS name --mp-color-bg-scrim. Uses generated CSS custom property --mp-color-bg-scrim."
     },
     {
       "sourceId": "theme-light",
@@ -15138,10 +15191,11 @@
         "$color-bg-scrim"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "active",
-      "reason": "Required by alias from component/atoms/layout:component.layout.application.scrim.default. Required by alias from component/atoms/layout:component.layout.hero.overlay. Required by alias from component/atoms/media:component.media.surface.overlay. Required by alias from component/molecules/overlay:component.overlay.surface.scrim."
+      "reason": "Required by alias from component/atoms/layout:component.layout.application.scrim.default. Required by alias from component/atoms/layout:component.layout.hero.overlay. Required by alias from component/atoms/media:component.media.surface.overlay. Required by alias from component/molecules/overlay:component.overlay.surface.scrim. Uses generated CSS custom property --mp-color-bg-scrim."
     },
     {
       "sourceId": "theme-dark",
@@ -15607,7 +15661,7 @@
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous theme-light branch. Dynamic access protects the palette branch. References stable DTCG path color.cyan.50. Required by alias from theme-dark:color.text.primary. Required by alias from theme-light:color.secondary.subtle."
+      "reason": "Dependency of an ambiguous theme-light branch. Dynamic access protects the palette branch. References stable DTCG path color.cyan.50. Required by alias from theme-dark:color.text.on-inverse. Required by alias from theme-dark:color.text.primary. Required by alias from theme-light:color.secondary.subtle."
     },
     {
       "sourceId": "palette",
@@ -15653,7 +15707,7 @@
         "typescript"
       ],
       "status": "protected",
-      "reason": "Dynamic access protects the palette branch. References stable DTCG path color.cyan.950. Required by alias from theme-dark:color.bg.base."
+      "reason": "Dynamic access protects the palette branch. References stable DTCG path color.cyan.950. Required by alias from theme-dark:color.bg.base. Required by alias from theme-dark:color.bg.inverse."
     },
     {
       "sourceId": "palette",
@@ -16091,7 +16145,7 @@
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous theme-dark branch. Dependency of an ambiguous theme-light branch. Dynamic access protects the palette branch. References stable DTCG path color.error.100. Required by alias from theme-dark:color.error.text. Required by alias from theme-light:color.error.muted."
+      "reason": "Dependency of an ambiguous theme-light branch. Dynamic access protects the palette branch. References stable DTCG path color.error.100. Required by alias from theme-dark:color.error.text. Required by alias from theme-light:color.error.muted."
     },
     {
       "sourceId": "palette",
@@ -16119,7 +16173,7 @@
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous theme-dark branch. Dynamic access protects the palette branch. Required by alias from theme-dark:color.error.default."
+      "reason": "Dynamic access protects the palette branch. Required by alias from theme-dark:color.error.default."
     },
     {
       "sourceId": "palette",
@@ -16174,10 +16228,11 @@
         "$color-error-default"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous theme-light branch. Theme-dark twin of reachable theme-light color.error.default via shared light-dark() CSS name --mp-color-error-default."
+      "reason": "Dependency of an ambiguous theme-light branch. Theme-dark twin of reachable theme-light color.error.default via shared light-dark() CSS name --mp-color-error-default. Uses generated CSS custom property --mp-color-error-default."
     },
     {
       "sourceId": "theme-light",
@@ -16187,10 +16242,11 @@
         "$color-error-default"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/surface branch. Dependency of an ambiguous component/molecules/navigation branch. Dependency of an ambiguous component/molecules/timeline branch. Required by alias from component/atoms/button:component.button.error.background.default. Required by alias from component/atoms/button:component.button.error.border.default. Required by alias from component/atoms/feedback:component.feedback.progress.fill.error. Required by alias from component/atoms/feedback:component.feedback.spinner.color.error. Required by alias from component/atoms/feedback:component.feedback.status.color.error. Required by alias from component/atoms/media:component.media.avatar.surface.error. Required by alias from component/atoms/surface:component.surface.quote.border.error. Required by alias from component/molecules/navigation:component.navigation.carousel.tone.error.indicator. Required by alias from component/molecules/navigation:component.navigation.list.tone.error.marker. Required by alias from component/molecules/timeline:component.timeline.variant.error. Required by alias from component/organisms/resource-planner:component.resource-planner.booking.conflict-surface. Required by alias from component/organisms/resource-planner:component.resource-planner.capacity.conflict-surface. Required by alias from component/organisms/resource-planner:component.resource-planner.current-time.surface."
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/surface branch. Dependency of an ambiguous component/molecules/navigation branch. Dependency of an ambiguous component/molecules/timeline branch. Required by alias from component/atoms/button:component.button.error.background.default. Required by alias from component/atoms/button:component.button.error.border.default. Required by alias from component/atoms/feedback:component.feedback.progress.fill.error. Required by alias from component/atoms/feedback:component.feedback.spinner.color.error. Required by alias from component/atoms/feedback:component.feedback.status.color.error. Required by alias from component/atoms/media:component.media.avatar.surface.error. Required by alias from component/atoms/surface:component.surface.quote.border.error. Required by alias from component/molecules/navigation:component.navigation.carousel.tone.error.indicator. Required by alias from component/molecules/navigation:component.navigation.list.tone.error.marker. Required by alias from component/molecules/timeline:component.timeline.variant.error. Required by alias from component/organisms/resource-planner:component.resource-planner.booking.conflict-surface. Required by alias from component/organisms/resource-planner:component.resource-planner.capacity.conflict-surface. Required by alias from component/organisms/resource-planner:component.resource-planner.current-time.surface. Uses generated CSS custom property --mp-color-error-default."
     },
     {
       "sourceId": "theme-dark",
@@ -16252,10 +16308,11 @@
         "$color-error-subtle"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous theme-light branch. Theme-dark twin of reachable theme-light color.error.subtle via shared light-dark() CSS name --mp-color-error-subtle."
+      "reason": "Dependency of an ambiguous theme-light branch. Theme-dark twin of reachable theme-light color.error.subtle via shared light-dark() CSS name --mp-color-error-subtle. Uses generated CSS custom property --mp-color-error-subtle."
     },
     {
       "sourceId": "theme-light",
@@ -16265,10 +16322,11 @@
         "$color-error-subtle"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button-group branch. Dependency of an ambiguous component/atoms/code branch. Dependency of an ambiguous component/molecules/card branch. Dependency of an ambiguous component/molecules/collapse branch. Dependency of an ambiguous component/molecules/navigation branch. Dependency of an ambiguous component/organisms/data branch. Required by alias from component/atoms/button-group:component.button-group.border.error. Required by alias from component/atoms/code:component.code.variant.error.border. Required by alias from component/molecules/card:component.card.tone.error.border. Required by alias from component/molecules/collapse:component.collapse.tone.error.border. Required by alias from component/molecules/navigation:component.navigation.carousel.tone.error.control-border. Required by alias from component/molecules/navigation:component.navigation.list.tone.error.border. Required by alias from component/molecules/navigation:component.navigation.menu.tone.error.surface-hover. Required by alias from component/organisms/data:component.data.table.tone.error.border."
+      "reason": "Dependency of an ambiguous component/atoms/button-group branch. Dependency of an ambiguous component/atoms/code branch. Dependency of an ambiguous component/molecules/card branch. Dependency of an ambiguous component/molecules/collapse branch. Dependency of an ambiguous component/molecules/navigation branch. Dependency of an ambiguous component/organisms/data branch. Required by alias from component/atoms/button-group:component.button-group.border.error. Required by alias from component/atoms/code:component.code.variant.error.border. Required by alias from component/molecules/card:component.card.tone.error.border. Required by alias from component/molecules/collapse:component.collapse.tone.error.border. Required by alias from component/molecules/navigation:component.navigation.carousel.tone.error.control-border. Required by alias from component/molecules/navigation:component.navigation.list.tone.error.border. Required by alias from component/molecules/navigation:component.navigation.menu.tone.error.surface-hover. Required by alias from component/organisms/data:component.data.table.tone.error.border. Uses generated CSS custom property --mp-color-error-subtle."
     },
     {
       "sourceId": "theme-dark",
@@ -16278,10 +16336,11 @@
         "$color-error-text"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous theme-light branch. Theme-dark twin of reachable theme-light color.error.text via shared light-dark() CSS name --mp-color-error-text."
+      "reason": "Dependency of an ambiguous theme-light branch. Theme-dark twin of reachable theme-light color.error.text via shared light-dark() CSS name --mp-color-error-text. Uses generated CSS custom property --mp-color-error-text."
     },
     {
       "sourceId": "theme-light",
@@ -16291,10 +16350,11 @@
         "$color-error-text"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/atoms/typography branch. Dependency of an ambiguous component/molecules/card branch. Dependency of an ambiguous component/molecules/collapse branch. Dependency of an ambiguous component/molecules/navigation branch. Required by alias from component/atoms/feedback:component.feedback.badge.error.text. Required by alias from component/atoms/tag:component.tag.error.text. Required by alias from component/atoms/typography:component.typography.color.error. Required by alias from component/molecules/card:component.card.tone.error.text. Required by alias from component/molecules/collapse:component.collapse.tone.error.text. Required by alias from component/molecules/navigation:component.navigation.carousel.tone.error.control-text. Required by alias from component/molecules/navigation:component.navigation.menu.tone.error.text. Required by alias from component/molecules/navigation:component.navigation.navbar-item.tone.error.text."
+      "reason": "Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/atoms/typography branch. Dependency of an ambiguous component/molecules/card branch. Dependency of an ambiguous component/molecules/collapse branch. Dependency of an ambiguous component/molecules/navigation branch. Required by alias from component/atoms/feedback:component.feedback.badge.error.text. Required by alias from component/atoms/tag:component.tag.error.text. Required by alias from component/atoms/typography:component.typography.color.error. Required by alias from component/molecules/card:component.card.tone.error.text. Required by alias from component/molecules/collapse:component.collapse.tone.error.text. Required by alias from component/molecules/navigation:component.navigation.carousel.tone.error.control-text. Required by alias from component/molecules/navigation:component.navigation.menu.tone.error.text. Required by alias from component/molecules/navigation:component.navigation.navbar-item.tone.error.text. Uses generated CSS custom property --mp-color-error-text."
     },
     {
       "sourceId": "palette",
@@ -16798,7 +16858,7 @@
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous theme-light branch. Dynamic access protects the palette branch. References stable DTCG path color.neutral.900. Required by alias from theme-light:color.default.active. Required by alias from theme-light:color.text.primary."
+      "reason": "Dependency of an ambiguous theme-light branch. Dynamic access protects the palette branch. References stable DTCG path color.neutral.900. Required by alias from theme-light:color.bg.inverse. Required by alias from theme-light:color.default.active. Required by alias from theme-light:color.text.primary."
     },
     {
       "sourceId": "palette",
@@ -17983,10 +18043,11 @@
       ],
       "evidence": [
         "alias",
+        "css",
         "docs"
       ],
       "status": "protected",
-      "reason": "References stable DTCG path color.text.link. Theme-dark twin of reachable theme-light color.text.link via shared light-dark() CSS name --mp-color-text-link."
+      "reason": "References stable DTCG path color.text.link. Theme-dark twin of reachable theme-light color.text.link via shared light-dark() CSS name --mp-color-text-link. Uses generated CSS custom property --mp-color-text-link."
     },
     {
       "sourceId": "theme-light",
@@ -17997,10 +18058,11 @@
       ],
       "evidence": [
         "alias",
+        "css",
         "docs"
       ],
       "status": "protected",
-      "reason": "Dependency of an ambiguous component/atoms/typography branch. References stable DTCG path color.text.link. Required by alias from component/atoms/typography:component.typography.color.link."
+      "reason": "Dependency of an ambiguous component/atoms/typography branch. References stable DTCG path color.text.link. Required by alias from component/atoms/typography:component.typography.color.link. Uses generated CSS custom property --mp-color-text-link."
     },
     {
       "sourceId": "theme-dark",
@@ -18057,6 +18119,33 @@
       ],
       "status": "protected",
       "reason": "Dependency of an ambiguous component/atoms/typography branch. References stable DTCG path color.text.link-visited. Required by alias from component/atoms/typography:component.typography.color.link-visited."
+    },
+    {
+      "sourceId": "theme-dark",
+      "path": "color.text.on-inverse",
+      "generatedNames": [
+        "--mp-color-text-on-inverse",
+        "$color-text-on-inverse"
+      ],
+      "evidence": [
+        "alias",
+        "css"
+      ],
+      "status": "active",
+      "reason": "Theme-dark twin of reachable theme-light color.text.on-inverse via shared light-dark() CSS name --mp-color-text-on-inverse. Uses generated CSS custom property --mp-color-text-on-inverse."
+    },
+    {
+      "sourceId": "theme-light",
+      "path": "color.text.on-inverse",
+      "generatedNames": [
+        "--mp-color-text-on-inverse",
+        "$color-text-on-inverse"
+      ],
+      "evidence": [
+        "css"
+      ],
+      "status": "active",
+      "reason": "Uses generated CSS custom property --mp-color-text-on-inverse."
     },
     {
       "sourceId": "theme-dark",
@@ -18428,7 +18517,7 @@
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous theme-light branch. Dynamic access protects the palette branch. References stable DTCG path color.white. Required by alias from theme-light:color.bg.overlay. Required by alias from theme-light:color.bg.raised. Required by alias from theme-light:color.bg.surface. Required by alias from theme-light:color.text.on-primary."
+      "reason": "Dependency of an ambiguous theme-light branch. Dynamic access protects the palette branch. References stable DTCG path color.white. Required by alias from theme-light:color.bg.overlay. Required by alias from theme-light:color.bg.raised. Required by alias from theme-light:color.bg.surface. Required by alias from theme-light:color.text.on-inverse. Required by alias from theme-light:color.text.on-primary."
     },
     {
       "sourceId": "component/atoms/button-group",
@@ -51931,10 +52020,11 @@
         "$duration-fast"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/code branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/typography branch. Dependency of an ambiguous component/molecules/time branch. Dependency of an ambiguous component/organisms/form branch. Required by alias from component/atoms/button:component.button.icon-button.transition.duration. Required by alias from component/atoms/button:component.button.primary.transition.duration. Required by alias from component/atoms/button:component.button.secondary.transition.duration. Required by alias from component/atoms/checkable:component.checkable.transition.duration. Required by alias from component/atoms/code:component.code.copy.transition.duration. Required by alias from component/atoms/feedback:component.feedback.transition.duration. Required by alias from component/atoms/icon:component.icon.transition.duration. Required by alias from component/atoms/input:component.input.file.transition.duration. Required by alias from component/atoms/input:component.input.transition.duration. Required by alias from component/atoms/typography:component.typography.link.transition.duration. Required by alias from component/molecules/calendar:component.calendar.transition.duration. Required by alias from component/molecules/collapse:component.collapse.transition.duration. Required by alias from component/molecules/color-input:component.color-input.transition.duration. Required by alias from component/molecules/navigation:component.navigation.menu.transition.duration. Required by alias from component/molecules/navigation:component.navigation.menubar.submenu.transition.duration. Required by alias from component/molecules/navigation:component.navigation.navbar-item.transition.duration. Required by alias from component/molecules/navigation:component.navigation.pagination.transition.duration. Required by alias from component/molecules/navigation:component.navigation.tabs.transition.duration. Required by alias from component/molecules/navigation:component.navigation.tabs.wrapper.line.transition.duration. Required by alias from component/molecules/navigation:component.navigation.tabs.wrapper.pill.transition.duration. Required by alias from component/molecules/navigation:component.navigation.transition.duration. Required by alias from component/molecules/overlay:component.overlay.alert-banner.dismiss.transition-duration. Required by alias from component/molecules/overlay:component.overlay.drawer.resize-handle.transition.duration. Required by alias from component/molecules/overlay:component.overlay.dropdown.transition.duration. Required by alias from component/molecules/overlay:component.overlay.popover.transition.duration. Required by alias from component/molecules/overlay:component.overlay.toast.transition.duration. Required by alias from component/molecules/overlay:component.overlay.tooltip.transition.duration. Required by alias from component/molecules/overlay:component.overlay.window-popout.toggle.transition.duration. Required by alias from component/molecules/select:component.select.segment.transition.duration. Required by alias from component/molecules/select:component.select.transition.duration. Required by alias from component/molecules/time:component.time.transition.duration. Required by alias from component/organisms/form:component.form.transition.duration."
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/code branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/typography branch. Dependency of an ambiguous component/molecules/time branch. Dependency of an ambiguous component/organisms/form branch. Required by alias from component/atoms/button:component.button.icon-button.transition.duration. Required by alias from component/atoms/button:component.button.primary.transition.duration. Required by alias from component/atoms/button:component.button.secondary.transition.duration. Required by alias from component/atoms/checkable:component.checkable.transition.duration. Required by alias from component/atoms/code:component.code.copy.transition.duration. Required by alias from component/atoms/feedback:component.feedback.transition.duration. Required by alias from component/atoms/icon:component.icon.transition.duration. Required by alias from component/atoms/input:component.input.file.transition.duration. Required by alias from component/atoms/input:component.input.transition.duration. Required by alias from component/atoms/typography:component.typography.link.transition.duration. Required by alias from component/molecules/calendar:component.calendar.transition.duration. Required by alias from component/molecules/collapse:component.collapse.transition.duration. Required by alias from component/molecules/color-input:component.color-input.transition.duration. Required by alias from component/molecules/navigation:component.navigation.menu.transition.duration. Required by alias from component/molecules/navigation:component.navigation.menubar.submenu.transition.duration. Required by alias from component/molecules/navigation:component.navigation.navbar-item.transition.duration. Required by alias from component/molecules/navigation:component.navigation.pagination.transition.duration. Required by alias from component/molecules/navigation:component.navigation.tabs.transition.duration. Required by alias from component/molecules/navigation:component.navigation.tabs.wrapper.line.transition.duration. Required by alias from component/molecules/navigation:component.navigation.tabs.wrapper.pill.transition.duration. Required by alias from component/molecules/navigation:component.navigation.transition.duration. Required by alias from component/molecules/overlay:component.overlay.alert-banner.dismiss.transition-duration. Required by alias from component/molecules/overlay:component.overlay.drawer.resize-handle.transition.duration. Required by alias from component/molecules/overlay:component.overlay.dropdown.transition.duration. Required by alias from component/molecules/overlay:component.overlay.popover.transition.duration. Required by alias from component/molecules/overlay:component.overlay.toast.transition.duration. Required by alias from component/molecules/overlay:component.overlay.tooltip.transition.duration. Required by alias from component/molecules/overlay:component.overlay.window-popout.toggle.transition.duration. Required by alias from component/molecules/select:component.select.segment.transition.duration. Required by alias from component/molecules/select:component.select.transition.duration. Required by alias from component/molecules/time:component.time.transition.duration. Required by alias from component/organisms/form:component.form.transition.duration. Uses generated CSS custom property --mp-duration-fast."
     },
     {
       "sourceId": "motion",
@@ -51970,10 +52060,11 @@
         "$duration-slow"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "active",
-      "reason": "Required by alias from component/molecules/navigation:component.navigation.carousel.track.transition.duration."
+      "reason": "Required by alias from component/molecules/navigation:component.navigation.carousel.track.transition.duration. Uses generated CSS custom property --mp-duration-slow."
     },
     {
       "sourceId": "motion",
@@ -51996,10 +52087,11 @@
         "$easing-standard"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/code branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/typography branch. Dependency of an ambiguous component/molecules/time branch. Dependency of an ambiguous component/organisms/form branch. Required by alias from component/atoms/button:component.button.icon-button.transition.easing. Required by alias from component/atoms/button:component.button.primary.transition.easing. Required by alias from component/atoms/button:component.button.secondary.transition.easing. Required by alias from component/atoms/checkable:component.checkable.transition.easing. Required by alias from component/atoms/code:component.code.copy.transition.easing. Required by alias from component/atoms/icon:component.icon.transition.easing. Required by alias from component/atoms/input:component.input.file.transition.easing. Required by alias from component/atoms/input:component.input.transition.easing. Required by alias from component/atoms/layout:component.layout.application.transition.easing. Required by alias from component/atoms/typography:component.typography.link.transition.easing. Required by alias from component/molecules/calendar:component.calendar.transition.easing. Required by alias from component/molecules/collapse:component.collapse.transition.easing. Required by alias from component/molecules/color-input:component.color-input.transition.easing. Required by alias from component/molecules/navigation:component.navigation.carousel.indicator.transition.easing. Required by alias from component/molecules/navigation:component.navigation.carousel.track.transition.easing. Required by alias from component/molecules/navigation:component.navigation.menu-item.transition.easing. Required by alias from component/molecules/navigation:component.navigation.menu.transition.easing. Required by alias from component/molecules/navigation:component.navigation.menubar.submenu.transition.easing. Required by alias from component/molecules/navigation:component.navigation.navbar-item.transition.easing. Required by alias from component/molecules/navigation:component.navigation.pagination.transition.easing. Required by alias from component/molecules/navigation:component.navigation.tabs.transition.easing. Required by alias from component/molecules/navigation:component.navigation.tabs.wrapper.line.transition.easing. Required by alias from component/molecules/navigation:component.navigation.tabs.wrapper.pill.transition.easing. Required by alias from component/molecules/navigation:component.navigation.transition.easing. Required by alias from component/molecules/overlay:component.overlay.alert-banner.dismiss.transition-easing. Required by alias from component/molecules/overlay:component.overlay.drawer.resize-handle.transition.easing. Required by alias from component/molecules/overlay:component.overlay.drawer.transition.easing. Required by alias from component/molecules/overlay:component.overlay.dropdown.transition.easing. Required by alias from component/molecules/overlay:component.overlay.popover.transition.easing. Required by alias from component/molecules/overlay:component.overlay.toast.transition.easing. Required by alias from component/molecules/overlay:component.overlay.tooltip.transition.easing. Required by alias from component/molecules/overlay:component.overlay.transition.easing. Required by alias from component/molecules/overlay:component.overlay.window-popout.toggle.transition.easing. Required by alias from component/molecules/select:component.select.segment.transition.easing. Required by alias from component/molecules/select:component.select.transition.easing. Required by alias from component/molecules/time:component.time.transition.easing. Required by alias from component/organisms/form:component.form.transition.easing."
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/code branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/typography branch. Dependency of an ambiguous component/molecules/time branch. Dependency of an ambiguous component/organisms/form branch. Required by alias from component/atoms/button:component.button.icon-button.transition.easing. Required by alias from component/atoms/button:component.button.primary.transition.easing. Required by alias from component/atoms/button:component.button.secondary.transition.easing. Required by alias from component/atoms/checkable:component.checkable.transition.easing. Required by alias from component/atoms/code:component.code.copy.transition.easing. Required by alias from component/atoms/icon:component.icon.transition.easing. Required by alias from component/atoms/input:component.input.file.transition.easing. Required by alias from component/atoms/input:component.input.transition.easing. Required by alias from component/atoms/layout:component.layout.application.transition.easing. Required by alias from component/atoms/typography:component.typography.link.transition.easing. Required by alias from component/molecules/calendar:component.calendar.transition.easing. Required by alias from component/molecules/collapse:component.collapse.transition.easing. Required by alias from component/molecules/color-input:component.color-input.transition.easing. Required by alias from component/molecules/navigation:component.navigation.carousel.indicator.transition.easing. Required by alias from component/molecules/navigation:component.navigation.carousel.track.transition.easing. Required by alias from component/molecules/navigation:component.navigation.menu-item.transition.easing. Required by alias from component/molecules/navigation:component.navigation.menu.transition.easing. Required by alias from component/molecules/navigation:component.navigation.menubar.submenu.transition.easing. Required by alias from component/molecules/navigation:component.navigation.navbar-item.transition.easing. Required by alias from component/molecules/navigation:component.navigation.pagination.transition.easing. Required by alias from component/molecules/navigation:component.navigation.tabs.transition.easing. Required by alias from component/molecules/navigation:component.navigation.tabs.wrapper.line.transition.easing. Required by alias from component/molecules/navigation:component.navigation.tabs.wrapper.pill.transition.easing. Required by alias from component/molecules/navigation:component.navigation.transition.easing. Required by alias from component/molecules/overlay:component.overlay.alert-banner.dismiss.transition-easing. Required by alias from component/molecules/overlay:component.overlay.drawer.resize-handle.transition.easing. Required by alias from component/molecules/overlay:component.overlay.drawer.transition.easing. Required by alias from component/molecules/overlay:component.overlay.dropdown.transition.easing. Required by alias from component/molecules/overlay:component.overlay.popover.transition.easing. Required by alias from component/molecules/overlay:component.overlay.toast.transition.easing. Required by alias from component/molecules/overlay:component.overlay.tooltip.transition.easing. Required by alias from component/molecules/overlay:component.overlay.transition.easing. Required by alias from component/molecules/overlay:component.overlay.window-popout.toggle.transition.easing. Required by alias from component/molecules/select:component.select.segment.transition.easing. Required by alias from component/molecules/select:component.select.transition.easing. Required by alias from component/molecules/time:component.time.transition.easing. Required by alias from component/organisms/form:component.form.transition.easing. Uses generated CSS custom property --mp-easing-standard."
     },
     {
       "sourceId": "font",
@@ -52043,6 +52135,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52058,6 +52151,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52073,6 +52167,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52088,6 +52183,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52119,6 +52215,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52134,6 +52231,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52149,6 +52247,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52163,6 +52262,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52178,6 +52278,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52193,6 +52294,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52427,10 +52529,11 @@
         "$opacity-disabled"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/organisms/form branch. Required by alias from component/atoms/button:component.button.icon-button.opacity.disabled. Required by alias from component/atoms/button:component.button.primary.opacity.disabled. Required by alias from component/atoms/checkable:component.checkable.opacity.disabled. Required by alias from component/atoms/feedback:component.feedback.opacity.disabled. Required by alias from component/atoms/icon:component.icon.opacity.disabled. Required by alias from component/atoms/input:component.input.opacity.disabled. Required by alias from component/molecules/color-input:component.color-input.disabled-opacity. Required by alias from component/molecules/editor:component.editor.block-menu.trigger.opacity.disabled. Required by alias from component/molecules/navigation:component.navigation.menubar.item.opacity-disabled. Required by alias from component/molecules/navigation:component.navigation.navbar-item.opacity-disabled. Required by alias from component/molecules/navigation:component.navigation.pagination.opacity.disabled. Required by alias from component/molecules/navigation:component.navigation.tabs.opacity.disabled. Required by alias from component/organisms/form:component.form.disabled-opacity."
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/organisms/form branch. Required by alias from component/atoms/button:component.button.icon-button.opacity.disabled. Required by alias from component/atoms/button:component.button.primary.opacity.disabled. Required by alias from component/atoms/checkable:component.checkable.opacity.disabled. Required by alias from component/atoms/feedback:component.feedback.opacity.disabled. Required by alias from component/atoms/icon:component.icon.opacity.disabled. Required by alias from component/atoms/input:component.input.opacity.disabled. Required by alias from component/molecules/color-input:component.color-input.disabled-opacity. Required by alias from component/molecules/editor:component.editor.block-menu.trigger.opacity.disabled. Required by alias from component/molecules/navigation:component.navigation.menubar.item.opacity-disabled. Required by alias from component/molecules/navigation:component.navigation.navbar-item.opacity-disabled. Required by alias from component/molecules/navigation:component.navigation.pagination.opacity.disabled. Required by alias from component/molecules/navigation:component.navigation.tabs.opacity.disabled. Required by alias from component/organisms/form:component.form.disabled-opacity. Uses generated CSS custom property --mp-opacity-disabled."
     },
     {
       "sourceId": "opacity",
@@ -52440,10 +52543,11 @@
         "$opacity-interactive"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/tag branch. Required by alias from component/atoms/tag:component.tag.remove-hover-opacity. Required by alias from component/molecules/overlay:component.overlay.alert-banner.dismiss.opacity."
+      "reason": "Dependency of an ambiguous component/atoms/tag branch. Required by alias from component/atoms/tag:component.tag.remove-hover-opacity. Required by alias from component/molecules/overlay:component.overlay.alert-banner.dismiss.opacity. Uses generated CSS custom property --mp-opacity-interactive."
     },
     {
       "sourceId": "opacity",
@@ -52453,10 +52557,11 @@
         "$opacity-muted"
       ],
       "evidence": [
-        "alias"
+        "alias",
+        "css"
       ],
       "status": "active",
-      "reason": "Required by alias from component/atoms/icon:component.icon.opacity.muted."
+      "reason": "Required by alias from component/atoms/icon:component.icon.opacity.muted. Uses generated CSS custom property --mp-opacity-muted."
     },
     {
       "sourceId": "opacity",
@@ -52481,6 +52586,7 @@
       "evidence": [
         "css",
         "override",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -52496,6 +52602,7 @@
       "evidence": [
         "css",
         "override",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -52513,6 +52620,7 @@
         "css",
         "docs",
         "override",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -52529,6 +52637,7 @@
         "alias",
         "css",
         "override",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -52545,6 +52654,7 @@
         "alias",
         "css",
         "override",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -52560,6 +52670,7 @@
       "evidence": [
         "css",
         "override",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -52576,6 +52687,7 @@
         "alias",
         "css",
         "override",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -52592,6 +52704,7 @@
         "alias",
         "css",
         "override",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -52608,6 +52721,7 @@
         "alias",
         "css",
         "override",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -52784,6 +52898,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52798,6 +52913,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52812,6 +52928,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52826,6 +52943,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52840,6 +52958,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52854,6 +52973,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52868,6 +52988,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52882,6 +53003,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52896,6 +53018,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52910,6 +53033,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52924,6 +53048,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52938,6 +53063,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52952,6 +53078,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52966,6 +53093,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52980,6 +53108,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -52994,6 +53123,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53008,6 +53138,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53022,10 +53153,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dynamic access protects the size branch. Required by alias from component/atoms/checkable:component.checkable.indicator-size."
+      "reason": "Dynamic access protects the size branch. Required by alias from component/atoms/checkable:component.checkable.indicator-size. Uses generated CSS custom property --mp-size-checkable-indicator."
     },
     {
       "sourceId": "size",
@@ -53036,6 +53169,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53050,6 +53184,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53064,6 +53199,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53078,6 +53214,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53092,6 +53229,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53106,6 +53244,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53120,6 +53259,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53134,6 +53274,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53148,6 +53289,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53162,6 +53304,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53176,6 +53319,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53190,6 +53334,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53204,6 +53349,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53218,6 +53364,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53232,6 +53379,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53246,6 +53394,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53260,6 +53409,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53274,6 +53424,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53288,6 +53439,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53302,6 +53454,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53316,6 +53469,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53330,6 +53484,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53344,6 +53499,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53358,6 +53514,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53372,6 +53529,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53386,6 +53544,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53400,6 +53559,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53414,6 +53574,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53428,6 +53589,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53442,6 +53604,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53456,6 +53619,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53470,6 +53634,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53484,6 +53649,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53498,6 +53664,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53512,6 +53679,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53526,6 +53694,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53540,6 +53709,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53554,6 +53724,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53568,6 +53739,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53582,6 +53754,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53708,6 +53881,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53722,6 +53896,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53736,6 +53911,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53750,6 +53926,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53764,10 +53941,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dynamic access protects the size branch. Required by alias from component/atoms/feedback:component.feedback.spinner.size.lg. Required by alias from component/atoms/feedback:component.feedback.status.size.lg. Required by alias from component/molecules/calendar:component.calendar.size.lg.cell-height. Required by alias from component/molecules/color-input:component.color-input.size.lg.swatch."
+      "reason": "Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dynamic access protects the size branch. Required by alias from component/atoms/feedback:component.feedback.spinner.size.lg. Required by alias from component/atoms/feedback:component.feedback.status.size.lg. Required by alias from component/molecules/calendar:component.calendar.size.lg.cell-height. Required by alias from component/molecules/color-input:component.color-input.size.lg.swatch. Uses generated CSS custom property --mp-size-height-lg."
     },
     {
       "sourceId": "size",
@@ -53778,10 +53957,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.size.height. Required by alias from component/atoms/feedback:component.feedback.spinner.size.md. Required by alias from component/atoms/feedback:component.feedback.status.size.md. Required by alias from component/molecules/calendar:component.calendar.size.md.cell-height. Required by alias from component/molecules/color-input:component.color-input.size.md.swatch. Required by alias from component/molecules/navigation:component.navigation.navbar.hamburger.size."
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.size.height. Required by alias from component/atoms/feedback:component.feedback.spinner.size.md. Required by alias from component/atoms/feedback:component.feedback.status.size.md. Required by alias from component/molecules/calendar:component.calendar.size.md.cell-height. Required by alias from component/molecules/color-input:component.color-input.size.md.swatch. Required by alias from component/molecules/navigation:component.navigation.navbar.hamburger.size. Uses generated CSS custom property --mp-size-height-md."
     },
     {
       "sourceId": "size",
@@ -53792,10 +53973,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dynamic access protects the size branch. Required by alias from component/atoms/feedback:component.feedback.spinner.size.sm. Required by alias from component/atoms/feedback:component.feedback.status.size.sm. Required by alias from component/molecules/calendar:component.calendar.size.sm.cell-height. Required by alias from component/molecules/color-input:component.color-input.size.sm.swatch. Required by alias from component/molecules/overlay:component.overlay.drawer.close.size."
+      "reason": "Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dynamic access protects the size branch. Required by alias from component/atoms/feedback:component.feedback.spinner.size.sm. Required by alias from component/atoms/feedback:component.feedback.status.size.sm. Required by alias from component/molecules/calendar:component.calendar.size.sm.cell-height. Required by alias from component/molecules/color-input:component.color-input.size.sm.swatch. Required by alias from component/molecules/overlay:component.overlay.drawer.close.size. Uses generated CSS custom property --mp-size-height-sm."
     },
     {
       "sourceId": "size",
@@ -53807,6 +53990,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53821,6 +54005,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53835,10 +54020,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/organisms/data branch. Dynamic access protects the size branch. Required by alias from component/organisms/data:component.data.table.spinner.size."
+      "reason": "Dependency of an ambiguous component/organisms/data branch. Dynamic access protects the size branch. Required by alias from component/organisms/data:component.data.table.spinner.size. Uses generated CSS custom property --mp-size-icon-lg."
     },
     {
       "sourceId": "size",
@@ -53849,6 +54036,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53862,6 +54050,7 @@
         "$size-leading-2xl"
       ],
       "evidence": [
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53875,6 +54064,7 @@
         "$size-leading-2xs"
       ],
       "evidence": [
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53888,6 +54078,7 @@
         "$size-leading-lg"
       ],
       "evidence": [
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53902,6 +54093,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53915,6 +54107,7 @@
         "$size-leading-sm"
       ],
       "evidence": [
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53928,6 +54121,7 @@
         "$size-leading-xl"
       ],
       "evidence": [
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53941,6 +54135,7 @@
         "$size-leading-xs"
       ],
       "evidence": [
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53955,6 +54150,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53969,6 +54165,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53983,6 +54180,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -53997,10 +54195,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/molecules/color-input branch. Dependency of an ambiguous component/molecules/navigation branch. Dependency of an ambiguous component/molecules/select branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.icon-button.size.md.padding. Required by alias from component/atoms/button:component.button.size.md.padding-block. Required by alias from component/atoms/button:component.button.size.padding-block. Required by alias from component/atoms/feedback:component.feedback.badge.size.md.padding-block. Required by alias from component/atoms/input:component.input.file.size.md.padding-block. Required by alias from component/atoms/input:component.input.padding.block. Required by alias from component/atoms/input:component.input.size.md.padding-block. Required by alias from component/atoms/tag:component.tag.size.md.padding-block. Required by alias from component/molecules/color-input:component.color-input.size.md.padding-block. Required by alias from component/molecules/navigation:component.navigation.list.size.md.padding-block. Required by alias from component/molecules/select:component.select.size.md.padding-block."
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/molecules/color-input branch. Dependency of an ambiguous component/molecules/navigation branch. Dependency of an ambiguous component/molecules/select branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.icon-button.size.md.padding. Required by alias from component/atoms/button:component.button.size.md.padding-block. Required by alias from component/atoms/button:component.button.size.padding-block. Required by alias from component/atoms/feedback:component.feedback.badge.size.md.padding-block. Required by alias from component/atoms/input:component.input.file.size.md.padding-block. Required by alias from component/atoms/input:component.input.padding.block. Required by alias from component/atoms/input:component.input.size.md.padding-block. Required by alias from component/atoms/tag:component.tag.size.md.padding-block. Required by alias from component/molecules/color-input:component.color-input.size.md.padding-block. Required by alias from component/molecules/navigation:component.navigation.list.size.md.padding-block. Required by alias from component/molecules/select:component.select.size.md.padding-block. Uses generated CSS custom property --mp-size-pad-block-md."
     },
     {
       "sourceId": "size",
@@ -54011,10 +54211,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/molecules/color-input branch. Dependency of an ambiguous component/molecules/navigation branch. Dependency of an ambiguous component/molecules/select branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.icon-button.size.sm.padding. Required by alias from component/atoms/button:component.button.size.sm.padding-block. Required by alias from component/atoms/feedback:component.feedback.badge.size.sm.padding-block. Required by alias from component/atoms/input:component.input.file.size.sm.padding-block. Required by alias from component/atoms/input:component.input.size.sm.padding-block. Required by alias from component/atoms/tag:component.tag.size.sm.padding-block. Required by alias from component/molecules/color-input:component.color-input.size.sm.padding-block. Required by alias from component/molecules/navigation:component.navigation.list.size.sm.padding-block. Required by alias from component/molecules/select:component.select.size.sm.padding-block."
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/molecules/color-input branch. Dependency of an ambiguous component/molecules/navigation branch. Dependency of an ambiguous component/molecules/select branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.icon-button.size.sm.padding. Required by alias from component/atoms/button:component.button.size.sm.padding-block. Required by alias from component/atoms/feedback:component.feedback.badge.size.sm.padding-block. Required by alias from component/atoms/input:component.input.file.size.sm.padding-block. Required by alias from component/atoms/input:component.input.size.sm.padding-block. Required by alias from component/atoms/tag:component.tag.size.sm.padding-block. Required by alias from component/molecules/color-input:component.color-input.size.sm.padding-block. Required by alias from component/molecules/navigation:component.navigation.list.size.sm.padding-block. Required by alias from component/molecules/select:component.select.size.sm.padding-block. Uses generated CSS custom property --mp-size-pad-block-sm."
     },
     {
       "sourceId": "size",
@@ -54025,6 +54227,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54039,6 +54242,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54053,6 +54257,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54067,6 +54272,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54081,10 +54287,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dependency of an ambiguous component/molecules/select branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.size.lg.padding-inline. Required by alias from component/atoms/feedback:component.feedback.badge.size.lg.padding-inline. Required by alias from component/atoms/input:component.input.file.size.lg.padding-inline. Required by alias from component/atoms/input:component.input.size.lg.padding-inline. Required by alias from component/atoms/tag:component.tag.size.lg.padding-inline. Required by alias from component/molecules/calendar:component.calendar.size.lg.padding. Required by alias from component/molecules/color-input:component.color-input.size.lg.padding-inline. Required by alias from component/molecules/select:component.select.size.lg.padding-inline."
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dependency of an ambiguous component/molecules/select branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.size.lg.padding-inline. Required by alias from component/atoms/feedback:component.feedback.badge.size.lg.padding-inline. Required by alias from component/atoms/input:component.input.file.size.lg.padding-inline. Required by alias from component/atoms/input:component.input.size.lg.padding-inline. Required by alias from component/atoms/tag:component.tag.size.lg.padding-inline. Required by alias from component/molecules/calendar:component.calendar.size.lg.padding. Required by alias from component/molecules/color-input:component.color-input.size.lg.padding-inline. Required by alias from component/molecules/select:component.select.size.lg.padding-inline. Uses generated CSS custom property --mp-size-pad-inline-lg."
     },
     {
       "sourceId": "size",
@@ -54095,10 +54303,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dependency of an ambiguous component/molecules/select branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.primary.padding. Required by alias from component/atoms/button:component.button.size.md.padding-inline. Required by alias from component/atoms/button:component.button.size.padding-inline. Required by alias from component/atoms/feedback:component.feedback.badge.size.md.padding-inline. Required by alias from component/atoms/input:component.input.file.size.md.padding-inline. Required by alias from component/atoms/input:component.input.padding.inline. Required by alias from component/atoms/input:component.input.size.md.padding-inline. Required by alias from component/atoms/tag:component.tag.size.md.padding-inline. Required by alias from component/molecules/calendar:component.calendar.size.md.padding. Required by alias from component/molecules/color-input:component.color-input.size.md.padding-inline. Required by alias from component/molecules/select:component.select.size.md.padding-inline."
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dependency of an ambiguous component/molecules/select branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.primary.padding. Required by alias from component/atoms/button:component.button.size.md.padding-inline. Required by alias from component/atoms/button:component.button.size.padding-inline. Required by alias from component/atoms/feedback:component.feedback.badge.size.md.padding-inline. Required by alias from component/atoms/input:component.input.file.size.md.padding-inline. Required by alias from component/atoms/input:component.input.padding.inline. Required by alias from component/atoms/input:component.input.size.md.padding-inline. Required by alias from component/atoms/tag:component.tag.size.md.padding-inline. Required by alias from component/molecules/calendar:component.calendar.size.md.padding. Required by alias from component/molecules/color-input:component.color-input.size.md.padding-inline. Required by alias from component/molecules/select:component.select.size.md.padding-inline. Uses generated CSS custom property --mp-size-pad-inline-md."
     },
     {
       "sourceId": "size",
@@ -54109,10 +54319,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dependency of an ambiguous component/molecules/select branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.size.sm.padding-inline. Required by alias from component/atoms/feedback:component.feedback.badge.size.sm.padding-inline. Required by alias from component/atoms/input:component.input.file.size.sm.padding-inline. Required by alias from component/atoms/input:component.input.size.sm.padding-inline. Required by alias from component/atoms/tag:component.tag.size.sm.padding-inline. Required by alias from component/molecules/calendar:component.calendar.size.sm.padding. Required by alias from component/molecules/color-input:component.color-input.size.sm.padding-inline. Required by alias from component/molecules/select:component.select.size.sm.padding-inline."
+      "reason": "Dependency of an ambiguous component/atoms/button branch. Dependency of an ambiguous component/atoms/feedback branch. Dependency of an ambiguous component/atoms/input branch. Dependency of an ambiguous component/atoms/tag branch. Dependency of an ambiguous component/molecules/calendar branch. Dependency of an ambiguous component/molecules/color-input branch. Dependency of an ambiguous component/molecules/select branch. Dynamic access protects the size branch. Required by alias from component/atoms/button:component.button.size.sm.padding-inline. Required by alias from component/atoms/feedback:component.feedback.badge.size.sm.padding-inline. Required by alias from component/atoms/input:component.input.file.size.sm.padding-inline. Required by alias from component/atoms/input:component.input.size.sm.padding-inline. Required by alias from component/atoms/tag:component.tag.size.sm.padding-inline. Required by alias from component/molecules/calendar:component.calendar.size.sm.padding. Required by alias from component/molecules/color-input:component.color-input.size.sm.padding-inline. Required by alias from component/molecules/select:component.select.size.sm.padding-inline. Uses generated CSS custom property --mp-size-pad-inline-sm."
     },
     {
       "sourceId": "size",
@@ -54123,6 +54335,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54137,6 +54350,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54151,6 +54365,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54164,6 +54379,7 @@
         "$size-width-2xl"
       ],
       "evidence": [
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54177,6 +54393,7 @@
         "$size-width-2xs"
       ],
       "evidence": [
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54191,6 +54408,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54205,6 +54423,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54219,6 +54438,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54232,6 +54452,7 @@
         "$size-width-xl"
       ],
       "evidence": [
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54245,6 +54466,7 @@
         "$size-width-xs"
       ],
       "evidence": [
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54261,6 +54483,7 @@
         "alias",
         "css",
         "docs",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -54276,6 +54499,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54290,6 +54514,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54304,10 +54529,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dynamic access protects the spacing branch. Required by alias from component/atoms/layout:component.layout.hero.padding.lg.inline."
+      "reason": "Dynamic access protects the spacing branch. Required by alias from component/atoms/layout:component.layout.hero.padding.lg.inline. Uses generated CSS custom property --mp-spacing-10."
     },
     {
       "sourceId": "spacing",
@@ -54319,10 +54546,11 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dynamic access protects the spacing branch. References stable DTCG path spacing.12. Required by alias from component/atoms/layout:component.layout.hero.padding.md.wide-inline. Required by alias from component/atoms/layout:component.layout.hero.padding.xl.inline."
+      "reason": "Dynamic access protects the spacing branch. References stable DTCG path spacing.12. Required by alias from component/atoms/layout:component.layout.hero.padding.md.wide-inline. Required by alias from component/atoms/layout:component.layout.hero.padding.xl.inline. Uses generated CSS custom property --mp-spacing-12."
     },
     {
       "sourceId": "spacing",
@@ -54333,6 +54561,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54348,6 +54577,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54362,6 +54592,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54376,6 +54607,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54390,6 +54622,7 @@
       ],
       "evidence": [
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54405,6 +54638,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54421,6 +54655,7 @@
         "alias",
         "css",
         "docs",
+        "scss",
         "typescript"
       ],
       "status": "protected",
@@ -54436,6 +54671,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54450,10 +54686,12 @@
       ],
       "evidence": [
         "alias",
+        "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/atoms/typography branch. Dependency of an ambiguous component/molecules/markdown branch. Dynamic access protects the spacing branch. Required by alias from component/atoms/layout:component.layout.hero.padding.xs.inline. Required by alias from component/atoms/surface:component.surface.quote.default-padding. Required by alias from component/atoms/typography:component.typography.margin-bottom.5. Required by alias from component/atoms/typography:component.typography.variant.display.margin-bottom. Required by alias from component/atoms/typography:component.typography.variant.h1.margin-bottom. Required by alias from component/molecules/markdown:component.markdown.flow.list-indent."
+      "reason": "Dependency of an ambiguous component/atoms/typography branch. Dependency of an ambiguous component/molecules/markdown branch. Dynamic access protects the spacing branch. Required by alias from component/atoms/layout:component.layout.hero.padding.xs.inline. Required by alias from component/atoms/surface:component.surface.quote.default-padding. Required by alias from component/atoms/typography:component.typography.margin-bottom.5. Required by alias from component/atoms/typography:component.typography.variant.display.margin-bottom. Required by alias from component/atoms/typography:component.typography.variant.h1.margin-bottom. Required by alias from component/molecules/markdown:component.markdown.flow.list-indent. Uses generated CSS custom property --mp-spacing-5."
     },
     {
       "sourceId": "spacing",
@@ -54465,10 +54703,11 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
-      "reason": "Dependency of an ambiguous component/organisms/form branch. Dynamic access protects the spacing branch. References stable DTCG path spacing.6. Required by alias from component/atoms/layout:component.layout.application.padding.status-inline-wide. Required by alias from component/atoms/layout:component.layout.hero.content.gap.wide. Required by alias from component/atoms/layout:component.layout.hero.padding.sm.inline. Required by alias from component/atoms/layout:component.layout.hero.padding.xs.block. Required by alias from component/atoms/media:component.media.chat-area.footer.padding-inline-wide. Required by alias from component/atoms/media:component.media.chat-area.header.padding-inline-wide. Required by alias from component/atoms/media:component.media.chat-area.log.padding-wide. Required by alias from component/atoms/surface:component.surface.separator.margin.lg. Required by alias from component/molecules/card:component.card.padding.lg.inline. Required by alias from component/molecules/card:component.card.padding.lg.wide-block. Required by alias from component/molecules/card:component.card.padding.md.wide-inline. Required by alias from component/molecules/navigation:component.navigation.list.description-gap-wide. Required by alias from component/molecules/navigation:component.navigation.list.marker-padding-inline-start. Required by alias from component/molecules/navigation:component.navigation.list.term-padding-inline-end. Required by alias from component/molecules/navigation:component.navigation.navbar.center-gap-widest. Required by alias from component/molecules/navigation:component.navigation.navbar.container-gap-widest. Required by alias from component/molecules/navigation:component.navigation.navbar.container-padding-wide. Required by alias from component/molecules/overlay:component.overlay.body.padding. Required by alias from component/molecules/overlay:component.overlay.drawer.body.padding. Required by alias from component/molecules/overlay:component.overlay.drawer.footer.padding-inline. Required by alias from component/molecules/overlay:component.overlay.drawer.header.padding-inline. Required by alias from component/molecules/overlay:component.overlay.footer.padding-inline. Required by alias from component/molecules/overlay:component.overlay.header.padding-inline. Required by alias from component/molecules/overlay:component.overlay.window-popout.placeholder.padding. Required by alias from component/molecules/timeline:component.timeline.gutter. Required by alias from component/organisms/form:component.form.gap.wizard."
+      "reason": "Dependency of an ambiguous component/organisms/form branch. Dynamic access protects the spacing branch. References stable DTCG path spacing.6. Required by alias from component/atoms/layout:component.layout.application.padding.status-inline-wide. Required by alias from component/atoms/layout:component.layout.hero.content.gap.wide. Required by alias from component/atoms/layout:component.layout.hero.padding.sm.inline. Required by alias from component/atoms/layout:component.layout.hero.padding.xs.block. Required by alias from component/atoms/media:component.media.chat-area.footer.padding-inline-wide. Required by alias from component/atoms/media:component.media.chat-area.header.padding-inline-wide. Required by alias from component/atoms/media:component.media.chat-area.log.padding-wide. Required by alias from component/atoms/surface:component.surface.separator.margin.lg. Required by alias from component/molecules/card:component.card.padding.lg.inline. Required by alias from component/molecules/card:component.card.padding.lg.wide-block. Required by alias from component/molecules/card:component.card.padding.md.wide-inline. Required by alias from component/molecules/navigation:component.navigation.list.description-gap-wide. Required by alias from component/molecules/navigation:component.navigation.list.marker-padding-inline-start. Required by alias from component/molecules/navigation:component.navigation.list.term-padding-inline-end. Required by alias from component/molecules/navigation:component.navigation.navbar.center-gap-widest. Required by alias from component/molecules/navigation:component.navigation.navbar.container-gap-widest. Required by alias from component/molecules/navigation:component.navigation.navbar.container-padding-wide. Required by alias from component/molecules/overlay:component.overlay.body.padding. Required by alias from component/molecules/overlay:component.overlay.drawer.body.padding. Required by alias from component/molecules/overlay:component.overlay.drawer.footer.padding-inline. Required by alias from component/molecules/overlay:component.overlay.drawer.header.padding-inline. Required by alias from component/molecules/overlay:component.overlay.footer.padding-inline. Required by alias from component/molecules/overlay:component.overlay.header.padding-inline. Required by alias from component/molecules/overlay:component.overlay.window-popout.placeholder.padding. Required by alias from component/molecules/timeline:component.timeline.gutter. Required by alias from component/organisms/form:component.form.gap.wizard. Uses generated CSS custom property --mp-spacing-6."
     },
     {
       "sourceId": "spacing",
@@ -54480,6 +54719,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54495,6 +54735,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54510,6 +54751,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54524,6 +54766,7 @@
       ],
       "evidence": [
         "alias",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54539,6 +54782,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54553,6 +54797,7 @@
       ],
       "evidence": [
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -54568,6 +54813,7 @@
       "evidence": [
         "alias",
         "css",
+        "scss",
         "typescript"
       ],
       "status": "ambiguous",
@@ -55379,7 +55625,7 @@
     }
   ],
   "summary": {
-    "active": 131,
+    "active": 135,
     "protected": 2191,
     "ambiguous": 549,
     "candidate": 0
