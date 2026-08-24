@@ -1,4 +1,4 @@
-import { h, type MpElement } from '@mission-platform/forge';
+import { type MpElement } from '@mission-platform/forge';
 
 import { useIconHref } from '../../../../sprite/provider';
 

@@ -1,5 +1,3 @@
-import { h } from '@mission-platform/forge';
-
 import { ForgeChatArea, ForgeChatBubble } from '@mission-platform/components';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
@@ -40,11 +38,8 @@ const meta = {
   },
   render: (arguments_) => (
     <div style={{ height: '360px', maxWidth: '420px' }}>
-      <ForgeChatArea
-        {...arguments_}
-        header={<strong>Support chat</strong>}
-        footer={<em>Type a message…</em>}
-      >
+      <ForgeChatArea {...arguments_}>
+        <strong slot="header">Support chat</strong>
         <ForgeChatBubble side="start">Hi! How can I help you today?</ForgeChatBubble>
         <ForgeChatBubble
           side="end"
@@ -53,6 +48,7 @@ const meta = {
           I have a question about my order.
         </ForgeChatBubble>
         <ForgeChatBubble side="start">Of course — what is your order number?</ForgeChatBubble>
+        <em slot="footer">Type a message…</em>
       </ForgeChatArea>
     </div>
   ),
@@ -74,6 +70,7 @@ export const WithoutChrome: Story = {
         >
           Looks good!
         </ForgeChatBubble>
+        <em slot="footer">Type a message…</em>
       </ForgeChatArea>
     </div>
   ),

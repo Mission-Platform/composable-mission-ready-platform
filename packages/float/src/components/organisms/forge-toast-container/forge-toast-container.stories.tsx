@@ -1,5 +1,4 @@
 import { ForgeButton } from '@mission-platform/components';
-import { h } from '@mission-platform/forge';
 
 import { useToast, type ToastPosition } from '../../../stores/toast-store/toast-store';
 

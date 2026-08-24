@@ -1,4 +1,4 @@
-import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
+import { classNames, type MpChild, type MpElement } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
 import styles from './forge-collapse.module.scss';

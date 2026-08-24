@@ -1,4 +1,4 @@
-import { h, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
+import { type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
 
 import { cycleTheme, getThemeSnapshot, subscribeTheme, type Theme } from '@/stores/theme-store/theme-store';
 

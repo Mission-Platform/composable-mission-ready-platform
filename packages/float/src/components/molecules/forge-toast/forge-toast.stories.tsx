@@ -1,5 +1,3 @@
-import { h } from '@mission-platform/forge';
-
 import { ForgeToast } from './forge-toast';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

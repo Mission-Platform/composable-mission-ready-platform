@@ -4,9 +4,11 @@ export default defineVitestConfig({
   coverageInclude: ['src/**/*.ts', 'src/**/*.tsx'],
   coverageExclude: ['src/**/*.stories.*', 'src/**/index.ts', 'src/jsx.d.ts'],
   overrides: {
-    esbuild: {
-      jsxFactory: 'h',
-      jsxFragment: 'Fragment',
+    oxc: {
+      jsx: {
+        runtime: 'automatic',
+        importSource: '@mission-platform/forge',
+      },
     },
     test: {
       // The neutral `@mission-platform/icons` is consumed from its source (its

@@ -1,5 +1,4 @@
 import {
-  h,
   type MpChild,
   type MpElement,
   Slot,

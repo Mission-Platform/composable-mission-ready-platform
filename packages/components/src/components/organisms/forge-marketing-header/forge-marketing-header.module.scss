@@ -1,0 +1,191 @@
+/* stylelint-disable declaration-block-single-line-max-declarations */
+@layer mp.components {
+  .forge-marketing-header {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 24rem;
+    overflow: hidden;
+    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    background: var(--mp-color-bg-surface);
+  }
+
+  .forge-marketing-header--has-media {
+    color: var(--mp-color-text-on-inverse);
+    background-position: center;
+    background-size: cover;
+  }
+
+  .forge-marketing-header--overlay {
+    color: var(--mp-color-text-on-inverse);
+  }
+
+  .forge-marketing-header--align-start {
+    justify-items: start;
+    text-align: start;
+  }
+
+  .forge-marketing-header--align-center {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .forge-marketing-header--align-end {
+    justify-items: end;
+    text-align: end;
+  }
+
+  .forge-marketing-header__content {
+    position: relative;
+    z-index: 1;
+    width: min(100% - 2rem, 60rem);
+    padding: 3rem 1rem;
+  }
+
+  .forge-marketing-header__content h1 {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 4rem);
+  }
+
+  .forge-marketing-header__content p {
+    max-width: 42rem;
+    margin: 1rem 0 0;
+    font-size: 1.25rem;
+  }
+
+  .forge-marketing-header__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mp-spacing-3);
+    margin-top: var(--mp-spacing-6);
+  }
+
+  .forge-marketing-header__actions a,
+  .forge-marketing-header__actions button {
+    min-height: var(--mp-size-height-lg);
+    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-lg);
+    border: var(--mp-border-width-thin) solid currentcolor;
+    border-radius: var(--mp-radius-md);
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .forge-marketing-header__action--solid {
+    background: var(--mp-color-primary-default);
+    color: var(--mp-color-text-on-primary) !important;
+  }
+
+  .forge-marketing-header__action--text {
+    border-color: transparent !important;
+    background: transparent;
+  }
+
+  .forge-marketing-header__video,
+  .forge-marketing-header__media,
+  .forge-marketing-header__scrim {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .forge-marketing-header__video {
+    z-index: 0;
+    object-fit: cover;
+  }
+
+  .forge-marketing-header__media {
+    z-index: 0;
+  }
+
+  .forge-marketing-header__media > * {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .forge-marketing-header__scrim {
+    z-index: 0;
+    background: var(--mp-color-bg-scrim);
+  }
+
+  .forge-marketing-header__bar {
+    display: flex;
+    max-width: 75rem;
+    min-height: 4rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mp-spacing-4);
+    margin: auto;
+    padding-inline: var(--mp-spacing-5);
+  }
+
+  .forge-marketing-header__brand {
+    color: var(--mp-color-text-primary);
+    font-size: var(--mp-font-size-xl);
+    font-weight: var(--mp-font-weight-bold);
+    text-decoration: none;
+  }
+
+  .forge-marketing-header__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--mp-spacing-5);
+  }
+
+  .forge-marketing-header__nav a {
+    color: var(--mp-color-text-primary);
+    text-decoration: none;
+  }
+
+  .forge-marketing-header__nav a:hover,
+  .forge-marketing-header__nav a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .forge-marketing-header__cta {
+    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-lg);
+    border-radius: var(--mp-radius-md);
+    background: var(--mp-color-primary-default);
+    color: var(--mp-color-text-on-primary) !important;
+    text-decoration: none !important;
+  }
+
+  .forge-marketing-header__toggle {
+    display: none;
+    min-width: var(--mp-size-height-lg);
+    min-height: var(--mp-size-height-lg);
+    border: 0;
+    background: transparent;
+    font-size: var(--mp-font-size-xl);
+    cursor: pointer;
+  }
+
+  .forge-marketing-header__mobile {
+    display: none;
+    padding: 0 var(--mp-spacing-5) var(--mp-spacing-4);
+  }
+
+  @media (width <= 48rem) {
+    .forge-marketing-header__desktop {
+      display: none;
+    }
+
+    .forge-marketing-header__toggle {
+      display: block;
+    }
+
+    .forge-marketing-header__mobile {
+      display: block;
+    }
+
+    .forge-marketing-header__mobile .forge-marketing-header__nav {
+      align-items: stretch;
+      flex-direction: column;
+      gap: var(--mp-spacing-3);
+    }
+  }
+}

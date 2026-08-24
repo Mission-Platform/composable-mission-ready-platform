@@ -1,5 +1,4 @@
 import { ForgeButton, ForgeStack } from '@mission-platform/components';
-import { h } from '@mission-platform/forge';
 import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 import { ForgeTypography } from '@mission-platform/typography';
 import { useArgs } from 'storybook/preview-api';

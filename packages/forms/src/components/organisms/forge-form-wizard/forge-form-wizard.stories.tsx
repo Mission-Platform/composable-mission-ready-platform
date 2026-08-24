@@ -1,4 +1,4 @@
-import { h, useState } from '@mission-platform/forge';
+import { useState } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeCheckbox, ForgeFormWizard, ForgeInput } from '@mission-platform/forms';

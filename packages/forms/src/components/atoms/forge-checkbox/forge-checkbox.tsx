@@ -1,4 +1,4 @@
-import { type ClassValue, h, type MpElement, useEffect, useId, useRef } from '@mission-platform/forge';
+import { type ClassValue, type MpElement, useEffect, useId, useRef } from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconMinus } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 

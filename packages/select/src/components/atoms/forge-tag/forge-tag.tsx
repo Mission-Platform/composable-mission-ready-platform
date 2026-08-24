@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement } from '@mission-platform/forge';
+import { classNames, type MpElement } from '@mission-platform/forge';
 import { ForgeIconClose } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 

@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 
 import { ForgeStack } from '@mission-platform/components';
 

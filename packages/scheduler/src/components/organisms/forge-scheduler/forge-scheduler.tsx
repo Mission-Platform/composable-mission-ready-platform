@@ -1,6 +1,6 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeDialog } from '@mission-platform/float';
-import { Dynamic, h, type MpElement, useState } from '@mission-platform/forge';
+import { Dynamic, type MpElement, useState } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 import { ForgeInput, ForgeTextarea } from '@mission-platform/forms';
 import { ForgeIconChevron } from '@mission-platform/icons';

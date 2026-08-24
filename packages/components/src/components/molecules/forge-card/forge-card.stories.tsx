@@ -1,5 +1,3 @@
-import { h } from '@mission-platform/forge';
-
 import { ForgeCard } from '@mission-platform/components';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
@@ -46,12 +44,9 @@ const meta = {
     bordered: true,
   },
   render: (arguments_) => (
-    <ForgeCard
-      {...arguments_}
-      style={{ maxWidth: '24rem' }}
-    >
-      A composable surface for grouping related content.
-    </ForgeCard>
+    <div style={{ maxWidth: '24rem' }}>
+      <ForgeCard {...arguments_}>A composable surface for grouping related content.</ForgeCard>
+    </div>
   ),
 } satisfies Meta<typeof ForgeCard>;
 
@@ -62,27 +57,29 @@ export const Default: Story = {};
 
 export const WithHeaderAndFooter: Story = {
   render: (arguments_) => (
-    <ForgeCard
-      {...arguments_}
-      style={{ maxWidth: '24rem' }}
-      header="ForgeCard title"
-      footer="Footer actions"
-    >
-      A composable surface for grouping related content.
-    </ForgeCard>
+    <div style={{ maxWidth: '24rem' }}>
+      <ForgeCard
+        {...arguments_}
+        header="ForgeCard title"
+        footer="Footer actions"
+      >
+        A composable surface for grouping related content.
+      </ForgeCard>
+    </div>
   ),
 };
 
 export const Shadowed: Story = {
   args: { shadow: true },
   render: (arguments_) => (
-    <ForgeCard
-      {...arguments_}
-      style={{ maxWidth: '24rem' }}
-      header="Elevated"
-    >
-      A composable surface for grouping related content.
-    </ForgeCard>
+    <div style={{ maxWidth: '24rem' }}>
+      <ForgeCard
+        {...arguments_}
+        header="Elevated"
+      >
+        A composable surface for grouping related content.
+      </ForgeCard>
+    </div>
   ),
 };
 
@@ -97,60 +94,13 @@ export const Error: Story = { args: { variant: 'error' } };
 export const Variants: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-      <ForgeCard
-        variant="neutral"
-        style={{ width: '12rem' }}
-      >
-        Neutral
-      </ForgeCard>
-      <ForgeCard
-        variant="primary"
-        style={{ width: '12rem' }}
-      >
-        Primary
-      </ForgeCard>
-      <ForgeCard
-        variant="secondary"
-        style={{ width: '12rem' }}
-      >
-        Secondary
-      </ForgeCard>
-      <ForgeCard
-        variant="tertiary"
-        style={{ width: '12rem' }}
-      >
-        Tertiary
-      </ForgeCard>
-      <ForgeCard
-        variant="success"
-        style={{ width: '12rem' }}
-      >
-        Success
-      </ForgeCard>
-      <ForgeCard
-        variant="warning"
-        style={{ width: '12rem' }}
-      >
-        Warning
-      </ForgeCard>
-      <ForgeCard
-        variant="info"
-        style={{ width: '12rem' }}
-      >
-        Info
-      </ForgeCard>
-      <ForgeCard
-        variant="error"
-        style={{ width: '12rem' }}
-      >
-        Error
-      </ForgeCard>
-      <ForgeCard
-        variant="critical"
-        style={{ width: '12rem' }}
-      >
-        Critical
-      </ForgeCard>
+      {(
+        ['neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical'] as const
+      ).map((variant) => (
+        <div style={{ width: '12rem' }}>
+          <ForgeCard variant={variant}>{variant[0].toUpperCase() + variant.slice(1)}</ForgeCard>
+        </div>
+      ))}
     </div>
   ),
 };
@@ -158,12 +108,13 @@ export const Variants: Story = {
 export const Compact: Story = {
   args: { padding: 'sm' },
   render: (arguments_) => (
-    <ForgeCard
-      {...arguments_}
-      style={{ maxWidth: '24rem' }}
-      header="Compact"
-    >
-      A composable surface for grouping related content.
-    </ForgeCard>
+    <div style={{ maxWidth: '24rem' }}>
+      <ForgeCard
+        {...arguments_}
+        header="Compact"
+      >
+        A composable surface for grouping related content.
+      </ForgeCard>
+    </div>
   ),
 };

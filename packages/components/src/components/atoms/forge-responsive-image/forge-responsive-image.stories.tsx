@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 
 import { ForgeResponsiveImage } from '@mission-platform/components';
 

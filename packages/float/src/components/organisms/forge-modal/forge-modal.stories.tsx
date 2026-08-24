@@ -1,5 +1,5 @@
 import { ForgeButton, ForgeStack } from '@mission-platform/components';
-import { h, type MpChild } from '@mission-platform/forge';
+import { type MpChild } from '@mission-platform/forge';
 import { ForgeSelect } from '@mission-platform/forms';
 import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 import { ForgeTypography } from '@mission-platform/typography';

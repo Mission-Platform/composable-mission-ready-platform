@@ -1,5 +1,6 @@
 import { ForgeAccordion } from '@mission-platform/components';
 
+import type { AccordionProperties } from '@mission-platform/components';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
@@ -44,7 +45,7 @@ const meta = {
 } satisfies Meta<typeof ForgeAccordion>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<AccordionProperties>;
 
 export const Default: Story = {};
 

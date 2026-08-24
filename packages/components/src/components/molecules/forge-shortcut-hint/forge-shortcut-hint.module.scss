@@ -1,0 +1,48 @@
+@layer mp.components {
+  .forge-shortcut-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mp-spacing-2);
+    color: var(--mp-color-text-secondary);
+
+    &__keys {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--mp-spacing-1);
+    }
+
+    &__key-group {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--mp-spacing-1);
+    }
+
+    &__key {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.5em;
+      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+      border-bottom-width: var(--mp-border-width-thick);
+      border-radius: var(--mp-radius-sm);
+      background: var(--mp-color-bg-raised);
+      color: var(--mp-color-text-primary);
+      font-family: inherit;
+      font-size: 0.875em;
+      line-height: 1;
+    }
+
+    &--sm {
+      font-size: var(--mp-font-size-sm);
+    }
+
+    &--md {
+      font-size: var(--mp-font-size-md);
+    }
+
+    &--lg {
+      font-size: var(--mp-font-size-lg);
+    }
+  }
+}

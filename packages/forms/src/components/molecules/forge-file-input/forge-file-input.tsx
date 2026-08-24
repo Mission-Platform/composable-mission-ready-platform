@@ -1,4 +1,4 @@
-import { type ClassValue, h, type MpElement, useId, useState } from '@mission-platform/forge';
+import { type ClassValue, type MpElement, useId, useState } from '@mission-platform/forge';
 import { ForgeIconUpload } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 

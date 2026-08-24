@@ -1,4 +1,4 @@
-import { h, type MpChild, type MpElement } from '@mission-platform/forge';
+import { type MpChild, type MpElement } from '@mission-platform/forge';
 
 /** Canonical 2xs → 2xl size scale shared across the display components. */
 export type AvatarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';

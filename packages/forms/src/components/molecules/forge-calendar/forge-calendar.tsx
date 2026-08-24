@@ -1,4 +1,4 @@
-import { h, type MpChild, type MpElement, useEffect, useMemo, useState } from '@mission-platform/forge';
+import { type MpChild, type MpElement, useEffect, useMemo, useState } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 import { DateTime } from 'luxon';

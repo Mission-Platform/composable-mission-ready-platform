@@ -1,0 +1,117 @@
+@layer mp.components {
+  .forge-cta-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mp-spacing-8);
+    padding: var(--mp-spacing-6);
+    border-radius: var(--mp-radius-md);
+    color: var(--mp-color-text-on-primary);
+    background: var(--mp-color-primary-default);
+  }
+
+  .forge-cta-banner--neutral {
+    color: var(--mp-color-text-primary);
+    background: var(--mp-color-bg-muted);
+  }
+
+  .forge-cta-banner--secondary {
+    background: var(--mp-color-secondary-default);
+  }
+
+  .forge-cta-banner--success {
+    background: var(--mp-color-success-default);
+  }
+
+  .forge-cta-banner--warning {
+    color: var(--mp-color-text-primary);
+    background: var(--mp-color-warning-default);
+  }
+
+  .forge-cta-banner--left {
+    text-align: start;
+  }
+
+  .forge-cta-banner--center {
+    text-align: center;
+  }
+
+  .forge-cta-banner--right {
+    text-align: end;
+  }
+
+  .forge-cta-banner__content {
+    flex: 1;
+  }
+
+  .forge-cta-banner__title {
+    margin: 0 0 var(--mp-spacing-2);
+    font-size: var(--mp-font-size-2xl);
+  }
+
+  .forge-cta-banner__description {
+    margin: 0 0 var(--mp-spacing-4);
+    opacity: var(--mp-opacity-interactive);
+  }
+
+  .forge-cta-banner__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mp-spacing-3);
+    margin-top: var(--mp-spacing-4);
+  }
+
+  .forge-cta-banner__action {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-lg);
+    border: var(--mp-border-width-thin) solid transparent;
+    border-radius: var(--mp-radius-md);
+    font: inherit;
+    font-weight: var(--mp-font-weight-semibold);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .forge-cta-banner__action--solid {
+    color: var(--mp-color-primary-default);
+    background: var(--mp-color-bg-surface);
+  }
+
+  .forge-cta-banner__action--outline {
+    border-color: currentcolor;
+    color: inherit;
+    background: transparent;
+  }
+
+  .forge-cta-banner__action--text {
+    padding-inline: var(--mp-spacing-1);
+    color: inherit;
+    background: transparent;
+    text-decoration: underline;
+  }
+
+  .forge-cta-banner__image {
+    max-width: 30%;
+    max-height: 10rem;
+    border-radius: var(--mp-radius-md);
+    object-fit: cover;
+  }
+
+  .forge-cta-banner__action:focus-visible {
+    outline: var(--mp-border-width-thick) solid currentcolor;
+    outline-offset: var(--mp-spacing-1);
+  }
+
+  @media (width <= 40rem) {
+    .forge-cta-banner {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .forge-cta-banner__image {
+      max-width: 100%;
+      width: 100%;
+    }
+  }
+}

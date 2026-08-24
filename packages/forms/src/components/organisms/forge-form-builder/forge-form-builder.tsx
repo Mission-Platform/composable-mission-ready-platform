@@ -5,7 +5,7 @@ import {
   type TabItem,
 } from '@mission-platform/components';
 import { ForgeCodeBlock } from '@mission-platform/content';
-import { Fragment, h, type MpChild, type MpElement, useRef, useState } from '@mission-platform/forge';
+import { Fragment, type MpChild, type MpElement, useRef, useState } from '@mission-platform/forge';
 import {
   type BuilderField,
   type BuilderFieldOption,

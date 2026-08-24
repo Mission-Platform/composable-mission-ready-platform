@@ -1,4 +1,4 @@
-import { h, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
+import { type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
 import { ForgeIconChevron, type IconDirection } from '@mission-platform/icons';
 
 import styles from './forge-menu.module.scss';

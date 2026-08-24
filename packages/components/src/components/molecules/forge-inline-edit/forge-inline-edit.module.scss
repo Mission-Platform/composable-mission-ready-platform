@@ -1,0 +1,94 @@
+@layer mp.components {
+  .forge-inline-edit {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-1);
+    max-width: 100%;
+    color: var(--mp-color-text-primary);
+  }
+
+  .forge-inline-edit__label {
+    font-size: var(--mp-font-size-sm);
+    font-weight: var(--mp-font-weight-semibold);
+  }
+
+  .forge-inline-edit__display,
+  .forge-inline-edit__form {
+    display: flex;
+    align-items: center;
+    gap: var(--mp-spacing-2);
+    max-width: 100%;
+  }
+
+  .forge-inline-edit__value {
+    min-width: 2rem;
+    overflow-wrap: anywhere;
+  }
+
+  .forge-inline-edit__input {
+    min-width: 10rem;
+    padding: var(--mp-size-pad-block-sm) var(--mp-size-pad-inline-sm);
+    color: inherit;
+    background: var(--mp-color-bg-surface);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    font: inherit;
+  }
+
+  .forge-inline-edit__input:focus-visible {
+    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+    outline-offset: var(--mp-spacing-1);
+    border-color: var(--mp-color-border-focus);
+  }
+
+  .forge-inline-edit__button {
+    padding: var(--mp-spacing-1) var(--mp-spacing-2);
+    color: var(--mp-color-text-link);
+    background: transparent;
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    cursor: pointer;
+    font: inherit;
+    white-space: nowrap;
+  }
+
+  .forge-inline-edit__button:hover:not(:disabled) {
+    background: var(--mp-color-primary-subtle);
+  }
+
+  .forge-inline-edit__button:focus-visible {
+    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+    outline-offset: var(--mp-spacing-1);
+  }
+
+  .forge-inline-edit__button:disabled {
+    cursor: not-allowed;
+    opacity: var(--mp-opacity-disabled);
+  }
+
+  .forge-inline-edit__error {
+    margin: 0;
+    color: var(--mp-color-danger-text);
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-inline-edit__footer {
+    margin-top: var(--mp-spacing-1);
+  }
+
+  .forge-inline-edit--sm {
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-inline-edit--lg {
+    font-size: 1.0625rem;
+  }
+
+  .forge-inline-edit--disabled {
+    opacity: var(--mp-opacity-disabled);
+  }
+
+  .forge-inline-edit--error .forge-inline-edit__input {
+    border-color: var(--mp-color-danger-default);
+  }
+}

@@ -1,4 +1,4 @@
-import { h, type MpChild, type MpElement, Slot, Teleport, useEffect, useId, useRef } from '@mission-platform/forge';
+import { type MpChild, type MpElement, Slot, Teleport, useEffect, useId, useRef } from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 import { resolvePortalTarget } from '../../../utils/portal-target/portal-target';

@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, useMemo, useState } from '@mission-platform/forge';
+import { classNames, type MpElement, useMemo, useState } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 

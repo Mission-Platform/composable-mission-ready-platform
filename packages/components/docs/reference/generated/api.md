@@ -248,6 +248,50 @@ assembled with the framework-neutral {@link classNames} helper, including its
 | --- | --- | --- |
 | properties | Readonly<ButtonProperties> |  |
 
+## `src/components/atoms/forge-divider/forge-divider`
+
+### DividerOrientation
+
+**Kind:** type
+
+```typescript
+export type DividerOrientation = 'horizontal' | 'vertical';
+```
+
+Layout direction of the divider.
+
+### DividerProperties
+
+**Kind:** interface
+
+```typescript
+export interface DividerProperties
+```
+
+No description provided.
+
+### ForgeDivider
+
+**Kind:** function
+
+```typescript
+function ForgeDivider(properties: Readonly<DividerProperties>): MpElement
+```
+
+`ForgeDivider` — a thin border divider authored once in the neutral JSX
+dialect and compiled straight to React or Vue by
+`@mission-platform/vite-plugin-forge`.
+
+It fills the available width or height according to `orientation` and uses
+the semantic `<hr>` element by default. Set `decorative` to `false` to use a
+role-bearing `<div>` instead.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DividerProperties> |  |
+
 ## `src/components/atoms/forge-icon-button/forge-icon-button`
 
 ### ForgeIconButton
@@ -304,6 +348,94 @@ export type IconButtonVariant = 'ghost' | 'neutral' | 'primary' | 'secondary' | 
 ```
 
 Visual treatment of the icon button — the canonical colour set plus a transparent `ghost`.
+
+## `src/components/atoms/forge-icon/forge-icon`
+
+### ForgeIcon
+
+**Kind:** function
+
+```typescript
+function ForgeIcon(properties: Readonly<IconProperties>): MpElement
+```
+
+Framework-neutral icon facade backed by the reviewed `@mission-platform/icons`
+catalog. Resolution is data-driven and unknown names never render an invalid
+component; the wrapper owns the accessible name so catalog SVGs remain silent.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<IconProperties> |  |
+
+### IconName
+
+**Kind:** type
+
+```typescript
+export type IconName = string;
+```
+
+A catalog name such as `forge-icon-check`; unknown names use the fallback icon.
+
+### IconProperties
+
+**Kind:** interface
+
+```typescript
+export interface IconProperties
+```
+
+No description provided.
+
+### IconSize
+
+**Kind:** type
+
+```typescript
+export type IconSize = 'sm' | 'md' | 'lg' | 'xl';
+```
+
+Icon size mapped to the catalog's pixel dimensions.
+
+## `src/components/atoms/forge-kbd/forge-kbd`
+
+### ForgeKbd
+
+**Kind:** function
+
+```typescript
+function ForgeKbd(properties: Readonly<KbdProperties>): MpElement
+```
+
+A semantic keyboard key/chord label rendered in the neutral JSX dialect.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<KbdProperties> |  |
+
+### KbdProperties
+
+**Kind:** interface
+
+```typescript
+export interface KbdProperties
+```
+
+No description provided.
+
+### KbdSize
+
+**Kind:** type
+
+```typescript
+export type KbdSize = 'sm' | 'md' | 'lg';
+```
+
+Keyboard key size.
 
 ## `src/components/atoms/forge-progress-bar/forge-progress-bar`
 
@@ -848,6 +980,102 @@ export type StatusIconSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 Canonical 2xs → 2xl size scale.
 
+## `src/components/atoms/forge-surface/forge-surface`
+
+### ForgeSurface
+
+**Kind:** function
+
+```typescript
+function ForgeSurface(properties: Readonly<SurfaceProperties>): MpElement
+```
+
+A themeable semantic surface with a default slot.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SurfaceProperties> |  |
+
+### SurfaceElevation
+
+**Kind:** type
+
+```typescript
+export type SurfaceElevation = 0 | 1 | 2 | 3;
+```
+
+Surface elevation level.
+
+### SurfacePadding
+
+**Kind:** type
+
+```typescript
+export type SurfacePadding = 'none' | 'sm' | 'md' | 'lg';
+```
+
+Surface padding scale.
+
+### SurfaceProperties
+
+**Kind:** interface
+
+```typescript
+export interface SurfaceProperties
+```
+
+No description provided.
+
+### SurfaceRounded
+
+**Kind:** type
+
+```typescript
+export type SurfaceRounded = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+```
+
+Surface corner radius treatment.
+
+## `src/components/atoms/forge-sync-status-indicator/forge-sync-status-indicator`
+
+### ForgeSyncStatusIndicator
+
+**Kind:** function
+
+```typescript
+function ForgeSyncStatusIndicator(properties: Readonly<SyncStatusIndicatorProperties>): MpElement
+```
+
+A compact, accessible synchronization state indicator.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SyncStatusIndicatorProperties> |  |
+
+### SyncStatus
+
+**Kind:** type
+
+```typescript
+export type SyncStatus = 'synced' | 'syncing' | 'pending' | 'error' | 'offline';
+```
+
+Synchronization state represented by the indicator.
+
+### SyncStatusIndicatorProperties
+
+**Kind:** interface
+
+```typescript
+export interface SyncStatusIndicatorProperties
+```
+
+No description provided.
+
 ## `src/components/molecules/forge-accordion/forge-accordion`
 
 ### AccordionItem
@@ -911,6 +1139,54 @@ that fall back to the item's `title`/`content` text.
 | Name | Type | Description |
 | --- | --- | --- |
 | properties | Readonly<AccordionProperties> |  |
+
+## `src/components/molecules/forge-alert/forge-alert`
+
+### AlertProperties
+
+**Kind:** interface
+
+```typescript
+export interface AlertProperties
+```
+
+No description provided.
+
+### AlertSize
+
+**Kind:** type
+
+```typescript
+export type AlertSize = 'sm' | 'md' | 'lg';
+```
+
+No description provided.
+
+### AlertVariant
+
+**Kind:** type
+
+```typescript
+export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+No description provided.
+
+### ForgeAlert
+
+**Kind:** function
+
+```typescript
+function ForgeAlert(properties: Readonly<AlertProperties>): MpElement
+```
+
+An accessible, dismissible status message with a composable message and action slot.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<AlertProperties> |  |
 
 ## `src/components/molecules/forge-breadcrumb/forge-breadcrumb`
 
@@ -1023,6 +1299,54 @@ It owns its styling through the co-located CSS Module
 | --- | --- | --- |
 | properties | Readonly<ButtonGroupProperties> |  |
 
+## `src/components/molecules/forge-callout-block/forge-callout-block`
+
+### CalloutBlockProperties
+
+**Kind:** interface
+
+```typescript
+export interface CalloutBlockProperties
+```
+
+No description provided.
+
+### CalloutBlockSize
+
+**Kind:** type
+
+```typescript
+export type CalloutBlockSize = 'sm' | 'md';
+```
+
+No description provided.
+
+### CalloutBlockVariant
+
+**Kind:** type
+
+```typescript
+export type CalloutBlockVariant = 'info' | 'success' | 'warning' | 'danger';
+```
+
+No description provided.
+
+### ForgeCalloutBlock
+
+**Kind:** function
+
+```typescript
+function ForgeCalloutBlock(properties: Readonly<CalloutBlockProperties>): MpElement
+```
+
+A prominent informational block with title, description, content, and action slots.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CalloutBlockProperties> |  |
+
 ## `src/components/molecules/forge-card/forge-card`
 
 ### CardPadding
@@ -1073,6 +1397,54 @@ frameworks.
 | Name | Type | Description |
 | --- | --- | --- |
 | properties | Readonly<CardProperties> |  |
+
+## `src/components/molecules/forge-carousel-indicator/forge-carousel-indicator`
+
+### CarouselIndicatorOrientation
+
+**Kind:** type
+
+```typescript
+export type CarouselIndicatorOrientation = 'horizontal' | 'vertical';
+```
+
+No description provided.
+
+### CarouselIndicatorProperties
+
+**Kind:** interface
+
+```typescript
+export interface CarouselIndicatorProperties
+```
+
+No description provided.
+
+### CarouselIndicatorSize
+
+**Kind:** type
+
+```typescript
+export type CarouselIndicatorSize = 'sm' | 'md' | 'lg';
+```
+
+No description provided.
+
+### ForgeCarouselIndicator
+
+**Kind:** function
+
+```typescript
+function ForgeCarouselIndicator(properties: Readonly<CarouselIndicatorProperties>): MpElement
+```
+
+Accessible, keyboard-operable pagination dots for a carousel.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CarouselIndicatorProperties> |  |
 
 ## `src/components/molecules/forge-chat-bubble/forge-chat-bubble`
 
@@ -1248,6 +1620,122 @@ handheld frames (`mobile`/`tablet`) honour the `orientation` prop; the
 | --- | --- | --- |
 | properties | Readonly<DeviceMockProperties> |  |
 
+## `src/components/molecules/forge-drop-zone/forge-drop-zone`
+
+### DropZoneProperties
+
+**Kind:** interface
+
+```typescript
+export interface DropZoneProperties
+```
+
+No description provided.
+
+### DropZoneReject
+
+**Kind:** interface
+
+```typescript
+export interface DropZoneReject
+```
+
+No description provided.
+
+### DropZoneScope
+
+**Kind:** interface
+
+```typescript
+export interface DropZoneScope
+```
+
+No description provided.
+
+### DropZoneSize
+
+**Kind:** type
+
+```typescript
+export type DropZoneSize = 'sm' | 'md' | 'lg';
+```
+
+No description provided.
+
+### DropZoneValue
+
+**Kind:** type
+
+```typescript
+export type DropZoneValue = File | File[];
+```
+
+No description provided.
+
+### ForgeDropZone
+
+**Kind:** function
+
+```typescript
+function ForgeDropZone(properties: Readonly<DropZoneProperties>): MpElement
+```
+
+A keyboard-accessible drag-and-drop file target with client-side validation.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DropZoneProperties> |  |
+
+## `src/components/molecules/forge-empty-state/forge-empty-state`
+
+### EmptyStateProperties
+
+**Kind:** interface
+
+```typescript
+export interface EmptyStateProperties
+```
+
+No description provided.
+
+### EmptyStateSize
+
+**Kind:** type
+
+```typescript
+export type EmptyStateSize = 'sm' | 'md' | 'lg';
+```
+
+No description provided.
+
+### EmptyStateVariant
+
+**Kind:** type
+
+```typescript
+export type EmptyStateVariant = 'neutral' | 'info';
+```
+
+No description provided.
+
+### ForgeEmptyState
+
+**Kind:** function
+
+```typescript
+function ForgeEmptyState(properties: Readonly<EmptyStateProperties>): MpElement
+```
+
+A centered no-content message with optional icon, supporting copy, and action.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<EmptyStateProperties> |  |
+
 ## `src/components/molecules/forge-grid/forge-grid`
 
 ### ForgeGrid
@@ -1351,6 +1839,64 @@ No description provided.
 
 ```typescript
 export interface InViewProperties
+```
+
+No description provided.
+
+## `src/components/molecules/forge-inline-edit/forge-inline-edit`
+
+### ForgeInlineEdit
+
+**Kind:** function
+
+```typescript
+function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement
+```
+
+A compact read/edit control with keyboard submit, cancel, and validation.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<InlineEditProperties> |  |
+
+### InlineEditInputType
+
+**Kind:** type
+
+```typescript
+export type InlineEditInputType = 'text' | 'email' | 'url' | 'number';
+```
+
+No description provided.
+
+### InlineEditProperties
+
+**Kind:** interface
+
+```typescript
+export interface InlineEditProperties
+```
+
+No description provided.
+
+### InlineEditSize
+
+**Kind:** type
+
+```typescript
+export type InlineEditSize = 'sm' | 'md' | 'lg';
+```
+
+No description provided.
+
+### InlineEditValidator
+
+**Kind:** type
+
+```typescript
+export type InlineEditValidator = (value: string) => string | undefined;
 ```
 
 No description provided.
@@ -1481,6 +2027,54 @@ export interface MasonryProperties
 
 No description provided.
 
+## `src/components/molecules/forge-mention-input/forge-mention-input`
+
+### ForgeMentionInput
+
+**Kind:** function
+
+```typescript
+function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement
+```
+
+A textarea with accessible, keyboard-navigable mention suggestions.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<MentionInputProperties> |  |
+
+### MentionInputProperties
+
+**Kind:** interface
+
+```typescript
+export interface MentionInputProperties
+```
+
+No description provided.
+
+### MentionItem
+
+**Kind:** interface
+
+```typescript
+export interface MentionItem
+```
+
+No description provided.
+
+### MentionSuggestionScope
+
+**Kind:** interface
+
+```typescript
+export interface MentionSuggestionScope
+```
+
+No description provided.
+
 ## `src/components/molecules/forge-menu-item/forge-menu-item`
 
 ### ForgeMenuItem
@@ -1598,6 +2192,76 @@ export interface MenuProperties
 ```
 
 No description provided.
+
+## `src/components/molecules/forge-metric-card/forge-metric-card`
+
+### ForgeMetricCard
+
+**Kind:** function
+
+```typescript
+function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement
+```
+
+`ForgeMetricCard` — a compact metric summary authored once in neutral JSX.
+It keeps the value, trend, loading state, and supporting content in one
+accessible article while leaving visual treatments to its CSS Module.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<MetricCardProperties> |  |
+
+### MetricCardProperties
+
+**Kind:** interface
+
+```typescript
+export interface MetricCardProperties
+```
+
+No description provided.
+
+### MetricCardSize
+
+**Kind:** type
+
+```typescript
+export type MetricCardSize = 'sm' | 'md' | 'lg';
+```
+
+Size token controlling the metric card scale.
+
+### MetricCardTrend
+
+**Kind:** interface
+
+```typescript
+export interface MetricCardTrend
+```
+
+Optional change indicator rendered below the metric value.
+
+### MetricCardTrendDirection
+
+**Kind:** type
+
+```typescript
+export type MetricCardTrendDirection = 'up' | 'down' | 'flat';
+```
+
+Direction of change represented by a metric trend.
+
+### MetricCardVariant
+
+**Kind:** type
+
+```typescript
+export type MetricCardVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+Surface tone of the metric card.
 
 ## `src/components/molecules/forge-navbar-item/forge-navbar-item`
 
@@ -1814,6 +2478,57 @@ export type TabsVariant = 'line' | 'pill';
 
 Visual treatment of the tab list.
 
+## `src/components/molecules/forge-tag-input/forge-tag-input`
+
+### ForgeTagInput
+
+**Kind:** function
+
+```typescript
+function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement
+```
+
+`ForgeTagInput` — a controlled, accessible tag editor authored in neutral
+JSX. Enter or comma commits a trimmed draft, backspace removes the last tag
+when the draft is empty, and duplicate/max-tag rules are applied before the
+controlled update callback is fired.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TagInputProperties> |  |
+
+### TagInputProperties
+
+**Kind:** interface
+
+```typescript
+export interface TagInputProperties
+```
+
+No description provided.
+
+### TagInputSize
+
+**Kind:** type
+
+```typescript
+export type TagInputSize = 'sm' | 'md' | 'lg';
+```
+
+Size token controlling the tag input scale.
+
+### TagInputVariant
+
+**Kind:** type
+
+```typescript
+export type TagInputVariant = 'neutral' | 'primary' | 'error';
+```
+
+Surface tone of the tag input.
+
 ## `src/components/molecules/forge-timeline/forge-timeline`
 
 ### ForgeTimeline
@@ -1952,6 +2667,164 @@ export interface WindowPopoutProperties
 
 No description provided.
 
+## `src/components/organisms/forge-activity-feed/forge-activity-feed`
+
+### ActivityFeedItem
+
+**Kind:** type
+
+```typescript
+export type ActivityFeedItem = ActivityItem;
+```
+
+No description provided.
+
+#### Contract
+
+- **@deprecated:** Use `ActivityItem`.
+
+### ActivityFeedProperties
+
+**Kind:** interface
+
+```typescript
+export interface ActivityFeedProperties
+```
+
+No description provided.
+
+### ActivityFeedSize
+
+**Kind:** type
+
+```typescript
+export type ActivityFeedSize = 'sm' | 'md' | 'lg';
+```
+
+No description provided.
+
+### ActivityFeedVariant
+
+**Kind:** type
+
+```typescript
+export type ActivityFeedVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+```
+
+No description provided.
+
+### ForgeActivityFeed
+
+**Kind:** function
+
+```typescript
+function ForgeActivityFeed(properties: Readonly<ActivityFeedProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ActivityFeedProperties> |  |
+
+## `src/components/organisms/forge-announcement-bar/forge-announcement-bar`
+
+### AnnouncementBarProperties
+
+**Kind:** interface
+
+```typescript
+export interface AnnouncementBarProperties
+```
+
+No description provided.
+
+### AnnouncementBarVariant
+
+**Kind:** type
+
+```typescript
+export type AnnouncementBarVariant = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+No description provided.
+
+### ForgeAnnouncementBar
+
+**Kind:** function
+
+```typescript
+function ForgeAnnouncementBar(properties: Readonly<AnnouncementBarProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<AnnouncementBarProperties> |  |
+
+## `src/components/organisms/forge-asset-browser/forge-asset-browser`
+
+### AssetBrowserItem
+
+**Kind:** interface
+
+```typescript
+export interface AssetBrowserItem
+```
+
+No description provided.
+
+### AssetBrowserProperties
+
+**Kind:** interface
+
+```typescript
+export interface AssetBrowserProperties
+```
+
+No description provided.
+
+### AssetBrowserSize
+
+**Kind:** type
+
+```typescript
+export type AssetBrowserSize = 'sm' | 'md' | 'lg';
+```
+
+No description provided.
+
+### AssetBrowserValue
+
+**Kind:** type
+
+```typescript
+export type AssetBrowserValue = string | string[];
+```
+
+No description provided.
+
+### ForgeAssetBrowser
+
+**Kind:** function
+
+```typescript
+function ForgeAssetBrowser(properties: Readonly<AssetBrowserProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<AssetBrowserProperties> |  |
+
 ## `src/components/organisms/forge-carousel/forge-carousel`
 
 ### CarouselProperties
@@ -2064,6 +2937,421 @@ auto-scroll covers the common case.
 | --- | --- | --- |
 | properties | Readonly<ChatAreaProperties> |  |
 
+## `src/components/organisms/forge-command-palette/forge-command-palette`
+
+### CommandPaletteCommand
+
+**Kind:** type
+
+```typescript
+export type CommandPaletteCommand = CommandItem;
+```
+
+No description provided.
+
+#### Contract
+
+- **@deprecated:** Use `CommandItem`.
+
+### CommandPaletteProperties
+
+**Kind:** interface
+
+```typescript
+export interface CommandPaletteProperties
+```
+
+No description provided.
+
+### CommandPaletteSize
+
+**Kind:** type
+
+```typescript
+export type CommandPaletteSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Size token controlling the command palette scale.
+
+### ForgeCommandPalette
+
+**Kind:** function
+
+```typescript
+function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement
+```
+
+A searchable, keyboard-first command palette with a modal overlay. The neutral
+implementation keeps filtering and selection framework-independent while
+guarding global document listeners for SSR.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CommandPaletteProperties> |  |
+
+## `src/components/organisms/forge-comment-thread/forge-comment-thread`
+
+### CommentThreadComment
+
+**Kind:** interface
+
+```typescript
+export interface CommentThreadComment
+```
+
+No description provided.
+
+### CommentThreadProperties
+
+**Kind:** interface
+
+```typescript
+export interface CommentThreadProperties
+```
+
+No description provided.
+
+### CommentThreadSize
+
+**Kind:** type
+
+```typescript
+export type CommentThreadSize = 'sm' | 'md' | 'lg';
+```
+
+No description provided.
+
+### ForgeCommentThread
+
+**Kind:** function
+
+```typescript
+function ForgeCommentThread(properties: Readonly<CommentThreadProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CommentThreadProperties> |  |
+
+## `src/components/organisms/forge-comparison-table/forge-comparison-table`
+
+### ComparisonTableFeature
+
+**Kind:** type
+
+```typescript
+export type ComparisonTableFeature = FeatureRow;
+```
+
+No description provided.
+
+#### Contract
+
+- **@deprecated:** Use `FeatureRow`.
+
+### ComparisonTablePlan
+
+**Kind:** type
+
+```typescript
+export type ComparisonTablePlan = ComparisonItem;
+```
+
+No description provided.
+
+#### Contract
+
+- **@deprecated:** Use `ComparisonItem`.
+
+### ComparisonTableProperties
+
+**Kind:** interface
+
+```typescript
+export interface ComparisonTableProperties
+```
+
+No description provided.
+
+### ComparisonTableSize
+
+**Kind:** type
+
+```typescript
+export type ComparisonTableSize = 'sm' | 'md' | 'lg';
+```
+
+No description provided.
+
+### ComparisonTableValue
+
+**Kind:** type
+
+```typescript
+export type ComparisonTableValue = string | number | boolean;
+```
+
+No description provided.
+
+### ForgeComparisonTable
+
+**Kind:** function
+
+```typescript
+function ForgeComparisonTable(properties: Readonly<ComparisonTableProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ComparisonTableProperties> |  |
+
+## `src/components/organisms/forge-cookie-consent/forge-cookie-consent`
+
+### CookieCategory
+
+**Kind:** interface
+
+```typescript
+export interface CookieCategory
+```
+
+A user-configurable cookie category.
+
+### CookieConsentProperties
+
+**Kind:** interface
+
+```typescript
+export interface CookieConsentProperties
+```
+
+No description provided.
+
+### CookieConsentSize
+
+**Kind:** type
+
+```typescript
+export type CookieConsentSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Size token controlling the consent surface scale.
+
+### CookieConsentState
+
+**Kind:** interface
+
+```typescript
+export interface CookieConsentState
+```
+
+The consent payload emitted to the host application and persisted in storage.
+
+### ForgeCookieConsent
+
+**Kind:** function
+
+```typescript
+function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement
+```
+
+A consent banner and accessible preferences dialog with required-category
+enforcement and guarded local/session storage persistence.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CookieConsentProperties> |  |
+
+## `src/components/organisms/forge-cta-banner/forge-cta-banner`
+
+### CtaBannerAction
+
+**Kind:** interface
+
+```typescript
+export interface CtaBannerAction
+```
+
+No description provided.
+
+### CtaBannerProperties
+
+**Kind:** interface
+
+```typescript
+export interface CtaBannerProperties
+```
+
+No description provided.
+
+### CtaBannerVariant
+
+**Kind:** type
+
+```typescript
+export type CtaBannerVariant = 'neutral' | 'primary' | 'secondary' | 'success' | 'warning';
+```
+
+No description provided.
+
+### ForgeCtaBanner
+
+**Kind:** function
+
+```typescript
+function ForgeCtaBanner(properties: Readonly<CtaBannerProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<CtaBannerProperties> |  |
+
+## `src/components/organisms/forge-data-card/forge-data-card`
+
+### DataCardData
+
+**Kind:** type
+
+```typescript
+export type DataCardData = VCardData | ICalendarData;
+```
+
+Typed contact or calendar data displayed by `ForgeDataCard`.
+
+### DataCardProperties
+
+**Kind:** interface
+
+```typescript
+export interface DataCardProperties
+```
+
+No description provided.
+
+### DataCardSize
+
+**Kind:** type
+
+```typescript
+export type DataCardSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Size token controlling the data card scale.
+
+### DataCardTrend
+
+**Kind:** interface
+
+```typescript
+export interface DataCardTrend
+```
+
+No description provided.
+
+#### Contract
+
+- **@deprecated:** Data cards now use `VCardData` or `ICalendarData`.
+
+### DataCardVariant
+
+**Kind:** type
+
+```typescript
+export type DataCardVariant = 'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
+```
+
+Colour tone of the card surface.
+
+### ForgeDataCard
+
+**Kind:** function
+
+```typescript
+function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement
+```
+
+A semantic contact or calendar card with standards-compliant downloads.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DataCardProperties> |  |
+
+## `src/components/organisms/forge-diff-viewer/forge-diff-viewer`
+
+### DiffLineType
+
+**Kind:** type
+
+```typescript
+export type DiffLineType = 'context' | 'addition' | 'deletion';
+```
+
+No description provided.
+
+### DiffViewerLine
+
+**Kind:** interface
+
+```typescript
+export interface DiffViewerLine
+```
+
+No description provided.
+
+### DiffViewerMode
+
+**Kind:** type
+
+```typescript
+export type DiffViewerMode = 'unified' | 'split';
+```
+
+No description provided.
+
+### DiffViewerProperties
+
+**Kind:** interface
+
+```typescript
+export interface DiffViewerProperties
+```
+
+No description provided.
+
+### ForgeDiffViewer
+
+**Kind:** function
+
+```typescript
+function ForgeDiffViewer(properties: Readonly<DiffViewerProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<DiffViewerProperties> |  |
+
 ## `src/components/organisms/forge-drawer/forge-drawer`
 
 ### DrawerBreakpoint
@@ -2167,6 +3455,196 @@ helper) and a `closeLabel` prop in place of i18n.
 | Name | Type | Description |
 | --- | --- | --- |
 | properties | Readonly<DrawerProperties> |  |
+
+## `src/components/organisms/forge-error-page/forge-error-page`
+
+### ErrorPageAction
+
+**Kind:** interface
+
+```typescript
+export interface ErrorPageAction
+```
+
+An action displayed below the error message.
+
+### ErrorPageData
+
+**Kind:** interface
+
+```typescript
+export interface ErrorPageData
+```
+
+Structured error information that can be passed as one public data object.
+
+### ErrorPageProperties
+
+**Kind:** interface
+
+```typescript
+export interface ErrorPageProperties
+```
+
+No description provided.
+
+### ErrorPageSize
+
+**Kind:** type
+
+```typescript
+export type ErrorPageSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Size token controlling the error page scale.
+
+### ForgeErrorPage
+
+**Kind:** function
+
+```typescript
+function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement
+```
+
+A semantic, slot-friendly error state page with typed action descriptors.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ErrorPageProperties> |  |
+
+## `src/components/organisms/forge-kanban-board/forge-kanban-board`
+
+### ForgeKanbanBoard
+
+**Kind:** function
+
+```typescript
+function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement
+```
+
+A responsive board for moving items between columns.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<KanbanBoardProperties> |  |
+
+### KanbanBoardProperties
+
+**Kind:** interface
+
+```typescript
+export interface KanbanBoardProperties
+```
+
+No description provided.
+
+### KanbanCard
+
+**Kind:** type
+
+```typescript
+export type KanbanCard = KanbanItem;
+```
+
+No description provided.
+
+#### Contract
+
+- **@deprecated:** Use `KanbanItem`.
+
+### KanbanColumn
+
+**Kind:** interface
+
+```typescript
+export interface KanbanColumn
+```
+
+No description provided.
+
+## `src/components/organisms/forge-logo-cloud/forge-logo-cloud`
+
+### ForgeLogoCloud
+
+**Kind:** function
+
+```typescript
+function ForgeLogoCloud(properties: Readonly<LogoCloudProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<LogoCloudProperties> |  |
+
+### LogoCloudItem
+
+**Kind:** type
+
+```typescript
+export type LogoCloudItem = Logo;
+```
+
+No description provided.
+
+#### Contract
+
+- **@deprecated:** Use `Logo`.
+
+### LogoCloudProperties
+
+**Kind:** interface
+
+```typescript
+export interface LogoCloudProperties
+```
+
+No description provided.
+
+## `src/components/organisms/forge-marketing-header/forge-marketing-header`
+
+### ForgeMarketingHeader
+
+**Kind:** function
+
+```typescript
+function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<MarketingHeaderProperties> |  |
+
+### MarketingHeaderAction
+
+**Kind:** interface
+
+```typescript
+export interface MarketingHeaderAction
+```
+
+No description provided.
+
+### MarketingHeaderProperties
+
+**Kind:** interface
+
+```typescript
+export interface MarketingHeaderProperties
+```
+
+No description provided.
 
 ## `src/components/organisms/forge-menubar/forge-menubar`
 
@@ -2280,6 +3758,306 @@ export interface NavbarProperties
 
 No description provided.
 
+## `src/components/organisms/forge-notification-panel/forge-notification-panel`
+
+### ForgeNotificationPanel
+
+**Kind:** function
+
+```typescript
+function ForgeNotificationPanel(properties: Readonly<NotificationPanelProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<NotificationPanelProperties> |  |
+
+### NotificationItem
+
+**Kind:** interface
+
+```typescript
+export interface NotificationItem
+```
+
+No description provided.
+
+### NotificationPanelProperties
+
+**Kind:** interface
+
+```typescript
+export interface NotificationPanelProperties
+```
+
+No description provided.
+
+### NotificationType
+
+**Kind:** type
+
+```typescript
+export type NotificationType = 'neutral' | 'info' | 'success' | 'warning' | 'error';
+```
+
+No description provided.
+
+## `src/components/organisms/forge-onboarding-tour/forge-onboarding-tour`
+
+### ForgeOnboardingTour
+
+**Kind:** function
+
+```typescript
+function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement
+```
+
+An accessible spotlight tour with keyboard navigation and optional completion persistence.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<OnboardingTourProperties> |  |
+
+### OnboardingStep
+
+**Kind:** type
+
+```typescript
+export type OnboardingStep = TourStep;
+```
+
+No description provided.
+
+#### Contract
+
+- **@deprecated:** Use `TourStep`.
+
+### OnboardingTourPlacement
+
+**Kind:** type
+
+```typescript
+export type OnboardingTourPlacement = 'top' | 'right' | 'bottom' | 'left' | 'center';
+```
+
+Placement preference for a tour dialog anchored to a target.
+
+### OnboardingTourProperties
+
+**Kind:** interface
+
+```typescript
+export interface OnboardingTourProperties
+```
+
+No description provided.
+
+### OnboardingTourSize
+
+**Kind:** type
+
+```typescript
+export type OnboardingTourSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+```
+
+Size token controlling the tour dialog scale.
+
+## `src/components/organisms/forge-pricing-table/forge-pricing-table`
+
+### ForgePricingTable
+
+**Kind:** function
+
+```typescript
+function ForgePricingTable(properties: Readonly<PricingTableProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<PricingTableProperties> |  |
+
+### PricingFeature
+
+**Kind:** interface
+
+```typescript
+export interface PricingFeature
+```
+
+No description provided.
+
+### PricingPlan
+
+**Kind:** interface
+
+```typescript
+export interface PricingPlan
+```
+
+No description provided.
+
+### PricingTableProperties
+
+**Kind:** interface
+
+```typescript
+export interface PricingTableProperties
+```
+
+No description provided.
+
+## `src/components/organisms/forge-profile-card/forge-profile-card`
+
+### ForgeProfileCard
+
+**Kind:** function
+
+```typescript
+function ForgeProfileCard(properties: Readonly<ProfileCardProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<ProfileCardProperties> |  |
+
+### ProfileCardProperties
+
+**Kind:** interface
+
+```typescript
+export interface ProfileCardProperties
+```
+
+No description provided.
+
+## `src/components/organisms/forge-site-footer/forge-site-footer`
+
+### ForgeSiteFooter
+
+**Kind:** function
+
+```typescript
+function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SiteFooterProperties> |  |
+
+### SiteFooterColumn
+
+**Kind:** interface
+
+```typescript
+export interface SiteFooterColumn
+```
+
+No description provided.
+
+### SiteFooterLink
+
+**Kind:** interface
+
+```typescript
+export interface SiteFooterLink
+```
+
+No description provided.
+
+### SiteFooterProperties
+
+**Kind:** interface
+
+```typescript
+export interface SiteFooterProperties
+```
+
+No description provided.
+
+## `src/components/organisms/forge-split-pane/forge-split-pane`
+
+### ForgeSplitPane
+
+**Kind:** function
+
+```typescript
+function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<SplitPaneProperties> |  |
+
+### SplitPaneProperties
+
+**Kind:** interface
+
+```typescript
+export interface SplitPaneProperties
+```
+
+No description provided.
+
+## `src/components/organisms/forge-stats-section/forge-stats-section`
+
+### ForgeStatsSection
+
+**Kind:** function
+
+```typescript
+function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<StatsSectionProperties> |  |
+
+### StatItem
+
+**Kind:** interface
+
+```typescript
+export interface StatItem
+```
+
+No description provided.
+
+### StatsSectionProperties
+
+**Kind:** interface
+
+```typescript
+export interface StatsSectionProperties
+```
+
+No description provided.
+
 ## `src/components/organisms/forge-table/forge-table`
 
 ### ForgeTable
@@ -2340,6 +4118,82 @@ A single column definition.
 
 ```typescript
 export interface TableProperties
+```
+
+No description provided.
+
+## `src/components/organisms/forge-testimonials-section/forge-testimonials-section`
+
+### ForgeTestimonialsSection
+
+**Kind:** function
+
+```typescript
+function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TestimonialsSectionProperties> |  |
+
+### Testimonial
+
+**Kind:** interface
+
+```typescript
+export interface Testimonial
+```
+
+No description provided.
+
+### TestimonialsSectionProperties
+
+**Kind:** interface
+
+```typescript
+export interface TestimonialsSectionProperties
+```
+
+No description provided.
+
+## `src/components/organisms/forge-transfer-list/forge-transfer-list`
+
+### ForgeTransferList
+
+**Kind:** function
+
+```typescript
+function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement
+```
+
+No description provided.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| properties | Readonly<TransferListProperties> |  |
+
+### TransferItem
+
+**Kind:** interface
+
+```typescript
+export interface TransferItem
+```
+
+No description provided.
+
+### TransferListProperties
+
+**Kind:** interface
+
+```typescript
+export interface TransferListProperties
 ```
 
 No description provided.

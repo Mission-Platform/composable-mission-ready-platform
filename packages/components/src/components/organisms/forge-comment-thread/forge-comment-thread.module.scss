@@ -1,0 +1,126 @@
+@layer mp.components {
+  .forge-comment-thread {
+    width: 100%;
+    color: var(--mp-color-text-primary);
+  }
+
+  .forge-comment-thread__list {
+    display: grid;
+    gap: var(--mp-spacing-4);
+    margin: 0 0 var(--mp-spacing-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  .forge-comment-thread__comment {
+    display: flex;
+    gap: var(--mp-spacing-3);
+  }
+
+  .forge-comment-thread__comment--resolved {
+    opacity: var(--mp-opacity-muted);
+  }
+
+  .forge-comment-thread__comment--own {
+    background: var(--mp-color-bg-muted);
+  }
+
+  .forge-comment-thread__avatar {
+    display: inline-flex;
+    flex: 0 0 var(--mp-size-height-md);
+    align-items: center;
+    justify-content: center;
+    width: var(--mp-size-height-md);
+    height: var(--mp-size-height-md);
+    border-radius: var(--mp-radius-full);
+    background: var(--mp-color-primary-subtle);
+    object-fit: cover;
+  }
+
+  .forge-comment-thread__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .forge-comment-thread__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mp-spacing-3);
+    align-items: baseline;
+  }
+
+  .forge-comment-thread__meta time {
+    color: var(--mp-color-text-secondary);
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-comment-thread__body p {
+    margin: var(--mp-spacing-1) 0 var(--mp-spacing-2);
+    white-space: pre-wrap;
+  }
+
+  .forge-comment-thread__resolve {
+    padding: 0;
+    border: 0;
+    color: var(--mp-color-text-link);
+    background: transparent;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .forge-comment-thread__resolved {
+    color: var(--mp-color-success-text);
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-comment-thread__form {
+    display: grid;
+    gap: var(--mp-spacing-3);
+  }
+
+  .forge-comment-thread__label {
+    display: grid;
+    gap: var(--mp-spacing-1);
+  }
+
+  .forge-comment-thread__label-text {
+    font-weight: var(--mp-font-weight-semibold);
+  }
+
+  .forge-comment-thread__input {
+    min-height: 5rem;
+    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-md);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    font: inherit;
+    resize: vertical;
+  }
+
+  .forge-comment-thread__submit {
+    justify-self: start;
+    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-lg);
+    border: 0;
+    border-radius: var(--mp-radius-md);
+    color: var(--mp-color-text-on-primary);
+    background: var(--mp-color-primary-default);
+    font: inherit;
+    font-weight: var(--mp-font-weight-semibold);
+    cursor: pointer;
+  }
+
+  .forge-comment-thread__submit:disabled {
+    opacity: var(--mp-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  .forge-comment-thread__input:focus-visible,
+  .forge-comment-thread__submit:focus-visible,
+  .forge-comment-thread__resolve:focus-visible {
+    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+    outline-offset: var(--mp-spacing-1);
+  }
+
+  .forge-comment-thread__empty {
+    color: var(--mp-color-text-secondary);
+  }
+}

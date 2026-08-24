@@ -1,7 +1,6 @@
 import { ForgeDropdown } from '@mission-platform/float';
 import {
   type ClassValue,
-  h,
   hasSlot,
   type MpChild,
   type MpElement,

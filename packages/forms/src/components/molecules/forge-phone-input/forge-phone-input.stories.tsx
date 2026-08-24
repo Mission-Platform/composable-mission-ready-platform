@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgePhoneInput } from '@mission-platform/forms';

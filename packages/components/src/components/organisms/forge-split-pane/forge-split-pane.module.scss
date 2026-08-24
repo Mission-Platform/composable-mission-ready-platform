@@ -1,0 +1,57 @@
+/* stylelint-disable declaration-block-single-line-max-declarations */
+@layer mp.components {
+  .forge-split-pane {
+    display: flex;
+    width: 100%;
+    min-height: 12rem;
+    overflow: hidden;
+  }
+
+  .forge-split-pane--vertical {
+    flex-direction: column;
+  }
+
+  .forge-split-pane__primary,
+  .forge-split-pane__secondary {
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .forge-split-pane--vertical .forge-split-pane__primary,
+  .forge-split-pane--vertical .forge-split-pane__secondary {
+    width: 100%;
+  }
+
+  .forge-split-pane__separator {
+    flex: 0 0 var(--mp-spacing-2);
+    background: var(--mp-color-border-default);
+    cursor: col-resize;
+  }
+
+  .forge-split-pane--vertical .forge-split-pane__separator {
+    cursor: row-resize;
+  }
+
+  .forge-split-pane__separator:focus-visible {
+    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+    outline-offset: calc(-1 * var(--mp-border-width-thick));
+  }
+
+  @media (width <= 40rem) {
+    .forge-split-pane {
+      flex-direction: column;
+    }
+
+    .forge-split-pane__primary,
+    .forge-split-pane__secondary {
+      flex-basis: auto !important;
+      min-height: 10rem;
+    }
+
+    .forge-split-pane__separator {
+      flex-basis: var(--mp-spacing-2);
+      width: 100%;
+    }
+  }
+}

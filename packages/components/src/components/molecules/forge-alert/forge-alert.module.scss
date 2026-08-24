@@ -1,0 +1,75 @@
+@layer mp.components {
+  .forge-alert {
+    display: flex;
+    gap: var(--mp-spacing-3);
+    align-items: flex-start;
+    padding: var(--mp-spacing-3) var(--mp-spacing-4);
+    color: var(--mp-color-text-primary);
+    background: var(--mp-color-bg-muted);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+
+    &--success {
+      background: var(--mp-color-success-subtle);
+      border-color: var(--mp-color-success-default);
+
+      --mp-alert-marker: var(--mp-color-success-default);
+    }
+
+    &--warning {
+      background: var(--mp-color-warning-subtle);
+      border-color: var(--mp-color-warning-default);
+
+      --mp-alert-marker: var(--mp-color-warning-default);
+    }
+
+    &--danger {
+      background: var(--mp-color-danger-subtle);
+      border-color: var(--mp-color-danger-default);
+
+      --mp-alert-marker: var(--mp-color-danger-default);
+    }
+
+    &__icon {
+      flex: 0 0 var(--mp-size-icon-lg);
+      color: var(--mp-alert-marker, var(--mp-color-info-default));
+      font-weight: var(--mp-font-weight-bold);
+      text-align: center;
+    }
+
+    &__body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &__title {
+      display: block;
+      margin-bottom: var(--mp-spacing-1);
+    }
+
+    &__message {
+      overflow-wrap: anywhere;
+    }
+
+    &__action {
+      margin-top: var(--mp-spacing-2);
+    }
+
+    &__close {
+      flex: 0 0 auto;
+      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+      color: inherit;
+      background: transparent;
+      border: 0;
+      border-radius: var(--mp-radius-sm);
+      cursor: pointer;
+      font-size: var(--mp-font-size-xl);
+      line-height: var(--mp-line-height-tight);
+    }
+
+    &__close:focus-visible {
+      outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+      outline-offset: var(--mp-spacing-1);
+    }
+  }
+}

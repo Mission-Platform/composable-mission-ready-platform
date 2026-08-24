@@ -1,4 +1,4 @@
-import { h, type MpElement } from '@mission-platform/forge';
+import { type MpElement } from '@mission-platform/forge';
 
 import { SUPPORTED_COUNTRY_CODES } from '../../../../sprite/country-flags';
 import { useIconHref } from '../../../../sprite/provider';

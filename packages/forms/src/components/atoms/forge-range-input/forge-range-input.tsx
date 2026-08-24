@@ -1,4 +1,4 @@
-import { h, type MpElement, useRef } from '@mission-platform/forge';
+import { type MpElement, useRef } from '@mission-platform/forge';
 
 import { beginPointerDrag, clamp } from '../../../utils/pointer-drag/pointer-drag';
 

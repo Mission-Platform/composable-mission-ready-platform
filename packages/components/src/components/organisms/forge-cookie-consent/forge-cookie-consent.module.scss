@@ -1,0 +1,111 @@
+@layer mp.components {
+  .forge-cookie-consent,
+  .forge-cookie-consent__dialog {
+    color: var(--mp-color-text-primary);
+    background: var(--mp-color-surface-primary);
+    border: 1px solid var(--mp-color-border-default);
+    box-shadow: var(--mp-shadow-lg, 0 0.5rem 2rem rgb(0 0 0 / 18%));
+  }
+
+  .forge-cookie-consent {
+    position: fixed;
+    inset-inline: 0;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mp-spacing-5);
+    padding: var(--mp-spacing-4) max(var(--mp-spacing-4), 5vw);
+
+    &--top {
+      top: 0;
+    }
+
+    &--bottom {
+      bottom: 0;
+    }
+  }
+
+  .forge-cookie-consent__content {
+    max-width: 52rem;
+
+    h2,
+    p {
+      margin: 0 0 var(--mp-spacing-2);
+    }
+
+    a {
+      color: var(--mp-color-text-link);
+    }
+  }
+
+  .forge-cookie-consent__summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mp-spacing-3);
+    margin: var(--mp-spacing-2) 0 0;
+    padding: 0;
+    color: var(--mp-color-text-secondary);
+    list-style: none;
+  }
+
+  .forge-cookie-consent__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mp-spacing-2);
+
+    button {
+      padding: var(--mp-spacing-2) var(--mp-spacing-3);
+      border: 1px solid var(--mp-color-border-default);
+      border-radius: var(--mp-border-radius-sm);
+      background: var(--mp-color-surface-primary);
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button:last-child {
+      background: var(--mp-color-action-primary);
+      color: var(--mp-color-text-on-action);
+    }
+  }
+
+  .forge-cookie-consent__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 901;
+    display: grid;
+    place-items: center;
+    padding: var(--mp-spacing-4);
+    background: var(--mp-overlay-modal-backdrop-surface, rgb(0 0 0 / 45%));
+  }
+
+  .forge-cookie-consent__dialog {
+    width: min(100%, 40rem);
+    padding: var(--mp-spacing-5);
+    border-radius: var(--mp-border-radius-lg);
+  }
+
+  .forge-cookie-consent__categories {
+    display: grid;
+    gap: var(--mp-spacing-2);
+    margin-block: var(--mp-spacing-4);
+  }
+
+  .forge-cookie-consent__category {
+    display: flex;
+    gap: var(--mp-spacing-3);
+    align-items: flex-start;
+    padding: var(--mp-spacing-3);
+    border: 1px solid var(--mp-color-border-default);
+    border-radius: var(--mp-border-radius-sm);
+
+    span {
+      display: grid;
+      gap: var(--mp-spacing-1);
+    }
+
+    small {
+      color: var(--mp-color-text-secondary);
+    }
+  }
+}

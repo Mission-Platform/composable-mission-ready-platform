@@ -1,4 +1,4 @@
-import { type ClassValue, h, type MpChild, type MpElement } from '@mission-platform/forge';
+import { type ClassValue, type MpChild, type MpElement } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-field-set.module.scss';

@@ -1,4 +1,4 @@
-import { h, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import { hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import { ForgeAvatar } from '@/components/atoms/forge-avatar';

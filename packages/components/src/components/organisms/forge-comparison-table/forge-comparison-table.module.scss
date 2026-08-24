@@ -1,0 +1,79 @@
+@layer mp.components {
+  .forge-comparison-table {
+    width: 100%;
+    overflow-x: auto;
+    color: var(--mp-color-text-primary);
+  }
+
+  .forge-comparison-table table {
+    width: 100%;
+    min-width: 38rem;
+    border-collapse: collapse;
+  }
+
+  .forge-comparison-table th,
+  .forge-comparison-table td {
+    padding: var(--mp-spacing-4);
+    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    text-align: center;
+    vertical-align: top;
+  }
+
+  .forge-comparison-table thead th:first-child,
+  .forge-comparison-table tbody th {
+    text-align: start;
+  }
+
+  .forge-comparison-table thead th {
+    background: var(--mp-color-bg-muted);
+  }
+
+  .forge-comparison-table--sticky-header thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .forge-comparison-table__highlighted {
+    background: var(--mp-color-primary-subtle);
+  }
+
+  .forge-comparison-table__plan-name,
+  .forge-comparison-table__plan-description,
+  .forge-comparison-table__price {
+    display: block;
+  }
+
+  .forge-comparison-table__plan-name {
+    font-size: 1.1em;
+  }
+
+  .forge-comparison-table__plan-description,
+  .forge-comparison-table tbody small {
+    margin-top: var(--mp-spacing-1);
+    color: var(--mp-color-text-secondary);
+    font-size: var(--mp-font-size-sm);
+    font-weight: var(--mp-font-weight-regular);
+  }
+
+  .forge-comparison-table__price {
+    margin: var(--mp-spacing-3) 0;
+    font-weight: var(--mp-font-weight-bold);
+  }
+
+  .forge-comparison-table__action {
+    padding: var(--mp-spacing-2) var(--mp-spacing-3);
+    border: 0;
+    border-radius: var(--mp-radius-sm);
+    color: var(--mp-color-text-on-primary);
+    background: var(--mp-color-primary-default);
+    font: inherit;
+    font-weight: var(--mp-font-weight-semibold);
+    cursor: pointer;
+  }
+
+  .forge-comparison-table__action:focus-visible {
+    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+    outline-offset: var(--mp-spacing-1);
+  }
+}

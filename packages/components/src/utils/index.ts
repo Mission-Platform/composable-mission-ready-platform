@@ -21,3 +21,4 @@ export {
   type TimezoneMode,
 } from './date-time/date-time';
 export { beginPointerDrag, rootFontSize, type PointerDragHandlers } from './pointer-drag/pointer-drag';
+export { initialsForName } from './initials/initials';

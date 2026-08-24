@@ -1,7 +1,6 @@
 import {
   classNames,
   Dynamic,
-  h,
   type MpChild,
   type MpElement,
   Slot,

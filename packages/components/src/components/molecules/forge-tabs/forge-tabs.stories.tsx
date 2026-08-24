@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeTabs } from '@mission-platform/components';

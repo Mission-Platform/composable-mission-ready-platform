@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpRenderProperty, useRef } from '@mission-platform/forge';
+import { type MpElement, type MpRenderProperty, useRef } from '@mission-platform/forge';
 import { ForgeIconClose, ForgeIconPlus } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 

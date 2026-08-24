@@ -1,0 +1,19 @@
+@layer mp.components {
+  .forge-divider {
+    display: block;
+    flex-shrink: 0;
+    margin: 0;
+    border: 0;
+    background-color: var(--mp-color-border);
+  }
+
+  .forge-divider--horizontal {
+    width: 100%;
+    height: 1px;
+  }
+
+  .forge-divider--vertical {
+    width: 1px;
+    height: 100%;
+  }
+}

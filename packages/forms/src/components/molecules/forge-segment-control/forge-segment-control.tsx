@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, useRef } from '@mission-platform/forge';
+import { classNames, type MpElement, useRef } from '@mission-platform/forge';
 
 import styles from './forge-segment-control.module.scss';
 

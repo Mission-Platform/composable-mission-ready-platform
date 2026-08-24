@@ -1,5 +1,5 @@
 import { validateUrl } from '@mission-platform/email-renderer';
-import { Dynamic, h, type MpChild, type MpElement } from '@mission-platform/forge';
+import { Dynamic, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import { colorValue, typographyStyle, type EmailColor, type EmailTypographyVariant } from '@/tokens';
 

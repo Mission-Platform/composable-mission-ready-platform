@@ -1,0 +1,92 @@
+@layer mp.components {
+  .forge-carousel-indicator {
+    display: flex;
+    gap: var(--mp-navigation-carousel-indicators-gap);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .forge-carousel-indicator--vertical {
+    flex-direction: column;
+  }
+
+  .forge-carousel-indicator__button {
+    width: var(--mp-navigation-carousel-indicator-target-size);
+    height: var(--mp-navigation-carousel-indicator-target-size);
+    padding: 0;
+    background: var(--mp-navigation-carousel-indicator-surface-default);
+    border: 0;
+    cursor: pointer;
+  }
+
+  .forge-carousel-indicator__dots,
+  .forge-carousel-indicator__bars,
+  .forge-carousel-indicator__numbers {
+    display: block;
+    background: var(--mp-navigation-carousel-indicator-surface-dot-default);
+    transition:
+      transform var(--mp-navigation-carousel-indicator-transition-duration)
+        var(--mp-navigation-carousel-indicator-transition-easing),
+      background-color var(--mp-navigation-carousel-indicator-transition-duration)
+        var(--mp-navigation-carousel-indicator-transition-easing);
+  }
+
+  .forge-carousel-indicator__dots {
+    width: var(--mp-size-checkable-indicator);
+    height: var(--mp-size-checkable-indicator);
+    border-radius: var(--mp-navigation-carousel-indicator-radius);
+  }
+
+  .forge-carousel-indicator__bars {
+    width: var(--mp-size-icon-lg);
+    height: var(--mp-border-width-thick);
+    border-radius: var(--mp-radius-xs);
+  }
+
+  .forge-carousel-indicator__numbers {
+    min-width: var(--mp-size-icon-lg);
+    padding: var(--mp-spacing-1) var(--mp-spacing-1);
+    border-radius: var(--mp-radius-sm);
+    color: var(--mp-color-text-on-primary);
+    font-size: var(--mp-font-size-xs);
+    text-align: center;
+  }
+
+  .forge-carousel-indicator__active {
+    background: var(--mp-navigation-carousel-indicator-surface-dot-selected);
+    transform: scale(1.35);
+  }
+
+  .forge-carousel-indicator--sm .forge-carousel-indicator__dots {
+    width: 0.375rem;
+    height: 0.375rem;
+  }
+
+  .forge-carousel-indicator--lg .forge-carousel-indicator__dots {
+    width: 0.6875rem;
+    height: 0.6875rem;
+  }
+
+  .forge-carousel-indicator__button:focus-visible {
+    outline: var(--mp-navigation-carousel-focus-border-width) solid var(--mp-navigation-carousel-focus-border);
+    outline-offset: var(--mp-navigation-carousel-focus-offset);
+    border-radius: var(--mp-navigation-carousel-control-radius);
+  }
+
+  .forge-carousel-indicator__button:disabled {
+    cursor: not-allowed;
+    opacity: var(--mp-opacity-disabled);
+  }
+
+  .forge-carousel-indicator__fraction {
+    color: var(--mp-color-text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  button.forge-carousel-indicator__fraction {
+    padding: var(--mp-spacing-1) var(--mp-spacing-2);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+}

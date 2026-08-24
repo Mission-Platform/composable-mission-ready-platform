@@ -1,4 +1,4 @@
-import { h, type MpElement, type MpRenderProperty, useState } from '@mission-platform/forge';
+import { type MpElement, type MpRenderProperty, useState } from '@mission-platform/forge';
 
 import { ForgeTreeViewItem } from './forge-tree-view-item';
 import styles from './forge-tree-view.module.scss';

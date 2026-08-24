@@ -1,5 +1,5 @@
 import { ForgeIconButton } from '@mission-platform/components';
-import { h, hasSlot, type MpChild, type MpElement, Slot, useEffect, useRef } from '@mission-platform/forge';
+import { hasSlot, type MpChild, type MpElement, Slot, useEffect, useRef } from '@mission-platform/forge';
 import { ForgeIconClose } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 

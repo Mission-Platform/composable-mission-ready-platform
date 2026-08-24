@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 
 import { ForgeInView } from '@mission-platform/components';
 

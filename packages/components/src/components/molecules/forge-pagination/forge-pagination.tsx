@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement } from '@mission-platform/forge';
+import { classNames, type MpElement } from '@mission-platform/forge';
 import { ForgeIconChevron, ForgeIconChevrons } from '@mission-platform/icons';
 
 import styles from './forge-pagination.module.scss';

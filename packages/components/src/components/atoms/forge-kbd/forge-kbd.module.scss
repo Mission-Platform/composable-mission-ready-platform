@@ -1,0 +1,30 @@
+@layer mp.components {
+  .forge-kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.75em;
+    border: var(--mp-code-kbd-border-width, var(--mp-border-width-thin)) solid
+      var(--mp-code-kbd-border, var(--mp-color-border-default));
+    border-radius: var(--mp-code-kbd-radius, var(--mp-radius-sm));
+    padding: var(--mp-code-kbd-padding-block, var(--mp-spacing-1))
+      var(--mp-code-kbd-padding-inline, var(--mp-spacing-2));
+    background: var(--mp-code-kbd-background, var(--mp-color-bg-muted));
+    color: var(--mp-code-kbd-text, var(--mp-color-text-primary));
+    font-family: var(--mp-font-family-mono);
+    font-weight: var(--mp-font-weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+
+    @each $size in 'sm', 'md', 'lg' {
+      &--#{$size} {
+        font-size: var(--mp-font-size-#{$size});
+      }
+    }
+
+    &--pressed {
+      transform: translateY(var(--mp-code-kbd-pressed-offset, 1px));
+      box-shadow: inset 0 var(--mp-code-kbd-pressed-shadow, 2px) 0 var(--mp-color-border-default);
+    }
+  }
+}

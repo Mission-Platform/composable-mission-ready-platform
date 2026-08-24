@@ -39,9 +39,7 @@ export function renderReactSsr<P extends MpPropertyBag>(
   children?: ParityChildren,
 ): string {
   const ReactComponent = toReactComponent(component, component.name || 'MpComponent');
-  return renderToStaticMarkup(
-    createElement(ReactComponent, properties as Record<string, unknown>, children as ReactNode),
-  );
+  return renderToStaticMarkup(createElement(ReactComponent, properties as P, children as ReactNode));
 }
 
 export async function renderVueSsr<P extends MpPropertyBag>(
@@ -53,7 +51,7 @@ export async function renderVueSsr<P extends MpPropertyBag>(
   const slots = children === undefined ? undefined : { default: () => children as unknown as MpChild };
   return renderToString(
     createSSRApp({
-      render: () => vueH(VueComponent, properties as Record<string, unknown>, slots),
+      render: () => vueH(VueComponent, properties as P, slots),
     }),
   );
 }

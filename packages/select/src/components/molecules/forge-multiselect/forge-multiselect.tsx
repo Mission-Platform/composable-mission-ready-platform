@@ -1,5 +1,5 @@
 import { ForgeDropdown } from '@mission-platform/float';
-import { type ClassValue, h, type MpChild, type MpElement, Slot, useId, useState } from '@mission-platform/forge';
+import { type ClassValue, type MpChild, type MpElement, Slot, useId, useState } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 

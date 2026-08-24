@@ -1,0 +1,151 @@
+/* stylelint-disable declaration-block-single-line-max-declarations */
+@layer mp.components {
+  .forge-site-footer {
+    width: 100%;
+    padding: var(--mp-spacing-10) var(--mp-spacing-5) var(--mp-spacing-4);
+    box-sizing: border-box;
+    background: var(--mp-color-bg-inverse);
+    color: var(--mp-color-text-on-inverse);
+  }
+
+  .forge-site-footer__main {
+    display: grid;
+    grid-template-columns: minmax(12rem, 1.3fr) 2fr;
+    gap: var(--mp-spacing-12);
+    max-width: 75rem;
+    margin: auto;
+  }
+
+  .forge-site-footer__brand > a {
+    color: inherit;
+    font-size: var(--mp-font-size-xl);
+    font-weight: var(--mp-font-weight-bold);
+    text-decoration: none;
+  }
+
+  .forge-site-footer p {
+    max-width: 24rem;
+    color: color-mix(in srgb, currentcolor 70%, transparent);
+    line-height: var(--mp-line-height-relaxed);
+  }
+
+  .forge-site-footer__columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: var(--mp-spacing-6);
+  }
+
+  .forge-site-footer h2 {
+    margin: 0 0 var(--mp-spacing-3);
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-site-footer ul {
+    display: grid;
+    gap: var(--mp-spacing-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .forge-site-footer a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .forge-site-footer a:hover,
+  .forge-site-footer a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .forge-site-footer__socials {
+    max-width: 75rem;
+    margin: var(--mp-spacing-8) auto 0;
+  }
+
+  .forge-site-footer__socials ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mp-spacing-4);
+  }
+
+  .forge-site-footer__socials a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mp-spacing-1);
+  }
+
+  .forge-site-footer__newsletter {
+    display: grid;
+    grid-template-columns: 1fr minmax(12rem, 18rem) auto;
+    gap: var(--mp-spacing-4);
+    align-items: end;
+    max-width: 75rem;
+    margin: var(--mp-spacing-8) auto 0;
+    padding-top: var(--mp-spacing-6);
+    border-top: var(--mp-border-width-thin) solid color-mix(in srgb, currentcolor 20%, transparent);
+  }
+
+  .forge-site-footer__newsletter h2 {
+    margin-bottom: var(--mp-spacing-1);
+  }
+
+  .forge-site-footer__newsletter p {
+    margin: 0;
+  }
+
+  .forge-site-footer__newsletter label {
+    display: block;
+  }
+
+  .forge-site-footer__newsletter input {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: var(--mp-size-height-lg);
+    padding: var(--mp-spacing-2) var(--mp-spacing-3);
+    border: var(--mp-border-width-thin) solid color-mix(in srgb, currentcolor 40%, transparent);
+    border-radius: var(--mp-radius-md);
+    background: transparent;
+    color: inherit;
+  }
+
+  .forge-site-footer__newsletter button {
+    min-height: var(--mp-size-height-lg);
+    padding: var(--mp-spacing-2) var(--mp-spacing-4);
+    border: 0;
+    border-radius: var(--mp-radius-md);
+    background: var(--mp-color-primary-default);
+    color: var(--mp-color-text-on-primary);
+    cursor: pointer;
+  }
+
+  .forge-site-footer__visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .forge-site-footer__bottom {
+    max-width: 75rem;
+    margin: var(--mp-spacing-8) auto 0;
+    padding-top: var(--mp-spacing-4);
+    border-top: var(--mp-border-width-thin) solid color-mix(in srgb, currentcolor 20%, transparent);
+    color: color-mix(in srgb, currentcolor 70%, transparent);
+    font-size: var(--mp-font-size-sm);
+  }
+
+  @media (width <= 48rem) {
+    .forge-site-footer__main {
+      grid-template-columns: 1fr;
+      gap: var(--mp-spacing-8);
+    }
+
+    .forge-site-footer__newsletter {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { h, useEffect, useState, type MpElement } from '@mission-platform/forge';
+import { useEffect, useState, type MpElement } from '@mission-platform/forge';
 import i18next from 'i18next';
 
 import { breakpointKeys, breakpoints, resolveBreakpoint } from '@/breakpoints';

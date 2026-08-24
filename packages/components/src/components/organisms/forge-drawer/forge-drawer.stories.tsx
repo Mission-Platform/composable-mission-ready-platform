@@ -1,8 +1,8 @@
-import { h } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeDrawer } from '@mission-platform/components';
 
+import type { DrawerProperties } from '@mission-platform/components';
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
 
 /**
@@ -46,7 +46,7 @@ const meta = {
 } satisfies Meta<typeof ForgeDrawer>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<DrawerProperties>;
 
 /** An interactive overlay drawer toggled by a trigger button. */
 export const Overlay: Story = {
@@ -61,7 +61,7 @@ export const Overlay: Story = {
           Open drawer
         </button>
         <ForgeDrawer
-          {...arguments_}
+          {...(arguments_ as DrawerProperties)}
           open={Boolean(open)}
           onOpenChange={(value) => updateArguments({ open: value })}
         >
@@ -77,7 +77,7 @@ export const Open: Story = {
   args: { open: true },
   render: (arguments_) => (
     <ForgeDrawer
-      {...arguments_}
+      {...(arguments_ as DrawerProperties)}
       open
     >
       A drawer rendered open, with a header, scrollable body, and a footer.
@@ -92,7 +92,7 @@ export const Draggable: Story = {
     const [{ open }, updateArguments] = useArgs();
     return (
       <ForgeDrawer
-        {...arguments_}
+        {...(arguments_ as DrawerProperties)}
         open={open ?? true}
         onOpenChange={(value) => updateArguments({ open: value })}
       >
@@ -113,12 +113,7 @@ export const Inline: Story = {
         border: '1px solid var(--mp-color-border-default)',
       }}
     >
-      <ForgeDrawer
-        {...arguments_}
-        style={{ width: '16rem' }}
-      >
-        Fixed-open inline panel content.
-      </ForgeDrawer>
+      <ForgeDrawer {...(arguments_ as DrawerProperties)}>Fixed-open inline panel content.</ForgeDrawer>
       <div style={{ flex: 1, padding: 'var(--mp-spacing-4)' }}>Main content area beside the inline drawer.</div>
     </div>
   ),

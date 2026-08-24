@@ -1,4 +1,4 @@
-import { h, type MpChild, type MpElement, Slot, useEffect, useRef } from '@mission-platform/forge';
+import { type MpChild, type MpElement, Slot, useEffect, useRef } from '@mission-platform/forge';
 
 import styles from './forge-chat-area.module.scss';
 

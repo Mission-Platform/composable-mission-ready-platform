@@ -1,5 +1,5 @@
 import { validateUrl } from '@mission-platform/email-renderer';
-import { h, type MpElement } from '@mission-platform/forge';
+import { type MpElement } from '@mission-platform/forge';
 
 export interface EmailSocialLink {
   readonly href: string;

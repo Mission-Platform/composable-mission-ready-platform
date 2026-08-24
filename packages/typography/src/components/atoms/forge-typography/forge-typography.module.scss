@@ -11,19 +11,48 @@
  * restored here via the `truncatePopup` prop, positioned with CSS Anchor
  * Positioning (the cross-framework substitute for `@floating-ui`).
  */
+@property --forge-typography-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-base-font-family);
+}
+
+@property --forge-typography-base-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-base-line-height);
+}
+
+@property --forge-typography-display-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-margin-bottom);
+}
+
+@property --forge-typography-display-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-font-family);
+}
+
+@property --forge-typography-display-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-font-size);
+}
 
 @layer mp.typography {
   .forge-typography {
     margin: 0;
-    font-family: var(--mp-typography-base-font-family);
-    line-height: var(--mp-typography-base-line-height);
+    font-family: var(--forge-typography-font-family, var(--mp-typography-base-font-family, sans-serif)), serif, sans-serif, system-ui, cursive, fantasy, math, monospace;
+    line-height: var(--forge-typography-base-line-height, var(--mp-typography-base-line-height, 1em));
 
     /* ── Variants ──────────────────────────────────────────────────────────── */
 
     &--display {
-      margin-bottom: var(--mp-typography-variant-display-margin-bottom);
-      font-family: var(--mp-typography-variant-display-font-family);
-      font-size: var(--mp-typography-variant-display-font-size);
+      margin-bottom: var(--forge-typography-display-margin-bottom, var(--mp-typography-base-line-height, inherit));
+      font-family: var(--forge-typography-display-font-family, var(--mp-typography-variant-display-font-family, sans-serif)), serif, sans-serif, system-ui, cursive, fantasy, math, monospace;
+      font-size: var(--forge-typography-display-font-size, var(--mp-typography-variant-display-font-size, inherit));
       font-weight: var(--mp-typography-variant-display-font-weight);
       line-height: var(--mp-typography-variant-display-line-height);
       letter-spacing: var(--mp-typography-variant-display-letter-spacing);
@@ -156,9 +185,7 @@
       cursor: pointer;
       text-decoration-thickness: from-font;
       text-underline-offset: 0.15em;
-      transition:
-        color var(--mp-typography-link-transition-duration)
-          var(--mp-typography-link-transition-easing);
+      transition: color var(--mp-typography-link-transition-duration) var(--mp-typography-link-transition-easing);
 
       &:visited {
         color: var(--mp-typography-color-link-visited);
@@ -265,16 +292,14 @@
      * `neutral` tone reuses the `default` token family (no `neutral` alias).
      */
     @each $name,
-      $family
-        in (
-          'neutral': 'default',
-          'success': 'success',
-          'warning': 'warning',
-          'info': 'info',
-          'error': 'error',
-          'critical': 'critical'
-        )
-    {
+    $family in (
+      'neutral': 'default',
+      'success': 'success',
+      'warning': 'warning',
+      'info': 'info',
+      'error': 'error',
+      'critical': 'critical'
+    ) {
       &--color-#{$name} {
         color: var(--mp-typography-color-#{$name});
       }
@@ -359,8 +384,7 @@
     margin-top: var(--mp-typography-popup-margin-top);
     z-index: 700;
     max-width: var(--mp-typography-popup-max-width);
-    padding: var(--mp-typography-popup-padding-block)
-      var(--mp-typography-popup-padding-inline);
+    padding: var(--mp-typography-popup-padding-block) var(--mp-typography-popup-padding-inline);
     background-color: var(--mp-typography-popup-surface);
     color: var(--mp-typography-popup-text);
     border: var(--mp-typography-popup-border-width) solid var(--mp-typography-popup-border);

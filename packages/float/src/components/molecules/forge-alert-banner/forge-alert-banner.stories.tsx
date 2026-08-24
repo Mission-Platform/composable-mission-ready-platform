@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 import { useArgs } from 'storybook/preview-api';
 
 import { ForgeAlertBanner } from './forge-alert-banner';

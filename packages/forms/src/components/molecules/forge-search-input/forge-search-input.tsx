@@ -1,4 +1,4 @@
-import { h, type MpElement, useId, useRef } from '@mission-platform/forge';
+import { type MpElement, useId, useRef } from '@mission-platform/forge';
 import { ForgeIconClose, ForgeIconSearch } from '@mission-platform/icons';
 
 import styles from './forge-search-input.module.scss';

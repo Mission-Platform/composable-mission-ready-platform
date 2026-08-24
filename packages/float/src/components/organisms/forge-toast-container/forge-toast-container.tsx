@@ -1,4 +1,4 @@
-import { h, type MpElement, Teleport, TransitionGroup, useEffect, useState } from '@mission-platform/forge';
+import { type MpElement, Teleport, TransitionGroup, useEffect, useState } from '@mission-platform/forge';
 
 import { dismissToast, getToastsSnapshot, subscribeToasts, type ToastPosition } from '../../../stores/toast-store/toast-store';
 import { ForgeToast } from '../../molecules/forge-toast';

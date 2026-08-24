@@ -1,4 +1,4 @@
-import { h, useState } from '@mission-platform/forge';
+import { useState } from '@mission-platform/forge';
 
 import { ForgeFieldSet, ForgeInput, ForgePhoneInput, ForgeTextarea } from '@mission-platform/forms';
 

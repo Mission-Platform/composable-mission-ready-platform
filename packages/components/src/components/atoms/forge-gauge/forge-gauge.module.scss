@@ -1,0 +1,59 @@
+@layer mp.components {
+  .forge-gauge {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-feedback-gauge-gap, var(--mp-spacing-2));
+    min-width: 0;
+    color: var(--mp-color-text-primary);
+
+    &__header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--mp-feedback-gauge-label-gap, var(--mp-spacing-2));
+      font-family: var(--mp-font-family-sans);
+      font-size: var(--mp-feedback-gauge-label-font-size, var(--mp-font-size-sm));
+      line-height: var(--mp-line-height-tight);
+    }
+
+    &__label {
+      font-weight: var(--mp-font-weight-medium);
+    }
+
+    &__value {
+      color: var(--mp-color-text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    &__visual {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: var(--mp-feedback-gauge-max-size, 12rem);
+    }
+
+    &__svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      transform: rotate(-90deg);
+    }
+
+    &__track {
+      stroke: var(--mp-feedback-gauge-track, var(--mp-color-bg-muted));
+    }
+
+    &__arc {
+      stroke: var(--mp-feedback-gauge-fill, var(--mp-color-primary-default));
+      transition: stroke-dashoffset var(--mp-feedback-gauge-transition-duration, var(--mp-duration-fast))
+        var(--mp-feedback-gauge-transition-easing, var(--mp-easing-standard));
+    }
+
+    @each $size in 'sm', 'md', 'lg' {
+      &--#{$size} {
+        --mp-feedback-gauge-max-size: var(--mp-size-#{$size});
+      }
+    }
+  }
+}

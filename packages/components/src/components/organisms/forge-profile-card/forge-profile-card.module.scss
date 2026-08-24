@@ -1,0 +1,88 @@
+/* stylelint-disable declaration-block-single-line-max-declarations */
+@layer mp.components {
+  .forge-profile-card {
+    display: grid;
+    gap: var(--mp-spacing-4);
+    width: 100%;
+    max-width: 28rem;
+    padding: var(--mp-spacing-5);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-lg);
+    background: var(--mp-color-bg-surface);
+  }
+
+  .forge-profile-card__identity {
+    display: flex;
+    align-items: center;
+    gap: var(--mp-spacing-4);
+  }
+
+  .forge-profile-card h2 {
+    margin: 0;
+    font-size: var(--mp-font-size-xl);
+  }
+
+  .forge-profile-card p {
+    margin: var(--mp-spacing-1) 0 0;
+    color: var(--mp-color-text-tertiary);
+  }
+
+  .forge-profile-card small {
+    color: var(--mp-color-text-tertiary);
+  }
+
+  .forge-profile-card__bio {
+    line-height: var(--mp-line-height-relaxed);
+  }
+
+  .forge-profile-card--loading {
+    min-height: 12rem;
+    place-items: center;
+  }
+
+  .forge-profile-card__socials ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mp-spacing-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .forge-profile-card__socials a {
+    color: var(--mp-color-text-link);
+  }
+
+  .forge-profile-card__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+    gap: var(--mp-spacing-3);
+    margin: 0;
+  }
+
+  .forge-profile-card__stats > div {
+    padding: var(--mp-spacing-2);
+    border-radius: var(--mp-radius-md);
+    background: var(--mp-color-bg-muted);
+    text-align: center;
+  }
+
+  .forge-profile-card__stats dt {
+    color: var(--mp-color-text-tertiary);
+    font-size: var(--mp-font-size-xs);
+  }
+
+  .forge-profile-card__stats dd {
+    margin: var(--mp-spacing-1) 0 0;
+    font-weight: var(--mp-font-weight-bold);
+  }
+
+  .forge-profile-card button {
+    min-height: var(--mp-size-height-lg);
+    border: 0;
+    border-radius: var(--mp-radius-md);
+    background: var(--mp-color-primary-default);
+    color: var(--mp-color-text-on-primary);
+    cursor: pointer;
+  }
+}

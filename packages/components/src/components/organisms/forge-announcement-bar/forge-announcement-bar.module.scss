@@ -1,0 +1,73 @@
+@layer mp.components {
+  .forge-announcement-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--mp-spacing-3);
+    width: 100%;
+    min-height: var(--mp-size-height-lg);
+    padding: var(--mp-spacing-3) var(--mp-spacing-4);
+    box-sizing: border-box;
+    color: var(--mp-color-text-primary);
+    background: var(--mp-color-bg-muted);
+  }
+
+  .forge-announcement-bar--info {
+    background: var(--mp-color-info-subtle);
+  }
+
+  .forge-announcement-bar--success {
+    background: var(--mp-color-success-subtle);
+  }
+
+  .forge-announcement-bar--warning {
+    background: var(--mp-color-warning-subtle);
+  }
+
+  .forge-announcement-bar--error {
+    background: var(--mp-color-error-subtle);
+  }
+
+  .forge-announcement-bar__indicator {
+    flex: 0 0 var(--mp-size-checkable-indicator);
+    width: var(--mp-size-checkable-indicator);
+    height: var(--mp-size-checkable-indicator);
+    border-radius: var(--mp-radius-full);
+    background: currentcolor;
+  }
+
+  .forge-announcement-bar__content {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    gap: var(--mp-spacing-2);
+    align-items: baseline;
+  }
+
+  .forge-announcement-bar__title {
+    flex: 0 0 auto;
+  }
+
+  .forge-announcement-bar__action {
+    padding: var(--mp-spacing-1) var(--mp-spacing-2);
+    color: inherit;
+    font-weight: var(--mp-font-weight-semibold);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .forge-announcement-bar__close {
+    width: var(--mp-size-height-sm);
+    height: var(--mp-size-height-sm);
+    border: 0;
+    color: inherit;
+    background: transparent;
+    font-size: var(--mp-font-size-xl);
+    cursor: pointer;
+  }
+
+  .forge-announcement-bar__close:focus-visible,
+  .forge-announcement-bar__action:focus-visible {
+    outline: var(--mp-border-width-thick) solid currentcolor;
+    outline-offset: var(--mp-spacing-1);
+  }
+}

@@ -1,6 +1,6 @@
 import {
-  type ClassValue,
   classNames,
+  type ClassValue,
   h,
   type MpChild,
   type MpElement,
@@ -123,6 +123,12 @@ export interface TypographyProperties {
   rel?: string;
   /** When a link draws its underline. Defaults to `'always'`. */
   underline?: TypographyUnderline;
+  properties?: Readonly<{
+    'font-family'?: string;
+    'base-line-height'?: string;
+    'display-margin-bottom'?: string;
+    'display-font-family'?: string;
+  }>;
 }
 
 /** Maps each {@link TypographyVariant} onto the semantic HTML tag it renders as. */
@@ -185,6 +191,7 @@ export function ForgeTypography(properties: Readonly<TypographyProperties>): MpE
     target,
     rel,
     underline = 'always',
+    properties: styleProperties = undefined,
   } = properties;
 
   // A link is either declared through the variant (standalone link text) or
@@ -241,7 +248,15 @@ export function ForgeTypography(properties: Readonly<TypographyProperties>): MpE
   const hidePopup = (): void => setPopupVisible(false);
 
   return (
-    <span className={styles['forge-typography-popup-wrapper']}>
+    <span
+      className={styles['forge-typography-popup-wrapper']}
+      styles={{
+        '--forge-typography-font-family': styleProperties?.['font-family'],
+        '--forge-typography-base-line-height': styleProperties?.['base-line-height'],
+        '--forge-typography-display-margin-bottom': styleProperties?.['display-margin-bottom'],
+        '--forge-typography-display-font-family': styleProperties?.['font-family'],
+      }}
+    >
       {h(
         tag,
         {

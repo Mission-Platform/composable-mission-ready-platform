@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 
 import { ForgeWindowPopout } from '@mission-platform/components';
 

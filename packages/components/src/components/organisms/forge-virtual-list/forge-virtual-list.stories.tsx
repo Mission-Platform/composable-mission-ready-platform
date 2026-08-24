@@ -1,5 +1,3 @@
-import { h } from '@mission-platform/forge';
-
 import { ForgeVirtualList } from '@mission-platform/components';
 
 import styles from './forge-virtual-list.module.scss';
@@ -39,17 +37,21 @@ const meta = {
     overscan: 3,
   },
   render: (arguments_) => (
-    <ForgeVirtualList {...arguments_}>
-      {({ item, index }: { item: { index: number; label: string }; index: number }) => (
-        <div
-          className={`${styles['virtual-list-demo-row']} ${
-            index % 2 === 1 ? styles['virtual-list-demo-row--alt'] : ''
-          }`}
-        >
-          {item.label}
-        </div>
-      )}
-    </ForgeVirtualList>
+    <ForgeVirtualList
+      {...arguments_}
+      row={({ item, index }) => {
+        const rowItem = item as { index: number; label: string };
+        return (
+          <div
+            className={`${styles['virtual-list-demo-row']} ${
+              index % 2 === 1 ? styles['virtual-list-demo-row--alt'] : ''
+            }`}
+          >
+            {rowItem.label}
+          </div>
+        );
+      }}
+    />
   ),
 } satisfies Meta<typeof ForgeVirtualList>;
 

@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 import { expect, userEvent, within } from 'storybook/test';
 
 import { ForgeButton } from '@mission-platform/components';
@@ -118,5 +117,3 @@ export const FocusVisible: Story = {
 export const Small: Story = { args: { size: 'sm' } };
 
 export const Large: Story = { args: { size: 'lg' } };
-
-export const WithBadge: Story = { args: { variant: 'primary', badge: 3 } };

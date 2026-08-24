@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 import { expect, waitFor } from 'storybook/test';
 
 import { ForgeShowAt } from '@mission-platform/breakpoints';

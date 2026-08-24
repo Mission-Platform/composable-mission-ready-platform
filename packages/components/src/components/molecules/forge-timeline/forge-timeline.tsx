@@ -1,4 +1,4 @@
-import { h, type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';
+import { type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-timeline.module.scss';

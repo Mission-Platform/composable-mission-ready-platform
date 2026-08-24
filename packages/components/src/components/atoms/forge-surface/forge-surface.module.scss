@@ -1,0 +1,30 @@
+@layer mp.components {
+  .forge-surface {
+    display: block;
+    color: var(--mp-surface-text, var(--mp-color-text-primary));
+
+    @each $elevation in 0, 1, 2, 3 {
+      &--elevation-#{$elevation} {
+        box-shadow: var(--mp-surface-elevation-#{$elevation}, var(--mp-elevation-#{$elevation}, none));
+      }
+    }
+
+    @each $padding in 'none', 'sm', 'md', 'lg' {
+      &--padding-#{$padding} {
+        @if $padding == 'none' {
+          padding: 0;
+        } @else {
+          padding: var(--mp-surface-padding-#{$padding}, var(--mp-spacing-#{$padding}));
+        }
+      }
+    }
+
+    @each $rounded in 'none', 'sm', 'md', 'lg', 'xl' {
+      &--rounded-#{$rounded} {
+        border-radius: var(--mp-surface-rounded-#{$rounded}, var(--mp-radius-#{$rounded}));
+      }
+    }
+
+    background: var(--mp-surface-background, var(--mp-color-bg-surface));
+  }
+}

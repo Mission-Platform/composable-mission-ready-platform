@@ -1,4 +1,4 @@
-import { classNames, h, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import { classNames, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
 
 import styles from './forge-device-mock.module.scss';
 

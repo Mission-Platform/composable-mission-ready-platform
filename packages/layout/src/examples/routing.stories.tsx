@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 
 import { ForgeApplicationLayout, ForgeContainer } from '@mission-platform/layouts';
 

@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 import { renderWithSlots } from '@mission-platform/storybook-framework/slots';
 
 import { ForgeNavbar } from '@mission-platform/components';

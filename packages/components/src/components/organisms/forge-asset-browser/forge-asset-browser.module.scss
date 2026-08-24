@@ -1,0 +1,109 @@
+@layer mp.components {
+  .forge-asset-browser {
+    width: 100%;
+    color: var(--mp-color-text-primary);
+  }
+
+  .forge-asset-browser--list .forge-asset-browser__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .forge-asset-browser__breadcrumb {
+    margin-bottom: var(--mp-spacing-4);
+  }
+
+  .forge-asset-browser__upload {
+    display: inline-block;
+    margin-bottom: var(--mp-spacing-4);
+    font-weight: 600;
+  }
+
+  .forge-asset-browser__upload input {
+    display: block;
+    margin-top: 0.375rem;
+  }
+
+  .forge-asset-browser__search-label {
+    display: grid;
+    gap: var(--mp-spacing-1);
+    margin-bottom: var(--mp-spacing-4);
+    font-weight: var(--mp-font-weight-semibold);
+  }
+
+  .forge-asset-browser__search-label > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .forge-asset-browser__search {
+    width: 100%;
+    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-md);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    box-sizing: border-box;
+    color: inherit;
+    background: var(--mp-color-bg-surface);
+  }
+
+  .forge-asset-browser__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: var(--mp-spacing-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .forge-asset-browser__asset {
+    display: grid;
+    width: 100%;
+    gap: var(--mp-spacing-1);
+    padding: var(--mp-spacing-2);
+    border: var(--mp-border-width-thick) solid transparent;
+    border-radius: var(--mp-radius-md);
+    color: inherit;
+    background: var(--mp-color-bg-muted);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .forge-asset-browser__asset--selected {
+    border-color: var(--mp-color-primary-default);
+    background: var(--mp-color-primary-subtle);
+  }
+
+  .forge-asset-browser__image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--mp-radius-sm);
+    object-fit: cover;
+  }
+
+  .forge-asset-browser__name {
+    overflow: hidden;
+    font-weight: var(--mp-font-weight-semibold);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .forge-asset-browser__metadata {
+    color: var(--mp-color-text-secondary);
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-asset-browser__empty {
+    padding: var(--mp-spacing-8);
+    color: var(--mp-color-text-secondary);
+    text-align: center;
+  }
+
+  .forge-asset-browser__asset:focus-visible,
+  .forge-asset-browser__search:focus-visible {
+    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+    outline-offset: var(--mp-spacing-1);
+  }
+}

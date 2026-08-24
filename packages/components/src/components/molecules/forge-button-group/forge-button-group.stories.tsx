@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 
 import { ForgeButton, ForgeButtonGroup } from '@mission-platform/components';
 

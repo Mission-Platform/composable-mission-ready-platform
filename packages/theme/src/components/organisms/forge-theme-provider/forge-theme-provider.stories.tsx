@@ -1,5 +1,3 @@
-import { h } from '@mission-platform/forge';
-
 import { ForgeThemeProvider, ForgeThemeToggle } from '@mission-platform/theme';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

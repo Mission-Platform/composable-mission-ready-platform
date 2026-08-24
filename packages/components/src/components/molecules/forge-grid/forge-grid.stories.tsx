@@ -1,5 +1,3 @@
-import { h } from '@mission-platform/forge';
-
 import { ForgeGrid } from '@mission-platform/components';
 
 import styles from './forge-grid.module.scss';
@@ -51,19 +49,18 @@ const meta = {
   render: (arguments_) => {
     const count = (arguments_.rows ?? 1) * (arguments_.cols ?? 1);
     return (
-      <ForgeGrid
-        {...arguments_}
-        class={styles['grid-demo-container']}
-      >
-        {Array.from({ length: count }, (_unused, index) => (
-          <div
-            key={index}
-            class={styles['grid-demo-cell']}
-          >
-            {index + 1}
-          </div>
-        ))}
-      </ForgeGrid>
+      <div class={styles['grid-demo-container']}>
+        <ForgeGrid {...arguments_}>
+          {Array.from({ length: count }, (_unused, index) => (
+            <div
+              key={index}
+              class={styles['grid-demo-cell']}
+            >
+              {index + 1}
+            </div>
+          ))}
+        </ForgeGrid>
+      </div>
     );
   },
 } satisfies Meta<typeof ForgeGrid>;
@@ -91,19 +88,18 @@ export const Responsive: Story = {
   },
   args: { minColumnWidth: '12rem', gap: 'md' },
   render: (arguments_) => (
-    <ForgeGrid
-      {...arguments_}
-      class={styles['grid-demo-container']}
-    >
-      {Array.from({ length: 8 }, (_unused, index) => (
-        <div
-          key={index}
-          class={styles['grid-demo-cell']}
-        >
-          {index + 1}
-        </div>
-      ))}
-    </ForgeGrid>
+    <div class={styles['grid-demo-container']}>
+      <ForgeGrid {...arguments_}>
+        {Array.from({ length: 8 }, (_unused, index) => (
+          <div
+            key={index}
+            class={styles['grid-demo-cell']}
+          >
+            {index + 1}
+          </div>
+        ))}
+      </ForgeGrid>
+    </div>
   ),
 };
 

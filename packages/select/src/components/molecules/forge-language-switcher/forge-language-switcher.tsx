@@ -1,4 +1,4 @@
-import { h, type MpElement } from '@mission-platform/forge';
+import { type MpElement } from '@mission-platform/forge';
 import { ForgeIconFlag, ForgeIconLanguage, IconSpriteProvider, type IconCountryCode } from '@mission-platform/icons';
 
 import { ForgeSelect } from '../forge-select';

@@ -1,4 +1,4 @@
-import { type ClassValue, classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
+import { type ClassValue, classNames, type MpChild, type MpElement } from '@mission-platform/forge';
 
 import spacingStyles from '../../../styles/spacing.module.scss';
 

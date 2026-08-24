@@ -1,6 +1,5 @@
 import {
   classNames,
-  h,
   type MpChild,
   type MpElement,
   Slot,

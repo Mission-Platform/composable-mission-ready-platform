@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement } from '@mission-platform/forge';
+import { classNames, type MpElement } from '@mission-platform/forge';
 
 import styles from './forge-responsive-image.module.scss';
 

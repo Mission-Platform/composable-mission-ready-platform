@@ -1,4 +1,4 @@
-import { type ClassValue, h, type MpElement, useId } from '@mission-platform/forge';
+import { type ClassValue, type MpElement, useId } from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconError } from '@mission-platform/icons';
 import { ForgeSelect, type SelectOption } from '@mission-platform/select';
 import { ForgeTypography } from '@mission-platform/typography';

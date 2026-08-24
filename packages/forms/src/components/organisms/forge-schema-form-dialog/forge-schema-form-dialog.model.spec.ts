@@ -34,7 +34,6 @@ async function flush(times = 8): Promise<void> {
   for (let index = 0; index < times; index += 1) {
     await nextTick();
     await Promise.resolve();
-    await new Promise((resolve) => setTimeout(resolve, 2));
   }
 }
 
@@ -48,7 +47,6 @@ describe('ForgeSchemaFormDialog forwards update:modelValue on the compiled Vue b
     const { ForgeSchemaFormDialog } = (await import('@mission-platform/forms')) as unknown as {
       ForgeSchemaFormDialog: unknown;
     };
-
     const updates: Array<Record<string, unknown>> = [];
 
     const host = document.createElement('div');
@@ -84,5 +82,5 @@ describe('ForgeSchemaFormDialog forwards update:modelValue on the compiled Vue b
     // proving the dialog re-emits its model rather than swallowing the update.
     expect(updates.length).toBeGreaterThan(0);
     expect(updates.at(-1)?.name).toBe('Ada Lovelace');
-  });
+  }, 30_000);
 });

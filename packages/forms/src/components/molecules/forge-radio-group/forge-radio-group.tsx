@@ -1,5 +1,5 @@
 import { ForgeStack } from '@mission-platform/components';
-import { type ClassValue, h, type MpChild, type MpElement, useId } from '@mission-platform/forge';
+import { type ClassValue, type MpChild, type MpElement, useId } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import { ForgeRadio } from '../../atoms/forge-radio';

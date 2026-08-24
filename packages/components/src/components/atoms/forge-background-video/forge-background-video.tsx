@@ -1,4 +1,4 @@
-import { classNames, h, type MpChild, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
+import { classNames, type MpChild, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
 
 import styles from './forge-background-video.module.scss';
 

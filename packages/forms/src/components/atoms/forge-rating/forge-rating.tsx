@@ -1,4 +1,4 @@
-import { h, type MpElement, useState } from '@mission-platform/forge';
+import { type MpElement, useState } from '@mission-platform/forge';
 import { ForgeIconStar } from '@mission-platform/icons';
 
 import styles from './forge-rating.module.scss';

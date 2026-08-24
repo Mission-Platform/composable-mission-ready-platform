@@ -1,3 +1,4 @@
+import { h } from '@mission-platform/forge';
 import { toReactComponent } from '@mission-platform/forge/react';
 import { toVueComponent } from '@mission-platform/forge/vue';
 import { createElement } from 'react';
@@ -50,11 +51,11 @@ describe('ForgeMenubar authors the same component for React and Vue', () => {
 
   it('renders the default slot when no items are provided on both frameworks', async () => {
     const react = renderToStaticMarkup(
-      createElement(ReactMenubar, { children: createElement('span', undefined, 'Custom bar') }),
+      createElement(ReactMenubar, { children: h('span', {}, 'Custom bar') }),
     );
     const vue = await renderToString(
       createSSRApp({
-        render: () => vueH(VueMenubar, undefined, { default: () => vueH('span', 'Custom bar') }),
+        render: () => vueH(VueMenubar, {}, { default: () => vueH('span', {}, 'Custom bar') }),
       }),
     );
 

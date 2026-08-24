@@ -1,5 +1,3 @@
-import { h } from '@mission-platform/forge';
-
 import { ForgeCollapse } from '@mission-platform/components';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
@@ -44,12 +42,9 @@ const meta = {
     disabled: false,
   },
   render: (arguments_) => (
-    <ForgeCollapse
-      {...arguments_}
-      style={{ maxWidth: '28rem' }}
-    >
-      This content is revealed when the disclosure is opened.
-    </ForgeCollapse>
+    <div style={{ maxWidth: '28rem' }}>
+      <ForgeCollapse {...arguments_}>This content is revealed when the disclosure is opened.</ForgeCollapse>
+    </div>
   ),
 } satisfies Meta<typeof ForgeCollapse>;
 

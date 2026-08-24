@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 
 import { ForgeNavbarItem } from '@mission-platform/components';
 

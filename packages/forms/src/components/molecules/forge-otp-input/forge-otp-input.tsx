@@ -1,4 +1,4 @@
-import { h, type MpElement, useEffect, useRef } from '@mission-platform/forge';
+import { type MpElement, useEffect, useRef } from '@mission-platform/forge';
 
 import styles from './forge-otp-input.module.scss';
 

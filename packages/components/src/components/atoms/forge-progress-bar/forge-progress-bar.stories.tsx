@@ -1,5 +1,3 @@
-import { h } from '@mission-platform/forge';
-
 import { ForgeProgressBar } from '@mission-platform/components';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';
@@ -42,10 +40,9 @@ const meta = {
     label: 'Uploading…',
   },
   render: (arguments_) => (
-    <ForgeProgressBar
-      {...arguments_}
-      style={{ maxWidth: 400 }}
-    />
+    <div style={{ maxWidth: 400 }}>
+      <ForgeProgressBar {...arguments_} />
+    </div>
   ),
 } satisfies Meta<typeof ForgeProgressBar>;
 

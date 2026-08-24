@@ -1,5 +1,5 @@
 import { ForgeButton } from '@mission-platform/components';
-import { h, type MpChild, type MpElement, Slot, useMemo, useState } from '@mission-platform/forge';
+import { type MpChild, type MpElement, Slot, useMemo, useState } from '@mission-platform/forge';
 import {
   createFormValidator,
   evaluateCondition,

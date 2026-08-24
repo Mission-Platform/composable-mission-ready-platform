@@ -1,5 +1,5 @@
 import { ForgeCard, ForgeStack } from '@mission-platform/components';
-import { h, type MpElement } from '@mission-platform/forge';
+import { type MpElement } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import type { ICalendarEvent } from '../parsers/icalendar';

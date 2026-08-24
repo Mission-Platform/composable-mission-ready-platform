@@ -1,5 +1,3 @@
-import { h } from '@mission-platform/forge';
-
 import { ForgeTypography } from '@mission-platform/typography';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

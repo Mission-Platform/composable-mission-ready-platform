@@ -1,0 +1,87 @@
+@layer mp.components {
+  .forge-mention-input {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-1);
+    color: var(--mp-color-text-primary);
+  }
+
+  .forge-mention-input__label {
+    font-weight: var(--mp-font-weight-semibold);
+  }
+
+  .forge-mention-input__control {
+    position: relative;
+  }
+
+  .forge-mention-input__textarea {
+    display: block;
+    width: 100%;
+    min-width: 14rem;
+    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-md);
+    resize: vertical;
+    color: inherit;
+    background: var(--mp-color-bg-surface);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    font: inherit;
+    line-height: var(--mp-line-height-normal);
+    box-sizing: border-box;
+  }
+
+  .forge-mention-input__textarea:focus-visible {
+    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
+    outline-offset: var(--mp-spacing-1);
+    border-color: var(--mp-color-border-focus);
+  }
+
+  .forge-mention-input__suggestions {
+    position: absolute;
+    z-index: 1;
+    inset-inline: 0;
+    max-height: 12rem;
+    margin: var(--mp-spacing-1) 0 0;
+    padding: var(--mp-spacing-1) 0;
+    overflow: auto;
+    background: var(--mp-color-bg-surface);
+    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    box-shadow: var(--mp-shadow-md);
+    list-style: none;
+  }
+
+  .forge-mention-input__suggestion {
+    padding: var(--mp-spacing-2) var(--mp-spacing-3);
+    cursor: pointer;
+  }
+
+  .forge-mention-input__suggestion[aria-selected='true'],
+  .forge-mention-input__suggestion:hover {
+    background: var(--mp-color-primary-subtle);
+  }
+
+  .forge-mention-input__error {
+    margin: 0;
+    color: var(--mp-color-danger-text);
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-mention-input__hint {
+    margin: 0;
+    color: var(--mp-color-text-secondary);
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-mention-input__footer,
+  .forge-mention-input__content {
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-mention-input--error .forge-mention-input__textarea {
+    border-color: var(--mp-color-danger-default);
+  }
+
+  .forge-mention-input--disabled {
+    opacity: var(--mp-opacity-disabled);
+  }
+}

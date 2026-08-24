@@ -1,0 +1,99 @@
+@layer mp.components {
+  .forge-drop-zone {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mp-spacing-2);
+    color: var(--mp-color-text-primary);
+  }
+
+  .forge-drop-zone__label {
+    font-weight: var(--mp-font-weight-semibold);
+  }
+
+  .forge-drop-zone__target {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mp-spacing-2);
+    min-height: 8rem;
+    padding: var(--mp-spacing-5);
+    text-align: center;
+    background: var(--mp-color-bg-sunken);
+    border: var(--mp-border-width-thick) dashed var(--mp-color-border-default);
+    border-radius: var(--mp-radius-md);
+    cursor: pointer;
+    transition:
+      background-color 120ms ease,
+      border-color 120ms ease;
+  }
+
+  .forge-drop-zone__target:hover,
+  .forge-drop-zone__target--dragging {
+    background: var(--mp-color-primary-subtle);
+    border-color: var(--mp-color-border-focus);
+  }
+
+  .forge-drop-zone__target:focus-visible {
+    outline: var(--mp-border-width-heavy) solid var(--mp-color-border-focus);
+    outline-offset: var(--mp-spacing-1);
+  }
+
+  .forge-drop-zone__prompt {
+    font-weight: var(--mp-font-weight-medium);
+  }
+
+  .forge-drop-zone__browse {
+    color: var(--mp-color-text-link);
+    text-decoration: underline;
+  }
+
+  .forge-drop-zone__files {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-drop-zone__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .forge-drop-zone__error {
+    margin: 0;
+    color: var(--mp-color-danger-text);
+  }
+
+  .forge-drop-zone__hint {
+    margin: 0;
+    color: var(--mp-color-text-secondary);
+  }
+
+  .forge-drop-zone--sm .forge-drop-zone__target {
+    min-height: 5rem;
+    padding: var(--mp-spacing-3);
+    font-size: var(--mp-font-size-sm);
+  }
+
+  .forge-drop-zone--lg .forge-drop-zone__target {
+    min-height: 11rem;
+    padding: var(--mp-spacing-6);
+    font-size: var(--mp-font-size-lg);
+  }
+
+  .forge-drop-zone--error .forge-drop-zone__target {
+    border-color: var(--mp-color-danger-default);
+  }
+
+  .forge-drop-zone--disabled {
+    opacity: var(--mp-opacity-disabled);
+  }
+
+  .forge-drop-zone--disabled .forge-drop-zone__target {
+    cursor: not-allowed;
+  }
+}

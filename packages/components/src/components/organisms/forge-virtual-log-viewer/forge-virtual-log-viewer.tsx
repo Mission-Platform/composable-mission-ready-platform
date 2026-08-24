@@ -1,4 +1,4 @@
-import { classNames, h, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import { classNames, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-virtual-log-viewer.module.scss';
