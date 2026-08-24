@@ -1,69 +1,64 @@
-# Costruisci sistema
+# Build System
 
-Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
+This document explains the architecture and mechanics of the Mission Platform's build system. It is designed for high
+performance, incremental builds, and multi-framework package distribution.
 
-> Fonte inglese: [docs/build-system.md](../../build-system.md)
-> Lingua: Italiano (it)
+## Core Architecture
 
-Questo documento spiega l'architettura e i meccanismi del sistema di costruzione della Mission Platform. È progettato per l'alto
-prestazioni, build incrementali e distribuzione di pacchetti multi-framework.
+The Mission Platform uses a tiered build system that separates task orchestration from individual workspace compilation.
 
-## Architettura centrale
+### 1. Task Orchestration (Turborepo)
 
-La Mission Platform utilizza un sistema di creazione a più livelli che separa l'orchestrazione delle attività dalla compilazione del singolo spazio di lavoro.
+**Turborepo** is the top-level orchestrator. It manages the dependency graph between workspaces and provides caching for
+all tasks.
 
-### 1. Orchestrazione delle attività (Turborepo)
+- **Pipeline defined in `turbo.json`**: Tasks like `build`, `test`, and `lint` are defined with their dependencies
+  (e.g., `build` depends on `^build`, meaning all dependencies must be built first).
+- **Hashing**: Turborepo hashes source files, environment variables, and global dependencies to determine if a task's
+  output can be re-used from the cache.
+- **Parallelism**: Independent tasks are executed concurrently to maximize CPU utilization.
 
-**Turborepo** è l'orchestratore di massimo livello. Gestisce il grafico delle dipendenze tra le aree di lavoro e fornisce la memorizzazione nella cache
-tutti i compiti.
+### 2. Package Compilation (tsdown)
 
-- **Gasdotto definito nel `turbo.json`**: Attività come `build`, `test`, E `lint` sono definiti con le loro dipendenze
-  (ad esempio, `build` dipende da `^build`, il che significa che tutte le dipendenze devono essere create prima).
-- **Hashing**: Turborepo esegue l'hashing di file sorgente, variabili di ambiente e dipendenze globali per determinare se un'attività
-  l'output può essere riutilizzato dalla cache.
-- **Parallelismo**: attività indipendenti vengono eseguite contemporaneamente per massimizzare l'utilizzo della CPU.
+Most library packages in `packages/` use **tsdown** for compilation.
 
-### 2. Compilazione del pacchetto (tsdown)
+- **Speed**: Built on top of **Rolldown** (the Rust-based successor to Rollup), providing near-instant builds.
+- **Unbundling**: Packages are built with `unbundle: true`, preserving the original module structure in `dist/`. This
+  ensures optimal tree-shaking and better debugging in consumer applications.
+- **CSS Threading**: A custom plugin re-links extracted stylesheets back to their owning JS modules, ensuring that
+  importing a component automatically pulls in its styles.
 
-La maggior parte dei pacchetti di libreria in `packages/` utilizzare **tsdown** per la compilazione.
+### 3. Application Bundling (Vite)
 
-- **Velocità**: basato su **Rolldown** (il successore di Rollup basato su Rust), che fornisce build quasi istantanee.
-- **Unbundling**: i pacchetti vengono creati con `unbundle: true`, preservando la struttura del modulo originale in `dist/`. Questo
-  garantisce uno scuotimento ottimale degli alberi e un migliore debug nelle applicazioni consumer.
-- **Threading CSS**: un plug-in personalizzato ricollega i fogli di stile estratti ai relativi moduli JS, garantendo che
-  l'importazione di un componente inserisce automaticamente i suoi stili.
+Deployable applications in `apps/` use **Vite** for development and production bundling.
 
-### 3. Raggruppamento di applicazioni (Vite)
+- **Shared Configs**: Apps extend `@mission-platform/vite-config` to ensure consistent PostCSS pipelines and
+  framework-agnostic resolution.
+- **SSR/SSG Support**: Applications like `my-care-notes` use `vite-ssg` for static site generation.
 
-Applicazioni distribuibili in `apps/` utilizzo **Vite** per il raggruppamento di sviluppo e produzione.
+### Forge package builds
 
-- **Configurazioni condivise**: le app si estendono `@mission-platform/vite-config` per garantire pipeline PostCSS coerenti e
-  risoluzione indipendente dal quadro normativo.
-- **Supporto SSR/SSG**: applicazioni come `my-care-notes` utilizzo `vite-ssg` per la generazione di siti statici.
+Forge package builds add a neutral compiler front end to the normal `tsdown` or Vite flow. A consuming package imports
+the framework plugins it wants and passes explicit instances to `defineTsdownForgeComponents` or
+`defineTsdownForgeHooks`. The neutral driver creates semantic IR once, then the selected plugin owns target lowering,
+source generation, declarations, runtime externals, and its native Vite/tsdown adapter.
 
-### Build del pacchetto Forge
+Content-platform output is a second, orthogonal axis configured through `@mission-platform/forge-cms-plugin-api`. A
+consumer passes `defineTsdownForgeCms` (or `defineTsdownForgeCmsAll`) a list of `CmsOutputPlugin` instances, each of
+which _composes_ a framework plugin — `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`,
+`forgeAstroCms({ packageName, plugin })`, and so on for Ghost, Jekyll, and Webflow. Because the platform and the
+framework are chosen independently, `storyblok × vue` and `astro × solid` are configuration rather than new code.
 
-Le build del pacchetto Forge aggiungono un front-end del compilatore neutro al normale `tsdown` O Vite fluire. Un pacchetto che consuma importa
-i plugin del framework che desidera e a cui passa istanze esplicite `defineTsdownForgeComponents` O
-`defineTsdownForgeHooks`. Il driver neutro crea l'IR semantico una volta, quindi il plugin selezionato possiede l'abbassamento del target,
-generazione del codice sorgente, dichiarazioni, elementi esterni di runtime e relativo nativo Vite/tsdown adattatore.
+CMS builds emit to `dist/cms/<cms>/<framework>/**`, with manifests and other platform sidecars mirrored into
+`dist/cms/<cms>/`. Targets that need a hydrated runtime (Astro, Webflow) co-generate an island tree from the bound
+framework plugin into the same build. The complete responsibility split and stage boundaries are described in
+[Forge Compiler Pipeline](../vite-plugins/forge/docs/reference/compiler.md).
 
-L'output della piattaforma di contenuto è un secondo asse ortogonale configurato attraverso `@mission-platform/forge-cms-plugin-api`. A
-abbonamenti del consumatore `defineTsdownForgeCms` (O `defineTsdownForgeCmsAll`) un elenco di `CmsOutputPlugin` istanze, ciascuno di
-che _compone_ un plugin framework — `forgeStoryblokCms({ packageName, plugin, storyblokRuntime })`,
-`forgeAstroCms({ packageName, plugin })`e così via per Ghost, Jekyll e Webflow. Perché la piattaforma e il
-quadro sono scelti in modo indipendente, `storyblok × vue` E `astro × solid` sono configurazione piuttosto che nuovo codice.
+## Build contract
 
-Le build CMS vengono inviate a `dist/cms/<cms>/<framework>/**`, con manifesti e altri sidecar della piattaforma specchiati
-`dist/cms/<cms>/`. I target che necessitano di un runtime idratato (Astro, Webflow) cogenerano un albero dell'isola dal limite
-plugin del framework nella stessa build. La suddivisione completa delle responsabilità e i confini delle fasi sono descritti in
-[Pipeline del compilatore Forge](forge-compiler.md).
-
-## Costruisci contratto
-
-`pnpm build` è la build aggregata canonica. Delega a Turboa livello di pacchetto `build` attività senza impostare a
-selettore del framework, quindi ogni pacchetto Forge emette il suo output neutro e ogni destinazione del framework configurato da quello
-pacchetto. I pacchetti con proiezioni CMS emettono tali proiezioni e i relativi sidecar condivisi nella stessa build a fasi.
+`pnpm build` is the canonical aggregate build. It delegates to Turbo's package-level `build` task without setting a
+framework selector, so every Forge package emits its neutral output and every framework target configured by that
+package. Packages with CMS projections emit those projections and their shared sidecars in the same staged build.
 
 ```bash
 pnpm build
@@ -71,7 +66,7 @@ pnpm build:force                 # the same aggregate build, ignoring Turbo's ca
 pnpm exec turbo run build --filter @mission-platform/components
 ```
 
-I pacchetti Forge mantengono anche alias di compatibilità thin per ricostruire un target:
+Forge packages also retain thin compatibility aliases for rebuilding one target:
 
 ```bash
 pnpm --filter @mission-platform/components run build:forge
@@ -82,92 +77,92 @@ pnpm --filter @mission-platform/components run build:solid
 pnpm --filter @mission-platform/components run build:web-components
 ```
 
-Gli alias utilizzano lo stesso runner digitato di `build`; non contengono indipendenti `tsdown` implementazioni. `build:forge`
-seleziona la destinazione neutra, mentre gli alias del framework selezionano la directory del framework corrispondente. Specifico per il pacchetto
-I comandi in modalità artefatto CMS rimangono disponibili laddove esposti, incluso il comando delle risorse Storyblok condivise e il file
-comandi wrapper Storyblok per framework.
+The aliases use the same typed runner as `build`; they do not contain independent `tsdown` implementations. `build:forge`
+selects the neutral target, while the framework aliases select the corresponding framework directory. Package-specific
+CMS artifact-mode commands remain available where exposed, including the shared Storyblok assets command and the
+per-framework Storyblok wrapper commands.
 
-### Allestimento e promozione
+### Staging and promotion
 
-Ogni invocazione di Forge scrive in una fase locale del pacchetto univoca sotto `node_modules/.cache/forge-build/`. Il palco è
-ignorato da Turboe non viene mai pubblicato. Una build riuscita viene controllata per l'output prima della promozione:
+Every Forge invocation writes to a unique package-local stage under `node_modules/.cache/forge-build/`. The stage is
+ignored by Turbo's inputs and is never published. A successful build is checked for output before promotion:
 
-- La **Modalità aggregata** sostituisce atomicamente l'intera proprietà della Forgia `dist` albero. File neutri, framework e CMS obsoleti
-  vengono quindi rimossi invece di soddisfare accidentalmente le esportazioni.
-- La **modalità mirata** sostituisce atomicamente solo il sottoalbero del framework selezionato (e il relativo sottoalbero wrapper CMS corrispondente),
-  preservando l'output neutro, framework, email e CMS non correlato già presente `dist`. Il runner ha come ambito il selettore CMS
-  (ad es. `FORGE_CMS_STORYBLOK_TARGET`) al quadro richiesto a fianco `FORGE_FRAMEWORK_TARGET`, quindi il CMS di un pacchetto
-  cablaggio (`forgeStoryblokCmsTargets`, ecc.) ricostruisce effettivamente il wrapper corrispondente nella stessa fase invece di esserlo
-  silenziosamente abbandonato dalla promozione. La promozione cancella solo un sottoalbero wrapper CMS rigenerato dalla fase; mai
-  elimina un wrapper CMS di pari livello che la build corrente non ha ricostruito.
-- Risorse condivise CMS come schemi Storyblok e `components.json` hanno una destinazione condivisa e non vengono eliminati da a
-  successiva promozione del quadro.
-- Un errore del compilatore, una fase vuota o un errore di promozione lascia intatto l'albero pubblicato in precedenza e rimuove il file
-  directory temporanea di stage e promozioni.
+- **Aggregate mode** atomically replaces the complete Forge-owned `dist` tree. Stale neutral, framework, and CMS files
+  are therefore removed instead of satisfying exports accidentally.
+- **Targeted mode** atomically replaces only the selected framework subtree (and its matching CMS wrapper subtree),
+  preserving unrelated neutral, framework, email, and CMS output already in `dist`. The runner scopes the CMS selector
+  (e.g. `FORGE_CMS_STORYBLOK_TARGET`) to the requested framework alongside `FORGE_FRAMEWORK_TARGET`, so a package's CMS
+  wiring (`forgeStoryblokCmsTargets`, etc.) actually rebuilds the matching wrapper in the same stage instead of it being
+  silently dropped from promotion. Promotion only clears a CMS wrapper subtree that the stage regenerated; it never
+  deletes a sibling CMS wrapper the current build did not rebuild.
+- CMS shared assets such as Storyblok schemas and `components.json` have a shared destination and are not deleted by a
+  later framework promotion.
+- A compiler failure, empty stage, or promotion failure leaves the previous published tree untouched and removes the
+  temporary stage and promotion directory.
 
-L'output pubblicato rimane sotto esistente `dist` contratto: moduli e dichiarazioni neutre, directory quadro
-(`vue`, `react`, `svelte`, `solid`, `web-components`)e proiezioni CMS di seguito `cms/<cms>/<framework>`. Esportazione del pacchetto
-mappe, incluse `mp:*` condizioni e percorsi secondari CMS, continuano a risolversi rispetto a questi percorsi promossi.
+The published output remains under the existing `dist` contract: neutral modules and declarations, framework directories
+(`vue`, `react`, `svelte`, `solid`, `web-components`), and CMS projections under `cms/<cms>/<framework>`. Package export
+maps, including `mp:*` conditions and CMS subpaths, continue to resolve against these promoted paths.
 
-### Attività del pacchetto
+### Package tasks
 
-| Compito | Descrizione |
-| :------------ | :------------------------------------------------------------------------------------------------------- |
-| `build`       | Aggrega output neutrali, framework, dichiarazioni, e-mail e CMS configurati tramite il runner Forge condiviso. |
-| `build:forge` | Alias ​​di compatibilità dell'output Forge neutro mirato.                                                      |
-| `build:react`, `build:vue`, `build:svelte` | Alias ​​di compatibilità del framework mirato.                                      |
-| `build:solid`, `build:web-components` | Alias ​​di compatibilità del framework mirato.                                         |
-| `build:check` | Convalida i tipi per un'area di lavoro senza pubblicare l'output.                                               |
-| `build:watch` | Avvia una compilazione incrementale in modalità orologio per un'area di lavoro.                                               |
+| Task                                       | Description                                                                                                                  |
+| :----------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| `build`                                    | Aggregate neutral, framework, declaration, email, and configured CMS output through the shared Forge runner. |
+| `build:forge`                              | Targeted neutral Forge output compatibility alias.                                                           |
+| `build:react`, `build:vue`, `build:svelte` | Targeted framework compatibility aliases.                                                                    |
+| `build:solid`, `build:web-components`      | Targeted framework compatibility aliases.                                                                    |
+| `build:check`                              | Validates types for a workspace without publishing output.                                                   |
+| `build:watch`                              | Starts an incremental build in watch mode for a workspace.                                                   |
 
-Turbo esegue l'hashing dei selettori di destinazione (`FORGE_BUILD_TARGET` e i selettori Forge/CMS legacy) insieme a shared
-fonti del corridore e della stadiazione. Di conseguenza, le build aggregate e mirate non possono riutilizzare reciprocamente i risultati memorizzati nella cache. Finale
-`dist/**` l'output è memorizzato nella cache; le directory temporanee di allestimento e promozione sono esplicitamente escluse.
+Turbo hashes the target selectors (`FORGE_BUILD_TARGET` and the legacy Forge/CMS selectors) together with the shared
+runner and staging sources. Consequently, aggregate and targeted builds cannot reuse one another's cached result. Final
+`dist/**` output is cached; temporary staging and promotion directories are explicitly excluded.
 
-### Strategia di memorizzazione nella cache
+### Caching Strategy
 
-Turborepo memorizza nella cache i seguenti artefatti:
+Turborepo caches the following artifacts:
 
-- `dist/**`: Crea artefatti JS/CSS.
-- `.vite/**`: Vitela cache interna di.
-- `coverage/**`: Rapporti di copertura dei test.
+- `dist/**`: Built JS/CSS artifacts.
+- `.vite/**`: Vite's internal cache.
+- `coverage/**`: Test coverage reports.
 
-Per ignorare la cache e forzare una nuova build, utilizzare il file `--force` bandiera:
+To bypass the cache and force a fresh build, use the `--force` flag:
 
 ```bash
 pnpm build:force
 ```
 
-Gli alias di compatibilità e le attività in modalità artefatto CMS sono quindi attività del pacchetto Turbo applica ancora il grafico delle dipendenze e
-input della cache specifici del target. Le fasi temporanee non sono output della cache; solo i promossi `dist` l'albero è pubblicato o
-ripristinato dalla cache.
+The compatibility aliases and CMS artifact-mode tasks are package tasks, so Turbo still applies their dependency graph and
+target-specific cache inputs. Temporary stages are not cache outputs; only the promoted `dist` tree is published or
+restored from cache.
 
-## Configurazioni condivise
+## Shared Configurations
 
-Le configurazioni di build sono centralizzate in `configs/` directory per mantenere la coerenza nel monorepo.
+Build configurations are centralized in the `configs/` directory to maintain consistency across the monorepo.
 
-| Pacchetto | Scopo |
-| :------------------------------------ | :----------------------------------------------------------- |
-| `@mission-platform/vite-config`       | Condiviso Vite logica per app e Vue-build specifiche.          |
-| `@mission-platform/tsdown-config`     | Logica tsdown condivisa per i pacchetti di librerie.                    |
-| `@mission-platform/typescript-config` | Base `tsconfig.json` preimpostazioni per app, librerie e test. |
-| `@mission-platform/postcss-config`    | Elaborazione CSS standardizzata (Autoprefixer, ecc.).            |
+| Package                               | Purpose                                                                                              |
+| :------------------------------------ | :--------------------------------------------------------------------------------------------------- |
+| `@mission-platform/vite-config`       | Shared Vite logic for apps and Vue-specific builds.                                  |
+| `@mission-platform/tsdown-config`     | Shared tsdown logic for library packages.                                            |
+| `@mission-platform/typescript-config` | Base `tsconfig.json` presets for apps, libraries, and tests.                         |
+| `@mission-platform/postcss-config`    | Standardized CSS processing (Autoprefixer, etc.). |
 
-## Sviluppo locale vs. produzione
+## Local Development vs. Production
 
-### Sviluppo (`dev` compito)
+### Development (`dev` task)
 
-ViteIl server di sviluppo di fornisce la sostituzione del modulo a caldo (HMR). Quando un'app `dev` si avvia l'attività, viene eseguito anche Turborepo
-quello della libreria dei componenti `build:watch` task accanto ad esso (tramite task's `with` tasto), quindi modifica in
-`@mission-platform/components` vengono ricompilati automaticamente e ripresi dall'app in esecuzione senza una ricostruzione manuale.
+Vite's development server provides Hot Module Replacement (HMR). When an app's `dev` task starts, Turborepo also runs
+the component library's `build:watch` task alongside it (via the task's `with` key), so edits to
+`@mission-platform/components` are recompiled automatically and picked up by the running app without a manual rebuild.
 
-### Produzione (`build` compito)
+### Production (`build` task)
 
-Turborepo esegue le build in ordine topologico. Un pacchetto viene creato solo dopo che sono state create tutte le sue dipendenze interne
-costruito con successo. L'uscita in `dist/` è ciò che alla fine viene pubblicato o distribuito.
+Turborepo executes builds in topological order. A package is only built after all its internal dependencies have
+successfully built. The output in `dist/` is what is eventually published or deployed.
 
-## Avanzato: integrazione WASM
+## Advanced: WASM Integration
 
-Alcuni pacchetti (ad es. `@mission-platform/hunspell`, lettori di codici a barre) coinvolgono il codice Rust compilato in WebAssembly. Questi
-le build sono orchestrate tramite attività specializzate che utilizzano `wasm-pack` per garantire la coerenza dell'ambiente e ottimale
-prestazione.
+Certain packages (e.g., `@mission-platform/hunspell`, barcode scanners) involve Rust code compiled to WebAssembly. These
+builds are orchestrated via specialized tasks that use `wasm-pack` to ensure environment consistency and optimal
+performance.
