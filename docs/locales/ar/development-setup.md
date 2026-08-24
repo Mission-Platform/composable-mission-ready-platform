@@ -1,95 +1,81 @@
-# إعداد التطوير
+# Development Setup
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+This guide provides a step-by-step tutorial for setting up your local environment to contribute to the Mission Platform.
+By the end of this guide, you will have a working monorepo and be able to run the development tools.
 
-> المصدر الإنجليزي: [docs/development-setup.md](../../development-setup.md)
-> اللغة: العربية (ar)
+## Prerequisites
 
-يوفر هذا الدليل برنامجًا تعليميًا خطوة بخطوة لإعداد بيئتك المحلية للمساهمة في منصة المهمة.
-بحلول نهاية هذا الدليل، سيكون لديك monorepo فعال وستكون قادرًا على تشغيل أدوات التطوير.
+Before cloning the repository, ensure your system meets the following requirements.
 
-## المتطلبات الأساسية
+### System Requirements
 
-قبل استنساخ المستودع، تأكد من أن نظامك يلبي المتطلبات التالية.
+| Tool                        | Required Version | Purpose                                             |
+| :-------------------------- | :--------------- | :-------------------------------------------------- |
+| **Node.js** | `24.19.0`        | Runtime environment (Active LTS) |
+| **pnpm**                    | `11.21.0`        | Package manager and workspace orchestrator          |
+| **Git**                     | Latest stable    | Version control                                     |
+| **Rust**                    | Stable toolchain | Optional standalone Rust benchmark development      |
+| **Docker**                  | Latest stable    | Required only for the Emscripten Hunspell build     |
 
-### متطلبات النظام
+### Version Management (Recommended)
 
-| أداة | النسخة المطلوبة | الغرض |
-| :------------ | :---------------- | :---------------------------------------------------- |
-| **Node.js** | `24.19.0`         | بيئة وقت التشغيل (LTS النشطة) |
-| **pnpm**      | `11.21.0`         | مدير الحزم ومنسق مساحة العمل |
-| **جيت** | أحدث مستقرة | التحكم في الإصدار |
-| **الصدأ** | سلسلة أدوات مستقرة | الاختبارات الأصلية وتطوير صناديق Rust/WASM |
-| **wasm-pack** | `0.15.0` عبر pnpm | التعبئة والتغليف صناديق الصدأ كما هو مكتوب مساحات عمل WebAssembly |
-| ** عامل الميناء ** | أحدث مستقرة | مطلوب فقط لبناء Emscripten Hunspell |
-
-### إدارة الإصدارات (مستحسن)
-
-نوصي باستخدام **nvm** (Node مدير الإصدارات) للتأكد من أنك تستخدم الإصدار الصحيح Nodeإصدار .js المحدد في
-root `.nvmrc` ملف.
+We recommend using **nvm** (Node Version Manager) to ensure you are using the correct Node.js version specified in the
+root `.nvmrc` file.
 
 ```bash
 nvm install
 nvm use
 ```
 
-يُمكَِن **pnpm** باستخدام Corepack:
+Enable **pnpm** using Corepack:
 
 ```bash
 corepack enable
 corepack prepare pnpm@11.21.0 --activate
 ```
 
-قم بتثبيت هدف الصدأ عند العمل على صناديق الصدأ. يتم توفير حزمة WebAssembly بواسطة الملف المثبت `wasm-pack` npm
-التبعية أثناء `pnpm install`:
+## Initial Setup
 
-```bash
-rustup target add wasm32-unknown-unknown
-```
+Follow these steps to initialize the monorepo on your machine.
 
-## الإعداد الأولي
-
-اتبع هذه الخطوات لتهيئة monorepo على جهازك.
-
-### 1. استنساخ المستودع
+### 1. Clone the Repository
 
 ```bash
 git clone git@github.com:Mission-Platform/composable-mission-ready-platform.git
 cd composable-mission-ready-platform
 ```
 
-### 2. تثبيت التبعيات
+### 2. Install Dependencies
 
-قم بتثبيت جميع تبعيات مساحة العمل وقم بإعداد خطافات git:
+Install all workspace dependencies and set up git hooks:
 
 ```bash
 pnpm install
 ```
 
-يؤدي هذا الأمر إلى تشغيل `prepare` البرنامج النصي، الذي يقوم بتهيئة **Husky** لإجراء فحص الالتزام ويضمن كل ما هو داخلي
-تم إنشاء روابط الحزمة بشكل صحيح.
+This command triggers the `prepare` script, which initializes **Husky** for commit linting and ensures all internal
+package links are correctly established.
 
-### 3. تحقق من التثبيت
+### 3. Verify the Installation
 
-قم بإجراء اختبار الدخان للتأكد من تكوين نظام البناء والبيئة بشكل صحيح:
+Run a smoke test to ensure the build system and environment are correctly configured:
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/forge...
 ```
 
-ال `...` يبني أيضًا تبعيات Forge التي تتطلبها الحزمة. يتم اختبار وحدة فك تشفير الصدأ وصناديق التشفير
-أصلا مع `cargo test`; هُم
-`wasm-pack` تتم كتابة النواتج في المقابلة `packages/*-wasm/`
-مساحة العمل حسب مهمة الحزمة الخاصة بالصندوق، وهي الحزمة/عقد البناء الذي تم تسجيله والذي تستخدمه Turborepo.
+The `...` also builds the Forge dependencies required by the package. The
+neutral code scanner is compiled from its Forge Web Script graph; it does not
+require a Rust or `wasm-pack` build step.
 
-## سير عمل التطوير
+## Development Workflow
 
-يستخدم Mission Platform **Turborepo** لتنسيق المهام عبر التطبيقات والحزم.
+The Mission Platform uses **Turborepo** to orchestrate tasks across applications and packages.
 
-### تطوير المكونات (القصص المصورة)
+### Component Development (Storybook)
 
-Storybook هو منصة العمل الأساسية لبناء واختبار المكونات بشكل منفصل. يمكنك استهداف أطر محددة
-باستخدام متغيرات البيئة:
+Storybook is the primary workbench for building and testing components in isolation. You can target specific frameworks
+using environment variables:
 
 ```bash
 # Start Vue 3 Storybook
@@ -108,8 +94,8 @@ pnpm storybook:solid
 pnpm storybook:web-component
 ```
 
-تستخدم جميع الأوضاع الخمسة نفس مخزون القصة المحايدة. للتحقق من صحة كل ثابت
-بناء طاولة العمل في تمريرة واحدة:
+All five modes use the same neutral story inventory. To validate every static
+workbench build in one pass:
 
 ```bash
 for framework in vue react svelte solid web-component; do
@@ -117,36 +103,36 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-تنشر الحزم المدعومة من Forge المطابقة `mp:vue`, `mp:react`, `mp:svelte`,
-`mp:solid`، و `mp:web-component` شروط. يجب أن تكون الحالة النشطة
-تم تكوينه بواسطة المجمع المستهلك؛ يرى [مرجع المترجم](forge-compiler.md)
-للمكون الإضافي المستهدف وخط أنابيب الإعلان.
+Forge-backed packages publish matching `mp:vue`, `mp:react`, `mp:svelte`,
+`mp:solid`, and `mp:web-component` conditions. The active condition must be
+configured by the consuming bundler; see [the compiler reference](../vite-plugins/forge/docs/reference/compiler.md)
+for the target plugin and declaration pipeline.
 
-### تطوير التطبيقات
+### Application Development
 
-لبدء تطبيق محدد في وضع التطوير:
+To start a specific application in development mode:
 
 ```bash
 # Start My Care Notes (Vue 3)
 pnpm exec turbo run dev --filter @mission-platform/my-care-notes
 ```
 
-سيكون التطبيق متاحًا عادةً على `http://localhost:5173`.
+The application will typically be available at `http://localhost:5173`.
 
-### الأوامر المشتركة
+### Common Commands
 
-| مهمة | الأمر | الوصف |
+| Task       | Command       | Description                    |
 | :--------- | :------------ | :----------------------------- |
-| **بناء** | `pnpm build`  | بناء جميع التطبيقات والحزم |
-| **اختبار** | `pnpm test`   | تشغيل الكل Vitest أجنحة |
-| ** لينت ** | `pnpm lint`   | يجري ESLint عبر مونوريبو |
-| **التنسيق** | `pnpm format` | التحقق من التنسيق باستخدام Prettier |
+| **Build**  | `pnpm build`  | Build all apps and packages    |
+| **Test**   | `pnpm test`   | Run all Vitest suites          |
+| **Lint**   | `pnpm lint`   | Run ESLint across the monorepo |
+| **Format** | `pnpm format` | Check formatting with Prettier |
 
-## استكشاف الأخطاء وإصلاحها
+## Troubleshooting
 
-### مسح ذاكرة التخزين المؤقت
+### Clearing Caches
 
-إذا واجهت أخطاء بناء غير متوقعة، فقم بمسح ملف Turborepo و Node مخابئ:
+If you encounter unexpected build errors, clear the Turborepo and Node caches:
 
 ```bash
 # Remove Turborepo cache
@@ -157,10 +143,9 @@ pnpm -r exec rm -rf node_modules
 pnpm install
 ```
 
-### فشل بناء WASM
+### WASM Build Failures
 
-إذا فشل إنشاء حزم Rust/WASM، فتأكد من أن سلسلة أدوات Rust المستقرة و
-`wasm32-unknown-unknown` يتم تثبيت الهدف، ثم تشغيله `pnpm install` لاستعادة المثبتة `wasm-pack` npm التبعية.
-ال
-`@mission-platform/hunspell` يتطلب بناء Emscripten أيضًا تشغيل Docker؛ تم بناء صناديق الصدأ الأخرى
-باستخدام سلسلة أدوات Rust المحلية.
+If a Forge Web Script artifact fails to build, inspect its compiler diagnostics
+and verify the selected static or dynamic link profile. The
+`@mission-platform/hunspell` Emscripten build additionally requires Docker to
+be running.
