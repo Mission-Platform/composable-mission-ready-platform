@@ -44,6 +44,20 @@ describe("scopeExpression", () => {
     ).toBe("`id-${hostRef?.id}-${open = true}`");
   });
 
+  it("rewrites functional state setters to assignments", () => {
+    const scope: SvelteScope = {
+      ...EMPTY_SCOPE,
+      setterNames: new Map([["setActiveIndex", "activeIndex"]]),
+    };
+
+    expect(
+      scopeExpression(
+        "setActiveIndex((index) => (index + 1) % enabledCommands.length,)",
+        scope,
+      ),
+    ).toBe("activeIndex = (activeIndex + 1) % enabledCommands.length");
+  });
+
   it("leaves the literal text of a template literal untouched", () => {
     expect(
       scopeExpression("`plain text with no interpolation`", EMPTY_SCOPE),

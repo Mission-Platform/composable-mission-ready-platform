@@ -117,7 +117,7 @@ export function synthesiseElementClass(
   const { template } = plan;
   const definitionName = "__mpDomDefinition";
   const preamble = [
-    `const ${definitionName} = {`,
+    `const ${definitionName}: DomTemplateDefinition = {`,
     `  create: ${template.dom.create},`,
     `  parts: ${JSON.stringify(template.dom.partDefinitions)},`,
     ...(template.dom.hot
@@ -319,7 +319,7 @@ export function synthesiseElementClass(
   lines.push("", "  render() {");
   lines.push(...template.head.map((statement) => `    ${statement}`));
   lines.push(
-    `    return new DomTemplateResult(${definitionName}, [${template.dom.values.join(", ")}]);`,
+    `    return domTemplate(${definitionName}, [${template.dom.values.join(", ")}]);`,
   );
   lines.push(
     "  }",

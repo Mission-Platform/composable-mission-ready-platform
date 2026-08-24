@@ -1,7 +1,7 @@
 import { localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 import { describe, expect, it } from 'vitest';
 
-import { localEffectModuleSource, localJsxTypesModuleSource } from './ast';
+import { localJsxTypesModuleSource, parseTsx, printSourceFile, stripFrameworkDirective } from './ast';
 import {
   compileComponentModule,
   compileHookModule,
@@ -1280,31 +1280,6 @@ describe('the local JSX types module source (`localJsxTypesModuleSource`)', () =
   );
 });
 
-describe('the local effect helper module source (`localEffectModuleSource`)', () => {
-  it('generates a Vue-only `mpEffect` built on native `watch`/lifecycle', () => {
-    const source = localEffectModuleSource('vue');
-    // Exports the generalised watcher with the `(effect, deps?)` signature.
-    expect(source).toContain("import { onMounted, onUnmounted, onUpdated, watch } from 'vue';");
-    expect(source).toContain('export function mpEffect(');
-    expect(source).toContain('effect: () => void | (() => void),');
-    expect(source).toContain('deps?: () => readonly unknown[],');
-    // Mount → run once; deps → `watch`; no deps → `onUpdated`; cleanup on re-run
-    // and unmount — the exact semantics the inlined block used to emit per effect.
-    expect(source).toContain('onMounted(run);');
-    expect(source).toContain('watch(deps, run);');
-    expect(source).toContain('onUpdated(run);');
-    expect(source).toContain('onUnmounted(() => cleanup?.());');
-    // It is a generalised Vue-native watcher: nothing is imported from `react`
-    // (the docblock may still reference React's `useEffect` as the conceptual mirror).
-    expect(source).not.toMatch(/from ['"]react['"]/);
-  });
-
-  it('is Vue-only: React gets an empty source (the writer skips it)', () => {
-    // React keeps emitting `useEffect(…)` verbatim, so no helper is generated.
-    expect(localEffectModuleSource('react')).toBe('');
-  });
-});
-
 describe('the `className` attribute', () => {
   const react = compileComponentModule(CLASS_NAMES, { framework: 'react', componentName: 'ForgeChip' });
   const vue = compileComponentModule(CLASS_NAMES, { framework: 'vue', componentName: 'ForgeChip' });
@@ -1414,16 +1389,10 @@ describe('the Vue emitter translates hooks to Vue reactivity', () => {
     expect(vue.code).not.toContain('const wrapperReference = ref<HTMLElement | null>(null)');
   });
 
-  it('routes useEffect through the generated `mpEffect` helper with a deps factory', () => {
-    // The per-effect `onMounted`/`watch`/`onUnmounted` lifecycle block is now
-    // centralised in the generated Vue-only `./mp-effect` helper; each effect
-    // collapses to a single `mpEffect(callback, () => [deps])` call.
-    expect(vue.code).toContain("import { mpEffect } from './mp-effect';");
-    expect(vue.code).toContain('mpEffect(');
-    expect(vue.code).toContain('}, () => [properties.threshold, properties.once]);');
-    // The inlined lifecycle wiring no longer appears in the component.
-    expect(vue.code).not.toContain('onMounted(__effect0)');
-    expect(vue.code).not.toContain('__cleanup0');
+  it('lowers useEffect through Vue native watchers with a deps getter', () => {
+    expect(vue.code).toContain('watch(() => [properties.threshold, properties.once]');
+    expect(vue.code).toContain('{ immediate: true });');
+    expect(vue.code).not.toContain('mpEffect');
   });
 
   it('moves destructured prop defaults into a `withDefaults` type-based props declaration', () => {
@@ -1889,9 +1858,8 @@ describe('the Vue emitter hoists derived declarations an effect depends on into 
     expect(vue.code.indexOf('const commit =')).toBeLessThan(vue.code.indexOf('const render = () => {'));
   });
 
-  it('rewrites the effect body and deps to the hoisted reactive reads (via the `mpEffect` deps factory)', () => {
-    expect(vue.code).toContain('mpEffect(');
-    expect(vue.code).toContain('}, () => [slideCount.value, current.value, properties.interval]);');
+  it('rewrites the effect body and deps to the hoisted reactive reads', () => {
+    expect(vue.code).toContain('watch(() => [slideCount.value, current.value, properties.interval]');
     expect(vue.code).not.toContain('slideCount <= 1)'); // never the bare (undefined) name
   });
 
@@ -2395,6 +2363,9 @@ describe('the compiler reads and applies `"use <framework>";` module directives'
   it('detects the framework a module is pinned to from its directive prologue', () => {
     expect(readFrameworkDirective('a.tsx', '"use vue";\nexport const a = 1;')).toBe('vue');
     expect(readFrameworkDirective('a.tsx', '"use react";\nexport const a = 1;')).toBe('react');
+    expect(readFrameworkDirective('a.tsx', '"use svelte";\nexport const a = 1;')).toBe('svelte');
+    expect(readFrameworkDirective('a.tsx', '"use solid";\nexport const a = 1;')).toBe('solid');
+    expect(readFrameworkDirective('a.tsx', '"use web-components";\nexport const a = 1;')).toBe('web-components');
   });
 
   it('returns undefined for a neutral module or an unrelated prologue directive', () => {
@@ -2414,6 +2385,16 @@ describe('the compiler reads and applies `"use <framework>";` module directives'
     const neutral = 'export const a = 1;';
     expect(moduleTargetsFramework('a.tsx', neutral, 'vue')).toBe(true);
     expect(moduleTargetsFramework('a.tsx', neutral, 'react')).toBe(true);
+    const svelte = '"use svelte";\nexport const a = 1;';
+    expect(moduleTargetsFramework('a.tsx', svelte, 'svelte')).toBe(true);
+    expect(moduleTargetsFramework('a.tsx', svelte, 'solid')).toBe(false);
+  });
+
+  it('strips every built-in framework directive from the source module', () => {
+    for (const directive of ['react', 'vue', 'svelte', 'solid', 'web-components']) {
+      const source = parseTsx('a.tsx', `"use ${directive}";\nexport const a = 1;`);
+      expect(printSourceFile(stripFrameworkDirective(source))).not.toContain(`use ${directive}`);
+    }
   });
 
   it('strips the directive from the compiled output so the marker never leaks', () => {
@@ -2975,17 +2956,14 @@ describe('the Vue hook emitter preserves the authored statement order of a compo
 
   it('emits the options destructuring before any effect setup (no temporal-dead-zone)', () => {
     const destructureIndex = vue.code.indexOf('const { lngLat, content } = options;');
-    const firstEffectIndex = vue.code.indexOf('mpEffect(');
+    const firstEffectIndex = vue.code.indexOf('watch(');
     expect(destructureIndex).toBeGreaterThanOrEqual(0);
     expect(firstEffectIndex).toBeGreaterThan(destructureIndex);
   });
 
-  it('routes the effects through the generated `mpEffect` helper within the composable body', () => {
-    // The composable pulls `mpEffect` from the generated Vue-only `./mp-effect`
-    // helper and each effect collapses to a single `mpEffect(callback, () => [deps])`.
-    expect(vue.code).toContain("import { mpEffect } from './mp-effect';");
-    expect(vue.code).toContain('}, () => [content]);');
-    expect(vue.code).toContain('}, () => [lngLat]);');
+  it('routes the effects through Vue native watchers within the composable body', () => {
+    expect(vue.code).toContain('watch(() => [content]');
+    expect(vue.code).toContain('watch(() => [lngLat]');
     expect(vue.code).not.toContain('onMounted(');
   });
 });
@@ -3214,17 +3192,18 @@ describe('the compiler emits SolidJS components with signals', () => {
 describe('the compiler emits Web Components custom elements', () => {
   const wc = compileComponentModule(IN_VIEW, { framework: 'web-components', componentName: 'ForgeInView' });
 
-  it('emits a native ForgeElement subclass with an html`…` render() registered via customElements.define', () => {
-    // The tagged-template output is plain TypeScript, so the module is `.ts`.
+  it('emits a native ForgeElement subclass with a direct-DOM render() registered via customElements.define', () => {
+    // The direct-DOM output is plain TypeScript, so the module is `.ts`.
     expect(wc.lang).toBe('ts');
     // The only forge import is the native web-components runtime — never `lit`.
     expect(wc.code).not.toContain("from 'lit'");
     expect(wc.code).not.toContain('LitElement');
     expect(wc.code).not.toContain('from "react"');
-    expect(wc.code).toContain('ForgeElement, html, nothing');
+    expect(wc.code).toContain('ForgeElement, domTemplate, nothing');
     expect(wc.code).toContain('class ForgeInViewElement extends ForgeElement');
     expect(wc.code).toContain('render()');
-    expect(wc.code).toContain('return html`');
+    expect(wc.code).toContain('const __mpDomDefinition: DomTemplateDefinition =');
+    expect(wc.code).toContain('return domTemplate(__mpDomDefinition, []);');
     expect(wc.code).toContain("customElements.define('forge-in-view', ForgeInViewElement);");
   });
 });
@@ -3261,22 +3240,15 @@ describe('the Web Components compiler preserves slot ownership', () => {
   });
 
   it('emits repeated default/named outlets and exact children aliases natively', () => {
-    expect(projection.code.match(/<slot><\/slot>/g)?.length).toBe(2);
-    expect(projection.code).toContain('<slot name="end"></slot>');
-    expect(projection.code).toContain(
-      '<forge-slot data-mp-forge-slot="true" data-mp-forge-nested="true" .content=${this.children}></forge-slot>',
-    );
+    expect(projection.code.match(/dynamicElement\("slot"/g)?.length).toBe(4);
+    expect(projection.code).toContain('"~name": "end"');
+    expect(projection.code).toContain('dynamicElement("slot", {}, )');
   });
 
   it('marks nested forwarding and conditional/array slot expressions for runtime resolution', () => {
-    expect(projection.code).toContain(
-      '<nav><forge-slot data-mp-forge-slot="true" data-mp-forge-nested="true" .content=${this.children}></forge-slot></nav>',
-    );
-    expect(projection.code).toContain('<forge-slot data-mp-forge-slot="true" .content=${children}></forge-slot>');
-    expect(projection.code).toContain('<forge-slot data-mp-forge-slot="default" .content=${[children]}></forge-slot>');
-    expect(projection.code).toContain(
-      '<forge-slot data-mp-forge-slot="default" .content=${this.children?.length ? this.children : undefined}></forge-slot>',
-    );
+    expect(projection.code).toContain('document.createElement("nav")');
+    expect(projection.code).toContain('children, [children]');
+    expect(projection.code).toContain('this.children?.length ? this.children : undefined');
   });
 });
 

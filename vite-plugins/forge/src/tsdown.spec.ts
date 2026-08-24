@@ -175,4 +175,23 @@ describe('Forge tsdown component helpers', () => {
     expect(stagedTsconfig.compilerOptions.declarationDir).toBe(path.resolve(stageRoot, 'dist'));
     expect(stagedTsconfig.compilerOptions.tsBuildInfoFile).toBe(path.join(stageRoot, 'tsconfig.build.tsbuildinfo'));
   }, 30_000);
+
+  it('keeps framework artifacts available while running in watch mode', () => {
+    const originalArgv = process.argv;
+    process.argv = [...originalArgv, '--watch'];
+
+    try {
+      const rootDir = path.resolve('/tmp', 'mission-platform-watch-components');
+      const configs = defineTsdownForgeComponents({
+        rootDir,
+        componentsModule: path.resolve(import.meta.dirname, '../../../packages/components/src/components/index.ts'),
+        frameworks: [fixtureFramework('web-components')],
+        rejectFixturePlaceholder: false,
+      });
+
+      expect((configs as UserConfig[]).every((config) => config.clean === false)).toBe(true);
+    } finally {
+      process.argv = originalArgv;
+    }
+  }, 30_000);
 });

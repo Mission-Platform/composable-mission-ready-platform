@@ -10,12 +10,23 @@
 import { isContextProvider, MP_CONTEXT } from '../runtime/context';
 
 import {
-  DomTemplateResult,
-  DynamicElementResult,
+  dynamicElement,
   RawHtml,
   TemplateResult,
   nothing,
+  type DomDynamicRenderResult,
+  type DomRenderResult,
+  type DomTemplateDefinition,
+  type DomTemplatePartDefinition,
+  type DomTemplateRuntimePart,
   type HtmlContentResult,
+} from './web-components';
+
+export type {
+  DomTemplateBlueprint,
+  DomTemplateDefinition,
+  DomTemplatePartDefinition,
+  DomTemplateRuntimePart,
 } from './web-components';
 
 type BindingPrefix = '' | '?' | '.' | '@' | '~';
@@ -36,49 +47,38 @@ const PROPERTY_BOUND_NAMES = new Set(['value', 'checked', 'selected', 'disabled'
 const NO_VALUE = Symbol('forge-renderer:no-value');
 
 /** A compiler-provided slot in a direct-DOM template blueprint. */
-export type RuntimePart =
-  | {
-      readonly kind: 'node';
-      readonly id: number;
-      readonly start: Comment;
-      readonly end?: Comment;
-    }
-  | {
-      readonly kind: 'attr';
-      readonly id: number;
-      readonly element: Element;
-      readonly prefix: BindingPrefix;
-      readonly name: string;
-    }
-  | {
-      readonly kind: 'spread';
-      readonly id: number;
-      readonly element: Element;
-    };
+export type RuntimePart = DomTemplateRuntimePart;
 
-/** A stable path to a slot in a lazily cloned template blueprint. */
-export type DomTemplatePartDefinition =
-  | { readonly kind: 'node'; readonly id: number; readonly path: readonly number[] }
-  | {
-      readonly kind: 'attr';
-      readonly id: number;
-      readonly path: readonly number[];
-      readonly prefix: BindingPrefix;
-      readonly name: string;
-    }
-  | { readonly kind: 'spread'; readonly id: number; readonly path: readonly number[] };
-
-/** The detached DOM skeleton and indexed runtime slots for one result instance. */
-export interface DomTemplateBlueprint {
-  readonly nodes: readonly Node[];
-  readonly parts: readonly RuntimePart[];
+function isDomTemplateResult(value: unknown): value is Extract<DomRenderResult, { kind: 'template' }> {
+  if (typeof value !== 'object' || value === null || (value as { readonly kind?: unknown }).kind !== 'template') {
+    return false;
+  }
+  const result = value as { readonly definition?: unknown; readonly values?: unknown };
+  const definition = result.definition as {
+    readonly create?: unknown;
+    readonly hotTemplate?: unknown;
+    readonly parts?: unknown;
+  } | null;
+  return (
+    definition !== null &&
+    typeof definition === 'object' &&
+    (typeof definition.create === 'function' ||
+      (typeof definition.hotTemplate === 'function' && Array.isArray(definition.parts))) &&
+    Array.isArray(result.values)
+  );
 }
 
-/** A browser-lazy definition shared by all instances of a generated template. */
-export interface DomTemplateDefinition {
-  readonly create: (document: Document) => DomTemplateBlueprint;
-  readonly hotTemplate?: (document: Document) => HTMLTemplateElement;
-  readonly parts?: readonly DomTemplatePartDefinition[];
+function isDomDynamicResult(value: unknown): value is DomDynamicRenderResult {
+  if (typeof value !== 'object' || value === null || (value as { readonly kind?: unknown }).kind !== 'dynamic') {
+    return false;
+  }
+  const result = value as { readonly properties?: unknown; readonly children?: unknown };
+  return (
+    typeof result.properties === 'object' &&
+    result.properties !== null &&
+    !Array.isArray(result.properties) &&
+    Array.isArray(result.children)
+  );
 }
 
 /** The common ownership boundary for every detached/materialized DOM tree. */
@@ -482,67 +482,6 @@ class OwnedMaterializedTree implements MaterializedTree {
   }
 }
 
-function materializeDynamicTree(result: DynamicElementResult): MaterializedTree {
-  if (typeof result.tag === 'string') {
-    if (result.tag.length === 0) {
-      throw new TypeError('Dynamic Web Components tags must resolve to a non-empty string.');
-    }
-    const element = document.createElement(result.tag);
-    const attributes: AttributePart[] = [];
-    const children: MaterializedTree[] = [];
-    for (const [key, value] of Object.entries(result.properties)) {
-      const part = spreadPropertyPart(key);
-      const attribute = new AttributePart(element, part);
-      attribute.update(value);
-      attributes.push(attribute);
-    }
-    for (const child of result.children) {
-      const tree = materializeTree(child);
-      children.push(tree);
-      element.append(...tree.nodes);
-    }
-    return new OwnedMaterializedTree([element], () => {
-      for (const child of children) {
-        child.dispose();
-      }
-      for (const attribute of attributes) {
-        attribute.dispose();
-      }
-      removeNode(element);
-    });
-  }
-  if (isContextProvider(result.tag)) {
-    const value = result.properties['~value'] ?? result.properties.value;
-    const context = result.tag[MP_CONTEXT];
-    context.stack.push(value);
-    try {
-      const trees = result.children.map((child) => materializeTree(child));
-      return new OwnedMaterializedTree(
-        trees.flatMap((tree) => [...tree.nodes]),
-        () => {
-          for (const tree of trees) {
-            tree.dispose();
-          }
-        },
-      );
-    } finally {
-      context.stack.pop();
-    }
-  }
-  if (typeof result.tag === 'function') {
-    const properties: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(result.properties)) {
-      const prefix = key[0];
-      const name = prefix === '?' || prefix === '.' || prefix === '~' || prefix === '@' ? key.slice(1) : key;
-      const componentName = prefix === '@' ? `on${name[0]?.toUpperCase() ?? ''}${name.slice(1)}` : name;
-      properties[componentName] = value;
-    }
-    properties.children = result.children.length === 1 ? result.children[0] : result.children;
-    return materializeTree(result.tag(properties));
-  }
-  throw new TypeError('Dynamic Web Components tags must resolve to a tag name or component.');
-}
-
 /** Materialize a child value with ownership for all nested listeners and parts. */
 export function materializeTree(value: unknown): MaterializedTree {
   if (isEmptyValue(value)) {
@@ -554,17 +493,20 @@ export function materializeTree(value: unknown): MaterializedTree {
     instance.hideAnchors();
     return new OwnedMaterializedTree(nodes, () => instance.dispose());
   }
-  if (value instanceof DomTemplateResult) {
+  if (isDomTemplateResult(value)) {
     const instance = new DomTemplateInstance(value);
     const nodes = instance.mountDetached();
     instance.hideAnchors();
     return new OwnedMaterializedTree(nodes, () => instance.dispose());
   }
-  if (value instanceof DynamicElementResult) {
-    return materializeDynamicTree(value);
+  if (isDomDynamicResult(value)) {
+    const instance = new DomDynamicInstance(value);
+    const nodes = instance.mountDetached();
+    instance.hideAnchors();
+    return new OwnedMaterializedTree(nodes, () => instance.dispose());
   }
   if (isNeutralElement(value)) {
-    return materializeDynamicTree(new DynamicElementResult(value.type, value.properties, value.children));
+    return materializeTree(dynamicElement(value.type, value.properties, ...value.children));
   }
   if (value instanceof RawHtml) {
     const template = document.createElement('template');
@@ -615,6 +557,17 @@ function isNeutralElement(value: unknown): value is NeutralElementValue {
   );
 }
 
+export interface DomRenderInstance {
+  mount(container: ParentNode): readonly Node[];
+  mountBefore(before: Node): readonly Node[];
+  mountDetached(): readonly Node[];
+  currentNodes(): readonly Node[];
+  update(result: DomRenderResult): void;
+  isCompatible(result: DomRenderResult): boolean;
+  dispose(): void;
+  hideAnchors(): void;
+}
+
 type MountedValue =
   | { readonly kind: 'empty'; readonly nodes: readonly Node[] }
   | { readonly kind: 'text'; readonly nodes: readonly [Text]; value: string }
@@ -622,12 +575,11 @@ type MountedValue =
   | { readonly kind: 'raw'; readonly nodes: readonly Node[]; value: string }
   | { readonly kind: 'template'; readonly nodes: readonly Node[]; value: TemplateResult; instance: TemplateInstance }
   | {
-      readonly kind: 'dom-template';
+      readonly kind: 'dom-render';
       readonly nodes: readonly Node[];
-      value: DomTemplateResult;
-      instance: DomTemplateInstance;
+      value: DomRenderResult;
+      instance: DomRenderInstance;
     }
-  | { readonly kind: 'materialized'; readonly nodes: readonly Node[]; value: unknown; tree: MaterializedTree }
   | { readonly kind: 'array'; readonly nodes: readonly Node[]; value: readonly unknown[]; entries: MountedValue[] };
 
 function primitiveText(value: unknown): string | undefined {
@@ -635,9 +587,9 @@ function primitiveText(value: unknown): string | undefined {
     isEmptyValue(value) ||
     value instanceof Node ||
     value instanceof TemplateResult ||
-    value instanceof DomTemplateResult ||
+    isDomTemplateResult(value) ||
     value instanceof RawHtml ||
-    value instanceof DynamicElementResult ||
+    isDomDynamicResult(value) ||
     Array.isArray(value)
   ) {
     return undefined;
@@ -667,6 +619,10 @@ class NodePart {
     this.current = { kind: 'empty', nodes: [] };
     removeNode(this.start);
     removeNode(this.end);
+  }
+
+  get nodes(): readonly Node[] {
+    return this.current.nodes;
   }
 
   hideAnchors(): void {
@@ -705,15 +661,16 @@ class NodePart {
       const nodes = instance.mountBefore(this.end);
       return { kind: 'template', nodes, value, instance };
     }
-    if (value instanceof DomTemplateResult) {
-      if (oldValue.kind === 'dom-template' && oldValue.value.definition === value.definition) {
+    if (isDomTemplateResult(value) || isDomDynamicResult(value)) {
+      if (oldValue.kind === 'dom-render' && oldValue.instance.isCompatible(value)) {
         oldValue.instance.update(value);
-        return { ...oldValue, value };
+        return { ...oldValue, nodes: [...oldValue.instance.currentNodes()], value };
       }
       this.disposeValue(oldValue);
-      const instance = new DomTemplateInstance(value);
-      const nodes = instance.mountBefore(this.end);
-      return { kind: 'dom-template', nodes, value, instance };
+      const instance = value.kind === 'template' ? new DomTemplateInstance(value) : new DomDynamicInstance(value);
+      instance.mountBefore(this.end);
+      const nodes = [...instance.currentNodes()];
+      return { kind: 'dom-render', nodes, value, instance };
     }
     if (value instanceof RawHtml) {
       if (oldValue.kind === 'raw' && oldValue.value === value.value) {
@@ -731,12 +688,6 @@ class NodePart {
       this.disposeValue(oldValue);
       this.insertNodes([value]);
       return { kind: 'node', nodes: [value], value };
-    }
-    if (value instanceof DynamicElementResult) {
-      this.disposeValue(oldValue);
-      const tree = materializeDynamicTree(value);
-      this.insertNodes(tree.nodes);
-      return { kind: 'materialized', nodes: tree.nodes, value, tree };
     }
     this.disposeValue(oldValue);
     return { kind: 'empty', nodes: [] };
@@ -795,8 +746,8 @@ class NodePart {
     if (value instanceof TemplateResult) {
       return oldValue.kind === 'template' && oldValue.value.strings === value.strings;
     }
-    if (value instanceof DomTemplateResult) {
-      return oldValue.kind === 'dom-template' && oldValue.value.definition === value.definition;
+    if (isDomTemplateResult(value)) {
+      return oldValue.kind === 'dom-render' && oldValue.instance.isCompatible(value);
     }
     if (value instanceof RawHtml) {
       return oldValue.kind === 'raw';
@@ -804,8 +755,8 @@ class NodePart {
     if (value instanceof Node) {
       return oldValue.kind === 'node' && oldValue.value === value;
     }
-    if (value instanceof DynamicElementResult) {
-      return oldValue.kind === 'materialized';
+    if (isDomDynamicResult(value)) {
+      return oldValue.kind === 'dom-render' && oldValue.instance.isCompatible(value);
     }
     return false;
   }
@@ -822,10 +773,8 @@ class NodePart {
   private disposeValue(value: MountedValue): void {
     if (value.kind === 'template') {
       value.instance.dispose();
-    } else if (value.kind === 'dom-template') {
+    } else if (value.kind === 'dom-render') {
       value.instance.dispose();
-    } else if (value.kind === 'materialized') {
-      value.tree.dispose();
     } else if (value.kind === 'array') {
       for (const entry of value.entries) {
         this.disposeValue(entry);
@@ -835,6 +784,208 @@ class NodePart {
       removeNode(node);
     }
   }
+}
+
+/** Incremental instance for dynamic intrinsic tags, components, and providers. */
+export class DomDynamicInstance implements DomRenderInstance {
+  private readonly attributes = new Map<string, AttributePart>();
+  private readonly result: DomDynamicRenderResult;
+  private element: Element | undefined;
+  private children: NodePart | undefined;
+  private start: Comment | undefined;
+  private end: Comment | undefined;
+  private rootNodes: Node[] = [];
+  private mounted = false;
+
+  constructor(result: DomDynamicRenderResult) {
+    this.result = result;
+  }
+
+  currentNodes(): readonly Node[] {
+    if (this.start !== undefined && this.end !== undefined) {
+      return [this.start, ...this.rootNodes, this.end];
+    }
+    return this.rootNodes;
+  }
+
+  mount(container: ParentNode): readonly Node[] {
+    if (this.mounted) {
+      return this.rootNodes;
+    }
+    this.initialize();
+    if (this.element !== undefined) {
+      this.update(this.result);
+      container.append(this.element);
+    } else if (this.start !== undefined && this.end !== undefined) {
+      container.append(this.start, this.end);
+      this.update(this.result);
+    }
+    this.mounted = true;
+    return this.rootNodes;
+  }
+
+  mountBefore(before: Node): readonly Node[] {
+    if (before.parentNode === null) {
+      return [];
+    }
+    this.initialize();
+    if (this.element !== undefined) {
+      this.update(this.result);
+      insertBefore(before, this.element);
+    } else if (this.start !== undefined && this.end !== undefined) {
+      insertBefore(before, this.start);
+      insertBefore(before, this.end);
+      this.update(this.result);
+    }
+    this.mounted = true;
+    return this.rootNodes;
+  }
+
+  mountDetached(): readonly Node[] {
+    this.initialize();
+    const fragment = document.createDocumentFragment();
+    if (this.element !== undefined) {
+      fragment.append(this.element);
+    } else if (this.start !== undefined && this.end !== undefined) {
+      fragment.append(this.start, this.end);
+    }
+    this.update(this.result);
+    this.mounted = true;
+    return this.rootNodes;
+  }
+
+  update(result: DomRenderResult): void {
+    if (!isDomDynamicResult(result) || !this.isCompatible(result)) {
+      throw new TypeError('A DomDynamicInstance can only update a compatible dynamic result.');
+    }
+    if (this.element !== undefined) {
+      this.updateElement(result);
+    } else {
+      this.updateRange(result);
+    }
+  }
+
+  isCompatible(result: DomRenderResult): boolean {
+    return (
+      isDomDynamicResult(result) &&
+      result.tag === this.result.tag &&
+      customizedBuiltIn(this.result) === customizedBuiltIn(result)
+    );
+  }
+
+  dispose(): void {
+    for (const attribute of this.attributes.values()) {
+      attribute.dispose();
+    }
+    this.attributes.clear();
+    this.children?.dispose();
+    this.children = undefined;
+    if (this.start !== undefined) {
+      removeNode(this.start);
+    }
+    if (this.end !== undefined) {
+      removeNode(this.end);
+    }
+    if (this.element !== undefined) {
+      removeNode(this.element);
+    }
+    this.rootNodes = [];
+    this.mounted = false;
+  }
+
+  hideAnchors(): void {
+    this.children?.hideAnchors();
+    if (this.start !== undefined) {
+      removeNode(this.start);
+    }
+    if (this.end !== undefined) {
+      removeNode(this.end);
+    }
+  }
+
+  private initialize(): void {
+    if (this.element !== undefined || this.start !== undefined) {
+      return;
+    }
+    if (typeof this.result.tag === 'string') {
+      if (this.result.tag.length === 0) {
+        throw new TypeError('Dynamic Web Components tags must resolve to a non-empty string.');
+      }
+      const customized = customizedBuiltIn(this.result);
+      this.element =
+        typeof customized === 'string'
+          ? document.createElement(this.result.tag, { is: customized })
+          : document.createElement(this.result.tag);
+      const start = document.createComment('mp:dynamic-start');
+      const end = document.createComment('/mp:dynamic-end');
+      this.children = new NodePart(start, end);
+      this.element.append(start, end);
+      this.rootNodes = [this.element];
+      return;
+    }
+    if (!isContextProvider(this.result.tag) && typeof this.result.tag !== 'function') {
+      throw new TypeError('Dynamic Web Components tags must resolve to a tag name or component.');
+    }
+    this.start = document.createComment('mp:dynamic-start');
+    this.end = document.createComment('/mp:dynamic-end');
+    this.children = new NodePart(this.start, this.end);
+  }
+
+  private updateElement(result: DomDynamicRenderResult): void {
+    const element = this.element;
+    const children = this.children;
+    if (element === undefined || children === undefined) {
+      return;
+    }
+    for (const [name, part] of this.attributes) {
+      if (!Object.prototype.hasOwnProperty.call(result.properties, name)) {
+        part.update(undefined);
+        part.dispose();
+        this.attributes.delete(name);
+      }
+    }
+    for (const [name, value] of Object.entries(result.properties)) {
+      let part = this.attributes.get(name);
+      if (part === undefined) {
+        part = new AttributePart(element, spreadPropertyPart(name));
+        this.attributes.set(name, part);
+      }
+      part.update(value);
+    }
+    children.update(result.children);
+    this.rootNodes = [element];
+  }
+
+  private updateRange(result: DomDynamicRenderResult): void {
+    const children = this.children;
+    if (children === undefined) {
+      return;
+    }
+    if (isContextProvider(result.tag)) {
+      const context = result.tag[MP_CONTEXT];
+      context.stack.push(result.properties['~value'] ?? result.properties.value);
+      try {
+        children.update(result.children);
+      } finally {
+        context.stack.pop();
+      }
+    } else if (typeof result.tag === 'function') {
+      const properties: Record<string, unknown> = {};
+      for (const [key, value] of Object.entries(result.properties)) {
+        const prefix = key[0];
+        const name = prefix === '?' || prefix === '.' || prefix === '~' || prefix === '@' ? key.slice(1) : key;
+        const componentName = prefix === '@' ? `on${name[0]?.toUpperCase() ?? ''}${name.slice(1)}` : name;
+        properties[componentName] = value;
+      }
+      properties.children = result.children.length === 1 ? result.children[0] : result.children;
+      children.update(result.tag(properties));
+    }
+    this.rootNodes = [...children.nodes];
+  }
+}
+
+function customizedBuiltIn(result: DomDynamicRenderResult): unknown {
+  return result.properties.is ?? result.properties['~is'];
 }
 
 export class TemplateInstance {
@@ -859,7 +1010,6 @@ export class TemplateInstance {
     this.rootNodes = [...template.content.childNodes];
     this.prepare(template.content);
     this.update(this.result);
-    this.hideProviderAnchors();
     container.append(template.content);
     this.mounted = true;
     return this.rootNodes;
@@ -947,19 +1097,6 @@ export class TemplateInstance {
       }
     }
   }
-
-  private hideProviderAnchors(): void {
-    let childIndex = 0;
-    for (const part of this.compiled.parts) {
-      const value = this.result.values[part.id];
-      if (part.kind === 'node' && value instanceof DynamicElementResult && isContextProvider(value.tag)) {
-        this.children[childIndex]?.hideAnchors();
-      }
-      if (part.kind === 'node') {
-        childIndex += 1;
-      }
-    }
-  }
 }
 
 function nodeAtPath(root: Node, path: readonly number[]): Node | undefined {
@@ -999,18 +1136,22 @@ function runtimePartsFromDefinitions(
 }
 
 /** Incremental instance for compiler-generated direct-DOM template results. */
-export class DomTemplateInstance {
+export class DomTemplateInstance implements DomRenderInstance {
   private readonly attributes: AttributePart[] = [];
   private readonly spreads: SpreadPart[] = [];
   private readonly spreadIds = new Map<SpreadPart, number>();
   private readonly children: NodePart[] = [];
   private rootNodes: Node[] = [];
   private mounted = false;
-  private result: DomTemplateResult;
+  private result: Extract<DomRenderResult, { kind: 'template' }>;
   private childIds: number[] = [];
 
-  constructor(result: DomTemplateResult) {
+  constructor(result: Extract<DomRenderResult, { kind: 'template' }>) {
     this.result = result;
+  }
+
+  currentNodes(): readonly Node[] {
+    return this.rootNodes;
   }
 
   mount(container: ParentNode): readonly Node[] {
@@ -1046,8 +1187,8 @@ export class DomTemplateInstance {
     return this.rootNodes;
   }
 
-  update(result: DomTemplateResult): void {
-    if (result.definition !== this.result.definition) {
+  update(result: DomRenderResult): void {
+    if (!isDomTemplateResult(result) || result.definition !== this.result.definition) {
       throw new TypeError('A DomTemplateInstance can only update a compatible definition.');
     }
     this.result = result;
@@ -1062,8 +1203,8 @@ export class DomTemplateInstance {
     }
   }
 
-  isCompatible(result: DomTemplateResult): boolean {
-    return result.definition === this.result.definition;
+  isCompatible(result: DomRenderResult): boolean {
+    return isDomTemplateResult(result) && result.definition === this.result.definition;
   }
 
   dispose(): void {
@@ -1098,6 +1239,9 @@ export class DomTemplateInstance {
       fragment = hotTemplate.content.cloneNode(true) as DocumentFragment;
       parts = runtimePartsFromDefinitions(fragment, definition.parts);
     } else {
+      if (definition.create === undefined) {
+        throw new TypeError('A direct-DOM template definition must provide a create function.');
+      }
       const blueprint = definition.create(document);
       fragment = document.createDocumentFragment();
       fragment.append(...blueprint.nodes);
@@ -1204,23 +1348,15 @@ class HtmlContentInstance {
   }
 }
 
-class MaterializedRenderInstance {
-  readonly tree: MaterializedTree;
-
-  constructor(tree: MaterializedTree) {
-    this.tree = tree;
-  }
-
-  dispose(): void {
-    this.tree.dispose();
-  }
-}
-
-type RenderInstance = TemplateInstance | DomTemplateInstance | HtmlContentInstance | MaterializedRenderInstance;
+type RenderInstance = TemplateInstance | DomRenderInstance | HtmlContentInstance;
 const renderInstances = new WeakMap<ParentNode, RenderInstance>();
 
+function isDomRenderInstance(instance: RenderInstance | undefined): instance is DomRenderInstance {
+  return instance instanceof DomTemplateInstance || instance instanceof DomDynamicInstance;
+}
+
 export function renderIncrementally(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
+  result: TemplateResult | DomRenderResult | HtmlContentResult,
   container: ParentNode,
 ): void {
   const current = renderInstances.get(container);
@@ -1236,23 +1372,15 @@ export function renderIncrementally(
     renderInstances.set(container, instance);
     return;
   }
-  if (result instanceof DomTemplateResult) {
-    if (current instanceof DomTemplateInstance && current.isCompatible(result)) {
+  if (isDomTemplateResult(result) || isDomDynamicResult(result)) {
+    if (isDomRenderInstance(current) && current.isCompatible(result)) {
       current.update(result);
       return;
     }
     current?.dispose();
     container.replaceChildren();
-    const instance = new DomTemplateInstance(result);
+    const instance = result.kind === 'template' ? new DomTemplateInstance(result) : new DomDynamicInstance(result);
     instance.mount(container);
-    renderInstances.set(container, instance);
-    return;
-  }
-  if (result instanceof DynamicElementResult) {
-    current?.dispose();
-    container.replaceChildren();
-    const instance = new MaterializedRenderInstance(materializeTree(result));
-    container.append(...instance.tree.nodes);
     renderInstances.set(container, instance);
     return;
   }

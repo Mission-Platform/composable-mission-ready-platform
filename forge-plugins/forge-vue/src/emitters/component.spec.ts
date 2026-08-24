@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   component,
+  effect,
   element,
   expressionAttribute,
   expressionChild,
@@ -147,7 +148,7 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
     expect(code).toContain("computed");
   });
 
-  it("routes an effect through the generated `mpEffect` helper", () => {
+  it("lowers an effect to Vue's native watcher and cleanup APIs", () => {
     const module = semanticModule({
       component: component({
         name: "Logger",
@@ -162,32 +163,43 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
       }),
       props: [prop("label", "string")],
       effects: [
-        {
-          body: {
-            kind: "source-backed-expression",
-            syntax: "expression",
-            text: "() => { console.log(properties.label); }",
-            span: { start: 0, end: 0 },
-          },
-          dependencies: [
-            {
-              kind: "source-backed-expression",
-              syntax: "expression",
-              text: "properties.label",
-              span: { start: 0, end: 0 },
-            },
-          ],
-          span: { start: 0, end: 0 },
-        },
+        effect("() => { console.log('changed'); }", {
+          cleanup: "() => console.log('cleanup')",
+          dependencies: ["properties.label"],
+        }),
       ],
     });
 
     const code = emitVueModule(module, "Logger").code;
 
     expect(code).toContain(
-      "mpEffect(() => { console.log(properties.label); }, () => [properties.label]);",
+      "watch(() => [properties.label], (_value, _oldValue, onCleanup) => { const result = (() => { console.log('changed'); })(); if (typeof result === \"function\") onCleanup(result); else onCleanup(() => console.log('cleanup')); }, { immediate: true });",
     );
-    expect(code).toContain("import { mpEffect } from");
+    expect(code).not.toContain("mpEffect");
+  });
+
+  it("uses watchEffect when the neutral effect omits dependencies", () => {
+    const module = semanticModule({
+      component: component({
+        name: "Observer",
+        parameter: "properties",
+        body: [
+          statement(
+            "useEffect(() => { observe(properties.value); });",
+            "expression",
+          ),
+        ],
+        returnNode: element("div", { selfClosing: true }),
+      }),
+      props: [prop("value", "number")],
+    });
+
+    const code = emitVueModule(module, "Observer").code;
+
+    expect(code).toContain(
+      "watchEffect(() => { observe(properties.value); });",
+    );
+    expect(code).not.toContain("onUpdated");
   });
 
   it("binds an element ref as a string template ref", () => {
@@ -339,6 +351,46 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
     expect(code).toContain('v-for="item in properties.items"');
     expect(code).toContain(':key="item.id"');
     expect(code).toContain("{{ item.label }}");
+  });
+
+  it("preserves list callback locals that shadow reactive bindings", () => {
+    const module = semanticModule({
+      component: component({
+        name: "ShadowedList",
+        parameter: "properties",
+        body: [statement("const [count, setCount] = useState(0);")],
+        returnNode: element("ul", {
+          children: [
+            expressionChild(
+              "properties.items.map((count, setCount) => <li><button onClick={() => setCount(count)}>update</button></li>)",
+              [
+                element("li", {
+                  children: [
+                    element("button", {
+                      attributes: [
+                        expressionAttribute("onClick", "() => setCount(count)"),
+                      ],
+                      children: [textChild("update")],
+                      source:
+                        "<button onClick={() => setCount(count)}>update</button>",
+                    }),
+                  ],
+                  source:
+                    "<li><button onClick={() => setCount(count)}>update</button></li>",
+                }),
+              ],
+            ),
+          ],
+        }),
+      }),
+      props: [prop("items", "readonly ((value: number) => void)[]")],
+      state: [state("count", "setCount", { initializer: "0" })],
+    });
+
+    const code = emitVueModule(module, "ShadowedList").code;
+
+    expect(code).toContain('@click="() => setCount(count)"');
+    expect(code).not.toContain('@click="() => count = count"');
   });
 
   it("keeps data projections that contain nested JSX in setup", () => {

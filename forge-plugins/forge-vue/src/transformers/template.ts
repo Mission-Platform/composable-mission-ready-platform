@@ -297,6 +297,17 @@ function templateExpression(text: string, context: TemplateContext): string {
   return rewriteTemplateExpression(inlined, context.scope);
 }
 
+/** Extend the expression scope with names introduced by a nested callback. */
+function withLocalNames(scope: VueScope, names: Iterable<string>): VueScope {
+  const localNames = new Set(scope.localNames);
+  for (const name of names) {
+    if (name.length > 0) {
+      localNames.add(name);
+    }
+  }
+  return { ...scope, localNames };
+}
+
 /**
  * Whether a handler expression can be bound directly. An arrow/function
  * expression, an `emit(…)` call and a plain assignment are all valid Vue
@@ -1110,6 +1121,7 @@ function emitListProjection(
   const itemName = projection.names[0];
   const inner: TemplateContext = {
     ...context,
+    scope: withLocalNames(context.scope, projection.names),
     substitutions: new Map([
       ...context.substitutions,
       ...projection.substitutions,
@@ -1648,6 +1660,7 @@ function emitMarkupExpression(
   if (helperCall !== undefined) {
     const inner: TemplateContext = {
       ...context,
+      scope: withLocalNames(context.scope, helperCall.bindings.keys()),
       substitutions: new Map([
         ...context.substitutions,
         ...helperCall.bindings,

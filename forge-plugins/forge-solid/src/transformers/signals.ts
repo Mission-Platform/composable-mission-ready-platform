@@ -27,8 +27,10 @@ import {
   indexOfAssignment,
   isEqualsBinding,
   isParameterList,
+  matchBracket,
   rewriteCalls,
   rewriteIdentifiers,
+  scanIdentifiers,
   skipTrivia,
 } from "./text.js";
 
@@ -111,6 +113,80 @@ function isMountDependencies(dependencies: string | undefined): boolean {
   );
 }
 
+/** The end of a returned expression, stopping at its callback body's semicolon. */
+function returnedExpressionEnd(text: string, start: number): number {
+  let cursor = start;
+  while (cursor < text.length) {
+    const character = text.charAt(cursor);
+    if (character === "'" || character === '"' || character === "`") {
+      const quote = character;
+      cursor += 1;
+      while (cursor < text.length) {
+        if (text.charAt(cursor) === "\\") {
+          cursor += 2;
+          continue;
+        }
+        if (text.charAt(cursor) === quote) {
+          cursor += 1;
+          break;
+        }
+        cursor += 1;
+      }
+      continue;
+    }
+    if (character === "(" || character === "[" || character === "{") {
+      const close = matchBracket(text, cursor);
+      if (close === -1) {
+        return text.length;
+      }
+      cursor = close + 1;
+      continue;
+    }
+    if (character === ";") {
+      return cursor + 1;
+    }
+    cursor += 1;
+  }
+  return text.length;
+}
+
+/** Replace a top-level callback return with Solid's cleanup registration. */
+function registerReturnedCleanup(body: string): string {
+  const returned = scanIdentifiers(body).find(
+    (occurrence) =>
+      occurrence.name === "return" && occurrence.bracketStart === -1,
+  );
+  if (returned === undefined) {
+    return body;
+  }
+  const end = returnedExpressionEnd(body, returned.end);
+  const cleanup = body.slice(returned.end, end).replace(/;\s*$/, "").trim();
+  if (cleanup.length === 0) {
+    return body;
+  }
+  return `${body.slice(0, returned.start)}onCleanup(${cleanup});${body.slice(end)}`;
+}
+
+/** Add cleanup registration to one effect callback. */
+function lowerEffectCallback(callback: string): string {
+  const arrow = callback.indexOf("=>");
+  if (arrow === -1) {
+    return callback;
+  }
+  const bodyStart = skipTrivia(callback, arrow + 2);
+  if (callback.charAt(bodyStart) === "{") {
+    const bodyEnd = matchBracket(callback, bodyStart);
+    if (bodyEnd === -1) {
+      return callback;
+    }
+    const body = registerReturnedCleanup(
+      callback.slice(bodyStart + 1, bodyEnd),
+    );
+    return `${callback.slice(0, bodyStart + 1)}${body}${callback.slice(bodyEnd)}`;
+  }
+  return callback;
+}
+
 /**
  * Rewrite the neutral hook calls in a fragment to their Solid primitives,
  * recording on `usage` which primitives the import builder must include.
@@ -141,10 +217,10 @@ export function lowerReactiveCalls(
       case "useEffect": {
         if (isMountDependencies(call.args[1])) {
           usage.onMount = true;
-          return `onMount${generics}(${first ?? ""})`;
+          return `onMount${generics}(${lowerEffectCallback(first ?? "")})`;
         }
         usage.createEffect = true;
-        return `createEffect${generics}(${first ?? ""})`;
+        return `createEffect${generics}(${lowerEffectCallback(first ?? "")})`;
       }
       case "useId": {
         usage.createUniqueId = true;

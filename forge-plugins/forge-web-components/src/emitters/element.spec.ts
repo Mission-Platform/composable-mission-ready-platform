@@ -74,8 +74,9 @@ describe("the element class synthesis", () => {
       "export class ForgeEmptyElement extends ForgeElement {",
     );
     expect(source).toContain(
-      "return new DomTemplateResult(__mpDomDefinition, []);",
+      "const __mpDomDefinition: DomTemplateDefinition = {",
     );
+    expect(source).toContain("return domTemplate(__mpDomDefinition, []);");
     expect(source).toContain('document.createElement("slot")');
     expect(source).toContain(
       "customElements.define('forge-empty', ForgeEmptyElement);",
@@ -150,7 +151,7 @@ describe("the element class synthesis", () => {
     expect(source).toContain("  declare label: string;");
     expect(source).toContain("    label: {},");
     expect(source).toContain(
-      "return new DomTemplateResult(__mpDomDefinition, [this.label]);",
+      "return domTemplate(__mpDomDefinition, [this.label]);",
     );
     expect(source).toContain('document.createElement("span")');
   });
@@ -268,7 +269,7 @@ describe("the element class synthesis", () => {
     // A field initializer, never a render-head statement.
     expect(source).not.toContain("    const generatedId = useId();");
     expect(source).toContain(
-      "return new DomTemplateResult(__mpDomDefinition, [this.generatedId]);",
+      "return domTemplate(__mpDomDefinition, [this.generatedId]);",
     );
   });
 
@@ -454,9 +455,7 @@ describe("the element class synthesis", () => {
 
     expect(source).toContain("hotTemplate: (document) => {");
     expect(source).toContain('document.createElement("template")');
-    expect(source).toContain(
-      "return new DomTemplateResult(__mpDomDefinition, []);",
-    );
+    expect(source).toContain("return domTemplate(__mpDomDefinition, []);");
   });
 
   it("prints derived getters, ref cells and lifecycle callbacks", () => {
@@ -485,12 +484,67 @@ describe("the element class synthesis", () => {
     expect(source).toContain("    return this.items.length;");
     expect(source).toContain("  connectedCallback() {");
     expect(source).toContain("    super.connectedCallback();");
-    expect(source).toContain("    this.__mpCleanup0 = (() => { start(); })();");
+    expect(source).toContain(
+      '    this.__mpCleanup0 = (() => { const result = (() => { start(); })(); return typeof result === "function" ? result : () => stop(); })()',
+    );
     expect(source).toContain("  disconnectedCallback() {");
     expect(source).toContain("    this.__mpCleanup0?.();");
     expect(source).toContain("  updatedCallback() {");
     expect(source).toContain("    super.disconnectedCallback();");
     expect(source).not.toMatch(/\bany\b/u);
+  });
+
+  it("prints derived getters with explicit dependencies", () => {
+    const source = synthesise(
+      semanticModule({
+        component: component({
+          name: "ForgeFixture",
+          parameter: "properties",
+          returnNode: element("span"),
+        }),
+        props: [prop("items", "readonly string[]")],
+        memos: [memo("total", "() => items.length", ["items"])],
+      }),
+    );
+
+    expect(source).toContain("  get total() {");
+    expect(source).toContain("    return this.items.length;");
+  });
+
+  it("keeps omitted memo dependencies as a recomputed getter", () => {
+    const source = synthesise(
+      semanticModule({
+        component: component({
+          name: "ForgeFixture",
+          parameter: "properties",
+          returnNode: element("span"),
+        }),
+        memos: [memo("now", "() => Date.now()")],
+      }),
+    );
+
+    expect(source).toContain("  get now() {");
+    expect(source).toContain("    return Date.now();");
+    expect(source).not.toContain("memoize(() => Date.now()");
+  });
+
+  it("tracks dependency changes even when the effect callback does not read them", () => {
+    const source = synthesise(
+      semanticModule({
+        component: component({
+          name: "ForgeFixture",
+          parameter: "properties",
+          returnNode: element("span"),
+        }),
+        props: [prop("version", "number")],
+        effects: [effect("() => { refresh(); }", undefined, ["version"])],
+      }),
+    );
+
+    expect(source).toContain("this.__mpEffectDeps0 = [this.version];");
+    expect(source).toContain("const nextDeps0 = [this.version];");
+    expect(source).toContain("Object.is(value, nextDeps0[index])");
+    expect(source).toContain("    (() => { refresh(); })();");
   });
 
   it("prints a block-bodied memo as the getter body rather than a returned object", () => {
@@ -579,7 +633,7 @@ describe("the element class synthesis", () => {
     expect(source).toContain("    const { src, alt = '' } = this;");
     // …and the bare reads are left bare, resolving to that local.
     expect(source).toContain(
-      "return new DomTemplateResult(__mpDomDefinition, [src, alt]);",
+      "return domTemplate(__mpDomDefinition, [src, alt]);",
     );
   });
 
@@ -631,7 +685,7 @@ describe("the element class synthesis", () => {
     // No body statement carries the parameter pattern, so the head is given one.
     expect(source).toContain("    const { label, size = 'md' } = this;");
     expect(source).toContain(
-      "return new DomTemplateResult(__mpDomDefinition, [size, label]);",
+      "return domTemplate(__mpDomDefinition, [size, label]);",
     );
   });
 
@@ -654,9 +708,7 @@ describe("the element class synthesis", () => {
     expect(source).toContain("    range: {},");
     expect(source).not.toContain("    start: {},");
     expect(source).toContain("    const { range: { start, end = 0 } } = this;");
-    expect(source).toContain(
-      "return new DomTemplateResult(__mpDomDefinition, [start]);",
-    );
+    expect(source).toContain("return domTemplate(__mpDomDefinition, [start]);");
   });
 
   it("seeds a ref that reads a destructured prop in setup, with the pattern replayed", () => {

@@ -1,3 +1,4 @@
+import { frameworkForDirective, type JsxFramework } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 import { parseSync } from 'oxc-parser';
 
 import type { ForgeExportFact, ForgeImportFact, ForgeModuleFacts, ForgeSourceSpan } from './ast.js';
@@ -303,16 +304,16 @@ function hasJsx(program: OxcNode): boolean {
   return found;
 }
 
-function frameworkDirective(program: OxcNode): 'react' | 'vue' | undefined {
+function frameworkDirective(program: OxcNode): JsxFramework | undefined {
   for (const statement of oxcProgramBody(program)) {
     if (statement.type !== 'ExpressionStatement' || typeof statement.directive !== 'string') break;
-    if (statement.directive === 'use react') return 'react';
-    if (statement.directive === 'use vue') return 'vue';
+    const framework = frameworkForDirective(statement.directive);
+    if (framework !== undefined) return framework;
   }
   return undefined;
 }
 
-/** Drop leading `"use react"` / `"use vue"` prologue directives from a parsed module. */
+/** Drop leading `"use <framework>"` prologue directives from a parsed module. */
 export function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedModule {
   const body = oxcProgramBody(module.program);
   const nextBody: OxcNode[] = [];
@@ -320,7 +321,7 @@ export function stripOxcFrameworkDirective(module: OxcParsedModule): OxcParsedMo
   let removed = false;
   for (const statement of body) {
     if (inPrologue && statement.type === 'ExpressionStatement' && typeof statement.directive === 'string') {
-      if (statement.directive === 'use react' || statement.directive === 'use vue') {
+      if (frameworkForDirective(statement.directive) !== undefined) {
         removed = true;
         continue;
       }

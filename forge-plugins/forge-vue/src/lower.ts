@@ -229,9 +229,15 @@ function lowerImports(
     values.push("computed");
   }
   for (const watcher of watchers) {
-    values.push(watcher.runsOnce ? "onMounted" : "watchEffect");
-    if (watcher.cleanupText !== undefined) {
-      values.push("onUnmounted");
+    if (watcher.runsOnce) {
+      values.push("onMounted");
+      if (watcher.cleanupText !== undefined) {
+        values.push("onUnmounted");
+      }
+    } else if (watcher.dependencies === undefined) {
+      values.push("watchEffect");
+    } else {
+      values.push("watch");
     }
   }
   for (const templateRef of templateRefs) {

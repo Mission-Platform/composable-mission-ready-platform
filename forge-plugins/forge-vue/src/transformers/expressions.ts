@@ -42,6 +42,8 @@ export interface VueEvent {
 export interface VueScope {
   /** The props parameter's local name (`properties`). */
   readonly propsParameterName: string;
+  /** Names introduced by an enclosing callback or helper scope. */
+  readonly localNames: ReadonlySet<string>;
   /** Locals bound by `const { … } = properties`. */
   readonly destructuredProps: ReadonlySet<string>;
   /** Renamed destructuring bindings (local name → real prop name). */
@@ -82,6 +84,7 @@ type RewriteMode = "script" | "template";
 export function emptyScope(propsParameterName = "properties"): VueScope {
   return {
     propsParameterName,
+    localNames: new Set(),
     destructuredProps: new Set(),
     propAliases: new Map(),
     stateNames: new Set(),
@@ -338,6 +341,11 @@ function rewriteFragment(
       end += 1;
     }
     const name = text.slice(index, end);
+    if (scope.localNames.has(name)) {
+      output += name;
+      index = end;
+      continue;
+    }
     if (
       isHyphenatedAttributeName(text, index, end) ||
       isBindingPosition(text, index, end, mask)

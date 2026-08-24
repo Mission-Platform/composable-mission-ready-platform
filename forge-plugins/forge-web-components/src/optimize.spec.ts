@@ -275,12 +275,12 @@ describe("the Web-Components optimization phase", () => {
     // `html` is imported only when retained legacy code references it.
     expect(plain.runtimeImports.values).toEqual([
       "ForgeElement",
-      "DomTemplateResult",
+      "domTemplate",
       "nothing",
     ]);
     expect(conditional.runtimeImports.values).toEqual([
       "ForgeElement",
-      "DomTemplateResult",
+      "domTemplate",
       "dynamicElement",
       "nothing",
     ]);

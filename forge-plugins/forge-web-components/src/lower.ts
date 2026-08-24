@@ -129,7 +129,7 @@ const GENERATED_ID_DECLARATION =
 /** The native runtime values a generated element module can import, in header order. */
 const RUNTIME_VALUES = [
   "ForgeElement",
-  "DomTemplateResult",
+  "domTemplate",
   "dynamicElement",
   "html",
   "nothing",
@@ -140,6 +140,7 @@ const RUNTIME_VALUES = [
 
 /** The native runtime **types** a generated element module can import. */
 const RUNTIME_PROPERTY_DECLARATION_TYPE = "PropertyDeclaration";
+const RUNTIME_TEMPLATE_DEFINITION_TYPE = "DomTemplateDefinition";
 
 /**
  * Runtime values every generated element module imports, whatever it renders.
@@ -150,7 +151,7 @@ const RUNTIME_PROPERTY_DECLARATION_TYPE = "PropertyDeclaration";
  */
 const STRUCTURAL_RUNTIME_VALUES: ReadonlySet<string> = new Set([
   "ForgeElement",
-  "DomTemplateResult",
+  "domTemplate",
   "nothing",
 ]);
 
@@ -314,11 +315,12 @@ export type WebComponentsDerivedBody =
   | { readonly kind: "expression"; readonly expression: string }
   | { readonly kind: "block"; readonly statements: readonly string[] };
 
-/** A memoized value, lowered to a getter recomputed on read. */
+/** A memoized value, lowered to a getter backed by an optional instance cache. */
 export interface WebComponentsDerivedValue {
   readonly name: string;
   readonly body: WebComponentsDerivedBody;
-  readonly dependencies: readonly string[];
+  /** Omitted when the source omitted dependencies, preserving recomputation. */
+  readonly dependencies?: readonly string[];
 }
 
 /**
@@ -443,7 +445,7 @@ export interface WebComponentsListKey {
 export interface WebComponentsRuntimeImports {
   /** Values imported from `@mission-platform/forge/web-components`. */
   readonly values: readonly string[];
-  /** Types imported from `@mission-platform/forge/web-components` (`PropertyDeclaration`). */
+  /** Types imported from `@mission-platform/forge/web-components`. */
   readonly types: readonly string[];
   /** Local JSX type names imported from the co-located `./mp-jsx-types` module. */
   readonly localTypes: readonly string[];
@@ -579,6 +581,22 @@ function autonomousHost(
   };
 }
 
+/** Whether a component has a return path whose root tag is selected at runtime. */
+function hasDynamicRootReturn(
+  component: GenericComponent | undefined,
+): boolean {
+  if (component === undefined) return false;
+  const expressions = [
+    ...(component.returnExpression === undefined
+      ? []
+      : [component.returnExpression.text]),
+    ...component.body.map((statement) => statement.text.text),
+  ];
+  return expressions.some((text) =>
+    /(?:^|\breturn\s+)(?:h|dynamicElement)\s*\(\s*(?!["'`])/u.test(text),
+  );
+}
+
 /**
  * Infer a customized-built-in host only from a single, static intrinsic root.
  *
@@ -588,7 +606,11 @@ function autonomousHost(
  */
 export function inferWebComponentsHost(
   returnNode: GenericRenderNode | undefined,
+  component?: GenericComponent,
 ): WebComponentsHostPlan {
+  if (hasDynamicRootReturn(component)) {
+    return autonomousHost("dynamic-root");
+  }
   if (returnNode === undefined) {
     return autonomousHost("missing-root");
   }
@@ -1505,7 +1527,7 @@ function loweredDerived(
   return module.intentions.memos.map((memo) => ({
     name: memo.name,
     body: derivedBody(memo.factory.text, scope, bindings),
-    dependencies: (memo.dependencies ?? []).map((dependency) =>
+    dependencies: memo.dependencies?.map((dependency) =>
       rewriteExpressionText(dependency.text, scope),
     ),
   }));
@@ -1530,6 +1552,14 @@ function loweredElementRefs(
   });
 }
 
+/** Invoke an effect callback and fall back to cleanup recorded separately in the IR. */
+function effectInvocation(body: string, cleanup: string | undefined): string {
+  if (cleanup === undefined) {
+    return `(${body})();`;
+  }
+  return `(() => { const result = (${body})(); return typeof result === "function" ? result : ${cleanup}; })()`;
+}
+
 /** The lifecycle callbacks and cleanup fields the component's effects lower to. */
 function loweredLifecycle(
   module: SemanticModule,
@@ -1548,27 +1578,29 @@ function loweredLifecycle(
 
   for (const [index, effect] of module.intentions.effects.entries()) {
     const body = rewriteExpressionText(effect.body.text.trim(), scope);
-    const dependencies = (effect.dependencies ?? []).map((dependency) =>
+    const dependencies = effect.dependencies?.map((dependency) =>
       rewriteExpressionText(dependency.text.trim(), scope),
     );
     const dependencyField = `__mpEffectDeps${index}`;
+    const nextDependencies = `nextDeps${index}`;
     bodies.push(body);
     // An effect that returns a teardown keeps it in a field so the element can
     // run it when it leaves the document; one that returns nothing is simply
     // invoked, so no field (and no `disconnectedCallback`) is generated.
     if (effect.cleanup === undefined) {
       connected.push(`(${body})();`);
-      if (dependencies.length === 0) {
+      if (dependencies === undefined) {
         updated.push(`(${body})();`);
-      } else {
+      } else if (dependencies.length > 0) {
         connected.splice(
           -1,
           0,
           `this.${dependencyField} = [${dependencies.join(", ")}];`,
         );
         updated.push(
-          `if (!this.${dependencyField}?.every((value, index) => Object.is(value, [${dependencies.join(", ")}][index]))) {`,
-          `  this.${dependencyField} = [${dependencies.join(", ")}];`,
+          `const ${nextDependencies} = [${dependencies.join(", ")}];`,
+          `if (!this.${dependencyField}?.every((value, index) => Object.is(value, ${nextDependencies}[index]))) {`,
+          `  this.${dependencyField} = ${nextDependencies};`,
           `  (${body})();`,
           "}",
         );
@@ -1577,8 +1609,10 @@ function loweredLifecycle(
     }
     const field = `${CLEANUP_FIELD_PREFIX}${index}`;
     cleanupFields.push({ name: field, type: CLEANUP_FIELD_TYPE });
-    connected.push(`this.${field} = (${body})();`);
-    if (dependencies.length > 0) {
+    connected.push(
+      `this.${field} = ${effectInvocation(body, rewriteExpressionText(effect.cleanup.text, scope))}`,
+    );
+    if (dependencies !== undefined && dependencies.length > 0) {
       connected.splice(
         -1,
         0,
@@ -1589,14 +1623,15 @@ function loweredLifecycle(
     const rerun = [
       `this.${field}?.();`,
       `this.${field} = undefined;`,
-      `this.${field} = (${body})();`,
+      `this.${field} = ${effectInvocation(body, rewriteExpressionText(effect.cleanup.text, scope))}`,
     ];
-    if (dependencies.length === 0) {
+    if (dependencies === undefined) {
       updated.push(...rerun);
-    } else {
+    } else if (dependencies.length > 0) {
       updated.push(
-        `if (!this.${dependencyField}?.every((value, index) => Object.is(value, [${dependencies.join(", ")}][index]))) {`,
-        `  this.${dependencyField} = [${dependencies.join(", ")}];`,
+        `const ${nextDependencies} = [${dependencies.join(", ")}];`,
+        `if (!this.${dependencyField}?.every((value, index) => Object.is(value, ${nextDependencies}[index]))) {`,
+        `  this.${dependencyField} = ${nextDependencies};`,
         ...rerun.map((statement) => `  ${statement}`),
         "}",
       );
@@ -1696,7 +1731,10 @@ export function resolveRuntimeImports(plan: {
         STRUCTURAL_RUNTIME_VALUES.has(value) ||
         referencesIdentifier(text, value),
     ),
-    types: hasReactiveMembers ? [RUNTIME_PROPERTY_DECLARATION_TYPE] : [],
+    types: [
+      RUNTIME_TEMPLATE_DEFINITION_TYPE,
+      ...(hasReactiveMembers ? [RUNTIME_PROPERTY_DECLARATION_TYPE] : []),
+    ],
     localTypes: LOCAL_ELEMENT_TYPES.filter((name) =>
       referencesIdentifier(text, name),
     ),
@@ -2123,7 +2161,7 @@ export function lowerWebComponentsPlan(
 
   return {
     framework: WEB_COMPONENTS_FRAMEWORK,
-    host: inferWebComponentsHost(returnNode),
+    host: inferWebComponentsHost(returnNode, module.ast.component),
     shadow: DEFAULT_WEBCOMPONENTS_SHADOW_POLICY,
     internals: DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY,
     tagName,

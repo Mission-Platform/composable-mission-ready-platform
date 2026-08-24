@@ -163,6 +163,40 @@ function declarationFunction(declaration: ForgeWebScriptAbiFunction, enumNames?:
   return `(${declaration.parameters.map((parameter) => `${declarationProperty(parameter.name)}: ${declarationType(parameter, enumNames)}`).join(', ')}) => ${declarationType(result, enumNames)}`;
 }
 
+function rawDeclarationType(value: ForgeWebScriptPrimitiveType | ForgeWebScriptAbiParameter): string {
+  if (typeof value !== 'string' && value.reference === 'Array') return 'number';
+  if (typeof value !== 'string') value = value.type;
+  if (value === 'string' || value === 'bytes') return 'number';
+  if (value === 'unit') return 'void';
+  if (value === 'i64' || value === 'u64') return 'bigint';
+  return 'number';
+}
+
+function rawDeclarationFunction(declaration: ForgeWebScriptAbiFunction): string {
+  const parameters = declaration.parameters.flatMap((parameter) => {
+    if (parameter.type === 'string' || parameter.type === 'bytes') {
+      return [
+        `${declarationProperty(parameter.name)}Pointer: number`,
+        `${declarationProperty(parameter.name)}Length: number`,
+      ];
+    }
+    return `${declarationProperty(parameter.name)}: ${rawDeclarationType(parameter)}`;
+  });
+  const result =
+    declaration.result === 'string' || declaration.result === 'bytes'
+      ? 'ForgeWebScriptBytes'
+      : rawDeclarationType(declaration.result);
+  return `(${parameters.join(', ')}) => ${result}`;
+}
+
+function rawDeclarationRecord(declarations: readonly ForgeWebScriptAbiFunction[]): string {
+  return declarations
+    .map(
+      (declaration) => `  readonly ${declarationProperty(declaration.name)}: ${rawDeclarationFunction(declaration)};`,
+    )
+    .join('\n');
+}
+
 function declarationRecord(
   declarations: readonly ForgeWebScriptAbiFunction[],
   enumNames?: ReadonlySet<string>,
@@ -366,6 +400,17 @@ function createDeclarations(manifest: ForgeWebScriptAbiManifest): string {
     '  readonly fws_reset: () => void;',
     '}',
     '',
+    'export interface ForgeWebScriptRawExports {',
+    '  readonly memory: WebAssembly.Memory;',
+    rawDeclarationRecord(manifest.exports),
+    '  readonly fws_alloc: (size: number) => number;',
+    '  readonly fws_dealloc: (pointer: number, size: number) => void;',
+    '  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;',
+    '  readonly fws_reset: () => void;',
+    '}',
+    '',
+    'export type ForgeWebScriptRawImports = WebAssembly.Imports;',
+    '',
     'export interface ForgeWebScriptDynamicModuleExports {',
     dynamicImports.length === 0
       ? '  // This module has no dynamic source-module links.'
@@ -400,6 +445,8 @@ function createDeclarations(manifest: ForgeWebScriptAbiManifest): string {
     'export function clearDynamicLinkCache(): void;',
     'export function load(imports?: ForgeWebScriptImports): Promise<ForgeWebScriptExports>;',
     'export function loadSync(imports?: ForgeWebScriptImports): ForgeWebScriptExports;',
+    'export function loadRaw(imports?: ForgeWebScriptRawImports): Promise<ForgeWebScriptRawExports>;',
+    'export function loadRawSync(imports?: ForgeWebScriptRawImports): ForgeWebScriptRawExports;',
   ].join('\n');
 }
 
@@ -515,7 +562,10 @@ function arraySnapshot(value) {
   return values;
 }
 function allocateArray(wasmExports, value) {
-  const values = arraySnapshot(value);
+  const values = value instanceof Int32Array ? value : arraySnapshot(value);
+  if (values.length > 0x3ffffffe || (values.length + 1) * 4 > 0xffffffff) {
+    throw new RangeError('Forge Web Script Array<i32> is too large.');
+  }
   const byteLength = (values.length + 1) * 4;
   const pointer = wasmExports.fws_alloc(byteLength);
   return { pointer, length: byteLength, values };
@@ -590,8 +640,9 @@ const decoder = new TextDecoder('utf-8', { fatal: true });
         checkedBytes(wasmExports.memory, array.pointer, array.length);
         const view = new DataView(wasmExports.memory.buffer, array.pointer, array.length);
         view.setInt32(0, array.values.length, true);
-        for (let elementIndex = 0; elementIndex < array.values.length; elementIndex += 1)
-          view.setInt32((elementIndex + 1) * 4, array.values[elementIndex], true);
+        new Uint8Array(wasmExports.memory.buffer, array.pointer + 4, array.values.byteLength).set(
+          new Uint8Array(array.values.buffer, array.values.byteOffset, array.values.byteLength),
+        );
         rawArgs.push(array.pointer);
         continue;
       }
@@ -811,6 +862,15 @@ export function loadSync(imports = {}) {
   const wasmExports = validateExports(instance.exports);
   ${hasValueAdapters ? 'initializeValueRuntime(runtime, wasmExports);' : ''}
   return adaptIteratorExports(adaptValueExports(wasmExports, runtime));
+}
+export async function loadRaw(imports = {}) {
+  const result = await WebAssembly.instantiate(wasm, imports);
+  return validateExports(result.instance.exports);
+}
+export function loadRawSync(imports = {}) {
+  const module = new WebAssembly.Module(decodeWasm());
+  const instance = new WebAssembly.Instance(module, imports);
+  return validateExports(instance.exports);
 }
 `;
 }

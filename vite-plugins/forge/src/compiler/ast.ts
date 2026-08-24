@@ -15,6 +15,11 @@
  */
 import path from 'node:path';
 
+import {
+  frameworkForDirective,
+  localJsxTypesModuleSource as sharedLocalJsxTypesModuleSource,
+  type JsxFramework,
+} from '@mission-platform/forge-plugin-api/compiler/ast.js';
 import ts from 'typescript';
 
 import {
@@ -27,8 +32,6 @@ import {
   type OxcNode,
   visitOxc,
 } from './oxc.js';
-
-import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 
 /** The neutral package the components import their primitives from. */
 export const NEUTRAL_MODULE = '@mission-platform/forge';
@@ -97,15 +100,6 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string> = new Set(['Slot'
  * `@mission-platform/forge/react` group driver for React, the built-in
  * `import { TransitionGroup } from 'vue'` for Vue).
  */
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string> = new Set([
-  'Teleport',
-  'Transition',
-  'TransitionGroup',
-  'HtmlContent',
-]);
-
-/** The neutral framework-component imports Vue resolves straight from the `vue` runtime. */
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string> = new Set(['Teleport', 'Transition', 'TransitionGroup']);
 
 /**
  * Neutral **value** hooks that have an identically-named native counterpart in
@@ -125,9 +119,6 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string> = new Set(['useId'])
  * `createContext`/`useContext`).
  */
 export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string> = new Set(['createContext', 'useContext']);
-
-/** The `@mission-platform/forge/react` subpath the React framework components are imported from. */
-export const REACT_ADAPTER_MODULE = '@mission-platform/forge/react';
 
 /**
  * Neutral **type** imports that have a first-class React equivalent shipped by
@@ -149,12 +140,6 @@ export const REACT_ADAPTER_MODULE = '@mission-platform/forge/react';
  * - `MpDependencyList` (an effect/memo dependency array) ⇒ React's
  *   `DependencyList`.
  */
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>> = {
-  MpChild: 'ReactNode',
-  MpElement: 'ReactElement',
-  MpRef: 'RefObject',
-  MpDependencyList: 'DependencyList',
-};
 
 /**
  * Neutral **type** imports that have no single first-class framework equivalent
@@ -187,7 +172,6 @@ export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set(['MpRenderPrope
  * {@link REACT_TYPE_ALIASES}); Vue keeps the `Mp*` names but resolves them to
  * the Vue-native types via the local module, so no reference rewriting is needed.
  */
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set(['MpRenderProperty', 'MpChild', 'MpElement']);
 
 /** The relative specifier the generated per-framework {@link LOCAL_JSX_TYPES_MODULE} is imported under. */
 export const LOCAL_JSX_TYPES_MODULE = './mp-jsx-types';
@@ -209,200 +193,8 @@ export const LOCAL_JSX_TYPES_FILE = 'mp-jsx-types.ts';
  * that no longer exists in the neutral dialect.
  */
 export function localJsxTypesModuleSource(framework: JsxFramework): string {
-  if (framework === 'solid') {
-    return [
-      '/**',
-      ' * Framework-specific variants of the neutral `@mission-platform/forge` render/props',
-      ' * primitives, generated for the solid build so the compiled components',
-      ' * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).',
-      ' */',
-      "import type { JSX } from 'solid-js';",
-      '',
-      '/** A scoped-slot / render-prop function — the solid variant of the neutral `MpRenderProperty`. */',
-      'export type MpRenderProperty<S = Record<string, unknown>> = (scope: S) => JSX.Element;',
-      '',
-      '/** Anything that may render as a child — the solid variant of the neutral `MpChild`. */',
-      'export type MpChild = JSX.Element;',
-      '',
-      '/** A node in the rendered tree — the solid variant of the neutral `MpElement`. */',
-      'export type MpElement = JSX.Element;',
-      '',
-    ].join('\n');
-  }
-  if (framework === 'svelte') {
-    // Svelte's compiled markup has no public renderable-value type, so the
-    // neutral primitives bind to `unknown` — a bounded fallback that still
-    // rejects the unsound assignments `any` would silently allow.
-    return [
-      '/**',
-      ' * Framework-specific variants of the neutral `@mission-platform/forge` render/props',
-      ' * primitives, generated for the svelte build so the compiled components',
-      ' * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).',
-      ' */',
-      "import type { Snippet } from 'svelte';",
-      '',
-      '/** A node in the rendered tree — the svelte variant of the neutral `MpElement`. */',
-      'export type MpElement = unknown;',
-      '',
-      '/** Anything that may render as a child — the svelte variant of the neutral `MpChild`. */',
-      'export type MpChild = unknown;',
-      '',
-      '/** A scoped snippet prop — the svelte variant of the neutral `MpRenderProperty`. */',
-      'export type MpRenderProperty<S = Record<string, unknown>> = Snippet<[S]>;',
-      '',
-    ].join('\n');
-  }
-  if (framework === 'web-components') {
-    // The native Web-Components runtime renders `html\`…\`` tagged templates, so
-    // the neutral element primitives map onto its concrete result types rather
-    // than `any`; primitive child values stay assignable through the union.
-    return [
-      '/**',
-      ' * Framework-specific variants of the neutral `@mission-platform/forge` render/props',
-      ' * primitives, generated for the web-components build so the compiled components',
-      ' * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).',
-      ' */',
-      "import type { HtmlContentResult, TemplateResult } from '@mission-platform/forge/web-components';",
-      '',
-      '/** A node in the rendered tree — the web-components variant of the neutral `MpElement`. */',
-      'export type MpElement = TemplateResult | HtmlContentResult;',
-      '',
-      '/** Anything that may render as a child — the web-components variant of the neutral `MpChild`. */',
-      'export type MpChild = MpElement | string | number | boolean | null | undefined;',
-      '',
-      '/** A scoped-slot / render-prop function — the web-components variant of the neutral `MpRenderProperty`. */',
-      'export type MpRenderProperty<S = Record<string, unknown>> = (scope: S) => MpChild;',
-      '',
-    ].join('\n');
-  }
-  const renderable = framework === 'react' ? 'ReactNode' : 'VNodeChild';
-  const imported =
-    framework === 'react' ? "import type { ReactNode } from 'react';" : "import type { VNode, VNodeChild } from 'vue';";
-  const lines = [
-    '/**',
-    ` * Framework-specific variants of the neutral \`@mission-platform/forge\` render/props`,
-    ' * primitives, generated for the ' + framework + ' build so the compiled components',
-    ' * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).',
-    ' */',
-    imported,
-    '',
-    '/** A scoped-slot / render-prop function — the ' + framework + ' variant of the neutral `MpRenderProperty`. */',
-    `export type MpRenderProperty<S = Record<string, unknown>> = (scope: S) => ${renderable};`,
-    '',
-  ];
-  // Under `jsxImportSource: 'vue'` a JSX expression in a generated SFC is typed
-  // as Vue's `VNode` (`JSX.Element`); re-declaring the neutral element primitives
-  // over the Vue-native types lets `const x: MpElement = <div/>` and
-  // `MpChild[] = items.map(() => <li/>)` type-check under `vue-tsc` without any
-  // reference rewriting (React instead renames these — see `REACT_TYPE_ALIASES`).
-  if (framework === 'vue') {
-    lines.push(
-      '/** Anything that may render as a child — the Vue variant of the neutral `MpChild`. */',
-      'export type MpChild = VNodeChild;',
-      '',
-      '/** A node in the rendered tree — the Vue variant of the neutral `MpElement`. */',
-      'export type MpElement = VNode;',
-      '',
-    );
-  }
-  return lines.join('\n');
+  return sharedLocalJsxTypesModuleSource(framework);
 }
-
-/** The relative specifier the generated Vue {@link LOCAL_EFFECT_MODULE} is imported under. */
-export const LOCAL_EFFECT_MODULE = './mp-effect';
-
-/** The file name (with extension) the local effect helper module is written as in the flat generated tree. */
-export const LOCAL_EFFECT_FILE = 'mp-effect.ts';
-
-/**
- * The source of the co-located {@link LOCAL_EFFECT_MODULE} for a target
- * framework, generated once per output tree exactly like the local JSX-types
- * module (see {@link localJsxTypesModuleSource}).
- *
- * It centralises the Vue emitter's `useEffect` → lifecycle translation in a
- * single generalised watcher (`mpEffect`) built on Vue's native
- * `watch`/`onMounted`/`onUpdated`/`onUnmounted`, so each component's `setup`
- * shrinks to a single `mpEffect(callback, () => [deps])` call instead of the
- * inlined per-effect lifecycle block. The semantics mirror React's
- * `useEffect(callback, deps?)`: run once after mount, re-run when a dependency
- * changes (or after every update when deps are omitted), and run the returned
- * cleanup before each re-run and on unmount.
- *
- * The helper is **Vue-only**: the React emitter keeps emitting `useEffect(…)`
- * verbatim (React's native form), so for `framework === 'react'` this returns an
- * empty string and the writer skips it.
- */
-export function localEffectModuleSource(framework: JsxFramework): string {
-  if (framework !== 'vue') {
-    return '';
-  }
-  return [
-    '/**',
-    ' * Vue-native generalised effect watcher — the mirror of React\u2019s',
-    ' * `useEffect(callback, deps?)`, generated once per output tree so the compiled',
-    ' * components share one lifecycle helper instead of inlining the wiring per',
-    ' * effect.',
-    ' *',
-    ' * - runs once after mount;',
-    ' * - re-runs when any dependency changes (when `deps` is provided);',
-    ' * - runs after every update when `deps` is omitted;',
-    ' * - runs the returned cleanup before each re-run and on unmount.',
-    ' */',
-    "import { onMounted, onUnmounted, onUpdated, watch } from 'vue';",
-    '',
-    'export function mpEffect(',
-    '  effect: () => void | (() => void),',
-    '  deps?: () => readonly unknown[],',
-    '): void {',
-    '  let cleanup: (() => void) | undefined;',
-    '  const run = () => {',
-    '    cleanup?.();',
-    '    const result = effect();',
-    "    cleanup = typeof result === 'function' ? result : undefined;",
-    '  };',
-    '  onMounted(run);',
-    '  if (deps) {',
-    '    watch(deps, run);',
-    '  } else {',
-    '    onUpdated(run);',
-    '  }',
-    '  onUnmounted(() => cleanup?.());',
-    '}',
-    '',
-  ].join('\n');
-}
-
-/** The `@mission-platform/forge/vue` subpath the Vue context primitives are imported from. */
-export const VUE_ADAPTER_MODULE = '@mission-platform/forge/vue';
-
-/**
- * The bare specifier of the write-once icon library `@mission-platform/icons`.
- * Neutral authors import their icons from this root, and the generated
- * per-framework sources keep that exact specifier: every framework-split
- * `@mission-platform/*` package declares `mp:vue` / `mp:react` / `mp:solid` /
- * `mp:web-component` custom export conditions on its bare `.` entry, so the
- * *consumer's* `resolve.conditions` (and the matching
- * `customConditions` tsconfig preset) select the right build. There is no
- * per-framework subpath to remap to.
- */
-export const ICONS_JSX_MODULE = '@mission-platform/icons';
-
-/**
- * The write-once **component-library** workspace packages: like
- * `@mission-platform/icons`, neutral authors import their components from these
- * packages (e.g. `ForgeDrawer` from `@mission-platform/components/forge-drawer`, or
- * `ForgeVerticalLayout` from `@mission-platform/layouts`), which type-check
- * against the neutral source and render through the `@mission-platform/forge`
- * adapters in unit tests. The generated per-framework sources import them under
- * the very same bare specifier — framework selection happens through each
- * package's `mp:<framework>` export condition, not through a subpath.
- */
-export const COMPONENTS_JSX_MODULES = [
-  '@mission-platform/components',
-  '@mission-platform/layouts',
-  '@mission-platform/forms',
-  '@mission-platform/i18n',
-] as const;
 
 /** The JSX tag name of the neutral named-slot marker element. */
 const SLOT_TAG = 'Slot';
@@ -437,17 +229,11 @@ export function printSourceFile(sourceFile: ts.SourceFile): string {
   return printer.printFile(sourceFile);
 }
 
-/** The recognised `"use <framework>";` module directives → the framework they pin a module to. */
-const FRAMEWORK_DIRECTIVES: Readonly<Record<string, 'react' | 'vue'>> = {
-  'use react': 'react',
-  'use vue': 'vue',
-};
-
 /**
  * Read a module's `"use <framework>";` directive, if any.
  *
  * A module may opt into a **framework-specific** implementation by opening with
- * a `"use react";` or `"use vue";` directive (mirroring `"use strict"` /
+ * a `"use <framework>";` directive (mirroring `"use strict"` /
  * `"use client"`). This returns the framework the directive pins the module to,
  * or `undefined` when the module is framework-neutral (no such directive).
  *
@@ -456,7 +242,7 @@ const FRAMEWORK_DIRECTIVES: Readonly<Record<string, 'react' | 'vue'>> = {
  * inspected, matching JavaScript's directive semantics; other prologue
  * directives (e.g. `"use strict"`) are ignored.
  */
-export function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined {
+export function readFrameworkDirective(fileName: string, source: string): JsxFramework | undefined {
   return parseOxcModule(fileName, source).facts.frameworkDirective;
 }
 
@@ -471,7 +257,7 @@ export function moduleTargetsFramework(fileName: string, source: string, framewo
 }
 
 /**
- * Return the source file with any leading `"use react"` / `"use vue"` directive
+ * Return the source file with any leading `"use <framework>"` directive
  * removed, so the compile-time gating marker never leaks into the emitted
  * per-framework source. Other prologue directives are preserved.
  */
@@ -482,7 +268,7 @@ export function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFil
       return true;
     }
     if (ts.isExpressionStatement(statement) && ts.isStringLiteralLike(statement.expression)) {
-      return FRAMEWORK_DIRECTIVES[statement.expression.text] === undefined;
+      return frameworkForDirective(statement.expression.text) === undefined;
     }
     inPrologue = false;
     return true;
@@ -521,7 +307,7 @@ export interface ForgeExportFact {
 export interface ForgeModuleFacts {
   imports: ForgeImportFact[];
   exports: ForgeExportFact[];
-  frameworkDirective: 'react' | 'vue' | undefined;
+  frameworkDirective: JsxFramework | undefined;
   hasJsx: boolean;
 }
 
@@ -1720,8 +1506,7 @@ export function readStyleImports(fileName: string, source: string, sourceRoot?: 
  * source so values referenced by the body, carried-over helpers, or prop
  * defaults resolve at runtime. Each entry is the printed `import` statement.
  *
- * Framework-split workspace packages such as the write-once icon library
- * {@link ICONS_JSX_MODULE} are carried verbatim too: each declares an
+ * Framework-split workspace packages are carried verbatim too: each declares an
  * `mp:<framework>` export condition on its bare `.` entry, so the consuming app
  * (or Storybook/Vitest config) resolves the matching native build without the
  * generated source naming a framework subpath.

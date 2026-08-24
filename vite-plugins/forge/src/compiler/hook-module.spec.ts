@@ -127,12 +127,9 @@ describe('compileHookModule — Vue', () => {
     expect(code).toContain('const value = ref<T | undefined>(initialValue)');
     // The `useState` setter call becomes a reactive assignment.
     expect(code).toContain('value.value =');
-    // The effect is routed through the generated Vue-only `./mp-effect` helper
-    // (native `watch`/lifecycle) as a single `mpEffect(callback, () => [deps])`
-    // call, so the inlined lifecycle wiring no longer appears in the composable.
-    expect(code).toContain("import { mpEffect } from './mp-effect';");
-    expect(code).toContain('mpEffect(');
-    expect(code).toContain('}, () => [source]);');
+    // Explicit dependencies use Vue's native `watch` source getter.
+    expect(code).toContain('watch(() => [source]');
+    expect(code).toContain('{ immediate: true });');
     expect(code).not.toContain('onMounted(');
     expect(code).not.toContain('onUnmounted(');
     // The external dependency import is preserved.

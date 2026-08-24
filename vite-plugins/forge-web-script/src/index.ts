@@ -15,12 +15,14 @@ import {
 } from "./compile.js";
 import {
   createForgeWebScriptDeclarationsSource,
+  createForgeWebScriptArtifactSource,
   createForgeWebScriptManifestSource,
   createForgeWebScriptModuleSource,
   createForgeWebScriptSourceMapSource,
   createForgeWebScriptWatSource,
   createForgeWebScriptWasmSource,
   FORGE_WEB_SCRIPT_DECLARATIONS_QUERY,
+  FORGE_WEB_SCRIPT_ARTIFACT_QUERY,
   FORGE_WEB_SCRIPT_MANIFEST_QUERY,
   FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY,
   FORGE_WEB_SCRIPT_WAT_QUERY,
@@ -35,6 +37,7 @@ export * from "./generate.js";
 const QUERY_NAMES = new Set([
   FORGE_WEB_SCRIPT_MANIFEST_QUERY,
   FORGE_WEB_SCRIPT_DECLARATIONS_QUERY,
+  FORGE_WEB_SCRIPT_ARTIFACT_QUERY,
   FORGE_WEB_SCRIPT_WASM_QUERY,
   FORGE_WEB_SCRIPT_WAT_QUERY,
   FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY,
@@ -191,6 +194,8 @@ export function forgeWebScriptPlugin(
         return createForgeWebScriptManifestSource(result);
       if (split.query === FORGE_WEB_SCRIPT_DECLARATIONS_QUERY)
         return createForgeWebScriptDeclarationsSource(result);
+      if (split.query === FORGE_WEB_SCRIPT_ARTIFACT_QUERY)
+        return createForgeWebScriptArtifactSource(result);
       if (split.query === FORGE_WEB_SCRIPT_WASM_QUERY)
         return createForgeWebScriptWasmSource(result);
       if (split.query === FORGE_WEB_SCRIPT_WAT_QUERY)

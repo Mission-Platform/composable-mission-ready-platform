@@ -10,7 +10,7 @@
  * - hook declarations, translated to Vue reactivity (`useState` → `ref`,
  *   `useRef` → `shallowRef`, `useMemo` → `computed`, `useCallback` → a plain
  *   `const`, a custom `use*` composable → a verbatim setup `const`),
- * - `useEffect` calls, routed through the generated `mpEffect` helper,
+ * - `useEffect` calls, lowered to Vue-native watcher and lifecycle APIs,
  * - every remaining derived statement, which the template path lifts into a
  *   reactive `computed` (or keeps as a plain `const` for handlers).
  *
@@ -382,6 +382,7 @@ function createScope(
   );
   const scope: VueScope = {
     propsParameterName,
+    localNames: new Set(),
     destructuredProps,
     propAliases,
     stateNames,
@@ -429,11 +430,12 @@ export interface AnalyseBodyOptions {
   readonly computedAliases?: ReadonlyMap<string, string>;
 }
 
-/** The `mpEffect(…)` line for one `useEffect` call. */
+/** The native Vue lifecycle line(s) for one `useEffect` call. */
 function emitEffect(
   effect: EffectIntention | undefined,
   statementText: string,
   scope: VueScope,
+  index: number,
 ): string {
   const argumentTexts =
     effect === undefined
@@ -451,9 +453,34 @@ function emitEffect(
     return "";
   }
   const callbackText = rewriteExpression(callback, scope);
-  return dependencies === undefined
-    ? `mpEffect(${callbackText});`
-    : `mpEffect(${callbackText}, () => ${rewriteExpression(dependencies, scope)});`;
+  const cleanup =
+    effect?.cleanup === undefined
+      ? undefined
+      : rewriteExpression(effect.cleanup.text, scope);
+  const invoke =
+    cleanup === undefined
+      ? `(${callbackText})();`
+      : `const result = (${callbackText})(); if (typeof result === "function") onCleanup(result); else onCleanup(${cleanup});`;
+  if (dependencies === undefined) {
+    return cleanup === undefined
+      ? `watchEffect(${callbackText});`
+      : `watchEffect((onCleanup) => { ${invoke} });`;
+  }
+  if (dependencies.replace(/\s/g, "") === "[]") {
+    if (cleanup === undefined) {
+      return `onMounted(${callbackText});`;
+    }
+    const cleanupName = `__vueCleanup${index}`;
+    return [
+      `let ${cleanupName}: (() => void) | undefined;`,
+      `onMounted(() => { const result = (${callbackText})(); ${cleanupName} = typeof result === "function" ? result : ${cleanup}; });`,
+      `onUnmounted(() => ${cleanupName}?.());`,
+    ].join("\n");
+  }
+  const source = rewriteExpression(dependencies, scope);
+  return cleanup === undefined
+    ? `watch(() => ${source}, ${callbackText}, { immediate: true });`
+    : `watch(() => ${source}, (_value, _oldValue, onCleanup) => { ${invoke} }, { immediate: true });`;
 }
 
 /**
@@ -545,7 +572,12 @@ export function analyseComponentBody(
     if (statement.statementKind === "expression") {
       const callee = calleeName(text);
       if (callee === "useEffect") {
-        const line = emitEffect(intentions.effects[effectIndex], text, scope);
+        const line = emitEffect(
+          intentions.effects[effectIndex],
+          text,
+          scope,
+          effectIndex,
+        );
         effectIndex += 1;
         if (line.length > 0) {
           setupLines.push(line);

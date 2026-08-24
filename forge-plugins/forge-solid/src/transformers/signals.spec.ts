@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { lowerReactiveCalls, rewriteGetterReads } from "./signals.js";
 
 /** The reactive bindings the fragments below are rewritten against. */
-const GETTERS: ReadonlySet<string> = new Set(["open", "total"]);
+const GETTERS: ReadonlySet<string> = new Set(["open", "total", "count"]);
 
 /** Create a fresh primitive-usage record for a lowering assertion. */
 function primitiveUsage(): Parameters<typeof lowerReactiveCalls>[1] {
@@ -114,6 +114,40 @@ describe("rewriteGetterReads", () => {
 });
 
 describe("lowerReactiveCalls", () => {
+  it("does not inject dependency expressions into an effect callback", () => {
+    const usage = primitiveUsage();
+
+    expect(
+      rewrite(
+        lowerReactiveCalls("useEffect(() => { report(); }, [count]);", usage),
+      ),
+    ).toBe("createEffect(() => { report(); });");
+  });
+
+  it("preserves native reactive reads in an effect callback", () => {
+    const usage = primitiveUsage();
+
+    expect(
+      rewrite(
+        lowerReactiveCalls(
+          "useEffect(() => { report(count); }, [other]);",
+          usage,
+        ),
+      ),
+    ).toBe("createEffect(() => { report(count()); });");
+  });
+
+  it("registers an effect cleanup with Solid teardown", () => {
+    const usage = primitiveUsage();
+
+    expect(
+      lowerReactiveCalls(
+        "useEffect(() => { subscribe(); return () => unsubscribe(); }, []);",
+        usage,
+      ),
+    ).toBe("onMount(() => { subscribe(); onCleanup(() => unsubscribe()); });");
+  });
+
   it("lowers multiline generic useMemo calls", () => {
     const usage = primitiveUsage();
     const lowered = lowerReactiveCalls(

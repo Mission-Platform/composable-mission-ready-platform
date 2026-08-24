@@ -1,5 +1,7 @@
+import { sourceBacked } from "@mission-platform/forge-plugin-api";
 import { describe, expect, it } from "vitest";
 
+import { emitSvelteModule } from "./emitters/component.js";
 import {
   component,
   dynamicNode,
@@ -106,6 +108,76 @@ describe("lowerSvelteModule", () => {
     ]);
     expect(lowered.script.setterNames.get("setCount")).toBe("count");
     expect(lowered.script.refNames.has("hostRef")).toBe(true);
+  });
+
+  it("keeps native effect reads and cleanup teardown", () => {
+    const root = element("div", { selfClosing: true, source: "<div />" });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [
+          statement(
+            "useEffect(() => { subscribe(properties.channel); }, [properties.other]);",
+            "expression",
+          ),
+        ],
+        returned: { expression: root.expression!.text, nodes: [root] },
+      }),
+      effects: [
+        {
+          body: sourceBacked("() => { subscribe(properties.channel); }"),
+          cleanup: sourceBacked("() => unsubscribe()"),
+          dependencies: [sourceBacked("properties.other")],
+        },
+      ],
+    });
+
+    const lowered = plan(module);
+
+    expect(lowered.effects).toEqual([
+      {
+        body: "() => { subscribe(properties.channel); }",
+        cleanup: "() => unsubscribe()",
+        lifecycle: "effect",
+      },
+    ]);
+
+    const emitted = emitSvelteModule(module).code;
+    expect(emitted).toContain(
+      "$effect(() => { subscribe(channel); return () => unsubscribe(); });",
+    );
+    expect(emitted).not.toContain("void other;");
+  });
+
+  it("keeps cleanup as a native onMount return", () => {
+    const root = element("div", { selfClosing: true, source: "<div />" });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [statement("useEffect(() => { mount(); }, []);", "expression")],
+        returned: { expression: root.expression!.text, nodes: [root] },
+      }),
+      effects: [
+        {
+          body: sourceBacked("() => { mount(); }"),
+          cleanup: sourceBacked("() => unmount()"),
+          dependencies: [],
+        },
+      ],
+    });
+
+    expect(plan(module).effects).toEqual([
+      {
+        body: "() => { mount(); }",
+        cleanup: "() => unmount()",
+        lifecycle: "mount",
+      },
+    ]);
+    expect(emitSvelteModule(module).code).toContain(
+      "onMount(() => { mount(); return () => unmount(); });",
+    );
   });
 
   it("keeps normalized prop locals when a properties rest destructure uses throwaway aliases", () => {

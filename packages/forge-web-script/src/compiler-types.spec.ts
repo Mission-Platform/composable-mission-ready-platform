@@ -3,20 +3,46 @@ import { describe, it } from 'vitest';
 
 import { compileForgeWebScript } from './compiler.ts';
 
-function typeCheckGeneratedConsumer(declarations: string): readonly ts.Diagnostic[] {
+function typeCheckGeneratedConsumer(declarations: string, includeRawConsumer = false): readonly ts.Diagnostic[] {
   const root = '/virtual-forge-web-script-types';
+  const rawConsumer = includeRawConsumer
+    ? `
+async function useRawRuntime(): Promise<ForgeWebScriptRawExports> {
+  const imports: ForgeWebScriptRawImports = {};
+  const exports: ForgeWebScriptRawExports = await loadRaw(imports);
+  const syncExports: ForgeWebScriptRawExports = loadRawSync(imports);
+  const currentTime: () => bigint = exports.currentTime;
+  const syncCurrentTime: () => bigint = syncExports.currentTime;
+  const echo: (valuePointer: number, valueLength: number) => ForgeWebScriptBytes = exports.echo;
+  const syncEcho: (valuePointer: number, valueLength: number) => ForgeWebScriptBytes = syncExports.echo;
+  const roundTrip: (valuePointer: number, valueLength: number) => ForgeWebScriptBytes = exports.roundTrip;
+  const scanArray: (values: number) => number = exports.scanArray;
+  void currentTime;
+  void syncCurrentTime;
+  void echo;
+  void syncEcho;
+  void roundTrip;
+  void scanArray;
+  return exports;
+}
+`
+    : '';
   const files = new Map([
     [
       `${root}/consumer.ts`,
       `
 import {
   load,
+  loadRaw,
+  loadRawSync,
   loadSync,
   manifest,
   type ForgeWebScriptBytes,
   type ForgeWebScriptExports,
   type ForgeWebScriptImports,
   type ForgeWebScriptManifest,
+  type ForgeWebScriptRawExports,
+  type ForgeWebScriptRawImports,
 } from 'generated-runtime';
 
 const imports: ForgeWebScriptImports = {
@@ -45,6 +71,8 @@ async function useRuntime(): Promise<bigint> {
   void echo('hello');
   return currentTime();
 }
+
+${rawConsumer}
 
 function inspectManifest(value: ForgeWebScriptManifest): void {
   const format: 'forge-web-script-module' = value.format;
@@ -156,6 +184,8 @@ export fn echo(value: string) -> string { return value; }
     expect(artifact.declarations).toContain('readonly echo: (value: string) => string;');
     expect(artifact.declarations).toContain('readonly memory: WebAssembly.Memory;');
     expect(artifact.declarations).toContain('export interface ForgeWebScriptImports');
+    expect(artifact.declarations).toContain('export interface ForgeWebScriptRawExports');
+    expect(artifact.declarations).toContain('export type ForgeWebScriptRawImports = WebAssembly.Imports;');
     expect(artifact.declarations).toContain('export interface ForgeWebScriptManifest');
     expect(artifact.declarations).toContain('export interface ForgeWebScriptAggregateLayout');
     expect(artifact.declarations).toContain('export const abiManifest: ForgeWebScriptManifest;');
@@ -163,6 +193,12 @@ export fn echo(value: string) -> string { return value; }
     expect(artifact.declarations).toContain('readonly now: () => bigint;');
     expect(artifact.declarations).toContain('load(imports?: ForgeWebScriptImports): Promise<ForgeWebScriptExports>');
     expect(artifact.declarations).toContain('loadSync(imports?: ForgeWebScriptImports): ForgeWebScriptExports');
+    expect(artifact.declarations).toContain(
+      'loadRaw(imports?: ForgeWebScriptRawImports): Promise<ForgeWebScriptRawExports>',
+    );
+    expect(artifact.declarations).toContain(
+      'loadRawSync(imports?: ForgeWebScriptRawImports): ForgeWebScriptRawExports',
+    );
   });
 
   it('generates valid TypeScript that can be parsed and type-checked', () => {
@@ -236,6 +272,32 @@ export fn echo(value: string) -> string { return value; }`,
     expect(artifact.diagnostics).toEqual([]);
     expect(artifact.declarations).toContain('readonly process: (data: ForgeWebScriptBytes) => ForgeWebScriptBytes;');
     expect(artifact.declarations).toContain('readonly echo: (value: string) => string;');
+  });
+
+  it('generates raw pointer signatures for string, bytes, and Array values', () => {
+    const artifact = compileForgeWebScript({
+      source: `import capability "clock.now" as now() -> i64;
+import capability "text.transform" as transform(value: string) -> string;
+import capability "codec.bytes" as reverse(value: bytes) -> bytes;
+export fn currentTime() -> i64 { return now(); }
+export fn process(data: bytes) -> bytes { return data; }
+export fn roundTrip(value: bytes) -> bytes { return value; }
+export fn echo(value: string) -> string { return value; }
+export fn scanArray(values: Array<i32>) -> i32 { return values[0]; }`,
+      fileName: 'raw.fws',
+      compilerVersion: '0.1.0',
+      requestedCapabilities: ['clock.now', 'text.transform', 'codec.bytes'],
+    });
+
+    expect(artifact.diagnostics).toEqual([]);
+    expect(artifact.declarations).toContain(
+      'readonly process: (dataPointer: number, dataLength: number) => ForgeWebScriptBytes;',
+    );
+    expect(artifact.declarations).toContain(
+      'readonly echo: (valuePointer: number, valueLength: number) => ForgeWebScriptBytes;',
+    );
+    expect(artifact.declarations).toContain('readonly scanArray: (values: number) => number;');
+    expect(typeCheckGeneratedConsumer(artifact.declarations, true)).toEqual([]);
   });
 
   it('generates capability imports with nested typed interfaces', () => {

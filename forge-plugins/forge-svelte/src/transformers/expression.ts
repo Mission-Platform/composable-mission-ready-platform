@@ -58,6 +58,24 @@ function endOfIdentifier(text: string, start: number): number {
   return index;
 }
 
+/** Rewrite a React-style functional state update into a Svelte assignment. */
+function functionalSetterValue(
+  argument: string,
+  target: string,
+  scope: SvelteScope,
+): string {
+  const arrow =
+    /^(?:\(\s*([A-Za-z_$][\w$]*)\s*\)|([A-Za-z_$][\w$]*))\s*=>\s*([\s\S]*)$/.exec(
+      argument,
+    );
+  if (arrow === null) {
+    return scopeExpression(argument, scope);
+  }
+  const parameter = arrow[1] ?? arrow[2]!;
+  const body = scopeExpression(arrow[3]!.trim(), scope);
+  return body.replace(new RegExp(`\\b${parameter}\\b`, "g"), target);
+}
+
 /** The index just past the line or block comment opened at `start`. */
 function endOfComment(text: string, start: number): number {
   if (text[start + 1] === "/") {
@@ -241,8 +259,11 @@ export function scopeExpression(text: string, scope: SvelteScope): string {
       const open = skipWhitespace(text, index);
       const close = text[open] === "(" ? endOfCall(text, open) : -1;
       if (close !== -1) {
-        const argument = text.slice(open + 1, close - 1).trim();
-        out += `${setterTarget} = ${argument === "" ? "undefined" : scopeExpression(argument, scope)}`;
+        const argument = text
+          .slice(open + 1, close - 1)
+          .trim()
+          .replace(/,\s*$/, "");
+        out += `${setterTarget} = ${argument === "" ? "undefined" : functionalSetterValue(argument, setterTarget, scope)}`;
         index = close;
         continue;
       }

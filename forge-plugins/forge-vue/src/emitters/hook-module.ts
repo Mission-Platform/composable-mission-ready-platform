@@ -8,9 +8,8 @@
  * - `useState(x)` → a reactive `ref(x)` (its setter calls become `state.value = …`);
  * - `useRef(x)`   → a Vue `shallowRef(x)` (`.current` reads collapse to `.value`);
  * - `useMemo(fn)` → a `computed(fn)`;
- * - `useEffect(fn, deps)` → a single `mpEffect(fn, () => [deps])` call routed
- *   through the generated Vue-only `./mp-effect` helper, shared with the
- *   component emitter.
+ * - `useEffect(fn, deps)` → Vue's native `watch`/`watchEffect`/`onMounted`
+ *   APIs, selected from the dependency form.
  *
  * A composable runs **once** (unlike a re-rendering React component), so the
  * hook translations and every other statement are emitted in source order. A
@@ -23,11 +22,10 @@
  * `../transformers/statements.js`) rather than re-parsing the module.
  */
 import {
-  LOCAL_EFFECT_MODULE,
+  frameworkAdapterModule,
   NEUTRAL_CONTEXT_VALUES,
   NEUTRAL_MODULE,
   NEUTRAL_RUNTIME_VALUES,
-  VUE_ADAPTER_MODULE,
 } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 
 import { constantMemoValue } from "../transformers/constants.js";
@@ -60,9 +58,9 @@ const VUE_RUNTIME_IMPORTS: readonly string[] = [
   "shallowRef",
   "computed",
   "watch",
+  "watchEffect",
   "onMounted",
   "onUnmounted",
-  "onUpdated",
 ];
 
 /** The Vue **type** imports an annotated composable return may reference. */
@@ -70,6 +68,8 @@ const VUE_TYPE_IMPORTS: readonly string[] = ["Ref", "ComputedRef"];
 
 /** The neutral ref type whose Vue equivalent is `Ref` (`MpRef<X>` → `Ref<X>`). */
 const NEUTRAL_REF_TYPE = "MpRef";
+
+const ADAPTER_MODULE = frameworkAdapterModule("vue");
 
 /** Neutral values that remain runtime calls in a plain helper module. */
 const NEUTRAL_HELPER_VALUES: ReadonlySet<string> = new Set([
@@ -237,9 +237,32 @@ function emitStatement(
       return "";
     }
     const callbackText = rewriteExpression(callback, scope);
-    return dependencies === undefined
-      ? `mpEffect(${callbackText});`
-      : `mpEffect(${callbackText}, () => ${rewriteExpression(dependencies, scope)});`;
+    const callbackBody = callbackText.trim();
+    const hasCleanup = (() => {
+      const arrow = indexOfTopLevel(callbackBody, "=>");
+      if (arrow === -1) return false;
+      const body = callbackBody.slice(arrow + 2).trim();
+      return body.startsWith("{") &&
+        body.endsWith("}") &&
+        indexOfTopLevel(body.slice(1, -1), "return") !== -1;
+    })();
+    const invoke = hasCleanup
+      ? `const result = (${callbackText})(); if (typeof result === "function") onCleanup(result);`
+      : `(${callbackText})();`;
+    if (dependencies === undefined) {
+      return hasCleanup
+        ? `watchEffect((onCleanup) => { ${invoke} });`
+        : `watchEffect(${callbackText});`;
+    }
+    if (dependencies.replace(/\s/g, "") === "[]") {
+      return hasCleanup
+        ? `(() => { let cleanup: (() => void) | undefined; onMounted(() => { const result = (${callbackText})(); cleanup = typeof result === "function" ? result : undefined; }); onUnmounted(() => cleanup?.()); })();`
+        : `onMounted(${callbackText});`;
+    }
+    const source = rewriteExpression(dependencies, scope);
+    return hasCleanup
+      ? `watch(() => ${source}, (_value, _oldValue, onCleanup) => { ${invoke} }, { immediate: true });`
+      : `watch(() => ${source}, ${callbackText}, { immediate: true });`;
   }
   return rewriteExpression(statement, scope);
 }
@@ -413,11 +436,6 @@ export function emitVueHookModule(module: SemanticModule): string {
   if (vueImportNames.length > 0) {
     importLines.push(`import { ${vueImportNames.join(", ")} } from 'vue';`);
   }
-  // A composable whose effects were routed through the generalised watcher pulls
-  // `mpEffect` from the generated Vue-only `./mp-effect` helper.
-  if (/\bmpEffect\(/.test(emittedBody)) {
-    importLines.push(`import { mpEffect } from '${LOCAL_EFFECT_MODULE}';`);
-  }
   const neutralTypes: string[] = [];
   const neutralRuntimeValues: string[] = [];
   const contextValues: string[] = [];
@@ -465,7 +483,7 @@ export function emitVueHookModule(module: SemanticModule): string {
   // implementation matching the neutral semantics), mirroring the component emitter.
   if (contextValues.length > 0) {
     importLines.push(
-      `import { ${contextValues.join(", ")} } from '${VUE_ADAPTER_MODULE}';`,
+      `import { ${contextValues.join(", ")} } from '${ADAPTER_MODULE}';`,
     );
   }
 

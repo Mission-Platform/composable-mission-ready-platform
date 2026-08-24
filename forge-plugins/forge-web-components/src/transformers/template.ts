@@ -853,6 +853,27 @@ function domProperties(
   return entries.length === 0 ? "{}" : `{ ${entries.join(", ")} }`;
 }
 
+function domAttributes(
+  node: GenericRenderNode,
+  host:
+    | Readonly<{
+        readonly baseTag?: string;
+        readonly invocation: "is-attribute" | "custom-tag";
+        readonly tagName: string;
+      }>
+    | undefined,
+): readonly GenericAttribute[] {
+  if (host?.invocation !== "is-attribute") return node.attributes;
+  return [
+    {
+      kind: "jsx-attribute",
+      name: "is",
+      value: { kind: "string", value: host.tagName },
+    } as GenericAttribute,
+    ...node.attributes,
+  ];
+}
+
 function domChildExpression(
   child: GenericRenderChild,
   context: TemplateContext,
@@ -948,8 +969,12 @@ function domNodeExpression(
       .filter((value): value is string => value !== undefined)
       .join(", ")})`;
   }
-  const name = tagNameOf(node);
-  return `dynamicElement(${JSON.stringify(name)}, ${domProperties(node.attributes, childContext)}, ${node.children
+  const host = componentHostOf(node, childContext);
+  const name =
+    host?.invocation === "is-attribute"
+      ? (host.baseTag ?? tagNameOf(node))
+      : tagNameOf(node);
+  return `dynamicElement(${JSON.stringify(name)}, ${domProperties(domAttributes(node, host), childContext)}, ${node.children
     .map((child) => domChildExpression(child, childContext))
     .filter((value): value is string => value !== undefined)
     .join(", ")})`;
@@ -984,15 +1009,23 @@ function domStaticNode(
     // nodes so the renderer can insert the `end` anchor and mount updates.
     return parent === undefined ? [anchor] : [];
   }
-  const tag = tagNameOf(node);
+  const host = componentHostOf(node, context);
+  const tag =
+    host?.invocation === "is-attribute"
+      ? (host.baseTag ?? tagNameOf(node))
+      : tagNameOf(node);
   const id = builder.nodeId++;
   const variable = `__mpNode${id}`;
+  const creationOptions =
+    host?.invocation === "is-attribute"
+      ? `, { is: ${JSON.stringify(host.tagName)} }`
+      : "";
   builder.statements.push(
-    `const ${variable} = document.createElement(${JSON.stringify(tag)});`,
+    `const ${variable} = document.createElement(${JSON.stringify(tag)}${creationOptions});`,
   );
   if (parent !== undefined)
     builder.statements.push(`${parent}.append(${variable});`);
-  for (const attribute of node.attributes) {
+  for (const attribute of domAttributes(node, host)) {
     if (attribute.kind === "jsx-spread-attribute") {
       if (attribute.expression !== undefined) {
         const valueId =

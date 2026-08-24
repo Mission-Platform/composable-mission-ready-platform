@@ -214,7 +214,7 @@ export interface CompiledModule {
  * Compile one neutral (or framework-gated) component module to its per-framework
  * source (Stage 1).
  *
- * A leading `"use react";` / `"use vue";` directive is stripped before emitting
+ * A leading `"use <framework>";` directive is stripped before emitting
  * so the marker never leaks into the output; gating a module out of the
  * non-matching framework's build is handled upstream by the discovery step
  * (see {@link moduleTargetsFramework}).

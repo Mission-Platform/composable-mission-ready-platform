@@ -266,6 +266,10 @@ export fn dispatch(state: State, values: [i32; 2]) -> i32 { return values[0]; }
     ]);
     expect(artifact.declarations).toContain('export type State = typeof State[keyof typeof State];');
     expect(artifact.declarations).toContain('values: ArrayLike<number>');
+    expect(artifact.esmSource).toContain('value instanceof Int32Array ? value : arraySnapshot(value)');
+    expect(artifact.esmSource).toContain(
+      'new Uint8Array(wasmExports.memory.buffer, array.pointer + 4, array.values.byteLength).set(',
+    );
 
     const deallocations: Array<[number, number]> = [];
     const generated = await import(
@@ -297,6 +301,7 @@ export fn dispatch(state: State, values: [i32; 2]) -> i32 { return values[0]; }
     };
     for (const exports of [generated.loadSync(), await generated.load()]) {
       expect(exports.dispatch(generated.State.Ready, values)).toBe(10);
+      expect(exports.dispatch(generated.State.Ready, new Int32Array([10, 20]))).toBe(10);
       expect(lengthReads).toBe(lengthReads === 1 ? 1 : 2);
       expect(elementReads).toBe(lengthReads === 1 ? 2 : 4);
     }
@@ -304,7 +309,7 @@ export fn dispatch(state: State, values: [i32; 2]) -> i32 { return values[0]; }
     expect(() => syncExports.dispatch(generated.State.Ready, { length: 1, 0: 1.5 })).toThrow(
       'Array<i32> element at index 0 must be a signed 32-bit integer.',
     );
-    expect(deallocations).toHaveLength(2);
+    expect(deallocations).toHaveLength(4);
     expect(deallocations.every(([, size]) => size === 12)).toBe(true);
   });
 

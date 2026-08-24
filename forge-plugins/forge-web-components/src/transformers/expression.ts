@@ -85,6 +85,24 @@ function customEventNameOf(callbackName: string): string {
   );
 }
 
+/** Rewrite a React-style functional state update into a field assignment. */
+function functionalSetterValue(
+  argument: string,
+  target: string,
+  scope: ElementScope,
+): string {
+  const arrow =
+    /^(?:\(\s*([A-Za-z_$][\w$]*)\s*\)|([A-Za-z_$][\w$]*))\s*=>\s*([\s\S]*)$/.exec(
+      argument,
+    );
+  if (arrow === null) {
+    return rewriteExpressionText(argument, scope);
+  }
+  const parameter = arrow[1] ?? arrow[2]!;
+  const body = rewriteExpressionText(arrow[3]!.trim(), scope);
+  return body.replace(new RegExp(`\\b${parameter}\\b`, "g"), `this.${target}`);
+}
+
 /** Replace callback-prop calls with typed, bubbling custom-event dispatches. */
 function rewriteCustomEventCalls(text: string): string {
   const calls = /\bthis\.(on[A-Z][A-Za-z0-9_]*)\?\.\(/gu;
@@ -615,11 +633,14 @@ function rewriteIdentifier(
   const getter = scope.setters.get(name);
   if (getter !== undefined && next === "(") {
     const close = matchingBracket(text, nextIndex);
-    const argument = text.slice(nextIndex + 1, close).trim();
+    const argument = text
+      .slice(nextIndex + 1, close)
+      .trim()
+      .replace(/,\s*$/, "");
     const value =
       argument.length === 0
         ? "undefined"
-        : rewriteExpressionText(argument, scope);
+        : functionalSetterValue(argument, getter, scope);
     return { text: `this.${getter} = ${value}`, end: close + 1 };
   }
 

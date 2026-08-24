@@ -94,8 +94,12 @@ describe("the generic render-node lowering", () => {
     // Root-level dynamic node-part must return a non-empty `nodes` array so the
     // renderer can insert the end anchor and mount updates.
     expect(source.create).toContain("nodes: [__mpAnchor0]");
-    expect(source.create).toContain('const __mpAnchor0 = document.createComment("mp:0");');
-    expect(source.create).toContain('{ kind: "node", id: 0, start: __mpAnchor0 }');
+    expect(source.create).toContain(
+      'const __mpAnchor0 = document.createComment("mp:0");',
+    );
+    expect(source.create).toContain(
+      '{ kind: "node", id: 0, start: __mpAnchor0 }',
+    );
   });
 
   it("includes root-level Slot dynamic node anchors in DomTemplate blueprint nodes", () => {
@@ -105,8 +109,12 @@ describe("the generic render-node lowering", () => {
     );
 
     expect(source.create).toContain("nodes: [__mpAnchor0]");
-    expect(source.create).toContain('const __mpAnchor0 = document.createComment("mp:0");');
-    expect(source.create).toContain('{ kind: "node", id: 0, start: __mpAnchor0 }');
+    expect(source.create).toContain(
+      'const __mpAnchor0 = document.createComment("mp:0");',
+    );
+    expect(source.create).toContain(
+      '{ kind: "node", id: 0, start: __mpAnchor0 }',
+    );
   });
 
   it("includes root-level fragment expression node anchors in DomTemplate blueprint nodes", () => {
@@ -116,8 +124,12 @@ describe("the generic render-node lowering", () => {
     );
 
     expect(source.create).toContain("nodes: [__mpAnchor0]");
-    expect(source.create).toContain('const __mpAnchor0 = document.createComment("mp:0");');
-    expect(source.create).toContain('{ kind: "node", id: 0, start: __mpAnchor0 }');
+    expect(source.create).toContain(
+      'const __mpAnchor0 = document.createComment("mp:0");',
+    );
+    expect(source.create).toContain(
+      '{ kind: "node", id: 0, start: __mpAnchor0 }',
+    );
   });
 
   it("kebab-cases a component tag and keeps intrinsic elements", () => {
@@ -151,6 +163,22 @@ describe("the generic render-node lowering", () => {
         context,
       ),
     ).toBe("<forge-icon></forge-icon>");
+  });
+
+  it("creates customized-built-in children with the is option", () => {
+    const context: TemplateContext = {
+      ...CONTEXT,
+      componentHosts: new Map([
+        ["forge-card", { baseTag: "div", invocation: "is-attribute" as const }],
+      ]),
+    };
+
+    expect(
+      renderNodeToDomTemplate(
+        element("ForgeCard", { selfClosing: true }),
+        context,
+      ).create,
+    ).toContain('document.createElement("div", { is: "forge-card" })');
   });
 
   it("keeps customized-built-in child spreads valid", () => {
@@ -271,13 +299,16 @@ describe("the generic render-node lowering", () => {
 
   it("keeps static JSX attributes valid inside conditional children", () => {
     const separator = element("span", {
-      source: '<span className={styles[\'separator\']}>:</span>',
+      source: "<span className={styles['separator']}>:</span>",
       attributes: [expressionAttribute("className", "styles['separator']")],
       children: [textChild(":")],
     });
     const node = element("div", {
       children: [
-        expressionChild("showSeconds ? <span className={styles['separator']}>:</span> : undefined", [separator]),
+        expressionChild(
+          "showSeconds ? <span className={styles['separator']}>:</span> : undefined",
+          [separator],
+        ),
       ],
     });
 
@@ -290,13 +321,16 @@ describe("the generic render-node lowering", () => {
 
   it("keeps static JSX attributes valid in conditional direct-DOM children", () => {
     const separator = element("span", {
-      source: '<span className={styles[\'separator\']}>:</span>',
+      source: "<span className={styles['separator']}>:</span>",
       attributes: [expressionAttribute("className", "styles['separator']")],
       children: [textChild(":")],
     });
     const node = element("div", {
       children: [
-        expressionChild("showSeconds ? <span className={styles['separator']}>:</span> : undefined", [separator]),
+        expressionChild(
+          "showSeconds ? <span className={styles['separator']}>:</span> : undefined",
+          [separator],
+        ),
       ],
     });
 

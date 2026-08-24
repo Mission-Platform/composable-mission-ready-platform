@@ -7,6 +7,7 @@
  * per-framework marker components from the Solid adapter subpath, and the
  * framework-agnostic runtime helpers stay on the neutral package.
  */
+import { frameworkAdapterModule } from '@mission-platform/forge-plugin-api/compiler/ast.js';
 
 /** The SolidJS runtime the reactive primitives and the `JSX` types come from. */
 export const SOLID_MODULE = "solid-js";
@@ -17,8 +18,8 @@ export const SOLID_MODULE = "solid-js";
  */
 export const SOLID_HYPERSCRIPT_MODULE = "solid-js/h";
 
-/** The `@mission-platform/forge/solid` subpath the Solid framework components are imported from. */
-export const SOLID_ADAPTER_MODULE = "@mission-platform/forge/solid";
+/** The Forge adapter subpath the Solid framework components are imported from. */
+export const SOLID_ADAPTER_MODULE = frameworkAdapterModule("solid");
 
 /** The i18n package providing the `useI18n()` hook injected for `i18next.t(…)` callers. */
 export const I18N_MODULE = "@mission-platform/i18n";

@@ -24,12 +24,14 @@
  *   type-only re-import of the type names that sibling contributes, while other
  *   relative imports (CSS modules, shared helpers) are preserved,
  * - the native, Lit-free runtime header
- *   (`import { ForgeElement, html, … } from '@mission-platform/forge/web-components'`)
+ *   (`import { ForgeElement, domTemplate, … } from '@mission-platform/forge/web-components'`)
  *   is prepended with exactly the values `plan.runtimeImports` asked for, plus
- *   the inline type imports its annotations need (`PropertyDeclaration`, the
- *   contract the class' `static properties` map is typed with).
+ *   the inline type imports its annotations need (`DomTemplateDefinition`, the
+ *   template contract, and `PropertyDeclaration`, the contract the class'
+ *   `static properties` map is typed with).
  */
 import {
+  frameworkAdapterModule,
   LOCAL_JSX_TYPE_NAMES,
   LOCAL_JSX_TYPES_MODULE,
   NEUTRAL_MODULE,
@@ -52,7 +54,7 @@ import type {
 } from "@mission-platform/forge-plugin-api";
 
 /** The module the native runtime values are imported from. */
-const RUNTIME_MODULE = "@mission-platform/forge/web-components";
+const RUNTIME_MODULE = frameworkAdapterModule("web-components");
 
 /** The neutral element type names the plan re-imports from the local JSX module. */
 const LOCAL_ELEMENT_TYPE_NAMES: ReadonlySet<string> = new Set(

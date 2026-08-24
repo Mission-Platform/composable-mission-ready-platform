@@ -541,22 +541,109 @@ export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
 
 Compatibility defaults used when a generated class does not override policy.
 
-### DomTemplateResult
+### DomDynamicRenderResult
 
-**Kind:** class
+**Kind:** interface
 
 ```typescript
-export class DomTemplateResult
+export interface DomDynamicRenderResult
+```
+
+A runtime-selected direct-DOM element and its children.
+
+### DomRenderResult
+
+**Kind:** type
+
+```typescript
+export type DomRenderResult = DomTemplateRenderResult | DomDynamicRenderResult;
+```
+
+The unified direct-DOM render-result contract.
+
+### domTemplate
+
+**Kind:** function
+
+```typescript
+function domTemplate(definition: DomTemplateDefinition, values: readonly unknown[]): DomTemplateRenderResult
+```
+
+Build a direct-DOM template result from a compiled template definition.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| definition | DomTemplateDefinition |  |
+| values | readonly unknown[] |  |
+
+### DomTemplateBindingPrefix
+
+**Kind:** type
+
+```typescript
+export type DomTemplateBindingPrefix = '' | '?' | '.' | '@' | '~';
+```
+
+Binding prefixes understood by a compiled direct-DOM template.
+
+### DomTemplateBlueprint
+
+**Kind:** interface
+
+```typescript
+export interface DomTemplateBlueprint
+```
+
+The detached DOM skeleton and indexed runtime slots for one template instance.
+
+### DomTemplateDefinition
+
+**Kind:** interface
+
+```typescript
+export interface DomTemplateDefinition
+```
+
+A browser-lazy definition shared by all direct-DOM template results.
+
+### DomTemplatePartDefinition
+
+**Kind:** type
+
+```typescript
+export type DomTemplatePartDefinition = |
+```
+
+A stable definition-time path to a compiled direct-DOM template slot.
+
+### DomTemplateRenderResult
+
+**Kind:** interface
+
+```typescript
+export interface DomTemplateRenderResult
 ```
 
 A direct-DOM generated result with a stable definition identity.
+
+### DomTemplateRuntimePart
+
+**Kind:** type
+
+```typescript
+export type DomTemplateRuntimePart = |
+```
+
+A runtime slot in a detached direct-DOM template blueprint.
 
 ### dynamicElement
 
 **Kind:** function
 
 ```typescript
-function dynamicElement(tag: unknown, properties: Readonly<Record<string, unknown>>, ...children: readonly unknown[]): DynamicElementResult
+function dynamicElement(tag: unknown, properties: Readonly<Record<string, unknown>>, ...children: readonly unknown[]): DomDynamicRenderResult
 ```
 
 Build a native Web-Components element whose tag is selected at runtime.
@@ -568,16 +655,6 @@ Build a native Web-Components element whose tag is selected at runtime.
 | tag | unknown |  |
 | properties | Readonly<Record<string, unknown>> |  |
 | children | readonly unknown[] |  |
-
-### DynamicElementResult
-
-**Kind:** class
-
-```typescript
-export class DynamicElementResult
-```
-
-A runtime-selected element and its children for a computed JSX tag.
 
 ### ForgeElement
 
@@ -593,8 +670,8 @@ dependency-free stand-in for `LitElement`.
 A subclass declares its reactive surface via `static properties` (mirroring
 Lit): each key becomes a prototype accessor whose setter schedules a
 microtask re-render, and each non-`state` key observes its lower-cased
-attribute. `render()` returns the element's {@link html}`…` template, rendered
-into an open shadow root. Reactive commits update the existing template
+attribute. `render()` returns the element's direct-DOM result, rendered into
+an open shadow root. Reactive commits update the existing direct-DOM result
 incrementally: positional lists reuse compatible entries, and slot outlets
 retain their native projection nodes while unrelated parts change.
 
@@ -739,6 +816,25 @@ export class HtmlContentResult
 
 A native host plus trusted raw child markup, rendered by {@link render}.
 
+### memoize
+
+**Kind:** function
+
+```typescript
+function memoize(factory: () => T, dependencies?: () => readonly unknown[]): () => T
+```
+
+Lazily cache a value for an element instance while its explicit dependencies
+remain `Object.is`-equal. An omitted dependency supplier intentionally keeps
+the neutral getter semantics and recomputes on every read.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| factory | () => T |  |
+| dependencies | () => readonly unknown[] |  |
+
 ### nothing
 
 **Kind:** constant
@@ -776,7 +872,7 @@ A trusted raw-HTML value used by the native Web-Components adapter.
 **Kind:** function
 
 ```typescript
-function render(result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult, container: ParentNode): void
+function render(result: TemplateResult | DomRenderResult | HtmlContentResult, container: ParentNode): void
 ```
 
 Render a result into `container` using a persistent template instance. Static
@@ -787,7 +883,7 @@ updated; incompatible template kinds replace the renderer-owned content.
 
 | Name | Type | Description |
 | --- | --- | --- |
-| result | TemplateResult \| DomTemplateResult \| DynamicElementResult \| HtmlContentResult |  |
+| result | TemplateResult \| DomRenderResult \| HtmlContentResult |  |
 | container | ParentNode |  |
 
 ### resolveForgeSlotMarkers

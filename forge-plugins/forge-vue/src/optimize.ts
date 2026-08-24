@@ -66,8 +66,14 @@ function requiredImports(plan: VueLoweredModule): Set<string> {
     required.add("computed");
   }
   for (const watcher of plan.watchers) {
-    required.add(watcher.runsOnce ? "onMounted" : "watchEffect");
-    if (watcher.cleanupText !== undefined) {
+    if (watcher.runsOnce) {
+      required.add("onMounted");
+    } else if (watcher.dependencies === undefined) {
+      required.add("watchEffect");
+    } else {
+      required.add("watch");
+    }
+    if (watcher.runsOnce && watcher.cleanupText !== undefined) {
       required.add("onUnmounted");
     }
   }

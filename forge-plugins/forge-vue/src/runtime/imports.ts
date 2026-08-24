@@ -17,12 +17,14 @@
  * render the `<script setup>` compiler macros from the derived props surface.
  */
 import {
+  frameworkAdapterModule,
   LOCAL_JSX_TYPES_MODULE,
   NEUTRAL_MODULE,
-  VUE_ADAPTER_MODULE,
   VUE_LOCAL_JSX_TYPE_NAMES,
   type StyleImport,
 } from "@mission-platform/forge-plugin-api/compiler/ast.js";
+
+const ADAPTER_MODULE = frameworkAdapterModule("vue");
 
 import type {
   VueEventSignature,
@@ -253,7 +255,7 @@ export function buildImports(
   // semantics (React imports them straight from `react`).
   if (vueAdapterValues.length > 0) {
     lines.push(
-      `import { ${[...vueAdapterValues].toSorted().join(", ")} } from '${VUE_ADAPTER_MODULE}';`,
+      `import { ${[...vueAdapterValues].toSorted().join(", ")} } from '${ADAPTER_MODULE}';`,
     );
   }
   for (const componentImport of componentImports) {

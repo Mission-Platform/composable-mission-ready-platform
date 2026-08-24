@@ -354,7 +354,7 @@ describe('Stage-2 — Svelte keyed each + constant memo', () => {
 });
 
 describe('Stage-2 — Web Components static template hoist', () => {
-  it('hoists a fully-static root to a module-level `html` template constant', () => {
+  it('hoists a fully-static root to a module-level direct-DOM definition', () => {
     const source = [
       "import { h, type MpElement } from '@mission-platform/forge';",
       'export function ForgeIcon(): MpElement {',
@@ -365,10 +365,11 @@ describe('Stage-2 — Web Components static template hoist', () => {
       framework: 'web-components',
       componentName: 'ForgeIcon',
     });
-    expect(code).toContain('const __mpStaticTpl_0 = html`');
-    expect(code).toContain('return __mpStaticTpl_0;');
-    // Marker attribute must not appear as a lit attribute (name may still be a
-    // prefix of the hoist binding `__mpStaticTpl_0`).
+    expect(code).toContain('const __mpDomDefinition: DomTemplateDefinition =');
+    expect(code).toContain('document.createElement("span")');
+    expect(code).toContain('createTextNode("★")');
+    expect(code).toContain('return domTemplate(__mpDomDefinition, []);');
+    // Marker attribute must not appear in the generated DOM definition.
     expect(code).not.toMatch(new RegExp(`${MP_STATIC_ATTR}[=\\s>]`));
   });
 });
@@ -463,7 +464,7 @@ describe('optimisations do not break previously-supported constructs', () => {
     const vue = compileHookModule(EFFECT_HOOK, { framework: 'vue' });
     expect(react.code).toContain('useEffect');
     expect(react.code).toContain('clearInterval');
-    expect(vue.code).toContain('mpEffect');
+    expect(vue.code).toContain('watch(');
     expect(vue.code).toContain('clearInterval');
   });
 

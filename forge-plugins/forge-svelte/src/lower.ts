@@ -357,16 +357,24 @@ function statementFragments(statement: GenericStatement): string[] {
 function fragmentsWithin(
   text: string,
   statement: GenericStatement,
+  additional: readonly GenericRenderNode[] = [],
 ): GenericRenderNode[] {
-  return statement.renderNodes.filter(
+  return [...new Set([...statement.renderNodes, ...additional])].filter(
     (node) =>
       node.expression !== undefined && text.includes(node.expression.text),
   );
 }
 
 /** Whether a sub-expression of a statement contains literal markup. */
-function containsMarkup(text: string, statement: GenericStatement): boolean {
-  return fragmentsWithin(text, statement).length > 0;
+function containsMarkup(
+  text: string,
+  statement: GenericStatement,
+  additional: readonly GenericRenderNode[] = [],
+): boolean {
+  return (
+    fragmentsWithin(text, statement, additional).length > 0 ||
+    /<\s*[A-Za-z][\w.-]*(?:\s|\/?>)/.test(text)
+  );
 }
 
 /** Split a helper block at top-level semicolons and completed control blocks. */
@@ -1125,6 +1133,7 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
   const bindings: SvelteBindingPlan[] = [];
   const derived: SvelteDerivedPlan[] = [];
   const effects: SvelteEffectPlan[] = [];
+  let effectIndex = 0;
   const setupStatements: string[] = [];
   const initializationOrder: SvelteInitializationPlan[] = [];
   const pushSetupStatement = (text: string): void => {
@@ -1140,6 +1149,7 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
     ir.intentions.refs.map((entry) => [entry.name, entry]),
   );
   let finalReturn: SvelteReturnPlan | undefined;
+  const allRenderNodes = body.flatMap((statement) => statement.renderNodes);
 
   for (const statement of body) {
     const text = statement.text.text;
@@ -1188,10 +1198,14 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
           );
         if (leadingDeclarations.length === leading.length) {
           for (const entry of leadingDeclarations) {
-            if (containsMarkup(entry.initializer, statement)) {
+            if (containsMarkup(entry.initializer, statement, allRenderNodes)) {
               jsxConstants.set(entry.binding, {
                 text: entry.initializer,
-                nodes: fragmentsWithin(entry.initializer, statement),
+                nodes: fragmentsWithin(
+                  entry.initializer,
+                  statement,
+                  allRenderNodes,
+                ),
               });
             } else {
               pushSetupStatement(
@@ -1365,10 +1379,10 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
 
           // A local computed **from** JSX has no script form: every template
           // read substitutes (and converts) its initializer instead.
-          if (containsMarkup(initializer, statement)) {
+          if (containsMarkup(initializer, statement, allRenderNodes)) {
             jsxConstants.set(name, {
               text: initializer,
-              nodes: fragmentsWithin(initializer, statement),
+              nodes: fragmentsWithin(initializer, statement, allRenderNodes),
             });
             continue;
           }
@@ -1417,13 +1431,24 @@ function analyzeComponent(ir: SemanticModule): ScriptAnalysis {
       fragments,
     );
     if (effectArguments?.[0] !== undefined) {
-      const dependencies = effectArguments[1];
+      const intention = ir.intentions.effects[effectIndex];
+      effectIndex += 1;
+      const dependencies =
+        intention?.dependencies?.map((dependency) => dependency.text) ??
+        effectArguments[1];
       effects.push({
-        body: effectArguments[0],
-        lifecycle:
-          dependencies !== undefined && dependencies.replace(/\s/g, "") === "[]"
-            ? "mount"
-            : "effect",
+        body: intention?.body.text ?? effectArguments[0],
+        ...(intention?.cleanup === undefined
+          ? {}
+          : { cleanup: intention.cleanup.text }),
+        lifecycle: (
+          Array.isArray(dependencies)
+            ? dependencies.length === 0
+            : dependencies !== undefined &&
+              dependencies.replace(/\s/g, "") === "[]"
+        )
+          ? "mount"
+          : "effect",
       });
       continue;
     }

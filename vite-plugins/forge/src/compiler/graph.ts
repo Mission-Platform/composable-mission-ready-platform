@@ -7,6 +7,7 @@ import ts from 'typescript';
 import { parseOxcModule, type OxcParsedModule } from './oxc.js';
 
 import type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan, inspectForgeModule } from './ast.js';
+import type { JsxFramework } from '@mission-platform/forge-plugin-api';
 
 export type { ForgeExportFact, ForgeImportFact, ForgeSourceSpan } from './ast.js';
 
@@ -21,7 +22,7 @@ export interface ForgeFileNode {
   readonly exports: readonly ForgeExportFact[];
   readonly imports: readonly ForgeImportFact[];
   readonly sourceRelativePath: string;
-  readonly frameworkDirective: 'react' | 'vue' | undefined;
+  readonly frameworkDirective: JsxFramework | undefined;
 }
 
 export type ForgeFileEdgeRelation = 'import' | 're-export' | 'type-export' | 'style' | 'side-effect';

@@ -33,16 +33,6 @@ export const CLASS_NAME_ATTRIBUTE
 
 No description provided.
 
-### COMPONENTS_JSX_MODULES
-
-**Kind:** constant
-
-```typescript
-export const COMPONENTS_JSX_MODULES
-```
-
-No description provided.
-
 ### eventNameForProperty
 
 **Kind:** function
@@ -59,15 +49,37 @@ Derive the event name represented by a Vue-style `on<Event>` prop.
 | --- | --- | --- |
 | propertyName | string |  |
 
-### ICONS_JSX_MODULE
+### frameworkAdapterModule
 
-**Kind:** constant
+**Kind:** function
 
 ```typescript
-export const ICONS_JSX_MODULE
+function frameworkAdapterModule(framework: JsxFramework): string
 ```
 
-No description provided.
+Derive the Forge adapter/runtime module for any built-in target framework.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| framework | JsxFramework |  |
+
+### frameworkForDirective
+
+**Kind:** function
+
+```typescript
+function frameworkForDirective(directive: string): JsxFramework | undefined
+```
+
+Resolve a leading `use <framework>` directive for any built-in target.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| directive | string |  |
 
 ### JSX_ATTRIBUTE_RENAMES
 
@@ -75,26 +87,6 @@ No description provided.
 
 ```typescript
 export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
-```
-
-No description provided.
-
-### LOCAL_EFFECT_FILE
-
-**Kind:** constant
-
-```typescript
-export const LOCAL_EFFECT_FILE
-```
-
-No description provided.
-
-### LOCAL_EFFECT_MODULE
-
-**Kind:** constant
-
-```typescript
-export const LOCAL_EFFECT_MODULE
 ```
 
 No description provided.
@@ -128,22 +120,6 @@ export const LOCAL_JSX_TYPES_MODULE
 ```
 
 No description provided.
-
-### localEffectModuleSource
-
-**Kind:** function
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string
-```
-
-Emit the shared Vue effect helper; other targets do not need this file.
-
-#### Parameters
-
-| Name | Type | Description |
-| --- | --- | --- |
-| framework | JsxFramework |  |
 
 ### localJsxTypesModuleSource
 
@@ -221,16 +197,6 @@ export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
 
 No description provided.
 
-### REACT_ADAPTER_MODULE
-
-**Kind:** constant
-
-```typescript
-export const REACT_ADAPTER_MODULE
-```
-
-No description provided.
-
 ### REACT_TYPE_ALIASES
 
 **Kind:** constant
@@ -260,16 +226,6 @@ export interface StyleImport
 ```
 
 A stylesheet import carried into a generated flat tree.
-
-### VUE_ADAPTER_MODULE
-
-**Kind:** constant
-
-```typescript
-export const VUE_ADAPTER_MODULE
-```
-
-No description provided.
 
 ### VUE_BUILTIN_COMPONENTS
 

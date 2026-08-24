@@ -310,7 +310,9 @@ describe('generateFrameworkSources', () => {
       });
 
       const generatedPanel = readFileSync(path.join(outDir, 'components', 'forge-panel', 'forge-panel.ts'), 'utf8');
-      expect(generatedPanel).toContain('<div is="forge-card"></div>');
+      expect(generatedPanel).toContain('document.createElement("div", { is: "forge-card" })');
+      expect(generatedPanel).toContain('setAttribute("is", "forge-card")');
+      expect(generatedPanel).not.toContain('document.createElement("forge-card")');
       expect(generatedPanel).not.toContain('<forge-card></forge-card>');
     } finally {
       rmSync(packageDir, { recursive: true, force: true });

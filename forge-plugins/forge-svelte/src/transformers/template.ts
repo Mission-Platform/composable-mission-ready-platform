@@ -553,7 +553,10 @@ export function renderNode(
   }
   const tag = renderNodeTagName(node);
   if (tag === SLOT_TAG) {
-    return renderSnippet(slotName(node));
+    return renderSnippet(
+      slotName(node),
+      renderChildren(node.children, context),
+    );
   }
   if (tag === DYNAMIC_TAG) {
     return dynamicMarkup(node, context);
@@ -751,6 +754,7 @@ function eachBlock(
   const constants: string[] = [];
   let blockConstants: readonly { name: string; value: string }[] = [];
   let returned = callback.body;
+  let templateContext = context;
   if (callback.body.startsWith("{")) {
     // A block-bodied callback lifts its leading `const`s to Svelte `{@const}`s
     // inside the block; any other statement shape falls back to a plain hole.
@@ -759,24 +763,36 @@ function eachBlock(
       return undefined;
     }
     blockConstants = statements.constants;
-    for (const constant of statements.constants) {
-      constants.push(
-        `{@const ${constant.name} = ${scopeExpression(constant.value, context.scope)}}`,
-      );
-    }
     returned = statements.returned;
+    const markupConstants = new Map(context.jsxConstants);
+    for (const constant of statements.constants) {
+      const containsMarkup =
+        nodesWithin(constant.value, nodes).length > 0 ||
+        /<\s*[A-Za-z][\w.-]*(?:\s|\/?>)/.test(constant.value);
+      if (containsMarkup) {
+        markupConstants.set(constant.name, {
+          text: constant.value,
+          nodes: nodesWithin(constant.value, nodes),
+        });
+      } else {
+        constants.push(
+          `{@const ${constant.name} = ${scopeExpression(constant.value, context.scope)}}`,
+        );
+      }
+    }
+    templateContext = { ...context, jsxConstants: markupConstants };
   }
   if (
-    !templateYieldsMarkup(returned, nodes, context, visited) &&
+    !templateYieldsMarkup(returned, nodes, templateContext, visited) &&
     stripParentheses(returned) !== "null"
   ) {
     return undefined;
   }
-  const key = listKey(list, returned, nodes, context, blockConstants);
+  const key = listKey(list, returned, nodes, templateContext, blockConstants);
   const binding =
     indexName === undefined ? itemName : `${itemName}, ${indexName}`;
   const suffix = key === undefined ? "" : ` (${key})`;
-  const markup = branch(returned, nodes, context, visited);
+  const markup = branch(returned, nodes, templateContext, visited);
   // An optional-chained iteration (`tokens?.map(…)`) renders nothing when the
   // list is absent; `{#each}` needs an array either way, so the nullish source
   // falls back to an empty one.

@@ -7,6 +7,7 @@ import { renderToString } from 'vue/server-renderer';
 import { toReactComponent } from './adapters/react';
 import { toVueComponent } from './adapters/vue';
 import { Fragment, h, HtmlContent, isMpElement, type MpComponent, Slot } from './runtime';
+import { jsx, jsxs } from './runtime/jsx-runtime';
 
 const HostTree: MpComponent = () => h('div', { class: 'x', id: 'y' }, 'hi');
 // A component whose `className` array/object forms collapse to a `class` string.
@@ -69,6 +70,18 @@ describe('@mission-platform/forge runtime', () => {
     const element = h('ul', undefined, [h('li', undefined, 'a'), h('li', undefined, 'b')], undefined, false);
 
     expect(element.children).toHaveLength(2);
+  });
+
+  it('builds the same neutral tree through the automatic JSX runtime', () => {
+    const child = jsx('span', { children: 'text' });
+    const element = jsxs('div', { class: 'root', children: [child, false, 'tail'] }, 'entry');
+
+    expect(element).toEqual({
+      __mpElement: true,
+      type: 'div',
+      properties: { class: 'root', key: 'entry' },
+      children: [child, 'tail'],
+    });
   });
 });
 

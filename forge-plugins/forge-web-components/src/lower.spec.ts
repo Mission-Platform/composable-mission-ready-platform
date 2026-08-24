@@ -571,7 +571,7 @@ describe("the Web-Components lowering phase", () => {
         callback: "connectedCallback",
         callsSuper: true,
         statements: [
-          "this.__mpCleanup0 = (() => { start(); })();",
+          'this.__mpCleanup0 = (() => { const result = (() => { start(); })(); return typeof result === "function" ? result : () => stop(); })()',
           "(() => { warmUp(); })();",
         ],
       },
@@ -589,10 +589,33 @@ describe("the Web-Components lowering phase", () => {
         statements: [
           "this.__mpCleanup0?.();",
           "this.__mpCleanup0 = undefined;",
-          "this.__mpCleanup0 = (() => { start(); })();",
+          'this.__mpCleanup0 = (() => { const result = (() => { start(); })(); return typeof result === "function" ? result : () => stop(); })()',
           "(() => { warmUp(); })();",
         ],
       },
+    ]);
+  });
+
+  it("keeps mount-only effects out of later updates and snapshots dependencies once", () => {
+    const plan = lower(
+      hostModule({
+        effects: [
+          effect("() => { mount(); }", "() => unmount()", []),
+          effect("() => { refresh(); }", undefined, ["version"]),
+        ],
+        props: [prop("version", "number")],
+      }),
+    );
+
+    const updated = plan.lifecycle.find(
+      (hook) => hook.callback === "updatedCallback",
+    );
+    expect(updated?.statements).toEqual([
+      "const nextDeps1 = [this.version];",
+      "if (!this.__mpEffectDeps1?.every((value, index) => Object.is(value, nextDeps1[index]))) {",
+      "  this.__mpEffectDeps1 = nextDeps1;",
+      "  (() => { refresh(); })();",
+      "}",
     ]);
   });
 
@@ -658,19 +681,22 @@ describe("the Web-Components lowering phase", () => {
     // The direct-DOM result and `nothing` are structural; compatibility `html`
     // is imported only when retained legacy code reaches for it.
     expect(plain.runtimeImports).toEqual({
-      values: ["ForgeElement", "DomTemplateResult", "nothing"],
-      types: [],
+      values: ["ForgeElement", "domTemplate", "nothing"],
+      types: ["DomTemplateDefinition"],
       localTypes: [],
     });
     expect(conditional.runtimeImports.values).toEqual([
       "ForgeElement",
-      "DomTemplateResult",
+      "domTemplate",
       "dynamicElement",
       "nothing",
     ]);
     // The `static properties` map is annotated with the runtime's own
     // contract, so its type rides the same header whenever the map is emitted.
-    expect(conditional.runtimeImports.types).toEqual(["PropertyDeclaration"]);
+    expect(conditional.runtimeImports.types).toEqual([
+      "DomTemplateDefinition",
+      "PropertyDeclaration",
+    ]);
   });
 
   it("reports the local JSX types a retained declaration still references", () => {

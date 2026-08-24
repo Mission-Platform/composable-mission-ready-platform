@@ -7,6 +7,8 @@ export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY =
   "forge-web-script-declarations";
 /** Query that returns the compiled Wasm bytes as the module default export. */
 export const FORGE_WEB_SCRIPT_WASM_QUERY = "forge-web-script-wasm";
+/** Query that returns all compiled artifact data from one graph compilation. */
+export const FORGE_WEB_SCRIPT_ARTIFACT_QUERY = "forge-web-script-artifact";
 /** Query that returns generated WAT, including branch-table lowering, as a string. */
 export const FORGE_WEB_SCRIPT_WAT_QUERY = "forge-web-script-wat";
 /** Query that returns the generated source map as the module default export. */
@@ -42,6 +44,7 @@ export function createForgeWebScriptDeclarationsSource(
   compiled: ForgeWebScriptCompiledModule,
 ): string {
   const graphMetadata = {
+    contentHash: compiled.artifact.contentHash,
     graphHash: compiled.artifact.graphHash,
     linkMode: compiled.artifact.linkMode,
     linkedModules: compiled.artifact.linkedModules,
@@ -59,6 +62,26 @@ export function createForgeWebScriptWasmSource(
   if (compiled.artifact.wasm === undefined)
     throw new Error("Cannot generate WASM for an unsuccessful compilation.");
   return `const wasm = Uint8Array.from([${[...compiled.artifact.wasm].join(",")}]);\nexport default wasm;\n`;
+}
+
+/** Generate one self-contained module for build-time artifact embedding. */
+export function createForgeWebScriptArtifactSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string {
+  if (compiled.artifact.wasm === undefined)
+    throw new Error(
+      "Cannot generate an artifact for an unsuccessful compilation.",
+    );
+  const manifest = compiled.artifact.manifest;
+  if (manifest === undefined)
+    throw new Error("Cannot generate an artifact without an ABI manifest.");
+  const graphMetadata = {
+    contentHash: compiled.artifact.contentHash,
+    graphHash: compiled.artifact.graphHash,
+    linkMode: compiled.artifact.linkMode,
+    linkedModules: compiled.artifact.linkedModules,
+  };
+  return `const wasm = Uint8Array.from([${[...compiled.artifact.wasm].join(",")}]);\nconst manifest = ${JSON.stringify(manifest)};\nconst declarations = ${JSON.stringify(compiled.artifact.declarations)};\nconst graphMetadata = ${JSON.stringify(graphMetadata)};\nexport { wasm, manifest, declarations, graphMetadata };\n`;
 }
 
 /**

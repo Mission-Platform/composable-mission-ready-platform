@@ -154,7 +154,7 @@ describe('Vue template render-safety audit (no template throws out of its render
 
   it('discovers the component library', () => {
     const discovered = new Set(components.map(({ name }) => name));
-    expect(components.length).toBe(45);
+    expect(components.length).toBe(46);
     expect(DISCOVERY_SENTINELS.every((name) => discovered.has(name))).toBe(true);
   });
 

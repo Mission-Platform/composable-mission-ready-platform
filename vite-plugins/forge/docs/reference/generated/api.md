@@ -133,23 +133,6 @@ export interface ComponentImport
 
 A relative import of a sibling component, e.g. `import { ForgeBadge } from '../forge-badge'`.
 
-### COMPONENTS_JSX_MODULES
-
-**Kind:** constant
-
-```typescript
-export const COMPONENTS_JSX_MODULES
-```
-
-The write-once **component-library** workspace packages: like
-`@mission-platform/icons`, neutral authors import their components from these
-packages (e.g. `ForgeDrawer` from `@mission-platform/components/forge-drawer`, or
-`ForgeVerticalLayout` from `@mission-platform/layouts`), which type-check
-against the neutral source and render through the `@mission-platform/forge`
-adapters in unit tests. The generated per-framework sources import them under
-the very same bare specifier — framework selection happens through each
-package's `mp:<framework>` export condition, not through a subpath.
-
 ### createReactHasSlotExpression
 
 **Kind:** function
@@ -564,23 +547,6 @@ Whether any of a parent's children carries a `slot="…"` marker.
 | --- | --- | --- |
 | children | readonly ts.JsxChild[] |  |
 
-### ICONS_JSX_MODULE
-
-**Kind:** constant
-
-```typescript
-export const ICONS_JSX_MODULE
-```
-
-The bare specifier of the write-once icon library `@mission-platform/icons`.
-Neutral authors import their icons from this root, and the generated
-per-framework sources keep that exact specifier: every framework-split
-`@mission-platform/*` package declares `mp:vue` / `mp:react` / `mp:solid` /
-`mp:web-component` custom export conditions on its bare `.` entry, so the
-*consumer's* `resolve.conditions` (and the matching
-`customConditions` tsconfig preset) select the right build. There is no
-per-framework subpath to remap to.
-
 ### inspectForgeModule
 
 **Kind:** function
@@ -721,26 +687,6 @@ to the HTML spelling Vue's JSX intrinsic-element types expect. Vue types the
 `<td>`/`<th>` span attributes as `colspan`/`rowspan` (not React's `colSpan`/
 `rowSpan`), so the render-closure JSX would otherwise fail to type-check.
 
-### LOCAL_EFFECT_FILE
-
-**Kind:** constant
-
-```typescript
-export const LOCAL_EFFECT_FILE
-```
-
-The file name (with extension) the local effect helper module is written as in the flat generated tree.
-
-### LOCAL_EFFECT_MODULE
-
-**Kind:** constant
-
-```typescript
-export const LOCAL_EFFECT_MODULE
-```
-
-The relative specifier the generated Vue {@link LOCAL_EFFECT_MODULE} is imported under.
-
 ### LOCAL_JSX_TYPE_NAMES
 
 **Kind:** constant
@@ -782,37 +728,6 @@ export const LOCAL_JSX_TYPES_MODULE
 ```
 
 The relative specifier the generated per-framework {@link LOCAL_JSX_TYPES_MODULE} is imported under.
-
-### localEffectModuleSource
-
-**Kind:** function
-
-```typescript
-function localEffectModuleSource(framework: JsxFramework): string
-```
-
-The source of the co-located {@link LOCAL_EFFECT_MODULE} for a target
-framework, generated once per output tree exactly like the local JSX-types
-module (see {@link localJsxTypesModuleSource}).
-
-It centralises the Vue emitter's `useEffect` → lifecycle translation in a
-single generalised watcher (`mpEffect`) built on Vue's native
-`watch`/`onMounted`/`onUpdated`/`onUnmounted`, so each component's `setup`
-shrinks to a single `mpEffect(callback, () => [deps])` call instead of the
-inlined per-effect lifecycle block. The semantics mirror React's
-`useEffect(callback, deps?)`: run once after mount, re-run when a dependency
-changes (or after every update when deps are omitted), and run the returned
-cleanup before each re-run and on unmount.
-
-The helper is **Vue-only**: the React emitter keeps emitting `useEffect(…)`
-verbatim (React's native form), so for `framework === 'react'` this returns an
-empty string and the writer skips it.
-
-#### Parameters
-
-| Name | Type | Description |
-| --- | --- | --- |
-| framework | JsxFramework |  |
 
 ### localJsxTypesModuleSource
 
@@ -905,28 +820,6 @@ React's own (`createContext`/`useContext`), so they fall through to the
 `react` value import; on Vue their import is remapped to the
 `@mission-platform/forge/vue` adapter (a `provide`/`inject`-backed
 `createContext`/`useContext`).
-
-### NEUTRAL_FRAMEWORK_COMPONENTS
-
-**Kind:** constant
-
-```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
-```
-
-Neutral **value** imports that are real, per-framework **components** rather
-than markers, runtime utilities, or React's own primitives. Their JSX usage
-is left untouched (they stay a component tag), but their
-`import { … } from '@mission-platform/forge'` is remapped to the target
-framework's native implementation: `Teleport` (the portal primitive) becomes
-`import { Teleport } from '@mission-platform/forge/react'` (a `createPortal`
-wrapper) for React and `import { Teleport } from 'vue'` (the built-in) for Vue;
-`Transition` (the enter/leave primitive) becomes the
-`@mission-platform/forge/react` CSS-class driver for React and the built-in
-`import { Transition } from 'vue'` for Vue; `TransitionGroup` (the list
-enter/leave/move primitive) is remapped the same way (the
-`@mission-platform/forge/react` group driver for React, the built-in
-`import { TransitionGroup } from 'vue'` for Vue).
 
 ### NEUTRAL_MODULE
 
@@ -1064,43 +957,6 @@ export interface PropertySignature
 
 A single (own) property of a props interface — its name, declared type text, and optionality.
 
-### REACT_ADAPTER_MODULE
-
-**Kind:** constant
-
-```typescript
-export const REACT_ADAPTER_MODULE
-```
-
-The `@mission-platform/forge/react` subpath the React framework components are imported from.
-
-### REACT_TYPE_ALIASES
-
-**Kind:** constant
-
-```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
-```
-
-Neutral **type** imports that have a first-class React equivalent shipped by
-`react` itself. On the React target these are rewritten to their React name
-(imported `import type { … } from 'react'`) rather than kept as a neutral
-`@mission-platform/forge` type, so React authors see the idiomatic type. Every
-reference to the neutral name in the emitted source is renamed to the mapped
-React name (see the React emitter). The neutral hook/render primitives each
-have an exact React counterpart:
-
-- `MpChild` (the "anything that may render as a child" union) ⇒ React's
-  `ReactNode`.
-- `MpElement` (a node in the neutral virtual tree, the return type of a
-  neutral component) ⇒ React's `ReactElement`, so a compiled component reads
-  as a genuine `(props) => ReactElement` — a valid React function component,
-  which the neutral `MpElement` return type is not.
-- `MpRef<T>` (the `{ current: T }` container returned by `useRef`) ⇒ React's
-  `RefObject<T>`.
-- `MpDependencyList` (an effect/memo dependency array) ⇒ React's
-  `DependencyList`.
-
 ### reactClassNameValue
 
 **Kind:** function
@@ -1179,8 +1035,7 @@ from other workspace/third-party packages (e.g. `@mission-platform/forms-core`,
 source so values referenced by the body, carried-over helpers, or prop
 defaults resolve at runtime. Each entry is the printed `import` statement.
 
-Framework-split workspace packages such as the write-once icon library
-{@link ICONS_JSX_MODULE} are carried verbatim too: each declares an
+Framework-split workspace packages are carried verbatim too: each declares an
 `mp:<framework>` export condition on its bare `.` entry, so the consuming app
 (or Storybook/Vitest config) resolves the matching native build without the
 generated source naming a framework subpath.
@@ -1197,13 +1052,13 @@ generated source naming a framework subpath.
 **Kind:** function
 
 ```typescript
-function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined
+function readFrameworkDirective(fileName: string, source: string): JsxFramework | undefined
 ```
 
 Read a module's `"use <framework>";` directive, if any.
 
 A module may opt into a **framework-specific** implementation by opening with
-a `"use react";` or `"use vue";` directive (mirroring `"use strict"` /
+a `"use <framework>";` directive (mirroring `"use strict"` /
 `"use client"`). This returns the framework the directive pins the module to,
 or `undefined` when the module is framework-neutral (no such directive).
 
@@ -1439,7 +1294,7 @@ The fallback children (arguments after the props) of an `h(Slot, props, …fallb
 function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile
 ```
 
-Return the source file with any leading `"use react"` / `"use vue"` directive
+Return the source file with any leading `"use <framework>"` directive
 removed, so the compile-time gating marker never leaks into the emitted
 per-framework source. Other prologue directives are preserved.
 
@@ -1564,47 +1419,6 @@ Whether an Oxc module or node calls `i18next.t(...)`.
 | --- | --- | --- |
 | node | OxcNode |  |
 
-### VUE_ADAPTER_MODULE
-
-**Kind:** constant
-
-```typescript
-export const VUE_ADAPTER_MODULE
-```
-
-The `@mission-platform/forge/vue` subpath the Vue context primitives are imported from.
-
-### VUE_BUILTIN_COMPONENTS
-
-**Kind:** constant
-
-```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
-```
-
-The neutral framework-component imports Vue resolves straight from the `vue` runtime.
-
-### VUE_LOCAL_JSX_TYPE_NAMES
-
-**Kind:** constant
-
-```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
-```
-
-The neutral render/props type names the **Vue** build redirects to its
-co-located {@link LOCAL_JSX_TYPES_MODULE}. It is a superset of
-{@link LOCAL_JSX_TYPE_NAMES}: besides `MpRenderProperty`, the Vue variant also
-re-declares the neutral **element** primitives `MpChild` and `MpElement` as
-Vue's `VNodeChild` / `VNode`. Under `jsxImportSource: 'vue'` a
-JSX expression in a generated SFC has type `JSX.Element` (i.e. Vue's `VNode`);
-keeping the neutral `@mission-platform/forge` definitions (branded with
-`__mpElement`) would make every `const x: MpElement = <div/>` /
-`MpChild[] = items.map(() => <li/>)` fail to type-check under `vue-tsc`. React
-instead renames these to `ReactNode`/`ReactElement` (see
-{@link REACT_TYPE_ALIASES}); Vue keeps the `Mp*` names but resolves them to
-the Vue-native types via the local module, so no reference rewriting is needed.
-
 ### vueComponentModelListenerTransformer
 
 **Kind:** function
@@ -1719,7 +1533,7 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 Compile one neutral (or framework-gated) component module to its per-framework
 source (Stage 1).
 
-A leading `"use react";` / `"use vue";` directive is stripped before emitting
+A leading `"use <framework>";` directive is stripped before emitting
 so the marker never leaks into the output; gating a module out of the
 non-matching framework's build is handled upstream by the discovery step
 (see {@link moduleTargetsFramework}).
@@ -2541,9 +2355,8 @@ not a `tsc`-visible source file. Rather than re-export a single *common*
 neutral declaration for every framework, this plugin runs the TypeScript
 compiler API over the generated tree in `closeBundle` (a post-build step) and
 writes the resulting `.d.ts` files (`index.d.ts` + one per module) into the
-build's own `outDir`. So the **React** build gets declarations typed against
-React's own hooks and the **Vue** build gets declarations whose composables
-return Vue `Ref`s — each framework its own types. Type diagnostics are
+build's own `outDir`. Each framework build gets declarations typed against
+its own generated runtime types. Type diagnostics are
 surfaced as build warnings rather than failures so a `.d.ts` is always
 produced.
 

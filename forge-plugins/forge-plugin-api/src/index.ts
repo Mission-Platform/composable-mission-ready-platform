@@ -78,6 +78,11 @@ export {
 
 export type ForgePluginId = FrameworkOutputPlugin["id"];
 
+export {
+  frameworkAdapterModule,
+  frameworkForDirective,
+} from "./compiler/ast.js";
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }

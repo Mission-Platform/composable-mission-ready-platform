@@ -88,6 +88,7 @@ describe("forgeWebScriptPlugin", () => {
     const declarations = await load(
       `${moduleId}?forge-web-script-declarations`,
     );
+    const artifact = await load(`${moduleId}?forge-web-script-artifact`);
     expect(manifest).toContain("export default manifest");
     expect(moduleSource).toMatchObject({
       code: expect.stringContaining("export const abiManifest = manifest;"),
@@ -101,6 +102,9 @@ describe("forgeWebScriptPlugin", () => {
     expect(wasm).toContain("Uint8Array.from");
     expect(sourceMap).toContain("sourcesContent");
     expect(declarations).toContain("graphMetadata");
+    expect(artifact).toContain(
+      "export { wasm, manifest, declarations, graphMetadata }",
+    );
     expect(declarations).toContain("selfHostedMetadata");
   });
 

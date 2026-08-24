@@ -45,6 +45,37 @@ describe("emitSolidHookModule", () => {
     );
   });
 
+  it("does not inject dependencies that the effect callback does not read", () => {
+    const code = emit({
+      declarations: [
+        statement(
+          "export function useWatcher() {\n  useEffect(() => { report(); }, [count]);\n}",
+          "function",
+          { name: "useWatcher", exported: true },
+        ),
+      ],
+    });
+
+    expect(code).toContain("createEffect(() => { report(); });");
+    expect(code).not.toContain("count; report();");
+  });
+
+  it("registers effect cleanup with Solid teardown", () => {
+    const code = emit({
+      declarations: [
+        statement(
+          "export function useSubscription() {\n  useEffect(() => { subscribe(); return () => unsubscribe(); }, []);\n}",
+          "function",
+          { name: "useSubscription", exported: true },
+        ),
+      ],
+    });
+
+    expect(code).toContain(
+      "onMount(() => { subscribe(); onCleanup(() => unsubscribe()); });",
+    );
+  });
+
   it("remaps the neutral context primitives to Solid own exports", () => {
     const code = emit({
       imports: [

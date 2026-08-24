@@ -4,7 +4,11 @@ import path from 'node:path';
 
 import { defineTsdownLibrary, resolveTsdownOutputDirectory } from '@mission-platform/tsdown-config';
 
-import { forgeServiceLifecyclePlugin, validateForgeBuildPlugin, validateForgeBuildSelection } from './build-integration.js';
+import {
+  forgeServiceLifecyclePlugin,
+  validateForgeBuildPlugin,
+  validateForgeBuildSelection,
+} from './build-integration.js';
 import { createForgeCompilerService, type ForgeCompilerService } from './compiler/service.js';
 import { generateHookLibrarySources, hookLibraryDtsPlugin } from './generate-hooks.js';
 import {
@@ -383,6 +387,9 @@ function defineTsdownForgeComponent(
     disposeService,
   } = options;
   const framework = plugin.id as JsxFramework;
+  const watchMode = process.argv.some(
+    (argument) => argument === '--watch' || argument === '-w' || argument.startsWith('--watch='),
+  );
 
   const cacheName = `${path.basename(rootDir)}-${framework}`;
   const generatedDirectory = path.join(rootDir, 'node_modules/.cache', cacheName);
@@ -460,7 +467,7 @@ function defineTsdownForgeComponent(
     unbundle: true,
     outDir: finalOutDir,
     outputRoot,
-    clean: true,
+    clean: !watchMode,
     external: [...frameworkExternals, ...external],
     tsconfigPathsRoot: generatedDirectory,
     overrides: {

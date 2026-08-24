@@ -29,7 +29,7 @@ describe("the Web-Components module emitter", () => {
 
     expect(
       code.startsWith(
-        "import { ForgeElement, DomTemplateResult, nothing } from '@mission-platform/forge/web-components';",
+        "import { ForgeElement, domTemplate, nothing, type DomTemplateDefinition } from '@mission-platform/forge/web-components';",
       ),
     ).toBe(true);
     expect(code).not.toContain("unsafeHtml");
@@ -86,7 +86,7 @@ describe("the Web-Components module emitter", () => {
     // contract rides the same header as an inline type specifier.
     expect(
       code.startsWith(
-        "import { ForgeElement, DomTemplateResult, dynamicElement, nothing, ForgeElementMixin, type PropertyDeclaration } from '@mission-platform/forge/web-components';",
+        "import { ForgeElement, domTemplate, dynamicElement, nothing, ForgeElementMixin, type DomTemplateDefinition, type PropertyDeclaration } from '@mission-platform/forge/web-components';",
       ),
     ).toBe(true);
   });
@@ -302,7 +302,7 @@ describe("the Web-Components module emitter", () => {
     expect(code).toContain("  declare label: string;");
     expect(code).toContain("  declare tone: string | undefined;");
     expect(code).toContain(
-      "return new DomTemplateResult(__mpDomDefinition, [this.tone, this.label]);",
+      "return domTemplate(__mpDomDefinition, [this.tone, this.label]);",
     );
     expect(code).toContain(
       "customElements.define('forge-fixture', ForgeFixtureElement);",
@@ -378,7 +378,7 @@ describe("the Web-Components module emitter", () => {
     );
 
     expect(withId.code).toContain(
-      "import { ForgeElement, DomTemplateResult, nothing, useId } from '@mission-platform/forge/web-components';",
+      "import { ForgeElement, domTemplate, nothing, useId, type DomTemplateDefinition } from '@mission-platform/forge/web-components';",
     );
     expect(withId.code).toContain("  readonly generatedId: string;");
     expect(withId.code).toContain("    this.generatedId = useId();");

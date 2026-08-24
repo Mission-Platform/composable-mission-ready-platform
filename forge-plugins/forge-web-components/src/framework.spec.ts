@@ -75,8 +75,7 @@ describe("Web Components Forge framework package", () => {
       invocation: "is-attribute",
     });
     expect(hosts?.get("forge-typography")).toEqual({
-      baseTag: "span",
-      invocation: "is-attribute",
+      invocation: "custom-tag",
     });
   });
 
@@ -109,6 +108,33 @@ describe("Web Components Forge framework package", () => {
     ).not.toThrow();
 
     expect(generateSpy).toHaveBeenCalled();
+  });
+
+  it("uses an autonomous host when a component can return a dynamic root", () => {
+    const generated = createCompilerPipeline().compile(
+      {
+        source: [
+          "import { h, type MpElement } from '@mission-platform/forge';",
+          "export function Fixture({ tag, wrapped }: { tag: string; wrapped: boolean }): MpElement {",
+          "  if (!wrapped) return h(tag, {}, 'content');",
+          "  return <span>content</span>;",
+          "}",
+        ].join("\n"),
+        fileName: "src/Fixture.tsx",
+        moduleKind: "component",
+        componentName: "Fixture",
+      },
+      forgeWebComponentsFramework(),
+    );
+
+    expect(generated.code).toContain(
+      "export class FixtureElement extends ForgeElement {",
+    );
+    expect(generated.code).toContain("dynamicElement(tag,");
+    expect(generated.code).not.toContain("{ extends: 'span' }");
+    expect(generated.code).toContain(
+      "customElements.define('fixture', FixtureElement);",
+    );
   });
 
   it("generates the element module from the semantic IR alone", () => {
@@ -261,7 +287,7 @@ describe("Web Components Forge framework package", () => {
       "Fixture",
     ).code;
 
-    expect(generated).toContain("DomTemplateResult");
+    expect(generated).toContain("domTemplate(__mpDomDefinition");
     expect(generated).toContain("unsafeHtml(this.markup)");
     expect(generated).not.toContain(".innerHTML=");
     expect(generated).not.toContain("<HtmlContent");

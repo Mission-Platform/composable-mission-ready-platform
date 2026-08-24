@@ -10,7 +10,7 @@ import path from 'node:path';
 
 import ts from 'typescript';
 
-import { LOCAL_EFFECT_FILE, LOCAL_EFFECT_MODULE, localEffectModuleSource, readNeutralImports } from './compiler/ast.js';
+import { readNeutralImports } from './compiler/ast.js';
 import { type DiscoveredHelperExport } from './compiler/discover.js';
 import { createForgeGenerationContext, type ForgeGenerationContext } from './compiler/generation-context.js';
 
@@ -181,27 +181,6 @@ function reExportLine(module: DiscoveredHelperExport): string {
   return `export { ${names.join(', ')} } from './${module.relativePath}';`;
 }
 
-/** How many folder levels deep a generated module sits (0 = tree root). */
-function moduleDepth(relativePath: string): number {
-  return relativePath.split('/').length - 1;
-}
-
-/**
- * The generated Vue hook modules import the co-located effect helper as
- * `./mp-effect` ({@link LOCAL_EFFECT_MODULE}), which is written at the tree root.
- * A module nested under `composables/` must reach it with `../`, so rewrite the
- * specifier to the depth-correct relative path before the module is written.
- */
-function rewriteLocalEffectImport(code: string, depth: number): string {
-  if (depth === 0) {
-    return code;
-  }
-  const target = `${'../'.repeat(depth)}mp-effect`;
-  return code
-    .replaceAll(`'${LOCAL_EFFECT_MODULE}'`, `'${target}'`)
-    .replaceAll(`"${LOCAL_EFFECT_MODULE}"`, `"${target}"`);
-}
-
 /** Write a generated module to `outDir`, mirroring its nested `relativePath` and creating folders as needed. */
 
 /** Recursively collect source files, excluding declarations and colocated tests. */
@@ -247,7 +226,7 @@ function emitGeneratedSource(
     routerPlugins,
     routerConditions,
   });
-  const code = rewriteLocalEffectImport(compiled.code, moduleDepth(generatedPath));
+  const code = compiled.code;
   context.writer.writeText(`${generatedPath}.${compiled.lang}`, code, 'module');
   for (const extra of compiled.extraModules ?? []) {
     const directory = path.posix.dirname(generatedPath);
@@ -292,7 +271,6 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
   const modules = discovery.modules;
   const directory = path.dirname(options.entryModule);
 
-
   for (const module of modules) {
     const resolved = resolveModuleSource(directory, module.relativePath);
     if (resolved === undefined) {
@@ -330,17 +308,6 @@ export function generateHookLibrarySources(options: GenerateHookLibrarySourcesOp
         options.routerConditions,
       );
     }
-  }
-
-  // The co-located effect helper module: the Vue-only generalised watcher
-  // (`mpEffect`) the compiled composables route every `useEffect` through (built
-  // on native `watch`/lifecycle). Written once per tree, exactly as the components
-  // driver writes it. It is Vue-only, so `localEffectModuleSource` returns an empty
-  // string for React and nothing is written for the React build.
-  const framework = options.plugin.id as JsxFramework;
-  const effectModuleSource = localEffectModuleSource(framework);
-  if (effectModuleSource.length > 0) {
-    context.writer.writeText(LOCAL_EFFECT_FILE, effectModuleSource, 'module');
   }
 
   const entryFile = path.join(
@@ -396,9 +363,8 @@ function hookSourceExtensions(framework: JsxFramework): readonly string[] {
  * neutral declaration for every framework, this plugin runs the TypeScript
  * compiler API over the generated tree in `closeBundle` (a post-build step) and
  * writes the resulting `.d.ts` files (`index.d.ts` + one per module) into the
- * build's own `outDir`. So the **React** build gets declarations typed against
- * React's own hooks and the **Vue** build gets declarations whose composables
- * return Vue `Ref`s — each framework its own types. Type diagnostics are
+ * build's own `outDir`. Each framework build gets declarations typed against
+ * its own generated runtime types. Type diagnostics are
  * surfaced as build warnings rather than failures so a `.d.ts` is always
  * produced.
  */
@@ -425,11 +391,9 @@ export function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin {
       });
       const emitResult = program.emit(undefined, undefined, undefined, true);
 
-      if (options.framework === 'react' || options.framework === 'vue') {
-        const diagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
-        for (const diagnostic of diagnostics) {
-          this.warn(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
-        }
+      const diagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
+      for (const diagnostic of diagnostics) {
+        this.warn(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
       }
     },
   };

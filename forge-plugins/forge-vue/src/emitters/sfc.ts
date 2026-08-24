@@ -9,11 +9,6 @@
  * differ only in the `bodyLines` / `markup` / `scoped` they pass in.
  */
 import {
-  LOCAL_EFFECT_MODULE,
-  type StyleImport,
-} from "@mission-platform/forge-plugin-api/compiler/ast.js";
-
-import {
   buildEmitsMacro,
   buildImports,
   buildModelsMacro,
@@ -27,6 +22,7 @@ import type {
   VueModelSignature,
   VuePropertySignature,
 } from "../transformers/props-interface.js";
+import type { StyleImport } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 
 /**
  * The invariant pieces of a component the SFC is assembled from — everything the
@@ -110,10 +106,6 @@ export function assembleSfc(
   if (referencesSlots) {
     parts.vueImports.add("useSlots");
   }
-  // A component whose effects were routed through the generalised watcher pulls
-  // `mpEffect` from the generated Vue-only `./mp-effect` helper (native
-  // `watch`/lifecycle) instead of importing the lifecycle hooks from `vue`.
-  const usesEffectHelper = bodyLines.some((line) => /\bmpEffect\(/.test(line));
   const body = [
     parts.carryOver.length > 0 ? `\n${parts.carryOver}\n` : "",
     `defineOptions({ name: '${parts.componentName}', inheritAttrs: false });`,
@@ -146,9 +138,6 @@ export function assembleSfc(
       parts.helperImports,
       parts.vueAdapterValues,
     ),
-    usesEffectHelper
-      ? `import { mpEffect } from '${LOCAL_EFFECT_MODULE}';`
-      : "",
     parts.externalImports.join("\n"),
     bodyText,
   ]

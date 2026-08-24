@@ -143,6 +143,42 @@ describe("emitSolidModule", () => {
       );
     });
 
+    it("does not inject dependencies that the effect callback does not read", () => {
+      const code = emit({
+        state: [state("count", "setCount")],
+        component: component({
+          name: "DependencyWatcher",
+          body: [
+            statement("const [count, setCount] = useState(0);"),
+            statement("useEffect(() => { report(); }, [count]);", "expression"),
+          ],
+          returnNode: element("div"),
+        }),
+      });
+
+      expect(code).toContain("createEffect(() => { report(); });");
+      expect(code).not.toContain("count(); report();");
+    });
+
+    it("registers effect cleanup with Solid teardown", () => {
+      const code = emit({
+        component: component({
+          name: "Subscription",
+          body: [
+            statement(
+              "useEffect(() => { subscribe(); return () => unsubscribe(); }, []);",
+              "expression",
+            ),
+          ],
+          returnNode: element("div"),
+        }),
+      });
+
+      expect(code).toContain(
+        "onMount(() => { subscribe(); onCleanup(() => unsubscribe()); });",
+      );
+    });
+
     it("lowers useRef to a container and the ref attribute to a callback", () => {
       const code = emit({
         refs: [reference("node", "HTMLDivElement")],

@@ -287,6 +287,33 @@ describe("Svelte Forge framework package", () => {
     expect(script(generated.code)).toContain('.replaceAll("<", "&lt;")');
   });
 
+  it("renders a slot fallback as template markup", () => {
+    const marker = element("Slot", {
+      attributes: [stringAttribute("name", "loading")],
+      children: [textChild("Loading activity…")],
+      source: '<Slot name="loading">Loading activity…</Slot>',
+    });
+    const host = element("div", {
+      children: [marker],
+      source: '<div><Slot name="loading">Loading activity…</Slot></div>',
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        returned: { expression: host.expression!.text, nodes: [host] },
+      }),
+      slots: [slot("loading")],
+    });
+
+    const generated = generate(module);
+
+    expect(markup(generated.code)).toBe(
+      "<div>{#if loading != null}{@render __mpSlotValueSnippet(loading)}{:else}Loading activity…{/if}</div>",
+    );
+    expectCompiles(generated.code);
+  });
+
   it("lowers children-list presence checks through a safe children alias", () => {
     const content = element("div", {
       children: [textChild("content")],
@@ -399,6 +426,40 @@ describe("Svelte Forge framework package", () => {
       "<ul>{#each items as item, index (index)}<li>{item.label}</li>{/each}{@render __mpSlotValueSnippet(children)}</ul>",
     );
     expect(script(generated.code)).toContain("const __mpSlotValueSnippet =");
+    expectCompiles(generated.code);
+  });
+
+  it("inlines JSX-valued constants inside each callbacks", () => {
+    const content = element("span", {
+      children: [expressionChild("item.label")],
+      source: "<span>{item.label}</span>",
+    });
+    const row = element("li", {
+      children: [expressionChild("content")],
+      source: "<li>{content}</li>",
+    });
+    const mapped = expressionChild(
+      "items.map((item) => { const content = item.active ? <span>{item.label}</span> : null; return <li>{content}</li>; })",
+      [content, row],
+    );
+    const host = element("ul", {
+      children: [mapped],
+      source:
+        "<ul>{items.map((item) => { const content = item.active ? <span>{item.label}</span> : null; return <li>{content}</li>; })}</ul>",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [],
+        returned: { expression: host.expression!.text, nodes: [host] },
+      }),
+      props: [prop("items")],
+    });
+
+    const generated = generate(module);
+
+    expect(generated.code).not.toContain("{@const content");
     expectCompiles(generated.code);
   });
 
@@ -576,6 +637,28 @@ describe("Svelte Forge framework package", () => {
     expect(script(generate(module).code)).toContain(
       "let cacheReference = $state<Map<string, Array<number>>>();",
     );
+  });
+
+  it("omits an empty ref type argument", () => {
+    const host = element("input", {
+      selfClosing: true,
+      attributes: [expressionAttribute("ref", "inputRef")],
+      source: "<input ref={inputRef} />",
+    });
+    const module = semanticModule({
+      component: component({
+        name: "Fixture",
+        parameter: "properties",
+        body: [statement("const inputRef = useRef<null>(null);")],
+        returned: { expression: host.expression!.text, nodes: [host] },
+      }),
+    });
+
+    const generated = generate(module);
+
+    expect(script(generated.code)).toContain("let inputRef = $state();");
+    expect(script(generated.code)).not.toContain("$state<>()");
+    expectCompiles(generated.code);
   });
 
   it("lowers a dynamic component marker to <svelte:component>", () => {

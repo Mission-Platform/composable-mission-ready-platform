@@ -39,7 +39,6 @@ export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string> = new Set([
   "createContext",
   "useContext",
 ]);
-export const REACT_ADAPTER_MODULE = "@mission-platform/forge/react";
 export const REACT_TYPE_ALIASES: Readonly<Record<string, string>> = {
   MpChild: "ReactNode",
   MpElement: "ReactElement",
@@ -56,16 +55,26 @@ export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string> = new Set([
 ]);
 export const LOCAL_JSX_TYPES_MODULE = "./mp-jsx-types";
 export const LOCAL_JSX_TYPES_FILE = "mp-jsx-types.ts";
-export const LOCAL_EFFECT_MODULE = "./mp-effect";
-export const LOCAL_EFFECT_FILE = "mp-effect.ts";
-export const VUE_ADAPTER_MODULE = "@mission-platform/forge/vue";
-export const ICONS_JSX_MODULE = "@mission-platform/icons";
-export const COMPONENTS_JSX_MODULES = [
-  "@mission-platform/components",
-  "@mission-platform/layouts",
-  "@mission-platform/forms",
-  "@mission-platform/i18n",
-] as const;
+
+const FRAMEWORK_DIRECTIVES: ReadonlyMap<string, JsxFramework> = new Map([
+  ["use react", "react"],
+  ["use vue", "vue"],
+  ["use svelte", "svelte"],
+  ["use solid", "solid"],
+  ["use web-components", "web-components"],
+]);
+
+/** Derive the Forge adapter/runtime module for any built-in target framework. */
+export function frameworkAdapterModule(framework: JsxFramework): string {
+  return `${NEUTRAL_MODULE}/${framework}`;
+}
+
+/** Resolve a leading `use <framework>` directive for any built-in target. */
+export function frameworkForDirective(
+  directive: string,
+): JsxFramework | undefined {
+  return FRAMEWORK_DIRECTIVES.get(directive);
+}
 
 /** A stable source edit, ordered by offsets in the original source. */
 export interface SourceEdit {
@@ -165,7 +174,7 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
       " * primitives, generated for the web-components build so the compiled components",
       " * carry no neutral-package type import (see `LOCAL_JSX_TYPE_NAMES`).",
       " */",
-      "import type { HtmlContentResult, TemplateResult } from '@mission-platform/forge/web-components';",
+      `import type { HtmlContentResult, TemplateResult } from '${frameworkAdapterModule("web-components")}';`,
       "",
       "/** A node in the rendered tree — the web-components variant of the neutral `MpElement`. */",
       "export type MpElement = TemplateResult | HtmlContentResult;",
@@ -210,43 +219,4 @@ export function localJsxTypesModuleSource(framework: JsxFramework): string {
     );
   }
   return lines.join("\n");
-}
-
-/** Emit the shared Vue effect helper; other targets do not need this file. */
-export function localEffectModuleSource(framework: JsxFramework): string {
-  if (framework !== "vue") return "";
-  return [
-    "/**",
-    " * Vue-native generalised effect watcher — the mirror of React’s",
-    " * `useEffect(callback, deps?)`, generated once per output tree so the compiled",
-    " * components share one lifecycle helper instead of inlining the wiring per",
-    " * effect.",
-    " *",
-    " * - runs once after mount;",
-    " * - re-runs when any dependency changes (when `deps` is provided);",
-    " * - runs after every update when `deps` is omitted;",
-    " * - runs the returned cleanup before each re-run and on unmount.",
-    " */",
-    "import { onMounted, onUnmounted, onUpdated, watch } from 'vue';",
-    "",
-    "export function mpEffect(",
-    "  effect: () => void | (() => void),",
-    "  deps?: () => readonly unknown[],",
-    "): void {",
-    "  let cleanup: (() => void) | undefined;",
-    "  const run = () => {",
-    "    cleanup?.();",
-    "    const result = effect();",
-    "    cleanup = typeof result === 'function' ? result : undefined;",
-    "  };",
-    "  onMounted(run);",
-    "  if (deps) {",
-    "    watch(deps, run);",
-    "  } else {",
-    "    onUpdated(run);",
-    "  }",
-    "  onUnmounted(() => cleanup?.());",
-    "}",
-    "",
-  ].join("\n");
 }

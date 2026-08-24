@@ -87,8 +87,8 @@ describe('generateHookLibrarySources', () => {
         "from './composables/use-example';",
       );
       expect(readFileSync(path.join(outputDirectory, 'index.ts'), 'utf8')).toContain('type ExampleControls');
-      expect(readFileSync(path.join(outputDirectory, 'composables/use-example/use-example.ts'), 'utf8')).toContain(
-        "from '../../mp-effect';",
+      expect(readFileSync(path.join(outputDirectory, 'composables/use-example/use-example.ts'), 'utf8')).not.toContain(
+        'mp-effect',
       );
     } finally {
       rmSync(root, { recursive: true, force: true });

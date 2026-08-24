@@ -1,4 +1,7 @@
-import { defineForgeOutputPlugin } from "@mission-platform/forge-plugin-api";
+import {
+  defineForgeOutputPlugin,
+  frameworkAdapterModule,
+} from "@mission-platform/forge-plugin-api";
 
 import { emitWebComponentModule } from "./emitters/module.js";
 import {
@@ -25,7 +28,7 @@ const BUILD: FrameworkBuildAdapters = { vite: () => [], tsdown: () => [] };
 /** Host metadata for components shared across independently built packages. */
 const SHARED_COMPONENT_HOSTS = {
   "forge-dropdown": { baseTag: "div", invocation: "is-attribute" },
-  "forge-typography": { baseTag: "span", invocation: "is-attribute" },
+  "forge-typography": { invocation: "custom-tag" },
 } as const satisfies Readonly<Record<string, TargetComponentHost>>;
 
 function componentTagName(name: string): string {
@@ -50,7 +53,7 @@ export function forgeWebComponentsFramework(): FrameworkOutputPlugin {
     },
     runtimeExternals: [
       "@mission-platform/forge",
-      "@mission-platform/forge/web-components",
+      frameworkAdapterModule("web-components"),
     ],
     displayNameSuffix: "WebComponents",
     prepareComponentHosts(
@@ -59,7 +62,10 @@ export function forgeWebComponentsFramework(): FrameworkOutputPlugin {
       return new Map([
         ...Object.entries(SHARED_COMPONENT_HOSTS),
         ...modules.map(({ componentName, module }) => {
-          const host = inferWebComponentsHost(module.ast.component?.returnNode);
+          const host = inferWebComponentsHost(
+            module.ast.component?.returnNode,
+            module.ast.component,
+          );
           return [
             componentTagName(componentName),
             {

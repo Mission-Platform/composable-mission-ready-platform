@@ -13,11 +13,13 @@ export default defineLibraryConfig({
     'adapters/solid': 'src/adapters/solid.ts',
   },
   overrides: {
-    // The package authors its components in JSX compiled by the classic
-    // factory, so esbuild must call `h`/`Fragment` rather than React's runtime.
-    esbuild: {
-      jsxFactory: 'h',
-      jsxFragment: 'Fragment',
+    // The package authors its components in neutral JSX, so Oxc must use the
+    // package's automatic runtime rather than React's runtime.
+    oxc: {
+      jsx: {
+        runtime: 'automatic',
+        importSource: '@mission-platform/forge',
+      },
     },
   },
 });

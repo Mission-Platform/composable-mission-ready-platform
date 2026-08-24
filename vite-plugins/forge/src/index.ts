@@ -39,17 +39,14 @@
 export { reactJsxPlugin as default } from './config.js';
 
 /**
- * A Vite plugin that configures the classic `h` / `Fragment` JSX factory for the
- * generated **React** sources (their JSX is authored in the neutral dialect and
- * `h` is imported as `React.createElement`). The Vue target instead uses
+ * A Vite plugin that configures the automatic React JSX runtime for generated
+ * sources authored in the neutral dialect. The Vue target instead uses
  * `@vitejs/plugin-vue` + `@vitejs/plugin-vue-jsx` and needs no JSX-transform config.
  *
  * The factory is configured through Vite's **`oxc`** transform option (Vite 8 /
  * Rolldown transforms JS/TS with Oxc, not esbuild). The neutral→React source
- * uses the classic `h(…)` factory, so the JSX transform runs in `classic`
- * runtime with `pragma: 'h'` / `pragmaFrag: 'Fragment'` — the Oxc equivalents of
- * the former `esbuild.jsxFactory` / `esbuild.jsxFragment` (which is now
- * deprecated and warns under Rolldown-Vite).
+ * uses Oxc's `automatic` runtime with `importSource: 'react'`; the former
+ * `esbuild` JSX fields are deprecated and warn under Rolldown-Vite.
  */
 export {
   defineJsxHookLibraryConfig,

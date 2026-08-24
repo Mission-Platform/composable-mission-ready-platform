@@ -1,12 +1,62 @@
 import {
   materializeTree,
   materializeValue,
+  DomDynamicInstance,
   DomTemplateInstance,
   renderIncrementally,
   TemplateInstance,
-  type DomTemplateDefinition,
+  type DomRenderInstance,
   type MaterializedTree,
 } from './web-components-renderer';
+
+/** Binding prefixes understood by a compiled direct-DOM template. */
+export type DomTemplateBindingPrefix = '' | '?' | '.' | '@' | '~';
+
+/** A runtime slot in a detached direct-DOM template blueprint. */
+export type DomTemplateRuntimePart =
+  | {
+      readonly kind: 'node';
+      readonly id: number;
+      readonly start: Comment;
+      readonly end?: Comment;
+    }
+  | {
+      readonly kind: 'attr';
+      readonly id: number;
+      readonly element: Element;
+      readonly prefix: DomTemplateBindingPrefix;
+      readonly name: string;
+    }
+  | {
+      readonly kind: 'spread';
+      readonly id: number;
+      readonly element: Element;
+    };
+
+/** A stable definition-time path to a compiled direct-DOM template slot. */
+export type DomTemplatePartDefinition =
+  | { readonly kind: 'node'; readonly id: number; readonly path: readonly number[] }
+  | {
+      readonly kind: 'attr';
+      readonly id: number;
+      readonly path: readonly number[];
+      readonly prefix: DomTemplateBindingPrefix;
+      readonly name: string;
+    }
+  | { readonly kind: 'spread'; readonly id: number; readonly path: readonly number[] };
+
+/** The detached DOM skeleton and indexed runtime slots for one template instance. */
+export interface DomTemplateBlueprint {
+  readonly nodes: readonly Node[];
+  readonly parts: readonly DomTemplateRuntimePart[];
+}
+
+/** A browser-lazy definition shared by all direct-DOM template results. */
+export interface DomTemplateDefinition {
+  readonly create?: (document: Document) => DomTemplateBlueprint;
+  readonly hotTemplate?: (document: Document) => HTMLTemplateElement;
+  readonly parts?: readonly DomTemplatePartDefinition[];
+}
 
 /**
  * Native Web-Components runtime for the framework-neutral JSX toolchain.
@@ -30,7 +80,7 @@ import {
  * Reactivity mirrors Lit's `static properties` contract: each declared property
  * (and `{ state: true }` internal state) becomes a prototype accessor whose
  * setter schedules a microtask re-render. Standalone `render()` calls update
- * persistent template instances incrementally, retaining static DOM and native
+ * persistent direct-DOM instances incrementally, retaining static DOM and native
  * form state while preserving this dependency-free implementation.
  */
 
@@ -159,14 +209,26 @@ export class TemplateResult {
 }
 
 /** A direct-DOM generated result with a stable definition identity. */
-export class DomTemplateResult {
+export interface DomTemplateRenderResult {
+  readonly kind: 'template';
   readonly definition: DomTemplateDefinition;
   readonly values: readonly unknown[];
+}
 
-  constructor(definition: DomTemplateDefinition, values: readonly unknown[]) {
-    this.definition = definition;
-    this.values = values;
-  }
+/** A runtime-selected direct-DOM element and its children. */
+export interface DomDynamicRenderResult {
+  readonly kind: 'dynamic';
+  readonly tag: unknown;
+  readonly properties: Readonly<Record<string, unknown>>;
+  readonly children: readonly unknown[];
+}
+
+/** The unified direct-DOM render-result contract. */
+export type DomRenderResult = DomTemplateRenderResult | DomDynamicRenderResult;
+
+/** Build a direct-DOM template result from a compiled template definition. */
+export function domTemplate(definition: DomTemplateDefinition, values: readonly unknown[]): DomTemplateRenderResult {
+  return { kind: 'template', definition, values };
 }
 
 /** A trusted raw-HTML value used by the native Web-Components adapter. */
@@ -201,26 +263,13 @@ export class HtmlContentResult {
   }
 }
 
-/** A runtime-selected element and its children for a computed JSX tag. */
-export class DynamicElementResult {
-  readonly tag: unknown;
-  readonly properties: Readonly<Record<string, unknown>>;
-  readonly children: readonly unknown[];
-
-  constructor(tag: unknown, properties: Readonly<Record<string, unknown>>, children: readonly unknown[]) {
-    this.tag = tag;
-    this.properties = properties;
-    this.children = children;
-  }
-}
-
 /** Build a native Web-Components element whose tag is selected at runtime. */
 export function dynamicElement(
   tag: unknown,
   properties: Readonly<Record<string, unknown>>,
   ...children: readonly unknown[]
-): DynamicElementResult {
-  return new DynamicElementResult(tag, properties, children);
+): DomDynamicRenderResult {
+  return { kind: 'dynamic', tag, properties, children };
 }
 
 /** Build a native Web-Components raw-content result without escaping `html`. */
@@ -707,11 +756,39 @@ function mountLiveForgeSlotMarkers(
  * DOM and native form state are retained while only changed binding ranges are
  * updated; incompatible template kinds replace the renderer-owned content.
  */
-export function render(
-  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
-  container: ParentNode,
-): void {
+export function render(result: TemplateResult | DomRenderResult | HtmlContentResult, container: ParentNode): void {
   renderIncrementally(result, container);
+}
+
+/**
+ * Lazily cache a value for an element instance while its explicit dependencies
+ * remain `Object.is`-equal. An omitted dependency supplier intentionally keeps
+ * the neutral getter semantics and recomputes on every read.
+ */
+export function memoize<T>(factory: () => T, dependencies?: () => readonly unknown[]): () => T {
+  let initialized = false;
+  let value!: T;
+  let previousDependencies: readonly unknown[] | undefined;
+
+  return () => {
+    if (dependencies === undefined) {
+      return factory();
+    }
+
+    const nextDependencies = dependencies();
+    const changed =
+      !initialized ||
+      previousDependencies === undefined ||
+      previousDependencies.length !== nextDependencies.length ||
+      nextDependencies.some((dependency, index) => !Object.is(dependency, previousDependencies?.[index]));
+    if (changed) {
+      const nextValue = factory();
+      previousDependencies = nextDependencies;
+      value = nextValue;
+      initialized = true;
+    }
+    return value;
+  };
 }
 
 /**
@@ -721,8 +798,8 @@ export function render(
  * A subclass declares its reactive surface via `static properties` (mirroring
  * Lit): each key becomes a prototype accessor whose setter schedules a
  * microtask re-render, and each non-`state` key observes its lower-cased
- * attribute. `render()` returns the element's {@link html}`…` template, rendered
- * into an open shadow root. Reactive commits update the existing template
+ * attribute. `render()` returns the element's direct-DOM result, rendered into
+ * an open shadow root. Reactive commits update the existing direct-DOM result
  * incrementally: positional lists reuse compatible entries, and slot outlets
  * retain their native projection nodes while unrelated parts change.
  */
@@ -744,9 +821,7 @@ export class ForgeElement extends ForgeHTMLElement {
   /** The host's capability-gated ElementInternals handle. */
   private mpInternals: ElementInternals | undefined;
   /** Incremental template instance for the current render shape. */
-  private mpRenderInstance: TemplateInstance | DomTemplateInstance | undefined;
-  /** Owned tree for a computed root, disposed before any representation switch. */
-  private mpRenderTree: MaterializedTree | undefined;
+  private mpRenderInstance: TemplateInstance | DomRenderInstance | undefined;
   /** Live projection outlets associated with the current template instance. */
   private mpSlotOutlets!: LiveSlotOutlet[];
   /** Whether a re-render is already scheduled for the current microtask. */
@@ -772,7 +847,6 @@ export class ForgeElement extends ForgeHTMLElement {
     this.mpSetUp = false;
     this.mpChildrenObserver = undefined;
     this.mpRenderInstance = undefined;
-    this.mpRenderTree = undefined;
     this.mpInternals = undefined;
     (this.constructor as typeof ForgeElement).finalize();
     const constructor = this.constructor as typeof ForgeElement & ForgeElementConstructor;
@@ -863,6 +937,9 @@ export class ForgeElement extends ForgeHTMLElement {
       this.setup();
     }
     this.mountStyles();
+    // The synchronous first render consumes writes made during construction,
+    // attribute adoption, and setup. A render-time write may set this again.
+    this.mpDirty = false;
     this.renderRoot();
   }
 
@@ -955,6 +1032,9 @@ export class ForgeElement extends ForgeHTMLElement {
     }
     this.mpDirty = true;
     queueMicrotask(() => {
+      if (!this.mpDirty) {
+        return;
+      }
       this.mpDirty = false;
       if (this.isConnected) {
         this.renderRoot();
@@ -969,7 +1049,7 @@ export class ForgeElement extends ForgeHTMLElement {
   }
 
   /** The element's template. Overridden by every generated subclass. */
-  render(): TemplateResult | DomTemplateResult | DynamicElementResult {
+  render(): TemplateResult | DomRenderResult {
     return html`
       <slot></slot>
     `;
@@ -1042,30 +1122,19 @@ export class ForgeElement extends ForgeHTMLElement {
       return;
     }
     const result = this.render();
-    if (result instanceof DynamicElementResult) {
-      for (const outlet of this.mpSlotOutlets) {
-        outlet.dispose();
-      }
-      this.mpSlotOutlets = [];
-      this.mpRenderInstance?.dispose();
-      this.mpRenderInstance = undefined;
-      this.mpRenderTree?.dispose();
-      this.mpRenderTree = materializeTree(result);
-      this.mpRoot.replaceChildren(...this.mpRenderTree.nodes);
-      this.mpSlotOutlets = mountLiveForgeSlotMarkers(this.mpRoot, this, this.mpChildren ?? []);
-      this.syncLiveSlotOutlets();
-      this.assignManualSlots();
-      return;
-    }
-    if (this.mpRenderTree !== undefined) {
-      this.mpRenderTree.dispose();
-      this.mpRenderTree = undefined;
-      this.mpRoot.replaceChildren();
-    }
+    const domResult = result instanceof TemplateResult ? undefined : result;
     const incompatible =
-      result instanceof DomTemplateResult
-        ? !(this.mpRenderInstance instanceof DomTemplateInstance && this.mpRenderInstance.isCompatible(result))
-        : !(this.mpRenderInstance instanceof TemplateInstance && this.mpRenderInstance.isCompatible(result));
+      domResult !== undefined
+        ? !(
+            this.mpRenderInstance !== undefined &&
+            !(this.mpRenderInstance instanceof TemplateInstance) &&
+            this.mpRenderInstance.isCompatible(domResult)
+          )
+        : !(
+            this.mpRenderInstance instanceof TemplateInstance &&
+            result instanceof TemplateResult &&
+            this.mpRenderInstance.isCompatible(result)
+          );
     if (incompatible) {
       for (const outlet of this.mpSlotOutlets) {
         outlet.dispose();
@@ -1073,12 +1142,20 @@ export class ForgeElement extends ForgeHTMLElement {
       this.mpSlotOutlets = [];
       this.mpRenderInstance?.dispose();
       this.mpRenderInstance =
-        result instanceof DomTemplateResult ? new DomTemplateInstance(result) : new TemplateInstance(result);
+        domResult !== undefined
+          ? domResult.kind === 'template'
+            ? new DomTemplateInstance(domResult)
+            : new DomDynamicInstance(domResult)
+          : new TemplateInstance(result as TemplateResult);
       this.mpRenderInstance.mount(this.mpRoot);
       this.mpSlotOutlets = mountLiveForgeSlotMarkers(this.mpRoot, this, this.mpChildren ?? []);
     } else {
-      if (result instanceof DomTemplateResult && this.mpRenderInstance instanceof DomTemplateInstance) {
-        this.mpRenderInstance.update(result);
+      if (
+        domResult !== undefined &&
+        this.mpRenderInstance !== undefined &&
+        !(this.mpRenderInstance instanceof TemplateInstance)
+      ) {
+        this.mpRenderInstance.update(domResult);
       } else if (result instanceof TemplateResult && this.mpRenderInstance instanceof TemplateInstance) {
         this.mpRenderInstance.update(result);
       }

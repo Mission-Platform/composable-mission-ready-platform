@@ -5,8 +5,8 @@
  * (React's model). A Vue `<script setup>` body runs **once**, so the emitter
  * splits the recorded component body: hook declarations (`useState`/`useRef`/
  * `useMemo`/`useCallback`) and effects (`useEffect`) are emitted once, translated
- * to Vue reactivity (`ref`/`computed`) and lifecycle (via the generated
- * `mpEffect` helper); props become `defineProps`, `on<Event>` props become
+ * to Vue reactivity (`ref`/`computed`) and lifecycle (`watch`/`watchEffect`/
+ * `onMounted`); props become `defineProps`, `on<Event>` props become
  * `defineEmits`, `@model` props become `defineModel`, and `properties.children`
  * becomes the default slot.
  *

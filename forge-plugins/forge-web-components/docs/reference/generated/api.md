@@ -82,7 +82,7 @@ Compatibility defaults preserved for generated components.
 **Kind:** function
 
 ```typescript
-function inferWebComponentsHost(returnNode: GenericRenderNode | undefined): WebComponentsHostPlan
+function inferWebComponentsHost(returnNode: GenericRenderNode | undefined, component?: GenericComponent): WebComponentsHostPlan
 ```
 
 Infer a customized-built-in host only from a single, static intrinsic root.
@@ -96,6 +96,7 @@ base across the supported DOM implementations.
 | Name | Type | Description |
 | --- | --- | --- |
 | returnNode | GenericRenderNode \| undefined |  |
+| component | GenericComponent |  |
 
 ### isWebComponentsLowered
 
@@ -207,7 +208,7 @@ its own statements (which the getter must run rather than return).
 export interface WebComponentsDerivedValue
 ```
 
-A memoized value, lowered to a getter recomputed on read.
+A memoized value, lowered to a getter backed by an optional instance cache.
 
 ### WebComponentsElementRef
 

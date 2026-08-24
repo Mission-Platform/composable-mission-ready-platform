@@ -5,12 +5,13 @@ import { createContext, useContext } from '../runtime/context';
 
 import {
   dynamicElement,
-  DomTemplateResult,
+  domTemplate,
   ForgeElement,
   ForgeElementMixin,
   hasSlotContent,
   html,
   HtmlContent,
+  memoize,
   nothing,
   render,
   unsafeHtml,
@@ -18,7 +19,7 @@ import {
 } from './web-components';
 import { TemplateInstance } from './web-components-renderer';
 
-import type { DomTemplateDefinition, TemplateResult } from './web-components-renderer';
+import type { DomRenderResult, DomTemplateDefinition, TemplateResult } from './web-components';
 
 /**
  * A representative generated-style element: a reactive `state` count, an
@@ -102,6 +103,24 @@ class UpdatedCallbackElement extends ForgeElement {
     return html`
       <span>${this.value}</span>
     `;
+  }
+}
+
+class DynamicRootElement extends ForgeElement {
+  static readonly properties = { tag: { state: true }, value: { state: true } };
+
+  declare tag: 'button' | 'span';
+  declare value: string;
+  readonly clicks: string[] = [];
+
+  constructor() {
+    super();
+    this.tag = 'button';
+    this.value = 'first';
+  }
+
+  render(): DomRenderResult {
+    return dynamicElement(this.tag, { '~value': this.value, '@click': () => this.clicks.push(this.value) }, this.value);
   }
 }
 
@@ -343,6 +362,9 @@ if (!customElements.get('mp-controlled-input-test')) {
 if (!customElements.get('mp-controlled-textarea-test')) {
   customElements.define('mp-controlled-textarea-test', ControlledTextareaElement);
 }
+if (!customElements.get('mp-dynamic-root-test')) {
+  customElements.define('mp-dynamic-root-test', DynamicRootElement);
+}
 
 /** Mount a fresh counter element and return it once connected + rendered. */
 function mountCounter(attributes: Record<string, string> = {}): CounterElement {
@@ -428,6 +450,50 @@ describe('the native `html` tagged template + `render`', () => {
     expect(clicks).toEqual(['clicked']);
   });
 
+  it('creates customized built-ins with their `is` value', () => {
+    class CustomizedBuiltInElement extends HTMLDivElement {
+      upgraded = true;
+    }
+    if (!customElements.get('mp-customized-built-in')) {
+      customElements.define('mp-customized-built-in', CustomizedBuiltInElement, { extends: 'div' });
+    }
+
+    const container = document.createElement('div');
+    render(dynamicElement('div', { is: 'mp-customized-built-in' }), container);
+
+    expect(container.firstElementChild).toBeInstanceOf(CustomizedBuiltInElement);
+    expect((container.firstElementChild as CustomizedBuiltInElement).upgraded).toBe(true);
+  });
+
+  it('updates a compatible dynamic element without replacing its node', () => {
+    const container = document.createElement('div');
+    const firstClicks: string[] = [];
+    const secondClicks: string[] = [];
+
+    render(
+      dynamicElement(
+        'button',
+        { '~value': 'first', '?disabled': true, '@click': () => firstClicks.push('first') },
+        'first',
+      ),
+      container,
+    );
+    const button = container.firstElementChild as HTMLButtonElement;
+
+    render(
+      dynamicElement('button', { '~value': 'second', '@click': () => secondClicks.push('second') }, 'second'),
+      container,
+    );
+
+    expect(container.firstElementChild).toBe(button);
+    expect(button.value).toBe('second');
+    expect(button.disabled).toBe(false);
+    expect(button.textContent).toBe('second');
+    button.dispatchEvent(new Event('click'));
+    expect(firstClicks).toEqual([]);
+    expect(secondClicks).toEqual(['second']);
+  });
+
   it('delivers computed properties to custom elements', () => {
     class DynamicTargetElement extends HTMLElement {
       value: unknown;
@@ -450,6 +516,46 @@ describe('the native `html` tagged template + `render`', () => {
     expect(target.value).toEqual(undefined);
     expect((target as unknown as { modelValue?: { id: number } }).modelValue).toEqual({ id: 1 });
     expect(target.textContent?.trim()).toBe('child');
+  });
+
+  it('memoizes values while explicit dependencies remain identical', () => {
+    let calls = 0;
+    let dependency = { value: 1 };
+    const read = memoize(
+      () => {
+        calls += 1;
+        return dependency.value;
+      },
+      () => [dependency],
+    );
+
+    expect(read()).toBe(1);
+    expect(read()).toBe(1);
+    expect(calls).toBe(1);
+
+    dependency = { value: 2 };
+    expect(read()).toBe(2);
+    expect(calls).toBe(2);
+  });
+
+  it('uses Object.is semantics for memo dependencies', () => {
+    let calls = 0;
+    let dependency = Number.NaN;
+    const read = memoize(
+      () => {
+        calls += 1;
+        return calls;
+      },
+      () => [dependency],
+    );
+
+    expect(read()).toBe(1);
+    expect(read()).toBe(1);
+    dependency = 0;
+    expect(read()).toBe(2);
+    dependency = -0;
+    expect(read()).toBe(3);
+    expect(calls).toBe(3);
   });
 
   it('applies raw spread properties and model-update event names', () => {
@@ -503,6 +609,42 @@ describe('the native `html` tagged template + `render`', () => {
 
     expect(container.textContent?.trim()).toBe('provided');
     expect(useContext(context)).toBe('default');
+  });
+
+  it('updates dynamic providers and components in place with the active context', () => {
+    const context = createContext('default');
+    const Reader = (): TemplateResult => html`
+      <span>${useContext(context)}</span>
+    `;
+    const container = document.createElement('div');
+    const view = (value: string): DomRenderResult =>
+      dynamicElement(context.Provider, { '~value': value }, dynamicElement(Reader, {}));
+
+    render(view('first'), container);
+    const span = container.querySelector('span');
+    render(view('second'), container);
+
+    expect(container.querySelector('span')).toBe(span);
+    expect(container.textContent?.trim()).toBe('second');
+    expect(useContext(context)).toBe('default');
+  });
+
+  it('tracks current nodes for dynamic components whose array output changes shape', () => {
+    type Shape = 'span' | 'div';
+    const Component = ({ shape }: { shape: Shape }): DomRenderResult => dynamicElement(shape, {}, shape);
+    const container = document.createElement('div');
+    const view = (shape: Shape): TemplateResult => html`
+      ${[dynamicElement(Component, { shape })]}
+    `;
+
+    render(view('span'), container);
+    expect(container.querySelector('span')?.textContent).toBe('span');
+
+    render(view('div'), container);
+
+    expect(container.querySelectorAll('span')).toHaveLength(0);
+    expect(container.querySelectorAll('div')).toHaveLength(1);
+    expect(container.textContent?.trim()).toBe('div');
   });
 
   it('normalizes nested class values and style objects into valid DOM values', () => {
@@ -781,10 +923,10 @@ describe('direct DOM template results', () => {
   it('constructs direct DOM once and updates the existing node range', () => {
     const container = document.createElement('div');
     const definition = directDefinition();
-    render(new DomTemplateResult(definition, ['first']), container);
+    render(domTemplate(definition, ['first']), container);
     const section = container.firstElementChild;
 
-    render(new DomTemplateResult(definition, ['second']), container);
+    render(domTemplate(definition, ['second']), container);
 
     expect(container.firstElementChild).toBe(section);
     expect(section?.textContent).toBe('second');
@@ -823,9 +965,9 @@ describe('direct DOM template results', () => {
     const container = document.createElement('div');
     document.body.append(container);
 
-    render(new DomTemplateResult(definition, ['first']), container);
+    render(domTemplate(definition, ['first']), container);
     const child = container.querySelector('mp-generated-child') as GeneratedChildElement;
-    render(new DomTemplateResult(definition, ['second']), container);
+    render(domTemplate(definition, ['second']), container);
 
     expect(container.querySelector('mp-generated-child')).toBe(child);
     expect(child.textContent).toBe('second');
@@ -850,7 +992,7 @@ describe('direct DOM template results', () => {
     const handler = (value: unknown): void => directCalls.push(value);
     const legacyHandler = (value: unknown): void => legacyCalls.push(value);
 
-    render(new DomTemplateResult(directDefinition, [handler]), directContainer);
+    render(domTemplate(directDefinition, [handler]), directContainer);
     render(
       html`
         <button @update-model-value=${legacyHandler}></button>
@@ -878,7 +1020,7 @@ describe('direct DOM template results', () => {
     };
     const container = document.createElement('div');
 
-    render(new DomTemplateResult(definition, []), container);
+    render(domTemplate(definition, []), container);
 
     expect(container.childNodes).toHaveLength(1);
     expect(container.firstChild?.nodeType).toBe(Node.TEXT_NODE);
@@ -906,7 +1048,7 @@ describe('direct DOM template results', () => {
     const container = document.createElement('div');
     const handler = (): void => calls.push('stale');
 
-    render(new DomTemplateResult(definition, ['before', handler, reference]), container);
+    render(domTemplate(definition, ['before', handler, reference]), container);
     const oldButton = container.querySelector('button') as HTMLButtonElement;
     render(HtmlContent({ as: 'section', html: '<span>trusted</span>' }), container);
     expect(oldButton.isConnected).toBe(false);
@@ -914,7 +1056,7 @@ describe('direct DOM template results', () => {
     oldButton.click();
     expect(calls).toEqual([]);
 
-    render(new DomTemplateResult(definition, ['after', handler, reference]), container);
+    render(domTemplate(definition, ['after', handler, reference]), container);
     expect(container.querySelector('button')).not.toBe(oldButton);
     expect(reference.current).toBe(container.querySelector('button'));
     expect(container.textContent).toContain('after');
@@ -942,11 +1084,11 @@ describe('direct DOM template results', () => {
     };
     const container = document.createElement('div');
     const handler = (): void => calls.push('clicked');
-    render(new DomTemplateResult(definition, ['click', handler, reference]), container);
+    render(domTemplate(definition, ['click', handler, reference]), container);
     const button = container.querySelector('button') as HTMLButtonElement;
     expect(reference.current).toBe(button);
 
-    render(new DomTemplateResult(definition, ['updated', handler, reference]), container);
+    render(domTemplate(definition, ['updated', handler, reference]), container);
     expect(templateBuilds).toBe(1);
     expect(container.querySelector('button')).toBe(button);
     expect(button.textContent).toBe('updated');
@@ -1021,6 +1163,32 @@ describe('ForgeElement shadow-root styles', () => {
 });
 
 describe('the `ForgeElement` base class', () => {
+  it('updates dynamic roots in place and replaces them when the tag changes', async () => {
+    const element = document.createElement('mp-dynamic-root-test') as DynamicRootElement;
+    document.body.append(element);
+    const firstButton = element.forgeRenderRoot?.querySelector('button');
+
+    expect(firstButton?.textContent).toBe('first');
+    element.value = 'second';
+    await tick();
+
+    expect(element.forgeRenderRoot?.querySelector('button')).toBe(firstButton);
+    expect((firstButton as HTMLButtonElement).value).toBe('second');
+    expect(firstButton?.textContent).toBe('second');
+    firstButton?.dispatchEvent(new Event('click'));
+    expect(element.clicks).toEqual(['second']);
+
+    element.tag = 'span';
+    await tick();
+
+    const span = element.forgeRenderRoot?.querySelector('span');
+    expect(span).not.toBeNull();
+    expect(span).not.toBe(firstButton);
+    expect(firstButton?.isConnected).toBe(false);
+    firstButton?.dispatchEvent(new Event('click'));
+    expect(element.clicks).toEqual(['second']);
+  });
+
   it('renders into an open shadow root on connect', () => {
     const element = mountCounter({ label: 'hits' });
     const root = element.shadowRoot;
@@ -1284,6 +1452,7 @@ class SeededElement extends ForgeElement {
   static readonly properties = { count: { state: true } };
 
   declare count: number;
+  renderCount = 0;
 
   constructor() {
     super();
@@ -1291,6 +1460,7 @@ class SeededElement extends ForgeElement {
   }
 
   render(): TemplateResult {
+    this.renderCount += 1;
     return html`
       <span class="value">${this.count}</span>
     `;
@@ -1335,6 +1505,7 @@ class DeferredSeedElement extends ForgeElement {
   declare modelValue: string | undefined;
 
   declare doubled: number;
+  renderCount = 0;
 
   setup(): void {
     const { modelValue = '0' } = this;
@@ -1342,6 +1513,7 @@ class DeferredSeedElement extends ForgeElement {
   }
 
   render(): TemplateResult {
+    this.renderCount += 1;
     return html`
       <span class="value">${this.doubled}</span>
     `;
@@ -1350,6 +1522,14 @@ class DeferredSeedElement extends ForgeElement {
 customElements.define('mp-deferred-seed', DeferredSeedElement);
 
 describe('reactive state seeding', () => {
+  it('does not repeat the initial render after constructor state seeding', async () => {
+    const element = new SeededElement();
+    document.body.append(element);
+    await tick();
+
+    expect(element.renderCount).toBe(1);
+  });
+
   it('re-renders when state seeded in the constructor is written', async () => {
     const element = new SeededElement();
     document.body.append(element);
@@ -1375,14 +1555,16 @@ describe('reactive state seeding', () => {
     expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('0');
   });
 
-  it('seeds state from a property set as an attribute before the first render', () => {
-    const element = document.createElement('mp-deferred-seed');
+  it('seeds state from a property set as an attribute before the first render', async () => {
+    const element = document.createElement('mp-deferred-seed') as DeferredSeedElement;
     element.setAttribute('modelvalue', '21');
     document.body.append(element);
 
     // `setup` runs after `adoptAttributes`, so the seed reads the real value —
     // in the constructor it would have read `undefined` and fallen back to `0`.
     expect(element.shadowRoot?.querySelector('.value')?.textContent).toBe('42');
+    await tick();
+    expect(element.renderCount).toBe(1);
   });
 
   it('seeds exactly once, so a reconnect keeps what the user has since changed', () => {

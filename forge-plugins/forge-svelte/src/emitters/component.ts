@@ -20,6 +20,11 @@
 
 import { lowerSvelteModule, type SvelteLoweredModule } from "../lower.js";
 import {
+  indexOfTopLevel,
+  readCallback,
+  scanSource,
+} from "../runtime/source-text.js";
+import {
   scopeExpression,
   type SvelteScope,
 } from "../transformers/expression.js";
@@ -89,10 +94,57 @@ function effectLine(
   entry: SvelteLoweredModule["effects"][number],
   scope: SvelteScope,
 ): string {
-  const body = scopeExpression(entry.body, scope);
+  const body = effectCallback(entry, scope);
   return entry.lifecycle === "mount"
     ? `onMount(${body});`
     : `$effect(${body});`;
+}
+
+/** Add the neutral cleanup to a lifecycle callback. */
+function effectCallback(
+  entry: SvelteLoweredModule["effects"][number],
+  scope: SvelteScope,
+): string {
+  const callback = scopeExpression(entry.body, scope);
+  const cleanup =
+    entry.cleanup === undefined
+      ? undefined
+      : `return ${scopeExpression(entry.cleanup, scope)};`;
+  if (cleanup === undefined) {
+    return callback;
+  }
+
+  const parts = readCallback(callback);
+  if (parts === undefined) {
+    return callback;
+  }
+  const callbackBody = parts.body.trim();
+  const callbackStart = callback.lastIndexOf(callbackBody);
+  if (callbackStart === -1) {
+    return callback;
+  }
+  const additions = callbackReturnsCleanup(callbackBody) ? [] : [cleanup];
+  if (additions.length === 0) {
+    return callback;
+  }
+  const additionText = additions.join(" ");
+  if (callbackBody.startsWith("{") && callbackBody.endsWith("}")) {
+    const inner = callbackBody.slice(1, -1);
+    const returnIndex = indexOfTopLevel(scanSource(inner), "return");
+    const insertion = returnIndex === -1 ? inner.length : returnIndex;
+    const nextBody = `{${inner.slice(0, insertion)}${additionText} ${inner.slice(insertion)}}`;
+    return `${callback.slice(0, callbackStart)}${nextBody}${callback.slice(callbackStart + callbackBody.length)}`;
+  }
+  const nextBody = `{${additionText} return ${callbackBody};}`;
+  return `${callback.slice(0, callbackStart)}${nextBody}${callback.slice(callbackStart + callbackBody.length)}`;
+}
+
+/** Whether a block callback already returns its cleanup. */
+function callbackReturnsCleanup(body: string): boolean {
+  if (!body.startsWith("{") || !body.endsWith("}")) {
+    return false;
+  }
+  return indexOfTopLevel(scanSource(body.slice(1, -1)), "return") !== -1;
 }
 
 /**
@@ -211,7 +263,9 @@ export function emitSvelteModule(
   );
   const bindingLines = lowered.bindings.map((entry) => {
     const typeArgument =
-      entry.elementType === undefined ? "" : `<${entry.elementType}>`;
+      entry.elementType === undefined || entry.elementType.length === 0
+        ? ""
+        : `<${entry.elementType}>`;
     const initial =
       entry.initializer === undefined
         ? ""

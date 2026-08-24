@@ -26,8 +26,9 @@ declare module '*.fws?forge-web-script-manifest' {
 declare module '*.fws?forge-web-script-declarations' {
   export const declarations: string;
   export const graphMetadata: {
+    readonly contentHash: string;
     readonly graphHash?: string;
-    readonly linkMode?: string;
+    readonly linkMode?: 'static' | 'dynamic';
     readonly linkedModules?: readonly string[];
   };
   export const selfHostedMetadata: unknown;
@@ -37,6 +38,18 @@ declare module '*.fws?forge-web-script-declarations' {
 declare module '*.fws?forge-web-script-wasm' {
   const wasm: Uint8Array;
   export default wasm;
+}
+
+declare module '*.fws?forge-web-script-artifact' {
+  export const wasm: Uint8Array;
+  export const manifest: ForgeWebScriptVirtualManifest;
+  export const declarations: string;
+  export const graphMetadata: {
+    readonly contentHash: string;
+    readonly graphHash?: string;
+    readonly linkMode?: 'static' | 'dynamic';
+    readonly linkedModules?: readonly string[];
+  };
 }
 
 declare module '*.fws?forge-web-script-source-map' {

@@ -60,6 +60,12 @@ describe("the source-backed expression rewriter", () => {
     expect(rewrite("setOpen()")).toBe("this.open = undefined");
   });
 
+  it("turns a functional state setter into a field assignment", () => {
+    expect(rewrite("setOpen((value) => value + 1,)")).toBe(
+      "this.open = this.open + 1",
+    );
+  });
+
   it("emits a typed bubbling custom event for an outbound callback", () => {
     expect(rewrite("properties.onLocaleChange?.(locale)")).toBe(
       '(() => { const callback = this.onLocaleChange; const eventDetail = (locale); this.dispatchEvent(new CustomEvent<Parameters<NonNullable<typeof this.onLocaleChange>>[0]>("locale-change", { detail: eventDetail, bubbles: true, composed: true })); return callback?.(locale); })()',

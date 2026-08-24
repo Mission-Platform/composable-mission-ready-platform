@@ -23,6 +23,7 @@
  *   condition.
  */
 import {
+  frameworkAdapterModule,
   LOCAL_JSX_TYPE_NAMES,
   LOCAL_JSX_TYPES_MODULE,
   NEUTRAL_COMPILE_TIME_MARKERS,
@@ -156,7 +157,10 @@ export function buildSolidImports(
   const adapterComponents = [...values].filter((name) =>
     NEUTRAL_FRAMEWORK_COMPONENTS.has(name),
   );
-  const adapter = namedImport(adapterComponents, SOLID_ADAPTER_MODULE);
+  const adapter = namedImport(
+    adapterComponents,
+    frameworkAdapterModule("solid"),
+  );
   if (adapter !== undefined) {
     lines.push(adapter);
   }

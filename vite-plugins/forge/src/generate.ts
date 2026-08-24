@@ -18,13 +18,17 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
+import {
+  throwOnCompilerErrors,
+  type CompilerDiagnostic,
+  type FrameworkOutputPlugin,
+  type JsxFramework,
+} from '@mission-platform/forge-plugin-api';
 import { emitDts } from 'svelte2tsx';
 import ts from 'typescript';
 
 import {
-  LOCAL_EFFECT_FILE,
   LOCAL_JSX_TYPES_FILE,
-  localEffectModuleSource,
   localJsxTypesModuleSource,
   moduleTargetsFramework,
   parseTsx,
@@ -39,7 +43,6 @@ import {
 } from './compiler/discover.js';
 import { createForgeGenerationContext } from './compiler/generation-context.js';
 import { buildForgeFileGraph } from './compiler/graph.js';
-import { compileRouterModule } from './compiler/router.js';
 import {
   oxcArray,
   oxcIdentifierName,
@@ -48,6 +51,7 @@ import {
   oxcProgramBody,
   parseOxcModule,
 } from './compiler/oxc.js';
+import { compileRouterModule } from './compiler/router.js';
 import { externalReExportLine, generateEntry } from './generate/entry-synthesis.js';
 import { createFlatTreeEmitter } from './generate/flat-tree-emitter.js';
 import { createFlatImportRewriter, rewriteFlatImportsInTargets } from './generate/flat-tree-import-rewrite.js';
@@ -55,12 +59,6 @@ import { copyComponentOwnStyles, createHelperModuleCarrier, carrySpriteHelpers }
 
 import type { ForgeCompilerService } from './compiler/service.js';
 import type { TypeOrigin, TypeOriginResolver } from './generate/entry-synthesis.js';
-import {
-  throwOnCompilerErrors,
-  type CompilerDiagnostic,
-  type FrameworkOutputPlugin,
-  type JsxFramework,
-} from '@mission-platform/forge-plugin-api';
 import type { RouterOutputPlugin, RouterPluginSelection } from '@mission-platform/forge-router-plugin-api';
 import type { Plugin } from 'vite';
 
@@ -200,7 +198,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
       ].join('\n'),
     );
   }
-  // Framework-gated components (opening with a `"use react";` / `"use vue";`
+  // Framework-gated components (opening with a `"use <framework>";`
   // directive) are emitted only for the framework they target; drop the rest so
   // they neither compile nor get re-exported from this framework's entry.
   const components = discoverComponentsFromGraph(graph, stripPrefix).filter((component) => {
@@ -674,23 +672,6 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     writeModule('', LOCAL_JSX_TYPES_FILE, localJsxTypesModuleSource(target.id));
   }
 
-  // The co-located effect helper module: the Vue-only generalised watcher
-  // (`mpEffect`) the Vue emitter routes every `useEffect` through (built on
-  // native `watch`/lifecycle). Written once per tree, exactly like the local JSX
-  // types module. It is Vue-only, so `localEffectModuleSource` returns an empty
-  // string for React and nothing is written for the React build.
-  if (
-    target.id === 'react' ||
-    target.id === 'vue' ||
-    target.id === 'solid' ||
-    target.id === 'svelte' ||
-    target.id === 'web-components'
-  ) {
-    const effectModuleSource = localEffectModuleSource(target.id);
-    if (effectModuleSource.length > 0) {
-      writeModule('', LOCAL_EFFECT_FILE, effectModuleSource);
-    }
-  }
 
   // Resolve each companion type to the flat-tree module that declares it: the
   // component's own module if it declares the type, else the first copied helper

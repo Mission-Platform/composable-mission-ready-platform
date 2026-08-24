@@ -11,9 +11,9 @@
  * type has neither.
  */
 import {
+  frameworkAdapterModule,
   LOCAL_JSX_TYPES_MODULE,
   NEUTRAL_MODULE,
-  REACT_ADAPTER_MODULE,
 } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 
 import {
@@ -29,6 +29,8 @@ const CREATE_ELEMENT = "createElement";
 
 /** The neutral render factory the emitted `h(…)` calls keep using. */
 const FACTORY_NAME = "h";
+
+const ADAPTER_MODULE = frameworkAdapterModule("react");
 
 /** `import { a, b } from "source";`, or nothing when there is no name to import. */
 function importLine(
@@ -49,7 +51,7 @@ function importLine(
 export function buildReactImports(plan: ReactImportPlan): string[] {
   return [
     importLine(plan.values, REACT_MODULE),
-    importLine(plan.adapterComponents, REACT_ADAPTER_MODULE),
+    importLine(plan.adapterComponents, ADAPTER_MODULE),
     importLine(plan.runtimeValues, NEUTRAL_MODULE),
     importLine(plan.types, REACT_MODULE, true),
     importLine(plan.localTypes, LOCAL_JSX_TYPES_MODULE, true),
