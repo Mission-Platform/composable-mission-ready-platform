@@ -165,9 +165,11 @@ export function writeIntoPackage(request: PackageWriteRequest): ScaffoldResult {
 }
 
 function applyBarrelUpdate(packageDir: string, update: BarrelUpdate, validatedPath?: string): void {
-  const fullPath = validatedPath ?? resolveRepoPath(join(packageDir, update.relativePath), `barrel ${update.relativePath}`, {
-    allowMissing: true,
-  });
+  const fullPath =
+    validatedPath ??
+    resolveRepoPath(join(packageDir, update.relativePath), `barrel ${update.relativePath}`, {
+      allowMissing: true,
+    });
   const line = update.exportLine.trim();
   mkdirSync(dirname(fullPath), { recursive: true });
 

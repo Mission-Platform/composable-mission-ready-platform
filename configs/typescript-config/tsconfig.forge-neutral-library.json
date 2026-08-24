@@ -15,9 +15,7 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "noEmit": false,
-    "types": ["@mission-platform/forge/jsx-globals"],
-    "jsx": "react",
-    "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment"
+    "jsx": "react-jsx",
+    "jsxImportSource": "@mission-platform/forge"
   }
 }

@@ -16,32 +16,32 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/vite-plugin-i1
 **Tipo:** funzione
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | I18nPluginOptions |  |
+| Nome    | Digitare          | Descrizione |
+| ------- | ----------------- | ----------- |
+| opzioni | I18nPluginOptions |             |
 
 ### i18nPlugin
 
 **Tipo:** funzione
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | I18nPluginOptions |  |
+| Nome    | Digitare          | Descrizione |
+| ------- | ----------------- | ----------- |
+| opzioni | I18nPluginOptions |             |
 
 ### I18nPluginOptions
 
@@ -58,7 +58,9 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
+function readSupportedLocales(
+  options: ReadSupportedLocalesOptions = {},
+): string[];
 ```
 
 Scopri le versioni locali supportate al **periodo di compilazione/configurazione**, utilizzando esattamente lo stesso
@@ -69,9 +71,9 @@ della verità invece di mantenere manualmente un elenco parallelo.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | LeggiSupportedLocalesOptions |  |
+| Nome    | Digitare                     | Descrizione |
+| ------- | ---------------------------- | ----------- |
+| opzioni | LeggiSupportedLocalesOptions |             |
 
 ### LeggiSupportedLocalesOptions
 

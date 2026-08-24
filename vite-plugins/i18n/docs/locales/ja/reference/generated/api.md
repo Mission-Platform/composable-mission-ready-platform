@@ -16,32 +16,32 @@
 **種類:** 関数
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | I18nプラグインオプション |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| オプション | I18nプラグインオプション |      |
 
 ### i18nプラグイン
 
 **種類:** 関数
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | I18nプラグインオプション |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| オプション | I18nプラグインオプション |      |
 
 ### I18nプラグインオプション
 
@@ -58,7 +58,9 @@ export interface I18nPluginOptions
 **種類:** 関数
 
 ```typescript
-function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
+function readSupportedLocales(
+  options: ReadSupportedLocalesOptions = {},
+): string[];
 ```
 
 **ビルド/構成時**に、まったく同じものを使用して、サポートされているロケールを検出します
@@ -69,9 +71,9 @@ function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ReadSupportedLocalesオプション |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| オプション | ReadSupportedLocalesオプション |      |
 
 ### ReadSupportedLocalesオプション
 

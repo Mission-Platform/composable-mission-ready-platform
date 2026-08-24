@@ -16,32 +16,32 @@
 פונקציה **סוג:**
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | I18nPluginOptions |  |
+| שם       | הקלד              | תיאור |
+| -------- | ----------------- | ----- |
+| אפשרויות | I18nPluginOptions |       |
 
 ### i18nPlugin
 
 פונקציה **סוג:**
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | I18nPluginOptions |  |
+| שם       | הקלד              | תיאור |
+| -------- | ----------------- | ----- |
+| אפשרויות | I18nPluginOptions |       |
 
 ### I18nPluginOptions
 
@@ -58,7 +58,9 @@ export interface I18nPluginOptions
 פונקציה **סוג:**
 
 ```typescript
-function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
+function readSupportedLocales(
+  options: ReadSupportedLocalesOptions = {},
+): string[];
 ```
 
 גלה את המקומות הנתמכים ב**זמן בנייה/קונפיגורציה**, תוך שימוש זהה בדיוק
@@ -69,9 +71,9 @@ function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ReadSupportedLocalesOptions |  |
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| אפשרויות | ReadSupportedLocalesOptions |       |
 
 ### ReadSupportedLocalesOptions
 

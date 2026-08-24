@@ -16,32 +16,32 @@
 **种类：**功能
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | I18nPluginOptions | I18nPluginOptions |  |
+| 名称 | 类型              | 描述              |
+| ---- | ----------------- | ----------------- |
+| 选项 | I18nPluginOptions | I18nPluginOptions |     |
 
 ### i18n插件
 
 **种类：**功能
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | I18nPluginOptions | I18nPluginOptions |  |
+| 名称 | 类型              | 描述              |
+| ---- | ----------------- | ----------------- |
+| 选项 | I18nPluginOptions | I18nPluginOptions |     |
 
 ### I18n插件选项
 
@@ -58,7 +58,9 @@ export interface I18nPluginOptions
 **种类：**功能
 
 ```typescript
-function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
+function readSupportedLocales(
+  options: ReadSupportedLocalesOptions = {},
+): string[];
 ```
 
 使用完全相同的方法在 **构建/配置时间** 发现支持的语言环境
@@ -69,9 +71,9 @@ function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |阅读SupportedLocalesOptions |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 选项 | 阅读SupportedLocalesOptions |      |
 
 ### 读取SupportedLocalesOptions
 

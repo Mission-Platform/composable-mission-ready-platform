@@ -16,32 +16,32 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/vite
 **Tipo:** función
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de complemento I18n |  |
+| Nombre   | Tipo                         | Descripción |
+| -------- | ---------------------------- | ----------- |
+| opciones | Opciones de complemento I18n |             |
 
 ### i18nPlugin
 
 **Tipo:** función
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de complemento I18n |  |
+| Nombre   | Tipo                         | Descripción |
+| -------- | ---------------------------- | ----------- |
+| opciones | Opciones de complemento I18n |             |
 
 ### Opciones de complemento I18n
 
@@ -58,7 +58,9 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
+function readSupportedLocales(
+  options: ReadSupportedLocalesOptions = {},
+): string[];
 ```
 
 Descubra las configuraciones regionales admitidas en el **momento de compilación/configuración**, utilizando exactamente las mismas
@@ -69,9 +71,9 @@ de la verdad en lugar de mantener manualmente una lista paralela.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | ReadSupportedLocalesOptions |  |
+| Nombre   | Tipo                        | Descripción |
+| -------- | --------------------------- | ----------- |
+| opciones | ReadSupportedLocalesOptions |             |
 
 ### Leer opciones locales admitidas
 

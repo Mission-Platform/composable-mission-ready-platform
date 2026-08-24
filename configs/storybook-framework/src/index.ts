@@ -348,13 +348,10 @@ async function sharedViteFinal(framework: StorybookFramework, config: UserConfig
     plugins,
     // Svelte and Web Components have no JSX transform of their own (`svelte()`
     // only compiles `.svelte` files, and the web-components renderer expects lit
-    // templates), so a neutral `*.stories.tsx` would otherwise compile through
-    // the stories tsconfig's `jsxFactory: h` and hand a forge element tree to a
-    // runtime that cannot render it. Point Vite 8's Oxc classic JSX pragma at
-    // the slot helper's own factory instead: it builds real DOM (web components)
-    // or mountable snippets (Svelte), which both renderers accept. The settings
-    // intentionally live under `oxc`; Vite 8 ignores the legacy `esbuild` JSX
-    // fields when both transformer option sets are present.
+    // templates), so neutral `*.stories.tsx` files use the slot helper's
+    // intentional Oxc classic runtime. It builds real DOM (web components) or
+    // mountable snippets (Svelte), which both renderers accept; the setting lives
+    // under `oxc` alongside the automatic runtime used by package sources.
     ...(storyJsxOxcOverride(framework) ? { oxc: storyJsxOxcOverride(framework) } : {}),
     // Resolve bare `@mission-platform/*` imports in stories to the build for the
     // active framework via the `mp:<framework>` export conditions (the same

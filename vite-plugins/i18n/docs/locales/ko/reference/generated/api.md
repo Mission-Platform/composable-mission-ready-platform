@@ -16,32 +16,32 @@
 **종류:** 기능
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | I18n플러그인 옵션 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 옵션 | I18n플러그인 옵션 |      |
 
 ### i18n플러그인
 
 **종류:** 기능
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | I18n플러그인 옵션 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 옵션 | I18n플러그인 옵션 |      |
 
 ### I18n플러그인옵션
 
@@ -58,7 +58,9 @@ export interface I18nPluginOptions
 **종류:** 기능
 
 ```typescript
-function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
+function readSupportedLocales(
+  options: ReadSupportedLocalesOptions = {},
+): string[];
 ```
 
 동일한 언어를 사용하여 **빌드/구성 시간**에 지원되는 로케일을 검색하세요.
@@ -69,9 +71,9 @@ function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ReadSupportedLocalesOptions |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 옵션 | ReadSupportedLocalesOptions |      |
 
 ### 지원되는 로캘 옵션 읽기
 

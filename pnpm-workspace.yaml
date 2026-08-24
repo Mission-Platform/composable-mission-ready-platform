@@ -162,7 +162,7 @@ catalogs:
     rwsdk: ^1.7.2
     wrangler: ^4.125.0
     "@cloudflare/vite-plugin": ^1.53.1
-    "@cloudflare/workers-types": ^5.20260821.1
+    "@cloudflare/workers-types": ^5.20260822.1
 
   mcp:
     "@modelcontextprotocol/sdk": ^1.30.0

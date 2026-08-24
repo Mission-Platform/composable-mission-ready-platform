@@ -16,32 +16,32 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/vite-plugin
 **Art:** Funktion
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | I18nPluginOptions |  |
+| Name     | Geben Sie         | ein Beschreibung |
+| -------- | ----------------- | ---------------- |
+| Optionen | I18nPluginOptions |                  |
 
 ### i18nPlugin
 
 **Art:** Funktion
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | I18nPluginOptions |  |
+| Name     | Geben Sie         | ein Beschreibung |
+| -------- | ----------------- | ---------------- |
+| Optionen | I18nPluginOptions |                  |
 
 ### I18nPluginOptions
 
@@ -58,7 +58,9 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
+function readSupportedLocales(
+  options: ReadSupportedLocalesOptions = {},
+): string[];
 ```
 
 Entdecken Sie die unterstützten Gebietsschemas zum **Build-/Konfigurationszeitpunkt** und verwenden Sie dabei genau dasselbe
@@ -69,9 +71,9 @@ der Wahrheit, anstatt eine parallele Liste manuell zu pflegen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ReadSupportedLocalesOptions |  |
+| Name     | Geben Sie                   | ein Beschreibung |
+| -------- | --------------------------- | ---------------- |
+| Optionen | ReadSupportedLocalesOptions |                  |
 
 ### ReadSupportedLocalesOptions
 

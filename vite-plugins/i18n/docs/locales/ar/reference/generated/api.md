@@ -16,32 +16,32 @@
 **النوع:** الوظيفة
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | I18nPluginOptions |  |
+| الاسم  | اكتب              | الوصف |
+| ------ | ----------------- | ----- |
+| خيارات | I18nPluginOptions |       |
 
 ### i18nPlugin
 
 **النوع:** الوظيفة
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | I18nPluginOptions |  |
+| الاسم  | اكتب              | الوصف |
+| ------ | ----------------- | ----- |
+| خيارات | I18nPluginOptions |       |
 
 ### I18nPluginOptions
 
@@ -58,7 +58,9 @@ export interface I18nPluginOptions
 **النوع:** الوظيفة
 
 ```typescript
-function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
+function readSupportedLocales(
+  options: ReadSupportedLocalesOptions = {},
+): string[];
 ```
 
 اكتشف اللغات المدعومة في **وقت الإنشاء/التكوين**، باستخدام نفس اللغة بالضبط
@@ -69,9 +71,9 @@ function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | ReadSupportedLocalesOptions |  |
+| الاسم  | اكتب                        | الوصف |
+| ------ | --------------------------- | ----- |
+| خيارات | ReadSupportedLocalesOptions |       |
 
 ### قراءة الخيارات المحلية المدعومة
 

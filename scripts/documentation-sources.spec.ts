@@ -1,7 +1,13 @@
-import { describe, expect, it } from 'vitest';
 import { resolve } from 'node:path';
 
-import { discoverDocumentationRoots, qualifiedSlug, rootForPath } from './documentation-sources';
+import { describe, expect, it } from 'vitest';
+
+import {
+  discoverDocumentationRoots,
+  packageDocumentationSourceRoot,
+  qualifiedSlug,
+  rootForPath,
+} from './documentation-sources';
 
 const repositoryRoot = resolve(import.meta.dirname, '..');
 
@@ -17,7 +23,13 @@ describe('documentation source ownership', () => {
   });
 
   it('selects the most specific root for nested package paths', () => {
-    const roots = discoverDocumentationRoots(repositoryRoot);
+    const roots = [
+      packageDocumentationSourceRoot('extensions/fws-vscode', `${repositoryRoot}/extensions/fws-vscode/docs`),
+      packageDocumentationSourceRoot(
+        'extensions/fws-vscode/server/dap',
+        `${repositoryRoot}/extensions/fws-vscode/server/dap/docs`,
+      ),
+    ];
     const nestedPath = `${repositoryRoot}/extensions/fws-vscode/server/dap/docs/reference/generated/api.md`;
 
     expect(rootForPath(nestedPath, roots)?.routePrefix).toBe('extensions/fws-vscode/server/dap');

@@ -32,9 +32,9 @@ describe('documentation route inventory', () => {
     expect(slugs).toEqual(runtimeSlugs);
   });
 
-  it('discovers documentation below nested package boundaries', () => {
-    expect(roots.some((root) => root.routePrefix === 'extensions/fws-vscode/server/dap')).toBe(true);
-    expect(slugs).toContain('extensions/fws-vscode/server/dap/reference/generated/api');
+  it('discovers documentation for the DAP package', () => {
+    expect(roots.some((root) => root.routePrefix === 'packages/forge-web-script-dap')).toBe(true);
+    expect(slugs).toContain('packages/forge-web-script-dap/reference/generated/api');
   });
 
   it('uses one ownership parser for root, nested package, and unsupported paths', () => {
@@ -48,7 +48,10 @@ describe('documentation route inventory', () => {
     });
     expect(parseWorkspaceDocumentationPath('apps/website/docs/index.md')).toBeUndefined();
 
-    const parsed = parseDocumentationModulePath('../../../packages/barcode/docs/locales/fr/index.md', '@mission-platform/barcode');
+    const parsed = parseDocumentationModulePath(
+      '../../../packages/barcode/docs/locales/fr/index.md',
+      '@mission-platform/barcode',
+    );
     expect(parsed?.locale).toBe('fr');
     expect(parsed?.sourceRoot.routePrefix).toBe('packages/barcode');
     expect(parsed?.documentPath).toBe('index');
@@ -67,10 +70,20 @@ describe('documentation route inventory', () => {
   });
 
   it('prefers the most specific (longest) documentation root for nested package slugs', () => {
-    const parentRoot = { kind: 'package' as const, rootDirectory: '/root', routePrefix: 'ext/parent', workspaceDirectory: 'ext/parent' };
-    const nestedRoot = { kind: 'package' as const, rootDirectory: '/root/nested', routePrefix: 'ext/parent/nested', workspaceDirectory: 'ext/parent/nested' };
+    const parentRoot = {
+      kind: 'package' as const,
+      rootDirectory: '/root',
+      routePrefix: 'ext/parent',
+      workspaceDirectory: 'ext/parent',
+    };
+    const nestedRoot = {
+      kind: 'package' as const,
+      rootDirectory: '/root/nested',
+      routePrefix: 'ext/parent/nested',
+      workspaceDirectory: 'ext/parent/nested',
+    };
     const roots = [parentRoot, nestedRoot];
-    
+
     const slug = 'ext/parent/nested/reference/api';
     const root = rootForSlug(slug, roots);
     expect(root).toBe(nestedRoot);

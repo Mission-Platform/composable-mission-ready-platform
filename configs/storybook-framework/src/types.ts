@@ -7,8 +7,9 @@
  * the renderer and its JSX transform, while the bare `@mission-platform/<pkg>`
  * import auto-resolves to the matching framework build). Inside a package the
  * same story is type-checked under the neutral forge JSX toolchain
- * (`jsxFactory: h`, `@mission-platform/forge/jsx-globals`), where a component is
- * a plain `(properties) => MpElement` function rather than a Vue/React node.
+ * (`jsx: react-jsx`, `jsxImportSource: '@mission-platform/forge'`), where a
+ * component is a plain `(properties) => MpElement` function rather than a
+ * Vue/React node.
  *
  * A renderer-specific `Meta`/`StoryObj` (e.g. from `@storybook/react-vite`)
  * therefore can't be used — it is bound to that renderer's component/node

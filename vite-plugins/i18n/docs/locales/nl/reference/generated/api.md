@@ -16,32 +16,32 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/vite-pl
 **Soort:** functie
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | I18nPluginOpties |  |
+| Naam   | Typ              | Beschrijving |
+| ------ | ---------------- | ------------ |
+| opties | I18nPluginOpties |              |
 
 ### i18nPlugin
 
 **Soort:** functie
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | I18nPluginOpties |  |
+| Naam   | Typ              | Beschrijving |
+| ------ | ---------------- | ------------ |
+| opties | I18nPluginOpties |              |
 
 ### I18nPluginopties
 
@@ -58,7 +58,9 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
+function readSupportedLocales(
+  options: ReadSupportedLocalesOptions = {},
+): string[];
 ```
 
 Ontdek de ondersteunde landinstellingen op **build/config time**, met exact dezelfde
@@ -69,9 +71,9 @@ van de waarheid in plaats van met de hand een parallelle lijst bij te houden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ReadSupportedLocalesOptions |  |
+| Naam   | Typ                         | Beschrijving |
+| ------ | --------------------------- | ------------ |
+| opties | ReadSupportedLocalesOptions |              |
 
 ### ReadSupportedLocalesOptions
 

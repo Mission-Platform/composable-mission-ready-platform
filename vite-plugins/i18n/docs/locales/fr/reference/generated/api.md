@@ -16,32 +16,32 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | Options du plug-in I18n |  |
+| Nom     | Tapez                   | Descriptif |
+| ------- | ----------------------- | ---------- |
+| options | Options du plug-in I18n |            |
 
 ### Plugin i18n
 
 **Genre :** fonction
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | Options du plug-in I18n |  |
+| Nom     | Tapez                   | Descriptif |
+| ------- | ----------------------- | ---------- |
+| options | Options du plug-in I18n |            |
 
 ### Options du plug-in I18n
 
@@ -58,7 +58,9 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
+function readSupportedLocales(
+  options: ReadSupportedLocalesOptions = {},
+): string[];
 ```
 
 Découvrez les paramètres régionaux pris en charge au **temps de construction/configuration**, en utilisant exactement la même
@@ -69,9 +71,9 @@ de vérité au lieu de maintenir manuellement une liste parallèle.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | LireSupportedLocalesOptions |  |
+| Nom     | Tapez                       | Descriptif |
+| ------- | --------------------------- | ---------- |
+| options | LireSupportedLocalesOptions |            |
 
 ### ReadSupportedLocalesOptions
 
