@@ -1,72 +1,72 @@
-# 共有ユーティリティスクリプト
+# Shared Utility Scripts
 
-正規の英語ソースからの機械支援翻訳です。必要に応じて人手で確認してください。パッケージ名、コマンド、パス、技術識別子は変更しません。
+This guide intentionally remains in the project documentation tier: `scripts/`
+contains repository orchestration rather than a publishable workspace package.
+Package- and application-specific commands remain documented beside their
+owning workspace.
 
-> 英語の原典: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
-> 言語: 日本語 (ja)
+The Mission Platform maintains a set of shared utility scripts in the root
+`scripts/` directory, managed by the root workspace tooling.
 
-Mission Platform は、ルートに共有ユーティリティ スクリプトのセットを維持します。 `scripts/` によって管理されるディレクトリ
-`@mission-platform/scripts` パッケージ。
+## Overview
 
-## 概要
+These scripts automate common monorepo tasks, such as local development setup and build verification. Translation
+extraction is defined by each app or package and orchestrated from the repository root with Turborepo.
 
-これらのスクリプトは、ローカル開発セットアップやビルド検証などの一般的なモノリポジトリ タスクを自動化します。翻訳
-抽出は各アプリまたはパッケージによって定義され、Turborepo を使用してリポジトリ ルートから調整されます。
+## Available Scripts
 
-## 利用可能なスクリプト
+### i18n Extraction (`i18n:extract`)
 
-### i18n 抽出 (`i18n:extract`)
-
-翻訳を所有する各アプリまたはパッケージは、 `i18n:extract` スクリプトと `i18next.config.ts`。コマンドは書きます
-各ワークスペースの下にある名前空間バンドル `locales/<locale>/` ディレクトリ。構成されているすべてのワークスペースの抽出を実行します。
-リポジトリのルート:
+Each app or package that owns translations provides an `i18n:extract` script and `i18next.config.ts`. The command writes
+namespace bundles under each workspace's `locales/<locale>/` directory. Run extraction for all configured workspaces from
+the repository root:
 
 ```bash
 pnpm i18n:extract
 ```
 
-### 開発証明書の生成 (`generate-dev-cert.ts`)
+### Dev Certificate Generation (`generate-dev-cert.ts`)
 
-HTTPS 開発用のローカル SSL/TLS 証明書を生成します。これは、安全なセキュリティを必要とする機能をテストする場合に役立ちます。
-コンテキスト (例: `@mission-platform/code-scanner`).
+Generates local SSL/TLS certificates for HTTPS development. This is useful for testing features that require a secure
+context (e.g., camera access via `@mission-platform/code-scanner`).
 
 ```bash
 pnpm exec tsx scripts/generate-dev-cert.ts
 ```
 
-### フレームワーク解像度の検証 (`verify-framework-resolution.mjs`)
+### Framework Resolution Verification (`verify-framework-resolution.mjs`)
 
-それを検証します `@mission-platform/*` パッケージのエクスポートは、意図したフレームワーク ビルドに正しく解決されます (Vue, React、など）
-環境の輸出条件に基づいて。
+Verifies that `@mission-platform/*` package exports correctly resolve to the intended framework build (Vue, React, etc.)
+based on the environment's export conditions.
 
 ```bash
 node scripts/verify-framework-resolution.mjs
 ```
 
-## 実行方法
+## Execution Methods
 
-### パッケージマネージャー経由
+### Via Package Manager
 
-ほとんどのスクリプトは次のようにして入手できます。 `pnpm` ルート内のスクリプト `package.json`:
+Most scripts are available as `pnpm` scripts in the root `package.json`:
 
 ```bash
 pnpm run <script-name>
 ```
 
-### 直接実行
+### Direct Execution
 
-個人 TypeScript スクリプトは次を使用して実行できます `tsx` または `node --experimental-strip-types`:
+Individual TypeScript scripts can be run using `tsx` or `node --experimental-strip-types`:
 
 ```bash
 pnpm exec tsx scripts/<filename>.ts
 ```
 
-## 貢献ガイドライン
+## Contribution Guidelines
 
-新しい共有スクリプトを追加する場合:
+When adding a new shared script:
 
-- に置きます `scripts/` ディレクトリ。
-- 使用 TypeScript 可能な限り。
-- スクリプトが外部パッケージに依存している場合は、それらを所有するワークスペースのパッケージに追加します。 `package.json`。
-- スクリプトの目的と使用法をこのファイルに文書化します。
-- ルートに対応するエントリを追加します `package.json` 頻繁に使用されるユーティリティの場合。
+- Place it in the `scripts/` directory.
+- Use TypeScript where possible.
+- If the script depends on external packages, add them to the owning workspace's `package.json`.
+- Document the script's purpose and usage in this file.
+- Add a corresponding entry in the root `package.json` if it's a frequently used utility.
