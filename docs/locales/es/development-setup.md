@@ -1,95 +1,81 @@
-# Configuración de desarrollo
+# Development Setup
 
-Traducción asistida por máquina a partir de la fuente canónica en inglés. Revisar manualmente cuando sea necesario. Los nombres de paquetes, comandos, rutas e identificadores técnicos no se modifican.
+This guide provides a step-by-step tutorial for setting up your local environment to contribute to the Mission Platform.
+By the end of this guide, you will have a working monorepo and be able to run the development tools.
 
-> Fuente en inglés: [docs/development-setup.md](../../development-setup.md)
-> Idioma: Español (es)
+## Prerequisites
 
-Esta guía proporciona un tutorial paso a paso para configurar su entorno local para contribuir a Mission Platform.
-Al final de esta guía, tendrá un monorepo funcional y podrá ejecutar las herramientas de desarrollo.
+Before cloning the repository, ensure your system meets the following requirements.
 
-## Requisitos previos
+### System Requirements
 
-Antes de clonar el repositorio, asegúrese de que su sistema cumpla con los siguientes requisitos.
+| Tool                        | Required Version | Purpose                                             |
+| :-------------------------- | :--------------- | :-------------------------------------------------- |
+| **Node.js** | `24.19.0`        | Runtime environment (Active LTS) |
+| **pnpm**                    | `11.21.0`        | Package manager and workspace orchestrator          |
+| **Git**                     | Latest stable    | Version control                                     |
+| **Rust**                    | Stable toolchain | Optional standalone Rust benchmark development      |
+| **Docker**                  | Latest stable    | Required only for the Emscripten Hunspell build     |
 
-### Requisitos del sistema
+### Version Management (Recommended)
 
-| Herramienta | Versión requerida | Propósito |
-| :------------ | :---------------- | :---------------------------------------------------- |
-| **Node.js** | `24.19.0`         | Entorno de ejecución (LTS activo) |
-| **pnpm**      | `11.21.0`         | Gestor de paquetes y orquestador del espacio de trabajo |
-| **Git** | Último establo | Control de versiones |
-| **Óxido** | Cadena de herramientas estable | Pruebas nativas y desarrollo de cajas Rust/WASM |
-| **paquete de agua** | `0.15.0` a través de pnpm | Empaquetado de cajas Rust como espacios de trabajo de WebAssembly escritos |
-| **Acoplador** | Último establo | Requerido sólo para la compilación Emscripten Hunspell |
-
-### Gestión de versiones (recomendado)
-
-Recomendamos usar **nvm** (Node Administrador de versiones) para asegurarse de que está utilizando la versión correcta. NodeVersión .js especificada en el
-raíz `.nvmrc` archivo.
+We recommend using **nvm** (Node Version Manager) to ensure you are using the correct Node.js version specified in the
+root `.nvmrc` file.
 
 ```bash
 nvm install
 nvm use
 ```
 
-Permitir **pnpm** usando Corepack:
+Enable **pnpm** using Corepack:
 
 ```bash
 corepack enable
 corepack prepare pnpm@11.21.0 --activate
 ```
 
-Instale el objetivo Rust cuando trabaje en cajas Rust. El empaquetador WebAssembly lo proporciona el anclado `wasm-pack` npm
-dependencia durante `pnpm install`:
+## Initial Setup
 
-```bash
-rustup target add wasm32-unknown-unknown
-```
+Follow these steps to initialize the monorepo on your machine.
 
-## Configuración inicial
-
-Siga estos pasos para inicializar el monorepo en su máquina.
-
-### 1. Clonar el repositorio
+### 1. Clone the Repository
 
 ```bash
 git clone git@github.com:Mission-Platform/composable-mission-ready-platform.git
 cd composable-mission-ready-platform
 ```
 
-### 2. Instalar dependencias
+### 2. Install Dependencies
 
-Instale todas las dependencias del espacio de trabajo y configure los ganchos de git:
+Install all workspace dependencies and set up git hooks:
 
 ```bash
 pnpm install
 ```
 
-Este comando desencadena el `prepare` script, que inicializa **Husky** para confirmar linting y garantiza que todos los internos
-Los enlaces del paquete están establecidos correctamente.
+This command triggers the `prepare` script, which initializes **Husky** for commit linting and ensures all internal
+package links are correctly established.
 
-### 3. Verificar la instalación
+### 3. Verify the Installation
 
-Ejecute una prueba de humo para garantizar que el sistema de compilación y el entorno estén configurados correctamente:
+Run a smoke test to ensure the build system and environment are correctly configured:
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/forge...
 ```
 
-El `...` También construye las dependencias de Forge requeridas por el paquete. Se prueban las cajas de codificador y decodificador de óxido
-nativamente con `cargo test`; su
-`wasm-pack` Las salidas se escriben en el correspondiente `packages/*-wasm/`
-espacio de trabajo por la tarea del paquete de la caja, que es el paquete registrado/contrato de compilación utilizado por Turborepo.
+The `...` also builds the Forge dependencies required by the package. The
+neutral code scanner is compiled from its Forge Web Script graph; it does not
+require a Rust or `wasm-pack` build step.
 
-## Flujo de trabajo de desarrollo
+## Development Workflow
 
-Mission Platform utiliza **Turborepo** para organizar tareas entre aplicaciones y paquetes.
+The Mission Platform uses **Turborepo** to orchestrate tasks across applications and packages.
 
-### Desarrollo de componentes (libro de cuentos)
+### Component Development (Storybook)
 
-Storybook es el banco de trabajo principal para construir y probar componentes de forma aislada. Puede apuntar a marcos específicos
-usando variables de entorno:
+Storybook is the primary workbench for building and testing components in isolation. You can target specific frameworks
+using environment variables:
 
 ```bash
 # Start Vue 3 Storybook
@@ -108,8 +94,8 @@ pnpm storybook:solid
 pnpm storybook:web-component
 ```
 
-Los cinco modos utilizan el mismo inventario de historia neutral. Para validar cada estática.
-banco de trabajo construido en una sola pasada:
+All five modes use the same neutral story inventory. To validate every static
+workbench build in one pass:
 
 ```bash
 for framework in vue react svelte solid web-component; do
@@ -117,36 +103,36 @@ for framework in vue react svelte solid web-component; do
 done
 ```
 
-Los paquetes respaldados por Forge publican coincidencias `mp:vue`, `mp:react`, `mp:svelte`,
-`mp:solid`, y `mp:web-component` condiciones. La condición activa debe ser
-configurado por el paquete consumidor; ver [la referencia del compilador](forge-compiler.md)
-para el complemento de destino y la canalización de declaración.
+Forge-backed packages publish matching `mp:vue`, `mp:react`, `mp:svelte`,
+`mp:solid`, and `mp:web-component` conditions. The active condition must be
+configured by the consuming bundler; see [the compiler reference](../vite-plugins/forge/docs/reference/compiler.md)
+for the target plugin and declaration pipeline.
 
-### Desarrollo de aplicaciones
+### Application Development
 
-Para iniciar una aplicación específica en modo de desarrollo:
+To start a specific application in development mode:
 
 ```bash
 # Start My Care Notes (Vue 3)
 pnpm exec turbo run dev --filter @mission-platform/my-care-notes
 ```
 
-La aplicación normalmente estará disponible en `http://localhost:5173`.
+The application will typically be available at `http://localhost:5173`.
 
-### Comandos comunes
+### Common Commands
 
-| Tarea | Comando | Descripción |
+| Task       | Command       | Description                    |
 | :--------- | :------------ | :----------------------------- |
-| **Construir** | `pnpm build`  | Cree todas las aplicaciones y paquetes |
-| **Prueba** | `pnpm test`   | ejecutar todo Vitest suites |
-| **Pelusa** | `pnpm lint`   | Correr ESLint a través del monorepo |
-| **Formato** | `pnpm format` | Verifique el formato con Prettier |
+| **Build**  | `pnpm build`  | Build all apps and packages    |
+| **Test**   | `pnpm test`   | Run all Vitest suites          |
+| **Lint**   | `pnpm lint`   | Run ESLint across the monorepo |
+| **Format** | `pnpm format` | Check formatting with Prettier |
 
-## Solución de problemas
+## Troubleshooting
 
-### Borrar cachés
+### Clearing Caches
 
-Si encuentra errores de compilación inesperados, borre Turborepo y Node cachés:
+If you encounter unexpected build errors, clear the Turborepo and Node caches:
 
 ```bash
 # Remove Turborepo cache
@@ -157,10 +143,9 @@ pnpm -r exec rm -rf node_modules
 pnpm install
 ```
 
-### Fallos de compilación de WASM
+### WASM Build Failures
 
-Si los paquetes Rust/WASM no se compilan, verifique que la cadena de herramientas estable de Rust y
-`wasm32-unknown-unknown` el objetivo está instalado, luego ejecute `pnpm install` para restaurar lo anclado `wasm-pack` npm dependencia.
-El
-`@mission-platform/hunspell` La compilación de Emscripten también requiere que Docker esté en ejecución; las otras cajas de Rust construyen
-con la cadena de herramientas local de Rust.
+If a Forge Web Script artifact fails to build, inspect its compiler diagnostics
+and verify the selected static or dynamic link profile. The
+`@mission-platform/hunspell` Emscripten build additionally requires Docker to
+be running.
