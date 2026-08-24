@@ -1,72 +1,72 @@
-# البرامج النصية المساعدة المشتركة
+# Shared Utility Scripts
 
-ترجمة آلية مساعدة من المصدر الإنجليزي الأساسي. تُراجع يدويًا عند الحاجة. تبقى أسماء الحزم والأوامر والمسارات والمعرّفات التقنية دون تغيير.
+This guide intentionally remains in the project documentation tier: `scripts/`
+contains repository orchestration rather than a publishable workspace package.
+Package- and application-specific commands remain documented beside their
+owning workspace.
 
-> المصدر الإنجليزي: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
-> اللغة: العربية (ar)
+The Mission Platform maintains a set of shared utility scripts in the root
+`scripts/` directory, managed by the root workspace tooling.
 
-تحتفظ Mission Platform بمجموعة من البرامج النصية للأدوات المساعدة المشتركة في الجذر `scripts/` الدليل، الذي يديره
-`@mission-platform/scripts` طَرد.
+## Overview
 
-## ملخص
+These scripts automate common monorepo tasks, such as local development setup and build verification. Translation
+extraction is defined by each app or package and orchestrated from the repository root with Turborepo.
 
-تعمل هذه البرامج النصية على أتمتة مهام monorepo الشائعة، مثل إعداد التطوير المحلي والتحقق من البناء. الترجمة
-يتم تعريف الاستخراج بواسطة كل تطبيق أو حزمة ويتم تنسيقه من جذر المستودع باستخدام Turborepo.
+## Available Scripts
 
-## البرامج النصية المتاحة
+### i18n Extraction (`i18n:extract`)
 
-### استخراج i18n (`i18n:extract`)
-
-يوفر كل تطبيق أو حزمة تمتلك ترجمات `i18n:extract` البرنامج النصي و `i18next.config.ts`. يكتب الأمر
-حزم مساحة الاسم ضمن كل مساحة عمل `locales/<locale>/` دليل. قم بتشغيل الاستخراج لجميع مساحات العمل التي تم تكوينها من
-جذر المستودع:
+Each app or package that owns translations provides an `i18n:extract` script and `i18next.config.ts`. The command writes
+namespace bundles under each workspace's `locales/<locale>/` directory. Run extraction for all configured workspaces from
+the repository root:
 
 ```bash
 pnpm i18n:extract
 ```
 
-### إنشاء شهادة المطورين (`generate-dev-cert.ts`)
+### Dev Certificate Generation (`generate-dev-cert.ts`)
 
-يُنشئ شهادات SSL/TLS محلية لتطوير HTTPS. وهذا مفيد لاختبار الميزات التي تتطلب تأمينًا
-السياق (على سبيل المثال، الوصول إلى الكاميرا عبر `@mission-platform/code-scanner`).
+Generates local SSL/TLS certificates for HTTPS development. This is useful for testing features that require a secure
+context (e.g., camera access via `@mission-platform/code-scanner`).
 
 ```bash
 pnpm exec tsx scripts/generate-dev-cert.ts
 ```
 
-### التحقق من دقة الإطار (`verify-framework-resolution.mjs`)
+### Framework Resolution Verification (`verify-framework-resolution.mjs`)
 
-يتحقق من ذلك `@mission-platform/*` يتم حل صادرات الحزمة بشكل صحيح لبناء إطار العمل المقصود (Vue, React، الخ.)
-بناء على ظروف التصدير البيئية.
+Verifies that `@mission-platform/*` package exports correctly resolve to the intended framework build (Vue, React, etc.)
+based on the environment's export conditions.
 
 ```bash
 node scripts/verify-framework-resolution.mjs
 ```
 
-## طرق التنفيذ
+## Execution Methods
 
-### عبر مدير الحزم
+### Via Package Manager
 
-تتوفر معظم البرامج النصية كـ `pnpm` البرامج النصية في الجذر `package.json`:
+Most scripts are available as `pnpm` scripts in the root `package.json`:
 
 ```bash
 pnpm run <script-name>
 ```
 
-### التنفيذ المباشر
+### Direct Execution
 
-فردي TypeScript يمكن تشغيل البرامج النصية باستخدام `tsx` أو `node --experimental-strip-types`:
+Individual TypeScript scripts can be run using `tsx` or `node --experimental-strip-types`:
 
 ```bash
 pnpm exec tsx scripts/<filename>.ts
 ```
 
-## إرشادات المساهمة
+## Contribution Guidelines
 
-عند إضافة برنامج نصي مشترك جديد:
+When adding a new shared script:
 
-- ضعه في `scripts/` دليل.
-- يستخدم TypeScript حيثما كان ذلك ممكنا.
-- إذا كان السكربت يعتمد على حزم خارجية، قم بإضافتها إلى مساحة العمل الخاصة به `package.json`.
-- توثيق غرض البرنامج النصي واستخدامه في هذا الملف.
-- إضافة الإدخال المقابل في الجذر `package.json` إذا كانت أداة مساعدة تستخدم بشكل متكرر.
+- Place it in the `scripts/` directory.
+- Use TypeScript where possible.
+- If the script depends on external packages, add them to the owning workspace's `package.json`.
+- Document the script's purpose and usage in this file.
+- Add a corresponding entry in the root `package.json` if it's a frequently used utility.
