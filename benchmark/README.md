@@ -5,6 +5,11 @@ corpus through JavaScript, Rust/WASM, AssemblyScript/WASM, and Forge Web Script
 VM/emitted-WASM adapters. It runs the same cases in Node and headless Chromium
 when the documented prerequisites are installed.
 
+The scanner-specific harness is intentionally separate from the general
+benchmark schema. It measures the built public `@mission-platform/code-scanner`
+façade over deterministic QR frames, with full-frame and ROI cases at
+`640×480` and `1280×720`.
+
 ## Prerequisites
 
 - Node and pnpm versions declared by the repository root.
@@ -26,6 +31,9 @@ pnpm bench
 pnpm bench --warmup 0 --samples 1
 pnpm bench --node-only --output benchmark/results/local-node
 pnpm bench --baseline benchmark/results/previous/report.json
+pnpm bench:scanner --warmup 3 --samples 10 --output benchmark/results/scanner/local
+pnpm bench:scanner --smoke --output benchmark/results/scanner/smoke
+pnpm bench:scanner --case qr-640x480-roi --warmup 0 --samples 1
 ```
 
 Useful options are:
@@ -105,3 +113,32 @@ loader; use the combined command for a complete run.
 
 Normal repository `build` and `test` tasks do not run benchmark measurements;
 the Turbo benchmark task is explicitly non-cached.
+
+## Scanner benchmark
+
+`pnpm bench:scanner` writes `report.json` and `report.md`. Its phases are:
+
+- `preprocess` — public `imageDataToLuma` plus `contrastStretchLuma`.
+- `marshal-proxy` — conversion of the prepared luma bytes to a JavaScript
+  number array. This is an explicitly labeled proxy, not a raw scanner call.
+- `adapted-scan` — the public synchronous `scanImageData` façade, including its
+  preprocessing, scratch allocation, marshalling, FWS scan, and result decoding.
+- `raw-session-scan` — the public asynchronous factory’s raw pointer session
+  called with the original `ImageLike` frame and optional ROI.
+
+The report measures both `adapted-scan` and `raw-session-scan`. Raw sessions
+currently accept `ImageLike` and perform their own preprocessing, scratch
+allocation, marshalling, scan, and result decoding. Consequently,
+`raw-session-scan` is not a prepared-luma or explicit-marshalling parity
+measurement with `marshal-proxy`; its timing includes that complete raw-session
+path. The harness uses only the public
+`createScannerRawPointerSessionAsync` export and does not import the internal
+`.fws` loader or ABI.
+
+Use `--case CASE_ID` to benchmark one of the four representative cases. Use
+`--smoke` for a bounded runtime check: it selects `qr-640x480-full` unless
+`--case` is also supplied, and forces zero warmups and one measured sample.
+This is the recommended first run because the `1280×720` full-frame scanner
+cases can be substantially more expensive on some environments. Smoke output
+is a real benchmark report, but it must not be treated as a full multi-case
+timing result.
