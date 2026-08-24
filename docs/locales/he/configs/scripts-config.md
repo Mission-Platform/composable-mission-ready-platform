@@ -1,72 +1,72 @@
-# סקריפטים של שירות משותף
+# Shared Utility Scripts
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+This guide intentionally remains in the project documentation tier: `scripts/`
+contains repository orchestration rather than a publishable workspace package.
+Package- and application-specific commands remain documented beside their
+owning workspace.
 
-> מקור באנגלית: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
-> שפה: עברית (he)
+The Mission Platform maintains a set of shared utility scripts in the root
+`scripts/` directory, managed by the root workspace tooling.
 
-פלטפורמת המשימה שומרת על קבוצה של סקריפטים של כלי שירות משותפים בשורש `scripts/` ספרייה, המנוהלת על ידי
-`@mission-platform/scripts` חֲבִילָה.
+## Overview
 
-## סקירה כללית
+These scripts automate common monorepo tasks, such as local development setup and build verification. Translation
+extraction is defined by each app or package and orchestrated from the repository root with Turborepo.
 
-סקריפטים אלו הופכים משימות monorepo נפוצות לאוטומטיות, כגון הגדרת פיתוח מקומי ואימות בנייה. תרגום
-החילוץ מוגדר על ידי כל אפליקציה או חבילה ומתוזמר משורש המאגר עם Turborepo.
+## Available Scripts
 
-## סקריפטים זמינים
+### i18n Extraction (`i18n:extract`)
 
-### חילוץ i18n (`i18n:extract`)
-
-כל אפליקציה או חבילה שבבעלותם תרגומים מספקת `i18n:extract` תסריט ו `i18next.config.ts`. הפקודה כותבת
-חבילות מרחב שמות מתחת לכל סביבת עבודה `locales/<locale>/` מַדרִיך. הפעל חילוץ עבור כל סביבות העבודה המוגדרות מ
-שורש המאגר:
+Each app or package that owns translations provides an `i18n:extract` script and `i18next.config.ts`. The command writes
+namespace bundles under each workspace's `locales/<locale>/` directory. Run extraction for all configured workspaces from
+the repository root:
 
 ```bash
 pnpm i18n:extract
 ```
 
-### יצירת אישורי מפתח (`generate-dev-cert.ts`)
+### Dev Certificate Generation (`generate-dev-cert.ts`)
 
-מייצר אישורי SSL/TLS מקומיים לפיתוח HTTPS. זה שימושי לבדיקת תכונות הדורשות מאובטח
-הקשר (למשל, גישה למצלמה באמצעות `@mission-platform/code-scanner`).
+Generates local SSL/TLS certificates for HTTPS development. This is useful for testing features that require a secure
+context (e.g., camera access via `@mission-platform/code-scanner`).
 
 ```bash
 pnpm exec tsx scripts/generate-dev-cert.ts
 ```
 
-### אימות רזולוציית מסגרת (`verify-framework-resolution.mjs`)
+### Framework Resolution Verification (`verify-framework-resolution.mjs`)
 
-מאמת את זה `@mission-platform/*` ייצוא חבילות פותר נכון לבניית המסגרת המיועדת (Vue, Reactוכו')
-בהתבסס על תנאי הייצוא של הסביבה.
+Verifies that `@mission-platform/*` package exports correctly resolve to the intended framework build (Vue, React, etc.)
+based on the environment's export conditions.
 
 ```bash
 node scripts/verify-framework-resolution.mjs
 ```
 
-## שיטות ביצוע
+## Execution Methods
 
-### דרך מנהל החבילות
+### Via Package Manager
 
-רוב התסריטים זמינים בתור `pnpm` סקריפטים בשורש `package.json`:
+Most scripts are available as `pnpm` scripts in the root `package.json`:
 
 ```bash
 pnpm run <script-name>
 ```
 
-### ביצוע ישיר
+### Direct Execution
 
-אִישִׁי TypeScript ניתן להפעיל סקריפטים באמצעות `tsx` אוֹ `node --experimental-strip-types`:
+Individual TypeScript scripts can be run using `tsx` or `node --experimental-strip-types`:
 
 ```bash
 pnpm exec tsx scripts/<filename>.ts
 ```
 
-## הנחיות לתרומה
+## Contribution Guidelines
 
-בעת הוספת סקריפט משותף חדש:
+When adding a new shared script:
 
-- הנח אותו ב `scripts/` מַדרִיך.
-- השתמש TypeScript היכן שאפשר.
-- אם הסקריפט תלוי בחבילות חיצוניות, הוסף אותן לסביבת העבודה שבבעלותך `package.json`.
-- תיעד את מטרת הסקריפט והשימוש בקובץ זה.
-- הוסף ערך מתאים בשורש `package.json` אם זה כלי עזר בשימוש תכוף.
+- Place it in the `scripts/` directory.
+- Use TypeScript where possible.
+- If the script depends on external packages, add them to the owning workspace's `package.json`.
+- Document the script's purpose and usage in this file.
+- Add a corresponding entry in the root `package.json` if it's a frequently used utility.
