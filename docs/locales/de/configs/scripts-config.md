@@ -1,72 +1,72 @@
-# Gemeinsam genutzte Dienstprogrammskripte
+# Shared Utility Scripts
 
-Maschinenunterstützte Übersetzung aus der kanonischen englischen Quelle. Bei Bedarf manuell nachprüfen. Paketnamen, Befehle, Pfade und technische Bezeichner bleiben unverändert.
+This guide intentionally remains in the project documentation tier: `scripts/`
+contains repository orchestration rather than a publishable workspace package.
+Package- and application-specific commands remain documented beside their
+owning workspace.
 
-> Englische Quelle: [docs/configs/scripts-config.md](../../../configs/scripts-config.md)
-> Sprache: Deutsch (de)
+The Mission Platform maintains a set of shared utility scripts in the root
+`scripts/` directory, managed by the root workspace tooling.
 
-Die Mission Platform verwaltet eine Reihe gemeinsamer Dienstprogrammskripts im Stammverzeichnis `scripts/` Verzeichnis, verwaltet von der
-`@mission-platform/scripts` Paket.
+## Overview
 
-## Überblick
+These scripts automate common monorepo tasks, such as local development setup and build verification. Translation
+extraction is defined by each app or package and orchestrated from the repository root with Turborepo.
 
-Diese Skripte automatisieren allgemeine Monorepo-Aufgaben, wie z. B. die Einrichtung der lokalen Entwicklung und die Build-Überprüfung. Übersetzung
-Die Extraktion wird von jeder App oder jedem Paket definiert und vom Repository-Stamm mit Turborepo orchestriert.
+## Available Scripts
 
-## Verfügbare Skripte
+### i18n Extraction (`i18n:extract`)
 
-### i18n-Extraktion (`i18n:extract`)
-
-Jede App oder jedes Paket, das Übersetzungen besitzt, bietet eine `i18n:extract` Drehbuch und `i18next.config.ts`. Der Befehl schreibt
-Namespace-Bundles unter jedem Arbeitsbereich `locales/<locale>/` Verzeichnis. Führen Sie die Extraktion für alle konfigurierten Arbeitsbereiche aus
-das Repository-Stammverzeichnis:
+Each app or package that owns translations provides an `i18n:extract` script and `i18next.config.ts`. The command writes
+namespace bundles under each workspace's `locales/<locale>/` directory. Run extraction for all configured workspaces from
+the repository root:
 
 ```bash
 pnpm i18n:extract
 ```
 
-### Erstellung von Entwicklungszertifikaten (`generate-dev-cert.ts`)
+### Dev Certificate Generation (`generate-dev-cert.ts`)
 
-Erzeugt lokale SSL/TLS-Zertifikate für die HTTPS-Entwicklung. Dies ist nützlich zum Testen von Funktionen, die eine Sicherheit erfordern
-Kontext (z. B. Kamerazugriff über `@mission-platform/code-scanner`).
+Generates local SSL/TLS certificates for HTTPS development. This is useful for testing features that require a secure
+context (e.g., camera access via `@mission-platform/code-scanner`).
 
 ```bash
 pnpm exec tsx scripts/generate-dev-cert.ts
 ```
 
-### Überprüfung der Framework-Auflösung (`verify-framework-resolution.mjs`)
+### Framework Resolution Verification (`verify-framework-resolution.mjs`)
 
-Bestätigt das `@mission-platform/*` Paketexporte werden korrekt in den vorgesehenen Framework-Build aufgelöst (Vue, Reactusw.)
-basierend auf den Exportbedingungen der Umgebung.
+Verifies that `@mission-platform/*` package exports correctly resolve to the intended framework build (Vue, React, etc.)
+based on the environment's export conditions.
 
 ```bash
 node scripts/verify-framework-resolution.mjs
 ```
 
-## Ausführungsmethoden
+## Execution Methods
 
-### Über den Paketmanager
+### Via Package Manager
 
-Die meisten Skripte sind verfügbar als `pnpm` Skripte im Stammverzeichnis `package.json`:
+Most scripts are available as `pnpm` scripts in the root `package.json`:
 
 ```bash
 pnpm run <script-name>
 ```
 
-### Direkte Ausführung
+### Direct Execution
 
-Person TypeScript Skripte können mit ausgeführt werden `tsx` oder `node --experimental-strip-types`:
+Individual TypeScript scripts can be run using `tsx` or `node --experimental-strip-types`:
 
 ```bash
 pnpm exec tsx scripts/<filename>.ts
 ```
 
-## Beitragsrichtlinien
+## Contribution Guidelines
 
-Beim Hinzufügen eines neuen freigegebenen Skripts:
+When adding a new shared script:
 
-- Legen Sie es in die `scripts/` Verzeichnis.
-- Verwenden TypeScript wo möglich.
-- Wenn das Skript von externen Paketen abhängt, fügen Sie diese dem Arbeitsbereich des Besitzers hinzu `package.json`.
-- Dokumentieren Sie den Zweck und die Verwendung des Skripts in dieser Datei.
-- Fügen Sie einen entsprechenden Eintrag im Stammverzeichnis hinzu `package.json` wenn es sich um ein häufig verwendetes Dienstprogramm handelt.
+- Place it in the `scripts/` directory.
+- Use TypeScript where possible.
+- If the script depends on external packages, add them to the owning workspace's `package.json`.
+- Document the script's purpose and usage in this file.
+- Add a corresponding entry in the root `package.json` if it's a frequently used utility.
