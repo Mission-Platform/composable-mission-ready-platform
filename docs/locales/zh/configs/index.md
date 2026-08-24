@@ -1,78 +1,77 @@
-# 配置包
+# Configuration Packages
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+The Mission Platform uses centralized configuration packages in the `configs/` directory to ensure consistency across
+the monorepo.
 
-> 英文原文: [docs/configs/index.md](../../../configs/index.md)
-> 语言: 简体中文 (zh)
+## Overview
 
-任务平台使用集中配置包 `configs/` 目录以确保一致性
-单一仓库。
+Centralizing configurations allows for a single source of truth for tooling rules, build processes, and code style.
+Packages and applications consume these configurations by extending them in their local config files.
 
-## 概述
+## Package Summary
 
-集中配置允许工具规则、构建过程和代码风格的单一事实来源。
-包和应用程序通过在本地配置文件中扩展它们来使用这些配置。
+Configuration package documentation is owned by each package. The links below
+are repository file links today and become package-namespaced routes in the
+documentation site:
 
-## 套餐摘要
+| Package                                                                                    | Purpose                                                          | Primary configuration surface |
+| :----------------------------------------------------------------------------------------- | :--------------------------------------------------------------- | :---------------------------- |
+| [`@mission-platform/eslint-config`](../../configs/eslint-config/docs/index.md)             | Flat ESLint rules for JS/TS and Vue.             | `eslint.config.js`            |
+| [`@mission-platform/prettier-config`](../../configs/prettier-config/docs/index.md)         | Repository formatting defaults.                  | `prettier.config.js`          |
+| [`@mission-platform/typescript-config`](../../configs/typescript-config/docs/index.md)     | TypeScript compiler presets.                     | `tsconfig.json`               |
+| [`@mission-platform/stylelint-config`](../../configs/stylelint-config/docs/index.md)       | CSS and SCSS linting.                            | `stylelint.config.mjs`        |
+| [`@mission-platform/vite-config`](../../configs/vite-config/docs/index.md)                 | Vite and Vitest configuration helpers.           | `vite.config.ts`              |
+| [`@mission-platform/tsdown-config`](../../configs/tsdown-config/docs/index.md)             | Library bundling helpers.                        | `tsdown.config.ts`            |
+| [`@mission-platform/postcss-config`](../../configs/postcss-config/docs/index.md)           | Shared PostCSS pipeline.                         | `postcss.config.mjs`          |
+| [`@mission-platform/i18n-config`](../../configs/i18n-config/docs/index.md)                 | Shared locale and extraction settings.           | `i18next.config.ts`           |
+| [`@mission-platform/storybook-framework`](../../configs/storybook-framework/docs/index.md) | Environment-selected Storybook framework preset. | `.storybook/main.ts`          |
+| [Workers Configuration](./workers-config.md)                                               | Cross-workspace Cloudflare Worker conventions.   | `wrangler.jsonc`              |
 
-|套餐 |目的|主构型面|
-|:---|:---|:---|
-| [`@mission-platform/eslint-config`](eslint-config.md) |平坦的 ESLint JS/TS 的规则和 Vue. | `eslint.config.js` |
-| `@mission-platform/prettier-config` |存储库格式默认值。 | `prettier.config.js` |
-| `@mission-platform/typescript-config` | TypeScript 编译器预设。 | `tsconfig.json` |
-| `@mission-platform/stylelint-config` | CSS 和 SCSS linting。 | `stylelint.config.mjs` |
-| `@mission-platform/vite-config` | Vite 和 Vitest 配置助手。 | `vite.config.ts` |
-| `@mission-platform/tsdown-config` |图书馆捆绑助手。 | `tsdown.config.ts` |
-| `@mission-platform/postcss-config` |共享 PostCSS 管道。 | `postcss.config.mjs` |
-| `@mission-platform/i18n-config` |共享区域设置和提取设置。 | `i18next.config.ts` |
-| `@mission-platform/storybook-framework` |环境选择的 Storybook 框架预设。 | `.storybook/main.ts` |
-| [工人配置](workers-config.md) | Cloudflare Worker 约定。 | `wrangler.jsonc` |
-
-## 核心工具
+## Core Tooling
 
 ### ESLint (`@mission-platform/eslint-config`)
 
-标准化所有工作区的代码质量规则。它使用 Flat Config 格式并支持
-TypeScript, Vue 3、交通方便。
+Standardizes code quality rules across all workspaces. It uses the Flat Config format and includes support for
+TypeScript, Vue 3, and accessibility.
 
 ### Prettier (`@mission-platform/prettier-config`)
 
-在整个 monorepo 中强制执行一致的代码风格（制表符、引号、分号）。
+Enforces a consistent code style (tabs, quotes, semicolons) across the entire monorepo.
 
 ### TypeScript (`@mission-platform/typescript-config`)
 
-提供基地 `tsconfig` 针对不同目标的预设：
+Provides base `tsconfig` presets for different targets:
 
-- `base`：一般默认值。
-- `vue`：优化为 Vue 3 个证监会。
-- `node`：优化为 Node.js 环境。
-- `framework-<name>`: 添加匹配 `mp:<framework>` 外部消费者的出口条件。
+- `base`: General defaults.
+- `vue`: Optimized for Vue 3 SFCs.
+- `node`: Optimized for Node.js environments.
+- `framework-<name>`: Adds the matching `mp:<framework>` export condition for external consumers.
 
-## 构建系统
+## Build System
 
 ### Vite (`@mission-platform/vite-config`)
 
-提供工厂函数来创建 Vite 应用程序和库的配置。
+Provides factory functions to create Vite configurations for both applications and libraries.
 
 ```ts
 import { defineAppConfig, defineLibraryConfig } from '@mission-platform/vite-config';
 ```
 
-- `defineAppConfig`：适用于顶级应用程序（SPA、workers）。
-- `defineLibraryConfig`：用于具有最佳捆绑和树摇动的共享包。
+- `defineAppConfig`: For top-level applications (SPA, workers).
+- `defineLibraryConfig`: For shared packages with optimal bundling and tree-shaking.
 
 ### PostCSS (`@mission-platform/postcss-config`)
 
-共享 PostCSS 插件管道（包括 Autoprefixer），以确保无论在何处都能一致地处理 CSS
-它是创作的。
+Shares the PostCSS plugin pipeline (including Autoprefixer) to ensure CSS is processed consistently regardless of where
+it is authored.
 
-## 使用模式
+## Usage Pattern
 
-要在工作区中使用配置：
+To use a configuration in a workspace:
 
-1.添加配置包为 `devDependency` 在 `package.json`。
-2. 创建本地配置文件（例如， `eslint.config.js`)。
-3. 导入和导出/扩展基本配置。
+1. Add the configuration package as a `devDependency` in `package.json`.
+2. Create a local configuration file (e.g., `eslint.config.js`).
+3. Import and export/extend the base configuration.
 
 ```js
 // Example: eslint.config.js
@@ -84,11 +83,11 @@ export default [
 ];
 ```
 
-## 选择配置
+## Choosing a configuration
 
-使用拥有关注点的包，而不是将规则复制到工作区中。应用程序和库构建文件
-可以添加本地覆盖，但共享默认值应保留在 `configs/`。对于新包，从包开始
-脚手架，然后运行工作区检查：
+Use the package that owns the concern rather than copying rules into a workspace. Application and library build files
+may add local overrides, but shared defaults should remain in `configs/`. For a new package, start with the package
+scaffold and then run the workspace checks:
 
 ```bash
 pnpm exec turbo run build:check --filter @mission-platform/<name>
