@@ -1,0 +1,601 @@
+import "./memory.fws" as memory;
+import "./value.fws" as value;
+import "./string.fws" as string;
+import "./table.fws" as table;
+import "./closure.fws" as closure;
+import "./thread.fws" as thread;
+import "./gc.fws" as gc;
+import "./lexer.fws" as lexer;
+import "./api.fws" as api;
+import "./lib/base.fws" as base;
+import "./lib/string.fws" as library_string;
+import "./lib/table.fws" as library_table;
+import "./lib/math.fws" as math;
+import "./lib/utf8.fws" as utf8;
+import "./lib/coroutine.fws" as coroutine;
+import "./lib/package.fws" as package;
+import "./lib/debug.fws" as debug;
+import "./lib/io.fws" as io;
+import "./lib/os.fws" as os;
+import "./lib/init.fws" as init;
+
+export fn create_state() -> u32 {
+  let heap: u32 = memory.heap_new();
+  if heap != 0 {
+    init.library_init(heap);
+  }
+  return heap;
+}
+
+export fn nil_value() -> u32 {
+  return value.value_nil();
+}
+
+export fn boolean_value(value_input: u32) -> u32 {
+  return value.value_boolean(value_input);
+}
+
+export fn integer_value(value_input: u32) -> u32 {
+  return value.value_integer(value_input);
+}
+
+export fn float_value(state: u32, value_input: f64) -> u32 {
+  return value.value_float_new(state, value_input);
+}
+
+export fn float_number_of(value_input: u32) -> f64 {
+  return value.value_float_number(value_input);
+}
+
+export fn value_kind_of(value_input: u32) -> u32 {
+  return value.value_kind(value_input);
+}
+
+export fn value_payload_of(value_input: u32) -> u32 {
+  return value.value_payload(value_input);
+}
+
+export fn value_float_of(handle: u32) -> u32 {
+  return value.value_float(handle);
+}
+
+export fn value_string_of(handle: u32) -> u32 {
+  return value.value_string(handle);
+}
+
+export fn value_table_of(handle: u32) -> u32 {
+  return value.value_table(handle);
+}
+
+export fn value_function_of(handle: u32) -> u32 {
+  return value.value_function(handle);
+}
+
+export fn value_thread_of(handle: u32) -> u32 {
+  return value.value_thread(handle);
+}
+
+export fn value_is_valid_of(value_input: u32) -> u32 {
+  return value.value_is_valid(value_input);
+}
+
+export fn library_type(state: u32, value_input: u32) -> u32 {
+  return base.base_type(state, value_input);
+}
+
+export fn library_base_truthy(value_input: u32) -> u32 {
+  return base.base_truthy(value_input);
+}
+
+export fn library_base_to_boolean(value_input: u32) -> u32 {
+  return base.base_to_boolean(value_input);
+}
+
+export fn library_base_to_integer(value_input: u32) -> u32 {
+  return base.base_to_integer(value_input);
+}
+
+export fn library_base_to_float(state: u32, value_input: u32) -> f64 {
+  return base.base_to_float(state, value_input);
+}
+
+export fn library_base_getmetatable(value_input: u32) -> u32 {
+  return base.base_getmetatable(value_input);
+}
+
+export fn library_base_setmetatable(value_input: u32, metatable: u32) -> u32 {
+  return base.base_setmetatable(value_input, metatable);
+}
+
+export fn library_base_pcall_status(state: u32, prototype: u32) -> u32 {
+  return base.base_pcall_status(state, prototype);
+}
+
+export fn library_base_pcall_result_count(prototype: u32) -> u32 {
+  return base.base_pcall_result_count(prototype);
+}
+
+export fn library_base_pcall_result_value(prototype: u32, index: u32) -> u32 {
+  return base.base_pcall_result_value(prototype, index);
+}
+
+export fn library_base_next_key(value_input: u32, cursor: u32) -> u32 {
+  return base.base_next_key(value_input, cursor);
+}
+
+export fn library_base_next_value(value_input: u32, cursor: u32) -> u32 {
+  return base.base_next_value(value_input, cursor);
+}
+
+export fn library_base_ipairs_next(value_input: u32, index: u32) -> u32 {
+  return base.base_ipairs_next(value_input, index);
+}
+
+export fn library_string_length(value_input: u32) -> u32 {
+  if value.value_kind(value_input) != 4 {
+    return 0;
+  }
+  return string.lua_string_length(value.value_payload(value_input));
+}
+
+export fn library_table_length(value_input: u32) -> u32 {
+  if value.value_kind(value_input) != 5 {
+    return 0;
+  }
+  return table.table_length(value.value_payload(value_input));
+}
+
+export fn library_raw_length(value_input: u32) -> u32 {
+  let kind: u32 = value.value_kind(value_input);
+  if kind == 4 {
+    return string.lua_string_length(value.value_payload(value_input));
+  }
+  if kind == 5 {
+    return table.table_length(value.value_payload(value_input));
+  }
+  return 0;
+}
+
+export fn library_string_byte(value_input: u32, index: u32) -> u32 {
+  if value.value_kind(value_input) != 4 {
+    return 0;
+  }
+  return string.string_byte(value.value_payload(value_input), index);
+}
+
+export fn library_string_byte_at(value_input: u32, index: u32) -> u32 {
+  return library_string.library_string_byte_at_impl(value_input, index);
+}
+
+export fn library_string_equal(left: u32, right: u32) -> u32 {
+  return library_string.library_string_equal_impl(left, right);
+}
+
+export fn library_string_concat(
+  state: u32,
+  left: u32,
+  right: u32,
+) -> u32 {
+  return library_string.library_string_concat_impl(state, left, right);
+}
+
+export fn library_string_sub(
+  state: u32,
+  value_input: u32,
+  start: u32,
+  finish: u32,
+) -> u32 {
+  return library_string.library_string_sub_impl(
+    state,
+    value_input,
+    start,
+    finish,
+  );
+}
+
+export fn library_string_reverse(state: u32, value_input: u32) -> u32 {
+  return library_string.library_string_reverse_impl(state, value_input);
+}
+
+export fn library_string_lower(state: u32, value_input: u32) -> u32 {
+  return library_string.library_string_lower_impl(state, value_input);
+}
+
+export fn library_string_upper(state: u32, value_input: u32) -> u32 {
+  return library_string.library_string_upper_impl(state, value_input);
+}
+
+export fn library_raw_get(value_input: u32, key: u32) -> u32 {
+  if value.value_kind(value_input) != 5 {
+    return 0;
+  }
+  return table.table_get_raw(value.value_payload(value_input), key);
+}
+
+export fn library_raw_set(value_input: u32, key: u32, output: u32) -> u32 {
+  if value.value_kind(value_input) != 5 {
+    return 2;
+  }
+  table.table_set_raw(value.value_payload(value_input), key, output);
+  return 0;
+}
+
+export fn library_table_insert(
+  value_input: u32,
+  position: u32,
+  output: u32,
+) -> u32 {
+  return library_table.table_insert(value_input, position, output);
+}
+
+export fn library_table_remove(value_input: u32, position: u32) -> u32 {
+  return library_table.table_remove(value_input, position);
+}
+
+export fn library_table_concat(
+  state: u32,
+  value_input: u32,
+  separator: u32,
+  start: u32,
+  finish: u32,
+) -> u32 {
+  return library_table.table_concat(
+    state,
+    value_input,
+    separator,
+    start,
+    finish,
+  );
+}
+
+export fn library_math_abs(input: f64) -> f64 {
+  return math.math_abs_value(input);
+}
+
+export fn library_math_min(left: f64, right: f64) -> f64 {
+  return math.math_min_value(left, right);
+}
+
+export fn library_math_max(left: f64, right: f64) -> f64 {
+  return math.math_max_value(left, right);
+}
+
+export fn library_math_abs_value(state: u32, value_input: u32) -> u32 {
+  return math.math_abs_number(state, value_input);
+}
+
+export fn library_math_min_value(
+  state: u32,
+  left: u32,
+  right: u32,
+) -> u32 {
+  return math.math_min_number(state, left, right);
+}
+
+export fn library_math_max_value(
+  state: u32,
+  left: u32,
+  right: u32,
+) -> u32 {
+  return math.math_max_number(state, left, right);
+}
+
+export fn library_utf8_length(value_input: u32) -> u32 {
+  return utf8.utf8_length_value(value_input);
+}
+
+export fn library_utf8_byte(value_input: u32, index: u32) -> u32 {
+  return utf8.utf8_byte_value(value_input, index);
+}
+
+export fn library_utf8_is_valid(value_input: u32) -> u32 {
+  return utf8.utf8_is_valid_value(value_input);
+}
+
+export fn library_utf8_codepoint(value_input: u32, index: u32) -> u32 {
+  return utf8.utf8_codepoint_value(value_input, index);
+}
+
+export fn library_coroutine_status(status: u32) -> u32 {
+  return coroutine.coroutine_status_value(status);
+}
+
+export fn library_coroutine_can_resume(status: u32) -> u32 {
+  return coroutine.coroutine_can_resume(status);
+}
+
+export fn library_coroutine_resume_status(status: u32) -> u32 {
+  return coroutine.coroutine_resume_status(status);
+}
+
+export fn library_coroutine_close_status(status: u32) -> u32 {
+  return coroutine.coroutine_close_status(status);
+}
+
+export fn library_coroutine_resume_result(state: u32, prototype: u32) -> u32 {
+  return coroutine.coroutine_resume_result(state, prototype);
+}
+
+export fn library_coroutine_close_result(state: u32) -> u32 {
+  return coroutine.coroutine_close_result(state);
+}
+
+export fn library_package_default_path() -> u32 {
+  return package.package_default_path();
+}
+
+export fn library_package_default_path_value() -> u32 {
+  return package.package_default_path_value();
+}
+
+export fn library_package_load_status(status: u32) -> u32 {
+  return package.package_load_status(status);
+}
+
+export fn library_package_can_load(status: u32) -> u32 {
+  return package.package_can_load(status);
+}
+
+export fn library_debug_trace_mask(mask: u32) -> u32 {
+  return debug.debug_trace_mask(mask);
+}
+
+export fn library_debug_trace_allowed(enabled: u32) -> u32 {
+  return debug.debug_trace_allowed(enabled);
+}
+
+export fn library_debug_trace_enabled(mask: u32, flag: u32) -> u32 {
+  return debug.debug_trace_enabled(mask, flag);
+}
+
+export fn capability_io_read_status(allowed: u32) -> u32 {
+  return io.io_read_status(allowed);
+}
+
+export fn capability_io_read_result(allowed: u32, result: u32) -> u32 {
+  return io.io_read_result(allowed, result);
+}
+
+export fn capability_io_write_status(allowed: u32) -> u32 {
+  return io.io_write_status(allowed);
+}
+
+export fn capability_io_write_result(allowed: u32, result: u32) -> u32 {
+  return io.io_write_result(allowed, result);
+}
+
+export fn capability_clock_now_status(allowed: u32) -> u32 {
+  return os.clock_now_status(allowed);
+}
+
+export fn capability_clock_now_result(allowed: u32, result: u32) -> u32 {
+  return os.clock_now_result(allowed, result);
+}
+
+export fn capability_random_bytes_status(allowed: u32) -> u32 {
+  return os.random_bytes_status(allowed);
+}
+
+export fn capability_random_bytes_result(allowed: u32, result: u32) -> u32 {
+  return os.random_bytes_result(allowed, result);
+}
+
+export fn capability_os_command_status(allowed: u32) -> u32 {
+  return os.os_command_status(allowed);
+}
+
+export fn capability_os_command_result(allowed: u32, result: u32) -> u32 {
+  return os.os_command_result(allowed, result);
+}
+
+export fn capability_package_load_status(allowed: u32) -> u32 {
+  if allowed != 0 {
+    return 0;
+  }
+  return 2;
+}
+
+export fn capability_package_load_result(allowed: u32, result: u32) -> u32 {
+  if allowed != 0 {
+    return result;
+  }
+  return 0;
+}
+
+export fn capability_debug_trace_status(allowed: u32) -> u32 {
+  if allowed != 0 {
+    return 0;
+  }
+  return 2;
+}
+
+export fn capability_debug_trace_result(allowed: u32, result: u32) -> u32 {
+  if allowed != 0 {
+    return result;
+  }
+  return 0;
+}
+
+export fn intern_string(state: u32, hash: u32, length: u32) -> u32 {
+  return string.string_intern(state, hash, length);
+}
+
+export fn find_string(state: u32, hash: u32, length: u32) -> u32 {
+  return string.string_find(state, hash, length);
+}
+
+export fn next_string(handle: u32) -> u32 {
+  return string.string_next(handle);
+}
+
+export fn intern_string_bytes(state: u32, source: bytes) -> u32 {
+  return string.string_intern_bytes(state, source);
+}
+
+export fn string_byte_value(handle: u32, index: u32) -> u32 {
+  return string.string_byte(handle, index);
+}
+
+export fn string_size(handle: u32) -> u32 {
+  return string.lua_string_length(handle);
+}
+
+export fn strings_equal(left: u32, right: u32) -> u32 {
+  return string.string_equal(left, right);
+}
+
+export fn new_table(state: u32, key: u32, value_input: u32) -> u32 {
+  return table.table_new(state, key, value_input);
+}
+
+export fn table_value(handle: u32, key: u32) -> u32 {
+  return table.table_get(handle, key);
+}
+
+export fn set_table_value(handle: u32, key: u32, value_input: u32) -> unit {
+  table.table_set(handle, key, value_input);
+}
+
+export fn new_empty_table(state: u32) -> u32 {
+  return table.table_new_empty(state);
+}
+
+export fn table_size(handle: u32) -> u32 {
+  return table.table_length(handle);
+}
+
+export fn table_next_entry(handle: u32, cursor: u32) -> u32 {
+  return table.table_next(handle, cursor);
+}
+
+export fn table_next_key_value(handle: u32, cursor: u32) -> u32 {
+  return table.table_next_key(handle, cursor);
+}
+
+export fn table_next_value_value(handle: u32, cursor: u32) -> u32 {
+  return table.table_next_value(handle, cursor);
+}
+
+export fn new_closure(state: u32, function_id: u32, upvalue: u32) -> u32 {
+  return closure.closure_new(state, function_id, upvalue);
+}
+
+export fn closure_value(handle: u32) -> u32 {
+  return closure.closure_upvalue(handle);
+}
+
+export fn new_upvalue(state: u32, value_input: u32) -> u32 {
+  return closure.upvalue_new(state, value_input);
+}
+
+export fn upvalue_value(handle: u32) -> u32 {
+  return closure.upvalue_get(handle);
+}
+
+export fn set_upvalue(handle: u32, value_input: u32) -> u32 {
+  return closure.upvalue_set(handle, value_input);
+}
+
+export fn new_thread(state: u32, status: u32, stack: u32) -> u32 {
+  return thread.thread_new(state, status, stack);
+}
+
+export fn thread_value(handle: u32) -> u32 {
+  return thread.thread_status(handle);
+}
+
+export fn new_frame(state: u32, previous: u32, prototype: u32, return_pc: u32) -> u32 {
+  return thread.frame_new(state, previous, prototype, return_pc);
+}
+
+export fn push_frame(thread_handle: u32, frame: u32) -> u32 {
+  return thread.thread_push_frame(thread_handle, frame);
+}
+
+export fn current_frame(thread_handle: u32) -> u32 {
+  return thread.thread_frame(thread_handle);
+}
+
+export fn set_thread_yield(thread_handle: u32, value_input: u32) -> unit {
+  thread.thread_set_yield(thread_handle, value_input);
+}
+
+export fn thread_yield_result(thread_handle: u32) -> u32 {
+  return thread.thread_yield_value(thread_handle);
+}
+
+export fn collect_state(state: u32, root: u32) -> u32 {
+  return gc.collect(state, root);
+}
+
+export fn object_count(state: u32) -> u32 {
+  return gc.tracked_objects(state);
+}
+
+export fn set_root(state: u32, index: u32, value_input: u32) -> u32 {
+  return memory.heap_set_root(state, index, value_input);
+}
+
+export fn root_value(state: u32, index: u32) -> u32 {
+  return memory.heap_root(state, index);
+}
+
+export fn owns_handle(state: u32, handle: u32) -> u32 {
+  return memory.heap_owns(state, handle);
+}
+
+export fn set_allocation_limit(state: u32, limit: u32) -> unit {
+  memory.heap_set_limit(state, limit);
+}
+
+export fn allocation_error(state: u32) -> u32 {
+  return memory.heap_allocation_error(state);
+}
+
+export fn state_is_valid(state: u32) -> u32 {
+  return memory.heap_valid(state);
+}
+
+export fn lex_token_count(source: bytes) -> u32 {
+  return lexer.lexer_count(source);
+}
+
+export fn load(state: u32, source: bytes) -> u32 {
+  return api.api_load(state, source);
+}
+
+export fn call(state: u32, prototype: u32) -> u32 {
+  return api.api_call(state, prototype);
+}
+
+export fn resume(state: u32, prototype: u32) -> u32 {
+  return api.api_resume(state, prototype);
+}
+
+export fn close_state(state: u32) -> u32 {
+  return api.api_close(state);
+}
+
+export fn state_status(state: u32) -> u32 {
+  return api.api_status(state);
+}
+
+export fn loaded_chunk_format(prototype: u32) -> u32 {
+  return api.api_chunk_format(prototype);
+}
+
+export fn loaded_chunk_source_length(prototype: u32) -> u32 {
+  return api.api_chunk_source_length(prototype);
+}
+
+export fn loaded_chunk_error(prototype: u32) -> u32 {
+  return api.api_chunk_error(prototype);
+}
+
+export fn result_count(prototype: u32) -> u32 {
+  return api.api_result_count(prototype);
+}
+
+export fn result_value(prototype: u32, index: u32) -> u32 {
+  return api.api_result_value(prototype, index);
+}

@@ -1,0 +1,29 @@
+fn io_status(allowed: u32) -> u32 {
+  if allowed != 0 {
+    return 0;
+  }
+  return 2;
+}
+
+fn io_result(allowed: u32, result: u32) -> u32 {
+  if allowed != 0 {
+    return result;
+  }
+  return 0;
+}
+
+export fn io_read_status(allowed: u32) -> u32 {
+  return io_status(allowed);
+}
+
+export fn io_read_result(allowed: u32, result: u32) -> u32 {
+  return io_result(allowed, result);
+}
+
+export fn io_write_status(allowed: u32) -> u32 {
+  return io_status(allowed);
+}
+
+export fn io_write_result(allowed: u32, result: u32) -> u32 {
+  return io_result(allowed, result);
+}

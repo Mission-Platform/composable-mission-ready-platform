@@ -1,0 +1,456 @@
+import "../string.fws" as strings;
+import "../value.fws" as value;
+import "../memory.fws" as memory;
+
+export fn library_string_length_impl(input: u32) -> u32 {
+  if value.value_kind(input) != 4 {
+    return 0;
+  }
+  return strings.lua_string_length(value.value_payload(input));
+}
+
+export fn library_string_byte_impl(input: u32, index: u32) -> u32 {
+  if value.value_kind(input) != 4 {
+    return 0;
+  }
+  return strings.string_byte(value.value_payload(input), index);
+}
+
+export fn library_string_byte_at_impl(input: u32, index: u32) -> u32 {
+  if value.value_kind(input) != 4 || index == 0 {
+    return 0;
+  }
+  let string: u32 = value.value_payload(input);
+  if index > strings.lua_string_length(string) {
+    return 0;
+  }
+  return strings.string_byte(string, index - 1);
+}
+
+export fn library_string_equal_impl(left: u32, right: u32) -> u32 {
+  if value.value_kind(left) != 4 || value.value_kind(right) != 4 {
+    return 0;
+  }
+  return strings.string_equal(
+    value.value_payload(left),
+    value.value_payload(right),
+  );
+}
+
+export fn library_string_concat_impl(
+  heap: u32,
+  left: u32,
+  right: u32,
+) -> u32 {
+  if value.value_kind(left) != 4 || value.value_kind(right) != 4 {
+    return value.value_nil();
+  }
+  let string: u32 = strings.lua_string_concat(
+    heap,
+    value.value_payload(left),
+    value.value_payload(right),
+  );
+  if string == 0 {
+    return value.value_nil();
+  }
+  return value.value_string(string);
+}
+
+export fn library_string_sub_impl(
+  heap: u32,
+  input: u32,
+  start: u32,
+  finish: u32,
+) -> u32 {
+  if value.value_kind(input) != 4 {
+    return value.value_nil();
+  }
+  let source: u32 = value.value_payload(input);
+  let length: u32 = strings.lua_string_length(source);
+  let first: u32 = start;
+  if first == 0 {
+    first = start - start + 1;
+  }
+  let last: u32 = finish;
+  if last == 0 || last > length {
+    last = length;
+  }
+  let count: u32 = 0;
+  if first <= length && first <= last {
+    count = last - first + 1;
+  }
+  let record: u32 = memory.heap_alloc(heap, count * 4 + 4, 0);
+  if record == 0 {
+    return value.value_nil();
+  }
+  memory_store_u32(record, count);
+  let index: u32 = 0;
+  while index < count {
+    memory_store_u32(record + index * 4 + 4, strings.string_byte(source, first - 1 + index));
+    index = index + 1;
+  }
+  let string: u32 = strings.string_intern_record(heap, record);
+  if string == 0 {
+    return value.value_nil();
+  }
+  return value.value_string(string);
+}
+
+export fn library_string_reverse_impl(heap: u32, input: u32) -> u32 {
+  if value.value_kind(input) != 4 {
+    return value.value_nil();
+  }
+  let source: u32 = value.value_payload(input);
+  let length: u32 = strings.lua_string_length(source);
+  let record: u32 = memory.heap_alloc(heap, length * 4 + 4, 0);
+  if record == 0 {
+    return value.value_nil();
+  }
+  memory_store_u32(record, length);
+  let index: u32 = 0;
+  while index < length {
+    memory_store_u32(
+      record + index * 4 + 4,
+      strings.string_byte(source, length - index - 1),
+    );
+    index = index + 1;
+  }
+  let string: u32 = strings.string_intern_record(heap, record);
+  if string == 0 {
+    return value.value_nil();
+  }
+  return value.value_string(string);
+}
+
+fn library_string_case_impl(heap: u32, input: u32, uppercase: u32) -> u32 {
+  if value.value_kind(input) != 4 {
+    return value.value_nil();
+  }
+  let source: u32 = value.value_payload(input);
+  let length: u32 = strings.lua_string_length(source);
+  let record: u32 = memory.heap_alloc(heap, length * 4 + 4, 0);
+  if record == 0 {
+    return value.value_nil();
+  }
+  memory_store_u32(record, length);
+  let index: u32 = 0;
+  while index < length {
+    let byte: u32 = strings.string_byte(source, index);
+    if uppercase == 1 {
+      if byte >= 97 && byte <= 122 {
+        byte = byte - 32;
+      }
+    } else {
+      if byte >= 65 && byte <= 90 {
+        byte = byte + 32;
+      }
+    }
+    memory_store_u32(record + index * 4 + 4, byte);
+    index = index + 1;
+  }
+  let string: u32 = strings.string_intern_record(heap, record);
+  if string == 0 {
+    return value.value_nil();
+  }
+  return value.value_string(string);
+}
+
+fn library_string_rep_empty(heap: u32) -> u32 {
+  let empty: u32 = strings.string_intern(heap, 216613626, 0);
+  if empty == 0 {
+    return value.value_nil();
+  }
+  return value.value_string(empty);
+}
+
+fn library_string_integer_is_negative(integer: u32) -> u32 {
+  let boundary: u32 = 2;
+  let steps: u32 = 30;
+  while steps != 0 {
+    boundary = boundary + boundary;
+    steps = steps - 1;
+  }
+  if integer >= boundary {
+    return 1;
+  }
+  return 0;
+}
+
+fn library_string_handle(input: u32) -> u32 {
+  let handle: u32 = input;
+  if value.value_kind(input) == 4 {
+    handle = value.value_payload(input);
+  }
+  if handle < 1024 || handle >= 16777216 || memory_load_u32(handle) != 2 {
+    return 0;
+  }
+  return handle;
+}
+
+fn library_string_floor_positive(number: f64) -> u32 {
+  let whole: u32 = 0;
+  let step: u32 = 1;
+  let step_number: f64 = f64_from_u32(1);
+  let two: f64 = f64_from_u32(2);
+  while step < 1073741824 && step_number + step_number <= number {
+    step = step + step;
+    step_number = step_number + step_number;
+  }
+  while step != 0 {
+    if step_number <= number {
+      number = number - step_number;
+      whole = whole + step;
+    }
+    step = step / 2;
+    step_number = step_number / two;
+  }
+  return whole;
+}
+
+export fn library_string_rep_impl(
+  heap: u32,
+  input: u32,
+  count_value: u32,
+  sep_value: u32,
+) -> u32 {
+  let source: u32 = library_string_handle(input);
+  if source == 0 {
+    return value.value_nil();
+  }
+  let count: u32 = 0;
+  let count_kind: u32 = value.value_kind(count_value);
+  if count_kind == 2 {
+    count = value.value_payload(count_value);
+  } else {
+    if count_kind == 3 {
+    let number: f64 = value.value_float_number(count_value);
+    if number <= f64_from_u32(0) {
+      return library_string_rep_empty(heap);
+    }
+    count = library_string_floor_positive(number);
+    } else {
+      count = count_value;
+    }
+  }
+  if library_string_integer_is_negative(count) == 1 {
+    return library_string_rep_empty(heap);
+  }
+  if count == 0 {
+    return library_string_rep_empty(heap);
+  }
+  let separator: u32 = 0;
+  if sep_value != 0 {
+    separator = library_string_handle(sep_value);
+    if separator == 0 {
+      return value.value_nil();
+    }
+  }
+  let source_length: u32 = strings.lua_string_length(source);
+  let separator_length: u32 = strings.lua_string_length(separator);
+  if count == 1 && separator_length == 0 {
+    return input;
+  }
+  let separator_count: u32 = 0;
+  if count > 0 {
+    separator_count = count - 1;
+  }
+  let length: u32 = source_length * count + separator_length * separator_count;
+  if length == 0 {
+    return library_string_rep_empty(heap);
+  }
+  let string: u32 = memory.heap_alloc(heap, length * 4 + 24, 0);
+  if string == 0 {
+    return value.value_nil();
+  }
+  memory_store_u32(string, 2);
+  memory_store_u32(string + 4, length * 4 + 24);
+  memory_store_u32(string + 8, memory.heap_string_head(heap));
+  memory_store_u32(string + 12, 216613626);
+  memory_store_u32(string + 16, length);
+  memory_store_u32(string + 20, 0);
+  let hash: u32 = 216613626;
+  let offset: u32 = 0;
+  let repeat_index: u32 = 0;
+  while repeat_index < count {
+    let source_index: u32 = 0;
+    while source_index < source_length {
+      let byte: u32 = strings.string_byte(source, source_index);
+      memory_store_u32(string + offset * 4 + 24, byte);
+      hash = hash + byte;
+      offset = offset + 1;
+      source_index = source_index + 1;
+    }
+    if repeat_index + 1 < count {
+      let separator_index: u32 = 0;
+      while separator_index < separator_length {
+        let byte: u32 = strings.string_byte(separator, separator_index);
+        memory_store_u32(string + offset * 4 + 24, byte);
+        hash = hash + byte;
+        offset = offset + 1;
+        separator_index = separator_index + 1;
+      }
+    }
+    repeat_index = repeat_index + 1;
+  }
+  memory_store_u32(string + 12, hash);
+  memory.heap_set_string_head(heap, string);
+  return value.value_string(string);
+}
+
+fn library_string_gsub_digit_run(pattern: u32) -> u32 {
+  if strings.lua_string_length(pattern) != 7 { return 0; }
+  if strings.string_byte(pattern, 0) != 40 { return 0; }
+  if strings.string_byte(pattern, 1) != 37 { return 0; }
+  if strings.string_byte(pattern, 2) != 100 { return 0; }
+  if strings.string_byte(pattern, 3) != 37 { return 0; }
+  if strings.string_byte(pattern, 4) != 100 { return 0; }
+  if strings.string_byte(pattern, 5) != 42 { return 0; }
+  if strings.string_byte(pattern, 6) != 41 { return 0; }
+  return 1;
+}
+
+fn library_string_gsub_matches(source: u32, first: u32, pattern: u32) -> u32 {
+  let length: u32 = strings.lua_string_length(pattern);
+  if length == 0 || first + length > strings.lua_string_length(source) { return 0; }
+  let index: u32 = 0;
+  while index < length {
+    if strings.string_byte(source, first + index) != strings.string_byte(pattern, index) {
+      return 0;
+    }
+    index = index + 1;
+  }
+  return 1;
+}
+
+fn library_string_gsub_write(
+  record: u32,
+  output_index: u32,
+  source: u32,
+  first: u32,
+  length: u32,
+) -> u32 {
+  let output: u32 = output_index;
+  let index: u32 = 0;
+  while index < length {
+    memory_store_u32(record + output * 4 + 4, strings.string_byte(source, first + index));
+    output = output + 1;
+    index = index + 1;
+  }
+  return output;
+}
+
+export fn library_string_gsub_impl(
+  heap: u32,
+  input: u32,
+  pattern_input: u32,
+  replacement_input: u32,
+  count_record: u32,
+) -> u32 {
+  let source: u32 = library_string_handle(input);
+  let pattern: u32 = library_string_handle(pattern_input);
+  let replacement: u32 = library_string_handle(replacement_input);
+  if source == 0 || pattern == 0 || replacement == 0 || count_record == 0 {
+    return value.value_nil();
+  }
+  let source_length: u32 = strings.lua_string_length(source);
+  let pattern_length: u32 = strings.lua_string_length(pattern);
+  memory_store_u32(count_record, 0);
+  if pattern_length == 0 {
+    return value.value_string(source);
+  }
+  let digit_run: u32 = library_string_gsub_digit_run(pattern);
+  let source_index: u32 = 0;
+  let output_length: u32 = 0;
+  let matches: u32 = 0;
+  while source_index < source_length {
+    if digit_run == 1 {
+      if strings.string_byte(source, source_index) >= 48 && strings.string_byte(source, source_index) <= 57 {
+        let capture_first: u32 = source_index;
+        while source_index < source_length && strings.string_byte(source, source_index) >= 48 && strings.string_byte(source, source_index) <= 57 {
+          source_index = source_index + 1;
+        }
+        let capture_length: u32 = source_index - capture_first;
+        output_length = output_length + capture_length * 2 + 1;
+        matches = matches + 1;
+      } else {
+        output_length = output_length + 1;
+        source_index = source_index + 1;
+      }
+    } else {
+      if library_string_gsub_matches(source, source_index, pattern) == 1 {
+        output_length = output_length + strings.lua_string_length(replacement);
+        source_index = source_index + pattern_length;
+        matches = matches + 1;
+      } else {
+        output_length = output_length + 1;
+        source_index = source_index + 1;
+      }
+    }
+  }
+  let record: u32 = memory.heap_alloc(heap, output_length * 4 + 4, 0);
+  if record == 0 {
+    return value.value_nil();
+  }
+  source_index = source_index - source_index;
+  let output_index: u32 = 0;
+  while source_index < source_length {
+    if digit_run == 1 {
+      if strings.string_byte(source, source_index) >= 48 && strings.string_byte(source, source_index) <= 57 {
+        let capture_first: u32 = source_index;
+        while source_index < source_length && strings.string_byte(source, source_index) >= 48 && strings.string_byte(source, source_index) <= 57 {
+          source_index = source_index + 1;
+        }
+        output_index = library_string_gsub_write(
+          record,
+          output_index,
+          source,
+          capture_first,
+          source_index - capture_first,
+        );
+        memory_store_u32(record + output_index * 4 + 4, 32);
+        output_index = output_index + 1;
+        output_index = library_string_gsub_write(
+          record,
+          output_index,
+          source,
+          capture_first,
+          source_index - capture_first,
+        );
+      } else {
+        memory_store_u32(record + output_index * 4 + 4, strings.string_byte(source, source_index));
+        output_index = output_index + 1;
+        source_index = source_index + 1;
+      }
+    } else {
+      if library_string_gsub_matches(source, source_index, pattern) == 1 {
+        output_index = library_string_gsub_write(
+          record,
+          output_index,
+          replacement,
+          0,
+          strings.lua_string_length(replacement),
+        );
+        source_index = source_index + pattern_length;
+      } else {
+        memory_store_u32(record + output_index * 4 + 4, strings.string_byte(source, source_index));
+        output_index = output_index + 1;
+        source_index = source_index + 1;
+      }
+    }
+  }
+  memory_store_u32(record, output_length);
+  memory_store_u32(count_record, matches);
+  let output: u32 = strings.string_intern_record(heap, record);
+  if output == 0 {
+    return value.value_nil();
+  }
+  return value.value_string(output);
+}
+
+export fn library_string_lower_impl(heap: u32, input: u32) -> u32 {
+  return library_string_case_impl(heap, input, 0);
+}
+
+export fn library_string_upper_impl(heap: u32, input: u32) -> u32 {
+  return library_string_case_impl(heap, input, 1);
+}

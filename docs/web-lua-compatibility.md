@@ -1,0 +1,17 @@
+# WebLua Lua 5.5.1 Compatibility Matrix
+
+This report is intentionally conservative. `matched` means the behavior is covered by a guest-level fixture and has a deterministic expected result; `capability-gated` means host effects require an explicit policy; `unresolved` means the behavior is tracked but must not be treated as passing.
+
+| Area                    | Behavior                                                                      | Status           | Evidence                                     | Notes                                                                                  |
+| ----------------------- | ----------------------------------------------------------------------------- | ---------------- | -------------------------------------------- | -------------------------------------------------------------------------------------- |
+| lexical syntax          | Whitespace, comments, keywords, integer literals, and operators               | matched          | `packages/web-lua/src/differential.spec.ts`  | Only the implemented scalar subset is claimed.                                         |
+| scalar expressions      | Integer arithmetic, unary minus, grouping, precedence, and comparisons        | matched          | `packages/web-lua/src/differential.spec.ts`  | Results use the current guest scalar ABI.                                              |
+| locals and control flow | Local assignment, reassignment, `if`/`else`, `while`, and returns             | matched          | `packages/web-lua/src/differential.spec.ts`  | Guest local and stack capacities remain explicit limits.                               |
+| named functions         | Named definitions, parameters, calls, and scalar returns                      | matched          | `packages/web-lua/src/differential.spec.ts`  | Closures, upvalues, varargs, tail calls, and multiple returns remain outside this row. |
+| errors and loading      | Syntax, runtime, division, and malformed binary-prefix statuses               | matched          | `packages/web-lua/src/utils/web-lua.spec.ts` | Statuses are compared without host-side Lua interpretation.                            |
+| host-facing libraries   | I/O, clock, randomness, OS, package loading, and debug effects                | capability-gated | `packages/web-lua/src/utils/web-lua.spec.ts` | Capabilities are deny-by-default; library implementations are incomplete.              |
+| values and tables       | Strings, floats, tables, userdata, identity, iteration, and metamethods       | unresolved       | `packages/web-lua/src/utils/web-lua.spec.ts` | The current boundary exposes scalar values and a one-entry table foundation.           |
+| closures and coroutines | Upvalues, `yield`/`resume`, protected calls, and nested coroutine errors      | unresolved       | `packages/web-lua/src/utils/web-lua.spec.ts` | `resume` currently re-executes a prototype and is not claimed as coroutine semantics.  |
+| standard libraries      | Base, coroutine, table, string, UTF-8, math, I/O, OS, debug, and package/load | unresolved       | No standard-library differential fixture     | No library behavior is silently treated as passing.                                    |
+
+The generated source of this report is the typed matrix in `packages/web-lua/src/compatibility.ts`; its tests require an explicit classification and evidence entry for every row.

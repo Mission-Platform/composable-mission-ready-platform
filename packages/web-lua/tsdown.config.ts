@@ -1,0 +1,27 @@
+import { defineTsdownLibrary } from "@mission-platform/tsdown-config";
+import forgeWebScriptPlugin from "@mission-platform/vite-plugin-forge-web-script";
+
+const webScript = forgeWebScriptPlugin({
+  root: import.meta.dirname,
+  requireExports: false,
+});
+
+export default [
+  defineTsdownLibrary({
+    rootDir: import.meta.dirname,
+    overrides: { plugins: [webScript] },
+  }),
+  defineTsdownLibrary({
+    rootDir: import.meta.dirname,
+    outDir: "dist-node",
+    platform: "node",
+    overrides: {
+      plugins: [
+        forgeWebScriptPlugin({
+          root: import.meta.dirname,
+          requireExports: false,
+        }),
+      ],
+    },
+  }),
+];

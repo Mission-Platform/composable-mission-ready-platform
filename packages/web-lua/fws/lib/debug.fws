@@ -1,0 +1,34 @@
+export fn debug_trace_mask(mask: u32) -> u32 {
+  return mask;
+}
+
+export fn debug_trace_allowed(enabled: u32) -> u32 {
+  if enabled != 0 {
+    return 1;
+  }
+  return 0;
+}
+
+export fn debug_trace_enabled(mask: u32, flag: u32) -> u32 {
+  if flag == 0 {
+    return 0;
+  }
+  if flag == 1 && mask % 2 == 1 {
+    return 1;
+  }
+  if flag == 2 {
+    let half_mask: u32 = mask / 2;
+    let second_bit: u32 = half_mask % 2;
+    if second_bit == 1 {
+      return 1;
+    }
+  }
+  if flag == 4 {
+    let quarter_mask: u32 = mask / 4;
+    let third_bit: u32 = quarter_mask % 2;
+    if third_bit == 1 {
+      return 1;
+    }
+  }
+  return 0;
+}

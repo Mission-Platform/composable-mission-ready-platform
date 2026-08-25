@@ -1,0 +1,67 @@
+import "../memory.fws" as memory;
+import "../value.fws" as value;
+
+export fn math_abs_value(input: f64) -> f64 {
+  if input < f64_from_u32(0) {
+    return f64_from_u32(0) - input;
+  }
+  return input;
+}
+
+export fn math_min_value(left: f64, right: f64) -> f64 {
+  if left < right {
+    return left;
+  }
+  return right;
+}
+
+export fn math_max_value(left: f64, right: f64) -> f64 {
+  if left > right {
+    return left;
+  }
+  return right;
+}
+
+fn valid_float(heap: u32, input: u32) -> u32 {
+  if value.value_kind(input) == 3 && memory.heap_owns(heap, value.value_payload(input)) == 1 {
+    return 1;
+  }
+  return 0;
+}
+
+export fn math_abs_number(heap: u32, input: u32) -> u32 {
+  let kind: u32 = value.value_kind(input);
+  if kind == 2 {
+    return input;
+  }
+  if valid_float(heap, input) == 0 {
+    return value.value_nil();
+  }
+  return value.value_float_new(heap, math_abs_value(value.value_float_number(input)));
+}
+
+export fn math_min_number(heap: u32, left: u32, right: u32) -> u32 {
+  if value.value_kind(left) == 2 && value.value_kind(right) == 2 {
+    if value.value_payload(left) < value.value_payload(right) {
+      return left;
+    }
+    return right;
+  }
+  if valid_float(heap, left) == 1 && valid_float(heap, right) == 1 {
+    return value.value_float_new(heap, math_min_value(value.value_float_number(left), value.value_float_number(right)));
+  }
+  return value.value_nil();
+}
+
+export fn math_max_number(heap: u32, left: u32, right: u32) -> u32 {
+  if value.value_kind(left) == 2 && value.value_kind(right) == 2 {
+    if value.value_payload(left) > value.value_payload(right) {
+      return left;
+    }
+    return right;
+  }
+  if valid_float(heap, left) == 1 && valid_float(heap, right) == 1 {
+    return value.value_float_new(heap, math_max_value(value.value_float_number(left), value.value_float_number(right)));
+  }
+  return value.value_nil();
+}

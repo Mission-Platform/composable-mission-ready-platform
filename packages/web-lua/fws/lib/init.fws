@@ -1,0 +1,226 @@
+import "../memory.fws" as memory;
+import "../string.fws" as string;
+import "../table.fws" as table;
+import "../value.fws" as value;
+
+fn startup_hash(
+  a: u32,
+  b: u32,
+  c: u32,
+  d: u32,
+  e: u32,
+  f: u32,
+  g: u32,
+  h: u32,
+  i: u32,
+  j: u32,
+  k: u32,
+  l: u32,
+  m: u32,
+  n: u32,
+  o: u32,
+  p: u32,
+) -> u32 {
+  let hash: u32 = 216613626;
+  if a != 0 { hash = hash * 16777619 + a; }
+  if b != 0 { hash = hash * 16777619 + b; }
+  if c != 0 { hash = hash * 16777619 + c; }
+  if d != 0 { hash = hash * 16777619 + d; }
+  if e != 0 { hash = hash * 16777619 + e; }
+  if f != 0 { hash = hash * 16777619 + f; }
+  if g != 0 { hash = hash * 16777619 + g; }
+  if h != 0 { hash = hash * 16777619 + h; }
+  if i != 0 { hash = hash * 16777619 + i; }
+  if j != 0 { hash = hash * 16777619 + j; }
+  if k != 0 { hash = hash * 16777619 + k; }
+  if l != 0 { hash = hash * 16777619 + l; }
+  if m != 0 { hash = hash * 16777619 + m; }
+  if n != 0 { hash = hash * 16777619 + n; }
+  if o != 0 { hash = hash * 16777619 + o; }
+  if p != 0 { hash = hash * 16777619 + p; }
+  return hash;
+}
+
+fn startup_string(
+  heap: u32,
+  hash: u32,
+  length: u32,
+  a: u32,
+  b: u32,
+  c: u32,
+  d: u32,
+  e: u32,
+  f: u32,
+  g: u32,
+  h: u32,
+  i: u32,
+  j: u32,
+  k: u32,
+  l: u32,
+) -> u32 {
+  let startup_value: u32 = string.string_intern(heap, hash, length);
+  if startup_value == 0 {
+    return 0;
+  }
+  if length > 0 {
+    memory_store_u32(startup_value + 24, a);
+  }
+  if length > 1 {
+    memory_store_u32(startup_value + 28, b);
+  }
+  if length > 2 {
+    memory_store_u32(startup_value + 32, c);
+  }
+  if length > 3 {
+    memory_store_u32(startup_value + 36, d);
+  }
+  if length > 4 {
+    memory_store_u32(startup_value + 40, e);
+  }
+  if length > 5 {
+    memory_store_u32(startup_value + 44, f);
+  }
+  if length > 6 {
+    memory_store_u32(startup_value + 48, g);
+  }
+  if length > 7 {
+    memory_store_u32(startup_value + 52, h);
+  }
+  if length > 8 {
+    memory_store_u32(startup_value + 56, i);
+  }
+  if length > 9 {
+    memory_store_u32(startup_value + 60, j);
+  }
+  if length > 10 {
+    memory_store_u32(startup_value + 64, k);
+  }
+  if length > 11 {
+    memory_store_u32(startup_value + 68, l);
+  }
+  return startup_value;
+}
+
+fn startup_builtin(heap: u32, name: u32, builtin: u32, arity: u32) -> u32 {
+  let function: u32 = memory.heap_alloc(heap, 32, 0);
+  if function == 0 {
+    return 0;
+  }
+  memory_store_u32(function, name);
+  memory_store_u32(function + 4, 0);
+  memory_store_u32(function + 8, 0);
+  memory_store_u32(function + 12, 0);
+  memory_store_u32(function + 16, arity);
+  memory_store_u32(function + 20, 0);
+  memory_store_u32(function + 24, 1);
+  memory_store_u32(function + 28, builtin);
+  return function;
+}
+
+fn startup_set(table_handle: u32, key: u32, output: u32) -> unit {
+  table.table_set_raw(table_handle, key, output);
+}
+
+fn startup_global(heap: u32, key: u32, output: u32) -> unit {
+  memory.heap_global_set(heap, key, output);
+}
+
+export fn library_init_marker() -> u32 {
+  return 1;
+}
+
+export fn library_init(heap: u32) -> u32 {
+  if heap == 0 {
+    return 0;
+  }
+  let global_table: u32 = memory_load_u32(heap + 40);
+  if global_table != 0 {
+    return global_table;
+  }
+  global_table = table.table_new_empty(heap);
+  if global_table == 0 {
+    return 0;
+  }
+  memory_store_u32(heap + 40, global_table);
+
+  let version: u32 = startup_string(heap, 216614100, 7, 76, 117, 97, 32, 53, 46, 53, 0, 0, 0, 0, 0);
+  let empty: u32 = startup_string(heap, 216613626, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  let type_name: u32 = startup_string(heap, 216614496, 8, 102, 117, 110, 99, 116, 105, 111, 110, 0, 0, 0, 0);
+  let string_name: u32 = startup_string(heap, 216614289, 6, 115, 116, 114, 105, 110, 103, 0, 0, 0, 0, 0, 0);
+  let table_name: u32 = startup_string(heap, 216614146, 5, 116, 97, 98, 108, 101, 0, 0, 0, 0, 0, 0, 0);
+  let number_name: u32 = startup_string(heap, 216614275, 6, 110, 117, 109, 98, 101, 114, 0, 0, 0, 0, 0, 0);
+  let boolean_name: u32 = startup_string(heap, 216614362, 7, 98, 111, 111, 108, 101, 97, 110, 0, 0, 0, 0, 0);
+  let nil_name: u32 = startup_string(heap, 216613949, 3, 110, 105, 108, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  let c_locale: u32 = startup_string(heap, 216613693, 1, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  let max_integer: u32 = value.value_float_new(heap, f64_from_u32(2147483647));
+  let arg_table: u32 = table.table_new_empty(heap);
+  let program_name: u32 = startup_string(heap, startup_hash(119, 101, 98, 45, 108, 117, 97, 0, 0, 0, 0, 0, 0, 0, 0, 0), 7, 119, 101, 98, 45, 108, 117, 97, 0, 0, 0, 0, 0);
+
+  startup_global(heap, startup_hash(95, 86, 69, 82, 83, 73, 79, 78, 0, 0, 0, 0, 0, 0, 0, 0), version);
+  startup_global(heap, startup_hash(95, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), global_table);
+  startup_set(arg_table, value.value_integer(1), value.value_string(program_name));
+  startup_global(heap, startup_hash(97, 114, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), arg_table);
+  startup_global(heap, startup_hash(114, 97, 119, 103, 101, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(114, 97, 119, 103, 101, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 3, 2));
+  startup_global(heap, startup_hash(97, 115, 115, 101, 114, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(97, 115, 115, 101, 114, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 4, 1));
+  startup_global(heap, startup_hash(116, 121, 112, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(116, 121, 112, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 5, 1));
+  startup_global(heap, startup_hash(99, 111, 108, 108, 101, 99, 116, 103, 97, 114, 98, 97, 103, 101, 0, 0), startup_builtin(heap, startup_hash(99, 111, 108, 108, 101, 99, 116, 103, 97, 114, 98, 97, 103, 101, 0, 0), 6, 0));
+  startup_global(heap, startup_hash(116, 111, 115, 116, 114, 105, 110, 103, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(116, 111, 115, 116, 114, 105, 110, 103, 0, 0, 0, 0, 0, 0, 0, 0), 7, 1));
+  startup_global(heap, startup_hash(112, 114, 105, 110, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(112, 114, 105, 110, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 8, 0));
+  startup_global(heap, startup_hash(119, 97, 114, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(119, 97, 114, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 9, 0));
+  startup_global(heap, startup_hash(112, 97, 105, 114, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(112, 97, 105, 114, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 20, 1));
+  startup_global(heap, startup_hash(110, 101, 120, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(110, 101, 120, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 41, 2));
+  // error / pcall — required by portable suite protected-call paths.
+  startup_global(heap, startup_hash(101, 114, 114, 111, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(101, 114, 114, 111, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 36, 1));
+  startup_global(heap, startup_hash(112, 99, 97, 108, 108, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(112, 99, 97, 108, 108, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 37, 1));
+
+  let io_table: u32 = table.table_new_empty(heap);
+  let io_stderr: u32 = table.table_new_empty(heap);
+  let math_table: u32 = table.table_new_empty(heap);
+  let string_table: u32 = table.table_new_empty(heap);
+  let package_table: u32 = table.table_new_empty(heap);
+  let os_table: u32 = table.table_new_empty(heap);
+  let table_table: u32 = table.table_new_empty(heap);
+  let debug_table: u32 = table.table_new_empty(heap);
+  let tracegc_table: u32 = table.table_new_empty(heap);
+
+  startup_set(io_table, startup_hash(119, 114, 105, 116, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(119, 114, 105, 116, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 10, 0));
+  startup_set(io_table, startup_hash(111, 112, 101, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(111, 112, 101, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 32, 2));
+  startup_set(io_stderr, startup_hash(119, 114, 105, 116, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(119, 114, 105, 116, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 11, 0));
+  startup_set(io_table, startup_hash(115, 116, 100, 101, 114, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), io_stderr);
+  startup_set(math_table, startup_hash(114, 97, 110, 100, 111, 109, 115, 101, 101, 100, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(114, 97, 110, 100, 111, 109, 115, 101, 101, 100, 0, 0, 0, 0, 0, 0), 12, 0));
+  startup_set(math_table, startup_hash(102, 108, 111, 111, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(102, 108, 111, 111, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 19, 1));
+  startup_set(math_table, startup_hash(109, 105, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(109, 105, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 38, 1));
+  startup_set(math_table, startup_hash(109, 97, 120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(109, 97, 120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 39, 1));
+  startup_set(math_table, startup_hash(109, 97, 120, 105, 110, 116, 101, 103, 101, 114, 0, 0, 0, 0, 0, 0), max_integer);
+  startup_set(string_table, startup_hash(102, 111, 114, 109, 97, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(102, 111, 114, 109, 97, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 13, 1));
+  startup_set(string_table, startup_hash(114, 101, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(114, 101, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 40, 3));
+  startup_set(string_table, startup_hash(103, 115, 117, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(103, 115, 117, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 42, 3));
+  startup_set(string_table, startup_hash(100, 117, 109, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(100, 117, 109, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 26, 1));
+  startup_set(string_table, startup_hash(112, 97, 99, 107, 115, 105, 122, 101, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(112, 97, 99, 107, 115, 105, 122, 101, 0, 0, 0, 0, 0, 0, 0, 0), 21, 1));
+  startup_set(os_table, startup_hash(99, 108, 111, 99, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(99, 108, 111, 99, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 14, 0));
+  startup_set(os_table, startup_hash(116, 105, 109, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(116, 105, 109, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 15, 0));
+  startup_set(os_table, startup_hash(100, 105, 102, 102, 116, 105, 109, 101, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(100, 105, 102, 102, 116, 105, 109, 101, 0, 0, 0, 0, 0, 0, 0, 0), 16, 2));
+  startup_set(os_table, startup_hash(101, 120, 101, 99, 117, 116, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(101, 120, 101, 99, 117, 116, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0), 29, 1));
+  startup_set(os_table, startup_hash(116, 109, 112, 110, 97, 109, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(116, 109, 112, 110, 97, 109, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0), 30, 0));
+  startup_set(os_table, startup_hash(114, 101, 109, 111, 118, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(114, 101, 109, 111, 118, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 31, 1));
+  startup_set(os_table, startup_hash(115, 101, 116, 108, 111, 99, 97, 108, 101, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(115, 101, 116, 108, 111, 99, 97, 108, 101, 0, 0, 0, 0, 0, 0, 0), 17, 1));
+  startup_set(table_table, startup_hash(117, 110, 112, 97, 99, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(117, 110, 112, 97, 99, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 18, 1));
+  startup_set(package_table, startup_hash(112, 97, 116, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), empty);
+  startup_set(package_table, startup_hash(108, 111, 97, 100, 101, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), table.table_new_empty(heap));
+  startup_set(debug_table, startup_hash(115, 101, 116, 104, 111, 111, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(115, 101, 116, 104, 111, 111, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0), 22, 2));
+  startup_set(tracegc_table, startup_hash(115, 116, 97, 114, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(115, 116, 97, 114, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 28, 0));
+
+  startup_global(heap, startup_hash(105, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), io_table);
+  startup_global(heap, startup_hash(109, 97, 116, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), math_table);
+  startup_global(heap, startup_hash(115, 116, 114, 105, 110, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), string_table);
+  startup_global(heap, startup_hash(112, 97, 99, 107, 97, 103, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0), package_table);
+  startup_global(heap, startup_hash(111, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), os_table);
+  startup_global(heap, startup_hash(116, 97, 98, 108, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), table_table);
+  startup_global(heap, startup_hash(116, 114, 97, 99, 101, 103, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0), tracegc_table);
+  startup_global(heap, startup_hash(114, 101, 113, 117, 105, 114, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(114, 101, 113, 117, 105, 114, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0), 23, 1));
+  startup_global(heap, startup_hash(108, 111, 97, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(108, 111, 97, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 27, 1));
+  startup_global(heap, startup_hash(108, 111, 97, 100, 102, 105, 108, 101, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(108, 111, 97, 100, 102, 105, 108, 101, 0, 0, 0, 0, 0, 0, 0, 0), 24, 1));
+  startup_global(heap, startup_hash(100, 111, 102, 105, 108, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), startup_builtin(heap, startup_hash(100, 111, 102, 105, 108, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 25, 1));
+  memory_store_u32(heap + 60, debug_table);
+  return global_table;
+}

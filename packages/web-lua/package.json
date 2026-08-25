@@ -1,0 +1,50 @@
+{
+  "name": "@mission-platform/web-lua",
+  "version": "0.1.0",
+  "description": "Guest-owned Lua runtime foundation compiled from Forge Web Script",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist-node/index.d.ts",
+      "import": "./dist-node/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "dist-node",
+    "fws"
+  ],
+  "scripts": {
+    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
+    "build": "tsdown",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --check ."
+  },
+  "dependencies": {
+    "@mission-platform/forge-web-script": "workspace:*"
+  },
+  "devDependencies": {
+    "@mission-platform/eslint-config": "workspace:*",
+    "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/tsdown-config": "workspace:*",
+    "@mission-platform/typescript-config": "workspace:*",
+    "@mission-platform/vite-plugin-forge-web-script": "workspace:*",
+    "@mission-platform/vite-config": "workspace:*",
+    "@types/node": "catalog:typescript",
+    "eslint": "catalog:eslint",
+    "prettier": "catalog:prettier",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:typescript",
+    "vite": "catalog:vite",
+    "vitest": "catalog:testing"
+  }
+}

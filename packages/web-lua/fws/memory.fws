@@ -1,0 +1,320 @@
+fn at(base: u32, offset: u32) -> u32 {
+  return base + offset;
+}
+
+export fn heap_new() -> u32 {
+  let heap: u32 = memory_alloc(64);
+  if heap == 0 {
+    return 0;
+  }
+  memory_store_u32(at(heap, 0), 1464159557);
+  memory_store_u32(at(heap, 4), 0);
+  memory_store_u32(at(heap, 8), 0);
+  memory_store_u32(at(heap, 12), 0);
+  memory_store_u32(at(heap, 16), 0);
+  memory_store_u32(at(heap, 20), 0);
+  memory_store_u32(at(heap, 24), 0);
+  memory_store_u32(at(heap, 28), 0);
+  let roots: u32 = memory_alloc(128);
+  memory_store_u32(at(heap, 32), roots);
+  let globals: u32 = memory_alloc(512);
+  memory_store_u32(at(heap, 36), globals);
+  let global_index: u32 = 0;
+  while global_index < 128 {
+    memory_store_u32(at(globals, global_index * 4), 0);
+    global_index = global_index + 1;
+  }
+  memory_store_u32(at(heap, 40), 0);
+  // Offset 44 is reserved for a lazily-allocated GC-state scratch block
+  // (current mode string handle, pause, stepmul); 0 means "unset".
+  memory_store_u32(at(heap, 44), 0);
+  memory_store_u32(at(heap, 48), 0);
+  memory_store_u32(at(heap, 52), 0);
+  memory_store_u32(at(heap, 56), 0);
+  memory_store_u32(at(heap, 60), 0);
+  return heap;
+}
+
+export fn heap_valid(heap: u32) -> u32 {
+  if heap == 0 {
+    return 0;
+  }
+  if memory_load_u32(at(heap, 0)) != 1464159557 {
+    return 0;
+  }
+  return 1;
+}
+
+export fn heap_open(heap: u32) -> u32 {
+  if heap_valid(heap) == 0 {
+    return 0;
+  }
+  if memory_load_u32(at(heap, 28)) == 1 {
+    return 0;
+  }
+  return 1;
+}
+
+export fn heap_alloc(heap: u32, size: u32, link: u32) -> u32 {
+  let free: u32 = memory_load_u32(at(heap, 4));
+  let free_size: u32 = 0;
+  if free != 0 {
+    free_size = memory_load_u32(at(free, 0));
+  }
+  if free != 0 && free_size >= size {
+    let next_free: u32 = memory_load_u32(at(free, 4));
+    memory_store_u32(at(heap, 4), next_free);
+    memory_store_u32(at(free, 0), size);
+    if link == 1 {
+      let objects: u32 = memory_load_u32(at(heap, 8));
+      memory_store_u32(at(free, 8), objects);
+      memory_store_u32(at(heap, 8), free);
+    } else {
+      memory_store_u32(at(free, 8), 0);
+    }
+    memory_store_u32(at(free, 4), size);
+    return free;
+  }
+  let limit: u32 = memory_load_u32(at(heap, 48));
+  let allocated: u32 = memory_load_u32(at(heap, 52));
+  if limit != 0 {
+    if allocated + size > limit {
+      memory_store_u32(at(heap, 56), 2);
+      return 0;
+    }
+  }
+  let block: u32 = memory_alloc(size);
+  if block == 0 {
+    memory_store_u32(at(heap, 56), 2);
+    return 0;
+  }
+  memory_store_u32(at(block, 4), size);
+  memory_store_u32(at(block, 0), size);
+  if link == 1 {
+    let objects: u32 = memory_load_u32(at(heap, 8));
+    memory_store_u32(at(block, 8), objects);
+    memory_store_u32(at(heap, 8), block);
+  } else {
+    memory_store_u32(at(block, 8), 0);
+  }
+  memory_store_u32(at(heap, 52), allocated + size);
+  return block;
+}
+
+export fn heap_free(heap: u32, block: u32) -> unit {
+  if heap_valid(heap) == 0 || block == 0 {
+    return;
+  }
+  let free: u32 = memory_load_u32(at(heap, 4));
+  let size: u32 = memory_load_u32(at(block, 4));
+  if size == 0 {
+    return;
+  }
+  let allocated: u32 = memory_load_u32(at(heap, 52));
+  if allocated >= size {
+    memory_store_u32(at(heap, 52), allocated - size);
+  }
+  memory_store_u32(at(block, 0), size);
+  memory_store_u32(at(block, 4), free);
+  memory_store_u32(at(heap, 4), block);
+}
+
+export fn heap_object_head(heap: u32) -> u32 {
+  return memory_load_u32(at(heap, 8));
+}
+
+export fn heap_string_head(heap: u32) -> u32 {
+  return memory_load_u32(at(heap, 12));
+}
+
+export fn heap_set_string_head(heap: u32, value: u32) -> unit {
+  memory_store_u32(at(heap, 12), value);
+}
+
+export fn heap_object_count(heap: u32) -> u32 {
+  return memory_load_u32(at(heap, 16));
+}
+
+export fn heap_increment_objects(heap: u32) -> unit {
+  let count: u32 = memory_load_u32(at(heap, 16));
+  memory_store_u32(at(heap, 16), count + 1);
+}
+
+export fn heap_decrement_objects(heap: u32) -> unit {
+  let count: u32 = memory_load_u32(at(heap, 16));
+  if count != 0 {
+    memory_store_u32(at(heap, 16), count - 1);
+  }
+}
+
+export fn heap_set_chunk(heap: u32, chunk: u32) -> unit {
+  memory_store_u32(at(heap, 20), chunk);
+}
+
+export fn heap_chunk(heap: u32) -> u32 {
+  return memory_load_u32(at(heap, 20));
+}
+
+export fn heap_set_status(heap: u32, status: u32) -> unit {
+  memory_store_u32(at(heap, 24), status);
+}
+
+export fn heap_status(heap: u32) -> u32 {
+  return memory_load_u32(at(heap, 24));
+}
+
+export fn heap_set_closed(heap: u32, closed: u32) -> unit {
+  memory_store_u32(at(heap, 28), closed);
+}
+
+export fn heap_closed(heap: u32) -> u32 {
+  return memory_load_u32(at(heap, 28));
+}
+
+export fn heap_collect(heap: u32, root: u32) -> u32 {
+  let current: u32 = heap_object_head(heap);
+  let previous: u32 = 0;
+  let reclaimed: u32 = 0;
+  while current != 0 {
+    let next: u32 = memory_load_u32(at(current, 8));
+    if current == root || heap_root(heap, 0) == current || heap_is_root(heap, current) == 1 {
+      previous = current;
+    } else {
+      if previous == 0 {
+        memory_store_u32(at(heap, 8), next);
+      } else {
+        memory_store_u32(at(previous, 8), next);
+      }
+      heap_free(heap, current);
+      heap_decrement_objects(heap);
+      reclaimed = reclaimed + 1;
+    }
+    current = next;
+  }
+  return reclaimed;
+}
+
+export fn heap_is_root(heap: u32, value: u32) -> u32 {
+  if heap_valid(heap) == 0 {
+    return 0;
+  }
+  let roots: u32 = memory_load_u32(at(heap, 32));
+  let index: u32 = 0;
+  while index < 64 {
+    if memory_load_u32(at(roots, index * 4)) == value {
+      return 1;
+    }
+    index = index + 1;
+  }
+  return 0;
+}
+
+export fn heap_has_roots(heap: u32) -> u32 {
+  if heap_valid(heap) == 0 {
+    return 0;
+  }
+  let index: u32 = 0;
+  while index < 64 {
+    if heap_root(heap, index) != 0 {
+      return 1;
+    }
+    index = index + 1;
+  }
+  return 0;
+}
+
+export fn heap_set_root(heap: u32, index: u32, value: u32) -> u32 {
+  if heap_valid(heap) == 0 || index >= 32 {
+    return 1;
+  }
+  let roots: u32 = memory_load_u32(at(heap, 32));
+  memory_store_u32(at(roots, index * 4), value);
+  return 0;
+}
+
+export fn heap_root(heap: u32, index: u32) -> u32 {
+  if heap_valid(heap) == 0 || index >= 32 {
+    return 0;
+  }
+  return memory_load_u32(at(memory_load_u32(at(heap, 32)), index * 4));
+}
+
+export fn heap_global_get(heap: u32, name: u32) -> u32 {
+  if heap_valid(heap) == 0 {
+    return 0;
+  }
+  let globals: u32 = memory_load_u32(at(heap, 36));
+  let index: u32 = 0;
+  while index < 64 {
+    let address: u32 = at(globals, index * 8);
+    if memory_load_u32(address) == name {
+      return memory_load_u32(address + 4);
+    }
+    index = index + 1;
+  }
+  return 0;
+}
+
+export fn heap_global_set(heap: u32, name: u32, value: u32) -> u32 {
+  if heap_valid(heap) == 0 || heap_closed(heap) == 1 {
+    return 2;
+  }
+  let globals: u32 = memory_load_u32(at(heap, 36));
+  let index: u32 = 0;
+  let empty: u32 = 32;
+  while index < 64 {
+    let address: u32 = at(globals, index * 8);
+    if memory_load_u32(address) == name {
+      memory_store_u32(address + 4, value);
+      return 0;
+    }
+    if memory_load_u32(address) == 0 && empty == 32 {
+      empty = index;
+    }
+    index = index + 1;
+  }
+  if empty == 32 {
+    return 2;
+  }
+  let address: u32 = at(globals, empty * 8);
+  memory_store_u32(address, name);
+  memory_store_u32(address + 4, value);
+  return 0;
+}
+
+export fn heap_set_limit(heap: u32, limit: u32) -> unit {
+  if heap_valid(heap) == 1 {
+    memory_store_u32(at(heap, 48), limit);
+  }
+}
+
+export fn heap_allocation_error(heap: u32) -> u32 {
+  if heap_valid(heap) == 0 {
+    return 2;
+  }
+  return memory_load_u32(at(heap, 56));
+}
+
+export fn heap_owns(heap: u32, handle: u32) -> u32 {
+  if heap_valid(heap) == 0 || handle == 0 {
+    return 0;
+  }
+  if heap_is_root(heap, handle) == 1 {
+    return 1;
+  }
+  let current: u32 = heap_object_head(heap);
+  while current != 0 {
+    if current == handle {
+      return 1;
+    }
+    current = memory_load_u32(at(current, 8));
+  }
+  current = heap_string_head(heap);
+  while current != 0 {
+    if current == handle {
+      return 1;
+    }
+    current = memory_load_u32(at(current, 8));
+  }
+  return 0;
+}

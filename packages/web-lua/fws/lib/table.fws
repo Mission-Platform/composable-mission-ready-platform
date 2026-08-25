@@ -1,0 +1,134 @@
+import "../string.fws" as strings;
+import "../table.fws" as tables;
+import "../value.fws" as value;
+
+fn integer_key(index: u32) -> u32 {
+  return value.value_integer(index);
+}
+
+fn table_item(table: u32, index: u32) -> u32 {
+  return tables.table_get_raw(table, integer_key(index));
+}
+
+fn default_start(index: u32) -> u32 {
+  if index == 0 {
+    return 1;
+  }
+  return index;
+}
+
+fn default_finish(index: u32, length: u32) -> u32 {
+  if index == 0 {
+    return length;
+  }
+  return index;
+}
+
+export fn table_raw_length(input: u32) -> u32 {
+  if value.value_kind(input) != 5 {
+    return 0;
+  }
+  return tables.table_length(value.value_payload(input));
+}
+
+export fn table_raw_get(input: u32, key: u32) -> u32 {
+  if value.value_kind(input) != 5 {
+    return 0;
+  }
+  return tables.table_get_raw(value.value_payload(input), key);
+}
+
+export fn table_raw_set(input: u32, key: u32, output: u32) -> u32 {
+  if value.value_kind(input) != 5 {
+    return 2;
+  }
+  tables.table_set_raw(value.value_payload(input), key, output);
+  return 0;
+}
+
+export fn table_insert(input: u32, position: u32, item: u32) -> u32 {
+  if value.value_kind(input) != 5 || position == 0 {
+    return 2;
+  }
+  let table: u32 = value.value_payload(input);
+  let length: u32 = tables.table_length(table);
+  if position > length + 1 {
+    return 2;
+  }
+  let index: u32 = length + 1;
+  while index > position {
+    tables.table_set_raw(table, integer_key(index), table_item(table, index - 1));
+    index = index - 1;
+  }
+  tables.table_set_raw(table, integer_key(position), item);
+  return 0;
+}
+
+export fn table_remove(input: u32, position: u32) -> u32 {
+  if value.value_kind(input) != 5 || position == 0 {
+    return value.value_nil();
+  }
+  let table: u32 = value.value_payload(input);
+  let length: u32 = tables.table_length(table);
+  if position > length {
+    return value.value_nil();
+  }
+  let removed: u32 = table_item(table, position);
+  let index: u32 = position;
+  while index < length {
+    tables.table_set_raw(table, integer_key(index), table_item(table, index + 1));
+    index = index + 1;
+  }
+  tables.table_set_raw(table, integer_key(length), value.value_nil());
+  return removed;
+}
+
+export fn table_concat(
+  heap: u32,
+  input: u32,
+  separator: u32,
+  start: u32,
+  finish: u32,
+) -> u32 {
+  if value.value_kind(input) != 5 || value.value_kind(separator) != 4 {
+    return value.value_nil();
+  }
+  let table: u32 = value.value_payload(input);
+  let length: u32 = tables.table_length(table);
+  let first: u32 = default_start(start);
+  let last: u32 = default_finish(finish, length);
+  if first > last || last > length {
+    return value.value_nil();
+  }
+  let combined: u32 = strings.string_intern(heap, 0, 0);
+  if combined == 0 {
+    return value.value_nil();
+  }
+  let index: u32 = first;
+  while index <= last {
+    let item: u32 = table_item(table, index);
+    if value.value_kind(item) != 4 {
+      return value.value_nil();
+    }
+    if index > first {
+      combined = strings.lua_string_concat(
+        heap,
+        combined,
+        value.value_payload(separator),
+      );
+      if combined == 0 {
+        return value.value_nil();
+      }
+    }
+    combined = strings.lua_string_concat(
+      heap,
+      combined,
+      value.value_payload(item),
+    );
+    if combined == 0 {
+      return value.value_nil();
+    }
+    index = index + 1;
+  }
+  return value.value_string(combined);
+}

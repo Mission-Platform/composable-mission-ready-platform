@@ -1,0 +1,94 @@
+import "./memory.fws" as memory;
+
+export fn thread_new(heap: u32, status: u32, stack: u32) -> u32 {
+  if memory.heap_open(heap) == 0 {
+    return 0;
+  }
+  let thread: u32 = memory.heap_alloc(heap, 44, 1);
+  if thread == 0 {
+    return 0;
+  }
+  memory_store_u32(thread, 4);
+  memory_store_u32(thread + 4, 44);
+  memory_store_u32(thread + 12, status);
+  memory_store_u32(thread + 16, stack);
+  memory_store_u32(thread + 20, 0);
+  memory_store_u32(thread + 24, 0);
+  memory_store_u32(thread + 28, 0);
+  memory_store_u32(thread + 32, 0);
+  memory_store_u32(thread + 36, 0);
+  memory_store_u32(thread + 40, 0);
+  memory.heap_increment_objects(heap);
+  return thread;
+}
+
+export fn thread_status(thread: u32) -> u32 {
+  if thread == 0 {
+    return 2;
+  }
+  return memory_load_u32(thread + 12);
+}
+
+export fn thread_set_status(thread: u32, status: u32) -> unit {
+  if thread != 0 {
+    memory_store_u32(thread + 12, status);
+  }
+}
+
+export fn frame_new(heap: u32, previous: u32, prototype: u32, return_pc: u32) -> u32 {
+  let frame: u32 = memory.heap_alloc(heap, 36, 0);
+  if frame == 0 {
+    return 0;
+  }
+  memory_store_u32(frame, 8);
+  memory_store_u32(frame + 4, 36);
+  memory_store_u32(frame + 12, previous);
+  memory_store_u32(frame + 16, prototype);
+  memory_store_u32(frame + 20, return_pc);
+  memory_store_u32(frame + 24, 0);
+  memory_store_u32(frame + 28, 0);
+  memory_store_u32(frame + 32, 0);
+  return frame;
+}
+
+export fn thread_push_frame(thread: u32, frame: u32) -> u32 {
+  if thread == 0 || frame == 0 {
+    return 1;
+  }
+  memory_store_u32(frame + 12, memory_load_u32(thread + 24));
+  memory_store_u32(thread + 24, frame);
+  return 0;
+}
+
+export fn thread_frame(thread: u32) -> u32 {
+  if thread == 0 {
+    return 0;
+  }
+  return memory_load_u32(thread + 24);
+}
+
+export fn thread_set_yield(thread: u32, value: u32) -> unit {
+  if thread != 0 {
+    memory_store_u32(thread + 28, value);
+  }
+}
+
+export fn thread_yield_value(thread: u32) -> u32 {
+  if thread == 0 {
+    return 0;
+  }
+  return memory_load_u32(thread + 28);
+}
+
+export fn thread_set_result_count(thread: u32, count: u32) -> unit {
+  if thread != 0 {
+    memory_store_u32(thread + 32, count);
+  }
+}
+
+export fn thread_result_count(thread: u32) -> u32 {
+  if thread == 0 {
+    return 0;
+  }
+  return memory_load_u32(thread + 32);
+}
