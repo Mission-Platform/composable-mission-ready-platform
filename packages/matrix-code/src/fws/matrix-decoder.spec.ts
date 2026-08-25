@@ -70,6 +70,7 @@ describe('matrix-decoder.fws artifact', () => {
   it('round-trips square Data Matrix through sync and async loaders', async () => {
     await expect(roundTrip(loadEncoderSync, loadSync, 0, 'Hello')).resolves.toBe('Hello');
     await expect(roundTrip(loadEncoderSync, loadSync, 0, '123456')).resolves.toBe('123456');
+    await expect(roundTrip(loadEncoderSync, loadSync, 0, '123456')).resolves.toBe('123456');
     await expect(roundTrip(loadEncoder, load, 0, 'A')).resolves.toBe('A');
   });
 
