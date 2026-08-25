@@ -81,7 +81,7 @@ describe('discoverComponents', () => {
         base: 'use-toast',
         relativePath: 'composables/use-toast',
         sourcePath: path.join(root, 'composables/use-toast.ts'),
-        values: ['useToast'],
+        values: [{ localName: 'useToast', exportedName: 'useToast' }],
       }),
     ]);
   });
@@ -108,8 +108,8 @@ describe('discoverComponents', () => {
     expect(helpers).toEqual([
       expect.objectContaining({
         base: 'use-layer',
-        values: ['useLayer'],
-        types: ['UseLayerOptions'],
+        values: [{ localName: 'useLayer', exportedName: 'useLayer' }],
+        types: [{ localName: 'UseLayerOptions', exportedName: 'UseLayerOptions' }],
         sourcePath: path.join(root, 'composables/use-layer.ts'),
       }),
     ]);
@@ -154,8 +154,15 @@ describe('discoverHelperExports', () => {
     expect(helpers[0]).toEqual({
       base: 'toast-store',
       relativePath: 'toast-store',
-      values: ['clearToasts', 'showToast', 'useToast'],
-      types: ['ToastOptions', 'ToastPosition'],
+      values: [
+        { localName: 'clearToasts', exportedName: 'clearToasts' },
+        { localName: 'showToast', exportedName: 'showToast' },
+        { localName: 'useToast', exportedName: 'useToast' },
+      ],
+      types: [
+        { localName: 'ToastOptions', exportedName: 'ToastOptions' },
+        { localName: 'ToastPosition', exportedName: 'ToastPosition' },
+      ],
     });
   });
 

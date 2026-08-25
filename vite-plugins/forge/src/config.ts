@@ -178,6 +178,11 @@ export interface JsxLibraryConfigOptions {
    * Auto-detected from `src/components/index.ts`, `src/component/index.ts`, or `src/index.ts` if omitted.
    */
   componentsModule?: string;
+  /**
+   * Path to the package public entry module used to preserve neutral exports.
+   * Defaults to `<rootDir>/src/index.ts` when it exists, otherwise the component entry.
+   */
+  publicEntryModule?: string;
   /** Use synthesised entry declaration file instead of running `vue-tsc`/`tsc` on generated tree. */
   useEntryDts?: boolean;
   /** Relative import path for declaration types when `useEntryDts` is enabled (defaults to `'../components'`). */
@@ -202,6 +207,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
     plugin,
     name,
     componentsModule,
+    publicEntryModule,
     useEntryDts,
     declarationModule,
     external = [],
@@ -225,6 +231,11 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
       path.resolve(rootDir, 'src/index.ts'),
     ].find((p) => fs.existsSync(p)) ??
     path.resolve(rootDir, 'src/index.ts');
+  const resolvedPublicEntryModule =
+    publicEntryModule ??
+    (fs.existsSync(path.resolve(rootDir, 'src/index.ts'))
+      ? path.resolve(rootDir, 'src/index.ts')
+      : resolvedComponentsModule);
 
   const vueTscBin = createRequire(path.join(rootDir, 'vite.config.ts')).resolve('vue-tsc/bin/vue-tsc.js', {
     paths: [path.join(rootDir, 'node_modules/@mission-platform/forge')],
@@ -233,6 +244,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
   const entry = generateFrameworkSources({
     plugin,
     componentsModule: resolvedComponentsModule,
+    publicEntryModule: resolvedPublicEntryModule,
     sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
     outDir: generatedDir,
     // Keep the neutral `Forge` prefix on the public API (do not strip it).
@@ -266,6 +278,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
       ? jsxComponentsEntryDtsPlugin({
           framework,
           componentsModule: resolvedComponentsModule,
+          publicEntryModule: resolvedPublicEntryModule,
           sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
           declarationFileName: 'index',
           declarationModule: declarationModule ?? '../components',
@@ -278,6 +291,7 @@ export function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserCo
           outDir: path.resolve(rootDir, `dist/${framework}`),
           vueTscBin,
           componentsModule: resolvedComponentsModule,
+          publicEntryModule: resolvedPublicEntryModule,
           sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
         });
 

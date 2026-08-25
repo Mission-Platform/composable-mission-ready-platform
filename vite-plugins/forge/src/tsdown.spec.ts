@@ -78,6 +78,91 @@ describe('Forge tsdown component helpers', () => {
     expect(JSON.stringify(configs)).not.toContain('baseUrl');
   }, 30_000);
 
+  it('discovers the package public entry by default while preserving component-only fallback', () => {
+    const rootDir = fs.mkdtempSync(path.join('/tmp', 'mission-platform-public-entry-'));
+    const componentsDir = path.join(rootDir, 'src', 'components');
+    const helperDir = path.join(rootDir, 'src', 'helpers');
+    const componentModule = path.join(componentsDir, 'index.ts');
+
+    try {
+      fs.mkdirSync(path.join(componentsDir, 'forge-card'), { recursive: true });
+      fs.mkdirSync(helperDir, { recursive: true });
+      fs.writeFileSync(componentModule, "export { ForgeCard } from './forge-card';\n");
+      fs.writeFileSync(path.join(componentsDir, 'forge-card', 'forge-card.tsx'), 'export function ForgeCard() {}\n');
+      fs.writeFileSync(
+        path.join(rootDir, 'src', 'index.ts'),
+        "export * from './components';\nexport * from './helpers/store';\n",
+      );
+      fs.writeFileSync(path.join(helperDir, 'store.ts'), 'export const publicStore = true;\n');
+
+      const [config] = defineTsdownForgeComponents({
+        rootDir,
+        frameworks: [fixtureFramework('vue')],
+        componentsModule: componentModule,
+        rejectFixturePlaceholder: false,
+      });
+      const generatedEntry = fs.readFileSync(config.entry as string, 'utf8');
+      expect(generatedEntry).toContain('publicStore');
+      expect(generatedEntry).toContain('ForgeCard');
+
+      const componentOnlyRootDir = fs.mkdtempSync(path.join('/tmp', 'mission-platform-component-only-'));
+      const componentOnlyModule = path.join(componentOnlyRootDir, 'src', 'components', 'index.ts');
+      fs.mkdirSync(path.dirname(componentOnlyModule), { recursive: true });
+      fs.mkdirSync(path.join(path.dirname(componentOnlyModule), 'forge-only'), { recursive: true });
+      fs.writeFileSync(componentOnlyModule, "export { ForgeOnly } from './forge-only';\n");
+      fs.writeFileSync(
+        path.join(path.dirname(componentOnlyModule), 'forge-only', 'forge-only.tsx'),
+        'export function ForgeOnly() {}\n',
+      );
+      try {
+        const [componentOnlyConfig] = defineTsdownForgeComponents({
+          rootDir: componentOnlyRootDir,
+          frameworks: [fixtureFramework('react')],
+          componentsModule: componentOnlyModule,
+          rejectFixturePlaceholder: false,
+        });
+        expect(fs.readFileSync(componentOnlyConfig.entry as string, 'utf8')).toContain('ForgeOnly');
+      } finally {
+        fs.rmSync(componentOnlyRootDir, { recursive: true, force: true });
+      }
+    } finally {
+      fs.rmSync(rootDir, { recursive: true, force: true });
+    }
+  }, 30_000);
+
+  it('uses an explicit public-entry override instead of the package root entry', () => {
+    const rootDir = fs.mkdtempSync(path.join('/tmp', 'mission-platform-public-entry-override-'));
+    const componentsDir = path.join(rootDir, 'src', 'components');
+    const helperDir = path.join(rootDir, 'src', 'helpers');
+    const componentModule = path.join(componentsDir, 'index.ts');
+    const overrideModule = path.join(rootDir, 'src', 'public.ts');
+
+    try {
+      fs.mkdirSync(path.join(componentsDir, 'forge-card'), { recursive: true });
+      fs.mkdirSync(helperDir, { recursive: true });
+      fs.writeFileSync(componentModule, "export { ForgeCard } from './forge-card';\n");
+      fs.writeFileSync(path.join(componentsDir, 'forge-card', 'forge-card.tsx'), 'export function ForgeCard() {}\n');
+      fs.writeFileSync(path.join(rootDir, 'src', 'index.ts'), "export * from './helpers/default-store';\n");
+      fs.writeFileSync(overrideModule, "export * from './helpers/override-store';\n");
+      fs.writeFileSync(path.join(helperDir, 'default-store.ts'), 'export const defaultStore = true;\n');
+      fs.writeFileSync(path.join(helperDir, 'override-store.ts'), 'export const overrideStore = true;\n');
+
+      const [config] = defineTsdownForgeComponents({
+        rootDir,
+        frameworks: [fixtureFramework('solid')],
+        componentsModule: componentModule,
+        publicEntryModule: overrideModule,
+        rejectFixturePlaceholder: false,
+      });
+      const generatedEntry = fs.readFileSync(config.entry as string, 'utf8');
+      expect(generatedEntry).toContain('overrideStore');
+      expect(generatedEntry).not.toContain('defaultStore');
+      expect(generatedEntry).toContain('ForgeCard');
+    } finally {
+      fs.rmSync(rootDir, { recursive: true, force: true });
+    }
+  }, 30_000);
+
   it('writes framework output below an isolated stage root when requested', () => {
     const rootDir = path.resolve('/tmp', 'mission-platform-staged-components');
     const stageRoot = path.resolve(rootDir, 'node_modules/.cache/forge-build/test');

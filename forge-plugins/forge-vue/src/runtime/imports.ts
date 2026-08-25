@@ -24,14 +24,14 @@ import {
   type StyleImport,
 } from "@mission-platform/forge-plugin-api/compiler/ast.js";
 
-const ADAPTER_MODULE = frameworkAdapterModule("vue");
-
 import type {
   VueEventSignature,
   VueModelSignature,
   VuePropertySignature,
 } from "../transformers/props-interface.js";
 import type { GenericImport } from "@mission-platform/forge-plugin-api";
+
+const ADAPTER_MODULE = frameworkAdapterModule("vue");
 
 /** A relative import of a sibling component or helper module. */
 export interface RelativeImport {
@@ -295,8 +295,9 @@ export function buildImports(
         : `import ${styleImport.name} from '${styleImport.flatSpecifier}';`,
     );
   }
-  // Framework-agnostic runtime utilities (e.g. `classNames`) keep their neutral
-  // import — they behave identically on Vue and are not translated.
+  // Framework-agnostic runtime utilities (e.g. `classNames` and
+  // `createForgeStyle`) keep their neutral import — they behave identically on
+  // Vue and are not translated.
   if (neutralRuntimeValues.length > 0) {
     lines.push(
       `import { ${[...neutralRuntimeValues].toSorted().join(", ")} } from '${NEUTRAL_MODULE}';`,

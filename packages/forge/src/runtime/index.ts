@@ -29,8 +29,10 @@ export {
   type MpContextProviderProperties,
 } from './context';
 export {
+  createForgeStyle,
   isMpElement,
   type MpChild,
+  type CSSStyleProperties,
   type MpComponent,
   type MpElement,
   type MpElementType,

@@ -9,7 +9,8 @@ import type { GeneratedModule } from '@mission-platform/forge-plugin-api';
 import type { SourceFile } from 'typescript';
 
 export function createHelperModuleCarrier(input: {
-  readonly graph: ForgeFileGraph;
+  /** Graphs for the public package entry and transformed component barrel. */
+  readonly graphs: readonly ForgeFileGraph[];
   readonly context: ForgeGenerationContext;
   readonly router: Parameters<ForgeGenerationContext['compile']>[0]['router'];
   readonly routerPlugins: Parameters<ForgeGenerationContext['compile']>[0]['routerPlugins'];
@@ -24,7 +25,7 @@ export function createHelperModuleCarrier(input: {
   readonly readExportedTypeNames: (parsed: SourceFile) => Set<string>;
 }): (sourcePath: string) => void {
   const {
-    graph,
+    graphs,
     context,
     router,
     routerPlugins,
@@ -38,6 +39,9 @@ export function createHelperModuleCarrier(input: {
     helperExportedTypes,
     readExportedTypeNames,
   } = input;
+
+  const graphForSource = (sourcePath: string): ForgeFileGraph | undefined =>
+    graphs.find((candidate) => candidate.nodes.has(path.resolve(sourcePath)));
 
   const carriedForgeWebScriptAssets = new Set<string>();
 
@@ -75,10 +79,11 @@ export function createHelperModuleCarrier(input: {
       const indexSource = readFileSync(sourcePath, 'utf8');
       const indexParsed = parseTsx(sourcePath, indexSource);
       helperExportedTypes.set('index', readExportedTypeNames(indexParsed));
-      for (const edge of graph.edges.filter(
+      const graph = graphForSource(sourcePath);
+      for (const edge of (graph?.edges ?? []).filter(
         (candidate) => candidate.from === sourcePath && candidate.resolved && candidate.to !== undefined,
       )) {
-        const nestedNode = graph.nodes.get(edge.to as string);
+        const nestedNode = graph?.nodes.get(edge.to as string);
         if (nestedNode?.kind === 'asset' && path.extname(nestedNode.id) === '.fws') {
           carryForgeWebScriptAsset(nestedNode.id);
           continue;
@@ -126,10 +131,11 @@ export function createHelperModuleCarrier(input: {
     }
 
     // Follow the helper's own relative (non-component) imports transitively.
-    for (const edge of graph.edges.filter(
+    const graph = graphForSource(sourcePath);
+    for (const edge of (graph?.edges ?? []).filter(
       (candidate) => candidate.from === sourcePath && candidate.resolved && candidate.to !== undefined,
     )) {
-      const nestedNode = graph.nodes.get(edge.to as string);
+      const nestedNode = graph?.nodes.get(edge.to as string);
       if (nestedNode?.kind === 'asset' && path.extname(nestedNode.id) === '.fws') {
         carryForgeWebScriptAsset(nestedNode.id);
         continue;
@@ -146,6 +152,48 @@ export function createHelperModuleCarrier(input: {
   };
 
   return carryHelperModule;
+}
+
+/**
+ * Resolve a relative Sass `@use` / `@forward` / `@import` specifier to a file on
+ * disk, including the underscore partial convention (`./name` → `_name.scss`).
+ */
+function resolveScssPartial(fromDirectory: string, specifier: string): string | undefined {
+  if (!specifier.startsWith('.')) {
+    return undefined;
+  }
+  const resolved = path.resolve(fromDirectory, specifier);
+  const directory = path.dirname(resolved);
+  const base = path.basename(resolved);
+  const candidates = [
+    resolved,
+    `${resolved}.scss`,
+    `${resolved}.sass`,
+    path.join(directory, `_${base}.scss`),
+    path.join(directory, `_${base}.sass`),
+    path.join(directory, `_${base}`),
+  ];
+  return candidates.find((candidate) => existsSync(candidate) && !existsSync(candidate + '/'));
+}
+
+/** Collect transitive relative Sass partials referenced from a stylesheet. */
+function collectScssPartials(stylePath: string, seen: Set<string> = new Set()): readonly string[] {
+  if (seen.has(stylePath) || !existsSync(stylePath)) {
+    return [];
+  }
+  seen.add(stylePath);
+  const source = readFileSync(stylePath, 'utf8');
+  const directory = path.dirname(stylePath);
+  const deps: string[] = [];
+  const usePattern = /@(?:use|forward|import)\s+['"]([^'"]+)['"]/g;
+  for (const match of source.matchAll(usePattern)) {
+    const partial = resolveScssPartial(directory, match[1] ?? '');
+    if (partial === undefined) {
+      continue;
+    }
+    deps.push(partial, ...collectScssPartials(partial, seen));
+  }
+  return deps;
 }
 
 export function copyComponentOwnStyles(input: {
@@ -178,6 +226,11 @@ export function copyComponentOwnStyles(input: {
       continue;
     }
     copyAsset(mirrorDir(styleNode.id), path.basename(styleNode.id), styleNode.id, styleNode.id);
+    // Carry co-located Sass partials referenced via @use/@forward/@import so
+    // generated framework trees can resolve `@use './component-properties'`.
+    for (const partial of collectScssPartials(styleNode.id)) {
+      copyAsset(mirrorDir(partial), path.basename(partial), partial, partial);
+    }
   }
 }
 

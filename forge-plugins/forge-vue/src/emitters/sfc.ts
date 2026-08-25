@@ -15,7 +15,7 @@ import {
   buildPropsMacro,
   type RelativeImport,
 } from "../runtime/imports.js";
-import { buildStyles } from "../runtime/styles.js";
+import { buildStyles, type VueStyleBinding } from "../runtime/styles.js";
 
 import type {
   VueEventSignature,
@@ -39,6 +39,8 @@ export interface SfcParts {
   readonly fileName: string;
   /** CSS-Module (default) style imports inlined as `<style>` blocks. */
   readonly styleModuleImports: readonly StyleImport[];
+  /** Nested component override values exposed through scoped Vue CSS. */
+  readonly styleBindings: readonly VueStyleBinding[];
   /**
    * The `vue` runtime imports the analysis collected. Mutated during assembly to
    * add `h`/`useSlots` when the body lines reference them.
@@ -96,6 +98,7 @@ export function assembleSfc(
     parts.styleModuleImports,
     parts.fileName,
     scoped,
+    parts.styleBindings,
   );
   if (bodyLines.some((line) => /\bh\(/.test(line))) {
     parts.vueImports.add("h");

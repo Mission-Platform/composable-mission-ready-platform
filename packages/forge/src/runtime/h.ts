@@ -33,9 +33,22 @@ export function h<P extends object>(
   properties?: P | null,
   ...children: MpChild[]
 ): MpElement {
-  const normalizedProperties: MpPropertyBag = { ...properties };
-  const inlineChildren = normalizedProperties.children;
-  delete normalizedProperties.children;
+  const rawProperties: MpPropertyBag = { ...properties };
+  const inlineChildren = rawProperties.children;
+  delete rawProperties.children;
+
+  // Drop `undefined`-valued attributes (most notably an omitted `style` override
+  // bag) so every target adapter sees the same, key-absent shape. Leaving the
+  // key present with an `undefined` value is invisible to React (which skips
+  // `undefined` DOM props) but Vue's SSR renderer still serialises a present
+  // `style` key as `style=""`, breaking cross-target parity when no override is
+  // supplied.
+  const normalizedProperties: MpPropertyBag = {};
+  for (const [key, value] of Object.entries(rawProperties)) {
+    if (value !== undefined) {
+      normalizedProperties[key] = value;
+    }
+  }
 
   let rawChildren: MpChild[];
   if (children.length > 0) {

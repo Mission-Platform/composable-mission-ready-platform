@@ -1,4 +1,13 @@
-import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdtempSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -16,6 +25,7 @@ import {
   generateFrameworkSources,
   jsxComponentsCssImportPlugin,
   jsxComponentsDtsPlugin,
+  jsxComponentsEntryDtsPlugin,
 } from './generate';
 
 import type { DiscoveredComponent, DiscoveredExternalExport, DiscoveredHelperExport } from './compiler/discover';
@@ -148,6 +158,169 @@ const aliasPreservingPlugin: FrameworkOutputPlugin = {
 };
 
 describe('generateFrameworkSources', () => {
+  it('preserves neutral exports from a distinct public entry and nested helper barrels', async () => {
+    const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-public-entry-'));
+    const componentsDir = path.join(packageDir, 'src', 'components');
+    const helperDir = path.join(packageDir, 'src', 'helpers', 'public');
+    const componentsModule = path.join(componentsDir, 'index.ts');
+    const publicEntryModule = path.join(packageDir, 'src', 'index.ts');
+    const frameworkPlugins: readonly FrameworkOutputPlugin[] = [
+      forgeReactFramework(),
+      forgeVueFramework(),
+      forgeSolidFramework(),
+      forgeSvelteFramework(),
+      forgeWebComponentsFramework(),
+    ];
+
+    try {
+      mkdirSync(path.join(componentsDir, 'forge-card'), { recursive: true });
+      mkdirSync(helperDir, { recursive: true });
+      writeFileSync(componentsModule, "export { ForgeCard } from './forge-card';\n");
+      writeFileSync(
+        path.join(componentsDir, 'forge-card', 'forge-card.tsx'),
+        'export function ForgeCard(): null { return <div data-public-entry="card" />; }\n',
+      );
+      writeFileSync(
+        publicEntryModule,
+        "export * from './components';\nexport * from './helpers/public';\nexport { neutralValue as aliasedNeutralValue, type NeutralOptions as AliasedNeutralOptions } from './helpers/public';\nexport * from './external';\n",
+      );
+      writeFileSync(path.join(helperDir, 'index.ts'), "export * from './nested/store';\n");
+      mkdirSync(path.join(helperDir, 'nested'), { recursive: true });
+      writeFileSync(
+        path.join(packageDir, 'src', 'external.ts'),
+        "export { externalValue } from '@external/package';\n",
+      );
+      writeFileSync(
+        path.join(helperDir, 'nested', 'store.ts'),
+        "import { neutralEnabled } from './values';\nexport interface NeutralOptions { enabled: boolean; }\nexport const neutralValue = neutralEnabled;\n",
+      );
+      writeFileSync(path.join(helperDir, 'nested', 'values.ts'), 'export const neutralEnabled = true;\n');
+
+      for (const plugin of frameworkPlugins) {
+        const outDir = path.join(packageDir, 'generated', plugin.id);
+        generateFrameworkSources({ plugin, componentsModule, publicEntryModule, outDir });
+
+        const entrySource = readFileSync(path.join(outDir, `index${plugin.source.entryExtension}`), 'utf8');
+        expect(entrySource, `${plugin.id} component`).toContain('ForgeCard');
+        expect(entrySource, `${plugin.id} neutral value`).toContain('neutralValue');
+        expect(entrySource, `${plugin.id} neutral value alias`).toContain('neutralValue as aliasedNeutralValue');
+        expect(entrySource, `${plugin.id} neutral type`).toContain('type NeutralOptions');
+        expect(entrySource, `${plugin.id} neutral type alias`).toContain(
+          'type NeutralOptions as AliasedNeutralOptions',
+        );
+        expect(entrySource, `${plugin.id} external`).toContain("externalValue } from '@external/package';");
+        expect(readFileSync(path.join(outDir, 'helpers', 'public', 'nested', 'store.ts'), 'utf8')).toContain(
+          "from './values'",
+        );
+        expect(readFileSync(path.join(outDir, 'helpers', 'public', 'nested', 'values.ts'), 'utf8')).toContain(
+          'neutralEnabled',
+        );
+
+        const declarationPlugin = jsxComponentsEntryDtsPlugin({
+          framework: plugin.id as 'react' | 'vue' | 'solid' | 'svelte' | 'web-components',
+          componentsModule,
+          publicEntryModule,
+          declarationFileName: 'index',
+          declarationModule: './components',
+          stripPrefix: '',
+        });
+        const emitted: string[] = [];
+        const generateBundle = declarationPlugin.generateBundle;
+        if (typeof generateBundle !== 'function') {
+          throw new TypeError('expected a function generateBundle hook');
+        }
+        generateBundle.call(
+          {
+            emitFile(file: { source: string }): void {
+              emitted.push(file.source);
+            },
+          } as never,
+          {},
+          {},
+        );
+        expect(emitted[0], `${plugin.id} declaration alias`).toContain('neutralValue as aliasedNeutralValue');
+        expect(emitted[0], `${plugin.id} declaration type alias`).toContain('NeutralOptions as AliasedNeutralOptions');
+        expect(emitted[0], `${plugin.id} declaration external`).toContain("externalValue } from '@external/package';");
+
+        // Production configs use `../components`, whose declaration tree is
+        // emitted alongside each framework directory. Materialise the
+        // corresponding helper declaration and verify that every relative
+        // declaration import points at an existing module, not merely at a
+        // source-tree path that happened to look plausible.
+        const declarationFile = path.join(outDir, 'declarations', 'index.d.ts');
+        mkdirSync(path.join(outDir, 'components', 'helpers', 'public', 'nested'), { recursive: true });
+        writeFileSync(
+          path.join(outDir, 'components', 'helpers', 'public', 'nested', 'store.d.ts'),
+          'export declare const neutralValue: boolean;\nexport interface NeutralOptions { enabled: boolean; }\n',
+        );
+        mkdirSync(path.dirname(declarationFile), { recursive: true });
+        const resolvableDeclarationPlugin = jsxComponentsEntryDtsPlugin({
+          framework: plugin.id as 'react' | 'vue' | 'solid' | 'svelte' | 'web-components',
+          componentsModule,
+          publicEntryModule,
+          declarationFileName: 'index',
+          declarationModule: '../components',
+          stripPrefix: '',
+        });
+        const resolvableGenerateBundle = resolvableDeclarationPlugin.generateBundle;
+        if (typeof resolvableGenerateBundle !== 'function') {
+          throw new TypeError('expected a function generateBundle hook');
+        }
+        resolvableGenerateBundle.call(
+          {
+            emitFile(file: { fileName: string; source: string }): void {
+              writeFileSync(declarationFile, file.source);
+            },
+          } as never,
+          {},
+          {},
+        );
+        const declarationSource = readFileSync(declarationFile, 'utf8');
+        for (const [, specifier] of declarationSource.matchAll(/from ['"](\.[^'"]+)['"]/g)) {
+          const resolved = path.resolve(path.dirname(declarationFile), specifier);
+          expect(
+            [resolved, `${resolved}.d.ts`, path.join(resolved, 'index.d.ts')].some((candidate) =>
+              existsSync(candidate),
+            ),
+            `${plugin.id} declaration import ${specifier}`,
+          ).toBe(true);
+        }
+
+        if (plugin.id === 'react') {
+          const nativeOutDir = path.join(outDir, 'native-dts');
+          const nativeWarnings: string[] = [];
+          const nativeDeclarationPlugin = jsxComponentsDtsPlugin({
+            framework: 'react',
+            generatedDir: outDir,
+            outDir: nativeOutDir,
+          });
+          const nativeCloseBundle = nativeDeclarationPlugin.closeBundle;
+          if (typeof nativeCloseBundle !== 'function') {
+            throw new TypeError('expected a function closeBundle hook');
+          }
+          await nativeCloseBundle.call({ warn: (message: unknown) => nativeWarnings.push(String(message)) } as never);
+          const nativeEntry = readFileSync(path.join(nativeOutDir, 'index.d.ts'), 'utf8');
+          expect(nativeEntry).toContain('neutralValue');
+          expect(nativeEntry).toContain('aliasedNeutralValue');
+          expect(nativeEntry).toContain('NeutralOptions');
+          expect(nativeEntry).toContain('externalValue');
+          expect(nativeWarnings.some((warning) => warning.includes('Duplicate identifier'))).toBe(false);
+          for (const [, specifier] of nativeEntry.matchAll(/from ['"](\.[^'"]+)['"]/g)) {
+            const resolved = path.resolve(path.dirname(path.join(nativeOutDir, 'index.d.ts')), specifier);
+            expect(
+              [resolved, `${resolved}.d.ts`, path.join(resolved, 'index.d.ts')].some((candidate) =>
+                existsSync(candidate),
+              ),
+              `native declaration import ${specifier}`,
+            ).toBe(true);
+          }
+        }
+      }
+    } finally {
+      rmSync(packageDir, { recursive: true, force: true });
+    }
+  });
+
   it('carries transitive Forge Web Script imports into the generated tree', () => {
     const packageDir = mkdtempSync(path.join(os.tmpdir(), 'mp-fws-assets-'));
     const componentsDir = path.join(packageDir, 'src', 'components');
@@ -996,8 +1169,11 @@ describe('generateEntry', () => {
     const helper: DiscoveredHelperExport = {
       base: 'toast-store',
       relativePath: 'toast-store',
-      values: ['useToast', 'showToast'],
-      types: ['ToastOptions'],
+      values: [
+        { localName: 'useToast', exportedName: 'useToast' },
+        { localName: 'showToast', exportedName: 'showToast' },
+      ],
+      types: [{ localName: 'ToastOptions', exportedName: 'ToastOptions' }],
     };
     const entry = generateEntry(
       'react',
@@ -1035,7 +1211,10 @@ describe('generateEntry', () => {
       base: 'date-time',
       relativePath: 'utils/date-time/date-time',
       values: [],
-      types: ['DateRange', 'TimeRange'],
+      types: [
+        { localName: 'DateRange', exportedName: 'DateRange' },
+        { localName: 'TimeRange', exportedName: 'TimeRange' },
+      ],
     };
     const entry = generateEntry(
       'react',
@@ -1054,13 +1233,48 @@ describe('generateEntry', () => {
         component({ neutralName: 'ForgeButton', folder: 'forge-button', typeExports: ['SpacingScale'] }),
         component({ neutralName: 'ForgeStack', folder: 'forge-stack', typeExports: ['SpacingScale'] }),
       ],
-      [{ base: 'date-time', relativePath: 'date-time', values: ['toRange'], types: ['DateRange'] }],
+      [
+        {
+          base: 'date-time',
+          relativePath: 'date-time',
+          values: [{ localName: 'toRange', exportedName: 'toRange' }],
+          types: [{ localName: 'DateRange', exportedName: 'DateRange' }],
+        },
+      ],
     );
 
     const exported = [...entry.matchAll(/(?:type\s+)?(\w+)(?:\s+as\s+(\w+))?(?=[,}])/g)].map(
       (match) => match[2] ?? match[1],
     );
     expect(exported).toHaveLength(new Set(exported).size);
+  });
+
+  it('gives component exports precedence over colliding helpers and externals', () => {
+    const helper: DiscoveredHelperExport = {
+      base: 'helper',
+      relativePath: 'helper',
+      values: [{ localName: 'Badge', exportedName: 'Badge' }],
+      types: [{ localName: 'BadgeProperties', exportedName: 'BadgeProperties' }],
+    };
+    const external: DiscoveredExternalExport = {
+      specifier: '@external/package',
+      exportedName: 'Badge',
+      localName: 'Badge',
+      typeOnly: false,
+      star: false,
+    };
+
+    const runtime = generateEntry(
+      'react',
+      [component({ neutralName: 'ForgeBadge', publicName: 'Badge', folder: 'forge-badge' })],
+      [helper],
+      undefined,
+      [external],
+    );
+    expect(runtime.split('\n').filter((line) => line.includes("from './forge-badge';"))).toHaveLength(2);
+    expect(runtime).not.toContain("export { Badge } from './helper';");
+    expect(runtime).toContain('type BadgeProperties');
+    expect(runtime).not.toContain("from '@external/package';");
   });
 });
 

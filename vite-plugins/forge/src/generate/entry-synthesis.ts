@@ -1,6 +1,7 @@
 import type {
   DiscoveredComponent,
   DiscoveredExternalExport,
+  DiscoveredHelperBinding,
   DiscoveredHelperExport,
 } from '../compiler/discover.js';
 import type { FrameworkSourceTarget } from '../generate.js';
@@ -32,21 +33,18 @@ const defaultTypeOriginResolver: TypeOriginResolver = (folder) => ({ base: folde
  * `date-time` and `forge-date-range-input`), and naming it twice in the entry is
  * a duplicate identifier. Returns `undefined` when nothing is left to forward.
  */
-function helperReExportLine(
-  helper: DiscoveredHelperExport,
-  claimed: Set<string>,
-): string | undefined {
+function helperReExportLine(helper: DiscoveredHelperExport, claimed: Set<string>): string | undefined {
   const names: string[] = [];
   for (const value of helper.values) {
-    if (!claimed.has(value)) {
-      claimed.add(value);
-      names.push(value);
+    if (!claimed.has(value.exportedName)) {
+      claimed.add(value.exportedName);
+      names.push(helperBindingReExportName(value));
     }
   }
   for (const type of helper.types) {
-    if (!claimed.has(type)) {
-      claimed.add(type);
-      names.push(`type ${type}`);
+    if (!claimed.has(type.exportedName)) {
+      claimed.add(type.exportedName);
+      names.push(helperBindingReExportName(type, true));
     }
   }
   if (names.length === 0) {
@@ -59,17 +57,19 @@ function helperReExportLine(
   return `export { ${names.join(', ')} } from './${relativePath}';`;
 }
 
+/** Format a helper binding for a runtime or type-only export list. */
+export function helperBindingReExportName(binding: DiscoveredHelperBinding, typeOnly = false): string {
+  const alias = binding.localName === binding.exportedName ? '' : ` as ${binding.exportedName}`;
+  return `${typeOnly ? 'type ' : ''}${binding.localName}${alias}`;
+}
+
 /**
  * Re-export one compiled component under a given export name.
  *
  * React re-exports the neutral function binding (`ForgeBadge`) under the target
  * name; Vue re-exports the SFC's `default` export.
  */
-function componentReExportLine(
-  target: FrameworkSourceTarget,
-  component: DiscoveredComponent,
-  as: string,
-): string {
+function componentReExportLine(target: FrameworkSourceTarget, component: DiscoveredComponent, as: string): string {
   const fileName = `${component.folder}${target.componentImportExtension}`;
   return target.componentReExport(component, as, `./${fileName}`);
 }
@@ -129,10 +129,16 @@ export function generateEntry(
 ): string {
   const target = typeof frameworkOrTarget === 'string' ? legacyEntryTarget(frameworkOrTarget) : frameworkOrTarget;
 
+  const claimedComponentNames = new Set<string>();
   const componentLines = components.flatMap((component) => {
+    if (claimedComponentNames.has(component.publicName)) {
+      return [];
+    }
+    claimedComponentNames.add(component.publicName);
     const lines = [componentReExportLine(target, component, component.publicName)];
     // Also ship the neutral `Base*` name as an alias of the same component.
-    if (component.neutralName !== component.publicName) {
+    if (component.neutralName !== component.publicName && !claimedComponentNames.has(component.neutralName)) {
+      claimedComponentNames.add(component.neutralName);
       lines.push(componentReExportLine(target, component, component.neutralName));
     }
     return lines;
@@ -149,7 +155,7 @@ export function generateEntry(
   // wins: re-exporting the same name twice from one module is a duplicate
   // identifier, and every claimant re-exports the same declaration anyway.
   const typesByModule = new Map<string, { origin: TypeOrigin; types: string[] }>();
-  const claimedTypes = new Set<string>();
+  const claimedTypes = new Set<string>(claimedComponentNames);
   for (const component of components) {
     for (const type of component.typeExports) {
       if (claimedTypes.has(type)) {
@@ -175,9 +181,24 @@ export function generateEntry(
   // filtered against the names the component/type lines already claimed, and
   // against each other, so the same helper reached from two barrels forwards a
   // binding exactly once.
-  const claimed = new Set(claimedTypes);
+  const claimed = claimedTypes;
   const helperLines = helpers.flatMap((helper) => helperReExportLine(helper, claimed) ?? []);
-  const externalLines = externalExports.map((external) => externalReExportLine(external));
+  const externalLines = externalExports.flatMap((external) => {
+    // A named external binding cannot replace a component or helper already
+    // selected above. Star exports remain useful because explicit bindings
+    // take precedence over names they might contain.
+    if (external.exportedName !== undefined && external.star && claimed.has(external.exportedName)) {
+      return [];
+    }
+    if (external.exportedName !== undefined && !external.star) {
+      if (claimed.has(external.exportedName)) {
+        return [];
+      }
+      claimed.add(external.exportedName);
+    }
+    const line = externalReExportLine(external);
+    return line.length > 0 ? [line] : [];
+  });
   const lines = [...new Set([...componentLines, ...typeLines, ...helperLines, ...externalLines])];
   return `${lines.join('\n')}\n`;
 }

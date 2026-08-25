@@ -7,7 +7,8 @@ import type { ForgeFileGraph } from '../compiler/graph.js';
 type RewriteFlatImports = (code: string, fromDir: string, sourceId?: string) => string;
 
 export function createFlatImportRewriter(input: {
-  readonly graph: ForgeFileGraph;
+  /** Graphs for the public package entry and transformed component barrel. */
+  readonly graphs: readonly ForgeFileGraph[];
   readonly components: readonly DiscoveredComponent[];
   readonly moduleRegistry: Map<string, { dir: string; file: string }>;
   readonly moduleRegistryCollisions: Set<string>;
@@ -15,7 +16,9 @@ export function createFlatImportRewriter(input: {
   readonly moduleBase: (fileName: string) => string;
   readonly relSpecifier: (fromDir: string, targetDir: string, fileName: string) => string;
 }): RewriteFlatImports {
-  const { graph, components, moduleRegistry, moduleRegistryCollisions, sourceModuleRegistry, moduleBase, relSpecifier } = input;
+  const { graphs, components, moduleRegistry, moduleRegistryCollisions, sourceModuleRegistry, moduleBase, relSpecifier } = input;
+  const graphForSource = (sourceId: string): ForgeFileGraph | undefined =>
+    graphs.find((candidate) => candidate.nodes.has(path.resolve(sourceId)));
 
   return (code, fromDir, sourceId) => {
     const rewrite = (specifier: string): string => {
@@ -25,9 +28,9 @@ export function createFlatImportRewriter(input: {
       const graphTargets =
         sourceId === undefined
           ? []
-          : graph.edges
+          : (graphForSource(sourceId)?.edges ?? [])
               .filter((edge) => edge.from === path.resolve(sourceId) && edge.resolved && edge.to !== undefined)
-              .map((edge) => ({ edge, node: graph.nodes.get(edge.to as string) }))
+              .map((edge) => ({ edge, node: graphForSource(sourceId)?.nodes.get(edge.to as string) }))
               .filter(({ node }) =>
                 node !== undefined && moduleBase(path.basename(node.id)) === moduleBase(fileName),
               );

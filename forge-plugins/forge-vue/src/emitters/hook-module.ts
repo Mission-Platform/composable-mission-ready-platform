@@ -242,9 +242,11 @@ function emitStatement(
       const arrow = indexOfTopLevel(callbackBody, "=>");
       if (arrow === -1) return false;
       const body = callbackBody.slice(arrow + 2).trim();
-      return body.startsWith("{") &&
+      return (
+        body.startsWith("{") &&
         body.endsWith("}") &&
-        indexOfTopLevel(body.slice(1, -1), "return") !== -1;
+        indexOfTopLevel(body.slice(1, -1), "return") !== -1
+      );
     })();
     const invoke = hasCleanup
       ? `const result = (${callbackText})(); if (typeof result === "function") onCleanup(result);`

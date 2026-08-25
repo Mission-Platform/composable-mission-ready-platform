@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { describe, expect, it, afterEach, beforeEach } from "vitest";
+import { compileScript, compileStyle, parse } from "vue/compiler-sfc";
 
 import { buildStyles } from "./styles.js";
 
@@ -25,7 +26,7 @@ describe("the Vue emitter builds `<style>` blocks", () => {
     sourceDirectory = mkdtempSync(path.join(tmpdir(), "mp-styles-"));
     writeFileSync(
       path.join(sourceDirectory, "forge-badge.module.scss"),
-      ".forge-badge { color: red; }\n",
+      "@layer mp.components { .forge-badge { color: var(--forge-badge-color, red); } }\n",
     );
   });
 
@@ -42,7 +43,9 @@ describe("the Vue emitter builds `<style>` blocks", () => {
     );
 
     expect(block).toContain('<style lang="scss" scoped>');
-    expect(block).toContain(".forge-badge { color: red; }");
+    expect(block).toContain(
+      ".forge-badge { color: var(--forge-badge-color, red); }",
+    );
   });
 
   it('emits an **unscoped** `<style lang="scss">` block for the render-closure fallback', () => {
@@ -66,5 +69,111 @@ describe("the Vue emitter builds `<style>` blocks", () => {
     );
 
     expect(block).toBe("");
+  });
+
+  it("inlines relative Sass @use partials into the SFC style block", () => {
+    writeFileSync(
+      path.join(sourceDirectory, "_forge-badge-properties.scss"),
+      "@property --forge-badge-color {\n  syntax: '<color>';\n  inherits: true;\n  initial-value: transparent;\n}\n",
+    );
+    writeFileSync(
+      path.join(sourceDirectory, "forge-badge.module.scss"),
+      "@use './forge-badge-properties';\n\n.forge-badge { color: var(--forge-badge-color, red); }\n",
+    );
+    const fileName = path.join(sourceDirectory, "forge-badge.tsx");
+    const block = buildStyles(
+      [styleImport("./forge-badge.module.scss")],
+      fileName,
+      true,
+    );
+
+    expect(block).toContain("@property --forge-badge-color");
+    expect(block).toContain(
+      ".forge-badge { color: var(--forge-badge-color, red); }",
+    );
+    expect(block).not.toContain("@use './forge-badge-properties'");
+  });
+
+  it("injects reactive bindings on the component root for scoped SFC styles", () => {
+    const fileName = path.join(sourceDirectory, "forge-badge.tsx");
+    const block = buildStyles(
+      [styleImport("./forge-badge.module.scss")],
+      fileName,
+      true,
+      [
+        {
+          customProperty: "--forge-badge-color",
+          expression: '$props.properties?.["color"]',
+        },
+      ],
+    );
+
+    expect(block).toContain(
+      `.forge-badge {\n  --forge-badge-color: v-bind('$props.properties?.["color"]');\n}`,
+    );
+    expect(block).toContain("@layer mp.components {");
+    const source = block.match(/<style[^>]*>\n([\s\S]*)\n<\/style>/)?.[1];
+    expect(source).toBeDefined();
+    const compiled = compileStyle({
+      filename: `${fileName}.vue`,
+      id: "data-v-forge-badge",
+      scoped: true,
+      preprocessLang: "scss",
+      source: source!,
+    });
+    expect(compiled.errors).toHaveLength(0);
+    expect(compiled.code).toContain("--forge-badge-color: var(");
+
+    const parsed = parse(
+      `<script setup lang="ts">\nconst properties = defineProps<{ properties?: { color?: string } }>();\n</script>\n${block}`,
+      { filename: `${fileName}.vue` },
+    );
+    expect(parsed.errors).toHaveLength(0);
+    expect(
+      compileScript(parsed.descriptor, { id: "data-v-forge-badge" }).content,
+    ).toContain("useCssVars");
+  });
+
+  it("keeps existing Sass @use directives before injected rules", () => {
+    writeFileSync(
+      path.join(sourceDirectory, "forge-badge.module.scss"),
+      "@use 'sass:math';\n\n@layer mp.components { .forge-badge { color: var(--forge-badge-color, red); } }\n",
+    );
+    const fileName = path.join(sourceDirectory, "forge-badge.tsx");
+    const block = buildStyles(
+      [styleImport("./forge-badge.module.scss")],
+      fileName,
+      true,
+      [
+        {
+          customProperty: "--forge-badge-color",
+          expression: '$props.properties?.["color"]',
+        },
+      ],
+    );
+
+    expect(block.indexOf("@use 'sass:math';")).toBeLessThan(
+      block.indexOf("--forge-badge-color: v-bind("),
+    );
+  });
+
+  it("does not leak Vue bindings into render-closure styles", () => {
+    const fileName = path.join(sourceDirectory, "forge-badge.tsx");
+    const block = buildStyles(
+      [styleImport("./forge-badge.module.scss")],
+      fileName,
+      false,
+      [
+        {
+          customProperty: "--forge-badge-color",
+          expression: '$props.properties?.["color"]',
+        },
+      ],
+    );
+
+    expect(block).not.toContain("v-bind(");
+    expect(block).toContain(
+      ".forge-badge { color: var(--forge-badge-color, red); }",
+    );
   });
 });

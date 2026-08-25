@@ -14,7 +14,7 @@
  */
 import path from 'node:path';
 
-import type { ForgeFileGraph, ForgeFileNode } from './graph.js';
+import type { ForgeExportFact, ForgeFileGraph, ForgeFileNode } from './graph.js';
 
 /** A neutral component discovered in the barrel, plus its derived public shape. */
 export interface DiscoveredComponent {
@@ -129,12 +129,18 @@ export interface DiscoveredHelperExport {
    * tree so hook libraries follow the same hierarchy as component packages.
    */
   relativePath: string;
-  /** Value export names (functions/consts), e.g. `useToast`, `showToast`. */
-  values: string[];
-  /** Type export names, e.g. `ToastOptions`, `ToastRecord`. */
-  types: string[];
+  /** Value export bindings (functions/consts), e.g. `useToast`, `showToast`. */
+  values: DiscoveredHelperBinding[];
+  /** Type export bindings, e.g. `ToastOptions`, `ToastRecord`. */
+  types: DiscoveredHelperBinding[];
   /** Canonical source node selected by graph-backed discovery. */
   sourcePath?: string;
+}
+
+/** A helper binding's source name and the name exposed by the package barrel. */
+export interface DiscoveredHelperBinding {
+  localName: string;
+  exportedName: string;
 }
 
 /** A public barrel export whose source is another package rather than local Forge source. */
@@ -169,47 +175,113 @@ function graphExportTarget(
   start: ForgeFileNode,
   exportedName: string,
   typeOnly = false,
+  visited = new Set<string>(),
 ): ForgeFileNode | undefined {
-  let node = start;
-  let name = exportedName;
-  const visited = new Set<string>();
-  while (!visited.has(node.id)) {
-    visited.add(node.id);
-    const fact = node.exports.find(
-      (entryExport) =>
-        entryExport.typeOnly === typeOnly && entryExport.exportedName === name && entryExport.specifier !== undefined,
-    );
-    if (fact?.specifier === undefined) {
-      return node;
+  if (visited.has(start.id)) {
+    return undefined;
+  }
+  visited.add(start.id);
+
+  const fact = start.exports.find(
+    (entryExport) =>
+      entryExport.typeOnly === typeOnly && entryExport.exportedName === exportedName,
+  );
+  if (fact?.specifier !== undefined) {
+    const targetId = graph.edges.find(
+      (edge) => edge.from === start.id && edge.specifier === fact.specifier && edge.resolved && edge.to !== undefined,
+    )?.to;
+    const target = targetId === undefined ? undefined : graph.nodes.get(targetId);
+    return target === undefined
+      ? undefined
+      : graphExportTarget(graph, target, fact.localName ?? exportedName, typeOnly, visited);
+  }
+  if (fact !== undefined) {
+    return start;
+  }
+
+  for (const star of start.exports.filter((entryExport) => entryExport.star)) {
+    if (star.specifier === undefined) {
+      continue;
     }
     const targetId = graph.edges.find(
-      (edge) => edge.from === node.id && edge.specifier === fact.specifier && edge.resolved && edge.to !== undefined,
+      (edge) => edge.from === start.id && edge.specifier === star.specifier && edge.resolved && edge.to !== undefined,
     )?.to;
-    if (targetId === undefined) {
-      return undefined;
+    const target = targetId === undefined ? undefined : graph.nodes.get(targetId);
+    const resolved =
+      target === undefined
+        ? undefined
+        : graphExportTarget(graph, target, exportedName, typeOnly || star.typeOnly, new Set(visited));
+    if (resolved !== undefined) {
+      return resolved;
     }
-    const target = graph.nodes.get(targetId);
-    if (target === undefined) {
-      return undefined;
-    }
-    node = target;
-    name = fact.localName ?? name;
   }
   return undefined;
+}
+
+interface ResolvedGraphExport {
+  readonly fact: ForgeExportFact;
+  readonly sourceNode: ForgeFileNode | undefined;
+}
+
+/**
+ * Expand local `export *` barrels while retaining the public binding names.
+ * Named exports are resolved to their canonical source node so callers can
+ * distinguish transformed components from neutral helper modules regardless of
+ * how many local barrels sit between the package entry and the source.
+ */
+function resolveGraphExports(graph: ForgeFileGraph, entry: ForgeFileNode): ResolvedGraphExport[] {
+  const resolve = (node: ForgeFileNode, inheritedTypeOnly: boolean, visited: ReadonlySet<string>): ResolvedGraphExport[] => {
+    if (visited.has(node.id)) {
+      return [];
+    }
+    const nextVisited = new Set(visited).add(node.id);
+    const resolved: ResolvedGraphExport[] = [];
+    for (const fact of node.exports) {
+      if (fact.specifier === undefined) {
+        resolved.push({
+          fact: { ...fact, typeOnly: inheritedTypeOnly || fact.typeOnly },
+          sourceNode: node,
+        });
+        continue;
+      }
+      const edge = graph.edges.find(
+        (candidate) =>
+          candidate.from === node.id &&
+          candidate.specifier === fact.specifier &&
+          candidate.resolved &&
+          candidate.to !== undefined,
+      );
+      const target = edge?.to === undefined ? undefined : graph.nodes.get(edge.to);
+      if (fact.star && target !== undefined) {
+        resolved.push(...resolve(target, inheritedTypeOnly || fact.typeOnly, nextVisited));
+        continue;
+      }
+      resolved.push({
+        fact: { ...fact, typeOnly: inheritedTypeOnly || fact.typeOnly },
+        sourceNode:
+          target === undefined
+            ? undefined
+            : graphExportTarget(graph, node, fact.exportedName ?? '', inheritedTypeOnly || fact.typeOnly),
+      });
+    }
+    return resolved;
+  };
+
+  return resolve(entry, false, new Set());
 }
 
 function graphTypeExports(
   graph: ForgeFileGraph,
   entry: ForgeFileNode,
   sourceNode: ForgeFileNode,
-  componentSpecifier: string,
+  componentSpecifier: string | undefined,
 ): string[] {
   const names = new Set<string>();
   for (const entryExport of entry.exports) {
     if (!entryExport.typeOnly || entryExport.exportedName === undefined || entryExport.specifier === undefined) {
       continue;
     }
-    if (entryExport.specifier === componentSpecifier) {
+    if (componentSpecifier !== undefined && entryExport.specifier === componentSpecifier) {
       names.add(entryExport.exportedName);
       continue;
     }
@@ -235,12 +307,14 @@ export function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix =
   if (entry === undefined) {
     return [];
   }
+  const exports = resolveGraphExports(graph, entry);
   const components: DiscoveredComponent[] = [];
-  for (const entryExport of entry.exports) {
-    if (entryExport.typeOnly || entryExport.exportedName === undefined || entryExport.specifier === undefined) {
+  for (const resolvedExport of exports) {
+    const entryExport = resolvedExport.fact;
+    if (entryExport.typeOnly || entryExport.exportedName === undefined) {
       continue;
     }
-    const sourceNode = graphExportTarget(graph, entry, entryExport.exportedName, entryExport.typeOnly);
+    const sourceNode = resolvedExport.sourceNode;
     if (sourceNode === undefined || sourceNode.kind !== 'component') {
       continue;
     }
@@ -254,6 +328,8 @@ export function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix =
     const publicName = neutralName.startsWith(stripPrefix) ? neutralName.slice(stripPrefix.length) : neutralName;
     const typeExports = graphTypeExports(graph, entry, sourceNode, entryExport.specifier);
     const candidate = `${publicName}Properties`;
+    const sourceSpecifier =
+      entryExport.specifier ?? `./${path.relative(path.dirname(graph.entry), sourceNode.id).split(path.sep).join('/')}`;
     components.push({
       neutralName,
       publicName,
@@ -261,7 +337,7 @@ export function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix =
       typeExports,
       folder: sourceBase(sourceNode.id),
       sourceDir: relativeModulePath(graph.entry, sourceNode.id),
-      sourceSpecifier: entryExport.specifier,
+      sourceSpecifier,
       sourcePath: sourceNode.id,
     });
   }
@@ -279,11 +355,12 @@ export function discoverHelperExportsFromGraph(
   }
   const helpers = new Map<string, DiscoveredHelperExport>();
   const entryDirectory = entry.sourceRelativePath.replace(/\/[^/]+$/, '');
-  for (const entryExport of entry.exports) {
-    if (entryExport.exportedName === undefined || entryExport.specifier === undefined) {
+  for (const resolvedExport of resolveGraphExports(graph, entry)) {
+    const entryExport = resolvedExport.fact;
+    if (entryExport.exportedName === undefined) {
       continue;
     }
-    const sourceNode = graphExportTarget(graph, entry, entryExport.exportedName, entryExport.typeOnly);
+    const sourceNode = resolvedExport.sourceNode;
     if (sourceNode === undefined || sourceNode.id === entry.id || sourceNode.kind === 'component') {
       continue;
     }
@@ -307,28 +384,36 @@ export function discoverHelperExportsFromGraph(
       types: [],
       sourcePath: sourceNode.id,
     };
+    const binding: DiscoveredHelperBinding = {
+      localName: entryExport.localName ?? entryExport.exportedName,
+      exportedName: entryExport.exportedName,
+    };
     if (entryExport.typeOnly) {
-      helper.types.push(entryExport.exportedName);
+      if (!helper.types.some((existing) => existing.exportedName === binding.exportedName)) {
+        helper.types.push(binding);
+      }
     } else {
-      helper.values.push(entryExport.exportedName);
+      if (!helper.values.some((existing) => existing.exportedName === binding.exportedName)) {
+        helper.values.push(binding);
+      }
     }
     helpers.set(key, helper);
   }
   return [...helpers.values()];
 }
 
-/** Discover direct external re-exports so generated framework entries preserve the package public API. */
+/** Discover external re-exports through local barrels so generated entries preserve the package public API. */
 export function discoverExternalExportsFromGraph(graph: ForgeFileGraph): DiscoveredExternalExport[] {
   const entry = graph.nodes.get(graph.entry);
   if (entry === undefined) {
     return [];
   }
-  return entry.exports.flatMap((entryExport) => {
+  return resolveGraphExports(graph, entry).flatMap(({ fact: entryExport }) => {
     if (entryExport.specifier === undefined || entryExport.specifier.startsWith('.')) {
       return [];
     }
     const external = graph.edges.some(
-      (edge) => edge.from === entry.id && edge.specifier === entryExport.specifier && edge.external === true,
+      (edge) => edge.specifier === entryExport.specifier && edge.external === true,
     );
     if (!external) {
       return [];
@@ -367,7 +452,7 @@ export function discoverHelperExports(
     // module's value exports are typically lowercase functions/consts, so
     // re-scan the statement to collect every non-type token as a value export.
     const values = collectHelperValues(barrelSource, reExport.from);
-    const types = [...reExport.types];
+    const types = [...reExport.types].map((type) => parseHelperBinding(type));
     if (values.length > 0 || types.length > 0) {
       helpers.push({ base, relativePath: moduleRelativePath(reExport.from), values, types });
     }
@@ -376,22 +461,28 @@ export function discoverHelperExports(
 }
 
 /** Re-scan a barrel for the value (non-type) names a given module is re-exported under. */
-function collectHelperValues(barrelSource: string, from: string): string[] {
+function collectHelperValues(barrelSource: string, from: string): DiscoveredHelperBinding[] {
   const escaped = from.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
   const statement = new RegExp(String.raw`export\s*\{([^}]*)\}\s*from\s*['"]${escaped}['"]`);
   const match = statement.exec(barrelSource);
   if (match === null) {
     return [];
   }
-  const values: string[] = [];
+  const values: DiscoveredHelperBinding[] = [];
   for (const raw of match[1].split(',')) {
     const token = raw.trim();
     if (token.length === 0 || token.startsWith('type ')) {
       continue;
     }
-    values.push(token);
+    values.push(parseHelperBinding(token));
   }
   return values;
+}
+
+/** Parse a local/exported binding pair from an export-list token. */
+function parseHelperBinding(token: string): DiscoveredHelperBinding {
+  const [localName, exportedName] = token.split(/\s+as\s+/).map((name) => name.trim());
+  return { localName, exportedName: exportedName ?? localName };
 }
 
 /**

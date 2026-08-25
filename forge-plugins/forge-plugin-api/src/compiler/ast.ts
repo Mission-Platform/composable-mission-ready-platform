@@ -10,6 +10,7 @@ import type { JsxFramework } from "../framework.js";
 export const NEUTRAL_MODULE = "@mission-platform/forge";
 export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string> = new Set([
   "classNames",
+  "createForgeStyle",
 ]);
 export const CLASS_NAME_ATTRIBUTE = "className";
 export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string> = new Map([

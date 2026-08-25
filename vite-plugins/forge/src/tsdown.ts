@@ -310,6 +310,11 @@ export interface TsdownForgeComponentsOptions {
    * `src/components/index.ts`, `src/component/index.ts`, or `src/index.ts` if omitted.
    */
   componentsModule?: string;
+  /**
+   * Path to the package public entry module used to preserve neutral exports.
+   * Defaults to `<rootDir>/src/index.ts` when it exists, otherwise the component entry.
+   */
+  publicEntryModule?: string;
   /** Base display name (parity with Vite helper). */
   name?: string;
   /** Use synthesised entry declaration instead of running vue-tsc/tsc on the generated tree. */
@@ -374,6 +379,7 @@ function defineTsdownForgeComponent(
     rootDir,
     plugin,
     componentsModule,
+    publicEntryModule,
     useEntryDts,
     declarationModule,
     external = [],
@@ -402,12 +408,18 @@ function defineTsdownForgeComponent(
       path.resolve(rootDir, 'src/index.ts'),
     ].find((candidate) => fs.existsSync(candidate)) ??
     path.resolve(rootDir, 'src/index.ts');
+  const resolvedPublicEntryModule =
+    publicEntryModule ??
+    (fs.existsSync(path.resolve(rootDir, 'src/index.ts'))
+      ? path.resolve(rootDir, 'src/index.ts')
+      : resolvedComponentsModule);
 
   validateForgeBuildPlugin(plugin, 'tsdown');
   const compilerService = service ?? createForgeCompilerService();
   const entry = generateFrameworkSources({
     plugin,
     componentsModule: resolvedComponentsModule,
+    publicEntryModule: resolvedPublicEntryModule,
     sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
     outDir: generatedDirectory,
     // Keep the neutral `Forge` prefix on the public API (do not strip it).
@@ -442,6 +454,7 @@ function defineTsdownForgeComponent(
       ? jsxComponentsEntryDtsPlugin({
           framework,
           componentsModule: resolvedComponentsModule,
+          publicEntryModule: resolvedPublicEntryModule,
           sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
           declarationFileName: 'index',
           declarationModule: declarationModule ?? '../components',
@@ -454,6 +467,7 @@ function defineTsdownForgeComponent(
           outDir: resolveTsdownOutputDirectory(rootDir, path.resolve(rootDir, `dist/${framework}`), outputRoot),
           vueTscBin,
           componentsModule: resolvedComponentsModule,
+          publicEntryModule: resolvedPublicEntryModule,
           sourceRoot: path.dirname(path.dirname(resolvedComponentsModule)),
         });
 

@@ -1557,6 +1557,40 @@ import to each framework's native group transition — Vue's built-in
 
 ## `src/runtime/types`
 
+### createForgeStyle
+
+**Kind:** function
+
+```typescript
+function createForgeStyle(style: T): DefinedForgeStyle<T> | undefined
+```
+
+Build a neutral `style` map from defined custom-property values.
+
+Entries whose value is `undefined` are omitted so SCSS
+`var(--forge-*, <token fallback>)` chains remain active. Returns `undefined`
+when no overrides are present.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| style | T |  |
+
+### CSSStyleProperties
+
+**Kind:** type
+
+```typescript
+export type CSSStyleProperties =
+```
+
+Framework-neutral CSS style object used by the JSX `style` attribute.
+
+Component-owned custom properties should extend this type with explicit
+`--forge-*` keys (for example `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
+rather than introducing an untyped style dictionary or a non-DOM `styles` bag.
+
 ### Fragment
 
 **Kind:** constant

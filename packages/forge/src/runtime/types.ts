@@ -44,6 +44,38 @@ export const Fragment: MpFragment = () => {
 export type MpPropertyBag = Record<string, unknown>;
 
 /**
+ * Framework-neutral CSS style object used by the JSX `style` attribute.
+ *
+ * Component-owned custom properties should extend this type with explicit
+ * `--forge-*` keys (for example `CSSStyleProperties & { '--forge-button-radius'?: string | undefined }`)
+ * rather than introducing an untyped style dictionary or a non-DOM `styles` bag.
+ */
+export type CSSStyleProperties = {
+  [property: string]: string | number | undefined;
+};
+
+type DefinedForgeStyle<T extends Record<string, string | undefined>> = {
+  [K in keyof T as T[K] extends undefined ? never : K]?: Exclude<T[K], undefined>;
+};
+
+/**
+ * Build a neutral `style` map from defined custom-property values.
+ *
+ * Entries whose value is `undefined` are omitted so SCSS
+ * `var(--forge-*, <token fallback>)` chains remain active. Returns `undefined`
+ * when no overrides are present.
+ */
+export function createForgeStyle<const T extends Record<string, string | undefined>>(
+  style: T,
+): DefinedForgeStyle<T> | undefined {
+  const entries = Object.entries(style).filter((entry): entry is [string, string] => entry[1] !== undefined);
+  if (entries.length === 0) {
+    return undefined;
+  }
+  return Object.fromEntries(entries) as DefinedForgeStyle<T>;
+}
+
+/**
  * The **reserved** attributes every JSX element accepts on top of the properties
  * it declares itself, wired up as `JSX.IntrinsicAttributes` by the opt-in
  * `@mission-platform/forge/jsx-globals` typings.

@@ -1,3 +1,7 @@
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -57,6 +61,67 @@ function planFor(
 }
 
 describe("the Vue component emitter builds an SFC from the generic AST", () => {
+  it("carries typed override assignments into native scoped styles", () => {
+    const directory = mkdtempSync(path.join(tmpdir(), "mp-component-"));
+    try {
+      writeFileSync(
+        path.join(directory, "forge-badge.module.scss"),
+        ".forge-badge { color: var(--forge-badge-color, red); }\n",
+      );
+      const module = semanticModule({
+        fileName: path.join(directory, "forge-badge.tsx"),
+        imports: [
+          NEUTRAL_IMPORT,
+          moduleImport(
+            "import styles from './forge-badge.module.scss';",
+            "./forge-badge.module.scss",
+            { defaultName: "styles" },
+          ),
+        ],
+        declarations: [
+          statement(
+            "function createBadgeStyle(properties?: BadgeStyleProperties) { return { '--forge-badge-color': properties?.['color'] }; }",
+            "function",
+            { name: "createBadgeStyle" },
+          ),
+        ],
+        component: component({
+          name: "Badge",
+          parameter: "properties",
+          body: [
+            statement(
+              "const style = createBadgeStyle(properties.properties);",
+              "variable",
+              { name: "style" },
+            ),
+          ],
+          returnNode: element("span", {
+            attributes: [
+              stringAttribute("className", "forge-badge"),
+              expressionAttribute("style", "style"),
+            ],
+            children: [textChild("Badge")],
+          }),
+        }),
+        props: [
+          prop("properties", "Readonly<BadgeStyleProperties>", {
+            optional: true,
+          }),
+        ],
+      });
+
+      const code = emitVueModule(module, "Badge").code;
+
+      expect(code).toContain(
+        `--forge-badge-color: v-bind('$props.properties?.["color"]');`,
+      );
+      expect(code).toContain(
+        '<span class="forge-badge" :style="style" v-bind="$attrs">',
+      );
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
   it("declares props, options and the template from the recorded render tree", () => {
     const module = semanticModule({
       imports: [NEUTRAL_IMPORT],
@@ -641,20 +706,59 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
   });
 
   it("falls back to a render closure when the markup cannot be expressed", () => {
-    const module = semanticModule({
-      component: component({
-        name: "Imperative",
-        parameter: "properties",
-        returnExpression: "buildTree(properties.items)",
-      }),
-      props: [prop("items", "readonly string[]")],
-    });
+    const directory = mkdtempSync(path.join(tmpdir(), "mp-closure-"));
+    try {
+      writeFileSync(
+        path.join(directory, "forge-imperative.module.scss"),
+        ".forge-imperative { color: var(--forge-imperative-color, red); }\n",
+      );
+      const module = semanticModule({
+        fileName: path.join(directory, "forge-imperative.tsx"),
+        imports: [
+          NEUTRAL_IMPORT,
+          moduleImport(
+            "import styles from './forge-imperative.module.scss';",
+            "./forge-imperative.module.scss",
+            { defaultName: "styles" },
+          ),
+        ],
+        declarations: [
+          statement(
+            "function createImperativeStyle(properties?: ImperativeStyleProperties) { return { '--forge-imperative-color': properties?.['color'] }; }",
+            "function",
+            { name: "createImperativeStyle" },
+          ),
+        ],
+        component: component({
+          name: "Imperative",
+          parameter: "properties",
+          body: [
+            statement(
+              "const style = createImperativeStyle(properties.properties);",
+              "variable",
+              { name: "style" },
+            ),
+          ],
+          returnExpression: "buildTree(properties.items)",
+        }),
+        props: [
+          prop("items", "readonly string[]"),
+          prop("properties", "Readonly<ImperativeStyleProperties>", {
+            optional: true,
+          }),
+        ],
+      });
 
-    const code = emitVueModule(module, "Imperative").code;
+      const code = emitVueModule(module, "Imperative").code;
 
-    expect(code).toContain("const render = () => {");
-    expect(code).toContain("return buildTree(properties.items);");
-    expect(code).toContain('<render v-bind="$attrs" />');
-    expect(code).toContain("native <template> unavailable");
+      expect(code).toContain("const render = () => {");
+      expect(code).toContain("return buildTree(properties.items);");
+      expect(code).toContain('<render v-bind="$attrs" />');
+      expect(code).toContain("native <template> unavailable");
+      expect(code).toContain('<style lang="scss">');
+      expect(code).not.toContain("v-bind('$props.properties?.");
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
   });
 });

@@ -248,17 +248,17 @@ describe("the Vue emitter generates SFCs the Vue compiler accepts", () => {
             "variable",
             {
               name: "headerNode",
-              renderNodes: [element("Slot", { source: "<Slot name=\"header\" />" })],
+              renderNodes: [
+                element("Slot", { source: '<Slot name="header" />' }),
+              ],
             },
           ),
-          statement(
-            "const footerNode = <Slot name=\"footer\" />;",
-            "variable",
-            {
-              name: "footerNode",
-              renderNodes: [element("Slot", { source: "<Slot name=\"footer\" />" })],
-            },
-          ),
+          statement('const footerNode = <Slot name="footer" />;', "variable", {
+            name: "footerNode",
+            renderNodes: [
+              element("Slot", { source: '<Slot name="footer" />' }),
+            ],
+          }),
           statement(
             "const panel = <section {...extra}>{headerNode}{footerNode}</section>;",
             "variable",
@@ -271,7 +271,8 @@ describe("the Vue emitter generates SFCs the Vue compiler accepts", () => {
                     expressionChild("headerNode"),
                     expressionChild("footerNode"),
                   ],
-                  source: "<section {...extra}>{headerNode}{footerNode}</section>",
+                  source:
+                    "<section {...extra}>{headerNode}{footerNode}</section>",
                 }),
               ],
             },

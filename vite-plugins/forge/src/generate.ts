@@ -27,12 +27,7 @@ import {
 import { emitDts } from 'svelte2tsx';
 import ts from 'typescript';
 
-import {
-  LOCAL_JSX_TYPES_FILE,
-  localJsxTypesModuleSource,
-  moduleTargetsFramework,
-  parseTsx,
-} from './compiler/ast.js';
+import { LOCAL_JSX_TYPES_FILE, localJsxTypesModuleSource, moduleTargetsFramework, parseTsx } from './compiler/ast.js';
 import {
   discoverExternalExportsFromGraph,
   discoverComponentsFromGraph,
@@ -52,7 +47,7 @@ import {
   parseOxcModule,
 } from './compiler/oxc.js';
 import { compileRouterModule } from './compiler/router.js';
-import { externalReExportLine, generateEntry } from './generate/entry-synthesis.js';
+import { externalReExportLine, generateEntry, helperBindingReExportName } from './generate/entry-synthesis.js';
 import { createFlatTreeEmitter } from './generate/flat-tree-emitter.js';
 import { createFlatImportRewriter, rewriteFlatImportsInTargets } from './generate/flat-tree-import-rewrite.js';
 import { copyComponentOwnStyles, createHelperModuleCarrier, carrySpriteHelpers } from './generate/helper-carry.js';
@@ -70,6 +65,13 @@ export interface GenerateFrameworkSourcesOptions {
   plugin: FrameworkOutputPlugin;
   /** Absolute path of the neutral components barrel (e.g. `src/components/index.ts`). */
   componentsModule: string;
+  /**
+   * Absolute path of the package public entry (e.g. `src/index.ts`). Component
+   * transformation still uses {@link componentsModule}; this entry is only
+   * used to preserve neutral helper, type, and external exports. Defaults to
+   * {@link componentsModule} for component-only packages and fixtures.
+   */
+  publicEntryModule?: string;
   /** Absolute path of the directory the generated sources + entry are written to. */
   outDir: string;
   /** Prefix stripped from each neutral export name to form its public name. Defaults to `Forge`. */
@@ -177,6 +179,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   const stripPrefix = options.stripPrefix ?? 'Forge';
   const componentsDir = path.dirname(options.componentsModule);
   const sourceRoot = options.sourceRoot ?? path.dirname(componentsDir);
+  const publicEntryModule = options.publicEntryModule ?? options.componentsModule;
   const context = createForgeGenerationContext({
     service: options.service,
     target: options.plugin,
@@ -187,13 +190,20 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     rejectFixturePlaceholder: options.rejectFixturePlaceholder,
   });
   const graph = context.graph;
+  const publicGraph =
+    path.resolve(publicEntryModule) === path.resolve(options.componentsModule)
+      ? graph
+      : buildForgeFileGraph({ entry: publicEntryModule, sourceRoot });
   options.diagnostics?.push(...(context.service.report().diagnostics ?? []));
-  const graphErrors = graph.diagnostics.filter((diagnostic) => diagnostic.code !== 'cycle');
+  const graphErrors = [...graph.diagnostics, ...publicGraph.diagnostics].filter(
+    (diagnostic) => diagnostic.code !== 'cycle',
+  );
   if (graphErrors.length > 0) {
     throw new Error(
       [
         `Forge graph entry: ${graph.entry}`,
         `Forge graph source root: ${sourceRoot}`,
+        ...(publicGraph.entry === graph.entry ? [] : [`Forge public graph entry: ${publicGraph.entry}`]),
         ...graphErrors.map((diagnostic) => `${diagnostic.code}: ${diagnostic.message}`),
       ].join('\n'),
     );
@@ -276,7 +286,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   } = emitter;
 
   const rewriteFlatImports = createFlatImportRewriter({
-    graph,
+    graphs: [publicGraph, graph],
     components,
     moduleRegistry,
     moduleRegistryCollisions,
@@ -297,6 +307,8 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   const carriedHelpers = new Set<string>();
   const pendingIndexSources = new Set<string>();
   const siblingComponents: DiscoveredComponent[] = [];
+  const graphForSource = (sourcePath: string): ReturnType<typeof buildForgeFileGraph> | undefined =>
+    [publicGraph, graph].find((candidate) => candidate.nodes.has(path.resolve(sourcePath)));
   const componentForSource = (sourcePath: string): DiscoveredComponent | undefined =>
     [...components, ...siblingComponents].find((component) => component.sourcePath === sourcePath);
   const componentForIndexExport = (
@@ -304,6 +316,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     exportedName: string,
     typeOnly: boolean,
   ): DiscoveredComponent | undefined => {
+    const sourceGraph = sourceNode === undefined ? undefined : graphForSource(sourceNode.id);
     let node = sourceNode;
     let name = exportedName;
     const visited = new Set<string>();
@@ -320,7 +333,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
       if (exportFact?.specifier === undefined) {
         return componentForSource(node.id);
       }
-      const targetId = graph.edges.find(
+      const targetId = sourceGraph?.edges.find(
         (edge) =>
           edge.from === node?.id && edge.specifier === exportFact.specifier && edge.resolved && edge.to !== undefined,
       )?.to;
@@ -337,7 +350,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   const generatedModuleSpecifier = (fromSourcePath: string, targetSourcePath: string): string | undefined => {
     const target = sourceModuleRegistry.get(path.resolve(targetSourcePath));
     if (target === undefined) {
-      const targetNode = graph.nodes.get(path.resolve(targetSourcePath));
+      const targetNode = graphForSource(targetSourcePath)?.nodes.get(path.resolve(targetSourcePath));
       if (targetNode === undefined || path.basename(targetNode.id, path.extname(targetNode.id)) !== 'index') {
         return undefined;
       }
@@ -350,7 +363,8 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     return relSpecifier(mirrorDir(fromSourcePath), target.dir, targetFile);
   };
   const generatedIndexSource = (sourcePath: string): string | undefined => {
-    const moduleNode = graph.nodes.get(sourcePath);
+    const sourceGraph = graphForSource(sourcePath);
+    const moduleNode = sourceGraph?.nodes.get(sourcePath);
     if (moduleNode === undefined) {
       return undefined;
     }
@@ -378,7 +392,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
         cursor = statement.end;
         continue;
       }
-      const edge = graph.edges.find(
+      const edge = sourceGraph?.edges.find(
         (candidate) =>
           candidate.from === sourcePath &&
           candidate.specifier === authoredSpecifier &&
@@ -447,7 +461,7 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
     return `${generated}${source.slice(cursor)}`;
   };
   const carryHelperModule = createHelperModuleCarrier({
-    graph,
+    graphs: [publicGraph, graph],
     context,
     router: options.router,
     routerPlugins: options.routerPlugins,
@@ -639,8 +653,8 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   // Shared helper modules re-exported from the barrel (e.g. the toast store) are
   // forwarded through the entry; their source files are already carried into the
   // flat tree by the per-component helper-import copy above.
-  const helpers = discoverHelperExportsFromGraph(graph, componentFolders);
-  const externalExports = discoverExternalExportsFromGraph(graph);
+  const helpers = discoverHelperExportsFromGraph(publicGraph, componentFolders);
+  const externalExports = discoverExternalExportsFromGraph(publicGraph);
   for (const helper of helpers) {
     if (helper.sourcePath === undefined) {
       continue;
@@ -671,7 +685,6 @@ export function generateFrameworkSources(options: GenerateFrameworkSourcesOption
   ) {
     writeModule('', LOCAL_JSX_TYPES_FILE, localJsxTypesModuleSource(target.id));
   }
-
 
   // Resolve each companion type to the flat-tree module that declares it: the
   // component's own module if it declares the type, else the first copied helper
@@ -716,6 +729,13 @@ export interface JsxComponentsEntryDtsOptions {
   framework: JsxFramework;
   /** Absolute path of the neutral components barrel (e.g. `src/components/index.ts`). */
   componentsModule: string;
+  /**
+   * Absolute path of the package public entry (e.g. `src/index.ts`). Component
+   * declarations are discovered from {@link componentsModule}; helper, type,
+   * and external declarations are discovered from this entry. Defaults to the
+   * component module for component-only packages and fixtures.
+   */
+  publicEntryModule?: string;
   /** Base name (no extension) of the synthesised declaration file, e.g. `vue`. */
   declarationFileName: string;
   /** Import specifier for the props types inside the emitted `.d.ts`. Defaults to `./components`. */
@@ -865,12 +885,18 @@ function generateEntryDeclaration(
     lines.push(`import type { ${propertyTypes.join(', ')} } from ${JSON.stringify(declarationModule)};`);
   }
   lines.push('');
+  const claimed = new Set<string>();
   for (const component of components) {
+    if (claimed.has(component.publicName)) {
+      continue;
+    }
+    claimed.add(component.publicName);
     const properties = component.propertiesType ?? 'Record<string, unknown>';
     lines.push(`export declare const ${component.publicName}: ${componentType}<${properties}>;`);
     // Declare the neutral `Base*` name as an alias of the same typed component,
     // matching the runtime entry's dual export.
-    if (component.neutralName !== component.publicName) {
+    if (component.neutralName !== component.publicName && !claimed.has(component.neutralName)) {
+      claimed.add(component.neutralName);
       lines.push(`export declare const ${component.neutralName}: ${componentType}<${properties}>;`);
     }
   }
@@ -878,17 +904,53 @@ function generateEntryDeclaration(
   // option shapes, props interfaces, …) from the neutral declarations, so
   // consumers can import them from the framework entry too.
   const componentTypes = [...new Set(components.flatMap((component) => component.typeExports))];
-  if (componentTypes.length > 0) {
-    lines.push(`export type { ${componentTypes.join(', ')} } from ${JSON.stringify(declarationModule)};`);
+  const unclaimedComponentTypes = componentTypes.filter((type) => {
+    if (claimed.has(type)) {
+      return false;
+    }
+    claimed.add(type);
+    return true;
+  });
+  if (unclaimedComponentTypes.length > 0) {
+    lines.push(`export type { ${unclaimedComponentTypes.join(', ')} } from ${JSON.stringify(declarationModule)};`);
   }
   // Re-export each shared helper module's API from its `tsc`-emitted declaration
   // (e.g. `./components/toast-store`), matching the entry's runtime re-exports.
   for (const helper of helpers) {
-    const names = [...helper.values, ...helper.types.map((type) => `type ${type}`)];
-    lines.push(`export { ${names.join(', ')} } from ${JSON.stringify(`${declarationModule}/${helper.relativePath}`)};`);
+    const names = [
+      ...helper.values
+        .filter((value) => !claimed.has(value.exportedName))
+        .map((value) => {
+          claimed.add(value.exportedName);
+          return helperBindingReExportName(value);
+        }),
+      ...helper.types
+        .filter((type) => !claimed.has(type.exportedName))
+        .map((type) => {
+          claimed.add(type.exportedName);
+          return helperBindingReExportName(type, true);
+        }),
+    ];
+    if (names.length > 0) {
+      lines.push(
+        `export { ${names.join(', ')} } from ${JSON.stringify(`${declarationModule}/${helper.relativePath}`)};`,
+      );
+    }
   }
   for (const external of externalExports) {
-    lines.push(externalReExportLine(external));
+    if (external.exportedName !== undefined && external.star && claimed.has(external.exportedName)) {
+      continue;
+    }
+    if (external.exportedName !== undefined && !external.star) {
+      if (claimed.has(external.exportedName)) {
+        continue;
+      }
+      claimed.add(external.exportedName);
+    }
+    const line = externalReExportLine(external);
+    if (line.length > 0) {
+      lines.push(line);
+    }
   }
   lines.push('');
   return lines.join('\n');
@@ -896,6 +958,7 @@ function generateEntryDeclaration(
 
 function discoverGeneratedEntrySources(
   componentsModule: string,
+  publicEntryModule = componentsModule,
   stripPrefix = 'Forge',
   sourceRoot = path.dirname(path.dirname(componentsModule)),
 ): {
@@ -903,16 +966,22 @@ function discoverGeneratedEntrySources(
   helpers: DiscoveredHelperExport[];
   externalExports: DiscoveredExternalExport[];
 } {
-  const graph = buildForgeFileGraph({ entry: componentsModule, sourceRoot });
-  const graphErrors = graph.diagnostics.filter((diagnostic) => diagnostic.code !== 'cycle');
+  const componentGraph = buildForgeFileGraph({ entry: componentsModule, sourceRoot });
+  const publicGraph =
+    publicEntryModule === componentsModule
+      ? componentGraph
+      : buildForgeFileGraph({ entry: publicEntryModule, sourceRoot });
+  const graphErrors = [...componentGraph.diagnostics, ...publicGraph.diagnostics]
+    .filter((diagnostic) => diagnostic.code !== 'cycle')
+    .map((diagnostic) => `${diagnostic.code}: ${diagnostic.message}`);
   if (graphErrors.length > 0) {
-    throw new Error(graphErrors.map((diagnostic) => `${diagnostic.code}: ${diagnostic.message}`).join('\n'));
+    throw new Error(graphErrors.join('\n'));
   }
-  const components = discoverComponentsFromGraph(graph, stripPrefix);
+  const components = discoverComponentsFromGraph(componentGraph, stripPrefix);
   return {
     components,
-    helpers: discoverHelperExportsFromGraph(graph, new Set(components.map((component) => component.folder))),
-    externalExports: discoverExternalExportsFromGraph(graph),
+    helpers: discoverHelperExportsFromGraph(publicGraph, new Set(components.map((component) => component.folder))),
+    externalExports: discoverExternalExportsFromGraph(publicGraph),
   };
 }
 
@@ -930,6 +999,7 @@ export function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOption
     generateBundle() {
       const { components, helpers, externalExports } = discoverGeneratedEntrySources(
         options.componentsModule,
+        options.publicEntryModule,
         stripPrefix,
         options.sourceRoot,
       );
@@ -970,6 +1040,12 @@ export interface JsxComponentsDtsOptions {
    * when `svelte2tsx`'s `emitDts` does not leave a usable one behind.
    */
   componentsModule?: string;
+  /**
+   * Absolute path of the package public entry used when a declaration toolchain
+   * falls back to synthesising `index.d.ts`. Native declaration emit otherwise
+   * follows the generated framework entry, which already contains this surface.
+   */
+  publicEntryModule?: string;
   /** Owning neutral source root used for graph alias resolution. */
   sourceRoot?: string;
 }
@@ -1497,8 +1573,13 @@ async function emitSvelteComponentDeclarations(
   if (options.componentsModule === undefined) {
     return;
   }
-  const { components, helpers } = discoverGeneratedEntrySources(options.componentsModule, 'Forge', options.sourceRoot);
-  const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers);
+  const { components, helpers, externalExports } = discoverGeneratedEntrySources(
+    options.componentsModule,
+    options.publicEntryModule,
+    'Forge',
+    options.sourceRoot,
+  );
+  const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers, externalExports);
   mkdirSync(options.outDir, { recursive: true });
   writeFileSync(path.join(options.outDir, 'index.d.ts'), dtsContent, 'utf8');
 }
@@ -1573,12 +1654,19 @@ export function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
         }
         default: {
           if (options.componentsModule) {
-            const { components, helpers } = discoverGeneratedEntrySources(
+            const { components, helpers, externalExports } = discoverGeneratedEntrySources(
               options.componentsModule,
+              options.publicEntryModule,
               'Forge',
               options.sourceRoot,
             );
-            const dtsContent = generateEntryDeclaration(options.framework, '../components', components, helpers);
+            const dtsContent = generateEntryDeclaration(
+              options.framework,
+              '../components',
+              components,
+              helpers,
+              externalExports,
+            );
             mkdirSync(options.outDir, { recursive: true });
             writeFileSync(path.join(options.outDir, 'index.d.ts'), dtsContent, 'utf8');
           }
