@@ -123,11 +123,11 @@ fn aztec_field_size(word_size: i32) -> i32 {
 
 fn aztec_get_pixel(row: i32, col: i32, size: i32, layers: i32, mode_message: string, message: string) -> bool {
   let center: i32 = size / 2;
-  let dr: i32 = row - center;
+  let mut dr: i32 = row - center;
   if dr < 0 { dr = 0 - dr; }
-  let dc: i32 = col - center;
+  let mut dc: i32 = col - center;
   if dc < 0 { dc = 0 - dc; }
-  let d: i32 = dr;
+  let mut d: i32 = dr;
   if dc > d { d = dc; }
   
   if d <= 4 { return d == 0 || d == 2 || d == 4; }
@@ -152,13 +152,13 @@ fn aztec_get_pixel(row: i32, col: i32, size: i32, layers: i32, mode_message: str
     } } } }
     return false;
   }
-  let dist_row: i32 = row;
+  let mut dist_row: i32 = row;
   let sr: i32 = size - 1 - row;
   if sr < dist_row { dist_row = sr; }
-  let dist_col: i32 = col;
+  let mut dist_col: i32 = col;
   let sc: i32 = size - 1 - col;
   if sc < dist_col { dist_col = sc; }
-  let dist_edge: i32 = dist_row;
+  let mut dist_edge: i32 = dist_row;
   if dist_col < dist_edge { dist_edge = dist_col; }
   
   let layer: i32 = dist_edge / 2;
@@ -169,8 +169,8 @@ fn aztec_get_pixel(row: i32, col: i32, size: i32, layers: i32, mode_message: str
   let ll: i32 = layers - layer;
   let row_size: i32 = ll * 4 + 9;
   
-  let row_offset: i32 = 0;
-  let l: i32 = 0;
+  let mut row_offset: i32 = 0;
+  let mut l: i32 = 0;
   while l < layer {
     let l_ll: i32 = layers - l;
     let l_row_size: i32 = l_ll * 4 + 9;
@@ -249,11 +249,11 @@ export fn encode_aztec(data: string) -> string {
   let bits: string = aztec_high_level(data);
   let data_bits: i32 = string_length(bits);
   let ecc_bits: i32 = data_bits * 23 / 100 + 11;
-  let layers: i32 = 1;
+  let mut layers: i32 = 1;
   while layers <= 4 {
-    let total_bits: i32 = 88 + 16 * layers;
+    let mut total_bits: i32 = 88 + 16 * layers;
     total_bits = total_bits * layers;
-    let word_size: i32 = 8;
+    let mut word_size: i32 = 8;
     if layers <= 2 { word_size = 6; }
     let stuffed: string = aztec_stuff_bits(bits, word_size);
     let stuffed_len: i32 = string_length(stuffed);
@@ -264,16 +264,16 @@ export fn encode_aztec(data: string) -> string {
         let field_size: i32 = aztec_field_size(word_size);
         let message: string = aztec_generate_check_words(stuffed, total_bits, word_size, primitive, field_size);
         // mode message
-        let mode_bits: string = "";
+        let mut mode_bits: string = "";
         mode_bits = core.bits_push_value(mode_bits, layers - 1, 2);
         mode_bits = core.bits_push_value(mode_bits, message_words - 1, 6);
         let mode_message: string = aztec_generate_check_words(mode_bits, 28, 4, 19, 16);
         let size: i32 = 11 + layers * 4;
         
-        let out: string = "";
-        let row: i32 = 0;
+        let mut out: string = "";
+        let mut row: i32 = 0;
         while row < size {
-          let col: i32 = 0;
+          let mut col: i32 = 0;
           while col < size {
             if aztec_get_pixel(row, col, size, layers, mode_message, message) {
               out = string_concat(out, "1");
@@ -284,7 +284,7 @@ export fn encode_aztec(data: string) -> string {
           }
           row = row + 1;
         }
-        return core.packed_result(size, size, out);
+        return string_concat(core.packed_result(size, size, out), "");
       }
     }
     layers = layers + 1;
