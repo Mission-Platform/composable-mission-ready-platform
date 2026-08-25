@@ -1,0 +1,469 @@
+/**
+ * Registered inherited custom properties for forge-resource-planner overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+@property --forge-resource-planner-booking-conflict-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-conflict-surface);
+}
+@property --forge-resource-planner-booking-focus-ring {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-focus-ring);
+}
+@property --forge-resource-planner-booking-height-inset {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-height-inset);
+}
+@property --forge-resource-planner-booking-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-padding-block);
+}
+@property --forge-resource-planner-booking-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-padding-inline);
+}
+@property --forge-resource-planner-booking-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-radius);
+}
+@property --forge-resource-planner-booking-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-surface);
+}
+@property --forge-resource-planner-booking-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-text);
+}
+@property --forge-resource-planner-capacity-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-capacity-border);
+}
+@property --forge-resource-planner-capacity-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-capacity-border-width);
+}
+@property --forge-resource-planner-capacity-conflict-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-capacity-conflict-surface);
+}
+@property --forge-resource-planner-capacity-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-capacity-font-size);
+}
+@property --forge-resource-planner-capacity-unavailable-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-capacity-unavailable-surface);
+}
+@property --forge-resource-planner-container-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-border);
+}
+@property --forge-resource-planner-container-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-border-width);
+}
+@property --forge-resource-planner-container-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-gap);
+}
+@property --forge-resource-planner-container-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-padding);
+}
+@property --forge-resource-planner-container-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-radius);
+}
+@property --forge-resource-planner-container-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-surface);
+}
+@property --forge-resource-planner-control-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-border);
+}
+@property --forge-resource-planner-control-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-border-width);
+}
+@property --forge-resource-planner-control-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-padding-block);
+}
+@property --forge-resource-planner-control-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-padding-inline);
+}
+@property --forge-resource-planner-control-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-radius);
+}
+@property --forge-resource-planner-control-selected-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-selected-surface);
+}
+@property --forge-resource-planner-control-selected-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-selected-text);
+}
+@property --forge-resource-planner-control-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-surface);
+}
+@property --forge-resource-planner-control-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-text);
+}
+@property --forge-resource-planner-current-time-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-current-time-surface);
+}
+@property --forge-resource-planner-current-time-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-current-time-width);
+}
+@property --forge-resource-planner-empty-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-empty-text);
+}
+@property --forge-resource-planner-header-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-header-border);
+}
+@property --forge-resource-planner-header-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-header-border-width);
+}
+@property --forge-resource-planner-header-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-header-surface);
+}
+@property --forge-resource-planner-resource-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-border);
+}
+@property --forge-resource-planner-resource-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-border-width);
+}
+@property --forge-resource-planner-resource-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-gap);
+}
+@property --forge-resource-planner-resource-heading-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-heading-weight);
+}
+@property --forge-resource-planner-resource-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-padding);
+}
+@property --forge-resource-planner-resource-secondary-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-secondary-text);
+}
+@property --forge-resource-planner-resource-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-surface);
+}
+@property --forge-resource-planner-row-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-row-border);
+}
+@property --forge-resource-planner-row-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-row-border-width);
+}
+@property --forge-resource-planner-selection-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-selection-border);
+}
+@property --forge-resource-planner-selection-border-style {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-selection-border-style);
+}
+@property --forge-resource-planner-selection-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-selection-border-width);
+}
+@property --forge-resource-planner-selection-height-inset {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-selection-height-inset);
+}
+@property --forge-resource-planner-selection-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-selection-surface);
+}
+@property --forge-resource-planner-timeline-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-border);
+}
+@property --forge-resource-planner-timeline-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-border-width);
+}
+@property --forge-resource-planner-timeline-header-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-header-font-size);
+}
+@property --forge-resource-planner-timeline-header-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-header-padding);
+}
+@property --forge-resource-planner-timeline-header-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-header-text);
+}
+@property --forge-resource-planner-timeline-selected-ring {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-selected-ring);
+}
+@property --forge-resource-planner-toolbar-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-toolbar-gap);
+}
+@property --forge-resource-planner-viewport-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-viewport-border);
+}
+@property --forge-resource-planner-viewport-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-viewport-border-width);
+}
+@layer mp.resource-planner {
+  .forge-resource-planner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--forge-resource-planner-container-gap, var(--mp-resource-planner-container-gap));
+    min-width: 0;
+    border: var(--forge-resource-planner-container-border-width, var(--mp-resource-planner-container-border-width)) solid var(--forge-resource-planner-container-border, var(--mp-resource-planner-container-border));
+    border-radius: var(--forge-resource-planner-container-radius, var(--mp-resource-planner-container-radius));
+    background: var(--forge-resource-planner-container-surface, var(--mp-resource-planner-container-surface));
+    padding: var(--forge-resource-planner-container-padding, var(--mp-resource-planner-container-padding));
+  }
+  .forge-resource-planner__toolbar, .forge-resource-planner__navigation, .forge-resource-planner__view-switcher {
+    display: flex;
+    align-items: center;
+    gap: var(--forge-resource-planner-toolbar-gap, var(--mp-resource-planner-toolbar-gap));
+  }
+  .forge-resource-planner__toolbar {
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .forge-resource-planner__navigation button, .forge-resource-planner__view-switcher button {
+    border: var(--forge-resource-planner-control-border-width, var(--mp-resource-planner-control-border-width)) solid var(--forge-resource-planner-control-border, var(--mp-resource-planner-control-border));
+    border-radius: var(--forge-resource-planner-control-radius, var(--mp-resource-planner-control-radius));
+    background: var(--forge-resource-planner-control-surface, var(--mp-resource-planner-control-surface));
+    color: var(--forge-resource-planner-control-text, var(--mp-resource-planner-control-text));
+    cursor: pointer;
+    padding: var(--forge-resource-planner-control-padding-block, var(--mp-resource-planner-control-padding-block)) var(--forge-resource-planner-control-padding-inline, var(--mp-resource-planner-control-padding-inline));
+  }
+  .forge-resource-planner__view-switcher button[aria-pressed=true] {
+    background: var(--forge-resource-planner-control-selected-surface, var(--mp-resource-planner-control-selected-surface));
+    color: var(--forge-resource-planner-control-selected-text, var(--mp-resource-planner-control-selected-text));
+  }
+  .forge-resource-planner__viewport {
+    overflow: auto;
+    min-height: 12rem;
+    border: var(--forge-resource-planner-viewport-border-width, var(--mp-resource-planner-viewport-border-width)) solid var(--forge-resource-planner-viewport-border, var(--mp-resource-planner-viewport-border));
+  }
+  .forge-resource-planner__header, .forge-resource-planner__row {
+    display: grid;
+    grid-template-columns: 12rem var(--timeline-width);
+    min-width: calc(12rem + var(--timeline-width));
+  }
+  .forge-resource-planner__header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    min-height: 2.75rem;
+    border-bottom: var(--forge-resource-planner-header-border-width, var(--mp-resource-planner-header-border-width)) solid var(--forge-resource-planner-header-border, var(--mp-resource-planner-header-border));
+    background: var(--forge-resource-planner-header-surface, var(--mp-resource-planner-header-surface));
+  }
+  .forge-resource-planner__resource-header, .forge-resource-planner__resource {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    border-right: var(--forge-resource-planner-resource-border-width, var(--mp-resource-planner-resource-border-width)) solid var(--forge-resource-planner-resource-border, var(--mp-resource-planner-resource-border));
+    background: var(--forge-resource-planner-resource-surface, var(--mp-resource-planner-resource-surface));
+    padding: var(--forge-resource-planner-resource-padding, var(--mp-resource-planner-resource-padding));
+  }
+  .forge-resource-planner__resource-header {
+    z-index: 4;
+    font-weight: var(--forge-resource-planner-resource-heading-weight, var(--mp-resource-planner-resource-heading-weight));
+  }
+  .forge-resource-planner__timeline-header, .forge-resource-planner__timeline {
+    display: flex;
+    position: relative;
+    width: var(--timeline-width);
+  }
+  .forge-resource-planner__timeline-header > div {
+    flex: 0 0 auto;
+    border-right: var(--forge-resource-planner-timeline-border-width, var(--mp-resource-planner-timeline-border-width)) solid var(--forge-resource-planner-timeline-border, var(--mp-resource-planner-timeline-border));
+    padding: var(--forge-resource-planner-timeline-header-padding, var(--mp-resource-planner-timeline-header-padding));
+    color: var(--forge-resource-planner-timeline-header-text, var(--mp-resource-planner-timeline-header-text));
+    font-size: var(--forge-resource-planner-timeline-header-font-size, var(--mp-resource-planner-timeline-header-font-size));
+  }
+  .forge-resource-planner__rows {
+    position: relative;
+    min-width: calc(12rem + var(--timeline-width));
+  }
+  .forge-resource-planner__row {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: var(--resource-row-height);
+    min-height: var(--resource-row-height);
+    border-bottom: var(--forge-resource-planner-row-border-width, var(--mp-resource-planner-row-border-width)) solid var(--forge-resource-planner-row-border, var(--mp-resource-planner-row-border));
+  }
+  .forge-resource-planner__resource {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--forge-resource-planner-resource-gap, var(--mp-resource-planner-resource-gap));
+    cursor: pointer;
+  }
+  .forge-resource-planner__resource small {
+    color: var(--forge-resource-planner-resource-secondary-text, var(--mp-resource-planner-resource-secondary-text));
+  }
+  .forge-resource-planner__timeline {
+    min-height: var(--resource-row-height);
+    background: repeating-linear-gradient(90deg, transparent 0, transparent calc(var(--slot-width, 144px) - 1px), var(--forge-resource-planner-timeline-border, var(--mp-resource-planner-timeline-border)) calc(var(--slot-width, 144px) - 1px), var(--forge-resource-planner-timeline-border, var(--mp-resource-planner-timeline-border)) var(--slot-width, 144px));
+    cursor: crosshair;
+  }
+  .forge-resource-planner__timeline[data-selected=true] {
+    outline: 2px solid var(--forge-resource-planner-timeline-selected-ring, var(--mp-resource-planner-timeline-selected-ring));
+    outline-offset: -2px;
+  }
+  .forge-resource-planner__capacity-cell {
+    flex: 0 0 auto;
+    height: 100%;
+    border-right: var(--forge-resource-planner-capacity-border-width, var(--mp-resource-planner-capacity-border-width)) solid color-mix(in srgb, var(--forge-resource-planner-capacity-border, var(--mp-resource-planner-capacity-border)) 45%, transparent);
+    color: transparent;
+    font-size: var(--forge-resource-planner-capacity-font-size, var(--mp-resource-planner-capacity-font-size));
+    pointer-events: none;
+  }
+  .forge-resource-planner__capacity-cell[data-status=unavailable] {
+    background: color-mix(in srgb, var(--forge-resource-planner-capacity-unavailable-surface, var(--mp-resource-planner-capacity-unavailable-surface)) 70%, transparent);
+  }
+  .forge-resource-planner__capacity-cell[data-status=over-capacity], .forge-resource-planner__capacity-cell[data-status=conflict] {
+    background: color-mix(in srgb, var(--forge-resource-planner-capacity-conflict-surface, var(--mp-resource-planner-capacity-conflict-surface)) 12%, transparent);
+  }
+  .forge-resource-planner__booking {
+    position: absolute;
+    top: var(--forge-resource-planner-booking-padding-inline, var(--mp-resource-planner-booking-padding-inline));
+    z-index: 1;
+    overflow: hidden;
+    height: calc(100% - var(--forge-resource-planner-booking-height-inset, var(--mp-resource-planner-booking-height-inset)));
+    border: none;
+    border-radius: var(--forge-resource-planner-booking-radius, var(--mp-resource-planner-booking-radius));
+    background: var(--forge-resource-planner-booking-surface, var(--mp-resource-planner-booking-surface));
+    color: var(--forge-resource-planner-booking-text, var(--mp-resource-planner-booking-text));
+    cursor: grab;
+    padding: var(--forge-resource-planner-booking-padding-block, var(--mp-resource-planner-booking-padding-block)) var(--forge-resource-planner-booking-padding-inline, var(--mp-resource-planner-booking-padding-inline));
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .forge-resource-planner__booking:focus-visible, .forge-resource-planner__navigation button:focus-visible, .forge-resource-planner__view-switcher button:focus-visible {
+    outline: 2px solid var(--forge-resource-planner-booking-focus-ring, var(--mp-resource-planner-booking-focus-ring));
+    outline-offset: 2px;
+  }
+  .forge-resource-planner__booking[data-conflict=true] {
+    background: var(--forge-resource-planner-booking-conflict-surface, var(--mp-resource-planner-booking-conflict-surface));
+  }
+  .forge-resource-planner__resize-start, .forge-resource-planner__resize-end {
+    position: absolute;
+    top: 0;
+    width: 0.375rem;
+    height: 100%;
+    cursor: ew-resize;
+  }
+  .forge-resource-planner__resize-start {
+    left: 0;
+  }
+  .forge-resource-planner__resize-end {
+    right: 0;
+  }
+  .forge-resource-planner__selection {
+    position: absolute;
+    top: var(--forge-resource-planner-booking-padding-block, var(--mp-resource-planner-booking-padding-block));
+    z-index: 0;
+    height: calc(100% - var(--forge-resource-planner-selection-height-inset, var(--mp-resource-planner-selection-height-inset)));
+    border: var(--forge-resource-planner-selection-border-width, var(--mp-resource-planner-selection-border-width)) var(--forge-resource-planner-selection-border-style, var(--mp-resource-planner-selection-border-style)) var(--forge-resource-planner-selection-border, var(--mp-resource-planner-selection-border));
+    background: color-mix(in srgb, var(--forge-resource-planner-selection-surface, var(--mp-resource-planner-selection-surface)) 12%, transparent);
+    pointer-events: none;
+  }
+  .forge-resource-planner__current-time {
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    width: var(--forge-resource-planner-current-time-width, var(--mp-resource-planner-current-time-width));
+    height: 100%;
+    background: var(--forge-resource-planner-current-time-surface, var(--mp-resource-planner-current-time-surface));
+    pointer-events: none;
+  }
+  .forge-resource-planner__empty {
+    margin: 0;
+    color: var(--forge-resource-planner-empty-text, var(--mp-resource-planner-empty-text));
+  }
+}

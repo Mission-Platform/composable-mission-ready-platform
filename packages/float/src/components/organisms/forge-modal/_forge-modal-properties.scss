@@ -1,0 +1,144 @@
+/**
+ * Registered inherited custom properties for forge-modal overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-modal-overlay-modal-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-surface-default);
+}
+
+@property --forge-modal-overlay-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-radius);
+}
+
+@property --forge-modal-overlay-modal-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-shadow);
+}
+
+@property --forge-modal-overlay-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-transition-duration);
+}
+
+@property --forge-modal-overlay-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-transition-easing);
+}
+
+@property --forge-modal-overlay-surface-scrim {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-surface-scrim);
+}
+
+@property --forge-modal-spacing-8 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-8);
+}
+
+@property --forge-modal-overlay-modal-size-2xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-size-2xs);
+}
+
+@property --forge-modal-overlay-modal-size-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-size-xs);
+}
+
+@property --forge-modal-overlay-modal-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-size-sm);
+}
+
+@property --forge-modal-overlay-modal-size-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-size-md);
+}
+
+@property --forge-modal-overlay-modal-size-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-size-lg);
+}
+
+@property --forge-modal-overlay-modal-size-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-size-xl);
+}
+
+@property --forge-modal-overlay-modal-size-2xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-size-2xl);
+}
+
+@property --forge-modal-overlay-header-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-header-gap);
+}
+
+@property --forge-modal-overlay-header-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-header-padding-block);
+}
+
+@property --forge-modal-overlay-header-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-header-padding-inline);
+}
+
+@property --forge-modal-overlay-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-width);
+}
+
+@property --forge-modal-overlay-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-default);
+}
+
+@property --forge-modal-overlay-body-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-body-padding);
+}
+
+@property --forge-modal-overlay-footer-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-footer-gap);
+}
+
+@property --forge-modal-overlay-footer-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-footer-padding-block);
+}
+
+@property --forge-modal-overlay-footer-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-footer-padding-inline);
+}

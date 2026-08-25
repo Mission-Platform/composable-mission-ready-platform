@@ -21,10 +21,12 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-dropdown-properties';
+
 /* A custom position-try fallback used once the flip tactics are exhausted. */
 @position-try --mp-dropdown-shift {
   position-area: bottom center;
-  margin: var(--mp-spacing-1);
+  margin: var(--forge-dropdown-spacing-1, var(--mp-spacing-1));
 }
 
 @layer mp.components {
@@ -48,26 +50,29 @@
        * to override the UA `[popover]` default (`CanvasText`), which would
        * otherwise reset the panel's inherited text colour.
        */
-      z-index: 200;
+      z-index: var(--mp-z-index-floating-dropdown);
       min-width: 1px;
       min-height: 1px;
-      margin: var(--mp-spacing-1) 0;
-      padding: var(--mp-overlay-panel-padding-block) 0;
+      margin: var(--forge-dropdown-spacing-1, var(--mp-spacing-1)) 0;
+      padding: var(--forge-dropdown-overlay-panel-padding-block, var(--mp-overlay-panel-padding-block)) 0;
       overflow-y: auto;
-      color: var(--mp-overlay-text-default);
-      background-color: var(--mp-overlay-dropdown-surface);
-      border: var(--mp-overlay-border-width) solid var(--mp-overlay-border-default);
-      border-radius: var(--mp-overlay-dropdown-radius);
-      box-shadow: var(--mp-overlay-dropdown-shadow);
+      color: var(--forge-dropdown-overlay-text-default, var(--mp-overlay-text-default));
+      background-color: var(--forge-dropdown-overlay-dropdown-surface, var(--mp-overlay-dropdown-surface));
+      border: var(--forge-dropdown-overlay-border-width, var(--mp-overlay-border-width)) solid
+        var(--forge-dropdown-overlay-border-default, var(--mp-overlay-border-default));
+      border-radius: var(--forge-dropdown-overlay-dropdown-radius, var(--mp-overlay-dropdown-radius));
+      box-shadow: var(--forge-dropdown-overlay-dropdown-shadow, var(--mp-overlay-dropdown-shadow));
       outline: none;
       position-try-fallbacks: flip-block, flip-inline, --mp-dropdown-shift;
       opacity: 1;
       translate: 0 0;
       transition:
-        opacity var(--mp-overlay-dropdown-transition-duration)
-          var(--mp-overlay-dropdown-transition-easing),
-        translate var(--mp-overlay-dropdown-transition-duration)
-          var(--mp-overlay-dropdown-transition-easing);
+        opacity
+          var(--forge-dropdown-overlay-dropdown-transition-duration, var(--mp-overlay-dropdown-transition-duration))
+          var(--forge-dropdown-overlay-dropdown-transition-easing, var(--mp-overlay-dropdown-transition-easing)),
+        translate
+          var(--forge-dropdown-overlay-dropdown-transition-duration, var(--mp-overlay-dropdown-transition-duration))
+          var(--forge-dropdown-overlay-dropdown-transition-easing, var(--mp-overlay-dropdown-transition-easing));
 
       @starting-style {
         opacity: 0;

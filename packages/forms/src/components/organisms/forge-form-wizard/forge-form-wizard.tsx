@@ -1,4 +1,11 @@
-import { type MpChild, type MpElement, type MpRenderProperty, Slot } from '@mission-platform/forge';
+import {
+  Slot,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type MpRenderProperty,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-form-wizard.module.scss';
@@ -42,6 +49,95 @@ export interface WizardStep {
   content?: MpRenderProperty<Record<string, unknown>>;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface FormWizardStyleProperties {
+  readonly 'form-border-default'?: string;
+  readonly 'form-border-focus'?: string;
+  readonly 'form-border-focus-width'?: string;
+  readonly 'form-border-invalid'?: string;
+  readonly 'form-border-selected'?: string;
+  readonly 'form-border-width'?: string;
+  readonly 'form-disabled-opacity'?: string;
+  readonly 'form-font-family-sans'?: string;
+  readonly 'form-font-size-small'?: string;
+  readonly 'form-gap-default'?: string;
+  readonly 'form-gap-large'?: string;
+  readonly 'form-gap-section'?: string;
+  readonly 'form-gap-wizard'?: string;
+  readonly 'form-padding-default'?: string;
+  readonly 'form-padding-large'?: string;
+  readonly 'form-padding-section'?: string;
+  readonly 'form-primary'?: string;
+  readonly 'form-primary-hover-opacity'?: string;
+  readonly 'form-radius-default'?: string;
+  readonly 'form-surface-muted'?: string;
+  readonly 'form-text-default'?: string;
+  readonly 'form-text-inverse'?: string;
+  readonly 'form-text-secondary'?: string;
+  readonly 'form-transition-duration'?: string;
+  readonly 'form-transition-easing'?: string;
+}
+
+export type FormWizardStyle = CSSStyleProperties & {
+  readonly '--forge-form-wizard-form-border-default'?: string | undefined;
+  readonly '--forge-form-wizard-form-border-focus'?: string | undefined;
+  readonly '--forge-form-wizard-form-border-focus-width'?: string | undefined;
+  readonly '--forge-form-wizard-form-border-invalid'?: string | undefined;
+  readonly '--forge-form-wizard-form-border-selected'?: string | undefined;
+  readonly '--forge-form-wizard-form-border-width'?: string | undefined;
+  readonly '--forge-form-wizard-form-disabled-opacity'?: string | undefined;
+  readonly '--forge-form-wizard-form-font-family-sans'?: string | undefined;
+  readonly '--forge-form-wizard-form-font-size-small'?: string | undefined;
+  readonly '--forge-form-wizard-form-gap-default'?: string | undefined;
+  readonly '--forge-form-wizard-form-gap-large'?: string | undefined;
+  readonly '--forge-form-wizard-form-gap-section'?: string | undefined;
+  readonly '--forge-form-wizard-form-gap-wizard'?: string | undefined;
+  readonly '--forge-form-wizard-form-padding-default'?: string | undefined;
+  readonly '--forge-form-wizard-form-padding-large'?: string | undefined;
+  readonly '--forge-form-wizard-form-padding-section'?: string | undefined;
+  readonly '--forge-form-wizard-form-primary'?: string | undefined;
+  readonly '--forge-form-wizard-form-primary-hover-opacity'?: string | undefined;
+  readonly '--forge-form-wizard-form-radius-default'?: string | undefined;
+  readonly '--forge-form-wizard-form-surface-muted'?: string | undefined;
+  readonly '--forge-form-wizard-form-text-default'?: string | undefined;
+  readonly '--forge-form-wizard-form-text-inverse'?: string | undefined;
+  readonly '--forge-form-wizard-form-text-secondary'?: string | undefined;
+  readonly '--forge-form-wizard-form-transition-duration'?: string | undefined;
+  readonly '--forge-form-wizard-form-transition-easing'?: string | undefined;
+};
+
+function createFormWizardStyle(
+  properties: Readonly<FormWizardStyleProperties> | undefined,
+): FormWizardStyle | undefined {
+  return createForgeStyle({
+    '--forge-form-wizard-form-border-default': properties?.['form-border-default'],
+    '--forge-form-wizard-form-border-focus': properties?.['form-border-focus'],
+    '--forge-form-wizard-form-border-focus-width': properties?.['form-border-focus-width'],
+    '--forge-form-wizard-form-border-invalid': properties?.['form-border-invalid'],
+    '--forge-form-wizard-form-border-selected': properties?.['form-border-selected'],
+    '--forge-form-wizard-form-border-width': properties?.['form-border-width'],
+    '--forge-form-wizard-form-disabled-opacity': properties?.['form-disabled-opacity'],
+    '--forge-form-wizard-form-font-family-sans': properties?.['form-font-family-sans'],
+    '--forge-form-wizard-form-font-size-small': properties?.['form-font-size-small'],
+    '--forge-form-wizard-form-gap-default': properties?.['form-gap-default'],
+    '--forge-form-wizard-form-gap-large': properties?.['form-gap-large'],
+    '--forge-form-wizard-form-gap-section': properties?.['form-gap-section'],
+    '--forge-form-wizard-form-gap-wizard': properties?.['form-gap-wizard'],
+    '--forge-form-wizard-form-padding-default': properties?.['form-padding-default'],
+    '--forge-form-wizard-form-padding-large': properties?.['form-padding-large'],
+    '--forge-form-wizard-form-padding-section': properties?.['form-padding-section'],
+    '--forge-form-wizard-form-primary': properties?.['form-primary'],
+    '--forge-form-wizard-form-primary-hover-opacity': properties?.['form-primary-hover-opacity'],
+    '--forge-form-wizard-form-radius-default': properties?.['form-radius-default'],
+    '--forge-form-wizard-form-surface-muted': properties?.['form-surface-muted'],
+    '--forge-form-wizard-form-text-default': properties?.['form-text-default'],
+    '--forge-form-wizard-form-text-inverse': properties?.['form-text-inverse'],
+    '--forge-form-wizard-form-text-secondary': properties?.['form-text-secondary'],
+    '--forge-form-wizard-form-transition-duration': properties?.['form-transition-duration'],
+    '--forge-form-wizard-form-transition-easing': properties?.['form-transition-easing'],
+  }) as FormWizardStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface FormWizardProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -72,6 +168,9 @@ export interface FormWizardProperties {
   onPrev?: (index: number) => void;
   /** Fired when the final step's Finish button is pressed. */
   onComplete?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<FormWizardStyleProperties>;
 }
 
 /**
@@ -99,6 +198,8 @@ export interface FormWizardProperties {
  * props. The active index stays **controlled** (`modelValue`).
  */
 export function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpElement {
+  const style = createFormWizardStyle(properties.properties);
+
   const {
     steps,
     modelValue = 0,
@@ -161,7 +262,10 @@ export function ForgeFormWizard(properties: Readonly<FormWizardProperties>): MpE
   );
 
   return (
-    <div className={[styles['forge-form-wizard'], size ? `forge-size--${size}` : undefined]}>
+    <div
+      className={[styles['forge-form-wizard'], size ? `forge-size--${size}` : undefined]}
+      style={style}
+    >
       <ol
         className={styles['forge-form-wizard__steps']}
         role="list"

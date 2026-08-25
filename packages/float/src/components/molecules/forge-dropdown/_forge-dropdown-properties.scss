@@ -1,0 +1,66 @@
+/**
+ * Registered inherited custom properties for forge-dropdown overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-dropdown-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-dropdown-overlay-panel-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-panel-padding-block);
+}
+
+@property --forge-dropdown-overlay-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-text-default);
+}
+
+@property --forge-dropdown-overlay-dropdown-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dropdown-surface);
+}
+
+@property --forge-dropdown-overlay-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-width);
+}
+
+@property --forge-dropdown-overlay-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-default);
+}
+
+@property --forge-dropdown-overlay-dropdown-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dropdown-radius);
+}
+
+@property --forge-dropdown-overlay-dropdown-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dropdown-shadow);
+}
+
+@property --forge-dropdown-overlay-dropdown-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dropdown-transition-duration);
+}
+
+@property --forge-dropdown-overlay-dropdown-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dropdown-transition-easing);
+}

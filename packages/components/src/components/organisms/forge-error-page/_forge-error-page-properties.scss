@@ -1,0 +1,69 @@
+/**
+ * Registered inherited custom properties for forge-error-page overrides.
+ */
+
+@property --forge-error-page-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-error-page-spacing-8 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-8);
+}
+
+@property --forge-error-page-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-error-page-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-error-page-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-error-page-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-error-page-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-error-page-border-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-radius-sm);
+}
+
+@property --forge-error-page-color-action-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-action-primary);
+}
+
+@property --forge-error-page-color-text-on-action {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-action);
+}
+
+@property --forge-error-page-color-surface-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-surface-secondary);
+}

@@ -1,0 +1,93 @@
+/**
+ * Registered inherited custom properties for forge-transfer-list overrides.
+ */
+
+@property --forge-transfer-list-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-transfer-list-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-transfer-list-font-size-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-md);
+}
+
+@property --forge-transfer-list-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-transfer-list-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-transfer-list-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-transfer-list-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-transfer-list-size-height-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-lg);
+}
+
+@property --forge-transfer-list-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-sm);
+}
+
+@property --forge-transfer-list-color-bg-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-muted);
+}
+
+@property --forge-transfer-list-color-text-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-tertiary);
+}
+
+@property --forge-transfer-list-color-bg-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-surface);
+}
+
+@property --forge-transfer-list-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-disabled);
+}
+
+@property --forge-transfer-list-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-transfer-list-size-height-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-md);
+}

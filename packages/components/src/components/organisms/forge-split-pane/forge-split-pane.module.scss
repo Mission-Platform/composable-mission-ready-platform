@@ -1,4 +1,6 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
+@use './forge-split-pane-properties';
+
 @layer mp.components {
   .forge-split-pane {
     display: flex;
@@ -24,8 +26,8 @@
   }
 
   .forge-split-pane__separator {
-    flex: 0 0 var(--mp-spacing-2);
-    background: var(--mp-color-border-default);
+    flex: 0 0 var(--forge-split-pane-spacing-2, var(--mp-spacing-2));
+    background: var(--forge-split-pane-color-border-default, var(--mp-color-border-default));
     cursor: col-resize;
   }
 
@@ -34,8 +36,9 @@
   }
 
   .forge-split-pane__separator:focus-visible {
-    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
-    outline-offset: calc(-1 * var(--mp-border-width-thick));
+    outline: var(--forge-split-pane-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-split-pane-color-border-focus, var(--mp-color-border-focus));
+    outline-offset: calc(-1 * var(--forge-split-pane-border-width-thick, var(--mp-border-width-thick)));
   }
 
   @media (width <= 40rem) {
@@ -50,7 +53,7 @@
     }
 
     .forge-split-pane__separator {
-      flex-basis: var(--mp-spacing-2);
+      flex-basis: var(--forge-split-pane-spacing-2, var(--mp-spacing-2));
       width: 100%;
     }
   }

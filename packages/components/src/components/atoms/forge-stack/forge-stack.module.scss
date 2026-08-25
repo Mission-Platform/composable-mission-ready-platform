@@ -10,12 +10,15 @@
  * consumed through its hashed class map by `forge-stack.stories.tsx`.
  */
 
+@use './forge-stack-properties';
+
 @layer mp.components {
   .stack-demo-container {
     min-height: 10rem;
-    padding: var(--mp-layout-stack-container-padding);
-    border: var(--mp-layout-stack-container-border-width) dashed var(--mp-layout-stack-container-border);
-    border-radius: var(--mp-layout-stack-container-radius);
+    padding: var(--forge-stack-layout-stack-container-padding, var(--mp-layout-stack-container-padding));
+    border: var(--forge-stack-layout-stack-container-border-width, var(--mp-layout-stack-container-border-width)) dashed
+      var(--forge-stack-layout-stack-container-border, var(--mp-layout-stack-container-border));
+    border-radius: var(--forge-stack-layout-stack-container-radius, var(--mp-layout-stack-container-radius));
   }
 
   .stack-demo-item {
@@ -24,10 +27,12 @@
     justify-content: center;
     min-width: 4rem;
     min-height: 3rem;
-    padding: var(--mp-layout-stack-item-padding-block) var(--mp-layout-stack-item-padding-inline);
-    border: var(--mp-layout-stack-item-border-width) solid var(--mp-layout-stack-item-border);
-    border-radius: var(--mp-layout-stack-item-radius);
-    background: var(--mp-layout-stack-item-surface);
-    color: var(--mp-layout-stack-item-text);
+    padding: var(--forge-stack-layout-stack-item-padding-block, var(--mp-layout-stack-item-padding-block))
+      var(--forge-stack-layout-stack-item-padding-inline, var(--mp-layout-stack-item-padding-inline));
+    border: var(--forge-stack-layout-stack-item-border-width, var(--mp-layout-stack-item-border-width)) solid
+      var(--forge-stack-layout-stack-item-border, var(--mp-layout-stack-item-border));
+    border-radius: var(--forge-stack-layout-stack-item-radius, var(--mp-layout-stack-item-radius));
+    background: var(--forge-stack-layout-stack-item-surface, var(--mp-layout-stack-item-surface));
+    color: var(--forge-stack-layout-stack-item-text, var(--mp-layout-stack-item-text));
   }
 }

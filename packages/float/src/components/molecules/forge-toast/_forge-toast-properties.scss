@@ -1,0 +1,168 @@
+/**
+ * Registered inherited custom properties for forge-toast overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-toast-overlay-toast-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-gap);
+}
+
+@property --forge-toast-overlay-toast-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-padding-block);
+}
+
+@property --forge-toast-overlay-toast-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-padding-inline);
+}
+
+@property --forge-toast-overlay-toast-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-surface);
+}
+
+@property --forge-toast-overlay-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-width);
+}
+
+@property --forge-toast-overlay-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-default);
+}
+
+@property --forge-toast-overlay-toast-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-radius);
+}
+
+@property --forge-toast-overlay-toast-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-shadow);
+}
+
+@property --forge-toast-overlay-toast-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-text-default);
+}
+
+@property --forge-toast-overlay-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-font-family);
+}
+
+@property --forge-toast-overlay-icon-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-icon-size);
+}
+
+@property --forge-toast-overlay-toast-title-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-title-gap);
+}
+
+@property --forge-toast-overlay-toast-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-font-size);
+}
+
+@property --forge-toast-overlay-toast-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-font-weight);
+}
+
+@property --forge-toast-overlay-toast-text-message {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-text-message);
+}
+
+@property --forge-toast-overlay-dismiss-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dismiss-padding);
+}
+
+@property --forge-toast-overlay-dismiss-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dismiss-radius);
+}
+
+@property --forge-toast-icon-color-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-icon-color-muted);
+}
+
+@property --forge-toast-overlay-toast-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-transition-duration);
+}
+
+@property --forge-toast-overlay-toast-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-toast-transition-easing);
+}
+
+@property --forge-toast-overlay-dismiss-focus-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dismiss-focus-width);
+}
+
+@property --forge-toast-overlay-border-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-focus-visible);
+}
+
+@property --forge-toast-feedback-neutral-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-neutral-border);
+}
+
+@property --forge-toast-feedback-info-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-info-border);
+}
+
+@property --forge-toast-feedback-success-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-success-border);
+}
+
+@property --forge-toast-feedback-warning-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-warning-border);
+}
+
+@property --forge-toast-feedback-danger-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-danger-border);
+}

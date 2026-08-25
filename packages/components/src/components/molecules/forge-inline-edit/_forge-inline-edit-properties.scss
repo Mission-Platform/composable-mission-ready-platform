@@ -1,0 +1,111 @@
+/**
+ * Registered inherited custom properties for forge-inline-edit overrides.
+ */
+
+@property --forge-inline-edit-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-inline-edit-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-inline-edit-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-inline-edit-font-weight-semibold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-semibold);
+}
+
+@property --forge-inline-edit-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-inline-edit-size-pad-block-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-block-sm);
+}
+
+@property --forge-inline-edit-size-pad-inline-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-inline-sm);
+}
+
+@property --forge-inline-edit-color-bg-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-surface);
+}
+
+@property --forge-inline-edit-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-inline-edit-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-inline-edit-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-inline-edit-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-inline-edit-color-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-focus);
+}
+
+@property --forge-inline-edit-color-text-link {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-link);
+}
+
+@property --forge-inline-edit-color-primary-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-subtle);
+}
+
+@property --forge-inline-edit-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-disabled);
+}
+
+@property --forge-inline-edit-color-danger-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-danger-text);
+}
+
+@property --forge-inline-edit-color-danger-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-danger-default);
+}

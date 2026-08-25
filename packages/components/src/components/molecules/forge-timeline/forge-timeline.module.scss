@@ -11,9 +11,11 @@
  * version renders both from a single component.
  */
 
+@use './forge-timeline-properties';
+
 @layer mp.components {
   .forge-timeline {
-    --mp-timeline-line-thickness: var(--mp-timeline-line-width);
+    --mp-timeline-line-thickness: var(--forge-timeline-line-width, var(--mp-timeline-line-width));
 
     list-style: none;
     margin: 0;
@@ -33,7 +35,7 @@
   }
 
   .forge-timeline-item {
-    --mp-timeline-item-color: var(--mp-timeline-marker-default);
+    --mp-timeline-item-color: var(--forge-timeline-marker-default, var(--mp-timeline-marker-default));
 
     position: relative;
     display: flex;
@@ -42,7 +44,7 @@
       'critical'
     {
       &--#{$family} {
-        --mp-timeline-item-color: var(--mp-timeline-variant-#{$family});
+        --mp-timeline-item-color: var(--forge-timeline-variant-#{$family}, var(--mp-timeline-variant-#{$family}));
       }
     }
 
@@ -55,26 +57,28 @@
     }
 
     &__dot {
-      width: var(--mp-timeline-marker-size);
-      height: var(--mp-timeline-marker-size);
-      border-radius: var(--mp-timeline-marker-radius);
-      background-color: var(--mp-timeline-item-color);
-      box-shadow: 0 0 0 var(--mp-timeline-marker-outline-width) var(--mp-timeline-marker-outline-surface);
+      width: var(--forge-timeline-marker-size, var(--mp-timeline-marker-size));
+      height: var(--forge-timeline-marker-size, var(--mp-timeline-marker-size));
+      border-radius: var(--forge-timeline-marker-radius, var(--mp-timeline-marker-radius));
+      background-color: var(--forge-timeline-item-color, var(--mp-timeline-item-color));
+      box-shadow: 0 0 0 var(--forge-timeline-marker-outline-width, var(--mp-timeline-marker-outline-width))
+        var(--forge-timeline-marker-outline-surface, var(--mp-timeline-marker-outline-surface));
     }
 
     &--outlined &__dot {
-      background-color: var(--mp-timeline-marker-outlined-surface);
-      border: var(--mp-timeline-line-thickness) solid var(--mp-timeline-item-color);
+      background-color: var(--forge-timeline-marker-outlined-surface, var(--mp-timeline-marker-outlined-surface));
+      border: var(--forge-timeline-line-thickness, var(--mp-timeline-line-thickness)) solid
+        var(--forge-timeline-item-color, var(--mp-timeline-item-color));
     }
 
     /* ── Vertical ─────────────────────────────────────────────────────────── */
     &--vertical {
       flex-direction: row;
-      gap: var(--mp-timeline-vertical-gap);
-      padding-bottom: var(--mp-timeline-gutter);
+      gap: var(--forge-timeline-vertical-gap, var(--mp-timeline-vertical-gap));
+      padding-bottom: var(--forge-timeline-gutter, var(--mp-timeline-gutter));
 
       .forge-timeline-item__marker {
-        width: var(--mp-timeline-marker-size);
+        width: var(--forge-timeline-marker-size, var(--mp-timeline-marker-size));
         flex-direction: column;
       }
 
@@ -82,28 +86,28 @@
       .forge-timeline-item__marker::after {
         content: '';
         position: absolute;
-        top: var(--mp-timeline-marker-size);
-        bottom: calc(var(--mp-timeline-gutter) * -1);
+        top: var(--forge-timeline-marker-size, var(--mp-timeline-marker-size));
+        bottom: calc(var(--forge-timeline-gutter, var(--mp-timeline-gutter)) * -1);
         left: 50%;
-        width: var(--mp-timeline-line-thickness);
+        width: var(--forge-timeline-line-thickness, var(--mp-timeline-line-thickness));
         transform: translateX(-50%);
-        background-color: var(--mp-timeline-line-surface);
+        background-color: var(--forge-timeline-line-surface, var(--mp-timeline-line-surface));
       }
 
       .forge-timeline-item__content {
-        padding-top: calc((var(--mp-timeline-marker-size) - 1em) / 2);
+        padding-top: calc((var(--forge-timeline-marker-size, var(--mp-timeline-marker-size)) - 1em) / 2);
       }
     }
 
     /* ── Horizontal ───────────────────────────────────────────────────────── */
     &--horizontal {
       flex-direction: column;
-      gap: var(--mp-timeline-horizontal-gap);
+      gap: var(--forge-timeline-horizontal-gap, var(--mp-timeline-horizontal-gap));
       min-width: 12rem;
-      padding-right: var(--mp-timeline-gutter);
+      padding-right: var(--forge-timeline-gutter, var(--mp-timeline-gutter));
 
       .forge-timeline-item__marker {
-        height: var(--mp-timeline-marker-size);
+        height: var(--forge-timeline-marker-size, var(--mp-timeline-marker-size));
         width: 100%;
         justify-content: flex-start;
       }
@@ -111,19 +115,19 @@
       .forge-timeline-item__marker::after {
         content: '';
         position: absolute;
-        left: var(--mp-timeline-marker-size);
-        right: calc(var(--mp-timeline-gutter) * -1);
+        left: var(--forge-timeline-marker-size, var(--mp-timeline-marker-size));
+        right: calc(var(--forge-timeline-gutter, var(--mp-timeline-gutter)) * -1);
         top: 50%;
-        height: var(--mp-timeline-line-thickness);
+        height: var(--forge-timeline-line-thickness, var(--mp-timeline-line-thickness));
         transform: translateY(-50%);
-        background-color: var(--mp-timeline-line-surface);
+        background-color: var(--forge-timeline-line-surface, var(--mp-timeline-line-surface));
       }
     }
 
     &__content {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-timeline-content-gap);
+      gap: var(--forge-timeline-content-gap, var(--mp-timeline-content-gap));
       min-width: 0;
     }
 
@@ -132,7 +136,7 @@
     }
 
     &__body {
-      margin-top: var(--mp-timeline-content-body-margin-top);
+      margin-top: var(--forge-timeline-content-body-margin-top, var(--mp-timeline-content-body-margin-top));
     }
 
     /* The final item has no following sibling, so hide its connecting line.

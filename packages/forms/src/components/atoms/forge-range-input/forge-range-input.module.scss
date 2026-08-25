@@ -1,3 +1,5 @@
+@use './forge-range-input-properties';
+
 /**
  * Styling for the write-once `ForgeRangeInput`.
  *
@@ -12,61 +14,109 @@
 
 @layer mp.forms {
   .forge-range-input {
-    --mp-range-track-height: var(--mp-checkable-size-md-track-height);
-    --mp-range-thumb-size: var(--mp-checkable-size-md-thumb-size);
+    --mp-range-track-height: var(
+      --forge-range-input-checkable-size-md-track-height,
+      var(--mp-checkable-size-md-track-height)
+    );
+    --mp-range-thumb-size: var(
+      --forge-range-input-checkable-size-md-thumb-size,
+      var(--mp-checkable-size-md-thumb-size)
+    );
 
     display: flex;
     align-items: center;
     width: 100%;
-    padding-block: calc(var(--mp-range-thumb-size) / 2);
+    padding-block: calc(var(--forge-range-input-range-thumb-size, var(--mp-range-thumb-size)) / 2);
 
     /* Sizes — canonical 2xs → 2xl scale (track height + thumb size). */
     &--2xs {
-      --mp-range-track-height: var(--mp-checkable-size-2xs-track-height);
-      --mp-range-thumb-size: var(--mp-checkable-size-2xs-thumb-size);
+      --mp-range-track-height: var(
+        --forge-range-input-checkable-size-2xs-track-height,
+        var(--mp-checkable-size-2xs-track-height)
+      );
+      --mp-range-thumb-size: var(
+        --forge-range-input-checkable-size-2xs-thumb-size,
+        var(--mp-checkable-size-2xs-thumb-size)
+      );
     }
 
     &--xs {
-      --mp-range-track-height: var(--mp-checkable-size-xs-track-height);
-      --mp-range-thumb-size: var(--mp-checkable-size-xs-thumb-size);
+      --mp-range-track-height: var(
+        --forge-range-input-checkable-size-xs-track-height,
+        var(--mp-checkable-size-xs-track-height)
+      );
+      --mp-range-thumb-size: var(
+        --forge-range-input-checkable-size-xs-thumb-size,
+        var(--mp-checkable-size-xs-thumb-size)
+      );
     }
 
     &--sm {
-      --mp-range-track-height: var(--mp-checkable-size-sm-track-height);
-      --mp-range-thumb-size: var(--mp-checkable-size-sm-thumb-size);
+      --mp-range-track-height: var(
+        --forge-range-input-checkable-size-sm-track-height,
+        var(--mp-checkable-size-sm-track-height)
+      );
+      --mp-range-thumb-size: var(
+        --forge-range-input-checkable-size-sm-thumb-size,
+        var(--mp-checkable-size-sm-thumb-size)
+      );
     }
 
     &--md {
-      --mp-range-track-height: var(--mp-checkable-size-md-track-height);
-      --mp-range-thumb-size: var(--mp-checkable-size-md-thumb-size);
+      --mp-range-track-height: var(
+        --forge-range-input-checkable-size-md-track-height,
+        var(--mp-checkable-size-md-track-height)
+      );
+      --mp-range-thumb-size: var(
+        --forge-range-input-checkable-size-md-thumb-size,
+        var(--mp-checkable-size-md-thumb-size)
+      );
     }
 
     &--lg {
-      --mp-range-track-height: var(--mp-checkable-size-lg-track-height);
-      --mp-range-thumb-size: var(--mp-checkable-size-lg-thumb-size);
+      --mp-range-track-height: var(
+        --forge-range-input-checkable-size-lg-track-height,
+        var(--mp-checkable-size-lg-track-height)
+      );
+      --mp-range-thumb-size: var(
+        --forge-range-input-checkable-size-lg-thumb-size,
+        var(--mp-checkable-size-lg-thumb-size)
+      );
     }
 
     &--xl {
-      --mp-range-track-height: var(--mp-checkable-size-xl-track-height);
-      --mp-range-thumb-size: var(--mp-checkable-size-xl-thumb-size);
+      --mp-range-track-height: var(
+        --forge-range-input-checkable-size-xl-track-height,
+        var(--mp-checkable-size-xl-track-height)
+      );
+      --mp-range-thumb-size: var(
+        --forge-range-input-checkable-size-xl-thumb-size,
+        var(--mp-checkable-size-xl-thumb-size)
+      );
     }
 
     &--2xl {
-      --mp-range-track-height: var(--mp-checkable-size-2xl-track-height);
-      --mp-range-thumb-size: var(--mp-checkable-size-2xl-thumb-size);
+      --mp-range-track-height: var(
+        --forge-range-input-checkable-size-2xl-track-height,
+        var(--mp-checkable-size-2xl-track-height)
+      );
+      --mp-range-thumb-size: var(
+        --forge-range-input-checkable-size-2xl-thumb-size,
+        var(--mp-checkable-size-2xl-thumb-size)
+      );
     }
 
     &--disabled {
-      opacity: var(--mp-checkable-opacity-disabled);
+      opacity: var(--forge-range-input-checkable-opacity-disabled, var(--mp-checkable-opacity-disabled));
       cursor: not-allowed;
     }
 
     &__track {
       position: relative;
       flex: 1 1 auto;
-      height: var(--mp-range-track-height);
-      background-color: var(--mp-checkable-track-inactive);
-      border-radius: var(--mp-checkable-circle-radius);
+      height: var(--forge-range-input-range-track-height, var(--mp-range-track-height));
+      background-color: var(--forge-range-input-checkable-track-inactive, var(--mp-checkable-track-inactive));
+      border-radius: var(--forge-range-input-checkable-circle-radius, var(--mp-checkable-circle-radius));
       cursor: pointer;
       touch-action: none;
     }
@@ -78,25 +128,26 @@
     &__fill {
       position: absolute;
       inset-block: 0;
-      background-color: var(--mp-checkable-track-selected);
+      background-color: var(--forge-range-input-checkable-track-selected, var(--mp-checkable-track-selected));
       border-radius: inherit;
     }
 
     &__thumb {
       position: absolute;
       top: 50%;
-      width: var(--mp-range-thumb-size);
-      height: var(--mp-range-thumb-size);
+      width: var(--forge-range-input-range-thumb-size, var(--mp-range-thumb-size));
+      height: var(--forge-range-input-range-thumb-size, var(--mp-range-thumb-size));
       transform: translate(-50%, -50%);
-      background-color: var(--mp-checkable-thumb-default);
-      border: var(--mp-checkable-border-width-default) solid var(--mp-checkable-border-selected);
-      border-radius: var(--mp-checkable-circle-radius);
+      background-color: var(--forge-range-input-checkable-thumb-default, var(--mp-checkable-thumb-default));
+      border: var(--forge-range-input-checkable-border-width-default, var(--mp-checkable-border-width-default)) solid
+        var(--forge-range-input-checkable-border-selected, var(--mp-checkable-border-selected));
+      border-radius: var(--forge-range-input-checkable-circle-radius, var(--mp-checkable-circle-radius));
       cursor: grab;
       touch-action: none;
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-checkable-focus-ring);
+        box-shadow: var(--forge-range-input-checkable-focus-ring, var(--mp-checkable-focus-ring));
       }
 
       &:active {
@@ -106,15 +157,16 @@
 
     &__value {
       position: absolute;
-      bottom: calc(100% + var(--mp-checkable-value-offset));
+      bottom: calc(100% + var(--forge-range-input-checkable-value-offset, var(--mp-checkable-value-offset)));
       left: 50%;
       transform: translateX(-50%);
-      padding: var(--mp-checkable-value-padding-block) var(--mp-checkable-value-padding-inline);
-      background-color: var(--mp-checkable-value-background);
-      color: var(--mp-checkable-value-text);
-      border-radius: var(--mp-checkable-value-radius);
-      font-family: var(--mp-checkable-font-family);
-      font-size: var(--mp-checkable-value-font-size);
+      padding: var(--forge-range-input-checkable-value-padding-block, var(--mp-checkable-value-padding-block))
+        var(--forge-range-input-checkable-value-padding-inline, var(--mp-checkable-value-padding-inline));
+      background-color: var(--forge-range-input-checkable-value-background, var(--mp-checkable-value-background));
+      color: var(--forge-range-input-checkable-value-text, var(--mp-checkable-value-text));
+      border-radius: var(--forge-range-input-checkable-value-radius, var(--mp-checkable-value-radius));
+      font-family: var(--forge-range-input-checkable-font-family, var(--mp-checkable-font-family));
+      font-size: var(--forge-range-input-checkable-value-font-size, var(--mp-checkable-value-font-size));
       white-space: nowrap;
       pointer-events: none;
     }

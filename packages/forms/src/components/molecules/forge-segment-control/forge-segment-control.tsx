@@ -1,4 +1,4 @@
-import { classNames, type MpElement, useRef } from '@mission-platform/forge';
+import { classNames, useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import styles from './forge-segment-control.module.scss';
 
@@ -15,6 +15,137 @@ export interface SegmentOption {
   disabled?: boolean;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface SegmentControlStyleProperties {
+  readonly 'input-focus-ring'?: string;
+  readonly 'select-segment-border'?: string;
+  readonly 'select-segment-border-width'?: string;
+  readonly 'select-segment-disabled-opacity'?: string;
+  readonly 'select-segment-font-family'?: string;
+  readonly 'select-segment-font-weight'?: string;
+  readonly 'select-segment-gap'?: string;
+  readonly 'select-segment-padding'?: string;
+  readonly 'select-segment-radius-container'?: string;
+  readonly 'select-segment-radius-segment'?: string;
+  readonly 'select-segment-shadow-selected'?: string;
+  readonly 'select-segment-surface-default'?: string;
+  readonly 'select-segment-surface-selected'?: string;
+  readonly 'select-segment-text-default'?: string;
+  readonly 'select-segment-text-hover'?: string;
+  readonly 'select-segment-text-selected'?: string;
+  readonly 'select-segment-transition-duration'?: string;
+  readonly 'select-segment-transition-easing'?: string;
+  readonly 'select-size-2xl-font-size'?: string;
+  readonly 'select-size-2xl-padding-block'?: string;
+  readonly 'select-size-2xl-padding-inline'?: string;
+  readonly 'select-size-2xs-font-size'?: string;
+  readonly 'select-size-2xs-padding-block'?: string;
+  readonly 'select-size-2xs-padding-inline'?: string;
+  readonly 'select-size-lg-font-size'?: string;
+  readonly 'select-size-lg-padding-block'?: string;
+  readonly 'select-size-lg-padding-inline'?: string;
+  readonly 'select-size-md-font-size'?: string;
+  readonly 'select-size-md-padding-block'?: string;
+  readonly 'select-size-md-padding-inline'?: string;
+  readonly 'select-size-sm-font-size'?: string;
+  readonly 'select-size-sm-padding-block'?: string;
+  readonly 'select-size-sm-padding-inline'?: string;
+  readonly 'select-size-xl-font-size'?: string;
+  readonly 'select-size-xl-padding-block'?: string;
+  readonly 'select-size-xl-padding-inline'?: string;
+  readonly 'select-size-xs-font-size'?: string;
+  readonly 'select-size-xs-padding-block'?: string;
+  readonly 'select-size-xs-padding-inline'?: string;
+}
+
+export type SegmentControlStyle = CSSStyleProperties & {
+  readonly '--forge-segment-control-input-focus-ring'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-border'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-border-width'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-disabled-opacity'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-font-family'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-font-weight'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-gap'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-padding'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-radius-container'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-radius-segment'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-shadow-selected'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-surface-default'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-surface-selected'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-text-default'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-text-hover'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-text-selected'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-transition-duration'?: string | undefined;
+  readonly '--forge-segment-control-select-segment-transition-easing'?: string | undefined;
+  readonly '--forge-segment-control-select-size-2xl-font-size'?: string | undefined;
+  readonly '--forge-segment-control-select-size-2xl-padding-block'?: string | undefined;
+  readonly '--forge-segment-control-select-size-2xl-padding-inline'?: string | undefined;
+  readonly '--forge-segment-control-select-size-2xs-font-size'?: string | undefined;
+  readonly '--forge-segment-control-select-size-2xs-padding-block'?: string | undefined;
+  readonly '--forge-segment-control-select-size-2xs-padding-inline'?: string | undefined;
+  readonly '--forge-segment-control-select-size-lg-font-size'?: string | undefined;
+  readonly '--forge-segment-control-select-size-lg-padding-block'?: string | undefined;
+  readonly '--forge-segment-control-select-size-lg-padding-inline'?: string | undefined;
+  readonly '--forge-segment-control-select-size-md-font-size'?: string | undefined;
+  readonly '--forge-segment-control-select-size-md-padding-block'?: string | undefined;
+  readonly '--forge-segment-control-select-size-md-padding-inline'?: string | undefined;
+  readonly '--forge-segment-control-select-size-sm-font-size'?: string | undefined;
+  readonly '--forge-segment-control-select-size-sm-padding-block'?: string | undefined;
+  readonly '--forge-segment-control-select-size-sm-padding-inline'?: string | undefined;
+  readonly '--forge-segment-control-select-size-xl-font-size'?: string | undefined;
+  readonly '--forge-segment-control-select-size-xl-padding-block'?: string | undefined;
+  readonly '--forge-segment-control-select-size-xl-padding-inline'?: string | undefined;
+  readonly '--forge-segment-control-select-size-xs-font-size'?: string | undefined;
+  readonly '--forge-segment-control-select-size-xs-padding-block'?: string | undefined;
+  readonly '--forge-segment-control-select-size-xs-padding-inline'?: string | undefined;
+};
+
+function createSegmentControlStyle(
+  properties: Readonly<SegmentControlStyleProperties> | undefined,
+): SegmentControlStyle | undefined {
+  return createForgeStyle({
+    '--forge-segment-control-input-focus-ring': properties?.['input-focus-ring'],
+    '--forge-segment-control-select-segment-border': properties?.['select-segment-border'],
+    '--forge-segment-control-select-segment-border-width': properties?.['select-segment-border-width'],
+    '--forge-segment-control-select-segment-disabled-opacity': properties?.['select-segment-disabled-opacity'],
+    '--forge-segment-control-select-segment-font-family': properties?.['select-segment-font-family'],
+    '--forge-segment-control-select-segment-font-weight': properties?.['select-segment-font-weight'],
+    '--forge-segment-control-select-segment-gap': properties?.['select-segment-gap'],
+    '--forge-segment-control-select-segment-padding': properties?.['select-segment-padding'],
+    '--forge-segment-control-select-segment-radius-container': properties?.['select-segment-radius-container'],
+    '--forge-segment-control-select-segment-radius-segment': properties?.['select-segment-radius-segment'],
+    '--forge-segment-control-select-segment-shadow-selected': properties?.['select-segment-shadow-selected'],
+    '--forge-segment-control-select-segment-surface-default': properties?.['select-segment-surface-default'],
+    '--forge-segment-control-select-segment-surface-selected': properties?.['select-segment-surface-selected'],
+    '--forge-segment-control-select-segment-text-default': properties?.['select-segment-text-default'],
+    '--forge-segment-control-select-segment-text-hover': properties?.['select-segment-text-hover'],
+    '--forge-segment-control-select-segment-text-selected': properties?.['select-segment-text-selected'],
+    '--forge-segment-control-select-segment-transition-duration': properties?.['select-segment-transition-duration'],
+    '--forge-segment-control-select-segment-transition-easing': properties?.['select-segment-transition-easing'],
+    '--forge-segment-control-select-size-2xl-font-size': properties?.['select-size-2xl-font-size'],
+    '--forge-segment-control-select-size-2xl-padding-block': properties?.['select-size-2xl-padding-block'],
+    '--forge-segment-control-select-size-2xl-padding-inline': properties?.['select-size-2xl-padding-inline'],
+    '--forge-segment-control-select-size-2xs-font-size': properties?.['select-size-2xs-font-size'],
+    '--forge-segment-control-select-size-2xs-padding-block': properties?.['select-size-2xs-padding-block'],
+    '--forge-segment-control-select-size-2xs-padding-inline': properties?.['select-size-2xs-padding-inline'],
+    '--forge-segment-control-select-size-lg-font-size': properties?.['select-size-lg-font-size'],
+    '--forge-segment-control-select-size-lg-padding-block': properties?.['select-size-lg-padding-block'],
+    '--forge-segment-control-select-size-lg-padding-inline': properties?.['select-size-lg-padding-inline'],
+    '--forge-segment-control-select-size-md-font-size': properties?.['select-size-md-font-size'],
+    '--forge-segment-control-select-size-md-padding-block': properties?.['select-size-md-padding-block'],
+    '--forge-segment-control-select-size-md-padding-inline': properties?.['select-size-md-padding-inline'],
+    '--forge-segment-control-select-size-sm-font-size': properties?.['select-size-sm-font-size'],
+    '--forge-segment-control-select-size-sm-padding-block': properties?.['select-size-sm-padding-block'],
+    '--forge-segment-control-select-size-sm-padding-inline': properties?.['select-size-sm-padding-inline'],
+    '--forge-segment-control-select-size-xl-font-size': properties?.['select-size-xl-font-size'],
+    '--forge-segment-control-select-size-xl-padding-block': properties?.['select-size-xl-padding-block'],
+    '--forge-segment-control-select-size-xl-padding-inline': properties?.['select-size-xl-padding-inline'],
+    '--forge-segment-control-select-size-xs-font-size': properties?.['select-size-xs-font-size'],
+    '--forge-segment-control-select-size-xs-padding-block': properties?.['select-size-xs-padding-block'],
+    '--forge-segment-control-select-size-xs-padding-inline': properties?.['select-size-xs-padding-inline'],
+  }) as SegmentControlStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface SegmentControlProperties {
   /**
    * Selected value (controlled via `modelValue` + `onUpdateModelValue`).
@@ -35,6 +166,9 @@ export interface SegmentControlProperties {
   onUpdateModelValue?: (value: string | number) => void;
   /** Fired when the selected value changes via user interaction. */
   onChange?: (value: string | number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<SegmentControlStyleProperties>;
 }
 
 /**
@@ -55,6 +189,8 @@ export interface SegmentControlProperties {
  * established `onUpdateModelValue`/`onChange` callback props.
  */
 export function ForgeSegmentControl(properties: Readonly<SegmentControlProperties>): MpElement {
+  const style = createSegmentControlStyle(properties.properties);
+
   const { modelValue, options, size = 'md', disabled = false, fullWidth = false, ariaLabel } = properties;
 
   const containerReference = useRef<HTMLElement | null>(null);
@@ -150,6 +286,7 @@ export function ForgeSegmentControl(properties: Readonly<SegmentControlPropertie
       aria-label={ariaLabel}
       className={containerClass}
       role="radiogroup"
+      style={style}
     >
       {options.map((option, index) => (
         <button

@@ -1,4 +1,6 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
+@use './forge-kanban-board-properties';
+
 @layer mp.components {
   .forge-kanban-board {
     width: 100%;
@@ -9,7 +11,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--mp-spacing-4);
+    margin-bottom: var(--forge-kanban-board-spacing-4, var(--mp-spacing-4));
   }
 
   .forge-kanban-board__header h2 {
@@ -18,36 +20,39 @@
 
   .forge-kanban-board__header button,
   .forge-kanban-board__column > button {
-    min-height: var(--mp-size-height-md);
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-bg-surface);
+    min-height: var(--forge-kanban-board-size-height-md, var(--mp-size-height-md));
+    padding: var(--forge-kanban-board-spacing-2, var(--mp-spacing-2))
+      var(--forge-kanban-board-spacing-3, var(--mp-spacing-3));
+    border: var(--forge-kanban-board-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-kanban-board-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-kanban-board-radius-md, var(--mp-radius-md));
+    background: var(--forge-kanban-board-color-bg-surface, var(--mp-color-bg-surface));
     cursor: pointer;
   }
 
   .forge-kanban-board__columns {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: var(--mp-spacing-4);
+    gap: var(--forge-kanban-board-spacing-4, var(--mp-spacing-4));
     min-width: min(100%, 32rem);
     align-items: start;
   }
 
   .forge-kanban-board__column {
     min-height: 12rem;
-    padding: var(--mp-spacing-4);
-    background: var(--mp-color-bg-muted);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
+    padding: var(--forge-kanban-board-spacing-4, var(--mp-spacing-4));
+    background: var(--forge-kanban-board-color-bg-muted, var(--mp-color-bg-muted));
+    border: var(--forge-kanban-board-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-kanban-board-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-kanban-board-radius-lg, var(--mp-radius-lg));
   }
 
   .forge-kanban-board__column-header {
     display: flex;
     justify-content: space-between;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-kanban-board-spacing-3, var(--mp-spacing-3));
     align-items: center;
-    margin-bottom: var(--mp-spacing-3);
+    margin-bottom: var(--forge-kanban-board-spacing-3, var(--mp-spacing-3));
   }
 
   .forge-kanban-board__column-header h3,
@@ -56,21 +61,22 @@
   }
 
   .forge-kanban-board__column-header span {
-    color: var(--mp-color-text-tertiary);
-    font-size: var(--mp-font-size-sm);
+    color: var(--forge-kanban-board-color-text-tertiary, var(--mp-color-text-tertiary));
+    font-size: var(--forge-kanban-board-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-kanban-board__cards {
     display: grid;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-kanban-board-spacing-3, var(--mp-spacing-3));
   }
 
   .forge-kanban-board__card {
-    padding: var(--mp-spacing-3);
-    background: var(--mp-color-bg-surface);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    box-shadow: var(--mp-shadow-xs);
+    padding: var(--forge-kanban-board-spacing-3, var(--mp-spacing-3));
+    background: var(--forge-kanban-board-color-bg-surface, var(--mp-color-bg-surface));
+    border: var(--forge-kanban-board-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-kanban-board-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-kanban-board-radius-md, var(--mp-radius-md));
+    box-shadow: var(--forge-kanban-board-shadow-xs, var(--mp-shadow-xs));
   }
 
   .forge-kanban-board__item {
@@ -87,28 +93,30 @@
   }
 
   .forge-kanban-board__card p {
-    margin: var(--mp-spacing-2) 0;
-    color: var(--mp-color-text-tertiary);
+    margin: var(--forge-kanban-board-spacing-2, var(--mp-spacing-2)) 0;
+    color: var(--forge-kanban-board-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-kanban-board__card small {
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-kanban-board-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-kanban-board__card--success {
-    border-inline-start: var(--mp-border-width-thick) solid var(--mp-color-success-default);
+    border-inline-start: var(--forge-kanban-board-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-kanban-board-color-success-default, var(--mp-color-success-default));
   }
 
   .forge-kanban-board__card--warning {
-    border-inline-start: var(--mp-border-width-thick) solid var(--mp-color-warning-default);
+    border-inline-start: var(--forge-kanban-board-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-kanban-board-color-warning-default, var(--mp-color-warning-default));
   }
 
   .forge-kanban-board__move {
     display: grid;
-    gap: var(--mp-spacing-1);
-    margin-top: var(--mp-spacing-3);
-    font-size: var(--mp-font-size-xs);
-    color: var(--mp-color-text-tertiary);
+    gap: var(--forge-kanban-board-spacing-1, var(--mp-spacing-1));
+    margin-top: var(--forge-kanban-board-spacing-3, var(--mp-spacing-3));
+    font-size: var(--forge-kanban-board-font-size-xs, var(--mp-font-size-xs));
+    color: var(--forge-kanban-board-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-kanban-board__move select {
@@ -117,8 +125,8 @@
 
   .forge-kanban-board__empty {
     margin: 0;
-    color: var(--mp-color-text-tertiary);
-    font-size: var(--mp-font-size-sm);
+    color: var(--forge-kanban-board-color-text-tertiary, var(--mp-color-text-tertiary));
+    font-size: var(--forge-kanban-board-font-size-sm, var(--mp-font-size-sm));
   }
 
   @media (width <= 48rem) {

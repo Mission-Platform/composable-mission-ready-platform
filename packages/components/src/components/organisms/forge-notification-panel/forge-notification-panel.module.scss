@@ -1,78 +1,85 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
+@use './forge-notification-panel-properties';
+
 @layer mp.components {
   .forge-notification-panel {
     width: 100%;
     max-width: 32rem;
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    background: var(--mp-color-bg-surface);
+    border: var(--forge-notification-panel-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-notification-panel-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-notification-panel-radius-lg, var(--mp-radius-lg));
+    background: var(--forge-notification-panel-color-bg-surface, var(--mp-color-bg-surface));
   }
 
   .forge-notification-panel__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--mp-spacing-4);
-    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    padding: var(--forge-notification-panel-spacing-4, var(--mp-spacing-4));
+    border-bottom: var(--forge-notification-panel-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-notification-panel-color-border-default, var(--mp-color-border-default));
   }
 
   .forge-notification-panel__header h2 {
     margin: 0;
-    font-size: var(--mp-font-size-lg);
+    font-size: var(--forge-notification-panel-font-size-lg, var(--mp-font-size-lg));
   }
 
   .forge-notification-panel__header span {
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-notification-panel-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-notification-panel__list {
     display: grid;
-    gap: var(--mp-spacing-2);
+    gap: var(--forge-notification-panel-spacing-2, var(--mp-spacing-2));
     margin: 0;
-    padding: var(--mp-spacing-2);
+    padding: var(--forge-notification-panel-spacing-2, var(--mp-spacing-2));
     list-style: none;
   }
 
   .forge-notification-panel__group h3 {
-    margin: var(--mp-spacing-3) var(--mp-spacing-4) var(--mp-spacing-1);
-    color: var(--mp-color-text-tertiary);
-    font-size: var(--mp-font-size-sm);
+    margin: var(--forge-notification-panel-spacing-3, var(--mp-spacing-3))
+      var(--forge-notification-panel-spacing-4, var(--mp-spacing-4))
+      var(--forge-notification-panel-spacing-1, var(--mp-spacing-1));
+    color: var(--forge-notification-panel-color-text-tertiary, var(--mp-color-text-tertiary));
+    font-size: var(--forge-notification-panel-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-notification-panel__status {
-    padding: var(--mp-spacing-4);
+    padding: var(--forge-notification-panel-spacing-4, var(--mp-spacing-4));
     text-align: center;
   }
 
   .forge-notification-panel__item {
     display: flex;
-    gap: var(--mp-spacing-2);
-    padding: var(--mp-spacing-3);
-    border-inline-start: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-bg-muted);
+    gap: var(--forge-notification-panel-spacing-2, var(--mp-spacing-2));
+    padding: var(--forge-notification-panel-spacing-3, var(--mp-spacing-3));
+    border-inline-start: var(--forge-notification-panel-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-notification-panel-color-primary-default, var(--mp-color-primary-default));
+    border-radius: var(--forge-notification-panel-radius-md, var(--mp-radius-md));
+    background: var(--forge-notification-panel-color-bg-muted, var(--mp-color-bg-muted));
   }
 
   .forge-notification-panel__item--success {
-    border-color: var(--mp-color-success-default);
+    border-color: var(--forge-notification-panel-color-success-default, var(--mp-color-success-default));
   }
 
   .forge-notification-panel__item--warning {
-    border-color: var(--mp-color-warning-default);
+    border-color: var(--forge-notification-panel-color-warning-default, var(--mp-color-warning-default));
   }
 
   .forge-notification-panel__item--error {
-    border-color: var(--mp-color-error-default);
+    border-color: var(--forge-notification-panel-color-error-default, var(--mp-color-error-default));
   }
 
   .forge-notification-panel__item--read {
-    opacity: var(--mp-opacity-muted);
+    opacity: var(--forge-notification-panel-opacity-muted, var(--mp-opacity-muted));
   }
 
   .forge-notification-panel__content {
     display: grid;
     flex: 1;
-    gap: var(--mp-spacing-1);
+    gap: var(--forge-notification-panel-spacing-1, var(--mp-spacing-1));
     border: 0;
     padding: 0;
     text-align: start;
@@ -83,22 +90,22 @@
   .forge-notification-panel__content span,
   .forge-notification-panel__content small,
   .forge-notification-panel__empty {
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-notification-panel-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-notification-panel__dismiss {
-    min-width: var(--mp-size-height-md);
-    min-height: var(--mp-size-height-md);
+    min-width: var(--forge-notification-panel-size-height-md, var(--mp-size-height-md));
+    min-height: var(--forge-notification-panel-size-height-md, var(--mp-size-height-md));
     align-self: start;
     border: 0;
     background: transparent;
-    font-size: var(--mp-font-size-xl);
+    font-size: var(--forge-notification-panel-font-size-xl, var(--mp-font-size-xl));
     cursor: pointer;
   }
 
   .forge-notification-panel__empty {
     margin: 0;
-    padding: var(--mp-spacing-5);
+    padding: var(--forge-notification-panel-spacing-5, var(--mp-spacing-5));
     text-align: center;
   }
 }

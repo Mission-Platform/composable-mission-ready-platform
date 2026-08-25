@@ -1,0 +1,147 @@
+/**
+ * Registered inherited custom properties for forge-quote overrides.
+ */
+
+@property --forge-quote-surface-quote-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-gap);
+}
+
+@property --forge-quote-surface-quote-attribution-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-attribution-gap);
+}
+
+@property --forge-quote-surface-quote-attribution-marker {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-attribution-marker);
+}
+
+@property --forge-quote-surface-quote-bordered-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-bordered-padding);
+}
+
+@property --forge-quote-surface-quote-bordered-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-bordered-border-width);
+}
+
+@property --forge-quote-surface-quote-border-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-border-primary);
+}
+
+@property --forge-quote-surface-quote-default-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-default-padding);
+}
+
+@property --forge-quote-surface-quote-background-neutral {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-background-neutral);
+}
+
+@property --forge-quote-surface-quote-default-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-default-radius);
+}
+
+@property --forge-quote-surface-quote-border-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-border-secondary);
+}
+
+@property --forge-quote-surface-quote-border-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-border-tertiary);
+}
+
+@property --forge-quote-surface-quote-border-success {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-border-success);
+}
+
+@property --forge-quote-surface-quote-border-warning {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-border-warning);
+}
+
+@property --forge-quote-surface-quote-border-info {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-border-info);
+}
+
+@property --forge-quote-surface-quote-border-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-border-error);
+}
+
+@property --forge-quote-surface-quote-border-critical {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-border-critical);
+}
+
+@property --forge-quote-surface-quote-background-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-background-primary);
+}
+
+@property --forge-quote-surface-quote-background-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-background-secondary);
+}
+
+@property --forge-quote-surface-quote-background-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-background-tertiary);
+}
+
+@property --forge-quote-surface-quote-background-success {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-background-success);
+}
+
+@property --forge-quote-surface-quote-background-warning {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-background-warning);
+}
+
+@property --forge-quote-surface-quote-background-info {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-background-info);
+}
+
+@property --forge-quote-surface-quote-background-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-background-error);
+}
+
+@property --forge-quote-surface-quote-background-critical {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-quote-background-critical);
+}

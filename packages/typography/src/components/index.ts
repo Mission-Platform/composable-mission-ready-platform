@@ -4,6 +4,8 @@ export {
   type TypographyHorizontalAlign,
   type TypographyLineHeight,
   type TypographyProperties,
+  type TypographyStyle,
+  type TypographyStyleProperties,
   type TypographySize,
   type TypographyTarget,
   type TypographyUnderline,

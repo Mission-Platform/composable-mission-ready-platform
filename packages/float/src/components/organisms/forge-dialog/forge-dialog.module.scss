@@ -16,34 +16,39 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-dialog-properties';
+
 @layer mp.components {
   .forge-dialog {
     width: 100%;
     max-width: min(560px, calc(100vw - 2rem));
     padding: 0;
-    background: var(--mp-overlay-dialog-surface-default);
+    background: var(--forge-dialog-overlay-dialog-surface-default, var(--mp-overlay-dialog-surface-default));
     border: none;
-    border-radius: var(--mp-overlay-radius);
-    box-shadow: var(--mp-overlay-shadow);
+    border-radius: var(--forge-dialog-overlay-radius, var(--mp-overlay-radius));
+    box-shadow: var(--forge-dialog-overlay-shadow, var(--mp-overlay-shadow));
     opacity: 0;
     translate: 0 0.5rem;
     transition:
-      opacity var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
-      translate var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
-      overlay var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
-        allow-discrete,
-      display var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
-        allow-discrete;
+      opacity var(--forge-dialog-overlay-transition-duration, var(--mp-overlay-transition-duration))
+        var(--forge-dialog-overlay-transition-easing, var(--mp-overlay-transition-easing)),
+      translate var(--forge-dialog-overlay-transition-duration, var(--mp-overlay-transition-duration))
+        var(--forge-dialog-overlay-transition-easing, var(--mp-overlay-transition-easing)),
+      overlay var(--forge-dialog-overlay-transition-duration, var(--mp-overlay-transition-duration))
+        var(--forge-dialog-overlay-transition-easing, var(--mp-overlay-transition-easing)) allow-discrete,
+      display var(--forge-dialog-overlay-transition-duration, var(--mp-overlay-transition-duration))
+        var(--forge-dialog-overlay-transition-easing, var(--mp-overlay-transition-easing)) allow-discrete;
 
     &::backdrop {
-      background-color: var(--mp-overlay-surface-scrim);
+      background-color: var(--forge-dialog-overlay-surface-scrim, var(--mp-overlay-surface-scrim));
       opacity: 0;
       transition:
-        opacity var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
-        overlay var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
-          allow-discrete,
-        display var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
-          allow-discrete;
+        opacity var(--forge-dialog-overlay-transition-duration, var(--mp-overlay-transition-duration))
+          var(--forge-dialog-overlay-transition-easing, var(--mp-overlay-transition-easing)),
+        overlay var(--forge-dialog-overlay-transition-duration, var(--mp-overlay-transition-duration))
+          var(--forge-dialog-overlay-transition-easing, var(--mp-overlay-transition-easing)) allow-discrete,
+        display var(--forge-dialog-overlay-transition-duration, var(--mp-overlay-transition-duration))
+          var(--forge-dialog-overlay-transition-easing, var(--mp-overlay-transition-easing)) allow-discrete;
     }
 
     &[open] {
@@ -75,9 +80,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: var(--mp-overlay-header-gap);
-      padding: var(--mp-overlay-header-padding-block) var(--mp-overlay-header-padding-inline);
-      border-bottom: var(--mp-overlay-border-width) solid var(--mp-overlay-border-default);
+      gap: var(--forge-dialog-overlay-header-gap, var(--mp-overlay-header-gap));
+      padding: var(--forge-dialog-overlay-header-padding-block, var(--mp-overlay-header-padding-block))
+        var(--forge-dialog-overlay-header-padding-inline, var(--mp-overlay-header-padding-inline));
+      border-bottom: var(--forge-dialog-overlay-border-width, var(--mp-overlay-border-width)) solid
+        var(--forge-dialog-overlay-border-default, var(--mp-overlay-border-default));
     }
 
     &__title {
@@ -86,7 +93,7 @@
 
     &__body {
       flex: 1;
-      padding: var(--mp-overlay-body-padding);
+      padding: var(--forge-dialog-overlay-body-padding, var(--mp-overlay-body-padding));
       overflow-y: auto;
     }
 
@@ -94,9 +101,11 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: var(--mp-overlay-footer-gap);
-      padding: var(--mp-overlay-footer-padding-block) var(--mp-overlay-footer-padding-inline);
-      border-top: var(--mp-overlay-border-width) solid var(--mp-overlay-border-default);
+      gap: var(--forge-dialog-overlay-footer-gap, var(--mp-overlay-footer-gap));
+      padding: var(--forge-dialog-overlay-footer-padding-block, var(--mp-overlay-footer-padding-block))
+        var(--forge-dialog-overlay-footer-padding-inline, var(--mp-overlay-footer-padding-inline));
+      border-top: var(--forge-dialog-overlay-border-width, var(--mp-overlay-border-width)) solid
+        var(--forge-dialog-overlay-border-default, var(--mp-overlay-border-default));
     }
 
     /* Respect users who prefer reduced motion. */

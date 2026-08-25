@@ -1,4 +1,4 @@
-import { type MpElement, useEffect, useRef } from '@mission-platform/forge';
+import { useEffect, useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import styles from './forge-otp-input.module.scss';
 
@@ -8,6 +8,99 @@ export type OtpInputType = 'numeric' | 'alphanumeric' | 'text';
 /** Cell sizing scale — canonical 2xs → 2xl scale. */
 export type OtpInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface OtpInputStyleProperties {
+  readonly 'input-otp-border-default'?: string;
+  readonly 'input-otp-border-focus'?: string;
+  readonly 'input-otp-border-width'?: string;
+  readonly 'input-otp-disabled-opacity'?: string;
+  readonly 'input-otp-focus-ring'?: string;
+  readonly 'input-otp-font-family'?: string;
+  readonly 'input-otp-font-weight'?: string;
+  readonly 'input-otp-gap'?: string;
+  readonly 'input-otp-radius'?: string;
+  readonly 'input-otp-size-2xl-cell'?: string;
+  readonly 'input-otp-size-2xl-font-size'?: string;
+  readonly 'input-otp-size-2xs-cell'?: string;
+  readonly 'input-otp-size-2xs-font-size'?: string;
+  readonly 'input-otp-size-lg-cell'?: string;
+  readonly 'input-otp-size-lg-font-size'?: string;
+  readonly 'input-otp-size-md-cell'?: string;
+  readonly 'input-otp-size-md-font-size'?: string;
+  readonly 'input-otp-size-sm-cell'?: string;
+  readonly 'input-otp-size-sm-font-size'?: string;
+  readonly 'input-otp-size-xl-cell'?: string;
+  readonly 'input-otp-size-xl-font-size'?: string;
+  readonly 'input-otp-size-xs-cell'?: string;
+  readonly 'input-otp-size-xs-font-size'?: string;
+  readonly 'input-otp-surface'?: string;
+  readonly 'input-otp-text'?: string;
+  readonly 'otp-cell-size'?: string;
+  readonly 'otp-font-size'?: string;
+}
+
+export type OtpInputStyle = CSSStyleProperties & {
+  readonly '--forge-otp-input-input-otp-border-default'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-border-focus'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-border-width'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-disabled-opacity'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-focus-ring'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-font-family'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-font-weight'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-gap'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-radius'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-2xl-cell'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-2xl-font-size'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-2xs-cell'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-2xs-font-size'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-lg-cell'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-lg-font-size'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-md-cell'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-md-font-size'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-sm-cell'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-sm-font-size'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-xl-cell'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-xl-font-size'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-xs-cell'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-size-xs-font-size'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-surface'?: string | undefined;
+  readonly '--forge-otp-input-input-otp-text'?: string | undefined;
+  readonly '--forge-otp-input-otp-cell-size'?: string | undefined;
+  readonly '--forge-otp-input-otp-font-size'?: string | undefined;
+};
+
+function createOtpInputStyle(properties: Readonly<OtpInputStyleProperties> | undefined): OtpInputStyle | undefined {
+  return createForgeStyle({
+    '--forge-otp-input-input-otp-border-default': properties?.['input-otp-border-default'],
+    '--forge-otp-input-input-otp-border-focus': properties?.['input-otp-border-focus'],
+    '--forge-otp-input-input-otp-border-width': properties?.['input-otp-border-width'],
+    '--forge-otp-input-input-otp-disabled-opacity': properties?.['input-otp-disabled-opacity'],
+    '--forge-otp-input-input-otp-focus-ring': properties?.['input-otp-focus-ring'],
+    '--forge-otp-input-input-otp-font-family': properties?.['input-otp-font-family'],
+    '--forge-otp-input-input-otp-font-weight': properties?.['input-otp-font-weight'],
+    '--forge-otp-input-input-otp-gap': properties?.['input-otp-gap'],
+    '--forge-otp-input-input-otp-radius': properties?.['input-otp-radius'],
+    '--forge-otp-input-input-otp-size-2xl-cell': properties?.['input-otp-size-2xl-cell'],
+    '--forge-otp-input-input-otp-size-2xl-font-size': properties?.['input-otp-size-2xl-font-size'],
+    '--forge-otp-input-input-otp-size-2xs-cell': properties?.['input-otp-size-2xs-cell'],
+    '--forge-otp-input-input-otp-size-2xs-font-size': properties?.['input-otp-size-2xs-font-size'],
+    '--forge-otp-input-input-otp-size-lg-cell': properties?.['input-otp-size-lg-cell'],
+    '--forge-otp-input-input-otp-size-lg-font-size': properties?.['input-otp-size-lg-font-size'],
+    '--forge-otp-input-input-otp-size-md-cell': properties?.['input-otp-size-md-cell'],
+    '--forge-otp-input-input-otp-size-md-font-size': properties?.['input-otp-size-md-font-size'],
+    '--forge-otp-input-input-otp-size-sm-cell': properties?.['input-otp-size-sm-cell'],
+    '--forge-otp-input-input-otp-size-sm-font-size': properties?.['input-otp-size-sm-font-size'],
+    '--forge-otp-input-input-otp-size-xl-cell': properties?.['input-otp-size-xl-cell'],
+    '--forge-otp-input-input-otp-size-xl-font-size': properties?.['input-otp-size-xl-font-size'],
+    '--forge-otp-input-input-otp-size-xs-cell': properties?.['input-otp-size-xs-cell'],
+    '--forge-otp-input-input-otp-size-xs-font-size': properties?.['input-otp-size-xs-font-size'],
+    '--forge-otp-input-input-otp-surface': properties?.['input-otp-surface'],
+    '--forge-otp-input-input-otp-text': properties?.['input-otp-text'],
+    '--forge-otp-input-otp-cell-size': properties?.['otp-cell-size'],
+    '--forge-otp-input-otp-font-size': properties?.['otp-font-size'],
+  }) as OtpInputStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface OtpInputProperties {
   /**
    * The current code (controlled via `modelValue` + `onUpdateModelValue`).
@@ -32,6 +125,9 @@ export interface OtpInputProperties {
   onUpdateModelValue?: (value: string) => void;
   /** Fired once every cell is filled, with the full code. */
   onComplete?: (value: string) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<OtpInputStyleProperties>;
 }
 
 /**
@@ -53,6 +149,8 @@ export interface OtpInputProperties {
  * `onComplete` callback props.
  */
 export function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpElement {
+  const style = createOtpInputStyle(properties.properties);
+
   const {
     modelValue = '',
     length = 6,
@@ -192,6 +290,7 @@ export function ForgeOtpInput(properties: Readonly<OtpInputProperties>): MpEleme
           [styles['forge-otp-input--disabled']]: disabled,
         },
       ]}
+      style={style}
     >
       {characters.map((char, index) => (
         <input

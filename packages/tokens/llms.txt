@@ -19,7 +19,7 @@ Edit these DTCG files only; never edit the generated output.
   - `shadow.tokens.json`       — `shadow.*` elevation + focus-ring scale (rem offsets/blur/spread)
   - `size.tokens.json`         — the unified component `size.*` scale (font/pad/gap/icon/height/…)
   - `motion.tokens.json`       — `duration.*` and `easing.*` (transition/animation timing)
-  - `z-index.tokens.json`      — `z-index.*` stacking order (`base` → `toast`)
+  - `z-index.tokens.json`      — nested `z-index.*` stacking order (`base` → `debug`)
   - `opacity.tokens.json`      — `opacity.*` alpha levels (`disabled`, `muted`, …)
   - `border-width.tokens.json` — `border-width.*` (`thin`/`thick`/`heavy`), rem
 
@@ -63,8 +63,8 @@ TypeScript:
 ```ts
 import { colors, spacing, fontSizes, typography, sizeIcons } from '@mission-platform/tokens';
 // typography.h1 => { fontFamily, fontSize, fontWeight, lineHeight, letterSpacing, marginBlock, marginInline }
-import { durations, easings, zIndices, opacities, borderWidths } from '@mission-platform/tokens';
-// durations.fast => '150ms'; easings.standard => 'ease'; zIndices.modal => 1300
+import { durations, easings, zIndex, opacities, borderWidths } from '@mission-platform/tokens';
+// durations.fast => '150ms'; easings.standard => 'ease'; zIndex.modal.dialog => 450
 ```
 
 Motion, layering & box-model CSS custom properties (prefer these over inline literals):
@@ -78,9 +78,35 @@ Motion, layering & box-model CSS custom properties (prefer these over inline lit
   opacity: var(--mp-opacity-disabled);
 }
 .dialog {
-  z-index: var(--mp-z-index-modal);
+  z-index: var(--mp-z-index-modal-dialog);
 }
 ```
+
+The `zIndex` TypeScript API and matching `--mp-z-index-*` custom properties are
+nested by semantic category: `base`, `navigation`, `floating`, `overlay`,
+`drawer`, `modal`, `notification`, `feature`, and `debug`. Category anchors use
+the shared stacking scale and adjacent leaves are separated by 50 points; for
+example, `zIndex.drawer.backdrop` precedes `zIndex.drawer.panel`, while
+`zIndex.modal.onboarding` follows `zIndex.modal.dialog`. The authored leaves
+are `base.media`, `base.media-overlay`, `base.content`, `base.foreground`,
+`navigation.navbar`, `navigation.menu`, `floating.dropdown`,
+`floating.popover`, `floating.tooltip`, `overlay.backdrop`, `overlay.panel`,
+`drawer.backdrop`, `drawer.panel`, `modal.dialog`, `modal.onboarding`,
+`notification.toast`, `notification.cookie`, `feature.table`,
+`feature.editor`, `feature.planner`, `feature.scheduler`, `feature.rating`,
+and `debug.breakpoint`.
+The corresponding CSS names are `--mp-z-index-base-media`,
+`--mp-z-index-base-media-overlay`, `--mp-z-index-base-content`,
+`--mp-z-index-base-foreground`, `--mp-z-index-navigation-navbar`,
+`--mp-z-index-navigation-menu`, `--mp-z-index-floating-dropdown`,
+`--mp-z-index-floating-popover`, `--mp-z-index-floating-tooltip`,
+`--mp-z-index-overlay-backdrop`, `--mp-z-index-overlay-panel`,
+`--mp-z-index-drawer-backdrop`, `--mp-z-index-drawer-panel`,
+`--mp-z-index-modal-dialog`, `--mp-z-index-modal-onboarding`,
+`--mp-z-index-notification-toast`, `--mp-z-index-notification-cookie`,
+`--mp-z-index-feature-table`, `--mp-z-index-feature-editor`,
+`--mp-z-index-feature-planner`, `--mp-z-index-feature-scheduler`,
+`--mp-z-index-feature-rating`, and `--mp-z-index-debug-breakpoint`.
 
 Composite typography CSS custom properties (preferred over the legacy SCSS mixins):
 

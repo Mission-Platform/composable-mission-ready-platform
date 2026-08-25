@@ -1,4 +1,13 @@
-import { classNames, type MpChild, type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
+import {
+  classNames,
+  useEffect,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-background-video.module.scss';
 
@@ -16,6 +25,29 @@ export interface BackgroundVideoSource {
 /** How the video fills its box. */
 export type BackgroundVideoFit = 'cover' | 'contain';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface BackgroundVideoStyleProperties {
+  readonly 'media-background-padding'?: string;
+  readonly 'media-surface-overlay'?: string;
+  readonly 'media-text-inverse'?: string;
+}
+
+export type BackgroundVideoStyle = CSSStyleProperties & {
+  readonly '--forge-background-video-media-background-padding'?: string | undefined;
+  readonly '--forge-background-video-media-surface-overlay'?: string | undefined;
+  readonly '--forge-background-video-media-text-inverse'?: string | undefined;
+};
+
+function createBackgroundVideoStyle(
+  properties: Readonly<BackgroundVideoStyleProperties> | undefined,
+): BackgroundVideoStyle | undefined {
+  return createForgeStyle({
+    '--forge-background-video-media-background-padding': properties?.['media-background-padding'],
+    '--forge-background-video-media-surface-overlay': properties?.['media-surface-overlay'],
+    '--forge-background-video-media-text-inverse': properties?.['media-text-inverse'],
+  }) as BackgroundVideoStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface BackgroundVideoProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -33,6 +65,9 @@ export interface BackgroundVideoProperties {
   overlay?: boolean;
   /** Minimum height of the container (any CSS length). Defaults to `'24rem'`. */
   minHeight?: string;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<BackgroundVideoStyleProperties>;
 }
 
 /** The media query used to detect the user's reduced-motion preference. */
@@ -56,6 +91,8 @@ const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
  * {@link classNames} helper.
  */
 export function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoProperties>): MpElement {
+  const propertyStyle = createBackgroundVideoStyle(properties.properties);
+
   const { src, sources = [], poster, fit = 'cover', overlay = false, minHeight = '24rem', size = 'md' } = properties;
 
   const videoReference = useRef<HTMLVideoElement | null>(null);
@@ -138,7 +175,7 @@ export function ForgeBackgroundVideo(properties: Readonly<BackgroundVideoPropert
   return (
     <div
       className={className}
-      style={{ minHeight }}
+      style={{ ...propertyStyle, minHeight }}
     >
       {video}
       {content}

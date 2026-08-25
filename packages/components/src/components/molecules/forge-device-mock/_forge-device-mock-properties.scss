@@ -1,0 +1,111 @@
+/**
+ * Registered inherited custom properties for forge-device-mock overrides.
+ */
+
+@property --forge-device-mock-media-device-screen-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-screen-text);
+}
+
+@property --forge-device-mock-media-device-screen-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-screen-surface);
+}
+
+@property --forge-device-mock-media-device-frame-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-frame-surface);
+}
+
+@property --forge-device-mock-media-device-frame-shadow-handheld {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-frame-shadow-handheld);
+}
+
+@property --forge-device-mock-media-device-detail-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-detail-surface);
+}
+
+@property --forge-device-mock-media-device-camera-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-camera-radius);
+}
+
+@property --forge-device-mock-media-device-frame-shadow-desktop {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-frame-shadow-desktop);
+}
+
+@property --forge-device-mock-media-device-browser-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-browser-surface);
+}
+
+@property --forge-device-mock-media-device-browser-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-browser-border-width);
+}
+
+@property --forge-device-mock-media-device-browser-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-browser-border);
+}
+
+@property --forge-device-mock-media-device-browser-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-browser-radius);
+}
+
+@property --forge-device-mock-media-device-frame-shadow-browser {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-frame-shadow-browser);
+}
+
+@property --forge-device-mock-media-device-browser-chrome {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-browser-chrome);
+}
+
+@property --forge-device-mock-media-device-browser-control-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-browser-control-surface);
+}
+
+@property --forge-device-mock-media-device-browser-control-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-browser-control-radius);
+}
+
+@property --forge-device-mock-media-device-browser-address-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-browser-address-text);
+}
+
+@property --forge-device-mock-media-device-browser-address-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-browser-address-surface);
+}
+
+@property --forge-device-mock-media-device-browser-address-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-device-browser-address-radius);
+}

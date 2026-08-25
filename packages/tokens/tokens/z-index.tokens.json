@@ -1,8 +1,96 @@
 {
-  "$description": "Stacking-order (z-index) scale for Mission Platform. A shared, intentional ordering for overlay components so drawers, navbars, menus, modals, popovers and toasts never fight unpredictably with ad-hoc magic numbers.",
+  "$description": "Semantic stacking-order contract for Mission Platform. Categories are separated by the shared scale and leaves within a category use 50-point steps so media, application surfaces, overlays, features, and diagnostics layer predictably.",
   "z-index": {
-    "$description": "Named stacking levels, ascending. Use these instead of magic numbers so overlapping surfaces layer predictably.",
+    "$description": "Use these named layers instead of numeric z-index literals. Lower categories render behind higher categories; adjacent leaves within a category are separated by 50 points.",
     "$type": "number",
-    "dropdown": { "$value": 1000, "$description": "1000 — dropdowns, select menus, autocompletes." }
+    "base": {
+      "$description": "Foundational layers inside an isolated component, including media backgrounds and local foreground controls.",
+      "media": { "$value": -200, "$description": "Media backgrounds sit behind the component's normal content." },
+      "media-overlay": {
+        "$value": -150,
+        "$description": "Media scrims sit above media and below the component content."
+      },
+      "content": { "$value": -100, "$description": "Normal component content provides the base application surface." },
+      "foreground": {
+        "$value": -50,
+        "$description": "Local controls and raised content sit above the base component surface."
+      }
+    },
+    "navigation": {
+      "$description": "Persistent navigation and local navigation menus that sit above ordinary page content.",
+      "navbar": { "$value": 0, "$description": "Sticky or fixed navigation bars remain above page content." },
+      "menu": { "$value": 50, "$description": "Navigation menus and submenus sit above their navigation bar." }
+    },
+    "floating": {
+      "$description": "Transient anchored surfaces that float above navigation and ordinary content.",
+      "dropdown": {
+        "$value": 100,
+        "$description": "Dropdowns, select menus, and autocomplete lists use this floating layer."
+      },
+      "popover": { "$value": 150, "$description": "Anchored popovers render above dropdown menus." },
+      "tooltip": {
+        "$value": 200,
+        "$description": "Tooltips and truncation hints render above other anchored surfaces."
+      }
+    },
+    "overlay": {
+      "$description": "Application overlays and their content surfaces that cover or interrupt the page.",
+      "backdrop": { "$value": 250, "$description": "Overlay backdrops dim the page behind an overlay surface." },
+      "panel": {
+        "$value": 300,
+        "$description": "Overlay panels, command palettes, and related transient surfaces sit above their backdrop."
+      }
+    },
+    "drawer": {
+      "$description": "Dismissible side and edge drawers, with the scrim below the drawer panel.",
+      "backdrop": {
+        "$value": 350,
+        "$description": "Drawer backdrops cover the page immediately below the drawer panel."
+      },
+      "panel": { "$value": 400, "$description": "Drawer panels render above their backdrop and page content." }
+    },
+    "modal": {
+      "$description": "Modal and guided-education surfaces that require the user's attention.",
+      "dialog": {
+        "$value": 450,
+        "$description": "Dialog and modal surfaces render above drawers and application overlays."
+      },
+      "onboarding": { "$value": 500, "$description": "Onboarding tour layers render above modal dialog surfaces." }
+    },
+    "notification": {
+      "$description": "Persistent or transient notifications that remain visible above application surfaces.",
+      "toast": {
+        "$value": 550,
+        "$description": "Toast containers remain above modal and onboarding surfaces when announced."
+      },
+      "cookie": {
+        "$value": 600,
+        "$description": "Cookie-consent banners and settings surfaces remain above ordinary notifications."
+      }
+    },
+    "feature": {
+      "$description": "Feature-specific internal layers that must remain above their component surfaces but below diagnostics.",
+      "table": { "$value": 650, "$description": "Sticky table headers and loading surfaces sit above table content." },
+      "editor": {
+        "$value": 700,
+        "$description": "Rich-text editor selection and block controls sit above editor content."
+      },
+      "planner": {
+        "$value": 750,
+        "$description": "Resource-planner sticky headers and resource columns preserve their grid layering."
+      },
+      "scheduler": { "$value": 800, "$description": "Scheduler sticky grid headers sit above the scheduler body." },
+      "rating": {
+        "$value": 850,
+        "$description": "Rating hit targets layer above the star artwork for reliable interaction."
+      }
+    },
+    "debug": {
+      "$description": "Diagnostic UI is intentionally the highest authored application layer.",
+      "breakpoint": {
+        "$value": 900,
+        "$description": "Breakpoint debugging remains visible above all application and feature layers."
+      }
+    }
   }
 }

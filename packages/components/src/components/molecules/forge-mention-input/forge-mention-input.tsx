@@ -1,14 +1,16 @@
 import {
   classNames,
   hasSlot,
-  type MpChild,
-  type MpElement,
-  type MpRenderProperty,
   Slot,
   useEffect,
   useId,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type MpRenderProperty,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 
 import styles from './forge-mention-input.module.scss';
@@ -26,6 +28,83 @@ export interface MentionSuggestionScope {
   active: boolean;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface MentionInputStyleProperties {
+  readonly 'border-width-thick'?: string;
+  readonly 'border-width-thin'?: string;
+  readonly 'color-bg-surface'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-border-focus'?: string;
+  readonly 'color-danger-default'?: string;
+  readonly 'color-danger-text'?: string;
+  readonly 'color-primary-subtle'?: string;
+  readonly 'color-text-primary'?: string;
+  readonly 'color-text-secondary'?: string;
+  readonly 'font-size-sm'?: string;
+  readonly 'font-weight-semibold'?: string;
+  readonly 'line-height-normal'?: string;
+  readonly 'opacity-disabled'?: string;
+  readonly 'radius-md'?: string;
+  readonly 'shadow-md'?: string;
+  readonly 'size-pad-block-md'?: string;
+  readonly 'size-pad-inline-md'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-3'?: string;
+}
+
+export type MentionInputStyle = CSSStyleProperties & {
+  readonly '--forge-mention-input-border-width-thick'?: string | undefined;
+  readonly '--forge-mention-input-border-width-thin'?: string | undefined;
+  readonly '--forge-mention-input-color-bg-surface'?: string | undefined;
+  readonly '--forge-mention-input-color-border-default'?: string | undefined;
+  readonly '--forge-mention-input-color-border-focus'?: string | undefined;
+  readonly '--forge-mention-input-color-danger-default'?: string | undefined;
+  readonly '--forge-mention-input-color-danger-text'?: string | undefined;
+  readonly '--forge-mention-input-color-primary-subtle'?: string | undefined;
+  readonly '--forge-mention-input-color-text-primary'?: string | undefined;
+  readonly '--forge-mention-input-color-text-secondary'?: string | undefined;
+  readonly '--forge-mention-input-font-size-sm'?: string | undefined;
+  readonly '--forge-mention-input-font-weight-semibold'?: string | undefined;
+  readonly '--forge-mention-input-line-height-normal'?: string | undefined;
+  readonly '--forge-mention-input-opacity-disabled'?: string | undefined;
+  readonly '--forge-mention-input-radius-md'?: string | undefined;
+  readonly '--forge-mention-input-shadow-md'?: string | undefined;
+  readonly '--forge-mention-input-size-pad-block-md'?: string | undefined;
+  readonly '--forge-mention-input-size-pad-inline-md'?: string | undefined;
+  readonly '--forge-mention-input-spacing-1'?: string | undefined;
+  readonly '--forge-mention-input-spacing-2'?: string | undefined;
+  readonly '--forge-mention-input-spacing-3'?: string | undefined;
+};
+
+function createMentionInputStyle(
+  properties: Readonly<MentionInputStyleProperties> | undefined,
+): MentionInputStyle | undefined {
+  return createForgeStyle({
+    '--forge-mention-input-border-width-thick': properties?.['border-width-thick'],
+    '--forge-mention-input-border-width-thin': properties?.['border-width-thin'],
+    '--forge-mention-input-color-bg-surface': properties?.['color-bg-surface'],
+    '--forge-mention-input-color-border-default': properties?.['color-border-default'],
+    '--forge-mention-input-color-border-focus': properties?.['color-border-focus'],
+    '--forge-mention-input-color-danger-default': properties?.['color-danger-default'],
+    '--forge-mention-input-color-danger-text': properties?.['color-danger-text'],
+    '--forge-mention-input-color-primary-subtle': properties?.['color-primary-subtle'],
+    '--forge-mention-input-color-text-primary': properties?.['color-text-primary'],
+    '--forge-mention-input-color-text-secondary': properties?.['color-text-secondary'],
+    '--forge-mention-input-font-size-sm': properties?.['font-size-sm'],
+    '--forge-mention-input-font-weight-semibold': properties?.['font-weight-semibold'],
+    '--forge-mention-input-line-height-normal': properties?.['line-height-normal'],
+    '--forge-mention-input-opacity-disabled': properties?.['opacity-disabled'],
+    '--forge-mention-input-radius-md': properties?.['radius-md'],
+    '--forge-mention-input-shadow-md': properties?.['shadow-md'],
+    '--forge-mention-input-size-pad-block-md': properties?.['size-pad-block-md'],
+    '--forge-mention-input-size-pad-inline-md': properties?.['size-pad-inline-md'],
+    '--forge-mention-input-spacing-1': properties?.['spacing-1'],
+    '--forge-mention-input-spacing-2': properties?.['spacing-2'],
+    '--forge-mention-input-spacing-3': properties?.['spacing-3'],
+  }) as MentionInputStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface MentionInputProperties {
   children?: MpChild | readonly MpChild[];
   modelValue: string;
@@ -48,6 +127,9 @@ export interface MentionInputProperties {
   onChange?: (value: string) => void;
   onSearch?: (query: string) => void;
   onMention?: (item: MentionItem) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<MentionInputStyleProperties>;
 }
 
 function escaped(value: string): string {
@@ -56,6 +138,8 @@ function escaped(value: string): string {
 
 /** A textarea with accessible, keyboard-navigable mention suggestions. */
 export function ForgeMentionInput(properties: Readonly<MentionInputProperties>): MpElement {
+  const style = createMentionInputStyle(properties.properties);
+
   const generatedId = useId();
   const id = properties.id ?? generatedId;
   const listId = `${id}-suggestions`;
@@ -158,6 +242,7 @@ export function ForgeMentionInput(properties: Readonly<MentionInputProperties>):
         [styles['forge-mention-input--error']]: !!error,
         [styles['forge-mention-input--disabled']]: disabled,
       })}
+      style={style}
     >
       {label ? (
         <label

@@ -1,4 +1,4 @@
-import { classNames, type MpElement } from '@mission-platform/forge';
+import { classNames, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import styles from './forge-responsive-image.module.scss';
 
@@ -20,6 +20,23 @@ export interface ResponsiveImageSource {
 /** How the image fills its box. */
 export type ResponsiveImageFit = 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ResponsiveImageStyleProperties {
+  readonly 'media-radius'?: string;
+}
+
+export type ResponsiveImageStyle = CSSStyleProperties & {
+  readonly '--forge-responsive-image-media-radius'?: string | undefined;
+};
+
+function createResponsiveImageStyle(
+  properties: Readonly<ResponsiveImageStyleProperties> | undefined,
+): ResponsiveImageStyle | undefined {
+  return createForgeStyle({
+    '--forge-responsive-image-media-radius': properties?.['media-radius'],
+  }) as ResponsiveImageStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ResponsiveImageProperties {
   /** Fallback image URL (required, also used by browsers without `<picture>` support). */
   src: string;
@@ -53,6 +70,9 @@ export interface ResponsiveImageProperties {
   onLoad?: (event: Event) => void;
   /** Native image `error` event. */
   onError?: (event: Event) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ResponsiveImageStyleProperties>;
 }
 
 /**
@@ -73,6 +93,8 @@ export interface ResponsiveImageProperties {
  * convention used across the migrated components).
  */
 export function ForgeResponsiveImage(properties: Readonly<ResponsiveImageProperties>): MpElement {
+  const propertyStyle = createResponsiveImageStyle(properties.properties);
+
   const {
     src,
     alt,
@@ -128,7 +150,7 @@ export function ForgeResponsiveImage(properties: Readonly<ResponsiveImagePropert
   return (
     <picture
       className={className}
-      style={pictureStyle}
+      style={{ ...pictureStyle, ...propertyStyle }}
     >
       {sourceElements}
       {fallbackImage}

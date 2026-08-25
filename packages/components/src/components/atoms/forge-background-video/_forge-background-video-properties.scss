@@ -1,0 +1,21 @@
+/**
+ * Registered inherited custom properties for forge-background-video overrides.
+ */
+
+@property --forge-background-video-media-surface-overlay {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-surface-overlay);
+}
+
+@property --forge-background-video-media-background-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-background-padding);
+}
+
+@property --forge-background-video-media-text-inverse {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-text-inverse);
+}

@@ -1,4 +1,13 @@
-import { type ClassValue, hasSlot, type MpChild, type MpElement, Slot, useId } from '@mission-platform/forge';
+import {
+  hasSlot,
+  Slot,
+  useId,
+  createForgeStyle,
+  type ClassValue,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-textarea.module.scss';
@@ -10,6 +19,144 @@ export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both';
 /** Native `autocapitalize` hint for on-screen keyboards. */
 export type TextareaAutocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface TextareaStyleProperties {
+  readonly 'field-required'?: string;
+  readonly 'input-border-default'?: string;
+  readonly 'input-border-focus-visible'?: string;
+  readonly 'input-border-invalid'?: string;
+  readonly 'input-border-width'?: string;
+  readonly 'input-extension-gap'?: string;
+  readonly 'input-field-gap'?: string;
+  readonly 'input-focus-ring'?: string;
+  readonly 'input-focus-ring-invalid'?: string;
+  readonly 'input-font-family'?: string;
+  readonly 'input-line-height'?: string;
+  readonly 'input-opacity-disabled'?: string;
+  readonly 'input-radius'?: string;
+  readonly 'input-size-2xl-font-size'?: string;
+  readonly 'input-size-2xl-padding-block'?: string;
+  readonly 'input-size-2xl-padding-inline'?: string;
+  readonly 'input-size-2xs-font-size'?: string;
+  readonly 'input-size-2xs-padding-block'?: string;
+  readonly 'input-size-2xs-padding-inline'?: string;
+  readonly 'input-size-lg-font-size'?: string;
+  readonly 'input-size-lg-padding-block'?: string;
+  readonly 'input-size-lg-padding-inline'?: string;
+  readonly 'input-size-md-font-size'?: string;
+  readonly 'input-size-md-padding-block'?: string;
+  readonly 'input-size-md-padding-inline'?: string;
+  readonly 'input-size-sm-font-size'?: string;
+  readonly 'input-size-sm-padding-block'?: string;
+  readonly 'input-size-sm-padding-inline'?: string;
+  readonly 'input-size-xl-font-size'?: string;
+  readonly 'input-size-xl-padding-block'?: string;
+  readonly 'input-size-xl-padding-inline'?: string;
+  readonly 'input-size-xs-font-size'?: string;
+  readonly 'input-size-xs-padding-block'?: string;
+  readonly 'input-size-xs-padding-inline'?: string;
+  readonly 'input-surface-default'?: string;
+  readonly 'input-surface-disabled'?: string;
+  readonly 'input-text-default'?: string;
+  readonly 'input-text-invalid'?: string;
+  readonly 'input-text-placeholder'?: string;
+  readonly 'input-text-secondary'?: string;
+  readonly 'input-transition-duration'?: string;
+  readonly 'input-transition-easing'?: string;
+}
+
+export type TextareaStyle = CSSStyleProperties & {
+  readonly '--forge-textarea-field-required'?: string | undefined;
+  readonly '--forge-textarea-input-border-default'?: string | undefined;
+  readonly '--forge-textarea-input-border-focus-visible'?: string | undefined;
+  readonly '--forge-textarea-input-border-invalid'?: string | undefined;
+  readonly '--forge-textarea-input-border-width'?: string | undefined;
+  readonly '--forge-textarea-input-extension-gap'?: string | undefined;
+  readonly '--forge-textarea-input-field-gap'?: string | undefined;
+  readonly '--forge-textarea-input-focus-ring'?: string | undefined;
+  readonly '--forge-textarea-input-focus-ring-invalid'?: string | undefined;
+  readonly '--forge-textarea-input-font-family'?: string | undefined;
+  readonly '--forge-textarea-input-line-height'?: string | undefined;
+  readonly '--forge-textarea-input-opacity-disabled'?: string | undefined;
+  readonly '--forge-textarea-input-radius'?: string | undefined;
+  readonly '--forge-textarea-input-size-2xl-font-size'?: string | undefined;
+  readonly '--forge-textarea-input-size-2xl-padding-block'?: string | undefined;
+  readonly '--forge-textarea-input-size-2xl-padding-inline'?: string | undefined;
+  readonly '--forge-textarea-input-size-2xs-font-size'?: string | undefined;
+  readonly '--forge-textarea-input-size-2xs-padding-block'?: string | undefined;
+  readonly '--forge-textarea-input-size-2xs-padding-inline'?: string | undefined;
+  readonly '--forge-textarea-input-size-lg-font-size'?: string | undefined;
+  readonly '--forge-textarea-input-size-lg-padding-block'?: string | undefined;
+  readonly '--forge-textarea-input-size-lg-padding-inline'?: string | undefined;
+  readonly '--forge-textarea-input-size-md-font-size'?: string | undefined;
+  readonly '--forge-textarea-input-size-md-padding-block'?: string | undefined;
+  readonly '--forge-textarea-input-size-md-padding-inline'?: string | undefined;
+  readonly '--forge-textarea-input-size-sm-font-size'?: string | undefined;
+  readonly '--forge-textarea-input-size-sm-padding-block'?: string | undefined;
+  readonly '--forge-textarea-input-size-sm-padding-inline'?: string | undefined;
+  readonly '--forge-textarea-input-size-xl-font-size'?: string | undefined;
+  readonly '--forge-textarea-input-size-xl-padding-block'?: string | undefined;
+  readonly '--forge-textarea-input-size-xl-padding-inline'?: string | undefined;
+  readonly '--forge-textarea-input-size-xs-font-size'?: string | undefined;
+  readonly '--forge-textarea-input-size-xs-padding-block'?: string | undefined;
+  readonly '--forge-textarea-input-size-xs-padding-inline'?: string | undefined;
+  readonly '--forge-textarea-input-surface-default'?: string | undefined;
+  readonly '--forge-textarea-input-surface-disabled'?: string | undefined;
+  readonly '--forge-textarea-input-text-default'?: string | undefined;
+  readonly '--forge-textarea-input-text-invalid'?: string | undefined;
+  readonly '--forge-textarea-input-text-placeholder'?: string | undefined;
+  readonly '--forge-textarea-input-text-secondary'?: string | undefined;
+  readonly '--forge-textarea-input-transition-duration'?: string | undefined;
+  readonly '--forge-textarea-input-transition-easing'?: string | undefined;
+};
+
+function createTextareaStyle(properties: Readonly<TextareaStyleProperties> | undefined): TextareaStyle | undefined {
+  return createForgeStyle({
+    '--forge-textarea-field-required': properties?.['field-required'],
+    '--forge-textarea-input-border-default': properties?.['input-border-default'],
+    '--forge-textarea-input-border-focus-visible': properties?.['input-border-focus-visible'],
+    '--forge-textarea-input-border-invalid': properties?.['input-border-invalid'],
+    '--forge-textarea-input-border-width': properties?.['input-border-width'],
+    '--forge-textarea-input-extension-gap': properties?.['input-extension-gap'],
+    '--forge-textarea-input-field-gap': properties?.['input-field-gap'],
+    '--forge-textarea-input-focus-ring': properties?.['input-focus-ring'],
+    '--forge-textarea-input-focus-ring-invalid': properties?.['input-focus-ring-invalid'],
+    '--forge-textarea-input-font-family': properties?.['input-font-family'],
+    '--forge-textarea-input-line-height': properties?.['input-line-height'],
+    '--forge-textarea-input-opacity-disabled': properties?.['input-opacity-disabled'],
+    '--forge-textarea-input-radius': properties?.['input-radius'],
+    '--forge-textarea-input-size-2xl-font-size': properties?.['input-size-2xl-font-size'],
+    '--forge-textarea-input-size-2xl-padding-block': properties?.['input-size-2xl-padding-block'],
+    '--forge-textarea-input-size-2xl-padding-inline': properties?.['input-size-2xl-padding-inline'],
+    '--forge-textarea-input-size-2xs-font-size': properties?.['input-size-2xs-font-size'],
+    '--forge-textarea-input-size-2xs-padding-block': properties?.['input-size-2xs-padding-block'],
+    '--forge-textarea-input-size-2xs-padding-inline': properties?.['input-size-2xs-padding-inline'],
+    '--forge-textarea-input-size-lg-font-size': properties?.['input-size-lg-font-size'],
+    '--forge-textarea-input-size-lg-padding-block': properties?.['input-size-lg-padding-block'],
+    '--forge-textarea-input-size-lg-padding-inline': properties?.['input-size-lg-padding-inline'],
+    '--forge-textarea-input-size-md-font-size': properties?.['input-size-md-font-size'],
+    '--forge-textarea-input-size-md-padding-block': properties?.['input-size-md-padding-block'],
+    '--forge-textarea-input-size-md-padding-inline': properties?.['input-size-md-padding-inline'],
+    '--forge-textarea-input-size-sm-font-size': properties?.['input-size-sm-font-size'],
+    '--forge-textarea-input-size-sm-padding-block': properties?.['input-size-sm-padding-block'],
+    '--forge-textarea-input-size-sm-padding-inline': properties?.['input-size-sm-padding-inline'],
+    '--forge-textarea-input-size-xl-font-size': properties?.['input-size-xl-font-size'],
+    '--forge-textarea-input-size-xl-padding-block': properties?.['input-size-xl-padding-block'],
+    '--forge-textarea-input-size-xl-padding-inline': properties?.['input-size-xl-padding-inline'],
+    '--forge-textarea-input-size-xs-font-size': properties?.['input-size-xs-font-size'],
+    '--forge-textarea-input-size-xs-padding-block': properties?.['input-size-xs-padding-block'],
+    '--forge-textarea-input-size-xs-padding-inline': properties?.['input-size-xs-padding-inline'],
+    '--forge-textarea-input-surface-default': properties?.['input-surface-default'],
+    '--forge-textarea-input-surface-disabled': properties?.['input-surface-disabled'],
+    '--forge-textarea-input-text-default': properties?.['input-text-default'],
+    '--forge-textarea-input-text-invalid': properties?.['input-text-invalid'],
+    '--forge-textarea-input-text-placeholder': properties?.['input-text-placeholder'],
+    '--forge-textarea-input-text-secondary': properties?.['input-text-secondary'],
+    '--forge-textarea-input-transition-duration': properties?.['input-transition-duration'],
+    '--forge-textarea-input-transition-easing': properties?.['input-transition-easing'],
+  }) as TextareaStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface TextareaProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -61,6 +208,9 @@ export interface TextareaProperties {
   onBlur?: (event: FocusEvent) => void;
   /** Fired with the native `focus` event. */
   onFocus?: (event: FocusEvent) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<TextareaStyleProperties>;
 }
 
 /**
@@ -81,6 +231,8 @@ export interface TextareaProperties {
  * `onUpdateModelValue`/`onChange`/`onBlur`/`onFocus` callback props.
  */
 export function ForgeTextarea(properties: Readonly<TextareaProperties>): MpElement {
+  const style = createTextareaStyle(properties.properties);
+
   const {
     modelValue = '',
     rows = 4,
@@ -117,6 +269,7 @@ export function ForgeTextarea(properties: Readonly<TextareaProperties>): MpEleme
         },
         properties.className,
       ]}
+      style={style}
     >
       {label ? (
         <label

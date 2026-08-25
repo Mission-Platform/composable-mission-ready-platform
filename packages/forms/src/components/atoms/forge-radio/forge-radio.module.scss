@@ -1,3 +1,5 @@
+@use './forge-radio-properties';
+
 /**
  * Styling for the write-once `ForgeRadio`.
  *
@@ -12,7 +14,7 @@
   .forge-radio {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-checkable-gap-inline);
+    gap: var(--forge-radio-checkable-gap-inline, var(--mp-checkable-gap-inline));
     cursor: pointer;
 
     &__control-wrapper {
@@ -21,8 +23,8 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: var(--mp-checkable-control-size);
-      height: var(--mp-checkable-control-size);
+      width: var(--forge-radio-checkable-control-size, var(--mp-checkable-control-size));
+      height: var(--forge-radio-checkable-control-size, var(--mp-checkable-control-size));
     }
 
     &__input {
@@ -34,12 +36,13 @@
       cursor: pointer;
 
       &:focus-visible ~ .forge-radio__circle {
-        outline: var(--mp-checkable-border-width-focus) solid var(--mp-checkable-border-focus-visible);
+        outline: var(--forge-radio-checkable-border-width-focus, var(--mp-checkable-border-width-focus)) solid
+          var(--forge-radio-checkable-border-focus-visible, var(--mp-checkable-border-focus-visible));
         outline-offset: 2px;
       }
 
       &:checked ~ .forge-radio__circle {
-        border-color: var(--mp-checkable-border-selected);
+        border-color: var(--forge-radio-checkable-border-selected, var(--mp-checkable-border-selected));
 
         &::after {
           transform: translate(-50%, -50%) scale(1);
@@ -49,12 +52,14 @@
 
     &__circle {
       display: block;
-      width: var(--mp-checkable-control-size);
-      height: var(--mp-checkable-control-size);
-      border: var(--mp-checkable-border-width-default) solid var(--mp-checkable-border-default);
-      border-radius: var(--mp-checkable-circle-radius);
-      background-color: var(--mp-checkable-track-default);
-      transition: border-color var(--mp-checkable-transition-duration) var(--mp-checkable-transition-easing);
+      width: var(--forge-radio-checkable-control-size, var(--mp-checkable-control-size));
+      height: var(--forge-radio-checkable-control-size, var(--mp-checkable-control-size));
+      border: var(--forge-radio-checkable-border-width-default, var(--mp-checkable-border-width-default)) solid
+        var(--forge-radio-checkable-border-default, var(--mp-checkable-border-default));
+      border-radius: var(--forge-radio-checkable-circle-radius, var(--mp-checkable-circle-radius));
+      background-color: var(--forge-radio-checkable-track-default, var(--mp-checkable-track-default));
+      transition: border-color var(--forge-radio-checkable-transition-duration, var(--mp-checkable-transition-duration))
+        var(--forge-radio-checkable-transition-easing, var(--mp-checkable-transition-easing));
       pointer-events: none;
 
       &::after {
@@ -62,12 +67,13 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: var(--mp-checkable-indicator-size);
-        height: var(--mp-checkable-indicator-size);
-        border-radius: var(--mp-checkable-circle-radius);
-        background-color: var(--mp-checkable-track-selected);
+        width: var(--forge-radio-checkable-indicator-size, var(--mp-checkable-indicator-size));
+        height: var(--forge-radio-checkable-indicator-size, var(--mp-checkable-indicator-size));
+        border-radius: var(--forge-radio-checkable-circle-radius, var(--mp-checkable-circle-radius));
+        background-color: var(--forge-radio-checkable-track-selected, var(--mp-checkable-track-selected));
         transform: translate(-50%, -50%) scale(0);
-        transition: transform var(--mp-checkable-transition-duration) var(--mp-checkable-transition-easing);
+        transition: transform var(--forge-radio-checkable-transition-duration, var(--mp-checkable-transition-duration))
+          var(--forge-radio-checkable-transition-easing, var(--mp-checkable-transition-easing));
       }
     }
 
@@ -90,7 +96,7 @@
     }
 
     &--disabled {
-      opacity: var(--mp-checkable-opacity-disabled);
+      opacity: var(--forge-radio-checkable-opacity-disabled, var(--mp-checkable-opacity-disabled));
       pointer-events: none;
       cursor: not-allowed;
     }

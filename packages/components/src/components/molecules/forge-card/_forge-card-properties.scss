@@ -1,0 +1,249 @@
+/**
+ * Registered inherited custom properties for forge-card overrides.
+ */
+
+@property --forge-card-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-background);
+}
+
+@property --forge-card-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-radius);
+}
+
+@property --forge-card-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-border-width);
+}
+
+@property --forge-card-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-border);
+}
+
+@property --forge-card-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-shadow);
+}
+
+@property --forge-card-padding-sm-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-sm-block);
+}
+
+@property --forge-card-padding-sm-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-sm-inline);
+}
+
+@property --forge-card-padding-sm-wide-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-sm-wide-block);
+}
+
+@property --forge-card-padding-sm-wide-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-sm-wide-inline);
+}
+
+@property --forge-card-padding-md-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-md-block);
+}
+
+@property --forge-card-padding-md-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-md-inline);
+}
+
+@property --forge-card-padding-md-wide-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-md-wide-block);
+}
+
+@property --forge-card-padding-md-wide-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-md-wide-inline);
+}
+
+@property --forge-card-padding-lg-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-lg-block);
+}
+
+@property --forge-card-padding-lg-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-lg-inline);
+}
+
+@property --forge-card-padding-lg-wide-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-lg-wide-block);
+}
+
+@property --forge-card-padding-lg-wide-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-padding-lg-wide-inline);
+}
+
+@property --forge-card-tone-primary-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-primary-background);
+}
+
+@property --forge-card-tone-secondary-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-secondary-background);
+}
+
+@property --forge-card-tone-tertiary-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-tertiary-background);
+}
+
+@property --forge-card-tone-success-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-success-background);
+}
+
+@property --forge-card-tone-warning-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-warning-background);
+}
+
+@property --forge-card-tone-info-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-info-background);
+}
+
+@property --forge-card-tone-error-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-error-background);
+}
+
+@property --forge-card-tone-critical-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-critical-background);
+}
+
+@property --forge-card-tone-primary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-primary-text);
+}
+
+@property --forge-card-tone-secondary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-secondary-text);
+}
+
+@property --forge-card-tone-tertiary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-tertiary-text);
+}
+
+@property --forge-card-tone-success-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-success-text);
+}
+
+@property --forge-card-tone-warning-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-warning-text);
+}
+
+@property --forge-card-tone-info-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-info-text);
+}
+
+@property --forge-card-tone-error-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-error-text);
+}
+
+@property --forge-card-tone-critical-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-critical-text);
+}
+
+@property --forge-card-tone-primary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-primary-border);
+}
+
+@property --forge-card-tone-secondary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-secondary-border);
+}
+
+@property --forge-card-tone-tertiary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-tertiary-border);
+}
+
+@property --forge-card-tone-success-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-success-border);
+}
+
+@property --forge-card-tone-warning-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-warning-border);
+}
+
+@property --forge-card-tone-info-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-info-border);
+}
+
+@property --forge-card-tone-error-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-error-border);
+}
+
+@property --forge-card-tone-critical-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-card-tone-critical-border);
+}

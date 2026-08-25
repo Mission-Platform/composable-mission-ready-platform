@@ -1,0 +1,135 @@
+/**
+ * Registered inherited custom properties for forge-tag-input overrides.
+ */
+
+@property --forge-tag-input-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-tag-input-size-height-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-md);
+}
+
+@property --forge-tag-input-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-tag-input-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-tag-input-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-tag-input-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-tag-input-color-bg-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-surface);
+}
+
+@property --forge-tag-input-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-tag-input-color-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-focus);
+}
+
+@property --forge-tag-input-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-sm);
+}
+
+@property --forge-tag-input-color-bg-raised {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-raised);
+}
+
+@property --forge-tag-input-line-height-tight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-line-height-tight);
+}
+
+@property --forge-tag-input-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-tag-input-size-checkable-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-checkable-indicator);
+}
+
+@property --forge-tag-input-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-tag-input-radius-full {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-full);
+}
+
+@property --forge-tag-input-duration-slow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-duration-slow);
+}
+
+@property --forge-tag-input-color-danger-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-danger-default);
+}
+
+@property --forge-tag-input-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-disabled);
+}
+
+@property --forge-tag-input-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-tag-input-font-size-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-lg);
+}
+
+@property --forge-tag-input-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}

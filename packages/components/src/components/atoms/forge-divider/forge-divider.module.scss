@@ -1,10 +1,12 @@
+@use './forge-divider-properties';
+
 @layer mp.components {
   .forge-divider {
     display: block;
     flex-shrink: 0;
     margin: 0;
     border: 0;
-    background-color: var(--mp-color-border);
+    background-color: var(--forge-divider-color-border, var(--mp-color-border));
   }
 
   .forge-divider--horizontal {

@@ -1,3 +1,5 @@
+@use './forge-schema-form-dialog-properties';
+
 /**
  * Styling for the write-once `ForgeSchemaFormDialog`.
  *
@@ -10,7 +12,7 @@
   .forge-schema-form-dialog {
     &__actions {
       display: flex;
-      gap: var(--mp-form-gap-default);
+      gap: var(--forge-schema-form-dialog-form-gap-default, var(--mp-form-gap-default));
     }
   }
 }

@@ -1,0 +1,87 @@
+/**
+ * Registered inherited custom properties for forge-onboarding-tour overrides.
+ */
+
+@property --forge-onboarding-tour-overlay-modal-backdrop-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-backdrop-surface, rgb(0 0 0 / 55%));
+}
+
+@property --forge-onboarding-tour-color-action-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-action-primary);
+}
+
+@property --forge-onboarding-tour-border-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-radius-sm);
+}
+
+@property --forge-onboarding-tour-spacing-5 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-5);
+}
+
+@property --forge-onboarding-tour-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-onboarding-tour-border-radius-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-radius-lg);
+}
+
+@property --forge-onboarding-tour-color-surface-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-surface-primary);
+}
+
+@property --forge-onboarding-tour-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-onboarding-tour-shadow-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-shadow-xl, 0 1rem 3rem rgb(0 0 0 / 25%));
+}
+
+@property --forge-onboarding-tour-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-onboarding-tour-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-onboarding-tour-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-onboarding-tour-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-onboarding-tour-color-text-on-action {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-action);
+}

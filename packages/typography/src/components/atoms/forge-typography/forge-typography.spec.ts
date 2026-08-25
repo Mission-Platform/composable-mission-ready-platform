@@ -18,6 +18,45 @@ const ReactTypography = toReactComponent(ForgeTypography, 'Typography');
 const VueTypography = toVueComponent(ForgeTypography, 'Typography');
 
 describe('ForgeTypography authors the same component for React and Vue', () => {
+  it('emits defined typed custom-property overrides through neutral style', () => {
+    const element = ForgeTypography({
+      properties: {
+        'font-family': 'Inter, sans-serif',
+        'base-line-height': '1.6',
+        'display-margin-bottom': '1.5rem',
+        'display-font-family': 'Georgia, serif',
+        'display-font-size': 'clamp(2rem, 5vw, 4rem)',
+      },
+    });
+
+    expect(element.properties).toMatchObject({
+      style: {
+        '--forge-typography-font-family': 'Inter, sans-serif',
+        '--forge-typography-base-line-height': '1.6',
+        '--forge-typography-display-margin-bottom': '1.5rem',
+        '--forge-typography-display-font-family': 'Georgia, serif',
+        '--forge-typography-display-font-size': 'clamp(2rem, 5vw, 4rem)',
+      },
+    });
+    expect(element.properties).not.toHaveProperty('styles');
+  });
+
+  it('places overrides on the owning popup wrapper for descendant inheritance', () => {
+    const element = ForgeTypography({
+      truncatePopup: true,
+      properties: {
+        'base-line-height': '1.75',
+        'display-margin-bottom': '2rem',
+      },
+    });
+
+    expect(element.properties.style).toEqual({
+      '--forge-typography-base-line-height': '1.75',
+      '--forge-typography-display-margin-bottom': '2rem',
+    });
+    expect(element.properties).not.toHaveProperty('styles');
+  });
+
   it('renders the semantic tag for the variant on both frameworks', async () => {
     const react = renderToStaticMarkup(createElement(ReactTypography, { variant: 'h2' }, 'Heading'));
     const vue = await renderToString(

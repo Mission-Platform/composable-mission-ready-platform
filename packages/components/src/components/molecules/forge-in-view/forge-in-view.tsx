@@ -1,17 +1,46 @@
 import {
   classNames,
   Dynamic,
-  type MpChild,
-  type MpElement,
   useEffect,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 
 export type InViewAnimation = 'fade' | 'slide-up' | 'slide-left' | 'slide-right' | 'scale' | 'none';
 /** Size token — canonical 2xs → 2xl scale. */
 export type InViewSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface InViewStyleProperties {
+  readonly 'font-weight'?: string;
+  readonly padding?: string;
+  readonly radius?: string;
+  readonly surface?: string;
+  readonly text?: string;
+}
+
+export type InViewStyle = CSSStyleProperties & {
+  readonly '--forge-in-view-font-weight'?: string | undefined;
+  readonly '--forge-in-view-padding'?: string | undefined;
+  readonly '--forge-in-view-radius'?: string | undefined;
+  readonly '--forge-in-view-surface'?: string | undefined;
+  readonly '--forge-in-view-text'?: string | undefined;
+};
+
+function createInViewStyle(properties: Readonly<InViewStyleProperties> | undefined): InViewStyle | undefined {
+  return createForgeStyle({
+    '--forge-in-view-font-weight': properties?.['font-weight'],
+    '--forge-in-view-padding': properties?.['padding'],
+    '--forge-in-view-radius': properties?.['radius'],
+    '--forge-in-view-surface': properties?.['surface'],
+    '--forge-in-view-text': properties?.['text'],
+  }) as InViewStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface InViewProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -35,6 +64,9 @@ export interface InViewProperties {
   onEnter?: () => void;
   /** Called when the element leaves the viewport (only when `once` is false). */
   onLeave?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<InViewStyleProperties>;
 }
 
 /** Hidden (pre-reveal) style per animation. */
@@ -90,6 +122,8 @@ function wrapperStyle(
  * `onEnter`/`onLeave` callbacks, which map cleanly onto both frameworks.
  */
 export function ForgeInView(properties: Readonly<InViewProperties>): MpElement {
+  const propertyStyle = createInViewStyle(properties.properties);
+
   const {
     threshold = 0.15,
     rootMargin = '0px',
@@ -136,7 +170,7 @@ export function ForgeInView(properties: Readonly<InViewProperties>): MpElement {
       is={tag}
       ref={wrapperReference}
       className={classNames('in-view', size ? `forge-size--${size}` : undefined)}
-      style={wrapperStyle(animation, duration, delay, inView)}
+      style={{ ...wrapperStyle(animation, duration, delay, inView), ...propertyStyle }}
     >
       {properties.children}
     </Dynamic>

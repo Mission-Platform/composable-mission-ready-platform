@@ -1,0 +1,159 @@
+/**
+ * Registered inherited custom properties for forge-spinner overrides.
+ */
+
+@property --forge-spinner-feedback-spinner-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-radius);
+}
+
+@property --forge-spinner-feedback-spinner-animation-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-animation-duration);
+}
+
+@property --forge-spinner-feedback-spinner-animation-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-animation-easing);
+}
+
+@property --forge-spinner-feedback-spinner-border-width-2xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-border-width-2xs);
+}
+
+@property --forge-spinner-feedback-spinner-border-width-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-border-width-xs);
+}
+
+@property --forge-spinner-feedback-spinner-border-width-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-border-width-sm);
+}
+
+@property --forge-spinner-feedback-spinner-border-width-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-border-width-md);
+}
+
+@property --forge-spinner-feedback-spinner-border-width-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-border-width-lg);
+}
+
+@property --forge-spinner-feedback-spinner-border-width-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-border-width-xl);
+}
+
+@property --forge-spinner-feedback-spinner-border-width-2xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-border-width-2xl);
+}
+
+@property --forge-spinner-feedback-spinner-size-2xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-size-2xs);
+}
+
+@property --forge-spinner-feedback-spinner-size-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-size-xs);
+}
+
+@property --forge-spinner-feedback-spinner-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-size-sm);
+}
+
+@property --forge-spinner-feedback-spinner-size-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-size-md);
+}
+
+@property --forge-spinner-feedback-spinner-size-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-size-lg);
+}
+
+@property --forge-spinner-feedback-spinner-size-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-size-xl);
+}
+
+@property --forge-spinner-feedback-spinner-size-2xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-size-2xl);
+}
+
+@property --forge-spinner-feedback-spinner-color-neutral {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-color-neutral);
+}
+
+@property --forge-spinner-feedback-spinner-color-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-color-primary);
+}
+
+@property --forge-spinner-feedback-spinner-color-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-color-secondary);
+}
+
+@property --forge-spinner-feedback-spinner-color-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-color-tertiary);
+}
+
+@property --forge-spinner-feedback-spinner-color-success {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-color-success);
+}
+
+@property --forge-spinner-feedback-spinner-color-warning {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-color-warning);
+}
+
+@property --forge-spinner-feedback-spinner-color-info {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-color-info);
+}
+
+@property --forge-spinner-feedback-spinner-color-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-color-error);
+}
+
+@property --forge-spinner-feedback-spinner-color-critical {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-spinner-color-critical);
+}

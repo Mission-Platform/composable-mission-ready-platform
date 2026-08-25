@@ -1,3 +1,5 @@
+@use './forge-calendar-properties';
+
 /**
  * Styling for the write-once `ForgeCalendar`.
  *
@@ -12,10 +14,11 @@
   .forge-calendar {
     display: inline-flex;
     flex-direction: column;
-    background: var(--mp-calendar-surface-default);
-    border: var(--mp-calendar-border-width) solid var(--mp-calendar-border-default);
-    border-radius: var(--mp-calendar-radius-default);
-    box-shadow: var(--mp-calendar-shadow);
+    background: var(--forge-calendar-surface-default, var(--mp-calendar-surface-default));
+    border: var(--forge-calendar-border-width, var(--mp-calendar-border-width)) solid
+      var(--forge-calendar-border-default, var(--mp-calendar-border-default));
+    border-radius: var(--forge-calendar-radius-default, var(--mp-calendar-radius-default));
+    box-shadow: var(--forge-calendar-shadow, var(--mp-calendar-shadow));
     user-select: none;
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
@@ -23,14 +26,14 @@
       $min-width in ('2xs': 200px, 'xs': 220px, 'sm': 240px, 'md': 280px, 'lg': 320px, 'xl': 360px, '2xl': 400px)
     {
       &--#{$size} {
-        padding: var(--mp-calendar-size-#{$size}-padding);
+        padding: var(--forge-calendar-size-#{$size}-padding, var(--mp-calendar-size-#{$size}-padding));
         min-width: $min-width;
 
         .forge-calendar__weekday,
         .forge-calendar__day,
         .forge-calendar__cell {
-          height: var(--mp-calendar-size-#{$size}-cell-height);
-          font-size: var(--mp-calendar-size-#{$size}-font-size);
+          height: var(--forge-calendar-size-#{$size}-cell-height, var(--mp-calendar-size-#{$size}-cell-height));
+          font-size: var(--forge-calendar-size-#{$size}-font-size, var(--mp-calendar-size-#{$size}-font-size));
         }
       }
     }
@@ -47,7 +50,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: var(--mp-calendar-header-gap);
+      margin-bottom: var(--forge-calendar-header-gap, var(--mp-calendar-header-gap));
     }
 
     &__month-label {
@@ -59,24 +62,26 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: var(--mp-calendar-label-gap);
+      gap: var(--forge-calendar-label-gap, var(--mp-calendar-label-gap));
     }
 
     &__label-btn {
       border: none;
       background: transparent;
-      padding: var(--mp-calendar-label-padding-block) var(--mp-calendar-label-padding-inline);
-      border-radius: var(--mp-calendar-radius-control);
+      padding: var(--forge-calendar-label-padding-block, var(--mp-calendar-label-padding-block))
+        var(--forge-calendar-label-padding-inline, var(--mp-calendar-label-padding-inline));
+      border-radius: var(--forge-calendar-radius-control, var(--mp-calendar-radius-control));
       cursor: pointer;
-      transition: background-color var(--mp-calendar-transition-duration)
-        var(--mp-calendar-transition-easing);
+      transition: background-color var(--forge-calendar-transition-duration, var(--mp-calendar-transition-duration))
+        var(--forge-calendar-transition-easing, var(--mp-calendar-transition-easing));
 
       &:hover {
-        background-color: var(--mp-calendar-surface-hover);
+        background-color: var(--forge-calendar-surface-hover, var(--mp-calendar-surface-hover));
       }
 
       &:focus-visible {
-        outline: var(--mp-calendar-border-focus-width) solid var(--mp-calendar-border-focus);
+        outline: var(--forge-calendar-border-focus-width, var(--mp-calendar-border-focus-width)) solid
+          var(--forge-calendar-border-focus, var(--mp-calendar-border-focus));
         outline-offset: 2px;
       }
     }
@@ -90,12 +95,14 @@
       flex-shrink: 0;
       border: none;
       background: transparent;
-      border-radius: var(--mp-calendar-radius-control);
+      border-radius: var(--forge-calendar-radius-control, var(--mp-calendar-radius-control));
       cursor: pointer;
-      color: var(--mp-calendar-text-secondary);
+      color: var(--forge-calendar-text-secondary, var(--mp-calendar-text-secondary));
       transition:
-        background-color var(--mp-calendar-transition-duration) var(--mp-calendar-transition-easing),
-        color var(--mp-calendar-transition-duration) var(--mp-calendar-transition-easing);
+        background-color var(--forge-calendar-transition-duration, var(--mp-calendar-transition-duration))
+          var(--forge-calendar-transition-easing, var(--mp-calendar-transition-easing)),
+        color var(--forge-calendar-transition-duration, var(--mp-calendar-transition-duration))
+          var(--forge-calendar-transition-easing, var(--mp-calendar-transition-easing));
 
       svg {
         display: block;
@@ -105,12 +112,13 @@
       }
 
       &:hover {
-        background-color: var(--mp-calendar-surface-hover);
-        color: var(--mp-calendar-text-default);
+        background-color: var(--forge-calendar-surface-hover, var(--mp-calendar-surface-hover));
+        color: var(--forge-calendar-text-default, var(--mp-calendar-text-default));
       }
 
       &:focus-visible {
-        outline: var(--mp-calendar-border-focus-width) solid var(--mp-calendar-border-focus);
+        outline: var(--forge-calendar-border-focus-width, var(--mp-calendar-border-focus-width)) solid
+          var(--forge-calendar-border-focus, var(--mp-calendar-border-focus));
         outline-offset: 2px;
       }
     }
@@ -131,8 +139,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: var(--mp-calendar-font-weight-medium);
-      color: var(--mp-calendar-text-muted);
+      font-weight: var(--forge-calendar-font-weight-medium, var(--mp-calendar-font-weight-medium));
+      color: var(--forge-calendar-text-muted, var(--mp-calendar-text-muted));
     }
 
     &__day {
@@ -142,45 +150,50 @@
       width: 100%;
       border: none;
       background: transparent;
-      border-radius: var(--mp-calendar-radius-control);
+      border-radius: var(--forge-calendar-radius-control, var(--mp-calendar-radius-control));
       cursor: pointer;
-      color: var(--mp-calendar-text-default);
+      color: var(--forge-calendar-text-default, var(--mp-calendar-text-default));
       transition:
-        background-color var(--mp-calendar-transition-duration) var(--mp-calendar-transition-easing),
-        color var(--mp-calendar-transition-duration) var(--mp-calendar-transition-easing);
+        background-color var(--forge-calendar-transition-duration, var(--mp-calendar-transition-duration))
+          var(--forge-calendar-transition-easing, var(--mp-calendar-transition-easing)),
+        color var(--forge-calendar-transition-duration, var(--mp-calendar-transition-duration))
+          var(--forge-calendar-transition-easing, var(--mp-calendar-transition-easing));
 
       &--empty {
         pointer-events: none;
       }
 
       &--selected {
-        background-color: var(--mp-calendar-surface-selected);
-        color: var(--mp-calendar-text-selected);
-        font-weight: var(--mp-calendar-font-weight-selected);
+        background-color: var(--forge-calendar-surface-selected, var(--mp-calendar-surface-selected));
+        color: var(--forge-calendar-text-selected, var(--mp-calendar-text-selected));
+        font-weight: var(--forge-calendar-font-weight-selected, var(--mp-calendar-font-weight-selected));
       }
 
       &--range-start,
       &--range-end {
-        background-color: var(--mp-calendar-surface-selected);
-        color: var(--mp-calendar-text-selected);
-        font-weight: var(--mp-calendar-font-weight-selected);
+        background-color: var(--forge-calendar-surface-selected, var(--mp-calendar-surface-selected));
+        color: var(--forge-calendar-text-selected, var(--mp-calendar-text-selected));
+        font-weight: var(--forge-calendar-font-weight-selected, var(--mp-calendar-font-weight-selected));
       }
 
       &--range-start {
-        border-radius: var(--mp-calendar-radius-control) 0 0 var(--mp-calendar-radius-control);
+        border-radius: var(--forge-calendar-radius-control, var(--mp-calendar-radius-control)) 0 0
+          var(--forge-calendar-radius-control, var(--mp-calendar-radius-control));
       }
 
       &--range-end {
-        border-radius: 0 var(--mp-calendar-radius-control) var(--mp-calendar-radius-control) 0;
+        border-radius: 0 var(--forge-calendar-radius-control, var(--mp-calendar-radius-control))
+          var(--forge-calendar-radius-control, var(--mp-calendar-radius-control)) 0;
       }
 
       &--in-range {
         background-color: color-mix(
           in srgb,
-          var(--mp-calendar-surface-range) var(--mp-calendar-range-opacity),
+          var(--forge-calendar-surface-range, var(--mp-calendar-surface-range))
+            var(--forge-calendar-range-opacity, var(--mp-calendar-range-opacity)),
           transparent
         );
-        color: var(--mp-calendar-text-range);
+        color: var(--forge-calendar-text-range, var(--mp-calendar-text-range));
         border-radius: 0;
       }
 
@@ -189,42 +202,47 @@
       &--in-preview {
         background-color: color-mix(
           in srgb,
-          var(--mp-calendar-surface-range) var(--mp-calendar-preview-opacity),
+          var(--forge-calendar-surface-range, var(--mp-calendar-surface-range))
+            var(--forge-calendar-preview-opacity, var(--mp-calendar-preview-opacity)),
           transparent
         );
-        color: var(--mp-calendar-text-range);
+        color: var(--forge-calendar-text-range, var(--mp-calendar-text-range));
         border-radius: 0;
       }
 
       &--preview-end {
         background-color: color-mix(
           in srgb,
-          var(--mp-calendar-surface-range) var(--mp-calendar-preview-end-opacity),
+          var(--forge-calendar-surface-range, var(--mp-calendar-surface-range))
+            var(--forge-calendar-preview-end-opacity, var(--mp-calendar-preview-end-opacity)),
           transparent
         );
-        color: var(--mp-calendar-text-range);
-        font-weight: var(--mp-calendar-font-weight-selected);
-        border-radius: 0 var(--mp-calendar-radius-control) var(--mp-calendar-radius-control) 0;
+        color: var(--forge-calendar-text-range, var(--mp-calendar-text-range));
+        font-weight: var(--forge-calendar-font-weight-selected, var(--mp-calendar-font-weight-selected));
+        border-radius: 0 var(--forge-calendar-radius-control, var(--mp-calendar-radius-control))
+          var(--forge-calendar-radius-control, var(--mp-calendar-radius-control)) 0;
       }
 
       &--today {
         background-color: color-mix(
           in srgb,
-          var(--mp-calendar-surface-range) var(--mp-calendar-range-opacity),
+          var(--forge-calendar-surface-range, var(--mp-calendar-surface-range))
+            var(--forge-calendar-range-opacity, var(--mp-calendar-range-opacity)),
           transparent
         );
-        color: var(--mp-calendar-text-range);
-        font-weight: var(--mp-calendar-font-weight-selected);
+        color: var(--forge-calendar-text-range, var(--mp-calendar-text-range));
+        font-weight: var(--forge-calendar-font-weight-selected, var(--mp-calendar-font-weight-selected));
       }
 
       &--disabled {
-        opacity: var(--mp-calendar-disabled-opacity);
+        opacity: var(--forge-calendar-disabled-opacity, var(--mp-calendar-disabled-opacity));
         cursor: not-allowed;
         pointer-events: none;
       }
 
       &:focus-visible {
-        outline: var(--mp-calendar-border-focus-width) solid var(--mp-calendar-border-focus);
+        outline: var(--forge-calendar-border-focus-width, var(--mp-calendar-border-focus-width)) solid
+          var(--forge-calendar-border-focus, var(--mp-calendar-border-focus));
         outline-offset: 2px;
       }
 
@@ -235,7 +253,7 @@
           .forge-calendar__day--range-end,
           .forge-calendar__day--preview-end
         ) {
-        background-color: var(--mp-calendar-surface-hover);
+        background-color: var(--forge-calendar-surface-hover, var(--mp-calendar-surface-hover));
       }
     }
 
@@ -244,7 +262,7 @@
     &__years {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--mp-calendar-label-gap);
+      gap: var(--forge-calendar-label-gap, var(--mp-calendar-label-gap));
     }
 
     &__cell {
@@ -253,31 +271,34 @@
       justify-content: center;
       border: none;
       background: transparent;
-      border-radius: var(--mp-calendar-radius-control);
+      border-radius: var(--forge-calendar-radius-control, var(--mp-calendar-radius-control));
       cursor: pointer;
-      color: var(--mp-calendar-text-default);
+      color: var(--forge-calendar-text-default, var(--mp-calendar-text-default));
       transition:
-        background-color var(--mp-calendar-transition-duration) var(--mp-calendar-transition-easing),
-        color var(--mp-calendar-transition-duration) var(--mp-calendar-transition-easing);
+        background-color var(--forge-calendar-transition-duration, var(--mp-calendar-transition-duration))
+          var(--forge-calendar-transition-easing, var(--mp-calendar-transition-easing)),
+        color var(--forge-calendar-transition-duration, var(--mp-calendar-transition-duration))
+          var(--forge-calendar-transition-easing, var(--mp-calendar-transition-easing));
 
       &--current {
-        background-color: var(--mp-calendar-surface-selected);
-        color: var(--mp-calendar-text-selected);
-        font-weight: var(--mp-calendar-font-weight-selected);
+        background-color: var(--forge-calendar-surface-selected, var(--mp-calendar-surface-selected));
+        color: var(--forge-calendar-text-selected, var(--mp-calendar-text-selected));
+        font-weight: var(--forge-calendar-font-weight-selected, var(--mp-calendar-font-weight-selected));
       }
 
       &--outside {
-        color: var(--mp-calendar-text-muted);
-        opacity: var(--mp-calendar-outside-opacity);
+        color: var(--forge-calendar-text-muted, var(--mp-calendar-text-muted));
+        opacity: var(--forge-calendar-outside-opacity, var(--mp-calendar-outside-opacity));
       }
 
       &:focus-visible {
-        outline: var(--mp-calendar-border-focus-width) solid var(--mp-calendar-border-focus);
+        outline: var(--forge-calendar-border-focus-width, var(--mp-calendar-border-focus-width)) solid
+          var(--forge-calendar-border-focus, var(--mp-calendar-border-focus));
         outline-offset: 2px;
       }
 
       &:hover:not(.forge-calendar__cell--current) {
-        background-color: var(--mp-calendar-surface-hover);
+        background-color: var(--forge-calendar-surface-hover, var(--mp-calendar-surface-hover));
       }
     }
   }

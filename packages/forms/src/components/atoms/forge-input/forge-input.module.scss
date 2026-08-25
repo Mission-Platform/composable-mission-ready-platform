@@ -1,3 +1,5 @@
+@use './forge-input-properties';
+
 /**
  * Styling for the write-once `ForgeInput`.
  *
@@ -12,7 +14,7 @@
   .forge-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-input-field-gap);
+    gap: var(--forge-input-field-gap, var(--mp-input-field-gap));
 
     &__label {
       &--hidden {
@@ -29,23 +31,26 @@
     }
 
     &__required {
-      color: var(--mp-field-required);
+      color: var(--forge-input-field-required, var(--mp-field-required));
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: center;
-      border: var(--mp-input-border-width) solid var(--mp-input-border-default);
-      border-radius: var(--mp-input-radius);
-      background-color: var(--mp-input-surface-default);
+      border: var(--forge-input-border-width, var(--mp-input-border-width)) solid
+        var(--forge-input-border-default, var(--mp-input-border-default));
+      border-radius: var(--forge-input-radius, var(--mp-input-radius));
+      background-color: var(--forge-input-surface-default, var(--mp-input-surface-default));
       transition:
-        border-color var(--mp-input-transition-duration) var(--mp-input-transition-easing),
-        box-shadow var(--mp-input-transition-duration) var(--mp-input-transition-easing);
+        border-color var(--forge-input-transition-duration, var(--mp-input-transition-duration))
+          var(--forge-input-transition-easing, var(--mp-input-transition-easing)),
+        box-shadow var(--forge-input-transition-duration, var(--mp-input-transition-duration))
+          var(--forge-input-transition-easing, var(--mp-input-transition-easing));
 
       &:focus-within {
-        border-color: var(--mp-input-border-focus-visible);
-        box-shadow: var(--mp-input-focus-ring);
+        border-color: var(--forge-input-border-focus-visible, var(--mp-input-border-focus-visible));
+        box-shadow: var(--forge-input-focus-ring, var(--mp-input-focus-ring));
       }
     }
 
@@ -56,12 +61,12 @@
       border: none;
       outline: none;
       background: transparent;
-      color: var(--mp-input-text-default);
-      font-family: var(--mp-input-font-family);
-      line-height: var(--mp-input-line-height);
+      color: var(--forge-input-text-default, var(--mp-input-text-default));
+      font-family: var(--forge-input-font-family, var(--mp-input-font-family));
+      line-height: var(--forge-input-line-height, var(--mp-input-line-height));
 
       &::placeholder {
-        color: var(--mp-input-text-placeholder);
+        color: var(--forge-input-text-placeholder, var(--mp-input-text-placeholder));
       }
     }
 
@@ -70,14 +75,14 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      color: var(--mp-input-text-secondary);
+      color: var(--forge-input-text-secondary, var(--mp-input-text-secondary));
 
       &--start {
-        margin-inline-start: var(--mp-input-extension-gap);
+        margin-inline-start: var(--forge-input-extension-gap, var(--mp-input-extension-gap));
       }
 
       &--end {
-        margin-inline-end: var(--mp-input-extension-gap);
+        margin-inline-end: var(--forge-input-extension-gap, var(--mp-input-extension-gap));
       }
     }
 
@@ -85,9 +90,9 @@
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
         .forge-input__field {
-          padding: var(--mp-input-size-#{$size}-padding-block)
-            var(--mp-input-size-#{$size}-padding-inline);
-          font-size: var(--mp-input-size-#{$size}-font-size);
+          padding: var(--forge-input-size-#{$size}-padding-block, var(--mp-input-size-#{$size}-padding-block))
+            var(--forge-input-size-#{$size}-padding-inline, var(--mp-input-size-#{$size}-padding-inline));
+          font-size: var(--forge-input-size-#{$size}-font-size, var(--mp-input-size-#{$size}-font-size));
         }
       }
     }
@@ -95,26 +100,26 @@
     /* States */
     &--error {
       .forge-input__wrapper {
-        border-color: var(--mp-input-border-invalid);
+        border-color: var(--forge-input-border-invalid, var(--mp-input-border-invalid));
 
         &:focus-within {
-          box-shadow: var(--mp-input-focus-ring-invalid);
+          box-shadow: var(--forge-input-focus-ring-invalid, var(--mp-input-focus-ring-invalid));
         }
       }
     }
 
     &--disabled {
-      opacity: var(--mp-input-opacity-disabled);
+      opacity: var(--forge-input-opacity-disabled, var(--mp-input-opacity-disabled));
       pointer-events: none;
 
       .forge-input__wrapper {
-        background-color: var(--mp-input-surface-disabled);
+        background-color: var(--forge-input-surface-disabled, var(--mp-input-surface-disabled));
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-input-text-invalid);
+      color: var(--forge-input-text-invalid, var(--mp-input-text-invalid));
       margin: 0;
     }
 

@@ -11,41 +11,48 @@
  * all driven by the shared design tokens.
  */
 
+@use './forge-button-properties';
+
 @layer mp.components {
   .forge-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--mp-button-primary-gap);
-    border: var(--mp-button-border-width-default) solid transparent;
-    border-radius: var(--mp-button-primary-radius);
-    font-family: var(--mp-button-font-family);
-    font-weight: var(--mp-button-font-weight);
-    line-height: var(--mp-button-line-height);
+    gap: var(--forge-button-primary-gap, var(--mp-button-primary-gap));
+    border: var(--forge-button-border-width-default, var(--mp-button-border-width-default)) solid transparent;
+    border-radius: var(--forge-button-primary-radius, var(--mp-button-primary-radius));
+    font-family: var(--forge-button-font-family, var(--mp-button-font-family));
+    font-weight: var(--forge-button-font-weight, var(--mp-button-font-weight));
+    line-height: var(--forge-button-line-height, var(--mp-button-line-height));
     cursor: pointer;
     transition:
-      background-color var(--mp-button-primary-transition-duration) var(--mp-button-primary-transition-easing),
-      border-color var(--mp-button-primary-transition-duration) var(--mp-button-primary-transition-easing),
-      box-shadow var(--mp-button-primary-transition-duration) var(--mp-button-primary-transition-easing),
-      opacity var(--mp-button-primary-transition-duration) var(--mp-button-primary-transition-easing);
+      background-color var(--forge-button-primary-transition-duration, var(--mp-button-primary-transition-duration))
+        var(--forge-button-primary-transition-easing, var(--mp-button-primary-transition-easing)),
+      border-color var(--forge-button-primary-transition-duration, var(--mp-button-primary-transition-duration))
+        var(--forge-button-primary-transition-easing, var(--mp-button-primary-transition-easing)),
+      box-shadow var(--forge-button-primary-transition-duration, var(--mp-button-primary-transition-duration))
+        var(--forge-button-primary-transition-easing, var(--mp-button-primary-transition-easing)),
+      opacity var(--forge-button-primary-transition-duration, var(--mp-button-primary-transition-duration))
+        var(--forge-button-primary-transition-easing, var(--mp-button-primary-transition-easing));
     white-space: nowrap;
     user-select: none;
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-button-primary-focus-ring);
+      box-shadow: var(--forge-button-primary-focus-ring, var(--mp-button-primary-focus-ring));
     }
 
     &:disabled {
       cursor: not-allowed;
-      opacity: var(--mp-button-primary-opacity-disabled);
+      opacity: var(--forge-button-primary-opacity-disabled, var(--mp-button-primary-opacity-disabled));
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
-        padding: var(--mp-button-size-#{$size}-padding-block) var(--mp-button-size-#{$size}-padding-inline);
-        font-size: var(--mp-button-size-#{$size}-font-size);
+        padding: var(--forge-button-size-#{$size}-padding-block, var(--mp-button-size-#{$size}-padding-block))
+          var(--forge-button-size-#{$size}-padding-inline, var(--mp-button-size-#{$size}-padding-inline));
+        font-size: var(--forge-button-size-#{$size}-font-size, var(--mp-button-size-#{$size}-font-size));
       }
     }
 
@@ -53,15 +60,18 @@
 
     /* Solid fill (high emphasis) for brand / intent treatments. */
     @mixin solid($name, $family) {
-      background-color: var(--mp-button-#{$name}-background-default);
-      color: var(--mp-button-#{$name}-text-default);
+      background-color: var(--forge-button-#{$name}-background-default, var(--mp-button-#{$name}-background-default));
+      color: var(--forge-button-#{$name}-text-default, var(--mp-button-#{$name}-text-default));
 
       &:hover:not(:disabled) {
-        background-color: var(--mp-button-#{$name}-background-hover);
+        background-color: var(--forge-button-#{$name}-background-hover, var(--mp-button-#{$name}-background-hover));
       }
 
       &:active:not(:disabled) {
-        background-color: var(--mp-button-#{$name}-background-active, var(--mp-button-#{$name}-background-hover));
+        background-color: var(
+          --forge-button-#{$name}-background-active,
+          var(--mp-button-#{$name}-background-active, var(--mp-button-#{$name}-background-hover))
+        );
       }
     }
 
@@ -89,7 +99,7 @@
       @include solid('error', 'error');
 
       &:focus-visible {
-        box-shadow: var(--mp-button-error-focus-ring);
+        box-shadow: var(--forge-button-error-focus-ring, var(--mp-button-error-focus-ring));
       }
     }
 
@@ -97,37 +107,37 @@
       @include solid('critical', 'critical');
 
       &:focus-visible {
-        box-shadow: var(--mp-button-critical-focus-ring);
+        box-shadow: var(--forge-button-critical-focus-ring, var(--mp-button-critical-focus-ring));
       }
     }
 
     /* Secondary — outlined (medium emphasis). */
     &--secondary {
-      background-color: var(--mp-button-secondary-background-default);
-      border-color: var(--mp-button-secondary-border-default);
-      color: var(--mp-button-secondary-text-default);
+      background-color: var(--forge-button-secondary-background-default, var(--mp-button-secondary-background-default));
+      border-color: var(--forge-button-secondary-border-default, var(--mp-button-secondary-border-default));
+      color: var(--forge-button-secondary-text-default, var(--mp-button-secondary-text-default));
 
       &:hover:not(:disabled) {
-        background-color: var(--mp-button-secondary-background-hover);
-        border-color: var(--mp-button-secondary-border-hover);
+        background-color: var(--forge-button-secondary-background-hover, var(--mp-button-secondary-background-hover));
+        border-color: var(--forge-button-secondary-border-hover, var(--mp-button-secondary-border-hover));
       }
 
       &:active:not(:disabled) {
-        background-color: var(--mp-button-secondary-background-active);
+        background-color: var(--forge-button-secondary-background-active, var(--mp-button-secondary-background-active));
       }
     }
 
     /* Tertiary — transparent (low emphasis). */
     @mixin transparent($name) {
-      background-color: var(--mp-button-#{$name}-background-default);
-      color: var(--mp-button-#{$name}-text-default);
+      background-color: var(--forge-button-#{$name}-background-default, var(--mp-button-#{$name}-background-default));
+      color: var(--forge-button-#{$name}-text-default, var(--mp-button-#{$name}-text-default));
 
       &:hover:not(:disabled) {
-        background-color: var(--mp-button-#{$name}-background-hover);
+        background-color: var(--forge-button-#{$name}-background-hover, var(--mp-button-#{$name}-background-hover));
       }
 
       &:active:not(:disabled) {
-        background-color: var(--mp-button-#{$name}-background-active);
+        background-color: var(--forge-button-#{$name}-background-active, var(--mp-button-#{$name}-background-active));
       }
     }
 
@@ -152,10 +162,11 @@
     &__spinner {
       width: 1em;
       height: 1em;
-      border: var(--mp-button-spinner-border-width) solid currentcolor;
+      border: var(--forge-button-spinner-border-width, var(--mp-button-spinner-border-width)) solid currentcolor;
       border-top-color: transparent;
-      border-radius: var(--mp-button-spinner-radius);
-      animation: mp-spin var(--mp-button-spinner-animation-duration) var(--mp-button-spinner-animation-easing) infinite;
+      border-radius: var(--forge-button-spinner-radius, var(--mp-button-spinner-radius));
+      animation: mp-spin var(--forge-button-spinner-animation-duration, var(--mp-button-spinner-animation-duration))
+        var(--forge-button-spinner-animation-easing, var(--mp-button-spinner-animation-easing)) infinite;
       flex-shrink: 0;
     }
   }

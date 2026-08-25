@@ -11,6 +11,8 @@
  * is not `data-v-` scoped on either framework.
  */
 
+@use './forge-button-group-properties';
+
 @layer mp.components {
   .forge-button-group {
     display: inline-flex;
@@ -38,10 +40,10 @@
 
     /* Gaps (only when not attached) */
     $gap-map: (
-      'none': var(--mp-button-group-gap-none),
-      'xs': var(--mp-button-group-gap-xs),
-      'sm': var(--mp-button-group-gap-sm),
-      'md': var(--mp-button-group-gap-md),
+      'none': var(--forge-button-group-gap-none, var(--mp-button-group-gap-none)),
+      'xs': var(--forge-button-group-gap-xs, var(--mp-button-group-gap-xs)),
+      'sm': var(--forge-button-group-gap-sm, var(--mp-button-group-gap-sm)),
+      'md': var(--forge-button-group-gap-md, var(--mp-button-group-gap-md)),
     );
 
     @each $name, $value in $gap-map {
@@ -90,7 +92,7 @@
       > *:focus-visible,
       > *:hover {
         position: relative;
-        z-index: 1;
+        z-index: var(--mp-z-index-base-foreground);
       }
     }
 
@@ -112,7 +114,7 @@
         )
     {
       &--#{$name}.forge-button-group--attached > * {
-        border-color: var(--mp-button-group-border-#{$family});
+        border-color: var(--forge-button-group-border-#{$family}, var(--mp-button-group-border-#{$family}));
       }
     }
   }

@@ -9,6 +9,8 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-status-icon-properties';
+
 @layer mp.components {
   .forge-status-icon {
     display: inline-flex;
@@ -29,9 +31,9 @@
        with the wrapper's font-size instead. */
     @each $size in ('2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl') {
       &--#{$size} {
-        width: var(--mp-feedback-status-size-#{$size});
-        height: var(--mp-feedback-status-size-#{$size});
-        font-size: var(--mp-feedback-status-size-#{$size});
+        width: var(--forge-status-icon-feedback-status-size-#{$size}, var(--mp-feedback-status-size-#{$size}));
+        height: var(--forge-status-icon-feedback-status-size-#{$size}, var(--mp-feedback-status-size-#{$size}));
+        font-size: var(--forge-status-icon-feedback-status-size-#{$size}, var(--mp-feedback-status-size-#{$size}));
       }
     }
 
@@ -41,7 +43,7 @@
      */
     @each $name in ('neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical') {
       &--#{$name} {
-        color: var(--mp-feedback-status-color-#{$name});
+        color: var(--forge-status-icon-feedback-status-color-#{$name}, var(--mp-feedback-status-color-#{$name}));
       }
     }
   }

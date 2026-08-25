@@ -1,0 +1,111 @@
+/**
+ * Registered inherited custom properties for forge-chat-bubble overrides.
+ */
+
+@property --forge-chat-bubble-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-gap);
+}
+
+@property --forge-chat-bubble-pending-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-pending-opacity);
+}
+
+@property --forge-chat-bubble-column-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-column-gap);
+}
+
+@property --forge-chat-bubble-meta-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-meta-gap);
+}
+
+@property --forge-chat-bubble-meta-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-meta-padding-inline);
+}
+
+@property --forge-chat-bubble-body-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-body-padding-block);
+}
+
+@property --forge-chat-bubble-body-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-body-padding-inline);
+}
+
+@property --forge-chat-bubble-body-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-body-surface);
+}
+
+@property --forge-chat-bubble-body-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-body-text);
+}
+
+@property --forge-chat-bubble-body-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-body-radius);
+}
+
+@property --forge-chat-bubble-body-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-body-font-family);
+}
+
+@property --forge-chat-bubble-body-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-body-font-size);
+}
+
+@property --forge-chat-bubble-body-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-body-line-height);
+}
+
+@property --forge-chat-bubble-body-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-body-font-weight);
+}
+
+@property --forge-chat-bubble-body-tail-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-body-tail-radius);
+}
+
+@property --forge-chat-bubble-primary-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-primary-surface);
+}
+
+@property --forge-chat-bubble-primary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-primary-text);
+}
+
+@property --forge-chat-bubble-footer-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-chat-bubble-footer-padding-inline);
+}

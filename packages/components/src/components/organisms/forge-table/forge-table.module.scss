@@ -13,6 +13,7 @@
  */
 
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
+@use './forge-table-properties';
 
 @layer mp.components {
   .forge-table-wrapper {
@@ -20,58 +21,62 @@
     width: fit-content;
     max-width: 100%;
     overflow-x: auto;
-    border: var(--mp-data-table-wrapper-border-width) solid var(--mp-data-table-wrapper-border);
-    border-radius: var(--mp-data-table-wrapper-radius);
+    border: var(--forge-table-data-table-wrapper-border-width, var(--mp-data-table-wrapper-border-width)) solid
+      var(--forge-table-data-table-wrapper-border, var(--mp-data-table-wrapper-border));
+    border-radius: var(--forge-table-data-table-wrapper-radius, var(--mp-data-table-wrapper-radius));
   }
 
   .forge-table__loading {
     position: absolute;
     inset: 0;
-    background-color: var(--mp-data-table-loading-surface);
+    background-color: var(--forge-table-data-table-loading-surface, var(--mp-data-table-loading-surface));
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
-    border-radius: var(--mp-data-table-loading-radius);
+    z-index: var(--mp-z-index-feature-table);
+    border-radius: var(--forge-table-data-table-loading-radius, var(--mp-data-table-loading-radius));
   }
 
   .forge-table__spinner {
     display: inline-block;
-    width: var(--mp-data-table-spinner-size);
-    height: var(--mp-data-table-spinner-size);
-    border: var(--mp-data-table-spinner-border-width) solid var(--mp-data-table-spinner-border);
+    width: var(--forge-table-data-table-spinner-size, var(--mp-data-table-spinner-size));
+    height: var(--forge-table-data-table-spinner-size, var(--mp-data-table-spinner-size));
+    border: var(--forge-table-data-table-spinner-border-width, var(--mp-data-table-spinner-border-width)) solid
+      var(--forge-table-data-table-spinner-border, var(--mp-data-table-spinner-border));
     border-top-color: transparent;
-    border-radius: var(--mp-data-table-spinner-radius);
-    animation: mp-spin var(--mp-data-table-spinner-animation-duration)
-      var(--mp-data-table-spinner-animation-easing) infinite;
+    border-radius: var(--forge-table-data-table-spinner-radius, var(--mp-data-table-spinner-radius));
+    animation: mp-spin
+      var(--forge-table-data-table-spinner-animation-duration, var(--mp-data-table-spinner-animation-duration))
+      var(--forge-table-data-table-spinner-animation-easing, var(--mp-data-table-spinner-animation-easing)) infinite;
   }
 
   .forge-table {
-    font-size: var(--mp-data-table-font-size);
+    font-size: var(--forge-table-data-table-font-size, var(--mp-data-table-font-size));
     width: 100%;
     border-collapse: collapse;
 
     &__caption {
-      padding: var(--mp-data-table-caption-padding-block)
-        var(--mp-data-table-caption-padding-inline);
+      padding: var(--forge-table-data-table-caption-padding-block, var(--mp-data-table-caption-padding-block))
+        var(--forge-table-data-table-caption-padding-inline, var(--mp-data-table-caption-padding-inline));
       text-align: left;
       caption-side: top;
     }
 
     &__head {
-      background-color: var(--mp-data-table-head-surface);
+      background-color: var(--forge-table-data-table-head-surface, var(--mp-data-table-head-surface));
     }
 
     &__th {
-      padding: var(--mp-data-table-header-padding-block)
-        var(--mp-data-table-header-padding-inline);
+      padding: var(--forge-table-data-table-header-padding-block, var(--mp-data-table-header-padding-block))
+        var(--forge-table-data-table-header-padding-inline, var(--mp-data-table-header-padding-inline));
       text-align: left;
       white-space: nowrap;
-      border-bottom: var(--mp-data-table-wrapper-border-width) solid var(--mp-data-table-header-border);
+      border-bottom: var(--forge-table-data-table-wrapper-border-width, var(--mp-data-table-wrapper-border-width)) solid
+        var(--forge-table-data-table-header-border, var(--mp-data-table-header-border));
 
       @include bp.bp-up('sm') {
-        padding: var(--mp-data-table-header-padding-block-wide)
-          var(--mp-data-table-header-padding-inline-wide);
+        padding: var(--forge-table-data-table-header-padding-block-wide, var(--mp-data-table-header-padding-block-wide))
+          var(--forge-table-data-table-header-padding-inline-wide, var(--mp-data-table-header-padding-inline-wide));
       }
 
       &--align-center {
@@ -87,8 +92,14 @@
         user-select: none;
 
         &:hover {
-          background-color: var(--mp-data-table-header-sortable-hover-surface);
-          color: var(--mp-data-table-header-sortable-hover-text);
+          background-color: var(
+            --forge-table-data-table-header-sortable-hover-surface,
+            var(--mp-data-table-header-sortable-hover-surface)
+          );
+          color: var(
+            --forge-table-data-table-header-sortable-hover-text,
+            var(--mp-data-table-header-sortable-hover-text)
+          );
         }
       }
     }
@@ -96,22 +107,22 @@
     &__th-content {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-data-table-header-content-gap);
+      gap: var(--forge-table-data-table-header-content-gap, var(--mp-data-table-header-content-gap));
     }
 
     &__sort-icon {
-      opacity: var(--mp-data-table-sort-opacity);
-      font-size: var(--mp-data-table-sort-font-size);
+      opacity: var(--forge-table-data-table-sort-opacity, var(--mp-data-table-sort-opacity));
+      font-size: var(--forge-table-data-table-sort-font-size, var(--mp-data-table-sort-font-size));
     }
 
     &__td {
-      padding: var(--mp-data-table-cell-padding-block)
-        var(--mp-data-table-cell-padding-inline);
+      padding: var(--forge-table-data-table-cell-padding-block, var(--mp-data-table-cell-padding-block))
+        var(--forge-table-data-table-cell-padding-inline, var(--mp-data-table-cell-padding-inline));
       vertical-align: middle;
 
       @include bp.bp-up('sm') {
-        padding: var(--mp-data-table-cell-padding-block-wide)
-          var(--mp-data-table-cell-padding-inline-wide);
+        padding: var(--forge-table-data-table-cell-padding-block-wide, var(--mp-data-table-cell-padding-block-wide))
+          var(--forge-table-data-table-cell-padding-inline-wide, var(--mp-data-table-cell-padding-inline-wide));
       }
 
       &--align-center {
@@ -124,7 +135,8 @@
     }
 
     &__row {
-      border-bottom: var(--mp-data-table-wrapper-border-width) solid var(--mp-data-table-row-border);
+      border-bottom: var(--forge-table-data-table-wrapper-border-width, var(--mp-data-table-wrapper-border-width)) solid
+        var(--forge-table-data-table-row-border, var(--mp-data-table-row-border));
 
       &:last-child {
         border-bottom: none;
@@ -132,27 +144,28 @@
     }
 
     &__empty {
-      padding: var(--mp-data-table-empty-padding-block)
-        var(--mp-data-table-empty-padding-inline);
+      padding: var(--forge-table-data-table-empty-padding-block, var(--mp-data-table-empty-padding-block))
+        var(--forge-table-data-table-empty-padding-inline, var(--mp-data-table-empty-padding-inline));
       text-align: center;
     }
 
     /* Striped */
     &--striped .forge-table__row:nth-child(even) {
-      background-color: var(--mp-data-table-row-striped-surface);
+      background-color: var(--forge-table-data-table-row-striped-surface, var(--mp-data-table-row-striped-surface));
     }
 
     /* Bordered */
     &--bordered {
       .forge-table__th,
       .forge-table__td {
-        border: var(--mp-data-table-bordered-border-width) solid var(--mp-data-table-bordered-border);
+        border: var(--forge-table-data-table-bordered-border-width, var(--mp-data-table-bordered-border-width)) solid
+          var(--forge-table-data-table-bordered-border, var(--mp-data-table-bordered-border));
       }
     }
 
     /* Hoverable */
     &--hoverable .forge-table__row:hover {
-      background-color: var(--mp-data-table-row-hover-surface);
+      background-color: var(--forge-table-data-table-row-hover-surface, var(--mp-data-table-row-hover-surface));
     }
 
     /**
@@ -174,12 +187,18 @@
     {
       &--#{$name} {
         .forge-table__head {
-          background-color: var(--mp-data-table-tone-#{$family}-head-surface);
+          background-color: var(
+            --forge-table-data-table-tone-#{$family}-head-surface,
+            var(--mp-data-table-tone-#{$family}-head-surface)
+          );
         }
 
         .forge-table__th,
         .forge-table__row {
-          border-bottom-color: var(--mp-data-table-tone-#{$family}-border);
+          border-bottom-color: var(
+            --forge-table-data-table-tone-#{$family}-border,
+            var(--mp-data-table-tone-#{$family}-border)
+          );
         }
       }
     }

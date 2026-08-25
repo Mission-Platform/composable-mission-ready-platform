@@ -1,0 +1,141 @@
+/**
+ * Registered inherited custom properties for forge-alert overrides.
+ */
+
+@property --forge-alert-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-alert-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-alert-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-alert-color-bg-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-muted);
+}
+
+@property --forge-alert-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-alert-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-alert-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-alert-color-success-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-subtle);
+}
+
+@property --forge-alert-color-success-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-default);
+}
+
+@property --forge-alert-color-warning-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-warning-subtle);
+}
+
+@property --forge-alert-color-warning-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-warning-default);
+}
+
+@property --forge-alert-color-danger-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-danger-subtle);
+}
+
+@property --forge-alert-color-danger-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-danger-default);
+}
+
+@property --forge-alert-size-icon-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-icon-lg);
+}
+
+@property --forge-alert-marker {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-alert-marker, var(--mp-color-info-default));
+}
+
+@property --forge-alert-font-weight-bold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-bold);
+}
+
+@property --forge-alert-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-alert-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-alert-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-sm);
+}
+
+@property --forge-alert-font-size-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-xl);
+}
+
+@property --forge-alert-line-height-tight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-line-height-tight);
+}
+
+@property --forge-alert-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-alert-color-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-focus);
+}

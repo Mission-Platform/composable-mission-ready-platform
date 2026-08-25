@@ -1,0 +1,105 @@
+/**
+ * Registered inherited custom properties for forge-announcement-bar overrides.
+ */
+
+@property --forge-announcement-bar-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-announcement-bar-size-height-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-lg);
+}
+
+@property --forge-announcement-bar-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-announcement-bar-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-announcement-bar-color-bg-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-muted);
+}
+
+@property --forge-announcement-bar-color-info-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-info-subtle);
+}
+
+@property --forge-announcement-bar-color-success-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-subtle);
+}
+
+@property --forge-announcement-bar-color-warning-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-warning-subtle);
+}
+
+@property --forge-announcement-bar-color-error-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-error-subtle);
+}
+
+@property --forge-announcement-bar-size-checkable-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-checkable-indicator);
+}
+
+@property --forge-announcement-bar-radius-full {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-full);
+}
+
+@property --forge-announcement-bar-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-announcement-bar-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-announcement-bar-font-weight-semibold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-semibold);
+}
+
+@property --forge-announcement-bar-size-height-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-sm);
+}
+
+@property --forge-announcement-bar-font-size-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-xl);
+}
+
+@property --forge-announcement-bar-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}

@@ -9,15 +9,17 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-responsive-video-properties';
+
 @layer mp.components {
   .forge-responsive-video {
     display: block;
     width: 100%;
     height: auto;
-    background-color: var(--mp-media-video-surface-default);
+    background-color: var(--forge-responsive-video-media-video-surface-default, var(--mp-media-video-surface-default));
 
     &--rounded {
-      border-radius: var(--mp-media-radius);
+      border-radius: var(--forge-responsive-video-media-radius, var(--mp-media-radius));
       overflow: hidden;
     }
   }

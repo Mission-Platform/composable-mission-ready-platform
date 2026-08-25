@@ -1,31 +1,33 @@
+@use './forge-cta-banner-properties';
+
 @layer mp.components {
   .forge-cta-banner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--mp-spacing-8);
-    padding: var(--mp-spacing-6);
-    border-radius: var(--mp-radius-md);
-    color: var(--mp-color-text-on-primary);
-    background: var(--mp-color-primary-default);
+    gap: var(--forge-cta-banner-spacing-8, var(--mp-spacing-8));
+    padding: var(--forge-cta-banner-spacing-6, var(--mp-spacing-6));
+    border-radius: var(--forge-cta-banner-radius-md, var(--mp-radius-md));
+    color: var(--forge-cta-banner-color-text-on-primary, var(--mp-color-text-on-primary));
+    background: var(--forge-cta-banner-color-primary-default, var(--mp-color-primary-default));
   }
 
   .forge-cta-banner--neutral {
-    color: var(--mp-color-text-primary);
-    background: var(--mp-color-bg-muted);
+    color: var(--forge-cta-banner-color-text-primary, var(--mp-color-text-primary));
+    background: var(--forge-cta-banner-color-bg-muted, var(--mp-color-bg-muted));
   }
 
   .forge-cta-banner--secondary {
-    background: var(--mp-color-secondary-default);
+    background: var(--forge-cta-banner-color-secondary-default, var(--mp-color-secondary-default));
   }
 
   .forge-cta-banner--success {
-    background: var(--mp-color-success-default);
+    background: var(--forge-cta-banner-color-success-default, var(--mp-color-success-default));
   }
 
   .forge-cta-banner--warning {
-    color: var(--mp-color-text-primary);
-    background: var(--mp-color-warning-default);
+    color: var(--forge-cta-banner-color-text-primary, var(--mp-color-text-primary));
+    background: var(--forge-cta-banner-color-warning-default, var(--mp-color-warning-default));
   }
 
   .forge-cta-banner--left {
@@ -45,37 +47,38 @@
   }
 
   .forge-cta-banner__title {
-    margin: 0 0 var(--mp-spacing-2);
-    font-size: var(--mp-font-size-2xl);
+    margin: 0 0 var(--forge-cta-banner-spacing-2, var(--mp-spacing-2));
+    font-size: var(--forge-cta-banner-font-size-2xl, var(--mp-font-size-2xl));
   }
 
   .forge-cta-banner__description {
-    margin: 0 0 var(--mp-spacing-4);
-    opacity: var(--mp-opacity-interactive);
+    margin: 0 0 var(--forge-cta-banner-spacing-4, var(--mp-spacing-4));
+    opacity: var(--forge-cta-banner-opacity-interactive, var(--mp-opacity-interactive));
   }
 
   .forge-cta-banner__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--mp-spacing-3);
-    margin-top: var(--mp-spacing-4);
+    gap: var(--forge-cta-banner-spacing-3, var(--mp-spacing-3));
+    margin-top: var(--forge-cta-banner-spacing-4, var(--mp-spacing-4));
   }
 
   .forge-cta-banner__action {
     display: inline-flex;
     align-items: center;
-    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-lg);
-    border: var(--mp-border-width-thin) solid transparent;
-    border-radius: var(--mp-radius-md);
+    padding: var(--forge-cta-banner-size-pad-block-md, var(--mp-size-pad-block-md))
+      var(--forge-cta-banner-size-pad-inline-lg, var(--mp-size-pad-inline-lg));
+    border: var(--forge-cta-banner-border-width-thin, var(--mp-border-width-thin)) solid transparent;
+    border-radius: var(--forge-cta-banner-radius-md, var(--mp-radius-md));
     font: inherit;
-    font-weight: var(--mp-font-weight-semibold);
+    font-weight: var(--forge-cta-banner-font-weight-semibold, var(--mp-font-weight-semibold));
     text-decoration: none;
     cursor: pointer;
   }
 
   .forge-cta-banner__action--solid {
-    color: var(--mp-color-primary-default);
-    background: var(--mp-color-bg-surface);
+    color: var(--forge-cta-banner-color-primary-default, var(--mp-color-primary-default));
+    background: var(--forge-cta-banner-color-bg-surface, var(--mp-color-bg-surface));
   }
 
   .forge-cta-banner__action--outline {
@@ -85,7 +88,7 @@
   }
 
   .forge-cta-banner__action--text {
-    padding-inline: var(--mp-spacing-1);
+    padding-inline: var(--forge-cta-banner-spacing-1, var(--mp-spacing-1));
     color: inherit;
     background: transparent;
     text-decoration: underline;
@@ -94,13 +97,13 @@
   .forge-cta-banner__image {
     max-width: 30%;
     max-height: 10rem;
-    border-radius: var(--mp-radius-md);
+    border-radius: var(--forge-cta-banner-radius-md, var(--mp-radius-md));
     object-fit: cover;
   }
 
   .forge-cta-banner__action:focus-visible {
-    outline: var(--mp-border-width-thick) solid currentcolor;
-    outline-offset: var(--mp-spacing-1);
+    outline: var(--forge-cta-banner-border-width-thick, var(--mp-border-width-thick)) solid currentcolor;
+    outline-offset: var(--forge-cta-banner-spacing-1, var(--mp-spacing-1));
   }
 
   @media (width <= 40rem) {

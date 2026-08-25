@@ -1,4 +1,4 @@
-import { type MpElement, useRef } from '@mission-platform/forge';
+import { useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import { beginPointerDrag, clamp } from '../../../utils/pointer-drag/pointer-drag';
 
@@ -13,6 +13,116 @@ export type RangeValue = [number, number];
 /** Identifies which thumb is being manipulated. */
 type Thumb = 'min' | 'max';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface RangeInputStyleProperties {
+  readonly 'checkable-border-selected'?: string;
+  readonly 'checkable-border-width-default'?: string;
+  readonly 'checkable-circle-radius'?: string;
+  readonly 'checkable-focus-ring'?: string;
+  readonly 'checkable-font-family'?: string;
+  readonly 'checkable-opacity-disabled'?: string;
+  readonly 'checkable-size-2xl-thumb-size'?: string;
+  readonly 'checkable-size-2xl-track-height'?: string;
+  readonly 'checkable-size-2xs-thumb-size'?: string;
+  readonly 'checkable-size-2xs-track-height'?: string;
+  readonly 'checkable-size-lg-thumb-size'?: string;
+  readonly 'checkable-size-lg-track-height'?: string;
+  readonly 'checkable-size-md-thumb-size'?: string;
+  readonly 'checkable-size-md-track-height'?: string;
+  readonly 'checkable-size-sm-thumb-size'?: string;
+  readonly 'checkable-size-sm-track-height'?: string;
+  readonly 'checkable-size-xl-thumb-size'?: string;
+  readonly 'checkable-size-xl-track-height'?: string;
+  readonly 'checkable-size-xs-thumb-size'?: string;
+  readonly 'checkable-size-xs-track-height'?: string;
+  readonly 'checkable-thumb-default'?: string;
+  readonly 'checkable-track-inactive'?: string;
+  readonly 'checkable-track-selected'?: string;
+  readonly 'checkable-value-background'?: string;
+  readonly 'checkable-value-font-size'?: string;
+  readonly 'checkable-value-offset'?: string;
+  readonly 'checkable-value-padding-block'?: string;
+  readonly 'checkable-value-padding-inline'?: string;
+  readonly 'checkable-value-radius'?: string;
+  readonly 'checkable-value-text'?: string;
+  readonly 'range-thumb-size'?: string;
+  readonly 'range-track-height'?: string;
+}
+
+export type RangeInputStyle = CSSStyleProperties & {
+  readonly '--forge-range-input-checkable-border-selected'?: string | undefined;
+  readonly '--forge-range-input-checkable-border-width-default'?: string | undefined;
+  readonly '--forge-range-input-checkable-circle-radius'?: string | undefined;
+  readonly '--forge-range-input-checkable-focus-ring'?: string | undefined;
+  readonly '--forge-range-input-checkable-font-family'?: string | undefined;
+  readonly '--forge-range-input-checkable-opacity-disabled'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-2xl-thumb-size'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-2xl-track-height'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-2xs-thumb-size'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-2xs-track-height'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-lg-thumb-size'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-lg-track-height'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-md-thumb-size'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-md-track-height'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-sm-thumb-size'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-sm-track-height'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-xl-thumb-size'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-xl-track-height'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-xs-thumb-size'?: string | undefined;
+  readonly '--forge-range-input-checkable-size-xs-track-height'?: string | undefined;
+  readonly '--forge-range-input-checkable-thumb-default'?: string | undefined;
+  readonly '--forge-range-input-checkable-track-inactive'?: string | undefined;
+  readonly '--forge-range-input-checkable-track-selected'?: string | undefined;
+  readonly '--forge-range-input-checkable-value-background'?: string | undefined;
+  readonly '--forge-range-input-checkable-value-font-size'?: string | undefined;
+  readonly '--forge-range-input-checkable-value-offset'?: string | undefined;
+  readonly '--forge-range-input-checkable-value-padding-block'?: string | undefined;
+  readonly '--forge-range-input-checkable-value-padding-inline'?: string | undefined;
+  readonly '--forge-range-input-checkable-value-radius'?: string | undefined;
+  readonly '--forge-range-input-checkable-value-text'?: string | undefined;
+  readonly '--forge-range-input-range-thumb-size'?: string | undefined;
+  readonly '--forge-range-input-range-track-height'?: string | undefined;
+};
+
+function createRangeInputStyle(
+  properties: Readonly<RangeInputStyleProperties> | undefined,
+): RangeInputStyle | undefined {
+  return createForgeStyle({
+    '--forge-range-input-checkable-border-selected': properties?.['checkable-border-selected'],
+    '--forge-range-input-checkable-border-width-default': properties?.['checkable-border-width-default'],
+    '--forge-range-input-checkable-circle-radius': properties?.['checkable-circle-radius'],
+    '--forge-range-input-checkable-focus-ring': properties?.['checkable-focus-ring'],
+    '--forge-range-input-checkable-font-family': properties?.['checkable-font-family'],
+    '--forge-range-input-checkable-opacity-disabled': properties?.['checkable-opacity-disabled'],
+    '--forge-range-input-checkable-size-2xl-thumb-size': properties?.['checkable-size-2xl-thumb-size'],
+    '--forge-range-input-checkable-size-2xl-track-height': properties?.['checkable-size-2xl-track-height'],
+    '--forge-range-input-checkable-size-2xs-thumb-size': properties?.['checkable-size-2xs-thumb-size'],
+    '--forge-range-input-checkable-size-2xs-track-height': properties?.['checkable-size-2xs-track-height'],
+    '--forge-range-input-checkable-size-lg-thumb-size': properties?.['checkable-size-lg-thumb-size'],
+    '--forge-range-input-checkable-size-lg-track-height': properties?.['checkable-size-lg-track-height'],
+    '--forge-range-input-checkable-size-md-thumb-size': properties?.['checkable-size-md-thumb-size'],
+    '--forge-range-input-checkable-size-md-track-height': properties?.['checkable-size-md-track-height'],
+    '--forge-range-input-checkable-size-sm-thumb-size': properties?.['checkable-size-sm-thumb-size'],
+    '--forge-range-input-checkable-size-sm-track-height': properties?.['checkable-size-sm-track-height'],
+    '--forge-range-input-checkable-size-xl-thumb-size': properties?.['checkable-size-xl-thumb-size'],
+    '--forge-range-input-checkable-size-xl-track-height': properties?.['checkable-size-xl-track-height'],
+    '--forge-range-input-checkable-size-xs-thumb-size': properties?.['checkable-size-xs-thumb-size'],
+    '--forge-range-input-checkable-size-xs-track-height': properties?.['checkable-size-xs-track-height'],
+    '--forge-range-input-checkable-thumb-default': properties?.['checkable-thumb-default'],
+    '--forge-range-input-checkable-track-inactive': properties?.['checkable-track-inactive'],
+    '--forge-range-input-checkable-track-selected': properties?.['checkable-track-selected'],
+    '--forge-range-input-checkable-value-background': properties?.['checkable-value-background'],
+    '--forge-range-input-checkable-value-font-size': properties?.['checkable-value-font-size'],
+    '--forge-range-input-checkable-value-offset': properties?.['checkable-value-offset'],
+    '--forge-range-input-checkable-value-padding-block': properties?.['checkable-value-padding-block'],
+    '--forge-range-input-checkable-value-padding-inline': properties?.['checkable-value-padding-inline'],
+    '--forge-range-input-checkable-value-radius': properties?.['checkable-value-radius'],
+    '--forge-range-input-checkable-value-text': properties?.['checkable-value-text'],
+    '--forge-range-input-range-thumb-size': properties?.['range-thumb-size'],
+    '--forge-range-input-range-track-height': properties?.['range-track-height'],
+  }) as RangeInputStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface RangeInputProperties {
   /**
    * Current `[lower, upper]` selection (controlled via `modelValue`). Defaults to `[0, 100]`.
@@ -43,6 +153,9 @@ export interface RangeInputProperties {
   onUpdateModelValue?: (value: RangeValue) => void;
   /** Fired when the user finishes changing a value (native `change`). */
   onChange?: (value: RangeValue) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<RangeInputStyleProperties>;
 }
 
 /**
@@ -67,6 +180,8 @@ export interface RangeInputProperties {
  * props.
  */
 export function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpElement {
+  const style = createRangeInputStyle(properties.properties);
+
   const {
     modelValue = [0, 100],
     min = 0,
@@ -230,6 +345,7 @@ export function ForgeRangeInput(properties: Readonly<RangeInputProperties>): MpE
           [styles['forge-range-input--disabled']]: disabled,
         },
       ]}
+      style={style}
     >
       <div
         ref={trackReference}

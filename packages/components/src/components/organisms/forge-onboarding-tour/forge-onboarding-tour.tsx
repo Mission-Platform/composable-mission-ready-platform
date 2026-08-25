@@ -1,13 +1,15 @@
 import {
   classNames,
   hasSlot,
-  type MpChild,
-  type MpElement,
   Slot,
   useEffect,
   useId,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 
 import styles from './forge-onboarding-tour.module.scss';
@@ -32,6 +34,62 @@ export interface TourStep {
 /** @deprecated Use `TourStep`. */
 export type OnboardingStep = TourStep;
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface OnboardingTourStyleProperties {
+  readonly 'border-radius-lg'?: string;
+  readonly 'border-radius-sm'?: string;
+  readonly 'color-action-primary'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-surface-primary'?: string;
+  readonly 'color-text-on-action'?: string;
+  readonly 'color-text-primary'?: string;
+  readonly 'color-text-secondary'?: string;
+  readonly 'overlay-modal-backdrop-surface'?: string;
+  readonly 'shadow-xl'?: string;
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+  readonly 'spacing-5'?: string;
+}
+
+export type OnboardingTourStyle = CSSStyleProperties & {
+  readonly '--forge-onboarding-tour-border-radius-lg'?: string | undefined;
+  readonly '--forge-onboarding-tour-border-radius-sm'?: string | undefined;
+  readonly '--forge-onboarding-tour-color-action-primary'?: string | undefined;
+  readonly '--forge-onboarding-tour-color-border-default'?: string | undefined;
+  readonly '--forge-onboarding-tour-color-surface-primary'?: string | undefined;
+  readonly '--forge-onboarding-tour-color-text-on-action'?: string | undefined;
+  readonly '--forge-onboarding-tour-color-text-primary'?: string | undefined;
+  readonly '--forge-onboarding-tour-color-text-secondary'?: string | undefined;
+  readonly '--forge-onboarding-tour-overlay-modal-backdrop-surface'?: string | undefined;
+  readonly '--forge-onboarding-tour-shadow-xl'?: string | undefined;
+  readonly '--forge-onboarding-tour-spacing-2'?: string | undefined;
+  readonly '--forge-onboarding-tour-spacing-3'?: string | undefined;
+  readonly '--forge-onboarding-tour-spacing-4'?: string | undefined;
+  readonly '--forge-onboarding-tour-spacing-5'?: string | undefined;
+};
+
+function createOnboardingTourStyle(
+  properties: Readonly<OnboardingTourStyleProperties> | undefined,
+): OnboardingTourStyle | undefined {
+  return createForgeStyle({
+    '--forge-onboarding-tour-border-radius-lg': properties?.['border-radius-lg'],
+    '--forge-onboarding-tour-border-radius-sm': properties?.['border-radius-sm'],
+    '--forge-onboarding-tour-color-action-primary': properties?.['color-action-primary'],
+    '--forge-onboarding-tour-color-border-default': properties?.['color-border-default'],
+    '--forge-onboarding-tour-color-surface-primary': properties?.['color-surface-primary'],
+    '--forge-onboarding-tour-color-text-on-action': properties?.['color-text-on-action'],
+    '--forge-onboarding-tour-color-text-primary': properties?.['color-text-primary'],
+    '--forge-onboarding-tour-color-text-secondary': properties?.['color-text-secondary'],
+    '--forge-onboarding-tour-overlay-modal-backdrop-surface': properties?.['overlay-modal-backdrop-surface'],
+    '--forge-onboarding-tour-shadow-xl': properties?.['shadow-xl'],
+    '--forge-onboarding-tour-spacing-2': properties?.['spacing-2'],
+    '--forge-onboarding-tour-spacing-3': properties?.['spacing-3'],
+    '--forge-onboarding-tour-spacing-4': properties?.['spacing-4'],
+    '--forge-onboarding-tour-spacing-5': properties?.['spacing-5'],
+  }) as OnboardingTourStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface OnboardingTourProperties {
   /** Ordered tour steps. */
   steps: TourStep[];
@@ -77,6 +135,9 @@ export interface OnboardingTourProperties {
   onSkip?: () => void;
   /** Called when visibility changes. */
   onOpenChange?: (open: boolean) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<OnboardingTourStyleProperties>;
 }
 
 function readCompleted(key: string): boolean {
@@ -102,6 +163,8 @@ function writeCompleted(key: string): void {
 
 /** An accessible spotlight tour with keyboard navigation and optional completion persistence. */
 export function ForgeOnboardingTour(properties: Readonly<OnboardingTourProperties>): MpElement {
+  const style = createOnboardingTourStyle(properties.properties);
+
   const {
     steps,
     open,
@@ -245,7 +308,10 @@ export function ForgeOnboardingTour(properties: Readonly<OnboardingTourPropertie
 
   const placement = step.placement ?? (step.target ? 'bottom' : 'center');
   return (
-    <div className={styles['forge-onboarding-tour']}>
+    <div
+      className={styles['forge-onboarding-tour']}
+      style={style}
+    >
       {overlay ? (
         <div
           aria-hidden="true"

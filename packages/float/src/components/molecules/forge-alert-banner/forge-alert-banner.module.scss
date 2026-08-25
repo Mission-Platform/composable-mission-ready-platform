@@ -9,6 +9,8 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-alert-banner-properties';
+
 @layer mp.components {
   /* `display: contents` host so toggling visibility adds no layout box. */
   .forge-alert-banner-host {
@@ -18,18 +20,18 @@
   .forge-alert-banner {
     display: flex;
     align-items: flex-start;
-    gap: var(--mp-overlay-alert-banner-gap);
-    padding: var(--mp-overlay-alert-banner-padding-block)
-      var(--mp-overlay-alert-banner-padding-inline);
-    border: var(--mp-overlay-border-width) solid transparent;
-    border-radius: var(--mp-overlay-alert-banner-radius);
-    font-family: var(--mp-overlay-font-family);
+    gap: var(--forge-alert-banner-overlay-alert-banner-gap, var(--mp-overlay-alert-banner-gap));
+    padding: var(--forge-alert-banner-overlay-alert-banner-padding-block, var(--mp-overlay-alert-banner-padding-block))
+      var(--forge-alert-banner-overlay-alert-banner-padding-inline, var(--mp-overlay-alert-banner-padding-inline));
+    border: var(--forge-alert-banner-overlay-border-width, var(--mp-overlay-border-width)) solid transparent;
+    border-radius: var(--forge-alert-banner-overlay-alert-banner-radius, var(--mp-overlay-alert-banner-radius));
+    font-family: var(--forge-alert-banner-overlay-font-family, var(--mp-overlay-font-family));
 
     &__icon {
       display: flex;
       flex-shrink: 0;
       margin-top: 1px;
-      font-size: var(--mp-overlay-icon-size);
+      font-size: var(--forge-alert-banner-overlay-icon-size, var(--mp-overlay-icon-size));
       line-height: 1;
 
       svg {
@@ -44,15 +46,18 @@
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
-      gap: var(--mp-overlay-alert-banner-content-gap);
+      gap: var(--forge-alert-banner-overlay-alert-banner-content-gap, var(--mp-overlay-alert-banner-content-gap));
       min-width: 0;
     }
 
     &__actions {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--mp-overlay-alert-banner-actions-gap);
-      margin-top: var(--mp-overlay-alert-banner-actions-margin-top);
+      gap: var(--forge-alert-banner-overlay-alert-banner-actions-gap, var(--mp-overlay-alert-banner-actions-gap));
+      margin-top: var(
+        --forge-alert-banner-overlay-alert-banner-actions-margin-top,
+        var(--mp-overlay-alert-banner-actions-margin-top)
+      );
     }
 
     &__dismiss {
@@ -60,16 +65,26 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      padding: var(--mp-overlay-dismiss-padding);
-      margin: calc(var(--mp-overlay-dismiss-padding) * -1);
+      padding: var(--forge-alert-banner-overlay-dismiss-padding, var(--mp-overlay-dismiss-padding));
+      margin: calc(var(--forge-alert-banner-overlay-dismiss-padding, var(--mp-overlay-dismiss-padding)) * -1);
       background: transparent;
       border: 0;
-      border-radius: var(--mp-overlay-dismiss-radius);
+      border-radius: var(--forge-alert-banner-overlay-dismiss-radius, var(--mp-overlay-dismiss-radius));
       color: inherit;
       cursor: pointer;
-      opacity: var(--mp-overlay-alert-banner-dismiss-opacity);
-      transition: opacity var(--mp-overlay-alert-banner-dismiss-transition-duration)
-        var(--mp-overlay-alert-banner-dismiss-transition-easing);
+      opacity: var(
+        --forge-alert-banner-overlay-alert-banner-dismiss-opacity,
+        var(--mp-overlay-alert-banner-dismiss-opacity)
+      );
+      transition: opacity
+        var(
+          --forge-alert-banner-overlay-alert-banner-dismiss-transition-duration,
+          var(--mp-overlay-alert-banner-dismiss-transition-duration)
+        )
+        var(
+          --forge-alert-banner-overlay-alert-banner-dismiss-transition-easing,
+          var(--mp-overlay-alert-banner-dismiss-transition-easing)
+        );
       line-height: 1;
 
       svg {
@@ -84,7 +99,8 @@
       }
 
       &:focus-visible {
-        outline: var(--mp-overlay-dismiss-focus-width) solid currentcolor;
+        outline: var(--forge-alert-banner-overlay-dismiss-focus-width, var(--mp-overlay-dismiss-focus-width)) solid
+          currentcolor;
         outline-offset: 1px;
       }
     }
@@ -108,9 +124,12 @@
         )
     {
       &--#{$name} {
-        background-color: var(--mp-feedback-#{$family}-background);
-        border-color: var(--mp-feedback-#{$family}-border);
-        color: var(--mp-feedback-#{$family}-text);
+        background-color: var(
+          --forge-alert-banner-feedback-#{$family}-background,
+          var(--mp-feedback-#{$family}-background)
+        );
+        border-color: var(--forge-alert-banner-feedback-#{$family}-border, var(--mp-feedback-#{$family}-border));
+        color: var(--forge-alert-banner-feedback-#{$family}-text, var(--mp-feedback-#{$family}-text));
       }
     }
   }

@@ -1,4 +1,12 @@
-import { type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
+import {
+  Slot,
+  useEffect,
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import sizeStyles from '../../../styles/size.module.scss';
@@ -19,6 +27,114 @@ export type NavbarAlign = 'start' | 'center' | 'end';
  */
 export type NavbarBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface NavbarStyleProperties {
+  readonly 'navigation-navbar-border'?: string;
+  readonly 'navigation-navbar-border-width'?: string;
+  readonly 'navigation-navbar-center-gap-default'?: string;
+  readonly 'navigation-navbar-center-gap-wide'?: string;
+  readonly 'navigation-navbar-center-gap-widest'?: string;
+  readonly 'navigation-navbar-container-gap-default'?: string;
+  readonly 'navigation-navbar-container-gap-wide'?: string;
+  readonly 'navigation-navbar-container-gap-widest'?: string;
+  readonly 'navigation-navbar-container-height'?: string;
+  readonly 'navigation-navbar-container-padding-default'?: string;
+  readonly 'navigation-navbar-container-padding-wide'?: string;
+  readonly 'navigation-navbar-container-padding-widest'?: string;
+  readonly 'navigation-navbar-end-gap'?: string;
+  readonly 'navigation-navbar-hamburger-bar-color'?: string;
+  readonly 'navigation-navbar-hamburger-bar-height'?: string;
+  readonly 'navigation-navbar-hamburger-focus-ring'?: string;
+  readonly 'navigation-navbar-hamburger-gap'?: string;
+  readonly 'navigation-navbar-hamburger-padding'?: string;
+  readonly 'navigation-navbar-hamburger-radius'?: string;
+  readonly 'navigation-navbar-hamburger-size'?: string;
+  readonly 'navigation-navbar-hamburger-surface-hover'?: string;
+  readonly 'navigation-navbar-hamburger-text'?: string;
+  readonly 'navigation-navbar-mobile-nav-end-gap'?: string;
+  readonly 'navigation-navbar-mobile-nav-end-padding-top'?: string;
+  readonly 'navigation-navbar-mobile-nav-gap'?: string;
+  readonly 'navigation-navbar-mobile-nav-items-gap'?: string;
+  readonly 'navigation-navbar-mobile-nav-padding-block'?: string;
+  readonly 'navigation-navbar-mobile-nav-padding-inline'?: string;
+  readonly 'navigation-navbar-start-gap'?: string;
+  readonly 'navigation-navbar-surface'?: string;
+}
+
+export type NavbarStyle = CSSStyleProperties & {
+  readonly '--forge-navbar-navigation-navbar-border'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-border-width'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-center-gap-default'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-center-gap-wide'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-center-gap-widest'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-container-gap-default'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-container-gap-wide'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-container-gap-widest'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-container-height'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-container-padding-default'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-container-padding-wide'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-container-padding-widest'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-end-gap'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-hamburger-bar-color'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-hamburger-bar-height'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-hamburger-focus-ring'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-hamburger-gap'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-hamburger-padding'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-hamburger-radius'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-hamburger-size'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-hamburger-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-hamburger-text'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-mobile-nav-end-gap'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-mobile-nav-end-padding-top'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-mobile-nav-gap'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-mobile-nav-items-gap'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-mobile-nav-padding-block'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-mobile-nav-padding-inline'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-start-gap'?: string | undefined;
+  readonly '--forge-navbar-navigation-navbar-surface'?: string | undefined;
+};
+
+function createNavbarStyle(properties: Readonly<NavbarStyleProperties> | undefined): NavbarStyle | undefined {
+  return createForgeStyle({
+    '--forge-navbar-navigation-navbar-border': properties?.['navigation-navbar-border'],
+    '--forge-navbar-navigation-navbar-border-width': properties?.['navigation-navbar-border-width'],
+    '--forge-navbar-navigation-navbar-center-gap-default': properties?.['navigation-navbar-center-gap-default'],
+    '--forge-navbar-navigation-navbar-center-gap-wide': properties?.['navigation-navbar-center-gap-wide'],
+    '--forge-navbar-navigation-navbar-center-gap-widest': properties?.['navigation-navbar-center-gap-widest'],
+    '--forge-navbar-navigation-navbar-container-gap-default': properties?.['navigation-navbar-container-gap-default'],
+    '--forge-navbar-navigation-navbar-container-gap-wide': properties?.['navigation-navbar-container-gap-wide'],
+    '--forge-navbar-navigation-navbar-container-gap-widest': properties?.['navigation-navbar-container-gap-widest'],
+    '--forge-navbar-navigation-navbar-container-height': properties?.['navigation-navbar-container-height'],
+    '--forge-navbar-navigation-navbar-container-padding-default':
+      properties?.['navigation-navbar-container-padding-default'],
+    '--forge-navbar-navigation-navbar-container-padding-wide': properties?.['navigation-navbar-container-padding-wide'],
+    '--forge-navbar-navigation-navbar-container-padding-widest':
+      properties?.['navigation-navbar-container-padding-widest'],
+    '--forge-navbar-navigation-navbar-end-gap': properties?.['navigation-navbar-end-gap'],
+    '--forge-navbar-navigation-navbar-hamburger-bar-color': properties?.['navigation-navbar-hamburger-bar-color'],
+    '--forge-navbar-navigation-navbar-hamburger-bar-height': properties?.['navigation-navbar-hamburger-bar-height'],
+    '--forge-navbar-navigation-navbar-hamburger-focus-ring': properties?.['navigation-navbar-hamburger-focus-ring'],
+    '--forge-navbar-navigation-navbar-hamburger-gap': properties?.['navigation-navbar-hamburger-gap'],
+    '--forge-navbar-navigation-navbar-hamburger-padding': properties?.['navigation-navbar-hamburger-padding'],
+    '--forge-navbar-navigation-navbar-hamburger-radius': properties?.['navigation-navbar-hamburger-radius'],
+    '--forge-navbar-navigation-navbar-hamburger-size': properties?.['navigation-navbar-hamburger-size'],
+    '--forge-navbar-navigation-navbar-hamburger-surface-hover':
+      properties?.['navigation-navbar-hamburger-surface-hover'],
+    '--forge-navbar-navigation-navbar-hamburger-text': properties?.['navigation-navbar-hamburger-text'],
+    '--forge-navbar-navigation-navbar-mobile-nav-end-gap': properties?.['navigation-navbar-mobile-nav-end-gap'],
+    '--forge-navbar-navigation-navbar-mobile-nav-end-padding-top':
+      properties?.['navigation-navbar-mobile-nav-end-padding-top'],
+    '--forge-navbar-navigation-navbar-mobile-nav-gap': properties?.['navigation-navbar-mobile-nav-gap'],
+    '--forge-navbar-navigation-navbar-mobile-nav-items-gap': properties?.['navigation-navbar-mobile-nav-items-gap'],
+    '--forge-navbar-navigation-navbar-mobile-nav-padding-block':
+      properties?.['navigation-navbar-mobile-nav-padding-block'],
+    '--forge-navbar-navigation-navbar-mobile-nav-padding-inline':
+      properties?.['navigation-navbar-mobile-nav-padding-inline'],
+    '--forge-navbar-navigation-navbar-start-gap': properties?.['navigation-navbar-start-gap'],
+    '--forge-navbar-navigation-navbar-surface': properties?.['navigation-navbar-surface'],
+  }) as NavbarStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface NavbarProperties {
   /** Size token controlling the navbar's scale. Defaults to `'md'`. */
   size?: NavbarSize;
@@ -51,6 +167,9 @@ export interface NavbarProperties {
    * historical fixed collapse point.
    */
   mobileBreakpoint?: NavbarBreakpoint;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<NavbarStyleProperties>;
 }
 
 /** Minimum viewport width (px) for each named breakpoint (mirrors `@mission-platform/breakpoints`). */
@@ -80,6 +199,8 @@ const BREAKPOINT_PX: Record<NavbarBreakpoint, number> = {
  * has no multi-root fragment return).
  */
 export function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement {
+  const style = createNavbarStyle(properties.properties);
+
   const { brand, sticky = false, mobileTitle, align = 'start', size = 'md', mobileBreakpoint = 'sm' } = properties;
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -102,13 +223,17 @@ export function ForgeNavbar(properties: Readonly<NavbarProperties>): MpElement {
   }, [mobileBreakpoint]);
 
   return (
-    <div className={styles['forge-navbar-host']}>
+    <div
+      className={styles['forge-navbar-host']}
+      style={style}
+    >
       <header
         className={[
           styles['forge-navbar'],
           sizeStyles[`forge-size--${size}`],
           { [styles['forge-navbar--sticky']]: sticky, [styles['forge-navbar--mobile']]: isMobile },
         ]}
+        style={style}
       >
         <nav
           aria-label="Main navigation"

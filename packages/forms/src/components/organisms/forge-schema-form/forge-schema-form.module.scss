@@ -1,3 +1,5 @@
+@use './forge-schema-form-properties';
+
 /**
  * Styling for the write-once `ForgeSchemaForm`.
  *
@@ -8,23 +10,23 @@
   .forge-schema-form {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-form-gap-large);
+    gap: var(--forge-schema-form-form-gap-large, var(--mp-form-gap-large));
 
     &--disabled {
-      opacity: var(--mp-form-disabled-opacity);
+      opacity: var(--forge-schema-form-form-disabled-opacity, var(--mp-form-disabled-opacity));
       pointer-events: none;
     }
 
     &__fields {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-form-gap-large);
+      gap: var(--forge-schema-form-form-gap-large, var(--mp-form-gap-large));
     }
 
     &__datetime {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-form-gap-default);
+      gap: var(--forge-schema-form-form-gap-default, var(--mp-form-gap-default));
       padding: 0;
       margin: 0;
       border: 0;
@@ -32,28 +34,28 @@
 
     &__datetime-legend {
       padding: 0;
-      margin-bottom: var(--mp-form-gap-tight);
+      margin-bottom: var(--forge-schema-form-form-gap-tight, var(--mp-form-gap-tight));
     }
 
     &__datetime-controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--mp-form-gap-default);
+      gap: var(--forge-schema-form-form-gap-default, var(--mp-form-gap-default));
     }
 
     &__datetime-hint {
       margin: 0;
-      color: var(--mp-form-text-muted);
+      color: var(--forge-schema-form-form-text-muted, var(--mp-form-text-muted));
 
       &--error {
-        color: var(--mp-form-text-invalid);
+        color: var(--forge-schema-form-form-text-invalid, var(--mp-form-text-invalid));
       }
     }
 
     &__code {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-form-gap-default);
+      gap: var(--forge-schema-form-form-gap-default, var(--mp-form-gap-default));
       padding: 0;
       margin: 0;
       border: 0;
@@ -61,56 +63,61 @@
 
     &__code-legend {
       padding: 0;
-      margin-bottom: var(--mp-form-gap-tight);
+      margin-bottom: var(--forge-schema-form-form-gap-tight, var(--mp-form-gap-tight));
     }
 
     &__code-hint {
       margin: 0;
-      color: var(--mp-form-text-muted);
+      color: var(--forge-schema-form-form-text-muted, var(--mp-form-text-muted));
 
       &--error {
-        color: var(--mp-form-text-invalid);
+        color: var(--forge-schema-form-form-text-invalid, var(--mp-form-text-invalid));
       }
     }
 
     &__actions {
       display: flex;
       justify-content: flex-end;
-      gap: var(--mp-form-gap-default);
-      padding-top: var(--mp-form-padding-default);
-      border-top: var(--mp-form-border-width) solid var(--mp-form-border-default);
+      gap: var(--forge-schema-form-form-gap-default, var(--mp-form-gap-default));
+      padding-top: var(--forge-schema-form-form-padding-default, var(--mp-form-padding-default));
+      border-top: var(--forge-schema-form-form-border-width, var(--mp-form-border-width)) solid
+        var(--forge-schema-form-form-border-default, var(--mp-form-border-default));
     }
 
     &__button {
-      padding: var(--mp-form-padding-default) var(--mp-form-padding-large);
-      border: var(--mp-form-border-width) solid transparent;
-      border-radius: var(--mp-form-radius-default);
+      padding: var(--forge-schema-form-form-padding-default, var(--mp-form-padding-default))
+        var(--forge-schema-form-form-padding-large, var(--mp-form-padding-large));
+      border: var(--forge-schema-form-form-border-width, var(--mp-form-border-width)) solid transparent;
+      border-radius: var(--forge-schema-form-form-radius-default, var(--mp-form-radius-default));
       cursor: pointer;
       transition:
-        opacity var(--mp-form-transition-duration) var(--mp-form-transition-easing),
-        background-color var(--mp-form-transition-duration) var(--mp-form-transition-easing);
+        opacity var(--forge-schema-form-form-transition-duration, var(--mp-form-transition-duration))
+          var(--forge-schema-form-form-transition-easing, var(--mp-form-transition-easing)),
+        background-color var(--forge-schema-form-form-transition-duration, var(--mp-form-transition-duration))
+          var(--forge-schema-form-form-transition-easing, var(--mp-form-transition-easing));
 
       &:focus-visible {
-        outline: var(--mp-form-border-focus-width) solid var(--mp-form-border-focus);
+        outline: var(--forge-schema-form-form-border-focus-width, var(--mp-form-border-focus-width)) solid
+          var(--forge-schema-form-form-border-focus, var(--mp-form-border-focus));
         outline-offset: 2px;
       }
 
       &--primary {
-        background-color: var(--mp-form-primary);
-        color: var(--mp-form-text-inverse);
+        background-color: var(--forge-schema-form-form-primary, var(--mp-form-primary));
+        color: var(--forge-schema-form-form-text-inverse, var(--mp-form-text-inverse));
 
         &:hover {
-          opacity: var(--mp-form-primary-hover-opacity);
+          opacity: var(--forge-schema-form-form-primary-hover-opacity, var(--mp-form-primary-hover-opacity));
         }
       }
 
       &--secondary {
         background: transparent;
-        border-color: var(--mp-form-border-default);
-        color: var(--mp-form-text-default);
+        border-color: var(--forge-schema-form-form-border-default, var(--mp-form-border-default));
+        color: var(--forge-schema-form-form-text-default, var(--mp-form-text-default));
 
         &:hover {
-          background-color: var(--mp-form-surface-muted);
+          background-color: var(--forge-schema-form-form-surface-muted, var(--mp-form-surface-muted));
         }
       }
     }

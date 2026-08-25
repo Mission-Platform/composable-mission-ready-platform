@@ -1,3 +1,5 @@
+@use './forge-otp-input-properties';
+
 /**
  * Styling for the write-once `ForgeOtpInput`.
  *
@@ -10,11 +12,11 @@
 
 @layer mp.forms {
   .forge-otp-input {
-    --mp-otp-cell-size: var(--mp-input-otp-size-md-cell);
-    --mp-otp-font-size: var(--mp-input-otp-size-md-font-size);
+    --mp-otp-cell-size: var(--forge-otp-input-input-otp-size-md-cell, var(--mp-input-otp-size-md-cell));
+    --mp-otp-font-size: var(--forge-otp-input-input-otp-size-md-font-size, var(--mp-input-otp-size-md-font-size));
 
     display: inline-flex;
-    gap: var(--mp-input-otp-gap);
+    gap: var(--forge-otp-input-input-otp-gap, var(--mp-input-otp-gap));
     margin: 0;
     padding: 0;
     border: 0;
@@ -22,65 +24,66 @@
 
     /* Sizes — canonical 2xs → 2xl scale (cell size + glyph font). */
     &--2xs {
-      --mp-otp-cell-size: var(--mp-input-otp-size-2xs-cell);
-      --mp-otp-font-size: var(--mp-input-otp-size-2xs-font-size);
+      --mp-otp-cell-size: var(--forge-otp-input-input-otp-size-2xs-cell, var(--mp-input-otp-size-2xs-cell));
+      --mp-otp-font-size: var(--forge-otp-input-input-otp-size-2xs-font-size, var(--mp-input-otp-size-2xs-font-size));
     }
 
     &--xs {
-      --mp-otp-cell-size: var(--mp-input-otp-size-xs-cell);
-      --mp-otp-font-size: var(--mp-input-otp-size-xs-font-size);
+      --mp-otp-cell-size: var(--forge-otp-input-input-otp-size-xs-cell, var(--mp-input-otp-size-xs-cell));
+      --mp-otp-font-size: var(--forge-otp-input-input-otp-size-xs-font-size, var(--mp-input-otp-size-xs-font-size));
     }
 
     &--sm {
-      --mp-otp-cell-size: var(--mp-input-otp-size-sm-cell);
-      --mp-otp-font-size: var(--mp-input-otp-size-sm-font-size);
+      --mp-otp-cell-size: var(--forge-otp-input-input-otp-size-sm-cell, var(--mp-input-otp-size-sm-cell));
+      --mp-otp-font-size: var(--forge-otp-input-input-otp-size-sm-font-size, var(--mp-input-otp-size-sm-font-size));
     }
 
     &--md {
-      --mp-otp-cell-size: var(--mp-input-otp-size-md-cell);
-      --mp-otp-font-size: var(--mp-input-otp-size-md-font-size);
+      --mp-otp-cell-size: var(--forge-otp-input-input-otp-size-md-cell, var(--mp-input-otp-size-md-cell));
+      --mp-otp-font-size: var(--forge-otp-input-input-otp-size-md-font-size, var(--mp-input-otp-size-md-font-size));
     }
 
     &--lg {
-      --mp-otp-cell-size: var(--mp-input-otp-size-lg-cell);
-      --mp-otp-font-size: var(--mp-input-otp-size-lg-font-size);
+      --mp-otp-cell-size: var(--forge-otp-input-input-otp-size-lg-cell, var(--mp-input-otp-size-lg-cell));
+      --mp-otp-font-size: var(--forge-otp-input-input-otp-size-lg-font-size, var(--mp-input-otp-size-lg-font-size));
     }
 
     &--xl {
-      --mp-otp-cell-size: var(--mp-input-otp-size-xl-cell);
-      --mp-otp-font-size: var(--mp-input-otp-size-xl-font-size);
+      --mp-otp-cell-size: var(--forge-otp-input-input-otp-size-xl-cell, var(--mp-input-otp-size-xl-cell));
+      --mp-otp-font-size: var(--forge-otp-input-input-otp-size-xl-font-size, var(--mp-input-otp-size-xl-font-size));
     }
 
     &--2xl {
-      --mp-otp-cell-size: var(--mp-input-otp-size-2xl-cell);
-      --mp-otp-font-size: var(--mp-input-otp-size-2xl-font-size);
+      --mp-otp-cell-size: var(--forge-otp-input-input-otp-size-2xl-cell, var(--mp-input-otp-size-2xl-cell));
+      --mp-otp-font-size: var(--forge-otp-input-input-otp-size-2xl-font-size, var(--mp-input-otp-size-2xl-font-size));
     }
 
     &__cell {
-      width: var(--mp-otp-cell-size);
-      height: var(--mp-otp-cell-size);
+      width: var(--forge-otp-input-otp-cell-size, var(--mp-otp-cell-size));
+      height: var(--forge-otp-input-otp-cell-size, var(--mp-otp-cell-size));
       padding: 0;
       text-align: center;
-      font-family: var(--mp-input-otp-font-family);
-      font-size: var(--mp-otp-font-size);
-      font-weight: var(--mp-input-otp-font-weight);
-      color: var(--mp-input-otp-text);
-      background-color: var(--mp-input-otp-surface);
-      border: var(--mp-input-otp-border-width) solid var(--mp-input-otp-border-default);
-      border-radius: var(--mp-input-otp-radius);
+      font-family: var(--forge-otp-input-input-otp-font-family, var(--mp-input-otp-font-family));
+      font-size: var(--forge-otp-input-otp-font-size, var(--mp-otp-font-size));
+      font-weight: var(--forge-otp-input-input-otp-font-weight, var(--mp-input-otp-font-weight));
+      color: var(--forge-otp-input-input-otp-text, var(--mp-input-otp-text));
+      background-color: var(--forge-otp-input-input-otp-surface, var(--mp-input-otp-surface));
+      border: var(--forge-otp-input-input-otp-border-width, var(--mp-input-otp-border-width)) solid
+        var(--forge-otp-input-input-otp-border-default, var(--mp-input-otp-border-default));
+      border-radius: var(--forge-otp-input-input-otp-radius, var(--mp-input-otp-radius));
       transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease;
 
       &:focus {
         outline: none;
-        border-color: var(--mp-input-otp-border-focus);
-        box-shadow: var(--mp-input-otp-focus-ring);
+        border-color: var(--forge-otp-input-input-otp-border-focus, var(--mp-input-otp-border-focus));
+        box-shadow: var(--forge-otp-input-input-otp-focus-ring, var(--mp-input-otp-focus-ring));
       }
     }
 
     &--disabled &__cell {
-      opacity: var(--mp-input-otp-disabled-opacity);
+      opacity: var(--forge-otp-input-input-otp-disabled-opacity, var(--mp-input-otp-disabled-opacity));
       cursor: not-allowed;
     }
   }

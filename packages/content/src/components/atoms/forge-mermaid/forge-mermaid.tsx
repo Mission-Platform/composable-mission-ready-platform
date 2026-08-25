@@ -1,13 +1,74 @@
-import { HtmlContent, type MpElement, useEffect, useId, useRef, useState } from '@mission-platform/forge';
+import {
+  Fragment,
+  HtmlContent,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 import mermaid from 'mermaid';
 
 import { mermaidThemeCSS } from './forge-mermaid-theme';
 import styles from './forge-mermaid.module.scss';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface MermaidStyleProperties {
+  readonly 'code-border-default'?: string;
+  readonly 'code-border-width'?: string;
+  readonly 'code-error-font-weight'?: string;
+  readonly 'code-error-margin-bottom'?: string;
+  readonly 'code-error-text'?: string;
+  readonly 'code-padding'?: string;
+  readonly 'code-radius'?: string;
+  readonly 'code-surface-default'?: string;
+  readonly 'code-text-default'?: string;
+  readonly 'code-typography-font-family'?: string;
+  readonly 'code-typography-font-size'?: string;
+  readonly 'code-typography-line-height'?: string;
+}
+
+export type MermaidStyle = CSSStyleProperties & {
+  readonly '--forge-mermaid-code-border-default'?: string | undefined;
+  readonly '--forge-mermaid-code-border-width'?: string | undefined;
+  readonly '--forge-mermaid-code-error-font-weight'?: string | undefined;
+  readonly '--forge-mermaid-code-error-margin-bottom'?: string | undefined;
+  readonly '--forge-mermaid-code-error-text'?: string | undefined;
+  readonly '--forge-mermaid-code-padding'?: string | undefined;
+  readonly '--forge-mermaid-code-radius'?: string | undefined;
+  readonly '--forge-mermaid-code-surface-default'?: string | undefined;
+  readonly '--forge-mermaid-code-text-default'?: string | undefined;
+  readonly '--forge-mermaid-code-typography-font-family'?: string | undefined;
+  readonly '--forge-mermaid-code-typography-font-size'?: string | undefined;
+  readonly '--forge-mermaid-code-typography-line-height'?: string | undefined;
+};
+
+function createMermaidStyle(properties: Readonly<MermaidStyleProperties> | undefined): MermaidStyle | undefined {
+  return createForgeStyle({
+    '--forge-mermaid-code-border-default': properties?.['code-border-default'],
+    '--forge-mermaid-code-border-width': properties?.['code-border-width'],
+    '--forge-mermaid-code-error-font-weight': properties?.['code-error-font-weight'],
+    '--forge-mermaid-code-error-margin-bottom': properties?.['code-error-margin-bottom'],
+    '--forge-mermaid-code-error-text': properties?.['code-error-text'],
+    '--forge-mermaid-code-padding': properties?.['code-padding'],
+    '--forge-mermaid-code-radius': properties?.['code-radius'],
+    '--forge-mermaid-code-surface-default': properties?.['code-surface-default'],
+    '--forge-mermaid-code-text-default': properties?.['code-text-default'],
+    '--forge-mermaid-code-typography-font-family': properties?.['code-typography-font-family'],
+    '--forge-mermaid-code-typography-font-size': properties?.['code-typography-font-size'],
+    '--forge-mermaid-code-typography-line-height': properties?.['code-typography-line-height'],
+  }) as MermaidStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ForgeMermaidProperties {
   /** Mermaid source to render. */
   code: string;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<MermaidStyleProperties>;
 }
 
 async function loadDiagram({ code, diagramId }: { code: string; diagramId: string }) {
@@ -31,6 +92,8 @@ type MermaidRenderResult = Awaited<ReturnType<typeof loadDiagram>>;
  * chunk; browser APIs are still called only from the client effect.
  */
 export function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement {
+  const style = createMermaidStyle(properties.properties);
+
   const { code } = properties;
   const generatedId = useId();
   const diagramId = `forge-mermaid-${generatedId.replaceAll(/[^a-zA-Z0-9_-]/g, '')}`;
@@ -71,7 +134,7 @@ export function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpEl
   }, [renderedDiagram]);
 
   return (
-    <>
+    <Fragment>
       <ForgeTypography
         variant="body-md"
         as="p"
@@ -84,6 +147,7 @@ export function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpEl
           className={styles['forge-mermaid']}
           id={diagramId}
           role="img"
+          style={style}
         >
           {renderError ? (
             <div
@@ -106,8 +170,9 @@ export function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpEl
           html={renderedDiagram.svg}
           id={diagramId}
           role="img"
+          style={style}
         />
       )}
-    </>
+    </Fragment>
   );
 }

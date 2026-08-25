@@ -1,4 +1,13 @@
-import { classNames, type ClassValue, type MpElement, useEffect, useId, useState } from '@mission-platform/forge';
+import {
+  classNames,
+  useEffect,
+  useId,
+  useState,
+  createForgeStyle,
+  type ClassValue,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-tag-input.module.scss';
 
@@ -7,6 +16,84 @@ export type TagInputSize = 'sm' | 'md' | 'lg';
 /** Surface tone of the tag input. */
 export type TagInputVariant = 'neutral' | 'primary' | 'error';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface TagInputStyleProperties {
+  readonly 'border-width-thick'?: string;
+  readonly 'border-width-thin'?: string;
+  readonly 'color-bg-raised'?: string;
+  readonly 'color-bg-surface'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-border-focus'?: string;
+  readonly 'color-danger-default'?: string;
+  readonly 'color-primary-default'?: string;
+  readonly 'color-text-primary'?: string;
+  readonly 'color-text-secondary'?: string;
+  readonly 'duration-slow'?: string;
+  readonly 'font-size-lg'?: string;
+  readonly 'font-size-sm'?: string;
+  readonly 'line-height-tight'?: string;
+  readonly 'opacity-disabled'?: string;
+  readonly 'radius-full'?: string;
+  readonly 'radius-md'?: string;
+  readonly 'radius-sm'?: string;
+  readonly 'size-checkable-indicator'?: string;
+  readonly 'size-height-md'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-2'?: string;
+}
+
+export type TagInputStyle = CSSStyleProperties & {
+  readonly '--forge-tag-input-border-width-thick'?: string | undefined;
+  readonly '--forge-tag-input-border-width-thin'?: string | undefined;
+  readonly '--forge-tag-input-color-bg-raised'?: string | undefined;
+  readonly '--forge-tag-input-color-bg-surface'?: string | undefined;
+  readonly '--forge-tag-input-color-border-default'?: string | undefined;
+  readonly '--forge-tag-input-color-border-focus'?: string | undefined;
+  readonly '--forge-tag-input-color-danger-default'?: string | undefined;
+  readonly '--forge-tag-input-color-primary-default'?: string | undefined;
+  readonly '--forge-tag-input-color-text-primary'?: string | undefined;
+  readonly '--forge-tag-input-color-text-secondary'?: string | undefined;
+  readonly '--forge-tag-input-duration-slow'?: string | undefined;
+  readonly '--forge-tag-input-font-size-lg'?: string | undefined;
+  readonly '--forge-tag-input-font-size-sm'?: string | undefined;
+  readonly '--forge-tag-input-line-height-tight'?: string | undefined;
+  readonly '--forge-tag-input-opacity-disabled'?: string | undefined;
+  readonly '--forge-tag-input-radius-full'?: string | undefined;
+  readonly '--forge-tag-input-radius-md'?: string | undefined;
+  readonly '--forge-tag-input-radius-sm'?: string | undefined;
+  readonly '--forge-tag-input-size-checkable-indicator'?: string | undefined;
+  readonly '--forge-tag-input-size-height-md'?: string | undefined;
+  readonly '--forge-tag-input-spacing-1'?: string | undefined;
+  readonly '--forge-tag-input-spacing-2'?: string | undefined;
+};
+
+function createTagInputStyle(properties: Readonly<TagInputStyleProperties> | undefined): TagInputStyle | undefined {
+  return createForgeStyle({
+    '--forge-tag-input-border-width-thick': properties?.['border-width-thick'],
+    '--forge-tag-input-border-width-thin': properties?.['border-width-thin'],
+    '--forge-tag-input-color-bg-raised': properties?.['color-bg-raised'],
+    '--forge-tag-input-color-bg-surface': properties?.['color-bg-surface'],
+    '--forge-tag-input-color-border-default': properties?.['color-border-default'],
+    '--forge-tag-input-color-border-focus': properties?.['color-border-focus'],
+    '--forge-tag-input-color-danger-default': properties?.['color-danger-default'],
+    '--forge-tag-input-color-primary-default': properties?.['color-primary-default'],
+    '--forge-tag-input-color-text-primary': properties?.['color-text-primary'],
+    '--forge-tag-input-color-text-secondary': properties?.['color-text-secondary'],
+    '--forge-tag-input-duration-slow': properties?.['duration-slow'],
+    '--forge-tag-input-font-size-lg': properties?.['font-size-lg'],
+    '--forge-tag-input-font-size-sm': properties?.['font-size-sm'],
+    '--forge-tag-input-line-height-tight': properties?.['line-height-tight'],
+    '--forge-tag-input-opacity-disabled': properties?.['opacity-disabled'],
+    '--forge-tag-input-radius-full': properties?.['radius-full'],
+    '--forge-tag-input-radius-md': properties?.['radius-md'],
+    '--forge-tag-input-radius-sm': properties?.['radius-sm'],
+    '--forge-tag-input-size-checkable-indicator': properties?.['size-checkable-indicator'],
+    '--forge-tag-input-size-height-md': properties?.['size-height-md'],
+    '--forge-tag-input-spacing-1': properties?.['spacing-1'],
+    '--forge-tag-input-spacing-2': properties?.['spacing-2'],
+  }) as TagInputStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface TagInputProperties {
   /** Controlled list of committed tags. */
   modelValue?: readonly string[];
@@ -46,6 +133,9 @@ export interface TagInputProperties {
   onAdd?: (tag: string) => void;
   /** Fired after a tag is removed. */
   onRemove?: (tag: string, index: number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<TagInputStyleProperties>;
 }
 
 function emitTags(properties: Readonly<TagInputProperties>, tags: string[]): void {
@@ -59,6 +149,8 @@ function emitTags(properties: Readonly<TagInputProperties>, tags: string[]): voi
  * controlled update callback is fired.
  */
 export function ForgeTagInput(properties: Readonly<TagInputProperties>): MpElement {
+  const style = createTagInputStyle(properties.properties);
+
   const {
     modelValue = [],
     label,
@@ -128,6 +220,7 @@ export function ForgeTagInput(properties: Readonly<TagInputProperties>): MpEleme
     <div
       aria-busy={loading}
       className={className}
+      style={style}
     >
       {label ? (
         <label

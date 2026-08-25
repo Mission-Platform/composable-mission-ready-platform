@@ -14,37 +14,73 @@
  */
 
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
+@use './forge-application-layout-properties';
 
 @layer mp.layout {
   .application-layout {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: var(--mp-layout-application-surface-default);
+    background-color: var(
+      --forge-application-layout-layout-application-surface-default,
+      var(--mp-layout-application-surface-default)
+    );
 
     &__status {
-      transition: background-color var(--mp-layout-application-transition-duration)
-        var(--mp-layout-application-transition-easing);
+      transition: background-color
+        var(
+          --forge-application-layout-layout-application-transition-duration,
+          var(--mp-layout-application-transition-duration)
+        )
+        var(
+          --forge-application-layout-layout-application-transition-easing,
+          var(--mp-layout-application-transition-easing)
+        );
       min-height: 0;
       padding-left: env(safe-area-inset-left);
       padding-right: env(safe-area-inset-right);
 
       &:not(:empty) {
         font-family:
-          var(--mp-layout-application-typography-font-family) system-ui,
+          var(
+              --forge-application-layout-layout-application-typography-font-family,
+              var(--mp-layout-application-typography-font-family)
+            )
+            system-ui,
           -apple-system,
           'Segoe UI',
           roboto,
           sans-serif;
-        font-size: var(--mp-layout-application-typography-font-size);
-        font-weight: var(--mp-layout-application-typography-font-weight);
-        line-height: var(--mp-layout-application-typography-line-height);
-        letter-spacing: var(--mp-layout-application-typography-letter-spacing);
-        padding: var(--mp-layout-application-padding-status-block)
-          var(--mp-layout-application-padding-status-inline);
+        font-size: var(
+          --forge-application-layout-layout-application-typography-font-size,
+          var(--mp-layout-application-typography-font-size)
+        );
+        font-weight: var(
+          --forge-application-layout-layout-application-typography-font-weight,
+          var(--mp-layout-application-typography-font-weight)
+        );
+        line-height: var(
+          --forge-application-layout-layout-application-typography-line-height,
+          var(--mp-layout-application-typography-line-height)
+        );
+        letter-spacing: var(
+          --forge-application-layout-layout-application-typography-letter-spacing,
+          var(--mp-layout-application-typography-letter-spacing)
+        );
+        padding: var(
+            --forge-application-layout-layout-application-padding-status-block,
+            var(--mp-layout-application-padding-status-block)
+          )
+          var(
+            --forge-application-layout-layout-application-padding-status-inline,
+            var(--mp-layout-application-padding-status-inline)
+          );
 
         @include bp.bp-up('xs') {
-          padding-inline: var(--mp-layout-application-padding-status-inline-wide);
+          padding-inline: var(
+            --forge-application-layout-layout-application-padding-status-inline-wide,
+            var(--mp-layout-application-padding-status-inline-wide)
+          );
         }
       }
     }
@@ -55,7 +91,7 @@
       &--sticky {
         position: sticky;
         top: 0;
-        z-index: 100;
+        z-index: var(--mp-z-index-navigation-navbar);
       }
     }
 
@@ -76,37 +112,53 @@
     // `--mp-application-layout-sidebar-top`.
     &__sidebar {
       position: sticky;
-      top: var(--mp-application-layout-sidebar-top, 0);
+      top: var(--forge-application-layout-sidebar-top, var(--mp-application-layout-sidebar-top, 0));
       flex-shrink: 0;
       align-self: stretch;
-      width: var(--mp-application-layout-sidebar-width, 16rem);
-      max-height: calc(100vh - var(--mp-application-layout-sidebar-top, 0px));
+      width: var(--forge-application-layout-sidebar-width, var(--mp-application-layout-sidebar-width, 16rem));
+      max-height: calc(
+        100vh - var(--forge-application-layout-sidebar-top, var(--mp-application-layout-sidebar-top, 0px))
+      );
       overflow-y: auto;
-      background-color: var(--mp-layout-application-surface-sidebar);
+      background-color: var(
+        --forge-application-layout-layout-application-surface-sidebar,
+        var(--mp-layout-application-surface-sidebar)
+      );
 
       &--start {
-        border-right: var(--mp-layout-application-border-width-sidebar) solid
-          var(--mp-layout-application-border-sidebar);
+        border-right: var(
+            --forge-application-layout-layout-application-border-width-sidebar,
+            var(--mp-layout-application-border-width-sidebar)
+          )
+          solid
+          var(--forge-application-layout-layout-application-border-sidebar, var(--mp-layout-application-border-sidebar));
       }
 
       &--end {
-        border-left: var(--mp-layout-application-border-width-sidebar) solid
-          var(--mp-layout-application-border-sidebar);
+        border-left: var(
+            --forge-application-layout-layout-application-border-width-sidebar,
+            var(--mp-layout-application-border-width-sidebar)
+          )
+          solid
+          var(--forge-application-layout-layout-application-border-sidebar, var(--mp-layout-application-border-sidebar));
       }
 
       // Overlay variant: when a host forces a breakpoint-collapsed sidebar open,
       // it floats above the page (fixed, pinned to the relevant inline edge and
       // spanning from the sticky-header offset to the viewport bottom) rather
       // than reserving an inline column. It sits above the content but below a
-      // sticky header (`z-index: 100`) so the header — and its toggle — stay
+      // sticky header (`--mp-z-index-navigation-navbar`) so the header — and its toggle — stay
       // reachable, and casts a shadow to read as a raised surface.
       &--overlay {
         position: fixed;
-        top: var(--mp-application-layout-sidebar-top, 0);
+        top: var(--forge-application-layout-sidebar-top, var(--mp-application-layout-sidebar-top, 0));
         bottom: 0;
-        z-index: 90;
+        z-index: var(--mp-z-index-base-foreground);
         max-height: none;
-        box-shadow: var(--mp-layout-application-shadow-overlay);
+        box-shadow: var(
+          --forge-application-layout-layout-application-shadow-overlay,
+          var(--mp-layout-application-shadow-overlay)
+        );
 
         &.application-layout__sidebar--start {
           inset-inline-start: 0;
@@ -123,9 +175,12 @@
     // beneath the overlay panel.
     &__backdrop {
       position: fixed;
-      inset: var(--mp-application-layout-sidebar-top, 0) 0 0;
-      z-index: 89;
-      background-color: var(--mp-layout-application-scrim-default);
+      inset: var(--forge-application-layout-sidebar-top, var(--mp-application-layout-sidebar-top, 0)) 0 0;
+      z-index: var(--mp-z-index-base-content);
+      background-color: var(
+        --forge-application-layout-layout-application-scrim-default,
+        var(--mp-layout-application-scrim-default)
+      );
     }
 
     &__content {

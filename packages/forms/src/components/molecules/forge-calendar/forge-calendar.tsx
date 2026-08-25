@@ -1,4 +1,12 @@
-import { type MpChild, type MpElement, useEffect, useMemo, useState } from '@mission-platform/forge';
+import {
+  useEffect,
+  useMemo,
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 import { DateTime } from 'luxon';
@@ -8,6 +16,168 @@ import styles from './forge-calendar.module.scss';
 /** Visual size of the calendar, matching the shared size scale. */
 export type CalendarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface CalendarStyleProperties {
+  readonly 'border-default'?: string;
+  readonly 'border-focus'?: string;
+  readonly 'border-focus-width'?: string;
+  readonly 'border-width'?: string;
+  readonly 'disabled-opacity'?: string;
+  readonly 'font-weight-medium'?: string;
+  readonly 'font-weight-selected'?: string;
+  readonly 'header-gap'?: string;
+  readonly 'label-gap'?: string;
+  readonly 'label-padding-block'?: string;
+  readonly 'label-padding-inline'?: string;
+  readonly 'outside-opacity'?: string;
+  readonly 'preview-end-opacity'?: string;
+  readonly 'preview-opacity'?: string;
+  readonly 'radius-control'?: string;
+  readonly 'radius-default'?: string;
+  readonly 'range-opacity'?: string;
+  readonly shadow?: string;
+  readonly 'size-2xl-cell-height'?: string;
+  readonly 'size-2xl-font-size'?: string;
+  readonly 'size-2xl-padding'?: string;
+  readonly 'size-2xs-cell-height'?: string;
+  readonly 'size-2xs-font-size'?: string;
+  readonly 'size-2xs-padding'?: string;
+  readonly 'size-lg-cell-height'?: string;
+  readonly 'size-lg-font-size'?: string;
+  readonly 'size-lg-padding'?: string;
+  readonly 'size-md-cell-height'?: string;
+  readonly 'size-md-font-size'?: string;
+  readonly 'size-md-padding'?: string;
+  readonly 'size-sm-cell-height'?: string;
+  readonly 'size-sm-font-size'?: string;
+  readonly 'size-sm-padding'?: string;
+  readonly 'size-xl-cell-height'?: string;
+  readonly 'size-xl-font-size'?: string;
+  readonly 'size-xl-padding'?: string;
+  readonly 'size-xs-cell-height'?: string;
+  readonly 'size-xs-font-size'?: string;
+  readonly 'size-xs-padding'?: string;
+  readonly 'surface-default'?: string;
+  readonly 'surface-hover'?: string;
+  readonly 'surface-range'?: string;
+  readonly 'surface-selected'?: string;
+  readonly 'text-default'?: string;
+  readonly 'text-muted'?: string;
+  readonly 'text-range'?: string;
+  readonly 'text-secondary'?: string;
+  readonly 'text-selected'?: string;
+  readonly 'transition-duration'?: string;
+  readonly 'transition-easing'?: string;
+}
+
+export type CalendarStyle = CSSStyleProperties & {
+  readonly '--forge-calendar-border-default'?: string | undefined;
+  readonly '--forge-calendar-border-focus'?: string | undefined;
+  readonly '--forge-calendar-border-focus-width'?: string | undefined;
+  readonly '--forge-calendar-border-width'?: string | undefined;
+  readonly '--forge-calendar-disabled-opacity'?: string | undefined;
+  readonly '--forge-calendar-font-weight-medium'?: string | undefined;
+  readonly '--forge-calendar-font-weight-selected'?: string | undefined;
+  readonly '--forge-calendar-header-gap'?: string | undefined;
+  readonly '--forge-calendar-label-gap'?: string | undefined;
+  readonly '--forge-calendar-label-padding-block'?: string | undefined;
+  readonly '--forge-calendar-label-padding-inline'?: string | undefined;
+  readonly '--forge-calendar-outside-opacity'?: string | undefined;
+  readonly '--forge-calendar-preview-end-opacity'?: string | undefined;
+  readonly '--forge-calendar-preview-opacity'?: string | undefined;
+  readonly '--forge-calendar-radius-control'?: string | undefined;
+  readonly '--forge-calendar-radius-default'?: string | undefined;
+  readonly '--forge-calendar-range-opacity'?: string | undefined;
+  readonly '--forge-calendar-shadow'?: string | undefined;
+  readonly '--forge-calendar-size-2xl-cell-height'?: string | undefined;
+  readonly '--forge-calendar-size-2xl-font-size'?: string | undefined;
+  readonly '--forge-calendar-size-2xl-padding'?: string | undefined;
+  readonly '--forge-calendar-size-2xs-cell-height'?: string | undefined;
+  readonly '--forge-calendar-size-2xs-font-size'?: string | undefined;
+  readonly '--forge-calendar-size-2xs-padding'?: string | undefined;
+  readonly '--forge-calendar-size-lg-cell-height'?: string | undefined;
+  readonly '--forge-calendar-size-lg-font-size'?: string | undefined;
+  readonly '--forge-calendar-size-lg-padding'?: string | undefined;
+  readonly '--forge-calendar-size-md-cell-height'?: string | undefined;
+  readonly '--forge-calendar-size-md-font-size'?: string | undefined;
+  readonly '--forge-calendar-size-md-padding'?: string | undefined;
+  readonly '--forge-calendar-size-sm-cell-height'?: string | undefined;
+  readonly '--forge-calendar-size-sm-font-size'?: string | undefined;
+  readonly '--forge-calendar-size-sm-padding'?: string | undefined;
+  readonly '--forge-calendar-size-xl-cell-height'?: string | undefined;
+  readonly '--forge-calendar-size-xl-font-size'?: string | undefined;
+  readonly '--forge-calendar-size-xl-padding'?: string | undefined;
+  readonly '--forge-calendar-size-xs-cell-height'?: string | undefined;
+  readonly '--forge-calendar-size-xs-font-size'?: string | undefined;
+  readonly '--forge-calendar-size-xs-padding'?: string | undefined;
+  readonly '--forge-calendar-surface-default'?: string | undefined;
+  readonly '--forge-calendar-surface-hover'?: string | undefined;
+  readonly '--forge-calendar-surface-range'?: string | undefined;
+  readonly '--forge-calendar-surface-selected'?: string | undefined;
+  readonly '--forge-calendar-text-default'?: string | undefined;
+  readonly '--forge-calendar-text-muted'?: string | undefined;
+  readonly '--forge-calendar-text-range'?: string | undefined;
+  readonly '--forge-calendar-text-secondary'?: string | undefined;
+  readonly '--forge-calendar-text-selected'?: string | undefined;
+  readonly '--forge-calendar-transition-duration'?: string | undefined;
+  readonly '--forge-calendar-transition-easing'?: string | undefined;
+};
+
+function createCalendarStyle(properties: Readonly<CalendarStyleProperties> | undefined): CalendarStyle | undefined {
+  return createForgeStyle({
+    '--forge-calendar-border-default': properties?.['border-default'],
+    '--forge-calendar-border-focus': properties?.['border-focus'],
+    '--forge-calendar-border-focus-width': properties?.['border-focus-width'],
+    '--forge-calendar-border-width': properties?.['border-width'],
+    '--forge-calendar-disabled-opacity': properties?.['disabled-opacity'],
+    '--forge-calendar-font-weight-medium': properties?.['font-weight-medium'],
+    '--forge-calendar-font-weight-selected': properties?.['font-weight-selected'],
+    '--forge-calendar-header-gap': properties?.['header-gap'],
+    '--forge-calendar-label-gap': properties?.['label-gap'],
+    '--forge-calendar-label-padding-block': properties?.['label-padding-block'],
+    '--forge-calendar-label-padding-inline': properties?.['label-padding-inline'],
+    '--forge-calendar-outside-opacity': properties?.['outside-opacity'],
+    '--forge-calendar-preview-end-opacity': properties?.['preview-end-opacity'],
+    '--forge-calendar-preview-opacity': properties?.['preview-opacity'],
+    '--forge-calendar-radius-control': properties?.['radius-control'],
+    '--forge-calendar-radius-default': properties?.['radius-default'],
+    '--forge-calendar-range-opacity': properties?.['range-opacity'],
+    '--forge-calendar-shadow': properties?.['shadow'],
+    '--forge-calendar-size-2xl-cell-height': properties?.['size-2xl-cell-height'],
+    '--forge-calendar-size-2xl-font-size': properties?.['size-2xl-font-size'],
+    '--forge-calendar-size-2xl-padding': properties?.['size-2xl-padding'],
+    '--forge-calendar-size-2xs-cell-height': properties?.['size-2xs-cell-height'],
+    '--forge-calendar-size-2xs-font-size': properties?.['size-2xs-font-size'],
+    '--forge-calendar-size-2xs-padding': properties?.['size-2xs-padding'],
+    '--forge-calendar-size-lg-cell-height': properties?.['size-lg-cell-height'],
+    '--forge-calendar-size-lg-font-size': properties?.['size-lg-font-size'],
+    '--forge-calendar-size-lg-padding': properties?.['size-lg-padding'],
+    '--forge-calendar-size-md-cell-height': properties?.['size-md-cell-height'],
+    '--forge-calendar-size-md-font-size': properties?.['size-md-font-size'],
+    '--forge-calendar-size-md-padding': properties?.['size-md-padding'],
+    '--forge-calendar-size-sm-cell-height': properties?.['size-sm-cell-height'],
+    '--forge-calendar-size-sm-font-size': properties?.['size-sm-font-size'],
+    '--forge-calendar-size-sm-padding': properties?.['size-sm-padding'],
+    '--forge-calendar-size-xl-cell-height': properties?.['size-xl-cell-height'],
+    '--forge-calendar-size-xl-font-size': properties?.['size-xl-font-size'],
+    '--forge-calendar-size-xl-padding': properties?.['size-xl-padding'],
+    '--forge-calendar-size-xs-cell-height': properties?.['size-xs-cell-height'],
+    '--forge-calendar-size-xs-font-size': properties?.['size-xs-font-size'],
+    '--forge-calendar-size-xs-padding': properties?.['size-xs-padding'],
+    '--forge-calendar-surface-default': properties?.['surface-default'],
+    '--forge-calendar-surface-hover': properties?.['surface-hover'],
+    '--forge-calendar-surface-range': properties?.['surface-range'],
+    '--forge-calendar-surface-selected': properties?.['surface-selected'],
+    '--forge-calendar-text-default': properties?.['text-default'],
+    '--forge-calendar-text-muted': properties?.['text-muted'],
+    '--forge-calendar-text-range': properties?.['text-range'],
+    '--forge-calendar-text-secondary': properties?.['text-secondary'],
+    '--forge-calendar-text-selected': properties?.['text-selected'],
+    '--forge-calendar-transition-duration': properties?.['transition-duration'],
+    '--forge-calendar-transition-easing': properties?.['transition-easing'],
+  }) as CalendarStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface CalendarProperties {
   /**
    * ISO date string (YYYY-MM-DD) — the selected date.
@@ -58,6 +228,9 @@ export interface CalendarProperties {
    * day back as {@link CalendarProperties.previewEnd} to preview the range.
    */
   onHoverDate?: (value: string | undefined) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<CalendarStyleProperties>;
 }
 
 /** A single cell in the month grid. */
@@ -170,6 +343,8 @@ function buildCells(
  * `change` emits become the `onUpdateModelValue`/`onChange` callback props.
  */
 export function ForgeCalendar(properties: Readonly<CalendarProperties>): MpElement {
+  const style = createCalendarStyle(properties.properties);
+
   const {
     modelValue,
     min,
@@ -395,6 +570,7 @@ export function ForgeCalendar(properties: Readonly<CalendarProperties>): MpEleme
         },
       ]}
       role="application"
+      style={style}
     >
       <div className={styles['forge-calendar__header']}>
         <button

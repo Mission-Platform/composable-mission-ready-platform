@@ -12,15 +12,18 @@
  * `:empty`, since the neutral dialect cannot test for slot presence.
  */
 
+@use './forge-chat-area-properties';
+
 @layer mp.components {
   .forge-chat-area {
     display: flex;
     flex-direction: column;
     min-height: 0;
     height: 100%;
-    background-color: var(--mp-media-chat-area-surface);
-    border: var(--mp-media-chat-area-border-width) solid var(--mp-media-chat-area-border);
-    border-radius: var(--mp-media-chat-area-radius);
+    background-color: var(--forge-chat-area-media-chat-area-surface, var(--mp-media-chat-area-surface));
+    border: var(--forge-chat-area-media-chat-area-border-width, var(--mp-media-chat-area-border-width)) solid
+      var(--forge-chat-area-media-chat-area-border, var(--mp-media-chat-area-border));
+    border-radius: var(--forge-chat-area-media-chat-area-radius, var(--mp-media-chat-area-radius));
     overflow: hidden;
 
     @supports (container-type: inline-size) {
@@ -29,15 +32,27 @@
 
     &__header {
       flex-shrink: 0;
-      padding: var(--mp-media-chat-area-header-padding-block) var(--mp-media-chat-area-header-padding-inline);
-      border-bottom: var(--mp-media-chat-area-border-width) solid var(--mp-media-chat-area-header-border);
+      padding: var(
+          --forge-chat-area-media-chat-area-header-padding-block,
+          var(--mp-media-chat-area-header-padding-block)
+        )
+        var(--forge-chat-area-media-chat-area-header-padding-inline, var(--mp-media-chat-area-header-padding-inline));
+      border-bottom: var(--forge-chat-area-media-chat-area-border-width, var(--mp-media-chat-area-border-width)) solid
+        var(--forge-chat-area-media-chat-area-header-border, var(--mp-media-chat-area-header-border));
 
       &:empty {
         display: none;
       }
 
       @container forge-chat-area (width >= 40rem) {
-        padding: var(--mp-media-chat-area-header-padding-block-wide) var(--mp-media-chat-area-header-padding-inline-wide);
+        padding: var(
+            --forge-chat-area-media-chat-area-header-padding-block-wide,
+            var(--mp-media-chat-area-header-padding-block-wide)
+          )
+          var(
+            --forge-chat-area-media-chat-area-header-padding-inline-wide,
+            var(--mp-media-chat-area-header-padding-inline-wide)
+          );
       }
     }
 
@@ -45,38 +60,50 @@
       flex: 1 1 auto;
       min-height: 0;
       overflow-y: auto;
-      padding: var(--mp-media-chat-area-log-padding);
+      padding: var(--forge-chat-area-media-chat-area-log-padding, var(--mp-media-chat-area-log-padding));
       scroll-behavior: smooth;
 
       @container forge-chat-area (width >= 40rem) {
-        padding: var(--mp-media-chat-area-log-padding-wide);
+        padding: var(--forge-chat-area-media-chat-area-log-padding-wide, var(--mp-media-chat-area-log-padding-wide));
       }
     }
 
     &__messages {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-media-chat-area-messages-gap);
+      gap: var(--forge-chat-area-media-chat-area-messages-gap, var(--mp-media-chat-area-messages-gap));
       margin: 0;
       padding: 0;
       list-style: none;
 
       @container forge-chat-area (width >= 40rem) {
-        gap: var(--mp-media-chat-area-messages-gap-wide);
+        gap: var(--forge-chat-area-media-chat-area-messages-gap-wide, var(--mp-media-chat-area-messages-gap-wide));
       }
     }
 
     &__footer {
       flex-shrink: 0;
-      padding: var(--mp-media-chat-area-footer-padding-block) var(--mp-media-chat-area-footer-padding-inline);
-      border-top: var(--mp-media-chat-area-border-width) solid var(--mp-media-chat-area-footer-border);
+      padding: var(
+          --forge-chat-area-media-chat-area-footer-padding-block,
+          var(--mp-media-chat-area-footer-padding-block)
+        )
+        var(--forge-chat-area-media-chat-area-footer-padding-inline, var(--mp-media-chat-area-footer-padding-inline));
+      border-top: var(--forge-chat-area-media-chat-area-border-width, var(--mp-media-chat-area-border-width)) solid
+        var(--forge-chat-area-media-chat-area-footer-border, var(--mp-media-chat-area-footer-border));
 
       &:empty {
         display: none;
       }
 
       @container forge-chat-area (width >= 40rem) {
-        padding: var(--mp-media-chat-area-footer-padding-block-wide) var(--mp-media-chat-area-footer-padding-inline-wide);
+        padding: var(
+            --forge-chat-area-media-chat-area-footer-padding-block-wide,
+            var(--mp-media-chat-area-footer-padding-block-wide)
+          )
+          var(
+            --forge-chat-area-media-chat-area-footer-padding-inline-wide,
+            var(--mp-media-chat-area-footer-padding-inline-wide)
+          );
       }
     }
   }

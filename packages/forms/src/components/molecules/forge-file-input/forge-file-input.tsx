@@ -1,4 +1,11 @@
-import { type ClassValue, type MpElement, useId, useState } from '@mission-platform/forge';
+import {
+  useId,
+  useState,
+  createForgeStyle,
+  type ClassValue,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconUpload } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -7,6 +14,156 @@ import styles from './forge-file-input.module.scss';
 /** Field size token — canonical 2xs → 2xl scale. */
 export type FileInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface FileInputStyleProperties {
+  readonly 'input-file-border-active'?: string;
+  readonly 'input-file-border-default'?: string;
+  readonly 'input-file-border-hover'?: string;
+  readonly 'input-file-border-invalid'?: string;
+  readonly 'input-file-border-width-default'?: string;
+  readonly 'input-file-border-width-dropzone'?: string;
+  readonly 'input-file-font-weight'?: string;
+  readonly 'input-file-gap-dropzone'?: string;
+  readonly 'input-file-gap-row'?: string;
+  readonly 'input-file-gap-stack'?: string;
+  readonly 'input-file-padding-dropzone-block'?: string;
+  readonly 'input-file-padding-dropzone-inline'?: string;
+  readonly 'input-file-radius-button'?: string;
+  readonly 'input-file-radius-dropzone'?: string;
+  readonly 'input-file-required'?: string;
+  readonly 'input-file-size-2xl-font-size'?: string;
+  readonly 'input-file-size-2xl-padding-block'?: string;
+  readonly 'input-file-size-2xl-padding-inline'?: string;
+  readonly 'input-file-size-2xs-font-size'?: string;
+  readonly 'input-file-size-2xs-padding-block'?: string;
+  readonly 'input-file-size-2xs-padding-inline'?: string;
+  readonly 'input-file-size-lg-font-size'?: string;
+  readonly 'input-file-size-lg-padding-block'?: string;
+  readonly 'input-file-size-lg-padding-inline'?: string;
+  readonly 'input-file-size-md-font-size'?: string;
+  readonly 'input-file-size-md-padding-block'?: string;
+  readonly 'input-file-size-md-padding-inline'?: string;
+  readonly 'input-file-size-sm-font-size'?: string;
+  readonly 'input-file-size-sm-padding-block'?: string;
+  readonly 'input-file-size-sm-padding-inline'?: string;
+  readonly 'input-file-size-xl-font-size'?: string;
+  readonly 'input-file-size-xl-padding-block'?: string;
+  readonly 'input-file-size-xl-padding-inline'?: string;
+  readonly 'input-file-size-xs-font-size'?: string;
+  readonly 'input-file-size-xs-padding-block'?: string;
+  readonly 'input-file-size-xs-padding-inline'?: string;
+  readonly 'input-file-surface-active'?: string;
+  readonly 'input-file-surface-default'?: string;
+  readonly 'input-file-surface-disabled'?: string;
+  readonly 'input-file-surface-hover'?: string;
+  readonly 'input-file-text-default'?: string;
+  readonly 'input-file-text-disabled'?: string;
+  readonly 'input-file-text-error'?: string;
+  readonly 'input-file-text-link'?: string;
+  readonly 'input-file-text-link-hover'?: string;
+  readonly 'input-file-text-muted'?: string;
+}
+
+export type FileInputStyle = CSSStyleProperties & {
+  readonly '--forge-file-input-input-file-border-active'?: string | undefined;
+  readonly '--forge-file-input-input-file-border-default'?: string | undefined;
+  readonly '--forge-file-input-input-file-border-hover'?: string | undefined;
+  readonly '--forge-file-input-input-file-border-invalid'?: string | undefined;
+  readonly '--forge-file-input-input-file-border-width-default'?: string | undefined;
+  readonly '--forge-file-input-input-file-border-width-dropzone'?: string | undefined;
+  readonly '--forge-file-input-input-file-font-weight'?: string | undefined;
+  readonly '--forge-file-input-input-file-gap-dropzone'?: string | undefined;
+  readonly '--forge-file-input-input-file-gap-row'?: string | undefined;
+  readonly '--forge-file-input-input-file-gap-stack'?: string | undefined;
+  readonly '--forge-file-input-input-file-padding-dropzone-block'?: string | undefined;
+  readonly '--forge-file-input-input-file-padding-dropzone-inline'?: string | undefined;
+  readonly '--forge-file-input-input-file-radius-button'?: string | undefined;
+  readonly '--forge-file-input-input-file-radius-dropzone'?: string | undefined;
+  readonly '--forge-file-input-input-file-required'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-2xl-font-size'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-2xl-padding-block'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-2xl-padding-inline'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-2xs-font-size'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-2xs-padding-block'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-2xs-padding-inline'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-lg-font-size'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-lg-padding-block'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-lg-padding-inline'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-md-font-size'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-md-padding-block'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-md-padding-inline'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-sm-font-size'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-sm-padding-block'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-sm-padding-inline'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-xl-font-size'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-xl-padding-block'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-xl-padding-inline'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-xs-font-size'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-xs-padding-block'?: string | undefined;
+  readonly '--forge-file-input-input-file-size-xs-padding-inline'?: string | undefined;
+  readonly '--forge-file-input-input-file-surface-active'?: string | undefined;
+  readonly '--forge-file-input-input-file-surface-default'?: string | undefined;
+  readonly '--forge-file-input-input-file-surface-disabled'?: string | undefined;
+  readonly '--forge-file-input-input-file-surface-hover'?: string | undefined;
+  readonly '--forge-file-input-input-file-text-default'?: string | undefined;
+  readonly '--forge-file-input-input-file-text-disabled'?: string | undefined;
+  readonly '--forge-file-input-input-file-text-error'?: string | undefined;
+  readonly '--forge-file-input-input-file-text-link'?: string | undefined;
+  readonly '--forge-file-input-input-file-text-link-hover'?: string | undefined;
+  readonly '--forge-file-input-input-file-text-muted'?: string | undefined;
+};
+
+function createFileInputStyle(properties: Readonly<FileInputStyleProperties> | undefined): FileInputStyle | undefined {
+  return createForgeStyle({
+    '--forge-file-input-input-file-border-active': properties?.['input-file-border-active'],
+    '--forge-file-input-input-file-border-default': properties?.['input-file-border-default'],
+    '--forge-file-input-input-file-border-hover': properties?.['input-file-border-hover'],
+    '--forge-file-input-input-file-border-invalid': properties?.['input-file-border-invalid'],
+    '--forge-file-input-input-file-border-width-default': properties?.['input-file-border-width-default'],
+    '--forge-file-input-input-file-border-width-dropzone': properties?.['input-file-border-width-dropzone'],
+    '--forge-file-input-input-file-font-weight': properties?.['input-file-font-weight'],
+    '--forge-file-input-input-file-gap-dropzone': properties?.['input-file-gap-dropzone'],
+    '--forge-file-input-input-file-gap-row': properties?.['input-file-gap-row'],
+    '--forge-file-input-input-file-gap-stack': properties?.['input-file-gap-stack'],
+    '--forge-file-input-input-file-padding-dropzone-block': properties?.['input-file-padding-dropzone-block'],
+    '--forge-file-input-input-file-padding-dropzone-inline': properties?.['input-file-padding-dropzone-inline'],
+    '--forge-file-input-input-file-radius-button': properties?.['input-file-radius-button'],
+    '--forge-file-input-input-file-radius-dropzone': properties?.['input-file-radius-dropzone'],
+    '--forge-file-input-input-file-required': properties?.['input-file-required'],
+    '--forge-file-input-input-file-size-2xl-font-size': properties?.['input-file-size-2xl-font-size'],
+    '--forge-file-input-input-file-size-2xl-padding-block': properties?.['input-file-size-2xl-padding-block'],
+    '--forge-file-input-input-file-size-2xl-padding-inline': properties?.['input-file-size-2xl-padding-inline'],
+    '--forge-file-input-input-file-size-2xs-font-size': properties?.['input-file-size-2xs-font-size'],
+    '--forge-file-input-input-file-size-2xs-padding-block': properties?.['input-file-size-2xs-padding-block'],
+    '--forge-file-input-input-file-size-2xs-padding-inline': properties?.['input-file-size-2xs-padding-inline'],
+    '--forge-file-input-input-file-size-lg-font-size': properties?.['input-file-size-lg-font-size'],
+    '--forge-file-input-input-file-size-lg-padding-block': properties?.['input-file-size-lg-padding-block'],
+    '--forge-file-input-input-file-size-lg-padding-inline': properties?.['input-file-size-lg-padding-inline'],
+    '--forge-file-input-input-file-size-md-font-size': properties?.['input-file-size-md-font-size'],
+    '--forge-file-input-input-file-size-md-padding-block': properties?.['input-file-size-md-padding-block'],
+    '--forge-file-input-input-file-size-md-padding-inline': properties?.['input-file-size-md-padding-inline'],
+    '--forge-file-input-input-file-size-sm-font-size': properties?.['input-file-size-sm-font-size'],
+    '--forge-file-input-input-file-size-sm-padding-block': properties?.['input-file-size-sm-padding-block'],
+    '--forge-file-input-input-file-size-sm-padding-inline': properties?.['input-file-size-sm-padding-inline'],
+    '--forge-file-input-input-file-size-xl-font-size': properties?.['input-file-size-xl-font-size'],
+    '--forge-file-input-input-file-size-xl-padding-block': properties?.['input-file-size-xl-padding-block'],
+    '--forge-file-input-input-file-size-xl-padding-inline': properties?.['input-file-size-xl-padding-inline'],
+    '--forge-file-input-input-file-size-xs-font-size': properties?.['input-file-size-xs-font-size'],
+    '--forge-file-input-input-file-size-xs-padding-block': properties?.['input-file-size-xs-padding-block'],
+    '--forge-file-input-input-file-size-xs-padding-inline': properties?.['input-file-size-xs-padding-inline'],
+    '--forge-file-input-input-file-surface-active': properties?.['input-file-surface-active'],
+    '--forge-file-input-input-file-surface-default': properties?.['input-file-surface-default'],
+    '--forge-file-input-input-file-surface-disabled': properties?.['input-file-surface-disabled'],
+    '--forge-file-input-input-file-surface-hover': properties?.['input-file-surface-hover'],
+    '--forge-file-input-input-file-text-default': properties?.['input-file-text-default'],
+    '--forge-file-input-input-file-text-disabled': properties?.['input-file-text-disabled'],
+    '--forge-file-input-input-file-text-error': properties?.['input-file-text-error'],
+    '--forge-file-input-input-file-text-link': properties?.['input-file-text-link'],
+    '--forge-file-input-input-file-text-link-hover': properties?.['input-file-text-link-hover'],
+    '--forge-file-input-input-file-text-muted': properties?.['input-file-text-muted'],
+  }) as FileInputStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface FileInputProperties {
   /**
    * Extra class(es) merged onto the control's root element. Applied last so
@@ -52,6 +209,9 @@ export interface FileInputProperties {
   onUpdateModelValue?: (value?: File | File[]) => void;
   /** Fired with the native `FileList` (omitted when cleared) when the selection changes. */
   onChange?: (files?: FileList) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<FileInputStyleProperties>;
 }
 
 /**
@@ -71,6 +231,8 @@ export interface FileInputProperties {
  * become the `onUpdateModelValue`/`onChange` callback props.
  */
 export function ForgeFileInput(properties: Readonly<FileInputProperties>): MpElement {
+  const style = createFileInputStyle(properties.properties);
+
   const {
     multiple = false,
     accept,
@@ -141,6 +303,7 @@ export function ForgeFileInput(properties: Readonly<FileInputProperties>): MpEle
         },
         properties.className,
       ]}
+      style={style}
     >
       {label ? (
         <label

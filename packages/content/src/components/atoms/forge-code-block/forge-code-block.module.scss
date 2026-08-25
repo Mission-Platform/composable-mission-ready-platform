@@ -7,6 +7,7 @@
  *
  * The rules live in the package-owned `mp.content` cascade layer.
  */
+@use './forge-code-block-properties';
 
 @layer mp.content {
   .forge-code-block {
@@ -16,32 +17,38 @@
      * modifier scales them together) and the same leading — otherwise the two
      * columns drift apart and the numbers stop matching their lines.
      */
-    --mp-code-block-line-height: var(--mp-code-typography-line-height);
+    --mp-code-block-line-height: var(
+      --forge-code-block-code-typography-line-height,
+      var(--mp-code-typography-line-height)
+    );
 
-    border: var(--mp-code-border-width) solid var(--mp-code-border-default);
-    border-radius: var(--mp-code-radius);
-    background-color: var(--mp-code-surface-default);
+    border: var(--forge-code-block-code-border-width, var(--mp-code-border-width)) solid
+      var(--forge-code-block-code-border-default, var(--mp-code-border-default));
+    border-radius: var(--forge-code-block-code-radius, var(--mp-code-radius));
+    background-color: var(--forge-code-block-code-surface-default, var(--mp-code-surface-default));
     overflow: hidden;
-    font-family: var(--mp-code-typography-font-family);
-    font-size: var(--mp-code-typography-font-size);
+    font-family: var(--forge-code-block-code-typography-font-family, var(--mp-code-typography-font-family));
+    font-size: var(--forge-code-block-code-typography-font-size, var(--mp-code-typography-font-size));
 
     &__header {
       position: sticky;
       top: 0;
-      z-index: 1;
+      z-index: var(--mp-z-index-feature-editor);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--mp-code-header-padding-block) var(--mp-code-header-padding-inline);
-      border-bottom: var(--mp-code-border-width) solid var(--mp-code-header-border);
-      background-color: var(--mp-code-header-surface);
-      gap: var(--mp-code-header-gap);
+      padding: var(--forge-code-block-code-header-padding-block, var(--mp-code-header-padding-block))
+        var(--forge-code-block-code-header-padding-inline, var(--mp-code-header-padding-inline));
+      border-bottom: var(--forge-code-block-code-border-width, var(--mp-code-border-width)) solid
+        var(--forge-code-block-code-header-border, var(--mp-code-header-border));
+      background-color: var(--forge-code-block-code-header-surface, var(--mp-code-header-surface));
+      gap: var(--forge-code-block-code-header-gap, var(--mp-code-header-gap));
     }
 
     &__filename {
-      font-family: var(--mp-code-filename-font-family);
-      font-size: var(--mp-code-filename-font-size);
-      color: var(--mp-code-filename-text);
+      font-family: var(--forge-code-block-code-filename-font-family, var(--mp-code-filename-font-family));
+      font-size: var(--forge-code-block-code-filename-font-size, var(--mp-code-filename-font-size));
+      color: var(--forge-code-block-code-filename-text, var(--mp-code-filename-text));
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -50,9 +57,9 @@
     }
 
     &__language {
-      font-family: var(--mp-code-language-font-family);
-      font-size: var(--mp-code-language-font-size);
-      color: var(--mp-code-language-text);
+      font-family: var(--forge-code-block-code-language-font-family, var(--mp-code-language-font-family));
+      font-size: var(--forge-code-block-code-language-font-size, var(--mp-code-language-font-size));
+      color: var(--forge-code-block-code-language-text, var(--mp-code-language-text));
       text-transform: lowercase;
       flex: 1;
       min-width: 0;
@@ -61,20 +68,25 @@
     &__copy {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-code-copy-gap);
-      padding: var(--mp-code-copy-padding-block) var(--mp-code-copy-padding-inline);
-      border: var(--mp-code-copy-border-default) solid var(--mp-code-copy-border-width-default);
-      border-radius: var(--mp-code-copy-radius);
-      background: var(--mp-code-copy-surface-default);
-      color: var(--mp-code-copy-text-default);
-      font-family: var(--mp-code-copy-font-family);
-      font-size: var(--mp-code-copy-font-size);
+      gap: var(--forge-code-block-code-copy-gap, var(--mp-code-copy-gap));
+      padding: var(--forge-code-block-code-copy-padding-block, var(--mp-code-copy-padding-block))
+        var(--forge-code-block-code-copy-padding-inline, var(--mp-code-copy-padding-inline));
+      border: var(--forge-code-block-code-copy-border-default, var(--mp-code-copy-border-default)) solid
+        var(--forge-code-block-code-copy-border-width-default, var(--mp-code-copy-border-width-default));
+      border-radius: var(--forge-code-block-code-copy-radius, var(--mp-code-copy-radius));
+      background: var(--forge-code-block-code-copy-surface-default, var(--mp-code-copy-surface-default));
+      color: var(--forge-code-block-code-copy-text-default, var(--mp-code-copy-text-default));
+      font-family: var(--forge-code-block-code-copy-font-family, var(--mp-code-copy-font-family));
+      font-size: var(--forge-code-block-code-copy-font-size, var(--mp-code-copy-font-size));
       line-height: 1;
       cursor: pointer;
       transition:
-        color var(--mp-code-copy-transition-duration) var(--mp-code-copy-transition-easing),
-        border-color var(--mp-code-copy-transition-duration) var(--mp-code-copy-transition-easing),
-        background-color var(--mp-code-copy-transition-duration) var(--mp-code-copy-transition-easing);
+        color var(--forge-code-block-code-copy-transition-duration, var(--mp-code-copy-transition-duration))
+          var(--forge-code-block-code-copy-transition-easing, var(--mp-code-copy-transition-easing)),
+        border-color var(--forge-code-block-code-copy-transition-duration, var(--mp-code-copy-transition-duration))
+          var(--forge-code-block-code-copy-transition-easing, var(--mp-code-copy-transition-easing)),
+        background-color var(--forge-code-block-code-copy-transition-duration, var(--mp-code-copy-transition-duration))
+          var(--forge-code-block-code-copy-transition-easing, var(--mp-code-copy-transition-easing));
       white-space: nowrap;
       flex-shrink: 0;
 
@@ -86,13 +98,17 @@
       }
 
       &:hover {
-        color: var(--mp-code-copy-text-hover);
-        border-color: var(--mp-code-copy-border-hover);
-        background-color: var(--mp-code-copy-surface-hover);
+        color: var(--forge-code-block-code-copy-text-hover, var(--mp-code-copy-text-hover));
+        border-color: var(--forge-code-block-code-copy-border-hover, var(--mp-code-copy-border-hover));
+        background-color: var(--forge-code-block-code-copy-surface-hover, var(--mp-code-copy-surface-hover));
       }
 
       &:focus-visible {
-        outline: var(--mp-code-copy-border-width-focus-visible) solid var(--mp-code-copy-border-focus-visible);
+        outline: var(
+            --forge-code-block-code-copy-border-width-focus-visible,
+            var(--mp-code-copy-border-width-focus-visible)
+          )
+          solid var(--forge-code-block-code-copy-border-focus-visible, var(--mp-code-copy-border-focus-visible));
         outline-offset: 2px;
       }
     }
@@ -110,11 +126,14 @@
       display: block;
       flex-shrink: 0;
       user-select: none;
-      padding: var(--mp-code-gutter-padding-block) var(--mp-code-gutter-padding-inline-end) var(--mp-code-gutter-padding-block) var(--mp-code-gutter-padding-inline-start);
-      color: var(--mp-code-gutter-text);
-      font-family: var(--mp-code-typography-font-family);
+      padding: var(--forge-code-block-code-gutter-padding-block, var(--mp-code-gutter-padding-block))
+        var(--forge-code-block-code-gutter-padding-inline-end, var(--mp-code-gutter-padding-inline-end))
+        var(--forge-code-block-code-gutter-padding-block, var(--mp-code-gutter-padding-block))
+        var(--forge-code-block-code-gutter-padding-inline-start, var(--mp-code-gutter-padding-inline-start));
+      color: var(--forge-code-block-code-gutter-text, var(--mp-code-gutter-text));
+      font-family: var(--forge-code-block-code-typography-font-family, var(--mp-code-typography-font-family));
       font-size: inherit;
-      line-height: var(--mp-code-block-line-height);
+      line-height: var(--forge-code-block-line-height, var(--mp-code-block-line-height));
       font-variant-numeric: tabular-nums;
       text-align: right;
     }
@@ -126,14 +145,14 @@
 
     &__pre {
       margin: 0;
-      padding: var(--mp-code-padding);
+      padding: var(--forge-code-block-code-padding, var(--mp-code-padding));
       background: transparent;
       overflow: visible;
       flex: 1;
       min-width: 0;
-      font-family: var(--mp-code-typography-font-family);
+      font-family: var(--forge-code-block-code-typography-font-family, var(--mp-code-typography-font-family));
       font-size: inherit;
-      line-height: var(--mp-code-block-line-height);
+      line-height: var(--forge-code-block-line-height, var(--mp-code-block-line-height));
     }
 
     &__code {
@@ -164,10 +183,13 @@
         )
     {
       &--#{$name} {
-        border-color: var(--mp-code-variant-#{$family}-border);
+        border-color: var(--forge-code-block-code-variant-#{$family}-border, var(--mp-code-variant-#{$family}-border));
 
         .forge-code-block__header {
-          border-bottom-color: var(--mp-code-variant-#{$family}-border);
+          border-bottom-color: var(
+            --forge-code-block-code-variant-#{$family}-border,
+            var(--mp-code-variant-#{$family}-border)
+          );
         }
       }
     }

@@ -1,8 +1,40 @@
-import { type MpChild, type MpElement, Slot, useState } from '@mission-platform/forge';
+import {
+  Slot,
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-split-pane.module.scss';
 
 export type SplitPaneDirection = 'horizontal' | 'vertical';
+
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface SplitPaneStyleProperties {
+  readonly 'border-width-thick'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-border-focus'?: string;
+  readonly 'spacing-2'?: string;
+}
+
+export type SplitPaneStyle = CSSStyleProperties & {
+  readonly '--forge-split-pane-border-width-thick'?: string | undefined;
+  readonly '--forge-split-pane-color-border-default'?: string | undefined;
+  readonly '--forge-split-pane-color-border-focus'?: string | undefined;
+  readonly '--forge-split-pane-spacing-2'?: string | undefined;
+};
+
+function createSplitPaneStyle(properties: Readonly<SplitPaneStyleProperties> | undefined): SplitPaneStyle | undefined {
+  return createForgeStyle({
+    '--forge-split-pane-border-width-thick': properties?.['border-width-thick'],
+    '--forge-split-pane-color-border-default': properties?.['color-border-default'],
+    '--forge-split-pane-color-border-focus': properties?.['color-border-focus'],
+    '--forge-split-pane-spacing-2': properties?.['spacing-2'],
+  }) as SplitPaneStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface SplitPaneProperties {
   first?: MpChild;
   second?: MpChild;
@@ -19,9 +51,14 @@ export interface SplitPaneProperties {
   primaryLabel?: string;
   secondaryLabel?: string;
   onResize?: (size: number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<SplitPaneStyleProperties>;
 }
 
 export function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpElement {
+  const style = createSplitPaneStyle(properties.properties);
+
   const direction = properties.direction ?? 'horizontal';
   const minSize = Math.max(0, Math.min(100, properties.minSize ?? properties.min ?? 20));
   const maxSize = Math.max(minSize, Math.min(100, properties.maxSize ?? properties.max ?? 80));
@@ -64,7 +101,10 @@ export function ForgeSplitPane(properties: Readonly<SplitPaneProperties>): MpEle
   const firstContent = properties.first ?? properties.primary;
   const secondContent = properties.second ?? properties.secondary;
   return (
-    <div className={[styles['forge-split-pane'], styles[`forge-split-pane--${direction}`]]}>
+    <div
+      className={[styles['forge-split-pane'], styles[`forge-split-pane--${direction}`]]}
+      style={style}
+    >
       <section
         className={styles['forge-split-pane__primary']}
         style={{ flexBasis: `${size}%` }}

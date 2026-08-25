@@ -1,0 +1,30 @@
+/**
+ * Registered inherited custom properties for forge-toast-container overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-toast-container-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-toast-container-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-toast-container-overlay-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-transition-duration);
+}
+
+@property --forge-toast-container-overlay-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-transition-easing);
+}

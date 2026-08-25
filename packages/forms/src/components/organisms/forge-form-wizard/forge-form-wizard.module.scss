@@ -1,3 +1,5 @@
+@use './forge-form-wizard-properties';
+
 /**
  * Styling for the write-once `ForgeFormWizard`.
  *
@@ -8,7 +10,7 @@
   .forge-form-wizard {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-form-gap-wizard);
+    gap: var(--forge-form-wizard-form-gap-wizard, var(--mp-form-gap-wizard));
 
     @supports (container-type: inline-size) {
       container: forge-form-wizard / inline-size;
@@ -17,13 +19,13 @@
     &__steps {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--mp-form-gap-default);
+      gap: var(--forge-form-wizard-form-gap-default, var(--mp-form-gap-default));
       margin: 0;
       padding: 0;
       list-style: none;
 
       @container forge-form-wizard (width >= 40rem) {
-        gap: var(--mp-form-gap-large);
+        gap: var(--forge-form-wizard-form-gap-large, var(--mp-form-gap-large));
       }
     }
 
@@ -35,46 +37,53 @@
     &__step-btn {
       display: flex;
       align-items: center;
-      gap: var(--mp-form-gap-default);
+      gap: var(--forge-form-wizard-form-gap-default, var(--mp-form-gap-default));
       width: 100%;
-      padding: var(--mp-form-padding-default) var(--mp-form-padding-section);
-      border: var(--mp-form-border-width) solid var(--mp-form-border-default);
-      border-radius: var(--mp-form-radius-default);
+      padding: var(--forge-form-wizard-form-padding-default, var(--mp-form-padding-default))
+        var(--forge-form-wizard-form-padding-section, var(--mp-form-padding-section));
+      border: var(--forge-form-wizard-form-border-width, var(--mp-form-border-width)) solid
+        var(--forge-form-wizard-form-border-default, var(--mp-form-border-default));
+      border-radius: var(--forge-form-wizard-form-radius-default, var(--mp-form-radius-default));
       background: transparent;
       cursor: pointer;
       text-align: left;
-      color: var(--mp-form-text-secondary);
+      color: var(--forge-form-wizard-form-text-secondary, var(--mp-form-text-secondary));
       transition:
-        border-color var(--mp-form-transition-duration) var(--mp-form-transition-easing),
-        color var(--mp-form-transition-duration) var(--mp-form-transition-easing),
-        background-color var(--mp-form-transition-duration) var(--mp-form-transition-easing);
+        border-color var(--forge-form-wizard-form-transition-duration, var(--mp-form-transition-duration))
+          var(--forge-form-wizard-form-transition-easing, var(--mp-form-transition-easing)),
+        color var(--forge-form-wizard-form-transition-duration, var(--mp-form-transition-duration))
+          var(--forge-form-wizard-form-transition-easing, var(--mp-form-transition-easing)),
+        background-color var(--forge-form-wizard-form-transition-duration, var(--mp-form-transition-duration))
+          var(--forge-form-wizard-form-transition-easing, var(--mp-form-transition-easing));
 
       @container forge-form-wizard (width >= 40rem) {
-        padding: var(--mp-form-padding-section) var(--mp-form-padding-large);
-        gap: var(--mp-form-gap-large);
+        padding: var(--forge-form-wizard-form-padding-section, var(--mp-form-padding-section))
+          var(--forge-form-wizard-form-padding-large, var(--mp-form-padding-large));
+        gap: var(--forge-form-wizard-form-gap-large, var(--mp-form-gap-large));
       }
 
       &:disabled {
-        opacity: var(--mp-form-disabled-opacity);
+        opacity: var(--forge-form-wizard-form-disabled-opacity, var(--mp-form-disabled-opacity));
         cursor: not-allowed;
       }
 
       &:focus-visible {
-        outline: var(--mp-form-border-focus-width) solid var(--mp-form-border-focus);
+        outline: var(--forge-form-wizard-form-border-focus-width, var(--mp-form-border-focus-width)) solid
+          var(--forge-form-wizard-form-border-focus, var(--mp-form-border-focus));
         outline-offset: 2px;
       }
 
       &--active {
-        border-color: var(--mp-form-border-selected);
-        color: var(--mp-form-text-default);
+        border-color: var(--forge-form-wizard-form-border-selected, var(--mp-form-border-selected));
+        color: var(--forge-form-wizard-form-text-default, var(--mp-form-text-default));
       }
 
       &--done {
-        color: var(--mp-form-text-default);
+        color: var(--forge-form-wizard-form-text-default, var(--mp-form-text-default));
       }
 
       &--error {
-        border-color: var(--mp-form-border-invalid);
+        border-color: var(--forge-form-wizard-form-border-invalid, var(--mp-form-border-invalid));
       }
     }
 
@@ -86,13 +95,13 @@
       height: 1.5rem;
       flex-shrink: 0;
       border-radius: 50%;
-      background-color: var(--mp-form-surface-muted);
+      background-color: var(--forge-form-wizard-form-surface-muted, var(--mp-form-surface-muted));
       font-variant-numeric: tabular-nums;
     }
 
     &__step-btn--active &__step-index {
-      background-color: var(--mp-form-primary);
-      color: var(--mp-form-text-inverse);
+      background-color: var(--forge-form-wizard-form-primary, var(--mp-form-primary));
+      color: var(--forge-form-wizard-form-text-inverse, var(--mp-form-text-inverse));
     }
 
     &__step-text {
@@ -108,59 +117,64 @@
     &__footer {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-form-gap-section);
-      padding-top: var(--mp-form-padding-section);
-      border-top: var(--mp-form-border-width) solid var(--mp-form-border-default);
+      gap: var(--forge-form-wizard-form-gap-section, var(--mp-form-gap-section));
+      padding-top: var(--forge-form-wizard-form-padding-section, var(--mp-form-padding-section));
+      border-top: var(--forge-form-wizard-form-border-width, var(--mp-form-border-width)) solid
+        var(--forge-form-wizard-form-border-default, var(--mp-form-border-default));
 
       @container forge-form-wizard (width >= 48rem) {
-        padding-top: var(--mp-form-gap-wizard);
-        gap: var(--mp-form-gap-large);
+        padding-top: var(--forge-form-wizard-form-gap-wizard, var(--mp-form-gap-wizard));
+        gap: var(--forge-form-wizard-form-gap-large, var(--mp-form-gap-large));
       }
     }
 
     &__nav {
       display: flex;
       justify-content: space-between;
-      gap: var(--mp-form-gap-default);
+      gap: var(--forge-form-wizard-form-gap-default, var(--mp-form-gap-default));
     }
 
     &__button {
-      padding: var(--mp-form-padding-default) var(--mp-form-padding-large);
-      border: var(--mp-form-border-width) solid transparent;
-      border-radius: var(--mp-form-radius-default);
+      padding: var(--forge-form-wizard-form-padding-default, var(--mp-form-padding-default))
+        var(--forge-form-wizard-form-padding-large, var(--mp-form-padding-large));
+      border: var(--forge-form-wizard-form-border-width, var(--mp-form-border-width)) solid transparent;
+      border-radius: var(--forge-form-wizard-form-radius-default, var(--mp-form-radius-default));
       cursor: pointer;
-      font-family: var(--mp-form-font-family-sans);
-      font-size: var(--mp-form-font-size-small);
+      font-family: var(--forge-form-wizard-form-font-family-sans, var(--mp-form-font-family-sans));
+      font-size: var(--forge-form-wizard-form-font-size-small, var(--mp-form-font-size-small));
       transition:
-        opacity var(--mp-form-transition-duration) var(--mp-form-transition-easing),
-        background-color var(--mp-form-transition-duration) var(--mp-form-transition-easing);
+        opacity var(--forge-form-wizard-form-transition-duration, var(--mp-form-transition-duration))
+          var(--forge-form-wizard-form-transition-easing, var(--mp-form-transition-easing)),
+        background-color var(--forge-form-wizard-form-transition-duration, var(--mp-form-transition-duration))
+          var(--forge-form-wizard-form-transition-easing, var(--mp-form-transition-easing));
 
       &:disabled {
-        opacity: var(--mp-form-disabled-opacity);
+        opacity: var(--forge-form-wizard-form-disabled-opacity, var(--mp-form-disabled-opacity));
         cursor: not-allowed;
       }
 
       &:focus-visible {
-        outline: var(--mp-form-border-focus-width) solid var(--mp-form-border-focus);
+        outline: var(--forge-form-wizard-form-border-focus-width, var(--mp-form-border-focus-width)) solid
+          var(--forge-form-wizard-form-border-focus, var(--mp-form-border-focus));
         outline-offset: 2px;
       }
 
       &--primary {
-        background-color: var(--mp-form-primary);
-        color: var(--mp-form-text-inverse);
+        background-color: var(--forge-form-wizard-form-primary, var(--mp-form-primary));
+        color: var(--forge-form-wizard-form-text-inverse, var(--mp-form-text-inverse));
 
         &:hover:not(:disabled) {
-          opacity: var(--mp-form-primary-hover-opacity);
+          opacity: var(--forge-form-wizard-form-primary-hover-opacity, var(--mp-form-primary-hover-opacity));
         }
       }
 
       &--secondary {
         background: transparent;
-        border-color: var(--mp-form-border-default);
-        color: var(--mp-form-text-default);
+        border-color: var(--forge-form-wizard-form-border-default, var(--mp-form-border-default));
+        color: var(--forge-form-wizard-form-text-default, var(--mp-form-text-default));
 
         &:hover:not(:disabled) {
-          background-color: var(--mp-form-surface-muted);
+          background-color: var(--forge-form-wizard-form-surface-muted, var(--mp-form-surface-muted));
         }
       }
     }

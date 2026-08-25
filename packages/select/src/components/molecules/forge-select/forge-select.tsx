@@ -1,12 +1,14 @@
 import { ForgeDropdown } from '@mission-platform/float';
 import {
-  type ClassValue,
-  type MpChild,
-  type MpElement,
   Slot,
   useId,
   useRef,
   useState,
+  createForgeStyle,
+  type ClassValue,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
@@ -28,6 +30,159 @@ export interface SelectOption {
   disabled?: boolean;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface SelectStyleProperties {
+  readonly 'border-default'?: string;
+  readonly 'border-focus-visible'?: string;
+  readonly 'border-invalid'?: string;
+  readonly 'border-width-default'?: string;
+  readonly 'extension-padding-end'?: string;
+  readonly 'extension-padding-start'?: string;
+  readonly 'field-error'?: string;
+  readonly 'field-gap'?: string;
+  readonly 'field-required'?: string;
+  readonly 'focus-ring'?: string;
+  readonly 'font-family'?: string;
+  readonly 'input-transition-duration'?: string;
+  readonly 'input-transition-easing'?: string;
+  readonly 'line-height'?: string;
+  readonly 'option-background-hover'?: string;
+  readonly 'option-content-gap'?: string;
+  readonly 'option-font-size'?: string;
+  readonly 'option-font-weight-selected'?: string;
+  readonly 'option-padding-block'?: string;
+  readonly 'option-padding-inline'?: string;
+  readonly 'option-text-default'?: string;
+  readonly radius?: string;
+  readonly 'size-2xl-font-size'?: string;
+  readonly 'size-2xl-padding-block'?: string;
+  readonly 'size-2xl-padding-inline'?: string;
+  readonly 'size-2xs-font-size'?: string;
+  readonly 'size-2xs-padding-block'?: string;
+  readonly 'size-2xs-padding-inline'?: string;
+  readonly 'size-lg-font-size'?: string;
+  readonly 'size-lg-padding-block'?: string;
+  readonly 'size-lg-padding-inline'?: string;
+  readonly 'size-md-font-size'?: string;
+  readonly 'size-md-padding-block'?: string;
+  readonly 'size-md-padding-inline'?: string;
+  readonly 'size-sm-font-size'?: string;
+  readonly 'size-sm-padding-block'?: string;
+  readonly 'size-sm-padding-inline'?: string;
+  readonly 'size-xl-font-size'?: string;
+  readonly 'size-xl-padding-block'?: string;
+  readonly 'size-xl-padding-inline'?: string;
+  readonly 'size-xs-font-size'?: string;
+  readonly 'size-xs-padding-block'?: string;
+  readonly 'size-xs-padding-inline'?: string;
+  readonly 'surface-default'?: string;
+  readonly 'surface-disabled'?: string;
+  readonly 'text-disabled'?: string;
+  readonly 'text-secondary'?: string;
+}
+
+export type SelectStyle = CSSStyleProperties & {
+  readonly '--forge-select-border-default'?: string | undefined;
+  readonly '--forge-select-border-focus-visible'?: string | undefined;
+  readonly '--forge-select-border-invalid'?: string | undefined;
+  readonly '--forge-select-border-width-default'?: string | undefined;
+  readonly '--forge-select-extension-padding-end'?: string | undefined;
+  readonly '--forge-select-extension-padding-start'?: string | undefined;
+  readonly '--forge-select-field-error'?: string | undefined;
+  readonly '--forge-select-field-gap'?: string | undefined;
+  readonly '--forge-select-field-required'?: string | undefined;
+  readonly '--forge-select-focus-ring'?: string | undefined;
+  readonly '--forge-select-font-family'?: string | undefined;
+  readonly '--forge-select-input-transition-duration'?: string | undefined;
+  readonly '--forge-select-input-transition-easing'?: string | undefined;
+  readonly '--forge-select-line-height'?: string | undefined;
+  readonly '--forge-select-option-background-hover'?: string | undefined;
+  readonly '--forge-select-option-content-gap'?: string | undefined;
+  readonly '--forge-select-option-font-size'?: string | undefined;
+  readonly '--forge-select-option-font-weight-selected'?: string | undefined;
+  readonly '--forge-select-option-padding-block'?: string | undefined;
+  readonly '--forge-select-option-padding-inline'?: string | undefined;
+  readonly '--forge-select-option-text-default'?: string | undefined;
+  readonly '--forge-select-radius'?: string | undefined;
+  readonly '--forge-select-size-2xl-font-size'?: string | undefined;
+  readonly '--forge-select-size-2xl-padding-block'?: string | undefined;
+  readonly '--forge-select-size-2xl-padding-inline'?: string | undefined;
+  readonly '--forge-select-size-2xs-font-size'?: string | undefined;
+  readonly '--forge-select-size-2xs-padding-block'?: string | undefined;
+  readonly '--forge-select-size-2xs-padding-inline'?: string | undefined;
+  readonly '--forge-select-size-lg-font-size'?: string | undefined;
+  readonly '--forge-select-size-lg-padding-block'?: string | undefined;
+  readonly '--forge-select-size-lg-padding-inline'?: string | undefined;
+  readonly '--forge-select-size-md-font-size'?: string | undefined;
+  readonly '--forge-select-size-md-padding-block'?: string | undefined;
+  readonly '--forge-select-size-md-padding-inline'?: string | undefined;
+  readonly '--forge-select-size-sm-font-size'?: string | undefined;
+  readonly '--forge-select-size-sm-padding-block'?: string | undefined;
+  readonly '--forge-select-size-sm-padding-inline'?: string | undefined;
+  readonly '--forge-select-size-xl-font-size'?: string | undefined;
+  readonly '--forge-select-size-xl-padding-block'?: string | undefined;
+  readonly '--forge-select-size-xl-padding-inline'?: string | undefined;
+  readonly '--forge-select-size-xs-font-size'?: string | undefined;
+  readonly '--forge-select-size-xs-padding-block'?: string | undefined;
+  readonly '--forge-select-size-xs-padding-inline'?: string | undefined;
+  readonly '--forge-select-surface-default'?: string | undefined;
+  readonly '--forge-select-surface-disabled'?: string | undefined;
+  readonly '--forge-select-text-disabled'?: string | undefined;
+  readonly '--forge-select-text-secondary'?: string | undefined;
+};
+
+function createSelectStyle(properties: Readonly<SelectStyleProperties> | undefined): SelectStyle | undefined {
+  return createForgeStyle({
+    '--forge-select-border-default': properties?.['border-default'],
+    '--forge-select-border-focus-visible': properties?.['border-focus-visible'],
+    '--forge-select-border-invalid': properties?.['border-invalid'],
+    '--forge-select-border-width-default': properties?.['border-width-default'],
+    '--forge-select-extension-padding-end': properties?.['extension-padding-end'],
+    '--forge-select-extension-padding-start': properties?.['extension-padding-start'],
+    '--forge-select-field-error': properties?.['field-error'],
+    '--forge-select-field-gap': properties?.['field-gap'],
+    '--forge-select-field-required': properties?.['field-required'],
+    '--forge-select-focus-ring': properties?.['focus-ring'],
+    '--forge-select-font-family': properties?.['font-family'],
+    '--forge-select-input-transition-duration': properties?.['input-transition-duration'],
+    '--forge-select-input-transition-easing': properties?.['input-transition-easing'],
+    '--forge-select-line-height': properties?.['line-height'],
+    '--forge-select-option-background-hover': properties?.['option-background-hover'],
+    '--forge-select-option-content-gap': properties?.['option-content-gap'],
+    '--forge-select-option-font-size': properties?.['option-font-size'],
+    '--forge-select-option-font-weight-selected': properties?.['option-font-weight-selected'],
+    '--forge-select-option-padding-block': properties?.['option-padding-block'],
+    '--forge-select-option-padding-inline': properties?.['option-padding-inline'],
+    '--forge-select-option-text-default': properties?.['option-text-default'],
+    '--forge-select-radius': properties?.['radius'],
+    '--forge-select-size-2xl-font-size': properties?.['size-2xl-font-size'],
+    '--forge-select-size-2xl-padding-block': properties?.['size-2xl-padding-block'],
+    '--forge-select-size-2xl-padding-inline': properties?.['size-2xl-padding-inline'],
+    '--forge-select-size-2xs-font-size': properties?.['size-2xs-font-size'],
+    '--forge-select-size-2xs-padding-block': properties?.['size-2xs-padding-block'],
+    '--forge-select-size-2xs-padding-inline': properties?.['size-2xs-padding-inline'],
+    '--forge-select-size-lg-font-size': properties?.['size-lg-font-size'],
+    '--forge-select-size-lg-padding-block': properties?.['size-lg-padding-block'],
+    '--forge-select-size-lg-padding-inline': properties?.['size-lg-padding-inline'],
+    '--forge-select-size-md-font-size': properties?.['size-md-font-size'],
+    '--forge-select-size-md-padding-block': properties?.['size-md-padding-block'],
+    '--forge-select-size-md-padding-inline': properties?.['size-md-padding-inline'],
+    '--forge-select-size-sm-font-size': properties?.['size-sm-font-size'],
+    '--forge-select-size-sm-padding-block': properties?.['size-sm-padding-block'],
+    '--forge-select-size-sm-padding-inline': properties?.['size-sm-padding-inline'],
+    '--forge-select-size-xl-font-size': properties?.['size-xl-font-size'],
+    '--forge-select-size-xl-padding-block': properties?.['size-xl-padding-block'],
+    '--forge-select-size-xl-padding-inline': properties?.['size-xl-padding-inline'],
+    '--forge-select-size-xs-font-size': properties?.['size-xs-font-size'],
+    '--forge-select-size-xs-padding-block': properties?.['size-xs-padding-block'],
+    '--forge-select-size-xs-padding-inline': properties?.['size-xs-padding-inline'],
+    '--forge-select-surface-default': properties?.['surface-default'],
+    '--forge-select-surface-disabled': properties?.['surface-disabled'],
+    '--forge-select-text-disabled': properties?.['text-disabled'],
+    '--forge-select-text-secondary': properties?.['text-secondary'],
+  }) as SelectStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface SelectProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -79,6 +234,9 @@ export interface SelectProperties {
   onBlur?: (event: FocusEvent) => void;
   /** Fired when the control opens / the trigger gains focus. */
   onFocus?: (event: FocusEvent) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<SelectStyleProperties>;
 }
 
 /**
@@ -112,6 +270,8 @@ export interface SelectProperties {
  * preserved as neutral named slots.
  */
 export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
+  const style = createSelectStyle(properties.properties);
+
   const {
     modelValue = '',
     options = [],
@@ -412,6 +572,7 @@ export function ForgeSelect(properties: Readonly<SelectProperties>): MpElement {
         },
         properties.className,
       ]}
+      style={style}
     >
       {label ? (
         <label

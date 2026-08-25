@@ -1,0 +1,159 @@
+/**
+ * Registered inherited custom properties for forge-menu overrides.
+ */
+
+@property --forge-menu-navigation-menu-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-padding);
+}
+
+@property --forge-menu-navigation-menu-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-text-default);
+}
+
+@property --forge-menu-navigation-menu-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-surface-default);
+}
+
+@property --forge-menu-navigation-menu-border-width-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-border-width-default);
+}
+
+@property --forge-menu-navigation-menu-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-border-default);
+}
+
+@property --forge-menu-navigation-menu-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-radius);
+}
+
+@property --forge-menu-navigation-menu-submenu-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-submenu-gap);
+}
+
+@property --forge-menu-navigation-menu-link-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-link-gap);
+}
+
+@property --forge-menu-navigation-menu-link-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-link-padding-block);
+}
+
+@property --forge-menu-navigation-menu-link-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-link-padding-inline);
+}
+
+@property --forge-menu-navigation-menu-link-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-link-radius);
+}
+
+@property --forge-menu-navigation-menu-surface-link-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-surface-link-default);
+}
+
+@property --forge-menu-navigation-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-font-family);
+}
+
+@property --forge-menu-navigation-menu-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-transition-duration);
+}
+
+@property --forge-menu-navigation-menu-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-transition-easing);
+}
+
+@property --forge-menu-navigation-menu-border-width-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-border-width-focus);
+}
+
+@property --forge-menu-navigation-menu-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-border-focus);
+}
+
+@property --forge-menu-navigation-menu-text-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-text-disabled);
+}
+
+@property --forge-menu-navigation-menu-surface-link-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-surface-link-hover);
+}
+
+@property --forge-menu-navigation-menu-surface-link-expanded {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-surface-link-expanded);
+}
+
+@property --forge-menu-navigation-menu-text-chevron {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-text-chevron);
+}
+
+@property --forge-menu-navigation-menu-chevron-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-chevron-font-size);
+}
+
+@property --forge-menu-navigation-menu-submenu-padding-inline-start {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-submenu-padding-inline-start);
+}
+
+@property --forge-menu-navigation-menu-submenu-nested-margin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-submenu-nested-margin);
+}
+
+@property --forge-menu-z-index-dropdown {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-z-index-floating-dropdown);
+}
+
+@property --forge-menu-navigation-menu-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-shadow);
+}

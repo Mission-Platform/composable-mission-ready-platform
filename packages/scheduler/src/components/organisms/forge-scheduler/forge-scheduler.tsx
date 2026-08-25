@@ -1,6 +1,6 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeDialog } from '@mission-platform/float';
-import { Dynamic, type MpElement, useState } from '@mission-platform/forge';
+import { Dynamic, useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 import { ForgeInput, ForgeTextarea } from '@mission-platform/forms';
 import { ForgeIconChevron } from '@mission-platform/icons';
@@ -34,6 +34,270 @@ export type SchedulerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type { SchedulerView } from '../../../core';
 export type { VEvent } from '@mission-platform/vcard';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface SchedulerStyleProperties {
+  readonly 'container-border'?: string;
+  readonly 'container-border-width'?: string;
+  readonly 'container-gap'?: string;
+  readonly 'container-padding'?: string;
+  readonly 'container-radius'?: string;
+  readonly 'container-surface'?: string;
+  readonly 'day-heading-border'?: string;
+  readonly 'day-heading-gap'?: string;
+  readonly 'day-heading-padding'?: string;
+  readonly 'day-heading-surface'?: string;
+  readonly 'day-heading-text'?: string;
+  readonly 'day-heading-today-text'?: string;
+  readonly 'day-heading-today-weight'?: string;
+  readonly 'day-number-font-size'?: string;
+  readonly 'event-accent-border-width'?: string;
+  readonly 'event-border'?: string;
+  readonly 'event-border-width'?: string;
+  readonly 'event-font-size'?: string;
+  readonly 'event-muted-text'?: string;
+  readonly 'event-padding'?: string;
+  readonly 'event-radius'?: string;
+  readonly 'event-surface'?: string;
+  readonly 'event-text'?: string;
+  readonly 'event-time-font-family'?: string;
+  readonly 'event-title-weight'?: string;
+  readonly 'form-actions-gap'?: string;
+  readonly 'form-gap'?: string;
+  readonly 'form-row-gap'?: string;
+  readonly 'grid-border'?: string;
+  readonly 'grid-border-subtle'?: string;
+  readonly 'grid-border-width'?: string;
+  readonly 'grid-surface'?: string;
+  readonly 'hour-label-font-size'?: string;
+  readonly 'hour-label-padding-inline-end'?: string;
+  readonly 'hour-label-text'?: string;
+  readonly 'month-cell-border'?: string;
+  readonly 'month-cell-gap'?: string;
+  readonly 'month-cell-padding'?: string;
+  readonly 'month-cell-surface'?: string;
+  readonly 'month-cell-text'?: string;
+  readonly 'month-chip-font-size'?: string;
+  readonly 'month-chip-padding-block'?: string;
+  readonly 'month-chip-padding-inline'?: string;
+  readonly 'month-chip-radius'?: string;
+  readonly 'month-chip-surface'?: string;
+  readonly 'month-create-focus-ring'?: string;
+  readonly 'month-create-focus-ring-width'?: string;
+  readonly 'month-create-radius'?: string;
+  readonly 'month-create-surface'?: string;
+  readonly 'month-day-number-font-size'?: string;
+  readonly 'month-events-gap'?: string;
+  readonly 'month-more-font-size'?: string;
+  readonly 'month-more-text'?: string;
+  readonly 'month-outside-surface'?: string;
+  readonly 'month-outside-text'?: string;
+  readonly 'month-today-ring'?: string;
+  readonly 'month-today-ring-width'?: string;
+  readonly 'month-weekday-border'?: string;
+  readonly 'month-weekday-padding'?: string;
+  readonly 'navigation-gap'?: string;
+  readonly 'navigation-title-margin'?: string;
+  readonly 'toolbar-gap'?: string;
+  readonly 'view-switcher-gap'?: string;
+  readonly 'weekday-font-size'?: string;
+  readonly 'weekday-text'?: string;
+  readonly 'year-busy-surface'?: string;
+  readonly 'year-busy-text'?: string;
+  readonly 'year-busy-weight'?: string;
+  readonly 'year-day-font-size'?: string;
+  readonly 'year-day-radius'?: string;
+  readonly 'year-gap'?: string;
+  readonly 'year-mini-border'?: string;
+  readonly 'year-mini-gap'?: string;
+  readonly 'year-mini-grid-gap'?: string;
+  readonly 'year-mini-padding'?: string;
+  readonly 'year-mini-radius'?: string;
+  readonly 'year-mini-surface'?: string;
+  readonly 'year-mini-text'?: string;
+  readonly 'year-outside-text'?: string;
+  readonly 'year-outside-weight'?: string;
+  readonly 'year-title-font-size'?: string;
+  readonly 'year-title-weight'?: string;
+  readonly 'year-today-ring'?: string;
+  readonly 'year-today-ring-width'?: string;
+}
+
+export type SchedulerStyle = CSSStyleProperties & {
+  readonly '--forge-scheduler-container-border'?: string | undefined;
+  readonly '--forge-scheduler-container-border-width'?: string | undefined;
+  readonly '--forge-scheduler-container-gap'?: string | undefined;
+  readonly '--forge-scheduler-container-padding'?: string | undefined;
+  readonly '--forge-scheduler-container-radius'?: string | undefined;
+  readonly '--forge-scheduler-container-surface'?: string | undefined;
+  readonly '--forge-scheduler-day-heading-border'?: string | undefined;
+  readonly '--forge-scheduler-day-heading-gap'?: string | undefined;
+  readonly '--forge-scheduler-day-heading-padding'?: string | undefined;
+  readonly '--forge-scheduler-day-heading-surface'?: string | undefined;
+  readonly '--forge-scheduler-day-heading-text'?: string | undefined;
+  readonly '--forge-scheduler-day-heading-today-text'?: string | undefined;
+  readonly '--forge-scheduler-day-heading-today-weight'?: string | undefined;
+  readonly '--forge-scheduler-day-number-font-size'?: string | undefined;
+  readonly '--forge-scheduler-event-accent-border-width'?: string | undefined;
+  readonly '--forge-scheduler-event-border'?: string | undefined;
+  readonly '--forge-scheduler-event-border-width'?: string | undefined;
+  readonly '--forge-scheduler-event-font-size'?: string | undefined;
+  readonly '--forge-scheduler-event-muted-text'?: string | undefined;
+  readonly '--forge-scheduler-event-padding'?: string | undefined;
+  readonly '--forge-scheduler-event-radius'?: string | undefined;
+  readonly '--forge-scheduler-event-surface'?: string | undefined;
+  readonly '--forge-scheduler-event-text'?: string | undefined;
+  readonly '--forge-scheduler-event-time-font-family'?: string | undefined;
+  readonly '--forge-scheduler-event-title-weight'?: string | undefined;
+  readonly '--forge-scheduler-form-actions-gap'?: string | undefined;
+  readonly '--forge-scheduler-form-gap'?: string | undefined;
+  readonly '--forge-scheduler-form-row-gap'?: string | undefined;
+  readonly '--forge-scheduler-grid-border'?: string | undefined;
+  readonly '--forge-scheduler-grid-border-subtle'?: string | undefined;
+  readonly '--forge-scheduler-grid-border-width'?: string | undefined;
+  readonly '--forge-scheduler-grid-surface'?: string | undefined;
+  readonly '--forge-scheduler-hour-label-font-size'?: string | undefined;
+  readonly '--forge-scheduler-hour-label-padding-inline-end'?: string | undefined;
+  readonly '--forge-scheduler-hour-label-text'?: string | undefined;
+  readonly '--forge-scheduler-month-cell-border'?: string | undefined;
+  readonly '--forge-scheduler-month-cell-gap'?: string | undefined;
+  readonly '--forge-scheduler-month-cell-padding'?: string | undefined;
+  readonly '--forge-scheduler-month-cell-surface'?: string | undefined;
+  readonly '--forge-scheduler-month-cell-text'?: string | undefined;
+  readonly '--forge-scheduler-month-chip-font-size'?: string | undefined;
+  readonly '--forge-scheduler-month-chip-padding-block'?: string | undefined;
+  readonly '--forge-scheduler-month-chip-padding-inline'?: string | undefined;
+  readonly '--forge-scheduler-month-chip-radius'?: string | undefined;
+  readonly '--forge-scheduler-month-chip-surface'?: string | undefined;
+  readonly '--forge-scheduler-month-create-focus-ring'?: string | undefined;
+  readonly '--forge-scheduler-month-create-focus-ring-width'?: string | undefined;
+  readonly '--forge-scheduler-month-create-radius'?: string | undefined;
+  readonly '--forge-scheduler-month-create-surface'?: string | undefined;
+  readonly '--forge-scheduler-month-day-number-font-size'?: string | undefined;
+  readonly '--forge-scheduler-month-events-gap'?: string | undefined;
+  readonly '--forge-scheduler-month-more-font-size'?: string | undefined;
+  readonly '--forge-scheduler-month-more-text'?: string | undefined;
+  readonly '--forge-scheduler-month-outside-surface'?: string | undefined;
+  readonly '--forge-scheduler-month-outside-text'?: string | undefined;
+  readonly '--forge-scheduler-month-today-ring'?: string | undefined;
+  readonly '--forge-scheduler-month-today-ring-width'?: string | undefined;
+  readonly '--forge-scheduler-month-weekday-border'?: string | undefined;
+  readonly '--forge-scheduler-month-weekday-padding'?: string | undefined;
+  readonly '--forge-scheduler-navigation-gap'?: string | undefined;
+  readonly '--forge-scheduler-navigation-title-margin'?: string | undefined;
+  readonly '--forge-scheduler-toolbar-gap'?: string | undefined;
+  readonly '--forge-scheduler-view-switcher-gap'?: string | undefined;
+  readonly '--forge-scheduler-weekday-font-size'?: string | undefined;
+  readonly '--forge-scheduler-weekday-text'?: string | undefined;
+  readonly '--forge-scheduler-year-busy-surface'?: string | undefined;
+  readonly '--forge-scheduler-year-busy-text'?: string | undefined;
+  readonly '--forge-scheduler-year-busy-weight'?: string | undefined;
+  readonly '--forge-scheduler-year-day-font-size'?: string | undefined;
+  readonly '--forge-scheduler-year-day-radius'?: string | undefined;
+  readonly '--forge-scheduler-year-gap'?: string | undefined;
+  readonly '--forge-scheduler-year-mini-border'?: string | undefined;
+  readonly '--forge-scheduler-year-mini-gap'?: string | undefined;
+  readonly '--forge-scheduler-year-mini-grid-gap'?: string | undefined;
+  readonly '--forge-scheduler-year-mini-padding'?: string | undefined;
+  readonly '--forge-scheduler-year-mini-radius'?: string | undefined;
+  readonly '--forge-scheduler-year-mini-surface'?: string | undefined;
+  readonly '--forge-scheduler-year-mini-text'?: string | undefined;
+  readonly '--forge-scheduler-year-outside-text'?: string | undefined;
+  readonly '--forge-scheduler-year-outside-weight'?: string | undefined;
+  readonly '--forge-scheduler-year-title-font-size'?: string | undefined;
+  readonly '--forge-scheduler-year-title-weight'?: string | undefined;
+  readonly '--forge-scheduler-year-today-ring'?: string | undefined;
+  readonly '--forge-scheduler-year-today-ring-width'?: string | undefined;
+};
+
+function createSchedulerStyle(properties: Readonly<SchedulerStyleProperties> | undefined): SchedulerStyle | undefined {
+  return createForgeStyle({
+    '--forge-scheduler-container-border': properties?.['container-border'],
+    '--forge-scheduler-container-border-width': properties?.['container-border-width'],
+    '--forge-scheduler-container-gap': properties?.['container-gap'],
+    '--forge-scheduler-container-padding': properties?.['container-padding'],
+    '--forge-scheduler-container-radius': properties?.['container-radius'],
+    '--forge-scheduler-container-surface': properties?.['container-surface'],
+    '--forge-scheduler-day-heading-border': properties?.['day-heading-border'],
+    '--forge-scheduler-day-heading-gap': properties?.['day-heading-gap'],
+    '--forge-scheduler-day-heading-padding': properties?.['day-heading-padding'],
+    '--forge-scheduler-day-heading-surface': properties?.['day-heading-surface'],
+    '--forge-scheduler-day-heading-text': properties?.['day-heading-text'],
+    '--forge-scheduler-day-heading-today-text': properties?.['day-heading-today-text'],
+    '--forge-scheduler-day-heading-today-weight': properties?.['day-heading-today-weight'],
+    '--forge-scheduler-day-number-font-size': properties?.['day-number-font-size'],
+    '--forge-scheduler-event-accent-border-width': properties?.['event-accent-border-width'],
+    '--forge-scheduler-event-border': properties?.['event-border'],
+    '--forge-scheduler-event-border-width': properties?.['event-border-width'],
+    '--forge-scheduler-event-font-size': properties?.['event-font-size'],
+    '--forge-scheduler-event-muted-text': properties?.['event-muted-text'],
+    '--forge-scheduler-event-padding': properties?.['event-padding'],
+    '--forge-scheduler-event-radius': properties?.['event-radius'],
+    '--forge-scheduler-event-surface': properties?.['event-surface'],
+    '--forge-scheduler-event-text': properties?.['event-text'],
+    '--forge-scheduler-event-time-font-family': properties?.['event-time-font-family'],
+    '--forge-scheduler-event-title-weight': properties?.['event-title-weight'],
+    '--forge-scheduler-form-actions-gap': properties?.['form-actions-gap'],
+    '--forge-scheduler-form-gap': properties?.['form-gap'],
+    '--forge-scheduler-form-row-gap': properties?.['form-row-gap'],
+    '--forge-scheduler-grid-border': properties?.['grid-border'],
+    '--forge-scheduler-grid-border-subtle': properties?.['grid-border-subtle'],
+    '--forge-scheduler-grid-border-width': properties?.['grid-border-width'],
+    '--forge-scheduler-grid-surface': properties?.['grid-surface'],
+    '--forge-scheduler-hour-label-font-size': properties?.['hour-label-font-size'],
+    '--forge-scheduler-hour-label-padding-inline-end': properties?.['hour-label-padding-inline-end'],
+    '--forge-scheduler-hour-label-text': properties?.['hour-label-text'],
+    '--forge-scheduler-month-cell-border': properties?.['month-cell-border'],
+    '--forge-scheduler-month-cell-gap': properties?.['month-cell-gap'],
+    '--forge-scheduler-month-cell-padding': properties?.['month-cell-padding'],
+    '--forge-scheduler-month-cell-surface': properties?.['month-cell-surface'],
+    '--forge-scheduler-month-cell-text': properties?.['month-cell-text'],
+    '--forge-scheduler-month-chip-font-size': properties?.['month-chip-font-size'],
+    '--forge-scheduler-month-chip-padding-block': properties?.['month-chip-padding-block'],
+    '--forge-scheduler-month-chip-padding-inline': properties?.['month-chip-padding-inline'],
+    '--forge-scheduler-month-chip-radius': properties?.['month-chip-radius'],
+    '--forge-scheduler-month-chip-surface': properties?.['month-chip-surface'],
+    '--forge-scheduler-month-create-focus-ring': properties?.['month-create-focus-ring'],
+    '--forge-scheduler-month-create-focus-ring-width': properties?.['month-create-focus-ring-width'],
+    '--forge-scheduler-month-create-radius': properties?.['month-create-radius'],
+    '--forge-scheduler-month-create-surface': properties?.['month-create-surface'],
+    '--forge-scheduler-month-day-number-font-size': properties?.['month-day-number-font-size'],
+    '--forge-scheduler-month-events-gap': properties?.['month-events-gap'],
+    '--forge-scheduler-month-more-font-size': properties?.['month-more-font-size'],
+    '--forge-scheduler-month-more-text': properties?.['month-more-text'],
+    '--forge-scheduler-month-outside-surface': properties?.['month-outside-surface'],
+    '--forge-scheduler-month-outside-text': properties?.['month-outside-text'],
+    '--forge-scheduler-month-today-ring': properties?.['month-today-ring'],
+    '--forge-scheduler-month-today-ring-width': properties?.['month-today-ring-width'],
+    '--forge-scheduler-month-weekday-border': properties?.['month-weekday-border'],
+    '--forge-scheduler-month-weekday-padding': properties?.['month-weekday-padding'],
+    '--forge-scheduler-navigation-gap': properties?.['navigation-gap'],
+    '--forge-scheduler-navigation-title-margin': properties?.['navigation-title-margin'],
+    '--forge-scheduler-toolbar-gap': properties?.['toolbar-gap'],
+    '--forge-scheduler-view-switcher-gap': properties?.['view-switcher-gap'],
+    '--forge-scheduler-weekday-font-size': properties?.['weekday-font-size'],
+    '--forge-scheduler-weekday-text': properties?.['weekday-text'],
+    '--forge-scheduler-year-busy-surface': properties?.['year-busy-surface'],
+    '--forge-scheduler-year-busy-text': properties?.['year-busy-text'],
+    '--forge-scheduler-year-busy-weight': properties?.['year-busy-weight'],
+    '--forge-scheduler-year-day-font-size': properties?.['year-day-font-size'],
+    '--forge-scheduler-year-day-radius': properties?.['year-day-radius'],
+    '--forge-scheduler-year-gap': properties?.['year-gap'],
+    '--forge-scheduler-year-mini-border': properties?.['year-mini-border'],
+    '--forge-scheduler-year-mini-gap': properties?.['year-mini-gap'],
+    '--forge-scheduler-year-mini-grid-gap': properties?.['year-mini-grid-gap'],
+    '--forge-scheduler-year-mini-padding': properties?.['year-mini-padding'],
+    '--forge-scheduler-year-mini-radius': properties?.['year-mini-radius'],
+    '--forge-scheduler-year-mini-surface': properties?.['year-mini-surface'],
+    '--forge-scheduler-year-mini-text': properties?.['year-mini-text'],
+    '--forge-scheduler-year-outside-text': properties?.['year-outside-text'],
+    '--forge-scheduler-year-outside-weight': properties?.['year-outside-weight'],
+    '--forge-scheduler-year-title-font-size': properties?.['year-title-font-size'],
+    '--forge-scheduler-year-title-weight': properties?.['year-title-weight'],
+    '--forge-scheduler-year-today-ring': properties?.['year-today-ring'],
+    '--forge-scheduler-year-today-ring-width': properties?.['year-today-ring-width'],
+  }) as SchedulerStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface SchedulerProperties {
   /** Size token controlling the scheduler's font scale. Defaults to `'md'`. */
   size?: SchedulerSize;
@@ -50,6 +314,9 @@ export interface SchedulerProperties {
   onUpdateModelValue?: (events: VEvent[]) => void;
   /** Fired when the user clicks an event chip. */
   onEventClick?: (event: VEvent) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<SchedulerStyleProperties>;
 }
 
 /** The five calendar views, in toolbar order. */
@@ -186,6 +453,8 @@ function readableTextColor(background: string | undefined): string | undefined {
  * props.
  */
 export function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpElement {
+  const style = createSchedulerStyle(properties.properties);
+
   const { modelValue = [], defaultView = 'week', weekStartsOn = 0, size = 'md' } = properties;
 
   const [events, setEvents] = useState<VEvent[]>(modelValue);
@@ -585,7 +854,10 @@ export function ForgeScheduler(properties: Readonly<SchedulerProperties>): MpEle
   };
 
   return (
-    <div className={[styles['forge-scheduler'], size ? `forge-size--${size}` : undefined]}>
+    <div
+      className={[styles['forge-scheduler'], size ? `forge-size--${size}` : undefined]}
+      style={style}
+    >
       <div className={styles['forge-scheduler__toolbar']}>
         <ForgeButton
           size="sm"

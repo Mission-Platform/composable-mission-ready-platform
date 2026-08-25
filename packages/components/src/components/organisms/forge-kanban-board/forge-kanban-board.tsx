@@ -1,4 +1,11 @@
-import { classNames, type MpElement, useRef, useState } from '@mission-platform/forge';
+import {
+  classNames,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-kanban-board.module.scss';
 
@@ -20,6 +27,74 @@ export interface KanbanColumn {
   limit?: number;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface KanbanBoardStyleProperties {
+  readonly 'border-width-thick'?: string;
+  readonly 'border-width-thin'?: string;
+  readonly 'color-bg-muted'?: string;
+  readonly 'color-bg-surface'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-success-default'?: string;
+  readonly 'color-text-tertiary'?: string;
+  readonly 'color-warning-default'?: string;
+  readonly 'font-size-sm'?: string;
+  readonly 'font-size-xs'?: string;
+  readonly 'radius-lg'?: string;
+  readonly 'radius-md'?: string;
+  readonly 'shadow-xs'?: string;
+  readonly 'size-height-md'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+}
+
+export type KanbanBoardStyle = CSSStyleProperties & {
+  readonly '--forge-kanban-board-border-width-thick'?: string | undefined;
+  readonly '--forge-kanban-board-border-width-thin'?: string | undefined;
+  readonly '--forge-kanban-board-color-bg-muted'?: string | undefined;
+  readonly '--forge-kanban-board-color-bg-surface'?: string | undefined;
+  readonly '--forge-kanban-board-color-border-default'?: string | undefined;
+  readonly '--forge-kanban-board-color-success-default'?: string | undefined;
+  readonly '--forge-kanban-board-color-text-tertiary'?: string | undefined;
+  readonly '--forge-kanban-board-color-warning-default'?: string | undefined;
+  readonly '--forge-kanban-board-font-size-sm'?: string | undefined;
+  readonly '--forge-kanban-board-font-size-xs'?: string | undefined;
+  readonly '--forge-kanban-board-radius-lg'?: string | undefined;
+  readonly '--forge-kanban-board-radius-md'?: string | undefined;
+  readonly '--forge-kanban-board-shadow-xs'?: string | undefined;
+  readonly '--forge-kanban-board-size-height-md'?: string | undefined;
+  readonly '--forge-kanban-board-spacing-1'?: string | undefined;
+  readonly '--forge-kanban-board-spacing-2'?: string | undefined;
+  readonly '--forge-kanban-board-spacing-3'?: string | undefined;
+  readonly '--forge-kanban-board-spacing-4'?: string | undefined;
+};
+
+function createKanbanBoardStyle(
+  properties: Readonly<KanbanBoardStyleProperties> | undefined,
+): KanbanBoardStyle | undefined {
+  return createForgeStyle({
+    '--forge-kanban-board-border-width-thick': properties?.['border-width-thick'],
+    '--forge-kanban-board-border-width-thin': properties?.['border-width-thin'],
+    '--forge-kanban-board-color-bg-muted': properties?.['color-bg-muted'],
+    '--forge-kanban-board-color-bg-surface': properties?.['color-bg-surface'],
+    '--forge-kanban-board-color-border-default': properties?.['color-border-default'],
+    '--forge-kanban-board-color-success-default': properties?.['color-success-default'],
+    '--forge-kanban-board-color-text-tertiary': properties?.['color-text-tertiary'],
+    '--forge-kanban-board-color-warning-default': properties?.['color-warning-default'],
+    '--forge-kanban-board-font-size-sm': properties?.['font-size-sm'],
+    '--forge-kanban-board-font-size-xs': properties?.['font-size-xs'],
+    '--forge-kanban-board-radius-lg': properties?.['radius-lg'],
+    '--forge-kanban-board-radius-md': properties?.['radius-md'],
+    '--forge-kanban-board-shadow-xs': properties?.['shadow-xs'],
+    '--forge-kanban-board-size-height-md': properties?.['size-height-md'],
+    '--forge-kanban-board-spacing-1': properties?.['spacing-1'],
+    '--forge-kanban-board-spacing-2': properties?.['spacing-2'],
+    '--forge-kanban-board-spacing-3': properties?.['spacing-3'],
+    '--forge-kanban-board-spacing-4': properties?.['spacing-4'],
+  }) as KanbanBoardStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface KanbanBoardProperties {
   columns: KanbanColumn[];
   draggable?: boolean;
@@ -30,10 +105,15 @@ export interface KanbanBoardProperties {
   onColumnAdd?: () => void;
   onItemAdd?: (columnId: string) => void;
   onItemClick?: (item: KanbanItem) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<KanbanBoardStyleProperties>;
 }
 
 /** A responsive board for moving items between columns. */
 export function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): MpElement {
+  const style = createKanbanBoardStyle(properties.properties);
+
   const {
     ariaLabel = 'Kanban board',
     emptyMessage = 'No items',
@@ -75,6 +155,7 @@ export function ForgeKanbanBoard(properties: Readonly<KanbanBoardProperties>): M
     <section
       className={styles['forge-kanban-board']}
       aria-label={ariaLabel}
+      style={style}
     >
       <header className={styles['forge-kanban-board__header']}>
         <h2>{ariaLabel}</h2>

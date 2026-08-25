@@ -1,0 +1,117 @@
+/**
+ * Registered inherited custom properties for forge-comparison-table overrides.
+ */
+
+@property --forge-comparison-table-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-comparison-table-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-comparison-table-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-comparison-table-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-comparison-table-color-bg-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-muted);
+}
+
+@property --forge-comparison-table-color-primary-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-subtle);
+}
+
+@property --forge-comparison-table-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-comparison-table-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-comparison-table-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-comparison-table-font-weight-regular {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-regular);
+}
+
+@property --forge-comparison-table-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-comparison-table-font-weight-bold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-bold);
+}
+
+@property --forge-comparison-table-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-comparison-table-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-sm);
+}
+
+@property --forge-comparison-table-color-text-on-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-primary);
+}
+
+@property --forge-comparison-table-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}
+
+@property --forge-comparison-table-font-weight-semibold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-semibold);
+}
+
+@property --forge-comparison-table-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-comparison-table-color-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-focus);
+}

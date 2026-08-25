@@ -1,4 +1,14 @@
-import { classNames, hasSlot, type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
+import {
+  classNames,
+  hasSlot,
+  Slot,
+  useEffect,
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-marketing-header.module.scss';
 
@@ -16,6 +26,75 @@ export interface MarketingHeaderNavItem {
   href: string;
   external?: boolean;
 }
+
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface MarketingHeaderStyleProperties {
+  readonly 'border-width-thin'?: string;
+  readonly 'color-bg-scrim'?: string;
+  readonly 'color-bg-surface'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-primary-default'?: string;
+  readonly 'color-text-on-inverse'?: string;
+  readonly 'color-text-on-primary'?: string;
+  readonly 'color-text-primary'?: string;
+  readonly 'font-size-xl'?: string;
+  readonly 'font-weight-bold'?: string;
+  readonly 'radius-md'?: string;
+  readonly 'size-height-lg'?: string;
+  readonly 'size-pad-block-md'?: string;
+  readonly 'size-pad-inline-lg'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+  readonly 'spacing-5'?: string;
+  readonly 'spacing-6'?: string;
+}
+
+export type MarketingHeaderStyle = CSSStyleProperties & {
+  readonly '--forge-marketing-header-border-width-thin'?: string | undefined;
+  readonly '--forge-marketing-header-color-bg-scrim'?: string | undefined;
+  readonly '--forge-marketing-header-color-bg-surface'?: string | undefined;
+  readonly '--forge-marketing-header-color-border-default'?: string | undefined;
+  readonly '--forge-marketing-header-color-primary-default'?: string | undefined;
+  readonly '--forge-marketing-header-color-text-on-inverse'?: string | undefined;
+  readonly '--forge-marketing-header-color-text-on-primary'?: string | undefined;
+  readonly '--forge-marketing-header-color-text-primary'?: string | undefined;
+  readonly '--forge-marketing-header-font-size-xl'?: string | undefined;
+  readonly '--forge-marketing-header-font-weight-bold'?: string | undefined;
+  readonly '--forge-marketing-header-radius-md'?: string | undefined;
+  readonly '--forge-marketing-header-size-height-lg'?: string | undefined;
+  readonly '--forge-marketing-header-size-pad-block-md'?: string | undefined;
+  readonly '--forge-marketing-header-size-pad-inline-lg'?: string | undefined;
+  readonly '--forge-marketing-header-spacing-3'?: string | undefined;
+  readonly '--forge-marketing-header-spacing-4'?: string | undefined;
+  readonly '--forge-marketing-header-spacing-5'?: string | undefined;
+  readonly '--forge-marketing-header-spacing-6'?: string | undefined;
+};
+
+function createMarketingHeaderStyle(
+  properties: Readonly<MarketingHeaderStyleProperties> | undefined,
+): MarketingHeaderStyle | undefined {
+  return createForgeStyle({
+    '--forge-marketing-header-border-width-thin': properties?.['border-width-thin'],
+    '--forge-marketing-header-color-bg-scrim': properties?.['color-bg-scrim'],
+    '--forge-marketing-header-color-bg-surface': properties?.['color-bg-surface'],
+    '--forge-marketing-header-color-border-default': properties?.['color-border-default'],
+    '--forge-marketing-header-color-primary-default': properties?.['color-primary-default'],
+    '--forge-marketing-header-color-text-on-inverse': properties?.['color-text-on-inverse'],
+    '--forge-marketing-header-color-text-on-primary': properties?.['color-text-on-primary'],
+    '--forge-marketing-header-color-text-primary': properties?.['color-text-primary'],
+    '--forge-marketing-header-font-size-xl': properties?.['font-size-xl'],
+    '--forge-marketing-header-font-weight-bold': properties?.['font-weight-bold'],
+    '--forge-marketing-header-radius-md': properties?.['radius-md'],
+    '--forge-marketing-header-size-height-lg': properties?.['size-height-lg'],
+    '--forge-marketing-header-size-pad-block-md': properties?.['size-pad-block-md'],
+    '--forge-marketing-header-size-pad-inline-lg': properties?.['size-pad-inline-lg'],
+    '--forge-marketing-header-spacing-3': properties?.['spacing-3'],
+    '--forge-marketing-header-spacing-4': properties?.['spacing-4'],
+    '--forge-marketing-header-spacing-5': properties?.['spacing-5'],
+    '--forge-marketing-header-spacing-6': properties?.['spacing-6'],
+  }) as MarketingHeaderStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface MarketingHeaderProperties {
   title: string;
   subtitle?: string;
@@ -27,9 +106,14 @@ export interface MarketingHeaderProperties {
   minHeight?: string;
   media?: MpChild;
   children?: MpChild | readonly MpChild[];
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<MarketingHeaderStyleProperties>;
 }
 
 export function ForgeMarketingHeader(properties: Readonly<MarketingHeaderProperties>): MpElement {
+  const propertyStyle = createMarketingHeaderStyle(properties.properties);
+
   const {
     title,
     subtitle,
@@ -78,7 +162,7 @@ export function ForgeMarketingHeader(properties: Readonly<MarketingHeaderPropert
         [styles['forge-marketing-header--overlay']]: overlay,
         [styles['forge-marketing-header--has-media']]: hasMedia,
       })}
-      style={{ minHeight, backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined }}
+      style={{ ...propertyStyle, minHeight, backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined }}
     >
       {backgroundVideo ? (
         <video

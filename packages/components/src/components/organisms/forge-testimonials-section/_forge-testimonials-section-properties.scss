@@ -1,0 +1,93 @@
+/**
+ * Registered inherited custom properties for forge-testimonials-section overrides.
+ */
+
+@property --forge-testimonials-section-spacing-8 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-8);
+}
+
+@property --forge-testimonials-section-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-testimonials-section-spacing-5 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-5);
+}
+
+@property --forge-testimonials-section-spacing-6 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-6);
+}
+
+@property --forge-testimonials-section-radius-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-lg);
+}
+
+@property --forge-testimonials-section-color-bg-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-muted);
+}
+
+@property --forge-testimonials-section-line-height-relaxed {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-line-height-relaxed);
+}
+
+@property --forge-testimonials-section-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-testimonials-section-color-text-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-tertiary);
+}
+
+@property --forge-testimonials-section-size-height-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-lg);
+}
+
+@property --forge-testimonials-section-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-testimonials-section-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-testimonials-section-radius-full {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-full);
+}
+
+@property --forge-testimonials-section-color-bg-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-surface);
+}
+
+@property --forge-testimonial-columns {
+  syntax: '*';
+  inherits: true;
+  initial-value: 3;
+}

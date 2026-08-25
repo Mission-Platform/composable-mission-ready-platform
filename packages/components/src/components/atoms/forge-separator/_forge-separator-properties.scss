@@ -1,0 +1,81 @@
+/**
+ * Registered inherited custom properties for forge-separator overrides.
+ */
+
+@property --forge-separator-surface-separator-label {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-label);
+}
+
+@property --forge-separator-surface-separator-line-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-line-width);
+}
+
+@property --forge-separator-surface-separator-line {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-line);
+}
+
+@property --forge-separator-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-separator-spacing, var(--mp-surface-separator-margin-default));
+}
+
+@property --forge-separator-surface-separator-label-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-label-gap);
+}
+
+@property --forge-separator-surface-separator-label-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-label-font-family);
+}
+
+@property --forge-separator-surface-separator-label-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-label-font-size);
+}
+
+@property --forge-separator-surface-separator-label-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-label-line-height);
+}
+
+@property --forge-separator-surface-separator-margin-none {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-margin-none);
+}
+
+@property --forge-separator-surface-separator-margin-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-margin-sm);
+}
+
+@property --forge-separator-surface-separator-margin-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-margin-md);
+}
+
+@property --forge-separator-surface-separator-margin-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-margin-lg);
+}
+
+@property --forge-separator-surface-separator-margin-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-separator-margin-xl);
+}

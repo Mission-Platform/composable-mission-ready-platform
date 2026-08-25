@@ -1,13 +1,15 @@
 import {
   classNames,
-  type MpChild,
-  type MpElement,
-  type MpRenderProperty,
   Slot,
   useEffect,
   useMemo,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type MpRenderProperty,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeIconSort } from '@mission-platform/icons';
 
@@ -43,6 +45,34 @@ export interface VirtualTableCellScope {
   value: unknown;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface VirtualTableStyleProperties {
+  readonly 'data-virtual-table-footer-accent-font-weight'?: string;
+  readonly 'data-virtual-table-footer-accent-text'?: string;
+  readonly 'data-virtual-table-footer-gap'?: string;
+  readonly 'data-virtual-table-footer-text'?: string;
+}
+
+export type VirtualTableStyle = CSSStyleProperties & {
+  readonly '--forge-virtual-table-data-virtual-table-footer-accent-font-weight'?: string | undefined;
+  readonly '--forge-virtual-table-data-virtual-table-footer-accent-text'?: string | undefined;
+  readonly '--forge-virtual-table-data-virtual-table-footer-gap'?: string | undefined;
+  readonly '--forge-virtual-table-data-virtual-table-footer-text'?: string | undefined;
+};
+
+function createVirtualTableStyle(
+  properties: Readonly<VirtualTableStyleProperties> | undefined,
+): VirtualTableStyle | undefined {
+  return createForgeStyle({
+    '--forge-virtual-table-data-virtual-table-footer-accent-font-weight':
+      properties?.['data-virtual-table-footer-accent-font-weight'],
+    '--forge-virtual-table-data-virtual-table-footer-accent-text':
+      properties?.['data-virtual-table-footer-accent-text'],
+    '--forge-virtual-table-data-virtual-table-footer-gap': properties?.['data-virtual-table-footer-gap'],
+    '--forge-virtual-table-data-virtual-table-footer-text': properties?.['data-virtual-table-footer-text'],
+  }) as VirtualTableStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface VirtualTableProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -78,6 +108,9 @@ export interface VirtualTableProperties {
   onSort?: (key: string, direction: SortDirection | undefined) => void;
   /** Fired when a body row is clicked; receives the row and its absolute index. */
   onRowClick?: (row: Record<string, unknown>, index: number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<VirtualTableStyleProperties>;
 }
 
 /** Fixed sticky-header height (px) — matches the original Vue SFC. */
@@ -110,6 +143,8 @@ const HEADER_HEIGHT = 44;
  * slots for fully custom (interactive) cell content.
  */
 export function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>): MpElement {
+  const propertyStyle = createVirtualTableStyle(properties.properties);
+
   const {
     columns,
     rows,
@@ -330,6 +365,7 @@ export function ForgeVirtualTable(properties: Readonly<VirtualTableProperties>):
                       key={column.key}
                       role="gridcell"
                       style={{
+                        ...propertyStyle,
                         flex: column.width ? `0 0 ${column.width}` : '1',
                         minWidth: column.width ?? '80px',
                         padding: '0 var(--mp-spacing-3)',

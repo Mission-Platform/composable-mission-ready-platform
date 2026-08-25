@@ -1,4 +1,13 @@
-import { classNames, hasSlot, type MpChild, type MpElement, Slot, useId } from '@mission-platform/forge';
+import {
+  classNames,
+  hasSlot,
+  Slot,
+  useId,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import { ForgeCard } from '../../molecules/forge-card';
 
@@ -57,6 +66,63 @@ interface LegacyMetricData {
   icon?: MpChild;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface DataCardStyleProperties {
+  readonly 'border-radius-md'?: string;
+  readonly 'border-radius-sm'?: string;
+  readonly 'color-action-primary'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-status-error'?: string;
+  readonly 'color-status-success'?: string;
+  readonly 'color-status-warning'?: string;
+  readonly 'color-surface-primary'?: string;
+  readonly 'color-surface-secondary'?: string;
+  readonly 'color-text-primary'?: string;
+  readonly 'color-text-secondary'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+}
+
+export type DataCardStyle = CSSStyleProperties & {
+  readonly '--forge-data-card-border-radius-md'?: string | undefined;
+  readonly '--forge-data-card-border-radius-sm'?: string | undefined;
+  readonly '--forge-data-card-color-action-primary'?: string | undefined;
+  readonly '--forge-data-card-color-border-default'?: string | undefined;
+  readonly '--forge-data-card-color-status-error'?: string | undefined;
+  readonly '--forge-data-card-color-status-success'?: string | undefined;
+  readonly '--forge-data-card-color-status-warning'?: string | undefined;
+  readonly '--forge-data-card-color-surface-primary'?: string | undefined;
+  readonly '--forge-data-card-color-surface-secondary'?: string | undefined;
+  readonly '--forge-data-card-color-text-primary'?: string | undefined;
+  readonly '--forge-data-card-color-text-secondary'?: string | undefined;
+  readonly '--forge-data-card-spacing-1'?: string | undefined;
+  readonly '--forge-data-card-spacing-2'?: string | undefined;
+  readonly '--forge-data-card-spacing-3'?: string | undefined;
+  readonly '--forge-data-card-spacing-4'?: string | undefined;
+};
+
+function createDataCardStyle(properties: Readonly<DataCardStyleProperties> | undefined): DataCardStyle | undefined {
+  return createForgeStyle({
+    '--forge-data-card-border-radius-md': properties?.['border-radius-md'],
+    '--forge-data-card-border-radius-sm': properties?.['border-radius-sm'],
+    '--forge-data-card-color-action-primary': properties?.['color-action-primary'],
+    '--forge-data-card-color-border-default': properties?.['color-border-default'],
+    '--forge-data-card-color-status-error': properties?.['color-status-error'],
+    '--forge-data-card-color-status-success': properties?.['color-status-success'],
+    '--forge-data-card-color-status-warning': properties?.['color-status-warning'],
+    '--forge-data-card-color-surface-primary': properties?.['color-surface-primary'],
+    '--forge-data-card-color-surface-secondary': properties?.['color-surface-secondary'],
+    '--forge-data-card-color-text-primary': properties?.['color-text-primary'],
+    '--forge-data-card-color-text-secondary': properties?.['color-text-secondary'],
+    '--forge-data-card-spacing-1': properties?.['spacing-1'],
+    '--forge-data-card-spacing-2': properties?.['spacing-2'],
+    '--forge-data-card-spacing-3': properties?.['spacing-3'],
+    '--forge-data-card-spacing-4': properties?.['spacing-4'],
+  }) as DataCardStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface DataCardProperties {
   /** Typed contact or calendar data. */
   data: DataCardData;
@@ -84,6 +150,9 @@ export interface DataCardProperties {
   downloadFilename?: string;
   /** Called before the browser download is initiated. */
   onDownload?: (data: DataCardData) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<DataCardStyleProperties>;
 }
 
 function escapeRecord(value: string): string {
@@ -165,6 +234,8 @@ function downloadData(data: DataCardData, filename?: string): void {
 
 /** A semantic contact or calendar card with standards-compliant downloads. */
 export function ForgeDataCard(properties: Readonly<DataCardProperties>): MpElement {
+  const style = createDataCardStyle(properties.properties);
+
   const {
     data,
     header,
@@ -245,6 +316,7 @@ export function ForgeDataCard(properties: Readonly<DataCardProperties>): MpEleme
           styles[`forge-data-card--${size}`],
           styles[`forge-data-card--${legacyData.status ?? variant}`],
         )}
+        style={style}
       >
         {href ? (
           <a

@@ -9,6 +9,8 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-navbar-item-properties';
+
 @layer mp.components {
   .forge-navbar-item-dropdown-host {
     display: inline-flex;
@@ -18,46 +20,84 @@
   .forge-navbar-item {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-navigation-navbar-item-gap);
-    padding: var(--mp-navigation-navbar-item-padding-block)
-      var(--mp-navigation-navbar-item-padding-inline);
-    border-radius: var(--mp-navigation-navbar-item-radius);
-    color: var(--mp-navigation-navbar-item-text-default);
+    gap: var(--forge-navbar-item-navigation-navbar-item-gap, var(--mp-navigation-navbar-item-gap));
+    padding: var(
+        --forge-navbar-item-navigation-navbar-item-padding-block,
+        var(--mp-navigation-navbar-item-padding-block)
+      )
+      var(--forge-navbar-item-navigation-navbar-item-padding-inline, var(--mp-navigation-navbar-item-padding-inline));
+    border-radius: var(--forge-navbar-item-navigation-navbar-item-radius, var(--mp-navigation-navbar-item-radius));
+    color: var(--forge-navbar-item-navigation-navbar-item-text-default, var(--mp-navigation-navbar-item-text-default));
     background: none;
     border: none;
     cursor: pointer;
     text-decoration: none;
     white-space: nowrap;
     user-select: none;
-    font-family: var(--mp-navigation-navbar-item-font-family);
-    font-weight: var(--mp-navigation-navbar-item-font-weight);
+    font-family: var(
+      --forge-navbar-item-navigation-navbar-item-font-family,
+      var(--mp-navigation-navbar-item-font-family)
+    );
+    font-weight: var(
+      --forge-navbar-item-navigation-navbar-item-font-weight,
+      var(--mp-navigation-navbar-item-font-weight)
+    );
     transition:
-      background-color var(--mp-navigation-navbar-item-transition-duration)
-        var(--mp-navigation-navbar-item-transition-easing),
-      color var(--mp-navigation-navbar-item-transition-duration)
-        var(--mp-navigation-navbar-item-transition-easing);
+      background-color
+        var(
+          --forge-navbar-item-navigation-navbar-item-transition-duration,
+          var(--mp-navigation-navbar-item-transition-duration)
+        )
+        var(
+          --forge-navbar-item-navigation-navbar-item-transition-easing,
+          var(--mp-navigation-navbar-item-transition-easing)
+        ),
+      color
+        var(
+          --forge-navbar-item-navigation-navbar-item-transition-duration,
+          var(--mp-navigation-navbar-item-transition-duration)
+        )
+        var(
+          --forge-navbar-item-navigation-navbar-item-transition-easing,
+          var(--mp-navigation-navbar-item-transition-easing)
+        );
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-navigation-navbar-item-focus-ring);
+      box-shadow: var(
+        --forge-navbar-item-navigation-navbar-item-focus-ring,
+        var(--mp-navigation-navbar-item-focus-ring)
+      );
     }
 
     &--active {
-      background-color: var(--mp-navigation-navbar-item-surface-active);
-      color: var(--mp-navigation-navbar-item-text-active);
+      background-color: var(
+        --forge-navbar-item-navigation-navbar-item-surface-active,
+        var(--mp-navigation-navbar-item-surface-active)
+      );
+      color: var(--forge-navbar-item-navigation-navbar-item-text-active, var(--mp-navigation-navbar-item-text-active));
     }
 
     &--open {
-      background-color: var(--mp-navigation-navbar-item-surface-open);
-      color: var(--mp-navigation-navbar-item-text-open);
+      background-color: var(
+        --forge-navbar-item-navigation-navbar-item-surface-open,
+        var(--mp-navigation-navbar-item-surface-open)
+      );
+      color: var(--forge-navbar-item-navigation-navbar-item-text-open, var(--mp-navigation-navbar-item-text-open));
     }
 
     @mixin tone($family) {
       &--#{$family} {
-        color: var(--mp-navigation-navbar-item-tone-#{$family}-text);
+        color: var(
+          --forge-navbar-item-navigation-navbar-item-tone-#{$family}-text,
+          var(--mp-navigation-navbar-item-tone-#{$family}-text)
+        );
 
         &:hover:not(.forge-navbar-item--disabled) {
-          background-color: var(--mp-navigation-navbar-item-tone-#{$family}-surface-hover);
+          background-color: var(
+            --forge-navbar-item-navigation-navbar-item-tone-#{$family}-surface-hover,
+            var(--mp-navigation-navbar-item-tone-#{$family}-surface-hover)
+          );
         }
       }
     }
@@ -72,20 +112,26 @@
     @include tone('critical');
 
     &--disabled {
-      opacity: var(--mp-navigation-navbar-item-opacity-disabled);
+      opacity: var(
+        --forge-navbar-item-navigation-navbar-item-opacity-disabled,
+        var(--mp-navigation-navbar-item-opacity-disabled)
+      );
       cursor: not-allowed;
       pointer-events: none;
     }
 
     &:hover:not(.forge-navbar-item--disabled) {
-      background-color: var(--mp-navigation-navbar-item-surface-hover);
-      color: var(--mp-navigation-navbar-item-text-hover);
+      background-color: var(
+        --forge-navbar-item-navigation-navbar-item-surface-hover,
+        var(--mp-navigation-navbar-item-surface-hover)
+      );
+      color: var(--forge-navbar-item-navigation-navbar-item-text-hover, var(--mp-navigation-navbar-item-text-hover));
     }
 
     &__chevron {
       flex-shrink: 0;
       display: inline-flex;
-      color: var(--mp-navigation-navbar-item-chevron);
+      color: var(--forge-navbar-item-navigation-navbar-item-chevron, var(--mp-navigation-navbar-item-chevron));
     }
   }
 
@@ -93,19 +139,45 @@
     position: absolute;
     top: 100%;
     left: 0;
-    z-index: 10;
+    z-index: var(--mp-z-index-navigation-menu);
     list-style: none;
-    margin: var(--mp-navigation-navbar-item-dropdown-margin) 0 0;
-    padding: var(--mp-navigation-navbar-item-dropdown-padding) 0;
+    margin: var(
+        --forge-navbar-item-navigation-navbar-item-dropdown-margin,
+        var(--mp-navigation-navbar-item-dropdown-margin)
+      )
+      0 0;
+    padding: var(
+        --forge-navbar-item-navigation-navbar-item-dropdown-padding,
+        var(--mp-navigation-navbar-item-dropdown-padding)
+      )
+      0;
     min-width: 180px;
 
     /* Never exceed the viewport so an edge-anchored menu stays on-screen on mobile. */
-    max-width: calc(100vw - var(--mp-navigation-navbar-item-dropdown-viewport-gutter));
-    background-color: var(--mp-navigation-navbar-item-dropdown-surface);
-    border: var(--mp-navigation-navbar-item-dropdown-border-width)
-      solid var(--mp-navigation-navbar-item-dropdown-border);
-    border-radius: var(--mp-navigation-navbar-item-dropdown-radius);
-    box-shadow: var(--mp-navigation-navbar-item-dropdown-shadow);
+    max-width: calc(
+      100vw - var(
+          --forge-navbar-item-navigation-navbar-item-dropdown-viewport-gutter,
+          var(--mp-navigation-navbar-item-dropdown-viewport-gutter)
+        )
+    );
+    background-color: var(
+      --forge-navbar-item-navigation-navbar-item-dropdown-surface,
+      var(--mp-navigation-navbar-item-dropdown-surface)
+    );
+    border: var(
+        --forge-navbar-item-navigation-navbar-item-dropdown-border-width,
+        var(--mp-navigation-navbar-item-dropdown-border-width)
+      )
+      solid
+      var(--forge-navbar-item-navigation-navbar-item-dropdown-border, var(--mp-navigation-navbar-item-dropdown-border));
+    border-radius: var(
+      --forge-navbar-item-navigation-navbar-item-dropdown-radius,
+      var(--mp-navigation-navbar-item-dropdown-radius)
+    );
+    box-shadow: var(
+      --forge-navbar-item-navigation-navbar-item-dropdown-shadow,
+      var(--mp-navigation-navbar-item-dropdown-shadow)
+    );
   }
 
   .forge-navbar-item__dropdown-item-wrapper {
@@ -116,37 +188,75 @@
   .forge-navbar-item__dropdown-item {
     display: flex;
     align-items: center;
-    gap: var(--mp-navigation-navbar-item-dropdown-item-gap);
+    gap: var(
+      --forge-navbar-item-navigation-navbar-item-dropdown-item-gap,
+      var(--mp-navigation-navbar-item-dropdown-item-gap)
+    );
     width: 100%;
-    padding: var(--mp-navigation-navbar-item-dropdown-item-padding-block)
-      var(--mp-navigation-navbar-item-dropdown-item-padding-inline);
-    color: var(--mp-navigation-navbar-item-dropdown-item-text);
+    padding: var(
+        --forge-navbar-item-navigation-navbar-item-dropdown-item-padding-block,
+        var(--mp-navigation-navbar-item-dropdown-item-padding-block)
+      )
+      var(
+        --forge-navbar-item-navigation-navbar-item-dropdown-item-padding-inline,
+        var(--mp-navigation-navbar-item-dropdown-item-padding-inline)
+      );
+    color: var(
+      --forge-navbar-item-navigation-navbar-item-dropdown-item-text,
+      var(--mp-navigation-navbar-item-dropdown-item-text)
+    );
     background: none;
     border: none;
     cursor: pointer;
     text-decoration: none;
     text-align: left;
     white-space: nowrap;
-    font-family: var(--mp-navigation-navbar-item-font-family);
+    font-family: var(
+      --forge-navbar-item-navigation-navbar-item-font-family,
+      var(--mp-navigation-navbar-item-font-family)
+    );
     transition:
-      background-color var(--mp-navigation-navbar-item-transition-duration)
-        var(--mp-navigation-navbar-item-transition-easing),
-      color var(--mp-navigation-navbar-item-transition-duration)
-        var(--mp-navigation-navbar-item-transition-easing);
+      background-color
+        var(
+          --forge-navbar-item-navigation-navbar-item-transition-duration,
+          var(--mp-navigation-navbar-item-transition-duration)
+        )
+        var(
+          --forge-navbar-item-navigation-navbar-item-transition-easing,
+          var(--mp-navigation-navbar-item-transition-easing)
+        ),
+      color
+        var(
+          --forge-navbar-item-navigation-navbar-item-transition-duration,
+          var(--mp-navigation-navbar-item-transition-duration)
+        )
+        var(
+          --forge-navbar-item-navigation-navbar-item-transition-easing,
+          var(--mp-navigation-navbar-item-transition-easing)
+        );
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-navigation-navbar-item-dropdown-item-focus-ring);
+      box-shadow: var(
+        --forge-navbar-item-navigation-navbar-item-dropdown-item-focus-ring,
+        var(--mp-navigation-navbar-item-dropdown-item-focus-ring)
+      );
     }
 
     &--disabled {
-      color: var(--mp-navigation-navbar-item-dropdown-item-text-disabled);
+      color: var(
+        --forge-navbar-item-navigation-navbar-item-dropdown-item-text-disabled,
+        var(--mp-navigation-navbar-item-dropdown-item-text-disabled)
+      );
       cursor: not-allowed;
       pointer-events: none;
     }
 
     &:hover:not(.forge-navbar-item__dropdown-item--disabled) {
-      background-color: var(--mp-navigation-navbar-item-dropdown-item-surface-hover);
+      background-color: var(
+        --forge-navbar-item-navigation-navbar-item-dropdown-item-surface-hover,
+        var(--mp-navigation-navbar-item-dropdown-item-surface-hover)
+      );
     }
   }
 

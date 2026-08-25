@@ -1,0 +1,156 @@
+/**
+ * Registered inherited custom properties for forge-wysiwyg-block-menu overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-gap);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-padding-block);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-padding-inline);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-text);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-border-width);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-border);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-radius);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-surface-hover);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-focus-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-focus-border-width);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-focus-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-focus-border);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-trigger-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-trigger-opacity-disabled);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-list-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-list-gap);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-list-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-list-padding);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-list-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-list-text);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-list-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-list-surface);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-list-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-list-radius);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-item-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-item-padding-block);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-item-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-item-padding-inline);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-item-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-item-text-default);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-item-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-item-radius);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-item-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-item-surface-hover);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-item-focus-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-item-focus-border-width);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-item-focus-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-item-focus-border);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-item-text-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-item-text-active);
+}
+
+@property --forge-wysiwyg-block-menu-editor-block-menu-item-active-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-block-menu-item-active-font-weight);
+}

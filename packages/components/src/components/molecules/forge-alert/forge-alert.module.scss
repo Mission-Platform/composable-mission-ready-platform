@@ -1,39 +1,42 @@
+@use './forge-alert-properties';
+
 @layer mp.components {
   .forge-alert {
     display: flex;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-alert-spacing-3, var(--mp-spacing-3));
     align-items: flex-start;
-    padding: var(--mp-spacing-3) var(--mp-spacing-4);
-    color: var(--mp-color-text-primary);
-    background: var(--mp-color-bg-muted);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    padding: var(--forge-alert-spacing-3, var(--mp-spacing-3)) var(--forge-alert-spacing-4, var(--mp-spacing-4));
+    color: var(--forge-alert-color-text-primary, var(--mp-color-text-primary));
+    background: var(--forge-alert-color-bg-muted, var(--mp-color-bg-muted));
+    border: var(--forge-alert-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-alert-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-alert-radius-md, var(--mp-radius-md));
 
     &--success {
-      background: var(--mp-color-success-subtle);
-      border-color: var(--mp-color-success-default);
+      background: var(--forge-alert-color-success-subtle, var(--mp-color-success-subtle));
+      border-color: var(--forge-alert-color-success-default, var(--mp-color-success-default));
 
-      --mp-alert-marker: var(--mp-color-success-default);
+      --mp-alert-marker: var(--forge-alert-color-success-default, var(--mp-color-success-default));
     }
 
     &--warning {
-      background: var(--mp-color-warning-subtle);
-      border-color: var(--mp-color-warning-default);
+      background: var(--forge-alert-color-warning-subtle, var(--mp-color-warning-subtle));
+      border-color: var(--forge-alert-color-warning-default, var(--mp-color-warning-default));
 
-      --mp-alert-marker: var(--mp-color-warning-default);
+      --mp-alert-marker: var(--forge-alert-color-warning-default, var(--mp-color-warning-default));
     }
 
     &--danger {
-      background: var(--mp-color-danger-subtle);
-      border-color: var(--mp-color-danger-default);
+      background: var(--forge-alert-color-danger-subtle, var(--mp-color-danger-subtle));
+      border-color: var(--forge-alert-color-danger-default, var(--mp-color-danger-default));
 
-      --mp-alert-marker: var(--mp-color-danger-default);
+      --mp-alert-marker: var(--forge-alert-color-danger-default, var(--mp-color-danger-default));
     }
 
     &__icon {
-      flex: 0 0 var(--mp-size-icon-lg);
-      color: var(--mp-alert-marker, var(--mp-color-info-default));
-      font-weight: var(--mp-font-weight-bold);
+      flex: 0 0 var(--forge-alert-size-icon-lg, var(--mp-size-icon-lg));
+      color: var(--forge-alert-marker, var(--mp-alert-marker, var(--mp-color-info-default)));
+      font-weight: var(--forge-alert-font-weight-bold, var(--mp-font-weight-bold));
       text-align: center;
     }
 
@@ -44,7 +47,7 @@
 
     &__title {
       display: block;
-      margin-bottom: var(--mp-spacing-1);
+      margin-bottom: var(--forge-alert-spacing-1, var(--mp-spacing-1));
     }
 
     &__message {
@@ -52,24 +55,25 @@
     }
 
     &__action {
-      margin-top: var(--mp-spacing-2);
+      margin-top: var(--forge-alert-spacing-2, var(--mp-spacing-2));
     }
 
     &__close {
       flex: 0 0 auto;
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
+      padding: var(--forge-alert-spacing-1, var(--mp-spacing-1)) var(--forge-alert-spacing-2, var(--mp-spacing-2));
       color: inherit;
       background: transparent;
       border: 0;
-      border-radius: var(--mp-radius-sm);
+      border-radius: var(--forge-alert-radius-sm, var(--mp-radius-sm));
       cursor: pointer;
-      font-size: var(--mp-font-size-xl);
-      line-height: var(--mp-line-height-tight);
+      font-size: var(--forge-alert-font-size-xl, var(--mp-font-size-xl));
+      line-height: var(--forge-alert-line-height-tight, var(--mp-line-height-tight));
     }
 
     &__close:focus-visible {
-      outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
-      outline-offset: var(--mp-spacing-1);
+      outline: var(--forge-alert-border-width-thick, var(--mp-border-width-thick)) solid
+        var(--forge-alert-color-border-focus, var(--mp-color-border-focus));
+      outline-offset: var(--forge-alert-spacing-1, var(--mp-spacing-1));
     }
   }
 }

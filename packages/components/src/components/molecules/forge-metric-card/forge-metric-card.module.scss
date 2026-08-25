@@ -1,21 +1,24 @@
+@use './forge-metric-card-properties';
+
 @layer mp.components {
   .forge-metric-card {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-metric-card-spacing-3, var(--mp-spacing-3));
     min-width: 0;
-    padding: var(--mp-spacing-4);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-bg-surface);
-    color: var(--mp-color-text-primary);
+    padding: var(--forge-metric-card-spacing-4, var(--mp-spacing-4));
+    border: var(--forge-metric-card-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-metric-card-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-metric-card-radius-md, var(--mp-radius-md));
+    background: var(--forge-metric-card-color-bg-surface, var(--mp-color-bg-surface));
+    color: var(--forge-metric-card-color-text-primary, var(--mp-color-text-primary));
 
     &__header,
     &__trend,
     &__footer {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-1);
+      gap: var(--forge-metric-card-spacing-1, var(--mp-spacing-1));
     }
 
     &__header {
@@ -31,38 +34,38 @@
 
     &__value {
       min-height: 1.5em;
-      font-size: var(--mp-font-size-2xl);
-      font-weight: var(--mp-font-weight-bold);
-      line-height: var(--mp-line-height-tight);
+      font-size: var(--forge-metric-card-font-size-2xl, var(--mp-font-size-2xl));
+      font-weight: var(--forge-metric-card-font-weight-bold, var(--mp-font-weight-bold));
+      line-height: var(--forge-metric-card-line-height-tight, var(--mp-line-height-tight));
     }
 
     &__trend {
-      font-size: var(--mp-font-size-sm);
+      font-size: var(--forge-metric-card-font-size-sm, var(--mp-font-size-sm));
 
       &--up {
-        color: var(--mp-color-success-text);
+        color: var(--forge-metric-card-color-success-text, var(--mp-color-success-text));
       }
 
       &--down {
-        color: var(--mp-color-error-text);
+        color: var(--forge-metric-card-color-error-text, var(--mp-color-error-text));
       }
 
       &--flat {
-        color: var(--mp-color-text-secondary);
+        color: var(--forge-metric-card-color-text-secondary, var(--mp-color-text-secondary));
       }
     }
 
     &__trend-label,
     &__footer {
-      color: var(--mp-color-text-secondary);
+      color: var(--forge-metric-card-color-text-secondary, var(--mp-color-text-secondary));
     }
 
     &--sm {
-      padding: var(--mp-spacing-3);
+      padding: var(--forge-metric-card-spacing-3, var(--mp-spacing-3));
     }
 
     &--lg {
-      padding: var(--mp-spacing-6);
+      padding: var(--forge-metric-card-spacing-6, var(--mp-spacing-6));
     }
 
     &--loading {
@@ -70,19 +73,19 @@
     }
 
     &--primary {
-      border-color: var(--mp-color-primary-default);
+      border-color: var(--forge-metric-card-color-primary-default, var(--mp-color-primary-default));
     }
 
     &--success {
-      border-color: var(--mp-color-success-default);
+      border-color: var(--forge-metric-card-color-success-default, var(--mp-color-success-default));
     }
 
     &--warning {
-      border-color: var(--mp-color-warning-default);
+      border-color: var(--forge-metric-card-color-warning-default, var(--mp-color-warning-default));
     }
 
     &--error {
-      border-color: var(--mp-color-error-default);
+      border-color: var(--forge-metric-card-color-error-default, var(--mp-color-error-default));
     }
   }
 }

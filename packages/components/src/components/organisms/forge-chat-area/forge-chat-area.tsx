@@ -1,10 +1,88 @@
-import { type MpChild, type MpElement, Slot, useEffect, useRef } from '@mission-platform/forge';
+import {
+  Slot,
+  useEffect,
+  useRef,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-chat-area.module.scss';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type ChatAreaSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ChatAreaStyleProperties {
+  readonly 'media-chat-area-border'?: string;
+  readonly 'media-chat-area-border-width'?: string;
+  readonly 'media-chat-area-footer-border'?: string;
+  readonly 'media-chat-area-footer-padding-block'?: string;
+  readonly 'media-chat-area-footer-padding-block-wide'?: string;
+  readonly 'media-chat-area-footer-padding-inline'?: string;
+  readonly 'media-chat-area-footer-padding-inline-wide'?: string;
+  readonly 'media-chat-area-header-border'?: string;
+  readonly 'media-chat-area-header-padding-block'?: string;
+  readonly 'media-chat-area-header-padding-block-wide'?: string;
+  readonly 'media-chat-area-header-padding-inline'?: string;
+  readonly 'media-chat-area-header-padding-inline-wide'?: string;
+  readonly 'media-chat-area-log-padding'?: string;
+  readonly 'media-chat-area-log-padding-wide'?: string;
+  readonly 'media-chat-area-messages-gap'?: string;
+  readonly 'media-chat-area-messages-gap-wide'?: string;
+  readonly 'media-chat-area-radius'?: string;
+  readonly 'media-chat-area-surface'?: string;
+}
+
+export type ChatAreaStyle = CSSStyleProperties & {
+  readonly '--forge-chat-area-media-chat-area-border'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-border-width'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-footer-border'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-footer-padding-block'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-footer-padding-block-wide'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-footer-padding-inline'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-footer-padding-inline-wide'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-header-border'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-header-padding-block'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-header-padding-block-wide'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-header-padding-inline'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-header-padding-inline-wide'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-log-padding'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-log-padding-wide'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-messages-gap'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-messages-gap-wide'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-radius'?: string | undefined;
+  readonly '--forge-chat-area-media-chat-area-surface'?: string | undefined;
+};
+
+function createChatAreaStyle(properties: Readonly<ChatAreaStyleProperties> | undefined): ChatAreaStyle | undefined {
+  return createForgeStyle({
+    '--forge-chat-area-media-chat-area-border': properties?.['media-chat-area-border'],
+    '--forge-chat-area-media-chat-area-border-width': properties?.['media-chat-area-border-width'],
+    '--forge-chat-area-media-chat-area-footer-border': properties?.['media-chat-area-footer-border'],
+    '--forge-chat-area-media-chat-area-footer-padding-block': properties?.['media-chat-area-footer-padding-block'],
+    '--forge-chat-area-media-chat-area-footer-padding-block-wide':
+      properties?.['media-chat-area-footer-padding-block-wide'],
+    '--forge-chat-area-media-chat-area-footer-padding-inline': properties?.['media-chat-area-footer-padding-inline'],
+    '--forge-chat-area-media-chat-area-footer-padding-inline-wide':
+      properties?.['media-chat-area-footer-padding-inline-wide'],
+    '--forge-chat-area-media-chat-area-header-border': properties?.['media-chat-area-header-border'],
+    '--forge-chat-area-media-chat-area-header-padding-block': properties?.['media-chat-area-header-padding-block'],
+    '--forge-chat-area-media-chat-area-header-padding-block-wide':
+      properties?.['media-chat-area-header-padding-block-wide'],
+    '--forge-chat-area-media-chat-area-header-padding-inline': properties?.['media-chat-area-header-padding-inline'],
+    '--forge-chat-area-media-chat-area-header-padding-inline-wide':
+      properties?.['media-chat-area-header-padding-inline-wide'],
+    '--forge-chat-area-media-chat-area-log-padding': properties?.['media-chat-area-log-padding'],
+    '--forge-chat-area-media-chat-area-log-padding-wide': properties?.['media-chat-area-log-padding-wide'],
+    '--forge-chat-area-media-chat-area-messages-gap': properties?.['media-chat-area-messages-gap'],
+    '--forge-chat-area-media-chat-area-messages-gap-wide': properties?.['media-chat-area-messages-gap-wide'],
+    '--forge-chat-area-media-chat-area-radius': properties?.['media-chat-area-radius'],
+    '--forge-chat-area-media-chat-area-surface': properties?.['media-chat-area-surface'],
+  }) as ChatAreaStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ChatAreaProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -16,6 +94,9 @@ export interface ChatAreaProperties {
   autoScrollThreshold?: number;
   /** Accessible label for the message log region. */
   ariaLabel?: string;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ChatAreaStyleProperties>;
 }
 
 /**
@@ -40,6 +121,8 @@ export interface ChatAreaProperties {
  * auto-scroll covers the common case.
  */
 export function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpElement {
+  const style = createChatAreaStyle(properties.properties);
+
   const { autoScroll = true, autoScrollThreshold = 80, ariaLabel, size = 'md' } = properties;
 
   const logReference = useRef<HTMLElement | null>(null);
@@ -84,7 +167,10 @@ export function ForgeChatArea(properties: Readonly<ChatAreaProperties>): MpEleme
   }, []);
 
   return (
-    <div className={[styles['forge-chat-area'], size ? `forge-size--${size}` : undefined]}>
+    <div
+      className={[styles['forge-chat-area'], size ? `forge-size--${size}` : undefined]}
+      style={style}
+    >
       <header className={styles['forge-chat-area__header']}>
         <Slot name="header" />
       </header>

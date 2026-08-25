@@ -1,4 +1,6 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
+@use './forge-marketing-header-properties';
+
 @layer mp.components {
   .forge-marketing-header {
     position: relative;
@@ -7,18 +9,19 @@
     width: 100%;
     min-height: 24rem;
     overflow: hidden;
-    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    background: var(--mp-color-bg-surface);
+    border-bottom: var(--forge-marketing-header-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-marketing-header-color-border-default, var(--mp-color-border-default));
+    background: var(--forge-marketing-header-color-bg-surface, var(--mp-color-bg-surface));
   }
 
   .forge-marketing-header--has-media {
-    color: var(--mp-color-text-on-inverse);
+    color: var(--forge-marketing-header-color-text-on-inverse, var(--mp-color-text-on-inverse));
     background-position: center;
     background-size: cover;
   }
 
   .forge-marketing-header--overlay {
-    color: var(--mp-color-text-on-inverse);
+    color: var(--forge-marketing-header-color-text-on-inverse, var(--mp-color-text-on-inverse));
   }
 
   .forge-marketing-header--align-start {
@@ -38,7 +41,7 @@
 
   .forge-marketing-header__content {
     position: relative;
-    z-index: 1;
+    z-index: var(--mp-z-index-base-foreground);
     width: min(100% - 2rem, 60rem);
     padding: 3rem 1rem;
   }
@@ -57,16 +60,17 @@
   .forge-marketing-header__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--mp-spacing-3);
-    margin-top: var(--mp-spacing-6);
+    gap: var(--forge-marketing-header-spacing-3, var(--mp-spacing-3));
+    margin-top: var(--forge-marketing-header-spacing-6, var(--mp-spacing-6));
   }
 
   .forge-marketing-header__actions a,
   .forge-marketing-header__actions button {
-    min-height: var(--mp-size-height-lg);
-    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-lg);
-    border: var(--mp-border-width-thin) solid currentcolor;
-    border-radius: var(--mp-radius-md);
+    min-height: var(--forge-marketing-header-size-height-lg, var(--mp-size-height-lg));
+    padding: var(--forge-marketing-header-size-pad-block-md, var(--mp-size-pad-block-md))
+      var(--forge-marketing-header-size-pad-inline-lg, var(--mp-size-pad-inline-lg));
+    border: var(--forge-marketing-header-border-width-thin, var(--mp-border-width-thin)) solid currentcolor;
+    border-radius: var(--forge-marketing-header-radius-md, var(--mp-radius-md));
     color: inherit;
     font: inherit;
     text-decoration: none;
@@ -74,8 +78,8 @@
   }
 
   .forge-marketing-header__action--solid {
-    background: var(--mp-color-primary-default);
-    color: var(--mp-color-text-on-primary) !important;
+    background: var(--forge-marketing-header-color-primary-default, var(--mp-color-primary-default));
+    color: var(--forge-marketing-header-color-text-on-primary, var(--mp-color-text-on-primary)) !important;
   }
 
   .forge-marketing-header__action--text {
@@ -93,12 +97,12 @@
   }
 
   .forge-marketing-header__video {
-    z-index: 0;
+    z-index: var(--mp-z-index-base-media);
     object-fit: cover;
   }
 
   .forge-marketing-header__media {
-    z-index: 0;
+    z-index: var(--mp-z-index-base-media);
   }
 
   .forge-marketing-header__media > * {
@@ -108,8 +112,8 @@
   }
 
   .forge-marketing-header__scrim {
-    z-index: 0;
-    background: var(--mp-color-bg-scrim);
+    z-index: var(--mp-z-index-base-media-overlay);
+    background: var(--forge-marketing-header-color-bg-scrim, var(--mp-color-bg-scrim));
   }
 
   .forge-marketing-header__bar {
@@ -118,26 +122,26 @@
     min-height: 4rem;
     align-items: center;
     justify-content: space-between;
-    gap: var(--mp-spacing-4);
+    gap: var(--forge-marketing-header-spacing-4, var(--mp-spacing-4));
     margin: auto;
-    padding-inline: var(--mp-spacing-5);
+    padding-inline: var(--forge-marketing-header-spacing-5, var(--mp-spacing-5));
   }
 
   .forge-marketing-header__brand {
-    color: var(--mp-color-text-primary);
-    font-size: var(--mp-font-size-xl);
-    font-weight: var(--mp-font-weight-bold);
+    color: var(--forge-marketing-header-color-text-primary, var(--mp-color-text-primary));
+    font-size: var(--forge-marketing-header-font-size-xl, var(--mp-font-size-xl));
+    font-weight: var(--forge-marketing-header-font-weight-bold, var(--mp-font-weight-bold));
     text-decoration: none;
   }
 
   .forge-marketing-header__nav {
     display: flex;
     align-items: center;
-    gap: var(--mp-spacing-5);
+    gap: var(--forge-marketing-header-spacing-5, var(--mp-spacing-5));
   }
 
   .forge-marketing-header__nav a {
-    color: var(--mp-color-text-primary);
+    color: var(--forge-marketing-header-color-text-primary, var(--mp-color-text-primary));
     text-decoration: none;
   }
 
@@ -147,26 +151,28 @@
   }
 
   .forge-marketing-header__cta {
-    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-lg);
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-primary-default);
-    color: var(--mp-color-text-on-primary) !important;
+    padding: var(--forge-marketing-header-size-pad-block-md, var(--mp-size-pad-block-md))
+      var(--forge-marketing-header-size-pad-inline-lg, var(--mp-size-pad-inline-lg));
+    border-radius: var(--forge-marketing-header-radius-md, var(--mp-radius-md));
+    background: var(--forge-marketing-header-color-primary-default, var(--mp-color-primary-default));
+    color: var(--forge-marketing-header-color-text-on-primary, var(--mp-color-text-on-primary)) !important;
     text-decoration: none !important;
   }
 
   .forge-marketing-header__toggle {
     display: none;
-    min-width: var(--mp-size-height-lg);
-    min-height: var(--mp-size-height-lg);
+    min-width: var(--forge-marketing-header-size-height-lg, var(--mp-size-height-lg));
+    min-height: var(--forge-marketing-header-size-height-lg, var(--mp-size-height-lg));
     border: 0;
     background: transparent;
-    font-size: var(--mp-font-size-xl);
+    font-size: var(--forge-marketing-header-font-size-xl, var(--mp-font-size-xl));
     cursor: pointer;
   }
 
   .forge-marketing-header__mobile {
     display: none;
-    padding: 0 var(--mp-spacing-5) var(--mp-spacing-4);
+    padding: 0 var(--forge-marketing-header-spacing-5, var(--mp-spacing-5))
+      var(--forge-marketing-header-spacing-4, var(--mp-spacing-4));
   }
 
   @media (width <= 48rem) {
@@ -185,7 +191,7 @@
     .forge-marketing-header__mobile .forge-marketing-header__nav {
       align-items: stretch;
       flex-direction: column;
-      gap: var(--mp-spacing-3);
+      gap: var(--forge-marketing-header-spacing-3, var(--mp-spacing-3));
     }
   }
 }

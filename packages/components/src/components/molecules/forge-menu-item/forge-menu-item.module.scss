@@ -9,6 +9,8 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-menu-item-properties';
+
 @layer mp.components {
   .forge-menu-item {
     list-style: none;
@@ -17,19 +19,36 @@
     &__button {
       display: flex;
       align-items: center;
-      gap: var(--mp-navigation-menu-link-gap);
+      gap: var(--forge-menu-item-navigation-menu-link-gap, var(--mp-navigation-menu-link-gap));
       width: 100%;
-      padding: var(--mp-navigation-menu-link-padding-block) var(--mp-navigation-menu-link-padding-inline);
-      font-family: var(--mp-navigation-font-family);
+      padding: var(--forge-menu-item-navigation-menu-link-padding-block, var(--mp-navigation-menu-link-padding-block))
+        var(--forge-menu-item-navigation-menu-link-padding-inline, var(--mp-navigation-menu-link-padding-inline));
+      font-family: var(--forge-menu-item-navigation-font-family, var(--mp-navigation-font-family));
       cursor: pointer;
-      border-radius: var(--mp-navigation-menu-item-radius);
+      border-radius: var(--forge-menu-item-navigation-menu-item-radius, var(--mp-navigation-menu-item-radius));
       user-select: none;
       white-space: nowrap;
       text-decoration: none;
       color: inherit;
       transition:
-        background-color var(--mp-navigation-menu-item-transition-duration) var(--mp-navigation-menu-item-transition-easing),
-        color var(--mp-navigation-menu-item-transition-duration) var(--mp-navigation-menu-item-transition-easing);
+        background-color
+          var(
+            --forge-menu-item-navigation-menu-item-transition-duration,
+            var(--mp-navigation-menu-item-transition-duration)
+          )
+          var(
+            --forge-menu-item-navigation-menu-item-transition-easing,
+            var(--mp-navigation-menu-item-transition-easing)
+          ),
+        color
+          var(
+            --forge-menu-item-navigation-menu-item-transition-duration,
+            var(--mp-navigation-menu-item-transition-duration)
+          )
+          var(
+            --forge-menu-item-navigation-menu-item-transition-easing,
+            var(--mp-navigation-menu-item-transition-easing)
+          );
 
       svg {
         display: block;
@@ -41,28 +60,40 @@
 
     &__link:hover,
     &__button:hover {
-      background-color: var(--mp-navigation-menu-surface-link-hover);
+      background-color: var(
+        --forge-menu-item-navigation-menu-surface-link-hover,
+        var(--mp-navigation-menu-surface-link-hover)
+      );
     }
 
     &__link:focus-visible,
     &__button:focus-visible {
       outline: none;
-      box-shadow: var(--mp-navigation-focus-ring);
+      box-shadow: var(--forge-menu-item-navigation-focus-ring, var(--mp-navigation-focus-ring));
     }
 
     &--active > &__link,
     &--active > &__button {
-      background-color: var(--mp-navigation-menu-item-surface-active);
-      color: var(--mp-navigation-menu-item-text-active);
+      background-color: var(
+        --forge-menu-item-navigation-menu-item-surface-active,
+        var(--mp-navigation-menu-item-surface-active)
+      );
+      color: var(--forge-menu-item-navigation-menu-item-text-active, var(--mp-navigation-menu-item-text-active));
     }
 
     @mixin tone($family) {
       &--#{$family} > .forge-menu-item__link,
       &--#{$family} > .forge-menu-item__button {
-        color: var(--mp-navigation-menu-tone-#{$family}-text);
+        color: var(
+          --forge-menu-item-navigation-menu-tone-#{$family}-text,
+          var(--mp-navigation-menu-tone-#{$family}-text)
+        );
 
         &:hover {
-          background-color: var(--mp-navigation-menu-tone-#{$family}-surface-hover);
+          background-color: var(
+            --forge-menu-item-navigation-menu-tone-#{$family}-surface-hover,
+            var(--mp-navigation-menu-tone-#{$family}-surface-hover)
+          );
         }
       }
     }
@@ -78,7 +109,7 @@
 
     &--disabled > &__link,
     &--disabled > &__button {
-      opacity: var(--mp-feedback-opacity-disabled);
+      opacity: var(--forge-menu-item-feedback-opacity-disabled, var(--mp-feedback-opacity-disabled));
       cursor: not-allowed;
       pointer-events: none;
     }

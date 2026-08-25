@@ -1,4 +1,12 @@
-import { type ClassValue, type MpElement, useEffect, useId, useState } from '@mission-platform/forge';
+import {
+  useEffect,
+  useId,
+  useState,
+  createForgeStyle,
+  type ClassValue,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeSelect } from '@mission-platform/select';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -14,6 +22,38 @@ export type { LocationFormat, LocationValue } from './location';
 /** Field size, matching the composed {@link ForgeInput} / {@link ForgeSelect}. */
 export type LocationInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface LocationInputStyleProperties {
+  readonly 'input-location-gap-legend'?: string;
+  readonly 'input-location-gap-row'?: string;
+  readonly 'input-location-gap-stack'?: string;
+  readonly 'input-location-required'?: string;
+  readonly 'input-location-text-disabled'?: string;
+  readonly 'input-location-text-error'?: string;
+}
+
+export type LocationInputStyle = CSSStyleProperties & {
+  readonly '--forge-location-input-input-location-gap-legend'?: string | undefined;
+  readonly '--forge-location-input-input-location-gap-row'?: string | undefined;
+  readonly '--forge-location-input-input-location-gap-stack'?: string | undefined;
+  readonly '--forge-location-input-input-location-required'?: string | undefined;
+  readonly '--forge-location-input-input-location-text-disabled'?: string | undefined;
+  readonly '--forge-location-input-input-location-text-error'?: string | undefined;
+};
+
+function createLocationInputStyle(
+  properties: Readonly<LocationInputStyleProperties> | undefined,
+): LocationInputStyle | undefined {
+  return createForgeStyle({
+    '--forge-location-input-input-location-gap-legend': properties?.['input-location-gap-legend'],
+    '--forge-location-input-input-location-gap-row': properties?.['input-location-gap-row'],
+    '--forge-location-input-input-location-gap-stack': properties?.['input-location-gap-stack'],
+    '--forge-location-input-input-location-required': properties?.['input-location-required'],
+    '--forge-location-input-input-location-text-disabled': properties?.['input-location-text-disabled'],
+    '--forge-location-input-input-location-text-error': properties?.['input-location-text-error'],
+  }) as LocationInputStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface LocationInputProperties {
   /**
    * Extra class(es) merged onto the control's root element. Applied last so
@@ -49,6 +89,9 @@ export interface LocationInputProperties {
   onUpdateModelValue?: (value: LocationValue) => void;
   /** Fired with the next location value whenever it changes. */
   onChange?: (value: LocationValue) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<LocationInputStyleProperties>;
 }
 
 /** The selectable coordinate formats. */
@@ -98,6 +141,8 @@ function placeholdersFor(format: LocationFormat): { lat: string; lng: string } {
  * components.
  */
 export function ForgeLocationInput(properties: Readonly<LocationInputProperties>): MpElement {
+  const style = createLocationInputStyle(properties.properties);
+
   const {
     modelValue,
     label,
@@ -168,6 +213,7 @@ export function ForgeLocationInput(properties: Readonly<LocationInputProperties>
         },
         properties.className,
       ]}
+      style={style}
     >
       {label ? (
         <legend

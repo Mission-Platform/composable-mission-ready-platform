@@ -9,6 +9,8 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-background-video-properties';
+
 @layer mp.components {
   .forge-background-video {
     position: relative;
@@ -20,26 +22,26 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      z-index: -2;
+      z-index: var(--mp-z-index-base-media);
     }
 
     &--overlay::after {
       content: '';
       position: absolute;
       inset: 0;
-      z-index: -1;
-      background-color: var(--mp-media-surface-overlay);
+      z-index: var(--mp-z-index-base-media-overlay);
+      background-color: var(--forge-background-video-media-surface-overlay, var(--mp-media-surface-overlay));
     }
 
     &__content {
       position: relative;
-      z-index: 0;
+      z-index: var(--mp-z-index-base-content);
       display: flex;
       flex-direction: column;
       justify-content: center;
       min-height: inherit;
-      padding: var(--mp-media-background-padding);
-      color: var(--mp-media-text-inverse);
+      padding: var(--forge-background-video-media-background-padding, var(--mp-media-background-padding));
+      color: var(--forge-background-video-media-text-inverse, var(--mp-media-text-inverse));
     }
   }
 }

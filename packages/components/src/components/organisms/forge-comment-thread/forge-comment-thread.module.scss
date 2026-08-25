@@ -1,39 +1,41 @@
+@use './forge-comment-thread-properties';
+
 @layer mp.components {
   .forge-comment-thread {
     width: 100%;
-    color: var(--mp-color-text-primary);
+    color: var(--forge-comment-thread-color-text-primary, var(--mp-color-text-primary));
   }
 
   .forge-comment-thread__list {
     display: grid;
-    gap: var(--mp-spacing-4);
-    margin: 0 0 var(--mp-spacing-6);
+    gap: var(--forge-comment-thread-spacing-4, var(--mp-spacing-4));
+    margin: 0 0 var(--forge-comment-thread-spacing-6, var(--mp-spacing-6));
     padding: 0;
     list-style: none;
   }
 
   .forge-comment-thread__comment {
     display: flex;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-comment-thread-spacing-3, var(--mp-spacing-3));
   }
 
   .forge-comment-thread__comment--resolved {
-    opacity: var(--mp-opacity-muted);
+    opacity: var(--forge-comment-thread-opacity-muted, var(--mp-opacity-muted));
   }
 
   .forge-comment-thread__comment--own {
-    background: var(--mp-color-bg-muted);
+    background: var(--forge-comment-thread-color-bg-muted, var(--mp-color-bg-muted));
   }
 
   .forge-comment-thread__avatar {
     display: inline-flex;
-    flex: 0 0 var(--mp-size-height-md);
+    flex: 0 0 var(--forge-comment-thread-size-height-md, var(--mp-size-height-md));
     align-items: center;
     justify-content: center;
-    width: var(--mp-size-height-md);
-    height: var(--mp-size-height-md);
-    border-radius: var(--mp-radius-full);
-    background: var(--mp-color-primary-subtle);
+    width: var(--forge-comment-thread-size-height-md, var(--mp-size-height-md));
+    height: var(--forge-comment-thread-size-height-md, var(--mp-size-height-md));
+    border-radius: var(--forge-comment-thread-radius-full, var(--mp-radius-full));
+    background: var(--forge-comment-thread-color-primary-subtle, var(--mp-color-primary-subtle));
     object-fit: cover;
   }
 
@@ -45,82 +47,87 @@
   .forge-comment-thread__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-comment-thread-spacing-3, var(--mp-spacing-3));
     align-items: baseline;
   }
 
   .forge-comment-thread__meta time {
-    color: var(--mp-color-text-secondary);
-    font-size: var(--mp-font-size-sm);
+    color: var(--forge-comment-thread-color-text-secondary, var(--mp-color-text-secondary));
+    font-size: var(--forge-comment-thread-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-comment-thread__body p {
-    margin: var(--mp-spacing-1) 0 var(--mp-spacing-2);
+    margin: var(--forge-comment-thread-spacing-1, var(--mp-spacing-1)) 0
+      var(--forge-comment-thread-spacing-2, var(--mp-spacing-2));
     white-space: pre-wrap;
   }
 
   .forge-comment-thread__resolve {
     padding: 0;
     border: 0;
-    color: var(--mp-color-text-link);
+    color: var(--forge-comment-thread-color-text-link, var(--mp-color-text-link));
     background: transparent;
     text-decoration: underline;
     cursor: pointer;
   }
 
   .forge-comment-thread__resolved {
-    color: var(--mp-color-success-text);
-    font-size: var(--mp-font-size-sm);
+    color: var(--forge-comment-thread-color-success-text, var(--mp-color-success-text));
+    font-size: var(--forge-comment-thread-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-comment-thread__form {
     display: grid;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-comment-thread-spacing-3, var(--mp-spacing-3));
   }
 
   .forge-comment-thread__label {
     display: grid;
-    gap: var(--mp-spacing-1);
+    gap: var(--forge-comment-thread-spacing-1, var(--mp-spacing-1));
   }
 
   .forge-comment-thread__label-text {
-    font-weight: var(--mp-font-weight-semibold);
+    font-weight: var(--forge-comment-thread-font-weight-semibold, var(--mp-font-weight-semibold));
   }
 
   .forge-comment-thread__input {
     min-height: 5rem;
-    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-md);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    padding: var(--forge-comment-thread-size-pad-block-md, var(--mp-size-pad-block-md))
+      var(--forge-comment-thread-size-pad-inline-md, var(--mp-size-pad-inline-md));
+    border: var(--forge-comment-thread-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-comment-thread-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-comment-thread-radius-md, var(--mp-radius-md));
     font: inherit;
     resize: vertical;
   }
 
   .forge-comment-thread__submit {
     justify-self: start;
-    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-lg);
+    padding: var(--forge-comment-thread-size-pad-block-md, var(--mp-size-pad-block-md))
+      var(--forge-comment-thread-size-pad-inline-lg, var(--mp-size-pad-inline-lg));
     border: 0;
-    border-radius: var(--mp-radius-md);
-    color: var(--mp-color-text-on-primary);
-    background: var(--mp-color-primary-default);
+    border-radius: var(--forge-comment-thread-radius-md, var(--mp-radius-md));
+    color: var(--forge-comment-thread-color-text-on-primary, var(--mp-color-text-on-primary));
+    background: var(--forge-comment-thread-color-primary-default, var(--mp-color-primary-default));
     font: inherit;
-    font-weight: var(--mp-font-weight-semibold);
+    font-weight: var(--forge-comment-thread-font-weight-semibold, var(--mp-font-weight-semibold));
     cursor: pointer;
   }
 
   .forge-comment-thread__submit:disabled {
-    opacity: var(--mp-opacity-disabled);
+    opacity: var(--forge-comment-thread-opacity-disabled, var(--mp-opacity-disabled));
     cursor: not-allowed;
   }
 
   .forge-comment-thread__input:focus-visible,
   .forge-comment-thread__submit:focus-visible,
   .forge-comment-thread__resolve:focus-visible {
-    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
-    outline-offset: var(--mp-spacing-1);
+    outline: var(--forge-comment-thread-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-comment-thread-color-border-focus, var(--mp-color-border-focus));
+    outline-offset: var(--forge-comment-thread-spacing-1, var(--mp-spacing-1));
   }
 
   .forge-comment-thread__empty {
-    color: var(--mp-color-text-secondary);
+    color: var(--forge-comment-thread-color-text-secondary, var(--mp-color-text-secondary));
   }
 }

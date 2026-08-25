@@ -1,11 +1,16 @@
+@use './forge-surface-properties';
+
 @layer mp.components {
   .forge-surface {
     display: block;
-    color: var(--mp-surface-text, var(--mp-color-text-primary));
+    color: var(--forge-surface-text, var(--mp-surface-text, var(--mp-color-text-primary)));
 
     @each $elevation in 0, 1, 2, 3 {
       &--elevation-#{$elevation} {
-        box-shadow: var(--mp-surface-elevation-#{$elevation}, var(--mp-elevation-#{$elevation}, none));
+        box-shadow: var(
+          --forge-surface-elevation-#{$elevation},
+          var(--mp-surface-elevation-#{$elevation}, var(--mp-elevation-#{$elevation}, none))
+        );
       }
     }
 
@@ -14,17 +19,23 @@
         @if $padding == 'none' {
           padding: 0;
         } @else {
-          padding: var(--mp-surface-padding-#{$padding}, var(--mp-spacing-#{$padding}));
+          padding: var(
+            --forge-surface-padding-#{$padding},
+            var(--mp-surface-padding-#{$padding}, var(--mp-spacing-#{$padding}))
+          );
         }
       }
     }
 
     @each $rounded in 'none', 'sm', 'md', 'lg', 'xl' {
       &--rounded-#{$rounded} {
-        border-radius: var(--mp-surface-rounded-#{$rounded}, var(--mp-radius-#{$rounded}));
+        border-radius: var(
+          --forge-surface-rounded-#{$rounded},
+          var(--mp-surface-rounded-#{$rounded}, var(--mp-radius-#{$rounded}))
+        );
       }
     }
 
-    background: var(--mp-surface-background, var(--mp-color-bg-surface));
+    background: var(--forge-surface-background, var(--mp-surface-background, var(--mp-color-bg-surface)));
   }
 }

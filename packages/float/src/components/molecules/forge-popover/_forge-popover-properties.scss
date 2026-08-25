@@ -1,0 +1,72 @@
+/**
+ * Registered inherited custom properties for forge-popover overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-popover-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-popover-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-popover-overlay-panel-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-panel-padding-block);
+}
+
+@property --forge-popover-overlay-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-text-default);
+}
+
+@property --forge-popover-overlay-popover-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-popover-surface);
+}
+
+@property --forge-popover-overlay-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-width);
+}
+
+@property --forge-popover-overlay-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-default);
+}
+
+@property --forge-popover-overlay-popover-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-popover-radius);
+}
+
+@property --forge-popover-overlay-popover-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-popover-shadow);
+}
+
+@property --forge-popover-overlay-popover-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-popover-transition-duration);
+}
+
+@property --forge-popover-overlay-popover-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-popover-transition-easing);
+}

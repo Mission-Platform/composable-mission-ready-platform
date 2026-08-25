@@ -1,0 +1,201 @@
+/**
+ * Registered inherited custom properties for forge-virtual-log-viewer overrides.
+ */
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-surface);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-border-width);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-border);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-radius);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-toolbar-height);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-toolbar-padding-inline);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-toolbar-surface);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-toolbar-border);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-filter-font-family);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-filter-font-size);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-filter-font-weight);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-filter-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-filter-text);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-filter-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-filter-letter-spacing);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-row-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-row-gap);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-row-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-row-padding-inline);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-row-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-row-border-width);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-row-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-row-border);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-row-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-row-transition-duration);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-row-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-row-transition-easing);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-row-hover-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-row-hover-surface);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-row-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-row-focus-ring);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-severity-warn {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-severity-warn);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-severity-warn-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-severity-warn-opacity);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-severity-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-severity-error);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-severity-error-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-severity-error-opacity);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-line-number-min-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-line-number-min-width);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-line-number-padding-inline-end {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-line-number-padding-inline-end);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-line-number-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-line-number-border);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-timestamp-min-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-timestamp-min-width);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-level-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-level-gap);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-level-min-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-level-min-width);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-level-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-level-font-weight);
+}
+
+@property --forge-virtual-log-viewer-code-virtual-log-viewer-level-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-virtual-log-viewer-level-letter-spacing);
+}

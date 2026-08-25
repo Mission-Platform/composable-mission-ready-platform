@@ -1,4 +1,4 @@
-import { classNames, type MpElement } from '@mission-platform/forge';
+import { classNames, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 import { ForgeIconChevron, ForgeIconChevrons } from '@mission-platform/icons';
 
 import styles from './forge-pagination.module.scss';
@@ -22,6 +22,109 @@ type PaginationControl =
       modifier: 'edge' | 'prev' | 'next';
     };
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface PaginationStyleProperties {
+  readonly font?: string;
+  readonly 'navigation-font-family'?: string;
+  readonly 'navigation-pagination-border-active'?: string;
+  readonly 'navigation-pagination-border-default'?: string;
+  readonly 'navigation-pagination-border-hover'?: string;
+  readonly 'navigation-pagination-border-width'?: string;
+  readonly 'navigation-pagination-focus-ring'?: string;
+  readonly 'navigation-pagination-font-2xl'?: string;
+  readonly 'navigation-pagination-font-2xs'?: string;
+  readonly 'navigation-pagination-font-lg'?: string;
+  readonly 'navigation-pagination-font-md'?: string;
+  readonly 'navigation-pagination-font-sm'?: string;
+  readonly 'navigation-pagination-font-xl'?: string;
+  readonly 'navigation-pagination-font-xs'?: string;
+  readonly 'navigation-pagination-gap-default'?: string;
+  readonly 'navigation-pagination-gap-wide'?: string;
+  readonly 'navigation-pagination-gap-wider'?: string;
+  readonly 'navigation-pagination-opacity-disabled'?: string;
+  readonly 'navigation-pagination-padding-inline'?: string;
+  readonly 'navigation-pagination-radius'?: string;
+  readonly 'navigation-pagination-surface-active'?: string;
+  readonly 'navigation-pagination-surface-default'?: string;
+  readonly 'navigation-pagination-surface-hover'?: string;
+  readonly 'navigation-pagination-text-active'?: string;
+  readonly 'navigation-pagination-text-default'?: string;
+  readonly 'navigation-pagination-text-ellipsis'?: string;
+  readonly 'navigation-pagination-transition-duration'?: string;
+  readonly 'navigation-pagination-transition-easing'?: string;
+  readonly size?: string;
+}
+
+export type PaginationStyle = CSSStyleProperties & {
+  readonly '--forge-pagination-font'?: string | undefined;
+  readonly '--forge-pagination-navigation-font-family'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-border-active'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-border-default'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-border-hover'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-border-width'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-focus-ring'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-font-2xl'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-font-2xs'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-font-lg'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-font-md'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-font-sm'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-font-xl'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-font-xs'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-gap-default'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-gap-wide'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-gap-wider'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-opacity-disabled'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-padding-inline'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-radius'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-surface-active'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-surface-default'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-surface-hover'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-text-active'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-text-default'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-text-ellipsis'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-transition-duration'?: string | undefined;
+  readonly '--forge-pagination-navigation-pagination-transition-easing'?: string | undefined;
+  readonly '--forge-pagination-size'?: string | undefined;
+};
+
+function createPaginationStyle(
+  properties: Readonly<PaginationStyleProperties> | undefined,
+): PaginationStyle | undefined {
+  return createForgeStyle({
+    '--forge-pagination-font': properties?.['font'],
+    '--forge-pagination-navigation-font-family': properties?.['navigation-font-family'],
+    '--forge-pagination-navigation-pagination-border-active': properties?.['navigation-pagination-border-active'],
+    '--forge-pagination-navigation-pagination-border-default': properties?.['navigation-pagination-border-default'],
+    '--forge-pagination-navigation-pagination-border-hover': properties?.['navigation-pagination-border-hover'],
+    '--forge-pagination-navigation-pagination-border-width': properties?.['navigation-pagination-border-width'],
+    '--forge-pagination-navigation-pagination-focus-ring': properties?.['navigation-pagination-focus-ring'],
+    '--forge-pagination-navigation-pagination-font-2xl': properties?.['navigation-pagination-font-2xl'],
+    '--forge-pagination-navigation-pagination-font-2xs': properties?.['navigation-pagination-font-2xs'],
+    '--forge-pagination-navigation-pagination-font-lg': properties?.['navigation-pagination-font-lg'],
+    '--forge-pagination-navigation-pagination-font-md': properties?.['navigation-pagination-font-md'],
+    '--forge-pagination-navigation-pagination-font-sm': properties?.['navigation-pagination-font-sm'],
+    '--forge-pagination-navigation-pagination-font-xl': properties?.['navigation-pagination-font-xl'],
+    '--forge-pagination-navigation-pagination-font-xs': properties?.['navigation-pagination-font-xs'],
+    '--forge-pagination-navigation-pagination-gap-default': properties?.['navigation-pagination-gap-default'],
+    '--forge-pagination-navigation-pagination-gap-wide': properties?.['navigation-pagination-gap-wide'],
+    '--forge-pagination-navigation-pagination-gap-wider': properties?.['navigation-pagination-gap-wider'],
+    '--forge-pagination-navigation-pagination-opacity-disabled': properties?.['navigation-pagination-opacity-disabled'],
+    '--forge-pagination-navigation-pagination-padding-inline': properties?.['navigation-pagination-padding-inline'],
+    '--forge-pagination-navigation-pagination-radius': properties?.['navigation-pagination-radius'],
+    '--forge-pagination-navigation-pagination-surface-active': properties?.['navigation-pagination-surface-active'],
+    '--forge-pagination-navigation-pagination-surface-default': properties?.['navigation-pagination-surface-default'],
+    '--forge-pagination-navigation-pagination-surface-hover': properties?.['navigation-pagination-surface-hover'],
+    '--forge-pagination-navigation-pagination-text-active': properties?.['navigation-pagination-text-active'],
+    '--forge-pagination-navigation-pagination-text-default': properties?.['navigation-pagination-text-default'],
+    '--forge-pagination-navigation-pagination-text-ellipsis': properties?.['navigation-pagination-text-ellipsis'],
+    '--forge-pagination-navigation-pagination-transition-duration':
+      properties?.['navigation-pagination-transition-duration'],
+    '--forge-pagination-navigation-pagination-transition-easing':
+      properties?.['navigation-pagination-transition-easing'],
+    '--forge-pagination-size': properties?.['size'],
+  }) as PaginationStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface PaginationProperties {
   /**
    * Current page (1-based; controlled via `modelValue` + `onUpdateModelValue`).
@@ -52,6 +155,9 @@ export interface PaginationProperties {
   onUpdateModelValue?: (page: number) => void;
   /** Fired whenever the page changes via user interaction. */
   onChange?: (page: number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<PaginationStyleProperties>;
 }
 
 function range(start: number, end: number): number[] {
@@ -76,6 +182,8 @@ function range(start: number, end: number): number[] {
  * uses the established controlled `modelValue` + callback-prop convention.
  */
 export function ForgePagination(properties: Readonly<PaginationProperties>): MpElement {
+  const style = createPaginationStyle(properties.properties);
+
   const {
     modelValue = 1,
     pageCount,
@@ -196,6 +304,7 @@ export function ForgePagination(properties: Readonly<PaginationProperties>): MpE
     <nav
       aria-label={ariaLabel}
       className={navClass}
+      style={style}
     >
       <ul className={styles['forge-pagination__list']}>
         {controls.map((control, index) => (

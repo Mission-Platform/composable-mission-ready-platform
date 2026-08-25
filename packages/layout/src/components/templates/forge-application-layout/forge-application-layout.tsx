@@ -1,11 +1,13 @@
 import {
   classNames,
   hasSlot,
-  type MpChild,
-  type MpElement,
   Slot,
   useEffect,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 
 import styles from './forge-application-layout.module.scss';
@@ -16,6 +18,85 @@ export type StatusLevel = 'none' | 'info' | 'warning' | 'error';
 /** Named viewport breakpoint at/above which the sidebar columns render inline. */
 export type SidebarBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ApplicationLayoutStyleProperties {
+  readonly 'layout-application-border-sidebar'?: string;
+  readonly 'layout-application-border-width-sidebar'?: string;
+  readonly 'layout-application-padding-status-block'?: string;
+  readonly 'layout-application-padding-status-inline'?: string;
+  readonly 'layout-application-padding-status-inline-wide'?: string;
+  readonly 'layout-application-scrim-default'?: string;
+  readonly 'layout-application-shadow-overlay'?: string;
+  readonly 'layout-application-surface-default'?: string;
+  readonly 'layout-application-surface-sidebar'?: string;
+  readonly 'layout-application-transition-duration'?: string;
+  readonly 'layout-application-transition-easing'?: string;
+  readonly 'layout-application-typography-font-family'?: string;
+  readonly 'layout-application-typography-font-size'?: string;
+  readonly 'layout-application-typography-font-weight'?: string;
+  readonly 'layout-application-typography-letter-spacing'?: string;
+  readonly 'layout-application-typography-line-height'?: string;
+  readonly 'sidebar-top'?: string;
+  readonly 'sidebar-width'?: string;
+}
+
+export type ApplicationLayoutStyle = CSSStyleProperties & {
+  readonly '--forge-application-layout-layout-application-border-sidebar'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-border-width-sidebar'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-padding-status-block'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-padding-status-inline'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-padding-status-inline-wide'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-scrim-default'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-shadow-overlay'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-surface-default'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-surface-sidebar'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-transition-duration'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-transition-easing'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-typography-font-family'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-typography-font-size'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-typography-font-weight'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-typography-letter-spacing'?: string | undefined;
+  readonly '--forge-application-layout-layout-application-typography-line-height'?: string | undefined;
+  readonly '--forge-application-layout-sidebar-top'?: string | undefined;
+  readonly '--forge-application-layout-sidebar-width'?: string | undefined;
+};
+
+function createApplicationLayoutStyle(
+  properties: Readonly<ApplicationLayoutStyleProperties> | undefined,
+): ApplicationLayoutStyle | undefined {
+  return createForgeStyle({
+    '--forge-application-layout-layout-application-border-sidebar': properties?.['layout-application-border-sidebar'],
+    '--forge-application-layout-layout-application-border-width-sidebar':
+      properties?.['layout-application-border-width-sidebar'],
+    '--forge-application-layout-layout-application-padding-status-block':
+      properties?.['layout-application-padding-status-block'],
+    '--forge-application-layout-layout-application-padding-status-inline':
+      properties?.['layout-application-padding-status-inline'],
+    '--forge-application-layout-layout-application-padding-status-inline-wide':
+      properties?.['layout-application-padding-status-inline-wide'],
+    '--forge-application-layout-layout-application-scrim-default': properties?.['layout-application-scrim-default'],
+    '--forge-application-layout-layout-application-shadow-overlay': properties?.['layout-application-shadow-overlay'],
+    '--forge-application-layout-layout-application-surface-default': properties?.['layout-application-surface-default'],
+    '--forge-application-layout-layout-application-surface-sidebar': properties?.['layout-application-surface-sidebar'],
+    '--forge-application-layout-layout-application-transition-duration':
+      properties?.['layout-application-transition-duration'],
+    '--forge-application-layout-layout-application-transition-easing':
+      properties?.['layout-application-transition-easing'],
+    '--forge-application-layout-layout-application-typography-font-family':
+      properties?.['layout-application-typography-font-family'],
+    '--forge-application-layout-layout-application-typography-font-size':
+      properties?.['layout-application-typography-font-size'],
+    '--forge-application-layout-layout-application-typography-font-weight':
+      properties?.['layout-application-typography-font-weight'],
+    '--forge-application-layout-layout-application-typography-letter-spacing':
+      properties?.['layout-application-typography-letter-spacing'],
+    '--forge-application-layout-layout-application-typography-line-height':
+      properties?.['layout-application-typography-line-height'],
+    '--forge-application-layout-sidebar-top': properties?.['sidebar-top'],
+    '--forge-application-layout-sidebar-width': properties?.['sidebar-width'],
+  }) as ApplicationLayoutStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ApplicationLayoutProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -61,6 +142,9 @@ export interface ApplicationLayoutProperties {
   content?: MpChild;
   /** Footer content (the `footer` named slot). */
   footer?: MpChild;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ApplicationLayoutStyleProperties>;
 }
 
 /** Minimum viewport width (px) for each named sidebar breakpoint. */
@@ -116,6 +200,8 @@ function resolveStatusRole(level: StatusLevel): string | undefined {
  * {@link classNames} helper.
  */
 export function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutProperties>): MpElement {
+  const style = createApplicationLayoutStyle(properties.properties);
+
   const {
     statusLevel = 'none',
     stickyHeader = false,
@@ -167,12 +253,14 @@ export function ForgeApplicationLayout(properties: Readonly<ApplicationLayoutPro
   };
 
   const statusColor = STATUS_BACKGROUND[statusLevel];
-  const statusTextColor =
-    statusLevel === 'none' ? undefined : 'var(--mp-component-layout-application-text-status)';
+  const statusTextColor = statusLevel === 'none' ? undefined : 'var(--mp-component-layout-application-text-status)';
   const statusRole = resolveStatusRole(statusLevel);
 
   return (
-    <div class={styles['application-layout']}>
+    <div
+      class={styles['application-layout']}
+      style={style}
+    >
       <div
         class={styles['application-layout__status']}
         role={statusRole}

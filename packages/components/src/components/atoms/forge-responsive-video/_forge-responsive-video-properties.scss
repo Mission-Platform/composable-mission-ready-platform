@@ -1,0 +1,15 @@
+/**
+ * Registered inherited custom properties for forge-responsive-video overrides.
+ */
+
+@property --forge-responsive-video-media-video-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-video-surface-default);
+}
+
+@property --forge-responsive-video-media-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-radius);
+}

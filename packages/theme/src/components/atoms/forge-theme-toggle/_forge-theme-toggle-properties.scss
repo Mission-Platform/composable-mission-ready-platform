@@ -1,0 +1,138 @@
+/**
+ * Registered inherited custom properties for forge-theme-toggle overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-theme-toggle-button-primary-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-primary-gap);
+}
+
+@property --forge-theme-toggle-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-padding-block);
+}
+
+@property --forge-theme-toggle-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-padding-inline);
+}
+
+@property --forge-theme-toggle-button-secondary-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-background-default);
+}
+
+@property --forge-theme-toggle-button-secondary-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-text-default);
+}
+
+@property --forge-theme-toggle-button-secondary-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-border-width);
+}
+
+@property --forge-theme-toggle-button-secondary-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-border-default);
+}
+
+@property --forge-theme-toggle-button-primary-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-primary-radius);
+}
+
+@property --forge-theme-toggle-button-secondary-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-transition-duration);
+}
+
+@property --forge-theme-toggle-button-secondary-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-transition-easing);
+}
+
+@property --forge-theme-toggle-button-secondary-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-background-hover);
+}
+
+@property --forge-theme-toggle-border-color-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-border-color-hover);
+}
+
+@property --forge-theme-toggle-focus-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-focus-width);
+}
+
+@property --forge-theme-toggle-button-secondary-border-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-border-focus-visible);
+}
+
+@property --forge-theme-toggle-focus-offset {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-focus-offset);
+}
+
+@property --forge-theme-toggle-icon-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-icon-size);
+}
+
+@property --forge-theme-toggle-icon-color-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-icon-color-default);
+}
+
+@property --forge-theme-toggle-label-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-label-font-family);
+}
+
+@property --forge-theme-toggle-label-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-label-font-size);
+}
+
+@property --forge-theme-toggle-label-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-label-font-weight);
+}
+
+@property --forge-theme-toggle-label-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-label-line-height);
+}
+
+@property --forge-theme-toggle-label-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-label-letter-spacing);
+}

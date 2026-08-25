@@ -9,62 +9,70 @@
  * The rules live in the package-owned `mp.content` cascade layer.
  */
 
+@use './forge-markdown-properties';
+
 @layer mp.content {
   .forge-markdown {
-    color: var(--mp-markdown-text-default);
-    font-family: var(--mp-markdown-typography-font-family);
-    line-height: var(--mp-markdown-typography-line-height);
+    color: var(--forge-markdown-text-default, var(--mp-markdown-text-default));
+    font-family: var(--forge-markdown-typography-font-family, var(--mp-markdown-typography-font-family));
+    line-height: var(--forge-markdown-typography-line-height, var(--mp-markdown-typography-line-height));
     overflow-wrap: anywhere;
 
     /* Vertical rhythm between the direct block children. */
     > * + * {
-      margin-top: var(--mp-markdown-flow-block-gap);
+      margin-top: var(--forge-markdown-flow-block-gap, var(--mp-markdown-flow-block-gap));
     }
 
     /* Heading wrapper: carries the anchor id + scroll offset for deep links. */
     &__heading {
-      scroll-margin-top: var(--mp-markdown-flow-heading-scroll-margin);
+      scroll-margin-top: var(
+        --forge-markdown-flow-heading-scroll-margin,
+        var(--mp-markdown-flow-heading-scroll-margin)
+      );
     }
 
     &__list {
-      margin-left: var(--mp-markdown-flow-list-indent);
+      margin-left: var(--forge-markdown-flow-list-indent, var(--mp-markdown-flow-list-indent));
       padding: 0;
 
       > li + li {
-        margin-top: var(--mp-markdown-flow-list-item-gap);
+        margin-top: var(--forge-markdown-flow-list-item-gap, var(--mp-markdown-flow-list-item-gap));
       }
     }
 
     &__list-item {
-      line-height: var(--mp-markdown-typography-line-height);
+      line-height: var(--forge-markdown-typography-line-height, var(--mp-markdown-typography-line-height));
     }
 
     &__task {
-      margin-right: var(--mp-markdown-flow-task-gap);
+      margin-right: var(--forge-markdown-flow-task-gap, var(--mp-markdown-flow-task-gap));
       vertical-align: middle;
     }
 
     &__blockquote {
       margin-left: 0;
-      padding: var(--mp-markdown-blockquote-padding-block) var(--mp-markdown-blockquote-padding-inline);
-      border-left: var(--mp-markdown-blockquote-border-width) solid var(--mp-markdown-blockquote-border);
-      color: var(--mp-markdown-blockquote-text);
+      padding: var(--forge-markdown-blockquote-padding-block, var(--mp-markdown-blockquote-padding-block))
+        var(--forge-markdown-blockquote-padding-inline, var(--mp-markdown-blockquote-padding-inline));
+      border-left: var(--forge-markdown-blockquote-border-width, var(--mp-markdown-blockquote-border-width)) solid
+        var(--forge-markdown-blockquote-border, var(--mp-markdown-blockquote-border));
+      color: var(--forge-markdown-blockquote-text, var(--mp-markdown-blockquote-text));
     }
 
     &__hr {
       border: none;
-      border-top: var(--mp-markdown-rule-border-width) solid var(--mp-markdown-rule-border);
+      border-top: var(--forge-markdown-rule-border-width, var(--mp-markdown-rule-border-width)) solid
+        var(--forge-markdown-rule-border, var(--mp-markdown-rule-border));
     }
 
     &__image {
       max-width: 100%;
       height: auto;
-      border-radius: var(--mp-markdown-image-radius);
+      border-radius: var(--forge-markdown-image-radius, var(--mp-markdown-image-radius));
     }
 
     /* Inline links inherit the primary tone with an underline on interaction. */
     a {
-      color: var(--mp-markdown-text-link);
+      color: var(--forge-markdown-text-link, var(--mp-markdown-text-link));
       text-decoration: none;
 
       &:hover,

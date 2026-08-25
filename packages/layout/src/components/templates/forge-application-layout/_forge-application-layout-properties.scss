@@ -1,0 +1,107 @@
+@property --forge-application-layout-layout-application-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-surface-default);
+}
+
+@property --forge-application-layout-layout-application-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-transition-duration);
+}
+
+@property --forge-application-layout-layout-application-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-transition-easing);
+}
+
+@property --forge-application-layout-layout-application-typography-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-typography-font-family);
+}
+
+@property --forge-application-layout-layout-application-typography-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-typography-font-size);
+}
+
+@property --forge-application-layout-layout-application-typography-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-typography-font-weight);
+}
+
+@property --forge-application-layout-layout-application-typography-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-typography-line-height);
+}
+
+@property --forge-application-layout-layout-application-typography-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-typography-letter-spacing);
+}
+
+@property --forge-application-layout-layout-application-padding-status-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-padding-status-block);
+}
+
+@property --forge-application-layout-layout-application-padding-status-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-padding-status-inline);
+}
+
+@property --forge-application-layout-layout-application-padding-status-inline-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-padding-status-inline-wide);
+}
+
+@property --forge-application-layout-sidebar-top {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-application-layout-sidebar-top, 0);
+}
+
+@property --forge-application-layout-sidebar-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-application-layout-sidebar-width, 16rem);
+}
+
+@property --forge-application-layout-layout-application-surface-sidebar {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-surface-sidebar);
+}
+
+@property --forge-application-layout-layout-application-border-width-sidebar {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-border-width-sidebar);
+}
+
+@property --forge-application-layout-layout-application-border-sidebar {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-border-sidebar);
+}
+
+@property --forge-application-layout-layout-application-shadow-overlay {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-shadow-overlay);
+}
+
+@property --forge-application-layout-layout-application-scrim-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-application-scrim-default);
+}

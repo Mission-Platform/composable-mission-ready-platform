@@ -1,0 +1,231 @@
+/**
+ * Registered inherited custom properties for forge-drawer overrides.
+ */
+
+@property --forge-drawer-overlay-drawer-backdrop-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-backdrop-surface);
+}
+
+@property --forge-drawer-z-index-backdrop {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-z-index-drawer-backdrop);
+}
+
+@property --forge-drawer-overlay-drawer-panel-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-panel-surface);
+}
+
+@property --forge-drawer-z-index-panel {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-z-index-drawer-panel);
+}
+
+@property --forge-drawer-overlay-drawer-panel-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-panel-shadow);
+}
+
+@property --forge-drawer-overlay-drawer-panel-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-panel-border-width);
+}
+
+@property --forge-drawer-overlay-drawer-panel-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-panel-border);
+}
+
+@property --forge-drawer-overlay-drawer-header-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-header-padding-block);
+}
+
+@property --forge-drawer-overlay-drawer-header-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-header-padding-inline);
+}
+
+@property --forge-drawer-overlay-drawer-header-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-header-border-width);
+}
+
+@property --forge-drawer-overlay-drawer-header-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-header-border);
+}
+
+@property --forge-drawer-overlay-drawer-header-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-header-gap);
+}
+
+@property --forge-drawer-overlay-drawer-title-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-title-font-family);
+}
+
+@property --forge-drawer-overlay-drawer-title-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-title-font-size);
+}
+
+@property --forge-drawer-overlay-drawer-title-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-title-font-weight);
+}
+
+@property --forge-drawer-overlay-drawer-title-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-title-line-height);
+}
+
+@property --forge-drawer-overlay-drawer-title-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-title-text);
+}
+
+@property --forge-drawer-overlay-drawer-close-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-close-size);
+}
+
+@property --forge-drawer-overlay-drawer-close-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-close-radius);
+}
+
+@property --forge-drawer-overlay-drawer-close-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-close-surface-default);
+}
+
+@property --forge-drawer-overlay-drawer-close-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-close-text-default);
+}
+
+@property --forge-drawer-overlay-drawer-close-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-close-font-size);
+}
+
+@property --forge-drawer-overlay-drawer-close-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-close-line-height);
+}
+
+@property --forge-drawer-overlay-drawer-close-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-close-surface-hover);
+}
+
+@property --forge-drawer-overlay-drawer-close-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-close-text-hover);
+}
+
+@property --forge-drawer-overlay-drawer-body-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-body-padding);
+}
+
+@property --forge-drawer-overlay-drawer-footer-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-footer-gap);
+}
+
+@property --forge-drawer-overlay-drawer-footer-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-footer-padding-block);
+}
+
+@property --forge-drawer-overlay-drawer-footer-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-footer-padding-inline);
+}
+
+@property --forge-drawer-overlay-drawer-footer-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-footer-border-width);
+}
+
+@property --forge-drawer-overlay-drawer-footer-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-footer-border);
+}
+
+@property --forge-drawer-overlay-drawer-resize-handle-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-resize-handle-surface-default);
+}
+
+@property --forge-drawer-overlay-drawer-resize-handle-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-resize-handle-transition-duration);
+}
+
+@property --forge-drawer-overlay-drawer-resize-handle-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-resize-handle-transition-easing);
+}
+
+@property --forge-drawer-overlay-drawer-resize-handle-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-resize-handle-size);
+}
+
+@property --forge-drawer-overlay-drawer-resize-handle-surface-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-resize-handle-surface-active);
+}
+
+@property --forge-drawer-overlay-drawer-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-transition-duration);
+}
+
+@property --forge-drawer-overlay-drawer-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-drawer-transition-easing);
+}

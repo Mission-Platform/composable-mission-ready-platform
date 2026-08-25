@@ -1,0 +1,225 @@
+/**
+ * Registered inherited custom properties for forge-menubar overrides.
+ */
+
+@property --forge-menubar-navigation-menubar-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-gap);
+}
+
+@property --forge-menubar-navigation-menubar-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-padding);
+}
+
+@property --forge-menubar-navigation-menubar-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-surface);
+}
+
+@property --forge-menubar-navigation-menubar-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-border-width);
+}
+
+@property --forge-menubar-navigation-menubar-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-border);
+}
+
+@property --forge-menubar-navigation-menubar-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-radius);
+}
+
+@property --forge-menubar-navigation-menubar-item-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-item-opacity-disabled);
+}
+
+@property --forge-menubar-navigation-menubar-link-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-gap);
+}
+
+@property --forge-menubar-navigation-menubar-link-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-padding-block);
+}
+
+@property --forge-menubar-navigation-menubar-link-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-padding-inline);
+}
+
+@property --forge-menubar-navigation-menubar-link-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-radius);
+}
+
+@property --forge-menubar-navigation-menubar-link-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-text);
+}
+
+@property --forge-menubar-navigation-menubar-link-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-font-family);
+}
+
+@property --forge-menubar-navigation-menubar-link-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-transition-duration);
+}
+
+@property --forge-menubar-navigation-menubar-link-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-transition-easing);
+}
+
+@property --forge-menubar-navigation-menubar-link-focus-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-focus-border-width);
+}
+
+@property --forge-menubar-navigation-menubar-link-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-focus-ring);
+}
+
+@property --forge-menubar-navigation-menubar-link-focus-offset {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-focus-offset);
+}
+
+@property --forge-menubar-navigation-menubar-link-text-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-text-disabled);
+}
+
+@property --forge-menubar-navigation-menubar-link-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-surface-hover);
+}
+
+@property --forge-menubar-navigation-menubar-link-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-link-text-hover);
+}
+
+@property --forge-menubar-navigation-menubar-chevron-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-chevron-text);
+}
+
+@property --forge-menubar-navigation-menubar-chevron-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-chevron-font-size);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-margin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-margin);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-padding);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-min-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-min-width);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-viewport-gutter {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-viewport-gutter);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-gap);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-surface);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-border-width);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-border);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-radius);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-shadow);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-transition-duration);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-transition-easing);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-starting-offset {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-starting-offset);
+}
+
+@property --forge-menubar-navigation-menubar-submenu-nested-margin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menubar-submenu-nested-margin);
+}

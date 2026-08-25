@@ -1,0 +1,288 @@
+/**
+ * Registered inherited custom properties for forge-select overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-select-field-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-field-gap);
+}
+
+@property --forge-select-field-required {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-required);
+}
+
+@property --forge-select-border-width-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-border-width-default);
+}
+
+@property --forge-select-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-border-default);
+}
+
+@property --forge-select-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-radius);
+}
+
+@property --forge-select-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-surface-default);
+}
+
+@property --forge-select-input-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-transition-duration);
+}
+
+@property --forge-select-input-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-transition-easing);
+}
+
+@property --forge-select-border-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-border-focus-visible);
+}
+
+@property --forge-select-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-focus-ring);
+}
+
+@property --forge-select-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-text-secondary);
+}
+
+@property --forge-select-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-font-family);
+}
+
+@property --forge-select-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-line-height);
+}
+
+@property --forge-select-text-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-text-disabled);
+}
+
+@property --forge-select-extension-padding-start {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-extension-padding-start);
+}
+
+@property --forge-select-extension-padding-end {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-extension-padding-end);
+}
+
+@property --forge-select-option-content-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-content-gap);
+}
+
+@property --forge-select-option-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-padding-block);
+}
+
+@property --forge-select-option-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-padding-inline);
+}
+
+@property --forge-select-option-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-font-size);
+}
+
+@property --forge-select-option-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-text-default);
+}
+
+@property --forge-select-option-font-weight-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-font-weight-selected);
+}
+
+@property --forge-select-option-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-background-hover);
+}
+
+@property --forge-select-size-2xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-padding-block);
+}
+
+@property --forge-select-size-xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-padding-block);
+}
+
+@property --forge-select-size-sm-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-padding-block);
+}
+
+@property --forge-select-size-md-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-md-padding-block);
+}
+
+@property --forge-select-size-lg-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-padding-block);
+}
+
+@property --forge-select-size-xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-padding-block);
+}
+
+@property --forge-select-size-2xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-padding-block);
+}
+
+@property --forge-select-size-2xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-padding-inline);
+}
+
+@property --forge-select-size-xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-padding-inline);
+}
+
+@property --forge-select-size-sm-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-padding-inline);
+}
+
+@property --forge-select-size-md-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-md-padding-inline);
+}
+
+@property --forge-select-size-lg-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-padding-inline);
+}
+
+@property --forge-select-size-xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-padding-inline);
+}
+
+@property --forge-select-size-2xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-padding-inline);
+}
+
+@property --forge-select-size-2xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-font-size);
+}
+
+@property --forge-select-size-xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-font-size);
+}
+
+@property --forge-select-size-sm-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-font-size);
+}
+
+@property --forge-select-size-md-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-md-font-size);
+}
+
+@property --forge-select-size-lg-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-font-size);
+}
+
+@property --forge-select-size-xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-font-size);
+}
+
+@property --forge-select-size-2xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-font-size);
+}
+
+@property --forge-select-border-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-border-invalid);
+}
+
+@property --forge-select-surface-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-surface-disabled);
+}
+
+@property --forge-select-field-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-error);
+}

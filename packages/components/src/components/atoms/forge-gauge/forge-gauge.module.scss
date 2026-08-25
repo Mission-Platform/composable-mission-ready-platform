@@ -1,27 +1,32 @@
+@use './forge-gauge-properties';
+
 @layer mp.components {
   .forge-gauge {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-feedback-gauge-gap, var(--mp-spacing-2));
+    gap: var(--forge-gauge-feedback-gauge-gap, var(--mp-feedback-gauge-gap, var(--mp-spacing-2)));
     min-width: 0;
-    color: var(--mp-color-text-primary);
+    color: var(--forge-gauge-color-text-primary, var(--mp-color-text-primary));
 
     &__header {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      gap: var(--mp-feedback-gauge-label-gap, var(--mp-spacing-2));
-      font-family: var(--mp-font-family-sans);
-      font-size: var(--mp-feedback-gauge-label-font-size, var(--mp-font-size-sm));
-      line-height: var(--mp-line-height-tight);
+      gap: var(--forge-gauge-feedback-gauge-label-gap, var(--mp-feedback-gauge-label-gap, var(--mp-spacing-2)));
+      font-family: var(--forge-gauge-font-family-sans, var(--mp-font-family-sans));
+      font-size: var(
+        --forge-gauge-feedback-gauge-label-font-size,
+        var(--mp-feedback-gauge-label-font-size, var(--mp-font-size-sm))
+      );
+      line-height: var(--forge-gauge-line-height-tight, var(--mp-line-height-tight));
     }
 
     &__label {
-      font-weight: var(--mp-font-weight-medium);
+      font-weight: var(--forge-gauge-font-weight-medium, var(--mp-font-weight-medium));
     }
 
     &__value {
-      color: var(--mp-color-text-secondary);
+      color: var(--forge-gauge-color-text-secondary, var(--mp-color-text-secondary));
       font-variant-numeric: tabular-nums;
     }
 
@@ -29,7 +34,7 @@
       position: relative;
       width: 100%;
       aspect-ratio: 1;
-      max-width: var(--mp-feedback-gauge-max-size, 12rem);
+      max-width: var(--forge-gauge-feedback-gauge-max-size, var(--mp-feedback-gauge-max-size, 12rem));
     }
 
     &__svg {
@@ -41,18 +46,25 @@
     }
 
     &__track {
-      stroke: var(--mp-feedback-gauge-track, var(--mp-color-bg-muted));
+      stroke: var(--forge-gauge-feedback-gauge-track, var(--mp-feedback-gauge-track, var(--mp-color-bg-muted)));
     }
 
     &__arc {
-      stroke: var(--mp-feedback-gauge-fill, var(--mp-color-primary-default));
-      transition: stroke-dashoffset var(--mp-feedback-gauge-transition-duration, var(--mp-duration-fast))
-        var(--mp-feedback-gauge-transition-easing, var(--mp-easing-standard));
+      stroke: var(--forge-gauge-feedback-gauge-fill, var(--mp-feedback-gauge-fill, var(--mp-color-primary-default)));
+      transition: stroke-dashoffset
+        var(
+          --forge-gauge-feedback-gauge-transition-duration,
+          var(--mp-feedback-gauge-transition-duration, var(--mp-duration-fast))
+        )
+        var(
+          --forge-gauge-feedback-gauge-transition-easing,
+          var(--mp-feedback-gauge-transition-easing, var(--mp-easing-standard))
+        );
     }
 
     @each $size in 'sm', 'md', 'lg' {
       &--#{$size} {
-        --mp-feedback-gauge-max-size: var(--mp-size-#{$size});
+        --mp-feedback-gauge-max-size: var(--forge-gauge-size-#{$size}, var(--mp-size-#{$size}));
       }
     }
   }

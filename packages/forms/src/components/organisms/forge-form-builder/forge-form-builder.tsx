@@ -1,11 +1,14 @@
-import {
-  type DrawerDraggable,
-  ForgeButton,
-  ForgeTabs,
-  type TabItem,
-} from '@mission-platform/components';
+import { type DrawerDraggable, ForgeButton, ForgeTabs, type TabItem } from '@mission-platform/components';
 import { ForgeCodeBlock } from '@mission-platform/content';
-import { Fragment, type MpChild, type MpElement, useRef, useState } from '@mission-platform/forge';
+import {
+  Fragment,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import {
   type BuilderField,
   type BuilderFieldOption,
@@ -73,6 +76,110 @@ export type {
 /** Size token — canonical 2xs → 2xl scale. */
 export type FormBuilderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface FormBuilderStyleProperties {
+  readonly 'form-border-default'?: string;
+  readonly 'form-border-focus'?: string;
+  readonly 'form-border-focus-width'?: string;
+  readonly 'form-border-selected'?: string;
+  readonly 'form-border-width'?: string;
+  readonly 'form-disabled-opacity'?: string;
+  readonly 'form-drag-opacity'?: string;
+  readonly 'form-focus-ring'?: string;
+  readonly 'form-font-family-mono'?: string;
+  readonly 'form-font-size-extra-small'?: string;
+  readonly 'form-font-size-small'?: string;
+  readonly 'form-font-weight-medium'?: string;
+  readonly 'form-gap-default'?: string;
+  readonly 'form-gap-section'?: string;
+  readonly 'form-gap-tight'?: string;
+  readonly 'form-ghost-opacity'?: string;
+  readonly 'form-padding-default'?: string;
+  readonly 'form-padding-large'?: string;
+  readonly 'form-padding-section'?: string;
+  readonly 'form-padding-tight'?: string;
+  readonly 'form-radius-default'?: string;
+  readonly 'form-radius-small'?: string;
+  readonly 'form-surface-default'?: string;
+  readonly 'form-surface-muted'?: string;
+  readonly 'form-text-default'?: string;
+  readonly 'form-text-invalid'?: string;
+  readonly 'form-text-muted'?: string;
+  readonly 'form-text-secondary'?: string;
+  readonly 'form-transition-duration'?: string;
+  readonly 'form-transition-easing'?: string;
+}
+
+export type FormBuilderStyle = CSSStyleProperties & {
+  readonly '--forge-form-builder-form-border-default'?: string | undefined;
+  readonly '--forge-form-builder-form-border-focus'?: string | undefined;
+  readonly '--forge-form-builder-form-border-focus-width'?: string | undefined;
+  readonly '--forge-form-builder-form-border-selected'?: string | undefined;
+  readonly '--forge-form-builder-form-border-width'?: string | undefined;
+  readonly '--forge-form-builder-form-disabled-opacity'?: string | undefined;
+  readonly '--forge-form-builder-form-drag-opacity'?: string | undefined;
+  readonly '--forge-form-builder-form-focus-ring'?: string | undefined;
+  readonly '--forge-form-builder-form-font-family-mono'?: string | undefined;
+  readonly '--forge-form-builder-form-font-size-extra-small'?: string | undefined;
+  readonly '--forge-form-builder-form-font-size-small'?: string | undefined;
+  readonly '--forge-form-builder-form-font-weight-medium'?: string | undefined;
+  readonly '--forge-form-builder-form-gap-default'?: string | undefined;
+  readonly '--forge-form-builder-form-gap-section'?: string | undefined;
+  readonly '--forge-form-builder-form-gap-tight'?: string | undefined;
+  readonly '--forge-form-builder-form-ghost-opacity'?: string | undefined;
+  readonly '--forge-form-builder-form-padding-default'?: string | undefined;
+  readonly '--forge-form-builder-form-padding-large'?: string | undefined;
+  readonly '--forge-form-builder-form-padding-section'?: string | undefined;
+  readonly '--forge-form-builder-form-padding-tight'?: string | undefined;
+  readonly '--forge-form-builder-form-radius-default'?: string | undefined;
+  readonly '--forge-form-builder-form-radius-small'?: string | undefined;
+  readonly '--forge-form-builder-form-surface-default'?: string | undefined;
+  readonly '--forge-form-builder-form-surface-muted'?: string | undefined;
+  readonly '--forge-form-builder-form-text-default'?: string | undefined;
+  readonly '--forge-form-builder-form-text-invalid'?: string | undefined;
+  readonly '--forge-form-builder-form-text-muted'?: string | undefined;
+  readonly '--forge-form-builder-form-text-secondary'?: string | undefined;
+  readonly '--forge-form-builder-form-transition-duration'?: string | undefined;
+  readonly '--forge-form-builder-form-transition-easing'?: string | undefined;
+};
+
+function createFormBuilderStyle(
+  properties: Readonly<FormBuilderStyleProperties> | undefined,
+): FormBuilderStyle | undefined {
+  return createForgeStyle({
+    '--forge-form-builder-form-border-default': properties?.['form-border-default'],
+    '--forge-form-builder-form-border-focus': properties?.['form-border-focus'],
+    '--forge-form-builder-form-border-focus-width': properties?.['form-border-focus-width'],
+    '--forge-form-builder-form-border-selected': properties?.['form-border-selected'],
+    '--forge-form-builder-form-border-width': properties?.['form-border-width'],
+    '--forge-form-builder-form-disabled-opacity': properties?.['form-disabled-opacity'],
+    '--forge-form-builder-form-drag-opacity': properties?.['form-drag-opacity'],
+    '--forge-form-builder-form-focus-ring': properties?.['form-focus-ring'],
+    '--forge-form-builder-form-font-family-mono': properties?.['form-font-family-mono'],
+    '--forge-form-builder-form-font-size-extra-small': properties?.['form-font-size-extra-small'],
+    '--forge-form-builder-form-font-size-small': properties?.['form-font-size-small'],
+    '--forge-form-builder-form-font-weight-medium': properties?.['form-font-weight-medium'],
+    '--forge-form-builder-form-gap-default': properties?.['form-gap-default'],
+    '--forge-form-builder-form-gap-section': properties?.['form-gap-section'],
+    '--forge-form-builder-form-gap-tight': properties?.['form-gap-tight'],
+    '--forge-form-builder-form-ghost-opacity': properties?.['form-ghost-opacity'],
+    '--forge-form-builder-form-padding-default': properties?.['form-padding-default'],
+    '--forge-form-builder-form-padding-large': properties?.['form-padding-large'],
+    '--forge-form-builder-form-padding-section': properties?.['form-padding-section'],
+    '--forge-form-builder-form-padding-tight': properties?.['form-padding-tight'],
+    '--forge-form-builder-form-radius-default': properties?.['form-radius-default'],
+    '--forge-form-builder-form-radius-small': properties?.['form-radius-small'],
+    '--forge-form-builder-form-surface-default': properties?.['form-surface-default'],
+    '--forge-form-builder-form-surface-muted': properties?.['form-surface-muted'],
+    '--forge-form-builder-form-text-default': properties?.['form-text-default'],
+    '--forge-form-builder-form-text-invalid': properties?.['form-text-invalid'],
+    '--forge-form-builder-form-text-muted': properties?.['form-text-muted'],
+    '--forge-form-builder-form-text-secondary': properties?.['form-text-secondary'],
+    '--forge-form-builder-form-transition-duration': properties?.['form-transition-duration'],
+    '--forge-form-builder-form-transition-easing': properties?.['form-transition-easing'],
+  }) as FormBuilderStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface FormBuilderProperties {
   /** Size token controlling the builder's font scale. Defaults to `'md'`. */
   size?: FormBuilderSize;
@@ -101,6 +208,9 @@ export interface FormBuilderProperties {
   onUpdateTitle?: (title: string) => void;
   /** Fired with the next form description. */
   onUpdateDescription?: (description: string) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<FormBuilderStyleProperties>;
 }
 
 /** Combinator labels for the condition editor's `Match` select. */
@@ -224,6 +334,8 @@ function buildLeaf(field: string, operator: string, raw: string): FieldCondition
  * container), driven by a `dropIndicator` insert-target updated on `dragover`.
  */
 export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): MpElement {
+  const style = createFormBuilderStyle(properties.properties);
+
   const {
     modelValue,
     wizard = false,
@@ -1294,6 +1406,7 @@ export function ForgeFormBuilder(properties: Readonly<FormBuilderProperties>): M
           [styles['forge-form-builder--disabled']]: disabled,
         },
       ]}
+      style={style}
     >
       <ForgeVerticalLayout
         endDraggable={endDraggable}

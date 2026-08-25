@@ -19,6 +19,8 @@
  * styles) and `forge-masonry.stories.tsx` (the demo card).
  */
 
+@use './forge-masonry-properties';
+
 @layer mp.components {
   .forge-masonry {
     width: 100%;
@@ -32,20 +34,21 @@
   /* Keep free-form (default-slot) children from splitting across columns. */
   .forge-masonry > * {
     break-inside: avoid;
-    margin-bottom: var(--mp-masonry-gap);
+    margin-bottom: var(--forge-masonry-gap, var(--mp-masonry-gap));
 
     @container forge-masonry (width >= 48rem) {
-      margin-bottom: calc(var(--mp-masonry-gap) * 1.5);
+      margin-bottom: calc(var(--forge-masonry-gap, var(--mp-masonry-gap)) * 1.5);
     }
   }
 
   .masonry-demo-item {
     break-inside: avoid;
-    margin-bottom: var(--mp-masonry-gap, var(--mp-layout-masonry-gap));
-    padding: var(--mp-layout-masonry-demo-padding);
-    border: var(--mp-layout-masonry-demo-border-width) solid var(--mp-layout-masonry-demo-border);
-    border-radius: var(--mp-layout-masonry-demo-radius);
-    background: var(--mp-layout-masonry-demo-surface);
-    color: var(--mp-layout-masonry-demo-text);
+    margin-bottom: var(--forge-masonry-gap, var(--mp-masonry-gap, var(--mp-layout-masonry-gap)));
+    padding: var(--forge-masonry-layout-masonry-demo-padding, var(--mp-layout-masonry-demo-padding));
+    border: var(--forge-masonry-layout-masonry-demo-border-width, var(--mp-layout-masonry-demo-border-width)) solid
+      var(--forge-masonry-layout-masonry-demo-border, var(--mp-layout-masonry-demo-border));
+    border-radius: var(--forge-masonry-layout-masonry-demo-radius, var(--mp-layout-masonry-demo-radius));
+    background: var(--forge-masonry-layout-masonry-demo-surface, var(--mp-layout-masonry-demo-surface));
+    color: var(--forge-masonry-layout-masonry-demo-text, var(--mp-layout-masonry-demo-text));
   }
 }

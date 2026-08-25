@@ -1,4 +1,11 @@
-import { classNames, h, type MpChild, type MpElement } from '@mission-platform/forge';
+import {
+  classNames,
+  h,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-container.module.scss';
 
@@ -31,6 +38,39 @@ const MAX_WIDTH: Record<ContainerMaxWidth, string> = {
   '2xl': '96rem',
 };
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ContainerStyleProperties {
+  readonly 'layout-demo-border'?: string;
+  readonly 'layout-demo-border-width'?: string;
+  readonly 'layout-demo-padding'?: string;
+  readonly 'layout-demo-radius'?: string;
+  readonly 'layout-demo-surface-raised'?: string;
+  readonly 'layout-demo-surface-sunken'?: string;
+  readonly 'layout-demo-text'?: string;
+}
+
+export type ContainerStyle = CSSStyleProperties & {
+  readonly '--forge-container-layout-demo-border'?: string | undefined;
+  readonly '--forge-container-layout-demo-border-width'?: string | undefined;
+  readonly '--forge-container-layout-demo-padding'?: string | undefined;
+  readonly '--forge-container-layout-demo-radius'?: string | undefined;
+  readonly '--forge-container-layout-demo-surface-raised'?: string | undefined;
+  readonly '--forge-container-layout-demo-surface-sunken'?: string | undefined;
+  readonly '--forge-container-layout-demo-text'?: string | undefined;
+};
+
+function createContainerStyle(properties: Readonly<ContainerStyleProperties> | undefined): ContainerStyle | undefined {
+  return createForgeStyle({
+    '--forge-container-layout-demo-border': properties?.['layout-demo-border'],
+    '--forge-container-layout-demo-border-width': properties?.['layout-demo-border-width'],
+    '--forge-container-layout-demo-padding': properties?.['layout-demo-padding'],
+    '--forge-container-layout-demo-radius': properties?.['layout-demo-radius'],
+    '--forge-container-layout-demo-surface-raised': properties?.['layout-demo-surface-raised'],
+    '--forge-container-layout-demo-surface-sunken': properties?.['layout-demo-surface-sunken'],
+    '--forge-container-layout-demo-text': properties?.['layout-demo-text'],
+  }) as ContainerStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ContainerProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -52,6 +92,9 @@ export interface ContainerProperties {
   tag?: string;
   /** Size token controlling the container's font scale. Defaults to `'md'`. */
   size?: ContainerSize;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ContainerStyleProperties>;
 }
 
 /**
@@ -71,6 +114,8 @@ export interface ContainerProperties {
  * in the CSS Module (which inlines the platform breakpoints as media queries).
  */
 export function ForgeContainer(properties: Readonly<ContainerProperties>): MpElement {
+  const propertyStyle = createContainerStyle(properties.properties);
+
   const {
     variant = 'responsive',
     maxWidth = 'lg',
@@ -109,5 +154,6 @@ export function ForgeContainer(properties: Readonly<ContainerProperties>): MpEle
   const childList =
     children === undefined ? [] : Array.isArray(children) ? children.filter((x) => x !== undefined) : [children];
 
-  return h(tag, { class: className, style }, ...childList);
+  const resolvedStyle = { ...style, ...propertyStyle };
+  return h(tag, { class: className, style: resolvedStyle }, ...childList);
 }

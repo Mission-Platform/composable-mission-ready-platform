@@ -1,4 +1,11 @@
-import { classNames, Dynamic, type MpChild, type MpElement } from '@mission-platform/forge';
+import {
+  classNames,
+  Dynamic,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import spacingStyles from '../../../styles/spacing.module.scss';
 
@@ -22,6 +29,54 @@ const GAP_SPACING: Record<GridGap, string> = {
   '2xl': 'var(--mp-spacing-12)',
 };
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface GridStyleProperties {
+  readonly 'layout-grid-cell-border'?: string;
+  readonly 'layout-grid-cell-border-width'?: string;
+  readonly 'layout-grid-cell-padding-block'?: string;
+  readonly 'layout-grid-cell-padding-inline'?: string;
+  readonly 'layout-grid-cell-padding-wide'?: string;
+  readonly 'layout-grid-cell-radius'?: string;
+  readonly 'layout-grid-cell-surface'?: string;
+  readonly 'layout-grid-cell-text'?: string;
+  readonly 'layout-grid-container-border'?: string;
+  readonly 'layout-grid-container-border-width'?: string;
+  readonly 'layout-grid-container-padding'?: string;
+  readonly 'layout-grid-container-radius'?: string;
+}
+
+export type GridStyle = CSSStyleProperties & {
+  readonly '--forge-grid-layout-grid-cell-border'?: string | undefined;
+  readonly '--forge-grid-layout-grid-cell-border-width'?: string | undefined;
+  readonly '--forge-grid-layout-grid-cell-padding-block'?: string | undefined;
+  readonly '--forge-grid-layout-grid-cell-padding-inline'?: string | undefined;
+  readonly '--forge-grid-layout-grid-cell-padding-wide'?: string | undefined;
+  readonly '--forge-grid-layout-grid-cell-radius'?: string | undefined;
+  readonly '--forge-grid-layout-grid-cell-surface'?: string | undefined;
+  readonly '--forge-grid-layout-grid-cell-text'?: string | undefined;
+  readonly '--forge-grid-layout-grid-container-border'?: string | undefined;
+  readonly '--forge-grid-layout-grid-container-border-width'?: string | undefined;
+  readonly '--forge-grid-layout-grid-container-padding'?: string | undefined;
+  readonly '--forge-grid-layout-grid-container-radius'?: string | undefined;
+};
+
+function createGridStyle(properties: Readonly<GridStyleProperties> | undefined): GridStyle | undefined {
+  return createForgeStyle({
+    '--forge-grid-layout-grid-cell-border': properties?.['layout-grid-cell-border'],
+    '--forge-grid-layout-grid-cell-border-width': properties?.['layout-grid-cell-border-width'],
+    '--forge-grid-layout-grid-cell-padding-block': properties?.['layout-grid-cell-padding-block'],
+    '--forge-grid-layout-grid-cell-padding-inline': properties?.['layout-grid-cell-padding-inline'],
+    '--forge-grid-layout-grid-cell-padding-wide': properties?.['layout-grid-cell-padding-wide'],
+    '--forge-grid-layout-grid-cell-radius': properties?.['layout-grid-cell-radius'],
+    '--forge-grid-layout-grid-cell-surface': properties?.['layout-grid-cell-surface'],
+    '--forge-grid-layout-grid-cell-text': properties?.['layout-grid-cell-text'],
+    '--forge-grid-layout-grid-container-border': properties?.['layout-grid-container-border'],
+    '--forge-grid-layout-grid-container-border-width': properties?.['layout-grid-container-border-width'],
+    '--forge-grid-layout-grid-container-padding': properties?.['layout-grid-container-padding'],
+    '--forge-grid-layout-grid-container-radius': properties?.['layout-grid-container-radius'],
+  }) as GridStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface GridProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -53,6 +108,9 @@ export interface GridProperties {
   padding?: SpacingScale;
   /** Size token controlling the grid's font scale. Defaults to `'md'`. */
   size?: GridSize;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<GridStyleProperties>;
 }
 
 /**
@@ -72,6 +130,8 @@ export interface GridProperties {
  * `forge-grid.stories.tsx`).
  */
 export function ForgeGrid(properties: Readonly<GridProperties>): MpElement {
+  const propertyStyle = createGridStyle(properties.properties);
+
   const {
     rows = 1,
     cols = 1,
@@ -123,7 +183,7 @@ export function ForgeGrid(properties: Readonly<GridProperties>): MpElement {
     <Dynamic
       className={className}
       is={tag}
-      style={style}
+      style={{ ...style, ...propertyStyle }}
     >
       {properties.children}
     </Dynamic>

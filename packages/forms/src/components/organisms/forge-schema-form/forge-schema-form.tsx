@@ -1,5 +1,13 @@
 import { ForgeButton } from '@mission-platform/components';
-import { type MpChild, type MpElement, Slot, useMemo, useState } from '@mission-platform/forge';
+import {
+  Slot,
+  useMemo,
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import {
   createFormValidator,
   evaluateCondition,
@@ -59,6 +67,80 @@ export type {
   SchemaObject,
 } from '@mission-platform/forms-core';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface SchemaFormStyleProperties {
+  readonly 'form-border-default'?: string;
+  readonly 'form-border-focus'?: string;
+  readonly 'form-border-focus-width'?: string;
+  readonly 'form-border-width'?: string;
+  readonly 'form-disabled-opacity'?: string;
+  readonly 'form-gap-default'?: string;
+  readonly 'form-gap-large'?: string;
+  readonly 'form-gap-tight'?: string;
+  readonly 'form-padding-default'?: string;
+  readonly 'form-padding-large'?: string;
+  readonly 'form-primary'?: string;
+  readonly 'form-primary-hover-opacity'?: string;
+  readonly 'form-radius-default'?: string;
+  readonly 'form-surface-muted'?: string;
+  readonly 'form-text-default'?: string;
+  readonly 'form-text-invalid'?: string;
+  readonly 'form-text-inverse'?: string;
+  readonly 'form-text-muted'?: string;
+  readonly 'form-transition-duration'?: string;
+  readonly 'form-transition-easing'?: string;
+}
+
+export type SchemaFormStyle = CSSStyleProperties & {
+  readonly '--forge-schema-form-form-border-default'?: string | undefined;
+  readonly '--forge-schema-form-form-border-focus'?: string | undefined;
+  readonly '--forge-schema-form-form-border-focus-width'?: string | undefined;
+  readonly '--forge-schema-form-form-border-width'?: string | undefined;
+  readonly '--forge-schema-form-form-disabled-opacity'?: string | undefined;
+  readonly '--forge-schema-form-form-gap-default'?: string | undefined;
+  readonly '--forge-schema-form-form-gap-large'?: string | undefined;
+  readonly '--forge-schema-form-form-gap-tight'?: string | undefined;
+  readonly '--forge-schema-form-form-padding-default'?: string | undefined;
+  readonly '--forge-schema-form-form-padding-large'?: string | undefined;
+  readonly '--forge-schema-form-form-primary'?: string | undefined;
+  readonly '--forge-schema-form-form-primary-hover-opacity'?: string | undefined;
+  readonly '--forge-schema-form-form-radius-default'?: string | undefined;
+  readonly '--forge-schema-form-form-surface-muted'?: string | undefined;
+  readonly '--forge-schema-form-form-text-default'?: string | undefined;
+  readonly '--forge-schema-form-form-text-invalid'?: string | undefined;
+  readonly '--forge-schema-form-form-text-inverse'?: string | undefined;
+  readonly '--forge-schema-form-form-text-muted'?: string | undefined;
+  readonly '--forge-schema-form-form-transition-duration'?: string | undefined;
+  readonly '--forge-schema-form-form-transition-easing'?: string | undefined;
+};
+
+function createSchemaFormStyle(
+  properties: Readonly<SchemaFormStyleProperties> | undefined,
+): SchemaFormStyle | undefined {
+  return createForgeStyle({
+    '--forge-schema-form-form-border-default': properties?.['form-border-default'],
+    '--forge-schema-form-form-border-focus': properties?.['form-border-focus'],
+    '--forge-schema-form-form-border-focus-width': properties?.['form-border-focus-width'],
+    '--forge-schema-form-form-border-width': properties?.['form-border-width'],
+    '--forge-schema-form-form-disabled-opacity': properties?.['form-disabled-opacity'],
+    '--forge-schema-form-form-gap-default': properties?.['form-gap-default'],
+    '--forge-schema-form-form-gap-large': properties?.['form-gap-large'],
+    '--forge-schema-form-form-gap-tight': properties?.['form-gap-tight'],
+    '--forge-schema-form-form-padding-default': properties?.['form-padding-default'],
+    '--forge-schema-form-form-padding-large': properties?.['form-padding-large'],
+    '--forge-schema-form-form-primary': properties?.['form-primary'],
+    '--forge-schema-form-form-primary-hover-opacity': properties?.['form-primary-hover-opacity'],
+    '--forge-schema-form-form-radius-default': properties?.['form-radius-default'],
+    '--forge-schema-form-form-surface-muted': properties?.['form-surface-muted'],
+    '--forge-schema-form-form-text-default': properties?.['form-text-default'],
+    '--forge-schema-form-form-text-invalid': properties?.['form-text-invalid'],
+    '--forge-schema-form-form-text-inverse': properties?.['form-text-inverse'],
+    '--forge-schema-form-form-text-muted': properties?.['form-text-muted'],
+    '--forge-schema-form-form-transition-duration': properties?.['form-transition-duration'],
+    '--forge-schema-form-form-transition-easing': properties?.['form-transition-easing'],
+  }) as SchemaFormStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface SchemaFormProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -88,6 +170,9 @@ export interface SchemaFormProperties {
   onUpdateModelValue?: (values: FormValues) => void;
   /** Fired with the values bag and validity on submit. */
   onSubmit?: (values: FormValues, isValid: boolean) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<SchemaFormStyleProperties>;
 }
 
 export interface SchemaFormFieldRendererContext {
@@ -166,6 +251,8 @@ function withPath(values: FormValues, path: string, value: unknown): FormValues 
  * an overridable `actions` slot.
  */
 export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpElement {
+  const style = createSchemaFormStyle(properties.properties);
+
   const { schema, modelValue = {}, disabled = false, validationMode = 'per-step', size = 'md' } = properties;
 
   // Derive the render-ready steps, validators, step conditions, and merged
@@ -743,6 +830,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
           },
         ]}
         onSubmit={handleSubmit}
+        style={style}
       >
         <ForgeFormWizard
           linear={validationMode === 'per-step'}
@@ -767,6 +855,7 @@ export function ForgeSchemaForm(properties: Readonly<SchemaFormProperties>): MpE
       ]}
       onReset={handleReset}
       onSubmit={handleSubmit}
+      style={style}
     >
       <div className={styles['forge-schema-form__fields']}>
         {currentFields.map((field) => renderField(field, field.key))}

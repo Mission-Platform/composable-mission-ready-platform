@@ -1,0 +1,123 @@
+/**
+ * Registered inherited custom properties for forge-empty-state overrides.
+ */
+
+@property --forge-empty-state-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-empty-state-spacing-6 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-6);
+}
+
+@property --forge-empty-state-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-empty-state-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-empty-state-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-empty-state-spacing-8 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-8);
+}
+
+@property --forge-empty-state-font-size-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-lg);
+}
+
+@property --forge-empty-state-color-info-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-info-subtle);
+}
+
+@property --forge-empty-state-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-empty-state-font-size-4xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-4xl);
+}
+
+@property --forge-empty-state-line-height-tight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-line-height-tight);
+}
+
+@property --forge-empty-state-size-pad-block-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-block-sm);
+}
+
+@property --forge-empty-state-size-pad-inline-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-inline-md);
+}
+
+@property --forge-empty-state-color-text-on-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-primary);
+}
+
+@property --forge-empty-state-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}
+
+@property --forge-empty-state-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-empty-state-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-empty-state-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-empty-state-color-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-focus);
+}
+
+@property --forge-empty-state-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}

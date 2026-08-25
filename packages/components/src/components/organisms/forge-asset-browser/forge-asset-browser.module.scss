@@ -1,7 +1,9 @@
+@use './forge-asset-browser-properties';
+
 @layer mp.components {
   .forge-asset-browser {
     width: 100%;
-    color: var(--mp-color-text-primary);
+    color: var(--forge-asset-browser-color-text-primary, var(--mp-color-text-primary));
   }
 
   .forge-asset-browser--list .forge-asset-browser__grid {
@@ -9,12 +11,12 @@
   }
 
   .forge-asset-browser__breadcrumb {
-    margin-bottom: var(--mp-spacing-4);
+    margin-bottom: var(--forge-asset-browser-spacing-4, var(--mp-spacing-4));
   }
 
   .forge-asset-browser__upload {
     display: inline-block;
-    margin-bottom: var(--mp-spacing-4);
+    margin-bottom: var(--forge-asset-browser-spacing-4, var(--mp-spacing-4));
     font-weight: 600;
   }
 
@@ -25,9 +27,9 @@
 
   .forge-asset-browser__search-label {
     display: grid;
-    gap: var(--mp-spacing-1);
-    margin-bottom: var(--mp-spacing-4);
-    font-weight: var(--mp-font-weight-semibold);
+    gap: var(--forge-asset-browser-spacing-1, var(--mp-spacing-1));
+    margin-bottom: var(--forge-asset-browser-spacing-4, var(--mp-spacing-4));
+    font-weight: var(--forge-asset-browser-font-weight-semibold, var(--mp-font-weight-semibold));
   }
 
   .forge-asset-browser__search-label > span {
@@ -40,18 +42,20 @@
 
   .forge-asset-browser__search {
     width: 100%;
-    padding: var(--mp-size-pad-block-md) var(--mp-size-pad-inline-md);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    padding: var(--forge-asset-browser-size-pad-block-md, var(--mp-size-pad-block-md))
+      var(--forge-asset-browser-size-pad-inline-md, var(--mp-size-pad-inline-md));
+    border: var(--forge-asset-browser-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-asset-browser-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-asset-browser-radius-md, var(--mp-radius-md));
     box-sizing: border-box;
     color: inherit;
-    background: var(--mp-color-bg-surface);
+    background: var(--forge-asset-browser-color-bg-surface, var(--mp-color-bg-surface));
   }
 
   .forge-asset-browser__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-asset-browser-spacing-3, var(--mp-spacing-3));
     margin: 0;
     padding: 0;
     list-style: none;
@@ -60,50 +64,51 @@
   .forge-asset-browser__asset {
     display: grid;
     width: 100%;
-    gap: var(--mp-spacing-1);
-    padding: var(--mp-spacing-2);
-    border: var(--mp-border-width-thick) solid transparent;
-    border-radius: var(--mp-radius-md);
+    gap: var(--forge-asset-browser-spacing-1, var(--mp-spacing-1));
+    padding: var(--forge-asset-browser-spacing-2, var(--mp-spacing-2));
+    border: var(--forge-asset-browser-border-width-thick, var(--mp-border-width-thick)) solid transparent;
+    border-radius: var(--forge-asset-browser-radius-md, var(--mp-radius-md));
     color: inherit;
-    background: var(--mp-color-bg-muted);
+    background: var(--forge-asset-browser-color-bg-muted, var(--mp-color-bg-muted));
     text-align: start;
     cursor: pointer;
   }
 
   .forge-asset-browser__asset--selected {
-    border-color: var(--mp-color-primary-default);
-    background: var(--mp-color-primary-subtle);
+    border-color: var(--forge-asset-browser-color-primary-default, var(--mp-color-primary-default));
+    background: var(--forge-asset-browser-color-primary-subtle, var(--mp-color-primary-subtle));
   }
 
   .forge-asset-browser__image {
     display: block;
     width: 100%;
     aspect-ratio: 4 / 3;
-    border-radius: var(--mp-radius-sm);
+    border-radius: var(--forge-asset-browser-radius-sm, var(--mp-radius-sm));
     object-fit: cover;
   }
 
   .forge-asset-browser__name {
     overflow: hidden;
-    font-weight: var(--mp-font-weight-semibold);
+    font-weight: var(--forge-asset-browser-font-weight-semibold, var(--mp-font-weight-semibold));
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .forge-asset-browser__metadata {
-    color: var(--mp-color-text-secondary);
-    font-size: var(--mp-font-size-sm);
+    color: var(--forge-asset-browser-color-text-secondary, var(--mp-color-text-secondary));
+    font-size: var(--forge-asset-browser-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-asset-browser__empty {
-    padding: var(--mp-spacing-8);
-    color: var(--mp-color-text-secondary);
+    padding: var(--forge-asset-browser-spacing-8, var(--mp-spacing-8));
+    color: var(--forge-asset-browser-color-text-secondary, var(--mp-color-text-secondary));
     text-align: center;
   }
 
   .forge-asset-browser__asset:focus-visible,
   .forge-asset-browser__search:focus-visible {
-    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
-    outline-offset: var(--mp-spacing-1);
+    outline: var(--forge-asset-browser-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-asset-browser-color-border-focus, var(--mp-color-border-focus));
+    outline-offset: var(--forge-asset-browser-spacing-1, var(--mp-spacing-1));
   }
 }

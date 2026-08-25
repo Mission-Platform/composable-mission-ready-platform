@@ -7,30 +7,53 @@
  * `@mission-platform/components` package).
  */
 
+@use './forge-icon-button-properties';
+
 @layer mp.components {
   .forge-icon-button {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: var(--mp-button-icon-button-border-width) solid transparent;
-    border-radius: var(--mp-button-icon-button-radius);
-    background: var(--mp-button-ghost-background-default);
-    color: var(--mp-button-icon-button-color);
+    border: var(--forge-icon-button-button-icon-button-border-width, var(--mp-button-icon-button-border-width)) solid
+      transparent;
+    border-radius: var(--forge-icon-button-button-icon-button-radius, var(--mp-button-icon-button-radius));
+    background: var(--forge-icon-button-button-ghost-background-default, var(--mp-button-ghost-background-default));
+    color: var(--forge-icon-button-button-icon-button-color, var(--mp-button-icon-button-color));
     line-height: 1;
     cursor: pointer;
     flex-shrink: 0;
     transition:
-      background-color var(--mp-button-icon-button-transition-duration)
-        var(--mp-button-icon-button-transition-easing),
-      border-color var(--mp-button-icon-button-transition-duration)
-        var(--mp-button-icon-button-transition-easing),
-      color var(--mp-button-icon-button-transition-duration)
-        var(--mp-button-icon-button-transition-easing),
-      box-shadow var(--mp-button-icon-button-transition-duration)
-        var(--mp-button-icon-button-transition-easing),
-      opacity var(--mp-button-icon-button-transition-duration)
-        var(--mp-button-icon-button-transition-easing);
+      background-color
+        var(
+          --forge-icon-button-button-icon-button-transition-duration,
+          var(--mp-button-icon-button-transition-duration)
+        )
+        var(--forge-icon-button-button-icon-button-transition-easing, var(--mp-button-icon-button-transition-easing)),
+      border-color
+        var(
+          --forge-icon-button-button-icon-button-transition-duration,
+          var(--mp-button-icon-button-transition-duration)
+        )
+        var(--forge-icon-button-button-icon-button-transition-easing, var(--mp-button-icon-button-transition-easing)),
+      color
+        var(
+          --forge-icon-button-button-icon-button-transition-duration,
+          var(--mp-button-icon-button-transition-duration)
+        )
+        var(--forge-icon-button-button-icon-button-transition-easing, var(--mp-button-icon-button-transition-easing)),
+      box-shadow
+        var(
+          --forge-icon-button-button-icon-button-transition-duration,
+          var(--mp-button-icon-button-transition-duration)
+        )
+        var(--forge-icon-button-button-icon-button-transition-easing, var(--mp-button-icon-button-transition-easing)),
+      opacity
+        var(
+          --forge-icon-button-button-icon-button-transition-duration,
+          var(--mp-button-icon-button-transition-duration)
+        )
+        var(--forge-icon-button-button-icon-button-transition-easing, var(--mp-button-icon-button-transition-easing));
 
     svg {
       display: block;
@@ -51,19 +74,28 @@
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-button-icon-button-focus-ring);
+      box-shadow: var(--forge-icon-button-button-icon-button-focus-ring, var(--mp-button-icon-button-focus-ring));
     }
 
     &:disabled {
       cursor: not-allowed;
-      opacity: var(--mp-button-icon-button-opacity-disabled);
+      opacity: var(
+        --forge-icon-button-button-icon-button-opacity-disabled,
+        var(--mp-button-icon-button-opacity-disabled)
+      );
     }
 
     /* Sizes — square padding, canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
-        padding: var(--mp-button-icon-button-size-#{$size}-padding);
-        font-size: var(--mp-button-icon-button-size-#{$size}-font-size);
+        padding: var(
+          --forge-icon-button-button-icon-button-size-#{$size}-padding,
+          var(--mp-button-icon-button-size-#{$size}-padding)
+        );
+        font-size: var(
+          --forge-icon-button-button-icon-button-size-#{$size}-font-size,
+          var(--mp-button-icon-button-size-#{$size}-font-size)
+        );
       }
     }
 
@@ -73,12 +105,18 @@
     @mixin transparent($name) {
       &--#{$name} {
         &:hover:not(:disabled) {
-          background-color: var(--mp-button-#{$name}-background-hover);
-          color: var(--mp-button-#{$name}-text-hover);
+          background-color: var(
+            --forge-icon-button-button-#{$name}-background-hover,
+            var(--mp-button-#{$name}-background-hover)
+          );
+          color: var(--forge-icon-button-button-#{$name}-text-hover, var(--mp-button-#{$name}-text-hover));
         }
 
         &:active:not(:disabled) {
-          background-color: var(--mp-button-#{$name}-background-active);
+          background-color: var(
+            --forge-icon-button-button-#{$name}-background-active,
+            var(--mp-button-#{$name}-background-active)
+          );
         }
       }
     }
@@ -92,17 +130,23 @@
      */
     @mixin solid($name, $family) {
       &--#{$name} {
-        background-color: var(--mp-button-#{$name}-background-default);
-        color: var(--mp-button-#{$name}-text-default);
+        background-color: var(
+          --forge-icon-button-button-#{$name}-background-default,
+          var(--mp-button-#{$name}-background-default)
+        );
+        color: var(--forge-icon-button-button-#{$name}-text-default, var(--mp-button-#{$name}-text-default));
 
         &:hover:not(:disabled) {
-          background-color: var(--mp-button-#{$name}-background-hover);
+          background-color: var(
+            --forge-icon-button-button-#{$name}-background-hover,
+            var(--mp-button-#{$name}-background-hover)
+          );
         }
 
         &:active:not(:disabled) {
           background-color: var(
-            --mp-button-#{$name}-background-active,
-            var(--mp-button-#{$name}-background-hover)
+            --forge-icon-button-button-#{$name}-background-active,
+            var(--mp-button-#{$name}-background-active, var(--mp-button-#{$name}-background-hover))
           );
         }
       }
@@ -119,23 +163,32 @@
     &--error,
     &--critical {
       &:focus-visible {
-        box-shadow: var(--mp-button-error-focus-ring);
+        box-shadow: var(--forge-icon-button-button-error-focus-ring, var(--mp-button-error-focus-ring));
       }
     }
 
     /* Secondary — outlined (medium emphasis). */
     &--secondary {
-      border-color: var(--mp-button-secondary-border-default);
-      background-color: var(--mp-button-secondary-background-default);
-      color: var(--mp-button-secondary-text-default);
+      border-color: var(--forge-icon-button-button-secondary-border-default, var(--mp-button-secondary-border-default));
+      background-color: var(
+        --forge-icon-button-button-secondary-background-default,
+        var(--mp-button-secondary-background-default)
+      );
+      color: var(--forge-icon-button-button-secondary-text-default, var(--mp-button-secondary-text-default));
 
       &:hover:not(:disabled) {
-        background-color: var(--mp-button-secondary-background-hover);
-        border-color: var(--mp-button-secondary-border-hover);
+        background-color: var(
+          --forge-icon-button-button-secondary-background-hover,
+          var(--mp-button-secondary-background-hover)
+        );
+        border-color: var(--forge-icon-button-button-secondary-border-hover, var(--mp-button-secondary-border-hover));
       }
 
       &:active:not(:disabled) {
-        background-color: var(--mp-button-secondary-background-active);
+        background-color: var(
+          --forge-icon-button-button-secondary-background-active,
+          var(--mp-button-secondary-background-active)
+        );
       }
     }
   }

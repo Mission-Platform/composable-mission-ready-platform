@@ -1,4 +1,13 @@
-import { type ClassValue, hasSlot, type MpChild, type MpElement, Slot, useId } from '@mission-platform/forge';
+import {
+  hasSlot,
+  Slot,
+  useId,
+  createForgeStyle,
+  type ClassValue,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-input.module.scss';
@@ -10,6 +19,144 @@ export type InputType = 'text' | 'email' | 'password' | 'number' | 'search' | 'u
 /** Native `autocapitalize` hint for on-screen keyboards. */
 export type InputAutocapitalize = 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface InputStyleProperties {
+  readonly 'border-default'?: string;
+  readonly 'border-focus-visible'?: string;
+  readonly 'border-invalid'?: string;
+  readonly 'border-width'?: string;
+  readonly 'extension-gap'?: string;
+  readonly 'field-gap'?: string;
+  readonly 'field-required'?: string;
+  readonly 'focus-ring'?: string;
+  readonly 'focus-ring-invalid'?: string;
+  readonly 'font-family'?: string;
+  readonly 'line-height'?: string;
+  readonly 'opacity-disabled'?: string;
+  readonly radius?: string;
+  readonly 'size-2xl-font-size'?: string;
+  readonly 'size-2xl-padding-block'?: string;
+  readonly 'size-2xl-padding-inline'?: string;
+  readonly 'size-2xs-font-size'?: string;
+  readonly 'size-2xs-padding-block'?: string;
+  readonly 'size-2xs-padding-inline'?: string;
+  readonly 'size-lg-font-size'?: string;
+  readonly 'size-lg-padding-block'?: string;
+  readonly 'size-lg-padding-inline'?: string;
+  readonly 'size-md-font-size'?: string;
+  readonly 'size-md-padding-block'?: string;
+  readonly 'size-md-padding-inline'?: string;
+  readonly 'size-sm-font-size'?: string;
+  readonly 'size-sm-padding-block'?: string;
+  readonly 'size-sm-padding-inline'?: string;
+  readonly 'size-xl-font-size'?: string;
+  readonly 'size-xl-padding-block'?: string;
+  readonly 'size-xl-padding-inline'?: string;
+  readonly 'size-xs-font-size'?: string;
+  readonly 'size-xs-padding-block'?: string;
+  readonly 'size-xs-padding-inline'?: string;
+  readonly 'surface-default'?: string;
+  readonly 'surface-disabled'?: string;
+  readonly 'text-default'?: string;
+  readonly 'text-invalid'?: string;
+  readonly 'text-placeholder'?: string;
+  readonly 'text-secondary'?: string;
+  readonly 'transition-duration'?: string;
+  readonly 'transition-easing'?: string;
+}
+
+export type InputStyle = CSSStyleProperties & {
+  readonly '--forge-input-border-default'?: string | undefined;
+  readonly '--forge-input-border-focus-visible'?: string | undefined;
+  readonly '--forge-input-border-invalid'?: string | undefined;
+  readonly '--forge-input-border-width'?: string | undefined;
+  readonly '--forge-input-extension-gap'?: string | undefined;
+  readonly '--forge-input-field-gap'?: string | undefined;
+  readonly '--forge-input-field-required'?: string | undefined;
+  readonly '--forge-input-focus-ring'?: string | undefined;
+  readonly '--forge-input-focus-ring-invalid'?: string | undefined;
+  readonly '--forge-input-font-family'?: string | undefined;
+  readonly '--forge-input-line-height'?: string | undefined;
+  readonly '--forge-input-opacity-disabled'?: string | undefined;
+  readonly '--forge-input-radius'?: string | undefined;
+  readonly '--forge-input-size-2xl-font-size'?: string | undefined;
+  readonly '--forge-input-size-2xl-padding-block'?: string | undefined;
+  readonly '--forge-input-size-2xl-padding-inline'?: string | undefined;
+  readonly '--forge-input-size-2xs-font-size'?: string | undefined;
+  readonly '--forge-input-size-2xs-padding-block'?: string | undefined;
+  readonly '--forge-input-size-2xs-padding-inline'?: string | undefined;
+  readonly '--forge-input-size-lg-font-size'?: string | undefined;
+  readonly '--forge-input-size-lg-padding-block'?: string | undefined;
+  readonly '--forge-input-size-lg-padding-inline'?: string | undefined;
+  readonly '--forge-input-size-md-font-size'?: string | undefined;
+  readonly '--forge-input-size-md-padding-block'?: string | undefined;
+  readonly '--forge-input-size-md-padding-inline'?: string | undefined;
+  readonly '--forge-input-size-sm-font-size'?: string | undefined;
+  readonly '--forge-input-size-sm-padding-block'?: string | undefined;
+  readonly '--forge-input-size-sm-padding-inline'?: string | undefined;
+  readonly '--forge-input-size-xl-font-size'?: string | undefined;
+  readonly '--forge-input-size-xl-padding-block'?: string | undefined;
+  readonly '--forge-input-size-xl-padding-inline'?: string | undefined;
+  readonly '--forge-input-size-xs-font-size'?: string | undefined;
+  readonly '--forge-input-size-xs-padding-block'?: string | undefined;
+  readonly '--forge-input-size-xs-padding-inline'?: string | undefined;
+  readonly '--forge-input-surface-default'?: string | undefined;
+  readonly '--forge-input-surface-disabled'?: string | undefined;
+  readonly '--forge-input-text-default'?: string | undefined;
+  readonly '--forge-input-text-invalid'?: string | undefined;
+  readonly '--forge-input-text-placeholder'?: string | undefined;
+  readonly '--forge-input-text-secondary'?: string | undefined;
+  readonly '--forge-input-transition-duration'?: string | undefined;
+  readonly '--forge-input-transition-easing'?: string | undefined;
+};
+
+function createInputStyle(properties: Readonly<InputStyleProperties> | undefined): InputStyle | undefined {
+  return createForgeStyle({
+    '--forge-input-border-default': properties?.['border-default'],
+    '--forge-input-border-focus-visible': properties?.['border-focus-visible'],
+    '--forge-input-border-invalid': properties?.['border-invalid'],
+    '--forge-input-border-width': properties?.['border-width'],
+    '--forge-input-extension-gap': properties?.['extension-gap'],
+    '--forge-input-field-gap': properties?.['field-gap'],
+    '--forge-input-field-required': properties?.['field-required'],
+    '--forge-input-focus-ring': properties?.['focus-ring'],
+    '--forge-input-focus-ring-invalid': properties?.['focus-ring-invalid'],
+    '--forge-input-font-family': properties?.['font-family'],
+    '--forge-input-line-height': properties?.['line-height'],
+    '--forge-input-opacity-disabled': properties?.['opacity-disabled'],
+    '--forge-input-radius': properties?.['radius'],
+    '--forge-input-size-2xl-font-size': properties?.['size-2xl-font-size'],
+    '--forge-input-size-2xl-padding-block': properties?.['size-2xl-padding-block'],
+    '--forge-input-size-2xl-padding-inline': properties?.['size-2xl-padding-inline'],
+    '--forge-input-size-2xs-font-size': properties?.['size-2xs-font-size'],
+    '--forge-input-size-2xs-padding-block': properties?.['size-2xs-padding-block'],
+    '--forge-input-size-2xs-padding-inline': properties?.['size-2xs-padding-inline'],
+    '--forge-input-size-lg-font-size': properties?.['size-lg-font-size'],
+    '--forge-input-size-lg-padding-block': properties?.['size-lg-padding-block'],
+    '--forge-input-size-lg-padding-inline': properties?.['size-lg-padding-inline'],
+    '--forge-input-size-md-font-size': properties?.['size-md-font-size'],
+    '--forge-input-size-md-padding-block': properties?.['size-md-padding-block'],
+    '--forge-input-size-md-padding-inline': properties?.['size-md-padding-inline'],
+    '--forge-input-size-sm-font-size': properties?.['size-sm-font-size'],
+    '--forge-input-size-sm-padding-block': properties?.['size-sm-padding-block'],
+    '--forge-input-size-sm-padding-inline': properties?.['size-sm-padding-inline'],
+    '--forge-input-size-xl-font-size': properties?.['size-xl-font-size'],
+    '--forge-input-size-xl-padding-block': properties?.['size-xl-padding-block'],
+    '--forge-input-size-xl-padding-inline': properties?.['size-xl-padding-inline'],
+    '--forge-input-size-xs-font-size': properties?.['size-xs-font-size'],
+    '--forge-input-size-xs-padding-block': properties?.['size-xs-padding-block'],
+    '--forge-input-size-xs-padding-inline': properties?.['size-xs-padding-inline'],
+    '--forge-input-surface-default': properties?.['surface-default'],
+    '--forge-input-surface-disabled': properties?.['surface-disabled'],
+    '--forge-input-text-default': properties?.['text-default'],
+    '--forge-input-text-invalid': properties?.['text-invalid'],
+    '--forge-input-text-placeholder': properties?.['text-placeholder'],
+    '--forge-input-text-secondary': properties?.['text-secondary'],
+    '--forge-input-transition-duration': properties?.['transition-duration'],
+    '--forge-input-transition-easing': properties?.['transition-easing'],
+  }) as InputStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface InputProperties {
   /**
    * Extra class(es) merged onto the control's root element. Applied last so
@@ -73,6 +220,9 @@ export interface InputProperties {
   onBlur?: (event: FocusEvent) => void;
   /** Fired with the native `focus` event. */
   onFocus?: (event: FocusEvent) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<InputStyleProperties>;
 }
 
 /**
@@ -92,6 +242,8 @@ export interface InputProperties {
  * `onUpdateModelValue`/`onChange`/`onBlur`/`onFocus` callback props.
  */
 export function ForgeInput(properties: Readonly<InputProperties>): MpElement {
+  const style = createInputStyle(properties.properties);
+
   const {
     modelValue = '',
     type = 'text',
@@ -133,6 +285,7 @@ export function ForgeInput(properties: Readonly<InputProperties>): MpElement {
         },
         properties.className,
       ]}
+      style={style}
     >
       {label ? (
         <label

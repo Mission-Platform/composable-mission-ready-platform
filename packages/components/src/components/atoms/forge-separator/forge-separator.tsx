@@ -1,4 +1,4 @@
-import { type MpChild, type MpElement } from '@mission-platform/forge';
+import { createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import spacingStyles from '../../../styles/spacing.module.scss';
 
@@ -15,6 +15,57 @@ export type SeparatorSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Named `padding`/`margin` scale; each step maps to a named `--mp-spacing-*` design token. */
 export type SpacingScale = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface SeparatorStyleProperties {
+  readonly spacing?: string;
+  readonly 'surface-separator-label'?: string;
+  readonly 'surface-separator-label-font-family'?: string;
+  readonly 'surface-separator-label-font-size'?: string;
+  readonly 'surface-separator-label-gap'?: string;
+  readonly 'surface-separator-label-line-height'?: string;
+  readonly 'surface-separator-line'?: string;
+  readonly 'surface-separator-line-width'?: string;
+  readonly 'surface-separator-margin-lg'?: string;
+  readonly 'surface-separator-margin-md'?: string;
+  readonly 'surface-separator-margin-none'?: string;
+  readonly 'surface-separator-margin-sm'?: string;
+  readonly 'surface-separator-margin-xl'?: string;
+}
+
+export type SeparatorStyle = CSSStyleProperties & {
+  readonly '--forge-separator-spacing'?: string | undefined;
+  readonly '--forge-separator-surface-separator-label'?: string | undefined;
+  readonly '--forge-separator-surface-separator-label-font-family'?: string | undefined;
+  readonly '--forge-separator-surface-separator-label-font-size'?: string | undefined;
+  readonly '--forge-separator-surface-separator-label-gap'?: string | undefined;
+  readonly '--forge-separator-surface-separator-label-line-height'?: string | undefined;
+  readonly '--forge-separator-surface-separator-line'?: string | undefined;
+  readonly '--forge-separator-surface-separator-line-width'?: string | undefined;
+  readonly '--forge-separator-surface-separator-margin-lg'?: string | undefined;
+  readonly '--forge-separator-surface-separator-margin-md'?: string | undefined;
+  readonly '--forge-separator-surface-separator-margin-none'?: string | undefined;
+  readonly '--forge-separator-surface-separator-margin-sm'?: string | undefined;
+  readonly '--forge-separator-surface-separator-margin-xl'?: string | undefined;
+};
+
+function createSeparatorStyle(properties: Readonly<SeparatorStyleProperties> | undefined): SeparatorStyle | undefined {
+  return createForgeStyle({
+    '--forge-separator-spacing': properties?.['spacing'],
+    '--forge-separator-surface-separator-label': properties?.['surface-separator-label'],
+    '--forge-separator-surface-separator-label-font-family': properties?.['surface-separator-label-font-family'],
+    '--forge-separator-surface-separator-label-font-size': properties?.['surface-separator-label-font-size'],
+    '--forge-separator-surface-separator-label-gap': properties?.['surface-separator-label-gap'],
+    '--forge-separator-surface-separator-label-line-height': properties?.['surface-separator-label-line-height'],
+    '--forge-separator-surface-separator-line': properties?.['surface-separator-line'],
+    '--forge-separator-surface-separator-line-width': properties?.['surface-separator-line-width'],
+    '--forge-separator-surface-separator-margin-lg': properties?.['surface-separator-margin-lg'],
+    '--forge-separator-surface-separator-margin-md': properties?.['surface-separator-margin-md'],
+    '--forge-separator-surface-separator-margin-none': properties?.['surface-separator-margin-none'],
+    '--forge-separator-surface-separator-margin-sm': properties?.['surface-separator-margin-sm'],
+    '--forge-separator-surface-separator-margin-xl': properties?.['surface-separator-margin-xl'],
+  }) as SeparatorStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface SeparatorProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -32,6 +83,9 @@ export interface SeparatorProperties {
   margin?: SpacingScale;
   /** Inner padding (named `2xs … 2xl` scale), mapped to a `--mp-spacing-*` token. */
   padding?: SpacingScale;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<SeparatorStyleProperties>;
 }
 
 /**
@@ -52,6 +106,8 @@ export interface SeparatorProperties {
  * {@link classNames} helper.
  */
 export function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpElement {
+  const style = createSeparatorStyle(properties.properties);
+
   const {
     orientation = 'horizontal',
     variant = 'solid',
@@ -83,6 +139,7 @@ export function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpEle
       ]}
       role={role}
       aria-orientation={decorative ? undefined : 'horizontal'}
+      style={style}
     >
       <span className={styles['forge-separator__line']} />
       <span className={styles['forge-separator__label']}>{properties.children}</span>
@@ -101,6 +158,7 @@ export function ForgeSeparator(properties: Readonly<SeparatorProperties>): MpEle
       ]}
       role={role}
       aria-orientation={decorative ? undefined : orientation}
+      style={style}
     />
   );
 }

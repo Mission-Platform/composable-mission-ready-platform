@@ -1,4 +1,13 @@
-import { type MpChild, type MpElement, Slot, useEffect, useRef, useState } from '@mission-platform/forge';
+import {
+  Slot,
+  useEffect,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconChevron, type IconDirection } from '@mission-platform/icons';
 
 import styles from './forge-menubar.module.scss';
@@ -14,6 +23,138 @@ function parentOfPath(path: string): string {
   return dot === -1 ? '' : path.slice(0, dot);
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface MenubarStyleProperties {
+  readonly 'navigation-menubar-border'?: string;
+  readonly 'navigation-menubar-border-width'?: string;
+  readonly 'navigation-menubar-chevron-font-size'?: string;
+  readonly 'navigation-menubar-chevron-text'?: string;
+  readonly 'navigation-menubar-gap'?: string;
+  readonly 'navigation-menubar-item-opacity-disabled'?: string;
+  readonly 'navigation-menubar-link-focus-border-width'?: string;
+  readonly 'navigation-menubar-link-focus-offset'?: string;
+  readonly 'navigation-menubar-link-focus-ring'?: string;
+  readonly 'navigation-menubar-link-font-family'?: string;
+  readonly 'navigation-menubar-link-gap'?: string;
+  readonly 'navigation-menubar-link-padding-block'?: string;
+  readonly 'navigation-menubar-link-padding-inline'?: string;
+  readonly 'navigation-menubar-link-radius'?: string;
+  readonly 'navigation-menubar-link-surface-hover'?: string;
+  readonly 'navigation-menubar-link-text'?: string;
+  readonly 'navigation-menubar-link-text-disabled'?: string;
+  readonly 'navigation-menubar-link-text-hover'?: string;
+  readonly 'navigation-menubar-link-transition-duration'?: string;
+  readonly 'navigation-menubar-link-transition-easing'?: string;
+  readonly 'navigation-menubar-padding'?: string;
+  readonly 'navigation-menubar-radius'?: string;
+  readonly 'navigation-menubar-submenu-border'?: string;
+  readonly 'navigation-menubar-submenu-border-width'?: string;
+  readonly 'navigation-menubar-submenu-gap'?: string;
+  readonly 'navigation-menubar-submenu-margin'?: string;
+  readonly 'navigation-menubar-submenu-min-width'?: string;
+  readonly 'navigation-menubar-submenu-nested-margin'?: string;
+  readonly 'navigation-menubar-submenu-padding'?: string;
+  readonly 'navigation-menubar-submenu-radius'?: string;
+  readonly 'navigation-menubar-submenu-shadow'?: string;
+  readonly 'navigation-menubar-submenu-starting-offset'?: string;
+  readonly 'navigation-menubar-submenu-surface'?: string;
+  readonly 'navigation-menubar-submenu-transition-duration'?: string;
+  readonly 'navigation-menubar-submenu-transition-easing'?: string;
+  readonly 'navigation-menubar-submenu-viewport-gutter'?: string;
+  readonly 'navigation-menubar-surface'?: string;
+}
+
+export type MenubarStyle = CSSStyleProperties & {
+  readonly '--forge-menubar-navigation-menubar-border'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-border-width'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-chevron-font-size'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-chevron-text'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-gap'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-item-opacity-disabled'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-focus-border-width'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-focus-offset'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-focus-ring'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-font-family'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-gap'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-padding-block'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-padding-inline'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-radius'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-surface-hover'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-text'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-text-disabled'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-text-hover'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-transition-duration'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-link-transition-easing'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-padding'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-radius'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-border'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-border-width'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-gap'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-margin'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-min-width'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-nested-margin'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-padding'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-radius'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-shadow'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-starting-offset'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-surface'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-transition-duration'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-transition-easing'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-submenu-viewport-gutter'?: string | undefined;
+  readonly '--forge-menubar-navigation-menubar-surface'?: string | undefined;
+};
+
+function createMenubarStyle(properties: Readonly<MenubarStyleProperties> | undefined): MenubarStyle | undefined {
+  return createForgeStyle({
+    '--forge-menubar-navigation-menubar-border': properties?.['navigation-menubar-border'],
+    '--forge-menubar-navigation-menubar-border-width': properties?.['navigation-menubar-border-width'],
+    '--forge-menubar-navigation-menubar-chevron-font-size': properties?.['navigation-menubar-chevron-font-size'],
+    '--forge-menubar-navigation-menubar-chevron-text': properties?.['navigation-menubar-chevron-text'],
+    '--forge-menubar-navigation-menubar-gap': properties?.['navigation-menubar-gap'],
+    '--forge-menubar-navigation-menubar-item-opacity-disabled':
+      properties?.['navigation-menubar-item-opacity-disabled'],
+    '--forge-menubar-navigation-menubar-link-focus-border-width':
+      properties?.['navigation-menubar-link-focus-border-width'],
+    '--forge-menubar-navigation-menubar-link-focus-offset': properties?.['navigation-menubar-link-focus-offset'],
+    '--forge-menubar-navigation-menubar-link-focus-ring': properties?.['navigation-menubar-link-focus-ring'],
+    '--forge-menubar-navigation-menubar-link-font-family': properties?.['navigation-menubar-link-font-family'],
+    '--forge-menubar-navigation-menubar-link-gap': properties?.['navigation-menubar-link-gap'],
+    '--forge-menubar-navigation-menubar-link-padding-block': properties?.['navigation-menubar-link-padding-block'],
+    '--forge-menubar-navigation-menubar-link-padding-inline': properties?.['navigation-menubar-link-padding-inline'],
+    '--forge-menubar-navigation-menubar-link-radius': properties?.['navigation-menubar-link-radius'],
+    '--forge-menubar-navigation-menubar-link-surface-hover': properties?.['navigation-menubar-link-surface-hover'],
+    '--forge-menubar-navigation-menubar-link-text': properties?.['navigation-menubar-link-text'],
+    '--forge-menubar-navigation-menubar-link-text-disabled': properties?.['navigation-menubar-link-text-disabled'],
+    '--forge-menubar-navigation-menubar-link-text-hover': properties?.['navigation-menubar-link-text-hover'],
+    '--forge-menubar-navigation-menubar-link-transition-duration':
+      properties?.['navigation-menubar-link-transition-duration'],
+    '--forge-menubar-navigation-menubar-link-transition-easing':
+      properties?.['navigation-menubar-link-transition-easing'],
+    '--forge-menubar-navigation-menubar-padding': properties?.['navigation-menubar-padding'],
+    '--forge-menubar-navigation-menubar-radius': properties?.['navigation-menubar-radius'],
+    '--forge-menubar-navigation-menubar-submenu-border': properties?.['navigation-menubar-submenu-border'],
+    '--forge-menubar-navigation-menubar-submenu-border-width': properties?.['navigation-menubar-submenu-border-width'],
+    '--forge-menubar-navigation-menubar-submenu-gap': properties?.['navigation-menubar-submenu-gap'],
+    '--forge-menubar-navigation-menubar-submenu-margin': properties?.['navigation-menubar-submenu-margin'],
+    '--forge-menubar-navigation-menubar-submenu-min-width': properties?.['navigation-menubar-submenu-min-width'],
+    '--forge-menubar-navigation-menubar-submenu-nested-margin':
+      properties?.['navigation-menubar-submenu-nested-margin'],
+    '--forge-menubar-navigation-menubar-submenu-padding': properties?.['navigation-menubar-submenu-padding'],
+    '--forge-menubar-navigation-menubar-submenu-radius': properties?.['navigation-menubar-submenu-radius'],
+    '--forge-menubar-navigation-menubar-submenu-shadow': properties?.['navigation-menubar-submenu-shadow'],
+    '--forge-menubar-navigation-menubar-submenu-starting-offset':
+      properties?.['navigation-menubar-submenu-starting-offset'],
+    '--forge-menubar-navigation-menubar-submenu-surface': properties?.['navigation-menubar-submenu-surface'],
+    '--forge-menubar-navigation-menubar-submenu-transition-duration':
+      properties?.['navigation-menubar-submenu-transition-duration'],
+    '--forge-menubar-navigation-menubar-submenu-transition-easing':
+      properties?.['navigation-menubar-submenu-transition-easing'],
+    '--forge-menubar-navigation-menubar-submenu-viewport-gutter':
+      properties?.['navigation-menubar-submenu-viewport-gutter'],
+    '--forge-menubar-navigation-menubar-surface': properties?.['navigation-menubar-surface'],
+  }) as MenubarStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface MenubarProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -25,6 +166,9 @@ export interface MenubarProperties {
   bordered?: boolean;
   /** Top-level menubar entries. When omitted, the default slot is rendered. */
   items?: MenuNode[];
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<MenubarStyleProperties>;
 }
 
 /**
@@ -51,6 +195,8 @@ export interface MenubarProperties {
  * substitution).
  */
 export function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement {
+  const style = createMenubarStyle(properties.properties);
+
   const { label = 'Menu', bordered = false, items, size = 'md' } = properties;
 
   const menubarReference = useRef<HTMLElement | null>(null);
@@ -191,6 +337,7 @@ export function ForgeMenubar(properties: Readonly<MenubarProperties>): MpElement
         },
       ]}
       role={items ? 'menubar' : undefined}
+      style={style}
     >
       {items ? renderItems(items, '', false) : undefined}
       <Slot />

@@ -1,9 +1,11 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
+@use './forge-transfer-list-properties';
+
 @layer mp.components {
   .forge-transfer-list {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: var(--mp-spacing-4);
+    gap: var(--forge-transfer-list-spacing-4, var(--mp-spacing-4));
     width: 100%;
   }
 
@@ -12,75 +14,80 @@
   }
 
   .forge-transfer-list h2 {
-    margin: 0 0 var(--mp-spacing-2);
-    font-size: var(--mp-font-size-md);
+    margin: 0 0 var(--forge-transfer-list-spacing-2, var(--mp-spacing-2));
+    font-size: var(--forge-transfer-list-font-size-md, var(--mp-font-size-md));
   }
 
   .forge-transfer-list ul {
     display: grid;
-    gap: var(--mp-spacing-1);
+    gap: var(--forge-transfer-list-spacing-1, var(--mp-spacing-1));
     min-height: 10rem;
     margin: 0;
-    padding: var(--mp-spacing-2);
+    padding: var(--forge-transfer-list-spacing-2, var(--mp-spacing-2));
     overflow: auto;
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    border: var(--forge-transfer-list-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-transfer-list-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-transfer-list-radius-md, var(--mp-radius-md));
     list-style: none;
   }
 
   .forge-transfer-list li label {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: var(--mp-spacing-1) var(--mp-spacing-2);
+    gap: var(--forge-transfer-list-spacing-1, var(--mp-spacing-1))
+      var(--forge-transfer-list-spacing-2, var(--mp-spacing-2));
     align-items: center;
-    min-height: var(--mp-size-height-lg);
-    padding: var(--mp-spacing-1) var(--mp-spacing-2);
-    border-radius: var(--mp-radius-sm);
+    min-height: var(--forge-transfer-list-size-height-lg, var(--mp-size-height-lg));
+    padding: var(--forge-transfer-list-spacing-1, var(--mp-spacing-1))
+      var(--forge-transfer-list-spacing-2, var(--mp-spacing-2));
+    border-radius: var(--forge-transfer-list-radius-sm, var(--mp-radius-sm));
     cursor: pointer;
   }
 
   .forge-transfer-list li label:hover {
-    background: var(--mp-color-bg-muted);
+    background: var(--forge-transfer-list-color-bg-muted, var(--mp-color-bg-muted));
   }
 
   .forge-transfer-list small {
     grid-column: 2;
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-transfer-list-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-transfer-list__controls {
     display: grid;
     align-content: center;
-    gap: var(--mp-spacing-2);
+    gap: var(--forge-transfer-list-spacing-2, var(--mp-spacing-2));
   }
 
   .forge-transfer-list__controls button {
-    min-width: var(--mp-size-height-lg);
-    min-height: var(--mp-size-height-lg);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-bg-surface);
+    min-width: var(--forge-transfer-list-size-height-lg, var(--mp-size-height-lg));
+    min-height: var(--forge-transfer-list-size-height-lg, var(--mp-size-height-lg));
+    border: var(--forge-transfer-list-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-transfer-list-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-transfer-list-radius-md, var(--mp-radius-md));
+    background: var(--forge-transfer-list-color-bg-surface, var(--mp-color-bg-surface));
     cursor: pointer;
   }
 
   .forge-transfer-list__controls button:disabled {
-    opacity: var(--mp-opacity-disabled);
+    opacity: var(--forge-transfer-list-opacity-disabled, var(--mp-opacity-disabled));
     cursor: not-allowed;
   }
 
   .forge-transfer-list__search {
     display: grid;
-    gap: var(--mp-spacing-1);
-    margin-bottom: var(--mp-spacing-2);
-    color: var(--mp-color-text-tertiary);
-    font-size: var(--mp-font-size-sm);
+    gap: var(--forge-transfer-list-spacing-1, var(--mp-spacing-1));
+    margin-bottom: var(--forge-transfer-list-spacing-2, var(--mp-spacing-2));
+    color: var(--forge-transfer-list-color-text-tertiary, var(--mp-color-text-tertiary));
+    font-size: var(--forge-transfer-list-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-transfer-list__search input {
-    min-height: var(--mp-size-height-md);
-    padding: var(--mp-spacing-2);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    min-height: var(--forge-transfer-list-size-height-md, var(--mp-size-height-md));
+    padding: var(--forge-transfer-list-spacing-2, var(--mp-spacing-2));
+    border: var(--forge-transfer-list-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-transfer-list-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-transfer-list-radius-md, var(--mp-radius-md));
   }
 
   @media (width <= 40rem) {

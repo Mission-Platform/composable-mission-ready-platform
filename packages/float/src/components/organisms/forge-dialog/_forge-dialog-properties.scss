@@ -1,0 +1,96 @@
+/**
+ * Registered inherited custom properties for forge-dialog overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-dialog-overlay-dialog-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dialog-surface-default);
+}
+
+@property --forge-dialog-overlay-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-radius);
+}
+
+@property --forge-dialog-overlay-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-shadow);
+}
+
+@property --forge-dialog-overlay-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-transition-duration);
+}
+
+@property --forge-dialog-overlay-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-transition-easing);
+}
+
+@property --forge-dialog-overlay-surface-scrim {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-surface-scrim);
+}
+
+@property --forge-dialog-overlay-header-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-header-gap);
+}
+
+@property --forge-dialog-overlay-header-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-header-padding-block);
+}
+
+@property --forge-dialog-overlay-header-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-header-padding-inline);
+}
+
+@property --forge-dialog-overlay-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-width);
+}
+
+@property --forge-dialog-overlay-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-default);
+}
+
+@property --forge-dialog-overlay-body-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-body-padding);
+}
+
+@property --forge-dialog-overlay-footer-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-footer-gap);
+}
+
+@property --forge-dialog-overlay-footer-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-footer-padding-block);
+}
+
+@property --forge-dialog-overlay-footer-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-footer-padding-inline);
+}

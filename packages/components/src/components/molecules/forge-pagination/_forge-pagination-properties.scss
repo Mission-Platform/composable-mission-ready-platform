@@ -1,0 +1,177 @@
+/**
+ * Registered inherited custom properties for forge-pagination overrides.
+ */
+
+@property --forge-pagination-navigation-pagination-gap-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-gap-default);
+}
+
+@property --forge-pagination-navigation-pagination-gap-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-gap-wide);
+}
+
+@property --forge-pagination-navigation-pagination-gap-wider {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-gap-wider);
+}
+
+@property --forge-pagination-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-pagination-size, 2.25rem);
+}
+
+@property --forge-pagination-navigation-pagination-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-padding-inline);
+}
+
+@property --forge-pagination-navigation-pagination-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-surface-default);
+}
+
+@property --forge-pagination-navigation-pagination-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-text-default);
+}
+
+@property --forge-pagination-navigation-pagination-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-border-width);
+}
+
+@property --forge-pagination-navigation-pagination-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-border-default);
+}
+
+@property --forge-pagination-navigation-pagination-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-radius);
+}
+
+@property --forge-pagination-navigation-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-font-family);
+}
+
+@property --forge-pagination-font {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-pagination-font, var(--mp-navigation-pagination-font-md));
+}
+
+@property --forge-pagination-navigation-pagination-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-transition-duration);
+}
+
+@property --forge-pagination-navigation-pagination-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-transition-easing);
+}
+
+@property --forge-pagination-navigation-pagination-surface-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-surface-active);
+}
+
+@property --forge-pagination-navigation-pagination-border-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-border-active);
+}
+
+@property --forge-pagination-navigation-pagination-text-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-text-active);
+}
+
+@property --forge-pagination-navigation-pagination-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-focus-ring);
+}
+
+@property --forge-pagination-navigation-pagination-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-opacity-disabled);
+}
+
+@property --forge-pagination-navigation-pagination-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-surface-hover);
+}
+
+@property --forge-pagination-navigation-pagination-border-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-border-hover);
+}
+
+@property --forge-pagination-navigation-pagination-text-ellipsis {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-text-ellipsis);
+}
+
+@property --forge-pagination-navigation-pagination-font-2xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-font-2xs);
+}
+
+@property --forge-pagination-navigation-pagination-font-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-font-xs);
+}
+
+@property --forge-pagination-navigation-pagination-font-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-font-sm);
+}
+
+@property --forge-pagination-navigation-pagination-font-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-font-md);
+}
+
+@property --forge-pagination-navigation-pagination-font-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-font-lg);
+}
+
+@property --forge-pagination-navigation-pagination-font-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-font-xl);
+}
+
+@property --forge-pagination-navigation-pagination-font-2xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-pagination-font-2xl);
+}

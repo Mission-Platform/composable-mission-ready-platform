@@ -1,0 +1,69 @@
+/**
+ * Registered inherited custom properties for forge-stack overrides.
+ */
+
+@property --forge-stack-layout-stack-container-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-container-padding);
+}
+
+@property --forge-stack-layout-stack-container-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-container-border-width);
+}
+
+@property --forge-stack-layout-stack-container-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-container-border);
+}
+
+@property --forge-stack-layout-stack-container-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-container-radius);
+}
+
+@property --forge-stack-layout-stack-item-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-item-padding-block);
+}
+
+@property --forge-stack-layout-stack-item-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-item-padding-inline);
+}
+
+@property --forge-stack-layout-stack-item-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-item-border-width);
+}
+
+@property --forge-stack-layout-stack-item-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-item-border);
+}
+
+@property --forge-stack-layout-stack-item-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-item-radius);
+}
+
+@property --forge-stack-layout-stack-item-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-item-surface);
+}
+
+@property --forge-stack-layout-stack-item-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-stack-item-text);
+}

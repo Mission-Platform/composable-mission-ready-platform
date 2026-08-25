@@ -1,13 +1,15 @@
 import {
   classNames,
   hasSlot,
-  type MpChild,
-  type MpElement,
   Slot,
   Transition,
   useEffect,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeIconClose } from '@mission-platform/icons';
 
@@ -31,6 +33,130 @@ export type DrawerBreakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  */
 export type DrawerDraggable = boolean | DrawerSize | number;
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface DrawerStyleProperties {
+  readonly 'overlay-drawer-backdrop-surface'?: string;
+  readonly 'overlay-drawer-body-padding'?: string;
+  readonly 'overlay-drawer-close-font-size'?: string;
+  readonly 'overlay-drawer-close-line-height'?: string;
+  readonly 'overlay-drawer-close-radius'?: string;
+  readonly 'overlay-drawer-close-size'?: string;
+  readonly 'overlay-drawer-close-surface-default'?: string;
+  readonly 'overlay-drawer-close-surface-hover'?: string;
+  readonly 'overlay-drawer-close-text-default'?: string;
+  readonly 'overlay-drawer-close-text-hover'?: string;
+  readonly 'overlay-drawer-footer-border'?: string;
+  readonly 'overlay-drawer-footer-border-width'?: string;
+  readonly 'overlay-drawer-footer-gap'?: string;
+  readonly 'overlay-drawer-footer-padding-block'?: string;
+  readonly 'overlay-drawer-footer-padding-inline'?: string;
+  readonly 'overlay-drawer-header-border'?: string;
+  readonly 'overlay-drawer-header-border-width'?: string;
+  readonly 'overlay-drawer-header-gap'?: string;
+  readonly 'overlay-drawer-header-padding-block'?: string;
+  readonly 'overlay-drawer-header-padding-inline'?: string;
+  readonly 'overlay-drawer-panel-border'?: string;
+  readonly 'overlay-drawer-panel-border-width'?: string;
+  readonly 'overlay-drawer-panel-shadow'?: string;
+  readonly 'overlay-drawer-panel-surface'?: string;
+  readonly 'overlay-drawer-resize-handle-size'?: string;
+  readonly 'overlay-drawer-resize-handle-surface-active'?: string;
+  readonly 'overlay-drawer-resize-handle-surface-default'?: string;
+  readonly 'overlay-drawer-resize-handle-transition-duration'?: string;
+  readonly 'overlay-drawer-resize-handle-transition-easing'?: string;
+  readonly 'overlay-drawer-title-font-family'?: string;
+  readonly 'overlay-drawer-title-font-size'?: string;
+  readonly 'overlay-drawer-title-font-weight'?: string;
+  readonly 'overlay-drawer-title-line-height'?: string;
+  readonly 'overlay-drawer-title-text'?: string;
+  readonly 'overlay-drawer-transition-duration'?: string;
+  readonly 'overlay-drawer-transition-easing'?: string;
+}
+
+export type DrawerStyle = CSSStyleProperties & {
+  readonly '--forge-drawer-overlay-drawer-backdrop-surface'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-body-padding'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-close-font-size'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-close-line-height'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-close-radius'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-close-size'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-close-surface-default'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-close-surface-hover'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-close-text-default'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-close-text-hover'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-footer-border'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-footer-border-width'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-footer-gap'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-footer-padding-block'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-footer-padding-inline'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-header-border'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-header-border-width'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-header-gap'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-header-padding-block'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-header-padding-inline'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-panel-border'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-panel-border-width'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-panel-shadow'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-panel-surface'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-resize-handle-size'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-resize-handle-surface-active'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-resize-handle-surface-default'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-resize-handle-transition-duration'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-resize-handle-transition-easing'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-title-font-family'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-title-font-size'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-title-font-weight'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-title-line-height'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-title-text'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-transition-duration'?: string | undefined;
+  readonly '--forge-drawer-overlay-drawer-transition-easing'?: string | undefined;
+};
+
+function createDrawerStyle(properties: Readonly<DrawerStyleProperties> | undefined): DrawerStyle | undefined {
+  return createForgeStyle({
+    '--forge-drawer-overlay-drawer-backdrop-surface': properties?.['overlay-drawer-backdrop-surface'],
+    '--forge-drawer-overlay-drawer-body-padding': properties?.['overlay-drawer-body-padding'],
+    '--forge-drawer-overlay-drawer-close-font-size': properties?.['overlay-drawer-close-font-size'],
+    '--forge-drawer-overlay-drawer-close-line-height': properties?.['overlay-drawer-close-line-height'],
+    '--forge-drawer-overlay-drawer-close-radius': properties?.['overlay-drawer-close-radius'],
+    '--forge-drawer-overlay-drawer-close-size': properties?.['overlay-drawer-close-size'],
+    '--forge-drawer-overlay-drawer-close-surface-default': properties?.['overlay-drawer-close-surface-default'],
+    '--forge-drawer-overlay-drawer-close-surface-hover': properties?.['overlay-drawer-close-surface-hover'],
+    '--forge-drawer-overlay-drawer-close-text-default': properties?.['overlay-drawer-close-text-default'],
+    '--forge-drawer-overlay-drawer-close-text-hover': properties?.['overlay-drawer-close-text-hover'],
+    '--forge-drawer-overlay-drawer-footer-border': properties?.['overlay-drawer-footer-border'],
+    '--forge-drawer-overlay-drawer-footer-border-width': properties?.['overlay-drawer-footer-border-width'],
+    '--forge-drawer-overlay-drawer-footer-gap': properties?.['overlay-drawer-footer-gap'],
+    '--forge-drawer-overlay-drawer-footer-padding-block': properties?.['overlay-drawer-footer-padding-block'],
+    '--forge-drawer-overlay-drawer-footer-padding-inline': properties?.['overlay-drawer-footer-padding-inline'],
+    '--forge-drawer-overlay-drawer-header-border': properties?.['overlay-drawer-header-border'],
+    '--forge-drawer-overlay-drawer-header-border-width': properties?.['overlay-drawer-header-border-width'],
+    '--forge-drawer-overlay-drawer-header-gap': properties?.['overlay-drawer-header-gap'],
+    '--forge-drawer-overlay-drawer-header-padding-block': properties?.['overlay-drawer-header-padding-block'],
+    '--forge-drawer-overlay-drawer-header-padding-inline': properties?.['overlay-drawer-header-padding-inline'],
+    '--forge-drawer-overlay-drawer-panel-border': properties?.['overlay-drawer-panel-border'],
+    '--forge-drawer-overlay-drawer-panel-border-width': properties?.['overlay-drawer-panel-border-width'],
+    '--forge-drawer-overlay-drawer-panel-shadow': properties?.['overlay-drawer-panel-shadow'],
+    '--forge-drawer-overlay-drawer-panel-surface': properties?.['overlay-drawer-panel-surface'],
+    '--forge-drawer-overlay-drawer-resize-handle-size': properties?.['overlay-drawer-resize-handle-size'],
+    '--forge-drawer-overlay-drawer-resize-handle-surface-active':
+      properties?.['overlay-drawer-resize-handle-surface-active'],
+    '--forge-drawer-overlay-drawer-resize-handle-surface-default':
+      properties?.['overlay-drawer-resize-handle-surface-default'],
+    '--forge-drawer-overlay-drawer-resize-handle-transition-duration':
+      properties?.['overlay-drawer-resize-handle-transition-duration'],
+    '--forge-drawer-overlay-drawer-resize-handle-transition-easing':
+      properties?.['overlay-drawer-resize-handle-transition-easing'],
+    '--forge-drawer-overlay-drawer-title-font-family': properties?.['overlay-drawer-title-font-family'],
+    '--forge-drawer-overlay-drawer-title-font-size': properties?.['overlay-drawer-title-font-size'],
+    '--forge-drawer-overlay-drawer-title-font-weight': properties?.['overlay-drawer-title-font-weight'],
+    '--forge-drawer-overlay-drawer-title-line-height': properties?.['overlay-drawer-title-line-height'],
+    '--forge-drawer-overlay-drawer-title-text': properties?.['overlay-drawer-title-text'],
+    '--forge-drawer-overlay-drawer-transition-duration': properties?.['overlay-drawer-transition-duration'],
+    '--forge-drawer-overlay-drawer-transition-easing': properties?.['overlay-drawer-transition-easing'],
+  }) as DrawerStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface DrawerProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -62,6 +188,9 @@ export interface DrawerProperties {
   onClose?: () => void;
   /** Called while dragging the resize handle, with the new size in `rem`. */
   onResize?: (size: number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<DrawerStyleProperties>;
 }
 
 /** Minimum viewport width (px) for each named breakpoint (mirrors `@mission-platform/breakpoints`). */
@@ -114,6 +243,8 @@ const MIN_SIZE_REM = 12;
  * helper) and a `closeLabel` prop in place of i18n.
  */
 export function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement {
+  const propertyStyle = createDrawerStyle(properties.properties);
+
   const {
     open = false,
     placement = 'start',
@@ -355,7 +486,10 @@ export function ForgeDrawer(properties: Readonly<DrawerProperties>): MpElement {
   // SFC's `scoped` `<style>` — no `:global()` rules); the unstyled
   // `-enter-to`/`-leave-from` markers fall back to the `name`-derived defaults.
   return (
-    <div className={styles['forge-drawer-host']}>
+    <div
+      className={styles['forge-drawer-host']}
+      style={propertyStyle}
+    >
       <Transition
         name="forge-drawer-fade"
         enterFromClass={styles['forge-drawer-fade-enter-from']}

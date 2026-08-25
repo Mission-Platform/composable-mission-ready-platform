@@ -7,12 +7,14 @@
  * `@mission-platform/components` package).
  */
 
+@use './forge-quote-properties';
+
 @layer mp.components {
   .forge-quote {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--mp-surface-quote-gap);
+    gap: var(--forge-quote-surface-quote-gap, var(--mp-surface-quote-gap));
 
     &__content {
       margin: 0;
@@ -23,11 +25,11 @@
       display: flex;
       flex-wrap: wrap;
       align-items: baseline;
-      gap: var(--mp-surface-quote-attribution-gap);
+      gap: var(--forge-quote-surface-quote-attribution-gap, var(--mp-surface-quote-attribution-gap));
 
       &::before {
         content: '—';
-        color: var(--mp-surface-quote-attribution-marker);
+        color: var(--forge-quote-surface-quote-attribution-marker, var(--mp-surface-quote-attribution-marker));
       }
     }
 
@@ -41,14 +43,15 @@
 
     /* Variants */
     &--bordered {
-      padding-left: var(--mp-surface-quote-bordered-padding);
-      border-left: var(--mp-surface-quote-bordered-border-width) solid var(--mp-surface-quote-border-primary);
+      padding-left: var(--forge-quote-surface-quote-bordered-padding, var(--mp-surface-quote-bordered-padding));
+      border-left: var(--forge-quote-surface-quote-bordered-border-width, var(--mp-surface-quote-bordered-border-width))
+        solid var(--forge-quote-surface-quote-border-primary, var(--mp-surface-quote-border-primary));
     }
 
     &--default {
-      padding: var(--mp-surface-quote-default-padding);
-      background-color: var(--mp-surface-quote-background-neutral);
-      border-radius: var(--mp-surface-quote-default-radius);
+      padding: var(--forge-quote-surface-quote-default-padding, var(--mp-surface-quote-default-padding));
+      background-color: var(--forge-quote-surface-quote-background-neutral, var(--mp-surface-quote-background-neutral));
+      border-radius: var(--forge-quote-surface-quote-default-radius, var(--mp-surface-quote-default-radius));
     }
 
     &--plain {
@@ -74,11 +77,14 @@
     {
       &--tone-#{$name} {
         &.forge-quote--bordered {
-          border-left-color: var(--mp-surface-quote-border-#{$name});
+          border-left-color: var(--forge-quote-surface-quote-border-#{$name}, var(--mp-surface-quote-border-#{$name}));
         }
 
         &.forge-quote--default {
-          background-color: var(--mp-surface-quote-background-#{$name});
+          background-color: var(
+            --forge-quote-surface-quote-background-#{$name},
+            var(--mp-surface-quote-background-#{$name})
+          );
         }
       }
     }

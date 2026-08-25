@@ -1,4 +1,14 @@
-import { type MpChild, type MpElement, Slot, Teleport, useEffect, useId, useRef } from '@mission-platform/forge';
+import {
+  Slot,
+  Teleport,
+  useEffect,
+  useId,
+  useRef,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import sizeStyles from '../../../styles/size.module.scss';
 import { resolvePortalTarget } from '../../../utils/portal-target/portal-target';
@@ -11,6 +21,48 @@ export type DropdownSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Preferred placement of the dropdown panel relative to its trigger. */
 export type DropdownPlacement = 'bottom-start' | 'bottom-end' | 'bottom' | 'top-start' | 'top-end' | 'top';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface DropdownStyleProperties {
+  readonly 'overlay-border-default'?: string;
+  readonly 'overlay-border-width'?: string;
+  readonly 'overlay-dropdown-radius'?: string;
+  readonly 'overlay-dropdown-shadow'?: string;
+  readonly 'overlay-dropdown-surface'?: string;
+  readonly 'overlay-dropdown-transition-duration'?: string;
+  readonly 'overlay-dropdown-transition-easing'?: string;
+  readonly 'overlay-panel-padding-block'?: string;
+  readonly 'overlay-text-default'?: string;
+  readonly 'spacing-1'?: string;
+}
+
+export type DropdownStyle = CSSStyleProperties & {
+  readonly '--forge-dropdown-overlay-border-default'?: string | undefined;
+  readonly '--forge-dropdown-overlay-border-width'?: string | undefined;
+  readonly '--forge-dropdown-overlay-dropdown-radius'?: string | undefined;
+  readonly '--forge-dropdown-overlay-dropdown-shadow'?: string | undefined;
+  readonly '--forge-dropdown-overlay-dropdown-surface'?: string | undefined;
+  readonly '--forge-dropdown-overlay-dropdown-transition-duration'?: string | undefined;
+  readonly '--forge-dropdown-overlay-dropdown-transition-easing'?: string | undefined;
+  readonly '--forge-dropdown-overlay-panel-padding-block'?: string | undefined;
+  readonly '--forge-dropdown-overlay-text-default'?: string | undefined;
+  readonly '--forge-dropdown-spacing-1'?: string | undefined;
+};
+
+function createDropdownStyle(properties: Readonly<DropdownStyleProperties> | undefined): DropdownStyle | undefined {
+  return createForgeStyle({
+    '--forge-dropdown-overlay-border-default': properties?.['overlay-border-default'],
+    '--forge-dropdown-overlay-border-width': properties?.['overlay-border-width'],
+    '--forge-dropdown-overlay-dropdown-radius': properties?.['overlay-dropdown-radius'],
+    '--forge-dropdown-overlay-dropdown-shadow': properties?.['overlay-dropdown-shadow'],
+    '--forge-dropdown-overlay-dropdown-surface': properties?.['overlay-dropdown-surface'],
+    '--forge-dropdown-overlay-dropdown-transition-duration': properties?.['overlay-dropdown-transition-duration'],
+    '--forge-dropdown-overlay-dropdown-transition-easing': properties?.['overlay-dropdown-transition-easing'],
+    '--forge-dropdown-overlay-panel-padding-block': properties?.['overlay-panel-padding-block'],
+    '--forge-dropdown-overlay-text-default': properties?.['overlay-text-default'],
+    '--forge-dropdown-spacing-1': properties?.['spacing-1'],
+  }) as DropdownStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface DropdownProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -33,6 +85,9 @@ export interface DropdownProperties {
   onUpdateOpen?: (open: boolean) => void;
   /** Fired when the dropdown requests to close. */
   onClose?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<DropdownStyleProperties>;
 }
 
 /**
@@ -96,6 +151,8 @@ const POSITION_AREA: Readonly<Record<DropdownPlacement, string>> = {
  * `forge-dropdown.module.scss`.
  */
 export function ForgeDropdown(properties: Readonly<DropdownProperties>): MpElement {
+  const style = createDropdownStyle(properties.properties);
+
   const {
     open = false,
     placement = 'bottom-start',
@@ -175,7 +232,10 @@ export function ForgeDropdown(properties: Readonly<DropdownProperties>): MpEleme
   }, [open]);
 
   return (
-    <div className={styles['forge-dropdown']}>
+    <div
+      className={styles['forge-dropdown']}
+      style={style}
+    >
       <div
         ref={triggerReference}
         id={triggerId}

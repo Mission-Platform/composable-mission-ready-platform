@@ -1,7 +1,14 @@
-import { type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconCopy } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
-import type { SizeScale } from '@mission-platform/tokens';
 import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 import css from 'highlight.js/lib/languages/css';
@@ -27,6 +34,8 @@ import yaml from 'highlight.js/lib/languages/yaml';
 // bare side-effect CSS imports onto both the React and Vue builds.
 import './forge-code-block.hljs.css';
 import styles from './forge-code-block.module.scss';
+
+import type { SizeScale } from '@mission-platform/tokens';
 
 /** Size token — canonical 2xs → 2xl scale. */
 export type CodeBlockSize = SizeScale;
@@ -73,6 +82,144 @@ hljs.registerLanguage('typescript', typescript);
 hljs.registerLanguage('xml', xml);
 hljs.registerLanguage('yaml', yaml);
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface CodeBlockStyleProperties {
+  readonly 'code-border-default'?: string;
+  readonly 'code-border-width'?: string;
+  readonly 'code-copy-border-default'?: string;
+  readonly 'code-copy-border-focus-visible'?: string;
+  readonly 'code-copy-border-hover'?: string;
+  readonly 'code-copy-border-width-default'?: string;
+  readonly 'code-copy-border-width-focus-visible'?: string;
+  readonly 'code-copy-font-family'?: string;
+  readonly 'code-copy-font-size'?: string;
+  readonly 'code-copy-gap'?: string;
+  readonly 'code-copy-padding-block'?: string;
+  readonly 'code-copy-padding-inline'?: string;
+  readonly 'code-copy-radius'?: string;
+  readonly 'code-copy-surface-default'?: string;
+  readonly 'code-copy-surface-hover'?: string;
+  readonly 'code-copy-text-default'?: string;
+  readonly 'code-copy-text-hover'?: string;
+  readonly 'code-copy-transition-duration'?: string;
+  readonly 'code-copy-transition-easing'?: string;
+  readonly 'code-filename-font-family'?: string;
+  readonly 'code-filename-font-size'?: string;
+  readonly 'code-filename-text'?: string;
+  readonly 'code-gutter-padding-block'?: string;
+  readonly 'code-gutter-padding-inline-end'?: string;
+  readonly 'code-gutter-padding-inline-start'?: string;
+  readonly 'code-gutter-text'?: string;
+  readonly 'code-header-border'?: string;
+  readonly 'code-header-gap'?: string;
+  readonly 'code-header-padding-block'?: string;
+  readonly 'code-header-padding-inline'?: string;
+  readonly 'code-header-surface'?: string;
+  readonly 'code-language-font-family'?: string;
+  readonly 'code-language-font-size'?: string;
+  readonly 'code-language-text'?: string;
+  readonly 'code-padding'?: string;
+  readonly 'code-radius'?: string;
+  readonly 'code-surface-default'?: string;
+  readonly 'code-typography-font-family'?: string;
+  readonly 'code-typography-font-size'?: string;
+  readonly 'code-typography-line-height'?: string;
+  readonly 'code-variant-numbered-border'?: string;
+  readonly 'line-height'?: string;
+}
+
+export type CodeBlockStyle = CSSStyleProperties & {
+  readonly '--forge-code-block-code-border-default'?: string | undefined;
+  readonly '--forge-code-block-code-border-width'?: string | undefined;
+  readonly '--forge-code-block-code-copy-border-default'?: string | undefined;
+  readonly '--forge-code-block-code-copy-border-focus-visible'?: string | undefined;
+  readonly '--forge-code-block-code-copy-border-hover'?: string | undefined;
+  readonly '--forge-code-block-code-copy-border-width-default'?: string | undefined;
+  readonly '--forge-code-block-code-copy-border-width-focus-visible'?: string | undefined;
+  readonly '--forge-code-block-code-copy-font-family'?: string | undefined;
+  readonly '--forge-code-block-code-copy-font-size'?: string | undefined;
+  readonly '--forge-code-block-code-copy-gap'?: string | undefined;
+  readonly '--forge-code-block-code-copy-padding-block'?: string | undefined;
+  readonly '--forge-code-block-code-copy-padding-inline'?: string | undefined;
+  readonly '--forge-code-block-code-copy-radius'?: string | undefined;
+  readonly '--forge-code-block-code-copy-surface-default'?: string | undefined;
+  readonly '--forge-code-block-code-copy-surface-hover'?: string | undefined;
+  readonly '--forge-code-block-code-copy-text-default'?: string | undefined;
+  readonly '--forge-code-block-code-copy-text-hover'?: string | undefined;
+  readonly '--forge-code-block-code-copy-transition-duration'?: string | undefined;
+  readonly '--forge-code-block-code-copy-transition-easing'?: string | undefined;
+  readonly '--forge-code-block-code-filename-font-family'?: string | undefined;
+  readonly '--forge-code-block-code-filename-font-size'?: string | undefined;
+  readonly '--forge-code-block-code-filename-text'?: string | undefined;
+  readonly '--forge-code-block-code-gutter-padding-block'?: string | undefined;
+  readonly '--forge-code-block-code-gutter-padding-inline-end'?: string | undefined;
+  readonly '--forge-code-block-code-gutter-padding-inline-start'?: string | undefined;
+  readonly '--forge-code-block-code-gutter-text'?: string | undefined;
+  readonly '--forge-code-block-code-header-border'?: string | undefined;
+  readonly '--forge-code-block-code-header-gap'?: string | undefined;
+  readonly '--forge-code-block-code-header-padding-block'?: string | undefined;
+  readonly '--forge-code-block-code-header-padding-inline'?: string | undefined;
+  readonly '--forge-code-block-code-header-surface'?: string | undefined;
+  readonly '--forge-code-block-code-language-font-family'?: string | undefined;
+  readonly '--forge-code-block-code-language-font-size'?: string | undefined;
+  readonly '--forge-code-block-code-language-text'?: string | undefined;
+  readonly '--forge-code-block-code-padding'?: string | undefined;
+  readonly '--forge-code-block-code-radius'?: string | undefined;
+  readonly '--forge-code-block-code-surface-default'?: string | undefined;
+  readonly '--forge-code-block-code-typography-font-family'?: string | undefined;
+  readonly '--forge-code-block-code-typography-font-size'?: string | undefined;
+  readonly '--forge-code-block-code-typography-line-height'?: string | undefined;
+  readonly '--forge-code-block-code-variant-numbered-border'?: string | undefined;
+  readonly '--forge-code-block-line-height'?: string | undefined;
+};
+
+function createCodeBlockStyle(properties: Readonly<CodeBlockStyleProperties> | undefined): CodeBlockStyle | undefined {
+  return createForgeStyle({
+    '--forge-code-block-code-border-default': properties?.['code-border-default'],
+    '--forge-code-block-code-border-width': properties?.['code-border-width'],
+    '--forge-code-block-code-copy-border-default': properties?.['code-copy-border-default'],
+    '--forge-code-block-code-copy-border-focus-visible': properties?.['code-copy-border-focus-visible'],
+    '--forge-code-block-code-copy-border-hover': properties?.['code-copy-border-hover'],
+    '--forge-code-block-code-copy-border-width-default': properties?.['code-copy-border-width-default'],
+    '--forge-code-block-code-copy-border-width-focus-visible': properties?.['code-copy-border-width-focus-visible'],
+    '--forge-code-block-code-copy-font-family': properties?.['code-copy-font-family'],
+    '--forge-code-block-code-copy-font-size': properties?.['code-copy-font-size'],
+    '--forge-code-block-code-copy-gap': properties?.['code-copy-gap'],
+    '--forge-code-block-code-copy-padding-block': properties?.['code-copy-padding-block'],
+    '--forge-code-block-code-copy-padding-inline': properties?.['code-copy-padding-inline'],
+    '--forge-code-block-code-copy-radius': properties?.['code-copy-radius'],
+    '--forge-code-block-code-copy-surface-default': properties?.['code-copy-surface-default'],
+    '--forge-code-block-code-copy-surface-hover': properties?.['code-copy-surface-hover'],
+    '--forge-code-block-code-copy-text-default': properties?.['code-copy-text-default'],
+    '--forge-code-block-code-copy-text-hover': properties?.['code-copy-text-hover'],
+    '--forge-code-block-code-copy-transition-duration': properties?.['code-copy-transition-duration'],
+    '--forge-code-block-code-copy-transition-easing': properties?.['code-copy-transition-easing'],
+    '--forge-code-block-code-filename-font-family': properties?.['code-filename-font-family'],
+    '--forge-code-block-code-filename-font-size': properties?.['code-filename-font-size'],
+    '--forge-code-block-code-filename-text': properties?.['code-filename-text'],
+    '--forge-code-block-code-gutter-padding-block': properties?.['code-gutter-padding-block'],
+    '--forge-code-block-code-gutter-padding-inline-end': properties?.['code-gutter-padding-inline-end'],
+    '--forge-code-block-code-gutter-padding-inline-start': properties?.['code-gutter-padding-inline-start'],
+    '--forge-code-block-code-gutter-text': properties?.['code-gutter-text'],
+    '--forge-code-block-code-header-border': properties?.['code-header-border'],
+    '--forge-code-block-code-header-gap': properties?.['code-header-gap'],
+    '--forge-code-block-code-header-padding-block': properties?.['code-header-padding-block'],
+    '--forge-code-block-code-header-padding-inline': properties?.['code-header-padding-inline'],
+    '--forge-code-block-code-header-surface': properties?.['code-header-surface'],
+    '--forge-code-block-code-language-font-family': properties?.['code-language-font-family'],
+    '--forge-code-block-code-language-font-size': properties?.['code-language-font-size'],
+    '--forge-code-block-code-language-text': properties?.['code-language-text'],
+    '--forge-code-block-code-padding': properties?.['code-padding'],
+    '--forge-code-block-code-radius': properties?.['code-radius'],
+    '--forge-code-block-code-surface-default': properties?.['code-surface-default'],
+    '--forge-code-block-code-typography-font-family': properties?.['code-typography-font-family'],
+    '--forge-code-block-code-typography-font-size': properties?.['code-typography-font-size'],
+    '--forge-code-block-code-typography-line-height': properties?.['code-typography-line-height'],
+    '--forge-code-block-code-variant-numbered-border': properties?.['code-variant-numbered-border'],
+    '--forge-code-block-line-height': properties?.['line-height'],
+  }) as CodeBlockStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface CodeBlockProperties {
   /** The source code to render. */
   code: string;
@@ -90,6 +237,9 @@ export interface CodeBlockProperties {
   size?: CodeBlockSize;
   /** Colour tone of the code block (tints the border/header). Defaults to `'neutral'`. */
   variant?: CodeBlockVariant;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<CodeBlockStyleProperties>;
 }
 
 /**
@@ -113,6 +263,8 @@ export interface CodeBlockProperties {
  * `@import` becomes the bare-side-effect `forge-code-block.hljs.css` import.
  */
 export function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement {
+  const style = createCodeBlockStyle(properties.properties);
+
   const {
     code,
     language = 'plaintext',
@@ -189,6 +341,7 @@ export function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpEle
         styles[`forge-code-block--${variant}`],
         size ? `forge-size--${size}` : undefined,
       ]}
+      style={style}
     >
       {hasHeader ? (
         <div className={styles['forge-code-block__header']}>

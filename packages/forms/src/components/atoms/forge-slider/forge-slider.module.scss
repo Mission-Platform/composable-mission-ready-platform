@@ -1,3 +1,5 @@
+@use './forge-slider-properties';
+
 /**
  * Styling for the write-once `ForgeSlider`.
  *
@@ -12,61 +14,91 @@
 
 @layer mp.forms {
   .forge-slider {
-    --mp-slider-track-height: var(--mp-checkable-size-md-track-height);
-    --mp-slider-thumb-size: var(--mp-checkable-size-md-thumb-size);
+    --mp-slider-track-height: var(
+      --forge-slider-checkable-size-md-track-height,
+      var(--mp-checkable-size-md-track-height)
+    );
+    --mp-slider-thumb-size: var(--forge-slider-checkable-size-md-thumb-size, var(--mp-checkable-size-md-thumb-size));
 
     display: flex;
     align-items: center;
     width: 100%;
-    padding-block: calc(var(--mp-slider-thumb-size) / 2);
+    padding-block: calc(var(--forge-slider-thumb-size, var(--mp-slider-thumb-size)) / 2);
 
     /* Sizes — canonical 2xs → 2xl scale (track height + thumb size). */
     &--2xs {
-      --mp-slider-track-height: var(--mp-checkable-size-2xs-track-height);
-      --mp-slider-thumb-size: var(--mp-checkable-size-2xs-thumb-size);
+      --mp-slider-track-height: var(
+        --forge-slider-checkable-size-2xs-track-height,
+        var(--mp-checkable-size-2xs-track-height)
+      );
+      --mp-slider-thumb-size: var(
+        --forge-slider-checkable-size-2xs-thumb-size,
+        var(--mp-checkable-size-2xs-thumb-size)
+      );
     }
 
     &--xs {
-      --mp-slider-track-height: var(--mp-checkable-size-xs-track-height);
-      --mp-slider-thumb-size: var(--mp-checkable-size-xs-thumb-size);
+      --mp-slider-track-height: var(
+        --forge-slider-checkable-size-xs-track-height,
+        var(--mp-checkable-size-xs-track-height)
+      );
+      --mp-slider-thumb-size: var(--forge-slider-checkable-size-xs-thumb-size, var(--mp-checkable-size-xs-thumb-size));
     }
 
     &--sm {
-      --mp-slider-track-height: var(--mp-checkable-size-sm-track-height);
-      --mp-slider-thumb-size: var(--mp-checkable-size-sm-thumb-size);
+      --mp-slider-track-height: var(
+        --forge-slider-checkable-size-sm-track-height,
+        var(--mp-checkable-size-sm-track-height)
+      );
+      --mp-slider-thumb-size: var(--forge-slider-checkable-size-sm-thumb-size, var(--mp-checkable-size-sm-thumb-size));
     }
 
     &--md {
-      --mp-slider-track-height: var(--mp-checkable-size-md-track-height);
-      --mp-slider-thumb-size: var(--mp-checkable-size-md-thumb-size);
+      --mp-slider-track-height: var(
+        --forge-slider-checkable-size-md-track-height,
+        var(--mp-checkable-size-md-track-height)
+      );
+      --mp-slider-thumb-size: var(--forge-slider-checkable-size-md-thumb-size, var(--mp-checkable-size-md-thumb-size));
     }
 
     &--lg {
-      --mp-slider-track-height: var(--mp-checkable-size-lg-track-height);
-      --mp-slider-thumb-size: var(--mp-checkable-size-lg-thumb-size);
+      --mp-slider-track-height: var(
+        --forge-slider-checkable-size-lg-track-height,
+        var(--mp-checkable-size-lg-track-height)
+      );
+      --mp-slider-thumb-size: var(--forge-slider-checkable-size-lg-thumb-size, var(--mp-checkable-size-lg-thumb-size));
     }
 
     &--xl {
-      --mp-slider-track-height: var(--mp-checkable-size-xl-track-height);
-      --mp-slider-thumb-size: var(--mp-checkable-size-xl-thumb-size);
+      --mp-slider-track-height: var(
+        --forge-slider-checkable-size-xl-track-height,
+        var(--mp-checkable-size-xl-track-height)
+      );
+      --mp-slider-thumb-size: var(--forge-slider-checkable-size-xl-thumb-size, var(--mp-checkable-size-xl-thumb-size));
     }
 
     &--2xl {
-      --mp-slider-track-height: var(--mp-checkable-size-2xl-track-height);
-      --mp-slider-thumb-size: var(--mp-checkable-size-2xl-thumb-size);
+      --mp-slider-track-height: var(
+        --forge-slider-checkable-size-2xl-track-height,
+        var(--mp-checkable-size-2xl-track-height)
+      );
+      --mp-slider-thumb-size: var(
+        --forge-slider-checkable-size-2xl-thumb-size,
+        var(--mp-checkable-size-2xl-thumb-size)
+      );
     }
 
     &--disabled {
-      opacity: var(--mp-checkable-opacity-disabled);
+      opacity: var(--forge-slider-checkable-opacity-disabled, var(--mp-checkable-opacity-disabled));
       cursor: not-allowed;
     }
 
     &__track {
       position: relative;
       flex: 1 1 auto;
-      height: var(--mp-slider-track-height);
-      background-color: var(--mp-checkable-track-inactive);
-      border-radius: var(--mp-checkable-circle-radius);
+      height: var(--forge-slider-track-height, var(--mp-slider-track-height));
+      background-color: var(--forge-slider-checkable-track-inactive, var(--mp-checkable-track-inactive));
+      border-radius: var(--forge-slider-checkable-circle-radius, var(--mp-checkable-circle-radius));
       cursor: pointer;
       touch-action: none;
     }
@@ -79,24 +111,25 @@
       position: absolute;
       inset-block: 0;
       left: 0;
-      background-color: var(--mp-checkable-track-selected);
+      background-color: var(--forge-slider-checkable-track-selected, var(--mp-checkable-track-selected));
       border-radius: inherit;
     }
 
     &__thumb {
       position: absolute;
       top: 50%;
-      width: var(--mp-slider-thumb-size);
-      height: var(--mp-slider-thumb-size);
+      width: var(--forge-slider-thumb-size, var(--mp-slider-thumb-size));
+      height: var(--forge-slider-thumb-size, var(--mp-slider-thumb-size));
       transform: translate(-50%, -50%);
-      background-color: var(--mp-checkable-thumb-default);
-      border: var(--mp-checkable-border-width-default) solid var(--mp-checkable-border-selected);
-      border-radius: var(--mp-checkable-circle-radius);
+      background-color: var(--forge-slider-checkable-thumb-default, var(--mp-checkable-thumb-default));
+      border: var(--forge-slider-checkable-border-width-default, var(--mp-checkable-border-width-default)) solid
+        var(--forge-slider-checkable-border-selected, var(--mp-checkable-border-selected));
+      border-radius: var(--forge-slider-checkable-circle-radius, var(--mp-checkable-circle-radius));
       cursor: grab;
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-checkable-focus-ring);
+        box-shadow: var(--forge-slider-checkable-focus-ring, var(--mp-checkable-focus-ring));
       }
 
       &:active {
@@ -106,15 +139,16 @@
 
     &__value {
       position: absolute;
-      bottom: calc(100% + var(--mp-checkable-value-offset));
+      bottom: calc(100% + var(--forge-slider-checkable-value-offset, var(--mp-checkable-value-offset)));
       left: 50%;
       transform: translateX(-50%);
-      padding: var(--mp-checkable-value-padding-block) var(--mp-checkable-value-padding-inline);
-      background-color: var(--mp-checkable-value-background);
-      color: var(--mp-checkable-value-text);
-      border-radius: var(--mp-checkable-value-radius);
-      font-family: var(--mp-checkable-font-family);
-      font-size: var(--mp-checkable-value-font-size);
+      padding: var(--forge-slider-checkable-value-padding-block, var(--mp-checkable-value-padding-block))
+        var(--forge-slider-checkable-value-padding-inline, var(--mp-checkable-value-padding-inline));
+      background-color: var(--forge-slider-checkable-value-background, var(--mp-checkable-value-background));
+      color: var(--forge-slider-checkable-value-text, var(--mp-checkable-value-text));
+      border-radius: var(--forge-slider-checkable-value-radius, var(--mp-checkable-value-radius));
+      font-family: var(--forge-slider-checkable-font-family, var(--mp-checkable-font-family));
+      font-size: var(--forge-slider-checkable-value-font-size, var(--mp-checkable-value-font-size));
       white-space: nowrap;
       pointer-events: none;
     }

@@ -1,3 +1,5 @@
+@use './forge-location-input-properties';
+
 /**
  * Styling for the write-once `ForgeLocationInput`.
  *
@@ -12,7 +14,7 @@
   .forge-location-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-input-location-gap-stack);
+    gap: var(--forge-location-input-input-location-gap-stack, var(--mp-input-location-gap-stack));
     padding: 0;
     margin: 0;
     border: 0;
@@ -22,7 +24,7 @@
       align-items: center;
       gap: 2px;
       padding: 0;
-      margin-bottom: var(--mp-input-location-gap-legend);
+      margin-bottom: var(--forge-location-input-input-location-gap-legend, var(--mp-input-location-gap-legend));
 
       &--hidden {
         position: absolute;
@@ -38,13 +40,13 @@
     }
 
     &__required {
-      color: var(--mp-input-location-required);
+      color: var(--forge-location-input-input-location-required, var(--mp-input-location-required));
       margin-left: 2px;
     }
 
     &__row {
       display: flex;
-      gap: var(--mp-input-location-gap-row);
+      gap: var(--forge-location-input-input-location-gap-row, var(--mp-input-location-gap-row));
       align-items: flex-end;
     }
 
@@ -59,11 +61,11 @@
 
     &--disabled {
       pointer-events: none;
-      color: var(--mp-input-location-text-disabled);
+      color: var(--forge-location-input-input-location-text-disabled, var(--mp-input-location-text-disabled));
     }
 
     &__error {
-      color: var(--mp-input-location-text-error);
+      color: var(--forge-location-input-input-location-text-error, var(--mp-input-location-text-error));
       margin: 0;
     }
 

@@ -1,3 +1,5 @@
+@use './forge-search-input-properties';
+
 /**
  * Styling for the write-once `ForgeSearchInput`.
  *
@@ -16,17 +18,18 @@
     &__wrapper {
       display: flex;
       align-items: center;
-      border: var(--mp-input-border-width) solid var(--mp-input-border-default);
-      border-radius: var(--mp-input-radius);
-      background-color: var(--mp-input-surface-default);
+      border: var(--forge-search-input-input-border-width, var(--mp-input-border-width)) solid
+        var(--forge-search-input-input-border-default, var(--mp-input-border-default));
+      border-radius: var(--forge-search-input-input-radius, var(--mp-input-radius));
+      background-color: var(--forge-search-input-input-surface-default, var(--mp-input-surface-default));
       transition:
         border-color 150ms ease,
         box-shadow 150ms ease;
-      gap: var(--mp-input-search-gap);
+      gap: var(--forge-search-input-input-search-gap, var(--mp-input-search-gap));
 
       &:focus-within {
-        border-color: var(--mp-input-border-focus-visible);
-        box-shadow: var(--mp-input-focus-ring);
+        border-color: var(--forge-search-input-input-border-focus-visible, var(--mp-input-border-focus-visible));
+        box-shadow: var(--forge-search-input-input-focus-ring, var(--mp-input-focus-ring));
       }
     }
 
@@ -35,7 +38,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      color: var(--mp-input-search-icon-text);
+      color: var(--forge-search-input-input-search-icon-text, var(--mp-input-search-icon-text));
     }
 
     &__field {
@@ -43,11 +46,11 @@
       border: none;
       outline: none;
       background: transparent;
-      color: var(--mp-input-text-default);
-      font-family: var(--mp-input-font-family);
+      color: var(--forge-search-input-input-text-default, var(--mp-input-text-default));
+      font-family: var(--forge-search-input-input-font-family, var(--mp-input-font-family));
 
       &::placeholder {
-        color: var(--mp-input-text-placeholder);
+        color: var(--forge-search-input-input-text-placeholder, var(--mp-input-text-placeholder));
       }
 
       /* Remove native search clear button */
@@ -64,18 +67,18 @@
       border: none;
       background: transparent;
       cursor: pointer;
-      color: var(--mp-input-search-clear-text-default);
-      border-radius: var(--mp-input-search-clear-radius);
+      color: var(--forge-search-input-input-search-clear-text-default, var(--mp-input-search-clear-text-default));
+      border-radius: var(--forge-search-input-input-search-clear-radius, var(--mp-input-search-clear-radius));
       flex-shrink: 0;
       line-height: 1;
 
       &:hover {
-        color: var(--mp-input-search-clear-text-hover);
+        color: var(--forge-search-input-input-search-clear-text-hover, var(--mp-input-search-clear-text-hover));
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-input-focus-ring);
+        box-shadow: var(--forge-search-input-input-focus-ring, var(--mp-input-focus-ring));
       }
     }
 
@@ -83,22 +86,28 @@
       display: inline-block;
       width: 14px;
       height: 14px;
-      border: var(--mp-input-search-spinner-border-width) solid currentcolor;
+      border: var(--forge-search-input-input-search-spinner-border-width, var(--mp-input-search-spinner-border-width))
+        solid currentcolor;
       border-top-color: transparent;
-      border-radius: var(--mp-input-search-spinner-radius);
-      animation: mp-search-spin var(--mp-input-search-spinner-duration) linear infinite;
+      border-radius: var(--forge-search-input-input-search-spinner-radius, var(--mp-input-search-spinner-radius));
+      animation: mp-search-spin
+        var(--forge-search-input-input-search-spinner-duration, var(--mp-input-search-spinner-duration)) linear infinite;
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
         .forge-search-input__wrapper {
-          padding: var(--mp-input-size-#{$size}-padding-block) var(--mp-input-size-#{$size}-padding-inline);
+          padding: var(
+              --forge-search-input-input-size-#{$size}-padding-block,
+              var(--mp-input-size-#{$size}-padding-block)
+            )
+            var(--forge-search-input-input-size-#{$size}-padding-inline, var(--mp-input-size-#{$size}-padding-inline));
         }
 
         .forge-search-input__field {
           padding: 0;
-          font-size: var(--mp-input-size-#{$size}-font-size);
+          font-size: var(--forge-search-input-input-size-#{$size}-font-size, var(--mp-input-size-#{$size}-font-size));
         }
       }
     }
@@ -107,14 +116,14 @@
       pointer-events: none;
 
       .forge-search-input__wrapper {
-        background-color: var(--mp-input-surface-disabled);
+        background-color: var(--forge-search-input-input-surface-disabled, var(--mp-input-surface-disabled));
         cursor: not-allowed;
       }
 
       .forge-search-input__field,
       .forge-search-input__search-icon,
       .forge-search-input__clear {
-        color: var(--mp-input-text-disabled);
+        color: var(--forge-search-input-input-text-disabled, var(--mp-input-text-disabled));
       }
     }
   }

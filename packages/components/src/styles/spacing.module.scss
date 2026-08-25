@@ -8,8 +8,8 @@
  *
  * The rules mirror `_spacing.scss` (the SCSS partial source of truth). They are
  * inlined here rather than `@use`d because vite-plugin-forge copies only this
- * file into its per-framework cache by basename; a `@use './spacing'` would
- * fail there when `_spacing.scss` is not copied alongside.
+ * file into its per-framework cache by basename; using the spacing partial
+ * would fail there when `_spacing.scss` is not copied alongside.
  */
 @layer mp.components {
   .forge-spacing--padding-2xs {

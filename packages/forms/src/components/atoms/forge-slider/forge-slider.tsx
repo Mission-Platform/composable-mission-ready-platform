@@ -1,4 +1,4 @@
-import { type MpElement, useRef } from '@mission-platform/forge';
+import { useRef, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import { beginPointerDrag, clamp } from '../../../utils/pointer-drag/pointer-drag';
 
@@ -7,6 +7,114 @@ import styles from './forge-slider.module.scss';
 /** Size token controlling the track / thumb dimensions — canonical 2xs → 2xl scale. */
 export type SliderSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface SliderStyleProperties {
+  readonly 'checkable-border-selected'?: string;
+  readonly 'checkable-border-width-default'?: string;
+  readonly 'checkable-circle-radius'?: string;
+  readonly 'checkable-focus-ring'?: string;
+  readonly 'checkable-font-family'?: string;
+  readonly 'checkable-opacity-disabled'?: string;
+  readonly 'checkable-size-2xl-thumb-size'?: string;
+  readonly 'checkable-size-2xl-track-height'?: string;
+  readonly 'checkable-size-2xs-thumb-size'?: string;
+  readonly 'checkable-size-2xs-track-height'?: string;
+  readonly 'checkable-size-lg-thumb-size'?: string;
+  readonly 'checkable-size-lg-track-height'?: string;
+  readonly 'checkable-size-md-thumb-size'?: string;
+  readonly 'checkable-size-md-track-height'?: string;
+  readonly 'checkable-size-sm-thumb-size'?: string;
+  readonly 'checkable-size-sm-track-height'?: string;
+  readonly 'checkable-size-xl-thumb-size'?: string;
+  readonly 'checkable-size-xl-track-height'?: string;
+  readonly 'checkable-size-xs-thumb-size'?: string;
+  readonly 'checkable-size-xs-track-height'?: string;
+  readonly 'checkable-thumb-default'?: string;
+  readonly 'checkable-track-inactive'?: string;
+  readonly 'checkable-track-selected'?: string;
+  readonly 'checkable-value-background'?: string;
+  readonly 'checkable-value-font-size'?: string;
+  readonly 'checkable-value-offset'?: string;
+  readonly 'checkable-value-padding-block'?: string;
+  readonly 'checkable-value-padding-inline'?: string;
+  readonly 'checkable-value-radius'?: string;
+  readonly 'checkable-value-text'?: string;
+  readonly 'thumb-size'?: string;
+  readonly 'track-height'?: string;
+}
+
+export type SliderStyle = CSSStyleProperties & {
+  readonly '--forge-slider-checkable-border-selected'?: string | undefined;
+  readonly '--forge-slider-checkable-border-width-default'?: string | undefined;
+  readonly '--forge-slider-checkable-circle-radius'?: string | undefined;
+  readonly '--forge-slider-checkable-focus-ring'?: string | undefined;
+  readonly '--forge-slider-checkable-font-family'?: string | undefined;
+  readonly '--forge-slider-checkable-opacity-disabled'?: string | undefined;
+  readonly '--forge-slider-checkable-size-2xl-thumb-size'?: string | undefined;
+  readonly '--forge-slider-checkable-size-2xl-track-height'?: string | undefined;
+  readonly '--forge-slider-checkable-size-2xs-thumb-size'?: string | undefined;
+  readonly '--forge-slider-checkable-size-2xs-track-height'?: string | undefined;
+  readonly '--forge-slider-checkable-size-lg-thumb-size'?: string | undefined;
+  readonly '--forge-slider-checkable-size-lg-track-height'?: string | undefined;
+  readonly '--forge-slider-checkable-size-md-thumb-size'?: string | undefined;
+  readonly '--forge-slider-checkable-size-md-track-height'?: string | undefined;
+  readonly '--forge-slider-checkable-size-sm-thumb-size'?: string | undefined;
+  readonly '--forge-slider-checkable-size-sm-track-height'?: string | undefined;
+  readonly '--forge-slider-checkable-size-xl-thumb-size'?: string | undefined;
+  readonly '--forge-slider-checkable-size-xl-track-height'?: string | undefined;
+  readonly '--forge-slider-checkable-size-xs-thumb-size'?: string | undefined;
+  readonly '--forge-slider-checkable-size-xs-track-height'?: string | undefined;
+  readonly '--forge-slider-checkable-thumb-default'?: string | undefined;
+  readonly '--forge-slider-checkable-track-inactive'?: string | undefined;
+  readonly '--forge-slider-checkable-track-selected'?: string | undefined;
+  readonly '--forge-slider-checkable-value-background'?: string | undefined;
+  readonly '--forge-slider-checkable-value-font-size'?: string | undefined;
+  readonly '--forge-slider-checkable-value-offset'?: string | undefined;
+  readonly '--forge-slider-checkable-value-padding-block'?: string | undefined;
+  readonly '--forge-slider-checkable-value-padding-inline'?: string | undefined;
+  readonly '--forge-slider-checkable-value-radius'?: string | undefined;
+  readonly '--forge-slider-checkable-value-text'?: string | undefined;
+  readonly '--forge-slider-thumb-size'?: string | undefined;
+  readonly '--forge-slider-track-height'?: string | undefined;
+};
+
+function createSliderStyle(properties: Readonly<SliderStyleProperties> | undefined): SliderStyle | undefined {
+  return createForgeStyle({
+    '--forge-slider-checkable-border-selected': properties?.['checkable-border-selected'],
+    '--forge-slider-checkable-border-width-default': properties?.['checkable-border-width-default'],
+    '--forge-slider-checkable-circle-radius': properties?.['checkable-circle-radius'],
+    '--forge-slider-checkable-focus-ring': properties?.['checkable-focus-ring'],
+    '--forge-slider-checkable-font-family': properties?.['checkable-font-family'],
+    '--forge-slider-checkable-opacity-disabled': properties?.['checkable-opacity-disabled'],
+    '--forge-slider-checkable-size-2xl-thumb-size': properties?.['checkable-size-2xl-thumb-size'],
+    '--forge-slider-checkable-size-2xl-track-height': properties?.['checkable-size-2xl-track-height'],
+    '--forge-slider-checkable-size-2xs-thumb-size': properties?.['checkable-size-2xs-thumb-size'],
+    '--forge-slider-checkable-size-2xs-track-height': properties?.['checkable-size-2xs-track-height'],
+    '--forge-slider-checkable-size-lg-thumb-size': properties?.['checkable-size-lg-thumb-size'],
+    '--forge-slider-checkable-size-lg-track-height': properties?.['checkable-size-lg-track-height'],
+    '--forge-slider-checkable-size-md-thumb-size': properties?.['checkable-size-md-thumb-size'],
+    '--forge-slider-checkable-size-md-track-height': properties?.['checkable-size-md-track-height'],
+    '--forge-slider-checkable-size-sm-thumb-size': properties?.['checkable-size-sm-thumb-size'],
+    '--forge-slider-checkable-size-sm-track-height': properties?.['checkable-size-sm-track-height'],
+    '--forge-slider-checkable-size-xl-thumb-size': properties?.['checkable-size-xl-thumb-size'],
+    '--forge-slider-checkable-size-xl-track-height': properties?.['checkable-size-xl-track-height'],
+    '--forge-slider-checkable-size-xs-thumb-size': properties?.['checkable-size-xs-thumb-size'],
+    '--forge-slider-checkable-size-xs-track-height': properties?.['checkable-size-xs-track-height'],
+    '--forge-slider-checkable-thumb-default': properties?.['checkable-thumb-default'],
+    '--forge-slider-checkable-track-inactive': properties?.['checkable-track-inactive'],
+    '--forge-slider-checkable-track-selected': properties?.['checkable-track-selected'],
+    '--forge-slider-checkable-value-background': properties?.['checkable-value-background'],
+    '--forge-slider-checkable-value-font-size': properties?.['checkable-value-font-size'],
+    '--forge-slider-checkable-value-offset': properties?.['checkable-value-offset'],
+    '--forge-slider-checkable-value-padding-block': properties?.['checkable-value-padding-block'],
+    '--forge-slider-checkable-value-padding-inline': properties?.['checkable-value-padding-inline'],
+    '--forge-slider-checkable-value-radius': properties?.['checkable-value-radius'],
+    '--forge-slider-checkable-value-text': properties?.['checkable-value-text'],
+    '--forge-slider-thumb-size': properties?.['thumb-size'],
+    '--forge-slider-track-height': properties?.['track-height'],
+  }) as SliderStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface SliderProperties {
   /**
    * Current value (controlled via `modelValue` + `onUpdateModelValue`). Defaults to `0`.
@@ -33,6 +141,9 @@ export interface SliderProperties {
   onUpdateModelValue?: (value: number) => void;
   /** Fired when the user finishes changing the value (native `change`). */
   onChange?: (value: number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<SliderStyleProperties>;
 }
 
 /**
@@ -54,6 +165,8 @@ export interface SliderProperties {
  * `onUpdateModelValue`/`onChange` callback props.
  */
 export function ForgeSlider(properties: Readonly<SliderProperties>): MpElement {
+  const style = createSliderStyle(properties.properties);
+
   const {
     modelValue = 0,
     min = 0,
@@ -171,6 +284,7 @@ export function ForgeSlider(properties: Readonly<SliderProperties>): MpElement {
           [styles['forge-slider--disabled']]: disabled,
         },
       ]}
+      style={style}
     >
       <div
         ref={trackReference}

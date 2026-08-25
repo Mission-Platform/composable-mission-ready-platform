@@ -1,45 +1,50 @@
+@use './forge-callout-block-properties';
+
 @layer mp.components {
   .forge-callout-block {
     display: flex;
-    gap: var(--mp-spacing-3);
-    padding: var(--mp-spacing-4) var(--mp-spacing-4);
-    color: var(--mp-color-text-primary);
-    background: var(--mp-color-bg-muted);
-    border-inline-start: var(--mp-border-width-thick) solid var(--mp-color-info-default);
-    border-radius: var(--mp-radius-md);
+    gap: var(--forge-callout-block-spacing-3, var(--mp-spacing-3));
+    padding: var(--forge-callout-block-spacing-4, var(--mp-spacing-4))
+      var(--forge-callout-block-spacing-4, var(--mp-spacing-4));
+    color: var(--forge-callout-block-color-text-primary, var(--mp-color-text-primary));
+    background: var(--forge-callout-block-color-bg-muted, var(--mp-color-bg-muted));
+    border-inline-start: var(--forge-callout-block-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-callout-block-color-info-default, var(--mp-color-info-default));
+    border-radius: var(--forge-callout-block-radius-md, var(--mp-radius-md));
 
-    --mp-callout-accent: var(--mp-color-info-default);
+    --mp-callout-accent: var(--forge-callout-block-color-info-default, var(--mp-color-info-default));
 
     &--sm {
-      padding: var(--mp-spacing-2) var(--mp-spacing-3);
-      font-size: var(--mp-font-size-sm);
+      padding: var(--forge-callout-block-spacing-2, var(--mp-spacing-2))
+        var(--forge-callout-block-spacing-3, var(--mp-spacing-3));
+      font-size: var(--forge-callout-block-font-size-sm, var(--mp-font-size-sm));
     }
 
     &--success {
-      background: var(--mp-color-success-subtle);
-      border-inline-start-color: var(--mp-color-success-default);
+      background: var(--forge-callout-block-color-success-subtle, var(--mp-color-success-subtle));
+      border-inline-start-color: var(--forge-callout-block-color-success-default, var(--mp-color-success-default));
 
-      --mp-callout-accent: var(--mp-color-success-default);
+      --mp-callout-accent: var(--forge-callout-block-color-success-default, var(--mp-color-success-default));
     }
 
     &--warning {
-      background: var(--mp-color-warning-subtle);
-      border-inline-start-color: var(--mp-color-warning-default);
+      background: var(--forge-callout-block-color-warning-subtle, var(--mp-color-warning-subtle));
+      border-inline-start-color: var(--forge-callout-block-color-warning-default, var(--mp-color-warning-default));
 
-      --mp-callout-accent: var(--mp-color-warning-default);
+      --mp-callout-accent: var(--forge-callout-block-color-warning-default, var(--mp-color-warning-default));
     }
 
     &--danger {
-      background: var(--mp-color-danger-subtle);
-      border-inline-start-color: var(--mp-color-danger-default);
+      background: var(--forge-callout-block-color-danger-subtle, var(--mp-color-danger-subtle));
+      border-inline-start-color: var(--forge-callout-block-color-danger-default, var(--mp-color-danger-default));
 
-      --mp-callout-accent: var(--mp-color-danger-default);
+      --mp-callout-accent: var(--forge-callout-block-color-danger-default, var(--mp-color-danger-default));
     }
 
     &__icon {
-      flex: 0 0 var(--mp-size-icon-lg);
-      color: var(--mp-callout-accent);
-      font-weight: var(--mp-font-weight-bold);
+      flex: 0 0 var(--forge-callout-block-size-icon-lg, var(--mp-size-icon-lg));
+      color: var(--forge-callout-block-callout-accent, var(--mp-callout-accent));
+      font-weight: var(--forge-callout-block-font-weight-bold, var(--mp-font-weight-bold));
       text-align: center;
     }
 
@@ -51,19 +56,19 @@
     &__title {
       margin: 0;
       font-size: inherit;
-      line-height: var(--mp-line-height-snug);
+      line-height: var(--forge-callout-block-line-height-snug, var(--mp-line-height-snug));
     }
 
     &__description {
-      margin: var(--mp-spacing-1) 0 0;
+      margin: var(--forge-callout-block-spacing-1, var(--mp-spacing-1)) 0 0;
     }
 
     &__body {
-      margin-top: var(--mp-spacing-2);
+      margin-top: var(--forge-callout-block-spacing-2, var(--mp-spacing-2));
     }
 
     &__action {
-      margin-top: var(--mp-spacing-3);
+      margin-top: var(--forge-callout-block-spacing-3, var(--mp-spacing-3));
     }
   }
 }

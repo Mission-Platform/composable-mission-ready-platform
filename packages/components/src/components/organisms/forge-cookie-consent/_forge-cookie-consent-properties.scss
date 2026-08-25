@@ -1,0 +1,99 @@
+/**
+ * Registered inherited custom properties for forge-cookie-consent overrides.
+ */
+
+@property --forge-cookie-consent-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-cookie-consent-color-surface-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-surface-primary);
+}
+
+@property --forge-cookie-consent-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-cookie-consent-shadow-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-shadow-lg, 0 0.5rem 2rem rgb(0 0 0 / 18%));
+}
+
+@property --forge-cookie-consent-spacing-5 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-5);
+}
+
+@property --forge-cookie-consent-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-cookie-consent-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-cookie-consent-color-text-link {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-link);
+}
+
+@property --forge-cookie-consent-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-cookie-consent-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-cookie-consent-border-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-radius-sm);
+}
+
+@property --forge-cookie-consent-color-action-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-action-primary);
+}
+
+@property --forge-cookie-consent-color-text-on-action {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-action);
+}
+
+@property --forge-cookie-consent-overlay-modal-backdrop-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-backdrop-surface, rgb(0 0 0 / 45%));
+}
+
+@property --forge-cookie-consent-border-radius-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-radius-lg);
+}
+
+@property --forge-cookie-consent-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}

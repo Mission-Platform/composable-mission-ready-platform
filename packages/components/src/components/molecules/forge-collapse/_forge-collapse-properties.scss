@@ -1,0 +1,225 @@
+/**
+ * Registered inherited custom properties for forge-collapse overrides.
+ */
+
+@property --forge-collapse-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-border-width);
+}
+
+@property --forge-collapse-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-border);
+}
+
+@property --forge-collapse-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-radius);
+}
+
+@property --forge-collapse-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-surface);
+}
+
+@property --forge-collapse-disabled-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-disabled-surface);
+}
+
+@property --forge-collapse-disabled-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-disabled-border);
+}
+
+@property --forge-collapse-disabled-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-disabled-text);
+}
+
+@property --forge-collapse-summary-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-padding-block);
+}
+
+@property --forge-collapse-summary-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-padding-inline);
+}
+
+@property --forge-collapse-summary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-text);
+}
+
+@property --forge-collapse-summary-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-font-weight);
+}
+
+@property --forge-collapse-summary-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-gap);
+}
+
+@property --forge-collapse-summary-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-surface-hover);
+}
+
+@property --forge-collapse-summary-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-focus-ring);
+}
+
+@property --forge-collapse-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-transition-duration);
+}
+
+@property --forge-collapse-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-transition-easing);
+}
+
+@property --forge-collapse-content-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-content-padding-block);
+}
+
+@property --forge-collapse-content-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-content-padding-inline);
+}
+
+@property --forge-collapse-content-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-content-text);
+}
+
+@property --forge-collapse-content-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-content-border-width);
+}
+
+@property --forge-collapse-content-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-content-border);
+}
+
+@property --forge-collapse-tone-primary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-primary-border);
+}
+
+@property --forge-collapse-tone-secondary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-secondary-border);
+}
+
+@property --forge-collapse-tone-tertiary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-tertiary-border);
+}
+
+@property --forge-collapse-tone-success-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-success-border);
+}
+
+@property --forge-collapse-tone-warning-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-warning-border);
+}
+
+@property --forge-collapse-tone-info-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-info-border);
+}
+
+@property --forge-collapse-tone-error-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-error-border);
+}
+
+@property --forge-collapse-tone-critical-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-critical-border);
+}
+
+@property --forge-collapse-tone-primary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-primary-text);
+}
+
+@property --forge-collapse-tone-secondary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-secondary-text);
+}
+
+@property --forge-collapse-tone-tertiary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-tertiary-text);
+}
+
+@property --forge-collapse-tone-success-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-success-text);
+}
+
+@property --forge-collapse-tone-warning-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-warning-text);
+}
+
+@property --forge-collapse-tone-info-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-info-text);
+}
+
+@property --forge-collapse-tone-error-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-error-text);
+}
+
+@property --forge-collapse-tone-critical-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-critical-text);
+}

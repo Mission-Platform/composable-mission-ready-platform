@@ -1,4 +1,4 @@
-import { type MpChild, type MpElement } from '@mission-platform/forge';
+import { createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 /** Canonical 2xs → 2xl size scale shared across the display components. */
 export type AvatarSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -10,6 +10,21 @@ export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy' | undefined;
 export type AvatarVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface AvatarStyleProperties {
+  readonly 'layout-gap'?: string;
+}
+
+export type AvatarStyle = CSSStyleProperties & {
+  readonly '--forge-avatar-layout-gap'?: string | undefined;
+};
+
+function createAvatarStyle(properties: Readonly<AvatarStyleProperties> | undefined): AvatarStyle | undefined {
+  return createForgeStyle({
+    '--forge-avatar-layout-gap': properties?.['layout-gap'],
+  }) as AvatarStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface AvatarProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -29,6 +44,9 @@ export interface AvatarProperties {
   variant?: AvatarVariant;
   /** Background colour used for the initials/slot fallback (when there is no `src`). Overrides `variant`. */
   color?: string;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<AvatarStyleProperties>;
 }
 
 /** Maps each {@link AvatarSize} onto its pixel dimension. */
@@ -100,6 +118,8 @@ const VARIANT_COLOR_MAP: Record<AvatarVariant, string> = {
  * the Storybook demo content.
  */
 export function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement {
+  const propertyStyle = createAvatarStyle(properties.properties);
+
   const { src, alt = '', initials, size = 'md', shape = 'circle', status, variant = 'primary', color } = properties;
 
   const dimension = SIZE_MAP[size];
@@ -138,7 +158,7 @@ export function ForgeAvatar(properties: Readonly<AvatarProperties>): MpElement {
   return (
     <div
       class="avatar"
-      style={{ position: 'relative', display: 'inline-flex' }}
+      style={{ position: 'relative', display: 'inline-flex', ...propertyStyle }}
     >
       <div
         className={['avatar__image', `avatar--${size}`, `avatar--${shape}`].join(' ')}

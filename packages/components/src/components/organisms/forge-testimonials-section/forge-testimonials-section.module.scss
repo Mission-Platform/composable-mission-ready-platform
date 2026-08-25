@@ -1,54 +1,58 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
+@use './forge-testimonials-section-properties';
+
 @layer mp.components {
   .forge-testimonials-section {
     width: 100%;
     max-width: 54rem;
     margin: auto;
-    padding: var(--mp-spacing-8) var(--mp-spacing-4);
+    padding: var(--forge-testimonials-section-spacing-8, var(--mp-spacing-8))
+      var(--forge-testimonials-section-spacing-4, var(--mp-spacing-4));
     text-align: center;
   }
 
   .forge-testimonials-section h2 {
-    margin: 0 0 var(--mp-spacing-5);
+    margin: 0 0 var(--forge-testimonials-section-spacing-5, var(--mp-spacing-5));
   }
 
   .forge-testimonials-section figure {
     margin: 0;
-    padding: var(--mp-spacing-6);
-    border-radius: var(--mp-radius-lg);
-    background: var(--mp-color-bg-muted);
+    padding: var(--forge-testimonials-section-spacing-6, var(--mp-spacing-6));
+    border-radius: var(--forge-testimonials-section-radius-lg, var(--mp-radius-lg));
+    background: var(--forge-testimonials-section-color-bg-muted, var(--mp-color-bg-muted));
   }
 
   .forge-testimonials-section blockquote {
     margin: 0;
     font-size: clamp(1.125rem, 3vw, 1.5rem);
-    line-height: var(--mp-line-height-relaxed);
+    line-height: var(--forge-testimonials-section-line-height-relaxed, var(--mp-line-height-relaxed));
   }
 
   .forge-testimonials-section figcaption {
     display: grid;
-    gap: var(--mp-spacing-1);
-    margin-top: var(--mp-spacing-4);
+    gap: var(--forge-testimonials-section-spacing-1, var(--mp-spacing-1));
+    margin-top: var(--forge-testimonials-section-spacing-4, var(--mp-spacing-4));
   }
 
   .forge-testimonials-section figcaption span {
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-testimonials-section-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-testimonials-section__controls {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--mp-spacing-4);
-    margin-top: var(--mp-spacing-4);
+    gap: var(--forge-testimonials-section-spacing-4, var(--mp-spacing-4));
+    margin-top: var(--forge-testimonials-section-spacing-4, var(--mp-spacing-4));
   }
 
   .forge-testimonials-section__controls button {
-    min-width: var(--mp-size-height-lg);
-    min-height: var(--mp-size-height-lg);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-full);
-    background: var(--mp-color-bg-surface);
+    min-width: var(--forge-testimonials-section-size-height-lg, var(--mp-size-height-lg));
+    min-height: var(--forge-testimonials-section-size-height-lg, var(--mp-size-height-lg));
+    border: var(--forge-testimonials-section-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-testimonials-section-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-testimonials-section-radius-full, var(--mp-radius-full));
+    background: var(--forge-testimonials-section-color-bg-surface, var(--mp-color-bg-surface));
     cursor: pointer;
   }
 
@@ -71,6 +75,6 @@
 
   .forge-testimonials-section__avatar {
     display: inline-flex;
-    margin: 0 auto var(--mp-spacing-1);
+    margin: 0 auto var(--forge-testimonials-section-spacing-1, var(--mp-spacing-1));
   }
 }

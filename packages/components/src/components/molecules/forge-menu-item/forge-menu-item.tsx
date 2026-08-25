@@ -1,4 +1,11 @@
-import { classNames, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import {
+  classNames,
+  Slot,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-menu-item.module.scss';
@@ -10,6 +17,111 @@ export type MenuItemSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type MenuItemVariant =
   'default' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'information' | 'error' | 'critical';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface MenuItemStyleProperties {
+  readonly 'feedback-opacity-disabled'?: string;
+  readonly 'navigation-focus-ring'?: string;
+  readonly 'navigation-font-family'?: string;
+  readonly 'navigation-menu-item-radius'?: string;
+  readonly 'navigation-menu-item-surface-active'?: string;
+  readonly 'navigation-menu-item-text-active'?: string;
+  readonly 'navigation-menu-item-transition-duration'?: string;
+  readonly 'navigation-menu-item-transition-easing'?: string;
+  readonly 'navigation-menu-link-gap'?: string;
+  readonly 'navigation-menu-link-padding-block'?: string;
+  readonly 'navigation-menu-link-padding-inline'?: string;
+  readonly 'navigation-menu-surface-link-hover'?: string;
+  readonly 'navigation-menu-tone-critical-surface-hover'?: string;
+  readonly 'navigation-menu-tone-critical-text'?: string;
+  readonly 'navigation-menu-tone-error-surface-hover'?: string;
+  readonly 'navigation-menu-tone-error-text'?: string;
+  readonly 'navigation-menu-tone-information-surface-hover'?: string;
+  readonly 'navigation-menu-tone-information-text'?: string;
+  readonly 'navigation-menu-tone-primary-surface-hover'?: string;
+  readonly 'navigation-menu-tone-primary-text'?: string;
+  readonly 'navigation-menu-tone-secondary-surface-hover'?: string;
+  readonly 'navigation-menu-tone-secondary-text'?: string;
+  readonly 'navigation-menu-tone-success-surface-hover'?: string;
+  readonly 'navigation-menu-tone-success-text'?: string;
+  readonly 'navigation-menu-tone-tertiary-surface-hover'?: string;
+  readonly 'navigation-menu-tone-tertiary-text'?: string;
+  readonly 'navigation-menu-tone-warning-surface-hover'?: string;
+  readonly 'navigation-menu-tone-warning-text'?: string;
+}
+
+export type MenuItemStyle = CSSStyleProperties & {
+  readonly '--forge-menu-item-feedback-opacity-disabled'?: string | undefined;
+  readonly '--forge-menu-item-navigation-focus-ring'?: string | undefined;
+  readonly '--forge-menu-item-navigation-font-family'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-item-radius'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-item-surface-active'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-item-text-active'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-item-transition-duration'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-item-transition-easing'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-link-gap'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-link-padding-block'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-link-padding-inline'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-surface-link-hover'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-critical-surface-hover'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-critical-text'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-error-surface-hover'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-error-text'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-information-surface-hover'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-information-text'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-primary-surface-hover'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-primary-text'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-secondary-surface-hover'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-secondary-text'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-success-surface-hover'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-success-text'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-tertiary-surface-hover'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-tertiary-text'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-warning-surface-hover'?: string | undefined;
+  readonly '--forge-menu-item-navigation-menu-tone-warning-text'?: string | undefined;
+};
+
+function createMenuItemStyle(properties: Readonly<MenuItemStyleProperties> | undefined): MenuItemStyle | undefined {
+  return createForgeStyle({
+    '--forge-menu-item-feedback-opacity-disabled': properties?.['feedback-opacity-disabled'],
+    '--forge-menu-item-navigation-focus-ring': properties?.['navigation-focus-ring'],
+    '--forge-menu-item-navigation-font-family': properties?.['navigation-font-family'],
+    '--forge-menu-item-navigation-menu-item-radius': properties?.['navigation-menu-item-radius'],
+    '--forge-menu-item-navigation-menu-item-surface-active': properties?.['navigation-menu-item-surface-active'],
+    '--forge-menu-item-navigation-menu-item-text-active': properties?.['navigation-menu-item-text-active'],
+    '--forge-menu-item-navigation-menu-item-transition-duration':
+      properties?.['navigation-menu-item-transition-duration'],
+    '--forge-menu-item-navigation-menu-item-transition-easing': properties?.['navigation-menu-item-transition-easing'],
+    '--forge-menu-item-navigation-menu-link-gap': properties?.['navigation-menu-link-gap'],
+    '--forge-menu-item-navigation-menu-link-padding-block': properties?.['navigation-menu-link-padding-block'],
+    '--forge-menu-item-navigation-menu-link-padding-inline': properties?.['navigation-menu-link-padding-inline'],
+    '--forge-menu-item-navigation-menu-surface-link-hover': properties?.['navigation-menu-surface-link-hover'],
+    '--forge-menu-item-navigation-menu-tone-critical-surface-hover':
+      properties?.['navigation-menu-tone-critical-surface-hover'],
+    '--forge-menu-item-navigation-menu-tone-critical-text': properties?.['navigation-menu-tone-critical-text'],
+    '--forge-menu-item-navigation-menu-tone-error-surface-hover':
+      properties?.['navigation-menu-tone-error-surface-hover'],
+    '--forge-menu-item-navigation-menu-tone-error-text': properties?.['navigation-menu-tone-error-text'],
+    '--forge-menu-item-navigation-menu-tone-information-surface-hover':
+      properties?.['navigation-menu-tone-information-surface-hover'],
+    '--forge-menu-item-navigation-menu-tone-information-text': properties?.['navigation-menu-tone-information-text'],
+    '--forge-menu-item-navigation-menu-tone-primary-surface-hover':
+      properties?.['navigation-menu-tone-primary-surface-hover'],
+    '--forge-menu-item-navigation-menu-tone-primary-text': properties?.['navigation-menu-tone-primary-text'],
+    '--forge-menu-item-navigation-menu-tone-secondary-surface-hover':
+      properties?.['navigation-menu-tone-secondary-surface-hover'],
+    '--forge-menu-item-navigation-menu-tone-secondary-text': properties?.['navigation-menu-tone-secondary-text'],
+    '--forge-menu-item-navigation-menu-tone-success-surface-hover':
+      properties?.['navigation-menu-tone-success-surface-hover'],
+    '--forge-menu-item-navigation-menu-tone-success-text': properties?.['navigation-menu-tone-success-text'],
+    '--forge-menu-item-navigation-menu-tone-tertiary-surface-hover':
+      properties?.['navigation-menu-tone-tertiary-surface-hover'],
+    '--forge-menu-item-navigation-menu-tone-tertiary-text': properties?.['navigation-menu-tone-tertiary-text'],
+    '--forge-menu-item-navigation-menu-tone-warning-surface-hover':
+      properties?.['navigation-menu-tone-warning-surface-hover'],
+    '--forge-menu-item-navigation-menu-tone-warning-text': properties?.['navigation-menu-tone-warning-text'],
+  }) as MenuItemStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface MenuItemProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -27,6 +139,9 @@ export interface MenuItemProperties {
   href?: string;
   /** Fired when a non-link item is activated by click or Enter/Space. */
   onClick?: (event: unknown) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<MenuItemStyleProperties>;
 }
 
 /**
@@ -46,6 +161,8 @@ export interface MenuItemProperties {
  * established router substitution) and exposes the `onClick` callback prop.
  */
 export function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpElement {
+  const style = createMenuItemStyle(properties.properties);
+
   const { label, disabled = false, variant = 'default', active = false, href, size = 'md' } = properties;
 
   const isLink = !disabled && !!href;
@@ -80,6 +197,7 @@ export function ForgeMenuItem(properties: Readonly<MenuItemProperties>): MpEleme
     <li
       className={liClass}
       role="none"
+      style={style}
     >
       {isLink ? (
         <a

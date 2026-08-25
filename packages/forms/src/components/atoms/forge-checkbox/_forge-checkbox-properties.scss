@@ -1,0 +1,119 @@
+@property --forge-checkbox-checkable-gap-stack {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-gap-stack);
+}
+
+@property --forge-checkbox-checkable-gap-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-gap-inline);
+}
+
+@property --forge-checkbox-checkable-control-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-control-size);
+}
+
+@property --forge-checkbox-checkable-border-width-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-width-default);
+}
+
+@property --forge-checkbox-checkable-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-default);
+}
+
+@property --forge-checkbox-checkable-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-radius);
+}
+
+@property --forge-checkbox-checkable-track-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-track-default);
+}
+
+@property --forge-checkbox-checkable-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-transition-duration);
+}
+
+@property --forge-checkbox-checkable-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-transition-easing);
+}
+
+@property --forge-checkbox-checkable-glyph-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-glyph-font-size);
+}
+
+@property --forge-checkbox-checkable-glyph-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-glyph-font-weight);
+}
+
+@property --forge-checkbox-field-required {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-required);
+}
+
+@property --forge-checkbox-checkable-border-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-invalid);
+}
+
+@property --forge-checkbox-checkable-border-width-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-width-focus);
+}
+
+@property --forge-checkbox-checkable-border-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-focus-visible);
+}
+
+@property --forge-checkbox-checkable-track-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-track-selected);
+}
+
+@property --forge-checkbox-checkable-border-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-selected);
+}
+
+@property --forge-checkbox-checkable-thumb-on-track {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-thumb-on-track);
+}
+
+@property --forge-checkbox-feedback-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-opacity-disabled);
+}
+
+@property --forge-checkbox-field-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-error);
+}

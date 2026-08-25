@@ -1,3 +1,5 @@
+@use './forge-segment-control-properties';
+
 /**
  * Styling for the write-once `ForgeSegmentControl`.
  *
@@ -11,11 +13,18 @@
 @layer mp.forms {
   .forge-segment-control {
     display: inline-flex;
-    padding: var(--mp-select-segment-padding);
-    background-color: var(--mp-select-segment-surface-default);
-    border: var(--mp-select-segment-border-width) solid var(--mp-select-segment-border);
-    border-radius: var(--mp-select-segment-radius-container);
-    gap: var(--mp-select-segment-gap);
+    padding: var(--forge-segment-control-select-segment-padding, var(--mp-select-segment-padding));
+    background-color: var(
+      --forge-segment-control-select-segment-surface-default,
+      var(--mp-select-segment-surface-default)
+    );
+    border: var(--forge-segment-control-select-segment-border-width, var(--mp-select-segment-border-width)) solid
+      var(--forge-segment-control-select-segment-border, var(--mp-select-segment-border));
+    border-radius: var(
+      --forge-segment-control-select-segment-radius-container,
+      var(--mp-select-segment-radius-container)
+    );
+    gap: var(--forge-segment-control-select-segment-gap, var(--mp-select-segment-gap));
 
     &--full-width {
       display: flex;
@@ -23,7 +32,7 @@
     }
 
     &--disabled {
-      opacity: var(--mp-select-segment-disabled-opacity);
+      opacity: var(--forge-segment-control-select-segment-disabled-opacity, var(--mp-select-segment-disabled-opacity));
     }
 
     &__segment {
@@ -33,43 +42,71 @@
       justify-content: center;
       white-space: nowrap;
       background-color: transparent;
-      color: var(--mp-select-segment-text-default);
+      color: var(--forge-segment-control-select-segment-text-default, var(--mp-select-segment-text-default));
       border: 0;
-      border-radius: var(--mp-select-segment-radius-segment);
-      font-family: var(--mp-select-segment-font-family);
-      font-weight: var(--mp-select-segment-font-weight);
+      border-radius: var(
+        --forge-segment-control-select-segment-radius-segment,
+        var(--mp-select-segment-radius-segment)
+      );
+      font-family: var(--forge-segment-control-select-segment-font-family, var(--mp-select-segment-font-family));
+      font-weight: var(--forge-segment-control-select-segment-font-weight, var(--mp-select-segment-font-weight));
       cursor: pointer;
       transition:
-        background-color var(--mp-select-segment-transition-duration) var(--mp-select-segment-transition-easing),
-        color var(--mp-select-segment-transition-duration) var(--mp-select-segment-transition-easing),
-        box-shadow var(--mp-select-segment-transition-duration) var(--mp-select-segment-transition-easing);
+        background-color
+          var(--forge-segment-control-select-segment-transition-duration, var(--mp-select-segment-transition-duration))
+          var(--forge-segment-control-select-segment-transition-easing, var(--mp-select-segment-transition-easing)),
+        color
+          var(--forge-segment-control-select-segment-transition-duration, var(--mp-select-segment-transition-duration))
+          var(--forge-segment-control-select-segment-transition-easing, var(--mp-select-segment-transition-easing)),
+        box-shadow
+          var(--forge-segment-control-select-segment-transition-duration, var(--mp-select-segment-transition-duration))
+          var(--forge-segment-control-select-segment-transition-easing, var(--mp-select-segment-transition-easing));
 
       &--selected {
-        background-color: var(--mp-select-segment-surface-selected);
-        color: var(--mp-select-segment-text-selected);
-        box-shadow: var(--mp-select-segment-shadow-selected);
+        background-color: var(
+          --forge-segment-control-select-segment-surface-selected,
+          var(--mp-select-segment-surface-selected)
+        );
+        color: var(--forge-segment-control-select-segment-text-selected, var(--mp-select-segment-text-selected));
+        box-shadow: var(
+          --forge-segment-control-select-segment-shadow-selected,
+          var(--mp-select-segment-shadow-selected)
+        );
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-input-focus-ring);
+        box-shadow: var(--forge-segment-control-input-focus-ring, var(--mp-input-focus-ring));
       }
 
       &:disabled {
         cursor: not-allowed;
-        opacity: var(--mp-select-segment-disabled-opacity);
+        opacity: var(
+          --forge-segment-control-select-segment-disabled-opacity,
+          var(--mp-select-segment-disabled-opacity)
+        );
       }
 
       &:hover:not(:disabled, .forge-segment-control__segment--selected) {
-        color: var(--mp-select-segment-text-hover);
+        color: var(--forge-segment-control-select-segment-text-hover, var(--mp-select-segment-text-hover));
       }
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-segment-control__segment {
-        padding: var(--mp-select-size-#{$size}-padding-block) var(--mp-select-size-#{$size}-padding-inline);
-        font-size: var(--mp-select-size-#{$size}-font-size);
+        padding: var(
+            --forge-segment-control-select-size-#{$size}-padding-block,
+            var(--mp-select-size-#{$size}-padding-block)
+          )
+          var(
+            --forge-segment-control-select-size-#{$size}-padding-inline,
+            var(--mp-select-size-#{$size}-padding-inline)
+          );
+        font-size: var(
+          --forge-segment-control-select-size-#{$size}-font-size,
+          var(--mp-select-size-#{$size}-font-size)
+        );
       }
     }
   }

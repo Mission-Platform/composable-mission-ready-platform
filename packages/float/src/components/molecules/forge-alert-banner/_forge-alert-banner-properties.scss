@@ -1,0 +1,192 @@
+/**
+ * Registered inherited custom properties for forge-alert-banner overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-alert-banner-overlay-alert-banner-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-alert-banner-gap);
+}
+
+@property --forge-alert-banner-overlay-alert-banner-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-alert-banner-padding-block);
+}
+
+@property --forge-alert-banner-overlay-alert-banner-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-alert-banner-padding-inline);
+}
+
+@property --forge-alert-banner-overlay-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-border-width);
+}
+
+@property --forge-alert-banner-overlay-alert-banner-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-alert-banner-radius);
+}
+
+@property --forge-alert-banner-overlay-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-font-family);
+}
+
+@property --forge-alert-banner-overlay-icon-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-icon-size);
+}
+
+@property --forge-alert-banner-overlay-alert-banner-content-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-alert-banner-content-gap);
+}
+
+@property --forge-alert-banner-overlay-alert-banner-actions-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-alert-banner-actions-gap);
+}
+
+@property --forge-alert-banner-overlay-alert-banner-actions-margin-top {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-alert-banner-actions-margin-top);
+}
+
+@property --forge-alert-banner-overlay-dismiss-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dismiss-padding);
+}
+
+@property --forge-alert-banner-overlay-dismiss-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dismiss-radius);
+}
+
+@property --forge-alert-banner-overlay-alert-banner-dismiss-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-alert-banner-dismiss-opacity);
+}
+
+@property --forge-alert-banner-overlay-alert-banner-dismiss-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-alert-banner-dismiss-transition-duration);
+}
+
+@property --forge-alert-banner-overlay-alert-banner-dismiss-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-alert-banner-dismiss-transition-easing);
+}
+
+@property --forge-alert-banner-overlay-dismiss-focus-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-dismiss-focus-width);
+}
+
+@property --forge-alert-banner-feedback-neutral-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-neutral-background);
+}
+
+@property --forge-alert-banner-feedback-info-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-info-background);
+}
+
+@property --forge-alert-banner-feedback-success-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-success-background);
+}
+
+@property --forge-alert-banner-feedback-warning-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-warning-background);
+}
+
+@property --forge-alert-banner-feedback-danger-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-danger-background);
+}
+
+@property --forge-alert-banner-feedback-neutral-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-neutral-border);
+}
+
+@property --forge-alert-banner-feedback-info-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-info-border);
+}
+
+@property --forge-alert-banner-feedback-success-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-success-border);
+}
+
+@property --forge-alert-banner-feedback-warning-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-warning-border);
+}
+
+@property --forge-alert-banner-feedback-danger-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-danger-border);
+}
+
+@property --forge-alert-banner-feedback-neutral-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-neutral-text);
+}
+
+@property --forge-alert-banner-feedback-info-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-info-text);
+}
+
+@property --forge-alert-banner-feedback-success-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-success-text);
+}
+
+@property --forge-alert-banner-feedback-warning-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-warning-text);
+}
+
+@property --forge-alert-banner-feedback-danger-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-danger-text);
+}

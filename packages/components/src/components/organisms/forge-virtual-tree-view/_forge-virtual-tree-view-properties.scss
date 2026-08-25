@@ -1,0 +1,99 @@
+/**
+ * Registered inherited custom properties for forge-virtual-tree-view overrides.
+ */
+
+@property --forge-virtual-tree-view-data-virtual-tree-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-font-family);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-font-size);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-text-default);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-label-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-label-gap);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-label-padding-inline-end {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-label-padding-inline-end);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-label-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-label-radius);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-label-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-label-transition-duration);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-label-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-label-transition-easing);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-label-hover-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-label-hover-surface);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-label-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-label-focus-ring);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-toggle-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-toggle-size);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-text-toggle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-text-toggle);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-toggle-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-toggle-radius);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-toggle-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-toggle-transition-duration);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-toggle-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-toggle-transition-easing);
+}
+
+@property --forge-virtual-tree-view-data-virtual-tree-text-toggle-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-tree-text-toggle-hover);
+}

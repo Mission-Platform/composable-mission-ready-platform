@@ -1,3 +1,5 @@
+@use './forge-date-input-properties';
+
 /**
  * Styling for the write-once `ForgeDateInput`.
  *
@@ -12,7 +14,7 @@
   .forge-date-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-input-field-gap);
+    gap: var(--forge-date-input-input-field-gap, var(--mp-input-field-gap));
 
     &__label {
       display: flex;
@@ -33,23 +35,26 @@
     }
 
     &__required {
-      color: var(--mp-field-required);
+      color: var(--forge-date-input-field-required, var(--mp-field-required));
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: center;
-      border: var(--mp-input-border-width) solid var(--mp-input-border-default);
-      border-radius: var(--mp-input-radius);
-      background-color: var(--mp-input-surface-default);
+      border: var(--forge-date-input-input-border-width, var(--mp-input-border-width)) solid
+        var(--forge-date-input-input-border-default, var(--mp-input-border-default));
+      border-radius: var(--forge-date-input-input-radius, var(--mp-input-radius));
+      background-color: var(--forge-date-input-input-surface-default, var(--mp-input-surface-default));
       transition:
-        border-color var(--mp-input-transition-duration) var(--mp-input-transition-easing),
-        box-shadow var(--mp-input-transition-duration) var(--mp-input-transition-easing);
+        border-color var(--forge-date-input-input-transition-duration, var(--mp-input-transition-duration))
+          var(--forge-date-input-input-transition-easing, var(--mp-input-transition-easing)),
+        box-shadow var(--forge-date-input-input-transition-duration, var(--mp-input-transition-duration))
+          var(--forge-date-input-input-transition-easing, var(--mp-input-transition-easing));
 
       &:focus-within {
-        border-color: var(--mp-input-border-focus-visible);
-        box-shadow: var(--mp-input-focus-ring);
+        border-color: var(--forge-date-input-input-border-focus-visible, var(--mp-input-border-focus-visible));
+        box-shadow: var(--forge-date-input-input-focus-ring, var(--mp-input-focus-ring));
       }
     }
 
@@ -80,28 +85,28 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      color: var(--mp-input-text-secondary);
+      color: var(--forge-date-input-input-text-secondary, var(--mp-input-text-secondary));
 
       &--start {
-        margin-inline-start: var(--mp-input-extension-gap);
+        margin-inline-start: var(--forge-date-input-input-extension-gap, var(--mp-input-extension-gap));
       }
 
       &--end {
-        margin-inline-end: var(--mp-input-extension-gap);
+        margin-inline-end: var(--forge-date-input-input-extension-gap, var(--mp-input-extension-gap));
       }
     }
 
     &__value {
-      color: var(--mp-input-text-default);
-      font-family: var(--mp-input-font-family);
+      color: var(--forge-date-input-input-text-default, var(--mp-input-text-default));
+      font-family: var(--forge-date-input-input-font-family, var(--mp-input-font-family));
 
       &--placeholder {
-        color: var(--mp-input-text-placeholder);
+        color: var(--forge-date-input-input-text-placeholder, var(--mp-input-text-placeholder));
       }
     }
 
     &__icon {
-      color: var(--mp-input-text-secondary);
+      color: var(--forge-date-input-input-text-secondary, var(--mp-input-text-secondary));
       display: flex;
       align-items: center;
       flex-shrink: 0;
@@ -117,36 +122,36 @@
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-date-input__trigger {
-        padding: var(--mp-input-size-#{$size}-padding-block)
-          var(--mp-input-size-#{$size}-padding-inline);
+        padding: var(--forge-date-input-input-size-#{$size}-padding-block, var(--mp-input-size-#{$size}-padding-block))
+          var(--forge-date-input-input-size-#{$size}-padding-inline, var(--mp-input-size-#{$size}-padding-inline));
 
         .forge-date-input__value {
-          font-size: var(--mp-input-size-#{$size}-font-size);
+          font-size: var(--forge-date-input-input-size-#{$size}-font-size, var(--mp-input-size-#{$size}-font-size));
         }
       }
     }
 
     /* States */
     &--error .forge-date-input__wrapper {
-      border-color: var(--mp-input-border-invalid);
+      border-color: var(--forge-date-input-input-border-invalid, var(--mp-input-border-invalid));
 
       &:focus-within {
-        box-shadow: var(--mp-input-focus-ring-invalid);
+        box-shadow: var(--forge-date-input-input-focus-ring-invalid, var(--mp-input-focus-ring-invalid));
       }
     }
 
     &--disabled {
-      opacity: var(--mp-input-opacity-disabled);
+      opacity: var(--forge-date-input-input-opacity-disabled, var(--mp-input-opacity-disabled));
       pointer-events: none;
 
       .forge-date-input__wrapper {
-        background-color: var(--mp-input-surface-disabled);
+        background-color: var(--forge-date-input-input-surface-disabled, var(--mp-input-surface-disabled));
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-field-error);
+      color: var(--forge-date-input-field-error, var(--mp-field-error));
       margin: 0;
     }
 
@@ -157,11 +162,11 @@
     /* Content filling the ForgeDropdown panel (which owns the surface, border,
        shadow, scrolling, and anchored positioning) around the ForgeCalendar. */
     &__calendar {
-      padding: var(--mp-calendar-popup-padding);
+      padding: var(--forge-date-input-calendar-popup-padding, var(--mp-calendar-popup-padding));
       min-width: 280px;
 
       /* Cap to the viewport so the calendar never overflows on small screens. */
-      max-width: calc(100vw - var(--mp-spacing-4));
+      max-width: calc(100vw - var(--forge-date-input-spacing-4, var(--mp-spacing-4)));
     }
   }
 }

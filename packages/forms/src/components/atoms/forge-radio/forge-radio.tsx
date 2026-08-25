@@ -1,4 +1,4 @@
-import { type MpChild, type MpElement } from '@mission-platform/forge';
+import { createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-radio.module.scss';
@@ -6,6 +6,60 @@ import styles from './forge-radio.module.scss';
 /** Size token — canonical 2xs → 2xl scale. */
 export type RadioSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface RadioStyleProperties {
+  readonly 'checkable-border-default'?: string;
+  readonly 'checkable-border-focus-visible'?: string;
+  readonly 'checkable-border-selected'?: string;
+  readonly 'checkable-border-width-default'?: string;
+  readonly 'checkable-border-width-focus'?: string;
+  readonly 'checkable-circle-radius'?: string;
+  readonly 'checkable-control-size'?: string;
+  readonly 'checkable-gap-inline'?: string;
+  readonly 'checkable-indicator-size'?: string;
+  readonly 'checkable-opacity-disabled'?: string;
+  readonly 'checkable-track-default'?: string;
+  readonly 'checkable-track-selected'?: string;
+  readonly 'checkable-transition-duration'?: string;
+  readonly 'checkable-transition-easing'?: string;
+}
+
+export type RadioStyle = CSSStyleProperties & {
+  readonly '--forge-radio-checkable-border-default'?: string | undefined;
+  readonly '--forge-radio-checkable-border-focus-visible'?: string | undefined;
+  readonly '--forge-radio-checkable-border-selected'?: string | undefined;
+  readonly '--forge-radio-checkable-border-width-default'?: string | undefined;
+  readonly '--forge-radio-checkable-border-width-focus'?: string | undefined;
+  readonly '--forge-radio-checkable-circle-radius'?: string | undefined;
+  readonly '--forge-radio-checkable-control-size'?: string | undefined;
+  readonly '--forge-radio-checkable-gap-inline'?: string | undefined;
+  readonly '--forge-radio-checkable-indicator-size'?: string | undefined;
+  readonly '--forge-radio-checkable-opacity-disabled'?: string | undefined;
+  readonly '--forge-radio-checkable-track-default'?: string | undefined;
+  readonly '--forge-radio-checkable-track-selected'?: string | undefined;
+  readonly '--forge-radio-checkable-transition-duration'?: string | undefined;
+  readonly '--forge-radio-checkable-transition-easing'?: string | undefined;
+};
+
+function createRadioStyle(properties: Readonly<RadioStyleProperties> | undefined): RadioStyle | undefined {
+  return createForgeStyle({
+    '--forge-radio-checkable-border-default': properties?.['checkable-border-default'],
+    '--forge-radio-checkable-border-focus-visible': properties?.['checkable-border-focus-visible'],
+    '--forge-radio-checkable-border-selected': properties?.['checkable-border-selected'],
+    '--forge-radio-checkable-border-width-default': properties?.['checkable-border-width-default'],
+    '--forge-radio-checkable-border-width-focus': properties?.['checkable-border-width-focus'],
+    '--forge-radio-checkable-circle-radius': properties?.['checkable-circle-radius'],
+    '--forge-radio-checkable-control-size': properties?.['checkable-control-size'],
+    '--forge-radio-checkable-gap-inline': properties?.['checkable-gap-inline'],
+    '--forge-radio-checkable-indicator-size': properties?.['checkable-indicator-size'],
+    '--forge-radio-checkable-opacity-disabled': properties?.['checkable-opacity-disabled'],
+    '--forge-radio-checkable-track-default': properties?.['checkable-track-default'],
+    '--forge-radio-checkable-track-selected': properties?.['checkable-track-selected'],
+    '--forge-radio-checkable-transition-duration': properties?.['checkable-transition-duration'],
+    '--forge-radio-checkable-transition-easing': properties?.['checkable-transition-easing'],
+  }) as RadioStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface RadioProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -30,6 +84,9 @@ export interface RadioProperties {
   onUpdateModelValue?: (value: string | number) => void;
   /** Fired with the native `change` event. */
   onChange?: (event: Event) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<RadioStyleProperties>;
 }
 
 /**
@@ -46,6 +103,8 @@ export interface RadioProperties {
  * `onUpdateModelValue`/`onChange` callback props.
  */
 export function ForgeRadio(properties: Readonly<RadioProperties>): MpElement {
+  const style = createRadioStyle(properties.properties);
+
   const { modelValue, value, label, labelHidden = false, disabled = false, size = 'md' } = properties;
 
   const isChecked = modelValue === value;
@@ -65,6 +124,7 @@ export function ForgeRadio(properties: Readonly<RadioProperties>): MpElement {
           [styles['forge-radio--disabled']]: disabled,
         },
       ]}
+      style={style}
     >
       <span className={styles['forge-radio__control-wrapper']}>
         <input

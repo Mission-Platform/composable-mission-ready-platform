@@ -10,12 +10,14 @@
  * properties are used.
  */
 
+@use './forge-window-popout-properties';
+
 @layer mp.components {
   .forge-window-popout {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--mp-overlay-window-popout-gap);
+    gap: var(--forge-window-popout-overlay-window-popout-gap, var(--mp-overlay-window-popout-gap));
 
     &__inline {
       width: 100%;
@@ -29,11 +31,31 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: var(--mp-overlay-window-popout-placeholder-padding);
-      border: var(--mp-overlay-window-popout-placeholder-border-width) dashed var(--mp-overlay-window-popout-placeholder-border);
-      border-radius: var(--mp-overlay-window-popout-placeholder-radius);
-      background-color: var(--mp-overlay-window-popout-placeholder-surface);
-      min-height: var(--mp-overlay-window-popout-placeholder-min-height);
+      padding: var(
+        --forge-window-popout-overlay-window-popout-placeholder-padding,
+        var(--mp-overlay-window-popout-placeholder-padding)
+      );
+      border: var(
+          --forge-window-popout-overlay-window-popout-placeholder-border-width,
+          var(--mp-overlay-window-popout-placeholder-border-width)
+        )
+        dashed
+        var(
+          --forge-window-popout-overlay-window-popout-placeholder-border,
+          var(--mp-overlay-window-popout-placeholder-border)
+        );
+      border-radius: var(
+        --forge-window-popout-overlay-window-popout-placeholder-radius,
+        var(--mp-overlay-window-popout-placeholder-radius)
+      );
+      background-color: var(
+        --forge-window-popout-overlay-window-popout-placeholder-surface,
+        var(--mp-overlay-window-popout-placeholder-surface)
+      );
+      min-height: var(
+        --forge-window-popout-overlay-window-popout-placeholder-min-height,
+        var(--mp-overlay-window-popout-placeholder-min-height)
+      );
     }
 
     &__placeholder-text {
@@ -48,32 +70,98 @@
     &__toggle {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-overlay-window-popout-toggle-gap);
-      padding: var(--mp-overlay-window-popout-toggle-padding-block) var(--mp-overlay-window-popout-toggle-padding-inline);
-      border: var(--mp-overlay-window-popout-toggle-border-width) solid var(--mp-overlay-window-popout-toggle-border-default);
-      border-radius: var(--mp-overlay-window-popout-toggle-radius);
-      background: var(--mp-overlay-window-popout-toggle-surface-default);
-      color: var(--mp-overlay-window-popout-toggle-text-default);
+      gap: var(--forge-window-popout-overlay-window-popout-toggle-gap, var(--mp-overlay-window-popout-toggle-gap));
+      padding: var(
+          --forge-window-popout-overlay-window-popout-toggle-padding-block,
+          var(--mp-overlay-window-popout-toggle-padding-block)
+        )
+        var(
+          --forge-window-popout-overlay-window-popout-toggle-padding-inline,
+          var(--mp-overlay-window-popout-toggle-padding-inline)
+        );
+      border: var(
+          --forge-window-popout-overlay-window-popout-toggle-border-width,
+          var(--mp-overlay-window-popout-toggle-border-width)
+        )
+        solid
+        var(
+          --forge-window-popout-overlay-window-popout-toggle-border-default,
+          var(--mp-overlay-window-popout-toggle-border-default)
+        );
+      border-radius: var(
+        --forge-window-popout-overlay-window-popout-toggle-radius,
+        var(--mp-overlay-window-popout-toggle-radius)
+      );
+      background: var(
+        --forge-window-popout-overlay-window-popout-toggle-surface-default,
+        var(--mp-overlay-window-popout-toggle-surface-default)
+      );
+      color: var(
+        --forge-window-popout-overlay-window-popout-toggle-text-default,
+        var(--mp-overlay-window-popout-toggle-text-default)
+      );
       cursor: pointer;
       transition:
-        background-color var(--mp-overlay-window-popout-toggle-transition-duration) var(--mp-overlay-window-popout-toggle-transition-easing),
-        color var(--mp-overlay-window-popout-toggle-transition-duration) var(--mp-overlay-window-popout-toggle-transition-easing),
-        border-color var(--mp-overlay-window-popout-toggle-transition-duration) var(--mp-overlay-window-popout-toggle-transition-easing);
+        background-color
+          var(
+            --forge-window-popout-overlay-window-popout-toggle-transition-duration,
+            var(--mp-overlay-window-popout-toggle-transition-duration)
+          )
+          var(
+            --forge-window-popout-overlay-window-popout-toggle-transition-easing,
+            var(--mp-overlay-window-popout-toggle-transition-easing)
+          ),
+        color
+          var(
+            --forge-window-popout-overlay-window-popout-toggle-transition-duration,
+            var(--mp-overlay-window-popout-toggle-transition-duration)
+          )
+          var(
+            --forge-window-popout-overlay-window-popout-toggle-transition-easing,
+            var(--mp-overlay-window-popout-toggle-transition-easing)
+          ),
+        border-color
+          var(
+            --forge-window-popout-overlay-window-popout-toggle-transition-duration,
+            var(--mp-overlay-window-popout-toggle-transition-duration)
+          )
+          var(
+            --forge-window-popout-overlay-window-popout-toggle-transition-easing,
+            var(--mp-overlay-window-popout-toggle-transition-easing)
+          );
 
       &:hover {
-        background-color: var(--mp-overlay-window-popout-toggle-surface-hover);
-        border-color: var(--mp-overlay-window-popout-toggle-border-hover);
+        background-color: var(
+          --forge-window-popout-overlay-window-popout-toggle-surface-hover,
+          var(--mp-overlay-window-popout-toggle-surface-hover)
+        );
+        border-color: var(
+          --forge-window-popout-overlay-window-popout-toggle-border-hover,
+          var(--mp-overlay-window-popout-toggle-border-hover)
+        );
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-overlay-window-popout-toggle-focus-ring);
+        box-shadow: var(
+          --forge-window-popout-overlay-window-popout-toggle-focus-ring,
+          var(--mp-overlay-window-popout-toggle-focus-ring)
+        );
       }
 
       &[aria-pressed='true'] {
-        background-color: var(--mp-overlay-window-popout-toggle-surface-selected);
-        color: var(--mp-overlay-window-popout-toggle-text-selected);
-        border-color: var(--mp-overlay-window-popout-toggle-border-selected);
+        background-color: var(
+          --forge-window-popout-overlay-window-popout-toggle-surface-selected,
+          var(--mp-overlay-window-popout-toggle-surface-selected)
+        );
+        color: var(
+          --forge-window-popout-overlay-window-popout-toggle-text-selected,
+          var(--mp-overlay-window-popout-toggle-text-selected)
+        );
+        border-color: var(
+          --forge-window-popout-overlay-window-popout-toggle-border-selected,
+          var(--mp-overlay-window-popout-toggle-border-selected)
+        );
       }
     }
   }

@@ -1,0 +1,41 @@
+@property --forge-container-layout-demo-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-demo-padding);
+}
+
+@property --forge-container-layout-demo-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-demo-border-width);
+}
+
+@property --forge-container-layout-demo-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-demo-border);
+}
+
+@property --forge-container-layout-demo-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-demo-radius);
+}
+
+@property --forge-container-layout-demo-surface-sunken {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-demo-surface-sunken);
+}
+
+@property --forge-container-layout-demo-surface-raised {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-demo-surface-raised);
+}
+
+@property --forge-container-layout-demo-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-demo-text);
+}

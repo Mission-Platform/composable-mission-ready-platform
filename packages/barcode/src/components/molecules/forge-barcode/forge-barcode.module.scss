@@ -8,6 +8,8 @@
  * The rules live in the package-owned `mp.barcode` cascade layer.
  */
 
+@use './forge-barcode-properties';
+
 @layer mp.barcode {
   .forge-barcode {
     display: block;
@@ -20,13 +22,13 @@
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--mp-code-barcode-figure-gap);
+    gap: var(--forge-barcode-code-barcode-figure-gap, var(--mp-code-barcode-figure-gap));
   }
 
   .forge-barcode__actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: var(--mp-code-barcode-actions-gap);
+    gap: var(--forge-barcode-code-barcode-actions-gap, var(--mp-code-barcode-actions-gap));
   }
 }

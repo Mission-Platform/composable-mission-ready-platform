@@ -1,5 +1,6 @@
 import {
-  h,
+  createForgeStyle,
+  type CSSStyleProperties,
   type MpChild,
   type MpElement,
   type MpRenderProperty,
@@ -60,6 +61,252 @@ export interface PlannerCapacityScope {
   state: CapacityState;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ResourcePlannerStyleProperties {
+  readonly "booking-conflict-surface"?: string;
+  readonly "booking-focus-ring"?: string;
+  readonly "booking-height-inset"?: string;
+  readonly "booking-padding-block"?: string;
+  readonly "booking-padding-inline"?: string;
+  readonly "booking-radius"?: string;
+  readonly "booking-surface"?: string;
+  readonly "booking-text"?: string;
+  readonly "capacity-border"?: string;
+  readonly "capacity-border-width"?: string;
+  readonly "capacity-conflict-surface"?: string;
+  readonly "capacity-font-size"?: string;
+  readonly "capacity-unavailable-surface"?: string;
+  readonly "container-border"?: string;
+  readonly "container-border-width"?: string;
+  readonly "container-gap"?: string;
+  readonly "container-padding"?: string;
+  readonly "container-radius"?: string;
+  readonly "container-surface"?: string;
+  readonly "control-border"?: string;
+  readonly "control-border-width"?: string;
+  readonly "control-padding-block"?: string;
+  readonly "control-padding-inline"?: string;
+  readonly "control-radius"?: string;
+  readonly "control-selected-surface"?: string;
+  readonly "control-selected-text"?: string;
+  readonly "control-surface"?: string;
+  readonly "control-text"?: string;
+  readonly "current-time-surface"?: string;
+  readonly "current-time-width"?: string;
+  readonly "empty-text"?: string;
+  readonly "header-border"?: string;
+  readonly "header-border-width"?: string;
+  readonly "header-surface"?: string;
+  readonly "resource-border"?: string;
+  readonly "resource-border-width"?: string;
+  readonly "resource-gap"?: string;
+  readonly "resource-heading-weight"?: string;
+  readonly "resource-padding"?: string;
+  readonly "resource-secondary-text"?: string;
+  readonly "resource-surface"?: string;
+  readonly "row-border"?: string;
+  readonly "row-border-width"?: string;
+  readonly "selection-border"?: string;
+  readonly "selection-border-style"?: string;
+  readonly "selection-border-width"?: string;
+  readonly "selection-height-inset"?: string;
+  readonly "selection-surface"?: string;
+  readonly "timeline-border"?: string;
+  readonly "timeline-border-width"?: string;
+  readonly "timeline-header-font-size"?: string;
+  readonly "timeline-header-padding"?: string;
+  readonly "timeline-header-text"?: string;
+  readonly "timeline-selected-ring"?: string;
+  readonly "toolbar-gap"?: string;
+  readonly "viewport-border"?: string;
+  readonly "viewport-border-width"?: string;
+}
+
+export type ResourcePlannerStyle = CSSStyleProperties & {
+  readonly "--forge-resource-planner-booking-conflict-surface"?:
+    string | undefined;
+  readonly "--forge-resource-planner-booking-focus-ring"?: string | undefined;
+  readonly "--forge-resource-planner-booking-height-inset"?: string | undefined;
+  readonly "--forge-resource-planner-booking-padding-block"?:
+    string | undefined;
+  readonly "--forge-resource-planner-booking-padding-inline"?:
+    string | undefined;
+  readonly "--forge-resource-planner-booking-radius"?: string | undefined;
+  readonly "--forge-resource-planner-booking-surface"?: string | undefined;
+  readonly "--forge-resource-planner-booking-text"?: string | undefined;
+  readonly "--forge-resource-planner-capacity-border"?: string | undefined;
+  readonly "--forge-resource-planner-capacity-border-width"?:
+    string | undefined;
+  readonly "--forge-resource-planner-capacity-conflict-surface"?:
+    string | undefined;
+  readonly "--forge-resource-planner-capacity-font-size"?: string | undefined;
+  readonly "--forge-resource-planner-capacity-unavailable-surface"?:
+    string | undefined;
+  readonly "--forge-resource-planner-container-border"?: string | undefined;
+  readonly "--forge-resource-planner-container-border-width"?:
+    string | undefined;
+  readonly "--forge-resource-planner-container-gap"?: string | undefined;
+  readonly "--forge-resource-planner-container-padding"?: string | undefined;
+  readonly "--forge-resource-planner-container-radius"?: string | undefined;
+  readonly "--forge-resource-planner-container-surface"?: string | undefined;
+  readonly "--forge-resource-planner-control-border"?: string | undefined;
+  readonly "--forge-resource-planner-control-border-width"?: string | undefined;
+  readonly "--forge-resource-planner-control-padding-block"?:
+    string | undefined;
+  readonly "--forge-resource-planner-control-padding-inline"?:
+    string | undefined;
+  readonly "--forge-resource-planner-control-radius"?: string | undefined;
+  readonly "--forge-resource-planner-control-selected-surface"?:
+    string | undefined;
+  readonly "--forge-resource-planner-control-selected-text"?:
+    string | undefined;
+  readonly "--forge-resource-planner-control-surface"?: string | undefined;
+  readonly "--forge-resource-planner-control-text"?: string | undefined;
+  readonly "--forge-resource-planner-current-time-surface"?: string | undefined;
+  readonly "--forge-resource-planner-current-time-width"?: string | undefined;
+  readonly "--forge-resource-planner-empty-text"?: string | undefined;
+  readonly "--forge-resource-planner-header-border"?: string | undefined;
+  readonly "--forge-resource-planner-header-border-width"?: string | undefined;
+  readonly "--forge-resource-planner-header-surface"?: string | undefined;
+  readonly "--forge-resource-planner-resource-border"?: string | undefined;
+  readonly "--forge-resource-planner-resource-border-width"?:
+    string | undefined;
+  readonly "--forge-resource-planner-resource-gap"?: string | undefined;
+  readonly "--forge-resource-planner-resource-heading-weight"?:
+    string | undefined;
+  readonly "--forge-resource-planner-resource-padding"?: string | undefined;
+  readonly "--forge-resource-planner-resource-secondary-text"?:
+    string | undefined;
+  readonly "--forge-resource-planner-resource-surface"?: string | undefined;
+  readonly "--forge-resource-planner-row-border"?: string | undefined;
+  readonly "--forge-resource-planner-row-border-width"?: string | undefined;
+  readonly "--forge-resource-planner-selection-border"?: string | undefined;
+  readonly "--forge-resource-planner-selection-border-style"?:
+    string | undefined;
+  readonly "--forge-resource-planner-selection-border-width"?:
+    string | undefined;
+  readonly "--forge-resource-planner-selection-height-inset"?:
+    string | undefined;
+  readonly "--forge-resource-planner-selection-surface"?: string | undefined;
+  readonly "--forge-resource-planner-timeline-border"?: string | undefined;
+  readonly "--forge-resource-planner-timeline-border-width"?:
+    string | undefined;
+  readonly "--forge-resource-planner-timeline-header-font-size"?:
+    string | undefined;
+  readonly "--forge-resource-planner-timeline-header-padding"?:
+    string | undefined;
+  readonly "--forge-resource-planner-timeline-header-text"?: string | undefined;
+  readonly "--forge-resource-planner-timeline-selected-ring"?:
+    string | undefined;
+  readonly "--forge-resource-planner-toolbar-gap"?: string | undefined;
+  readonly "--forge-resource-planner-viewport-border"?: string | undefined;
+  readonly "--forge-resource-planner-viewport-border-width"?:
+    string | undefined;
+};
+
+function createResourcePlannerStyle(
+  properties: Readonly<ResourcePlannerStyleProperties> | undefined,
+): ResourcePlannerStyle | undefined {
+  return createForgeStyle({
+    "--forge-resource-planner-booking-conflict-surface":
+      properties?.["booking-conflict-surface"],
+    "--forge-resource-planner-booking-focus-ring":
+      properties?.["booking-focus-ring"],
+    "--forge-resource-planner-booking-height-inset":
+      properties?.["booking-height-inset"],
+    "--forge-resource-planner-booking-padding-block":
+      properties?.["booking-padding-block"],
+    "--forge-resource-planner-booking-padding-inline":
+      properties?.["booking-padding-inline"],
+    "--forge-resource-planner-booking-radius": properties?.["booking-radius"],
+    "--forge-resource-planner-booking-surface": properties?.["booking-surface"],
+    "--forge-resource-planner-booking-text": properties?.["booking-text"],
+    "--forge-resource-planner-capacity-border": properties?.["capacity-border"],
+    "--forge-resource-planner-capacity-border-width":
+      properties?.["capacity-border-width"],
+    "--forge-resource-planner-capacity-conflict-surface":
+      properties?.["capacity-conflict-surface"],
+    "--forge-resource-planner-capacity-font-size":
+      properties?.["capacity-font-size"],
+    "--forge-resource-planner-capacity-unavailable-surface":
+      properties?.["capacity-unavailable-surface"],
+    "--forge-resource-planner-container-border":
+      properties?.["container-border"],
+    "--forge-resource-planner-container-border-width":
+      properties?.["container-border-width"],
+    "--forge-resource-planner-container-gap": properties?.["container-gap"],
+    "--forge-resource-planner-container-padding":
+      properties?.["container-padding"],
+    "--forge-resource-planner-container-radius":
+      properties?.["container-radius"],
+    "--forge-resource-planner-container-surface":
+      properties?.["container-surface"],
+    "--forge-resource-planner-control-border": properties?.["control-border"],
+    "--forge-resource-planner-control-border-width":
+      properties?.["control-border-width"],
+    "--forge-resource-planner-control-padding-block":
+      properties?.["control-padding-block"],
+    "--forge-resource-planner-control-padding-inline":
+      properties?.["control-padding-inline"],
+    "--forge-resource-planner-control-radius": properties?.["control-radius"],
+    "--forge-resource-planner-control-selected-surface":
+      properties?.["control-selected-surface"],
+    "--forge-resource-planner-control-selected-text":
+      properties?.["control-selected-text"],
+    "--forge-resource-planner-control-surface": properties?.["control-surface"],
+    "--forge-resource-planner-control-text": properties?.["control-text"],
+    "--forge-resource-planner-current-time-surface":
+      properties?.["current-time-surface"],
+    "--forge-resource-planner-current-time-width":
+      properties?.["current-time-width"],
+    "--forge-resource-planner-empty-text": properties?.["empty-text"],
+    "--forge-resource-planner-header-border": properties?.["header-border"],
+    "--forge-resource-planner-header-border-width":
+      properties?.["header-border-width"],
+    "--forge-resource-planner-header-surface": properties?.["header-surface"],
+    "--forge-resource-planner-resource-border": properties?.["resource-border"],
+    "--forge-resource-planner-resource-border-width":
+      properties?.["resource-border-width"],
+    "--forge-resource-planner-resource-gap": properties?.["resource-gap"],
+    "--forge-resource-planner-resource-heading-weight":
+      properties?.["resource-heading-weight"],
+    "--forge-resource-planner-resource-padding":
+      properties?.["resource-padding"],
+    "--forge-resource-planner-resource-secondary-text":
+      properties?.["resource-secondary-text"],
+    "--forge-resource-planner-resource-surface":
+      properties?.["resource-surface"],
+    "--forge-resource-planner-row-border": properties?.["row-border"],
+    "--forge-resource-planner-row-border-width":
+      properties?.["row-border-width"],
+    "--forge-resource-planner-selection-border":
+      properties?.["selection-border"],
+    "--forge-resource-planner-selection-border-style":
+      properties?.["selection-border-style"],
+    "--forge-resource-planner-selection-border-width":
+      properties?.["selection-border-width"],
+    "--forge-resource-planner-selection-height-inset":
+      properties?.["selection-height-inset"],
+    "--forge-resource-planner-selection-surface":
+      properties?.["selection-surface"],
+    "--forge-resource-planner-timeline-border": properties?.["timeline-border"],
+    "--forge-resource-planner-timeline-border-width":
+      properties?.["timeline-border-width"],
+    "--forge-resource-planner-timeline-header-font-size":
+      properties?.["timeline-header-font-size"],
+    "--forge-resource-planner-timeline-header-padding":
+      properties?.["timeline-header-padding"],
+    "--forge-resource-planner-timeline-header-text":
+      properties?.["timeline-header-text"],
+    "--forge-resource-planner-timeline-selected-ring":
+      properties?.["timeline-selected-ring"],
+    "--forge-resource-planner-toolbar-gap": properties?.["toolbar-gap"],
+    "--forge-resource-planner-viewport-border": properties?.["viewport-border"],
+    "--forge-resource-planner-viewport-border-width":
+      properties?.["viewport-border-width"],
+  }) as ResourcePlannerStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ResourcePlannerProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -94,6 +341,9 @@ export interface ResourcePlannerProperties {
   resource?: MpRenderProperty<PlannerResourceScope>;
   booking?: MpRenderProperty<PlannerBookingScope>;
   capacity?: MpRenderProperty<PlannerCapacityScope>;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ResourcePlannerStyleProperties>;
 }
 
 const SCALE_OPTIONS: ReadonlyArray<{ value: PlannerScale; label: string }> = [
@@ -181,6 +431,8 @@ function pointerTimelineX(pointerX: number, viewport: HTMLElement): number {
 export function ForgeResourcePlanner(
   properties: Readonly<ResourcePlannerProperties>,
 ): MpElement {
+  const style = createResourcePlannerStyle(properties.properties);
+
   const {
     resources,
     modelValue = [],
@@ -514,6 +766,7 @@ export function ForgeResourcePlanner(
     <section
       className={styles["forge-resource-planner"]}
       aria-label="Resource planner"
+      style={style}
     >
       <div className={styles["forge-resource-planner__toolbar"]}>
         <div className={styles["forge-resource-planner__navigation"]}>

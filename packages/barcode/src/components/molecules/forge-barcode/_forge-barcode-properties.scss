@@ -1,0 +1,18 @@
+/**
+ * Registered inherited custom properties for forge-barcode overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-barcode-code-barcode-figure-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-barcode-figure-gap);
+}
+
+@property --forge-barcode-code-barcode-actions-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-barcode-actions-gap);
+}

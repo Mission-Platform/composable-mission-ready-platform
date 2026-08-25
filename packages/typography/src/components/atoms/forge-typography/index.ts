@@ -3,6 +3,8 @@ export {
   type TypographyColor,
   type TypographyLineHeight,
   type TypographyProperties,
+  type TypographyStyle,
+  type TypographyStyleProperties,
   type TypographySize,
   type TypographyTarget,
   type TypographyUnderline,

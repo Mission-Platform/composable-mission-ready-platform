@@ -1,0 +1,47 @@
+@property --forge-field-set-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-set-padding);
+}
+
+@property --forge-field-set-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-set-surface);
+}
+
+@property --forge-field-set-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-set-border-width);
+}
+
+@property --forge-field-set-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-set-border);
+}
+
+@property --forge-field-set-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-set-radius);
+}
+
+@property --forge-field-set-legend-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-set-legend-padding);
+}
+
+@property --forge-field-set-description-margin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-set-description-margin);
+}
+
+@property --forge-field-set-content-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-set-content-gap);
+}

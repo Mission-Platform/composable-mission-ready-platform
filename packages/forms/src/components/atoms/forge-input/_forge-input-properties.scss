@@ -1,0 +1,251 @@
+@property --forge-input-field-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-field-gap);
+}
+
+@property --forge-input-field-required {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-required);
+}
+
+@property --forge-input-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-border-width);
+}
+
+@property --forge-input-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-border-default);
+}
+
+@property --forge-input-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-radius);
+}
+
+@property --forge-input-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-surface-default);
+}
+
+@property --forge-input-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-transition-duration);
+}
+
+@property --forge-input-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-transition-easing);
+}
+
+@property --forge-input-border-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-border-focus-visible);
+}
+
+@property --forge-input-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-focus-ring);
+}
+
+@property --forge-input-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-text-default);
+}
+
+@property --forge-input-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-font-family);
+}
+
+@property --forge-input-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-line-height);
+}
+
+@property --forge-input-text-placeholder {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-text-placeholder);
+}
+
+@property --forge-input-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-text-secondary);
+}
+
+@property --forge-input-extension-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-extension-gap);
+}
+
+@property --forge-input-size-2xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xs-padding-block);
+}
+
+@property --forge-input-size-xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xs-padding-block);
+}
+
+@property --forge-input-size-sm-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-sm-padding-block);
+}
+
+@property --forge-input-size-md-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-md-padding-block);
+}
+
+@property --forge-input-size-lg-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-lg-padding-block);
+}
+
+@property --forge-input-size-xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xl-padding-block);
+}
+
+@property --forge-input-size-2xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xl-padding-block);
+}
+
+@property --forge-input-size-2xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xs-padding-inline);
+}
+
+@property --forge-input-size-xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xs-padding-inline);
+}
+
+@property --forge-input-size-sm-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-sm-padding-inline);
+}
+
+@property --forge-input-size-md-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-md-padding-inline);
+}
+
+@property --forge-input-size-lg-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-lg-padding-inline);
+}
+
+@property --forge-input-size-xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xl-padding-inline);
+}
+
+@property --forge-input-size-2xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xl-padding-inline);
+}
+
+@property --forge-input-size-2xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xs-font-size);
+}
+
+@property --forge-input-size-xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xs-font-size);
+}
+
+@property --forge-input-size-sm-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-sm-font-size);
+}
+
+@property --forge-input-size-md-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-md-font-size);
+}
+
+@property --forge-input-size-lg-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-lg-font-size);
+}
+
+@property --forge-input-size-xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xl-font-size);
+}
+
+@property --forge-input-size-2xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xl-font-size);
+}
+
+@property --forge-input-border-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-border-invalid);
+}
+
+@property --forge-input-focus-ring-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-focus-ring-invalid);
+}
+
+@property --forge-input-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-opacity-disabled);
+}
+
+@property --forge-input-surface-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-surface-disabled);
+}
+
+@property --forge-input-text-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-text-invalid);
+}

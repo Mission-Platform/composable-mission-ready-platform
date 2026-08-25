@@ -1,0 +1,11 @@
+@property --forge-grid-columns {
+  syntax: '*';
+  inherits: true;
+  initial-value: initial;
+}
+
+@property --forge-grid-rows {
+  syntax: '*';
+  inherits: true;
+  initial-value: initial;
+}

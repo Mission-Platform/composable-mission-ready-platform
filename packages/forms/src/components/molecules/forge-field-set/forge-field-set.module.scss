@@ -1,3 +1,5 @@
+@use './forge-field-set-properties';
+
 /**
  * Styling for the write-once `ForgeFieldSet`.
  *
@@ -11,11 +13,12 @@
 @layer mp.forms {
   .forge-field-set {
     min-width: 0;
-    padding: var(--mp-field-set-padding);
+    padding: var(--forge-field-set-padding, var(--mp-field-set-padding));
     margin: 0;
-    background-color: var(--mp-field-set-surface);
-    border: var(--mp-field-set-border-width) solid var(--mp-field-set-border);
-    border-radius: var(--mp-field-set-radius);
+    background-color: var(--forge-field-set-surface, var(--mp-field-set-surface));
+    border: var(--forge-field-set-border-width, var(--mp-field-set-border-width)) solid
+      var(--forge-field-set-border, var(--mp-field-set-border));
+    border-radius: var(--forge-field-set-radius, var(--mp-field-set-radius));
 
     &--flush {
       padding: 0;
@@ -25,17 +28,17 @@
     }
 
     &__legend {
-      padding: 0 var(--mp-field-set-legend-padding);
+      padding: 0 var(--forge-field-set-legend-padding, var(--mp-field-set-legend-padding));
     }
 
     &__description {
-      margin: 0 0 var(--mp-field-set-description-margin);
+      margin: 0 0 var(--forge-field-set-description-margin, var(--mp-field-set-description-margin));
     }
 
     &__content {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-field-set-content-gap);
+      gap: var(--forge-field-set-content-gap, var(--mp-field-set-content-gap));
     }
   }
 }

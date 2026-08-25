@@ -1,0 +1,75 @@
+/**
+ * Registered inherited custom properties for forge-grid overrides.
+ */
+
+@property --forge-grid-layout-grid-container-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-container-padding);
+}
+
+@property --forge-grid-layout-grid-container-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-container-border-width);
+}
+
+@property --forge-grid-layout-grid-container-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-container-border);
+}
+
+@property --forge-grid-layout-grid-container-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-container-radius);
+}
+
+@property --forge-grid-layout-grid-cell-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-cell-padding-block);
+}
+
+@property --forge-grid-layout-grid-cell-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-cell-padding-inline);
+}
+
+@property --forge-grid-layout-grid-cell-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-cell-border-width);
+}
+
+@property --forge-grid-layout-grid-cell-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-cell-border);
+}
+
+@property --forge-grid-layout-grid-cell-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-cell-radius);
+}
+
+@property --forge-grid-layout-grid-cell-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-cell-surface);
+}
+
+@property --forge-grid-layout-grid-cell-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-cell-text);
+}
+
+@property --forge-grid-layout-grid-cell-padding-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-grid-cell-padding-wide);
+}

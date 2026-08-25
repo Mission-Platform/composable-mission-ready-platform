@@ -1,0 +1,9 @@
+/**
+ * Registered inherited custom properties for forge-responsive-image overrides.
+ */
+
+@property --forge-responsive-image-media-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-radius);
+}

@@ -1,48 +1,51 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
+@use './forge-site-footer-properties';
+
 @layer mp.components {
   .forge-site-footer {
     width: 100%;
-    padding: var(--mp-spacing-10) var(--mp-spacing-5) var(--mp-spacing-4);
+    padding: var(--forge-site-footer-spacing-10, var(--mp-spacing-10))
+      var(--forge-site-footer-spacing-5, var(--mp-spacing-5)) var(--forge-site-footer-spacing-4, var(--mp-spacing-4));
     box-sizing: border-box;
-    background: var(--mp-color-bg-inverse);
-    color: var(--mp-color-text-on-inverse);
+    background: var(--forge-site-footer-color-bg-inverse, var(--mp-color-bg-inverse));
+    color: var(--forge-site-footer-color-text-on-inverse, var(--mp-color-text-on-inverse));
   }
 
   .forge-site-footer__main {
     display: grid;
     grid-template-columns: minmax(12rem, 1.3fr) 2fr;
-    gap: var(--mp-spacing-12);
+    gap: var(--forge-site-footer-spacing-12, var(--mp-spacing-12));
     max-width: 75rem;
     margin: auto;
   }
 
   .forge-site-footer__brand > a {
     color: inherit;
-    font-size: var(--mp-font-size-xl);
-    font-weight: var(--mp-font-weight-bold);
+    font-size: var(--forge-site-footer-font-size-xl, var(--mp-font-size-xl));
+    font-weight: var(--forge-site-footer-font-weight-bold, var(--mp-font-weight-bold));
     text-decoration: none;
   }
 
   .forge-site-footer p {
     max-width: 24rem;
     color: color-mix(in srgb, currentcolor 70%, transparent);
-    line-height: var(--mp-line-height-relaxed);
+    line-height: var(--forge-site-footer-line-height-relaxed, var(--mp-line-height-relaxed));
   }
 
   .forge-site-footer__columns {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-    gap: var(--mp-spacing-6);
+    gap: var(--forge-site-footer-spacing-6, var(--mp-spacing-6));
   }
 
   .forge-site-footer h2 {
-    margin: 0 0 var(--mp-spacing-3);
-    font-size: var(--mp-font-size-sm);
+    margin: 0 0 var(--forge-site-footer-spacing-3, var(--mp-spacing-3));
+    font-size: var(--forge-site-footer-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-site-footer ul {
     display: grid;
-    gap: var(--mp-spacing-2);
+    gap: var(--forge-site-footer-spacing-2, var(--mp-spacing-2));
     margin: 0;
     padding: 0;
     list-style: none;
@@ -60,34 +63,35 @@
 
   .forge-site-footer__socials {
     max-width: 75rem;
-    margin: var(--mp-spacing-8) auto 0;
+    margin: var(--forge-site-footer-spacing-8, var(--mp-spacing-8)) auto 0;
   }
 
   .forge-site-footer__socials ul {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--mp-spacing-4);
+    gap: var(--forge-site-footer-spacing-4, var(--mp-spacing-4));
   }
 
   .forge-site-footer__socials a {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-spacing-1);
+    gap: var(--forge-site-footer-spacing-1, var(--mp-spacing-1));
   }
 
   .forge-site-footer__newsletter {
     display: grid;
     grid-template-columns: 1fr minmax(12rem, 18rem) auto;
-    gap: var(--mp-spacing-4);
+    gap: var(--forge-site-footer-spacing-4, var(--mp-spacing-4));
     align-items: end;
     max-width: 75rem;
-    margin: var(--mp-spacing-8) auto 0;
-    padding-top: var(--mp-spacing-6);
-    border-top: var(--mp-border-width-thin) solid color-mix(in srgb, currentcolor 20%, transparent);
+    margin: var(--forge-site-footer-spacing-8, var(--mp-spacing-8)) auto 0;
+    padding-top: var(--forge-site-footer-spacing-6, var(--mp-spacing-6));
+    border-top: var(--forge-site-footer-border-width-thin, var(--mp-border-width-thin)) solid
+      color-mix(in srgb, currentcolor 20%, transparent);
   }
 
   .forge-site-footer__newsletter h2 {
-    margin-bottom: var(--mp-spacing-1);
+    margin-bottom: var(--forge-site-footer-spacing-1, var(--mp-spacing-1));
   }
 
   .forge-site-footer__newsletter p {
@@ -101,21 +105,24 @@
   .forge-site-footer__newsletter input {
     box-sizing: border-box;
     width: 100%;
-    min-height: var(--mp-size-height-lg);
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    border: var(--mp-border-width-thin) solid color-mix(in srgb, currentcolor 40%, transparent);
-    border-radius: var(--mp-radius-md);
+    min-height: var(--forge-site-footer-size-height-lg, var(--mp-size-height-lg));
+    padding: var(--forge-site-footer-spacing-2, var(--mp-spacing-2))
+      var(--forge-site-footer-spacing-3, var(--mp-spacing-3));
+    border: var(--forge-site-footer-border-width-thin, var(--mp-border-width-thin)) solid
+      color-mix(in srgb, currentcolor 40%, transparent);
+    border-radius: var(--forge-site-footer-radius-md, var(--mp-radius-md));
     background: transparent;
     color: inherit;
   }
 
   .forge-site-footer__newsletter button {
-    min-height: var(--mp-size-height-lg);
-    padding: var(--mp-spacing-2) var(--mp-spacing-4);
+    min-height: var(--forge-site-footer-size-height-lg, var(--mp-size-height-lg));
+    padding: var(--forge-site-footer-spacing-2, var(--mp-spacing-2))
+      var(--forge-site-footer-spacing-4, var(--mp-spacing-4));
     border: 0;
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-primary-default);
-    color: var(--mp-color-text-on-primary);
+    border-radius: var(--forge-site-footer-radius-md, var(--mp-radius-md));
+    background: var(--forge-site-footer-color-primary-default, var(--mp-color-primary-default));
+    color: var(--forge-site-footer-color-text-on-primary, var(--mp-color-text-on-primary));
     cursor: pointer;
   }
 
@@ -130,17 +137,18 @@
 
   .forge-site-footer__bottom {
     max-width: 75rem;
-    margin: var(--mp-spacing-8) auto 0;
-    padding-top: var(--mp-spacing-4);
-    border-top: var(--mp-border-width-thin) solid color-mix(in srgb, currentcolor 20%, transparent);
+    margin: var(--forge-site-footer-spacing-8, var(--mp-spacing-8)) auto 0;
+    padding-top: var(--forge-site-footer-spacing-4, var(--mp-spacing-4));
+    border-top: var(--forge-site-footer-border-width-thin, var(--mp-border-width-thin)) solid
+      color-mix(in srgb, currentcolor 20%, transparent);
     color: color-mix(in srgb, currentcolor 70%, transparent);
-    font-size: var(--mp-font-size-sm);
+    font-size: var(--forge-site-footer-font-size-sm, var(--mp-font-size-sm));
   }
 
   @media (width <= 48rem) {
     .forge-site-footer__main {
       grid-template-columns: 1fr;
-      gap: var(--mp-spacing-8);
+      gap: var(--forge-site-footer-spacing-8, var(--mp-spacing-8));
     }
 
     .forge-site-footer__newsletter {

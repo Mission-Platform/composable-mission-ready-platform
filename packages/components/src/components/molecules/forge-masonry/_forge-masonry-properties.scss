@@ -1,0 +1,45 @@
+/**
+ * Registered inherited custom properties for forge-masonry overrides.
+ */
+
+@property --forge-masonry-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-masonry-gap, var(--mp-layout-masonry-gap));
+}
+
+@property --forge-masonry-layout-masonry-demo-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-masonry-demo-padding);
+}
+
+@property --forge-masonry-layout-masonry-demo-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-masonry-demo-border-width);
+}
+
+@property --forge-masonry-layout-masonry-demo-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-masonry-demo-border);
+}
+
+@property --forge-masonry-layout-masonry-demo-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-masonry-demo-radius);
+}
+
+@property --forge-masonry-layout-masonry-demo-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-masonry-demo-surface);
+}
+
+@property --forge-masonry-layout-masonry-demo-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-masonry-demo-text);
+}

@@ -9,6 +9,8 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-menu-properties';
+
 @layer mp.components {
   .forge-menu {
     /*
@@ -18,12 +20,12 @@
      * a background, so the control looked invisible until hovered.
      */
     display: inline-block;
-    padding: var(--mp-navigation-menu-padding);
-    color: var(--mp-navigation-menu-text-default);
-    background-color: var(--mp-navigation-menu-surface-default);
-    border: var(--mp-navigation-menu-border-width-default) solid
-      var(--mp-navigation-menu-border-default);
-    border-radius: var(--mp-navigation-menu-radius);
+    padding: var(--forge-menu-navigation-menu-padding, var(--mp-navigation-menu-padding));
+    color: var(--forge-menu-navigation-menu-text-default, var(--mp-navigation-menu-text-default));
+    background-color: var(--forge-menu-navigation-menu-surface-default, var(--mp-navigation-menu-surface-default));
+    border: var(--forge-menu-navigation-menu-border-width-default, var(--mp-navigation-menu-border-width-default)) solid
+      var(--forge-menu-navigation-menu-border-default, var(--mp-navigation-menu-border-default));
+    border-radius: var(--forge-menu-navigation-menu-radius, var(--mp-navigation-menu-radius));
 
     /* A vertical menu is a stacked panel; a horizontal one is a full-width bar. */
     &--vertical {
@@ -42,7 +44,7 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: var(--mp-navigation-menu-submenu-gap);
+      gap: var(--forge-menu-navigation-menu-submenu-gap, var(--mp-navigation-menu-submenu-gap));
     }
 
     /*
@@ -53,7 +55,7 @@
     &--horizontal &__list {
       flex-flow: row wrap;
       align-items: center;
-      gap: var(--mp-navigation-menu-link-gap);
+      gap: var(--forge-menu-navigation-menu-link-gap, var(--mp-navigation-menu-link-gap));
     }
 
     &--horizontal &__link {
@@ -67,50 +69,60 @@
     &__link {
       display: flex;
       align-items: center;
-      gap: var(--mp-navigation-menu-link-gap);
+      gap: var(--forge-menu-navigation-menu-link-gap, var(--mp-navigation-menu-link-gap));
       width: 100%;
-      padding: var(--mp-navigation-menu-link-padding-block)
-        var(--mp-navigation-menu-link-padding-inline);
-      border-radius: var(--mp-navigation-menu-link-radius);
-      color: var(--mp-navigation-menu-text-default);
+      padding: var(--forge-menu-navigation-menu-link-padding-block, var(--mp-navigation-menu-link-padding-block))
+        var(--forge-menu-navigation-menu-link-padding-inline, var(--mp-navigation-menu-link-padding-inline));
+      border-radius: var(--forge-menu-navigation-menu-link-radius, var(--mp-navigation-menu-link-radius));
+      color: var(--forge-menu-navigation-menu-text-default, var(--mp-navigation-menu-text-default));
 
       /*
        * A resting tint so each row is discernible as an item on the surface. The
        * old rule left the link transparent and only painted on `:hover`, so the
        * item was not visually discoverable at rest.
        */
-      background-color: var(--mp-navigation-menu-surface-link-default);
+      background-color: var(
+        --forge-menu-navigation-menu-surface-link-default,
+        var(--mp-navigation-menu-surface-link-default)
+      );
       border: none;
       cursor: pointer;
       text-decoration: none;
       text-align: left;
-      font-family: var(--mp-navigation-font-family);
+      font-family: var(--forge-menu-navigation-font-family, var(--mp-navigation-font-family));
       transition:
-        background-color var(--mp-navigation-menu-transition-duration)
-          var(--mp-navigation-menu-transition-easing),
-        color var(--mp-navigation-menu-transition-duration)
-          var(--mp-navigation-menu-transition-easing);
+        background-color
+          var(--forge-menu-navigation-menu-transition-duration, var(--mp-navigation-menu-transition-duration))
+          var(--forge-menu-navigation-menu-transition-easing, var(--mp-navigation-menu-transition-easing)),
+        color var(--forge-menu-navigation-menu-transition-duration, var(--mp-navigation-menu-transition-duration))
+          var(--forge-menu-navigation-menu-transition-easing, var(--mp-navigation-menu-transition-easing));
 
       &:focus-visible {
-        outline: var(--mp-navigation-menu-border-width-focus) solid
-          var(--mp-navigation-menu-border-focus);
+        outline: var(--forge-menu-navigation-menu-border-width-focus, var(--mp-navigation-menu-border-width-focus))
+          solid var(--forge-menu-navigation-menu-border-focus, var(--mp-navigation-menu-border-focus));
         outline-offset: 2px;
       }
 
       &:disabled,
       &[aria-disabled='true'] {
-        color: var(--mp-navigation-menu-text-disabled);
+        color: var(--forge-menu-navigation-menu-text-disabled, var(--mp-navigation-menu-text-disabled));
         cursor: not-allowed;
         pointer-events: none;
       }
 
       &:hover:not(:disabled, [aria-disabled='true']) {
-        background-color: var(--mp-navigation-menu-surface-link-hover);
-        color: var(--mp-navigation-menu-text-default);
+        background-color: var(
+          --forge-menu-navigation-menu-surface-link-hover,
+          var(--mp-navigation-menu-surface-link-hover)
+        );
+        color: var(--forge-menu-navigation-menu-text-default, var(--mp-navigation-menu-text-default));
       }
 
       &[aria-expanded='true'] {
-        background-color: var(--mp-navigation-menu-surface-link-expanded);
+        background-color: var(
+          --forge-menu-navigation-menu-surface-link-expanded,
+          var(--mp-navigation-menu-surface-link-expanded)
+        );
       }
     }
 
@@ -124,24 +136,28 @@
 
     &__chevron {
       flex-shrink: 0;
-      color: var(--mp-navigation-menu-text-chevron);
-      font-size: var(--mp-navigation-menu-chevron-font-size);
+      color: var(--forge-menu-navigation-menu-text-chevron, var(--mp-navigation-menu-text-chevron));
+      font-size: var(--forge-menu-navigation-menu-chevron-font-size, var(--mp-navigation-menu-chevron-font-size));
     }
 
     &__submenu {
       list-style: none;
       margin: 0;
-      padding: 0 0 0 var(--mp-navigation-menu-submenu-padding-inline-start);
+      padding: 0 0 0
+        var(
+          --forge-menu-navigation-menu-submenu-padding-inline-start,
+          var(--mp-navigation-menu-submenu-padding-inline-start)
+        );
       display: flex;
       flex-direction: column;
-      gap: var(--mp-navigation-menu-submenu-gap);
+      gap: var(--forge-menu-navigation-menu-submenu-gap, var(--mp-navigation-menu-submenu-gap));
       opacity: 1;
       translate: 0 0;
       transition:
-        opacity var(--mp-navigation-menu-transition-duration)
-          var(--mp-navigation-menu-transition-easing),
-        translate var(--mp-navigation-menu-transition-duration)
-          var(--mp-navigation-menu-transition-easing);
+        opacity var(--forge-menu-navigation-menu-transition-duration, var(--mp-navigation-menu-transition-duration))
+          var(--forge-menu-navigation-menu-transition-easing, var(--mp-navigation-menu-transition-easing)),
+        translate var(--forge-menu-navigation-menu-transition-duration, var(--mp-navigation-menu-transition-duration))
+          var(--forge-menu-navigation-menu-transition-easing, var(--mp-navigation-menu-transition-easing));
 
       @starting-style {
         opacity: 0;
@@ -149,9 +165,15 @@
       }
 
       &--nested {
-        margin-left: var(--mp-navigation-menu-submenu-nested-margin);
-        border-left: var(--mp-navigation-menu-border-width-default) solid
-          var(--mp-navigation-menu-border-default);
+        margin-left: var(
+          --forge-menu-navigation-menu-submenu-nested-margin,
+          var(--mp-navigation-menu-submenu-nested-margin)
+        );
+        border-left: var(
+            --forge-menu-navigation-menu-border-width-default,
+            var(--mp-navigation-menu-border-width-default)
+          )
+          solid var(--forge-menu-navigation-menu-border-default, var(--mp-navigation-menu-border-default));
       }
     }
 
@@ -165,21 +187,24 @@
       position: absolute;
       inset-block-start: 100%;
       inset-inline-start: 0;
-      z-index: var(--mp-z-index-dropdown);
+      z-index: var(--forge-menu-z-index-dropdown, var(--mp-z-index-floating-dropdown));
       min-width: 12rem;
-      padding: var(--mp-navigation-menu-padding);
-      background-color: var(--mp-navigation-menu-surface-default);
-      border: var(--mp-navigation-menu-border-width-default) solid
-        var(--mp-navigation-menu-border-default);
-      border-radius: var(--mp-navigation-menu-radius);
-      box-shadow: var(--mp-navigation-menu-shadow);
+      padding: var(--forge-menu-navigation-menu-padding, var(--mp-navigation-menu-padding));
+      background-color: var(--forge-menu-navigation-menu-surface-default, var(--mp-navigation-menu-surface-default));
+      border: var(--forge-menu-navigation-menu-border-width-default, var(--mp-navigation-menu-border-width-default))
+        solid var(--forge-menu-navigation-menu-border-default, var(--mp-navigation-menu-border-default));
+      border-radius: var(--forge-menu-navigation-menu-radius, var(--mp-navigation-menu-radius));
+      box-shadow: var(--forge-menu-navigation-menu-shadow, var(--mp-navigation-menu-shadow));
 
       &--nested {
         inset-block-start: 0;
         inset-inline-start: 100%;
         margin-left: 0;
-        border-left: var(--mp-navigation-menu-border-width-default) solid
-          var(--mp-navigation-menu-border-default);
+        border-left: var(
+            --forge-menu-navigation-menu-border-width-default,
+            var(--mp-navigation-menu-border-width-default)
+          )
+          solid var(--forge-menu-navigation-menu-border-default, var(--mp-navigation-menu-border-default));
       }
     }
 

@@ -1,4 +1,12 @@
-import { classNames, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import {
+  classNames,
+  hasSlot,
+  Slot,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-error-page.module.scss';
 
@@ -33,6 +41,51 @@ export interface ErrorPageAction {
   onClick?: () => void;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ErrorPageStyleProperties {
+  readonly 'border-radius-sm'?: string;
+  readonly 'color-action-primary'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-surface-secondary'?: string;
+  readonly 'color-text-on-action'?: string;
+  readonly 'color-text-primary'?: string;
+  readonly 'color-text-secondary'?: string;
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+  readonly 'spacing-8'?: string;
+}
+
+export type ErrorPageStyle = CSSStyleProperties & {
+  readonly '--forge-error-page-border-radius-sm'?: string | undefined;
+  readonly '--forge-error-page-color-action-primary'?: string | undefined;
+  readonly '--forge-error-page-color-border-default'?: string | undefined;
+  readonly '--forge-error-page-color-surface-secondary'?: string | undefined;
+  readonly '--forge-error-page-color-text-on-action'?: string | undefined;
+  readonly '--forge-error-page-color-text-primary'?: string | undefined;
+  readonly '--forge-error-page-color-text-secondary'?: string | undefined;
+  readonly '--forge-error-page-spacing-2'?: string | undefined;
+  readonly '--forge-error-page-spacing-3'?: string | undefined;
+  readonly '--forge-error-page-spacing-4'?: string | undefined;
+  readonly '--forge-error-page-spacing-8'?: string | undefined;
+};
+
+function createErrorPageStyle(properties: Readonly<ErrorPageStyleProperties> | undefined): ErrorPageStyle | undefined {
+  return createForgeStyle({
+    '--forge-error-page-border-radius-sm': properties?.['border-radius-sm'],
+    '--forge-error-page-color-action-primary': properties?.['color-action-primary'],
+    '--forge-error-page-color-border-default': properties?.['color-border-default'],
+    '--forge-error-page-color-surface-secondary': properties?.['color-surface-secondary'],
+    '--forge-error-page-color-text-on-action': properties?.['color-text-on-action'],
+    '--forge-error-page-color-text-primary': properties?.['color-text-primary'],
+    '--forge-error-page-color-text-secondary': properties?.['color-text-secondary'],
+    '--forge-error-page-spacing-2': properties?.['spacing-2'],
+    '--forge-error-page-spacing-3': properties?.['spacing-3'],
+    '--forge-error-page-spacing-4': properties?.['spacing-4'],
+    '--forge-error-page-spacing-8': properties?.['spacing-8'],
+  }) as ErrorPageStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ErrorPageProperties {
   /** Optional structured error data; individual props take precedence. */
   data?: ErrorPageData;
@@ -68,10 +121,15 @@ export interface ErrorPageProperties {
   retryLabel?: string;
   /** Optional retry action appended after `actions`. */
   onRetry?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ErrorPageStyleProperties>;
 }
 
 /** A semantic, slot-friendly error state page with typed action descriptors. */
 export function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpElement {
+  const style = createErrorPageStyle(properties.properties);
+
   const {
     data,
     code,
@@ -107,6 +165,7 @@ export function ForgeErrorPage(properties: Readonly<ErrorPageProperties>): MpEle
       aria-label={ariaLabel}
       className={classNames(styles['forge-error-page'], styles[`forge-error-page--${size}`])}
       role="main"
+      style={style}
     >
       {hasSlot('illustration') || properties.illustration !== undefined ? (
         <div

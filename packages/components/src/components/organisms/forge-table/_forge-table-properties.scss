@@ -1,0 +1,315 @@
+/**
+ * Registered inherited custom properties for forge-table overrides.
+ */
+
+@property --forge-table-data-table-wrapper-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-wrapper-border-width);
+}
+
+@property --forge-table-data-table-wrapper-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-wrapper-border);
+}
+
+@property --forge-table-data-table-wrapper-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-wrapper-radius);
+}
+
+@property --forge-table-data-table-loading-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-loading-surface);
+}
+
+@property --forge-table-data-table-loading-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-loading-radius);
+}
+
+@property --forge-table-data-table-spinner-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-spinner-size);
+}
+
+@property --forge-table-data-table-spinner-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-spinner-border-width);
+}
+
+@property --forge-table-data-table-spinner-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-spinner-border);
+}
+
+@property --forge-table-data-table-spinner-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-spinner-radius);
+}
+
+@property --forge-table-data-table-spinner-animation-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-spinner-animation-duration);
+}
+
+@property --forge-table-data-table-spinner-animation-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-spinner-animation-easing);
+}
+
+@property --forge-table-data-table-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-font-size);
+}
+
+@property --forge-table-data-table-caption-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-caption-padding-block);
+}
+
+@property --forge-table-data-table-caption-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-caption-padding-inline);
+}
+
+@property --forge-table-data-table-head-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-head-surface);
+}
+
+@property --forge-table-data-table-header-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-header-padding-block);
+}
+
+@property --forge-table-data-table-header-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-header-padding-inline);
+}
+
+@property --forge-table-data-table-header-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-header-border);
+}
+
+@property --forge-table-data-table-header-padding-block-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-header-padding-block-wide);
+}
+
+@property --forge-table-data-table-header-padding-inline-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-header-padding-inline-wide);
+}
+
+@property --forge-table-data-table-header-sortable-hover-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-header-sortable-hover-surface);
+}
+
+@property --forge-table-data-table-header-sortable-hover-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-header-sortable-hover-text);
+}
+
+@property --forge-table-data-table-header-content-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-header-content-gap);
+}
+
+@property --forge-table-data-table-sort-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-sort-opacity);
+}
+
+@property --forge-table-data-table-sort-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-sort-font-size);
+}
+
+@property --forge-table-data-table-cell-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-cell-padding-block);
+}
+
+@property --forge-table-data-table-cell-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-cell-padding-inline);
+}
+
+@property --forge-table-data-table-cell-padding-block-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-cell-padding-block-wide);
+}
+
+@property --forge-table-data-table-cell-padding-inline-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-cell-padding-inline-wide);
+}
+
+@property --forge-table-data-table-row-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-row-border);
+}
+
+@property --forge-table-data-table-empty-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-empty-padding-block);
+}
+
+@property --forge-table-data-table-empty-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-empty-padding-inline);
+}
+
+@property --forge-table-data-table-row-striped-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-row-striped-surface);
+}
+
+@property --forge-table-data-table-bordered-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-bordered-border-width);
+}
+
+@property --forge-table-data-table-bordered-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-bordered-border);
+}
+
+@property --forge-table-data-table-row-hover-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-row-hover-surface);
+}
+
+@property --forge-table-data-table-tone-primary-head-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-primary-head-surface);
+}
+
+@property --forge-table-data-table-tone-secondary-head-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-secondary-head-surface);
+}
+
+@property --forge-table-data-table-tone-tertiary-head-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-tertiary-head-surface);
+}
+
+@property --forge-table-data-table-tone-success-head-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-success-head-surface);
+}
+
+@property --forge-table-data-table-tone-warning-head-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-warning-head-surface);
+}
+
+@property --forge-table-data-table-tone-info-head-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-info-head-surface);
+}
+
+@property --forge-table-data-table-tone-error-head-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-error-head-surface);
+}
+
+@property --forge-table-data-table-tone-critical-head-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-critical-head-surface);
+}
+
+@property --forge-table-data-table-tone-primary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-primary-border);
+}
+
+@property --forge-table-data-table-tone-secondary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-secondary-border);
+}
+
+@property --forge-table-data-table-tone-tertiary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-tertiary-border);
+}
+
+@property --forge-table-data-table-tone-success-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-success-border);
+}
+
+@property --forge-table-data-table-tone-warning-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-warning-border);
+}
+
+@property --forge-table-data-table-tone-info-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-info-border);
+}
+
+@property --forge-table-data-table-tone-error-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-error-border);
+}
+
+@property --forge-table-data-table-tone-critical-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-table-tone-critical-border);
+}

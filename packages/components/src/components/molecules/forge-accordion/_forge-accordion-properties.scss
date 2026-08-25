@@ -1,0 +1,207 @@
+/**
+ * Registered inherited custom properties for forge-accordion overrides.
+ */
+
+@property --forge-accordion-collapse-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-border-width);
+}
+
+@property --forge-accordion-collapse-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-border);
+}
+
+@property --forge-accordion-collapse-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-radius);
+}
+
+@property --forge-accordion-collapse-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-surface);
+}
+
+@property --forge-accordion-collapse-disabled-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-disabled-surface);
+}
+
+@property --forge-accordion-collapse-disabled-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-disabled-text);
+}
+
+@property --forge-accordion-collapse-summary-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-padding-block);
+}
+
+@property --forge-accordion-collapse-summary-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-padding-inline);
+}
+
+@property --forge-accordion-collapse-summary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-text);
+}
+
+@property --forge-accordion-collapse-summary-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-gap);
+}
+
+@property --forge-accordion-collapse-summary-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-surface-hover);
+}
+
+@property --forge-accordion-collapse-summary-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-summary-focus-ring);
+}
+
+@property --forge-accordion-collapse-content-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-content-padding-block);
+}
+
+@property --forge-accordion-collapse-content-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-content-padding-inline);
+}
+
+@property --forge-accordion-collapse-content-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-content-border-width);
+}
+
+@property --forge-accordion-collapse-content-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-content-border);
+}
+
+@property --forge-accordion-collapse-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-transition-duration);
+}
+
+@property --forge-accordion-collapse-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-transition-easing);
+}
+
+@property --forge-accordion-collapse-tone-primary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-primary-border);
+}
+
+@property --forge-accordion-collapse-tone-secondary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-secondary-border);
+}
+
+@property --forge-accordion-collapse-tone-tertiary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-tertiary-border);
+}
+
+@property --forge-accordion-collapse-tone-success-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-success-border);
+}
+
+@property --forge-accordion-collapse-tone-warning-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-warning-border);
+}
+
+@property --forge-accordion-collapse-tone-info-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-info-border);
+}
+
+@property --forge-accordion-collapse-tone-error-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-error-border);
+}
+
+@property --forge-accordion-collapse-tone-critical-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-critical-border);
+}
+
+@property --forge-accordion-collapse-tone-primary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-primary-text);
+}
+
+@property --forge-accordion-collapse-tone-secondary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-secondary-text);
+}
+
+@property --forge-accordion-collapse-tone-tertiary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-tertiary-text);
+}
+
+@property --forge-accordion-collapse-tone-success-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-success-text);
+}
+
+@property --forge-accordion-collapse-tone-warning-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-warning-text);
+}
+
+@property --forge-accordion-collapse-tone-info-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-info-text);
+}
+
+@property --forge-accordion-collapse-tone-error-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-error-text);
+}
+
+@property --forge-accordion-collapse-tone-critical-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-collapse-tone-critical-text);
+}

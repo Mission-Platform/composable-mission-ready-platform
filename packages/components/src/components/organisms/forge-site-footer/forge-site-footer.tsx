@@ -1,4 +1,10 @@
-import { type MpChild, type MpElement, useState } from '@mission-platform/forge';
+import {
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-site-footer.module.scss';
 
@@ -24,6 +30,81 @@ export interface SiteFooterNewsletter {
   submitLabel?: string;
   buttonLabel?: string;
 }
+
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface SiteFooterStyleProperties {
+  readonly 'border-width-thin'?: string;
+  readonly 'color-bg-inverse'?: string;
+  readonly 'color-primary-default'?: string;
+  readonly 'color-text-on-inverse'?: string;
+  readonly 'color-text-on-primary'?: string;
+  readonly 'font-size-sm'?: string;
+  readonly 'font-size-xl'?: string;
+  readonly 'font-weight-bold'?: string;
+  readonly 'line-height-relaxed'?: string;
+  readonly 'radius-md'?: string;
+  readonly 'size-height-lg'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-10'?: string;
+  readonly 'spacing-12'?: string;
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+  readonly 'spacing-5'?: string;
+  readonly 'spacing-6'?: string;
+  readonly 'spacing-8'?: string;
+}
+
+export type SiteFooterStyle = CSSStyleProperties & {
+  readonly '--forge-site-footer-border-width-thin'?: string | undefined;
+  readonly '--forge-site-footer-color-bg-inverse'?: string | undefined;
+  readonly '--forge-site-footer-color-primary-default'?: string | undefined;
+  readonly '--forge-site-footer-color-text-on-inverse'?: string | undefined;
+  readonly '--forge-site-footer-color-text-on-primary'?: string | undefined;
+  readonly '--forge-site-footer-font-size-sm'?: string | undefined;
+  readonly '--forge-site-footer-font-size-xl'?: string | undefined;
+  readonly '--forge-site-footer-font-weight-bold'?: string | undefined;
+  readonly '--forge-site-footer-line-height-relaxed'?: string | undefined;
+  readonly '--forge-site-footer-radius-md'?: string | undefined;
+  readonly '--forge-site-footer-size-height-lg'?: string | undefined;
+  readonly '--forge-site-footer-spacing-1'?: string | undefined;
+  readonly '--forge-site-footer-spacing-10'?: string | undefined;
+  readonly '--forge-site-footer-spacing-12'?: string | undefined;
+  readonly '--forge-site-footer-spacing-2'?: string | undefined;
+  readonly '--forge-site-footer-spacing-3'?: string | undefined;
+  readonly '--forge-site-footer-spacing-4'?: string | undefined;
+  readonly '--forge-site-footer-spacing-5'?: string | undefined;
+  readonly '--forge-site-footer-spacing-6'?: string | undefined;
+  readonly '--forge-site-footer-spacing-8'?: string | undefined;
+};
+
+function createSiteFooterStyle(
+  properties: Readonly<SiteFooterStyleProperties> | undefined,
+): SiteFooterStyle | undefined {
+  return createForgeStyle({
+    '--forge-site-footer-border-width-thin': properties?.['border-width-thin'],
+    '--forge-site-footer-color-bg-inverse': properties?.['color-bg-inverse'],
+    '--forge-site-footer-color-primary-default': properties?.['color-primary-default'],
+    '--forge-site-footer-color-text-on-inverse': properties?.['color-text-on-inverse'],
+    '--forge-site-footer-color-text-on-primary': properties?.['color-text-on-primary'],
+    '--forge-site-footer-font-size-sm': properties?.['font-size-sm'],
+    '--forge-site-footer-font-size-xl': properties?.['font-size-xl'],
+    '--forge-site-footer-font-weight-bold': properties?.['font-weight-bold'],
+    '--forge-site-footer-line-height-relaxed': properties?.['line-height-relaxed'],
+    '--forge-site-footer-radius-md': properties?.['radius-md'],
+    '--forge-site-footer-size-height-lg': properties?.['size-height-lg'],
+    '--forge-site-footer-spacing-1': properties?.['spacing-1'],
+    '--forge-site-footer-spacing-10': properties?.['spacing-10'],
+    '--forge-site-footer-spacing-12': properties?.['spacing-12'],
+    '--forge-site-footer-spacing-2': properties?.['spacing-2'],
+    '--forge-site-footer-spacing-3': properties?.['spacing-3'],
+    '--forge-site-footer-spacing-4': properties?.['spacing-4'],
+    '--forge-site-footer-spacing-5': properties?.['spacing-5'],
+    '--forge-site-footer-spacing-6': properties?.['spacing-6'],
+    '--forge-site-footer-spacing-8': properties?.['spacing-8'],
+  }) as SiteFooterStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface SiteFooterProperties {
   logo?: string | MpChild;
   brandHref?: string;
@@ -36,9 +117,14 @@ export interface SiteFooterProperties {
   onSubscribe?: (email: string) => void;
   copyright?: string;
   children?: MpChild | readonly MpChild[];
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<SiteFooterStyleProperties>;
 }
 
 export function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpElement {
+  const style = createSiteFooterStyle(properties.properties);
+
   const { logo, brandHref = '/', description, columns = [], copyright, children } = properties;
   const socials = properties.socials ?? [];
   const newsletter: SiteFooterNewsletter | undefined =
@@ -54,7 +140,10 @@ export function ForgeSiteFooter(properties: Readonly<SiteFooterProperties>): MpE
   };
 
   return (
-    <footer className={styles['forge-site-footer']}>
+    <footer
+      className={styles['forge-site-footer']}
+      style={style}
+    >
       <div className={styles['forge-site-footer__main']}>
         <div className={styles['forge-site-footer__brand']}>
           {logo ? <a href={brandHref}>{logo}</a> : undefined}

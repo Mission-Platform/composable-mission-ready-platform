@@ -9,13 +9,15 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-responsive-image-properties';
+
 @layer mp.components {
   .forge-responsive-image {
     display: block;
     overflow: hidden;
 
     &--rounded {
-      border-radius: var(--mp-media-radius);
+      border-radius: var(--forge-responsive-image-media-radius, var(--mp-media-radius));
     }
 
     &__img {

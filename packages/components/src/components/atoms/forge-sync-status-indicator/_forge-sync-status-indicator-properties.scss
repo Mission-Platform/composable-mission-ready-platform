@@ -1,0 +1,87 @@
+/**
+ * Registered inherited custom properties for forge-sync-status-indicator overrides.
+ */
+
+@property --forge-sync-status-indicator-feedback-sync-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-sync-gap, var(--mp-spacing-2));
+}
+
+@property --forge-sync-status-indicator-feedback-sync-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-sync-text, var(--mp-color-text-secondary));
+}
+
+@property --forge-sync-status-indicator-font-family-sans {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-family-sans);
+}
+
+@property --forge-sync-status-indicator-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-sync-status-indicator-size-checkable-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-checkable-indicator);
+}
+
+@property --forge-sync-status-indicator-radius-full {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-full);
+}
+
+@property --forge-sync-status-indicator-feedback-sync-color {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-sync-color, var(--mp-color-success-default));
+}
+
+@property --forge-sync-status-indicator-font-weight-medium {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-medium);
+}
+
+@property --forge-sync-status-indicator-color-success-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-default);
+}
+
+@property --forge-sync-status-indicator-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}
+
+@property --forge-sync-status-indicator-color-warning-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-warning-default);
+}
+
+@property --forge-sync-status-indicator-color-danger-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-danger-default, var(--mp-color-error-default));
+}
+
+@property --forge-sync-status-indicator-color-text-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-tertiary);
+}
+
+@property --forge-sync-status-indicator-opacity-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-muted);
+}

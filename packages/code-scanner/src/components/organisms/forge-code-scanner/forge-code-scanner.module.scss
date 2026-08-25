@@ -8,11 +8,13 @@
  * The rules live in the package-owned `mp.code-scanner` cascade layer.
  */
 
+@use './forge-code-scanner-properties';
+
 @layer mp.code-scanner {
   .forge-code-scanner {
     display: inline-flex;
     flex-direction: column;
-    gap: var(--mp-code-scanner-gap-root);
+    gap: var(--forge-code-scanner-gap-root, var(--mp-code-scanner-gap-root));
     max-width: 100%;
   }
 
@@ -23,8 +25,8 @@
     width: 100%;
     max-width: 20rem;
     overflow: hidden;
-    background: var(--mp-code-scanner-viewport-surface);
-    border-radius: var(--mp-code-scanner-viewport-radius);
+    background: var(--forge-code-scanner-viewport-surface, var(--mp-code-scanner-viewport-surface));
+    border-radius: var(--forge-code-scanner-viewport-radius, var(--mp-code-scanner-viewport-radius));
   }
 
   .forge-code-scanner__video {
@@ -41,7 +43,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--mp-code-scanner-placeholder-text);
+    color: var(--forge-code-scanner-placeholder-text, var(--mp-code-scanner-placeholder-text));
   }
 
   // Centred scan-window guide, sized (via inline width/height) to the region of
@@ -53,15 +55,16 @@
     left: 50%;
     box-sizing: border-box;
     pointer-events: none;
-    border: var(--mp-code-scanner-reticle-border-width) solid var(--mp-code-scanner-reticle-border);
-    border-radius: var(--mp-code-scanner-reticle-radius);
+    border: var(--forge-code-scanner-reticle-border-width, var(--mp-code-scanner-reticle-border-width)) solid
+      var(--forge-code-scanner-reticle-border, var(--mp-code-scanner-reticle-border));
+    border-radius: var(--forge-code-scanner-reticle-radius, var(--mp-code-scanner-reticle-radius));
     transform: translate(-50%, -50%);
   }
 
   .forge-code-scanner__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--mp-code-scanner-gap-actions);
+    gap: var(--forge-code-scanner-gap-actions, var(--mp-code-scanner-gap-actions));
   }
 
   // The hidden native file input; the visible trigger is the styled button.
@@ -80,10 +83,11 @@
   .forge-code-scanner__result {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-code-scanner-gap-result);
-    padding: var(--mp-code-scanner-result-padding-block) var(--mp-code-scanner-result-padding-inline);
-    background: var(--mp-code-scanner-result-surface);
-    border-radius: var(--mp-code-scanner-result-radius);
+    gap: var(--forge-code-scanner-gap-result, var(--mp-code-scanner-gap-result));
+    padding: var(--forge-code-scanner-result-padding-block, var(--mp-code-scanner-result-padding-block))
+      var(--forge-code-scanner-result-padding-inline, var(--mp-code-scanner-result-padding-inline));
+    background: var(--forge-code-scanner-result-surface, var(--mp-code-scanner-result-surface));
+    border-radius: var(--forge-code-scanner-result-radius, var(--mp-code-scanner-result-radius));
     word-break: break-all;
   }
 }

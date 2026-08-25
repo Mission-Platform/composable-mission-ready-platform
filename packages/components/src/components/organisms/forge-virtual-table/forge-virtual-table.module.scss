@@ -10,17 +10,25 @@
  * consumed through its hashed class map by `forge-virtual-table.stories.tsx`.
  */
 
+@use './forge-virtual-table-properties';
+
 @layer mp.components {
   .virtual-table-demo-footer {
     display: flex;
-    gap: var(--mp-data-virtual-table-footer-gap);
+    gap: var(--forge-virtual-table-data-virtual-table-footer-gap, var(--mp-data-virtual-table-footer-gap));
     align-items: center;
     width: 100%;
-    color: var(--mp-data-virtual-table-footer-text);
+    color: var(--forge-virtual-table-data-virtual-table-footer-text, var(--mp-data-virtual-table-footer-text));
   }
 
   .virtual-table-demo-footer__accent {
-    color: var(--mp-data-virtual-table-footer-accent-text);
-    font-weight: var(--mp-data-virtual-table-footer-accent-font-weight);
+    color: var(
+      --forge-virtual-table-data-virtual-table-footer-accent-text,
+      var(--mp-data-virtual-table-footer-accent-text)
+    );
+    font-weight: var(
+      --forge-virtual-table-data-virtual-table-footer-accent-font-weight,
+      var(--mp-data-virtual-table-footer-accent-font-weight)
+    );
   }
 }

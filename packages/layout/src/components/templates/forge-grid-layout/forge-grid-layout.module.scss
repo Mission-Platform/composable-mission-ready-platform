@@ -1,3 +1,5 @@
+@use './forge-grid-layout-properties';
+
 @layer mp.layout {
   .grid-layout {
     display: grid;

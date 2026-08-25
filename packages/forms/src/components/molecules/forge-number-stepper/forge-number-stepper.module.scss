@@ -1,3 +1,5 @@
+@use './forge-number-stepper-properties';
+
 /**
  * Styling for the write-once `ForgeNumberStepper`.
  *
@@ -12,7 +14,7 @@
   .forge-number-stepper {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-input-field-gap);
+    gap: var(--forge-number-stepper-input-field-gap, var(--mp-input-field-gap));
 
     &__label {
       display: flex;
@@ -33,24 +35,25 @@
     }
 
     &__required {
-      color: var(--mp-field-required);
+      color: var(--forge-number-stepper-field-required, var(--mp-field-required));
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: stretch;
-      border: var(--mp-input-border-width) solid var(--mp-input-border-default);
-      border-radius: var(--mp-input-radius);
-      background-color: var(--mp-input-surface-default);
+      border: var(--forge-number-stepper-input-border-width, var(--mp-input-border-width)) solid
+        var(--forge-number-stepper-input-border-default, var(--mp-input-border-default));
+      border-radius: var(--forge-number-stepper-input-radius, var(--mp-input-radius));
+      background-color: var(--forge-number-stepper-input-surface-default, var(--mp-input-surface-default));
       overflow: hidden;
       transition:
         border-color 150ms ease,
         box-shadow 150ms ease;
 
       &:focus-within {
-        border-color: var(--mp-input-border-focus-visible);
-        box-shadow: var(--mp-input-focus-ring);
+        border-color: var(--forge-number-stepper-input-border-focus-visible, var(--mp-input-border-focus-visible));
+        box-shadow: var(--forge-number-stepper-input-focus-ring, var(--mp-input-focus-ring));
       }
     }
 
@@ -58,12 +61,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: var(--mp-input-number-button-width);
+      width: var(--forge-number-stepper-input-number-button-width, var(--mp-input-number-button-width));
       flex-shrink: 0;
       border: none;
-      background-color: var(--mp-input-number-button-background-default);
-      color: var(--mp-input-number-button-text);
-      font-size: var(--mp-input-number-button-font-size);
+      background-color: var(
+        --forge-number-stepper-input-number-button-background-default,
+        var(--mp-input-number-button-background-default)
+      );
+      color: var(--forge-number-stepper-input-number-button-text, var(--mp-input-number-button-text));
+      font-size: var(--forge-number-stepper-input-number-button-font-size, var(--mp-input-number-button-font-size));
       line-height: 1;
       cursor: pointer;
       user-select: none;
@@ -71,11 +77,17 @@
 
       &:disabled {
         cursor: not-allowed;
-        opacity: var(--mp-input-number-button-disabled-opacity);
+        opacity: var(
+          --forge-number-stepper-input-number-button-disabled-opacity,
+          var(--mp-input-number-button-disabled-opacity)
+        );
       }
 
       &:hover:not(:disabled) {
-        background-color: var(--mp-input-number-button-background-hover);
+        background-color: var(
+          --forge-number-stepper-input-number-button-background-hover,
+          var(--mp-input-number-button-background-hover)
+        );
       }
     }
 
@@ -87,42 +99,46 @@
       outline: none;
       background: transparent;
       text-align: center;
-      color: var(--mp-input-text-default);
-      font-family: var(--mp-input-font-family);
-      line-height: var(--mp-input-line-height);
+      color: var(--forge-number-stepper-input-text-default, var(--mp-input-text-default));
+      font-family: var(--forge-number-stepper-input-font-family, var(--mp-input-font-family));
+      line-height: var(--forge-number-stepper-input-line-height, var(--mp-input-line-height));
 
       &::placeholder {
-        color: var(--mp-input-text-placeholder);
+        color: var(--forge-number-stepper-input-text-placeholder, var(--mp-input-text-placeholder));
       }
     }
 
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-number-stepper__field {
-        padding: var(--mp-input-size-#{$size}-padding-block) var(--mp-input-size-#{$size}-padding-inline);
-        font-size: var(--mp-input-size-#{$size}-font-size);
+        padding: var(
+            --forge-number-stepper-input-size-#{$size}-padding-block,
+            var(--mp-input-size-#{$size}-padding-block)
+          )
+          var(--forge-number-stepper-input-size-#{$size}-padding-inline, var(--mp-input-size-#{$size}-padding-inline));
+        font-size: var(--forge-number-stepper-input-size-#{$size}-font-size, var(--mp-input-size-#{$size}-font-size));
       }
     }
 
     &--error .forge-number-stepper__wrapper {
-      border-color: var(--mp-input-border-invalid);
+      border-color: var(--forge-number-stepper-input-border-invalid, var(--mp-input-border-invalid));
 
       &:focus-within {
-        box-shadow: var(--mp-input-focus-ring-invalid);
+        box-shadow: var(--forge-number-stepper-input-focus-ring-invalid, var(--mp-input-focus-ring-invalid));
       }
     }
 
     &--disabled {
-      opacity: var(--mp-input-opacity-disabled);
+      opacity: var(--forge-number-stepper-input-opacity-disabled, var(--mp-input-opacity-disabled));
       pointer-events: none;
 
       .forge-number-stepper__wrapper {
-        background-color: var(--mp-input-surface-disabled);
+        background-color: var(--forge-number-stepper-input-surface-disabled, var(--mp-input-surface-disabled));
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-input-text-invalid);
+      color: var(--forge-number-stepper-input-text-invalid, var(--mp-input-text-invalid));
       margin: 0;
     }
 

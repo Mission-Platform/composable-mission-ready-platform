@@ -1,0 +1,129 @@
+/**
+ * Registered inherited custom properties for forge-progress-bar overrides.
+ */
+
+@property --forge-progress-bar-feedback-progress-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-gap);
+}
+
+@property --forge-progress-bar-feedback-progress-track-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-track-radius);
+}
+
+@property --forge-progress-bar-feedback-progress-track-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-track-background);
+}
+
+@property --forge-progress-bar-feedback-progress-fill-neutral {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-fill-neutral);
+}
+
+@property --forge-progress-bar-feedback-progress-fill-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-fill-primary);
+}
+
+@property --forge-progress-bar-feedback-progress-fill-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-fill-secondary);
+}
+
+@property --forge-progress-bar-feedback-progress-fill-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-fill-tertiary);
+}
+
+@property --forge-progress-bar-feedback-progress-fill-success {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-fill-success);
+}
+
+@property --forge-progress-bar-feedback-progress-fill-warning {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-fill-warning);
+}
+
+@property --forge-progress-bar-feedback-progress-fill-info {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-fill-info);
+}
+
+@property --forge-progress-bar-feedback-progress-fill-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-fill-error);
+}
+
+@property --forge-progress-bar-feedback-progress-fill-critical {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-fill-critical);
+}
+
+@property --forge-progress-bar-feedback-progress-indeterminate-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-indeterminate-duration);
+}
+
+@property --forge-progress-bar-feedback-progress-indeterminate-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-indeterminate-easing);
+}
+
+@property --forge-progress-bar-feedback-progress-size-2xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-size-2xs);
+}
+
+@property --forge-progress-bar-feedback-progress-size-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-size-xs);
+}
+
+@property --forge-progress-bar-feedback-progress-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-size-sm);
+}
+
+@property --forge-progress-bar-feedback-progress-size-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-size-md);
+}
+
+@property --forge-progress-bar-feedback-progress-size-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-size-lg);
+}
+
+@property --forge-progress-bar-feedback-progress-size-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-size-xl);
+}
+
+@property --forge-progress-bar-feedback-progress-size-2xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-progress-size-2xl);
+}

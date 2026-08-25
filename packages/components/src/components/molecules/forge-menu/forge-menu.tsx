@@ -1,4 +1,11 @@
-import { type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
+import {
+  useEffect,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconChevron, type IconDirection } from '@mission-platform/icons';
 
 import styles from './forge-menu.module.scss';
@@ -31,6 +38,97 @@ function parentOfPath(path: string): string {
   return dot === -1 ? '' : path.slice(0, dot);
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface MenuStyleProperties {
+  readonly 'navigation-font-family'?: string;
+  readonly 'navigation-menu-border-default'?: string;
+  readonly 'navigation-menu-border-focus'?: string;
+  readonly 'navigation-menu-border-width-default'?: string;
+  readonly 'navigation-menu-border-width-focus'?: string;
+  readonly 'navigation-menu-chevron-font-size'?: string;
+  readonly 'navigation-menu-link-gap'?: string;
+  readonly 'navigation-menu-link-padding-block'?: string;
+  readonly 'navigation-menu-link-padding-inline'?: string;
+  readonly 'navigation-menu-link-radius'?: string;
+  readonly 'navigation-menu-padding'?: string;
+  readonly 'navigation-menu-radius'?: string;
+  readonly 'navigation-menu-shadow'?: string;
+  readonly 'navigation-menu-submenu-gap'?: string;
+  readonly 'navigation-menu-submenu-nested-margin'?: string;
+  readonly 'navigation-menu-submenu-padding-inline-start'?: string;
+  readonly 'navigation-menu-surface-default'?: string;
+  readonly 'navigation-menu-surface-link-default'?: string;
+  readonly 'navigation-menu-surface-link-expanded'?: string;
+  readonly 'navigation-menu-surface-link-hover'?: string;
+  readonly 'navigation-menu-text-chevron'?: string;
+  readonly 'navigation-menu-text-default'?: string;
+  readonly 'navigation-menu-text-disabled'?: string;
+  readonly 'navigation-menu-transition-duration'?: string;
+  readonly 'navigation-menu-transition-easing'?: string;
+  readonly 'z-index-dropdown'?: string;
+}
+
+export type MenuStyle = CSSStyleProperties & {
+  readonly '--forge-menu-navigation-font-family'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-border-default'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-border-focus'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-border-width-default'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-border-width-focus'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-chevron-font-size'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-link-gap'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-link-padding-block'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-link-padding-inline'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-link-radius'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-padding'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-radius'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-shadow'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-submenu-gap'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-submenu-nested-margin'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-submenu-padding-inline-start'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-surface-default'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-surface-link-default'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-surface-link-expanded'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-surface-link-hover'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-text-chevron'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-text-default'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-text-disabled'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-transition-duration'?: string | undefined;
+  readonly '--forge-menu-navigation-menu-transition-easing'?: string | undefined;
+  readonly '--forge-menu-z-index-dropdown'?: string | undefined;
+};
+
+function createMenuStyle(properties: Readonly<MenuStyleProperties> | undefined): MenuStyle | undefined {
+  return createForgeStyle({
+    '--forge-menu-navigation-font-family': properties?.['navigation-font-family'],
+    '--forge-menu-navigation-menu-border-default': properties?.['navigation-menu-border-default'],
+    '--forge-menu-navigation-menu-border-focus': properties?.['navigation-menu-border-focus'],
+    '--forge-menu-navigation-menu-border-width-default': properties?.['navigation-menu-border-width-default'],
+    '--forge-menu-navigation-menu-border-width-focus': properties?.['navigation-menu-border-width-focus'],
+    '--forge-menu-navigation-menu-chevron-font-size': properties?.['navigation-menu-chevron-font-size'],
+    '--forge-menu-navigation-menu-link-gap': properties?.['navigation-menu-link-gap'],
+    '--forge-menu-navigation-menu-link-padding-block': properties?.['navigation-menu-link-padding-block'],
+    '--forge-menu-navigation-menu-link-padding-inline': properties?.['navigation-menu-link-padding-inline'],
+    '--forge-menu-navigation-menu-link-radius': properties?.['navigation-menu-link-radius'],
+    '--forge-menu-navigation-menu-padding': properties?.['navigation-menu-padding'],
+    '--forge-menu-navigation-menu-radius': properties?.['navigation-menu-radius'],
+    '--forge-menu-navigation-menu-shadow': properties?.['navigation-menu-shadow'],
+    '--forge-menu-navigation-menu-submenu-gap': properties?.['navigation-menu-submenu-gap'],
+    '--forge-menu-navigation-menu-submenu-nested-margin': properties?.['navigation-menu-submenu-nested-margin'],
+    '--forge-menu-navigation-menu-submenu-padding-inline-start':
+      properties?.['navigation-menu-submenu-padding-inline-start'],
+    '--forge-menu-navigation-menu-surface-default': properties?.['navigation-menu-surface-default'],
+    '--forge-menu-navigation-menu-surface-link-default': properties?.['navigation-menu-surface-link-default'],
+    '--forge-menu-navigation-menu-surface-link-expanded': properties?.['navigation-menu-surface-link-expanded'],
+    '--forge-menu-navigation-menu-surface-link-hover': properties?.['navigation-menu-surface-link-hover'],
+    '--forge-menu-navigation-menu-text-chevron': properties?.['navigation-menu-text-chevron'],
+    '--forge-menu-navigation-menu-text-default': properties?.['navigation-menu-text-default'],
+    '--forge-menu-navigation-menu-text-disabled': properties?.['navigation-menu-text-disabled'],
+    '--forge-menu-navigation-menu-transition-duration': properties?.['navigation-menu-transition-duration'],
+    '--forge-menu-navigation-menu-transition-easing': properties?.['navigation-menu-transition-easing'],
+    '--forge-menu-z-index-dropdown': properties?.['z-index-dropdown'],
+  }) as MenuStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface MenuProperties {
   /** Top-level menu entries. */
   items: MenuNode[];
@@ -40,6 +138,9 @@ export interface MenuProperties {
   orientation?: MenuOrientation;
   /** Accessible label for the menu landmark. */
   ariaLabel?: string;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<MenuStyleProperties>;
 }
 
 /**
@@ -65,6 +166,8 @@ export interface MenuProperties {
  * substitution), otherwise matching the roles/ARIA of the Vue markup.
  */
 export function ForgeMenu(properties: Readonly<MenuProperties>): MpElement {
+  const style = createMenuStyle(properties.properties);
+
   const { items, orientation = 'vertical', ariaLabel, size = 'md' } = properties;
 
   const navReference = useRef<HTMLElement | null>(null);
@@ -201,6 +304,7 @@ export function ForgeMenu(properties: Readonly<MenuProperties>): MpElement {
       ref={navReference}
       aria-label={ariaLabel}
       className={[styles['forge-menu'], styles[`forge-menu--${orientation}`], size ? `forge-size--${size}` : undefined]}
+      style={style}
     >
       <menu
         aria-orientation={orientation}

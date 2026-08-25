@@ -1,0 +1,395 @@
+@property --forge-time-input-input-field-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-field-gap);
+}
+
+@property --forge-time-input-field-required {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-required);
+}
+
+@property --forge-time-input-input-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-border-width);
+}
+
+@property --forge-time-input-input-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-border-default);
+}
+
+@property --forge-time-input-input-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-radius);
+}
+
+@property --forge-time-input-input-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-surface-default);
+}
+
+@property --forge-time-input-input-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-transition-duration);
+}
+
+@property --forge-time-input-input-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-transition-easing);
+}
+
+@property --forge-time-input-input-border-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-border-focus-visible);
+}
+
+@property --forge-time-input-input-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-focus-ring);
+}
+
+@property --forge-time-input-input-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-text-secondary);
+}
+
+@property --forge-time-input-input-extension-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-extension-gap);
+}
+
+@property --forge-time-input-input-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-text-default);
+}
+
+@property --forge-time-input-input-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-font-family);
+}
+
+@property --forge-time-input-input-text-placeholder {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-text-placeholder);
+}
+
+@property --forge-time-input-input-size-2xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xs-padding-block);
+}
+
+@property --forge-time-input-input-size-xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xs-padding-block);
+}
+
+@property --forge-time-input-input-size-sm-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-sm-padding-block);
+}
+
+@property --forge-time-input-input-size-md-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-md-padding-block);
+}
+
+@property --forge-time-input-input-size-lg-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-lg-padding-block);
+}
+
+@property --forge-time-input-input-size-xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xl-padding-block);
+}
+
+@property --forge-time-input-input-size-2xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xl-padding-block);
+}
+
+@property --forge-time-input-input-size-2xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xs-padding-inline);
+}
+
+@property --forge-time-input-input-size-xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xs-padding-inline);
+}
+
+@property --forge-time-input-input-size-sm-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-sm-padding-inline);
+}
+
+@property --forge-time-input-input-size-md-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-md-padding-inline);
+}
+
+@property --forge-time-input-input-size-lg-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-lg-padding-inline);
+}
+
+@property --forge-time-input-input-size-xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xl-padding-inline);
+}
+
+@property --forge-time-input-input-size-2xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xl-padding-inline);
+}
+
+@property --forge-time-input-input-size-2xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xs-font-size);
+}
+
+@property --forge-time-input-input-size-xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xs-font-size);
+}
+
+@property --forge-time-input-input-size-sm-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-sm-font-size);
+}
+
+@property --forge-time-input-input-size-md-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-md-font-size);
+}
+
+@property --forge-time-input-input-size-lg-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-lg-font-size);
+}
+
+@property --forge-time-input-input-size-xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-xl-font-size);
+}
+
+@property --forge-time-input-input-size-2xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-size-2xl-font-size);
+}
+
+@property --forge-time-input-input-border-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-border-invalid);
+}
+
+@property --forge-time-input-input-focus-ring-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-focus-ring-invalid);
+}
+
+@property --forge-time-input-input-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-opacity-disabled);
+}
+
+@property --forge-time-input-input-surface-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-surface-disabled);
+}
+
+@property --forge-time-input-field-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-error);
+}
+
+@property --forge-time-input-time-popover-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-popover-padding);
+}
+
+@property --forge-time-input-time-columns-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-columns-gap);
+}
+
+@property --forge-time-input-time-font-size-separator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-font-size-separator);
+}
+
+@property --forge-time-input-time-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-text-secondary);
+}
+
+@property --forge-time-input-time-font-size-header {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-font-size-header);
+}
+
+@property --forge-time-input-time-font-weight-medium {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-font-weight-medium);
+}
+
+@property --forge-time-input-time-text-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-text-muted);
+}
+
+@property --forge-time-input-time-unit-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-unit-padding-block);
+}
+
+@property --forge-time-input-time-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-border-default);
+}
+
+@property --forge-time-input-time-unit-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-unit-radius);
+}
+
+@property --forge-time-input-time-font-size-unit {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-font-size-unit);
+}
+
+@property --forge-time-input-time-unit-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-unit-padding-inline);
+}
+
+@property --forge-time-input-time-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-text-default);
+}
+
+@property --forge-time-input-time-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-transition-duration);
+}
+
+@property --forge-time-input-time-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-transition-easing);
+}
+
+@property --forge-time-input-time-surface-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-surface-selected);
+}
+
+@property --forge-time-input-time-text-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-text-selected);
+}
+
+@property --forge-time-input-time-font-weight-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-font-weight-selected);
+}
+
+@property --forge-time-input-time-border-focus-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-border-focus-width);
+}
+
+@property --forge-time-input-time-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-border-focus);
+}
+
+@property --forge-time-input-time-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-surface-hover);
+}
+
+@property --forge-time-input-time-done-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-done-padding-block);
+}
+
+@property --forge-time-input-time-done-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-done-padding-inline);
+}
+
+@property --forge-time-input-time-done-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-done-radius);
+}
+
+@property --forge-time-input-time-done-hover-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-time-done-hover-opacity);
+}

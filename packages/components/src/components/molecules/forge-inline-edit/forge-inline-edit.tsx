@@ -1,13 +1,15 @@
 import {
   classNames,
   hasSlot,
-  type MpChild,
-  type MpElement,
   Slot,
   useEffect,
   useId,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 
 import styles from './forge-inline-edit.module.scss';
@@ -16,6 +18,74 @@ export type InlineEditSize = 'sm' | 'md' | 'lg';
 export type InlineEditInputType = 'text' | 'email' | 'url' | 'number';
 export type InlineEditValidator = (value: string) => string | undefined;
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface InlineEditStyleProperties {
+  readonly 'border-width-thick'?: string;
+  readonly 'border-width-thin'?: string;
+  readonly 'color-bg-surface'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-border-focus'?: string;
+  readonly 'color-danger-default'?: string;
+  readonly 'color-danger-text'?: string;
+  readonly 'color-primary-subtle'?: string;
+  readonly 'color-text-link'?: string;
+  readonly 'color-text-primary'?: string;
+  readonly 'font-size-sm'?: string;
+  readonly 'font-weight-semibold'?: string;
+  readonly 'opacity-disabled'?: string;
+  readonly 'radius-md'?: string;
+  readonly 'size-pad-block-sm'?: string;
+  readonly 'size-pad-inline-sm'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-2'?: string;
+}
+
+export type InlineEditStyle = CSSStyleProperties & {
+  readonly '--forge-inline-edit-border-width-thick'?: string | undefined;
+  readonly '--forge-inline-edit-border-width-thin'?: string | undefined;
+  readonly '--forge-inline-edit-color-bg-surface'?: string | undefined;
+  readonly '--forge-inline-edit-color-border-default'?: string | undefined;
+  readonly '--forge-inline-edit-color-border-focus'?: string | undefined;
+  readonly '--forge-inline-edit-color-danger-default'?: string | undefined;
+  readonly '--forge-inline-edit-color-danger-text'?: string | undefined;
+  readonly '--forge-inline-edit-color-primary-subtle'?: string | undefined;
+  readonly '--forge-inline-edit-color-text-link'?: string | undefined;
+  readonly '--forge-inline-edit-color-text-primary'?: string | undefined;
+  readonly '--forge-inline-edit-font-size-sm'?: string | undefined;
+  readonly '--forge-inline-edit-font-weight-semibold'?: string | undefined;
+  readonly '--forge-inline-edit-opacity-disabled'?: string | undefined;
+  readonly '--forge-inline-edit-radius-md'?: string | undefined;
+  readonly '--forge-inline-edit-size-pad-block-sm'?: string | undefined;
+  readonly '--forge-inline-edit-size-pad-inline-sm'?: string | undefined;
+  readonly '--forge-inline-edit-spacing-1'?: string | undefined;
+  readonly '--forge-inline-edit-spacing-2'?: string | undefined;
+};
+
+function createInlineEditStyle(
+  properties: Readonly<InlineEditStyleProperties> | undefined,
+): InlineEditStyle | undefined {
+  return createForgeStyle({
+    '--forge-inline-edit-border-width-thick': properties?.['border-width-thick'],
+    '--forge-inline-edit-border-width-thin': properties?.['border-width-thin'],
+    '--forge-inline-edit-color-bg-surface': properties?.['color-bg-surface'],
+    '--forge-inline-edit-color-border-default': properties?.['color-border-default'],
+    '--forge-inline-edit-color-border-focus': properties?.['color-border-focus'],
+    '--forge-inline-edit-color-danger-default': properties?.['color-danger-default'],
+    '--forge-inline-edit-color-danger-text': properties?.['color-danger-text'],
+    '--forge-inline-edit-color-primary-subtle': properties?.['color-primary-subtle'],
+    '--forge-inline-edit-color-text-link': properties?.['color-text-link'],
+    '--forge-inline-edit-color-text-primary': properties?.['color-text-primary'],
+    '--forge-inline-edit-font-size-sm': properties?.['font-size-sm'],
+    '--forge-inline-edit-font-weight-semibold': properties?.['font-weight-semibold'],
+    '--forge-inline-edit-opacity-disabled': properties?.['opacity-disabled'],
+    '--forge-inline-edit-radius-md': properties?.['radius-md'],
+    '--forge-inline-edit-size-pad-block-sm': properties?.['size-pad-block-sm'],
+    '--forge-inline-edit-size-pad-inline-sm': properties?.['size-pad-inline-sm'],
+    '--forge-inline-edit-spacing-1': properties?.['spacing-1'],
+    '--forge-inline-edit-spacing-2': properties?.['spacing-2'],
+  }) as InlineEditStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface InlineEditProperties {
   /** Rendered read-only value, or the editor's default slot when supplied. */
   children?: MpChild | readonly MpChild[];
@@ -39,10 +109,15 @@ export interface InlineEditProperties {
   onSave?: (value: string) => void;
   onCancel?: () => void;
   onValidationError?: (message: string) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<InlineEditStyleProperties>;
 }
 
 /** A compact read/edit control with keyboard submit, cancel, and validation. */
 export function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpElement {
+  const style = createInlineEditStyle(properties.properties);
+
   const {
     modelValue = '',
     placeholder = 'Add a value',
@@ -104,6 +179,7 @@ export function ForgeInlineEdit(properties: Readonly<InlineEditProperties>): MpE
         [styles['forge-inline-edit--disabled']]: disabled,
         [styles['forge-inline-edit--error']]: !!error,
       })}
+      style={style}
     >
       {label ? (
         <span

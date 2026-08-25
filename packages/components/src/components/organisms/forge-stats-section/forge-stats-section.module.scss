@@ -1,8 +1,11 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
+@use './forge-stats-section-properties';
+
 @layer mp.components {
   .forge-stats-section {
     width: 100%;
-    padding: var(--mp-spacing-8) var(--mp-spacing-4);
+    padding: var(--forge-stats-section-spacing-8, var(--mp-spacing-8))
+      var(--forge-stats-section-spacing-4, var(--mp-spacing-4));
     text-align: center;
   }
 
@@ -12,8 +15,8 @@
 
   .forge-stats-section__description {
     max-width: 38rem;
-    margin: var(--mp-spacing-3) auto 0;
-    color: var(--mp-color-text-tertiary);
+    margin: var(--forge-stats-section-spacing-3, var(--mp-spacing-3)) auto 0;
+    color: var(--forge-stats-section-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-stats-section__grid {
@@ -21,39 +24,46 @@
     grid-template-columns: repeat(var(--forge-stats-columns, 4), minmax(0, 1fr));
     gap: var(--mp-spacing-4);
     max-width: 70rem;
-    margin: var(--mp-spacing-6) auto 0;
+    margin: var(--forge-stats-section-spacing-6, var(--mp-spacing-6)) auto 0;
   }
 
   .forge-stats-section--cards .forge-stats-section__grid > div {
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    border: var(--forge-stats-section-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-stats-section-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-stats-section-radius-md, var(--mp-radius-md));
   }
 
   .forge-stats-section--minimal {
-    padding-block: var(--mp-spacing-4);
+    padding-block: var(--forge-stats-section-spacing-4, var(--mp-spacing-4));
   }
 
   .forge-stats-section__grid > div {
-    padding: var(--mp-spacing-4);
-    border-inline-start: var(--mp-border-width-thick) solid var(--mp-color-primary-default);
+    padding: var(--forge-stats-section-spacing-4, var(--mp-spacing-4));
+    border-inline-start: var(--forge-stats-section-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-stats-section-color-primary-default, var(--mp-color-primary-default));
   }
 
   .forge-stats-section dt {
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-stats-section-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-stats-section dd {
-    margin: var(--mp-spacing-1) 0;
-    font-size: clamp(var(--mp-font-size-2xl), 4vw, var(--mp-font-size-4xl));
-    font-weight: var(--mp-font-weight-bold);
+    margin: var(--forge-stats-section-spacing-1, var(--mp-spacing-1)) 0;
+    font-size: clamp(
+      var(--forge-stats-section-font-size-2xl, var(--mp-font-size-2xl)),
+      4vw,
+      var(--forge-stats-section-font-size-4xl, var(--mp-font-size-4xl))
+    );
+    font-weight: var(--forge-stats-section-font-weight-bold, var(--mp-font-weight-bold));
   }
 
   .forge-stats-section small {
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-stats-section-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-stats-section--animated .forge-stats-section__grid > div {
-    transition: transform var(--mp-duration-fast) var(--mp-easing-standard);
+    transition: transform var(--forge-stats-section-duration-fast, var(--mp-duration-fast))
+      var(--forge-stats-section-easing-standard, var(--mp-easing-standard));
   }
 
   .forge-stats-section--animated .forge-stats-section__grid > div:hover {

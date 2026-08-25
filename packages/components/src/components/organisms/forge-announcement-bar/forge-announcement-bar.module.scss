@@ -1,37 +1,40 @@
+@use './forge-announcement-bar-properties';
+
 @layer mp.components {
   .forge-announcement-bar {
     display: flex;
     align-items: center;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-announcement-bar-spacing-3, var(--mp-spacing-3));
     width: 100%;
-    min-height: var(--mp-size-height-lg);
-    padding: var(--mp-spacing-3) var(--mp-spacing-4);
+    min-height: var(--forge-announcement-bar-size-height-lg, var(--mp-size-height-lg));
+    padding: var(--forge-announcement-bar-spacing-3, var(--mp-spacing-3))
+      var(--forge-announcement-bar-spacing-4, var(--mp-spacing-4));
     box-sizing: border-box;
-    color: var(--mp-color-text-primary);
-    background: var(--mp-color-bg-muted);
+    color: var(--forge-announcement-bar-color-text-primary, var(--mp-color-text-primary));
+    background: var(--forge-announcement-bar-color-bg-muted, var(--mp-color-bg-muted));
   }
 
   .forge-announcement-bar--info {
-    background: var(--mp-color-info-subtle);
+    background: var(--forge-announcement-bar-color-info-subtle, var(--mp-color-info-subtle));
   }
 
   .forge-announcement-bar--success {
-    background: var(--mp-color-success-subtle);
+    background: var(--forge-announcement-bar-color-success-subtle, var(--mp-color-success-subtle));
   }
 
   .forge-announcement-bar--warning {
-    background: var(--mp-color-warning-subtle);
+    background: var(--forge-announcement-bar-color-warning-subtle, var(--mp-color-warning-subtle));
   }
 
   .forge-announcement-bar--error {
-    background: var(--mp-color-error-subtle);
+    background: var(--forge-announcement-bar-color-error-subtle, var(--mp-color-error-subtle));
   }
 
   .forge-announcement-bar__indicator {
-    flex: 0 0 var(--mp-size-checkable-indicator);
-    width: var(--mp-size-checkable-indicator);
-    height: var(--mp-size-checkable-indicator);
-    border-radius: var(--mp-radius-full);
+    flex: 0 0 var(--forge-announcement-bar-size-checkable-indicator, var(--mp-size-checkable-indicator));
+    width: var(--forge-announcement-bar-size-checkable-indicator, var(--mp-size-checkable-indicator));
+    height: var(--forge-announcement-bar-size-checkable-indicator, var(--mp-size-checkable-indicator));
+    border-radius: var(--forge-announcement-bar-radius-full, var(--mp-radius-full));
     background: currentcolor;
   }
 
@@ -39,7 +42,7 @@
     display: flex;
     flex: 1;
     flex-wrap: wrap;
-    gap: var(--mp-spacing-2);
+    gap: var(--forge-announcement-bar-spacing-2, var(--mp-spacing-2));
     align-items: baseline;
   }
 
@@ -48,26 +51,27 @@
   }
 
   .forge-announcement-bar__action {
-    padding: var(--mp-spacing-1) var(--mp-spacing-2);
+    padding: var(--forge-announcement-bar-spacing-1, var(--mp-spacing-1))
+      var(--forge-announcement-bar-spacing-2, var(--mp-spacing-2));
     color: inherit;
-    font-weight: var(--mp-font-weight-semibold);
+    font-weight: var(--forge-announcement-bar-font-weight-semibold, var(--mp-font-weight-semibold));
     text-decoration: underline;
     cursor: pointer;
   }
 
   .forge-announcement-bar__close {
-    width: var(--mp-size-height-sm);
-    height: var(--mp-size-height-sm);
+    width: var(--forge-announcement-bar-size-height-sm, var(--mp-size-height-sm));
+    height: var(--forge-announcement-bar-size-height-sm, var(--mp-size-height-sm));
     border: 0;
     color: inherit;
     background: transparent;
-    font-size: var(--mp-font-size-xl);
+    font-size: var(--forge-announcement-bar-font-size-xl, var(--mp-font-size-xl));
     cursor: pointer;
   }
 
   .forge-announcement-bar__close:focus-visible,
   .forge-announcement-bar__action:focus-visible {
-    outline: var(--mp-border-width-thick) solid currentcolor;
-    outline-offset: var(--mp-spacing-1);
+    outline: var(--forge-announcement-bar-border-width-thick, var(--mp-border-width-thick)) solid currentcolor;
+    outline-offset: var(--forge-announcement-bar-spacing-1, var(--mp-spacing-1));
   }
 }

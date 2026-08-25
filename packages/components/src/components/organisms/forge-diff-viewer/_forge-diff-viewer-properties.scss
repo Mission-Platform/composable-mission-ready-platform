@@ -1,0 +1,147 @@
+/**
+ * Registered inherited custom properties for forge-diff-viewer overrides.
+ */
+
+@property --forge-diff-viewer-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-diff-viewer-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-diff-viewer-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-diff-viewer-color-text-on-inverse {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-inverse);
+}
+
+@property --forge-diff-viewer-color-bg-inverse {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-inverse);
+}
+
+@property --forge-diff-viewer-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-diff-viewer-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-diff-viewer-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-diff-viewer-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-diff-viewer-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-sm);
+}
+
+@property --forge-diff-viewer-color-text-on-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-primary);
+}
+
+@property --forge-diff-viewer-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}
+
+@property --forge-diff-viewer-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-diff-viewer-color-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-focus);
+}
+
+@property --forge-diff-viewer-font-family-mono {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-family-mono);
+}
+
+@property --forge-diff-viewer-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-diff-viewer-line-height-relaxed {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-line-height-relaxed);
+}
+
+@property --forge-diff-viewer-font-size-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-xs);
+}
+
+@property --forge-diff-viewer-line-height-tight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-line-height-tight);
+}
+
+@property --forge-diff-viewer-color-success-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-text);
+}
+
+@property --forge-diff-viewer-color-success-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-subtle);
+}
+
+@property --forge-diff-viewer-color-error-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-error-text);
+}
+
+@property --forge-diff-viewer-color-error-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-error-subtle);
+}
+
+@property --forge-diff-viewer-size-height-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-lg);
+}

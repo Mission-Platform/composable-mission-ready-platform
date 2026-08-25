@@ -1,0 +1,348 @@
+/**
+ * Registered inherited custom properties for forge-resource-planner overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-resource-planner-booking-conflict-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-conflict-surface);
+}
+
+@property --forge-resource-planner-booking-focus-ring {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-focus-ring);
+}
+
+@property --forge-resource-planner-booking-height-inset {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-height-inset);
+}
+
+@property --forge-resource-planner-booking-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-padding-block);
+}
+
+@property --forge-resource-planner-booking-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-padding-inline);
+}
+
+@property --forge-resource-planner-booking-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-radius);
+}
+
+@property --forge-resource-planner-booking-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-surface);
+}
+
+@property --forge-resource-planner-booking-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-booking-text);
+}
+
+@property --forge-resource-planner-capacity-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-capacity-border);
+}
+
+@property --forge-resource-planner-capacity-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-capacity-border-width);
+}
+
+@property --forge-resource-planner-capacity-conflict-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-capacity-conflict-surface);
+}
+
+@property --forge-resource-planner-capacity-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-capacity-font-size);
+}
+
+@property --forge-resource-planner-capacity-unavailable-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-capacity-unavailable-surface);
+}
+
+@property --forge-resource-planner-container-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-border);
+}
+
+@property --forge-resource-planner-container-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-border-width);
+}
+
+@property --forge-resource-planner-container-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-gap);
+}
+
+@property --forge-resource-planner-container-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-padding);
+}
+
+@property --forge-resource-planner-container-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-radius);
+}
+
+@property --forge-resource-planner-container-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-container-surface);
+}
+
+@property --forge-resource-planner-control-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-border);
+}
+
+@property --forge-resource-planner-control-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-border-width);
+}
+
+@property --forge-resource-planner-control-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-padding-block);
+}
+
+@property --forge-resource-planner-control-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-padding-inline);
+}
+
+@property --forge-resource-planner-control-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-radius);
+}
+
+@property --forge-resource-planner-control-selected-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-selected-surface);
+}
+
+@property --forge-resource-planner-control-selected-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-selected-text);
+}
+
+@property --forge-resource-planner-control-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-surface);
+}
+
+@property --forge-resource-planner-control-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-control-text);
+}
+
+@property --forge-resource-planner-current-time-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-current-time-surface);
+}
+
+@property --forge-resource-planner-current-time-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-current-time-width);
+}
+
+@property --forge-resource-planner-empty-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-empty-text);
+}
+
+@property --forge-resource-planner-header-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-header-border);
+}
+
+@property --forge-resource-planner-header-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-header-border-width);
+}
+
+@property --forge-resource-planner-header-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-header-surface);
+}
+
+@property --forge-resource-planner-resource-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-border);
+}
+
+@property --forge-resource-planner-resource-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-border-width);
+}
+
+@property --forge-resource-planner-resource-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-gap);
+}
+
+@property --forge-resource-planner-resource-heading-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-heading-weight);
+}
+
+@property --forge-resource-planner-resource-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-padding);
+}
+
+@property --forge-resource-planner-resource-secondary-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-secondary-text);
+}
+
+@property --forge-resource-planner-resource-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-resource-surface);
+}
+
+@property --forge-resource-planner-row-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-row-border);
+}
+
+@property --forge-resource-planner-row-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-row-border-width);
+}
+
+@property --forge-resource-planner-selection-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-selection-border);
+}
+
+@property --forge-resource-planner-selection-border-style {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-selection-border-style);
+}
+
+@property --forge-resource-planner-selection-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-selection-border-width);
+}
+
+@property --forge-resource-planner-selection-height-inset {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-selection-height-inset);
+}
+
+@property --forge-resource-planner-selection-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-selection-surface);
+}
+
+@property --forge-resource-planner-timeline-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-border);
+}
+
+@property --forge-resource-planner-timeline-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-border-width);
+}
+
+@property --forge-resource-planner-timeline-header-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-header-font-size);
+}
+
+@property --forge-resource-planner-timeline-header-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-header-padding);
+}
+
+@property --forge-resource-planner-timeline-header-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-header-text);
+}
+
+@property --forge-resource-planner-timeline-selected-ring {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-timeline-selected-ring);
+}
+
+@property --forge-resource-planner-toolbar-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-toolbar-gap);
+}
+
+@property --forge-resource-planner-viewport-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-viewport-border);
+}
+
+@property --forge-resource-planner-viewport-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-resource-planner-viewport-border-width);
+}

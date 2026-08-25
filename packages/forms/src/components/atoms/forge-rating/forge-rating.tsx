@@ -1,4 +1,4 @@
-import { type MpElement, useState } from '@mission-platform/forge';
+import { useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 import { ForgeIconStar } from '@mission-platform/icons';
 
 import styles from './forge-rating.module.scss';
@@ -6,6 +6,57 @@ import styles from './forge-rating.module.scss';
 /** Size token controlling the star dimensions — canonical 2xs → 2xl scale. */
 export type RatingSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface RatingStyleProperties {
+  readonly 'checkable-focus-ring'?: string;
+  readonly 'checkable-gap-stack'?: string;
+  readonly 'checkable-opacity-disabled'?: string;
+  readonly 'checkable-radius'?: string;
+  readonly 'checkable-rating-empty'?: string;
+  readonly 'checkable-rating-filled'?: string;
+  readonly 'checkable-size-2xl-rating-font-size'?: string;
+  readonly 'checkable-size-2xs-rating-font-size'?: string;
+  readonly 'checkable-size-lg-rating-font-size'?: string;
+  readonly 'checkable-size-md-rating-font-size'?: string;
+  readonly 'checkable-size-sm-rating-font-size'?: string;
+  readonly 'checkable-size-xl-rating-font-size'?: string;
+  readonly 'checkable-size-xs-rating-font-size'?: string;
+}
+
+export type RatingStyle = CSSStyleProperties & {
+  readonly '--forge-rating-checkable-focus-ring'?: string | undefined;
+  readonly '--forge-rating-checkable-gap-stack'?: string | undefined;
+  readonly '--forge-rating-checkable-opacity-disabled'?: string | undefined;
+  readonly '--forge-rating-checkable-radius'?: string | undefined;
+  readonly '--forge-rating-checkable-rating-empty'?: string | undefined;
+  readonly '--forge-rating-checkable-rating-filled'?: string | undefined;
+  readonly '--forge-rating-checkable-size-2xl-rating-font-size'?: string | undefined;
+  readonly '--forge-rating-checkable-size-2xs-rating-font-size'?: string | undefined;
+  readonly '--forge-rating-checkable-size-lg-rating-font-size'?: string | undefined;
+  readonly '--forge-rating-checkable-size-md-rating-font-size'?: string | undefined;
+  readonly '--forge-rating-checkable-size-sm-rating-font-size'?: string | undefined;
+  readonly '--forge-rating-checkable-size-xl-rating-font-size'?: string | undefined;
+  readonly '--forge-rating-checkable-size-xs-rating-font-size'?: string | undefined;
+};
+
+function createRatingStyle(properties: Readonly<RatingStyleProperties> | undefined): RatingStyle | undefined {
+  return createForgeStyle({
+    '--forge-rating-checkable-focus-ring': properties?.['checkable-focus-ring'],
+    '--forge-rating-checkable-gap-stack': properties?.['checkable-gap-stack'],
+    '--forge-rating-checkable-opacity-disabled': properties?.['checkable-opacity-disabled'],
+    '--forge-rating-checkable-radius': properties?.['checkable-radius'],
+    '--forge-rating-checkable-rating-empty': properties?.['checkable-rating-empty'],
+    '--forge-rating-checkable-rating-filled': properties?.['checkable-rating-filled'],
+    '--forge-rating-checkable-size-2xl-rating-font-size': properties?.['checkable-size-2xl-rating-font-size'],
+    '--forge-rating-checkable-size-2xs-rating-font-size': properties?.['checkable-size-2xs-rating-font-size'],
+    '--forge-rating-checkable-size-lg-rating-font-size': properties?.['checkable-size-lg-rating-font-size'],
+    '--forge-rating-checkable-size-md-rating-font-size': properties?.['checkable-size-md-rating-font-size'],
+    '--forge-rating-checkable-size-sm-rating-font-size': properties?.['checkable-size-sm-rating-font-size'],
+    '--forge-rating-checkable-size-xl-rating-font-size': properties?.['checkable-size-xl-rating-font-size'],
+    '--forge-rating-checkable-size-xs-rating-font-size': properties?.['checkable-size-xs-rating-font-size'],
+  }) as RatingStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface RatingProperties {
   /**
    * Current rating value (controlled via `modelValue` + `onUpdateModelValue`).
@@ -30,6 +81,9 @@ export interface RatingProperties {
   onUpdateModelValue?: (value: number) => void;
   /** Fired when the value changes via user interaction. */
   onChange?: (value: number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<RatingStyleProperties>;
 }
 
 /**
@@ -49,6 +103,8 @@ export interface RatingProperties {
  * `onUpdateModelValue`/`onChange` callback props.
  */
 export function ForgeRating(properties: Readonly<RatingProperties>): MpElement {
+  const style = createRatingStyle(properties.properties);
+
   const {
     modelValue = 0,
     max = 5,
@@ -189,6 +245,7 @@ export function ForgeRating(properties: Readonly<RatingProperties>): MpElement {
       onBlur={clearHover}
       onKeydown={onKeydown}
       onMouseleave={clearHover}
+      style={style}
     >
       {starItems}
     </div>
@@ -203,6 +260,7 @@ export function ForgeRating(properties: Readonly<RatingProperties>): MpElement {
         },
       ]}
       role="img"
+      style={style}
     >
       {starItems}
     </div>

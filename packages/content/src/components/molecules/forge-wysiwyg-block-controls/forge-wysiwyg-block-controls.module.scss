@@ -1,11 +1,23 @@
+@use './forge-wysiwyg-block-controls-properties';
+
 @layer mp.content {
   .wysiwyg-block-controls {
     position: absolute;
-    z-index: 1;
+    z-index: var(--mp-z-index-feature-editor);
     box-sizing: border-box;
-    border: var(--mp-editor-block-controls-selection-border-width) dashed
-      var(--mp-editor-block-controls-selection-border);
-    border-radius: var(--mp-editor-block-controls-selection-radius);
+    border: var(
+        --forge-wysiwyg-block-controls-editor-block-controls-selection-border-width,
+        var(--mp-editor-block-controls-selection-border-width)
+      )
+      dashed
+      var(
+        --forge-wysiwyg-block-controls-editor-block-controls-selection-border,
+        var(--mp-editor-block-controls-selection-border)
+      );
+    border-radius: var(
+      --forge-wysiwyg-block-controls-editor-block-controls-selection-radius,
+      var(--mp-editor-block-controls-selection-radius)
+    );
     pointer-events: none;
   }
 
@@ -14,14 +26,27 @@
     top: 2px;
     right: 2px;
     display: inline-flex;
-    gap: var(--mp-editor-block-controls-gap);
+    gap: var(--forge-wysiwyg-block-controls-editor-block-controls-gap, var(--mp-editor-block-controls-gap));
     align-items: center;
-    padding: var(--mp-editor-block-controls-padding);
-    background-color: var(--mp-editor-block-controls-bar-surface);
-    border: var(--mp-editor-block-controls-bar-border-width) solid
-      var(--mp-editor-block-controls-bar-border);
-    border-radius: var(--mp-editor-block-controls-bar-radius);
-    box-shadow: var(--mp-editor-block-controls-bar-shadow);
+    padding: var(--forge-wysiwyg-block-controls-editor-block-controls-padding, var(--mp-editor-block-controls-padding));
+    background-color: var(
+      --forge-wysiwyg-block-controls-editor-block-controls-bar-surface,
+      var(--mp-editor-block-controls-bar-surface)
+    );
+    border: var(
+        --forge-wysiwyg-block-controls-editor-block-controls-bar-border-width,
+        var(--mp-editor-block-controls-bar-border-width)
+      )
+      solid
+      var(--forge-wysiwyg-block-controls-editor-block-controls-bar-border, var(--mp-editor-block-controls-bar-border));
+    border-radius: var(
+      --forge-wysiwyg-block-controls-editor-block-controls-bar-radius,
+      var(--mp-editor-block-controls-bar-radius)
+    );
+    box-shadow: var(
+      --forge-wysiwyg-block-controls-editor-block-controls-bar-shadow,
+      var(--mp-editor-block-controls-bar-shadow)
+    );
     pointer-events: auto;
   }
 

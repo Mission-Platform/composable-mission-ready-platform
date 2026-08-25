@@ -1,5 +1,14 @@
 import { ForgeIconButton } from '@mission-platform/components';
-import { hasSlot, type MpChild, type MpElement, Slot, useEffect, useRef } from '@mission-platform/forge';
+import {
+  hasSlot,
+  Slot,
+  useEffect,
+  useRef,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconClose } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -8,6 +17,63 @@ import styles from './forge-dialog.module.scss';
 /** Size token — canonical 2xs → 2xl scale. */
 export type DialogSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface DialogStyleProperties {
+  readonly 'overlay-body-padding'?: string;
+  readonly 'overlay-border-default'?: string;
+  readonly 'overlay-border-width'?: string;
+  readonly 'overlay-dialog-surface-default'?: string;
+  readonly 'overlay-footer-gap'?: string;
+  readonly 'overlay-footer-padding-block'?: string;
+  readonly 'overlay-footer-padding-inline'?: string;
+  readonly 'overlay-header-gap'?: string;
+  readonly 'overlay-header-padding-block'?: string;
+  readonly 'overlay-header-padding-inline'?: string;
+  readonly 'overlay-radius'?: string;
+  readonly 'overlay-shadow'?: string;
+  readonly 'overlay-surface-scrim'?: string;
+  readonly 'overlay-transition-duration'?: string;
+  readonly 'overlay-transition-easing'?: string;
+}
+
+export type DialogStyle = CSSStyleProperties & {
+  readonly '--forge-dialog-overlay-body-padding'?: string | undefined;
+  readonly '--forge-dialog-overlay-border-default'?: string | undefined;
+  readonly '--forge-dialog-overlay-border-width'?: string | undefined;
+  readonly '--forge-dialog-overlay-dialog-surface-default'?: string | undefined;
+  readonly '--forge-dialog-overlay-footer-gap'?: string | undefined;
+  readonly '--forge-dialog-overlay-footer-padding-block'?: string | undefined;
+  readonly '--forge-dialog-overlay-footer-padding-inline'?: string | undefined;
+  readonly '--forge-dialog-overlay-header-gap'?: string | undefined;
+  readonly '--forge-dialog-overlay-header-padding-block'?: string | undefined;
+  readonly '--forge-dialog-overlay-header-padding-inline'?: string | undefined;
+  readonly '--forge-dialog-overlay-radius'?: string | undefined;
+  readonly '--forge-dialog-overlay-shadow'?: string | undefined;
+  readonly '--forge-dialog-overlay-surface-scrim'?: string | undefined;
+  readonly '--forge-dialog-overlay-transition-duration'?: string | undefined;
+  readonly '--forge-dialog-overlay-transition-easing'?: string | undefined;
+};
+
+function createDialogStyle(properties: Readonly<DialogStyleProperties> | undefined): DialogStyle | undefined {
+  return createForgeStyle({
+    '--forge-dialog-overlay-body-padding': properties?.['overlay-body-padding'],
+    '--forge-dialog-overlay-border-default': properties?.['overlay-border-default'],
+    '--forge-dialog-overlay-border-width': properties?.['overlay-border-width'],
+    '--forge-dialog-overlay-dialog-surface-default': properties?.['overlay-dialog-surface-default'],
+    '--forge-dialog-overlay-footer-gap': properties?.['overlay-footer-gap'],
+    '--forge-dialog-overlay-footer-padding-block': properties?.['overlay-footer-padding-block'],
+    '--forge-dialog-overlay-footer-padding-inline': properties?.['overlay-footer-padding-inline'],
+    '--forge-dialog-overlay-header-gap': properties?.['overlay-header-gap'],
+    '--forge-dialog-overlay-header-padding-block': properties?.['overlay-header-padding-block'],
+    '--forge-dialog-overlay-header-padding-inline': properties?.['overlay-header-padding-inline'],
+    '--forge-dialog-overlay-radius': properties?.['overlay-radius'],
+    '--forge-dialog-overlay-shadow': properties?.['overlay-shadow'],
+    '--forge-dialog-overlay-surface-scrim': properties?.['overlay-surface-scrim'],
+    '--forge-dialog-overlay-transition-duration': properties?.['overlay-transition-duration'],
+    '--forge-dialog-overlay-transition-easing': properties?.['overlay-transition-easing'],
+  }) as DialogStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface DialogProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -32,6 +98,9 @@ export interface DialogProperties {
   onUpdateOpen?: (open: boolean) => void;
   /** Fired when the dialog requests to close. */
   onClose?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<DialogStyleProperties>;
 }
 
 /** A native `<dialog>` narrowed to the imperative modal methods we drive. */
@@ -66,6 +135,8 @@ type DialogElement = HTMLDialogElement & {
  * `forge-dialog.module.scss`.
  */
 export function ForgeDialog(properties: Readonly<DialogProperties>): MpElement {
+  const style = createDialogStyle(properties.properties);
+
   const { open = false, title, closeOnBackdrop = true, closeLabel = 'Close', size = 'md' } = properties;
 
   const dialogReference = useRef<HTMLDialogElement | null>(null);
@@ -103,6 +174,7 @@ export function ForgeDialog(properties: Readonly<DialogProperties>): MpElement {
       className={[styles['forge-dialog'], size ? `forge-size--${size}` : undefined]}
       onClick={handleClick}
       onClose={requestClose}
+      style={style}
     >
       <div className={styles['forge-dialog__panel']}>
         {hasHeader ? (

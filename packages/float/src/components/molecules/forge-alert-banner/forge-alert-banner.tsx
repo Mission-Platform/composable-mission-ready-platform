@@ -1,4 +1,11 @@
-import { hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import {
+  hasSlot,
+  Slot,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import {
   ForgeIconCheck,
   ForgeIconClose,
@@ -17,6 +24,125 @@ export type AlertBannerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type AlertBannerVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface AlertBannerStyleProperties {
+  readonly 'feedback-critical-background'?: string;
+  readonly 'feedback-critical-border'?: string;
+  readonly 'feedback-critical-text'?: string;
+  readonly 'feedback-error-background'?: string;
+  readonly 'feedback-error-border'?: string;
+  readonly 'feedback-error-text'?: string;
+  readonly 'feedback-info-background'?: string;
+  readonly 'feedback-info-border'?: string;
+  readonly 'feedback-info-text'?: string;
+  readonly 'feedback-neutral-background'?: string;
+  readonly 'feedback-neutral-border'?: string;
+  readonly 'feedback-neutral-text'?: string;
+  readonly 'feedback-success-background'?: string;
+  readonly 'feedback-success-border'?: string;
+  readonly 'feedback-success-text'?: string;
+  readonly 'feedback-warning-background'?: string;
+  readonly 'feedback-warning-border'?: string;
+  readonly 'feedback-warning-text'?: string;
+  readonly 'overlay-alert-banner-actions-gap'?: string;
+  readonly 'overlay-alert-banner-actions-margin-top'?: string;
+  readonly 'overlay-alert-banner-content-gap'?: string;
+  readonly 'overlay-alert-banner-dismiss-opacity'?: string;
+  readonly 'overlay-alert-banner-dismiss-transition-duration'?: string;
+  readonly 'overlay-alert-banner-dismiss-transition-easing'?: string;
+  readonly 'overlay-alert-banner-gap'?: string;
+  readonly 'overlay-alert-banner-padding-block'?: string;
+  readonly 'overlay-alert-banner-padding-inline'?: string;
+  readonly 'overlay-alert-banner-radius'?: string;
+  readonly 'overlay-border-width'?: string;
+  readonly 'overlay-dismiss-focus-width'?: string;
+  readonly 'overlay-dismiss-padding'?: string;
+  readonly 'overlay-dismiss-radius'?: string;
+  readonly 'overlay-font-family'?: string;
+  readonly 'overlay-icon-size'?: string;
+}
+
+export type AlertBannerStyle = CSSStyleProperties & {
+  readonly '--forge-alert-banner-feedback-critical-background'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-critical-border'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-critical-text'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-error-background'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-error-border'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-error-text'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-info-background'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-info-border'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-info-text'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-neutral-background'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-neutral-border'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-neutral-text'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-success-background'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-success-border'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-success-text'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-warning-background'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-warning-border'?: string | undefined;
+  readonly '--forge-alert-banner-feedback-warning-text'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-alert-banner-actions-gap'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-alert-banner-actions-margin-top'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-alert-banner-content-gap'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-alert-banner-dismiss-opacity'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-alert-banner-dismiss-transition-duration'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-alert-banner-dismiss-transition-easing'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-alert-banner-gap'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-alert-banner-padding-block'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-alert-banner-padding-inline'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-alert-banner-radius'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-border-width'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-dismiss-focus-width'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-dismiss-padding'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-dismiss-radius'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-font-family'?: string | undefined;
+  readonly '--forge-alert-banner-overlay-icon-size'?: string | undefined;
+};
+
+function createAlertBannerStyle(
+  properties: Readonly<AlertBannerStyleProperties> | undefined,
+): AlertBannerStyle | undefined {
+  return createForgeStyle({
+    '--forge-alert-banner-feedback-critical-background': properties?.['feedback-critical-background'],
+    '--forge-alert-banner-feedback-critical-border': properties?.['feedback-critical-border'],
+    '--forge-alert-banner-feedback-critical-text': properties?.['feedback-critical-text'],
+    '--forge-alert-banner-feedback-error-background': properties?.['feedback-error-background'],
+    '--forge-alert-banner-feedback-error-border': properties?.['feedback-error-border'],
+    '--forge-alert-banner-feedback-error-text': properties?.['feedback-error-text'],
+    '--forge-alert-banner-feedback-info-background': properties?.['feedback-info-background'],
+    '--forge-alert-banner-feedback-info-border': properties?.['feedback-info-border'],
+    '--forge-alert-banner-feedback-info-text': properties?.['feedback-info-text'],
+    '--forge-alert-banner-feedback-neutral-background': properties?.['feedback-neutral-background'],
+    '--forge-alert-banner-feedback-neutral-border': properties?.['feedback-neutral-border'],
+    '--forge-alert-banner-feedback-neutral-text': properties?.['feedback-neutral-text'],
+    '--forge-alert-banner-feedback-success-background': properties?.['feedback-success-background'],
+    '--forge-alert-banner-feedback-success-border': properties?.['feedback-success-border'],
+    '--forge-alert-banner-feedback-success-text': properties?.['feedback-success-text'],
+    '--forge-alert-banner-feedback-warning-background': properties?.['feedback-warning-background'],
+    '--forge-alert-banner-feedback-warning-border': properties?.['feedback-warning-border'],
+    '--forge-alert-banner-feedback-warning-text': properties?.['feedback-warning-text'],
+    '--forge-alert-banner-overlay-alert-banner-actions-gap': properties?.['overlay-alert-banner-actions-gap'],
+    '--forge-alert-banner-overlay-alert-banner-actions-margin-top':
+      properties?.['overlay-alert-banner-actions-margin-top'],
+    '--forge-alert-banner-overlay-alert-banner-content-gap': properties?.['overlay-alert-banner-content-gap'],
+    '--forge-alert-banner-overlay-alert-banner-dismiss-opacity': properties?.['overlay-alert-banner-dismiss-opacity'],
+    '--forge-alert-banner-overlay-alert-banner-dismiss-transition-duration':
+      properties?.['overlay-alert-banner-dismiss-transition-duration'],
+    '--forge-alert-banner-overlay-alert-banner-dismiss-transition-easing':
+      properties?.['overlay-alert-banner-dismiss-transition-easing'],
+    '--forge-alert-banner-overlay-alert-banner-gap': properties?.['overlay-alert-banner-gap'],
+    '--forge-alert-banner-overlay-alert-banner-padding-block': properties?.['overlay-alert-banner-padding-block'],
+    '--forge-alert-banner-overlay-alert-banner-padding-inline': properties?.['overlay-alert-banner-padding-inline'],
+    '--forge-alert-banner-overlay-alert-banner-radius': properties?.['overlay-alert-banner-radius'],
+    '--forge-alert-banner-overlay-border-width': properties?.['overlay-border-width'],
+    '--forge-alert-banner-overlay-dismiss-focus-width': properties?.['overlay-dismiss-focus-width'],
+    '--forge-alert-banner-overlay-dismiss-padding': properties?.['overlay-dismiss-padding'],
+    '--forge-alert-banner-overlay-dismiss-radius': properties?.['overlay-dismiss-radius'],
+    '--forge-alert-banner-overlay-font-family': properties?.['overlay-font-family'],
+    '--forge-alert-banner-overlay-icon-size': properties?.['overlay-icon-size'],
+  }) as AlertBannerStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface AlertBannerProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -45,6 +171,9 @@ export interface AlertBannerProperties {
   onUpdateModelValue?: (value: boolean) => void;
   /** Fired when the dismiss button is pressed. */
   onDismiss?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<AlertBannerStyleProperties>;
 }
 
 /** Renders the `@mission-platform/icons` status icon for a given {@link AlertBannerVariant}. */
@@ -89,6 +218,8 @@ function variantIcon(variant: AlertBannerVariant): MpElement {
  * has no conditional-root return).
  */
 export function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): MpElement {
+  const style = createAlertBannerStyle(properties.properties);
+
   const {
     modelValue = true,
     variant = 'info',
@@ -112,7 +243,10 @@ export function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): M
   const message = properties.children;
 
   return (
-    <div className={styles['forge-alert-banner-host']}>
+    <div
+      className={styles['forge-alert-banner-host']}
+      style={style}
+    >
       {modelValue ? (
         <div
           aria-live={ariaLive}
@@ -122,6 +256,7 @@ export function ForgeAlertBanner(properties: Readonly<AlertBannerProperties>): M
             size ? `forge-size--${size}` : undefined,
           ]}
           role={role}
+          style={style}
         >
           {icon ? (
             <span

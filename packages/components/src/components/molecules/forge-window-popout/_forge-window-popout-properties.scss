@@ -1,0 +1,141 @@
+/**
+ * Registered inherited custom properties for forge-window-popout overrides.
+ */
+
+@property --forge-window-popout-overlay-window-popout-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-gap);
+}
+
+@property --forge-window-popout-overlay-window-popout-placeholder-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-placeholder-padding);
+}
+
+@property --forge-window-popout-overlay-window-popout-placeholder-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-placeholder-border-width);
+}
+
+@property --forge-window-popout-overlay-window-popout-placeholder-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-placeholder-border);
+}
+
+@property --forge-window-popout-overlay-window-popout-placeholder-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-placeholder-radius);
+}
+
+@property --forge-window-popout-overlay-window-popout-placeholder-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-placeholder-surface);
+}
+
+@property --forge-window-popout-overlay-window-popout-placeholder-min-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-placeholder-min-height);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-gap);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-padding-block);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-padding-inline);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-border-width);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-border-default);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-radius);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-surface-default);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-text-default);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-transition-duration);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-transition-easing);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-surface-hover);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-border-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-border-hover);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-focus-ring);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-surface-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-surface-selected);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-text-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-text-selected);
+}
+
+@property --forge-window-popout-overlay-window-popout-toggle-border-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-window-popout-toggle-border-selected);
+}

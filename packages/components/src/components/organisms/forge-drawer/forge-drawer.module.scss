@@ -22,6 +22,7 @@
  */
 
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
+@use './forge-drawer-properties';
 
 @layer mp.components {
   $drawer-sizes: (
@@ -41,8 +42,8 @@
   .forge-drawer-backdrop {
     position: fixed;
     inset: 0;
-    z-index: 700;
-    background-color: var(--mp-overlay-drawer-backdrop-surface);
+    z-index: var(--forge-drawer-z-index-backdrop, var(--mp-z-index-drawer-backdrop));
+    background-color: var(--forge-drawer-overlay-drawer-backdrop-surface, var(--mp-overlay-drawer-backdrop-surface));
     border: none;
     padding: 0;
     margin: 0;
@@ -53,9 +54,9 @@
 
   .forge-drawer {
     position: fixed;
-    z-index: 701;
-    background-color: var(--mp-overlay-drawer-panel-surface);
-    box-shadow: var(--mp-overlay-drawer-panel-shadow);
+    z-index: var(--forge-drawer-z-index-panel, var(--mp-z-index-drawer-panel));
+    background-color: var(--forge-drawer-overlay-drawer-panel-surface, var(--mp-overlay-drawer-panel-surface));
+    box-shadow: var(--forge-drawer-overlay-drawer-panel-shadow, var(--mp-overlay-drawer-panel-shadow));
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -70,12 +71,20 @@
 
     &--start {
       inset-inline-start: 0;
-      border-inline-end: var(--mp-overlay-drawer-panel-border-width) solid var(--mp-overlay-drawer-panel-border);
+      border-inline-end: var(
+          --forge-drawer-overlay-drawer-panel-border-width,
+          var(--mp-overlay-drawer-panel-border-width)
+        )
+        solid var(--forge-drawer-overlay-drawer-panel-border, var(--mp-overlay-drawer-panel-border));
     }
 
     &--end {
       inset-inline-end: 0;
-      border-inline-start: var(--mp-overlay-drawer-panel-border-width) solid var(--mp-overlay-drawer-panel-border);
+      border-inline-start: var(
+          --forge-drawer-overlay-drawer-panel-border-width,
+          var(--mp-overlay-drawer-panel-border-width)
+        )
+        solid var(--forge-drawer-overlay-drawer-panel-border, var(--mp-overlay-drawer-panel-border));
     }
 
     &--top,
@@ -89,12 +98,14 @@
 
     &--top {
       top: 0;
-      border-bottom: var(--mp-overlay-drawer-panel-border-width) solid var(--mp-overlay-drawer-panel-border);
+      border-bottom: var(--forge-drawer-overlay-drawer-panel-border-width, var(--mp-overlay-drawer-panel-border-width))
+        solid var(--forge-drawer-overlay-drawer-panel-border, var(--mp-overlay-drawer-panel-border));
     }
 
     &--bottom {
       bottom: 0;
-      border-top: var(--mp-overlay-drawer-panel-border-width) solid var(--mp-overlay-drawer-panel-border);
+      border-top: var(--forge-drawer-overlay-drawer-panel-border-width, var(--mp-overlay-drawer-panel-border-width))
+        solid var(--forge-drawer-overlay-drawer-panel-border, var(--mp-overlay-drawer-panel-border));
     }
 
     @include bp.bp-up('sm') {
@@ -127,54 +138,67 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--mp-overlay-drawer-header-padding-block) var(--mp-overlay-drawer-header-padding-inline);
-      border-bottom: var(--mp-overlay-drawer-header-border-width) solid var(--mp-overlay-drawer-header-border);
+      padding: var(--forge-drawer-overlay-drawer-header-padding-block, var(--mp-overlay-drawer-header-padding-block))
+        var(--forge-drawer-overlay-drawer-header-padding-inline, var(--mp-overlay-drawer-header-padding-inline));
+      border-bottom: var(
+          --forge-drawer-overlay-drawer-header-border-width,
+          var(--mp-overlay-drawer-header-border-width)
+        )
+        solid var(--forge-drawer-overlay-drawer-header-border, var(--mp-overlay-drawer-header-border));
       flex-shrink: 0;
-      gap: var(--mp-overlay-drawer-header-gap);
+      gap: var(--forge-drawer-overlay-drawer-header-gap, var(--mp-overlay-drawer-header-gap));
     }
 
     &__title {
       margin: 0;
-      font-family: var(--mp-overlay-drawer-title-font-family);
-      font-size: var(--mp-overlay-drawer-title-font-size);
-      font-weight: var(--mp-overlay-drawer-title-font-weight);
-      line-height: var(--mp-overlay-drawer-title-line-height);
-      color: var(--mp-overlay-drawer-title-text);
+      font-family: var(--forge-drawer-overlay-drawer-title-font-family, var(--mp-overlay-drawer-title-font-family));
+      font-size: var(--forge-drawer-overlay-drawer-title-font-size, var(--mp-overlay-drawer-title-font-size));
+      font-weight: var(--forge-drawer-overlay-drawer-title-font-weight, var(--mp-overlay-drawer-title-font-weight));
+      line-height: var(--forge-drawer-overlay-drawer-title-line-height, var(--mp-overlay-drawer-title-line-height));
+      color: var(--forge-drawer-overlay-drawer-title-text, var(--mp-overlay-drawer-title-text));
     }
 
     &__close {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: var(--mp-overlay-drawer-close-size);
-      height: var(--mp-overlay-drawer-close-size);
+      width: var(--forge-drawer-overlay-drawer-close-size, var(--mp-overlay-drawer-close-size));
+      height: var(--forge-drawer-overlay-drawer-close-size, var(--mp-overlay-drawer-close-size));
       border: none;
-      border-radius: var(--mp-overlay-drawer-close-radius);
-      background: var(--mp-overlay-drawer-close-surface-default);
-      color: var(--mp-overlay-drawer-close-text-default);
-      font-size: var(--mp-overlay-drawer-close-font-size);
-      line-height: var(--mp-overlay-drawer-close-line-height);
+      border-radius: var(--forge-drawer-overlay-drawer-close-radius, var(--mp-overlay-drawer-close-radius));
+      background: var(
+        --forge-drawer-overlay-drawer-close-surface-default,
+        var(--mp-overlay-drawer-close-surface-default)
+      );
+      color: var(--forge-drawer-overlay-drawer-close-text-default, var(--mp-overlay-drawer-close-text-default));
+      font-size: var(--forge-drawer-overlay-drawer-close-font-size, var(--mp-overlay-drawer-close-font-size));
+      line-height: var(--forge-drawer-overlay-drawer-close-line-height, var(--mp-overlay-drawer-close-line-height));
       cursor: pointer;
 
       &:hover {
-        background-color: var(--mp-overlay-drawer-close-surface-hover);
-        color: var(--mp-overlay-drawer-close-text-hover);
+        background-color: var(
+          --forge-drawer-overlay-drawer-close-surface-hover,
+          var(--mp-overlay-drawer-close-surface-hover)
+        );
+        color: var(--forge-drawer-overlay-drawer-close-text-hover, var(--mp-overlay-drawer-close-text-hover));
       }
     }
 
     &__body {
       flex: 1;
       overflow-y: auto;
-      padding: var(--mp-overlay-drawer-body-padding);
+      padding: var(--forge-drawer-overlay-drawer-body-padding, var(--mp-overlay-drawer-body-padding));
     }
 
     &__footer {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: var(--mp-overlay-drawer-footer-gap);
-      padding: var(--mp-overlay-drawer-footer-padding-block) var(--mp-overlay-drawer-footer-padding-inline);
-      border-top: var(--mp-overlay-drawer-footer-border-width) solid var(--mp-overlay-drawer-footer-border);
+      gap: var(--forge-drawer-overlay-drawer-footer-gap, var(--mp-overlay-drawer-footer-gap));
+      padding: var(--forge-drawer-overlay-drawer-footer-padding-block, var(--mp-overlay-drawer-footer-padding-block))
+        var(--forge-drawer-overlay-drawer-footer-padding-inline, var(--mp-overlay-drawer-footer-padding-inline));
+      border-top: var(--forge-drawer-overlay-drawer-footer-border-width, var(--mp-overlay-drawer-footer-border-width))
+        solid var(--forge-drawer-overlay-drawer-footer-border, var(--mp-overlay-drawer-footer-border));
       flex-shrink: 0;
     }
 
@@ -183,16 +207,27 @@
        absolutely-positioned handle anchors to it. */
     &__resize-handle {
       position: absolute;
-      z-index: 1;
+      z-index: var(--mp-z-index-drawer-panel);
       touch-action: none;
-      background-color: var(--mp-overlay-drawer-resize-handle-surface-default);
-      transition: background-color var(--mp-overlay-drawer-resize-handle-transition-duration) var(--mp-overlay-drawer-resize-handle-transition-easing);
+      background-color: var(
+        --forge-drawer-overlay-drawer-resize-handle-surface-default,
+        var(--mp-overlay-drawer-resize-handle-surface-default)
+      );
+      transition: background-color
+        var(
+          --forge-drawer-overlay-drawer-resize-handle-transition-duration,
+          var(--mp-overlay-drawer-resize-handle-transition-duration)
+        )
+        var(
+          --forge-drawer-overlay-drawer-resize-handle-transition-easing,
+          var(--mp-overlay-drawer-resize-handle-transition-easing)
+        );
 
       &--start,
       &--end {
         top: 0;
         bottom: 0;
-        width: var(--mp-overlay-drawer-resize-handle-size);
+        width: var(--forge-drawer-overlay-drawer-resize-handle-size, var(--mp-overlay-drawer-resize-handle-size));
         cursor: ew-resize;
       }
 
@@ -208,7 +243,7 @@
       &--bottom {
         left: 0;
         right: 0;
-        height: var(--mp-overlay-drawer-resize-handle-size);
+        height: var(--forge-drawer-overlay-drawer-resize-handle-size, var(--mp-overlay-drawer-resize-handle-size));
         cursor: ns-resize;
       }
 
@@ -222,7 +257,10 @@
 
       &:hover,
       &:active {
-        background-color: var(--mp-overlay-drawer-resize-handle-surface-active);
+        background-color: var(
+          --forge-drawer-overlay-drawer-resize-handle-surface-active,
+          var(--mp-overlay-drawer-resize-handle-surface-active)
+        );
       }
     }
   }
@@ -235,7 +273,9 @@
      styled; the `-enter-to`/`-leave-from` markers carry no rules). */
   .forge-drawer-fade-enter-active,
   .forge-drawer-fade-leave-active {
-    transition: opacity var(--mp-overlay-drawer-transition-duration) var(--mp-overlay-drawer-transition-easing);
+    transition: opacity
+      var(--forge-drawer-overlay-drawer-transition-duration, var(--mp-overlay-drawer-transition-duration))
+      var(--forge-drawer-overlay-drawer-transition-easing, var(--mp-overlay-drawer-transition-easing));
   }
 
   .forge-drawer-fade-enter-from,
@@ -251,7 +291,9 @@
   .forge-drawer-slide-top-leave-active,
   .forge-drawer-slide-bottom-enter-active,
   .forge-drawer-slide-bottom-leave-active {
-    transition: transform var(--mp-overlay-drawer-transition-duration) var(--mp-overlay-drawer-transition-easing);
+    transition: transform
+      var(--forge-drawer-overlay-drawer-transition-duration, var(--mp-overlay-drawer-transition-duration))
+      var(--forge-drawer-overlay-drawer-transition-easing, var(--mp-overlay-drawer-transition-easing));
   }
 
   .forge-drawer-slide-start-enter-from,

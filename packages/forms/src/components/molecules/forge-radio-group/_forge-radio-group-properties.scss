@@ -1,0 +1,29 @@
+@property --forge-radio-group-checkable-gap-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-gap-inline);
+}
+
+@property --forge-radio-group-input-field-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-field-gap);
+}
+
+@property --forge-radio-group-field-required {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-required);
+}
+
+@property --forge-radio-group-checkable-text-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-text-disabled);
+}
+
+@property --forge-radio-group-field-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-error);
+}

@@ -1,13 +1,15 @@
 import {
   classNames,
   hasSlot,
-  type MpChild,
-  type MpElement,
   Slot,
   useEffect,
   useId,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 
 import styles from './forge-cookie-consent.module.scss';
@@ -39,6 +41,68 @@ export interface CookieConsentState {
   timestamp: number;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface CookieConsentStyleProperties {
+  readonly 'border-radius-lg'?: string;
+  readonly 'border-radius-sm'?: string;
+  readonly 'color-action-primary'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-surface-primary'?: string;
+  readonly 'color-text-link'?: string;
+  readonly 'color-text-on-action'?: string;
+  readonly 'color-text-primary'?: string;
+  readonly 'color-text-secondary'?: string;
+  readonly 'overlay-modal-backdrop-surface'?: string;
+  readonly 'shadow-lg'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+  readonly 'spacing-5'?: string;
+}
+
+export type CookieConsentStyle = CSSStyleProperties & {
+  readonly '--forge-cookie-consent-border-radius-lg'?: string | undefined;
+  readonly '--forge-cookie-consent-border-radius-sm'?: string | undefined;
+  readonly '--forge-cookie-consent-color-action-primary'?: string | undefined;
+  readonly '--forge-cookie-consent-color-border-default'?: string | undefined;
+  readonly '--forge-cookie-consent-color-surface-primary'?: string | undefined;
+  readonly '--forge-cookie-consent-color-text-link'?: string | undefined;
+  readonly '--forge-cookie-consent-color-text-on-action'?: string | undefined;
+  readonly '--forge-cookie-consent-color-text-primary'?: string | undefined;
+  readonly '--forge-cookie-consent-color-text-secondary'?: string | undefined;
+  readonly '--forge-cookie-consent-overlay-modal-backdrop-surface'?: string | undefined;
+  readonly '--forge-cookie-consent-shadow-lg'?: string | undefined;
+  readonly '--forge-cookie-consent-spacing-1'?: string | undefined;
+  readonly '--forge-cookie-consent-spacing-2'?: string | undefined;
+  readonly '--forge-cookie-consent-spacing-3'?: string | undefined;
+  readonly '--forge-cookie-consent-spacing-4'?: string | undefined;
+  readonly '--forge-cookie-consent-spacing-5'?: string | undefined;
+};
+
+function createCookieConsentStyle(
+  properties: Readonly<CookieConsentStyleProperties> | undefined,
+): CookieConsentStyle | undefined {
+  return createForgeStyle({
+    '--forge-cookie-consent-border-radius-lg': properties?.['border-radius-lg'],
+    '--forge-cookie-consent-border-radius-sm': properties?.['border-radius-sm'],
+    '--forge-cookie-consent-color-action-primary': properties?.['color-action-primary'],
+    '--forge-cookie-consent-color-border-default': properties?.['color-border-default'],
+    '--forge-cookie-consent-color-surface-primary': properties?.['color-surface-primary'],
+    '--forge-cookie-consent-color-text-link': properties?.['color-text-link'],
+    '--forge-cookie-consent-color-text-on-action': properties?.['color-text-on-action'],
+    '--forge-cookie-consent-color-text-primary': properties?.['color-text-primary'],
+    '--forge-cookie-consent-color-text-secondary': properties?.['color-text-secondary'],
+    '--forge-cookie-consent-overlay-modal-backdrop-surface': properties?.['overlay-modal-backdrop-surface'],
+    '--forge-cookie-consent-shadow-lg': properties?.['shadow-lg'],
+    '--forge-cookie-consent-spacing-1': properties?.['spacing-1'],
+    '--forge-cookie-consent-spacing-2': properties?.['spacing-2'],
+    '--forge-cookie-consent-spacing-3': properties?.['spacing-3'],
+    '--forge-cookie-consent-spacing-4': properties?.['spacing-4'],
+    '--forge-cookie-consent-spacing-5': properties?.['spacing-5'],
+  }) as CookieConsentStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface CookieConsentProperties {
   /** Optional additional content in the banner. */
   children?: MpChild | readonly MpChild[];
@@ -86,6 +150,9 @@ export interface CookieConsentProperties {
   onCustomize?: (state: CookieConsentState) => void;
   /** Called whenever visibility changes. */
   onOpenChange?: (open: boolean) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<CookieConsentStyleProperties>;
 }
 
 function initialCategories(categories: CookieCategory[], all: boolean): Record<string, boolean> {
@@ -130,6 +197,8 @@ function readStoredConsent(key: string, storageType: 'local' | 'session'): Cooki
  * enforcement and guarded local/session storage persistence.
  */
 export function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>): MpElement {
+  const style = createCookieConsentStyle(properties.properties);
+
   const {
     categories,
     open: controlledOpen,
@@ -313,6 +382,7 @@ export function ForgeCookieConsent(properties: Readonly<CookieConsentProperties>
           styles[`forge-cookie-consent--${size}`],
         )}
         role="region"
+        style={style}
       >
         <div className={styles['forge-cookie-consent__content']}>
           <h2 id={bannerTitleId}>{title}</h2>

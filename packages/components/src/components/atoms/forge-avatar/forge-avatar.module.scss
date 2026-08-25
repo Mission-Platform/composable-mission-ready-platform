@@ -10,11 +10,13 @@
  * consumed through its hashed class map by `forge-avatar.stories.tsx`.
  */
 
+@use './forge-avatar-properties';
+
 @layer mp.components {
   .avatar-demo-row {
     display: flex;
     align-items: center;
-    gap: var(--mp-layout-gap);
+    gap: var(--forge-avatar-layout-gap, var(--mp-layout-gap));
     flex-wrap: wrap;
   }
 }

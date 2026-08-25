@@ -1,3 +1,5 @@
+@use './forge-command-palette-properties';
+
 @layer mp.components {
   .forge-command-palette-host {
     display: contents;
@@ -11,47 +13,51 @@
   .forge-command-palette__trigger {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-spacing-3);
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-border-radius-md);
-    background: var(--mp-color-surface-primary);
-    color: var(--mp-color-text-primary);
+    gap: var(--forge-command-palette-spacing-3, var(--mp-spacing-3));
+    padding: var(--forge-command-palette-spacing-2, var(--mp-spacing-2))
+      var(--forge-command-palette-spacing-3, var(--mp-spacing-3));
+    border: 1px solid var(--forge-command-palette-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-command-palette-border-radius-md, var(--mp-border-radius-md));
+    background: var(--forge-command-palette-color-surface-primary, var(--mp-color-surface-primary));
+    color: var(--forge-command-palette-color-text-primary, var(--mp-color-text-primary));
     cursor: pointer;
   }
 
   .forge-command-palette__trigger kbd,
   .forge-command-palette__key {
-    color: var(--mp-color-text-secondary);
+    color: var(--forge-command-palette-color-text-secondary, var(--mp-color-text-secondary));
     font-size: 0.75em;
   }
 
   .forge-command-palette__overlay {
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    z-index: var(--mp-z-index-overlay-panel);
     display: grid;
     place-items: start center;
-    padding: 12vh var(--mp-spacing-4);
-    background: var(--mp-overlay-modal-backdrop-surface, rgb(0 0 0 / 45%));
+    padding: 12vh var(--forge-command-palette-spacing-4, var(--mp-spacing-4));
+    background: var(
+      --forge-command-palette-overlay-modal-backdrop-surface,
+      var(--mp-overlay-modal-backdrop-surface, rgb(0 0 0 / 45%))
+    );
   }
 
   .forge-command-palette {
     width: min(100%, 42rem);
     overflow: hidden;
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-border-radius-lg);
-    background: var(--mp-color-surface-primary);
-    box-shadow: var(--mp-shadow-xl, 0 1rem 3rem rgb(0 0 0 / 25%));
-    color: var(--mp-color-text-primary);
+    border: 1px solid var(--forge-command-palette-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-command-palette-border-radius-lg, var(--mp-border-radius-lg));
+    background: var(--forge-command-palette-color-surface-primary, var(--mp-color-surface-primary));
+    box-shadow: var(--forge-command-palette-shadow-xl, var(--mp-shadow-xl, 0 1rem 3rem rgb(0 0 0 / 25%)));
+    color: var(--forge-command-palette-color-text-primary, var(--mp-color-text-primary));
   }
 
   .forge-command-palette__search {
     display: flex;
     align-items: center;
-    gap: var(--mp-spacing-3);
-    padding: var(--mp-spacing-3);
-    border-bottom: 1px solid var(--mp-color-border-default);
+    gap: var(--forge-command-palette-spacing-3, var(--mp-spacing-3));
+    padding: var(--forge-command-palette-spacing-3, var(--mp-spacing-3));
+    border-bottom: 1px solid var(--forge-command-palette-color-border-default, var(--mp-color-border-default));
   }
 
   .forge-command-palette__input {
@@ -67,17 +73,17 @@
   .forge-command-palette__list {
     max-height: 24rem;
     overflow: auto;
-    padding: var(--mp-spacing-2);
+    padding: var(--forge-command-palette-spacing-2, var(--mp-spacing-2));
   }
 
   .forge-command-palette__command {
     display: flex;
     align-items: center;
     width: 100%;
-    gap: var(--mp-spacing-3);
-    padding: var(--mp-spacing-3);
+    gap: var(--forge-command-palette-spacing-3, var(--mp-spacing-3));
+    padding: var(--forge-command-palette-spacing-3, var(--mp-spacing-3));
     border: 0;
-    border-radius: var(--mp-border-radius-sm);
+    border-radius: var(--forge-command-palette-border-radius-sm, var(--mp-border-radius-sm));
     background: transparent;
     color: inherit;
     text-align: start;
@@ -86,7 +92,7 @@
     &:hover,
     &:focus-visible,
     &--active {
-      background: var(--mp-color-surface-secondary);
+      background: var(--forge-command-palette-color-surface-secondary, var(--mp-color-surface-secondary));
     }
 
     &--disabled {
@@ -98,16 +104,18 @@
   .forge-command-palette__copy {
     display: grid;
     flex: 1;
-    gap: var(--mp-spacing-1);
+    gap: var(--forge-command-palette-spacing-1, var(--mp-spacing-1));
 
     small {
-      color: var(--mp-color-text-secondary);
+      color: var(--forge-command-palette-color-text-secondary, var(--mp-color-text-secondary));
     }
   }
 
   .forge-command-palette__group h3 {
-    margin: var(--mp-spacing-2) var(--mp-spacing-3) var(--mp-spacing-1);
-    color: var(--mp-color-text-secondary);
+    margin: var(--forge-command-palette-spacing-2, var(--mp-spacing-2))
+      var(--forge-command-palette-spacing-3, var(--mp-spacing-3))
+      var(--forge-command-palette-spacing-1, var(--mp-spacing-1));
+    color: var(--forge-command-palette-color-text-secondary, var(--mp-color-text-secondary));
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -115,16 +123,16 @@
 
   .forge-command-palette__empty,
   .forge-command-palette__footer {
-    padding: var(--mp-spacing-3);
+    padding: var(--forge-command-palette-spacing-3, var(--mp-spacing-3));
   }
 
   .forge-command-palette__empty {
     margin: 0;
-    color: var(--mp-color-text-secondary);
+    color: var(--forge-command-palette-color-text-secondary, var(--mp-color-text-secondary));
     text-align: center;
   }
 
   .forge-command-palette__footer {
-    border-top: 1px solid var(--mp-color-border-default);
+    border-top: 1px solid var(--forge-command-palette-color-border-default, var(--mp-color-border-default));
   }
 }

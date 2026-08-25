@@ -1,7 +1,9 @@
+@use './forge-activity-feed-properties';
+
 @layer mp.components {
   .forge-activity-feed {
     width: 100%;
-    color: var(--mp-color-text-primary);
+    color: var(--forge-activity-feed-color-text-primary, var(--mp-color-text-primary));
   }
 
   .forge-activity-feed__list {
@@ -13,18 +15,20 @@
   }
 
   .forge-activity-feed__item {
-    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    border-bottom: var(--forge-activity-feed-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-activity-feed-color-border-default, var(--mp-color-border-default));
   }
 
   .forge-activity-feed__item--unread {
-    border-inline-start: var(--mp-border-width-heavy) solid var(--mp-color-primary-default);
+    border-inline-start: var(--forge-activity-feed-border-width-heavy, var(--mp-border-width-heavy)) solid
+      var(--forge-activity-feed-color-primary-default, var(--mp-color-primary-default));
   }
 
   .forge-activity-feed__link {
     display: flex;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-activity-feed-spacing-3, var(--mp-spacing-3));
     width: 100%;
-    padding: var(--mp-spacing-4);
+    padding: var(--forge-activity-feed-spacing-4, var(--mp-spacing-4));
     border: 0;
     color: inherit;
     background: transparent;
@@ -34,24 +38,24 @@
   }
 
   .forge-activity-feed__link:hover {
-    background: var(--mp-color-bg-muted);
+    background: var(--forge-activity-feed-color-bg-muted, var(--mp-color-bg-muted));
   }
 
   .forge-activity-feed__avatar {
     display: inline-flex;
-    flex: 0 0 var(--mp-size-height-md);
+    flex: 0 0 var(--forge-activity-feed-size-height-md, var(--mp-size-height-md));
     align-items: center;
     justify-content: center;
-    width: var(--mp-size-height-md);
-    height: var(--mp-size-height-md);
-    border-radius: var(--mp-radius-full);
-    background: var(--mp-color-primary-subtle);
+    width: var(--forge-activity-feed-size-height-md, var(--mp-size-height-md));
+    height: var(--forge-activity-feed-size-height-md, var(--mp-size-height-md));
+    border-radius: var(--forge-activity-feed-radius-full, var(--mp-radius-full));
+    background: var(--forge-activity-feed-color-primary-subtle, var(--mp-color-primary-subtle));
     object-fit: cover;
   }
 
   .forge-activity-feed__body {
     display: grid;
-    gap: var(--mp-spacing-1);
+    gap: var(--forge-activity-feed-spacing-1, var(--mp-spacing-1));
     min-width: 0;
   }
 
@@ -63,30 +67,32 @@
 
   .forge-activity-feed__description,
   .forge-activity-feed__time {
-    color: var(--mp-color-text-secondary);
-    font-size: var(--mp-font-size-sm);
+    color: var(--forge-activity-feed-color-text-secondary, var(--mp-color-text-secondary));
+    font-size: var(--forge-activity-feed-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-activity-feed__load-more {
     display: block;
-    margin: var(--mp-spacing-4) auto 0;
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    border: var(--mp-border-width-thin) solid currentcolor;
-    border-radius: var(--mp-radius-sm);
+    margin: var(--forge-activity-feed-spacing-4, var(--mp-spacing-4)) auto 0;
+    padding: var(--forge-activity-feed-spacing-2, var(--mp-spacing-2))
+      var(--forge-activity-feed-spacing-3, var(--mp-spacing-3));
+    border: var(--forge-activity-feed-border-width-thin, var(--mp-border-width-thin)) solid currentcolor;
+    border-radius: var(--forge-activity-feed-radius-sm, var(--mp-radius-sm));
     background: transparent;
     cursor: pointer;
   }
 
   .forge-activity-feed__empty,
   .forge-activity-feed__status {
-    padding: var(--mp-spacing-6);
-    color: var(--mp-color-text-secondary);
+    padding: var(--forge-activity-feed-spacing-6, var(--mp-spacing-6));
+    color: var(--forge-activity-feed-color-text-secondary, var(--mp-color-text-secondary));
     text-align: center;
   }
 
   .forge-activity-feed__link:focus-visible,
   .forge-activity-feed__load-more:focus-visible {
-    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
-    outline-offset: var(--mp-spacing-1);
+    outline: var(--forge-activity-feed-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-activity-feed-color-border-focus, var(--mp-color-border-focus));
+    outline-offset: var(--forge-activity-feed-spacing-1, var(--mp-spacing-1));
   }
 }

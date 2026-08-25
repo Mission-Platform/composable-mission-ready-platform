@@ -1,0 +1,111 @@
+/**
+ * Registered inherited custom properties for forge-kanban-board overrides.
+ */
+
+@property --forge-kanban-board-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-kanban-board-size-height-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-md);
+}
+
+@property --forge-kanban-board-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-kanban-board-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-kanban-board-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-kanban-board-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-kanban-board-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-kanban-board-color-bg-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-surface);
+}
+
+@property --forge-kanban-board-color-bg-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-muted);
+}
+
+@property --forge-kanban-board-radius-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-lg);
+}
+
+@property --forge-kanban-board-color-text-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-tertiary);
+}
+
+@property --forge-kanban-board-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-kanban-board-shadow-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-shadow-xs);
+}
+
+@property --forge-kanban-board-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-kanban-board-color-success-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-default);
+}
+
+@property --forge-kanban-board-color-warning-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-warning-default);
+}
+
+@property --forge-kanban-board-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-kanban-board-font-size-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-xs);
+}

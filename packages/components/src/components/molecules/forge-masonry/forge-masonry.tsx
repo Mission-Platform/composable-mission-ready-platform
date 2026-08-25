@@ -1,4 +1,11 @@
-import { classNames, Dynamic, type MpChild, type MpElement } from '@mission-platform/forge';
+import {
+  classNames,
+  Dynamic,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import spacingStyles from '../../../styles/spacing.module.scss';
 
@@ -22,6 +29,39 @@ const GAP_SPACING: Record<MasonryGap, string> = {
   '2xl': 'var(--mp-spacing-12)',
 };
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface MasonryStyleProperties {
+  readonly gap?: string;
+  readonly 'layout-masonry-demo-border'?: string;
+  readonly 'layout-masonry-demo-border-width'?: string;
+  readonly 'layout-masonry-demo-padding'?: string;
+  readonly 'layout-masonry-demo-radius'?: string;
+  readonly 'layout-masonry-demo-surface'?: string;
+  readonly 'layout-masonry-demo-text'?: string;
+}
+
+export type MasonryStyle = CSSStyleProperties & {
+  readonly '--forge-masonry-gap'?: string | undefined;
+  readonly '--forge-masonry-layout-masonry-demo-border'?: string | undefined;
+  readonly '--forge-masonry-layout-masonry-demo-border-width'?: string | undefined;
+  readonly '--forge-masonry-layout-masonry-demo-padding'?: string | undefined;
+  readonly '--forge-masonry-layout-masonry-demo-radius'?: string | undefined;
+  readonly '--forge-masonry-layout-masonry-demo-surface'?: string | undefined;
+  readonly '--forge-masonry-layout-masonry-demo-text'?: string | undefined;
+};
+
+function createMasonryStyle(properties: Readonly<MasonryStyleProperties> | undefined): MasonryStyle | undefined {
+  return createForgeStyle({
+    '--forge-masonry-gap': properties?.['gap'],
+    '--forge-masonry-layout-masonry-demo-border': properties?.['layout-masonry-demo-border'],
+    '--forge-masonry-layout-masonry-demo-border-width': properties?.['layout-masonry-demo-border-width'],
+    '--forge-masonry-layout-masonry-demo-padding': properties?.['layout-masonry-demo-padding'],
+    '--forge-masonry-layout-masonry-demo-radius': properties?.['layout-masonry-demo-radius'],
+    '--forge-masonry-layout-masonry-demo-surface': properties?.['layout-masonry-demo-surface'],
+    '--forge-masonry-layout-masonry-demo-text': properties?.['layout-masonry-demo-text'],
+  }) as MasonryStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface MasonryProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -39,6 +79,9 @@ export interface MasonryProperties {
   margin?: SpacingScale;
   /** Inner padding (named `2xs … 2xl` scale), mapped to a `--mp-spacing-*` token. */
   padding?: SpacingScale;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<MasonryStyleProperties>;
 }
 
 /**
@@ -61,6 +104,8 @@ export interface MasonryProperties {
  * CSS); the dynamic multi-column properties are applied inline.
  */
 export function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement {
+  const propertyStyle = createMasonryStyle(properties.properties);
+
   const { columns = 3, minColumnWidth, gap = 'md', tag = 'div', padding, margin, size = 'md' } = properties;
 
   const columnCount = Math.max(1, Math.floor(columns));
@@ -84,7 +129,7 @@ export function ForgeMasonry(properties: Readonly<MasonryProperties>): MpElement
     <Dynamic
       is={tag}
       className={className}
-      style={style}
+      style={{ ...style, ...propertyStyle }}
     >
       {properties.children}
     </Dynamic>

@@ -1,6 +1,6 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeModal, type ModalSize } from '@mission-platform/float';
-import { type MpElement } from '@mission-platform/forge';
+import { createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import {
   ForgeSchemaForm,
@@ -12,6 +12,23 @@ import {
 
 import styles from './forge-schema-form-dialog.module.scss';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface SchemaFormDialogStyleProperties {
+  readonly 'form-gap-default'?: string;
+}
+
+export type SchemaFormDialogStyle = CSSStyleProperties & {
+  readonly '--forge-schema-form-dialog-form-gap-default'?: string | undefined;
+};
+
+function createSchemaFormDialogStyle(
+  properties: Readonly<SchemaFormDialogStyleProperties> | undefined,
+): SchemaFormDialogStyle | undefined {
+  return createForgeStyle({
+    '--forge-schema-form-dialog-form-gap-default': properties?.['form-gap-default'],
+  }) as SchemaFormDialogStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface SchemaFormDialogProperties {
   /**
    * Whether the dialog is open (controlled).
@@ -56,6 +73,9 @@ export interface SchemaFormDialogProperties {
   onSubmit?: (values: FormValues, isValid: boolean) => void;
   /** Fired when the cancel button is pressed. */
   onCancel?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<SchemaFormDialogStyleProperties>;
 }
 
 /**
@@ -72,6 +92,8 @@ export interface SchemaFormDialogProperties {
  * whether to close on a valid submit.
  */
 export function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogProperties>): MpElement {
+  const propertyStyle = createSchemaFormDialogStyle(properties.properties);
+
   const {
     open = false,
     title,
@@ -110,46 +132,48 @@ export function ForgeSchemaFormDialog(properties: Readonly<SchemaFormDialogPrope
   };
 
   return (
-    <ForgeModal
-      closeLabel={cancelLabel}
-      closeOnBackdrop={closeOnBackdrop}
-      closeOnEsc={closeOnEsc}
-      open={open}
-      size={size}
-      title={title}
-      onClose={properties.onClose}
-      onUpdateOpen={properties.onUpdateOpen}
-    >
-      <ForgeSchemaForm
-        disabled={disabled}
-        modelValue={modelValue}
-        schema={schema}
-        renderField={properties.renderField}
-        validationMode={validationMode}
-        onSubmit={handleSubmit}
-        onUpdateModelValue={handleUpdateModelValue}
+    <div style={propertyStyle}>
+      <ForgeModal
+        closeLabel={cancelLabel}
+        closeOnBackdrop={closeOnBackdrop}
+        closeOnEsc={closeOnEsc}
+        open={open}
+        size={size}
+        title={title}
+        onClose={properties.onClose}
+        onUpdateOpen={properties.onUpdateOpen}
       >
-        <div
-          className={styles['forge-schema-form-dialog__actions']}
-          slot="actions"
+        <ForgeSchemaForm
+          disabled={disabled}
+          modelValue={modelValue}
+          schema={schema}
+          renderField={properties.renderField}
+          validationMode={validationMode}
+          onSubmit={handleSubmit}
+          onUpdateModelValue={handleUpdateModelValue}
         >
-          <ForgeButton
-            disabled={disabled}
-            type="button"
-            variant="secondary"
-            onClick={handleCancel}
+          <div
+            className={styles['forge-schema-form-dialog__actions']}
+            slot="actions"
           >
-            {cancelLabel}
-          </ForgeButton>
-          <ForgeButton
-            disabled={disabled}
-            type="submit"
-            variant="primary"
-          >
-            {submitLabel}
-          </ForgeButton>
-        </div>
-      </ForgeSchemaForm>
-    </ForgeModal>
+            <ForgeButton
+              disabled={disabled}
+              type="button"
+              variant="secondary"
+              onClick={handleCancel}
+            >
+              {cancelLabel}
+            </ForgeButton>
+            <ForgeButton
+              disabled={disabled}
+              type="submit"
+              variant="primary"
+            >
+              {submitLabel}
+            </ForgeButton>
+          </div>
+        </ForgeSchemaForm>
+      </ForgeModal>
+    </div>
   );
 }

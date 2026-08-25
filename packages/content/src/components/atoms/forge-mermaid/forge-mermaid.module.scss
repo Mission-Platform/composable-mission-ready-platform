@@ -2,14 +2,17 @@
  * Styling for the standalone `ForgeMermaid` atom.
  */
 
+@use './forge-mermaid-properties';
+
 @layer mp.content {
   .forge-mermaid {
     min-width: 0;
     overflow-x: auto;
-    padding: var(--mp-code-padding);
-    border: var(--mp-code-border-default) solid var(--mp-code-border-width);
-    border-radius: var(--mp-code-radius);
-    background: var(--mp-code-surface-default);
+    padding: var(--forge-mermaid-code-padding, var(--mp-code-padding));
+    border: var(--forge-mermaid-code-border-default, var(--mp-code-border-default)) solid
+      var(--forge-mermaid-code-border-width, var(--mp-code-border-width));
+    border-radius: var(--forge-mermaid-code-radius, var(--mp-code-radius));
+    background: var(--forge-mermaid-code-surface-default, var(--mp-code-surface-default));
     text-align: center;
 
     svg {
@@ -26,22 +29,22 @@
   .forge-mermaid__error pre {
     margin: 0;
     overflow-x: auto;
-    color: var(--mp-code-error-text);
-    font-family: var(--mp-code-typography-font-family);
-    font-size: var(--mp-code-typography-font-size);
-    line-height: var(--mp-code-typography-line-height);
+    color: var(--forge-mermaid-code-error-text, var(--mp-code-error-text));
+    font-family: var(--forge-mermaid-code-typography-font-family, var(--mp-code-typography-font-family));
+    font-size: var(--forge-mermaid-code-typography-font-size, var(--mp-code-typography-font-size));
+    line-height: var(--forge-mermaid-code-typography-line-height, var(--mp-code-typography-line-height));
     text-align: left;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
 
   .forge-mermaid__error {
-    color: var(--mp-code-text-default);
+    color: var(--forge-mermaid-code-text-default, var(--mp-code-text-default));
     text-align: left;
 
     p {
-      margin: 0 0 var(--mp-code-error-margin-bottom);
-      font-weight: var(--mp-code-error-font-weight);
+      margin: 0 0 var(--forge-mermaid-code-error-margin-bottom, var(--mp-code-error-margin-bottom));
+      font-weight: var(--forge-mermaid-code-error-font-weight, var(--mp-code-error-font-weight));
     }
   }
 }

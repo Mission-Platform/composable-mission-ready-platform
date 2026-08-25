@@ -9,10 +9,12 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-chat-bubble-properties';
+
 @layer mp.components {
   .forge-chat-bubble {
     display: flex;
-    gap: var(--mp-chat-bubble-gap);
+    gap: var(--forge-chat-bubble-gap, var(--mp-chat-bubble-gap));
     max-width: 100%;
     align-items: flex-end;
     list-style: none;
@@ -30,7 +32,7 @@
     &--pending {
       /* Dim as an "optimistic / not yet delivered" cue. Kept high enough that the
          composited text still clears WCAG AA (4.5:1) against the page background. */
-      opacity: var(--mp-chat-bubble-pending-opacity);
+      opacity: var(--forge-chat-bubble-pending-opacity, var(--mp-chat-bubble-pending-opacity));
     }
 
     &__avatar {
@@ -40,7 +42,7 @@
     &__column {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-chat-bubble-column-gap);
+      gap: var(--forge-chat-bubble-column-gap, var(--mp-chat-bubble-column-gap));
       min-width: 0;
       max-width: min(36rem, 75%);
     }
@@ -51,38 +53,39 @@
 
     &__meta {
       display: flex;
-      gap: var(--mp-chat-bubble-meta-gap);
+      gap: var(--forge-chat-bubble-meta-gap, var(--mp-chat-bubble-meta-gap));
       align-items: baseline;
-      padding-inline: var(--mp-chat-bubble-meta-padding-inline);
+      padding-inline: var(--forge-chat-bubble-meta-padding-inline, var(--mp-chat-bubble-meta-padding-inline));
     }
 
     &__body {
-      padding: var(--mp-chat-bubble-body-padding-block) var(--mp-chat-bubble-body-padding-inline);
-      background-color: var(--mp-chat-bubble-body-surface);
-      color: var(--mp-chat-bubble-body-text);
-      border-radius: var(--mp-chat-bubble-body-radius);
-      font-family: var(--mp-chat-bubble-body-font-family);
-      font-size: var(--mp-chat-bubble-body-font-size);
-      line-height: var(--mp-chat-bubble-body-line-height);
-      font-weight: var(--mp-chat-bubble-body-font-weight);
+      padding: var(--forge-chat-bubble-body-padding-block, var(--mp-chat-bubble-body-padding-block))
+        var(--forge-chat-bubble-body-padding-inline, var(--mp-chat-bubble-body-padding-inline));
+      background-color: var(--forge-chat-bubble-body-surface, var(--mp-chat-bubble-body-surface));
+      color: var(--forge-chat-bubble-body-text, var(--mp-chat-bubble-body-text));
+      border-radius: var(--forge-chat-bubble-body-radius, var(--mp-chat-bubble-body-radius));
+      font-family: var(--forge-chat-bubble-body-font-family, var(--mp-chat-bubble-body-font-family));
+      font-size: var(--forge-chat-bubble-body-font-size, var(--mp-chat-bubble-body-font-size));
+      line-height: var(--forge-chat-bubble-body-line-height, var(--mp-chat-bubble-body-line-height));
+      font-weight: var(--forge-chat-bubble-body-font-weight, var(--mp-chat-bubble-body-font-weight));
       overflow-wrap: anywhere;
     }
 
     &--start &__body {
-      border-end-start-radius: var(--mp-chat-bubble-body-tail-radius);
+      border-end-start-radius: var(--forge-chat-bubble-body-tail-radius, var(--mp-chat-bubble-body-tail-radius));
     }
 
     &--end &__body {
-      border-end-end-radius: var(--mp-chat-bubble-body-tail-radius);
+      border-end-end-radius: var(--forge-chat-bubble-body-tail-radius, var(--mp-chat-bubble-body-tail-radius));
     }
 
     &--primary &__body {
-      background-color: var(--mp-chat-bubble-primary-surface);
-      color: var(--mp-chat-bubble-primary-text);
+      background-color: var(--forge-chat-bubble-primary-surface, var(--mp-chat-bubble-primary-surface));
+      color: var(--forge-chat-bubble-primary-text, var(--mp-chat-bubble-primary-text));
     }
 
     &__footer {
-      padding-inline: var(--mp-chat-bubble-footer-padding-inline);
+      padding-inline: var(--forge-chat-bubble-footer-padding-inline, var(--mp-chat-bubble-footer-padding-inline));
     }
   }
 }

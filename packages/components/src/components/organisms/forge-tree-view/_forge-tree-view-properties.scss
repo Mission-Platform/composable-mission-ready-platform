@@ -1,0 +1,111 @@
+/**
+ * Registered inherited custom properties for forge-tree-view overrides.
+ */
+
+@property --forge-tree-view-data-tree-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-font-family);
+}
+
+@property --forge-tree-view-data-tree-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-font-size);
+}
+
+@property --forge-tree-view-data-tree-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-text-default);
+}
+
+@property --forge-tree-view-data-tree-label-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-label-gap);
+}
+
+@property --forge-tree-view-data-tree-label-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-label-height);
+}
+
+@property --forge-tree-view-data-tree-label-padding-inline-end {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-label-padding-inline-end);
+}
+
+@property --forge-tree-view-data-tree-label-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-label-radius);
+}
+
+@property --forge-tree-view-data-tree-label-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-label-transition-duration);
+}
+
+@property --forge-tree-view-data-tree-label-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-label-transition-easing);
+}
+
+@property --forge-tree-view-data-tree-label-hover-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-label-hover-surface);
+}
+
+@property --forge-tree-view-data-tree-label-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-label-focus-ring);
+}
+
+@property --forge-tree-view-data-tree-toggle-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-toggle-size);
+}
+
+@property --forge-tree-view-data-tree-text-toggle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-text-toggle);
+}
+
+@property --forge-tree-view-data-tree-toggle-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-toggle-radius);
+}
+
+@property --forge-tree-view-data-tree-toggle-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-toggle-transition-duration);
+}
+
+@property --forge-tree-view-data-tree-toggle-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-toggle-transition-easing);
+}
+
+@property --forge-tree-view-data-tree-text-toggle-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-text-toggle-hover);
+}
+
+@property --forge-tree-view-data-tree-text-toggle-open {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-tree-text-toggle-open);
+}

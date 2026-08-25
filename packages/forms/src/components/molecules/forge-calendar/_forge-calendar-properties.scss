@@ -1,0 +1,299 @@
+@property --forge-calendar-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-surface-default);
+}
+
+@property --forge-calendar-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-border-width);
+}
+
+@property --forge-calendar-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-border-default);
+}
+
+@property --forge-calendar-radius-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-radius-default);
+}
+
+@property --forge-calendar-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-shadow);
+}
+
+@property --forge-calendar-size-2xs-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-2xs-padding);
+}
+
+@property --forge-calendar-size-xs-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-xs-padding);
+}
+
+@property --forge-calendar-size-sm-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-sm-padding);
+}
+
+@property --forge-calendar-size-md-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-md-padding);
+}
+
+@property --forge-calendar-size-lg-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-lg-padding);
+}
+
+@property --forge-calendar-size-xl-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-xl-padding);
+}
+
+@property --forge-calendar-size-2xl-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-2xl-padding);
+}
+
+@property --forge-calendar-size-2xs-cell-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-2xs-cell-height);
+}
+
+@property --forge-calendar-size-xs-cell-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-xs-cell-height);
+}
+
+@property --forge-calendar-size-sm-cell-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-sm-cell-height);
+}
+
+@property --forge-calendar-size-md-cell-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-md-cell-height);
+}
+
+@property --forge-calendar-size-lg-cell-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-lg-cell-height);
+}
+
+@property --forge-calendar-size-xl-cell-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-xl-cell-height);
+}
+
+@property --forge-calendar-size-2xl-cell-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-2xl-cell-height);
+}
+
+@property --forge-calendar-size-2xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-2xs-font-size);
+}
+
+@property --forge-calendar-size-xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-xs-font-size);
+}
+
+@property --forge-calendar-size-sm-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-sm-font-size);
+}
+
+@property --forge-calendar-size-md-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-md-font-size);
+}
+
+@property --forge-calendar-size-lg-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-lg-font-size);
+}
+
+@property --forge-calendar-size-xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-xl-font-size);
+}
+
+@property --forge-calendar-size-2xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-size-2xl-font-size);
+}
+
+@property --forge-calendar-header-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-header-gap);
+}
+
+@property --forge-calendar-label-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-label-gap);
+}
+
+@property --forge-calendar-label-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-label-padding-block);
+}
+
+@property --forge-calendar-label-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-label-padding-inline);
+}
+
+@property --forge-calendar-radius-control {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-radius-control);
+}
+
+@property --forge-calendar-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-transition-duration);
+}
+
+@property --forge-calendar-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-transition-easing);
+}
+
+@property --forge-calendar-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-surface-hover);
+}
+
+@property --forge-calendar-border-focus-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-border-focus-width);
+}
+
+@property --forge-calendar-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-border-focus);
+}
+
+@property --forge-calendar-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-text-secondary);
+}
+
+@property --forge-calendar-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-text-default);
+}
+
+@property --forge-calendar-font-weight-medium {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-font-weight-medium);
+}
+
+@property --forge-calendar-text-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-text-muted);
+}
+
+@property --forge-calendar-surface-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-surface-selected);
+}
+
+@property --forge-calendar-text-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-text-selected);
+}
+
+@property --forge-calendar-font-weight-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-font-weight-selected);
+}
+
+@property --forge-calendar-surface-range {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-surface-range);
+}
+
+@property --forge-calendar-range-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-range-opacity);
+}
+
+@property --forge-calendar-text-range {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-text-range);
+}
+
+@property --forge-calendar-preview-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-preview-opacity);
+}
+
+@property --forge-calendar-preview-end-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-preview-end-opacity);
+}
+
+@property --forge-calendar-disabled-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-disabled-opacity);
+}
+
+@property --forge-calendar-outside-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-calendar-outside-opacity);
+}

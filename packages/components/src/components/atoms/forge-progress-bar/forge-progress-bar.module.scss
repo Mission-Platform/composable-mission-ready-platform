@@ -9,13 +9,15 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-progress-bar-properties';
+
 @layer mp.components {
   .forge-progress-bar {
     /* The original SFC wrapped the bar in a `ForgeStack` with `gap="2xs"`; the
        neutral version is a plain flex column with the equivalent gap. */
     display: flex;
     flex-direction: column;
-    gap: var(--mp-feedback-progress-gap);
+    gap: var(--forge-progress-bar-feedback-progress-gap, var(--mp-feedback-progress-gap));
 
     &__header {
       display: flex;
@@ -28,14 +30,23 @@
       display: block;
       width: 100%;
       border: none;
-      border-radius: var(--mp-feedback-progress-track-radius);
+      border-radius: var(--forge-progress-bar-feedback-progress-track-radius, var(--mp-feedback-progress-track-radius));
       overflow: hidden;
-      background-color: var(--mp-feedback-progress-track-background);
+      background-color: var(
+        --forge-progress-bar-feedback-progress-track-background,
+        var(--mp-feedback-progress-track-background)
+      );
 
       /* WebKit: trough */
       &::-webkit-progress-bar {
-        background-color: var(--mp-feedback-progress-track-background);
-        border-radius: var(--mp-feedback-progress-track-radius);
+        background-color: var(
+          --forge-progress-bar-feedback-progress-track-background,
+          var(--mp-feedback-progress-track-background)
+        );
+        border-radius: var(
+          --forge-progress-bar-feedback-progress-track-radius,
+          var(--mp-feedback-progress-track-radius)
+        );
       }
 
       /**
@@ -44,13 +55,25 @@
        */
       @mixin fill($name) {
         &--#{$name}::-webkit-progress-value {
-          background-color: var(--mp-feedback-progress-fill-#{$name});
-          border-radius: var(--mp-feedback-progress-track-radius);
+          background-color: var(
+            --forge-progress-bar-feedback-progress-fill-#{$name},
+            var(--mp-feedback-progress-fill-#{$name})
+          );
+          border-radius: var(
+            --forge-progress-bar-feedback-progress-track-radius,
+            var(--mp-feedback-progress-track-radius)
+          );
         }
 
         &--#{$name}::-moz-progress-bar {
-          background-color: var(--mp-feedback-progress-fill-#{$name});
-          border-radius: var(--mp-feedback-progress-track-radius);
+          background-color: var(
+            --forge-progress-bar-feedback-progress-fill-#{$name},
+            var(--mp-feedback-progress-fill-#{$name})
+          );
+          border-radius: var(
+            --forge-progress-bar-feedback-progress-track-radius,
+            var(--mp-feedback-progress-track-radius)
+          );
         }
       }
 
@@ -65,15 +88,23 @@
       @include fill('critical');
 
       &--indeterminate {
-        animation: mp-progress-indeterminate var(--mp-feedback-progress-indeterminate-duration)
-          var(--mp-feedback-progress-indeterminate-easing) infinite;
+        animation: mp-progress-indeterminate
+          var(
+            --forge-progress-bar-feedback-progress-indeterminate-duration,
+            var(--mp-feedback-progress-indeterminate-duration)
+          )
+          var(
+            --forge-progress-bar-feedback-progress-indeterminate-easing,
+            var(--mp-feedback-progress-indeterminate-easing)
+          )
+          infinite;
       }
     }
 
     /* Sizes — canonical 2xs → 2xl scale (track thickness). */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-progress-bar__track {
-        height: var(--mp-feedback-progress-size-#{$size});
+        height: var(--forge-progress-bar-feedback-progress-size-#{$size}, var(--mp-feedback-progress-size-#{$size}));
       }
     }
   }

@@ -1,0 +1,123 @@
+/**
+ * Registered inherited custom properties for forge-metric-card overrides.
+ */
+
+@property --forge-metric-card-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-metric-card-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-metric-card-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-metric-card-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-metric-card-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-metric-card-color-bg-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-surface);
+}
+
+@property --forge-metric-card-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-metric-card-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-metric-card-font-size-2xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-2xl);
+}
+
+@property --forge-metric-card-font-weight-bold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-bold);
+}
+
+@property --forge-metric-card-line-height-tight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-line-height-tight);
+}
+
+@property --forge-metric-card-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-metric-card-color-success-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-text);
+}
+
+@property --forge-metric-card-color-error-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-error-text);
+}
+
+@property --forge-metric-card-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-metric-card-spacing-6 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-6);
+}
+
+@property --forge-metric-card-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}
+
+@property --forge-metric-card-color-success-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-default);
+}
+
+@property --forge-metric-card-color-warning-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-warning-default);
+}
+
+@property --forge-metric-card-color-error-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-error-default);
+}

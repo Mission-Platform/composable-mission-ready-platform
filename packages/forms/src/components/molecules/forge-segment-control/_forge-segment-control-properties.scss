@@ -1,0 +1,233 @@
+@property --forge-segment-control-select-segment-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-padding);
+}
+
+@property --forge-segment-control-select-segment-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-surface-default);
+}
+
+@property --forge-segment-control-select-segment-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-border-width);
+}
+
+@property --forge-segment-control-select-segment-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-border);
+}
+
+@property --forge-segment-control-select-segment-radius-container {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-radius-container);
+}
+
+@property --forge-segment-control-select-segment-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-gap);
+}
+
+@property --forge-segment-control-select-segment-disabled-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-disabled-opacity);
+}
+
+@property --forge-segment-control-select-segment-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-text-default);
+}
+
+@property --forge-segment-control-select-segment-radius-segment {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-radius-segment);
+}
+
+@property --forge-segment-control-select-segment-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-font-family);
+}
+
+@property --forge-segment-control-select-segment-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-font-weight);
+}
+
+@property --forge-segment-control-select-segment-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-transition-duration);
+}
+
+@property --forge-segment-control-select-segment-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-transition-easing);
+}
+
+@property --forge-segment-control-select-segment-surface-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-surface-selected);
+}
+
+@property --forge-segment-control-select-segment-text-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-text-selected);
+}
+
+@property --forge-segment-control-select-segment-shadow-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-shadow-selected);
+}
+
+@property --forge-segment-control-input-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-focus-ring);
+}
+
+@property --forge-segment-control-select-segment-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-segment-text-hover);
+}
+
+@property --forge-segment-control-select-size-2xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-padding-block);
+}
+
+@property --forge-segment-control-select-size-xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-padding-block);
+}
+
+@property --forge-segment-control-select-size-sm-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-padding-block);
+}
+
+@property --forge-segment-control-select-size-md-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-md-padding-block);
+}
+
+@property --forge-segment-control-select-size-lg-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-padding-block);
+}
+
+@property --forge-segment-control-select-size-xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-padding-block);
+}
+
+@property --forge-segment-control-select-size-2xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-padding-block);
+}
+
+@property --forge-segment-control-select-size-2xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-padding-inline);
+}
+
+@property --forge-segment-control-select-size-xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-padding-inline);
+}
+
+@property --forge-segment-control-select-size-sm-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-padding-inline);
+}
+
+@property --forge-segment-control-select-size-md-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-md-padding-inline);
+}
+
+@property --forge-segment-control-select-size-lg-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-padding-inline);
+}
+
+@property --forge-segment-control-select-size-xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-padding-inline);
+}
+
+@property --forge-segment-control-select-size-2xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-padding-inline);
+}
+
+@property --forge-segment-control-select-size-2xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-font-size);
+}
+
+@property --forge-segment-control-select-size-xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-font-size);
+}
+
+@property --forge-segment-control-select-size-sm-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-font-size);
+}
+
+@property --forge-segment-control-select-size-md-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-md-font-size);
+}
+
+@property --forge-segment-control-select-size-lg-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-font-size);
+}
+
+@property --forge-segment-control-select-size-xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-font-size);
+}
+
+@property --forge-segment-control-select-size-2xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-font-size);
+}

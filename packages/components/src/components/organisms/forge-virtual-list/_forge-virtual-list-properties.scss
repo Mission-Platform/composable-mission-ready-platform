@@ -1,0 +1,39 @@
+/**
+ * Registered inherited custom properties for forge-virtual-list overrides.
+ */
+
+@property --forge-virtual-list-data-virtual-list-row-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-list-row-padding-block);
+}
+
+@property --forge-virtual-list-data-virtual-list-row-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-list-row-padding-inline);
+}
+
+@property --forge-virtual-list-data-virtual-list-row-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-list-row-border-width);
+}
+
+@property --forge-virtual-list-data-virtual-list-row-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-list-row-border);
+}
+
+@property --forge-virtual-list-data-virtual-list-row-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-list-row-text);
+}
+
+@property --forge-virtual-list-data-virtual-list-row-alternate-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-data-virtual-list-row-alternate-surface);
+}

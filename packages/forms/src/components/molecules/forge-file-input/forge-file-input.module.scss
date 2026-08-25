@@ -1,3 +1,5 @@
+@use './forge-file-input-properties';
+
 /**
  * Styling for the write-once `ForgeFileInput`.
  *
@@ -12,13 +14,23 @@
   .forge-file-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-input-file-gap-stack);
+    gap: var(--forge-file-input-input-file-gap-stack, var(--mp-input-file-gap-stack));
 
     /* Sizes — canonical 2xs → 2xl scale (browse button padding + font). */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-file-input__button {
-        padding: var(--mp-input-file-size-#{$size}-padding-block) var(--mp-input-file-size-#{$size}-padding-inline);
-        font-size: var(--mp-input-file-size-#{$size}-font-size);
+        padding: var(
+            --forge-file-input-input-file-size-#{$size}-padding-block,
+            var(--mp-input-file-size-#{$size}-padding-block)
+          )
+          var(
+            --forge-file-input-input-file-size-#{$size}-padding-inline,
+            var(--mp-input-file-size-#{$size}-padding-inline)
+          );
+        font-size: var(
+          --forge-file-input-input-file-size-#{$size}-font-size,
+          var(--mp-input-file-size-#{$size}-font-size)
+        );
       }
     }
 
@@ -37,7 +49,7 @@
     }
 
     &__required {
-      color: var(--mp-input-file-required);
+      color: var(--forge-file-input-input-file-required, var(--mp-input-file-required));
       margin-left: 2px;
     }
 
@@ -56,19 +68,21 @@
     &__row {
       display: flex;
       align-items: center;
-      gap: var(--mp-input-file-gap-row);
+      gap: var(--forge-file-input-input-file-gap-row, var(--mp-input-file-gap-row));
     }
 
     &__button {
       display: inline-flex;
       align-items: center;
-      padding: var(--mp-input-file-size-sm-padding-block) var(--mp-input-file-size-sm-padding-inline);
-      font-size: var(--mp-input-file-size-sm-font-size);
-      font-weight: var(--mp-input-file-font-weight);
-      color: var(--mp-input-file-text-default);
-      background-color: var(--mp-input-file-surface-default);
-      border: var(--mp-input-file-border-width-default) solid var(--mp-input-file-border-default);
-      border-radius: var(--mp-input-file-radius-button);
+      padding: var(--forge-file-input-input-file-size-sm-padding-block, var(--mp-input-file-size-sm-padding-block))
+        var(--forge-file-input-input-file-size-sm-padding-inline, var(--mp-input-file-size-sm-padding-inline));
+      font-size: var(--forge-file-input-input-file-size-sm-font-size, var(--mp-input-file-size-sm-font-size));
+      font-weight: var(--forge-file-input-input-file-font-weight, var(--mp-input-file-font-weight));
+      color: var(--forge-file-input-input-file-text-default, var(--mp-input-file-text-default));
+      background-color: var(--forge-file-input-input-file-surface-default, var(--mp-input-file-surface-default));
+      border: var(--forge-file-input-input-file-border-width-default, var(--mp-input-file-border-width-default)) solid
+        var(--forge-file-input-input-file-border-default, var(--mp-input-file-border-default));
+      border-radius: var(--forge-file-input-input-file-radius-button, var(--mp-input-file-radius-button));
       cursor: pointer;
       white-space: nowrap;
       transition:
@@ -76,14 +90,14 @@
         border-color 150ms ease;
 
       &--disabled {
-        background-color: var(--mp-input-file-surface-disabled);
-        color: var(--mp-input-file-text-disabled);
+        background-color: var(--forge-file-input-input-file-surface-disabled, var(--mp-input-file-surface-disabled));
+        color: var(--forge-file-input-input-file-text-disabled, var(--mp-input-file-text-disabled));
         cursor: not-allowed;
       }
 
       &:hover:not(.forge-file-input__button--disabled) {
-        background-color: var(--mp-input-file-surface-hover);
-        border-color: var(--mp-input-file-border-hover);
+        background-color: var(--forge-file-input-input-file-surface-hover, var(--mp-input-file-surface-hover));
+        border-color: var(--forge-file-input-input-file-border-hover, var(--mp-input-file-border-hover));
       }
     }
 
@@ -98,11 +112,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: var(--mp-input-file-gap-dropzone);
-      padding: var(--mp-input-file-padding-dropzone-block) var(--mp-input-file-padding-dropzone-inline);
-      border: var(--mp-input-file-border-width-dropzone) dashed var(--mp-input-file-border-default);
-      border-radius: var(--mp-input-file-radius-dropzone);
-      background-color: var(--mp-input-file-surface-default);
+      gap: var(--forge-file-input-input-file-gap-dropzone, var(--mp-input-file-gap-dropzone));
+      padding: var(--forge-file-input-input-file-padding-dropzone-block, var(--mp-input-file-padding-dropzone-block))
+        var(--forge-file-input-input-file-padding-dropzone-inline, var(--mp-input-file-padding-dropzone-inline));
+      border: var(--forge-file-input-input-file-border-width-dropzone, var(--mp-input-file-border-width-dropzone))
+        dashed var(--forge-file-input-input-file-border-default, var(--mp-input-file-border-default));
+      border-radius: var(--forge-file-input-input-file-radius-dropzone, var(--mp-input-file-radius-dropzone));
+      background-color: var(--forge-file-input-input-file-surface-default, var(--mp-input-file-surface-default));
       transition:
         border-color 150ms ease,
         background-color 150ms ease;
@@ -110,13 +126,13 @@
       text-align: center;
 
       &--active {
-        border-color: var(--mp-input-file-border-active);
-        background-color: var(--mp-input-file-surface-active);
+        border-color: var(--forge-file-input-input-file-border-active, var(--mp-input-file-border-active));
+        background-color: var(--forge-file-input-input-file-surface-active, var(--mp-input-file-surface-active));
       }
     }
 
     &__icon {
-      color: var(--mp-input-file-text-muted);
+      color: var(--forge-file-input-input-file-text-muted, var(--mp-input-file-text-muted));
       font-size: 2rem;
       line-height: 1;
 
@@ -133,13 +149,13 @@
     }
 
     &__browse-link {
-      color: var(--mp-input-file-text-link);
+      color: var(--forge-file-input-input-file-text-link, var(--mp-input-file-text-link));
       cursor: pointer;
-      font-weight: var(--mp-input-file-font-weight);
+      font-weight: var(--forge-file-input-input-file-font-weight, var(--mp-input-file-font-weight));
       text-decoration: underline;
 
       &:hover {
-        color: var(--mp-input-file-text-link-hover);
+        color: var(--forge-file-input-input-file-text-link-hover, var(--mp-input-file-text-link-hover));
       }
     }
 
@@ -150,7 +166,7 @@
     &--error {
       .forge-file-input__button,
       .forge-file-input__dropzone {
-        border-color: var(--mp-input-file-border-invalid);
+        border-color: var(--forge-file-input-input-file-border-invalid, var(--mp-input-file-border-invalid));
       }
     }
 
@@ -161,18 +177,18 @@
       .forge-file-input__name,
       .forge-file-input__drop-text,
       .forge-file-input__file-name {
-        color: var(--mp-input-file-text-disabled);
+        color: var(--forge-file-input-input-file-text-disabled, var(--mp-input-file-text-disabled));
       }
 
       .forge-file-input__dropzone {
-        background-color: var(--mp-input-file-surface-disabled);
-        color: var(--mp-input-file-text-disabled);
+        background-color: var(--forge-file-input-input-file-surface-disabled, var(--mp-input-file-surface-disabled));
+        color: var(--forge-file-input-input-file-text-disabled, var(--mp-input-file-text-disabled));
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-input-file-text-error);
+      color: var(--forge-file-input-input-file-text-error, var(--mp-input-file-text-error));
       margin: 0;
     }
 

@@ -41,6 +41,18 @@ describe('ForgeOnboardingTour authors the same component for React and Vue', () 
     expect(html).not.toContain('role="dialog"');
   });
 
+  it('forwards the backdrop surface override to the neutral style map', () => {
+    const html = renderToStaticMarkup(
+      createElement(ReactOnboardingTour, {
+        steps,
+        open: true,
+        properties: { 'overlay-modal-backdrop-surface': 'rgb(10 20 30 / 40%)' },
+      }),
+    );
+
+    expect(html).toContain('--forge-onboarding-tour-overlay-modal-backdrop-surface:rgb(10 20 30 / 40%)');
+  });
+
   it('dismisses when the modal backdrop is clicked', async () => {
     const onSkip = vi.fn();
     const host = document.createElement('div');

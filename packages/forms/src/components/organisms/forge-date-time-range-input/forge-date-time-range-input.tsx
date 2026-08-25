@@ -1,12 +1,14 @@
 import { ForgeDropdown } from '@mission-platform/float';
 import {
-  type ClassValue,
   hasSlot,
-  type MpChild,
-  type MpElement,
   Slot,
   useId,
   useState,
+  createForgeStyle,
+  type ClassValue,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeIconCalendar, ForgeIconGlobe } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
@@ -33,6 +35,230 @@ export type DateTimeRangeInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 
 /** The endpoint being edited (`start` or `end`). */
 type Endpoint = 'start' | 'end';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface DateTimeRangeInputStyleProperties {
+  readonly 'field-required'?: string;
+  readonly 'input-border-default'?: string;
+  readonly 'input-border-focus-visible'?: string;
+  readonly 'input-border-invalid'?: string;
+  readonly 'input-border-width'?: string;
+  readonly 'input-field-gap'?: string;
+  readonly 'input-focus-ring'?: string;
+  readonly 'input-focus-ring-invalid'?: string;
+  readonly 'input-font-family'?: string;
+  readonly 'input-opacity-disabled'?: string;
+  readonly 'input-radius'?: string;
+  readonly 'input-size-2xl-font-size'?: string;
+  readonly 'input-size-2xl-padding-block'?: string;
+  readonly 'input-size-2xl-padding-inline'?: string;
+  readonly 'input-size-2xs-font-size'?: string;
+  readonly 'input-size-2xs-padding-block'?: string;
+  readonly 'input-size-2xs-padding-inline'?: string;
+  readonly 'input-size-lg-font-size'?: string;
+  readonly 'input-size-lg-padding-block'?: string;
+  readonly 'input-size-lg-padding-inline'?: string;
+  readonly 'input-size-md-font-size'?: string;
+  readonly 'input-size-md-padding-block'?: string;
+  readonly 'input-size-md-padding-inline'?: string;
+  readonly 'input-size-sm-font-size'?: string;
+  readonly 'input-size-sm-padding-block'?: string;
+  readonly 'input-size-sm-padding-inline'?: string;
+  readonly 'input-size-xl-font-size'?: string;
+  readonly 'input-size-xl-padding-block'?: string;
+  readonly 'input-size-xl-padding-inline'?: string;
+  readonly 'input-size-xs-font-size'?: string;
+  readonly 'input-size-xs-padding-block'?: string;
+  readonly 'input-size-xs-padding-inline'?: string;
+  readonly 'input-surface-default'?: string;
+  readonly 'input-surface-disabled'?: string;
+  readonly 'input-text-default'?: string;
+  readonly 'input-text-invalid'?: string;
+  readonly 'input-text-placeholder'?: string;
+  readonly 'input-text-secondary'?: string;
+  readonly 'spacing-4'?: string;
+  readonly 'time-border-default'?: string;
+  readonly 'time-border-focus'?: string;
+  readonly 'time-border-focus-width'?: string;
+  readonly 'time-done-hover-opacity'?: string;
+  readonly 'time-done-padding-block'?: string;
+  readonly 'time-done-padding-inline'?: string;
+  readonly 'time-done-radius'?: string;
+  readonly 'time-font-size-header'?: string;
+  readonly 'time-font-size-separator'?: string;
+  readonly 'time-font-size-unit'?: string;
+  readonly 'time-font-weight-medium'?: string;
+  readonly 'time-font-weight-selected'?: string;
+  readonly 'time-footer-gap'?: string;
+  readonly 'time-header-gap'?: string;
+  readonly 'time-header-padding'?: string;
+  readonly 'time-pane-gap'?: string;
+  readonly 'time-panes-gap'?: string;
+  readonly 'time-popover-padding'?: string;
+  readonly 'time-surface-hover'?: string;
+  readonly 'time-surface-selected'?: string;
+  readonly 'time-text-default'?: string;
+  readonly 'time-text-muted'?: string;
+  readonly 'time-text-secondary'?: string;
+  readonly 'time-text-selected'?: string;
+  readonly 'time-timezone-gap'?: string;
+  readonly 'time-timezone-margin'?: string;
+  readonly 'time-transition-duration'?: string;
+  readonly 'time-transition-easing'?: string;
+  readonly 'time-unit-padding-block'?: string;
+  readonly 'time-unit-padding-inline'?: string;
+  readonly 'time-unit-radius'?: string;
+}
+
+export type DateTimeRangeInputStyle = CSSStyleProperties & {
+  readonly '--forge-date-time-range-input-field-required'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-border-default'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-border-focus-visible'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-border-invalid'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-border-width'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-field-gap'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-focus-ring'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-focus-ring-invalid'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-font-family'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-opacity-disabled'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-radius'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-2xl-font-size'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-2xl-padding-block'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-2xl-padding-inline'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-2xs-font-size'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-2xs-padding-block'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-2xs-padding-inline'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-lg-font-size'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-lg-padding-block'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-lg-padding-inline'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-md-font-size'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-md-padding-block'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-md-padding-inline'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-sm-font-size'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-sm-padding-block'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-sm-padding-inline'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-xl-font-size'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-xl-padding-block'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-xl-padding-inline'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-xs-font-size'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-xs-padding-block'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-size-xs-padding-inline'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-surface-default'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-surface-disabled'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-text-default'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-text-invalid'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-text-placeholder'?: string | undefined;
+  readonly '--forge-date-time-range-input-input-text-secondary'?: string | undefined;
+  readonly '--forge-date-time-range-input-spacing-4'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-border-default'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-border-focus'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-border-focus-width'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-done-hover-opacity'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-done-padding-block'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-done-padding-inline'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-done-radius'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-font-size-header'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-font-size-separator'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-font-size-unit'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-font-weight-medium'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-font-weight-selected'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-footer-gap'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-header-gap'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-header-padding'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-pane-gap'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-panes-gap'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-popover-padding'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-surface-hover'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-surface-selected'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-text-default'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-text-muted'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-text-secondary'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-text-selected'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-timezone-gap'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-timezone-margin'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-transition-duration'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-transition-easing'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-unit-padding-block'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-unit-padding-inline'?: string | undefined;
+  readonly '--forge-date-time-range-input-time-unit-radius'?: string | undefined;
+};
+
+function createDateTimeRangeInputStyle(
+  properties: Readonly<DateTimeRangeInputStyleProperties> | undefined,
+): DateTimeRangeInputStyle | undefined {
+  return createForgeStyle({
+    '--forge-date-time-range-input-field-required': properties?.['field-required'],
+    '--forge-date-time-range-input-input-border-default': properties?.['input-border-default'],
+    '--forge-date-time-range-input-input-border-focus-visible': properties?.['input-border-focus-visible'],
+    '--forge-date-time-range-input-input-border-invalid': properties?.['input-border-invalid'],
+    '--forge-date-time-range-input-input-border-width': properties?.['input-border-width'],
+    '--forge-date-time-range-input-input-field-gap': properties?.['input-field-gap'],
+    '--forge-date-time-range-input-input-focus-ring': properties?.['input-focus-ring'],
+    '--forge-date-time-range-input-input-focus-ring-invalid': properties?.['input-focus-ring-invalid'],
+    '--forge-date-time-range-input-input-font-family': properties?.['input-font-family'],
+    '--forge-date-time-range-input-input-opacity-disabled': properties?.['input-opacity-disabled'],
+    '--forge-date-time-range-input-input-radius': properties?.['input-radius'],
+    '--forge-date-time-range-input-input-size-2xl-font-size': properties?.['input-size-2xl-font-size'],
+    '--forge-date-time-range-input-input-size-2xl-padding-block': properties?.['input-size-2xl-padding-block'],
+    '--forge-date-time-range-input-input-size-2xl-padding-inline': properties?.['input-size-2xl-padding-inline'],
+    '--forge-date-time-range-input-input-size-2xs-font-size': properties?.['input-size-2xs-font-size'],
+    '--forge-date-time-range-input-input-size-2xs-padding-block': properties?.['input-size-2xs-padding-block'],
+    '--forge-date-time-range-input-input-size-2xs-padding-inline': properties?.['input-size-2xs-padding-inline'],
+    '--forge-date-time-range-input-input-size-lg-font-size': properties?.['input-size-lg-font-size'],
+    '--forge-date-time-range-input-input-size-lg-padding-block': properties?.['input-size-lg-padding-block'],
+    '--forge-date-time-range-input-input-size-lg-padding-inline': properties?.['input-size-lg-padding-inline'],
+    '--forge-date-time-range-input-input-size-md-font-size': properties?.['input-size-md-font-size'],
+    '--forge-date-time-range-input-input-size-md-padding-block': properties?.['input-size-md-padding-block'],
+    '--forge-date-time-range-input-input-size-md-padding-inline': properties?.['input-size-md-padding-inline'],
+    '--forge-date-time-range-input-input-size-sm-font-size': properties?.['input-size-sm-font-size'],
+    '--forge-date-time-range-input-input-size-sm-padding-block': properties?.['input-size-sm-padding-block'],
+    '--forge-date-time-range-input-input-size-sm-padding-inline': properties?.['input-size-sm-padding-inline'],
+    '--forge-date-time-range-input-input-size-xl-font-size': properties?.['input-size-xl-font-size'],
+    '--forge-date-time-range-input-input-size-xl-padding-block': properties?.['input-size-xl-padding-block'],
+    '--forge-date-time-range-input-input-size-xl-padding-inline': properties?.['input-size-xl-padding-inline'],
+    '--forge-date-time-range-input-input-size-xs-font-size': properties?.['input-size-xs-font-size'],
+    '--forge-date-time-range-input-input-size-xs-padding-block': properties?.['input-size-xs-padding-block'],
+    '--forge-date-time-range-input-input-size-xs-padding-inline': properties?.['input-size-xs-padding-inline'],
+    '--forge-date-time-range-input-input-surface-default': properties?.['input-surface-default'],
+    '--forge-date-time-range-input-input-surface-disabled': properties?.['input-surface-disabled'],
+    '--forge-date-time-range-input-input-text-default': properties?.['input-text-default'],
+    '--forge-date-time-range-input-input-text-invalid': properties?.['input-text-invalid'],
+    '--forge-date-time-range-input-input-text-placeholder': properties?.['input-text-placeholder'],
+    '--forge-date-time-range-input-input-text-secondary': properties?.['input-text-secondary'],
+    '--forge-date-time-range-input-spacing-4': properties?.['spacing-4'],
+    '--forge-date-time-range-input-time-border-default': properties?.['time-border-default'],
+    '--forge-date-time-range-input-time-border-focus': properties?.['time-border-focus'],
+    '--forge-date-time-range-input-time-border-focus-width': properties?.['time-border-focus-width'],
+    '--forge-date-time-range-input-time-done-hover-opacity': properties?.['time-done-hover-opacity'],
+    '--forge-date-time-range-input-time-done-padding-block': properties?.['time-done-padding-block'],
+    '--forge-date-time-range-input-time-done-padding-inline': properties?.['time-done-padding-inline'],
+    '--forge-date-time-range-input-time-done-radius': properties?.['time-done-radius'],
+    '--forge-date-time-range-input-time-font-size-header': properties?.['time-font-size-header'],
+    '--forge-date-time-range-input-time-font-size-separator': properties?.['time-font-size-separator'],
+    '--forge-date-time-range-input-time-font-size-unit': properties?.['time-font-size-unit'],
+    '--forge-date-time-range-input-time-font-weight-medium': properties?.['time-font-weight-medium'],
+    '--forge-date-time-range-input-time-font-weight-selected': properties?.['time-font-weight-selected'],
+    '--forge-date-time-range-input-time-footer-gap': properties?.['time-footer-gap'],
+    '--forge-date-time-range-input-time-header-gap': properties?.['time-header-gap'],
+    '--forge-date-time-range-input-time-header-padding': properties?.['time-header-padding'],
+    '--forge-date-time-range-input-time-pane-gap': properties?.['time-pane-gap'],
+    '--forge-date-time-range-input-time-panes-gap': properties?.['time-panes-gap'],
+    '--forge-date-time-range-input-time-popover-padding': properties?.['time-popover-padding'],
+    '--forge-date-time-range-input-time-surface-hover': properties?.['time-surface-hover'],
+    '--forge-date-time-range-input-time-surface-selected': properties?.['time-surface-selected'],
+    '--forge-date-time-range-input-time-text-default': properties?.['time-text-default'],
+    '--forge-date-time-range-input-time-text-muted': properties?.['time-text-muted'],
+    '--forge-date-time-range-input-time-text-secondary': properties?.['time-text-secondary'],
+    '--forge-date-time-range-input-time-text-selected': properties?.['time-text-selected'],
+    '--forge-date-time-range-input-time-timezone-gap': properties?.['time-timezone-gap'],
+    '--forge-date-time-range-input-time-timezone-margin': properties?.['time-timezone-margin'],
+    '--forge-date-time-range-input-time-transition-duration': properties?.['time-transition-duration'],
+    '--forge-date-time-range-input-time-transition-easing': properties?.['time-transition-easing'],
+    '--forge-date-time-range-input-time-unit-padding-block': properties?.['time-unit-padding-block'],
+    '--forge-date-time-range-input-time-unit-padding-inline': properties?.['time-unit-padding-inline'],
+    '--forge-date-time-range-input-time-unit-radius': properties?.['time-unit-radius'],
+  }) as DateTimeRangeInputStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface DateTimeRangeInputProperties {
   /**
    * Extra class(es) merged onto the control's root element. Applied last so
@@ -76,6 +302,9 @@ export interface DateTimeRangeInputProperties {
   onUpdateModelValue?: (value: DateTimeRange) => void;
   /** Fired with the next range whenever it changes. */
   onChange?: (value: DateTimeRange) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<DateTimeRangeInputStyleProperties>;
 }
 
 /**
@@ -105,6 +334,8 @@ export interface DateTimeRangeInputProperties {
  * + `change` emits become the `onUpdateModelValue`/`onChange` callback props.
  */
 export function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputProperties>): MpElement {
+  const style = createDateTimeRangeInputStyle(properties.properties);
+
   const {
     modelValue = { start: '', end: '', timezone: 'browser' },
     label,
@@ -280,6 +511,7 @@ export function ForgeDateTimeRangeInput(properties: Readonly<DateTimeRangeInputP
         },
         properties.className,
       ]}
+      style={style}
     >
       {label ? (
         <label

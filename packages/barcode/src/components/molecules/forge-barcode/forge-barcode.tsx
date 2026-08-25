@@ -1,5 +1,13 @@
 import { ForgeButton } from '@mission-platform/components';
-import { type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -19,6 +27,24 @@ export interface BarcodeActions {
   copyValue?: boolean;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface BarcodeStyleProperties {
+  readonly 'code-barcode-actions-gap'?: string;
+  readonly 'code-barcode-figure-gap'?: string;
+}
+
+export type BarcodeStyle = CSSStyleProperties & {
+  readonly '--forge-barcode-code-barcode-actions-gap'?: string | undefined;
+  readonly '--forge-barcode-code-barcode-figure-gap'?: string | undefined;
+};
+
+function createBarcodeStyle(properties: Readonly<BarcodeStyleProperties> | undefined): BarcodeStyle | undefined {
+  return createForgeStyle({
+    '--forge-barcode-code-barcode-actions-gap': properties?.['code-barcode-actions-gap'],
+    '--forge-barcode-code-barcode-figure-gap': properties?.['code-barcode-figure-gap'],
+  }) as BarcodeStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface BarcodeProperties {
   /** The data to encode. Its valid form depends on the {@link symbology}. */
   value: string;
@@ -48,6 +74,9 @@ export interface BarcodeProperties {
   downloadFileName?: string;
   /** Fired when `value` cannot be encoded, or an action (save/copy) fails. */
   onError?: (error: Error) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<BarcodeStyleProperties>;
 }
 
 interface BarcodeRenderResult {
@@ -146,6 +175,8 @@ function encodeRenderedBarcode(
  * `forge-barcode.module.scss`.
  */
 export function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement {
+  const style = createBarcodeStyle(properties.properties);
+
   const {
     value,
     symbology = 'code128',
@@ -213,6 +244,7 @@ export function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement
       viewBox={`0 0 ${dimensionX} ${dimensionY}`}
       width={dimensionX}
       xmlns="http://www.w3.org/2000/svg"
+      style={style}
     >
       <rect
         className={styles['forge-barcode__background']}
@@ -338,7 +370,10 @@ export function ForgeBarcode(properties: Readonly<BarcodeProperties>): MpElement
 
   const hasVisibleToolbarActions = rendered !== undefined && (showDownload || showCopyImage || showCopyValue);
   return hasVisibleToolbarActions ? (
-    <div className={styles['forge-barcode-figure']}>
+    <div
+      className={styles['forge-barcode-figure']}
+      style={style}
+    >
       {barcodeSvg}
       <div className={styles['forge-barcode__actions']}>
         {showDownload ? (

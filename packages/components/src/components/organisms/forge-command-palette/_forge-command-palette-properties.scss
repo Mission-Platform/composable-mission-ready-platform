@@ -1,0 +1,87 @@
+/**
+ * Registered inherited custom properties for forge-command-palette overrides.
+ */
+
+@property --forge-command-palette-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-command-palette-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-command-palette-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-command-palette-border-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-radius-md);
+}
+
+@property --forge-command-palette-color-surface-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-surface-primary);
+}
+
+@property --forge-command-palette-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-command-palette-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-command-palette-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-command-palette-overlay-modal-backdrop-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-overlay-modal-backdrop-surface, rgb(0 0 0 / 45%));
+}
+
+@property --forge-command-palette-border-radius-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-radius-lg);
+}
+
+@property --forge-command-palette-shadow-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-shadow-xl, 0 1rem 3rem rgb(0 0 0 / 25%));
+}
+
+@property --forge-command-palette-border-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-radius-sm);
+}
+
+@property --forge-command-palette-color-surface-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-surface-secondary);
+}
+
+@property --forge-command-palette-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}

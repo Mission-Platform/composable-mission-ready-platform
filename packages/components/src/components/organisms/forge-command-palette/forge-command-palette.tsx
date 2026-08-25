@@ -1,13 +1,15 @@
 import {
   classNames,
   hasSlot,
-  type MpChild,
-  type MpElement,
   Slot,
   useEffect,
   useId,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 
 import styles from './forge-command-palette.module.scss';
@@ -40,6 +42,62 @@ export interface CommandItem {
 /** @deprecated Use `CommandItem`. */
 export type CommandPaletteCommand = CommandItem;
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface CommandPaletteStyleProperties {
+  readonly 'border-radius-lg'?: string;
+  readonly 'border-radius-md'?: string;
+  readonly 'border-radius-sm'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-surface-primary'?: string;
+  readonly 'color-surface-secondary'?: string;
+  readonly 'color-text-primary'?: string;
+  readonly 'color-text-secondary'?: string;
+  readonly 'overlay-modal-backdrop-surface'?: string;
+  readonly 'shadow-xl'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+}
+
+export type CommandPaletteStyle = CSSStyleProperties & {
+  readonly '--forge-command-palette-border-radius-lg'?: string | undefined;
+  readonly '--forge-command-palette-border-radius-md'?: string | undefined;
+  readonly '--forge-command-palette-border-radius-sm'?: string | undefined;
+  readonly '--forge-command-palette-color-border-default'?: string | undefined;
+  readonly '--forge-command-palette-color-surface-primary'?: string | undefined;
+  readonly '--forge-command-palette-color-surface-secondary'?: string | undefined;
+  readonly '--forge-command-palette-color-text-primary'?: string | undefined;
+  readonly '--forge-command-palette-color-text-secondary'?: string | undefined;
+  readonly '--forge-command-palette-overlay-modal-backdrop-surface'?: string | undefined;
+  readonly '--forge-command-palette-shadow-xl'?: string | undefined;
+  readonly '--forge-command-palette-spacing-1'?: string | undefined;
+  readonly '--forge-command-palette-spacing-2'?: string | undefined;
+  readonly '--forge-command-palette-spacing-3'?: string | undefined;
+  readonly '--forge-command-palette-spacing-4'?: string | undefined;
+};
+
+function createCommandPaletteStyle(
+  properties: Readonly<CommandPaletteStyleProperties> | undefined,
+): CommandPaletteStyle | undefined {
+  return createForgeStyle({
+    '--forge-command-palette-border-radius-lg': properties?.['border-radius-lg'],
+    '--forge-command-palette-border-radius-md': properties?.['border-radius-md'],
+    '--forge-command-palette-border-radius-sm': properties?.['border-radius-sm'],
+    '--forge-command-palette-color-border-default': properties?.['color-border-default'],
+    '--forge-command-palette-color-surface-primary': properties?.['color-surface-primary'],
+    '--forge-command-palette-color-surface-secondary': properties?.['color-surface-secondary'],
+    '--forge-command-palette-color-text-primary': properties?.['color-text-primary'],
+    '--forge-command-palette-color-text-secondary': properties?.['color-text-secondary'],
+    '--forge-command-palette-overlay-modal-backdrop-surface': properties?.['overlay-modal-backdrop-surface'],
+    '--forge-command-palette-shadow-xl': properties?.['shadow-xl'],
+    '--forge-command-palette-spacing-1': properties?.['spacing-1'],
+    '--forge-command-palette-spacing-2': properties?.['spacing-2'],
+    '--forge-command-palette-spacing-3': properties?.['spacing-3'],
+    '--forge-command-palette-spacing-4': properties?.['spacing-4'],
+  }) as CommandPaletteStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface CommandPaletteProperties {
   /** Optional default-slot content. */
   children?: MpChild | readonly MpChild[];
@@ -81,6 +139,9 @@ export interface CommandPaletteProperties {
   onQueryChange?: (query: string) => void;
   /** Called after a command is selected. */
   onSelect?: (command: CommandPaletteCommand) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<CommandPaletteStyleProperties>;
 }
 
 /**
@@ -89,6 +150,8 @@ export interface CommandPaletteProperties {
  * guarding global document listeners for SSR.
  */
 export function ForgeCommandPalette(properties: Readonly<CommandPaletteProperties>): MpElement {
+  const style = createCommandPaletteStyle(properties.properties);
+
   const {
     commands,
     groups,
@@ -250,6 +313,7 @@ export function ForgeCommandPalette(properties: Readonly<CommandPalettePropertie
         className={classNames(styles['forge-command-palette'], styles[`forge-command-palette--${size}`])}
         ref={rootReference}
         role="dialog"
+        style={style}
       >
         <div className={styles['forge-command-palette__search']}>
           <input
@@ -314,7 +378,10 @@ export function ForgeCommandPalette(properties: Readonly<CommandPalettePropertie
   ) : undefined;
 
   return (
-    <div className={styles['forge-command-palette-host']}>
+    <div
+      className={styles['forge-command-palette-host']}
+      style={style}
+    >
       {hasSlot('trigger') ? (
         <Slot name="trigger">{properties.trigger}</Slot>
       ) : (

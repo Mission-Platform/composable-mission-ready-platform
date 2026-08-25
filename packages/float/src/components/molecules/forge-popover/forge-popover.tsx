@@ -1,4 +1,14 @@
-import { type MpChild, type MpElement, Slot, Teleport, useEffect, useId, useRef } from '@mission-platform/forge';
+import {
+  Slot,
+  Teleport,
+  useEffect,
+  useId,
+  useRef,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import { resolvePortalTarget } from '../../../utils/portal-target/portal-target';
 
@@ -22,6 +32,51 @@ export type PopoverPlacement =
   | 'right-start'
   | 'right-end';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface PopoverStyleProperties {
+  readonly 'overlay-border-default'?: string;
+  readonly 'overlay-border-width'?: string;
+  readonly 'overlay-panel-padding-block'?: string;
+  readonly 'overlay-popover-radius'?: string;
+  readonly 'overlay-popover-shadow'?: string;
+  readonly 'overlay-popover-surface'?: string;
+  readonly 'overlay-popover-transition-duration'?: string;
+  readonly 'overlay-popover-transition-easing'?: string;
+  readonly 'overlay-text-default'?: string;
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-4'?: string;
+}
+
+export type PopoverStyle = CSSStyleProperties & {
+  readonly '--forge-popover-overlay-border-default'?: string | undefined;
+  readonly '--forge-popover-overlay-border-width'?: string | undefined;
+  readonly '--forge-popover-overlay-panel-padding-block'?: string | undefined;
+  readonly '--forge-popover-overlay-popover-radius'?: string | undefined;
+  readonly '--forge-popover-overlay-popover-shadow'?: string | undefined;
+  readonly '--forge-popover-overlay-popover-surface'?: string | undefined;
+  readonly '--forge-popover-overlay-popover-transition-duration'?: string | undefined;
+  readonly '--forge-popover-overlay-popover-transition-easing'?: string | undefined;
+  readonly '--forge-popover-overlay-text-default'?: string | undefined;
+  readonly '--forge-popover-spacing-2'?: string | undefined;
+  readonly '--forge-popover-spacing-4'?: string | undefined;
+};
+
+function createPopoverStyle(properties: Readonly<PopoverStyleProperties> | undefined): PopoverStyle | undefined {
+  return createForgeStyle({
+    '--forge-popover-overlay-border-default': properties?.['overlay-border-default'],
+    '--forge-popover-overlay-border-width': properties?.['overlay-border-width'],
+    '--forge-popover-overlay-panel-padding-block': properties?.['overlay-panel-padding-block'],
+    '--forge-popover-overlay-popover-radius': properties?.['overlay-popover-radius'],
+    '--forge-popover-overlay-popover-shadow': properties?.['overlay-popover-shadow'],
+    '--forge-popover-overlay-popover-surface': properties?.['overlay-popover-surface'],
+    '--forge-popover-overlay-popover-transition-duration': properties?.['overlay-popover-transition-duration'],
+    '--forge-popover-overlay-popover-transition-easing': properties?.['overlay-popover-transition-easing'],
+    '--forge-popover-overlay-text-default': properties?.['overlay-text-default'],
+    '--forge-popover-spacing-2': properties?.['spacing-2'],
+    '--forge-popover-spacing-4': properties?.['spacing-4'],
+  }) as PopoverStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface PopoverProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -44,6 +99,9 @@ export interface PopoverProperties {
   onUpdateOpen?: (open: boolean) => void;
   /** Fired when the popover requests to close. */
   onClose?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<PopoverStyleProperties>;
 }
 
 /**
@@ -113,6 +171,8 @@ const POSITION_AREA: Readonly<Record<PopoverPlacement, string>> = {
  * `forge-popover.module.scss`.
  */
 export function ForgePopover(properties: Readonly<PopoverProperties>): MpElement {
+  const style = createPopoverStyle(properties.properties);
+
   const {
     open = false,
     placement = 'bottom-start',
@@ -192,7 +252,10 @@ export function ForgePopover(properties: Readonly<PopoverProperties>): MpElement
   }, [open]);
 
   return (
-    <div className={styles['forge-popover']}>
+    <div
+      className={styles['forge-popover']}
+      style={style}
+    >
       <div
         ref={triggerReference}
         id={triggerId}

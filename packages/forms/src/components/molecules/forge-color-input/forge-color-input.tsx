@@ -1,4 +1,11 @@
-import { type MpElement, useEffect, useId, useState } from '@mission-platform/forge';
+import {
+  useEffect,
+  useId,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-color-input.module.scss';
@@ -9,6 +16,167 @@ export type ColorInputSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Matches a 6-digit `#rrggbb` hex colour. */
 const HEX_PATTERN = /^#[0-9a-fA-F]{6}$/;
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ColorInputStyleProperties {
+  readonly 'border-default'?: string;
+  readonly 'border-focus'?: string;
+  readonly 'border-invalid'?: string;
+  readonly 'border-width'?: string;
+  readonly 'disabled-opacity'?: string;
+  readonly 'focus-ring'?: string;
+  readonly 'focus-ring-invalid'?: string;
+  readonly 'font-family'?: string;
+  readonly 'form-text-invalid'?: string;
+  readonly 'gap-inline'?: string;
+  readonly 'gap-stack'?: string;
+  readonly 'hover-opacity'?: string;
+  readonly 'letter-spacing'?: string;
+  readonly radius?: string;
+  readonly 'size-2xl-font-size'?: string;
+  readonly 'size-2xl-padding-block'?: string;
+  readonly 'size-2xl-padding-inline'?: string;
+  readonly 'size-2xl-swatch'?: string;
+  readonly 'size-2xs-font-size'?: string;
+  readonly 'size-2xs-padding-block'?: string;
+  readonly 'size-2xs-padding-inline'?: string;
+  readonly 'size-2xs-swatch'?: string;
+  readonly 'size-lg-font-size'?: string;
+  readonly 'size-lg-padding-block'?: string;
+  readonly 'size-lg-padding-inline'?: string;
+  readonly 'size-lg-swatch'?: string;
+  readonly 'size-md-font-size'?: string;
+  readonly 'size-md-padding-block'?: string;
+  readonly 'size-md-padding-inline'?: string;
+  readonly 'size-md-swatch'?: string;
+  readonly 'size-sm-font-size'?: string;
+  readonly 'size-sm-padding-block'?: string;
+  readonly 'size-sm-padding-inline'?: string;
+  readonly 'size-sm-swatch'?: string;
+  readonly 'size-xl-font-size'?: string;
+  readonly 'size-xl-padding-block'?: string;
+  readonly 'size-xl-padding-inline'?: string;
+  readonly 'size-xl-swatch'?: string;
+  readonly 'size-xs-font-size'?: string;
+  readonly 'size-xs-padding-block'?: string;
+  readonly 'size-xs-padding-inline'?: string;
+  readonly 'size-xs-swatch'?: string;
+  readonly 'surface-default'?: string;
+  readonly 'surface-disabled'?: string;
+  readonly 'text-default'?: string;
+  readonly 'text-error'?: string;
+  readonly 'text-placeholder'?: string;
+  readonly 'transition-duration'?: string;
+  readonly 'transition-easing'?: string;
+}
+
+export type ColorInputStyle = CSSStyleProperties & {
+  readonly '--forge-color-input-border-default'?: string | undefined;
+  readonly '--forge-color-input-border-focus'?: string | undefined;
+  readonly '--forge-color-input-border-invalid'?: string | undefined;
+  readonly '--forge-color-input-border-width'?: string | undefined;
+  readonly '--forge-color-input-disabled-opacity'?: string | undefined;
+  readonly '--forge-color-input-focus-ring'?: string | undefined;
+  readonly '--forge-color-input-focus-ring-invalid'?: string | undefined;
+  readonly '--forge-color-input-font-family'?: string | undefined;
+  readonly '--forge-color-input-form-text-invalid'?: string | undefined;
+  readonly '--forge-color-input-gap-inline'?: string | undefined;
+  readonly '--forge-color-input-gap-stack'?: string | undefined;
+  readonly '--forge-color-input-hover-opacity'?: string | undefined;
+  readonly '--forge-color-input-letter-spacing'?: string | undefined;
+  readonly '--forge-color-input-radius'?: string | undefined;
+  readonly '--forge-color-input-size-2xl-font-size'?: string | undefined;
+  readonly '--forge-color-input-size-2xl-padding-block'?: string | undefined;
+  readonly '--forge-color-input-size-2xl-padding-inline'?: string | undefined;
+  readonly '--forge-color-input-size-2xl-swatch'?: string | undefined;
+  readonly '--forge-color-input-size-2xs-font-size'?: string | undefined;
+  readonly '--forge-color-input-size-2xs-padding-block'?: string | undefined;
+  readonly '--forge-color-input-size-2xs-padding-inline'?: string | undefined;
+  readonly '--forge-color-input-size-2xs-swatch'?: string | undefined;
+  readonly '--forge-color-input-size-lg-font-size'?: string | undefined;
+  readonly '--forge-color-input-size-lg-padding-block'?: string | undefined;
+  readonly '--forge-color-input-size-lg-padding-inline'?: string | undefined;
+  readonly '--forge-color-input-size-lg-swatch'?: string | undefined;
+  readonly '--forge-color-input-size-md-font-size'?: string | undefined;
+  readonly '--forge-color-input-size-md-padding-block'?: string | undefined;
+  readonly '--forge-color-input-size-md-padding-inline'?: string | undefined;
+  readonly '--forge-color-input-size-md-swatch'?: string | undefined;
+  readonly '--forge-color-input-size-sm-font-size'?: string | undefined;
+  readonly '--forge-color-input-size-sm-padding-block'?: string | undefined;
+  readonly '--forge-color-input-size-sm-padding-inline'?: string | undefined;
+  readonly '--forge-color-input-size-sm-swatch'?: string | undefined;
+  readonly '--forge-color-input-size-xl-font-size'?: string | undefined;
+  readonly '--forge-color-input-size-xl-padding-block'?: string | undefined;
+  readonly '--forge-color-input-size-xl-padding-inline'?: string | undefined;
+  readonly '--forge-color-input-size-xl-swatch'?: string | undefined;
+  readonly '--forge-color-input-size-xs-font-size'?: string | undefined;
+  readonly '--forge-color-input-size-xs-padding-block'?: string | undefined;
+  readonly '--forge-color-input-size-xs-padding-inline'?: string | undefined;
+  readonly '--forge-color-input-size-xs-swatch'?: string | undefined;
+  readonly '--forge-color-input-surface-default'?: string | undefined;
+  readonly '--forge-color-input-surface-disabled'?: string | undefined;
+  readonly '--forge-color-input-text-default'?: string | undefined;
+  readonly '--forge-color-input-text-error'?: string | undefined;
+  readonly '--forge-color-input-text-placeholder'?: string | undefined;
+  readonly '--forge-color-input-transition-duration'?: string | undefined;
+  readonly '--forge-color-input-transition-easing'?: string | undefined;
+};
+
+function createColorInputStyle(
+  properties: Readonly<ColorInputStyleProperties> | undefined,
+): ColorInputStyle | undefined {
+  return createForgeStyle({
+    '--forge-color-input-border-default': properties?.['border-default'],
+    '--forge-color-input-border-focus': properties?.['border-focus'],
+    '--forge-color-input-border-invalid': properties?.['border-invalid'],
+    '--forge-color-input-border-width': properties?.['border-width'],
+    '--forge-color-input-disabled-opacity': properties?.['disabled-opacity'],
+    '--forge-color-input-focus-ring': properties?.['focus-ring'],
+    '--forge-color-input-focus-ring-invalid': properties?.['focus-ring-invalid'],
+    '--forge-color-input-font-family': properties?.['font-family'],
+    '--forge-color-input-form-text-invalid': properties?.['form-text-invalid'],
+    '--forge-color-input-gap-inline': properties?.['gap-inline'],
+    '--forge-color-input-gap-stack': properties?.['gap-stack'],
+    '--forge-color-input-hover-opacity': properties?.['hover-opacity'],
+    '--forge-color-input-letter-spacing': properties?.['letter-spacing'],
+    '--forge-color-input-radius': properties?.['radius'],
+    '--forge-color-input-size-2xl-font-size': properties?.['size-2xl-font-size'],
+    '--forge-color-input-size-2xl-padding-block': properties?.['size-2xl-padding-block'],
+    '--forge-color-input-size-2xl-padding-inline': properties?.['size-2xl-padding-inline'],
+    '--forge-color-input-size-2xl-swatch': properties?.['size-2xl-swatch'],
+    '--forge-color-input-size-2xs-font-size': properties?.['size-2xs-font-size'],
+    '--forge-color-input-size-2xs-padding-block': properties?.['size-2xs-padding-block'],
+    '--forge-color-input-size-2xs-padding-inline': properties?.['size-2xs-padding-inline'],
+    '--forge-color-input-size-2xs-swatch': properties?.['size-2xs-swatch'],
+    '--forge-color-input-size-lg-font-size': properties?.['size-lg-font-size'],
+    '--forge-color-input-size-lg-padding-block': properties?.['size-lg-padding-block'],
+    '--forge-color-input-size-lg-padding-inline': properties?.['size-lg-padding-inline'],
+    '--forge-color-input-size-lg-swatch': properties?.['size-lg-swatch'],
+    '--forge-color-input-size-md-font-size': properties?.['size-md-font-size'],
+    '--forge-color-input-size-md-padding-block': properties?.['size-md-padding-block'],
+    '--forge-color-input-size-md-padding-inline': properties?.['size-md-padding-inline'],
+    '--forge-color-input-size-md-swatch': properties?.['size-md-swatch'],
+    '--forge-color-input-size-sm-font-size': properties?.['size-sm-font-size'],
+    '--forge-color-input-size-sm-padding-block': properties?.['size-sm-padding-block'],
+    '--forge-color-input-size-sm-padding-inline': properties?.['size-sm-padding-inline'],
+    '--forge-color-input-size-sm-swatch': properties?.['size-sm-swatch'],
+    '--forge-color-input-size-xl-font-size': properties?.['size-xl-font-size'],
+    '--forge-color-input-size-xl-padding-block': properties?.['size-xl-padding-block'],
+    '--forge-color-input-size-xl-padding-inline': properties?.['size-xl-padding-inline'],
+    '--forge-color-input-size-xl-swatch': properties?.['size-xl-swatch'],
+    '--forge-color-input-size-xs-font-size': properties?.['size-xs-font-size'],
+    '--forge-color-input-size-xs-padding-block': properties?.['size-xs-padding-block'],
+    '--forge-color-input-size-xs-padding-inline': properties?.['size-xs-padding-inline'],
+    '--forge-color-input-size-xs-swatch': properties?.['size-xs-swatch'],
+    '--forge-color-input-surface-default': properties?.['surface-default'],
+    '--forge-color-input-surface-disabled': properties?.['surface-disabled'],
+    '--forge-color-input-text-default': properties?.['text-default'],
+    '--forge-color-input-text-error': properties?.['text-error'],
+    '--forge-color-input-text-placeholder': properties?.['text-placeholder'],
+    '--forge-color-input-transition-duration': properties?.['transition-duration'],
+    '--forge-color-input-transition-easing': properties?.['transition-easing'],
+  }) as ColorInputStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ColorInputProperties {
   /**
    * Colour value (controlled via `modelValue` + `onUpdateModelValue`). Defaults to `'#000000'`.
@@ -35,6 +203,9 @@ export interface ColorInputProperties {
   onUpdateModelValue?: (value: string) => void;
   /** Fired with the committed value (the native `change`). */
   onChange?: (value: string) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ColorInputStyleProperties>;
 }
 
 /**
@@ -54,6 +225,8 @@ export interface ColorInputProperties {
  * `onUpdateModelValue`/`onChange` callback props.
  */
 export function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpElement {
+  const style = createColorInputStyle(properties.properties);
+
   const {
     modelValue = '#000000',
     label,
@@ -116,6 +289,7 @@ export function ForgeColorInput(properties: Readonly<ColorInputProperties>): MpE
           [styles['forge-color-input--disabled']]: disabled,
         },
       ]}
+      style={style}
     >
       {label ? (
         <label

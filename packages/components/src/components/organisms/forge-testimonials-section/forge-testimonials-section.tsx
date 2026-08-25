@@ -1,4 +1,11 @@
-import { classNames, type MpElement, useEffect, useState } from '@mission-platform/forge';
+import {
+  classNames,
+  useEffect,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import { initialsForName } from '../../../utils';
 import { ForgeAvatar } from '../../atoms/forge-avatar/forge-avatar';
@@ -14,6 +21,63 @@ export interface Testimonial {
   src?: string;
 }
 export type TestimonialsVariant = 'carousel' | 'grid' | 'cards' | 'card' | 'featured' | 'minimal' | 'single';
+
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface TestimonialsSectionStyleProperties {
+  readonly 'border-width-thin'?: string;
+  readonly 'color-bg-muted'?: string;
+  readonly 'color-bg-surface'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-text-tertiary'?: string;
+  readonly 'line-height-relaxed'?: string;
+  readonly 'radius-full'?: string;
+  readonly 'radius-lg'?: string;
+  readonly 'size-height-lg'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-4'?: string;
+  readonly 'spacing-5'?: string;
+  readonly 'spacing-6'?: string;
+  readonly 'spacing-8'?: string;
+}
+
+export type TestimonialsSectionStyle = CSSStyleProperties & {
+  readonly '--forge-testimonials-section-border-width-thin'?: string | undefined;
+  readonly '--forge-testimonials-section-color-bg-muted'?: string | undefined;
+  readonly '--forge-testimonials-section-color-bg-surface'?: string | undefined;
+  readonly '--forge-testimonials-section-color-border-default'?: string | undefined;
+  readonly '--forge-testimonials-section-color-text-tertiary'?: string | undefined;
+  readonly '--forge-testimonials-section-line-height-relaxed'?: string | undefined;
+  readonly '--forge-testimonials-section-radius-full'?: string | undefined;
+  readonly '--forge-testimonials-section-radius-lg'?: string | undefined;
+  readonly '--forge-testimonials-section-size-height-lg'?: string | undefined;
+  readonly '--forge-testimonials-section-spacing-1'?: string | undefined;
+  readonly '--forge-testimonials-section-spacing-4'?: string | undefined;
+  readonly '--forge-testimonials-section-spacing-5'?: string | undefined;
+  readonly '--forge-testimonials-section-spacing-6'?: string | undefined;
+  readonly '--forge-testimonials-section-spacing-8'?: string | undefined;
+};
+
+function createTestimonialsSectionStyle(
+  properties: Readonly<TestimonialsSectionStyleProperties> | undefined,
+): TestimonialsSectionStyle | undefined {
+  return createForgeStyle({
+    '--forge-testimonials-section-border-width-thin': properties?.['border-width-thin'],
+    '--forge-testimonials-section-color-bg-muted': properties?.['color-bg-muted'],
+    '--forge-testimonials-section-color-bg-surface': properties?.['color-bg-surface'],
+    '--forge-testimonials-section-color-border-default': properties?.['color-border-default'],
+    '--forge-testimonials-section-color-text-tertiary': properties?.['color-text-tertiary'],
+    '--forge-testimonials-section-line-height-relaxed': properties?.['line-height-relaxed'],
+    '--forge-testimonials-section-radius-full': properties?.['radius-full'],
+    '--forge-testimonials-section-radius-lg': properties?.['radius-lg'],
+    '--forge-testimonials-section-size-height-lg': properties?.['size-height-lg'],
+    '--forge-testimonials-section-spacing-1': properties?.['spacing-1'],
+    '--forge-testimonials-section-spacing-4': properties?.['spacing-4'],
+    '--forge-testimonials-section-spacing-5': properties?.['spacing-5'],
+    '--forge-testimonials-section-spacing-6': properties?.['spacing-6'],
+    '--forge-testimonials-section-spacing-8': properties?.['spacing-8'],
+  }) as TestimonialsSectionStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface TestimonialsSectionProperties {
   testimonials: Testimonial[];
   title?: string;
@@ -23,9 +87,14 @@ export interface TestimonialsSectionProperties {
   columns?: number;
   interval?: number;
   onChange?: (index: number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<TestimonialsSectionStyleProperties>;
 }
 
 export function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectionProperties>): MpElement {
+  const style = createTestimonialsSectionStyle(properties.properties);
+
   const {
     testimonials,
     title,
@@ -77,6 +146,7 @@ export function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectio
       <section
         className={classNames(styles['forge-testimonials-section'], styles[`forge-testimonials-section--${variant}`])}
         aria-label={ariaLabel}
+        style={style}
       />
     );
   const columnCount = Math.max(1, Math.floor(columns));
@@ -84,6 +154,7 @@ export function ForgeTestimonialsSection(properties: Readonly<TestimonialsSectio
     <section
       className={classNames(styles['forge-testimonials-section'], styles[`forge-testimonials-section--${variant}`])}
       aria-label={resolvedAriaLabel}
+      style={style}
     >
       {title ? <h2>{title}</h2> : undefined}
       {isCollection ? (

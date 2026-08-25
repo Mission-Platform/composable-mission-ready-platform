@@ -1,4 +1,10 @@
-import { type MpElement, type MpRenderProperty, useRef } from '@mission-platform/forge';
+import {
+  useRef,
+  createForgeStyle,
+  type MpElement,
+  type MpRenderProperty,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconClose, ForgeIconPlus } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -26,6 +32,179 @@ export interface TabPanelScope {
   tab: TabItem;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface TabsStyleProperties {
+  readonly 'navigation-tabs-bar-border'?: string;
+  readonly 'navigation-tabs-bar-border-width'?: string;
+  readonly 'navigation-tabs-border-line'?: string;
+  readonly 'navigation-tabs-border-width'?: string;
+  readonly 'navigation-tabs-close-font-size'?: string;
+  readonly 'navigation-tabs-list-pill-gap'?: string;
+  readonly 'navigation-tabs-list-pill-padding'?: string;
+  readonly 'navigation-tabs-list-pill-radius'?: string;
+  readonly 'navigation-tabs-list-pill-surface'?: string;
+  readonly 'navigation-tabs-opacity-disabled'?: string;
+  readonly 'navigation-tabs-padding-add-block'?: string;
+  readonly 'navigation-tabs-padding-add-inline'?: string;
+  readonly 'navigation-tabs-padding-panel-block-start'?: string;
+  readonly 'navigation-tabs-radius-add-focus'?: string;
+  readonly 'navigation-tabs-radius-close'?: string;
+  readonly 'navigation-tabs-radius-focus'?: string;
+  readonly 'navigation-tabs-shadow-focus'?: string;
+  readonly 'navigation-tabs-surface-hover'?: string;
+  readonly 'navigation-tabs-text-hover'?: string;
+  readonly 'navigation-tabs-text-muted'?: string;
+  readonly 'navigation-tabs-transition-duration'?: string;
+  readonly 'navigation-tabs-transition-easing'?: string;
+  readonly 'navigation-tabs-wrapper-gap'?: string;
+  readonly 'navigation-tabs-wrapper-line-indicator-active'?: string;
+  readonly 'navigation-tabs-wrapper-line-indicator-default'?: string;
+  readonly 'navigation-tabs-wrapper-line-indicator-hover'?: string;
+  readonly 'navigation-tabs-wrapper-line-indicator-radius'?: string;
+  readonly 'navigation-tabs-wrapper-line-indicator-width'?: string;
+  readonly 'navigation-tabs-wrapper-line-padding-block'?: string;
+  readonly 'navigation-tabs-wrapper-line-padding-inline'?: string;
+  readonly 'navigation-tabs-wrapper-line-radius'?: string;
+  readonly 'navigation-tabs-wrapper-line-surface-active'?: string;
+  readonly 'navigation-tabs-wrapper-line-text-active'?: string;
+  readonly 'navigation-tabs-wrapper-line-text-default'?: string;
+  readonly 'navigation-tabs-wrapper-line-text-hover'?: string;
+  readonly 'navigation-tabs-wrapper-line-transition-duration'?: string;
+  readonly 'navigation-tabs-wrapper-line-transition-easing'?: string;
+  readonly 'navigation-tabs-wrapper-pill-padding-block'?: string;
+  readonly 'navigation-tabs-wrapper-pill-padding-inline'?: string;
+  readonly 'navigation-tabs-wrapper-pill-radius'?: string;
+  readonly 'navigation-tabs-wrapper-pill-shadow-active'?: string;
+  readonly 'navigation-tabs-wrapper-pill-surface-active'?: string;
+  readonly 'navigation-tabs-wrapper-pill-surface-hover'?: string;
+  readonly 'navigation-tabs-wrapper-pill-text-active'?: string;
+  readonly 'navigation-tabs-wrapper-pill-text-default'?: string;
+  readonly 'navigation-tabs-wrapper-pill-text-hover'?: string;
+  readonly 'navigation-tabs-wrapper-pill-transition-duration'?: string;
+  readonly 'navigation-tabs-wrapper-pill-transition-easing'?: string;
+}
+
+export type TabsStyle = CSSStyleProperties & {
+  readonly '--forge-tabs-navigation-tabs-bar-border'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-bar-border-width'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-border-line'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-border-width'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-close-font-size'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-list-pill-gap'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-list-pill-padding'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-list-pill-radius'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-list-pill-surface'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-opacity-disabled'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-padding-add-block'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-padding-add-inline'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-padding-panel-block-start'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-radius-add-focus'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-radius-close'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-radius-focus'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-shadow-focus'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-surface-hover'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-text-hover'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-text-muted'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-transition-duration'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-transition-easing'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-gap'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-indicator-active'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-indicator-default'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-indicator-hover'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-indicator-radius'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-indicator-width'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-padding-block'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-padding-inline'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-radius'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-surface-active'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-text-active'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-text-default'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-text-hover'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-transition-duration'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-line-transition-easing'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-padding-block'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-padding-inline'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-radius'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-shadow-active'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-surface-active'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-surface-hover'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-text-active'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-text-default'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-text-hover'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-transition-duration'?: string | undefined;
+  readonly '--forge-tabs-navigation-tabs-wrapper-pill-transition-easing'?: string | undefined;
+};
+
+function createTabsStyle(properties: Readonly<TabsStyleProperties> | undefined): TabsStyle | undefined {
+  return createForgeStyle({
+    '--forge-tabs-navigation-tabs-bar-border': properties?.['navigation-tabs-bar-border'],
+    '--forge-tabs-navigation-tabs-bar-border-width': properties?.['navigation-tabs-bar-border-width'],
+    '--forge-tabs-navigation-tabs-border-line': properties?.['navigation-tabs-border-line'],
+    '--forge-tabs-navigation-tabs-border-width': properties?.['navigation-tabs-border-width'],
+    '--forge-tabs-navigation-tabs-close-font-size': properties?.['navigation-tabs-close-font-size'],
+    '--forge-tabs-navigation-tabs-list-pill-gap': properties?.['navigation-tabs-list-pill-gap'],
+    '--forge-tabs-navigation-tabs-list-pill-padding': properties?.['navigation-tabs-list-pill-padding'],
+    '--forge-tabs-navigation-tabs-list-pill-radius': properties?.['navigation-tabs-list-pill-radius'],
+    '--forge-tabs-navigation-tabs-list-pill-surface': properties?.['navigation-tabs-list-pill-surface'],
+    '--forge-tabs-navigation-tabs-opacity-disabled': properties?.['navigation-tabs-opacity-disabled'],
+    '--forge-tabs-navigation-tabs-padding-add-block': properties?.['navigation-tabs-padding-add-block'],
+    '--forge-tabs-navigation-tabs-padding-add-inline': properties?.['navigation-tabs-padding-add-inline'],
+    '--forge-tabs-navigation-tabs-padding-panel-block-start': properties?.['navigation-tabs-padding-panel-block-start'],
+    '--forge-tabs-navigation-tabs-radius-add-focus': properties?.['navigation-tabs-radius-add-focus'],
+    '--forge-tabs-navigation-tabs-radius-close': properties?.['navigation-tabs-radius-close'],
+    '--forge-tabs-navigation-tabs-radius-focus': properties?.['navigation-tabs-radius-focus'],
+    '--forge-tabs-navigation-tabs-shadow-focus': properties?.['navigation-tabs-shadow-focus'],
+    '--forge-tabs-navigation-tabs-surface-hover': properties?.['navigation-tabs-surface-hover'],
+    '--forge-tabs-navigation-tabs-text-hover': properties?.['navigation-tabs-text-hover'],
+    '--forge-tabs-navigation-tabs-text-muted': properties?.['navigation-tabs-text-muted'],
+    '--forge-tabs-navigation-tabs-transition-duration': properties?.['navigation-tabs-transition-duration'],
+    '--forge-tabs-navigation-tabs-transition-easing': properties?.['navigation-tabs-transition-easing'],
+    '--forge-tabs-navigation-tabs-wrapper-gap': properties?.['navigation-tabs-wrapper-gap'],
+    '--forge-tabs-navigation-tabs-wrapper-line-indicator-active':
+      properties?.['navigation-tabs-wrapper-line-indicator-active'],
+    '--forge-tabs-navigation-tabs-wrapper-line-indicator-default':
+      properties?.['navigation-tabs-wrapper-line-indicator-default'],
+    '--forge-tabs-navigation-tabs-wrapper-line-indicator-hover':
+      properties?.['navigation-tabs-wrapper-line-indicator-hover'],
+    '--forge-tabs-navigation-tabs-wrapper-line-indicator-radius':
+      properties?.['navigation-tabs-wrapper-line-indicator-radius'],
+    '--forge-tabs-navigation-tabs-wrapper-line-indicator-width':
+      properties?.['navigation-tabs-wrapper-line-indicator-width'],
+    '--forge-tabs-navigation-tabs-wrapper-line-padding-block':
+      properties?.['navigation-tabs-wrapper-line-padding-block'],
+    '--forge-tabs-navigation-tabs-wrapper-line-padding-inline':
+      properties?.['navigation-tabs-wrapper-line-padding-inline'],
+    '--forge-tabs-navigation-tabs-wrapper-line-radius': properties?.['navigation-tabs-wrapper-line-radius'],
+    '--forge-tabs-navigation-tabs-wrapper-line-surface-active':
+      properties?.['navigation-tabs-wrapper-line-surface-active'],
+    '--forge-tabs-navigation-tabs-wrapper-line-text-active': properties?.['navigation-tabs-wrapper-line-text-active'],
+    '--forge-tabs-navigation-tabs-wrapper-line-text-default': properties?.['navigation-tabs-wrapper-line-text-default'],
+    '--forge-tabs-navigation-tabs-wrapper-line-text-hover': properties?.['navigation-tabs-wrapper-line-text-hover'],
+    '--forge-tabs-navigation-tabs-wrapper-line-transition-duration':
+      properties?.['navigation-tabs-wrapper-line-transition-duration'],
+    '--forge-tabs-navigation-tabs-wrapper-line-transition-easing':
+      properties?.['navigation-tabs-wrapper-line-transition-easing'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-padding-block':
+      properties?.['navigation-tabs-wrapper-pill-padding-block'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-padding-inline':
+      properties?.['navigation-tabs-wrapper-pill-padding-inline'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-radius': properties?.['navigation-tabs-wrapper-pill-radius'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-shadow-active':
+      properties?.['navigation-tabs-wrapper-pill-shadow-active'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-surface-active':
+      properties?.['navigation-tabs-wrapper-pill-surface-active'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-surface-hover':
+      properties?.['navigation-tabs-wrapper-pill-surface-hover'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-text-active': properties?.['navigation-tabs-wrapper-pill-text-active'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-text-default': properties?.['navigation-tabs-wrapper-pill-text-default'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-text-hover': properties?.['navigation-tabs-wrapper-pill-text-hover'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-transition-duration':
+      properties?.['navigation-tabs-wrapper-pill-transition-duration'],
+    '--forge-tabs-navigation-tabs-wrapper-pill-transition-easing':
+      properties?.['navigation-tabs-wrapper-pill-transition-easing'],
+  }) as TabsStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface TabsProperties {
   /** Ordered list of tabs to render. */
   tabs: TabItem[];
@@ -54,6 +233,9 @@ export interface TabsProperties {
   onAdd?: () => void;
   /** Fired when a tab is double-clicked (rename request). */
   onRename?: (id: string) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<TabsStyleProperties>;
 }
 
 /**
@@ -87,6 +269,8 @@ export interface TabsProperties {
  * `modelValue` + callback-prop convention.
  */
 export function ForgeTabs(properties: Readonly<TabsProperties>): MpElement {
+  const style = createTabsStyle(properties.properties);
+
   const { tabs, modelValue, variant = 'line', closable = false, addable = false, size = 'md' } = properties;
 
   const listReference = useRef<HTMLElement | null>(null);
@@ -167,7 +351,10 @@ export function ForgeTabs(properties: Readonly<TabsProperties>): MpElement {
     ));
 
   return (
-    <div className={[styles['forge-tabs'], styles[`forge-tabs--${variant}`], size ? `forge-size--${size}` : undefined]}>
+    <div
+      className={[styles['forge-tabs'], styles[`forge-tabs--${variant}`], size ? `forge-size--${size}` : undefined]}
+      style={style}
+    >
       <div className={[styles['forge-tabs__bar'], styles[`forge-tabs__bar--${variant}`]]}>
         <div
           ref={listReference}

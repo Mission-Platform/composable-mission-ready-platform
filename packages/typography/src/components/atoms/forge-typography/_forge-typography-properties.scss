@@ -1,0 +1,756 @@
+/**
+ * Registered inherited custom properties for forge-typography overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-typography-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-base-font-family, sans-serif);
+}
+
+@property --forge-typography-base-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-base-line-height, 1em);
+}
+
+@property --forge-typography-display-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-margin-bottom, inherit);
+}
+
+@property --forge-typography-display-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-font-family, sans-serif);
+}
+
+@property --forge-typography-display-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-font-size, inherit);
+}
+
+@property --forge-typography-variant-display-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-font-weight);
+}
+
+@property --forge-typography-variant-display-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-line-height);
+}
+
+@property --forge-typography-variant-display-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-letter-spacing);
+}
+
+@property --forge-typography-variant-h1-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-margin-bottom);
+}
+
+@property --forge-typography-variant-h1-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-font-family);
+}
+
+@property --forge-typography-variant-h1-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-font-size);
+}
+
+@property --forge-typography-variant-h1-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-font-weight);
+}
+
+@property --forge-typography-variant-h1-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-line-height);
+}
+
+@property --forge-typography-variant-h1-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-letter-spacing);
+}
+
+@property --forge-typography-variant-h2-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-margin-bottom);
+}
+
+@property --forge-typography-variant-h2-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-font-family);
+}
+
+@property --forge-typography-variant-h2-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-font-size);
+}
+
+@property --forge-typography-variant-h2-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-font-weight);
+}
+
+@property --forge-typography-variant-h2-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-line-height);
+}
+
+@property --forge-typography-variant-h2-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-letter-spacing);
+}
+
+@property --forge-typography-variant-h3-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-margin-bottom);
+}
+
+@property --forge-typography-variant-h3-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-font-family);
+}
+
+@property --forge-typography-variant-h3-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-font-size);
+}
+
+@property --forge-typography-variant-h3-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-font-weight);
+}
+
+@property --forge-typography-variant-h3-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-line-height);
+}
+
+@property --forge-typography-variant-h3-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-letter-spacing);
+}
+
+@property --forge-typography-variant-h4-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-margin-bottom);
+}
+
+@property --forge-typography-variant-h4-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-font-family);
+}
+
+@property --forge-typography-variant-h4-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-font-size);
+}
+
+@property --forge-typography-variant-h4-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-font-weight);
+}
+
+@property --forge-typography-variant-h4-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-line-height);
+}
+
+@property --forge-typography-variant-h4-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-letter-spacing);
+}
+
+@property --forge-typography-variant-h5-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-margin-bottom);
+}
+
+@property --forge-typography-variant-h5-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-font-family);
+}
+
+@property --forge-typography-variant-h5-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-font-size);
+}
+
+@property --forge-typography-variant-h5-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-font-weight);
+}
+
+@property --forge-typography-variant-h5-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-line-height);
+}
+
+@property --forge-typography-variant-h5-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-letter-spacing);
+}
+
+@property --forge-typography-variant-h6-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-margin-bottom);
+}
+
+@property --forge-typography-variant-h6-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-font-family);
+}
+
+@property --forge-typography-variant-h6-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-font-size);
+}
+
+@property --forge-typography-variant-h6-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-font-weight);
+}
+
+@property --forge-typography-variant-h6-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-line-height);
+}
+
+@property --forge-typography-variant-h6-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-letter-spacing);
+}
+
+@property --forge-typography-variant-body-lg-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-margin-bottom);
+}
+
+@property --forge-typography-variant-body-lg-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-font-family);
+}
+
+@property --forge-typography-variant-body-lg-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-font-size);
+}
+
+@property --forge-typography-variant-body-lg-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-font-weight);
+}
+
+@property --forge-typography-variant-body-lg-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-line-height);
+}
+
+@property --forge-typography-variant-body-lg-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-letter-spacing);
+}
+
+@property --forge-typography-variant-body-md-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-margin-bottom);
+}
+
+@property --forge-typography-variant-body-md-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-font-family);
+}
+
+@property --forge-typography-variant-body-md-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-font-size);
+}
+
+@property --forge-typography-variant-body-md-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-font-weight);
+}
+
+@property --forge-typography-variant-body-md-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-line-height);
+}
+
+@property --forge-typography-variant-body-md-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-letter-spacing);
+}
+
+@property --forge-typography-variant-body-sm-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-margin-bottom);
+}
+
+@property --forge-typography-variant-body-sm-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-font-family);
+}
+
+@property --forge-typography-variant-body-sm-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-font-size);
+}
+
+@property --forge-typography-variant-body-sm-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-font-weight);
+}
+
+@property --forge-typography-variant-body-sm-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-line-height);
+}
+
+@property --forge-typography-variant-body-sm-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-letter-spacing);
+}
+
+@property --forge-typography-variant-body-xs-margin-bottom {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-margin-bottom);
+}
+
+@property --forge-typography-variant-body-xs-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-font-family);
+}
+
+@property --forge-typography-variant-body-xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-font-size);
+}
+
+@property --forge-typography-variant-body-xs-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-font-weight);
+}
+
+@property --forge-typography-variant-body-xs-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-line-height);
+}
+
+@property --forge-typography-variant-body-xs-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-letter-spacing);
+}
+
+@property --forge-typography-variant-label-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-label-font-family);
+}
+
+@property --forge-typography-variant-label-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-label-font-size);
+}
+
+@property --forge-typography-variant-label-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-label-font-weight);
+}
+
+@property --forge-typography-variant-label-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-label-line-height);
+}
+
+@property --forge-typography-variant-label-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-label-letter-spacing);
+}
+
+@property --forge-typography-variant-caption-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-caption-font-family);
+}
+
+@property --forge-typography-variant-caption-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-caption-font-size);
+}
+
+@property --forge-typography-variant-caption-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-caption-font-weight);
+}
+
+@property --forge-typography-variant-caption-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-caption-line-height);
+}
+
+@property --forge-typography-variant-caption-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-caption-letter-spacing);
+}
+
+@property --forge-typography-variant-code-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-code-font-family);
+}
+
+@property --forge-typography-variant-code-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-code-font-size);
+}
+
+@property --forge-typography-variant-code-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-code-font-weight);
+}
+
+@property --forge-typography-variant-code-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-code-line-height);
+}
+
+@property --forge-typography-variant-code-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-variant-code-letter-spacing);
+}
+
+@property --forge-typography-color-link {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-link);
+}
+
+@property --forge-typography-link-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-link-transition-duration);
+}
+
+@property --forge-typography-link-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-link-transition-easing);
+}
+
+@property --forge-typography-color-link-visited {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-link-visited);
+}
+
+@property --forge-typography-color-link-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-link-hover);
+}
+
+@property --forge-typography-link-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-link-radius);
+}
+
+@property --forge-typography-link-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-link-focus-ring);
+}
+
+@property --forge-typography-override-font-weight-regular {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-override-font-weight-regular);
+}
+
+@property --forge-typography-override-font-weight-medium {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-override-font-weight-medium);
+}
+
+@property --forge-typography-override-font-weight-semibold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-override-font-weight-semibold);
+}
+
+@property --forge-typography-override-font-weight-bold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-override-font-weight-bold);
+}
+
+@property --forge-typography-override-line-height-tight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-override-line-height-tight);
+}
+
+@property --forge-typography-override-line-height-snug {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-override-line-height-snug);
+}
+
+@property --forge-typography-override-line-height-normal {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-override-line-height-normal);
+}
+
+@property --forge-typography-override-line-height-relaxed {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-override-line-height-relaxed);
+}
+
+@property --forge-typography-override-line-height-loose {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-override-line-height-loose);
+}
+
+@property --forge-typography-color-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-primary);
+}
+
+@property --forge-typography-color-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-secondary);
+}
+
+@property --forge-typography-color-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-tertiary);
+}
+
+@property --forge-typography-color-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-disabled);
+}
+
+@property --forge-typography-color-inverse {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-inverse);
+}
+
+@property --forge-typography-color-neutral {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-neutral);
+}
+
+@property --forge-typography-color-success {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-success);
+}
+
+@property --forge-typography-color-warning {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-warning);
+}
+
+@property --forge-typography-color-info {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-info);
+}
+
+@property --forge-typography-color-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-error);
+}
+
+@property --forge-typography-color-critical {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-color-critical);
+}
+
+@property --forge-typography-popup-margin-top {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-margin-top);
+}
+
+@property --forge-typography-popup-max-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-max-width);
+}
+
+@property --forge-typography-popup-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-padding-block);
+}
+
+@property --forge-typography-popup-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-padding-inline);
+}
+
+@property --forge-typography-popup-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-surface);
+}
+
+@property --forge-typography-popup-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-text);
+}
+
+@property --forge-typography-popup-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-border-width);
+}
+
+@property --forge-typography-popup-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-border);
+}
+
+@property --forge-typography-popup-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-radius);
+}
+
+@property --forge-typography-popup-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-shadow);
+}
+
+@property --forge-typography-popup-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-font-family);
+}
+
+@property --forge-typography-popup-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-font-size);
+}
+
+@property --forge-typography-popup-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-font-weight);
+}
+
+@property --forge-typography-popup-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-line-height);
+}
+
+@property --forge-typography-popup-letter-spacing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-typography-popup-letter-spacing);
+}

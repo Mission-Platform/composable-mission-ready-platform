@@ -1,4 +1,13 @@
-import { classNames, type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import {
+  classNames,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-virtual-log-viewer.module.scss';
@@ -21,6 +30,146 @@ export interface LogEntry {
   timestamp?: string;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface VirtualLogViewerStyleProperties {
+  readonly 'code-virtual-log-viewer-border'?: string;
+  readonly 'code-virtual-log-viewer-border-width'?: string;
+  readonly 'code-virtual-log-viewer-filter-font-family'?: string;
+  readonly 'code-virtual-log-viewer-filter-font-size'?: string;
+  readonly 'code-virtual-log-viewer-filter-font-weight'?: string;
+  readonly 'code-virtual-log-viewer-filter-letter-spacing'?: string;
+  readonly 'code-virtual-log-viewer-filter-text'?: string;
+  readonly 'code-virtual-log-viewer-level-font-weight'?: string;
+  readonly 'code-virtual-log-viewer-level-gap'?: string;
+  readonly 'code-virtual-log-viewer-level-letter-spacing'?: string;
+  readonly 'code-virtual-log-viewer-level-min-width'?: string;
+  readonly 'code-virtual-log-viewer-line-number-border'?: string;
+  readonly 'code-virtual-log-viewer-line-number-min-width'?: string;
+  readonly 'code-virtual-log-viewer-line-number-padding-inline-end'?: string;
+  readonly 'code-virtual-log-viewer-radius'?: string;
+  readonly 'code-virtual-log-viewer-row-border'?: string;
+  readonly 'code-virtual-log-viewer-row-border-width'?: string;
+  readonly 'code-virtual-log-viewer-row-focus-ring'?: string;
+  readonly 'code-virtual-log-viewer-row-gap'?: string;
+  readonly 'code-virtual-log-viewer-row-hover-surface'?: string;
+  readonly 'code-virtual-log-viewer-row-padding-inline'?: string;
+  readonly 'code-virtual-log-viewer-row-transition-duration'?: string;
+  readonly 'code-virtual-log-viewer-row-transition-easing'?: string;
+  readonly 'code-virtual-log-viewer-severity-error'?: string;
+  readonly 'code-virtual-log-viewer-severity-error-opacity'?: string;
+  readonly 'code-virtual-log-viewer-severity-warn'?: string;
+  readonly 'code-virtual-log-viewer-severity-warn-opacity'?: string;
+  readonly 'code-virtual-log-viewer-surface'?: string;
+  readonly 'code-virtual-log-viewer-timestamp-min-width'?: string;
+  readonly 'code-virtual-log-viewer-toolbar-border'?: string;
+  readonly 'code-virtual-log-viewer-toolbar-height'?: string;
+  readonly 'code-virtual-log-viewer-toolbar-padding-inline'?: string;
+  readonly 'code-virtual-log-viewer-toolbar-surface'?: string;
+}
+
+export type VirtualLogViewerStyle = CSSStyleProperties & {
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-border'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-border-width'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-family'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-size'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-weight'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-filter-letter-spacing'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-filter-text'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-level-font-weight'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-level-gap'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-level-letter-spacing'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-level-min-width'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-line-number-border'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-line-number-min-width'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-line-number-padding-inline-end'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-radius'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-row-border'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-row-border-width'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-row-focus-ring'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-row-gap'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-row-hover-surface'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-row-padding-inline'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-row-transition-duration'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-row-transition-easing'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-severity-error'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-severity-error-opacity'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-severity-warn'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-severity-warn-opacity'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-surface'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-timestamp-min-width'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-border'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-height'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-padding-inline'?: string | undefined;
+  readonly '--forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-surface'?: string | undefined;
+};
+
+function createVirtualLogViewerStyle(
+  properties: Readonly<VirtualLogViewerStyleProperties> | undefined,
+): VirtualLogViewerStyle | undefined {
+  return createForgeStyle({
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-border': properties?.['code-virtual-log-viewer-border'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-border-width':
+      properties?.['code-virtual-log-viewer-border-width'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-family':
+      properties?.['code-virtual-log-viewer-filter-font-family'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-size':
+      properties?.['code-virtual-log-viewer-filter-font-size'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-weight':
+      properties?.['code-virtual-log-viewer-filter-font-weight'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-filter-letter-spacing':
+      properties?.['code-virtual-log-viewer-filter-letter-spacing'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-filter-text':
+      properties?.['code-virtual-log-viewer-filter-text'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-level-font-weight':
+      properties?.['code-virtual-log-viewer-level-font-weight'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-level-gap': properties?.['code-virtual-log-viewer-level-gap'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-level-letter-spacing':
+      properties?.['code-virtual-log-viewer-level-letter-spacing'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-level-min-width':
+      properties?.['code-virtual-log-viewer-level-min-width'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-line-number-border':
+      properties?.['code-virtual-log-viewer-line-number-border'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-line-number-min-width':
+      properties?.['code-virtual-log-viewer-line-number-min-width'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-line-number-padding-inline-end':
+      properties?.['code-virtual-log-viewer-line-number-padding-inline-end'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-radius': properties?.['code-virtual-log-viewer-radius'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-row-border': properties?.['code-virtual-log-viewer-row-border'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-row-border-width':
+      properties?.['code-virtual-log-viewer-row-border-width'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-row-focus-ring':
+      properties?.['code-virtual-log-viewer-row-focus-ring'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-row-gap': properties?.['code-virtual-log-viewer-row-gap'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-row-hover-surface':
+      properties?.['code-virtual-log-viewer-row-hover-surface'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-row-padding-inline':
+      properties?.['code-virtual-log-viewer-row-padding-inline'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-row-transition-duration':
+      properties?.['code-virtual-log-viewer-row-transition-duration'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-row-transition-easing':
+      properties?.['code-virtual-log-viewer-row-transition-easing'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-severity-error':
+      properties?.['code-virtual-log-viewer-severity-error'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-severity-error-opacity':
+      properties?.['code-virtual-log-viewer-severity-error-opacity'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-severity-warn':
+      properties?.['code-virtual-log-viewer-severity-warn'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-severity-warn-opacity':
+      properties?.['code-virtual-log-viewer-severity-warn-opacity'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-surface': properties?.['code-virtual-log-viewer-surface'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-timestamp-min-width':
+      properties?.['code-virtual-log-viewer-timestamp-min-width'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-border':
+      properties?.['code-virtual-log-viewer-toolbar-border'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-height':
+      properties?.['code-virtual-log-viewer-toolbar-height'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-padding-inline':
+      properties?.['code-virtual-log-viewer-toolbar-padding-inline'],
+    '--forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-surface':
+      properties?.['code-virtual-log-viewer-toolbar-surface'],
+  }) as VirtualLogViewerStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface VirtualLogViewerProperties {
   /** The full list of log entries. Only the visible window is rendered. */
   entries: LogEntry[];
@@ -42,6 +191,9 @@ export interface VirtualLogViewerProperties {
   filter?: string;
   /** Fired when a log row is clicked; receives the entry. */
   onSelect?: (entry: LogEntry) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<VirtualLogViewerStyleProperties>;
 }
 
 /** Level → text colour token. */
@@ -70,6 +222,8 @@ const LEVEL_COLORS: Record<LogLevel, string> = {
  * suppression is dropped.
  */
 export function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerProperties>): MpElement {
+  const propertyStyle = createVirtualLogViewerStyle(properties.properties);
+
   const {
     entries,
     itemHeight = 24,
@@ -151,7 +305,7 @@ export function ForgeVirtualLogViewer(properties: Readonly<VirtualLogViewerPrope
   return (
     <div
       className={[styles['log-viewer'], size ? `forge-size--${size}` : undefined]}
-      style={{ height: `${height}px` }}
+      style={{ ...propertyStyle, height: `${height}px` }}
     >
       {toolbar}
       <div

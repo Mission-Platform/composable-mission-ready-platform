@@ -1,0 +1,381 @@
+/**
+ * Registered inherited custom properties for forge-icon-button overrides.
+ */
+
+@property --forge-icon-button-button-icon-button-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-border-width);
+}
+
+@property --forge-icon-button-button-icon-button-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-radius);
+}
+
+@property --forge-icon-button-button-ghost-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-ghost-background-default);
+}
+
+@property --forge-icon-button-button-icon-button-color {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-color);
+}
+
+@property --forge-icon-button-button-icon-button-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-transition-duration);
+}
+
+@property --forge-icon-button-button-icon-button-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-transition-easing);
+}
+
+@property --forge-icon-button-button-icon-button-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-focus-ring);
+}
+
+@property --forge-icon-button-button-icon-button-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-opacity-disabled);
+}
+
+@property --forge-icon-button-button-icon-button-size-2xs-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-2xs-padding);
+}
+
+@property --forge-icon-button-button-icon-button-size-xs-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-xs-padding);
+}
+
+@property --forge-icon-button-button-icon-button-size-sm-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-sm-padding);
+}
+
+@property --forge-icon-button-button-icon-button-size-md-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-md-padding);
+}
+
+@property --forge-icon-button-button-icon-button-size-lg-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-lg-padding);
+}
+
+@property --forge-icon-button-button-icon-button-size-xl-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-xl-padding);
+}
+
+@property --forge-icon-button-button-icon-button-size-2xl-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-2xl-padding);
+}
+
+@property --forge-icon-button-button-icon-button-size-2xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-2xs-font-size);
+}
+
+@property --forge-icon-button-button-icon-button-size-xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-xs-font-size);
+}
+
+@property --forge-icon-button-button-icon-button-size-sm-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-sm-font-size);
+}
+
+@property --forge-icon-button-button-icon-button-size-md-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-md-font-size);
+}
+
+@property --forge-icon-button-button-icon-button-size-lg-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-lg-font-size);
+}
+
+@property --forge-icon-button-button-icon-button-size-xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-xl-font-size);
+}
+
+@property --forge-icon-button-button-icon-button-size-2xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-icon-button-size-2xl-font-size);
+}
+
+@property --forge-icon-button-button-ghost-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-ghost-background-hover);
+}
+
+@property --forge-icon-button-button-tertiary-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-tertiary-background-hover);
+}
+
+@property --forge-icon-button-button-ghost-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-ghost-text-hover);
+}
+
+@property --forge-icon-button-button-tertiary-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-tertiary-text-hover);
+}
+
+@property --forge-icon-button-button-ghost-background-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-ghost-background-active);
+}
+
+@property --forge-icon-button-button-tertiary-background-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-tertiary-background-active);
+}
+
+@property --forge-icon-button-button-neutral-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-neutral-background-default);
+}
+
+@property --forge-icon-button-button-primary-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-primary-background-default);
+}
+
+@property --forge-icon-button-button-success-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-success-background-default);
+}
+
+@property --forge-icon-button-button-warning-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-warning-background-default);
+}
+
+@property --forge-icon-button-button-info-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-info-background-default);
+}
+
+@property --forge-icon-button-button-error-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-error-background-default);
+}
+
+@property --forge-icon-button-button-critical-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-critical-background-default);
+}
+
+@property --forge-icon-button-button-neutral-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-neutral-text-default);
+}
+
+@property --forge-icon-button-button-primary-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-primary-text-default);
+}
+
+@property --forge-icon-button-button-success-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-success-text-default);
+}
+
+@property --forge-icon-button-button-warning-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-warning-text-default);
+}
+
+@property --forge-icon-button-button-info-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-info-text-default);
+}
+
+@property --forge-icon-button-button-error-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-error-text-default);
+}
+
+@property --forge-icon-button-button-critical-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-critical-text-default);
+}
+
+@property --forge-icon-button-button-neutral-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-neutral-background-hover);
+}
+
+@property --forge-icon-button-button-primary-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-primary-background-hover);
+}
+
+@property --forge-icon-button-button-success-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-success-background-hover);
+}
+
+@property --forge-icon-button-button-warning-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-warning-background-hover);
+}
+
+@property --forge-icon-button-button-info-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-info-background-hover);
+}
+
+@property --forge-icon-button-button-error-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-error-background-hover);
+}
+
+@property --forge-icon-button-button-critical-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-critical-background-hover);
+}
+
+@property --forge-icon-button-button-neutral-background-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-neutral-background-active, var(--mp-button-neutral-background-hover));
+}
+
+@property --forge-icon-button-button-primary-background-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-primary-background-active, var(--mp-button-primary-background-hover));
+}
+
+@property --forge-icon-button-button-success-background-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-success-background-active, var(--mp-button-success-background-hover));
+}
+
+@property --forge-icon-button-button-warning-background-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-warning-background-active, var(--mp-button-warning-background-hover));
+}
+
+@property --forge-icon-button-button-info-background-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-info-background-active, var(--mp-button-info-background-hover));
+}
+
+@property --forge-icon-button-button-error-background-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-error-background-active, var(--mp-button-error-background-hover));
+}
+
+@property --forge-icon-button-button-critical-background-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-critical-background-active, var(--mp-button-critical-background-hover));
+}
+
+@property --forge-icon-button-button-error-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-error-focus-ring);
+}
+
+@property --forge-icon-button-button-secondary-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-border-default);
+}
+
+@property --forge-icon-button-button-secondary-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-background-default);
+}
+
+@property --forge-icon-button-button-secondary-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-text-default);
+}
+
+@property --forge-icon-button-button-secondary-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-background-hover);
+}
+
+@property --forge-icon-button-button-secondary-border-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-border-hover);
+}
+
+@property --forge-icon-button-button-secondary-background-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-secondary-background-active);
+}

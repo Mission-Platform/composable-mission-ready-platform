@@ -1,4 +1,4 @@
-import { type MpElement } from '@mission-platform/forge';
+import { createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 import {
   ForgeIconAlignCenter,
   ForgeIconAlignJustify,
@@ -27,6 +27,55 @@ export interface WysiwygBlockControlsGeometry {
   height: number;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface WysiwygBlockControlsStyleProperties {
+  readonly 'editor-block-controls-bar-border'?: string;
+  readonly 'editor-block-controls-bar-border-width'?: string;
+  readonly 'editor-block-controls-bar-radius'?: string;
+  readonly 'editor-block-controls-bar-shadow'?: string;
+  readonly 'editor-block-controls-bar-surface'?: string;
+  readonly 'editor-block-controls-gap'?: string;
+  readonly 'editor-block-controls-padding'?: string;
+  readonly 'editor-block-controls-selection-border'?: string;
+  readonly 'editor-block-controls-selection-border-width'?: string;
+  readonly 'editor-block-controls-selection-radius'?: string;
+}
+
+export type WysiwygBlockControlsStyle = CSSStyleProperties & {
+  readonly '--forge-wysiwyg-block-controls-editor-block-controls-bar-border'?: string | undefined;
+  readonly '--forge-wysiwyg-block-controls-editor-block-controls-bar-border-width'?: string | undefined;
+  readonly '--forge-wysiwyg-block-controls-editor-block-controls-bar-radius'?: string | undefined;
+  readonly '--forge-wysiwyg-block-controls-editor-block-controls-bar-shadow'?: string | undefined;
+  readonly '--forge-wysiwyg-block-controls-editor-block-controls-bar-surface'?: string | undefined;
+  readonly '--forge-wysiwyg-block-controls-editor-block-controls-gap'?: string | undefined;
+  readonly '--forge-wysiwyg-block-controls-editor-block-controls-padding'?: string | undefined;
+  readonly '--forge-wysiwyg-block-controls-editor-block-controls-selection-border'?: string | undefined;
+  readonly '--forge-wysiwyg-block-controls-editor-block-controls-selection-border-width'?: string | undefined;
+  readonly '--forge-wysiwyg-block-controls-editor-block-controls-selection-radius'?: string | undefined;
+};
+
+function createWysiwygBlockControlsStyle(
+  properties: Readonly<WysiwygBlockControlsStyleProperties> | undefined,
+): WysiwygBlockControlsStyle | undefined {
+  return createForgeStyle({
+    '--forge-wysiwyg-block-controls-editor-block-controls-bar-border': properties?.['editor-block-controls-bar-border'],
+    '--forge-wysiwyg-block-controls-editor-block-controls-bar-border-width':
+      properties?.['editor-block-controls-bar-border-width'],
+    '--forge-wysiwyg-block-controls-editor-block-controls-bar-radius': properties?.['editor-block-controls-bar-radius'],
+    '--forge-wysiwyg-block-controls-editor-block-controls-bar-shadow': properties?.['editor-block-controls-bar-shadow'],
+    '--forge-wysiwyg-block-controls-editor-block-controls-bar-surface':
+      properties?.['editor-block-controls-bar-surface'],
+    '--forge-wysiwyg-block-controls-editor-block-controls-gap': properties?.['editor-block-controls-gap'],
+    '--forge-wysiwyg-block-controls-editor-block-controls-padding': properties?.['editor-block-controls-padding'],
+    '--forge-wysiwyg-block-controls-editor-block-controls-selection-border':
+      properties?.['editor-block-controls-selection-border'],
+    '--forge-wysiwyg-block-controls-editor-block-controls-selection-border-width':
+      properties?.['editor-block-controls-selection-border-width'],
+    '--forge-wysiwyg-block-controls-editor-block-controls-selection-radius':
+      properties?.['editor-block-controls-selection-radius'],
+  }) as WysiwygBlockControlsStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface WysiwygBlockControlsProperties {
   /** Whether the outline + controls are shown. */
   visible?: boolean;
@@ -46,6 +95,9 @@ export interface WysiwygBlockControlsProperties {
   onMoveDown?: () => void;
   /** Apply an alignment to the outlined block. */
   onAlign?: (align: WysiwygBlockAlign) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<WysiwygBlockControlsStyleProperties>;
 }
 
 /**
@@ -61,11 +113,18 @@ export interface WysiwygBlockControlsProperties {
  * steals the selection from the editing surface.
  */
 export function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement {
+  const propertyStyle = createWysiwygBlockControlsStyle(properties.properties);
+
   const labels = resolveLabels(properties.labels);
   const { visible = false, geometry } = properties;
 
   if (!visible || geometry === undefined) {
-    return <div className={styles['wysiwyg-block-controls__hidden']} />;
+    return (
+      <div
+        className={styles['wysiwyg-block-controls__hidden']}
+        style={propertyStyle}
+      />
+    );
   }
 
   // This handler intentionally captures the component-local event contract.
@@ -78,6 +137,7 @@ export function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockContr
       aria-hidden="true"
       className={styles['wysiwyg-block-controls']}
       style={{
+        ...propertyStyle,
         top: `${geometry.top}px`,
         left: `${geometry.left}px`,
         width: `${geometry.width}px`,

@@ -1,0 +1,111 @@
+/**
+ * Registered inherited custom properties for forge-marketing-header overrides.
+ */
+
+@property --forge-marketing-header-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-marketing-header-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-marketing-header-color-bg-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-surface);
+}
+
+@property --forge-marketing-header-color-text-on-inverse {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-inverse);
+}
+
+@property --forge-marketing-header-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-marketing-header-spacing-6 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-6);
+}
+
+@property --forge-marketing-header-size-height-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-lg);
+}
+
+@property --forge-marketing-header-size-pad-block-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-block-md);
+}
+
+@property --forge-marketing-header-size-pad-inline-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-inline-lg);
+}
+
+@property --forge-marketing-header-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-marketing-header-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}
+
+@property --forge-marketing-header-color-text-on-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-primary);
+}
+
+@property --forge-marketing-header-color-bg-scrim {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-scrim);
+}
+
+@property --forge-marketing-header-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-marketing-header-spacing-5 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-5);
+}
+
+@property --forge-marketing-header-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-marketing-header-font-size-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-xl);
+}
+
+@property --forge-marketing-header-font-weight-bold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-bold);
+}

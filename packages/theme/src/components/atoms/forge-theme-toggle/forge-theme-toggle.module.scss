@@ -10,48 +10,65 @@
  * Module — both resolve to the same visual result.
  */
 
+@use './forge-theme-toggle-properties';
+
 @layer mp.components {
   .theme-toggle {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-button-primary-gap);
-    padding: var(--mp-theme-toggle-padding-block) var(--mp-theme-toggle-padding-inline);
-    background-color: var(--mp-button-secondary-background-default);
-    color: var(--mp-button-secondary-text-default);
-    border: var(--mp-button-secondary-border-width) solid var(--mp-button-secondary-border-default);
-    border-radius: var(--mp-button-primary-radius);
+    gap: var(--forge-theme-toggle-button-primary-gap, var(--mp-button-primary-gap));
+    padding: var(--forge-theme-toggle-padding-block, var(--mp-theme-toggle-padding-block))
+      var(--forge-theme-toggle-padding-inline, var(--mp-theme-toggle-padding-inline));
+    background-color: var(
+      --forge-theme-toggle-button-secondary-background-default,
+      var(--mp-button-secondary-background-default)
+    );
+    color: var(--forge-theme-toggle-button-secondary-text-default, var(--mp-button-secondary-text-default));
+    border: var(--forge-theme-toggle-button-secondary-border-width, var(--mp-button-secondary-border-width)) solid
+      var(--forge-theme-toggle-button-secondary-border-default, var(--mp-button-secondary-border-default));
+    border-radius: var(--forge-theme-toggle-button-primary-radius, var(--mp-button-primary-radius));
     cursor: pointer;
     font: inherit;
     transition:
-      background-color var(--mp-button-secondary-transition-duration) var(--mp-button-secondary-transition-easing),
-      border-color var(--mp-button-secondary-transition-duration) var(--mp-button-secondary-transition-easing),
-      color var(--mp-button-secondary-transition-duration) var(--mp-button-secondary-transition-easing);
+      background-color
+        var(--forge-theme-toggle-button-secondary-transition-duration, var(--mp-button-secondary-transition-duration))
+        var(--forge-theme-toggle-button-secondary-transition-easing, var(--mp-button-secondary-transition-easing)),
+      border-color
+        var(--forge-theme-toggle-button-secondary-transition-duration, var(--mp-button-secondary-transition-duration))
+        var(--forge-theme-toggle-button-secondary-transition-easing, var(--mp-button-secondary-transition-easing)),
+      color
+        var(--forge-theme-toggle-button-secondary-transition-duration, var(--mp-button-secondary-transition-duration))
+        var(--forge-theme-toggle-button-secondary-transition-easing, var(--mp-button-secondary-transition-easing));
 
     &:hover {
-      background-color: var(--mp-button-secondary-background-hover);
-      border-color: var(--mp-theme-toggle-border-color-hover);
+      background-color: var(
+        --forge-theme-toggle-button-secondary-background-hover,
+        var(--mp-button-secondary-background-hover)
+      );
+      border-color: var(--forge-theme-toggle-border-color-hover, var(--mp-theme-toggle-border-color-hover));
     }
 
     &:focus-visible {
-      outline: var(--mp-theme-toggle-focus-width) solid var(--mp-button-secondary-border-focus-visible);
-      outline-offset: var(--mp-theme-toggle-focus-offset);
+      outline: var(--forge-theme-toggle-focus-width, var(--mp-theme-toggle-focus-width)) solid
+        var(--forge-theme-toggle-button-secondary-border-focus-visible, var(--mp-button-secondary-border-focus-visible));
+      outline-offset: var(--forge-theme-toggle-focus-offset, var(--mp-theme-toggle-focus-offset));
     }
 
     &__icon {
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      font-size: var(--mp-theme-toggle-icon-size);
+      font-size: var(--forge-theme-toggle-icon-size, var(--mp-theme-toggle-icon-size));
       line-height: 1;
-      color: var(--mp-theme-toggle-icon-color-default);
+      color: var(--forge-theme-toggle-icon-color-default, var(--mp-theme-toggle-icon-color-default));
     }
 
     &__label {
-      font-family: var(--mp-theme-toggle-label-font-family);
-      font-size: var(--mp-theme-toggle-label-font-size);
-      font-weight: var(--mp-theme-toggle-label-font-weight);
-      line-height: var(--mp-theme-toggle-label-line-height);
-      letter-spacing: var(--mp-theme-toggle-label-letter-spacing);
+      font-family: var(--forge-theme-toggle-label-font-family, var(--mp-theme-toggle-label-font-family));
+      font-size: var(--forge-theme-toggle-label-font-size, var(--mp-theme-toggle-label-font-size));
+      font-weight: var(--forge-theme-toggle-label-font-weight, var(--mp-theme-toggle-label-font-weight));
+      line-height: var(--forge-theme-toggle-label-line-height, var(--mp-theme-toggle-label-line-height));
+      letter-spacing: var(--forge-theme-toggle-label-letter-spacing, var(--mp-theme-toggle-label-letter-spacing));
       white-space: nowrap;
     }
   }

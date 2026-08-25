@@ -11,6 +11,8 @@
  * modifier from the token stylesheet scales the whole device frame.
  */
 
+@use './forge-device-mock-properties';
+
 @layer mp.components {
   .forge-device-mock {
     position: relative;
@@ -18,7 +20,7 @@
     flex-direction: column;
     align-items: center;
     box-sizing: border-box;
-    color: var(--mp-media-device-screen-text);
+    color: var(--forge-device-mock-media-device-screen-text, var(--mp-media-device-screen-text));
     line-height: 1.4;
 
     *,
@@ -32,17 +34,20 @@
       width: 100%;
       height: 100%;
       overflow: auto;
-      background-color: var(--mp-media-device-screen-surface);
-      color: var(--mp-media-device-screen-text);
+      background-color: var(--forge-device-mock-media-device-screen-surface, var(--mp-media-device-screen-surface));
+      color: var(--forge-device-mock-media-device-screen-text, var(--mp-media-device-screen-text));
     }
 
     /* ─── Mobile ─────────────────────────────────────────────────────────── */
     &--mobile {
       width: 17em;
       padding: 0.9em;
-      background-color: var(--mp-media-device-frame-surface);
+      background-color: var(--forge-device-mock-media-device-frame-surface, var(--mp-media-device-frame-surface));
       border-radius: 2.6em;
-      box-shadow: var(--mp-media-device-frame-shadow-handheld);
+      box-shadow: var(
+        --forge-device-mock-media-device-frame-shadow-handheld,
+        var(--mp-media-device-frame-shadow-handheld)
+      );
 
       .forge-device-mock__frame {
         width: 100%;
@@ -59,10 +64,10 @@
         position: absolute;
         top: 0.9em;
         left: 50%;
-        z-index: 1;
+        z-index: var(--mp-z-index-base-foreground);
         width: 6em;
         height: 1.3em;
-        background-color: var(--mp-media-device-frame-surface);
+        background-color: var(--forge-device-mock-media-device-frame-surface, var(--mp-media-device-frame-surface));
         border-bottom-right-radius: 0.8em;
         border-bottom-left-radius: 0.8em;
         transform: translateX(-50%);
@@ -91,9 +96,12 @@
     &--tablet {
       width: 26em;
       padding: 1.4em 1.1em;
-      background-color: var(--mp-media-device-frame-surface);
+      background-color: var(--forge-device-mock-media-device-frame-surface, var(--mp-media-device-frame-surface));
       border-radius: 1.4em;
-      box-shadow: var(--mp-media-device-frame-shadow-handheld);
+      box-shadow: var(
+        --forge-device-mock-media-device-frame-shadow-handheld,
+        var(--mp-media-device-frame-shadow-handheld)
+      );
 
       .forge-device-mock__frame {
         width: 100%;
@@ -108,8 +116,8 @@
         left: 50%;
         width: 0.5em;
         height: 0.5em;
-        background-color: var(--mp-media-device-detail-surface);
-        border-radius: var(--mp-media-device-camera-radius);
+        background-color: var(--forge-device-mock-media-device-detail-surface, var(--mp-media-device-detail-surface));
+        border-radius: var(--forge-device-mock-media-device-camera-radius, var(--mp-media-device-camera-radius));
         transform: translateX(-50%);
       }
 
@@ -129,9 +137,12 @@
         width: 44em;
         height: 27.5em;
         padding: 0.9em;
-        background-color: var(--mp-media-device-frame-surface);
+        background-color: var(--forge-device-mock-media-device-frame-surface, var(--mp-media-device-frame-surface));
         border-radius: 0.9em;
-        box-shadow: var(--mp-media-device-frame-shadow-desktop);
+        box-shadow: var(
+          --forge-device-mock-media-device-frame-shadow-desktop,
+          var(--mp-media-device-frame-shadow-desktop)
+        );
       }
 
       .forge-device-mock__screen {
@@ -147,13 +158,13 @@
       .forge-device-mock__neck {
         width: 6em;
         height: 2.2em;
-        background-color: var(--mp-media-device-detail-surface);
+        background-color: var(--forge-device-mock-media-device-detail-surface, var(--mp-media-device-detail-surface));
       }
 
       .forge-device-mock__base {
         width: 14em;
         height: 0.9em;
-        background-color: var(--mp-media-device-detail-surface);
+        background-color: var(--forge-device-mock-media-device-detail-surface, var(--mp-media-device-detail-surface));
         border-radius: 0 0 0.5em 0.5em;
       }
     }
@@ -163,18 +174,26 @@
       width: 44em;
       align-items: stretch;
       overflow: hidden;
-      background-color: var(--mp-media-device-browser-surface);
-      border: var(--mp-media-device-browser-border-width) solid var(--mp-media-device-browser-border);
-      border-radius: var(--mp-media-device-browser-radius);
-      box-shadow: var(--mp-media-device-frame-shadow-browser);
+      background-color: var(--forge-device-mock-media-device-browser-surface, var(--mp-media-device-browser-surface));
+      border: var(--forge-device-mock-media-device-browser-border-width, var(--mp-media-device-browser-border-width))
+        solid var(--forge-device-mock-media-device-browser-border, var(--mp-media-device-browser-border));
+      border-radius: var(--forge-device-mock-media-device-browser-radius, var(--mp-media-device-browser-radius));
+      box-shadow: var(
+        --forge-device-mock-media-device-frame-shadow-browser,
+        var(--mp-media-device-frame-shadow-browser)
+      );
 
       .forge-device-mock__chrome {
         display: flex;
         gap: 0.8em;
         align-items: center;
         padding: 0.6em 0.9em;
-        background-color: var(--mp-media-device-browser-chrome);
-        border-bottom: var(--mp-media-device-browser-border-width) solid var(--mp-media-device-browser-border);
+        background-color: var(--forge-device-mock-media-device-browser-chrome, var(--mp-media-device-browser-chrome));
+        border-bottom: var(
+            --forge-device-mock-media-device-browser-border-width,
+            var(--mp-media-device-browser-border-width)
+          )
+          solid var(--forge-device-mock-media-device-browser-border, var(--mp-media-device-browser-border));
       }
 
       .forge-device-mock__controls {
@@ -186,8 +205,14 @@
       .forge-device-mock__control {
         width: 0.8em;
         height: 0.8em;
-        background-color: var(--mp-media-device-browser-control-surface);
-        border-radius: var(--mp-media-device-browser-control-radius);
+        background-color: var(
+          --forge-device-mock-media-device-browser-control-surface,
+          var(--mp-media-device-browser-control-surface)
+        );
+        border-radius: var(
+          --forge-device-mock-media-device-browser-control-radius,
+          var(--mp-media-device-browser-control-radius)
+        );
       }
 
       .forge-device-mock__address {
@@ -195,12 +220,19 @@
         padding: 0.3em 0.8em;
         overflow: hidden;
         font-size: 0.85em;
-        color: var(--mp-media-device-browser-address-text);
+        color: var(--forge-device-mock-media-device-browser-address-text, var(--mp-media-device-browser-address-text));
         text-overflow: ellipsis;
         white-space: nowrap;
-        background-color: var(--mp-media-device-browser-address-surface);
-        border: var(--mp-media-device-browser-border-width) solid var(--mp-media-device-browser-border);
-        border-radius: var(--mp-media-device-browser-address-radius);
+        background-color: var(
+          --forge-device-mock-media-device-browser-address-surface,
+          var(--mp-media-device-browser-address-surface)
+        );
+        border: var(--forge-device-mock-media-device-browser-border-width, var(--mp-media-device-browser-border-width))
+          solid var(--forge-device-mock-media-device-browser-border, var(--mp-media-device-browser-border));
+        border-radius: var(
+          --forge-device-mock-media-device-browser-address-radius,
+          var(--mp-media-device-browser-address-radius)
+        );
       }
 
       .forge-device-mock__frame {

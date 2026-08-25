@@ -1,12 +1,14 @@
 import {
   classNames,
   Dynamic,
-  type MpChild,
-  type MpElement,
   Slot,
   useEffect,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
@@ -33,6 +35,201 @@ export interface NavbarItemChild {
   onClick?: () => void;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface NavbarItemStyleProperties {
+  readonly 'navigation-navbar-item-chevron'?: string;
+  readonly 'navigation-navbar-item-dropdown-border'?: string;
+  readonly 'navigation-navbar-item-dropdown-border-width'?: string;
+  readonly 'navigation-navbar-item-dropdown-item-focus-ring'?: string;
+  readonly 'navigation-navbar-item-dropdown-item-gap'?: string;
+  readonly 'navigation-navbar-item-dropdown-item-padding-block'?: string;
+  readonly 'navigation-navbar-item-dropdown-item-padding-inline'?: string;
+  readonly 'navigation-navbar-item-dropdown-item-surface-hover'?: string;
+  readonly 'navigation-navbar-item-dropdown-item-text'?: string;
+  readonly 'navigation-navbar-item-dropdown-item-text-disabled'?: string;
+  readonly 'navigation-navbar-item-dropdown-margin'?: string;
+  readonly 'navigation-navbar-item-dropdown-padding'?: string;
+  readonly 'navigation-navbar-item-dropdown-radius'?: string;
+  readonly 'navigation-navbar-item-dropdown-shadow'?: string;
+  readonly 'navigation-navbar-item-dropdown-surface'?: string;
+  readonly 'navigation-navbar-item-dropdown-viewport-gutter'?: string;
+  readonly 'navigation-navbar-item-focus-ring'?: string;
+  readonly 'navigation-navbar-item-font-family'?: string;
+  readonly 'navigation-navbar-item-font-weight'?: string;
+  readonly 'navigation-navbar-item-gap'?: string;
+  readonly 'navigation-navbar-item-opacity-disabled'?: string;
+  readonly 'navigation-navbar-item-padding-block'?: string;
+  readonly 'navigation-navbar-item-padding-inline'?: string;
+  readonly 'navigation-navbar-item-radius'?: string;
+  readonly 'navigation-navbar-item-surface-active'?: string;
+  readonly 'navigation-navbar-item-surface-hover'?: string;
+  readonly 'navigation-navbar-item-surface-open'?: string;
+  readonly 'navigation-navbar-item-text-active'?: string;
+  readonly 'navigation-navbar-item-text-default'?: string;
+  readonly 'navigation-navbar-item-text-hover'?: string;
+  readonly 'navigation-navbar-item-text-open'?: string;
+  readonly 'navigation-navbar-item-tone-critical-surface-hover'?: string;
+  readonly 'navigation-navbar-item-tone-critical-text'?: string;
+  readonly 'navigation-navbar-item-tone-error-surface-hover'?: string;
+  readonly 'navigation-navbar-item-tone-error-text'?: string;
+  readonly 'navigation-navbar-item-tone-information-surface-hover'?: string;
+  readonly 'navigation-navbar-item-tone-information-text'?: string;
+  readonly 'navigation-navbar-item-tone-primary-surface-hover'?: string;
+  readonly 'navigation-navbar-item-tone-primary-text'?: string;
+  readonly 'navigation-navbar-item-tone-secondary-surface-hover'?: string;
+  readonly 'navigation-navbar-item-tone-secondary-text'?: string;
+  readonly 'navigation-navbar-item-tone-success-surface-hover'?: string;
+  readonly 'navigation-navbar-item-tone-success-text'?: string;
+  readonly 'navigation-navbar-item-tone-tertiary-surface-hover'?: string;
+  readonly 'navigation-navbar-item-tone-tertiary-text'?: string;
+  readonly 'navigation-navbar-item-tone-warning-surface-hover'?: string;
+  readonly 'navigation-navbar-item-tone-warning-text'?: string;
+  readonly 'navigation-navbar-item-transition-duration'?: string;
+  readonly 'navigation-navbar-item-transition-easing'?: string;
+}
+
+export type NavbarItemStyle = CSSStyleProperties & {
+  readonly '--forge-navbar-item-navigation-navbar-item-chevron'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-border'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-border-width'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-item-focus-ring'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-item-gap'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-item-padding-block'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-item-padding-inline'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-item-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-item-text'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-item-text-disabled'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-margin'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-padding'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-radius'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-shadow'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-surface'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-dropdown-viewport-gutter'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-focus-ring'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-font-family'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-font-weight'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-gap'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-opacity-disabled'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-padding-block'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-padding-inline'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-radius'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-surface-active'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-surface-open'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-text-active'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-text-default'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-text-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-text-open'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-critical-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-critical-text'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-error-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-error-text'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-information-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-information-text'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-primary-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-primary-text'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-secondary-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-secondary-text'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-success-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-success-text'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-tertiary-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-tertiary-text'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-warning-surface-hover'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-tone-warning-text'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-transition-duration'?: string | undefined;
+  readonly '--forge-navbar-item-navigation-navbar-item-transition-easing'?: string | undefined;
+};
+
+function createNavbarItemStyle(
+  properties: Readonly<NavbarItemStyleProperties> | undefined,
+): NavbarItemStyle | undefined {
+  return createForgeStyle({
+    '--forge-navbar-item-navigation-navbar-item-chevron': properties?.['navigation-navbar-item-chevron'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-border':
+      properties?.['navigation-navbar-item-dropdown-border'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-border-width':
+      properties?.['navigation-navbar-item-dropdown-border-width'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-item-focus-ring':
+      properties?.['navigation-navbar-item-dropdown-item-focus-ring'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-item-gap':
+      properties?.['navigation-navbar-item-dropdown-item-gap'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-item-padding-block':
+      properties?.['navigation-navbar-item-dropdown-item-padding-block'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-item-padding-inline':
+      properties?.['navigation-navbar-item-dropdown-item-padding-inline'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-item-surface-hover':
+      properties?.['navigation-navbar-item-dropdown-item-surface-hover'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-item-text':
+      properties?.['navigation-navbar-item-dropdown-item-text'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-item-text-disabled':
+      properties?.['navigation-navbar-item-dropdown-item-text-disabled'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-margin':
+      properties?.['navigation-navbar-item-dropdown-margin'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-padding':
+      properties?.['navigation-navbar-item-dropdown-padding'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-radius':
+      properties?.['navigation-navbar-item-dropdown-radius'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-shadow':
+      properties?.['navigation-navbar-item-dropdown-shadow'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-surface':
+      properties?.['navigation-navbar-item-dropdown-surface'],
+    '--forge-navbar-item-navigation-navbar-item-dropdown-viewport-gutter':
+      properties?.['navigation-navbar-item-dropdown-viewport-gutter'],
+    '--forge-navbar-item-navigation-navbar-item-focus-ring': properties?.['navigation-navbar-item-focus-ring'],
+    '--forge-navbar-item-navigation-navbar-item-font-family': properties?.['navigation-navbar-item-font-family'],
+    '--forge-navbar-item-navigation-navbar-item-font-weight': properties?.['navigation-navbar-item-font-weight'],
+    '--forge-navbar-item-navigation-navbar-item-gap': properties?.['navigation-navbar-item-gap'],
+    '--forge-navbar-item-navigation-navbar-item-opacity-disabled':
+      properties?.['navigation-navbar-item-opacity-disabled'],
+    '--forge-navbar-item-navigation-navbar-item-padding-block': properties?.['navigation-navbar-item-padding-block'],
+    '--forge-navbar-item-navigation-navbar-item-padding-inline': properties?.['navigation-navbar-item-padding-inline'],
+    '--forge-navbar-item-navigation-navbar-item-radius': properties?.['navigation-navbar-item-radius'],
+    '--forge-navbar-item-navigation-navbar-item-surface-active': properties?.['navigation-navbar-item-surface-active'],
+    '--forge-navbar-item-navigation-navbar-item-surface-hover': properties?.['navigation-navbar-item-surface-hover'],
+    '--forge-navbar-item-navigation-navbar-item-surface-open': properties?.['navigation-navbar-item-surface-open'],
+    '--forge-navbar-item-navigation-navbar-item-text-active': properties?.['navigation-navbar-item-text-active'],
+    '--forge-navbar-item-navigation-navbar-item-text-default': properties?.['navigation-navbar-item-text-default'],
+    '--forge-navbar-item-navigation-navbar-item-text-hover': properties?.['navigation-navbar-item-text-hover'],
+    '--forge-navbar-item-navigation-navbar-item-text-open': properties?.['navigation-navbar-item-text-open'],
+    '--forge-navbar-item-navigation-navbar-item-tone-critical-surface-hover':
+      properties?.['navigation-navbar-item-tone-critical-surface-hover'],
+    '--forge-navbar-item-navigation-navbar-item-tone-critical-text':
+      properties?.['navigation-navbar-item-tone-critical-text'],
+    '--forge-navbar-item-navigation-navbar-item-tone-error-surface-hover':
+      properties?.['navigation-navbar-item-tone-error-surface-hover'],
+    '--forge-navbar-item-navigation-navbar-item-tone-error-text':
+      properties?.['navigation-navbar-item-tone-error-text'],
+    '--forge-navbar-item-navigation-navbar-item-tone-information-surface-hover':
+      properties?.['navigation-navbar-item-tone-information-surface-hover'],
+    '--forge-navbar-item-navigation-navbar-item-tone-information-text':
+      properties?.['navigation-navbar-item-tone-information-text'],
+    '--forge-navbar-item-navigation-navbar-item-tone-primary-surface-hover':
+      properties?.['navigation-navbar-item-tone-primary-surface-hover'],
+    '--forge-navbar-item-navigation-navbar-item-tone-primary-text':
+      properties?.['navigation-navbar-item-tone-primary-text'],
+    '--forge-navbar-item-navigation-navbar-item-tone-secondary-surface-hover':
+      properties?.['navigation-navbar-item-tone-secondary-surface-hover'],
+    '--forge-navbar-item-navigation-navbar-item-tone-secondary-text':
+      properties?.['navigation-navbar-item-tone-secondary-text'],
+    '--forge-navbar-item-navigation-navbar-item-tone-success-surface-hover':
+      properties?.['navigation-navbar-item-tone-success-surface-hover'],
+    '--forge-navbar-item-navigation-navbar-item-tone-success-text':
+      properties?.['navigation-navbar-item-tone-success-text'],
+    '--forge-navbar-item-navigation-navbar-item-tone-tertiary-surface-hover':
+      properties?.['navigation-navbar-item-tone-tertiary-surface-hover'],
+    '--forge-navbar-item-navigation-navbar-item-tone-tertiary-text':
+      properties?.['navigation-navbar-item-tone-tertiary-text'],
+    '--forge-navbar-item-navigation-navbar-item-tone-warning-surface-hover':
+      properties?.['navigation-navbar-item-tone-warning-surface-hover'],
+    '--forge-navbar-item-navigation-navbar-item-tone-warning-text':
+      properties?.['navigation-navbar-item-tone-warning-text'],
+    '--forge-navbar-item-navigation-navbar-item-transition-duration':
+      properties?.['navigation-navbar-item-transition-duration'],
+    '--forge-navbar-item-navigation-navbar-item-transition-easing':
+      properties?.['navigation-navbar-item-transition-easing'],
+  }) as NavbarItemStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface NavbarItemProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -52,6 +249,9 @@ export interface NavbarItemProperties {
   dropdownItems?: NavbarItemChild[];
   /** Fired when a childless item is activated. */
   onClick?: (event: MouseEvent) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<NavbarItemStyleProperties>;
 }
 
 /**
@@ -79,6 +279,8 @@ export interface NavbarItemProperties {
  * own `direction` prop), and the `onClick` callback prop.
  */
 export function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpElement {
+  const style = createNavbarItemStyle(properties.properties);
+
   const { label, href, disabled = false, active = false, variant = 'default', dropdownItems, size = 'md' } = properties;
 
   const hasChildren = Boolean(dropdownItems && dropdownItems.length > 0);
@@ -134,6 +336,7 @@ export function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpE
     <div
       ref={hostReference}
       className={styles['forge-navbar-item-dropdown-host']}
+      style={style}
     >
       <button
         aria-current={active ? 'page' : undefined}
@@ -144,6 +347,7 @@ export function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpE
         disabled={disabled}
         type="button"
         onClick={handleClick}
+        style={style}
       >
         <Slot name="icon" />
         <Slot>{label}</Slot>
@@ -231,6 +435,7 @@ export function ForgeNavbarItem(properties: Readonly<NavbarItemProperties>): MpE
       tabindex={disabled ? -1 : undefined}
       type={tag === 'button' ? 'button' : undefined}
       onClick={handleClick}
+      style={style}
     >
       <Slot name="icon" />
       <Slot>{label}</Slot>

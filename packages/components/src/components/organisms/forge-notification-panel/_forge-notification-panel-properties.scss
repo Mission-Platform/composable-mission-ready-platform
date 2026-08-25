@@ -1,0 +1,135 @@
+/**
+ * Registered inherited custom properties for forge-notification-panel overrides.
+ */
+
+@property --forge-notification-panel-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-notification-panel-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-notification-panel-radius-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-lg);
+}
+
+@property --forge-notification-panel-color-bg-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-surface);
+}
+
+@property --forge-notification-panel-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-notification-panel-font-size-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-lg);
+}
+
+@property --forge-notification-panel-color-text-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-tertiary);
+}
+
+@property --forge-notification-panel-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-notification-panel-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-notification-panel-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-notification-panel-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-notification-panel-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-notification-panel-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}
+
+@property --forge-notification-panel-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-notification-panel-color-bg-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-muted);
+}
+
+@property --forge-notification-panel-color-success-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-default);
+}
+
+@property --forge-notification-panel-color-warning-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-warning-default);
+}
+
+@property --forge-notification-panel-color-error-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-error-default);
+}
+
+@property --forge-notification-panel-opacity-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-muted);
+}
+
+@property --forge-notification-panel-size-height-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-md);
+}
+
+@property --forge-notification-panel-font-size-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-xl);
+}
+
+@property --forge-notification-panel-spacing-5 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-5);
+}

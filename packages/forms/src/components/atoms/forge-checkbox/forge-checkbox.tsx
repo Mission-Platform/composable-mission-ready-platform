@@ -1,4 +1,12 @@
-import { type ClassValue, type MpElement, useEffect, useId, useRef } from '@mission-platform/forge';
+import {
+  useEffect,
+  useId,
+  useRef,
+  createForgeStyle,
+  type ClassValue,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconCheck, ForgeIconMinus } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -7,6 +15,78 @@ import styles from './forge-checkbox.module.scss';
 /** Size token — canonical 2xs → 2xl scale. */
 export type CheckboxSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface CheckboxStyleProperties {
+  readonly 'checkable-border-default'?: string;
+  readonly 'checkable-border-focus-visible'?: string;
+  readonly 'checkable-border-invalid'?: string;
+  readonly 'checkable-border-selected'?: string;
+  readonly 'checkable-border-width-default'?: string;
+  readonly 'checkable-border-width-focus'?: string;
+  readonly 'checkable-control-size'?: string;
+  readonly 'checkable-gap-inline'?: string;
+  readonly 'checkable-gap-stack'?: string;
+  readonly 'checkable-glyph-font-size'?: string;
+  readonly 'checkable-glyph-font-weight'?: string;
+  readonly 'checkable-radius'?: string;
+  readonly 'checkable-thumb-on-track'?: string;
+  readonly 'checkable-track-default'?: string;
+  readonly 'checkable-track-selected'?: string;
+  readonly 'checkable-transition-duration'?: string;
+  readonly 'checkable-transition-easing'?: string;
+  readonly 'feedback-opacity-disabled'?: string;
+  readonly 'field-error'?: string;
+  readonly 'field-required'?: string;
+}
+
+export type CheckboxStyle = CSSStyleProperties & {
+  readonly '--forge-checkbox-checkable-border-default'?: string | undefined;
+  readonly '--forge-checkbox-checkable-border-focus-visible'?: string | undefined;
+  readonly '--forge-checkbox-checkable-border-invalid'?: string | undefined;
+  readonly '--forge-checkbox-checkable-border-selected'?: string | undefined;
+  readonly '--forge-checkbox-checkable-border-width-default'?: string | undefined;
+  readonly '--forge-checkbox-checkable-border-width-focus'?: string | undefined;
+  readonly '--forge-checkbox-checkable-control-size'?: string | undefined;
+  readonly '--forge-checkbox-checkable-gap-inline'?: string | undefined;
+  readonly '--forge-checkbox-checkable-gap-stack'?: string | undefined;
+  readonly '--forge-checkbox-checkable-glyph-font-size'?: string | undefined;
+  readonly '--forge-checkbox-checkable-glyph-font-weight'?: string | undefined;
+  readonly '--forge-checkbox-checkable-radius'?: string | undefined;
+  readonly '--forge-checkbox-checkable-thumb-on-track'?: string | undefined;
+  readonly '--forge-checkbox-checkable-track-default'?: string | undefined;
+  readonly '--forge-checkbox-checkable-track-selected'?: string | undefined;
+  readonly '--forge-checkbox-checkable-transition-duration'?: string | undefined;
+  readonly '--forge-checkbox-checkable-transition-easing'?: string | undefined;
+  readonly '--forge-checkbox-feedback-opacity-disabled'?: string | undefined;
+  readonly '--forge-checkbox-field-error'?: string | undefined;
+  readonly '--forge-checkbox-field-required'?: string | undefined;
+};
+
+function createCheckboxStyle(properties: Readonly<CheckboxStyleProperties> | undefined): CheckboxStyle | undefined {
+  return createForgeStyle({
+    '--forge-checkbox-checkable-border-default': properties?.['checkable-border-default'],
+    '--forge-checkbox-checkable-border-focus-visible': properties?.['checkable-border-focus-visible'],
+    '--forge-checkbox-checkable-border-invalid': properties?.['checkable-border-invalid'],
+    '--forge-checkbox-checkable-border-selected': properties?.['checkable-border-selected'],
+    '--forge-checkbox-checkable-border-width-default': properties?.['checkable-border-width-default'],
+    '--forge-checkbox-checkable-border-width-focus': properties?.['checkable-border-width-focus'],
+    '--forge-checkbox-checkable-control-size': properties?.['checkable-control-size'],
+    '--forge-checkbox-checkable-gap-inline': properties?.['checkable-gap-inline'],
+    '--forge-checkbox-checkable-gap-stack': properties?.['checkable-gap-stack'],
+    '--forge-checkbox-checkable-glyph-font-size': properties?.['checkable-glyph-font-size'],
+    '--forge-checkbox-checkable-glyph-font-weight': properties?.['checkable-glyph-font-weight'],
+    '--forge-checkbox-checkable-radius': properties?.['checkable-radius'],
+    '--forge-checkbox-checkable-thumb-on-track': properties?.['checkable-thumb-on-track'],
+    '--forge-checkbox-checkable-track-default': properties?.['checkable-track-default'],
+    '--forge-checkbox-checkable-track-selected': properties?.['checkable-track-selected'],
+    '--forge-checkbox-checkable-transition-duration': properties?.['checkable-transition-duration'],
+    '--forge-checkbox-checkable-transition-easing': properties?.['checkable-transition-easing'],
+    '--forge-checkbox-feedback-opacity-disabled': properties?.['feedback-opacity-disabled'],
+    '--forge-checkbox-field-error': properties?.['field-error'],
+    '--forge-checkbox-field-required': properties?.['field-required'],
+  }) as CheckboxStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface CheckboxProperties {
   /**
    * Extra class(es) merged onto the control's root element. Applied last so
@@ -44,6 +124,9 @@ export interface CheckboxProperties {
   onUpdateModelValue?: (value: boolean | string[]) => void;
   /** Fired with the native `change` event. */
   onChange?: (event: Event) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<CheckboxStyleProperties>;
 }
 
 /**
@@ -65,6 +148,8 @@ export interface CheckboxProperties {
  * `onUpdateModelValue`/`onChange` callback props.
  */
 export function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpElement {
+  const style = createCheckboxStyle(properties.properties);
+
   const {
     modelValue = false,
     value,
@@ -121,6 +206,7 @@ export function ForgeCheckbox(properties: Readonly<CheckboxProperties>): MpEleme
         },
         properties.className,
       ]}
+      style={style}
     >
       <label
         className={styles['forge-checkbox__row']}

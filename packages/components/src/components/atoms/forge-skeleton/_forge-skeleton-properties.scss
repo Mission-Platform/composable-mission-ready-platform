@@ -1,0 +1,87 @@
+/**
+ * Registered inherited custom properties for forge-skeleton overrides.
+ */
+
+@property --forge-skeleton-feedback-skeleton-background-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-background-default);
+}
+
+@property --forge-skeleton-feedback-skeleton-radius-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-radius-default);
+}
+
+@property --forge-skeleton-feedback-skeleton-shimmer {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-shimmer);
+}
+
+@property --forge-skeleton-feedback-skeleton-radius-line {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-radius-line);
+}
+
+@property --forge-skeleton-feedback-skeleton-radius-circle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-radius-circle);
+}
+
+@property --forge-skeleton-feedback-skeleton-radius-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-radius-block);
+}
+
+@property --forge-skeleton-feedback-skeleton-background-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-background-primary);
+}
+
+@property --forge-skeleton-feedback-skeleton-background-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-background-secondary);
+}
+
+@property --forge-skeleton-feedback-skeleton-background-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-background-tertiary);
+}
+
+@property --forge-skeleton-feedback-skeleton-background-success {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-background-success);
+}
+
+@property --forge-skeleton-feedback-skeleton-background-warning {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-background-warning);
+}
+
+@property --forge-skeleton-feedback-skeleton-background-info {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-background-info);
+}
+
+@property --forge-skeleton-feedback-skeleton-background-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-background-error);
+}
+
+@property --forge-skeleton-feedback-skeleton-background-critical {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-skeleton-background-critical);
+}

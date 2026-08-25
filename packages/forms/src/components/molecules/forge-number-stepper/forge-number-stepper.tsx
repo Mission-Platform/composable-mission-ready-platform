@@ -1,4 +1,10 @@
-import { type ClassValue, type MpElement, useId } from '@mission-platform/forge';
+import {
+  useId,
+  createForgeStyle,
+  type ClassValue,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconMinus, ForgeIconPlus } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -7,6 +13,153 @@ import styles from './forge-number-stepper.module.scss';
 /** Size token (canonical `2xs … 2xl` scale). */
 export type NumberStepperSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface NumberStepperStyleProperties {
+  readonly 'field-required'?: string;
+  readonly 'input-border-default'?: string;
+  readonly 'input-border-focus-visible'?: string;
+  readonly 'input-border-invalid'?: string;
+  readonly 'input-border-width'?: string;
+  readonly 'input-field-gap'?: string;
+  readonly 'input-focus-ring'?: string;
+  readonly 'input-focus-ring-invalid'?: string;
+  readonly 'input-font-family'?: string;
+  readonly 'input-line-height'?: string;
+  readonly 'input-number-button-background-default'?: string;
+  readonly 'input-number-button-background-hover'?: string;
+  readonly 'input-number-button-disabled-opacity'?: string;
+  readonly 'input-number-button-font-size'?: string;
+  readonly 'input-number-button-text'?: string;
+  readonly 'input-number-button-width'?: string;
+  readonly 'input-opacity-disabled'?: string;
+  readonly 'input-radius'?: string;
+  readonly 'input-size-2xl-font-size'?: string;
+  readonly 'input-size-2xl-padding-block'?: string;
+  readonly 'input-size-2xl-padding-inline'?: string;
+  readonly 'input-size-2xs-font-size'?: string;
+  readonly 'input-size-2xs-padding-block'?: string;
+  readonly 'input-size-2xs-padding-inline'?: string;
+  readonly 'input-size-lg-font-size'?: string;
+  readonly 'input-size-lg-padding-block'?: string;
+  readonly 'input-size-lg-padding-inline'?: string;
+  readonly 'input-size-md-font-size'?: string;
+  readonly 'input-size-md-padding-block'?: string;
+  readonly 'input-size-md-padding-inline'?: string;
+  readonly 'input-size-sm-font-size'?: string;
+  readonly 'input-size-sm-padding-block'?: string;
+  readonly 'input-size-sm-padding-inline'?: string;
+  readonly 'input-size-xl-font-size'?: string;
+  readonly 'input-size-xl-padding-block'?: string;
+  readonly 'input-size-xl-padding-inline'?: string;
+  readonly 'input-size-xs-font-size'?: string;
+  readonly 'input-size-xs-padding-block'?: string;
+  readonly 'input-size-xs-padding-inline'?: string;
+  readonly 'input-surface-default'?: string;
+  readonly 'input-surface-disabled'?: string;
+  readonly 'input-text-default'?: string;
+  readonly 'input-text-invalid'?: string;
+  readonly 'input-text-placeholder'?: string;
+}
+
+export type NumberStepperStyle = CSSStyleProperties & {
+  readonly '--forge-number-stepper-field-required'?: string | undefined;
+  readonly '--forge-number-stepper-input-border-default'?: string | undefined;
+  readonly '--forge-number-stepper-input-border-focus-visible'?: string | undefined;
+  readonly '--forge-number-stepper-input-border-invalid'?: string | undefined;
+  readonly '--forge-number-stepper-input-border-width'?: string | undefined;
+  readonly '--forge-number-stepper-input-field-gap'?: string | undefined;
+  readonly '--forge-number-stepper-input-focus-ring'?: string | undefined;
+  readonly '--forge-number-stepper-input-focus-ring-invalid'?: string | undefined;
+  readonly '--forge-number-stepper-input-font-family'?: string | undefined;
+  readonly '--forge-number-stepper-input-line-height'?: string | undefined;
+  readonly '--forge-number-stepper-input-number-button-background-default'?: string | undefined;
+  readonly '--forge-number-stepper-input-number-button-background-hover'?: string | undefined;
+  readonly '--forge-number-stepper-input-number-button-disabled-opacity'?: string | undefined;
+  readonly '--forge-number-stepper-input-number-button-font-size'?: string | undefined;
+  readonly '--forge-number-stepper-input-number-button-text'?: string | undefined;
+  readonly '--forge-number-stepper-input-number-button-width'?: string | undefined;
+  readonly '--forge-number-stepper-input-opacity-disabled'?: string | undefined;
+  readonly '--forge-number-stepper-input-radius'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-2xl-font-size'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-2xl-padding-block'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-2xl-padding-inline'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-2xs-font-size'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-2xs-padding-block'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-2xs-padding-inline'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-lg-font-size'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-lg-padding-block'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-lg-padding-inline'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-md-font-size'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-md-padding-block'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-md-padding-inline'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-sm-font-size'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-sm-padding-block'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-sm-padding-inline'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-xl-font-size'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-xl-padding-block'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-xl-padding-inline'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-xs-font-size'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-xs-padding-block'?: string | undefined;
+  readonly '--forge-number-stepper-input-size-xs-padding-inline'?: string | undefined;
+  readonly '--forge-number-stepper-input-surface-default'?: string | undefined;
+  readonly '--forge-number-stepper-input-surface-disabled'?: string | undefined;
+  readonly '--forge-number-stepper-input-text-default'?: string | undefined;
+  readonly '--forge-number-stepper-input-text-invalid'?: string | undefined;
+  readonly '--forge-number-stepper-input-text-placeholder'?: string | undefined;
+};
+
+function createNumberStepperStyle(
+  properties: Readonly<NumberStepperStyleProperties> | undefined,
+): NumberStepperStyle | undefined {
+  return createForgeStyle({
+    '--forge-number-stepper-field-required': properties?.['field-required'],
+    '--forge-number-stepper-input-border-default': properties?.['input-border-default'],
+    '--forge-number-stepper-input-border-focus-visible': properties?.['input-border-focus-visible'],
+    '--forge-number-stepper-input-border-invalid': properties?.['input-border-invalid'],
+    '--forge-number-stepper-input-border-width': properties?.['input-border-width'],
+    '--forge-number-stepper-input-field-gap': properties?.['input-field-gap'],
+    '--forge-number-stepper-input-focus-ring': properties?.['input-focus-ring'],
+    '--forge-number-stepper-input-focus-ring-invalid': properties?.['input-focus-ring-invalid'],
+    '--forge-number-stepper-input-font-family': properties?.['input-font-family'],
+    '--forge-number-stepper-input-line-height': properties?.['input-line-height'],
+    '--forge-number-stepper-input-number-button-background-default':
+      properties?.['input-number-button-background-default'],
+    '--forge-number-stepper-input-number-button-background-hover': properties?.['input-number-button-background-hover'],
+    '--forge-number-stepper-input-number-button-disabled-opacity': properties?.['input-number-button-disabled-opacity'],
+    '--forge-number-stepper-input-number-button-font-size': properties?.['input-number-button-font-size'],
+    '--forge-number-stepper-input-number-button-text': properties?.['input-number-button-text'],
+    '--forge-number-stepper-input-number-button-width': properties?.['input-number-button-width'],
+    '--forge-number-stepper-input-opacity-disabled': properties?.['input-opacity-disabled'],
+    '--forge-number-stepper-input-radius': properties?.['input-radius'],
+    '--forge-number-stepper-input-size-2xl-font-size': properties?.['input-size-2xl-font-size'],
+    '--forge-number-stepper-input-size-2xl-padding-block': properties?.['input-size-2xl-padding-block'],
+    '--forge-number-stepper-input-size-2xl-padding-inline': properties?.['input-size-2xl-padding-inline'],
+    '--forge-number-stepper-input-size-2xs-font-size': properties?.['input-size-2xs-font-size'],
+    '--forge-number-stepper-input-size-2xs-padding-block': properties?.['input-size-2xs-padding-block'],
+    '--forge-number-stepper-input-size-2xs-padding-inline': properties?.['input-size-2xs-padding-inline'],
+    '--forge-number-stepper-input-size-lg-font-size': properties?.['input-size-lg-font-size'],
+    '--forge-number-stepper-input-size-lg-padding-block': properties?.['input-size-lg-padding-block'],
+    '--forge-number-stepper-input-size-lg-padding-inline': properties?.['input-size-lg-padding-inline'],
+    '--forge-number-stepper-input-size-md-font-size': properties?.['input-size-md-font-size'],
+    '--forge-number-stepper-input-size-md-padding-block': properties?.['input-size-md-padding-block'],
+    '--forge-number-stepper-input-size-md-padding-inline': properties?.['input-size-md-padding-inline'],
+    '--forge-number-stepper-input-size-sm-font-size': properties?.['input-size-sm-font-size'],
+    '--forge-number-stepper-input-size-sm-padding-block': properties?.['input-size-sm-padding-block'],
+    '--forge-number-stepper-input-size-sm-padding-inline': properties?.['input-size-sm-padding-inline'],
+    '--forge-number-stepper-input-size-xl-font-size': properties?.['input-size-xl-font-size'],
+    '--forge-number-stepper-input-size-xl-padding-block': properties?.['input-size-xl-padding-block'],
+    '--forge-number-stepper-input-size-xl-padding-inline': properties?.['input-size-xl-padding-inline'],
+    '--forge-number-stepper-input-size-xs-font-size': properties?.['input-size-xs-font-size'],
+    '--forge-number-stepper-input-size-xs-padding-block': properties?.['input-size-xs-padding-block'],
+    '--forge-number-stepper-input-size-xs-padding-inline': properties?.['input-size-xs-padding-inline'],
+    '--forge-number-stepper-input-surface-default': properties?.['input-surface-default'],
+    '--forge-number-stepper-input-surface-disabled': properties?.['input-surface-disabled'],
+    '--forge-number-stepper-input-text-default': properties?.['input-text-default'],
+    '--forge-number-stepper-input-text-invalid': properties?.['input-text-invalid'],
+    '--forge-number-stepper-input-text-placeholder': properties?.['input-text-placeholder'],
+  }) as NumberStepperStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface NumberStepperProperties {
   /**
    * Extra class(es) merged onto the control's root element. Applied last so
@@ -52,6 +205,9 @@ export interface NumberStepperProperties {
   onUpdateModelValue?: (value?: number) => void;
   /** Fired alongside `onUpdateModelValue` whenever the value changes. */
   onChange?: (value?: number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<NumberStepperStyleProperties>;
 }
 
 /**
@@ -71,6 +227,8 @@ export interface NumberStepperProperties {
  * callback props.
  */
 export function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>): MpElement {
+  const style = createNumberStepperStyle(properties.properties);
+
   const {
     modelValue = undefined,
     label,
@@ -166,6 +324,7 @@ export function ForgeNumberStepper(properties: Readonly<NumberStepperProperties>
         },
         properties.className,
       ]}
+      style={style}
     >
       {label ? (
         <label

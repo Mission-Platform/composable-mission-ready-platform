@@ -1,0 +1,93 @@
+/**
+ * Registered inherited custom properties for forge-kbd overrides.
+ */
+
+@property --forge-kbd-code-kbd-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-kbd-border-width, var(--mp-border-width-thin));
+}
+
+@property --forge-kbd-code-kbd-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-kbd-border, var(--mp-color-border-default));
+}
+
+@property --forge-kbd-code-kbd-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-kbd-radius, var(--mp-radius-sm));
+}
+
+@property --forge-kbd-code-kbd-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-kbd-padding-block, var(--mp-spacing-1));
+}
+
+@property --forge-kbd-code-kbd-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-kbd-padding-inline, var(--mp-spacing-2));
+}
+
+@property --forge-kbd-code-kbd-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-kbd-background, var(--mp-color-bg-muted));
+}
+
+@property --forge-kbd-code-kbd-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-kbd-text, var(--mp-color-text-primary));
+}
+
+@property --forge-kbd-font-family-mono {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-family-mono);
+}
+
+@property --forge-kbd-font-weight-medium {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-medium);
+}
+
+@property --forge-kbd-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-kbd-font-size-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-md);
+}
+
+@property --forge-kbd-font-size-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-lg);
+}
+
+@property --forge-kbd-code-kbd-pressed-offset {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-kbd-pressed-offset, 1px);
+}
+
+@property --forge-kbd-code-kbd-pressed-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-kbd-pressed-shadow, 2px);
+}
+
+@property --forge-kbd-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}

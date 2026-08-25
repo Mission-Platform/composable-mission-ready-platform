@@ -9,11 +9,16 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-skeleton-properties';
+
 @layer mp.components {
   .forge-skeleton {
     display: block;
-    background-color: var(--mp-feedback-skeleton-background-default);
-    border-radius: var(--mp-feedback-skeleton-radius-default);
+    background-color: var(
+      --forge-skeleton-feedback-skeleton-background-default,
+      var(--mp-feedback-skeleton-background-default)
+    );
+    border-radius: var(--forge-skeleton-feedback-skeleton-radius-default, var(--mp-feedback-skeleton-radius-default));
     position: relative;
     overflow: hidden;
 
@@ -24,7 +29,7 @@
       background: linear-gradient(
         90deg,
         transparent 0%,
-        var(--mp-feedback-skeleton-shimmer) 50%,
+        var(--forge-skeleton-feedback-skeleton-shimmer, var(--mp-feedback-skeleton-shimmer)) 50%,
         transparent 100%
       );
       animation: mp-skeleton-shimmer 1.6s ease-in-out infinite;
@@ -34,19 +39,19 @@
     &--line {
       width: 100%;
       height: 1em;
-      border-radius: var(--mp-feedback-skeleton-radius-line);
+      border-radius: var(--forge-skeleton-feedback-skeleton-radius-line, var(--mp-feedback-skeleton-radius-line));
     }
 
     &--circle {
       width: 2.5rem;
       height: 2.5rem;
-      border-radius: var(--mp-feedback-skeleton-radius-circle);
+      border-radius: var(--forge-skeleton-feedback-skeleton-radius-circle, var(--mp-feedback-skeleton-radius-circle));
     }
 
     &--block {
       width: 100%;
       height: 8rem;
-      border-radius: var(--mp-feedback-skeleton-radius-block);
+      border-radius: var(--forge-skeleton-feedback-skeleton-radius-block, var(--mp-feedback-skeleton-radius-block));
     }
 
     /**
@@ -55,7 +60,10 @@
      */
     @each $name in ('primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical') {
       &--#{$name} {
-        background-color: var(--mp-feedback-skeleton-background-#{$name});
+        background-color: var(
+          --forge-skeleton-feedback-skeleton-background-#{$name},
+          var(--mp-feedback-skeleton-background-#{$name})
+        );
       }
     }
   }

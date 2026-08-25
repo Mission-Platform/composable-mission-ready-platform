@@ -69,6 +69,10 @@ const meta = {
     },
     truncate: { control: 'boolean' },
     truncatePopup: { control: 'boolean' },
+    properties: {
+      control: 'object',
+      description: 'Optional component-owned CSS values inherited by typography variants and truncate-popup content.',
+    },
     href: { control: 'text' },
     target: { control: 'inline-radio', options: ['_self', '_blank', '_parent', '_top'] },
     underline: { control: 'inline-radio', options: ['always', 'hover', 'none'] },
@@ -89,6 +93,29 @@ type Story = StoryObj<typeof meta>;
 export const BodyMedium: Story = {};
 
 export const Display: Story = { args: { variant: 'display' } };
+
+export const PropertyOverrides: Story = {
+  name: 'Component property overrides',
+  args: {
+    variant: 'display',
+    properties: {
+      'font-family': 'Inter, sans-serif',
+      'base-line-height': '1.6',
+      'display-margin-bottom': '1.5rem',
+      'display-font-family': 'Georgia, serif',
+      'display-font-size': 'clamp(2rem, 5vw, 4rem)',
+      'display-margin-bottom': '2rem',
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The typed `properties` bag maps only to inherited typography custom properties. Omitted values keep the token fallbacks active.',
+      },
+    },
+  },
+};
 
 export const Heading: Story = { args: { variant: 'h2' } };
 

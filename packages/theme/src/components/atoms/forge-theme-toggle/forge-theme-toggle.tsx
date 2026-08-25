@@ -1,4 +1,12 @@
-import { type MpChild, type MpElement, Slot, useEffect, useState } from '@mission-platform/forge';
+import {
+  Slot,
+  useEffect,
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import { cycleTheme, getThemeSnapshot, subscribeTheme, type Theme } from '@/stores/theme-store/theme-store';
 
@@ -7,6 +15,86 @@ import styles from './forge-theme-toggle.module.scss';
 /** Size token — canonical 2xs → 2xl scale. */
 export type ThemeToggleSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ThemeToggleStyleProperties {
+  readonly 'border-color-hover'?: string;
+  readonly 'button-primary-gap'?: string;
+  readonly 'button-primary-radius'?: string;
+  readonly 'button-secondary-background-default'?: string;
+  readonly 'button-secondary-background-hover'?: string;
+  readonly 'button-secondary-border-default'?: string;
+  readonly 'button-secondary-border-focus-visible'?: string;
+  readonly 'button-secondary-border-width'?: string;
+  readonly 'button-secondary-text-default'?: string;
+  readonly 'button-secondary-transition-duration'?: string;
+  readonly 'button-secondary-transition-easing'?: string;
+  readonly 'focus-offset'?: string;
+  readonly 'focus-width'?: string;
+  readonly 'icon-color-default'?: string;
+  readonly 'icon-size'?: string;
+  readonly 'label-font-family'?: string;
+  readonly 'label-font-size'?: string;
+  readonly 'label-font-weight'?: string;
+  readonly 'label-letter-spacing'?: string;
+  readonly 'label-line-height'?: string;
+  readonly 'padding-block'?: string;
+  readonly 'padding-inline'?: string;
+}
+
+export type ThemeToggleStyle = CSSStyleProperties & {
+  readonly '--forge-theme-toggle-border-color-hover'?: string | undefined;
+  readonly '--forge-theme-toggle-button-primary-gap'?: string | undefined;
+  readonly '--forge-theme-toggle-button-primary-radius'?: string | undefined;
+  readonly '--forge-theme-toggle-button-secondary-background-default'?: string | undefined;
+  readonly '--forge-theme-toggle-button-secondary-background-hover'?: string | undefined;
+  readonly '--forge-theme-toggle-button-secondary-border-default'?: string | undefined;
+  readonly '--forge-theme-toggle-button-secondary-border-focus-visible'?: string | undefined;
+  readonly '--forge-theme-toggle-button-secondary-border-width'?: string | undefined;
+  readonly '--forge-theme-toggle-button-secondary-text-default'?: string | undefined;
+  readonly '--forge-theme-toggle-button-secondary-transition-duration'?: string | undefined;
+  readonly '--forge-theme-toggle-button-secondary-transition-easing'?: string | undefined;
+  readonly '--forge-theme-toggle-focus-offset'?: string | undefined;
+  readonly '--forge-theme-toggle-focus-width'?: string | undefined;
+  readonly '--forge-theme-toggle-icon-color-default'?: string | undefined;
+  readonly '--forge-theme-toggle-icon-size'?: string | undefined;
+  readonly '--forge-theme-toggle-label-font-family'?: string | undefined;
+  readonly '--forge-theme-toggle-label-font-size'?: string | undefined;
+  readonly '--forge-theme-toggle-label-font-weight'?: string | undefined;
+  readonly '--forge-theme-toggle-label-letter-spacing'?: string | undefined;
+  readonly '--forge-theme-toggle-label-line-height'?: string | undefined;
+  readonly '--forge-theme-toggle-padding-block'?: string | undefined;
+  readonly '--forge-theme-toggle-padding-inline'?: string | undefined;
+};
+
+function createThemeToggleStyle(
+  properties: Readonly<ThemeToggleStyleProperties> | undefined,
+): ThemeToggleStyle | undefined {
+  return createForgeStyle({
+    '--forge-theme-toggle-border-color-hover': properties?.['border-color-hover'],
+    '--forge-theme-toggle-button-primary-gap': properties?.['button-primary-gap'],
+    '--forge-theme-toggle-button-primary-radius': properties?.['button-primary-radius'],
+    '--forge-theme-toggle-button-secondary-background-default': properties?.['button-secondary-background-default'],
+    '--forge-theme-toggle-button-secondary-background-hover': properties?.['button-secondary-background-hover'],
+    '--forge-theme-toggle-button-secondary-border-default': properties?.['button-secondary-border-default'],
+    '--forge-theme-toggle-button-secondary-border-focus-visible': properties?.['button-secondary-border-focus-visible'],
+    '--forge-theme-toggle-button-secondary-border-width': properties?.['button-secondary-border-width'],
+    '--forge-theme-toggle-button-secondary-text-default': properties?.['button-secondary-text-default'],
+    '--forge-theme-toggle-button-secondary-transition-duration': properties?.['button-secondary-transition-duration'],
+    '--forge-theme-toggle-button-secondary-transition-easing': properties?.['button-secondary-transition-easing'],
+    '--forge-theme-toggle-focus-offset': properties?.['focus-offset'],
+    '--forge-theme-toggle-focus-width': properties?.['focus-width'],
+    '--forge-theme-toggle-icon-color-default': properties?.['icon-color-default'],
+    '--forge-theme-toggle-icon-size': properties?.['icon-size'],
+    '--forge-theme-toggle-label-font-family': properties?.['label-font-family'],
+    '--forge-theme-toggle-label-font-size': properties?.['label-font-size'],
+    '--forge-theme-toggle-label-font-weight': properties?.['label-font-weight'],
+    '--forge-theme-toggle-label-letter-spacing': properties?.['label-letter-spacing'],
+    '--forge-theme-toggle-label-line-height': properties?.['label-line-height'],
+    '--forge-theme-toggle-padding-block': properties?.['padding-block'],
+    '--forge-theme-toggle-padding-inline': properties?.['padding-inline'],
+  }) as ThemeToggleStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ThemeToggleProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -16,6 +104,9 @@ export interface ThemeToggleProperties {
   ariaLabel?: string;
   /** Fired with the new theme after each toggle. */
   onChange?: (theme: Theme) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ThemeToggleStyleProperties>;
 }
 
 /** The icon glyph shown for each theme (substituted for the original inline SVGs). */
@@ -60,6 +151,8 @@ function nextTheme(theme: Theme): Theme {
  * through the default slot.
  */
 export function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): MpElement {
+  const style = createThemeToggleStyle(properties.properties);
+
   const { ariaLabel, onChange, size = 'md' } = properties;
 
   const [snapshot, setSnapshot] = useState(getThemeSnapshot());
@@ -91,6 +184,7 @@ export function ForgeThemeToggle(properties: Readonly<ThemeToggleProperties>): M
       aria-pressed={theme === 'dark'}
       className={[styles['theme-toggle'], size ? `forge-size--${size}` : undefined]}
       onClick={handleClick}
+      style={style}
     >
       <span
         aria-hidden="true"

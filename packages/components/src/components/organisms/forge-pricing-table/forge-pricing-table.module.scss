@@ -1,8 +1,10 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
+@use './forge-pricing-table-properties';
+
 @layer mp.components {
   .forge-pricing-table {
     width: 100%;
-    padding: var(--mp-spacing-4) 0;
+    padding: var(--forge-pricing-table-spacing-4, var(--mp-spacing-4)) 0;
     text-align: center;
   }
 
@@ -11,34 +13,36 @@
   }
 
   .forge-pricing-table__note {
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-pricing-table-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-pricing-table__billing {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-spacing-2);
-    margin-top: var(--mp-spacing-4);
+    gap: var(--forge-pricing-table-spacing-2, var(--mp-spacing-2));
+    margin-top: var(--forge-pricing-table-spacing-4, var(--mp-spacing-4));
   }
 
   .forge-pricing-table__billing button {
-    min-height: var(--mp-size-height-md);
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-bg-surface);
+    min-height: var(--forge-pricing-table-size-height-md, var(--mp-size-height-md));
+    padding: var(--forge-pricing-table-spacing-2, var(--mp-spacing-2))
+      var(--forge-pricing-table-spacing-3, var(--mp-spacing-3));
+    border: var(--forge-pricing-table-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-pricing-table-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-pricing-table-radius-md, var(--mp-radius-md));
+    background: var(--forge-pricing-table-color-bg-surface, var(--mp-color-bg-surface));
     cursor: pointer;
   }
 
   .forge-pricing-table__billing span {
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-pricing-table-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-pricing-table__plans {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: var(--mp-spacing-4);
-    margin-top: var(--mp-spacing-6);
+    gap: var(--forge-pricing-table-spacing-4, var(--mp-spacing-4));
+    margin-top: var(--forge-pricing-table-spacing-6, var(--mp-spacing-6));
     text-align: start;
   }
 
@@ -46,54 +50,56 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: var(--mp-spacing-5);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    background: var(--mp-color-bg-surface);
+    padding: var(--forge-pricing-table-spacing-5, var(--mp-spacing-5));
+    border: var(--forge-pricing-table-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-pricing-table-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-pricing-table-radius-lg, var(--mp-radius-lg));
+    background: var(--forge-pricing-table-color-bg-surface, var(--mp-color-bg-surface));
   }
 
   .forge-pricing-table__plan--highlighted,
   .forge-pricing-table__plan--selected {
-    border-color: var(--mp-color-primary-default);
-    box-shadow: var(--mp-shadow-focus-primary);
+    border-color: var(--forge-pricing-table-color-primary-default, var(--mp-color-primary-default));
+    box-shadow: var(--forge-pricing-table-shadow-focus-primary, var(--mp-shadow-focus-primary));
   }
 
   .forge-pricing-table__badge {
     position: absolute;
     inset-block-start: -0.75rem;
     inset-inline-end: 1rem;
-    padding: var(--mp-spacing-1) var(--mp-spacing-2);
-    border-radius: var(--mp-radius-full);
-    background: var(--mp-color-primary-default);
-    color: var(--mp-color-text-on-primary);
-    font-size: var(--mp-font-size-xs);
+    padding: var(--forge-pricing-table-spacing-1, var(--mp-spacing-1))
+      var(--forge-pricing-table-spacing-2, var(--mp-spacing-2));
+    border-radius: var(--forge-pricing-table-radius-full, var(--mp-radius-full));
+    background: var(--forge-pricing-table-color-primary-default, var(--mp-color-primary-default));
+    color: var(--forge-pricing-table-color-text-on-primary, var(--mp-color-text-on-primary));
+    font-size: var(--forge-pricing-table-font-size-xs, var(--mp-font-size-xs));
   }
 
   .forge-pricing-table__price {
-    margin: var(--mp-spacing-2) 0;
-    font-size: var(--mp-font-size-3xl);
-    font-weight: var(--mp-font-weight-bold);
+    margin: var(--forge-pricing-table-spacing-2, var(--mp-spacing-2)) 0;
+    font-size: var(--forge-pricing-table-font-size-3xl, var(--mp-font-size-3xl));
+    font-weight: var(--forge-pricing-table-font-weight-bold, var(--mp-font-weight-bold));
   }
 
   .forge-pricing-table__plan ul {
     display: grid;
-    gap: var(--mp-spacing-2);
+    gap: var(--forge-pricing-table-spacing-2, var(--mp-spacing-2));
     flex: 1;
-    margin: var(--mp-spacing-4) 0;
+    margin: var(--forge-pricing-table-spacing-4, var(--mp-spacing-4)) 0;
     padding: 0;
     list-style: none;
   }
 
   .forge-pricing-table__feature--excluded {
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-pricing-table-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-pricing-table__plan button {
-    min-height: var(--mp-size-height-lg);
+    min-height: var(--forge-pricing-table-size-height-lg, var(--mp-size-height-lg));
     border: 0;
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-primary-default);
-    color: var(--mp-color-text-on-primary);
+    border-radius: var(--forge-pricing-table-radius-md, var(--mp-radius-md));
+    background: var(--forge-pricing-table-color-primary-default, var(--mp-color-primary-default));
+    color: var(--forge-pricing-table-color-text-on-primary, var(--mp-color-text-on-primary));
     cursor: pointer;
   }
 }

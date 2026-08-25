@@ -1,0 +1,147 @@
+/**
+ * Registered inherited custom properties for forge-timeline overrides.
+ */
+
+@property --forge-timeline-line-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-line-width);
+}
+
+@property --forge-timeline-marker-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-marker-default);
+}
+
+@property --forge-timeline-variant-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-variant-default);
+}
+
+@property --forge-timeline-variant-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-variant-primary);
+}
+
+@property --forge-timeline-variant-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-variant-secondary);
+}
+
+@property --forge-timeline-variant-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-variant-tertiary);
+}
+
+@property --forge-timeline-variant-success {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-variant-success);
+}
+
+@property --forge-timeline-variant-warning {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-variant-warning);
+}
+
+@property --forge-timeline-variant-information {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-variant-information);
+}
+
+@property --forge-timeline-variant-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-variant-error);
+}
+
+@property --forge-timeline-variant-critical {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-variant-critical);
+}
+
+@property --forge-timeline-marker-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-marker-size);
+}
+
+@property --forge-timeline-marker-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-marker-radius);
+}
+
+@property --forge-timeline-item-color {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-item-color);
+}
+
+@property --forge-timeline-marker-outline-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-marker-outline-width);
+}
+
+@property --forge-timeline-marker-outline-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-marker-outline-surface);
+}
+
+@property --forge-timeline-marker-outlined-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-marker-outlined-surface);
+}
+
+@property --forge-timeline-line-thickness {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-line-thickness);
+}
+
+@property --forge-timeline-vertical-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-vertical-gap);
+}
+
+@property --forge-timeline-gutter {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-gutter);
+}
+
+@property --forge-timeline-line-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-line-surface);
+}
+
+@property --forge-timeline-horizontal-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-horizontal-gap);
+}
+
+@property --forge-timeline-content-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-content-gap);
+}
+
+@property --forge-timeline-content-body-margin-top {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-timeline-content-body-margin-top);
+}

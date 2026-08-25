@@ -3,7 +3,7 @@
     position: fixed;
     right: 0;
     bottom: 0;
-    z-index: 9999;
+    z-index: var(--mp-z-index-debug-breakpoint);
     display: flex;
     gap: var(--mp-debug-breakpoint-gap);
     align-items: center;

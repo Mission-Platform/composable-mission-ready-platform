@@ -10,17 +10,19 @@
  * consumed through its hashed class map by `forge-in-view.stories.tsx`.
  */
 
+@use './forge-in-view-properties';
+
 @layer mp.components {
   .in-view-demo {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 8rem;
-    padding: var(--mp-in-view-padding);
-    border-radius: var(--mp-in-view-radius);
-    background: var(--mp-in-view-surface);
-    color: var(--mp-in-view-text);
-    font-weight: var(--mp-in-view-font-weight);
+    padding: var(--forge-in-view-padding, var(--mp-in-view-padding));
+    border-radius: var(--forge-in-view-radius, var(--mp-in-view-radius));
+    background: var(--forge-in-view-surface, var(--mp-in-view-surface));
+    color: var(--forge-in-view-text, var(--mp-in-view-text));
+    font-weight: var(--forge-in-view-font-weight, var(--mp-in-view-font-weight));
   }
 
   .in-view-spacer {

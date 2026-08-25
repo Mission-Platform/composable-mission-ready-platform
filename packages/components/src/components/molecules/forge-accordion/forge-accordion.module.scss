@@ -12,28 +12,32 @@
  * prop).
  */
 
+@use './forge-accordion-properties';
+
 @layer mp.components {
   .forge-accordion {
-    border: var(--mp-collapse-border-width) solid var(--mp-collapse-border);
-    border-radius: var(--mp-collapse-radius);
+    border: var(--forge-accordion-collapse-border-width, var(--mp-collapse-border-width)) solid
+      var(--forge-accordion-collapse-border, var(--mp-collapse-border));
+    border-radius: var(--forge-accordion-collapse-radius, var(--mp-collapse-radius));
     overflow: hidden;
 
     &__item {
-      background-color: var(--mp-collapse-surface);
+      background-color: var(--forge-accordion-collapse-surface, var(--mp-collapse-surface));
 
       & + .forge-accordion__item {
-        border-top: var(--mp-collapse-border-width) solid var(--mp-collapse-border);
+        border-top: var(--forge-accordion-collapse-border-width, var(--mp-collapse-border-width)) solid
+          var(--forge-accordion-collapse-border, var(--mp-collapse-border));
       }
 
       &--disabled {
-        background-color: var(--mp-collapse-disabled-surface);
+        background-color: var(--forge-accordion-collapse-disabled-surface, var(--mp-collapse-disabled-surface));
 
         .forge-accordion__summary {
-          color: var(--mp-collapse-disabled-text);
+          color: var(--forge-accordion-collapse-disabled-text, var(--mp-collapse-disabled-text));
           cursor: not-allowed;
 
           &:hover {
-            background-color: var(--mp-collapse-disabled-surface);
+            background-color: var(--forge-accordion-collapse-disabled-surface, var(--mp-collapse-disabled-surface));
           }
         }
       }
@@ -43,24 +47,28 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--mp-collapse-summary-padding-block) var(--mp-collapse-summary-padding-inline);
+      padding: var(--forge-accordion-collapse-summary-padding-block, var(--mp-collapse-summary-padding-block))
+        var(--forge-accordion-collapse-summary-padding-inline, var(--mp-collapse-summary-padding-inline));
       cursor: pointer;
-      color: var(--mp-collapse-summary-text);
+      color: var(--forge-accordion-collapse-summary-text, var(--mp-collapse-summary-text));
       list-style: none;
       user-select: none;
-      gap: var(--mp-collapse-summary-gap);
+      gap: var(--forge-accordion-collapse-summary-gap, var(--mp-collapse-summary-gap));
 
       &::-webkit-details-marker {
         display: none;
       }
 
       &:hover {
-        background-color: var(--mp-collapse-summary-surface-hover);
+        background-color: var(
+          --forge-accordion-collapse-summary-surface-hover,
+          var(--mp-collapse-summary-surface-hover)
+        );
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-collapse-summary-focus-ring);
+        box-shadow: var(--forge-accordion-collapse-summary-focus-ring, var(--mp-collapse-summary-focus-ring));
       }
     }
 
@@ -71,11 +79,13 @@
     }
 
     &__content {
-      padding: var(--mp-collapse-content-padding-block) var(--mp-collapse-content-padding-inline);
-      border-top: var(--mp-collapse-content-border-width) solid var(--mp-collapse-content-border);
+      padding: var(--forge-accordion-collapse-content-padding-block, var(--mp-collapse-content-padding-block))
+        var(--forge-accordion-collapse-content-padding-inline, var(--mp-collapse-content-padding-inline));
+      border-top: var(--forge-accordion-collapse-content-border-width, var(--mp-collapse-content-border-width)) solid
+        var(--forge-accordion-collapse-content-border, var(--mp-collapse-content-border));
       opacity: 1;
-      transition: opacity var(--mp-collapse-transition-duration)
-        var(--mp-collapse-transition-easing);
+      transition: opacity var(--forge-accordion-collapse-transition-duration, var(--mp-collapse-transition-duration))
+        var(--forge-accordion-collapse-transition-easing, var(--mp-collapse-transition-easing));
 
       @starting-style {
         opacity: 0;
@@ -100,15 +110,18 @@
         )
     {
       &--#{$name} {
-        border-color: var(--mp-collapse-tone-#{$family}-border);
+        border-color: var(--forge-accordion-collapse-tone-#{$family}-border, var(--mp-collapse-tone-#{$family}-border));
 
         .forge-accordion__item + .forge-accordion__item,
         .forge-accordion__content {
-          border-top-color: var(--mp-collapse-tone-#{$family}-border);
+          border-top-color: var(
+            --forge-accordion-collapse-tone-#{$family}-border,
+            var(--mp-collapse-tone-#{$family}-border)
+          );
         }
 
         .forge-accordion__summary {
-          color: var(--mp-collapse-tone-#{$family}-text);
+          color: var(--forge-accordion-collapse-tone-#{$family}-text, var(--mp-collapse-tone-#{$family}-text));
         }
       }
     }

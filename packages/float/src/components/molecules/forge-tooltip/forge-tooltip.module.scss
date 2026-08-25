@@ -20,10 +20,12 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-tooltip-properties';
+
 /* A custom position-try fallback: nudge fully back on-screen along both axes. */
 @position-try --mp-tooltip-shift {
   position-area: center;
-  margin: var(--mp-spacing-2);
+  margin: var(--forge-tooltip-spacing-2, var(--mp-spacing-2));
 }
 
 @layer mp.components {
@@ -47,23 +49,24 @@
        * renders above an open native `<dialog>` modal/dialog. `border` is reset
        * to override the UA `[popover]` default (`border: solid`).
        */
-      z-index: 500;
+      z-index: var(--mp-z-index-floating-tooltip);
       max-width: 240px;
       margin: 0;
-      padding: var(--mp-overlay-tooltip-padding-block) var(--mp-overlay-tooltip-padding-inline);
-      color: var(--mp-overlay-tooltip-text);
+      padding: var(--forge-tooltip-overlay-tooltip-padding-block, var(--mp-overlay-tooltip-padding-block))
+        var(--forge-tooltip-overlay-tooltip-padding-inline, var(--mp-overlay-tooltip-padding-inline));
+      color: var(--forge-tooltip-overlay-tooltip-text, var(--mp-overlay-tooltip-text));
       pointer-events: none;
-      background-color: var(--mp-overlay-tooltip-surface);
+      background-color: var(--forge-tooltip-overlay-tooltip-surface, var(--mp-overlay-tooltip-surface));
       border: none;
-      border-radius: var(--mp-overlay-tooltip-radius);
+      border-radius: var(--forge-tooltip-overlay-tooltip-radius, var(--mp-overlay-tooltip-radius));
       position-try-fallbacks: flip-block, flip-inline, --mp-tooltip-shift;
       opacity: 1;
       scale: 1;
       transition:
-        opacity var(--mp-overlay-tooltip-transition-duration)
-          var(--mp-overlay-tooltip-transition-easing),
-        scale var(--mp-overlay-tooltip-transition-duration)
-          var(--mp-overlay-tooltip-transition-easing);
+        opacity var(--forge-tooltip-overlay-tooltip-transition-duration, var(--mp-overlay-tooltip-transition-duration))
+          var(--forge-tooltip-overlay-tooltip-transition-easing, var(--mp-overlay-tooltip-transition-easing)),
+        scale var(--forge-tooltip-overlay-tooltip-transition-duration, var(--mp-overlay-tooltip-transition-duration))
+          var(--forge-tooltip-overlay-tooltip-transition-easing, var(--mp-overlay-tooltip-transition-easing));
 
       @starting-style {
         opacity: 0;
@@ -71,19 +74,19 @@
       }
 
       &--top {
-        margin-bottom: var(--mp-spacing-2);
+        margin-bottom: var(--forge-tooltip-spacing-2, var(--mp-spacing-2));
       }
 
       &--bottom {
-        margin-top: var(--mp-spacing-2);
+        margin-top: var(--forge-tooltip-spacing-2, var(--mp-spacing-2));
       }
 
       &--left {
-        margin-right: var(--mp-spacing-2);
+        margin-right: var(--forge-tooltip-spacing-2, var(--mp-spacing-2));
       }
 
       &--right {
-        margin-left: var(--mp-spacing-2);
+        margin-left: var(--forge-tooltip-spacing-2, var(--mp-spacing-2));
       }
     }
 

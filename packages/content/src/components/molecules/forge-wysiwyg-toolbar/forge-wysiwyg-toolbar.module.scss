@@ -1,25 +1,33 @@
+@use './forge-wysiwyg-toolbar-properties';
+
 @layer mp.content {
   .wysiwyg-toolbar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--mp-editor-toolbar-gap);
-    padding: var(--mp-editor-toolbar-padding);
-    border-bottom: var(--mp-editor-toolbar-border-width) solid
-      var(--mp-editor-toolbar-border);
-    background-color: var(--mp-editor-toolbar-surface);
+    gap: var(--forge-wysiwyg-toolbar-editor-toolbar-gap, var(--mp-editor-toolbar-gap));
+    padding: var(--forge-wysiwyg-toolbar-editor-toolbar-padding, var(--mp-editor-toolbar-padding));
+    border-bottom: var(--forge-wysiwyg-toolbar-editor-toolbar-border-width, var(--mp-editor-toolbar-border-width)) solid
+      var(--forge-wysiwyg-toolbar-editor-toolbar-border, var(--mp-editor-toolbar-border));
+    background-color: var(--forge-wysiwyg-toolbar-editor-toolbar-surface, var(--mp-editor-toolbar-surface));
   }
 
   .wysiwyg-toolbar__group {
     display: flex;
     align-items: center;
-    gap: var(--mp-editor-toolbar-group-gap);
+    gap: var(--forge-wysiwyg-toolbar-editor-toolbar-group-gap, var(--mp-editor-toolbar-group-gap));
   }
 
   .wysiwyg-toolbar__group:not(:last-child) {
-    padding-right: var(--mp-editor-toolbar-group-padding-inline-end);
-    border-right: var(--mp-editor-toolbar-group-border-width) solid
-      var(--mp-editor-toolbar-group-border);
+    padding-right: var(
+      --forge-wysiwyg-toolbar-editor-toolbar-group-padding-inline-end,
+      var(--mp-editor-toolbar-group-padding-inline-end)
+    );
+    border-right: var(
+        --forge-wysiwyg-toolbar-editor-toolbar-group-border-width,
+        var(--mp-editor-toolbar-group-border-width)
+      )
+      solid var(--forge-wysiwyg-toolbar-editor-toolbar-group-border, var(--mp-editor-toolbar-group-border));
   }
 
   .wysiwyg-toolbar__group--end {

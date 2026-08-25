@@ -1,0 +1,297 @@
+/**
+ * Registered inherited custom properties for forge-navbar-item overrides.
+ */
+
+@property --forge-navbar-item-navigation-navbar-item-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-gap);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-padding-block);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-padding-inline);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-radius);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-text-default);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-font-family);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-font-weight);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-transition-duration);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-transition-easing);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-focus-ring);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-surface-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-surface-active);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-text-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-text-active);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-surface-open {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-surface-open);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-text-open {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-text-open);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-primary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-primary-text);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-secondary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-secondary-text);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-tertiary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-tertiary-text);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-success-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-success-text);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-warning-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-warning-text);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-information-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-information-text);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-error-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-error-text);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-critical-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-critical-text);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-primary-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-primary-surface-hover);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-secondary-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-secondary-surface-hover);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-tertiary-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-tertiary-surface-hover);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-success-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-success-surface-hover);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-warning-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-warning-surface-hover);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-information-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-information-surface-hover);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-error-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-error-surface-hover);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-tone-critical-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-tone-critical-surface-hover);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-opacity-disabled);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-surface-hover);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-text-hover);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-chevron {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-chevron);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-margin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-margin);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-padding);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-viewport-gutter {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-viewport-gutter);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-surface);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-border-width);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-border);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-radius);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-shadow);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-item-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-item-gap);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-item-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-item-padding-block);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-item-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-item-padding-inline);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-item-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-item-text);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-item-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-item-focus-ring);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-item-text-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-item-text-disabled);
+}
+
+@property --forge-navbar-item-navigation-navbar-item-dropdown-item-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-item-dropdown-item-surface-hover);
+}

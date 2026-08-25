@@ -1,4 +1,10 @@
-import { type MpElement, useEffect, useState } from '@mission-platform/forge';
+import {
+  useEffect,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-transfer-list.module.scss';
 
@@ -9,6 +15,66 @@ export interface TransferItem {
   description?: string;
 }
 export type TransferListTitles = readonly [string, string] | { source: string; target: string };
+
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface TransferListStyleProperties {
+  readonly 'border-width-thin'?: string;
+  readonly 'color-bg-muted'?: string;
+  readonly 'color-bg-surface'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-text-tertiary'?: string;
+  readonly 'font-size-md'?: string;
+  readonly 'font-size-sm'?: string;
+  readonly 'opacity-disabled'?: string;
+  readonly 'radius-md'?: string;
+  readonly 'radius-sm'?: string;
+  readonly 'size-height-lg'?: string;
+  readonly 'size-height-md'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-4'?: string;
+}
+
+export type TransferListStyle = CSSStyleProperties & {
+  readonly '--forge-transfer-list-border-width-thin'?: string | undefined;
+  readonly '--forge-transfer-list-color-bg-muted'?: string | undefined;
+  readonly '--forge-transfer-list-color-bg-surface'?: string | undefined;
+  readonly '--forge-transfer-list-color-border-default'?: string | undefined;
+  readonly '--forge-transfer-list-color-text-tertiary'?: string | undefined;
+  readonly '--forge-transfer-list-font-size-md'?: string | undefined;
+  readonly '--forge-transfer-list-font-size-sm'?: string | undefined;
+  readonly '--forge-transfer-list-opacity-disabled'?: string | undefined;
+  readonly '--forge-transfer-list-radius-md'?: string | undefined;
+  readonly '--forge-transfer-list-radius-sm'?: string | undefined;
+  readonly '--forge-transfer-list-size-height-lg'?: string | undefined;
+  readonly '--forge-transfer-list-size-height-md'?: string | undefined;
+  readonly '--forge-transfer-list-spacing-1'?: string | undefined;
+  readonly '--forge-transfer-list-spacing-2'?: string | undefined;
+  readonly '--forge-transfer-list-spacing-4'?: string | undefined;
+};
+
+function createTransferListStyle(
+  properties: Readonly<TransferListStyleProperties> | undefined,
+): TransferListStyle | undefined {
+  return createForgeStyle({
+    '--forge-transfer-list-border-width-thin': properties?.['border-width-thin'],
+    '--forge-transfer-list-color-bg-muted': properties?.['color-bg-muted'],
+    '--forge-transfer-list-color-bg-surface': properties?.['color-bg-surface'],
+    '--forge-transfer-list-color-border-default': properties?.['color-border-default'],
+    '--forge-transfer-list-color-text-tertiary': properties?.['color-text-tertiary'],
+    '--forge-transfer-list-font-size-md': properties?.['font-size-md'],
+    '--forge-transfer-list-font-size-sm': properties?.['font-size-sm'],
+    '--forge-transfer-list-opacity-disabled': properties?.['opacity-disabled'],
+    '--forge-transfer-list-radius-md': properties?.['radius-md'],
+    '--forge-transfer-list-radius-sm': properties?.['radius-sm'],
+    '--forge-transfer-list-size-height-lg': properties?.['size-height-lg'],
+    '--forge-transfer-list-size-height-md': properties?.['size-height-md'],
+    '--forge-transfer-list-spacing-1': properties?.['spacing-1'],
+    '--forge-transfer-list-spacing-2': properties?.['spacing-2'],
+    '--forge-transfer-list-spacing-4': properties?.['spacing-4'],
+  }) as TransferListStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface TransferListProperties {
   sourceItems: TransferItem[];
   modelValue?: string[];
@@ -17,9 +83,14 @@ export interface TransferListProperties {
   maxSelections?: number;
   onUpdateModelValue?: (targetIds: string[]) => void;
   onChange?: (targetIds: string[], items: TransferItem[]) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<TransferListStyleProperties>;
 }
 
 export function ForgeTransferList(properties: Readonly<TransferListProperties>): MpElement {
+  const style = createTransferListStyle(properties.properties);
+
   const { sourceItems, titles = ['Available items', 'Selected items'], searchable = false, maxSelections } = properties;
   const [target, setTarget] = useState(properties.modelValue ?? []);
   const [selected, setSelected] = useState<string[]>([]);
@@ -83,6 +154,7 @@ export function ForgeTransferList(properties: Readonly<TransferListProperties>):
     <section
       className={styles['forge-transfer-list']}
       aria-label="Transfer items"
+      style={style}
     >
       {list(available, sourceTitle, 'Search available')}
       <div className={styles['forge-transfer-list__controls']}>

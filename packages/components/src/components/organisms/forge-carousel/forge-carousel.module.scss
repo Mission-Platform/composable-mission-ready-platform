@@ -11,6 +11,8 @@
  * `forge-carousel__slide` element, so the sizing targets that class directly.
  */
 
+@use './forge-carousel-properties';
+
 @layer mp.components {
   .forge-carousel {
     position: relative;
@@ -21,14 +23,27 @@
     }
 
     &:focus-visible {
-      outline: var(--mp-navigation-carousel-focus-border-width) solid var(--mp-navigation-carousel-focus-border);
-      outline-offset: var(--mp-navigation-carousel-focus-offset);
-      border-radius: var(--mp-navigation-carousel-viewport-radius);
+      outline: var(
+          --forge-carousel-navigation-carousel-focus-border-width,
+          var(--mp-navigation-carousel-focus-border-width)
+        )
+        solid var(--forge-carousel-navigation-carousel-focus-border, var(--mp-navigation-carousel-focus-border));
+      outline-offset: var(
+        --forge-carousel-navigation-carousel-focus-offset,
+        var(--mp-navigation-carousel-focus-offset)
+      );
+      border-radius: var(
+        --forge-carousel-navigation-carousel-viewport-radius,
+        var(--mp-navigation-carousel-viewport-radius)
+      );
     }
 
     &__viewport {
       overflow: hidden;
-      border-radius: var(--mp-navigation-carousel-viewport-radius);
+      border-radius: var(
+        --forge-carousel-navigation-carousel-viewport-radius,
+        var(--mp-navigation-carousel-viewport-radius)
+      );
       touch-action: pan-y;
       user-select: none;
     }
@@ -36,7 +51,15 @@
     &__track {
       display: flex;
       width: 100%;
-      transition: transform var(--mp-navigation-carousel-track-transition-duration) var(--mp-navigation-carousel-track-transition-easing);
+      transition: transform
+        var(
+          --forge-carousel-navigation-carousel-track-transition-duration,
+          var(--mp-navigation-carousel-track-transition-duration)
+        )
+        var(
+          --forge-carousel-navigation-carousel-track-transition-easing,
+          var(--mp-navigation-carousel-track-transition-easing)
+        );
     }
 
     &__slide {
@@ -55,19 +78,38 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: var(--mp-navigation-carousel-control-size);
-      height: var(--mp-navigation-carousel-control-size);
-      border-radius: var(--mp-navigation-carousel-control-radius);
-      border: var(--mp-navigation-carousel-control-border-width) solid var(--mp-navigation-carousel-control-border);
-      background: var(--mp-navigation-carousel-control-surface-default);
-      color: var(--mp-navigation-carousel-control-text);
-      font-size: var(--mp-navigation-carousel-control-font-size);
-      line-height: var(--mp-navigation-carousel-control-line-height);
+      width: var(--forge-carousel-navigation-carousel-control-size, var(--mp-navigation-carousel-control-size));
+      height: var(--forge-carousel-navigation-carousel-control-size, var(--mp-navigation-carousel-control-size));
+      border-radius: var(
+        --forge-carousel-navigation-carousel-control-radius,
+        var(--mp-navigation-carousel-control-radius)
+      );
+      border: var(
+          --forge-carousel-navigation-carousel-control-border-width,
+          var(--mp-navigation-carousel-control-border-width)
+        )
+        solid var(--forge-carousel-navigation-carousel-control-border, var(--mp-navigation-carousel-control-border));
+      background: var(
+        --forge-carousel-navigation-carousel-control-surface-default,
+        var(--mp-navigation-carousel-control-surface-default)
+      );
+      color: var(--forge-carousel-navigation-carousel-control-text, var(--mp-navigation-carousel-control-text));
+      font-size: var(
+        --forge-carousel-navigation-carousel-control-font-size,
+        var(--mp-navigation-carousel-control-font-size)
+      );
+      line-height: var(
+        --forge-carousel-navigation-carousel-control-line-height,
+        var(--mp-navigation-carousel-control-line-height)
+      );
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: var(--mp-navigation-carousel-control-shadow);
+      box-shadow: var(
+        --forge-carousel-navigation-carousel-control-shadow,
+        var(--mp-navigation-carousel-control-shadow)
+      );
 
       svg {
         display: block;
@@ -77,28 +119,37 @@
       }
 
       &--prev {
-        left: var(--mp-navigation-carousel-control-offset);
+        left: var(--forge-carousel-navigation-carousel-control-offset, var(--mp-navigation-carousel-control-offset));
       }
 
       &--next {
-        right: var(--mp-navigation-carousel-control-offset);
+        right: var(--forge-carousel-navigation-carousel-control-offset, var(--mp-navigation-carousel-control-offset));
       }
 
       &:disabled {
-        opacity: var(--mp-navigation-carousel-control-opacity-disabled);
+        opacity: var(
+          --forge-carousel-navigation-carousel-control-opacity-disabled,
+          var(--mp-navigation-carousel-control-opacity-disabled)
+        );
         cursor: not-allowed;
       }
 
       &:hover:not(:disabled) {
-        background: var(--mp-navigation-carousel-control-surface-hover);
+        background: var(
+          --forge-carousel-navigation-carousel-control-surface-hover,
+          var(--mp-navigation-carousel-control-surface-hover)
+        );
       }
     }
 
     &__indicators {
       display: flex;
       justify-content: center;
-      gap: var(--mp-navigation-carousel-indicators-gap);
-      margin-top: var(--mp-navigation-carousel-indicators-margin-top);
+      gap: var(--forge-carousel-navigation-carousel-indicators-gap, var(--mp-navigation-carousel-indicators-gap));
+      margin-top: var(
+        --forge-carousel-navigation-carousel-indicators-margin-top,
+        var(--mp-navigation-carousel-indicators-margin-top)
+      );
     }
 
     &__indicator {
@@ -107,30 +158,72 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: var(--mp-navigation-carousel-indicator-target-size);
-      height: var(--mp-navigation-carousel-indicator-target-size);
+      width: var(
+        --forge-carousel-navigation-carousel-indicator-target-size,
+        var(--mp-navigation-carousel-indicator-target-size)
+      );
+      height: var(
+        --forge-carousel-navigation-carousel-indicator-target-size,
+        var(--mp-navigation-carousel-indicator-target-size)
+      );
       padding: 0;
       border: none;
-      border-radius: var(--mp-navigation-carousel-indicator-radius);
-      background: var(--mp-navigation-carousel-indicator-surface-default);
+      border-radius: var(
+        --forge-carousel-navigation-carousel-indicator-radius,
+        var(--mp-navigation-carousel-indicator-radius)
+      );
+      background: var(
+        --forge-carousel-navigation-carousel-indicator-surface-default,
+        var(--mp-navigation-carousel-indicator-surface-default)
+      );
       cursor: pointer;
 
       &::before {
         content: '';
-        width: var(--mp-navigation-carousel-indicator-dot-size);
-        height: var(--mp-navigation-carousel-indicator-dot-size);
-        border-radius: var(--mp-navigation-carousel-indicator-radius);
-        background: var(--mp-navigation-carousel-indicator-surface-dot-default);
-        transition: background var(--mp-navigation-carousel-indicator-transition-duration) var(--mp-navigation-carousel-indicator-transition-easing);
+        width: var(
+          --forge-carousel-navigation-carousel-indicator-dot-size,
+          var(--mp-navigation-carousel-indicator-dot-size)
+        );
+        height: var(
+          --forge-carousel-navigation-carousel-indicator-dot-size,
+          var(--mp-navigation-carousel-indicator-dot-size)
+        );
+        border-radius: var(
+          --forge-carousel-navigation-carousel-indicator-radius,
+          var(--mp-navigation-carousel-indicator-radius)
+        );
+        background: var(
+          --forge-carousel-navigation-carousel-indicator-surface-dot-default,
+          var(--mp-navigation-carousel-indicator-surface-dot-default)
+        );
+        transition: background
+          var(
+            --forge-carousel-navigation-carousel-indicator-transition-duration,
+            var(--mp-navigation-carousel-indicator-transition-duration)
+          )
+          var(
+            --forge-carousel-navigation-carousel-indicator-transition-easing,
+            var(--mp-navigation-carousel-indicator-transition-easing)
+          );
       }
 
       &--active::before {
-        background: var(--mp-navigation-carousel-indicator-surface-dot-selected);
+        background: var(
+          --forge-carousel-navigation-carousel-indicator-surface-dot-selected,
+          var(--mp-navigation-carousel-indicator-surface-dot-selected)
+        );
       }
 
       &:focus-visible {
-        outline: var(--mp-navigation-carousel-focus-border-width) solid var(--mp-navigation-carousel-focus-border);
-        outline-offset: var(--mp-navigation-carousel-focus-offset);
+        outline: var(
+            --forge-carousel-navigation-carousel-focus-border-width,
+            var(--mp-navigation-carousel-focus-border-width)
+          )
+          solid var(--forge-carousel-navigation-carousel-focus-border, var(--mp-navigation-carousel-focus-border));
+        outline-offset: var(
+          --forge-carousel-navigation-carousel-focus-offset,
+          var(--mp-navigation-carousel-focus-offset)
+        );
       }
     }
 
@@ -140,18 +233,41 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: var(--mp-navigation-carousel-autoplay-size);
-      height: var(--mp-navigation-carousel-autoplay-size);
-      margin: var(--mp-navigation-carousel-autoplay-margin-top) auto 0;
+      width: var(--forge-carousel-navigation-carousel-autoplay-size, var(--mp-navigation-carousel-autoplay-size));
+      height: var(--forge-carousel-navigation-carousel-autoplay-size, var(--mp-navigation-carousel-autoplay-size));
+      margin: var(
+          --forge-carousel-navigation-carousel-autoplay-margin-top,
+          var(--mp-navigation-carousel-autoplay-margin-top)
+        )
+        auto 0;
       padding: 0;
-      border: var(--mp-navigation-carousel-autoplay-border-width) solid var(--mp-navigation-carousel-autoplay-border);
-      border-radius: var(--mp-navigation-carousel-autoplay-radius);
-      background: var(--mp-navigation-carousel-autoplay-surface-default);
-      color: var(--mp-navigation-carousel-autoplay-text);
-      font-size: var(--mp-navigation-carousel-autoplay-font-size);
-      line-height: var(--mp-navigation-carousel-autoplay-line-height);
+      border: var(
+          --forge-carousel-navigation-carousel-autoplay-border-width,
+          var(--mp-navigation-carousel-autoplay-border-width)
+        )
+        solid var(--forge-carousel-navigation-carousel-autoplay-border, var(--mp-navigation-carousel-autoplay-border));
+      border-radius: var(
+        --forge-carousel-navigation-carousel-autoplay-radius,
+        var(--mp-navigation-carousel-autoplay-radius)
+      );
+      background: var(
+        --forge-carousel-navigation-carousel-autoplay-surface-default,
+        var(--mp-navigation-carousel-autoplay-surface-default)
+      );
+      color: var(--forge-carousel-navigation-carousel-autoplay-text, var(--mp-navigation-carousel-autoplay-text));
+      font-size: var(
+        --forge-carousel-navigation-carousel-autoplay-font-size,
+        var(--mp-navigation-carousel-autoplay-font-size)
+      );
+      line-height: var(
+        --forge-carousel-navigation-carousel-autoplay-line-height,
+        var(--mp-navigation-carousel-autoplay-line-height)
+      );
       cursor: pointer;
-      box-shadow: var(--mp-navigation-carousel-autoplay-shadow);
+      box-shadow: var(
+        --forge-carousel-navigation-carousel-autoplay-shadow,
+        var(--mp-navigation-carousel-autoplay-shadow)
+      );
 
       svg {
         display: block;
@@ -161,12 +277,22 @@
       }
 
       &:hover {
-        background: var(--mp-navigation-carousel-autoplay-surface-hover);
+        background: var(
+          --forge-carousel-navigation-carousel-autoplay-surface-hover,
+          var(--mp-navigation-carousel-autoplay-surface-hover)
+        );
       }
 
       &:focus-visible {
-        outline: var(--mp-navigation-carousel-focus-border-width) solid var(--mp-navigation-carousel-focus-border);
-        outline-offset: var(--mp-navigation-carousel-focus-offset);
+        outline: var(
+            --forge-carousel-navigation-carousel-focus-border-width,
+            var(--mp-navigation-carousel-focus-border-width)
+          )
+          solid var(--forge-carousel-navigation-carousel-focus-border, var(--mp-navigation-carousel-focus-border));
+        outline-offset: var(
+          --forge-carousel-navigation-carousel-focus-offset,
+          var(--mp-navigation-carousel-focus-offset)
+        );
       }
     }
 
@@ -189,12 +315,21 @@
     {
       &--#{$name} {
         .forge-carousel__indicator--active::before {
-          background: var(--mp-navigation-carousel-tone-#{$name}-indicator);
+          background: var(
+            --forge-carousel-navigation-carousel-tone-#{$name}-indicator,
+            var(--mp-navigation-carousel-tone-#{$name}-indicator)
+          );
         }
 
         .forge-carousel__control {
-          color: var(--mp-navigation-carousel-tone-#{$name}-control-text);
-          border-color: var(--mp-navigation-carousel-tone-#{$name}-control-border);
+          color: var(
+            --forge-carousel-navigation-carousel-tone-#{$name}-control-text,
+            var(--mp-navigation-carousel-tone-#{$name}-control-text)
+          );
+          border-color: var(
+            --forge-carousel-navigation-carousel-tone-#{$name}-control-border,
+            var(--mp-navigation-carousel-tone-#{$name}-control-border)
+          );
         }
       }
     }

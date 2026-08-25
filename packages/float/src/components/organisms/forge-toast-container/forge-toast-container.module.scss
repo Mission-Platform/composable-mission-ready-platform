@@ -9,50 +9,52 @@
  * `@mission-platform/components` package's `forge-toast-container.vue`.
  */
 
+@use './forge-toast-container-properties';
+
 @layer mp.components {
   .forge-toast-container {
     position: fixed;
-    z-index: 700;
+    z-index: var(--mp-z-index-notification-toast);
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-3);
-    width: min(24rem, calc(100vw - 2 * var(--mp-spacing-4)));
+    gap: var(--forge-toast-container-spacing-3, var(--mp-spacing-3));
+    width: min(24rem, calc(100vw - 2 * var(--forge-toast-container-spacing-4, var(--mp-spacing-4))));
     padding: 0;
     margin: 0;
     pointer-events: none;
 
     &--top-left {
-      top: var(--mp-spacing-4);
-      left: var(--mp-spacing-4);
+      top: var(--forge-toast-container-spacing-4, var(--mp-spacing-4));
+      left: var(--forge-toast-container-spacing-4, var(--mp-spacing-4));
     }
 
     &--top-center {
-      top: var(--mp-spacing-4);
+      top: var(--forge-toast-container-spacing-4, var(--mp-spacing-4));
       left: 50%;
       align-items: center;
       transform: translateX(-50%);
     }
 
     &--top-right {
-      top: var(--mp-spacing-4);
-      right: var(--mp-spacing-4);
+      top: var(--forge-toast-container-spacing-4, var(--mp-spacing-4));
+      right: var(--forge-toast-container-spacing-4, var(--mp-spacing-4));
     }
 
     &--bottom-left {
-      bottom: var(--mp-spacing-4);
-      left: var(--mp-spacing-4);
+      bottom: var(--forge-toast-container-spacing-4, var(--mp-spacing-4));
+      left: var(--forge-toast-container-spacing-4, var(--mp-spacing-4));
     }
 
     &--bottom-center {
-      bottom: var(--mp-spacing-4);
+      bottom: var(--forge-toast-container-spacing-4, var(--mp-spacing-4));
       left: 50%;
       align-items: center;
       transform: translateX(-50%);
     }
 
     &--bottom-right {
-      bottom: var(--mp-spacing-4);
-      right: var(--mp-spacing-4);
+      bottom: var(--forge-toast-container-spacing-4, var(--mp-spacing-4));
+      right: var(--forge-toast-container-spacing-4, var(--mp-spacing-4));
     }
   }
 
@@ -67,8 +69,10 @@
   .forge-toast-enter-active,
   .forge-toast-leave-active {
     transition:
-      opacity var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
-      transform var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing);
+      opacity var(--forge-toast-container-overlay-transition-duration, var(--mp-overlay-transition-duration))
+        var(--forge-toast-container-overlay-transition-easing, var(--mp-overlay-transition-easing)),
+      transform var(--forge-toast-container-overlay-transition-duration, var(--mp-overlay-transition-duration))
+        var(--forge-toast-container-overlay-transition-easing, var(--mp-overlay-transition-easing));
   }
 
   .forge-toast-enter-from,

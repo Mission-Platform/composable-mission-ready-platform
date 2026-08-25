@@ -1,0 +1,77 @@
+@property --forge-rating-checkable-gap-stack {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-gap-stack);
+}
+
+@property --forge-rating-checkable-rating-filled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-rating-filled);
+}
+
+@property --forge-rating-checkable-size-2xs-rating-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xs-rating-font-size);
+}
+
+@property --forge-rating-checkable-size-xs-rating-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xs-rating-font-size);
+}
+
+@property --forge-rating-checkable-size-sm-rating-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-sm-rating-font-size);
+}
+
+@property --forge-rating-checkable-size-md-rating-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-md-rating-font-size);
+}
+
+@property --forge-rating-checkable-size-lg-rating-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-lg-rating-font-size);
+}
+
+@property --forge-rating-checkable-size-xl-rating-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xl-rating-font-size);
+}
+
+@property --forge-rating-checkable-size-2xl-rating-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xl-rating-font-size);
+}
+
+@property --forge-rating-checkable-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-opacity-disabled);
+}
+
+@property --forge-rating-checkable-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-radius);
+}
+
+@property --forge-rating-checkable-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-focus-ring);
+}
+
+@property --forge-rating-checkable-rating-empty {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-rating-empty);
+}

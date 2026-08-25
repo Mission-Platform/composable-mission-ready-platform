@@ -36,6 +36,12 @@ variant, alignment, weight, line-height, color, and truncation props. Load the
 `@mission-platform/tokens` stylesheet in the application so the shared size
 utility classes are available.
 
+Component-owned visual values can be overridden through the typed `properties`
+bag. Supported keys are `font-family`, `base-line-height`,
+`display-margin-bottom`, `display-font-family`, and `display-font-size`; values
+are inherited by variant and truncate-popup descendants, while omitted keys use
+the token defaults.
+
 ## Framework outputs
 
 Configure the application with the matching `mp:vue`, `mp:react`,

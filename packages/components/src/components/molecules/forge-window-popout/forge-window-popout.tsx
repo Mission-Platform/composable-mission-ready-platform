@@ -1,11 +1,13 @@
 import {
   classNames,
-  type MpChild,
-  type MpElement,
   Slot,
   useEffect,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -21,6 +23,109 @@ function copyStyles(targetDocument: Document): void {
   }
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface WindowPopoutStyleProperties {
+  readonly 'overlay-window-popout-gap'?: string;
+  readonly 'overlay-window-popout-placeholder-border'?: string;
+  readonly 'overlay-window-popout-placeholder-border-width'?: string;
+  readonly 'overlay-window-popout-placeholder-min-height'?: string;
+  readonly 'overlay-window-popout-placeholder-padding'?: string;
+  readonly 'overlay-window-popout-placeholder-radius'?: string;
+  readonly 'overlay-window-popout-placeholder-surface'?: string;
+  readonly 'overlay-window-popout-toggle-border-default'?: string;
+  readonly 'overlay-window-popout-toggle-border-hover'?: string;
+  readonly 'overlay-window-popout-toggle-border-selected'?: string;
+  readonly 'overlay-window-popout-toggle-border-width'?: string;
+  readonly 'overlay-window-popout-toggle-focus-ring'?: string;
+  readonly 'overlay-window-popout-toggle-gap'?: string;
+  readonly 'overlay-window-popout-toggle-padding-block'?: string;
+  readonly 'overlay-window-popout-toggle-padding-inline'?: string;
+  readonly 'overlay-window-popout-toggle-radius'?: string;
+  readonly 'overlay-window-popout-toggle-surface-default'?: string;
+  readonly 'overlay-window-popout-toggle-surface-hover'?: string;
+  readonly 'overlay-window-popout-toggle-surface-selected'?: string;
+  readonly 'overlay-window-popout-toggle-text-default'?: string;
+  readonly 'overlay-window-popout-toggle-text-selected'?: string;
+  readonly 'overlay-window-popout-toggle-transition-duration'?: string;
+  readonly 'overlay-window-popout-toggle-transition-easing'?: string;
+}
+
+export type WindowPopoutStyle = CSSStyleProperties & {
+  readonly '--forge-window-popout-overlay-window-popout-gap'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-placeholder-border'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-placeholder-border-width'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-placeholder-min-height'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-placeholder-padding'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-placeholder-radius'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-placeholder-surface'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-border-default'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-border-hover'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-border-selected'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-border-width'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-focus-ring'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-gap'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-padding-block'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-padding-inline'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-radius'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-surface-default'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-surface-hover'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-surface-selected'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-text-default'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-text-selected'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-transition-duration'?: string | undefined;
+  readonly '--forge-window-popout-overlay-window-popout-toggle-transition-easing'?: string | undefined;
+};
+
+function createWindowPopoutStyle(
+  properties: Readonly<WindowPopoutStyleProperties> | undefined,
+): WindowPopoutStyle | undefined {
+  return createForgeStyle({
+    '--forge-window-popout-overlay-window-popout-gap': properties?.['overlay-window-popout-gap'],
+    '--forge-window-popout-overlay-window-popout-placeholder-border':
+      properties?.['overlay-window-popout-placeholder-border'],
+    '--forge-window-popout-overlay-window-popout-placeholder-border-width':
+      properties?.['overlay-window-popout-placeholder-border-width'],
+    '--forge-window-popout-overlay-window-popout-placeholder-min-height':
+      properties?.['overlay-window-popout-placeholder-min-height'],
+    '--forge-window-popout-overlay-window-popout-placeholder-padding':
+      properties?.['overlay-window-popout-placeholder-padding'],
+    '--forge-window-popout-overlay-window-popout-placeholder-radius':
+      properties?.['overlay-window-popout-placeholder-radius'],
+    '--forge-window-popout-overlay-window-popout-placeholder-surface':
+      properties?.['overlay-window-popout-placeholder-surface'],
+    '--forge-window-popout-overlay-window-popout-toggle-border-default':
+      properties?.['overlay-window-popout-toggle-border-default'],
+    '--forge-window-popout-overlay-window-popout-toggle-border-hover':
+      properties?.['overlay-window-popout-toggle-border-hover'],
+    '--forge-window-popout-overlay-window-popout-toggle-border-selected':
+      properties?.['overlay-window-popout-toggle-border-selected'],
+    '--forge-window-popout-overlay-window-popout-toggle-border-width':
+      properties?.['overlay-window-popout-toggle-border-width'],
+    '--forge-window-popout-overlay-window-popout-toggle-focus-ring':
+      properties?.['overlay-window-popout-toggle-focus-ring'],
+    '--forge-window-popout-overlay-window-popout-toggle-gap': properties?.['overlay-window-popout-toggle-gap'],
+    '--forge-window-popout-overlay-window-popout-toggle-padding-block':
+      properties?.['overlay-window-popout-toggle-padding-block'],
+    '--forge-window-popout-overlay-window-popout-toggle-padding-inline':
+      properties?.['overlay-window-popout-toggle-padding-inline'],
+    '--forge-window-popout-overlay-window-popout-toggle-radius': properties?.['overlay-window-popout-toggle-radius'],
+    '--forge-window-popout-overlay-window-popout-toggle-surface-default':
+      properties?.['overlay-window-popout-toggle-surface-default'],
+    '--forge-window-popout-overlay-window-popout-toggle-surface-hover':
+      properties?.['overlay-window-popout-toggle-surface-hover'],
+    '--forge-window-popout-overlay-window-popout-toggle-surface-selected':
+      properties?.['overlay-window-popout-toggle-surface-selected'],
+    '--forge-window-popout-overlay-window-popout-toggle-text-default':
+      properties?.['overlay-window-popout-toggle-text-default'],
+    '--forge-window-popout-overlay-window-popout-toggle-text-selected':
+      properties?.['overlay-window-popout-toggle-text-selected'],
+    '--forge-window-popout-overlay-window-popout-toggle-transition-duration':
+      properties?.['overlay-window-popout-toggle-transition-duration'],
+    '--forge-window-popout-overlay-window-popout-toggle-transition-easing':
+      properties?.['overlay-window-popout-toggle-transition-easing'],
+  }) as WindowPopoutStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface WindowPopoutProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -44,6 +149,9 @@ export interface WindowPopoutProperties {
   onOpen?: () => void;
   /** Called when the popout window closes (via the toggle, the window's X, or unmount). */
   onClose?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<WindowPopoutStyleProperties>;
 }
 
 /**
@@ -68,6 +176,8 @@ export interface WindowPopoutProperties {
  * are plain props.
  */
 export function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>): MpElement {
+  const style = createWindowPopoutStyle(properties.properties);
+
   const {
     title,
     width = 800,
@@ -176,7 +286,10 @@ export function ForgeWindowPopout(properties: Readonly<WindowPopoutProperties>):
   ) : undefined;
 
   return (
-    <div className={classNames(styles['forge-window-popout'], size ? `forge-size--${size}` : undefined)}>
+    <div
+      className={classNames(styles['forge-window-popout'], size ? `forge-size--${size}` : undefined)}
+      style={style}
+    >
       {inlineNode}
       {placeholderNode}
       <div className={styles['forge-window-popout__controls']}>

@@ -1,0 +1,968 @@
+@charset "UTF-8";
+/**
+ * Styling for the write-once `ForgeTypography`.
+ *
+ * `ForgeTypography` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its appearance ships in the built package CSS (the two-stage
+ * compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the package-owned `mp.typography` cascade layer. Only
+ * `var(--mp-*)` design-token custom
+ * properties are used. The original SFC's `@floating-ui` truncate-popup is
+ * restored here via the `truncatePopup` prop, positioned with CSS Anchor
+ * Positioning (the cross-framework substitute for `@floating-ui`).
+ *
+ * Inherited override registrations live in `_forge-typography-properties.scss`.
+ */
+/**
+ * Registered inherited custom properties for forge-typography overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+@property --forge-typography-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-base-font-family, sans-serif);
+}
+@property --forge-typography-base-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-base-line-height, 1em);
+}
+@property --forge-typography-display-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-margin-bottom, inherit);
+}
+@property --forge-typography-display-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-font-family, sans-serif);
+}
+@property --forge-typography-display-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-font-size, inherit);
+}
+@property --forge-typography-variant-display-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-font-weight);
+}
+@property --forge-typography-variant-display-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-line-height);
+}
+@property --forge-typography-variant-display-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-display-letter-spacing);
+}
+@property --forge-typography-variant-h1-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-margin-bottom);
+}
+@property --forge-typography-variant-h1-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-font-family);
+}
+@property --forge-typography-variant-h1-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-font-size);
+}
+@property --forge-typography-variant-h1-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-font-weight);
+}
+@property --forge-typography-variant-h1-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-line-height);
+}
+@property --forge-typography-variant-h1-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h1-letter-spacing);
+}
+@property --forge-typography-variant-h2-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-margin-bottom);
+}
+@property --forge-typography-variant-h2-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-font-family);
+}
+@property --forge-typography-variant-h2-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-font-size);
+}
+@property --forge-typography-variant-h2-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-font-weight);
+}
+@property --forge-typography-variant-h2-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-line-height);
+}
+@property --forge-typography-variant-h2-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h2-letter-spacing);
+}
+@property --forge-typography-variant-h3-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-margin-bottom);
+}
+@property --forge-typography-variant-h3-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-font-family);
+}
+@property --forge-typography-variant-h3-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-font-size);
+}
+@property --forge-typography-variant-h3-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-font-weight);
+}
+@property --forge-typography-variant-h3-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-line-height);
+}
+@property --forge-typography-variant-h3-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h3-letter-spacing);
+}
+@property --forge-typography-variant-h4-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-margin-bottom);
+}
+@property --forge-typography-variant-h4-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-font-family);
+}
+@property --forge-typography-variant-h4-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-font-size);
+}
+@property --forge-typography-variant-h4-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-font-weight);
+}
+@property --forge-typography-variant-h4-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-line-height);
+}
+@property --forge-typography-variant-h4-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h4-letter-spacing);
+}
+@property --forge-typography-variant-h5-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-margin-bottom);
+}
+@property --forge-typography-variant-h5-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-font-family);
+}
+@property --forge-typography-variant-h5-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-font-size);
+}
+@property --forge-typography-variant-h5-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-font-weight);
+}
+@property --forge-typography-variant-h5-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-line-height);
+}
+@property --forge-typography-variant-h5-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h5-letter-spacing);
+}
+@property --forge-typography-variant-h6-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-margin-bottom);
+}
+@property --forge-typography-variant-h6-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-font-family);
+}
+@property --forge-typography-variant-h6-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-font-size);
+}
+@property --forge-typography-variant-h6-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-font-weight);
+}
+@property --forge-typography-variant-h6-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-line-height);
+}
+@property --forge-typography-variant-h6-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-h6-letter-spacing);
+}
+@property --forge-typography-variant-body-lg-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-margin-bottom);
+}
+@property --forge-typography-variant-body-lg-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-font-family);
+}
+@property --forge-typography-variant-body-lg-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-font-size);
+}
+@property --forge-typography-variant-body-lg-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-font-weight);
+}
+@property --forge-typography-variant-body-lg-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-line-height);
+}
+@property --forge-typography-variant-body-lg-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-lg-letter-spacing);
+}
+@property --forge-typography-variant-body-md-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-margin-bottom);
+}
+@property --forge-typography-variant-body-md-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-font-family);
+}
+@property --forge-typography-variant-body-md-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-font-size);
+}
+@property --forge-typography-variant-body-md-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-font-weight);
+}
+@property --forge-typography-variant-body-md-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-line-height);
+}
+@property --forge-typography-variant-body-md-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-md-letter-spacing);
+}
+@property --forge-typography-variant-body-sm-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-margin-bottom);
+}
+@property --forge-typography-variant-body-sm-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-font-family);
+}
+@property --forge-typography-variant-body-sm-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-font-size);
+}
+@property --forge-typography-variant-body-sm-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-font-weight);
+}
+@property --forge-typography-variant-body-sm-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-line-height);
+}
+@property --forge-typography-variant-body-sm-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-sm-letter-spacing);
+}
+@property --forge-typography-variant-body-xs-margin-bottom {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-margin-bottom);
+}
+@property --forge-typography-variant-body-xs-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-font-family);
+}
+@property --forge-typography-variant-body-xs-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-font-size);
+}
+@property --forge-typography-variant-body-xs-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-font-weight);
+}
+@property --forge-typography-variant-body-xs-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-line-height);
+}
+@property --forge-typography-variant-body-xs-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-body-xs-letter-spacing);
+}
+@property --forge-typography-variant-label-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-label-font-family);
+}
+@property --forge-typography-variant-label-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-label-font-size);
+}
+@property --forge-typography-variant-label-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-label-font-weight);
+}
+@property --forge-typography-variant-label-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-label-line-height);
+}
+@property --forge-typography-variant-label-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-label-letter-spacing);
+}
+@property --forge-typography-variant-caption-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-caption-font-family);
+}
+@property --forge-typography-variant-caption-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-caption-font-size);
+}
+@property --forge-typography-variant-caption-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-caption-font-weight);
+}
+@property --forge-typography-variant-caption-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-caption-line-height);
+}
+@property --forge-typography-variant-caption-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-caption-letter-spacing);
+}
+@property --forge-typography-variant-code-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-code-font-family);
+}
+@property --forge-typography-variant-code-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-code-font-size);
+}
+@property --forge-typography-variant-code-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-code-font-weight);
+}
+@property --forge-typography-variant-code-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-code-line-height);
+}
+@property --forge-typography-variant-code-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-variant-code-letter-spacing);
+}
+@property --forge-typography-color-link {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-link);
+}
+@property --forge-typography-link-transition-duration {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-link-transition-duration);
+}
+@property --forge-typography-link-transition-easing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-link-transition-easing);
+}
+@property --forge-typography-color-link-visited {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-link-visited);
+}
+@property --forge-typography-color-link-hover {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-link-hover);
+}
+@property --forge-typography-link-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-link-radius);
+}
+@property --forge-typography-link-focus-ring {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-link-focus-ring);
+}
+@property --forge-typography-override-font-weight-regular {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-override-font-weight-regular);
+}
+@property --forge-typography-override-font-weight-medium {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-override-font-weight-medium);
+}
+@property --forge-typography-override-font-weight-semibold {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-override-font-weight-semibold);
+}
+@property --forge-typography-override-font-weight-bold {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-override-font-weight-bold);
+}
+@property --forge-typography-override-line-height-tight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-override-line-height-tight);
+}
+@property --forge-typography-override-line-height-snug {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-override-line-height-snug);
+}
+@property --forge-typography-override-line-height-normal {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-override-line-height-normal);
+}
+@property --forge-typography-override-line-height-relaxed {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-override-line-height-relaxed);
+}
+@property --forge-typography-override-line-height-loose {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-override-line-height-loose);
+}
+@property --forge-typography-color-primary {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-primary);
+}
+@property --forge-typography-color-secondary {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-secondary);
+}
+@property --forge-typography-color-tertiary {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-tertiary);
+}
+@property --forge-typography-color-disabled {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-disabled);
+}
+@property --forge-typography-color-inverse {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-inverse);
+}
+@property --forge-typography-color-neutral {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-neutral);
+}
+@property --forge-typography-color-success {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-success);
+}
+@property --forge-typography-color-warning {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-warning);
+}
+@property --forge-typography-color-info {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-info);
+}
+@property --forge-typography-color-error {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-error);
+}
+@property --forge-typography-color-critical {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-color-critical);
+}
+@property --forge-typography-popup-margin-top {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-margin-top);
+}
+@property --forge-typography-popup-max-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-max-width);
+}
+@property --forge-typography-popup-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-padding-block);
+}
+@property --forge-typography-popup-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-padding-inline);
+}
+@property --forge-typography-popup-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-surface);
+}
+@property --forge-typography-popup-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-text);
+}
+@property --forge-typography-popup-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-border-width);
+}
+@property --forge-typography-popup-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-border);
+}
+@property --forge-typography-popup-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-radius);
+}
+@property --forge-typography-popup-shadow {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-shadow);
+}
+@property --forge-typography-popup-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-font-family);
+}
+@property --forge-typography-popup-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-font-size);
+}
+@property --forge-typography-popup-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-font-weight);
+}
+@property --forge-typography-popup-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-line-height);
+}
+@property --forge-typography-popup-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-typography-popup-letter-spacing);
+}
+@layer mp.typography {
+  .forge-typography {
+    margin: 0;
+    font-family: var(--forge-typography-font-family, var(--mp-typography-base-font-family, sans-serif)), serif, sans-serif, system-ui, cursive, fantasy, math, monospace;
+    line-height: var(--forge-typography-base-line-height, var(--mp-typography-base-line-height, 1em));
+    /* ── Variants ──────────────────────────────────────────────────────────── */
+  }
+  .forge-typography--display {
+    margin-bottom: var(--forge-typography-display-margin-bottom, var(--mp-typography-variant-display-margin-bottom, inherit));
+    font-family: var(--forge-typography-display-font-family, var(--mp-typography-variant-display-font-family, sans-serif)), serif, sans-serif, system-ui, cursive, fantasy, math, monospace;
+    font-size: var(--forge-typography-display-font-size, var(--mp-typography-variant-display-font-size, inherit));
+    font-weight: var(--forge-typography-variant-display-font-weight, var(--mp-typography-variant-display-font-weight));
+    line-height: var(--forge-typography-variant-display-line-height, var(--mp-typography-variant-display-line-height));
+    letter-spacing: var(--forge-typography-variant-display-letter-spacing, var(--mp-typography-variant-display-letter-spacing));
+  }
+  .forge-typography--h1 {
+    margin-bottom: var(--forge-typography-variant-h1-margin-bottom, var(--mp-typography-variant-h1-margin-bottom));
+    font-family: var(--forge-typography-variant-h1-font-family, var(--mp-typography-variant-h1-font-family));
+    font-size: var(--forge-typography-variant-h1-font-size, var(--mp-typography-variant-h1-font-size));
+    font-weight: var(--forge-typography-variant-h1-font-weight, var(--mp-typography-variant-h1-font-weight));
+    line-height: var(--forge-typography-variant-h1-line-height, var(--mp-typography-variant-h1-line-height));
+    letter-spacing: var(--forge-typography-variant-h1-letter-spacing, var(--mp-typography-variant-h1-letter-spacing));
+  }
+  .forge-typography--h2 {
+    margin-bottom: var(--forge-typography-variant-h2-margin-bottom, var(--mp-typography-variant-h2-margin-bottom));
+    font-family: var(--forge-typography-variant-h2-font-family, var(--mp-typography-variant-h2-font-family));
+    font-size: var(--forge-typography-variant-h2-font-size, var(--mp-typography-variant-h2-font-size));
+    font-weight: var(--forge-typography-variant-h2-font-weight, var(--mp-typography-variant-h2-font-weight));
+    line-height: var(--forge-typography-variant-h2-line-height, var(--mp-typography-variant-h2-line-height));
+    letter-spacing: var(--forge-typography-variant-h2-letter-spacing, var(--mp-typography-variant-h2-letter-spacing));
+  }
+  .forge-typography--h3 {
+    margin-bottom: var(--forge-typography-variant-h3-margin-bottom, var(--mp-typography-variant-h3-margin-bottom));
+    font-family: var(--forge-typography-variant-h3-font-family, var(--mp-typography-variant-h3-font-family));
+    font-size: var(--forge-typography-variant-h3-font-size, var(--mp-typography-variant-h3-font-size));
+    font-weight: var(--forge-typography-variant-h3-font-weight, var(--mp-typography-variant-h3-font-weight));
+    line-height: var(--forge-typography-variant-h3-line-height, var(--mp-typography-variant-h3-line-height));
+    letter-spacing: var(--forge-typography-variant-h3-letter-spacing, var(--mp-typography-variant-h3-letter-spacing));
+  }
+  .forge-typography--h4 {
+    margin-bottom: var(--forge-typography-variant-h4-margin-bottom, var(--mp-typography-variant-h4-margin-bottom));
+    font-family: var(--forge-typography-variant-h4-font-family, var(--mp-typography-variant-h4-font-family));
+    font-size: var(--forge-typography-variant-h4-font-size, var(--mp-typography-variant-h4-font-size));
+    font-weight: var(--forge-typography-variant-h4-font-weight, var(--mp-typography-variant-h4-font-weight));
+    line-height: var(--forge-typography-variant-h4-line-height, var(--mp-typography-variant-h4-line-height));
+    letter-spacing: var(--forge-typography-variant-h4-letter-spacing, var(--mp-typography-variant-h4-letter-spacing));
+  }
+  .forge-typography--h5 {
+    margin-bottom: var(--forge-typography-variant-h5-margin-bottom, var(--mp-typography-variant-h5-margin-bottom));
+    font-family: var(--forge-typography-variant-h5-font-family, var(--mp-typography-variant-h5-font-family));
+    font-size: var(--forge-typography-variant-h5-font-size, var(--mp-typography-variant-h5-font-size));
+    font-weight: var(--forge-typography-variant-h5-font-weight, var(--mp-typography-variant-h5-font-weight));
+    line-height: var(--forge-typography-variant-h5-line-height, var(--mp-typography-variant-h5-line-height));
+    letter-spacing: var(--forge-typography-variant-h5-letter-spacing, var(--mp-typography-variant-h5-letter-spacing));
+  }
+  .forge-typography--h6 {
+    margin-bottom: var(--forge-typography-variant-h6-margin-bottom, var(--mp-typography-variant-h6-margin-bottom));
+    font-family: var(--forge-typography-variant-h6-font-family, var(--mp-typography-variant-h6-font-family));
+    font-size: var(--forge-typography-variant-h6-font-size, var(--mp-typography-variant-h6-font-size));
+    font-weight: var(--forge-typography-variant-h6-font-weight, var(--mp-typography-variant-h6-font-weight));
+    line-height: var(--forge-typography-variant-h6-line-height, var(--mp-typography-variant-h6-line-height));
+    letter-spacing: var(--forge-typography-variant-h6-letter-spacing, var(--mp-typography-variant-h6-letter-spacing));
+  }
+  .forge-typography--body-lg {
+    margin-bottom: var(--forge-typography-variant-body-lg-margin-bottom, var(--mp-typography-variant-body-lg-margin-bottom));
+    font-family: var(--forge-typography-variant-body-lg-font-family, var(--mp-typography-variant-body-lg-font-family));
+    font-size: var(--forge-typography-variant-body-lg-font-size, var(--mp-typography-variant-body-lg-font-size));
+    font-weight: var(--forge-typography-variant-body-lg-font-weight, var(--mp-typography-variant-body-lg-font-weight));
+    line-height: var(--forge-typography-variant-body-lg-line-height, var(--mp-typography-variant-body-lg-line-height));
+    letter-spacing: var(--forge-typography-variant-body-lg-letter-spacing, var(--mp-typography-variant-body-lg-letter-spacing));
+  }
+  .forge-typography--body-md {
+    margin-bottom: var(--forge-typography-variant-body-md-margin-bottom, var(--mp-typography-variant-body-md-margin-bottom));
+    font-family: var(--forge-typography-variant-body-md-font-family, var(--mp-typography-variant-body-md-font-family));
+    font-size: var(--forge-typography-variant-body-md-font-size, var(--mp-typography-variant-body-md-font-size));
+    font-weight: var(--forge-typography-variant-body-md-font-weight, var(--mp-typography-variant-body-md-font-weight));
+    line-height: var(--forge-typography-variant-body-md-line-height, var(--mp-typography-variant-body-md-line-height));
+    letter-spacing: var(--forge-typography-variant-body-md-letter-spacing, var(--mp-typography-variant-body-md-letter-spacing));
+  }
+  .forge-typography--body-sm {
+    margin-bottom: var(--forge-typography-variant-body-sm-margin-bottom, var(--mp-typography-variant-body-sm-margin-bottom));
+    font-family: var(--forge-typography-variant-body-sm-font-family, var(--mp-typography-variant-body-sm-font-family));
+    font-size: var(--forge-typography-variant-body-sm-font-size, var(--mp-typography-variant-body-sm-font-size));
+    font-weight: var(--forge-typography-variant-body-sm-font-weight, var(--mp-typography-variant-body-sm-font-weight));
+    line-height: var(--forge-typography-variant-body-sm-line-height, var(--mp-typography-variant-body-sm-line-height));
+    letter-spacing: var(--forge-typography-variant-body-sm-letter-spacing, var(--mp-typography-variant-body-sm-letter-spacing));
+  }
+  .forge-typography--body-xs {
+    margin-bottom: var(--forge-typography-variant-body-xs-margin-bottom, var(--mp-typography-variant-body-xs-margin-bottom));
+    font-family: var(--forge-typography-variant-body-xs-font-family, var(--mp-typography-variant-body-xs-font-family));
+    font-size: var(--forge-typography-variant-body-xs-font-size, var(--mp-typography-variant-body-xs-font-size));
+    font-weight: var(--forge-typography-variant-body-xs-font-weight, var(--mp-typography-variant-body-xs-font-weight));
+    line-height: var(--forge-typography-variant-body-xs-line-height, var(--mp-typography-variant-body-xs-line-height));
+    letter-spacing: var(--forge-typography-variant-body-xs-letter-spacing, var(--mp-typography-variant-body-xs-letter-spacing));
+  }
+  .forge-typography--label {
+    font-family: var(--forge-typography-variant-label-font-family, var(--mp-typography-variant-label-font-family));
+    font-size: var(--forge-typography-variant-label-font-size, var(--mp-typography-variant-label-font-size));
+    font-weight: var(--forge-typography-variant-label-font-weight, var(--mp-typography-variant-label-font-weight));
+    line-height: var(--forge-typography-variant-label-line-height, var(--mp-typography-variant-label-line-height));
+    letter-spacing: var(--forge-typography-variant-label-letter-spacing, var(--mp-typography-variant-label-letter-spacing));
+  }
+  .forge-typography--caption {
+    font-family: var(--forge-typography-variant-caption-font-family, var(--mp-typography-variant-caption-font-family));
+    font-size: var(--forge-typography-variant-caption-font-size, var(--mp-typography-variant-caption-font-size));
+    font-weight: var(--forge-typography-variant-caption-font-weight, var(--mp-typography-variant-caption-font-weight));
+    line-height: var(--forge-typography-variant-caption-line-height, var(--mp-typography-variant-caption-line-height));
+    letter-spacing: var(--forge-typography-variant-caption-letter-spacing, var(--mp-typography-variant-caption-letter-spacing));
+  }
+  .forge-typography--code {
+    font-family: var(--forge-typography-variant-code-font-family, var(--mp-typography-variant-code-font-family));
+    font-size: var(--forge-typography-variant-code-font-size, var(--mp-typography-variant-code-font-size));
+    font-weight: var(--forge-typography-variant-code-font-weight, var(--mp-typography-variant-code-font-weight));
+    line-height: var(--forge-typography-variant-code-line-height, var(--mp-typography-variant-code-line-height));
+    letter-spacing: var(--forge-typography-variant-code-letter-spacing, var(--mp-typography-variant-code-letter-spacing));
+  }
+  .forge-typography {
+    /* ── Link ───────────────────────────────────────────────────────────────── */
+    /*
+     * Applied whenever the component renders a link — either `variant="link"` or
+     * `href` on any other variant. It carries **no** font metrics, so a linked
+     * heading keeps its own type scale, and it sits *before* the colour
+     * overrides so an explicit `color` prop still wins.
+     */
+  }
+  .forge-typography--link {
+    color: var(--forge-typography-color-link, var(--mp-typography-color-link));
+    cursor: pointer;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.15em;
+    transition: color var(--forge-typography-link-transition-duration, var(--mp-typography-link-transition-duration)) var(--forge-typography-link-transition-easing, var(--mp-typography-link-transition-easing));
+  }
+  .forge-typography--link:visited {
+    color: var(--forge-typography-color-link-visited, var(--mp-typography-color-link-visited));
+  }
+  .forge-typography--link:hover, .forge-typography--link:active {
+    color: var(--forge-typography-color-link-hover, var(--mp-typography-color-link-hover));
+  }
+  .forge-typography--link:focus-visible {
+    outline: none;
+    border-radius: var(--forge-typography-link-radius, var(--mp-typography-link-radius));
+    box-shadow: var(--forge-typography-link-focus-ring, var(--mp-typography-link-focus-ring));
+  }
+  .forge-typography {
+    /*
+     * Underline behaviour. `always` is the default so links stay distinguishable
+     * without relying on colour alone; `hover` and `none` are available for
+     * explicit opt-in treatments.
+     */
+  }
+  .forge-typography--underline-always {
+    text-decoration-line: underline;
+  }
+  .forge-typography--underline-hover {
+    text-decoration-line: none;
+  }
+  .forge-typography--underline-hover:hover, .forge-typography--underline-hover:focus-visible {
+    text-decoration-line: underline;
+  }
+  .forge-typography--underline-none {
+    text-decoration-line: none;
+  }
+  .forge-typography {
+    /* ── Weight overrides ───────────────────────────────────────────────────── */
+  }
+  .forge-typography--weight-regular {
+    font-weight: var(--forge-typography-override-font-weight-regular, var(--mp-typography-override-font-weight-regular));
+  }
+  .forge-typography--weight-medium {
+    font-weight: var(--forge-typography-override-font-weight-medium, var(--mp-typography-override-font-weight-medium));
+  }
+  .forge-typography--weight-semibold {
+    font-weight: var(--forge-typography-override-font-weight-semibold, var(--mp-typography-override-font-weight-semibold));
+  }
+  .forge-typography--weight-bold {
+    font-weight: var(--forge-typography-override-font-weight-bold, var(--mp-typography-override-font-weight-bold));
+  }
+  .forge-typography {
+    /* ── Line-height (leading) override ──────────────────────────────────────── */
+  }
+  .forge-typography--lh-tight {
+    line-height: var(--forge-typography-override-line-height-tight, var(--mp-typography-override-line-height-tight));
+  }
+  .forge-typography--lh-snug {
+    line-height: var(--forge-typography-override-line-height-snug, var(--mp-typography-override-line-height-snug));
+  }
+  .forge-typography--lh-normal {
+    line-height: var(--forge-typography-override-line-height-normal, var(--mp-typography-override-line-height-normal));
+  }
+  .forge-typography--lh-relaxed {
+    line-height: var(--forge-typography-override-line-height-relaxed, var(--mp-typography-override-line-height-relaxed));
+  }
+  .forge-typography--lh-loose {
+    line-height: var(--forge-typography-override-line-height-loose, var(--mp-typography-override-line-height-loose));
+  }
+  .forge-typography {
+    /* ── Color ──────────────────────────────────────────────────────────────── */
+  }
+  .forge-typography--color-primary {
+    color: var(--forge-typography-color-primary, var(--mp-typography-color-primary));
+  }
+  .forge-typography--color-secondary {
+    color: var(--forge-typography-color-secondary, var(--mp-typography-color-secondary));
+  }
+  .forge-typography--color-tertiary {
+    color: var(--forge-typography-color-tertiary, var(--mp-typography-color-tertiary));
+  }
+  .forge-typography--color-disabled {
+    color: var(--forge-typography-color-disabled, var(--mp-typography-color-disabled));
+  }
+  .forge-typography--color-inverse {
+    color: var(--forge-typography-color-inverse, var(--mp-typography-color-inverse));
+  }
+  .forge-typography {
+    /**
+     * Canonical semantic tones — mapped to each family's `-text` token. The
+     * `neutral` tone reuses the `default` token family (no `neutral` alias).
+     */
+  }
+  .forge-typography--color-neutral {
+    color: var(--forge-typography-color-neutral, var(--mp-typography-color-neutral));
+  }
+  .forge-typography--color-success {
+    color: var(--forge-typography-color-success, var(--mp-typography-color-success));
+  }
+  .forge-typography--color-warning {
+    color: var(--forge-typography-color-warning, var(--mp-typography-color-warning));
+  }
+  .forge-typography--color-info {
+    color: var(--forge-typography-color-info, var(--mp-typography-color-info));
+  }
+  .forge-typography--color-error {
+    color: var(--forge-typography-color-error, var(--mp-typography-color-error));
+  }
+  .forge-typography--color-critical {
+    color: var(--forge-typography-color-critical, var(--mp-typography-color-critical));
+  }
+  .forge-typography {
+    /* ── Horizontal alignment (text-align) ──────────────────────────────────── */
+  }
+  .forge-typography--halign-start {
+    text-align: start;
+  }
+  .forge-typography--halign-center {
+    text-align: center;
+  }
+  .forge-typography--halign-end {
+    text-align: end;
+  }
+  .forge-typography {
+    /* ── Vertical alignment (vertical-align) ────────────────────────────────── */
+  }
+  .forge-typography--valign-baseline {
+    vertical-align: baseline;
+  }
+  .forge-typography--valign-top {
+    vertical-align: top;
+  }
+  .forge-typography--valign-middle {
+    vertical-align: middle;
+  }
+  .forge-typography--valign-bottom {
+    vertical-align: bottom;
+  }
+  .forge-typography--valign-sub {
+    vertical-align: sub;
+  }
+  .forge-typography--valign-super {
+    vertical-align: super;
+  }
+  .forge-typography--valign-text-top {
+    vertical-align: text-top;
+  }
+  .forge-typography--valign-text-bottom {
+    vertical-align: text-bottom;
+  }
+  .forge-typography {
+    /* ── Truncate ───────────────────────────────────────────────────────────── */
+  }
+  .forge-typography--truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .forge-typography {
+    /* The truncated text is the CSS-anchor for its floating popup. */
+  }
+  .forge-typography--popup-anchor {
+    anchor-name: --mp-typography-truncate;
+  }
+  /* ── Truncate-popup wrapper & floating popup ──────────────────────────────── */
+  .forge-typography-popup-wrapper {
+    display: block;
+    min-width: 0;
+    /* Scope the anchor name so each wrapper's popup binds to its own text. */
+    anchor-scope: --mp-typography-truncate;
+  }
+  .forge-typography-popup {
+    position: absolute;
+    position-anchor: --mp-typography-truncate;
+    top: anchor(bottom);
+    left: anchor(left);
+    margin-top: var(--forge-typography-popup-margin-top, var(--mp-typography-popup-margin-top));
+    z-index: var(--mp-z-index-tooltip);
+    max-width: var(--forge-typography-popup-max-width, var(--mp-typography-popup-max-width));
+    padding: var(--forge-typography-popup-padding-block, var(--mp-typography-popup-padding-block)) var(--forge-typography-popup-padding-inline, var(--mp-typography-popup-padding-inline));
+    background-color: var(--forge-typography-popup-surface, var(--mp-typography-popup-surface));
+    color: var(--forge-typography-popup-text, var(--mp-typography-popup-text));
+    border: var(--forge-typography-popup-border-width, var(--mp-typography-popup-border-width)) solid var(--forge-typography-popup-border, var(--mp-typography-popup-border));
+    border-radius: var(--forge-typography-popup-radius, var(--mp-typography-popup-radius));
+    box-shadow: var(--forge-typography-popup-shadow, var(--mp-typography-popup-shadow));
+    font-family: var(--forge-typography-popup-font-family, var(--mp-typography-popup-font-family));
+    font-size: var(--forge-typography-popup-font-size, var(--mp-typography-popup-font-size));
+    font-weight: var(--forge-typography-popup-font-weight, var(--mp-typography-popup-font-weight));
+    line-height: var(--forge-typography-popup-line-height, var(--mp-typography-popup-line-height));
+    letter-spacing: var(--forge-typography-popup-letter-spacing, var(--mp-typography-popup-letter-spacing));
+    white-space: normal;
+    overflow-wrap: break-word;
+    pointer-events: none;
+  }
+}

@@ -7,19 +7,19 @@
  *
  * The rules live in the package-owned `mp.forms` cascade layer.
  */
-
 @use 'sass:list';
+@use './forge-switch-properties';
 
 @layer mp.forms {
   .forge-switch {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-checkable-gap-stack);
+    gap: var(--forge-switch-checkable-gap-stack, var(--mp-checkable-gap-stack));
 
     &__row {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-checkable-gap-inline);
+      gap: var(--forge-switch-checkable-gap-inline, var(--mp-checkable-gap-inline));
       cursor: pointer;
     }
 
@@ -35,53 +35,53 @@
       $dims
         in (
           '2xs': (
-              var(--mp-checkable-size-2xs-switch-width),
-              var(--mp-checkable-size-2xs-switch-height),
-              var(--mp-checkable-size-2xs-switch-padding),
-              var(--mp-checkable-size-2xs-switch-thumb-size),
-              var(--mp-checkable-size-2xs-switch-translate),
+              var(--forge-switch-checkable-size-2xs-switch-width, var(--mp-checkable-size-2xs-switch-width)),
+              var(--forge-switch-checkable-size-2xs-switch-height, var(--mp-checkable-size-2xs-switch-height)),
+              var(--forge-switch-checkable-size-2xs-switch-padding, var(--mp-checkable-size-2xs-switch-padding)),
+              var(--forge-switch-checkable-size-2xs-switch-thumb-size, var(--mp-checkable-size-2xs-switch-thumb-size)),
+              var(--forge-switch-checkable-size-2xs-switch-translate, var(--mp-checkable-size-2xs-switch-translate)),
             ),
           'xs': (
-              var(--mp-checkable-size-xs-switch-width),
-              var(--mp-checkable-size-xs-switch-height),
-              var(--mp-checkable-size-xs-switch-padding),
-              var(--mp-checkable-size-xs-switch-thumb-size),
-              var(--mp-checkable-size-xs-switch-translate),
+              var(--forge-switch-checkable-size-xs-switch-width, var(--mp-checkable-size-xs-switch-width)),
+              var(--forge-switch-checkable-size-xs-switch-height, var(--mp-checkable-size-xs-switch-height)),
+              var(--forge-switch-checkable-size-xs-switch-padding, var(--mp-checkable-size-xs-switch-padding)),
+              var(--forge-switch-checkable-size-xs-switch-thumb-size, var(--mp-checkable-size-xs-switch-thumb-size)),
+              var(--forge-switch-checkable-size-xs-switch-translate, var(--mp-checkable-size-xs-switch-translate)),
             ),
           'sm': (
-              var(--mp-checkable-size-sm-switch-width),
-              var(--mp-checkable-size-sm-switch-height),
-              var(--mp-checkable-size-sm-switch-padding),
-              var(--mp-checkable-size-sm-switch-thumb-size),
-              var(--mp-checkable-size-sm-switch-translate),
+              var(--forge-switch-checkable-size-sm-switch-width, var(--mp-checkable-size-sm-switch-width)),
+              var(--forge-switch-checkable-size-sm-switch-height, var(--mp-checkable-size-sm-switch-height)),
+              var(--forge-switch-checkable-size-sm-switch-padding, var(--mp-checkable-size-sm-switch-padding)),
+              var(--forge-switch-checkable-size-sm-switch-thumb-size, var(--mp-checkable-size-sm-switch-thumb-size)),
+              var(--forge-switch-checkable-size-sm-switch-translate, var(--mp-checkable-size-sm-switch-translate)),
             ),
           'md': (
-              var(--mp-checkable-size-md-switch-width),
-              var(--mp-checkable-size-md-switch-height),
-              var(--mp-checkable-size-md-switch-padding),
-              var(--mp-checkable-size-md-switch-thumb-size),
-              var(--mp-checkable-size-md-switch-translate),
+              var(--forge-switch-checkable-size-md-switch-width, var(--mp-checkable-size-md-switch-width)),
+              var(--forge-switch-checkable-size-md-switch-height, var(--mp-checkable-size-md-switch-height)),
+              var(--forge-switch-checkable-size-md-switch-padding, var(--mp-checkable-size-md-switch-padding)),
+              var(--forge-switch-checkable-size-md-switch-thumb-size, var(--mp-checkable-size-md-switch-thumb-size)),
+              var(--forge-switch-checkable-size-md-switch-translate, var(--mp-checkable-size-md-switch-translate)),
             ),
           'lg': (
-              var(--mp-checkable-size-lg-switch-width),
-              var(--mp-checkable-size-lg-switch-height),
-              var(--mp-checkable-size-lg-switch-padding),
-              var(--mp-checkable-size-lg-switch-thumb-size),
-              var(--mp-checkable-size-lg-switch-translate),
+              var(--forge-switch-checkable-size-lg-switch-width, var(--mp-checkable-size-lg-switch-width)),
+              var(--forge-switch-checkable-size-lg-switch-height, var(--mp-checkable-size-lg-switch-height)),
+              var(--forge-switch-checkable-size-lg-switch-padding, var(--mp-checkable-size-lg-switch-padding)),
+              var(--forge-switch-checkable-size-lg-switch-thumb-size, var(--mp-checkable-size-lg-switch-thumb-size)),
+              var(--forge-switch-checkable-size-lg-switch-translate, var(--mp-checkable-size-lg-switch-translate)),
             ),
           'xl': (
-              var(--mp-checkable-size-xl-switch-width),
-              var(--mp-checkable-size-xl-switch-height),
-              var(--mp-checkable-size-xl-switch-padding),
-              var(--mp-checkable-size-xl-switch-thumb-size),
-              var(--mp-checkable-size-xl-switch-translate),
+              var(--forge-switch-checkable-size-xl-switch-width, var(--mp-checkable-size-xl-switch-width)),
+              var(--forge-switch-checkable-size-xl-switch-height, var(--mp-checkable-size-xl-switch-height)),
+              var(--forge-switch-checkable-size-xl-switch-padding, var(--mp-checkable-size-xl-switch-padding)),
+              var(--forge-switch-checkable-size-xl-switch-thumb-size, var(--mp-checkable-size-xl-switch-thumb-size)),
+              var(--forge-switch-checkable-size-xl-switch-translate, var(--mp-checkable-size-xl-switch-translate)),
             ),
           '2xl': (
-              var(--mp-checkable-size-2xl-switch-width),
-              var(--mp-checkable-size-2xl-switch-height),
-              var(--mp-checkable-size-2xl-switch-padding),
-              var(--mp-checkable-size-2xl-switch-thumb-size),
-              var(--mp-checkable-size-2xl-switch-translate),
+              var(--forge-switch-checkable-size-2xl-switch-width, var(--mp-checkable-size-2xl-switch-width)),
+              var(--forge-switch-checkable-size-2xl-switch-height, var(--mp-checkable-size-2xl-switch-height)),
+              var(--forge-switch-checkable-size-2xl-switch-padding, var(--mp-checkable-size-2xl-switch-padding)),
+              var(--forge-switch-checkable-size-2xl-switch-thumb-size, var(--mp-checkable-size-2xl-switch-thumb-size)),
+              var(--forge-switch-checkable-size-2xl-switch-translate, var(--mp-checkable-size-2xl-switch-translate)),
             )
         )
     {
@@ -104,7 +104,8 @@
     /* States */
     &--error {
       .forge-switch__track {
-        outline: var(--mp-checkable-border-width-invalid) solid var(--mp-checkable-border-invalid);
+        outline: var(--forge-switch-checkable-border-width-invalid, var(--mp-checkable-border-width-invalid)) solid
+          var(--forge-switch-checkable-border-invalid, var(--mp-checkable-border-invalid));
       }
     }
 
@@ -117,12 +118,13 @@
       cursor: pointer;
 
       &:focus-visible ~ .forge-switch__track {
-        outline: var(--mp-checkable-border-width-focus) solid var(--mp-checkable-border-focus-visible);
+        outline: var(--forge-switch-checkable-border-width-focus, var(--mp-checkable-border-width-focus)) solid
+          var(--forge-switch-checkable-border-focus-visible, var(--mp-checkable-border-focus-visible));
         outline-offset: 2px;
       }
 
       &:checked ~ .forge-switch__track {
-        background-color: var(--mp-checkable-track-selected);
+        background-color: var(--forge-switch-checkable-track-selected, var(--mp-checkable-track-selected));
 
         .forge-switch__thumb {
           transform: translateX(var(--thumb-translate));
@@ -133,23 +135,27 @@
     &__track {
       display: flex;
       align-items: center;
-      background-color: var(--mp-checkable-track-unselected);
-      border-radius: var(--mp-checkable-circle-radius);
-      transition: background-color var(--mp-checkable-transition-switch-duration) var(--mp-checkable-transition-easing);
+      background-color: var(--forge-switch-checkable-track-unselected, var(--mp-checkable-track-unselected));
+      border-radius: var(--forge-switch-checkable-circle-radius, var(--mp-checkable-circle-radius));
+      transition: background-color
+        var(--forge-switch-checkable-transition-switch-duration, var(--mp-checkable-transition-switch-duration))
+        var(--forge-switch-checkable-transition-easing, var(--mp-checkable-transition-easing));
       pointer-events: none;
     }
 
     &__thumb {
       display: block;
-      background-color: var(--mp-checkable-thumb-on-track);
-      border-radius: var(--mp-checkable-circle-radius);
-      box-shadow: var(--mp-checkable-shadow);
-      transition: transform var(--mp-checkable-transition-switch-duration) var(--mp-checkable-transition-easing);
+      background-color: var(--forge-switch-checkable-thumb-on-track, var(--mp-checkable-thumb-on-track));
+      border-radius: var(--forge-switch-checkable-circle-radius, var(--mp-checkable-circle-radius));
+      box-shadow: var(--forge-switch-checkable-shadow, var(--mp-checkable-shadow));
+      transition: transform
+        var(--forge-switch-checkable-transition-switch-duration, var(--mp-checkable-transition-switch-duration))
+        var(--forge-switch-checkable-transition-easing, var(--mp-checkable-transition-easing));
       flex-shrink: 0;
     }
 
     &--disabled {
-      opacity: var(--mp-checkable-opacity-disabled);
+      opacity: var(--forge-switch-checkable-opacity-disabled, var(--mp-checkable-opacity-disabled));
       pointer-events: none;
 
       .forge-switch__row {
@@ -158,7 +164,7 @@
     }
 
     &__error {
-      color: var(--mp-field-error);
+      color: var(--forge-switch-field-error, var(--mp-field-error));
       margin: 0;
     }
 

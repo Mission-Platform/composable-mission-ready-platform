@@ -1,0 +1,294 @@
+/**
+ * Registered inherited custom properties for forge-multiselect overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-multiselect-select-field-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-field-gap);
+}
+
+@property --forge-multiselect-field-required {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-required);
+}
+
+@property --forge-multiselect-select-border-width-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-border-width-default);
+}
+
+@property --forge-multiselect-select-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-border-default);
+}
+
+@property --forge-multiselect-select-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-radius);
+}
+
+@property --forge-multiselect-select-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-surface-default);
+}
+
+@property --forge-multiselect-select-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-transition-duration);
+}
+
+@property --forge-multiselect-select-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-transition-easing);
+}
+
+@property --forge-multiselect-select-border-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-border-focus-visible);
+}
+
+@property --forge-multiselect-select-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-focus-ring);
+}
+
+@property --forge-multiselect-select-control-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-control-gap);
+}
+
+@property --forge-multiselect-select-tag-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-tag-gap);
+}
+
+@property --forge-multiselect-select-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-font-family);
+}
+
+@property --forge-multiselect-select-size-md-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-md-font-size);
+}
+
+@property --forge-multiselect-select-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-line-height);
+}
+
+@property --forge-multiselect-select-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-text-default);
+}
+
+@property --forge-multiselect-select-text-placeholder {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-text-placeholder);
+}
+
+@property --forge-multiselect-select-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-text-secondary);
+}
+
+@property --forge-multiselect-select-size-sm-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-font-size);
+}
+
+@property --forge-multiselect-select-option-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-padding-block);
+}
+
+@property --forge-multiselect-select-option-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-padding-inline);
+}
+
+@property --forge-multiselect-select-option-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-text-default);
+}
+
+@property --forge-multiselect-select-option-text-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-text-disabled);
+}
+
+@property --forge-multiselect-select-option-background-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-option-background-hover);
+}
+
+@property --forge-multiselect-select-size-2xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-padding-block);
+}
+
+@property --forge-multiselect-select-size-xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-padding-block);
+}
+
+@property --forge-multiselect-select-size-sm-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-padding-block);
+}
+
+@property --forge-multiselect-select-size-md-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-md-padding-block);
+}
+
+@property --forge-multiselect-select-size-lg-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-padding-block);
+}
+
+@property --forge-multiselect-select-size-xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-padding-block);
+}
+
+@property --forge-multiselect-select-size-2xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-padding-block);
+}
+
+@property --forge-multiselect-select-size-2xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-padding-inline);
+}
+
+@property --forge-multiselect-select-size-xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-padding-inline);
+}
+
+@property --forge-multiselect-select-size-sm-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-padding-inline);
+}
+
+@property --forge-multiselect-select-size-md-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-md-padding-inline);
+}
+
+@property --forge-multiselect-select-size-lg-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-padding-inline);
+}
+
+@property --forge-multiselect-select-size-xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-padding-inline);
+}
+
+@property --forge-multiselect-select-size-2xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-padding-inline);
+}
+
+@property --forge-multiselect-select-size-2xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-font-size);
+}
+
+@property --forge-multiselect-select-size-xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-font-size);
+}
+
+@property --forge-multiselect-select-size-lg-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-font-size);
+}
+
+@property --forge-multiselect-select-size-xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-font-size);
+}
+
+@property --forge-multiselect-select-size-2xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-font-size);
+}
+
+@property --forge-multiselect-select-border-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-border-invalid);
+}
+
+@property --forge-multiselect-select-focus-ring-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-focus-ring-invalid);
+}
+
+@property --forge-multiselect-select-surface-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-surface-disabled);
+}
+
+@property --forge-multiselect-select-text-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-select-text-disabled);
+}
+
+@property --forge-multiselect-field-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-error);
+}

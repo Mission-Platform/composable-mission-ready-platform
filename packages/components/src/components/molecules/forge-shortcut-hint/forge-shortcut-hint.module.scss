@@ -1,20 +1,22 @@
+@use './forge-shortcut-hint-properties';
+
 @layer mp.components {
   .forge-shortcut-hint {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-spacing-2);
-    color: var(--mp-color-text-secondary);
+    gap: var(--forge-shortcut-hint-spacing-2, var(--mp-spacing-2));
+    color: var(--forge-shortcut-hint-color-text-secondary, var(--mp-color-text-secondary));
 
     &__keys {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-spacing-1);
+      gap: var(--forge-shortcut-hint-spacing-1, var(--mp-spacing-1));
     }
 
     &__key-group {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-spacing-1);
+      gap: var(--forge-shortcut-hint-spacing-1, var(--mp-spacing-1));
     }
 
     &__key {
@@ -22,27 +24,29 @@
       align-items: center;
       justify-content: center;
       min-width: 1.5em;
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-bottom-width: var(--mp-border-width-thick);
-      border-radius: var(--mp-radius-sm);
-      background: var(--mp-color-bg-raised);
-      color: var(--mp-color-text-primary);
+      padding: var(--forge-shortcut-hint-spacing-1, var(--mp-spacing-1))
+        var(--forge-shortcut-hint-spacing-2, var(--mp-spacing-2));
+      border: var(--forge-shortcut-hint-border-width-thin, var(--mp-border-width-thin)) solid
+        var(--forge-shortcut-hint-color-border-default, var(--mp-color-border-default));
+      border-bottom-width: var(--forge-shortcut-hint-border-width-thick, var(--mp-border-width-thick));
+      border-radius: var(--forge-shortcut-hint-radius-sm, var(--mp-radius-sm));
+      background: var(--forge-shortcut-hint-color-bg-raised, var(--mp-color-bg-raised));
+      color: var(--forge-shortcut-hint-color-text-primary, var(--mp-color-text-primary));
       font-family: inherit;
       font-size: 0.875em;
       line-height: 1;
     }
 
     &--sm {
-      font-size: var(--mp-font-size-sm);
+      font-size: var(--forge-shortcut-hint-font-size-sm, var(--mp-font-size-sm));
     }
 
     &--md {
-      font-size: var(--mp-font-size-md);
+      font-size: var(--forge-shortcut-hint-font-size-md, var(--mp-font-size-md));
     }
 
     &--lg {
-      font-size: var(--mp-font-size-lg);
+      font-size: var(--forge-shortcut-hint-font-size-lg, var(--mp-font-size-lg));
     }
   }
 }

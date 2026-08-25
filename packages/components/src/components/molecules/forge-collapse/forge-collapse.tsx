@@ -1,4 +1,10 @@
-import { classNames, type MpChild, type MpElement } from '@mission-platform/forge';
+import {
+  classNames,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
 import styles from './forge-collapse.module.scss';
@@ -10,6 +16,87 @@ export type CollapseSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type CollapseVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface CollapseStyleProperties {
+  readonly border?: string;
+  readonly 'border-width'?: string;
+  readonly 'content-border'?: string;
+  readonly 'content-border-width'?: string;
+  readonly 'content-padding-block'?: string;
+  readonly 'content-padding-inline'?: string;
+  readonly 'content-text'?: string;
+  readonly 'disabled-border'?: string;
+  readonly 'disabled-surface'?: string;
+  readonly 'disabled-text'?: string;
+  readonly radius?: string;
+  readonly 'summary-focus-ring'?: string;
+  readonly 'summary-font-weight'?: string;
+  readonly 'summary-gap'?: string;
+  readonly 'summary-padding-block'?: string;
+  readonly 'summary-padding-inline'?: string;
+  readonly 'summary-surface-hover'?: string;
+  readonly 'summary-text'?: string;
+  readonly surface?: string;
+  readonly 'tone-disabled-border'?: string;
+  readonly 'tone-disabled-text'?: string;
+  readonly 'transition-duration'?: string;
+  readonly 'transition-easing'?: string;
+}
+
+export type CollapseStyle = CSSStyleProperties & {
+  readonly '--forge-collapse-border'?: string | undefined;
+  readonly '--forge-collapse-border-width'?: string | undefined;
+  readonly '--forge-collapse-content-border'?: string | undefined;
+  readonly '--forge-collapse-content-border-width'?: string | undefined;
+  readonly '--forge-collapse-content-padding-block'?: string | undefined;
+  readonly '--forge-collapse-content-padding-inline'?: string | undefined;
+  readonly '--forge-collapse-content-text'?: string | undefined;
+  readonly '--forge-collapse-disabled-border'?: string | undefined;
+  readonly '--forge-collapse-disabled-surface'?: string | undefined;
+  readonly '--forge-collapse-disabled-text'?: string | undefined;
+  readonly '--forge-collapse-radius'?: string | undefined;
+  readonly '--forge-collapse-summary-focus-ring'?: string | undefined;
+  readonly '--forge-collapse-summary-font-weight'?: string | undefined;
+  readonly '--forge-collapse-summary-gap'?: string | undefined;
+  readonly '--forge-collapse-summary-padding-block'?: string | undefined;
+  readonly '--forge-collapse-summary-padding-inline'?: string | undefined;
+  readonly '--forge-collapse-summary-surface-hover'?: string | undefined;
+  readonly '--forge-collapse-summary-text'?: string | undefined;
+  readonly '--forge-collapse-surface'?: string | undefined;
+  readonly '--forge-collapse-tone-disabled-border'?: string | undefined;
+  readonly '--forge-collapse-tone-disabled-text'?: string | undefined;
+  readonly '--forge-collapse-transition-duration'?: string | undefined;
+  readonly '--forge-collapse-transition-easing'?: string | undefined;
+};
+
+function createCollapseStyle(properties: Readonly<CollapseStyleProperties> | undefined): CollapseStyle | undefined {
+  return createForgeStyle({
+    '--forge-collapse-border': properties?.['border'],
+    '--forge-collapse-border-width': properties?.['border-width'],
+    '--forge-collapse-content-border': properties?.['content-border'],
+    '--forge-collapse-content-border-width': properties?.['content-border-width'],
+    '--forge-collapse-content-padding-block': properties?.['content-padding-block'],
+    '--forge-collapse-content-padding-inline': properties?.['content-padding-inline'],
+    '--forge-collapse-content-text': properties?.['content-text'],
+    '--forge-collapse-disabled-border': properties?.['disabled-border'],
+    '--forge-collapse-disabled-surface': properties?.['disabled-surface'],
+    '--forge-collapse-disabled-text': properties?.['disabled-text'],
+    '--forge-collapse-radius': properties?.['radius'],
+    '--forge-collapse-summary-focus-ring': properties?.['summary-focus-ring'],
+    '--forge-collapse-summary-font-weight': properties?.['summary-font-weight'],
+    '--forge-collapse-summary-gap': properties?.['summary-gap'],
+    '--forge-collapse-summary-padding-block': properties?.['summary-padding-block'],
+    '--forge-collapse-summary-padding-inline': properties?.['summary-padding-inline'],
+    '--forge-collapse-summary-surface-hover': properties?.['summary-surface-hover'],
+    '--forge-collapse-summary-text': properties?.['summary-text'],
+    '--forge-collapse-surface': properties?.['surface'],
+    '--forge-collapse-tone-disabled-border': properties?.['tone-disabled-border'],
+    '--forge-collapse-tone-disabled-text': properties?.['tone-disabled-text'],
+    '--forge-collapse-transition-duration': properties?.['transition-duration'],
+    '--forge-collapse-transition-easing': properties?.['transition-easing'],
+  }) as CollapseStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface CollapseProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -25,6 +112,9 @@ export interface CollapseProperties {
   disabled?: boolean;
   /** Fired when the disclosure is toggled; receives the new open state. */
   onToggle?: (open: boolean) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<CollapseStyleProperties>;
 }
 
 /**
@@ -47,6 +137,8 @@ export interface CollapseProperties {
  * collide with same-named props).
  */
 export function ForgeCollapse(properties: Readonly<CollapseProperties>): MpElement {
+  const style = createCollapseStyle(properties.properties);
+
   const { summary = 'Details', open = false, disabled = false, variant = 'neutral', size = 'md' } = properties;
 
   const className = classNames(
@@ -68,6 +160,7 @@ export function ForgeCollapse(properties: Readonly<CollapseProperties>): MpEleme
       className={className}
       open={open}
       onToggle={handleToggle}
+      style={style}
     >
       <summary className={styles['forge-collapse__summary']}>
         <span className={styles['forge-collapse__label']}>{summary}</span>

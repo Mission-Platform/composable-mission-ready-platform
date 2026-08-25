@@ -1,0 +1,51 @@
+/**
+ * Registered inherited custom properties for forge-breadcrumb overrides.
+ */
+
+@property --forge-breadcrumb-navigation-breadcrumb-gap-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-breadcrumb-gap-default);
+}
+
+@property --forge-breadcrumb-navigation-breadcrumb-gap-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-breadcrumb-gap-wide);
+}
+
+@property --forge-breadcrumb-navigation-breadcrumb-separator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-breadcrumb-separator);
+}
+
+@property --forge-breadcrumb-navigation-breadcrumb-link-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-breadcrumb-link-text);
+}
+
+@property --forge-breadcrumb-navigation-breadcrumb-link-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-breadcrumb-link-text-hover);
+}
+
+@property --forge-breadcrumb-navigation-breadcrumb-link-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-breadcrumb-link-radius);
+}
+
+@property --forge-breadcrumb-navigation-breadcrumb-link-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-breadcrumb-link-focus-ring);
+}
+
+@property --forge-breadcrumb-navigation-breadcrumb-current-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-breadcrumb-current-text);
+}

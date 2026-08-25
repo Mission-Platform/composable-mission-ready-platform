@@ -9,6 +9,8 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-pagination-properties';
+
 @layer mp.components {
   .forge-pagination {
     @supports (container-type: inline-size) {
@@ -19,17 +21,17 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: var(--mp-navigation-pagination-gap-default);
+      gap: var(--forge-pagination-navigation-pagination-gap-default, var(--mp-navigation-pagination-gap-default));
       list-style: none;
       margin: 0;
       padding: 0;
 
       @container forge-pagination (width >= 30rem) {
-        gap: var(--mp-navigation-pagination-gap-wide);
+        gap: var(--forge-pagination-navigation-pagination-gap-wide, var(--mp-navigation-pagination-gap-wide));
       }
 
       @container forge-pagination (width >= 48rem) {
-        gap: var(--mp-navigation-pagination-gap-wider);
+        gap: var(--forge-pagination-navigation-pagination-gap-wider, var(--mp-navigation-pagination-gap-wider));
       }
     }
 
@@ -37,41 +39,89 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: var(--mp-pagination-size, 2.25rem);
-      height: var(--mp-pagination-size, 2.25rem);
-      padding: 0 var(--mp-navigation-pagination-padding-inline);
-      background-color: var(--mp-navigation-pagination-surface-default);
-      color: var(--mp-navigation-pagination-text-default);
-      border: var(--mp-navigation-pagination-border-width) solid var(--mp-navigation-pagination-border-default);
-      border-radius: var(--mp-navigation-pagination-radius);
-      font-family: var(--mp-navigation-font-family);
-      font-size: var(--mp-pagination-font, var(--mp-navigation-pagination-font-md));
+      min-width: var(--forge-pagination-size, var(--mp-pagination-size, 2.25rem));
+      height: var(--forge-pagination-size, var(--mp-pagination-size, 2.25rem));
+      padding: 0
+        var(--forge-pagination-navigation-pagination-padding-inline, var(--mp-navigation-pagination-padding-inline));
+      background-color: var(
+        --forge-pagination-navigation-pagination-surface-default,
+        var(--mp-navigation-pagination-surface-default)
+      );
+      color: var(--forge-pagination-navigation-pagination-text-default, var(--mp-navigation-pagination-text-default));
+      border: var(--forge-pagination-navigation-pagination-border-width, var(--mp-navigation-pagination-border-width))
+        solid
+        var(--forge-pagination-navigation-pagination-border-default, var(--mp-navigation-pagination-border-default));
+      border-radius: var(--forge-pagination-navigation-pagination-radius, var(--mp-navigation-pagination-radius));
+      font-family: var(--forge-pagination-navigation-font-family, var(--mp-navigation-font-family));
+      font-size: var(--forge-pagination-font, var(--mp-pagination-font, var(--mp-navigation-pagination-font-md)));
       cursor: pointer;
       transition:
-        background-color var(--mp-navigation-pagination-transition-duration) var(--mp-navigation-pagination-transition-easing),
-        border-color var(--mp-navigation-pagination-transition-duration) var(--mp-navigation-pagination-transition-easing),
-        color var(--mp-navigation-pagination-transition-duration) var(--mp-navigation-pagination-transition-easing);
+        background-color
+          var(
+            --forge-pagination-navigation-pagination-transition-duration,
+            var(--mp-navigation-pagination-transition-duration)
+          )
+          var(
+            --forge-pagination-navigation-pagination-transition-easing,
+            var(--mp-navigation-pagination-transition-easing)
+          ),
+        border-color
+          var(
+            --forge-pagination-navigation-pagination-transition-duration,
+            var(--mp-navigation-pagination-transition-duration)
+          )
+          var(
+            --forge-pagination-navigation-pagination-transition-easing,
+            var(--mp-navigation-pagination-transition-easing)
+          ),
+        color
+          var(
+            --forge-pagination-navigation-pagination-transition-duration,
+            var(--mp-navigation-pagination-transition-duration)
+          )
+          var(
+            --forge-pagination-navigation-pagination-transition-easing,
+            var(--mp-navigation-pagination-transition-easing)
+          );
 
       &--active {
-        background-color: var(--mp-navigation-pagination-surface-active);
-        border-color: var(--mp-navigation-pagination-border-active);
-        color: var(--mp-navigation-pagination-text-active);
+        background-color: var(
+          --forge-pagination-navigation-pagination-surface-active,
+          var(--mp-navigation-pagination-surface-active)
+        );
+        border-color: var(
+          --forge-pagination-navigation-pagination-border-active,
+          var(--mp-navigation-pagination-border-active)
+        );
+        color: var(--forge-pagination-navigation-pagination-text-active, var(--mp-navigation-pagination-text-active));
         cursor: default;
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-navigation-pagination-focus-ring);
+        box-shadow: var(
+          --forge-pagination-navigation-pagination-focus-ring,
+          var(--mp-navigation-pagination-focus-ring)
+        );
       }
 
       &:disabled {
         cursor: not-allowed;
-        opacity: var(--mp-navigation-pagination-opacity-disabled);
+        opacity: var(
+          --forge-pagination-navigation-pagination-opacity-disabled,
+          var(--mp-navigation-pagination-opacity-disabled)
+        );
       }
 
       &:hover:not(:disabled, .forge-pagination__btn--active) {
-        background-color: var(--mp-navigation-pagination-surface-hover);
-        border-color: var(--mp-navigation-pagination-border-hover);
+        background-color: var(
+          --forge-pagination-navigation-pagination-surface-hover,
+          var(--mp-navigation-pagination-surface-hover)
+        );
+        border-color: var(
+          --forge-pagination-navigation-pagination-border-hover,
+          var(--mp-navigation-pagination-border-hover)
+        );
       }
     }
 
@@ -79,46 +129,67 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: var(--mp-pagination-size, 2.25rem);
-      height: var(--mp-pagination-size, 2.25rem);
-      color: var(--mp-navigation-pagination-text-ellipsis);
+      min-width: var(--forge-pagination-size, var(--mp-pagination-size, 2.25rem));
+      height: var(--forge-pagination-size, var(--mp-pagination-size, 2.25rem));
+      color: var(--forge-pagination-navigation-pagination-text-ellipsis, var(--mp-navigation-pagination-text-ellipsis));
       user-select: none;
     }
 
     /* Sizes — canonical 2xs → 2xl scale (control size + glyph font). */
     &--2xs {
       --mp-pagination-size: 1.25rem;
-      --mp-pagination-font: var(--mp-navigation-pagination-font-2xs);
+      --mp-pagination-font: var(
+        --forge-pagination-navigation-pagination-font-2xs,
+        var(--mp-navigation-pagination-font-2xs)
+      );
     }
 
     &--xs {
       --mp-pagination-size: 1.5rem;
-      --mp-pagination-font: var(--mp-navigation-pagination-font-xs);
+      --mp-pagination-font: var(
+        --forge-pagination-navigation-pagination-font-xs,
+        var(--mp-navigation-pagination-font-xs)
+      );
     }
 
     &--sm {
       --mp-pagination-size: 1.75rem;
-      --mp-pagination-font: var(--mp-navigation-pagination-font-sm);
+      --mp-pagination-font: var(
+        --forge-pagination-navigation-pagination-font-sm,
+        var(--mp-navigation-pagination-font-sm)
+      );
     }
 
     &--md {
       --mp-pagination-size: 2.25rem;
-      --mp-pagination-font: var(--mp-navigation-pagination-font-md);
+      --mp-pagination-font: var(
+        --forge-pagination-navigation-pagination-font-md,
+        var(--mp-navigation-pagination-font-md)
+      );
     }
 
     &--lg {
       --mp-pagination-size: 2.75rem;
-      --mp-pagination-font: var(--mp-navigation-pagination-font-lg);
+      --mp-pagination-font: var(
+        --forge-pagination-navigation-pagination-font-lg,
+        var(--mp-navigation-pagination-font-lg)
+      );
     }
 
     &--xl {
       --mp-pagination-size: 3.25rem;
-      --mp-pagination-font: var(--mp-navigation-pagination-font-xl);
+      --mp-pagination-font: var(
+        --forge-pagination-navigation-pagination-font-xl,
+        var(--mp-navigation-pagination-font-xl)
+      );
     }
 
     &--2xl {
       --mp-pagination-size: 3.75rem;
-      --mp-pagination-font: var(--mp-navigation-pagination-font-2xl);
+      --mp-pagination-font: var(
+        --forge-pagination-navigation-pagination-font-2xl,
+        var(--mp-navigation-pagination-font-2xl)
+      );
     }
   }
 }

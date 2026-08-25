@@ -7,32 +7,77 @@
  * BEM class names. Rules live in the shared `mp.components` cascade layer.
  */
 
+@use './forge-virtual-log-viewer-properties';
+
 @layer mp.components {
   .log-viewer {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: var(--mp-code-virtual-log-viewer-surface);
-    border: var(--mp-code-virtual-log-viewer-border-width) solid var(--mp-code-virtual-log-viewer-border);
-    border-radius: var(--mp-code-virtual-log-viewer-radius);
+    background: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-surface,
+      var(--mp-code-virtual-log-viewer-surface)
+    );
+    border: var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-border-width,
+        var(--mp-code-virtual-log-viewer-border-width)
+      )
+      solid var(--forge-virtual-log-viewer-code-virtual-log-viewer-border, var(--mp-code-virtual-log-viewer-border));
+    border-radius: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-radius,
+      var(--mp-code-virtual-log-viewer-radius)
+    );
   }
 
   .log-viewer__toolbar {
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    height: var(--mp-code-virtual-log-viewer-toolbar-height);
-    padding: 0 var(--mp-code-virtual-log-viewer-toolbar-padding-inline);
-    background: var(--mp-code-virtual-log-viewer-toolbar-surface);
-    border-bottom: var(--mp-code-virtual-log-viewer-border-width) solid var(--mp-code-virtual-log-viewer-toolbar-border);
+    height: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-height,
+      var(--mp-code-virtual-log-viewer-toolbar-height)
+    );
+    padding: 0
+      var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-padding-inline,
+        var(--mp-code-virtual-log-viewer-toolbar-padding-inline)
+      );
+    background: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-surface,
+      var(--mp-code-virtual-log-viewer-toolbar-surface)
+    );
+    border-bottom: var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-border-width,
+        var(--mp-code-virtual-log-viewer-border-width)
+      )
+      solid
+      var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-toolbar-border,
+        var(--mp-code-virtual-log-viewer-toolbar-border)
+      );
   }
 
   .log-viewer__filter-badge {
-    font-family: var(--mp-code-virtual-log-viewer-filter-font-family);
-    font-size: var(--mp-code-virtual-log-viewer-filter-font-size);
-    font-weight: var(--mp-code-virtual-log-viewer-filter-font-weight);
-    color: var(--mp-code-virtual-log-viewer-filter-text);
-    letter-spacing: var(--mp-code-virtual-log-viewer-filter-letter-spacing);
+    font-family: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-family,
+      var(--mp-code-virtual-log-viewer-filter-font-family)
+    );
+    font-size: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-size,
+      var(--mp-code-virtual-log-viewer-filter-font-size)
+    );
+    font-weight: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-filter-font-weight,
+      var(--mp-code-virtual-log-viewer-filter-font-weight)
+    );
+    color: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-filter-text,
+      var(--mp-code-virtual-log-viewer-filter-text)
+    );
+    letter-spacing: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-filter-letter-spacing,
+      var(--mp-code-virtual-log-viewer-filter-letter-spacing)
+    );
     text-transform: uppercase;
   }
 
@@ -42,10 +87,14 @@
 
   .log-viewer__row {
     display: flex;
-    gap: var(--mp-code-virtual-log-viewer-row-gap);
+    gap: var(--forge-virtual-log-viewer-code-virtual-log-viewer-row-gap, var(--mp-code-virtual-log-viewer-row-gap));
     align-items: center;
     width: 100%;
-    padding: 0 var(--mp-code-virtual-log-viewer-row-padding-inline);
+    padding: 0
+      var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-row-padding-inline,
+        var(--mp-code-virtual-log-viewer-row-padding-inline)
+      );
     margin: 0;
     font: inherit;
     color: inherit;
@@ -53,53 +102,120 @@
     cursor: default;
     background: none;
     border: 0;
-    border-bottom: var(--mp-code-virtual-log-viewer-row-border-width) solid var(--mp-code-virtual-log-viewer-row-border);
+    border-bottom: var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-row-border-width,
+        var(--mp-code-virtual-log-viewer-row-border-width)
+      )
+      solid
+      var(--forge-virtual-log-viewer-code-virtual-log-viewer-row-border, var(--mp-code-virtual-log-viewer-row-border));
     outline: none;
-    transition: background-color var(--mp-code-virtual-log-viewer-row-transition-duration) var(--mp-code-virtual-log-viewer-row-transition-easing);
+    transition: background-color
+      var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-row-transition-duration,
+        var(--mp-code-virtual-log-viewer-row-transition-duration)
+      )
+      var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-row-transition-easing,
+        var(--mp-code-virtual-log-viewer-row-transition-easing)
+      );
 
     &:hover {
-      background-color: var(--mp-code-virtual-log-viewer-row-hover-surface);
+      background-color: var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-row-hover-surface,
+        var(--mp-code-virtual-log-viewer-row-hover-surface)
+      );
     }
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-code-virtual-log-viewer-row-focus-ring);
+      box-shadow: var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-row-focus-ring,
+        var(--mp-code-virtual-log-viewer-row-focus-ring)
+      );
     }
   }
 
   .log-viewer__row--warn {
-    background: color-mix(in srgb, var(--mp-code-virtual-log-viewer-severity-warn) var(--mp-code-virtual-log-viewer-severity-warn-opacity), transparent);
+    background: color-mix(
+      in srgb,
+      var(
+          --forge-virtual-log-viewer-code-virtual-log-viewer-severity-warn,
+          var(--mp-code-virtual-log-viewer-severity-warn)
+        )
+        var(
+          --forge-virtual-log-viewer-code-virtual-log-viewer-severity-warn-opacity,
+          var(--mp-code-virtual-log-viewer-severity-warn-opacity)
+        ),
+      transparent
+    );
   }
 
   .log-viewer__row--error,
   .log-viewer__row--fatal {
-    background: color-mix(in srgb, var(--mp-code-virtual-log-viewer-severity-error) var(--mp-code-virtual-log-viewer-severity-error-opacity), transparent);
+    background: color-mix(
+      in srgb,
+      var(
+          --forge-virtual-log-viewer-code-virtual-log-viewer-severity-error,
+          var(--mp-code-virtual-log-viewer-severity-error)
+        )
+        var(
+          --forge-virtual-log-viewer-code-virtual-log-viewer-severity-error-opacity,
+          var(--mp-code-virtual-log-viewer-severity-error-opacity)
+        ),
+      transparent
+    );
   }
 
   .log-viewer__line-no {
     flex-shrink: 0;
-    min-width: var(--mp-code-virtual-log-viewer-line-number-min-width);
-    padding-right: var(--mp-code-virtual-log-viewer-line-number-padding-inline-end);
+    min-width: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-line-number-min-width,
+      var(--mp-code-virtual-log-viewer-line-number-min-width)
+    );
+    padding-right: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-line-number-padding-inline-end,
+      var(--mp-code-virtual-log-viewer-line-number-padding-inline-end)
+    );
     text-align: right;
-    border-right: var(--mp-code-virtual-log-viewer-row-border-width) solid var(--mp-code-virtual-log-viewer-line-number-border);
+    border-right: var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-row-border-width,
+        var(--mp-code-virtual-log-viewer-row-border-width)
+      )
+      solid
+      var(
+        --forge-virtual-log-viewer-code-virtual-log-viewer-line-number-border,
+        var(--mp-code-virtual-log-viewer-line-number-border)
+      );
   }
 
   .log-viewer__timestamp {
     flex-shrink: 0;
-    min-width: var(--mp-code-virtual-log-viewer-timestamp-min-width);
+    min-width: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-timestamp-min-width,
+      var(--mp-code-virtual-log-viewer-timestamp-min-width)
+    );
   }
 
   .log-viewer__level {
     display: flex;
     flex-shrink: 0;
-    gap: var(--mp-code-virtual-log-viewer-level-gap);
+    gap: var(--forge-virtual-log-viewer-code-virtual-log-viewer-level-gap, var(--mp-code-virtual-log-viewer-level-gap));
     align-items: center;
-    min-width: var(--mp-code-virtual-log-viewer-level-min-width);
+    min-width: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-level-min-width,
+      var(--mp-code-virtual-log-viewer-level-min-width)
+    );
   }
 
   .log-viewer__level-label {
-    font-weight: var(--mp-code-virtual-log-viewer-level-font-weight);
-    letter-spacing: var(--mp-code-virtual-log-viewer-level-letter-spacing);
+    font-weight: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-level-font-weight,
+      var(--mp-code-virtual-log-viewer-level-font-weight)
+    );
+    letter-spacing: var(
+      --forge-virtual-log-viewer-code-virtual-log-viewer-level-letter-spacing,
+      var(--mp-code-virtual-log-viewer-level-letter-spacing)
+    );
     text-transform: uppercase;
   }
 

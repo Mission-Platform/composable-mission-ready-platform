@@ -1,8 +1,10 @@
+@use './forge-comparison-table-properties';
+
 @layer mp.components {
   .forge-comparison-table {
     width: 100%;
     overflow-x: auto;
-    color: var(--mp-color-text-primary);
+    color: var(--forge-comparison-table-color-text-primary, var(--mp-color-text-primary));
   }
 
   .forge-comparison-table table {
@@ -13,8 +15,9 @@
 
   .forge-comparison-table th,
   .forge-comparison-table td {
-    padding: var(--mp-spacing-4);
-    border-bottom: var(--mp-border-width-thin) solid var(--mp-color-border-default);
+    padding: var(--forge-comparison-table-spacing-4, var(--mp-spacing-4));
+    border-bottom: var(--forge-comparison-table-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-comparison-table-color-border-default, var(--mp-color-border-default));
     text-align: center;
     vertical-align: top;
   }
@@ -25,17 +28,17 @@
   }
 
   .forge-comparison-table thead th {
-    background: var(--mp-color-bg-muted);
+    background: var(--forge-comparison-table-color-bg-muted, var(--mp-color-bg-muted));
   }
 
   .forge-comparison-table--sticky-header thead th {
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: var(--mp-z-index-feature-table);
   }
 
   .forge-comparison-table__highlighted {
-    background: var(--mp-color-primary-subtle);
+    background: var(--forge-comparison-table-color-primary-subtle, var(--mp-color-primary-subtle));
   }
 
   .forge-comparison-table__plan-name,
@@ -50,30 +53,32 @@
 
   .forge-comparison-table__plan-description,
   .forge-comparison-table tbody small {
-    margin-top: var(--mp-spacing-1);
-    color: var(--mp-color-text-secondary);
-    font-size: var(--mp-font-size-sm);
-    font-weight: var(--mp-font-weight-regular);
+    margin-top: var(--forge-comparison-table-spacing-1, var(--mp-spacing-1));
+    color: var(--forge-comparison-table-color-text-secondary, var(--mp-color-text-secondary));
+    font-size: var(--forge-comparison-table-font-size-sm, var(--mp-font-size-sm));
+    font-weight: var(--forge-comparison-table-font-weight-regular, var(--mp-font-weight-regular));
   }
 
   .forge-comparison-table__price {
-    margin: var(--mp-spacing-3) 0;
-    font-weight: var(--mp-font-weight-bold);
+    margin: var(--forge-comparison-table-spacing-3, var(--mp-spacing-3)) 0;
+    font-weight: var(--forge-comparison-table-font-weight-bold, var(--mp-font-weight-bold));
   }
 
   .forge-comparison-table__action {
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
+    padding: var(--forge-comparison-table-spacing-2, var(--mp-spacing-2))
+      var(--forge-comparison-table-spacing-3, var(--mp-spacing-3));
     border: 0;
-    border-radius: var(--mp-radius-sm);
-    color: var(--mp-color-text-on-primary);
-    background: var(--mp-color-primary-default);
+    border-radius: var(--forge-comparison-table-radius-sm, var(--mp-radius-sm));
+    color: var(--forge-comparison-table-color-text-on-primary, var(--mp-color-text-on-primary));
+    background: var(--forge-comparison-table-color-primary-default, var(--mp-color-primary-default));
     font: inherit;
-    font-weight: var(--mp-font-weight-semibold);
+    font-weight: var(--forge-comparison-table-font-weight-semibold, var(--mp-font-weight-semibold));
     cursor: pointer;
   }
 
   .forge-comparison-table__action:focus-visible {
-    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
-    outline-offset: var(--mp-spacing-1);
+    outline: var(--forge-comparison-table-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-comparison-table-color-border-focus, var(--mp-color-border-focus));
+    outline-offset: var(--forge-comparison-table-spacing-1, var(--mp-spacing-1));
   }
 }

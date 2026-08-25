@@ -1,4 +1,4 @@
-import { type MpElement } from '@mission-platform/forge';
+import { createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 import {
   ForgeIconAlignCenter,
   ForgeIconAlignJustify,
@@ -49,6 +49,48 @@ export interface WysiwygToolbarItem {
   icon?: MpElement;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface WysiwygToolbarStyleProperties {
+  readonly 'editor-toolbar-border'?: string;
+  readonly 'editor-toolbar-border-width'?: string;
+  readonly 'editor-toolbar-gap'?: string;
+  readonly 'editor-toolbar-group-border'?: string;
+  readonly 'editor-toolbar-group-border-width'?: string;
+  readonly 'editor-toolbar-group-gap'?: string;
+  readonly 'editor-toolbar-group-padding-inline-end'?: string;
+  readonly 'editor-toolbar-padding'?: string;
+  readonly 'editor-toolbar-surface'?: string;
+}
+
+export type WysiwygToolbarStyle = CSSStyleProperties & {
+  readonly '--forge-wysiwyg-toolbar-editor-toolbar-border'?: string | undefined;
+  readonly '--forge-wysiwyg-toolbar-editor-toolbar-border-width'?: string | undefined;
+  readonly '--forge-wysiwyg-toolbar-editor-toolbar-gap'?: string | undefined;
+  readonly '--forge-wysiwyg-toolbar-editor-toolbar-group-border'?: string | undefined;
+  readonly '--forge-wysiwyg-toolbar-editor-toolbar-group-border-width'?: string | undefined;
+  readonly '--forge-wysiwyg-toolbar-editor-toolbar-group-gap'?: string | undefined;
+  readonly '--forge-wysiwyg-toolbar-editor-toolbar-group-padding-inline-end'?: string | undefined;
+  readonly '--forge-wysiwyg-toolbar-editor-toolbar-padding'?: string | undefined;
+  readonly '--forge-wysiwyg-toolbar-editor-toolbar-surface'?: string | undefined;
+};
+
+function createWysiwygToolbarStyle(
+  properties: Readonly<WysiwygToolbarStyleProperties> | undefined,
+): WysiwygToolbarStyle | undefined {
+  return createForgeStyle({
+    '--forge-wysiwyg-toolbar-editor-toolbar-border': properties?.['editor-toolbar-border'],
+    '--forge-wysiwyg-toolbar-editor-toolbar-border-width': properties?.['editor-toolbar-border-width'],
+    '--forge-wysiwyg-toolbar-editor-toolbar-gap': properties?.['editor-toolbar-gap'],
+    '--forge-wysiwyg-toolbar-editor-toolbar-group-border': properties?.['editor-toolbar-group-border'],
+    '--forge-wysiwyg-toolbar-editor-toolbar-group-border-width': properties?.['editor-toolbar-group-border-width'],
+    '--forge-wysiwyg-toolbar-editor-toolbar-group-gap': properties?.['editor-toolbar-group-gap'],
+    '--forge-wysiwyg-toolbar-editor-toolbar-group-padding-inline-end':
+      properties?.['editor-toolbar-group-padding-inline-end'],
+    '--forge-wysiwyg-toolbar-editor-toolbar-padding': properties?.['editor-toolbar-padding'],
+    '--forge-wysiwyg-toolbar-editor-toolbar-surface': properties?.['editor-toolbar-surface'],
+  }) as WysiwygToolbarStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface WysiwygToolbarProperties {
   /**
    * A user-configurable list of toolbar controls. When provided, it fully
@@ -79,6 +121,9 @@ export interface WysiwygToolbarProperties {
   sourceActive?: boolean;
   /** Invoked when the source toggle is activated. */
   onToggleSource?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<WysiwygToolbarStyleProperties>;
 }
 
 /**
@@ -100,6 +145,8 @@ export interface WysiwygToolbarProperties {
  * never steals the selection away from the editing surface.
  */
 export function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement {
+  const style = createWysiwygToolbarStyle(properties.properties);
+
   const labels = resolveLabels(properties.labels);
   const disabled = properties.disabled ?? false;
   const active = properties.activeCommands ?? [];
@@ -133,6 +180,7 @@ export function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarPropertie
       role="toolbar"
       aria-label={labels.toolbar}
       onMousedown={preventFocusLoss}
+      style={style}
     >
       {blockMenu}
 

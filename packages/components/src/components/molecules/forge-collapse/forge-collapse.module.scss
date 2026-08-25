@@ -12,25 +12,28 @@
  * no JS state is needed.
  */
 
+@use './forge-collapse-properties';
+
 @layer mp.components {
   .forge-collapse {
-    border: var(--mp-collapse-border-width) solid var(--mp-collapse-border);
-    border-radius: var(--mp-collapse-radius);
-    background-color: var(--mp-collapse-surface);
+    border: var(--forge-collapse-border-width, var(--mp-collapse-border-width)) solid
+      var(--forge-collapse-border, var(--mp-collapse-border));
+    border-radius: var(--forge-collapse-radius, var(--mp-collapse-radius));
+    background-color: var(--forge-collapse-surface, var(--mp-collapse-surface));
     overflow: hidden;
 
     &--disabled {
       pointer-events: none;
-      background-color: var(--mp-collapse-disabled-surface);
-      border-color: var(--mp-collapse-disabled-border);
+      background-color: var(--forge-collapse-disabled-surface, var(--mp-collapse-disabled-surface));
+      border-color: var(--forge-collapse-disabled-border, var(--mp-collapse-disabled-border));
 
       .forge-collapse__summary {
-        color: var(--mp-collapse-disabled-text);
+        color: var(--forge-collapse-disabled-text, var(--mp-collapse-disabled-text));
         cursor: not-allowed;
       }
 
       .forge-collapse__content {
-        color: var(--mp-collapse-disabled-text);
+        color: var(--forge-collapse-disabled-text, var(--mp-collapse-disabled-text));
       }
     }
 
@@ -42,25 +45,26 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--mp-collapse-summary-padding-block) var(--mp-collapse-summary-padding-inline);
+      padding: var(--forge-collapse-summary-padding-block, var(--mp-collapse-summary-padding-block))
+        var(--forge-collapse-summary-padding-inline, var(--mp-collapse-summary-padding-inline));
       cursor: pointer;
-      color: var(--mp-collapse-summary-text);
-      font-weight: var(--mp-collapse-summary-font-weight);
+      color: var(--forge-collapse-summary-text, var(--mp-collapse-summary-text));
+      font-weight: var(--forge-collapse-summary-font-weight, var(--mp-collapse-summary-font-weight));
       list-style: none;
       user-select: none;
-      gap: var(--mp-collapse-summary-gap);
+      gap: var(--forge-collapse-summary-gap, var(--mp-collapse-summary-gap));
 
       &::-webkit-details-marker {
         display: none;
       }
 
       &:hover {
-        background-color: var(--mp-collapse-summary-surface-hover);
+        background-color: var(--forge-collapse-summary-surface-hover, var(--mp-collapse-summary-surface-hover));
       }
 
       &:focus-visible {
         outline: none;
-        box-shadow: var(--mp-collapse-summary-focus-ring);
+        box-shadow: var(--forge-collapse-summary-focus-ring, var(--mp-collapse-summary-focus-ring));
       }
     }
 
@@ -73,17 +77,19 @@
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
-      transition: transform var(--mp-collapse-transition-duration)
-        var(--mp-collapse-transition-easing);
+      transition: transform var(--forge-collapse-transition-duration, var(--mp-collapse-transition-duration))
+        var(--forge-collapse-transition-easing, var(--mp-collapse-transition-easing));
     }
 
     &__content {
-      padding: var(--mp-collapse-content-padding-block) var(--mp-collapse-content-padding-inline);
-      color: var(--mp-collapse-content-text);
-      border-top: var(--mp-collapse-content-border-width) solid var(--mp-collapse-content-border);
+      padding: var(--forge-collapse-content-padding-block, var(--mp-collapse-content-padding-block))
+        var(--forge-collapse-content-padding-inline, var(--mp-collapse-content-padding-inline));
+      color: var(--forge-collapse-content-text, var(--mp-collapse-content-text));
+      border-top: var(--forge-collapse-content-border-width, var(--mp-collapse-content-border-width)) solid
+        var(--forge-collapse-content-border, var(--mp-collapse-content-border));
       opacity: 1;
-      transition: opacity var(--mp-collapse-transition-duration)
-        var(--mp-collapse-transition-easing);
+      transition: opacity var(--forge-collapse-transition-duration, var(--mp-collapse-transition-duration))
+        var(--forge-collapse-transition-easing, var(--mp-collapse-transition-easing));
 
       @starting-style {
         opacity: 0;
@@ -108,14 +114,14 @@
         )
     {
       &--#{$name} {
-        border-color: var(--mp-collapse-tone-#{$family}-border);
+        border-color: var(--forge-collapse-tone-#{$family}-border, var(--mp-collapse-tone-#{$family}-border));
 
         .forge-collapse__summary {
-          color: var(--mp-collapse-tone-#{$family}-text);
+          color: var(--forge-collapse-tone-#{$family}-text, var(--mp-collapse-tone-#{$family}-text));
         }
 
         .forge-collapse__content {
-          border-top-color: var(--mp-collapse-tone-#{$family}-border);
+          border-top-color: var(--forge-collapse-tone-#{$family}-border, var(--mp-collapse-tone-#{$family}-border));
         }
       }
     }

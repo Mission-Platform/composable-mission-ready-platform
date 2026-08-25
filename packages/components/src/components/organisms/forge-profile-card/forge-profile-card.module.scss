@@ -1,38 +1,41 @@
 /* stylelint-disable declaration-block-single-line-max-declarations */
+@use './forge-profile-card-properties';
+
 @layer mp.components {
   .forge-profile-card {
     display: grid;
-    gap: var(--mp-spacing-4);
+    gap: var(--forge-profile-card-spacing-4, var(--mp-spacing-4));
     width: 100%;
     max-width: 28rem;
-    padding: var(--mp-spacing-5);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-lg);
-    background: var(--mp-color-bg-surface);
+    padding: var(--forge-profile-card-spacing-5, var(--mp-spacing-5));
+    border: var(--forge-profile-card-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-profile-card-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-profile-card-radius-lg, var(--mp-radius-lg));
+    background: var(--forge-profile-card-color-bg-surface, var(--mp-color-bg-surface));
   }
 
   .forge-profile-card__identity {
     display: flex;
     align-items: center;
-    gap: var(--mp-spacing-4);
+    gap: var(--forge-profile-card-spacing-4, var(--mp-spacing-4));
   }
 
   .forge-profile-card h2 {
     margin: 0;
-    font-size: var(--mp-font-size-xl);
+    font-size: var(--forge-profile-card-font-size-xl, var(--mp-font-size-xl));
   }
 
   .forge-profile-card p {
-    margin: var(--mp-spacing-1) 0 0;
-    color: var(--mp-color-text-tertiary);
+    margin: var(--forge-profile-card-spacing-1, var(--mp-spacing-1)) 0 0;
+    color: var(--forge-profile-card-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-profile-card small {
-    color: var(--mp-color-text-tertiary);
+    color: var(--forge-profile-card-color-text-tertiary, var(--mp-color-text-tertiary));
   }
 
   .forge-profile-card__bio {
-    line-height: var(--mp-line-height-relaxed);
+    line-height: var(--forge-profile-card-line-height-relaxed, var(--mp-line-height-relaxed));
   }
 
   .forge-profile-card--loading {
@@ -43,46 +46,46 @@
   .forge-profile-card__socials ul {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-profile-card-spacing-3, var(--mp-spacing-3));
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   .forge-profile-card__socials a {
-    color: var(--mp-color-text-link);
+    color: var(--forge-profile-card-color-text-link, var(--mp-color-text-link));
   }
 
   .forge-profile-card__stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-profile-card-spacing-3, var(--mp-spacing-3));
     margin: 0;
   }
 
   .forge-profile-card__stats > div {
-    padding: var(--mp-spacing-2);
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-bg-muted);
+    padding: var(--forge-profile-card-spacing-2, var(--mp-spacing-2));
+    border-radius: var(--forge-profile-card-radius-md, var(--mp-radius-md));
+    background: var(--forge-profile-card-color-bg-muted, var(--mp-color-bg-muted));
     text-align: center;
   }
 
   .forge-profile-card__stats dt {
-    color: var(--mp-color-text-tertiary);
-    font-size: var(--mp-font-size-xs);
+    color: var(--forge-profile-card-color-text-tertiary, var(--mp-color-text-tertiary));
+    font-size: var(--forge-profile-card-font-size-xs, var(--mp-font-size-xs));
   }
 
   .forge-profile-card__stats dd {
-    margin: var(--mp-spacing-1) 0 0;
-    font-weight: var(--mp-font-weight-bold);
+    margin: var(--forge-profile-card-spacing-1, var(--mp-spacing-1)) 0 0;
+    font-weight: var(--forge-profile-card-font-weight-bold, var(--mp-font-weight-bold));
   }
 
   .forge-profile-card button {
-    min-height: var(--mp-size-height-lg);
+    min-height: var(--forge-profile-card-size-height-lg, var(--mp-size-height-lg));
     border: 0;
-    border-radius: var(--mp-radius-md);
-    background: var(--mp-color-primary-default);
-    color: var(--mp-color-text-on-primary);
+    border-radius: var(--forge-profile-card-radius-md, var(--mp-radius-md));
+    background: var(--forge-profile-card-color-primary-default, var(--mp-color-primary-default));
+    color: var(--forge-profile-card-color-text-on-primary, var(--mp-color-text-on-primary));
     cursor: pointer;
   }
 }

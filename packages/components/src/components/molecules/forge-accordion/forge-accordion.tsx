@@ -1,4 +1,12 @@
-import { type MpChild, type MpElement, type MpRenderProperty, Slot, useState } from '@mission-platform/forge';
+import {
+  Slot,
+  useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type MpRenderProperty,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -31,6 +39,78 @@ export interface AccordionItemScope {
   open: boolean;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface AccordionStyleProperties {
+  readonly 'collapse-border'?: string;
+  readonly 'collapse-border-width'?: string;
+  readonly 'collapse-content-border'?: string;
+  readonly 'collapse-content-border-width'?: string;
+  readonly 'collapse-content-padding-block'?: string;
+  readonly 'collapse-content-padding-inline'?: string;
+  readonly 'collapse-disabled-surface'?: string;
+  readonly 'collapse-disabled-text'?: string;
+  readonly 'collapse-radius'?: string;
+  readonly 'collapse-summary-focus-ring'?: string;
+  readonly 'collapse-summary-gap'?: string;
+  readonly 'collapse-summary-padding-block'?: string;
+  readonly 'collapse-summary-padding-inline'?: string;
+  readonly 'collapse-summary-surface-hover'?: string;
+  readonly 'collapse-summary-text'?: string;
+  readonly 'collapse-surface'?: string;
+  readonly 'collapse-tone-disabled-border'?: string;
+  readonly 'collapse-tone-disabled-text'?: string;
+  readonly 'collapse-transition-duration'?: string;
+  readonly 'collapse-transition-easing'?: string;
+}
+
+export type AccordionStyle = CSSStyleProperties & {
+  readonly '--forge-accordion-collapse-border'?: string | undefined;
+  readonly '--forge-accordion-collapse-border-width'?: string | undefined;
+  readonly '--forge-accordion-collapse-content-border'?: string | undefined;
+  readonly '--forge-accordion-collapse-content-border-width'?: string | undefined;
+  readonly '--forge-accordion-collapse-content-padding-block'?: string | undefined;
+  readonly '--forge-accordion-collapse-content-padding-inline'?: string | undefined;
+  readonly '--forge-accordion-collapse-disabled-surface'?: string | undefined;
+  readonly '--forge-accordion-collapse-disabled-text'?: string | undefined;
+  readonly '--forge-accordion-collapse-radius'?: string | undefined;
+  readonly '--forge-accordion-collapse-summary-focus-ring'?: string | undefined;
+  readonly '--forge-accordion-collapse-summary-gap'?: string | undefined;
+  readonly '--forge-accordion-collapse-summary-padding-block'?: string | undefined;
+  readonly '--forge-accordion-collapse-summary-padding-inline'?: string | undefined;
+  readonly '--forge-accordion-collapse-summary-surface-hover'?: string | undefined;
+  readonly '--forge-accordion-collapse-summary-text'?: string | undefined;
+  readonly '--forge-accordion-collapse-surface'?: string | undefined;
+  readonly '--forge-accordion-collapse-tone-disabled-border'?: string | undefined;
+  readonly '--forge-accordion-collapse-tone-disabled-text'?: string | undefined;
+  readonly '--forge-accordion-collapse-transition-duration'?: string | undefined;
+  readonly '--forge-accordion-collapse-transition-easing'?: string | undefined;
+};
+
+function createAccordionStyle(properties: Readonly<AccordionStyleProperties> | undefined): AccordionStyle | undefined {
+  return createForgeStyle({
+    '--forge-accordion-collapse-border': properties?.['collapse-border'],
+    '--forge-accordion-collapse-border-width': properties?.['collapse-border-width'],
+    '--forge-accordion-collapse-content-border': properties?.['collapse-content-border'],
+    '--forge-accordion-collapse-content-border-width': properties?.['collapse-content-border-width'],
+    '--forge-accordion-collapse-content-padding-block': properties?.['collapse-content-padding-block'],
+    '--forge-accordion-collapse-content-padding-inline': properties?.['collapse-content-padding-inline'],
+    '--forge-accordion-collapse-disabled-surface': properties?.['collapse-disabled-surface'],
+    '--forge-accordion-collapse-disabled-text': properties?.['collapse-disabled-text'],
+    '--forge-accordion-collapse-radius': properties?.['collapse-radius'],
+    '--forge-accordion-collapse-summary-focus-ring': properties?.['collapse-summary-focus-ring'],
+    '--forge-accordion-collapse-summary-gap': properties?.['collapse-summary-gap'],
+    '--forge-accordion-collapse-summary-padding-block': properties?.['collapse-summary-padding-block'],
+    '--forge-accordion-collapse-summary-padding-inline': properties?.['collapse-summary-padding-inline'],
+    '--forge-accordion-collapse-summary-surface-hover': properties?.['collapse-summary-surface-hover'],
+    '--forge-accordion-collapse-summary-text': properties?.['collapse-summary-text'],
+    '--forge-accordion-collapse-surface': properties?.['collapse-surface'],
+    '--forge-accordion-collapse-tone-disabled-border': properties?.['collapse-tone-disabled-border'],
+    '--forge-accordion-collapse-tone-disabled-text': properties?.['collapse-tone-disabled-text'],
+    '--forge-accordion-collapse-transition-duration': properties?.['collapse-transition-duration'],
+    '--forge-accordion-collapse-transition-easing': properties?.['collapse-transition-easing'],
+  }) as AccordionStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface AccordionProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -50,6 +130,9 @@ export interface AccordionProperties {
   content?: MpRenderProperty<AccordionItemScope>;
   /** Fired with the new list of open ids whenever the open set changes. */
   onChange?: (openIds: string[]) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<AccordionStyleProperties>;
 }
 
 /**
@@ -72,6 +155,8 @@ export interface AccordionProperties {
  * that fall back to the item's `title`/`content` text.
  */
 export function ForgeAccordion(properties: Readonly<AccordionProperties>): MpElement {
+  const style = createAccordionStyle(properties.properties);
+
   const { items, exclusive = true, defaultOpen = [], variant = 'neutral', size = 'md' } = properties;
 
   const [openIds, setOpenIds] = useState<string[]>(defaultOpen);
@@ -92,7 +177,12 @@ export function ForgeAccordion(properties: Readonly<AccordionProperties>): MpEle
 
   return (
     <div
-      className={[styles['forge-accordion'], styles[`forge-accordion--${variant}`], size ? `forge-size--${size}` : undefined]}
+      className={[
+        styles['forge-accordion'],
+        styles[`forge-accordion--${variant}`],
+        size ? `forge-size--${size}` : undefined,
+      ]}
+      style={style}
     >
       {items.map((item) => {
         const open = openIdSet.has(item.id);

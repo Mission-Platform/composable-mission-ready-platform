@@ -1,0 +1,75 @@
+/**
+ * Registered inherited custom properties for forge-button-group overrides.
+ */
+
+@property --forge-button-group-gap-none {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-gap-none);
+}
+
+@property --forge-button-group-gap-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-gap-xs);
+}
+
+@property --forge-button-group-gap-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-gap-sm);
+}
+
+@property --forge-button-group-gap-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-gap-md);
+}
+
+@property --forge-button-group-border-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-border-primary);
+}
+
+@property --forge-button-group-border-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-border-secondary);
+}
+
+@property --forge-button-group-border-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-border-tertiary);
+}
+
+@property --forge-button-group-border-success {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-border-success);
+}
+
+@property --forge-button-group-border-warning {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-border-warning);
+}
+
+@property --forge-button-group-border-info {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-border-info);
+}
+
+@property --forge-button-group-border-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-border-error);
+}
+
+@property --forge-button-group-border-critical {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-button-group-border-critical);
+}

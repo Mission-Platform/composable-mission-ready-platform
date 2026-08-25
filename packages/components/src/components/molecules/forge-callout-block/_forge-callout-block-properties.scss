@@ -1,0 +1,123 @@
+/**
+ * Registered inherited custom properties for forge-callout-block overrides.
+ */
+
+@property --forge-callout-block-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-callout-block-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-callout-block-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-callout-block-color-bg-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-muted);
+}
+
+@property --forge-callout-block-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-callout-block-color-info-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-info-default);
+}
+
+@property --forge-callout-block-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-callout-block-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-callout-block-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-callout-block-color-success-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-subtle);
+}
+
+@property --forge-callout-block-color-success-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-default);
+}
+
+@property --forge-callout-block-color-warning-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-warning-subtle);
+}
+
+@property --forge-callout-block-color-warning-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-warning-default);
+}
+
+@property --forge-callout-block-color-danger-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-danger-subtle);
+}
+
+@property --forge-callout-block-color-danger-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-danger-default);
+}
+
+@property --forge-callout-block-size-icon-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-icon-lg);
+}
+
+@property --forge-callout-block-callout-accent {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-callout-accent);
+}
+
+@property --forge-callout-block-font-weight-bold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-bold);
+}
+
+@property --forge-callout-block-line-height-snug {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-line-height-snug);
+}
+
+@property --forge-callout-block-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}

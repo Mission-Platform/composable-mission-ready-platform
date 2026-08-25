@@ -1,5 +1,15 @@
 import { ForgeIconButton } from '@mission-platform/components';
-import { hasSlot, type MpChild, type MpElement, Slot, useEffect, useId, useRef } from '@mission-platform/forge';
+import {
+  hasSlot,
+  Slot,
+  useEffect,
+  useId,
+  useRef,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconClose } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -8,6 +18,87 @@ import styles from './forge-modal.module.scss';
 /** Width step of the modal on tablet/desktop (`sm`+); mobile is always full-width. */
 export type ModalSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ModalStyleProperties {
+  readonly 'overlay-body-padding'?: string;
+  readonly 'overlay-border-default'?: string;
+  readonly 'overlay-border-width'?: string;
+  readonly 'overlay-footer-gap'?: string;
+  readonly 'overlay-footer-padding-block'?: string;
+  readonly 'overlay-footer-padding-inline'?: string;
+  readonly 'overlay-header-gap'?: string;
+  readonly 'overlay-header-padding-block'?: string;
+  readonly 'overlay-header-padding-inline'?: string;
+  readonly 'overlay-modal-shadow'?: string;
+  readonly 'overlay-modal-size-2xl'?: string;
+  readonly 'overlay-modal-size-2xs'?: string;
+  readonly 'overlay-modal-size-lg'?: string;
+  readonly 'overlay-modal-size-md'?: string;
+  readonly 'overlay-modal-size-sm'?: string;
+  readonly 'overlay-modal-size-xl'?: string;
+  readonly 'overlay-modal-size-xs'?: string;
+  readonly 'overlay-modal-surface-default'?: string;
+  readonly 'overlay-radius'?: string;
+  readonly 'overlay-surface-scrim'?: string;
+  readonly 'overlay-transition-duration'?: string;
+  readonly 'overlay-transition-easing'?: string;
+  readonly 'spacing-8'?: string;
+}
+
+export type ModalStyle = CSSStyleProperties & {
+  readonly '--forge-modal-overlay-body-padding'?: string | undefined;
+  readonly '--forge-modal-overlay-border-default'?: string | undefined;
+  readonly '--forge-modal-overlay-border-width'?: string | undefined;
+  readonly '--forge-modal-overlay-footer-gap'?: string | undefined;
+  readonly '--forge-modal-overlay-footer-padding-block'?: string | undefined;
+  readonly '--forge-modal-overlay-footer-padding-inline'?: string | undefined;
+  readonly '--forge-modal-overlay-header-gap'?: string | undefined;
+  readonly '--forge-modal-overlay-header-padding-block'?: string | undefined;
+  readonly '--forge-modal-overlay-header-padding-inline'?: string | undefined;
+  readonly '--forge-modal-overlay-modal-shadow'?: string | undefined;
+  readonly '--forge-modal-overlay-modal-size-2xl'?: string | undefined;
+  readonly '--forge-modal-overlay-modal-size-2xs'?: string | undefined;
+  readonly '--forge-modal-overlay-modal-size-lg'?: string | undefined;
+  readonly '--forge-modal-overlay-modal-size-md'?: string | undefined;
+  readonly '--forge-modal-overlay-modal-size-sm'?: string | undefined;
+  readonly '--forge-modal-overlay-modal-size-xl'?: string | undefined;
+  readonly '--forge-modal-overlay-modal-size-xs'?: string | undefined;
+  readonly '--forge-modal-overlay-modal-surface-default'?: string | undefined;
+  readonly '--forge-modal-overlay-radius'?: string | undefined;
+  readonly '--forge-modal-overlay-surface-scrim'?: string | undefined;
+  readonly '--forge-modal-overlay-transition-duration'?: string | undefined;
+  readonly '--forge-modal-overlay-transition-easing'?: string | undefined;
+  readonly '--forge-modal-spacing-8'?: string | undefined;
+};
+
+function createModalStyle(properties: Readonly<ModalStyleProperties> | undefined): ModalStyle | undefined {
+  return createForgeStyle({
+    '--forge-modal-overlay-body-padding': properties?.['overlay-body-padding'],
+    '--forge-modal-overlay-border-default': properties?.['overlay-border-default'],
+    '--forge-modal-overlay-border-width': properties?.['overlay-border-width'],
+    '--forge-modal-overlay-footer-gap': properties?.['overlay-footer-gap'],
+    '--forge-modal-overlay-footer-padding-block': properties?.['overlay-footer-padding-block'],
+    '--forge-modal-overlay-footer-padding-inline': properties?.['overlay-footer-padding-inline'],
+    '--forge-modal-overlay-header-gap': properties?.['overlay-header-gap'],
+    '--forge-modal-overlay-header-padding-block': properties?.['overlay-header-padding-block'],
+    '--forge-modal-overlay-header-padding-inline': properties?.['overlay-header-padding-inline'],
+    '--forge-modal-overlay-modal-shadow': properties?.['overlay-modal-shadow'],
+    '--forge-modal-overlay-modal-size-2xl': properties?.['overlay-modal-size-2xl'],
+    '--forge-modal-overlay-modal-size-2xs': properties?.['overlay-modal-size-2xs'],
+    '--forge-modal-overlay-modal-size-lg': properties?.['overlay-modal-size-lg'],
+    '--forge-modal-overlay-modal-size-md': properties?.['overlay-modal-size-md'],
+    '--forge-modal-overlay-modal-size-sm': properties?.['overlay-modal-size-sm'],
+    '--forge-modal-overlay-modal-size-xl': properties?.['overlay-modal-size-xl'],
+    '--forge-modal-overlay-modal-size-xs': properties?.['overlay-modal-size-xs'],
+    '--forge-modal-overlay-modal-surface-default': properties?.['overlay-modal-surface-default'],
+    '--forge-modal-overlay-radius': properties?.['overlay-radius'],
+    '--forge-modal-overlay-surface-scrim': properties?.['overlay-surface-scrim'],
+    '--forge-modal-overlay-transition-duration': properties?.['overlay-transition-duration'],
+    '--forge-modal-overlay-transition-easing': properties?.['overlay-transition-easing'],
+    '--forge-modal-spacing-8': properties?.['spacing-8'],
+  }) as ModalStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ModalProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -34,6 +125,9 @@ export interface ModalProperties {
   onUpdateOpen?: (open: boolean) => void;
   /** Fired when the modal requests to close. */
   onClose?: () => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ModalStyleProperties>;
 }
 
 /** A native `<dialog>` narrowed to the imperative modal methods we drive. */
@@ -94,6 +188,8 @@ function releaseBodyScrollLock(): void {
  * co-located CSS Module `forge-modal.module.scss`.
  */
 export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
+  const style = createModalStyle(properties.properties);
+
   const {
     open = false,
     title,
@@ -162,6 +258,7 @@ export function ForgeModal(properties: Readonly<ModalProperties>): MpElement {
       onCancel={handleCancel}
       onClick={handleClick}
       onClose={requestClose}
+      style={style}
     >
       {hasHeader ? (
         <header

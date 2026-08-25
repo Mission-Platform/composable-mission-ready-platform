@@ -1,0 +1,294 @@
+/**
+ * Registered inherited custom properties for forge-tabs overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-tabs-navigation-tabs-bar-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-bar-border);
+}
+
+@property --forge-tabs-navigation-tabs-bar-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-bar-border-width);
+}
+
+@property --forge-tabs-navigation-tabs-border-line {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-border-line);
+}
+
+@property --forge-tabs-navigation-tabs-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-border-width);
+}
+
+@property --forge-tabs-navigation-tabs-close-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-close-font-size);
+}
+
+@property --forge-tabs-navigation-tabs-list-pill-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-list-pill-gap);
+}
+
+@property --forge-tabs-navigation-tabs-list-pill-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-list-pill-padding);
+}
+
+@property --forge-tabs-navigation-tabs-list-pill-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-list-pill-radius);
+}
+
+@property --forge-tabs-navigation-tabs-list-pill-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-list-pill-surface);
+}
+
+@property --forge-tabs-navigation-tabs-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-opacity-disabled);
+}
+
+@property --forge-tabs-navigation-tabs-padding-add-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-padding-add-block);
+}
+
+@property --forge-tabs-navigation-tabs-padding-add-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-padding-add-inline);
+}
+
+@property --forge-tabs-navigation-tabs-padding-panel-block-start {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-padding-panel-block-start);
+}
+
+@property --forge-tabs-navigation-tabs-radius-add-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-radius-add-focus);
+}
+
+@property --forge-tabs-navigation-tabs-radius-close {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-radius-close);
+}
+
+@property --forge-tabs-navigation-tabs-radius-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-radius-focus);
+}
+
+@property --forge-tabs-navigation-tabs-shadow-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-shadow-focus);
+}
+
+@property --forge-tabs-navigation-tabs-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-surface-hover);
+}
+
+@property --forge-tabs-navigation-tabs-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-text-hover);
+}
+
+@property --forge-tabs-navigation-tabs-text-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-text-muted);
+}
+
+@property --forge-tabs-navigation-tabs-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-transition-duration);
+}
+
+@property --forge-tabs-navigation-tabs-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-transition-easing);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-gap);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-indicator-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-indicator-active);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-indicator-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-indicator-default);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-indicator-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-indicator-hover);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-indicator-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-indicator-radius);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-indicator-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-indicator-width);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-padding-block);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-padding-inline);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-radius);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-surface-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-surface-active);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-text-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-text-active);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-text-default);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-text-hover);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-transition-duration);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-line-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-line-transition-easing);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-padding-block);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-padding-inline);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-radius);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-shadow-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-shadow-active);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-surface-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-surface-active);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-surface-hover);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-text-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-text-active);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-text-default);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-text-hover);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-transition-duration);
+}
+
+@property --forge-tabs-navigation-tabs-wrapper-pill-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-tabs-wrapper-pill-transition-easing);
+}

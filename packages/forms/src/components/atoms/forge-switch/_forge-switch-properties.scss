@@ -1,0 +1,299 @@
+@property --forge-switch-checkable-gap-stack {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-gap-stack);
+}
+
+@property --forge-switch-checkable-gap-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-gap-inline);
+}
+
+@property --forge-switch-checkable-size-2xs-switch-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xs-switch-width);
+}
+
+@property --forge-switch-checkable-size-2xs-switch-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xs-switch-height);
+}
+
+@property --forge-switch-checkable-size-2xs-switch-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xs-switch-padding);
+}
+
+@property --forge-switch-checkable-size-2xs-switch-thumb-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xs-switch-thumb-size);
+}
+
+@property --forge-switch-checkable-size-2xs-switch-translate {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xs-switch-translate);
+}
+
+@property --forge-switch-checkable-size-xs-switch-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xs-switch-width);
+}
+
+@property --forge-switch-checkable-size-xs-switch-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xs-switch-height);
+}
+
+@property --forge-switch-checkable-size-xs-switch-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xs-switch-padding);
+}
+
+@property --forge-switch-checkable-size-xs-switch-thumb-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xs-switch-thumb-size);
+}
+
+@property --forge-switch-checkable-size-xs-switch-translate {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xs-switch-translate);
+}
+
+@property --forge-switch-checkable-size-sm-switch-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-sm-switch-width);
+}
+
+@property --forge-switch-checkable-size-sm-switch-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-sm-switch-height);
+}
+
+@property --forge-switch-checkable-size-sm-switch-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-sm-switch-padding);
+}
+
+@property --forge-switch-checkable-size-sm-switch-thumb-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-sm-switch-thumb-size);
+}
+
+@property --forge-switch-checkable-size-sm-switch-translate {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-sm-switch-translate);
+}
+
+@property --forge-switch-checkable-size-md-switch-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-md-switch-width);
+}
+
+@property --forge-switch-checkable-size-md-switch-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-md-switch-height);
+}
+
+@property --forge-switch-checkable-size-md-switch-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-md-switch-padding);
+}
+
+@property --forge-switch-checkable-size-md-switch-thumb-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-md-switch-thumb-size);
+}
+
+@property --forge-switch-checkable-size-md-switch-translate {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-md-switch-translate);
+}
+
+@property --forge-switch-checkable-size-lg-switch-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-lg-switch-width);
+}
+
+@property --forge-switch-checkable-size-lg-switch-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-lg-switch-height);
+}
+
+@property --forge-switch-checkable-size-lg-switch-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-lg-switch-padding);
+}
+
+@property --forge-switch-checkable-size-lg-switch-thumb-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-lg-switch-thumb-size);
+}
+
+@property --forge-switch-checkable-size-lg-switch-translate {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-lg-switch-translate);
+}
+
+@property --forge-switch-checkable-size-xl-switch-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xl-switch-width);
+}
+
+@property --forge-switch-checkable-size-xl-switch-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xl-switch-height);
+}
+
+@property --forge-switch-checkable-size-xl-switch-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xl-switch-padding);
+}
+
+@property --forge-switch-checkable-size-xl-switch-thumb-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xl-switch-thumb-size);
+}
+
+@property --forge-switch-checkable-size-xl-switch-translate {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-xl-switch-translate);
+}
+
+@property --forge-switch-checkable-size-2xl-switch-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xl-switch-width);
+}
+
+@property --forge-switch-checkable-size-2xl-switch-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xl-switch-height);
+}
+
+@property --forge-switch-checkable-size-2xl-switch-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xl-switch-padding);
+}
+
+@property --forge-switch-checkable-size-2xl-switch-thumb-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xl-switch-thumb-size);
+}
+
+@property --forge-switch-checkable-size-2xl-switch-translate {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-size-2xl-switch-translate);
+}
+
+@property --forge-switch-checkable-border-width-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-width-invalid);
+}
+
+@property --forge-switch-checkable-border-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-invalid);
+}
+
+@property --forge-switch-checkable-border-width-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-width-focus);
+}
+
+@property --forge-switch-checkable-border-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-focus-visible);
+}
+
+@property --forge-switch-checkable-track-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-track-selected);
+}
+
+@property --forge-switch-checkable-track-unselected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-track-unselected);
+}
+
+@property --forge-switch-checkable-circle-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-circle-radius);
+}
+
+@property --forge-switch-checkable-transition-switch-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-transition-switch-duration);
+}
+
+@property --forge-switch-checkable-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-transition-easing);
+}
+
+@property --forge-switch-checkable-thumb-on-track {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-thumb-on-track);
+}
+
+@property --forge-switch-checkable-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-shadow);
+}
+
+@property --forge-switch-checkable-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-opacity-disabled);
+}
+
+@property --forge-switch-field-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-field-error);
+}

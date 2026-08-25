@@ -1,0 +1,35 @@
+@property --forge-location-input-input-location-gap-stack {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-location-gap-stack);
+}
+
+@property --forge-location-input-input-location-gap-legend {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-location-gap-legend);
+}
+
+@property --forge-location-input-input-location-required {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-location-required);
+}
+
+@property --forge-location-input-input-location-gap-row {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-location-gap-row);
+}
+
+@property --forge-location-input-input-location-text-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-location-text-disabled);
+}
+
+@property --forge-location-input-input-location-text-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-location-text-error);
+}

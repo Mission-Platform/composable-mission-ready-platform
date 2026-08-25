@@ -1,3 +1,5 @@
+@use './forge-radio-group-properties';
+
 /**
  * Styling for the write-once `ForgeRadioGroup`.
  *
@@ -15,11 +17,11 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--mp-checkable-gap-inline);
+    gap: var(--forge-radio-group-checkable-gap-inline, var(--mp-checkable-gap-inline));
 
     &__legend {
       padding: 0;
-      margin-bottom: var(--mp-input-field-gap);
+      margin-bottom: var(--forge-radio-group-input-field-gap, var(--mp-input-field-gap));
 
       &--hidden {
         position: absolute;
@@ -35,17 +37,17 @@
     }
 
     &__required {
-      color: var(--mp-field-required);
+      color: var(--forge-radio-group-field-required, var(--mp-field-required));
       margin-left: 2px;
     }
 
     &--disabled {
       pointer-events: none;
-      color: var(--mp-checkable-text-disabled);
+      color: var(--forge-radio-group-checkable-text-disabled, var(--mp-checkable-text-disabled));
     }
 
     &__error {
-      color: var(--mp-field-error);
+      color: var(--forge-radio-group-field-error, var(--mp-field-error));
       margin: 0;
     }
 

@@ -1,0 +1,141 @@
+/**
+ * Registered inherited custom properties for forge-carousel-indicator overrides.
+ */
+
+@property --forge-carousel-indicator-navigation-carousel-indicators-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicators-gap);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-indicator-target-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-target-size);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-indicator-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-surface-default);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-indicator-surface-dot-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-surface-dot-default);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-indicator-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-transition-duration);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-indicator-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-transition-easing);
+}
+
+@property --forge-carousel-indicator-size-checkable-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-checkable-indicator);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-indicator-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-radius);
+}
+
+@property --forge-carousel-indicator-size-icon-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-icon-lg);
+}
+
+@property --forge-carousel-indicator-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-carousel-indicator-radius-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-xs);
+}
+
+@property --forge-carousel-indicator-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-carousel-indicator-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-sm);
+}
+
+@property --forge-carousel-indicator-color-text-on-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-primary);
+}
+
+@property --forge-carousel-indicator-font-size-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-xs);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-indicator-surface-dot-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-surface-dot-selected);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-focus-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-focus-border-width);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-focus-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-focus-border);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-focus-offset {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-focus-offset);
+}
+
+@property --forge-carousel-indicator-navigation-carousel-control-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-radius);
+}
+
+@property --forge-carousel-indicator-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-disabled);
+}
+
+@property --forge-carousel-indicator-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-carousel-indicator-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}

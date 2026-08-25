@@ -10,11 +10,14 @@
  * consumed through its hashed class map by `forge-grid.stories.tsx`.
  */
 
+@use './forge-grid-properties';
+
 @layer mp.components {
   .grid-demo-container {
-    padding: var(--mp-layout-grid-container-padding);
-    border: var(--mp-layout-grid-container-border-width) dashed var(--mp-layout-grid-container-border);
-    border-radius: var(--mp-layout-grid-container-radius);
+    padding: var(--forge-grid-layout-grid-container-padding, var(--mp-layout-grid-container-padding));
+    border: var(--forge-grid-layout-grid-container-border-width, var(--mp-layout-grid-container-border-width)) dashed
+      var(--forge-grid-layout-grid-container-border, var(--mp-layout-grid-container-border));
+    border-radius: var(--forge-grid-layout-grid-container-radius, var(--mp-layout-grid-container-radius));
 
     @supports (container-type: inline-size) {
       container: grid-demo / inline-size;
@@ -26,15 +29,17 @@
     align-items: center;
     justify-content: center;
     min-height: 3rem;
-    padding: var(--mp-layout-grid-cell-padding-block) var(--mp-layout-grid-cell-padding-inline);
-    border: var(--mp-layout-grid-cell-border-width) solid var(--mp-layout-grid-cell-border);
-    border-radius: var(--mp-layout-grid-cell-radius);
-    background: var(--mp-layout-grid-cell-surface);
-    color: var(--mp-layout-grid-cell-text);
+    padding: var(--forge-grid-layout-grid-cell-padding-block, var(--mp-layout-grid-cell-padding-block))
+      var(--forge-grid-layout-grid-cell-padding-inline, var(--mp-layout-grid-cell-padding-inline));
+    border: var(--forge-grid-layout-grid-cell-border-width, var(--mp-layout-grid-cell-border-width)) solid
+      var(--forge-grid-layout-grid-cell-border, var(--mp-layout-grid-cell-border));
+    border-radius: var(--forge-grid-layout-grid-cell-radius, var(--mp-layout-grid-cell-radius));
+    background: var(--forge-grid-layout-grid-cell-surface, var(--mp-layout-grid-cell-surface));
+    color: var(--forge-grid-layout-grid-cell-text, var(--mp-layout-grid-cell-text));
 
     @container grid-demo (width >= 40rem) {
       min-height: 4.5rem;
-      padding: var(--mp-layout-grid-cell-padding-wide);
+      padding: var(--forge-grid-layout-grid-cell-padding-wide, var(--mp-layout-grid-cell-padding-wide));
     }
   }
 }

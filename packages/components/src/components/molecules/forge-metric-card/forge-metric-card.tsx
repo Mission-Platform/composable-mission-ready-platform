@@ -1,4 +1,13 @@
-import { classNames, hasSlot, type ClassValue, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import {
+  classNames,
+  hasSlot,
+  Slot,
+  createForgeStyle,
+  type ClassValue,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import { ForgeSpinner } from '@/components/atoms/forge-spinner';
@@ -22,6 +31,80 @@ export interface MetricCardTrend {
   positive?: boolean;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface MetricCardStyleProperties {
+  readonly 'border-width-thin'?: string;
+  readonly 'color-bg-surface'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-error-default'?: string;
+  readonly 'color-error-text'?: string;
+  readonly 'color-primary-default'?: string;
+  readonly 'color-success-default'?: string;
+  readonly 'color-success-text'?: string;
+  readonly 'color-text-primary'?: string;
+  readonly 'color-text-secondary'?: string;
+  readonly 'color-warning-default'?: string;
+  readonly 'font-size-2xl'?: string;
+  readonly 'font-size-sm'?: string;
+  readonly 'font-weight-bold'?: string;
+  readonly 'line-height-tight'?: string;
+  readonly 'radius-md'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+  readonly 'spacing-6'?: string;
+}
+
+export type MetricCardStyle = CSSStyleProperties & {
+  readonly '--forge-metric-card-border-width-thin'?: string | undefined;
+  readonly '--forge-metric-card-color-bg-surface'?: string | undefined;
+  readonly '--forge-metric-card-color-border-default'?: string | undefined;
+  readonly '--forge-metric-card-color-error-default'?: string | undefined;
+  readonly '--forge-metric-card-color-error-text'?: string | undefined;
+  readonly '--forge-metric-card-color-primary-default'?: string | undefined;
+  readonly '--forge-metric-card-color-success-default'?: string | undefined;
+  readonly '--forge-metric-card-color-success-text'?: string | undefined;
+  readonly '--forge-metric-card-color-text-primary'?: string | undefined;
+  readonly '--forge-metric-card-color-text-secondary'?: string | undefined;
+  readonly '--forge-metric-card-color-warning-default'?: string | undefined;
+  readonly '--forge-metric-card-font-size-2xl'?: string | undefined;
+  readonly '--forge-metric-card-font-size-sm'?: string | undefined;
+  readonly '--forge-metric-card-font-weight-bold'?: string | undefined;
+  readonly '--forge-metric-card-line-height-tight'?: string | undefined;
+  readonly '--forge-metric-card-radius-md'?: string | undefined;
+  readonly '--forge-metric-card-spacing-1'?: string | undefined;
+  readonly '--forge-metric-card-spacing-3'?: string | undefined;
+  readonly '--forge-metric-card-spacing-4'?: string | undefined;
+  readonly '--forge-metric-card-spacing-6'?: string | undefined;
+};
+
+function createMetricCardStyle(
+  properties: Readonly<MetricCardStyleProperties> | undefined,
+): MetricCardStyle | undefined {
+  return createForgeStyle({
+    '--forge-metric-card-border-width-thin': properties?.['border-width-thin'],
+    '--forge-metric-card-color-bg-surface': properties?.['color-bg-surface'],
+    '--forge-metric-card-color-border-default': properties?.['color-border-default'],
+    '--forge-metric-card-color-error-default': properties?.['color-error-default'],
+    '--forge-metric-card-color-error-text': properties?.['color-error-text'],
+    '--forge-metric-card-color-primary-default': properties?.['color-primary-default'],
+    '--forge-metric-card-color-success-default': properties?.['color-success-default'],
+    '--forge-metric-card-color-success-text': properties?.['color-success-text'],
+    '--forge-metric-card-color-text-primary': properties?.['color-text-primary'],
+    '--forge-metric-card-color-text-secondary': properties?.['color-text-secondary'],
+    '--forge-metric-card-color-warning-default': properties?.['color-warning-default'],
+    '--forge-metric-card-font-size-2xl': properties?.['font-size-2xl'],
+    '--forge-metric-card-font-size-sm': properties?.['font-size-sm'],
+    '--forge-metric-card-font-weight-bold': properties?.['font-weight-bold'],
+    '--forge-metric-card-line-height-tight': properties?.['line-height-tight'],
+    '--forge-metric-card-radius-md': properties?.['radius-md'],
+    '--forge-metric-card-spacing-1': properties?.['spacing-1'],
+    '--forge-metric-card-spacing-3': properties?.['spacing-3'],
+    '--forge-metric-card-spacing-4': properties?.['spacing-4'],
+    '--forge-metric-card-spacing-6': properties?.['spacing-6'],
+  }) as MetricCardStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface MetricCardProperties {
   /** Short name of the metric. */
   label: string;
@@ -41,6 +124,9 @@ export interface MetricCardProperties {
   id?: string;
   /** Extra class(es) merged onto the root element. */
   className?: ClassValue;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<MetricCardStyleProperties>;
 }
 
 function inferTrendDirection(value: MpChild): MetricCardTrendDirection {
@@ -62,6 +148,8 @@ function inferTrendDirection(value: MpChild): MetricCardTrendDirection {
  * accessible article while leaving visual treatments to its CSS Module.
  */
 export function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpElement {
+  const style = createMetricCardStyle(properties.properties);
+
   const { label, value, trend, icon, size = 'md', loading = false } = properties;
   const trendDirection = trend ? (trend.direction ?? inferTrendDirection(trend.value)) : undefined;
   const trendTone = trend?.positive === undefined ? trendDirection : trend.positive ? 'up' : 'down';
@@ -77,6 +165,7 @@ export function ForgeMetricCard(properties: Readonly<MetricCardProperties>): MpE
       aria-busy={loading}
       className={className}
       id={properties.id}
+      style={style}
     >
       <div className={styles['forge-metric-card__header']}>
         {icon !== undefined || hasSlot('icon') ? (

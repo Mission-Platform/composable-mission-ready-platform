@@ -1,4 +1,10 @@
-import { classNames, type MpChild, type MpElement } from '@mission-platform/forge';
+import {
+  classNames,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-button-group.module.scss';
 
@@ -13,6 +19,41 @@ export type ButtonGroupGap = 'none' | 'xs' | 'sm' | 'md';
 export type ButtonGroupVariant =
   'neutral' | 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'info' | 'error' | 'critical';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ButtonGroupStyleProperties {
+  readonly 'border-attached'?: string;
+  readonly 'border-horizontal'?: string;
+  readonly 'border-vertical'?: string;
+  readonly 'gap-md'?: string;
+  readonly 'gap-none'?: string;
+  readonly 'gap-sm'?: string;
+  readonly 'gap-xs'?: string;
+}
+
+export type ButtonGroupStyle = CSSStyleProperties & {
+  readonly '--forge-button-group-border-attached'?: string | undefined;
+  readonly '--forge-button-group-border-horizontal'?: string | undefined;
+  readonly '--forge-button-group-border-vertical'?: string | undefined;
+  readonly '--forge-button-group-gap-md'?: string | undefined;
+  readonly '--forge-button-group-gap-none'?: string | undefined;
+  readonly '--forge-button-group-gap-sm'?: string | undefined;
+  readonly '--forge-button-group-gap-xs'?: string | undefined;
+};
+
+function createButtonGroupStyle(
+  properties: Readonly<ButtonGroupStyleProperties> | undefined,
+): ButtonGroupStyle | undefined {
+  return createForgeStyle({
+    '--forge-button-group-border-attached': properties?.['border-attached'],
+    '--forge-button-group-border-horizontal': properties?.['border-horizontal'],
+    '--forge-button-group-border-vertical': properties?.['border-vertical'],
+    '--forge-button-group-gap-md': properties?.['gap-md'],
+    '--forge-button-group-gap-none': properties?.['gap-none'],
+    '--forge-button-group-gap-sm': properties?.['gap-sm'],
+    '--forge-button-group-gap-xs': properties?.['gap-xs'],
+  }) as ButtonGroupStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ButtonGroupProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -28,6 +69,9 @@ export interface ButtonGroupProperties {
   size?: ButtonGroupSize;
   /** Accessible label describing the group. */
   ariaLabel?: string;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ButtonGroupStyleProperties>;
 }
 
 /**
@@ -46,6 +90,8 @@ export interface ButtonGroupProperties {
  * {@link classNames} helper.
  */
 export function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): MpElement {
+  const style = createButtonGroupStyle(properties.properties);
+
   const {
     orientation = 'horizontal',
     attached = false,
@@ -69,6 +115,7 @@ export function ForgeButtonGroup(properties: Readonly<ButtonGroupProperties>): M
       aria-label={ariaLabel}
       className={className}
       role="group"
+      style={style}
     >
       {properties.children}
     </div>

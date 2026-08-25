@@ -1,0 +1,165 @@
+/**
+ * Registered inherited custom properties for forge-comment-thread overrides.
+ */
+
+@property --forge-comment-thread-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-comment-thread-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-comment-thread-spacing-6 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-6);
+}
+
+@property --forge-comment-thread-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-comment-thread-opacity-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-muted);
+}
+
+@property --forge-comment-thread-color-bg-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-muted);
+}
+
+@property --forge-comment-thread-size-height-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-md);
+}
+
+@property --forge-comment-thread-radius-full {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-full);
+}
+
+@property --forge-comment-thread-color-primary-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-subtle);
+}
+
+@property --forge-comment-thread-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-comment-thread-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-comment-thread-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-comment-thread-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-comment-thread-color-text-link {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-link);
+}
+
+@property --forge-comment-thread-color-success-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-text);
+}
+
+@property --forge-comment-thread-font-weight-semibold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-semibold);
+}
+
+@property --forge-comment-thread-size-pad-block-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-block-md);
+}
+
+@property --forge-comment-thread-size-pad-inline-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-inline-md);
+}
+
+@property --forge-comment-thread-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-comment-thread-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-comment-thread-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-comment-thread-size-pad-inline-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-inline-lg);
+}
+
+@property --forge-comment-thread-color-text-on-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-primary);
+}
+
+@property --forge-comment-thread-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}
+
+@property --forge-comment-thread-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-disabled);
+}
+
+@property --forge-comment-thread-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-comment-thread-color-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-focus);
+}

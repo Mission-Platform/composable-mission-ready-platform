@@ -1,0 +1,300 @@
+/**
+ * Registered inherited custom properties for forge-code-block overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-code-block-code-typography-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-typography-line-height);
+}
+
+@property --forge-code-block-code-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-border-width);
+}
+
+@property --forge-code-block-code-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-border-default);
+}
+
+@property --forge-code-block-code-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-radius);
+}
+
+@property --forge-code-block-code-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-surface-default);
+}
+
+@property --forge-code-block-code-typography-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-typography-font-family);
+}
+
+@property --forge-code-block-code-typography-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-typography-font-size);
+}
+
+@property --forge-code-block-code-header-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-header-padding-block);
+}
+
+@property --forge-code-block-code-header-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-header-padding-inline);
+}
+
+@property --forge-code-block-code-header-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-header-border);
+}
+
+@property --forge-code-block-code-header-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-header-surface);
+}
+
+@property --forge-code-block-code-header-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-header-gap);
+}
+
+@property --forge-code-block-code-filename-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-filename-font-family);
+}
+
+@property --forge-code-block-code-filename-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-filename-font-size);
+}
+
+@property --forge-code-block-code-filename-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-filename-text);
+}
+
+@property --forge-code-block-code-language-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-language-font-family);
+}
+
+@property --forge-code-block-code-language-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-language-font-size);
+}
+
+@property --forge-code-block-code-language-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-language-text);
+}
+
+@property --forge-code-block-code-copy-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-gap);
+}
+
+@property --forge-code-block-code-copy-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-padding-block);
+}
+
+@property --forge-code-block-code-copy-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-padding-inline);
+}
+
+@property --forge-code-block-code-copy-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-border-default);
+}
+
+@property --forge-code-block-code-copy-border-width-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-border-width-default);
+}
+
+@property --forge-code-block-code-copy-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-radius);
+}
+
+@property --forge-code-block-code-copy-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-surface-default);
+}
+
+@property --forge-code-block-code-copy-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-text-default);
+}
+
+@property --forge-code-block-code-copy-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-font-family);
+}
+
+@property --forge-code-block-code-copy-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-font-size);
+}
+
+@property --forge-code-block-code-copy-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-transition-duration);
+}
+
+@property --forge-code-block-code-copy-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-transition-easing);
+}
+
+@property --forge-code-block-code-copy-text-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-text-hover);
+}
+
+@property --forge-code-block-code-copy-border-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-border-hover);
+}
+
+@property --forge-code-block-code-copy-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-surface-hover);
+}
+
+@property --forge-code-block-code-copy-border-width-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-border-width-focus-visible);
+}
+
+@property --forge-code-block-code-copy-border-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-copy-border-focus-visible);
+}
+
+@property --forge-code-block-code-gutter-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-gutter-padding-block);
+}
+
+@property --forge-code-block-code-gutter-padding-inline-end {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-gutter-padding-inline-end);
+}
+
+@property --forge-code-block-code-gutter-padding-inline-start {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-gutter-padding-inline-start);
+}
+
+@property --forge-code-block-code-gutter-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-gutter-text);
+}
+
+@property --forge-code-block-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-block-line-height);
+}
+
+@property --forge-code-block-code-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-padding);
+}
+
+@property --forge-code-block-code-variant-primary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-variant-primary-border);
+}
+
+@property --forge-code-block-code-variant-secondary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-variant-secondary-border);
+}
+
+@property --forge-code-block-code-variant-tertiary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-variant-tertiary-border);
+}
+
+@property --forge-code-block-code-variant-success-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-variant-success-border);
+}
+
+@property --forge-code-block-code-variant-warning-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-variant-warning-border);
+}
+
+@property --forge-code-block-code-variant-info-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-variant-info-border);
+}
+
+@property --forge-code-block-code-variant-error-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-variant-error-border);
+}
+
+@property --forge-code-block-code-variant-critical-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-code-variant-critical-border);
+}

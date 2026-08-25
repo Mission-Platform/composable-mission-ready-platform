@@ -1,11 +1,13 @@
 import {
-  type MpChild,
-  type MpElement,
-  type MpRenderProperty,
   Slot,
   useEffect,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type MpRenderProperty,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeIconChevron, ForgeIconPause, ForgeIconPlay } from '@mission-platform/icons';
 
@@ -38,6 +40,247 @@ export interface CarouselSlideScope {
   index: number;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface CarouselStyleProperties {
+  readonly 'navigation-carousel-autoplay-border'?: string;
+  readonly 'navigation-carousel-autoplay-border-width'?: string;
+  readonly 'navigation-carousel-autoplay-font-size'?: string;
+  readonly 'navigation-carousel-autoplay-line-height'?: string;
+  readonly 'navigation-carousel-autoplay-margin-top'?: string;
+  readonly 'navigation-carousel-autoplay-radius'?: string;
+  readonly 'navigation-carousel-autoplay-shadow'?: string;
+  readonly 'navigation-carousel-autoplay-size'?: string;
+  readonly 'navigation-carousel-autoplay-surface-default'?: string;
+  readonly 'navigation-carousel-autoplay-surface-hover'?: string;
+  readonly 'navigation-carousel-autoplay-text'?: string;
+  readonly 'navigation-carousel-control-border'?: string;
+  readonly 'navigation-carousel-control-border-width'?: string;
+  readonly 'navigation-carousel-control-font-size'?: string;
+  readonly 'navigation-carousel-control-line-height'?: string;
+  readonly 'navigation-carousel-control-offset'?: string;
+  readonly 'navigation-carousel-control-opacity-disabled'?: string;
+  readonly 'navigation-carousel-control-radius'?: string;
+  readonly 'navigation-carousel-control-shadow'?: string;
+  readonly 'navigation-carousel-control-size'?: string;
+  readonly 'navigation-carousel-control-surface-default'?: string;
+  readonly 'navigation-carousel-control-surface-hover'?: string;
+  readonly 'navigation-carousel-control-text'?: string;
+  readonly 'navigation-carousel-focus-border'?: string;
+  readonly 'navigation-carousel-focus-border-width'?: string;
+  readonly 'navigation-carousel-focus-offset'?: string;
+  readonly 'navigation-carousel-indicator-dot-size'?: string;
+  readonly 'navigation-carousel-indicator-radius'?: string;
+  readonly 'navigation-carousel-indicator-surface-default'?: string;
+  readonly 'navigation-carousel-indicator-surface-dot-default'?: string;
+  readonly 'navigation-carousel-indicator-surface-dot-selected'?: string;
+  readonly 'navigation-carousel-indicator-target-size'?: string;
+  readonly 'navigation-carousel-indicator-transition-duration'?: string;
+  readonly 'navigation-carousel-indicator-transition-easing'?: string;
+  readonly 'navigation-carousel-indicators-gap'?: string;
+  readonly 'navigation-carousel-indicators-margin-top'?: string;
+  readonly 'navigation-carousel-tone-critical-control-border'?: string;
+  readonly 'navigation-carousel-tone-critical-control-text'?: string;
+  readonly 'navigation-carousel-tone-critical-indicator'?: string;
+  readonly 'navigation-carousel-tone-error-control-border'?: string;
+  readonly 'navigation-carousel-tone-error-control-text'?: string;
+  readonly 'navigation-carousel-tone-error-indicator'?: string;
+  readonly 'navigation-carousel-tone-info-control-border'?: string;
+  readonly 'navigation-carousel-tone-info-control-text'?: string;
+  readonly 'navigation-carousel-tone-info-indicator'?: string;
+  readonly 'navigation-carousel-tone-primary-control-border'?: string;
+  readonly 'navigation-carousel-tone-primary-control-text'?: string;
+  readonly 'navigation-carousel-tone-primary-indicator'?: string;
+  readonly 'navigation-carousel-tone-secondary-control-border'?: string;
+  readonly 'navigation-carousel-tone-secondary-control-text'?: string;
+  readonly 'navigation-carousel-tone-secondary-indicator'?: string;
+  readonly 'navigation-carousel-tone-success-control-border'?: string;
+  readonly 'navigation-carousel-tone-success-control-text'?: string;
+  readonly 'navigation-carousel-tone-success-indicator'?: string;
+  readonly 'navigation-carousel-tone-tertiary-control-border'?: string;
+  readonly 'navigation-carousel-tone-tertiary-control-text'?: string;
+  readonly 'navigation-carousel-tone-tertiary-indicator'?: string;
+  readonly 'navigation-carousel-tone-warning-control-border'?: string;
+  readonly 'navigation-carousel-tone-warning-control-text'?: string;
+  readonly 'navigation-carousel-tone-warning-indicator'?: string;
+  readonly 'navigation-carousel-track-transition-duration'?: string;
+  readonly 'navigation-carousel-track-transition-easing'?: string;
+  readonly 'navigation-carousel-viewport-radius'?: string;
+}
+
+export type CarouselStyle = CSSStyleProperties & {
+  readonly '--forge-carousel-navigation-carousel-autoplay-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-autoplay-border-width'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-autoplay-font-size'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-autoplay-line-height'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-autoplay-margin-top'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-autoplay-radius'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-autoplay-shadow'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-autoplay-size'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-autoplay-surface-default'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-autoplay-surface-hover'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-autoplay-text'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-border-width'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-font-size'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-line-height'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-offset'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-opacity-disabled'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-radius'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-shadow'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-size'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-surface-default'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-surface-hover'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-control-text'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-focus-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-focus-border-width'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-focus-offset'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-indicator-dot-size'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-indicator-radius'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-indicator-surface-default'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-indicator-surface-dot-default'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-indicator-surface-dot-selected'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-indicator-target-size'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-indicator-transition-duration'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-indicator-transition-easing'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-indicators-gap'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-indicators-margin-top'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-critical-control-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-critical-control-text'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-critical-indicator'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-error-control-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-error-control-text'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-error-indicator'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-info-control-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-info-control-text'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-info-indicator'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-primary-control-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-primary-control-text'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-primary-indicator'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-secondary-control-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-secondary-control-text'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-secondary-indicator'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-success-control-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-success-control-text'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-success-indicator'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-tertiary-control-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-tertiary-control-text'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-tertiary-indicator'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-warning-control-border'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-warning-control-text'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-tone-warning-indicator'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-track-transition-duration'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-track-transition-easing'?: string | undefined;
+  readonly '--forge-carousel-navigation-carousel-viewport-radius'?: string | undefined;
+};
+
+function createCarouselStyle(properties: Readonly<CarouselStyleProperties> | undefined): CarouselStyle | undefined {
+  return createForgeStyle({
+    '--forge-carousel-navigation-carousel-autoplay-border': properties?.['navigation-carousel-autoplay-border'],
+    '--forge-carousel-navigation-carousel-autoplay-border-width':
+      properties?.['navigation-carousel-autoplay-border-width'],
+    '--forge-carousel-navigation-carousel-autoplay-font-size': properties?.['navigation-carousel-autoplay-font-size'],
+    '--forge-carousel-navigation-carousel-autoplay-line-height':
+      properties?.['navigation-carousel-autoplay-line-height'],
+    '--forge-carousel-navigation-carousel-autoplay-margin-top': properties?.['navigation-carousel-autoplay-margin-top'],
+    '--forge-carousel-navigation-carousel-autoplay-radius': properties?.['navigation-carousel-autoplay-radius'],
+    '--forge-carousel-navigation-carousel-autoplay-shadow': properties?.['navigation-carousel-autoplay-shadow'],
+    '--forge-carousel-navigation-carousel-autoplay-size': properties?.['navigation-carousel-autoplay-size'],
+    '--forge-carousel-navigation-carousel-autoplay-surface-default':
+      properties?.['navigation-carousel-autoplay-surface-default'],
+    '--forge-carousel-navigation-carousel-autoplay-surface-hover':
+      properties?.['navigation-carousel-autoplay-surface-hover'],
+    '--forge-carousel-navigation-carousel-autoplay-text': properties?.['navigation-carousel-autoplay-text'],
+    '--forge-carousel-navigation-carousel-control-border': properties?.['navigation-carousel-control-border'],
+    '--forge-carousel-navigation-carousel-control-border-width':
+      properties?.['navigation-carousel-control-border-width'],
+    '--forge-carousel-navigation-carousel-control-font-size': properties?.['navigation-carousel-control-font-size'],
+    '--forge-carousel-navigation-carousel-control-line-height': properties?.['navigation-carousel-control-line-height'],
+    '--forge-carousel-navigation-carousel-control-offset': properties?.['navigation-carousel-control-offset'],
+    '--forge-carousel-navigation-carousel-control-opacity-disabled':
+      properties?.['navigation-carousel-control-opacity-disabled'],
+    '--forge-carousel-navigation-carousel-control-radius': properties?.['navigation-carousel-control-radius'],
+    '--forge-carousel-navigation-carousel-control-shadow': properties?.['navigation-carousel-control-shadow'],
+    '--forge-carousel-navigation-carousel-control-size': properties?.['navigation-carousel-control-size'],
+    '--forge-carousel-navigation-carousel-control-surface-default':
+      properties?.['navigation-carousel-control-surface-default'],
+    '--forge-carousel-navigation-carousel-control-surface-hover':
+      properties?.['navigation-carousel-control-surface-hover'],
+    '--forge-carousel-navigation-carousel-control-text': properties?.['navigation-carousel-control-text'],
+    '--forge-carousel-navigation-carousel-focus-border': properties?.['navigation-carousel-focus-border'],
+    '--forge-carousel-navigation-carousel-focus-border-width': properties?.['navigation-carousel-focus-border-width'],
+    '--forge-carousel-navigation-carousel-focus-offset': properties?.['navigation-carousel-focus-offset'],
+    '--forge-carousel-navigation-carousel-indicator-dot-size': properties?.['navigation-carousel-indicator-dot-size'],
+    '--forge-carousel-navigation-carousel-indicator-radius': properties?.['navigation-carousel-indicator-radius'],
+    '--forge-carousel-navigation-carousel-indicator-surface-default':
+      properties?.['navigation-carousel-indicator-surface-default'],
+    '--forge-carousel-navigation-carousel-indicator-surface-dot-default':
+      properties?.['navigation-carousel-indicator-surface-dot-default'],
+    '--forge-carousel-navigation-carousel-indicator-surface-dot-selected':
+      properties?.['navigation-carousel-indicator-surface-dot-selected'],
+    '--forge-carousel-navigation-carousel-indicator-target-size':
+      properties?.['navigation-carousel-indicator-target-size'],
+    '--forge-carousel-navigation-carousel-indicator-transition-duration':
+      properties?.['navigation-carousel-indicator-transition-duration'],
+    '--forge-carousel-navigation-carousel-indicator-transition-easing':
+      properties?.['navigation-carousel-indicator-transition-easing'],
+    '--forge-carousel-navigation-carousel-indicators-gap': properties?.['navigation-carousel-indicators-gap'],
+    '--forge-carousel-navigation-carousel-indicators-margin-top':
+      properties?.['navigation-carousel-indicators-margin-top'],
+    '--forge-carousel-navigation-carousel-tone-critical-control-border':
+      properties?.['navigation-carousel-tone-critical-control-border'],
+    '--forge-carousel-navigation-carousel-tone-critical-control-text':
+      properties?.['navigation-carousel-tone-critical-control-text'],
+    '--forge-carousel-navigation-carousel-tone-critical-indicator':
+      properties?.['navigation-carousel-tone-critical-indicator'],
+    '--forge-carousel-navigation-carousel-tone-error-control-border':
+      properties?.['navigation-carousel-tone-error-control-border'],
+    '--forge-carousel-navigation-carousel-tone-error-control-text':
+      properties?.['navigation-carousel-tone-error-control-text'],
+    '--forge-carousel-navigation-carousel-tone-error-indicator':
+      properties?.['navigation-carousel-tone-error-indicator'],
+    '--forge-carousel-navigation-carousel-tone-info-control-border':
+      properties?.['navigation-carousel-tone-info-control-border'],
+    '--forge-carousel-navigation-carousel-tone-info-control-text':
+      properties?.['navigation-carousel-tone-info-control-text'],
+    '--forge-carousel-navigation-carousel-tone-info-indicator': properties?.['navigation-carousel-tone-info-indicator'],
+    '--forge-carousel-navigation-carousel-tone-primary-control-border':
+      properties?.['navigation-carousel-tone-primary-control-border'],
+    '--forge-carousel-navigation-carousel-tone-primary-control-text':
+      properties?.['navigation-carousel-tone-primary-control-text'],
+    '--forge-carousel-navigation-carousel-tone-primary-indicator':
+      properties?.['navigation-carousel-tone-primary-indicator'],
+    '--forge-carousel-navigation-carousel-tone-secondary-control-border':
+      properties?.['navigation-carousel-tone-secondary-control-border'],
+    '--forge-carousel-navigation-carousel-tone-secondary-control-text':
+      properties?.['navigation-carousel-tone-secondary-control-text'],
+    '--forge-carousel-navigation-carousel-tone-secondary-indicator':
+      properties?.['navigation-carousel-tone-secondary-indicator'],
+    '--forge-carousel-navigation-carousel-tone-success-control-border':
+      properties?.['navigation-carousel-tone-success-control-border'],
+    '--forge-carousel-navigation-carousel-tone-success-control-text':
+      properties?.['navigation-carousel-tone-success-control-text'],
+    '--forge-carousel-navigation-carousel-tone-success-indicator':
+      properties?.['navigation-carousel-tone-success-indicator'],
+    '--forge-carousel-navigation-carousel-tone-tertiary-control-border':
+      properties?.['navigation-carousel-tone-tertiary-control-border'],
+    '--forge-carousel-navigation-carousel-tone-tertiary-control-text':
+      properties?.['navigation-carousel-tone-tertiary-control-text'],
+    '--forge-carousel-navigation-carousel-tone-tertiary-indicator':
+      properties?.['navigation-carousel-tone-tertiary-indicator'],
+    '--forge-carousel-navigation-carousel-tone-warning-control-border':
+      properties?.['navigation-carousel-tone-warning-control-border'],
+    '--forge-carousel-navigation-carousel-tone-warning-control-text':
+      properties?.['navigation-carousel-tone-warning-control-text'],
+    '--forge-carousel-navigation-carousel-tone-warning-indicator':
+      properties?.['navigation-carousel-tone-warning-indicator'],
+    '--forge-carousel-navigation-carousel-track-transition-duration':
+      properties?.['navigation-carousel-track-transition-duration'],
+    '--forge-carousel-navigation-carousel-track-transition-easing':
+      properties?.['navigation-carousel-track-transition-easing'],
+    '--forge-carousel-navigation-carousel-viewport-radius': properties?.['navigation-carousel-viewport-radius'],
+  }) as CarouselStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface CarouselProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -74,6 +317,9 @@ export interface CarouselProperties {
   onUpdateModelValue?: (index: number) => void;
   /** Fired with the new index whenever the active slide changes. */
   onChange?: (index: number) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<CarouselStyleProperties>;
 }
 
 /**
@@ -98,6 +344,8 @@ export interface CarouselProperties {
  * `v-model` + emits become callback props.
  */
 export function ForgeCarousel(properties: Readonly<CarouselProperties>): MpElement {
+  const style = createCarouselStyle(properties.properties);
+
   const {
     slides,
     modelValue = 0,
@@ -274,7 +522,12 @@ export function ForgeCarousel(properties: Readonly<CarouselProperties>): MpEleme
     <section
       aria-label={ariaLabel}
       aria-roledescription="carousel"
-      className={[styles['forge-carousel'], styles[`forge-carousel--${variant}`], size ? `forge-size--${size}` : undefined]}
+      className={[
+        styles['forge-carousel'],
+        styles[`forge-carousel--${variant}`],
+        size ? `forge-size--${size}` : undefined,
+      ]}
+      style={style}
       tabindex={0}
       onKeydown={handleKeydown}
       onMouseenter={() => {

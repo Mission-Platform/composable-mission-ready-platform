@@ -1,4 +1,12 @@
-import { classNames, hasSlot, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import {
+  classNames,
+  hasSlot,
+  Slot,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import spacingStyles from '../../../styles/spacing.module.scss';
 
@@ -14,6 +22,123 @@ export type CardVariant =
 /** Named outer-`margin` scale; each step maps to a named `--mp-spacing-*` design token. */
 export type SpacingScale = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface CardStyleProperties {
+  readonly background?: string;
+  readonly border?: string;
+  readonly 'border-width'?: string;
+  readonly 'padding-lg-block'?: string;
+  readonly 'padding-lg-inline'?: string;
+  readonly 'padding-lg-wide-block'?: string;
+  readonly 'padding-lg-wide-inline'?: string;
+  readonly 'padding-md-block'?: string;
+  readonly 'padding-md-inline'?: string;
+  readonly 'padding-md-wide-block'?: string;
+  readonly 'padding-md-wide-inline'?: string;
+  readonly 'padding-sm-block'?: string;
+  readonly 'padding-sm-inline'?: string;
+  readonly 'padding-sm-wide-block'?: string;
+  readonly 'padding-sm-wide-inline'?: string;
+  readonly radius?: string;
+  readonly shadow?: string;
+  readonly 'tone-bordered-background'?: string;
+  readonly 'tone-bordered-border'?: string;
+  readonly 'tone-bordered-text'?: string;
+  readonly 'tone-padding-lg-background'?: string;
+  readonly 'tone-padding-lg-border'?: string;
+  readonly 'tone-padding-lg-text'?: string;
+  readonly 'tone-padding-md-background'?: string;
+  readonly 'tone-padding-md-border'?: string;
+  readonly 'tone-padding-md-text'?: string;
+  readonly 'tone-padding-none-background'?: string;
+  readonly 'tone-padding-none-border'?: string;
+  readonly 'tone-padding-none-text'?: string;
+  readonly 'tone-padding-sm-background'?: string;
+  readonly 'tone-padding-sm-border'?: string;
+  readonly 'tone-padding-sm-text'?: string;
+  readonly 'tone-shadow-background'?: string;
+  readonly 'tone-shadow-border'?: string;
+  readonly 'tone-shadow-text'?: string;
+}
+
+export type CardStyle = CSSStyleProperties & {
+  readonly '--forge-card-background'?: string | undefined;
+  readonly '--forge-card-border'?: string | undefined;
+  readonly '--forge-card-border-width'?: string | undefined;
+  readonly '--forge-card-padding-lg-block'?: string | undefined;
+  readonly '--forge-card-padding-lg-inline'?: string | undefined;
+  readonly '--forge-card-padding-lg-wide-block'?: string | undefined;
+  readonly '--forge-card-padding-lg-wide-inline'?: string | undefined;
+  readonly '--forge-card-padding-md-block'?: string | undefined;
+  readonly '--forge-card-padding-md-inline'?: string | undefined;
+  readonly '--forge-card-padding-md-wide-block'?: string | undefined;
+  readonly '--forge-card-padding-md-wide-inline'?: string | undefined;
+  readonly '--forge-card-padding-sm-block'?: string | undefined;
+  readonly '--forge-card-padding-sm-inline'?: string | undefined;
+  readonly '--forge-card-padding-sm-wide-block'?: string | undefined;
+  readonly '--forge-card-padding-sm-wide-inline'?: string | undefined;
+  readonly '--forge-card-radius'?: string | undefined;
+  readonly '--forge-card-shadow'?: string | undefined;
+  readonly '--forge-card-tone-bordered-background'?: string | undefined;
+  readonly '--forge-card-tone-bordered-border'?: string | undefined;
+  readonly '--forge-card-tone-bordered-text'?: string | undefined;
+  readonly '--forge-card-tone-padding-lg-background'?: string | undefined;
+  readonly '--forge-card-tone-padding-lg-border'?: string | undefined;
+  readonly '--forge-card-tone-padding-lg-text'?: string | undefined;
+  readonly '--forge-card-tone-padding-md-background'?: string | undefined;
+  readonly '--forge-card-tone-padding-md-border'?: string | undefined;
+  readonly '--forge-card-tone-padding-md-text'?: string | undefined;
+  readonly '--forge-card-tone-padding-none-background'?: string | undefined;
+  readonly '--forge-card-tone-padding-none-border'?: string | undefined;
+  readonly '--forge-card-tone-padding-none-text'?: string | undefined;
+  readonly '--forge-card-tone-padding-sm-background'?: string | undefined;
+  readonly '--forge-card-tone-padding-sm-border'?: string | undefined;
+  readonly '--forge-card-tone-padding-sm-text'?: string | undefined;
+  readonly '--forge-card-tone-shadow-background'?: string | undefined;
+  readonly '--forge-card-tone-shadow-border'?: string | undefined;
+  readonly '--forge-card-tone-shadow-text'?: string | undefined;
+};
+
+function createCardStyle(properties: Readonly<CardStyleProperties> | undefined): CardStyle | undefined {
+  return createForgeStyle({
+    '--forge-card-background': properties?.['background'],
+    '--forge-card-border': properties?.['border'],
+    '--forge-card-border-width': properties?.['border-width'],
+    '--forge-card-padding-lg-block': properties?.['padding-lg-block'],
+    '--forge-card-padding-lg-inline': properties?.['padding-lg-inline'],
+    '--forge-card-padding-lg-wide-block': properties?.['padding-lg-wide-block'],
+    '--forge-card-padding-lg-wide-inline': properties?.['padding-lg-wide-inline'],
+    '--forge-card-padding-md-block': properties?.['padding-md-block'],
+    '--forge-card-padding-md-inline': properties?.['padding-md-inline'],
+    '--forge-card-padding-md-wide-block': properties?.['padding-md-wide-block'],
+    '--forge-card-padding-md-wide-inline': properties?.['padding-md-wide-inline'],
+    '--forge-card-padding-sm-block': properties?.['padding-sm-block'],
+    '--forge-card-padding-sm-inline': properties?.['padding-sm-inline'],
+    '--forge-card-padding-sm-wide-block': properties?.['padding-sm-wide-block'],
+    '--forge-card-padding-sm-wide-inline': properties?.['padding-sm-wide-inline'],
+    '--forge-card-radius': properties?.['radius'],
+    '--forge-card-shadow': properties?.['shadow'],
+    '--forge-card-tone-bordered-background': properties?.['tone-bordered-background'],
+    '--forge-card-tone-bordered-border': properties?.['tone-bordered-border'],
+    '--forge-card-tone-bordered-text': properties?.['tone-bordered-text'],
+    '--forge-card-tone-padding-lg-background': properties?.['tone-padding-lg-background'],
+    '--forge-card-tone-padding-lg-border': properties?.['tone-padding-lg-border'],
+    '--forge-card-tone-padding-lg-text': properties?.['tone-padding-lg-text'],
+    '--forge-card-tone-padding-md-background': properties?.['tone-padding-md-background'],
+    '--forge-card-tone-padding-md-border': properties?.['tone-padding-md-border'],
+    '--forge-card-tone-padding-md-text': properties?.['tone-padding-md-text'],
+    '--forge-card-tone-padding-none-background': properties?.['tone-padding-none-background'],
+    '--forge-card-tone-padding-none-border': properties?.['tone-padding-none-border'],
+    '--forge-card-tone-padding-none-text': properties?.['tone-padding-none-text'],
+    '--forge-card-tone-padding-sm-background': properties?.['tone-padding-sm-background'],
+    '--forge-card-tone-padding-sm-border': properties?.['tone-padding-sm-border'],
+    '--forge-card-tone-padding-sm-text': properties?.['tone-padding-sm-text'],
+    '--forge-card-tone-shadow-background': properties?.['tone-shadow-background'],
+    '--forge-card-tone-shadow-border': properties?.['tone-shadow-border'],
+    '--forge-card-tone-shadow-text': properties?.['tone-shadow-text'],
+  }) as CardStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface CardProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -37,6 +162,9 @@ export interface CardProperties {
    * separate `padding` prop above.
    */
   margin?: SpacingScale;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<CardStyleProperties>;
 }
 
 /**
@@ -56,6 +184,8 @@ export interface CardProperties {
  * frameworks.
  */
 export function ForgeCard(properties: Readonly<CardProperties>): MpElement {
+  const style = createCardStyle(properties.properties);
+
   const { padding = 'md', shadow = false, bordered = true, variant = 'neutral', size = 'md', margin } = properties;
 
   // The optional outer `margin` (named `2xs … 2xl` scale) resolves to a shared
@@ -73,7 +203,10 @@ export function ForgeCard(properties: Readonly<CardProperties>): MpElement {
   );
 
   return (
-    <article className={className}>
+    <article
+      className={className}
+      style={style}
+    >
       {hasSlot('header') ? (
         <div className={styles['forge-card__header']}>
           <Slot name="header" />

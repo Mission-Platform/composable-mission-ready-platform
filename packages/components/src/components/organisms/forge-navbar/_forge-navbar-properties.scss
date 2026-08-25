@@ -1,0 +1,183 @@
+/**
+ * Registered inherited custom properties for forge-navbar overrides.
+ */
+
+@property --forge-navbar-navigation-navbar-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-surface);
+}
+
+@property --forge-navbar-navigation-navbar-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-border-width);
+}
+
+@property --forge-navbar-navigation-navbar-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-border);
+}
+
+@property --forge-navbar-navigation-navbar-container-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-container-height);
+}
+
+@property --forge-navbar-navigation-navbar-container-padding-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-container-padding-default);
+}
+
+@property --forge-navbar-navigation-navbar-container-gap-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-container-gap-default);
+}
+
+@property --forge-navbar-navigation-navbar-container-padding-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-container-padding-wide);
+}
+
+@property --forge-navbar-navigation-navbar-container-gap-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-container-gap-wide);
+}
+
+@property --forge-navbar-navigation-navbar-container-padding-widest {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-container-padding-widest);
+}
+
+@property --forge-navbar-navigation-navbar-container-gap-widest {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-container-gap-widest);
+}
+
+@property --forge-navbar-navigation-navbar-start-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-start-gap);
+}
+
+@property --forge-navbar-navigation-navbar-center-gap-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-center-gap-default);
+}
+
+@property --forge-navbar-navigation-navbar-center-gap-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-center-gap-wide);
+}
+
+@property --forge-navbar-navigation-navbar-center-gap-widest {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-center-gap-widest);
+}
+
+@property --forge-navbar-navigation-navbar-end-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-end-gap);
+}
+
+@property --forge-navbar-navigation-navbar-hamburger-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-hamburger-gap);
+}
+
+@property --forge-navbar-navigation-navbar-hamburger-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-hamburger-size);
+}
+
+@property --forge-navbar-navigation-navbar-hamburger-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-hamburger-padding);
+}
+
+@property --forge-navbar-navigation-navbar-hamburger-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-hamburger-radius);
+}
+
+@property --forge-navbar-navigation-navbar-hamburger-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-hamburger-text);
+}
+
+@property --forge-navbar-navigation-navbar-hamburger-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-hamburger-surface-hover);
+}
+
+@property --forge-navbar-navigation-navbar-hamburger-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-hamburger-focus-ring);
+}
+
+@property --forge-navbar-navigation-navbar-hamburger-bar-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-hamburger-bar-height);
+}
+
+@property --forge-navbar-navigation-navbar-hamburger-bar-color {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-hamburger-bar-color);
+}
+
+@property --forge-navbar-navigation-navbar-mobile-nav-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-mobile-nav-gap);
+}
+
+@property --forge-navbar-navigation-navbar-mobile-nav-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-mobile-nav-padding-block);
+}
+
+@property --forge-navbar-navigation-navbar-mobile-nav-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-mobile-nav-padding-inline);
+}
+
+@property --forge-navbar-navigation-navbar-mobile-nav-items-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-mobile-nav-items-gap);
+}
+
+@property --forge-navbar-navigation-navbar-mobile-nav-end-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-mobile-nav-end-gap);
+}
+
+@property --forge-navbar-navigation-navbar-mobile-nav-end-padding-top {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-navbar-mobile-nav-end-padding-top);
+}

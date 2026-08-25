@@ -8,12 +8,13 @@
  *
  * The rules live in the package-owned `mp.forms` cascade layer.
  */
+@use './forge-date-time-range-input-properties';
 
 @layer mp.forms {
   .forge-date-time-range-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-input-field-gap);
+    gap: var(--forge-date-time-range-input-input-field-gap, var(--mp-input-field-gap));
 
     &__label {
       display: flex;
@@ -34,23 +35,27 @@
     }
 
     &__required {
-      color: var(--mp-field-required);
+      color: var(--forge-date-time-range-input-field-required, var(--mp-field-required));
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: center;
-      border: var(--mp-input-border-width) solid var(--mp-input-border-default);
-      border-radius: var(--mp-input-radius);
-      background-color: var(--mp-input-surface-default);
+      border: var(--forge-date-time-range-input-input-border-width, var(--mp-input-border-width)) solid
+        var(--forge-date-time-range-input-input-border-default, var(--mp-input-border-default));
+      border-radius: var(--forge-date-time-range-input-input-radius, var(--mp-input-radius));
+      background-color: var(--forge-date-time-range-input-input-surface-default, var(--mp-input-surface-default));
       transition:
         border-color 150ms ease,
         box-shadow 150ms ease;
 
       &:focus-within {
-        border-color: var(--mp-input-border-focus-visible);
-        box-shadow: var(--mp-input-focus-ring);
+        border-color: var(
+          --forge-date-time-range-input-input-border-focus-visible,
+          var(--mp-input-border-focus-visible)
+        );
+        box-shadow: var(--forge-date-time-range-input-input-focus-ring, var(--mp-input-focus-ring));
       }
     }
 
@@ -77,28 +82,28 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      color: var(--mp-input-text-secondary);
+      color: var(--forge-date-time-range-input-input-text-secondary, var(--mp-input-text-secondary));
 
       &--start {
-        margin-inline-start: var(--mp-time-timezone-margin);
+        margin-inline-start: var(--forge-date-time-range-input-time-timezone-margin, var(--mp-time-timezone-margin));
       }
 
       &--end {
-        margin-inline-end: var(--mp-time-timezone-margin);
+        margin-inline-end: var(--forge-date-time-range-input-time-timezone-margin, var(--mp-time-timezone-margin));
       }
     }
 
     &__value {
-      color: var(--mp-input-text-default);
-      font-family: var(--mp-input-font-family);
+      color: var(--forge-date-time-range-input-input-text-default, var(--mp-input-text-default));
+      font-family: var(--forge-date-time-range-input-input-font-family, var(--mp-input-font-family));
 
       &--placeholder {
-        color: var(--mp-input-text-placeholder);
+        color: var(--forge-date-time-range-input-input-text-placeholder, var(--mp-input-text-placeholder));
       }
     }
 
     &__icon {
-      color: var(--mp-input-text-secondary);
+      color: var(--forge-date-time-range-input-input-text-secondary, var(--mp-input-text-secondary));
       display: flex;
       align-items: center;
       flex-shrink: 0;
@@ -114,35 +119,45 @@
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} .forge-date-time-range-input__trigger {
-        padding: var(--mp-input-size-#{$size}-padding-block) var(--mp-input-size-#{$size}-padding-inline);
+        padding: var(
+            --forge-date-time-range-input-input-size-#{$size}-padding-block,
+            var(--mp-input-size-#{$size}-padding-block)
+          )
+          var(
+            --forge-date-time-range-input-input-size-#{$size}-padding-inline,
+            var(--mp-input-size-#{$size}-padding-inline)
+          );
 
         .forge-date-time-range-input__value {
-          font-size: var(--mp-input-size-#{$size}-font-size);
+          font-size: var(
+            --forge-date-time-range-input-input-size-#{$size}-font-size,
+            var(--mp-input-size-#{$size}-font-size)
+          );
         }
       }
     }
 
     /* States */
     &--error .forge-date-time-range-input__wrapper {
-      border-color: var(--mp-input-border-invalid);
+      border-color: var(--forge-date-time-range-input-input-border-invalid, var(--mp-input-border-invalid));
 
       &:focus-within {
-        box-shadow: var(--mp-input-focus-ring-invalid);
+        box-shadow: var(--forge-date-time-range-input-input-focus-ring-invalid, var(--mp-input-focus-ring-invalid));
       }
     }
 
     &--disabled {
-      opacity: var(--mp-input-opacity-disabled);
+      opacity: var(--forge-date-time-range-input-input-opacity-disabled, var(--mp-input-opacity-disabled));
       pointer-events: none;
 
       .forge-date-time-range-input__wrapper {
-        background-color: var(--mp-input-surface-disabled);
+        background-color: var(--forge-date-time-range-input-input-surface-disabled, var(--mp-input-surface-disabled));
         cursor: not-allowed;
       }
     }
 
     &__error {
-      color: var(--mp-input-text-invalid);
+      color: var(--forge-date-time-range-input-input-text-invalid, var(--mp-input-text-invalid));
       margin: 0;
     }
 
@@ -154,56 +169,58 @@
        shadow, scrolling, and anchored positioning). */
     &__popover {
       margin: 0;
-      padding: var(--mp-time-popover-padding);
+      padding: var(--forge-date-time-range-input-time-popover-padding, var(--mp-time-popover-padding));
 
       /* Cap to the viewport so the panes wrap instead of overflowing on mobile. */
-      max-width: calc(100vw - var(--mp-spacing-4));
+      max-width: calc(100vw - var(--forge-date-time-range-input-spacing-4, var(--mp-spacing-4)));
     }
 
     &__tz {
       display: flex;
-      gap: var(--mp-time-timezone-gap);
-      margin-bottom: var(--mp-time-timezone-margin);
+      gap: var(--forge-date-time-range-input-time-timezone-gap, var(--mp-time-timezone-gap));
+      margin-bottom: var(--forge-date-time-range-input-time-timezone-margin, var(--mp-time-timezone-margin));
     }
 
     &__tz-btn {
-      font-size: var(--mp-time-font-size-header);
-      padding: var(--mp-time-unit-padding-block) var(--mp-time-unit-padding-inline);
-      border: var(--mp-input-border-width) solid var(--mp-time-border-default);
+      font-size: var(--forge-date-time-range-input-time-font-size-header, var(--mp-time-font-size-header));
+      padding: var(--forge-date-time-range-input-time-unit-padding-block, var(--mp-time-unit-padding-block))
+        var(--forge-date-time-range-input-time-unit-padding-inline, var(--mp-time-unit-padding-inline));
+      border: var(--forge-date-time-range-input-input-border-width, var(--mp-input-border-width)) solid
+        var(--forge-date-time-range-input-time-border-default, var(--mp-time-border-default));
       background: transparent;
-      border-radius: var(--mp-time-unit-radius);
+      border-radius: var(--forge-date-time-range-input-time-unit-radius, var(--mp-time-unit-radius));
       cursor: pointer;
-      color: var(--mp-time-text-secondary);
+      color: var(--forge-date-time-range-input-time-text-secondary, var(--mp-time-text-secondary));
 
       &--active {
-        background-color: var(--mp-time-surface-selected);
-        color: var(--mp-time-text-selected);
-        border-color: var(--mp-time-surface-selected);
+        background-color: var(--forge-date-time-range-input-time-surface-selected, var(--mp-time-surface-selected));
+        color: var(--forge-date-time-range-input-time-text-selected, var(--mp-time-text-selected));
+        border-color: var(--forge-date-time-range-input-time-surface-selected, var(--mp-time-surface-selected));
       }
     }
 
     &__panes {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--mp-time-panes-gap);
+      gap: var(--forge-date-time-range-input-time-panes-gap, var(--mp-time-panes-gap));
     }
 
     &__pane {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-time-pane-gap);
+      gap: var(--forge-date-time-range-input-time-pane-gap, var(--mp-time-pane-gap));
       min-width: 260px;
     }
 
     &__columns {
       display: flex;
       align-items: flex-start;
-      gap: var(--mp-time-pane-gap);
+      gap: var(--forge-date-time-range-input-time-pane-gap, var(--mp-time-pane-gap));
     }
 
     &__sep {
-      font-size: var(--mp-time-font-size-separator);
-      color: var(--mp-time-text-secondary);
+      font-size: var(--forge-date-time-range-input-time-font-size-separator, var(--mp-time-font-size-separator));
+      color: var(--forge-date-time-range-input-time-text-secondary, var(--mp-time-text-secondary));
       padding-top: 36px;
       line-height: 1;
     }
@@ -215,13 +232,14 @@
     }
 
     &__col-header {
-      font-size: var(--mp-time-font-size-header);
-      font-weight: var(--mp-time-font-weight-medium);
-      color: var(--mp-time-text-muted);
+      font-size: var(--forge-date-time-range-input-time-font-size-header, var(--mp-time-font-size-header));
+      font-weight: var(--forge-date-time-range-input-time-font-weight-medium, var(--mp-time-font-weight-medium));
+      color: var(--forge-date-time-range-input-time-text-muted, var(--mp-time-text-muted));
       text-align: center;
-      margin-bottom: var(--mp-time-header-gap);
-      padding-bottom: var(--mp-time-header-padding);
-      border-bottom: var(--mp-input-border-width) solid var(--mp-time-border-default);
+      margin-bottom: var(--forge-date-time-range-input-time-header-gap, var(--mp-time-header-gap));
+      padding-bottom: var(--forge-date-time-range-input-time-header-padding, var(--mp-time-header-padding));
+      border-bottom: var(--forge-date-time-range-input-input-border-width, var(--mp-input-border-width)) solid
+        var(--forge-date-time-range-input-time-border-default, var(--mp-time-border-default));
     }
 
     &__scroll {
@@ -241,66 +259,75 @@
       }
 
       &::-webkit-scrollbar-thumb {
-        background: var(--mp-time-border-default);
-        border-radius: var(--mp-time-unit-radius);
+        background: var(--forge-date-time-range-input-time-border-default, var(--mp-time-border-default));
+        border-radius: var(--forge-date-time-range-input-time-unit-radius, var(--mp-time-unit-radius));
       }
     }
 
     &__unit-btn {
-      font-size: var(--mp-time-font-size-unit);
-      padding: var(--mp-time-unit-padding-block) var(--mp-time-unit-padding-inline);
+      font-size: var(--forge-date-time-range-input-time-font-size-unit, var(--mp-time-font-size-unit));
+      padding: var(--forge-date-time-range-input-time-unit-padding-block, var(--mp-time-unit-padding-block))
+        var(--forge-date-time-range-input-time-unit-padding-inline, var(--mp-time-unit-padding-inline));
       border: none;
       background: transparent;
-      border-radius: var(--mp-time-unit-radius);
+      border-radius: var(--forge-date-time-range-input-time-unit-radius, var(--mp-time-unit-radius));
       cursor: pointer;
-      color: var(--mp-time-text-default);
+      color: var(--forge-date-time-range-input-time-text-default, var(--mp-time-text-default));
       text-align: center;
       transition:
-        background-color var(--mp-time-transition-duration) var(--mp-time-transition-easing),
-        color var(--mp-time-transition-duration) var(--mp-time-transition-easing);
+        background-color var(--forge-date-time-range-input-time-transition-duration, var(--mp-time-transition-duration))
+          var(--forge-date-time-range-input-time-transition-easing, var(--mp-time-transition-easing)),
+        color var(--forge-date-time-range-input-time-transition-duration, var(--mp-time-transition-duration))
+          var(--forge-date-time-range-input-time-transition-easing, var(--mp-time-transition-easing));
       width: 100%;
 
       &--active {
-        background-color: var(--mp-time-surface-selected);
-        color: var(--mp-time-text-selected);
-        font-weight: var(--mp-time-font-weight-selected);
+        background-color: var(--forge-date-time-range-input-time-surface-selected, var(--mp-time-surface-selected));
+        color: var(--forge-date-time-range-input-time-text-selected, var(--mp-time-text-selected));
+        font-weight: var(--forge-date-time-range-input-time-font-weight-selected, var(--mp-time-font-weight-selected));
       }
 
       &:focus-visible {
-        outline: var(--mp-time-border-focus-width) solid var(--mp-time-border-focus);
+        outline: var(--forge-date-time-range-input-time-border-focus-width, var(--mp-time-border-focus-width)) solid
+          var(--forge-date-time-range-input-time-border-focus, var(--mp-time-border-focus));
         outline-offset: 2px;
       }
 
       &:hover:not(.forge-date-time-range-input__unit-btn--active) {
-        background-color: var(--mp-time-surface-hover);
+        background-color: var(--forge-date-time-range-input-time-surface-hover, var(--mp-time-surface-hover));
       }
     }
 
     &__footer {
       display: flex;
       justify-content: flex-end;
-      margin-top: var(--mp-time-footer-gap);
-      padding-top: var(--mp-time-footer-gap);
-      border-top: var(--mp-input-border-width) solid var(--mp-time-border-default);
+      margin-top: var(--forge-date-time-range-input-time-footer-gap, var(--mp-time-footer-gap));
+      padding-top: var(--forge-date-time-range-input-time-footer-gap, var(--mp-time-footer-gap));
+      border-top: var(--forge-date-time-range-input-input-border-width, var(--mp-input-border-width)) solid
+        var(--forge-date-time-range-input-time-border-default, var(--mp-time-border-default));
     }
 
     &__done-btn {
-      font-size: var(--mp-time-font-size-unit);
-      font-weight: var(--mp-time-font-weight-medium);
-      padding: var(--mp-time-done-padding-block) var(--mp-time-done-padding-inline);
+      font-size: var(--forge-date-time-range-input-time-font-size-unit, var(--mp-time-font-size-unit));
+      font-weight: var(--forge-date-time-range-input-time-font-weight-medium, var(--mp-time-font-weight-medium));
+      padding: var(--forge-date-time-range-input-time-done-padding-block, var(--mp-time-done-padding-block))
+        var(--forge-date-time-range-input-time-done-padding-inline, var(--mp-time-done-padding-inline));
       border: none;
-      background-color: var(--mp-time-surface-selected);
-      color: var(--mp-time-text-selected);
-      border-radius: var(--mp-time-done-radius);
+      background-color: var(--forge-date-time-range-input-time-surface-selected, var(--mp-time-surface-selected));
+      color: var(--forge-date-time-range-input-time-text-selected, var(--mp-time-text-selected));
+      border-radius: var(--forge-date-time-range-input-time-done-radius, var(--mp-time-done-radius));
       cursor: pointer;
-      transition: opacity var(--mp-time-transition-duration) var(--mp-time-transition-easing);
+      transition: opacity
+        var(--forge-date-time-range-input-time-transition-duration, var(--mp-time-transition-duration))
+        var(--forge-date-time-range-input-time-transition-easing, var(--mp-time-transition-easing));
 
       &:hover {
-        opacity: var(--mp-time-done-hover-opacity);
+        opacity: var(--forge-date-time-range-input-time-done-hover-opacity, var(--mp-time-done-hover-opacity));
       }
 
       &:focus-visible {
-        outline: var(--mp-time-border-focus-width) solid var(--mp-time-border-focus);
+        outline: var(--forge-date-time-range-input-time-border-focus-width, var(--mp-time-border-focus-width)) solid
+          var(--forge-date-time-range-input-time-border-focus, var(--mp-time-border-focus));
         outline-offset: 2px;
       }
     }

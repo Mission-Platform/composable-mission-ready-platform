@@ -1,22 +1,24 @@
+@use './forge-inline-edit-properties';
+
 @layer mp.components {
   .forge-inline-edit {
     display: inline-flex;
     flex-direction: column;
-    gap: var(--mp-spacing-1);
+    gap: var(--forge-inline-edit-spacing-1, var(--mp-spacing-1));
     max-width: 100%;
-    color: var(--mp-color-text-primary);
+    color: var(--forge-inline-edit-color-text-primary, var(--mp-color-text-primary));
   }
 
   .forge-inline-edit__label {
-    font-size: var(--mp-font-size-sm);
-    font-weight: var(--mp-font-weight-semibold);
+    font-size: var(--forge-inline-edit-font-size-sm, var(--mp-font-size-sm));
+    font-weight: var(--forge-inline-edit-font-weight-semibold, var(--mp-font-weight-semibold));
   }
 
   .forge-inline-edit__display,
   .forge-inline-edit__form {
     display: flex;
     align-items: center;
-    gap: var(--mp-spacing-2);
+    gap: var(--forge-inline-edit-spacing-2, var(--mp-spacing-2));
     max-width: 100%;
   }
 
@@ -27,57 +29,63 @@
 
   .forge-inline-edit__input {
     min-width: 10rem;
-    padding: var(--mp-size-pad-block-sm) var(--mp-size-pad-inline-sm);
+    padding: var(--forge-inline-edit-size-pad-block-sm, var(--mp-size-pad-block-sm))
+      var(--forge-inline-edit-size-pad-inline-sm, var(--mp-size-pad-inline-sm));
     color: inherit;
-    background: var(--mp-color-bg-surface);
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    background: var(--forge-inline-edit-color-bg-surface, var(--mp-color-bg-surface));
+    border: var(--forge-inline-edit-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-inline-edit-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-inline-edit-radius-md, var(--mp-radius-md));
     font: inherit;
   }
 
   .forge-inline-edit__input:focus-visible {
-    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
-    outline-offset: var(--mp-spacing-1);
-    border-color: var(--mp-color-border-focus);
+    outline: var(--forge-inline-edit-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-inline-edit-color-border-focus, var(--mp-color-border-focus));
+    outline-offset: var(--forge-inline-edit-spacing-1, var(--mp-spacing-1));
+    border-color: var(--forge-inline-edit-color-border-focus, var(--mp-color-border-focus));
   }
 
   .forge-inline-edit__button {
-    padding: var(--mp-spacing-1) var(--mp-spacing-2);
-    color: var(--mp-color-text-link);
+    padding: var(--forge-inline-edit-spacing-1, var(--mp-spacing-1))
+      var(--forge-inline-edit-spacing-2, var(--mp-spacing-2));
+    color: var(--forge-inline-edit-color-text-link, var(--mp-color-text-link));
     background: transparent;
-    border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-    border-radius: var(--mp-radius-md);
+    border: var(--forge-inline-edit-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-inline-edit-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-inline-edit-radius-md, var(--mp-radius-md));
     cursor: pointer;
     font: inherit;
     white-space: nowrap;
   }
 
   .forge-inline-edit__button:hover:not(:disabled) {
-    background: var(--mp-color-primary-subtle);
+    background: var(--forge-inline-edit-color-primary-subtle, var(--mp-color-primary-subtle));
   }
 
   .forge-inline-edit__button:focus-visible {
-    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
-    outline-offset: var(--mp-spacing-1);
+    outline: var(--forge-inline-edit-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-inline-edit-color-border-focus, var(--mp-color-border-focus));
+    outline-offset: var(--forge-inline-edit-spacing-1, var(--mp-spacing-1));
   }
 
   .forge-inline-edit__button:disabled {
     cursor: not-allowed;
-    opacity: var(--mp-opacity-disabled);
+    opacity: var(--forge-inline-edit-opacity-disabled, var(--mp-opacity-disabled));
   }
 
   .forge-inline-edit__error {
     margin: 0;
-    color: var(--mp-color-danger-text);
-    font-size: var(--mp-font-size-sm);
+    color: var(--forge-inline-edit-color-danger-text, var(--mp-color-danger-text));
+    font-size: var(--forge-inline-edit-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-inline-edit__footer {
-    margin-top: var(--mp-spacing-1);
+    margin-top: var(--forge-inline-edit-spacing-1, var(--mp-spacing-1));
   }
 
   .forge-inline-edit--sm {
-    font-size: var(--mp-font-size-sm);
+    font-size: var(--forge-inline-edit-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-inline-edit--lg {
@@ -85,10 +93,10 @@
   }
 
   .forge-inline-edit--disabled {
-    opacity: var(--mp-opacity-disabled);
+    opacity: var(--forge-inline-edit-opacity-disabled, var(--mp-opacity-disabled));
   }
 
   .forge-inline-edit--error .forge-inline-edit__input {
-    border-color: var(--mp-color-danger-default);
+    border-color: var(--forge-inline-edit-color-danger-default, var(--mp-color-danger-default));
   }
 }

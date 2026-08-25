@@ -1,4 +1,4 @@
-import { type MpChild, type MpElement } from '@mission-platform/forge';
+import { createForgeStyle, type MpChild, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import { resolveLabels, type WysiwygLabels } from '../../../utils/labels';
 import { type EditorStats, EMPTY_EDITOR_STATS } from '../../../utils/text-stats';
@@ -25,6 +25,41 @@ export interface WysiwygStatusItem {
   value?: string | number;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface WysiwygStatusBarStyleProperties {
+  readonly 'editor-status-bar-border'?: string;
+  readonly 'editor-status-bar-border-width'?: string;
+  readonly 'editor-status-bar-font-size'?: string;
+  readonly 'editor-status-bar-gap'?: string;
+  readonly 'editor-status-bar-padding-block'?: string;
+  readonly 'editor-status-bar-padding-inline'?: string;
+  readonly 'editor-status-bar-text'?: string;
+}
+
+export type WysiwygStatusBarStyle = CSSStyleProperties & {
+  readonly '--forge-wysiwyg-status-bar-editor-status-bar-border'?: string | undefined;
+  readonly '--forge-wysiwyg-status-bar-editor-status-bar-border-width'?: string | undefined;
+  readonly '--forge-wysiwyg-status-bar-editor-status-bar-font-size'?: string | undefined;
+  readonly '--forge-wysiwyg-status-bar-editor-status-bar-gap'?: string | undefined;
+  readonly '--forge-wysiwyg-status-bar-editor-status-bar-padding-block'?: string | undefined;
+  readonly '--forge-wysiwyg-status-bar-editor-status-bar-padding-inline'?: string | undefined;
+  readonly '--forge-wysiwyg-status-bar-editor-status-bar-text'?: string | undefined;
+};
+
+function createWysiwygStatusBarStyle(
+  properties: Readonly<WysiwygStatusBarStyleProperties> | undefined,
+): WysiwygStatusBarStyle | undefined {
+  return createForgeStyle({
+    '--forge-wysiwyg-status-bar-editor-status-bar-border': properties?.['editor-status-bar-border'],
+    '--forge-wysiwyg-status-bar-editor-status-bar-border-width': properties?.['editor-status-bar-border-width'],
+    '--forge-wysiwyg-status-bar-editor-status-bar-font-size': properties?.['editor-status-bar-font-size'],
+    '--forge-wysiwyg-status-bar-editor-status-bar-gap': properties?.['editor-status-bar-gap'],
+    '--forge-wysiwyg-status-bar-editor-status-bar-padding-block': properties?.['editor-status-bar-padding-block'],
+    '--forge-wysiwyg-status-bar-editor-status-bar-padding-inline': properties?.['editor-status-bar-padding-inline'],
+    '--forge-wysiwyg-status-bar-editor-status-bar-text': properties?.['editor-status-bar-text'],
+  }) as WysiwygStatusBarStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface WysiwygStatusBarProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -40,6 +75,9 @@ export interface WysiwygStatusBarProperties {
   align?: WysiwygStatusBarAlign;
   /** Overridable labels (English defaults). */
   labels?: Partial<WysiwygLabels>;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<WysiwygStatusBarStyleProperties>;
 }
 
 /**
@@ -66,6 +104,8 @@ function buildDefaultStatusItems(stats: EditorStats, labels: WysiwygLabels): Wys
  * through the co-located CSS Module `forge-wysiwyg-status-bar.module.scss`.
  */
 export function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement {
+  const style = createWysiwygStatusBarStyle(properties.properties);
+
   const labels = resolveLabels(properties.labels);
   const stats = properties.stats ?? EMPTY_EDITOR_STATS;
   const align = properties.align ?? 'start';
@@ -77,6 +117,7 @@ export function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarPrope
       role="status"
       aria-live="polite"
       aria-label={labels.statusBar}
+      style={style}
     >
       {items.map((item) => (
         <span

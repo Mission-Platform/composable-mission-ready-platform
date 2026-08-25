@@ -1,0 +1,167 @@
+@charset "UTF-8";
+/**
+ * Styling for the write-once `ForgeThemeToggle`, ported from the original
+ * `@mission-platform/components` SFC.
+ *
+ * The rules live in the shared `mp.components` cascade layer (matching the
+ * components package) and are authored as a CSS Module consumed through the
+ * `classNames(styles[…])` helper. On the Vue build the two-stage compiler inlines
+ * this file as a non-scoped `<style>` block and collapses the `styles[…]` reads
+ * to these literal BEM class names; on the React build it ships as a hashed CSS
+ * Module — both resolve to the same visual result.
+ */
+/**
+ * Registered inherited custom properties for forge-theme-toggle overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+@property --forge-theme-toggle-button-primary-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-button-primary-gap);
+}
+@property --forge-theme-toggle-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-padding-block);
+}
+@property --forge-theme-toggle-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-padding-inline);
+}
+@property --forge-theme-toggle-button-secondary-background-default {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-button-secondary-background-default);
+}
+@property --forge-theme-toggle-button-secondary-text-default {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-button-secondary-text-default);
+}
+@property --forge-theme-toggle-button-secondary-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-button-secondary-border-width);
+}
+@property --forge-theme-toggle-button-secondary-border-default {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-button-secondary-border-default);
+}
+@property --forge-theme-toggle-button-primary-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-button-primary-radius);
+}
+@property --forge-theme-toggle-button-secondary-transition-duration {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-button-secondary-transition-duration);
+}
+@property --forge-theme-toggle-button-secondary-transition-easing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-button-secondary-transition-easing);
+}
+@property --forge-theme-toggle-button-secondary-background-hover {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-button-secondary-background-hover);
+}
+@property --forge-theme-toggle-border-color-hover {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-border-color-hover);
+}
+@property --forge-theme-toggle-focus-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-focus-width);
+}
+@property --forge-theme-toggle-button-secondary-border-focus-visible {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-button-secondary-border-focus-visible);
+}
+@property --forge-theme-toggle-focus-offset {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-focus-offset);
+}
+@property --forge-theme-toggle-icon-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-icon-size);
+}
+@property --forge-theme-toggle-icon-color-default {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-icon-color-default);
+}
+@property --forge-theme-toggle-label-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-label-font-family);
+}
+@property --forge-theme-toggle-label-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-label-font-size);
+}
+@property --forge-theme-toggle-label-font-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-label-font-weight);
+}
+@property --forge-theme-toggle-label-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-label-line-height);
+}
+@property --forge-theme-toggle-label-letter-spacing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-theme-toggle-label-letter-spacing);
+}
+@layer mp.components {
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--forge-theme-toggle-button-primary-gap, var(--mp-button-primary-gap));
+    padding: var(--forge-theme-toggle-padding-block, var(--mp-theme-toggle-padding-block)) var(--forge-theme-toggle-padding-inline, var(--mp-theme-toggle-padding-inline));
+    background-color: var(--forge-theme-toggle-button-secondary-background-default, var(--mp-button-secondary-background-default));
+    color: var(--forge-theme-toggle-button-secondary-text-default, var(--mp-button-secondary-text-default));
+    border: var(--forge-theme-toggle-button-secondary-border-width, var(--mp-button-secondary-border-width)) solid var(--forge-theme-toggle-button-secondary-border-default, var(--mp-button-secondary-border-default));
+    border-radius: var(--forge-theme-toggle-button-primary-radius, var(--mp-button-primary-radius));
+    cursor: pointer;
+    font: inherit;
+    transition: background-color var(--forge-theme-toggle-button-secondary-transition-duration, var(--mp-button-secondary-transition-duration)) var(--forge-theme-toggle-button-secondary-transition-easing, var(--mp-button-secondary-transition-easing)), border-color var(--forge-theme-toggle-button-secondary-transition-duration, var(--mp-button-secondary-transition-duration)) var(--forge-theme-toggle-button-secondary-transition-easing, var(--mp-button-secondary-transition-easing)), color var(--forge-theme-toggle-button-secondary-transition-duration, var(--mp-button-secondary-transition-duration)) var(--forge-theme-toggle-button-secondary-transition-easing, var(--mp-button-secondary-transition-easing));
+  }
+  .theme-toggle:hover {
+    background-color: var(--forge-theme-toggle-button-secondary-background-hover, var(--mp-button-secondary-background-hover));
+    border-color: var(--forge-theme-toggle-border-color-hover, var(--mp-theme-toggle-border-color-hover));
+  }
+  .theme-toggle:focus-visible {
+    outline: var(--forge-theme-toggle-focus-width, var(--mp-theme-toggle-focus-width)) solid var(--forge-theme-toggle-button-secondary-border-focus-visible, var(--mp-button-secondary-border-focus-visible));
+    outline-offset: var(--forge-theme-toggle-focus-offset, var(--mp-theme-toggle-focus-offset));
+  }
+  .theme-toggle__icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    font-size: var(--forge-theme-toggle-icon-size, var(--mp-theme-toggle-icon-size));
+    line-height: 1;
+    color: var(--forge-theme-toggle-icon-color-default, var(--mp-theme-toggle-icon-color-default));
+  }
+  .theme-toggle__label {
+    font-family: var(--forge-theme-toggle-label-font-family, var(--mp-theme-toggle-label-font-family));
+    font-size: var(--forge-theme-toggle-label-font-size, var(--mp-theme-toggle-label-font-size));
+    font-weight: var(--forge-theme-toggle-label-font-weight, var(--mp-theme-toggle-label-font-weight));
+    line-height: var(--forge-theme-toggle-label-line-height, var(--mp-theme-toggle-label-line-height));
+    letter-spacing: var(--forge-theme-toggle-label-letter-spacing, var(--mp-theme-toggle-label-letter-spacing));
+    white-space: nowrap;
+  }
+}

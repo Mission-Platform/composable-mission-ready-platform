@@ -1,4 +1,4 @@
-import { classNames, type MpElement } from '@mission-platform/forge';
+import { classNames, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import styles from './forge-skeleton.module.scss';
 
@@ -10,6 +10,60 @@ export type SkeletonVariant =
 /** Size token — canonical 2xs → 2xl scale. */
 export type SkeletonSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface SkeletonStyleProperties {
+  readonly 'feedback-skeleton-background-critical'?: string;
+  readonly 'feedback-skeleton-background-default'?: string;
+  readonly 'feedback-skeleton-background-error'?: string;
+  readonly 'feedback-skeleton-background-info'?: string;
+  readonly 'feedback-skeleton-background-primary'?: string;
+  readonly 'feedback-skeleton-background-secondary'?: string;
+  readonly 'feedback-skeleton-background-success'?: string;
+  readonly 'feedback-skeleton-background-tertiary'?: string;
+  readonly 'feedback-skeleton-background-warning'?: string;
+  readonly 'feedback-skeleton-radius-block'?: string;
+  readonly 'feedback-skeleton-radius-circle'?: string;
+  readonly 'feedback-skeleton-radius-default'?: string;
+  readonly 'feedback-skeleton-radius-line'?: string;
+  readonly 'feedback-skeleton-shimmer'?: string;
+}
+
+export type SkeletonStyle = CSSStyleProperties & {
+  readonly '--forge-skeleton-feedback-skeleton-background-critical'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-background-default'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-background-error'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-background-info'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-background-primary'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-background-secondary'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-background-success'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-background-tertiary'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-background-warning'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-radius-block'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-radius-circle'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-radius-default'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-radius-line'?: string | undefined;
+  readonly '--forge-skeleton-feedback-skeleton-shimmer'?: string | undefined;
+};
+
+function createSkeletonStyle(properties: Readonly<SkeletonStyleProperties> | undefined): SkeletonStyle | undefined {
+  return createForgeStyle({
+    '--forge-skeleton-feedback-skeleton-background-critical': properties?.['feedback-skeleton-background-critical'],
+    '--forge-skeleton-feedback-skeleton-background-default': properties?.['feedback-skeleton-background-default'],
+    '--forge-skeleton-feedback-skeleton-background-error': properties?.['feedback-skeleton-background-error'],
+    '--forge-skeleton-feedback-skeleton-background-info': properties?.['feedback-skeleton-background-info'],
+    '--forge-skeleton-feedback-skeleton-background-primary': properties?.['feedback-skeleton-background-primary'],
+    '--forge-skeleton-feedback-skeleton-background-secondary': properties?.['feedback-skeleton-background-secondary'],
+    '--forge-skeleton-feedback-skeleton-background-success': properties?.['feedback-skeleton-background-success'],
+    '--forge-skeleton-feedback-skeleton-background-tertiary': properties?.['feedback-skeleton-background-tertiary'],
+    '--forge-skeleton-feedback-skeleton-background-warning': properties?.['feedback-skeleton-background-warning'],
+    '--forge-skeleton-feedback-skeleton-radius-block': properties?.['feedback-skeleton-radius-block'],
+    '--forge-skeleton-feedback-skeleton-radius-circle': properties?.['feedback-skeleton-radius-circle'],
+    '--forge-skeleton-feedback-skeleton-radius-default': properties?.['feedback-skeleton-radius-default'],
+    '--forge-skeleton-feedback-skeleton-radius-line': properties?.['feedback-skeleton-radius-line'],
+    '--forge-skeleton-feedback-skeleton-shimmer': properties?.['feedback-skeleton-shimmer'],
+  }) as SkeletonStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface SkeletonProperties {
   /** Placeholder shape. Defaults to `'line'`. */
   shape?: SkeletonShape;
@@ -23,6 +77,9 @@ export interface SkeletonProperties {
   size?: SkeletonSize;
   /** Colour tone of the placeholder. Defaults to `'neutral'`. */
   variant?: SkeletonVariant;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<SkeletonStyleProperties>;
 }
 
 /**
@@ -37,6 +94,8 @@ export interface SkeletonProperties {
  * {@link classNames} helper.
  */
 export function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpElement {
+  const propertyStyle = createSkeletonStyle(properties.properties);
+
   const { shape = 'line', width, height, animated = true, size = 'md', variant = 'neutral' } = properties;
 
   const className = classNames(
@@ -60,7 +119,7 @@ export function ForgeSkeleton(properties: Readonly<SkeletonProperties>): MpEleme
   return (
     <span
       className={className}
-      style={style}
+      style={{ ...style, ...propertyStyle }}
       aria-hidden="true"
     />
   );

@@ -1,6 +1,14 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
-import { type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 import { encodeMicroQr, encodeQr, encodeRmqr } from '@/encoder';
 import { type QrErrorCorrection } from '@/types';
@@ -55,6 +63,24 @@ export interface QrCodeActions {
   copyValue?: boolean;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface QrCodeStyleProperties {
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-3'?: string;
+}
+
+export type QrCodeStyle = CSSStyleProperties & {
+  readonly '--forge-qr-code-spacing-2'?: string | undefined;
+  readonly '--forge-qr-code-spacing-3'?: string | undefined;
+};
+
+function createQrCodeStyle(properties: Readonly<QrCodeStyleProperties> | undefined): QrCodeStyle | undefined {
+  return createForgeStyle({
+    '--forge-qr-code-spacing-2': properties?.['spacing-2'],
+    '--forge-qr-code-spacing-3': properties?.['spacing-3'],
+  }) as QrCodeStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface QrCodeProperties {
   /** The data to encode (URL, text, etc.). */
   value: string;
@@ -101,6 +127,9 @@ export interface QrCodeProperties {
   downloadFileName?: string;
   /** Fired when `value` cannot be encoded, or an action (save/copy) fails. */
   onError?: (error: Error) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<QrCodeStyleProperties>;
 }
 
 /** The result of encoding the payload into an SVG path. */
@@ -237,6 +266,8 @@ function stableId(prefix: string, seed: string): string {
  * `forge-qr-code.module.scss`.
  */
 export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
+  const style = createQrCodeStyle(properties.properties);
+
   const {
     value,
     variant = 'qr',
@@ -326,6 +357,7 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
         height="0"
         width="0"
         xmlns="http://www.w3.org/2000/svg"
+        style={style}
       />
     );
   }
@@ -459,6 +491,7 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
       viewBox={`0 0 ${viewWidth} ${viewHeight}`}
       width={pixelWidth}
       xmlns="http://www.w3.org/2000/svg"
+      style={style}
     >
       {gradient ? (
         <defs>
@@ -566,7 +599,10 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
   }
 
   return (
-    <div className={styles['forge-qr-code-figure']}>
+    <div
+      className={styles['forge-qr-code-figure']}
+      style={style}
+    >
       {qrSvg}
       <div className={styles['forge-qr-code__actions']}>
         {visibleActions.map((action) => {

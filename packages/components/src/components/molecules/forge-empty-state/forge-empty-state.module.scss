@@ -1,36 +1,38 @@
+@use './forge-empty-state-properties';
+
 @layer mp.components {
   .forge-empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--mp-spacing-2);
+    gap: var(--forge-empty-state-spacing-2, var(--mp-spacing-2));
     min-height: 12rem;
-    padding: var(--mp-spacing-6);
-    color: var(--mp-color-text-primary);
+    padding: var(--forge-empty-state-spacing-6, var(--mp-spacing-6));
+    color: var(--forge-empty-state-color-text-primary, var(--mp-color-text-primary));
     text-align: center;
   }
 
   .forge-empty-state--sm {
     min-height: 8rem;
-    padding: var(--mp-spacing-4);
-    font-size: var(--mp-font-size-sm);
+    padding: var(--forge-empty-state-spacing-4, var(--mp-spacing-4));
+    font-size: var(--forge-empty-state-font-size-sm, var(--mp-font-size-sm));
   }
 
   .forge-empty-state--lg {
     min-height: 16rem;
-    padding: var(--mp-spacing-8);
-    font-size: var(--mp-font-size-lg);
+    padding: var(--forge-empty-state-spacing-8, var(--mp-spacing-8));
+    font-size: var(--forge-empty-state-font-size-lg, var(--mp-font-size-lg));
   }
 
   .forge-empty-state--info {
-    background: var(--mp-color-info-subtle);
+    background: var(--forge-empty-state-color-info-subtle, var(--mp-color-info-subtle));
   }
 
   .forge-empty-state__icon {
-    color: var(--mp-color-text-secondary);
-    font-size: var(--mp-font-size-4xl);
-    line-height: var(--mp-line-height-tight);
+    color: var(--forge-empty-state-color-text-secondary, var(--mp-color-text-secondary));
+    font-size: var(--forge-empty-state-font-size-4xl, var(--mp-font-size-4xl));
+    line-height: var(--forge-empty-state-line-height-tight, var(--mp-line-height-tight));
   }
 
   .forge-empty-state__title {
@@ -42,25 +44,28 @@
   .forge-empty-state__body {
     max-width: 36rem;
     margin: 0;
-    color: var(--mp-color-text-secondary);
+    color: var(--forge-empty-state-color-text-secondary, var(--mp-color-text-secondary));
   }
 
   .forge-empty-state__action {
-    margin-top: var(--mp-spacing-2);
+    margin-top: var(--forge-empty-state-spacing-2, var(--mp-spacing-2));
   }
 
   .forge-empty-state__button {
-    padding: var(--mp-size-pad-block-sm) var(--mp-size-pad-inline-md);
-    color: var(--mp-color-text-on-primary);
-    background: var(--mp-color-primary-default);
-    border: var(--mp-border-width-thin) solid var(--mp-color-primary-default);
-    border-radius: var(--mp-radius-md);
+    padding: var(--forge-empty-state-size-pad-block-sm, var(--mp-size-pad-block-sm))
+      var(--forge-empty-state-size-pad-inline-md, var(--mp-size-pad-inline-md));
+    color: var(--forge-empty-state-color-text-on-primary, var(--mp-color-text-on-primary));
+    background: var(--forge-empty-state-color-primary-default, var(--mp-color-primary-default));
+    border: var(--forge-empty-state-border-width-thin, var(--mp-border-width-thin)) solid
+      var(--forge-empty-state-color-primary-default, var(--mp-color-primary-default));
+    border-radius: var(--forge-empty-state-radius-md, var(--mp-radius-md));
     cursor: pointer;
     font: inherit;
   }
 
   .forge-empty-state__button:focus-visible {
-    outline: var(--mp-border-width-thick) solid var(--mp-color-border-focus);
-    outline-offset: var(--mp-spacing-1);
+    outline: var(--forge-empty-state-border-width-thick, var(--mp-border-width-thick)) solid
+      var(--forge-empty-state-color-border-focus, var(--mp-color-border-focus));
+    outline-offset: var(--forge-empty-state-spacing-1, var(--mp-spacing-1));
   }
 }

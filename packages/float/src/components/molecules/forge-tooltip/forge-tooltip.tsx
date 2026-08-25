@@ -1,12 +1,14 @@
 import {
-  type MpChild,
-  type MpElement,
   Slot,
   Teleport,
   useEffect,
   useId,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -20,6 +22,42 @@ export type TooltipSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 /** Preferred placement of the tooltip relative to its trigger. */
 export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface TooltipStyleProperties {
+  readonly 'overlay-tooltip-padding-block'?: string;
+  readonly 'overlay-tooltip-padding-inline'?: string;
+  readonly 'overlay-tooltip-radius'?: string;
+  readonly 'overlay-tooltip-surface'?: string;
+  readonly 'overlay-tooltip-text'?: string;
+  readonly 'overlay-tooltip-transition-duration'?: string;
+  readonly 'overlay-tooltip-transition-easing'?: string;
+  readonly 'spacing-2'?: string;
+}
+
+export type TooltipStyle = CSSStyleProperties & {
+  readonly '--forge-tooltip-overlay-tooltip-padding-block'?: string | undefined;
+  readonly '--forge-tooltip-overlay-tooltip-padding-inline'?: string | undefined;
+  readonly '--forge-tooltip-overlay-tooltip-radius'?: string | undefined;
+  readonly '--forge-tooltip-overlay-tooltip-surface'?: string | undefined;
+  readonly '--forge-tooltip-overlay-tooltip-text'?: string | undefined;
+  readonly '--forge-tooltip-overlay-tooltip-transition-duration'?: string | undefined;
+  readonly '--forge-tooltip-overlay-tooltip-transition-easing'?: string | undefined;
+  readonly '--forge-tooltip-spacing-2'?: string | undefined;
+};
+
+function createTooltipStyle(properties: Readonly<TooltipStyleProperties> | undefined): TooltipStyle | undefined {
+  return createForgeStyle({
+    '--forge-tooltip-overlay-tooltip-padding-block': properties?.['overlay-tooltip-padding-block'],
+    '--forge-tooltip-overlay-tooltip-padding-inline': properties?.['overlay-tooltip-padding-inline'],
+    '--forge-tooltip-overlay-tooltip-radius': properties?.['overlay-tooltip-radius'],
+    '--forge-tooltip-overlay-tooltip-surface': properties?.['overlay-tooltip-surface'],
+    '--forge-tooltip-overlay-tooltip-text': properties?.['overlay-tooltip-text'],
+    '--forge-tooltip-overlay-tooltip-transition-duration': properties?.['overlay-tooltip-transition-duration'],
+    '--forge-tooltip-overlay-tooltip-transition-easing': properties?.['overlay-tooltip-transition-easing'],
+    '--forge-tooltip-spacing-2': properties?.['spacing-2'],
+  }) as TooltipStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface TooltipProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -36,6 +74,9 @@ export interface TooltipProperties {
   size?: TooltipSize;
   /** Hover-open delay in milliseconds. Focus-open is always immediate. Defaults to `0`. */
   delay?: number;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<TooltipStyleProperties>;
 }
 
 /** Map a placement onto a CSS `position-area` value (the side of the anchor). */
@@ -85,6 +126,8 @@ const POSITION_AREA: Readonly<Record<TooltipPlacement, string>> = {
  * owns its styling through the co-located CSS Module `forge-tooltip.module.scss`.
  */
 export function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement {
+  const style = createTooltipStyle(properties.properties);
+
   const { content, placement = 'top', disabled = false, delay = 0, size = 'md' } = properties;
 
   const baseId = useId();
@@ -176,7 +219,7 @@ export function ForgeTooltip(properties: Readonly<TooltipProperties>): MpElement
             ]}
             popover="manual"
             role="tooltip"
-            style={{ positionAnchor: anchorName, positionArea: POSITION_AREA[placement] }}
+            style={{ positionAnchor: anchorName, positionArea: POSITION_AREA[placement], ...style }}
           >
             <ForgeTypography
               as="span"

@@ -1,0 +1,99 @@
+/**
+ * Registered inherited custom properties for forge-status-icon overrides.
+ */
+
+@property --forge-status-icon-feedback-status-size-2xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-size-2xs);
+}
+
+@property --forge-status-icon-feedback-status-size-xs {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-size-xs);
+}
+
+@property --forge-status-icon-feedback-status-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-size-sm);
+}
+
+@property --forge-status-icon-feedback-status-size-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-size-md);
+}
+
+@property --forge-status-icon-feedback-status-size-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-size-lg);
+}
+
+@property --forge-status-icon-feedback-status-size-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-size-xl);
+}
+
+@property --forge-status-icon-feedback-status-size-2xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-size-2xl);
+}
+
+@property --forge-status-icon-feedback-status-color-neutral {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-color-neutral);
+}
+
+@property --forge-status-icon-feedback-status-color-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-color-primary);
+}
+
+@property --forge-status-icon-feedback-status-color-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-color-secondary);
+}
+
+@property --forge-status-icon-feedback-status-color-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-color-tertiary);
+}
+
+@property --forge-status-icon-feedback-status-color-success {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-color-success);
+}
+
+@property --forge-status-icon-feedback-status-color-warning {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-color-warning);
+}
+
+@property --forge-status-icon-feedback-status-color-info {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-color-info);
+}
+
+@property --forge-status-icon-feedback-status-color-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-color-error);
+}
+
+@property --forge-status-icon-feedback-status-color-critical {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-status-color-critical);
+}

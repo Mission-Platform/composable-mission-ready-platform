@@ -1,0 +1,135 @@
+/**
+ * Registered inherited custom properties for forge-cta-banner overrides.
+ */
+
+@property --forge-cta-banner-spacing-8 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-8);
+}
+
+@property --forge-cta-banner-spacing-6 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-6);
+}
+
+@property --forge-cta-banner-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-cta-banner-color-text-on-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-on-primary);
+}
+
+@property --forge-cta-banner-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}
+
+@property --forge-cta-banner-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-cta-banner-color-bg-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-muted);
+}
+
+@property --forge-cta-banner-color-secondary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-secondary-default);
+}
+
+@property --forge-cta-banner-color-success-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-success-default);
+}
+
+@property --forge-cta-banner-color-warning-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-warning-default);
+}
+
+@property --forge-cta-banner-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-cta-banner-font-size-2xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-2xl);
+}
+
+@property --forge-cta-banner-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-cta-banner-opacity-interactive {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-interactive);
+}
+
+@property --forge-cta-banner-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-cta-banner-size-pad-block-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-block-md);
+}
+
+@property --forge-cta-banner-size-pad-inline-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-inline-lg);
+}
+
+@property --forge-cta-banner-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-cta-banner-font-weight-semibold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-semibold);
+}
+
+@property --forge-cta-banner-color-bg-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-surface);
+}
+
+@property --forge-cta-banner-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-cta-banner-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}

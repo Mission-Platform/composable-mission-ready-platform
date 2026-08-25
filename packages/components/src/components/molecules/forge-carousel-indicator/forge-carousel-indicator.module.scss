@@ -1,7 +1,12 @@
+@use './forge-carousel-indicator-properties';
+
 @layer mp.components {
   .forge-carousel-indicator {
     display: flex;
-    gap: var(--mp-navigation-carousel-indicators-gap);
+    gap: var(
+      --forge-carousel-indicator-navigation-carousel-indicators-gap,
+      var(--mp-navigation-carousel-indicators-gap)
+    );
     align-items: center;
     justify-content: center;
   }
@@ -11,10 +16,19 @@
   }
 
   .forge-carousel-indicator__button {
-    width: var(--mp-navigation-carousel-indicator-target-size);
-    height: var(--mp-navigation-carousel-indicator-target-size);
+    width: var(
+      --forge-carousel-indicator-navigation-carousel-indicator-target-size,
+      var(--mp-navigation-carousel-indicator-target-size)
+    );
+    height: var(
+      --forge-carousel-indicator-navigation-carousel-indicator-target-size,
+      var(--mp-navigation-carousel-indicator-target-size)
+    );
     padding: 0;
-    background: var(--mp-navigation-carousel-indicator-surface-default);
+    background: var(
+      --forge-carousel-indicator-navigation-carousel-indicator-surface-default,
+      var(--mp-navigation-carousel-indicator-surface-default)
+    );
     border: 0;
     cursor: pointer;
   }
@@ -23,37 +37,61 @@
   .forge-carousel-indicator__bars,
   .forge-carousel-indicator__numbers {
     display: block;
-    background: var(--mp-navigation-carousel-indicator-surface-dot-default);
+    background: var(
+      --forge-carousel-indicator-navigation-carousel-indicator-surface-dot-default,
+      var(--mp-navigation-carousel-indicator-surface-dot-default)
+    );
     transition:
-      transform var(--mp-navigation-carousel-indicator-transition-duration)
-        var(--mp-navigation-carousel-indicator-transition-easing),
-      background-color var(--mp-navigation-carousel-indicator-transition-duration)
-        var(--mp-navigation-carousel-indicator-transition-easing);
+      transform
+        var(
+          --forge-carousel-indicator-navigation-carousel-indicator-transition-duration,
+          var(--mp-navigation-carousel-indicator-transition-duration)
+        )
+        var(
+          --forge-carousel-indicator-navigation-carousel-indicator-transition-easing,
+          var(--mp-navigation-carousel-indicator-transition-easing)
+        ),
+      background-color
+        var(
+          --forge-carousel-indicator-navigation-carousel-indicator-transition-duration,
+          var(--mp-navigation-carousel-indicator-transition-duration)
+        )
+        var(
+          --forge-carousel-indicator-navigation-carousel-indicator-transition-easing,
+          var(--mp-navigation-carousel-indicator-transition-easing)
+        );
   }
 
   .forge-carousel-indicator__dots {
-    width: var(--mp-size-checkable-indicator);
-    height: var(--mp-size-checkable-indicator);
-    border-radius: var(--mp-navigation-carousel-indicator-radius);
+    width: var(--forge-carousel-indicator-size-checkable-indicator, var(--mp-size-checkable-indicator));
+    height: var(--forge-carousel-indicator-size-checkable-indicator, var(--mp-size-checkable-indicator));
+    border-radius: var(
+      --forge-carousel-indicator-navigation-carousel-indicator-radius,
+      var(--mp-navigation-carousel-indicator-radius)
+    );
   }
 
   .forge-carousel-indicator__bars {
-    width: var(--mp-size-icon-lg);
-    height: var(--mp-border-width-thick);
-    border-radius: var(--mp-radius-xs);
+    width: var(--forge-carousel-indicator-size-icon-lg, var(--mp-size-icon-lg));
+    height: var(--forge-carousel-indicator-border-width-thick, var(--mp-border-width-thick));
+    border-radius: var(--forge-carousel-indicator-radius-xs, var(--mp-radius-xs));
   }
 
   .forge-carousel-indicator__numbers {
-    min-width: var(--mp-size-icon-lg);
-    padding: var(--mp-spacing-1) var(--mp-spacing-1);
-    border-radius: var(--mp-radius-sm);
-    color: var(--mp-color-text-on-primary);
-    font-size: var(--mp-font-size-xs);
+    min-width: var(--forge-carousel-indicator-size-icon-lg, var(--mp-size-icon-lg));
+    padding: var(--forge-carousel-indicator-spacing-1, var(--mp-spacing-1))
+      var(--forge-carousel-indicator-spacing-1, var(--mp-spacing-1));
+    border-radius: var(--forge-carousel-indicator-radius-sm, var(--mp-radius-sm));
+    color: var(--forge-carousel-indicator-color-text-on-primary, var(--mp-color-text-on-primary));
+    font-size: var(--forge-carousel-indicator-font-size-xs, var(--mp-font-size-xs));
     text-align: center;
   }
 
   .forge-carousel-indicator__active {
-    background: var(--mp-navigation-carousel-indicator-surface-dot-selected);
+    background: var(
+      --forge-carousel-indicator-navigation-carousel-indicator-surface-dot-selected,
+      var(--mp-navigation-carousel-indicator-surface-dot-selected)
+    );
     transform: scale(1.35);
   }
 
@@ -68,23 +106,34 @@
   }
 
   .forge-carousel-indicator__button:focus-visible {
-    outline: var(--mp-navigation-carousel-focus-border-width) solid var(--mp-navigation-carousel-focus-border);
-    outline-offset: var(--mp-navigation-carousel-focus-offset);
-    border-radius: var(--mp-navigation-carousel-control-radius);
+    outline: var(
+        --forge-carousel-indicator-navigation-carousel-focus-border-width,
+        var(--mp-navigation-carousel-focus-border-width)
+      )
+      solid var(--forge-carousel-indicator-navigation-carousel-focus-border, var(--mp-navigation-carousel-focus-border));
+    outline-offset: var(
+      --forge-carousel-indicator-navigation-carousel-focus-offset,
+      var(--mp-navigation-carousel-focus-offset)
+    );
+    border-radius: var(
+      --forge-carousel-indicator-navigation-carousel-control-radius,
+      var(--mp-navigation-carousel-control-radius)
+    );
   }
 
   .forge-carousel-indicator__button:disabled {
     cursor: not-allowed;
-    opacity: var(--mp-opacity-disabled);
+    opacity: var(--forge-carousel-indicator-opacity-disabled, var(--mp-opacity-disabled));
   }
 
   .forge-carousel-indicator__fraction {
-    color: var(--mp-color-text-secondary);
+    color: var(--forge-carousel-indicator-color-text-secondary, var(--mp-color-text-secondary));
     font-variant-numeric: tabular-nums;
   }
 
   button.forge-carousel-indicator__fraction {
-    padding: var(--mp-spacing-1) var(--mp-spacing-2);
+    padding: var(--forge-carousel-indicator-spacing-1, var(--mp-spacing-1))
+      var(--forge-carousel-indicator-spacing-2, var(--mp-spacing-2));
     background: transparent;
     border: 0;
     cursor: pointer;

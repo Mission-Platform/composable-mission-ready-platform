@@ -1,6 +1,19 @@
-import { type MpElement, Teleport, TransitionGroup, useEffect, useState } from '@mission-platform/forge';
+import {
+  Teleport,
+  TransitionGroup,
+  useEffect,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
-import { dismissToast, getToastsSnapshot, subscribeToasts, type ToastPosition } from '../../../stores/toast-store/toast-store';
+import {
+  dismissToast,
+  getToastsSnapshot,
+  subscribeToasts,
+  type ToastPosition,
+} from '../../../stores/toast-store/toast-store';
 import { ForgeToast } from '../../molecules/forge-toast';
 
 import styles from './forge-toast-container.module.scss';
@@ -8,6 +21,32 @@ import styles from './forge-toast-container.module.scss';
 /** Size token — canonical 2xs → 2xl scale. */
 export type ToastContainerSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ToastContainerStyleProperties {
+  readonly 'overlay-transition-duration'?: string;
+  readonly 'overlay-transition-easing'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+}
+
+export type ToastContainerStyle = CSSStyleProperties & {
+  readonly '--forge-toast-container-overlay-transition-duration'?: string | undefined;
+  readonly '--forge-toast-container-overlay-transition-easing'?: string | undefined;
+  readonly '--forge-toast-container-spacing-3'?: string | undefined;
+  readonly '--forge-toast-container-spacing-4'?: string | undefined;
+};
+
+function createToastContainerStyle(
+  properties: Readonly<ToastContainerStyleProperties> | undefined,
+): ToastContainerStyle | undefined {
+  return createForgeStyle({
+    '--forge-toast-container-overlay-transition-duration': properties?.['overlay-transition-duration'],
+    '--forge-toast-container-overlay-transition-easing': properties?.['overlay-transition-easing'],
+    '--forge-toast-container-spacing-3': properties?.['spacing-3'],
+    '--forge-toast-container-spacing-4': properties?.['spacing-4'],
+  }) as ToastContainerStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ToastContainerProperties {
   /** Size token controlling the stack's font scale. Defaults to `'md'`. */
   size?: ToastContainerSize;
@@ -17,6 +56,9 @@ export interface ToastContainerProperties {
   ariaLabel?: string;
   /** Render into `<body>` via the neutral `<Teleport>`. Disable for tests. Defaults to `true`. */
   teleport?: boolean;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ToastContainerStyleProperties>;
 }
 
 /**
@@ -55,6 +97,8 @@ export interface ToastContainerProperties {
  * composable → the static `notification` z-index layer applied in CSS.
  */
 export function ForgeToastContainer(properties: Readonly<ToastContainerProperties>): MpElement {
+  const style = createToastContainerStyle(properties.properties);
+
   const { position = 'top-right', ariaLabel = 'Notifications', teleport = true, size = 'md' } = properties;
 
   const [toasts, setToasts] = useState(getToastsSnapshot());
@@ -79,6 +123,7 @@ export function ForgeToastContainer(properties: Readonly<ToastContainerPropertie
           size ? `forge-size--${size}` : undefined,
         ]}
         role="region"
+        style={style}
       >
         <TransitionGroup
           name="forge-toast"

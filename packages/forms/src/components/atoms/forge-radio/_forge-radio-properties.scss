@@ -1,0 +1,83 @@
+@property --forge-radio-checkable-gap-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-gap-inline);
+}
+
+@property --forge-radio-checkable-control-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-control-size);
+}
+
+@property --forge-radio-checkable-border-width-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-width-focus);
+}
+
+@property --forge-radio-checkable-border-focus-visible {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-focus-visible);
+}
+
+@property --forge-radio-checkable-border-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-selected);
+}
+
+@property --forge-radio-checkable-border-width-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-width-default);
+}
+
+@property --forge-radio-checkable-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-border-default);
+}
+
+@property --forge-radio-checkable-circle-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-circle-radius);
+}
+
+@property --forge-radio-checkable-track-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-track-default);
+}
+
+@property --forge-radio-checkable-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-transition-duration);
+}
+
+@property --forge-radio-checkable-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-transition-easing);
+}
+
+@property --forge-radio-checkable-indicator-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-indicator-size);
+}
+
+@property --forge-radio-checkable-track-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-track-selected);
+}
+
+@property --forge-radio-checkable-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-checkable-opacity-disabled);
+}

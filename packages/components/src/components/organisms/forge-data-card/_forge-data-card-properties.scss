@@ -1,0 +1,93 @@
+/**
+ * Registered inherited custom properties for forge-data-card overrides.
+ */
+
+@property --forge-data-card-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-data-card-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-data-card-border-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-radius-md);
+}
+
+@property --forge-data-card-color-surface-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-surface-primary);
+}
+
+@property --forge-data-card-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-data-card-color-action-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-action-primary);
+}
+
+@property --forge-data-card-color-status-success {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-status-success);
+}
+
+@property --forge-data-card-color-status-warning {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-status-warning);
+}
+
+@property --forge-data-card-color-status-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-status-error);
+}
+
+@property --forge-data-card-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-data-card-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-data-card-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-data-card-border-radius-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-radius-sm);
+}
+
+@property --forge-data-card-color-surface-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-surface-secondary);
+}
+
+@property --forge-data-card-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}

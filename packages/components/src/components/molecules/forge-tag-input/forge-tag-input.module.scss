@@ -1,8 +1,10 @@
+@use './forge-tag-input-properties';
+
 @layer mp.components {
   .forge-tag-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-spacing-2);
+    gap: var(--forge-tag-input-spacing-2, var(--mp-spacing-2));
 
     &__label {
       &--hidden {
@@ -20,16 +22,18 @@
     &__control {
       display: flex;
       align-items: center;
-      gap: var(--mp-spacing-2);
-      min-height: var(--mp-size-height-md);
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      border: var(--mp-border-width-thin) solid var(--mp-color-border-default);
-      border-radius: var(--mp-radius-md);
-      background: var(--mp-color-bg-surface);
-      color: var(--mp-color-text-primary);
+      gap: var(--forge-tag-input-spacing-2, var(--mp-spacing-2));
+      min-height: var(--forge-tag-input-size-height-md, var(--mp-size-height-md));
+      padding: var(--forge-tag-input-spacing-1, var(--mp-spacing-1))
+        var(--forge-tag-input-spacing-2, var(--mp-spacing-2));
+      border: var(--forge-tag-input-border-width-thin, var(--mp-border-width-thin)) solid
+        var(--forge-tag-input-color-border-default, var(--mp-color-border-default));
+      border-radius: var(--forge-tag-input-radius-md, var(--mp-radius-md));
+      background: var(--forge-tag-input-color-bg-surface, var(--mp-color-bg-surface));
+      color: var(--forge-tag-input-color-text-primary, var(--mp-color-text-primary));
 
       &:focus-within {
-        border-color: var(--mp-color-border-focus);
+        border-color: var(--forge-tag-input-color-border-focus, var(--mp-color-border-focus));
       }
     }
 
@@ -38,17 +42,18 @@
       flex: 1;
       flex-wrap: wrap;
       align-items: center;
-      gap: var(--mp-spacing-1);
+      gap: var(--forge-tag-input-spacing-1, var(--mp-spacing-1));
       min-width: 0;
     }
 
     &__tag {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-spacing-1);
-      padding: var(--mp-spacing-1) var(--mp-spacing-2);
-      border-radius: var(--mp-radius-sm);
-      background: var(--mp-color-bg-raised);
+      gap: var(--forge-tag-input-spacing-1, var(--mp-spacing-1));
+      padding: var(--forge-tag-input-spacing-1, var(--mp-spacing-1))
+        var(--forge-tag-input-spacing-2, var(--mp-spacing-2));
+      border-radius: var(--forge-tag-input-radius-sm, var(--mp-radius-sm));
+      background: var(--forge-tag-input-color-bg-raised, var(--mp-color-bg-raised));
       white-space: nowrap;
 
       button {
@@ -57,14 +62,14 @@
         background: transparent;
         color: inherit;
         cursor: pointer;
-        line-height: var(--mp-line-height-tight);
+        line-height: var(--forge-tag-input-line-height-tight, var(--mp-line-height-tight));
       }
     }
 
     input {
       flex: 1;
       min-width: 6rem;
-      padding: var(--mp-spacing-1);
+      padding: var(--forge-tag-input-spacing-1, var(--mp-spacing-1));
       border: 0;
       outline: 0;
       background: transparent;
@@ -72,43 +77,43 @@
       font: inherit;
 
       &::placeholder {
-        color: var(--mp-color-text-secondary);
+        color: var(--forge-tag-input-color-text-secondary, var(--mp-color-text-secondary));
       }
     }
 
     &__loading {
-      width: var(--mp-size-checkable-indicator);
-      height: var(--mp-size-checkable-indicator);
+      width: var(--forge-tag-input-size-checkable-indicator, var(--mp-size-checkable-indicator));
+      height: var(--forge-tag-input-size-checkable-indicator, var(--mp-size-checkable-indicator));
       flex-shrink: 0;
-      border: var(--mp-border-width-thick) solid currentcolor;
+      border: var(--forge-tag-input-border-width-thick, var(--mp-border-width-thick)) solid currentcolor;
       border-inline-end-color: transparent;
-      border-radius: var(--mp-radius-full);
-      animation: forge-tag-input-spin var(--mp-duration-slow) linear infinite;
+      border-radius: var(--forge-tag-input-radius-full, var(--mp-radius-full));
+      animation: forge-tag-input-spin var(--forge-tag-input-duration-slow, var(--mp-duration-slow)) linear infinite;
     }
 
     &__message {
       margin: 0;
-      color: var(--mp-color-text-secondary);
+      color: var(--forge-tag-input-color-text-secondary, var(--mp-color-text-secondary));
     }
 
     &--error &__control {
-      border-color: var(--mp-color-danger-default);
+      border-color: var(--forge-tag-input-color-danger-default, var(--mp-color-danger-default));
     }
 
     &--disabled {
-      opacity: var(--mp-opacity-disabled);
+      opacity: var(--forge-tag-input-opacity-disabled, var(--mp-opacity-disabled));
     }
 
     &--sm {
-      font-size: var(--mp-font-size-sm);
+      font-size: var(--forge-tag-input-font-size-sm, var(--mp-font-size-sm));
     }
 
     &--lg {
-      font-size: var(--mp-font-size-lg);
+      font-size: var(--forge-tag-input-font-size-lg, var(--mp-font-size-lg));
     }
 
     &--primary &__control {
-      border-color: var(--mp-color-primary-default);
+      border-color: var(--forge-tag-input-color-primary-default, var(--mp-color-primary-default));
     }
   }
 

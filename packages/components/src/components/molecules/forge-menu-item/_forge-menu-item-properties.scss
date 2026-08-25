@@ -1,0 +1,171 @@
+/**
+ * Registered inherited custom properties for forge-menu-item overrides.
+ */
+
+@property --forge-menu-item-navigation-menu-link-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-link-gap);
+}
+
+@property --forge-menu-item-navigation-menu-link-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-link-padding-block);
+}
+
+@property --forge-menu-item-navigation-menu-link-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-link-padding-inline);
+}
+
+@property --forge-menu-item-navigation-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-font-family);
+}
+
+@property --forge-menu-item-navigation-menu-item-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-item-radius);
+}
+
+@property --forge-menu-item-navigation-menu-item-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-item-transition-duration);
+}
+
+@property --forge-menu-item-navigation-menu-item-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-item-transition-easing);
+}
+
+@property --forge-menu-item-navigation-menu-surface-link-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-surface-link-hover);
+}
+
+@property --forge-menu-item-navigation-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-focus-ring);
+}
+
+@property --forge-menu-item-navigation-menu-item-surface-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-item-surface-active);
+}
+
+@property --forge-menu-item-navigation-menu-item-text-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-item-text-active);
+}
+
+@property --forge-menu-item-navigation-menu-tone-primary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-primary-text);
+}
+
+@property --forge-menu-item-navigation-menu-tone-secondary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-secondary-text);
+}
+
+@property --forge-menu-item-navigation-menu-tone-tertiary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-tertiary-text);
+}
+
+@property --forge-menu-item-navigation-menu-tone-success-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-success-text);
+}
+
+@property --forge-menu-item-navigation-menu-tone-warning-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-warning-text);
+}
+
+@property --forge-menu-item-navigation-menu-tone-information-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-information-text);
+}
+
+@property --forge-menu-item-navigation-menu-tone-error-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-error-text);
+}
+
+@property --forge-menu-item-navigation-menu-tone-critical-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-critical-text);
+}
+
+@property --forge-menu-item-navigation-menu-tone-primary-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-primary-surface-hover);
+}
+
+@property --forge-menu-item-navigation-menu-tone-secondary-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-secondary-surface-hover);
+}
+
+@property --forge-menu-item-navigation-menu-tone-tertiary-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-tertiary-surface-hover);
+}
+
+@property --forge-menu-item-navigation-menu-tone-success-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-success-surface-hover);
+}
+
+@property --forge-menu-item-navigation-menu-tone-warning-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-warning-surface-hover);
+}
+
+@property --forge-menu-item-navigation-menu-tone-information-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-information-surface-hover);
+}
+
+@property --forge-menu-item-navigation-menu-tone-error-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-error-surface-hover);
+}
+
+@property --forge-menu-item-navigation-menu-tone-critical-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-menu-tone-critical-surface-hover);
+}
+
+@property --forge-menu-item-feedback-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-opacity-disabled);
+}

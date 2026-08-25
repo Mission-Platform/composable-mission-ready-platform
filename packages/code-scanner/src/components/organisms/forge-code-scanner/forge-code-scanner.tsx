@@ -1,5 +1,12 @@
 import { ForgeButton } from '@mission-platform/components';
-import { type MpElement, useEffect, useRef, useState } from '@mission-platform/forge';
+import {
+  useEffect,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeIconCamera, ForgeIconClose, ForgeIconUpload } from '@mission-platform/icons';
 import { ForgeTypography } from '@mission-platform/typography';
 
@@ -16,6 +23,59 @@ import styles from './forge-code-scanner.module.scss';
 
 export type { ScanFormat, ScanResult } from '@mission-platform/code-scanner';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface CodeScannerStyleProperties {
+  readonly 'gap-actions'?: string;
+  readonly 'gap-result'?: string;
+  readonly 'gap-root'?: string;
+  readonly 'placeholder-text'?: string;
+  readonly 'result-padding-block'?: string;
+  readonly 'result-padding-inline'?: string;
+  readonly 'result-radius'?: string;
+  readonly 'result-surface'?: string;
+  readonly 'reticle-border'?: string;
+  readonly 'reticle-border-width'?: string;
+  readonly 'reticle-radius'?: string;
+  readonly 'viewport-radius'?: string;
+  readonly 'viewport-surface'?: string;
+}
+
+export type CodeScannerStyle = CSSStyleProperties & {
+  readonly '--forge-code-scanner-gap-actions'?: string | undefined;
+  readonly '--forge-code-scanner-gap-result'?: string | undefined;
+  readonly '--forge-code-scanner-gap-root'?: string | undefined;
+  readonly '--forge-code-scanner-placeholder-text'?: string | undefined;
+  readonly '--forge-code-scanner-result-padding-block'?: string | undefined;
+  readonly '--forge-code-scanner-result-padding-inline'?: string | undefined;
+  readonly '--forge-code-scanner-result-radius'?: string | undefined;
+  readonly '--forge-code-scanner-result-surface'?: string | undefined;
+  readonly '--forge-code-scanner-reticle-border'?: string | undefined;
+  readonly '--forge-code-scanner-reticle-border-width'?: string | undefined;
+  readonly '--forge-code-scanner-reticle-radius'?: string | undefined;
+  readonly '--forge-code-scanner-viewport-radius'?: string | undefined;
+  readonly '--forge-code-scanner-viewport-surface'?: string | undefined;
+};
+
+function createCodeScannerStyle(
+  properties: Readonly<CodeScannerStyleProperties> | undefined,
+): CodeScannerStyle | undefined {
+  return createForgeStyle({
+    '--forge-code-scanner-gap-actions': properties?.['gap-actions'],
+    '--forge-code-scanner-gap-result': properties?.['gap-result'],
+    '--forge-code-scanner-gap-root': properties?.['gap-root'],
+    '--forge-code-scanner-placeholder-text': properties?.['placeholder-text'],
+    '--forge-code-scanner-result-padding-block': properties?.['result-padding-block'],
+    '--forge-code-scanner-result-padding-inline': properties?.['result-padding-inline'],
+    '--forge-code-scanner-result-radius': properties?.['result-radius'],
+    '--forge-code-scanner-result-surface': properties?.['result-surface'],
+    '--forge-code-scanner-reticle-border': properties?.['reticle-border'],
+    '--forge-code-scanner-reticle-border-width': properties?.['reticle-border-width'],
+    '--forge-code-scanner-reticle-radius': properties?.['reticle-radius'],
+    '--forge-code-scanner-viewport-radius': properties?.['viewport-radius'],
+    '--forge-code-scanner-viewport-surface': properties?.['viewport-surface'],
+  }) as CodeScannerStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface CodeScannerProperties {
   /** Which camera to prefer for the live stream. Defaults to `'environment'` (rear). */
   facingMode?: 'environment' | 'user';
@@ -52,6 +112,9 @@ export interface CodeScannerProperties {
   onResult?: (result: ScanResult) => void;
   /** Fired when reading a file, decoding a frame, or opening the camera fails. */
   onError?: (error: Error) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<CodeScannerStyleProperties>;
 }
 
 /**
@@ -72,6 +135,8 @@ export interface CodeScannerProperties {
  * co-located CSS Module `forge-code-scanner.module.scss`.
  */
 export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): MpElement {
+  const style = createCodeScannerStyle(properties.properties);
+
   const {
     facingMode = 'environment',
     scanIntervalMs = 300,
@@ -269,6 +334,7 @@ export function ForgeCodeScanner(properties: Readonly<CodeScannerProperties>): M
       aria-label={ariaLabel}
       className={styles['forge-code-scanner']}
       role="group"
+      style={style}
     >
       <div className={styles['forge-code-scanner__viewport']}>
         <video

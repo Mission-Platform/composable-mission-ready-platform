@@ -1,0 +1,225 @@
+/**
+ * Registered inherited custom properties for forge-list overrides.
+ */
+
+@property --forge-list-navigation-list-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-line-height);
+}
+
+@property --forge-list-navigation-list-marker-padding-inline-start {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-marker-padding-inline-start);
+}
+
+@property --forge-list-navigation-list-description-gap-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-description-gap-wide);
+}
+
+@property --forge-list-navigation-list-description-gap-wider {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-description-gap-wider);
+}
+
+@property --forge-list-navigation-list-size-2xs-font {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-2xs-font);
+}
+
+@property --forge-list-navigation-list-size-xs-font {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-xs-font);
+}
+
+@property --forge-list-navigation-list-size-sm-font {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-sm-font);
+}
+
+@property --forge-list-navigation-list-size-md-font {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-md-font);
+}
+
+@property --forge-list-navigation-list-size-lg-font {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-lg-font);
+}
+
+@property --forge-list-navigation-list-size-xl-font {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-xl-font);
+}
+
+@property --forge-list-navigation-list-size-2xl-font {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-2xl-font);
+}
+
+@property --forge-list-navigation-list-size-2xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-2xs-padding-block);
+}
+
+@property --forge-list-navigation-list-size-xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-xs-padding-block);
+}
+
+@property --forge-list-navigation-list-size-sm-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-sm-padding-block);
+}
+
+@property --forge-list-navigation-list-size-md-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-md-padding-block);
+}
+
+@property --forge-list-navigation-list-size-lg-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-lg-padding-block);
+}
+
+@property --forge-list-navigation-list-size-xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-xl-padding-block);
+}
+
+@property --forge-list-navigation-list-size-2xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-size-2xl-padding-block);
+}
+
+@property --forge-list-navigation-list-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-border-width);
+}
+
+@property --forge-list-navigation-list-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-border-default);
+}
+
+@property --forge-list-navigation-list-tone-primary-marker {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-primary-marker);
+}
+
+@property --forge-list-navigation-list-tone-secondary-marker {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-secondary-marker);
+}
+
+@property --forge-list-navigation-list-tone-tertiary-marker {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-tertiary-marker);
+}
+
+@property --forge-list-navigation-list-tone-success-marker {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-success-marker);
+}
+
+@property --forge-list-navigation-list-tone-warning-marker {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-warning-marker);
+}
+
+@property --forge-list-navigation-list-tone-info-marker {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-info-marker);
+}
+
+@property --forge-list-navigation-list-tone-error-marker {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-error-marker);
+}
+
+@property --forge-list-navigation-list-tone-critical-marker {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-critical-marker);
+}
+
+@property --forge-list-navigation-list-tone-primary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-primary-border);
+}
+
+@property --forge-list-navigation-list-tone-secondary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-secondary-border);
+}
+
+@property --forge-list-navigation-list-tone-tertiary-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-tertiary-border);
+}
+
+@property --forge-list-navigation-list-tone-success-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-success-border);
+}
+
+@property --forge-list-navigation-list-tone-warning-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-warning-border);
+}
+
+@property --forge-list-navigation-list-tone-info-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-info-border);
+}
+
+@property --forge-list-navigation-list-tone-error-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-error-border);
+}
+
+@property --forge-list-navigation-list-tone-critical-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-tone-critical-border);
+}
+
+@property --forge-list-navigation-list-term-padding-inline-end {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-list-term-padding-inline-end);
+}

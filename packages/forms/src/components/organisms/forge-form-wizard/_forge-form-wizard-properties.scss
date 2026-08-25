@@ -1,0 +1,149 @@
+@property --forge-form-wizard-form-gap-wizard {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-gap-wizard);
+}
+
+@property --forge-form-wizard-form-gap-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-gap-default);
+}
+
+@property --forge-form-wizard-form-gap-large {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-gap-large);
+}
+
+@property --forge-form-wizard-form-padding-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-padding-default);
+}
+
+@property --forge-form-wizard-form-padding-section {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-padding-section);
+}
+
+@property --forge-form-wizard-form-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-border-width);
+}
+
+@property --forge-form-wizard-form-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-border-default);
+}
+
+@property --forge-form-wizard-form-radius-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-radius-default);
+}
+
+@property --forge-form-wizard-form-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-text-secondary);
+}
+
+@property --forge-form-wizard-form-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-transition-duration);
+}
+
+@property --forge-form-wizard-form-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-transition-easing);
+}
+
+@property --forge-form-wizard-form-padding-large {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-padding-large);
+}
+
+@property --forge-form-wizard-form-disabled-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-disabled-opacity);
+}
+
+@property --forge-form-wizard-form-border-focus-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-border-focus-width);
+}
+
+@property --forge-form-wizard-form-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-border-focus);
+}
+
+@property --forge-form-wizard-form-border-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-border-selected);
+}
+
+@property --forge-form-wizard-form-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-text-default);
+}
+
+@property --forge-form-wizard-form-border-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-border-invalid);
+}
+
+@property --forge-form-wizard-form-surface-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-surface-muted);
+}
+
+@property --forge-form-wizard-form-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-primary);
+}
+
+@property --forge-form-wizard-form-text-inverse {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-text-inverse);
+}
+
+@property --forge-form-wizard-form-gap-section {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-gap-section);
+}
+
+@property --forge-form-wizard-form-font-family-sans {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-font-family-sans);
+}
+
+@property --forge-form-wizard-form-font-size-small {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-font-size-small);
+}
+
+@property --forge-form-wizard-form-primary-hover-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-primary-hover-opacity);
+}

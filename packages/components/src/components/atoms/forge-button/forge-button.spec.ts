@@ -93,4 +93,23 @@ describe('ForgeButton authors the same component for React and Vue', () => {
     expect(buttonStyles).toContain('--mp-button-spinner-animation-duration');
     expect(buttonStyles).toContain('--mp-button-spinner-animation-easing');
   });
+
+  it('emits defined typed custom-property overrides through neutral style', () => {
+    const element = ForgeButton({
+      label: 'Save',
+      properties: {
+        'primary-radius': '12px',
+        'primary-gap': '0.5rem',
+      },
+    });
+
+    expect(element.properties).toMatchObject({
+      style: {
+        '--forge-button-primary-radius': '12px',
+        '--forge-button-primary-gap': '0.5rem',
+      },
+    });
+    expect(element.properties).not.toHaveProperty('styles');
+    expect(element.properties.style).not.toHaveProperty('--forge-button-font-family');
+  });
 });

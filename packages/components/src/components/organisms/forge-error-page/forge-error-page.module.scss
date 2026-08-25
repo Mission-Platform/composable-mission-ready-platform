@@ -1,12 +1,15 @@
+@use './forge-error-page-properties';
+
 @layer mp.components {
   .forge-error-page {
     display: grid;
     justify-items: center;
     min-block-size: 24rem;
-    gap: var(--mp-spacing-3);
+    gap: var(--forge-error-page-spacing-3, var(--mp-spacing-3));
     align-content: center;
-    padding: var(--mp-spacing-8) var(--mp-spacing-4);
-    color: var(--mp-color-text-primary);
+    padding: var(--forge-error-page-spacing-8, var(--mp-spacing-8))
+      var(--forge-error-page-spacing-4, var(--mp-spacing-4));
+    color: var(--forge-error-page-color-text-primary, var(--mp-color-text-primary));
     text-align: center;
   }
 
@@ -22,42 +25,43 @@
   .forge-error-page__status {
     font-size: 3rem;
     font-weight: 700;
-    color: var(--mp-color-text-secondary);
+    color: var(--forge-error-page-color-text-secondary, var(--mp-color-text-secondary));
   }
 
   .forge-error-page__message,
   .forge-error-page__content {
     max-width: 40rem;
-    color: var(--mp-color-text-secondary);
+    color: var(--forge-error-page-color-text-secondary, var(--mp-color-text-secondary));
   }
 
   .forge-error-page__actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: var(--mp-spacing-3);
-    margin-block-start: var(--mp-spacing-3);
+    gap: var(--forge-error-page-spacing-3, var(--mp-spacing-3));
+    margin-block-start: var(--forge-error-page-spacing-3, var(--mp-spacing-3));
   }
 
   .forge-error-page__action {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--mp-spacing-2) var(--mp-spacing-4);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-border-radius-sm);
+    padding: var(--forge-error-page-spacing-2, var(--mp-spacing-2))
+      var(--forge-error-page-spacing-4, var(--mp-spacing-4));
+    border: 1px solid var(--forge-error-page-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-error-page-border-radius-sm, var(--mp-border-radius-sm));
     color: inherit;
     text-decoration: none;
     cursor: pointer;
   }
 
   .forge-error-page__action--primary {
-    background: var(--mp-color-action-primary);
-    color: var(--mp-color-text-on-action);
+    background: var(--forge-error-page-color-action-primary, var(--mp-color-action-primary));
+    color: var(--forge-error-page-color-text-on-action, var(--mp-color-text-on-action));
   }
 
   .forge-error-page__action--secondary {
-    background: var(--mp-color-surface-secondary);
+    background: var(--forge-error-page-color-surface-secondary, var(--mp-color-surface-secondary));
   }
 
   .forge-error-page__action--ghost {

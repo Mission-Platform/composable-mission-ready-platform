@@ -1,0 +1,63 @@
+/**
+ * Registered inherited custom properties for forge-logo-cloud overrides.
+ */
+
+@property --forge-logo-cloud-spacing-6 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-6);
+}
+
+@property --forge-logo-cloud-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-logo-cloud-font-size-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-md);
+}
+
+@property --forge-logo-cloud-color-text-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-tertiary);
+}
+
+@property --forge-logo-columns {
+  syntax: '*';
+  inherits: true;
+  initial-value: 4;
+}
+
+@property --forge-logo-cloud-spacing-10 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-10);
+}
+
+@property --forge-logo-cloud-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-logo-cloud-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-logo-cloud-size-height-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-height-lg);
+}
+
+@property --forge-logo-cloud-opacity-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-muted);
+}

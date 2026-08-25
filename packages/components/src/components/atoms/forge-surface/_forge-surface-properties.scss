@@ -1,0 +1,93 @@
+/**
+ * Registered inherited custom properties for forge-surface overrides.
+ */
+
+@property --forge-surface-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-text, var(--mp-color-text-primary));
+}
+
+@property --forge-surface-elevation-0 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-elevation-0, var(--mp-elevation-0, none));
+}
+
+@property --forge-surface-elevation-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-elevation-1, var(--mp-elevation-1, none));
+}
+
+@property --forge-surface-elevation-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-elevation-2, var(--mp-elevation-2, none));
+}
+
+@property --forge-surface-elevation-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-elevation-3, var(--mp-elevation-3, none));
+}
+
+@property --forge-surface-padding-none {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-padding-none, var(--mp-spacing-none));
+}
+
+@property --forge-surface-padding-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-padding-sm, var(--mp-spacing-sm));
+}
+
+@property --forge-surface-padding-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-padding-md, var(--mp-spacing-md));
+}
+
+@property --forge-surface-padding-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-padding-lg, var(--mp-spacing-lg));
+}
+
+@property --forge-surface-rounded-none {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-rounded-none, var(--mp-radius-none));
+}
+
+@property --forge-surface-rounded-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-rounded-sm, var(--mp-radius-sm));
+}
+
+@property --forge-surface-rounded-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-rounded-md, var(--mp-radius-md));
+}
+
+@property --forge-surface-rounded-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-rounded-lg, var(--mp-radius-lg));
+}
+
+@property --forge-surface-rounded-xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-rounded-xl, var(--mp-radius-xl));
+}
+
+@property --forge-surface-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-surface-background, var(--mp-color-bg-surface));
+}

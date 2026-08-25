@@ -1,4 +1,4 @@
-import { classNames, type MpElement } from '@mission-platform/forge';
+import { classNames, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import styles from './forge-responsive-video.module.scss';
 
@@ -18,6 +18,26 @@ export interface ResponsiveVideoSource {
 /** How the video fills its box. */
 export type ResponsiveVideoFit = 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface ResponsiveVideoStyleProperties {
+  readonly 'media-radius'?: string;
+  readonly 'media-video-surface-default'?: string;
+}
+
+export type ResponsiveVideoStyle = CSSStyleProperties & {
+  readonly '--forge-responsive-video-media-radius'?: string | undefined;
+  readonly '--forge-responsive-video-media-video-surface-default'?: string | undefined;
+};
+
+function createResponsiveVideoStyle(
+  properties: Readonly<ResponsiveVideoStyleProperties> | undefined,
+): ResponsiveVideoStyle | undefined {
+  return createForgeStyle({
+    '--forge-responsive-video-media-radius': properties?.['media-radius'],
+    '--forge-responsive-video-media-video-surface-default': properties?.['media-video-surface-default'],
+  }) as ResponsiveVideoStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface ResponsiveVideoProperties {
   /** Single video URL. Use `sources` for multiple formats. */
   src?: string;
@@ -53,6 +73,9 @@ export interface ResponsiveVideoProperties {
   onPause?: (event: Event) => void;
   /** Native `ended` event. */
   onEnded?: (event: Event) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<ResponsiveVideoStyleProperties>;
 }
 
 /**
@@ -75,6 +98,8 @@ export interface ResponsiveVideoProperties {
  * components).
  */
 export function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoProperties>): MpElement {
+  const style = createResponsiveVideoStyle(properties.properties);
+
   const {
     src,
     sources = [],
@@ -119,7 +144,7 @@ export function ForgeResponsiveVideo(properties: Readonly<ResponsiveVideoPropert
       poster={poster}
       preload={preload}
       src={sources.length > 0 ? undefined : src}
-      style={{ aspectRatio, objectFit: fit }}
+      style={{ aspectRatio, objectFit: fit, ...style }}
       onPlay={onPlay}
       onPause={onPause}
       onEnded={onEnded}

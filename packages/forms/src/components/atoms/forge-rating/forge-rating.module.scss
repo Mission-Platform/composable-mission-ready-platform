@@ -1,3 +1,5 @@
+@use './forge-rating-properties';
+
 /**
  * Styling for the write-once `ForgeRating`.
  *
@@ -16,48 +18,48 @@
   .forge-rating {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-checkable-gap-stack);
-    color: var(--mp-checkable-rating-filled);
+    gap: var(--forge-rating-checkable-gap-stack, var(--mp-checkable-gap-stack));
+    color: var(--forge-rating-checkable-rating-filled, var(--mp-checkable-rating-filled));
     line-height: 1;
 
     /* Sizes — canonical 2xs → 2xl scale (star glyph font-size). */
     &--2xs {
-      font-size: var(--mp-checkable-size-2xs-rating-font-size);
+      font-size: var(--forge-rating-checkable-size-2xs-rating-font-size, var(--mp-checkable-size-2xs-rating-font-size));
     }
 
     &--xs {
-      font-size: var(--mp-checkable-size-xs-rating-font-size);
+      font-size: var(--forge-rating-checkable-size-xs-rating-font-size, var(--mp-checkable-size-xs-rating-font-size));
     }
 
     &--sm {
-      font-size: var(--mp-checkable-size-sm-rating-font-size);
+      font-size: var(--forge-rating-checkable-size-sm-rating-font-size, var(--mp-checkable-size-sm-rating-font-size));
     }
 
     &--md {
-      font-size: var(--mp-checkable-size-md-rating-font-size);
+      font-size: var(--forge-rating-checkable-size-md-rating-font-size, var(--mp-checkable-size-md-rating-font-size));
     }
 
     &--lg {
-      font-size: var(--mp-checkable-size-lg-rating-font-size);
+      font-size: var(--forge-rating-checkable-size-lg-rating-font-size, var(--mp-checkable-size-lg-rating-font-size));
     }
 
     &--xl {
-      font-size: var(--mp-checkable-size-xl-rating-font-size);
+      font-size: var(--forge-rating-checkable-size-xl-rating-font-size, var(--mp-checkable-size-xl-rating-font-size));
     }
 
     &--2xl {
-      font-size: var(--mp-checkable-size-2xl-rating-font-size);
+      font-size: var(--forge-rating-checkable-size-2xl-rating-font-size, var(--mp-checkable-size-2xl-rating-font-size));
     }
 
     &--disabled {
-      opacity: var(--mp-checkable-opacity-disabled);
+      opacity: var(--forge-rating-checkable-opacity-disabled, var(--mp-checkable-opacity-disabled));
       cursor: not-allowed;
     }
 
     &:focus-visible {
       outline: none;
-      border-radius: var(--mp-checkable-radius);
-      box-shadow: var(--mp-checkable-focus-ring);
+      border-radius: var(--forge-rating-checkable-radius, var(--mp-checkable-radius));
+      box-shadow: var(--forge-rating-checkable-focus-ring, var(--mp-checkable-focus-ring));
     }
 
     &__star {
@@ -83,7 +85,7 @@
       }
 
       &--empty {
-        color: var(--mp-checkable-rating-empty);
+        color: var(--forge-rating-checkable-rating-empty, var(--mp-checkable-rating-empty));
       }
 
       &--filled svg {
@@ -95,7 +97,7 @@
       position: absolute;
       inset: 0;
       overflow: hidden;
-      color: var(--mp-checkable-rating-filled);
+      color: var(--forge-rating-checkable-rating-filled, var(--mp-checkable-rating-filled));
     }
 
     &__hit {
@@ -109,11 +111,11 @@
 
       &--half {
         right: 50%;
-        z-index: 2;
+        z-index: var(--mp-z-index-feature-rating);
       }
 
       &--full {
-        z-index: 1;
+        z-index: var(--mp-z-index-base-foreground);
       }
     }
   }

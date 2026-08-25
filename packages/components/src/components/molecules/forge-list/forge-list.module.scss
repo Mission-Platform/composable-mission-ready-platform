@@ -7,6 +7,8 @@
  * `@mission-platform/components` package).
  */
 
+@use './forge-list-properties';
+
 @layer mp.components {
   .forge-list {
     margin: 0;
@@ -16,13 +18,16 @@
     }
 
     &__item {
-      line-height: var(--mp-navigation-list-line-height);
+      line-height: var(--forge-list-navigation-list-line-height, var(--mp-navigation-list-line-height));
     }
 
     /* Variants */
     &--unordered,
     &--ordered {
-      padding-left: var(--mp-navigation-list-marker-padding-inline-start);
+      padding-left: var(
+        --forge-list-navigation-list-marker-padding-inline-start,
+        var(--mp-navigation-list-marker-padding-inline-start)
+      );
     }
 
     &--none {
@@ -41,27 +46,38 @@
 
       @container forge-list (width >= 40rem) {
         grid-template-columns: 10rem 1fr;
-        gap: 0 var(--mp-navigation-list-description-gap-wide);
+        gap: 0 var(--forge-list-navigation-list-description-gap-wide, var(--mp-navigation-list-description-gap-wide));
       }
 
       @container forge-list (width >= 60rem) {
         grid-template-columns: 15rem 1fr;
-        gap: 0 var(--mp-navigation-list-description-gap-wider);
+        gap: 0 var(--forge-list-navigation-list-description-gap-wider, var(--mp-navigation-list-description-gap-wider));
       }
     }
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
-        font-size: var(--mp-navigation-list-size-#{$size}-font);
+        font-size: var(--forge-list-navigation-list-size-#{$size}-font, var(--mp-navigation-list-size-#{$size}-font));
 
         .forge-list__item,
         .forge-list__term,
         .forge-list__detail {
-          padding: var(--mp-navigation-list-size-#{$size}-padding-block) 0;
+          padding: var(
+              --forge-list-navigation-list-size-#{$size}-padding-block,
+              var(--mp-navigation-list-size-#{$size}-padding-block)
+            )
+            0;
 
           @container forge-list (width >= 48rem) {
-            padding: calc(var(--mp-navigation-list-size-#{$size}-padding-block) * 1.5) 0;
+            padding: calc(
+                var(
+                    --forge-list-navigation-list-size-#{$size}-padding-block,
+                    var(--mp-navigation-list-size-#{$size}-padding-block)
+                  ) *
+                  1.5
+              )
+              0;
           }
         }
       }
@@ -72,7 +88,8 @@
       &.forge-list--none .forge-list__item + .forge-list__item,
       &.forge-list--unordered .forge-list__item + .forge-list__item,
       &.forge-list--ordered .forge-list__item + .forge-list__item {
-        border-top: var(--mp-navigation-list-border-width) solid var(--mp-navigation-list-border-default);
+        border-top: var(--forge-list-navigation-list-border-width, var(--mp-navigation-list-border-width)) solid
+          var(--forge-list-navigation-list-border-default, var(--mp-navigation-list-border-default));
       }
     }
 
@@ -95,17 +112,26 @@
     {
       &--tone-#{$name} {
         .forge-list__item::marker {
-          color: var(--mp-navigation-list-tone-#{$family}-marker);
+          color: var(
+            --forge-list-navigation-list-tone-#{$family}-marker,
+            var(--mp-navigation-list-tone-#{$family}-marker)
+          );
         }
 
         &.forge-list--divided .forge-list__item + .forge-list__item {
-          border-top-color: var(--mp-navigation-list-tone-#{$family}-border);
+          border-top-color: var(
+            --forge-list-navigation-list-tone-#{$family}-border,
+            var(--mp-navigation-list-tone-#{$family}-border)
+          );
         }
       }
     }
 
     &__term {
-      padding-right: var(--mp-navigation-list-term-padding-inline-end);
+      padding-right: var(
+        --forge-list-navigation-list-term-padding-inline-end,
+        var(--mp-navigation-list-term-padding-inline-end)
+      );
     }
 
     &__detail {

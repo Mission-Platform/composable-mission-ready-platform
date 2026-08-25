@@ -1,4 +1,11 @@
-import { classNames, Dynamic, type MpChild, type MpElement } from '@mission-platform/forge';
+import {
+  classNames,
+  Dynamic,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import spacingStyles from '../../../styles/spacing.module.scss';
 
@@ -45,6 +52,51 @@ const ALIGN_ITEMS: Record<StackAlign, string> = {
   baseline: 'baseline',
 };
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface StackStyleProperties {
+  readonly 'layout-stack-container-border'?: string;
+  readonly 'layout-stack-container-border-width'?: string;
+  readonly 'layout-stack-container-padding'?: string;
+  readonly 'layout-stack-container-radius'?: string;
+  readonly 'layout-stack-item-border'?: string;
+  readonly 'layout-stack-item-border-width'?: string;
+  readonly 'layout-stack-item-padding-block'?: string;
+  readonly 'layout-stack-item-padding-inline'?: string;
+  readonly 'layout-stack-item-radius'?: string;
+  readonly 'layout-stack-item-surface'?: string;
+  readonly 'layout-stack-item-text'?: string;
+}
+
+export type StackStyle = CSSStyleProperties & {
+  readonly '--forge-stack-layout-stack-container-border'?: string | undefined;
+  readonly '--forge-stack-layout-stack-container-border-width'?: string | undefined;
+  readonly '--forge-stack-layout-stack-container-padding'?: string | undefined;
+  readonly '--forge-stack-layout-stack-container-radius'?: string | undefined;
+  readonly '--forge-stack-layout-stack-item-border'?: string | undefined;
+  readonly '--forge-stack-layout-stack-item-border-width'?: string | undefined;
+  readonly '--forge-stack-layout-stack-item-padding-block'?: string | undefined;
+  readonly '--forge-stack-layout-stack-item-padding-inline'?: string | undefined;
+  readonly '--forge-stack-layout-stack-item-radius'?: string | undefined;
+  readonly '--forge-stack-layout-stack-item-surface'?: string | undefined;
+  readonly '--forge-stack-layout-stack-item-text'?: string | undefined;
+};
+
+function createStackStyle(properties: Readonly<StackStyleProperties> | undefined): StackStyle | undefined {
+  return createForgeStyle({
+    '--forge-stack-layout-stack-container-border': properties?.['layout-stack-container-border'],
+    '--forge-stack-layout-stack-container-border-width': properties?.['layout-stack-container-border-width'],
+    '--forge-stack-layout-stack-container-padding': properties?.['layout-stack-container-padding'],
+    '--forge-stack-layout-stack-container-radius': properties?.['layout-stack-container-radius'],
+    '--forge-stack-layout-stack-item-border': properties?.['layout-stack-item-border'],
+    '--forge-stack-layout-stack-item-border-width': properties?.['layout-stack-item-border-width'],
+    '--forge-stack-layout-stack-item-padding-block': properties?.['layout-stack-item-padding-block'],
+    '--forge-stack-layout-stack-item-padding-inline': properties?.['layout-stack-item-padding-inline'],
+    '--forge-stack-layout-stack-item-radius': properties?.['layout-stack-item-radius'],
+    '--forge-stack-layout-stack-item-surface': properties?.['layout-stack-item-surface'],
+    '--forge-stack-layout-stack-item-text': properties?.['layout-stack-item-text'],
+  }) as StackStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface StackProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -68,6 +120,9 @@ export interface StackProperties {
   padding?: SpacingScale;
   /** Size token controlling the stack's font scale. Defaults to `'md'`. */
   size?: StackSize;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<StackStyleProperties>;
 }
 
 /**
@@ -82,6 +137,8 @@ export interface StackProperties {
  * `forge-stack.stories.tsx`).
  */
 export function ForgeStack(properties: Readonly<StackProperties>): MpElement {
+  const propertyStyle = createStackStyle(properties.properties);
+
   const {
     direction = 'vertical',
     gap = 'md',
@@ -119,7 +176,7 @@ export function ForgeStack(properties: Readonly<StackProperties>): MpElement {
     <Dynamic
       is={tag}
       className={className}
-      style={style}
+      style={{ ...style, ...propertyStyle }}
     >
       {properties.children}
     </Dynamic>

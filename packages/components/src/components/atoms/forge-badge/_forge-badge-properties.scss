@@ -1,0 +1,267 @@
+/**
+ * Registered inherited custom properties for forge-badge overrides.
+ */
+
+@property --forge-badge-feedback-badge-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-gap);
+}
+
+@property --forge-badge-feedback-badge-radius-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-radius-default);
+}
+
+@property --forge-badge-feedback-badge-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-font-family);
+}
+
+@property --forge-badge-feedback-badge-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-line-height);
+}
+
+@property --forge-badge-feedback-badge-radius-pill {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-radius-pill);
+}
+
+@property --forge-badge-feedback-badge-size-2xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-2xs-padding-block);
+}
+
+@property --forge-badge-feedback-badge-size-xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-xs-padding-block);
+}
+
+@property --forge-badge-feedback-badge-size-sm-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-sm-padding-block);
+}
+
+@property --forge-badge-feedback-badge-size-md-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-md-padding-block);
+}
+
+@property --forge-badge-feedback-badge-size-lg-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-lg-padding-block);
+}
+
+@property --forge-badge-feedback-badge-size-xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-xl-padding-block);
+}
+
+@property --forge-badge-feedback-badge-size-2xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-2xl-padding-block);
+}
+
+@property --forge-badge-feedback-badge-size-2xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-2xs-padding-inline);
+}
+
+@property --forge-badge-feedback-badge-size-xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-xs-padding-inline);
+}
+
+@property --forge-badge-feedback-badge-size-sm-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-sm-padding-inline);
+}
+
+@property --forge-badge-feedback-badge-size-md-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-md-padding-inline);
+}
+
+@property --forge-badge-feedback-badge-size-lg-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-lg-padding-inline);
+}
+
+@property --forge-badge-feedback-badge-size-xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-xl-padding-inline);
+}
+
+@property --forge-badge-feedback-badge-size-2xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-2xl-padding-inline);
+}
+
+@property --forge-badge-feedback-badge-size-2xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-2xs-font-size);
+}
+
+@property --forge-badge-feedback-badge-size-xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-xs-font-size);
+}
+
+@property --forge-badge-feedback-badge-size-sm-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-sm-font-size);
+}
+
+@property --forge-badge-feedback-badge-size-md-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-md-font-size);
+}
+
+@property --forge-badge-feedback-badge-size-lg-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-lg-font-size);
+}
+
+@property --forge-badge-feedback-badge-size-xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-xl-font-size);
+}
+
+@property --forge-badge-feedback-badge-size-2xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-size-2xl-font-size);
+}
+
+@property --forge-badge-feedback-badge-neutral-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-neutral-background);
+}
+
+@property --forge-badge-feedback-badge-primary-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-primary-background);
+}
+
+@property --forge-badge-feedback-badge-secondary-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-secondary-background);
+}
+
+@property --forge-badge-feedback-badge-tertiary-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-tertiary-background);
+}
+
+@property --forge-badge-feedback-badge-success-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-success-background);
+}
+
+@property --forge-badge-feedback-badge-warning-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-warning-background);
+}
+
+@property --forge-badge-feedback-badge-info-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-info-background);
+}
+
+@property --forge-badge-feedback-badge-error-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-error-background);
+}
+
+@property --forge-badge-feedback-badge-critical-background {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-critical-background);
+}
+
+@property --forge-badge-feedback-badge-neutral-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-neutral-text);
+}
+
+@property --forge-badge-feedback-badge-primary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-primary-text);
+}
+
+@property --forge-badge-feedback-badge-secondary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-secondary-text);
+}
+
+@property --forge-badge-feedback-badge-tertiary-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-tertiary-text);
+}
+
+@property --forge-badge-feedback-badge-success-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-success-text);
+}
+
+@property --forge-badge-feedback-badge-warning-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-warning-text);
+}
+
+@property --forge-badge-feedback-badge-info-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-info-text);
+}
+
+@property --forge-badge-feedback-badge-error-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-error-text);
+}
+
+@property --forge-badge-feedback-badge-critical-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-badge-critical-text);
+}

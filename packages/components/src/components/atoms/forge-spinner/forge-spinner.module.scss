@@ -9,32 +9,35 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-spinner-properties';
+
 @layer mp.components {
   .forge-spinner {
     display: inline-block;
     border-style: solid;
     border-top-color: transparent;
-    border-radius: var(--mp-feedback-spinner-radius);
-    animation: mp-spin var(--mp-feedback-spinner-animation-duration) var(--mp-feedback-spinner-animation-easing)
-      infinite;
+    border-radius: var(--forge-spinner-feedback-spinner-radius, var(--mp-feedback-spinner-radius));
+    animation: mp-spin
+      var(--forge-spinner-feedback-spinner-animation-duration, var(--mp-feedback-spinner-animation-duration))
+      var(--forge-spinner-feedback-spinner-animation-easing, var(--mp-feedback-spinner-animation-easing)) infinite;
     flex-shrink: 0;
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size,
       $border-width
         in (
-          '2xs': var(--mp-feedback-spinner-border-width-2xs),
-          'xs': var(--mp-feedback-spinner-border-width-xs),
-          'sm': var(--mp-feedback-spinner-border-width-sm),
-          'md': var(--mp-feedback-spinner-border-width-md),
-          'lg': var(--mp-feedback-spinner-border-width-lg),
-          'xl': var(--mp-feedback-spinner-border-width-xl),
-          '2xl': var(--mp-feedback-spinner-border-width-2xl)
+          '2xs': var(--forge-spinner-feedback-spinner-border-width-2xs, var(--mp-feedback-spinner-border-width-2xs)),
+          'xs': var(--forge-spinner-feedback-spinner-border-width-xs, var(--mp-feedback-spinner-border-width-xs)),
+          'sm': var(--forge-spinner-feedback-spinner-border-width-sm, var(--mp-feedback-spinner-border-width-sm)),
+          'md': var(--forge-spinner-feedback-spinner-border-width-md, var(--mp-feedback-spinner-border-width-md)),
+          'lg': var(--forge-spinner-feedback-spinner-border-width-lg, var(--mp-feedback-spinner-border-width-lg)),
+          'xl': var(--forge-spinner-feedback-spinner-border-width-xl, var(--mp-feedback-spinner-border-width-xl)),
+          '2xl': var(--forge-spinner-feedback-spinner-border-width-2xl, var(--mp-feedback-spinner-border-width-2xl))
         )
     {
       &--#{$size} {
-        width: var(--mp-feedback-spinner-size-#{$size});
-        height: var(--mp-feedback-spinner-size-#{$size});
+        width: var(--forge-spinner-feedback-spinner-size-#{$size}, var(--mp-feedback-spinner-size-#{$size}));
+        height: var(--forge-spinner-feedback-spinner-size-#{$size}, var(--mp-feedback-spinner-size-#{$size}));
         border-width: $border-width;
       }
     }
@@ -45,7 +48,7 @@
      */
     @each $name in ('neutral', 'primary', 'secondary', 'tertiary', 'success', 'warning', 'info', 'error', 'critical') {
       &--#{$name} {
-        border-color: var(--mp-feedback-spinner-color-#{$name});
+        border-color: var(--forge-spinner-feedback-spinner-color-#{$name}, var(--mp-feedback-spinner-color-#{$name}));
         border-top-color: transparent;
       }
     }

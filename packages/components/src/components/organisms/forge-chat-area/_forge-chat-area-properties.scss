@@ -1,0 +1,111 @@
+/**
+ * Registered inherited custom properties for forge-chat-area overrides.
+ */
+
+@property --forge-chat-area-media-chat-area-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-surface);
+}
+
+@property --forge-chat-area-media-chat-area-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-border-width);
+}
+
+@property --forge-chat-area-media-chat-area-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-border);
+}
+
+@property --forge-chat-area-media-chat-area-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-radius);
+}
+
+@property --forge-chat-area-media-chat-area-header-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-header-padding-block);
+}
+
+@property --forge-chat-area-media-chat-area-header-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-header-padding-inline);
+}
+
+@property --forge-chat-area-media-chat-area-header-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-header-border);
+}
+
+@property --forge-chat-area-media-chat-area-header-padding-block-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-header-padding-block-wide);
+}
+
+@property --forge-chat-area-media-chat-area-header-padding-inline-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-header-padding-inline-wide);
+}
+
+@property --forge-chat-area-media-chat-area-log-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-log-padding);
+}
+
+@property --forge-chat-area-media-chat-area-log-padding-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-log-padding-wide);
+}
+
+@property --forge-chat-area-media-chat-area-messages-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-messages-gap);
+}
+
+@property --forge-chat-area-media-chat-area-messages-gap-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-messages-gap-wide);
+}
+
+@property --forge-chat-area-media-chat-area-footer-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-footer-padding-block);
+}
+
+@property --forge-chat-area-media-chat-area-footer-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-footer-padding-inline);
+}
+
+@property --forge-chat-area-media-chat-area-footer-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-footer-border);
+}
+
+@property --forge-chat-area-media-chat-area-footer-padding-block-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-footer-padding-block-wide);
+}
+
+@property --forge-chat-area-media-chat-area-footer-padding-inline-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-media-chat-area-footer-padding-inline-wide);
+}

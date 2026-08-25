@@ -1,5 +1,12 @@
 import { ForgeStack } from '@mission-platform/components';
-import { type ClassValue, type MpChild, type MpElement, useId } from '@mission-platform/forge';
+import {
+  useId,
+  createForgeStyle,
+  type ClassValue,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import { ForgeRadio } from '../../atoms/forge-radio';
@@ -22,6 +29,35 @@ export interface RadioOption {
 /** Axis the radios flow along. */
 export type RadioGroupDirection = 'vertical' | 'horizontal';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface RadioGroupStyleProperties {
+  readonly 'checkable-gap-inline'?: string;
+  readonly 'checkable-text-disabled'?: string;
+  readonly 'field-error'?: string;
+  readonly 'field-required'?: string;
+  readonly 'input-field-gap'?: string;
+}
+
+export type RadioGroupStyle = CSSStyleProperties & {
+  readonly '--forge-radio-group-checkable-gap-inline'?: string | undefined;
+  readonly '--forge-radio-group-checkable-text-disabled'?: string | undefined;
+  readonly '--forge-radio-group-field-error'?: string | undefined;
+  readonly '--forge-radio-group-field-required'?: string | undefined;
+  readonly '--forge-radio-group-input-field-gap'?: string | undefined;
+};
+
+function createRadioGroupStyle(
+  properties: Readonly<RadioGroupStyleProperties> | undefined,
+): RadioGroupStyle | undefined {
+  return createForgeStyle({
+    '--forge-radio-group-checkable-gap-inline': properties?.['checkable-gap-inline'],
+    '--forge-radio-group-checkable-text-disabled': properties?.['checkable-text-disabled'],
+    '--forge-radio-group-field-error': properties?.['field-error'],
+    '--forge-radio-group-field-required': properties?.['field-required'],
+    '--forge-radio-group-input-field-gap': properties?.['input-field-gap'],
+  }) as RadioGroupStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface RadioGroupProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -59,6 +95,9 @@ export interface RadioGroupProperties {
   onUpdateModelValue?: (value: string | number) => void;
   /** Fired with the native `change` event. */
   onChange?: (event: Event) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<RadioGroupStyleProperties>;
 }
 
 /**
@@ -81,6 +120,8 @@ export interface RadioGroupProperties {
  * options.
  */
 export function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpElement {
+  const style = createRadioGroupStyle(properties.properties);
+
   const {
     modelValue,
     options = [],
@@ -137,6 +178,7 @@ export function ForgeRadioGroup(properties: Readonly<RadioGroupProperties>): MpE
         },
         properties.className,
       ]}
+      style={style}
     >
       {legend ? (
         <legend

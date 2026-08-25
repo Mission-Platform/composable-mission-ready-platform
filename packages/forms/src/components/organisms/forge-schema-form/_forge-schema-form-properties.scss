@@ -1,0 +1,119 @@
+@property --forge-schema-form-form-gap-large {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-gap-large);
+}
+
+@property --forge-schema-form-form-disabled-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-disabled-opacity);
+}
+
+@property --forge-schema-form-form-gap-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-gap-default);
+}
+
+@property --forge-schema-form-form-gap-tight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-gap-tight);
+}
+
+@property --forge-schema-form-form-text-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-text-muted);
+}
+
+@property --forge-schema-form-form-text-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-text-invalid);
+}
+
+@property --forge-schema-form-form-padding-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-padding-default);
+}
+
+@property --forge-schema-form-form-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-border-width);
+}
+
+@property --forge-schema-form-form-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-border-default);
+}
+
+@property --forge-schema-form-form-padding-large {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-padding-large);
+}
+
+@property --forge-schema-form-form-radius-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-radius-default);
+}
+
+@property --forge-schema-form-form-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-transition-duration);
+}
+
+@property --forge-schema-form-form-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-transition-easing);
+}
+
+@property --forge-schema-form-form-border-focus-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-border-focus-width);
+}
+
+@property --forge-schema-form-form-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-border-focus);
+}
+
+@property --forge-schema-form-form-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-primary);
+}
+
+@property --forge-schema-form-form-text-inverse {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-text-inverse);
+}
+
+@property --forge-schema-form-form-primary-hover-opacity {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-primary-hover-opacity);
+}
+
+@property --forge-schema-form-form-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-text-default);
+}
+
+@property --forge-schema-form-form-surface-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-form-surface-muted);
+}

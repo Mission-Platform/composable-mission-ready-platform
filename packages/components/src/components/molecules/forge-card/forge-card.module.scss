@@ -7,6 +7,8 @@
  * `@mission-platform/components` package).
  */
 
+@use './forge-card-properties';
+
 @layer mp.components {
   .forge-card {
     /* Become an inline-size container so the inner padding responds to the */
@@ -20,16 +22,17 @@
       container: forge-card / inline-size;
     }
 
-    background-color: var(--mp-card-background);
-    border-radius: var(--mp-card-radius);
+    background-color: var(--forge-card-background, var(--mp-card-background));
+    border-radius: var(--forge-card-radius, var(--mp-card-radius));
     overflow: hidden;
 
     &--bordered {
-      border: var(--mp-card-border-width) solid var(--mp-card-border);
+      border: var(--forge-card-border-width, var(--mp-card-border-width)) solid
+        var(--forge-card-border, var(--mp-card-border));
     }
 
     &--shadow {
-      box-shadow: var(--mp-card-shadow);
+      box-shadow: var(--forge-card-shadow, var(--mp-card-shadow));
     }
 
     /* Padding variants — compact by default, wider cards get more breathing room */
@@ -45,10 +48,12 @@
       .forge-card__header,
       .forge-card__body,
       .forge-card__footer {
-        padding: var(--mp-card-padding-sm-block) var(--mp-card-padding-sm-inline);
+        padding: var(--forge-card-padding-sm-block, var(--mp-card-padding-sm-block))
+          var(--forge-card-padding-sm-inline, var(--mp-card-padding-sm-inline));
 
         @container forge-card (width >= 30rem) {
-          padding: var(--mp-card-padding-sm-wide-block) var(--mp-card-padding-sm-wide-inline);
+          padding: var(--forge-card-padding-sm-wide-block, var(--mp-card-padding-sm-wide-block))
+            var(--forge-card-padding-sm-wide-inline, var(--mp-card-padding-sm-wide-inline));
         }
       }
     }
@@ -57,10 +62,12 @@
       .forge-card__header,
       .forge-card__body,
       .forge-card__footer {
-        padding: var(--mp-card-padding-md-block) var(--mp-card-padding-md-inline);
+        padding: var(--forge-card-padding-md-block, var(--mp-card-padding-md-block))
+          var(--forge-card-padding-md-inline, var(--mp-card-padding-md-inline));
 
         @container forge-card (width >= 30rem) {
-          padding: var(--mp-card-padding-md-wide-block) var(--mp-card-padding-md-wide-inline);
+          padding: var(--forge-card-padding-md-wide-block, var(--mp-card-padding-md-wide-block))
+            var(--forge-card-padding-md-wide-inline, var(--mp-card-padding-md-wide-inline));
         }
       }
     }
@@ -69,10 +76,12 @@
       .forge-card__header,
       .forge-card__body,
       .forge-card__footer {
-        padding: var(--mp-card-padding-lg-block) var(--mp-card-padding-lg-inline);
+        padding: var(--forge-card-padding-lg-block, var(--mp-card-padding-lg-block))
+          var(--forge-card-padding-lg-inline, var(--mp-card-padding-lg-inline));
 
         @container forge-card (width >= 30rem) {
-          padding: var(--mp-card-padding-lg-wide-block) var(--mp-card-padding-lg-wide-inline);
+          padding: var(--forge-card-padding-lg-wide-block, var(--mp-card-padding-lg-wide-block))
+            var(--forge-card-padding-lg-wide-inline, var(--mp-card-padding-lg-wide-inline));
         }
       }
     }
@@ -95,29 +104,31 @@
         )
     {
       &--#{$name} {
-        background-color: var(--mp-card-tone-#{$family}-background);
-        color: var(--mp-card-tone-#{$family}-text);
+        background-color: var(--forge-card-tone-#{$family}-background, var(--mp-card-tone-#{$family}-background));
+        color: var(--forge-card-tone-#{$family}-text, var(--mp-card-tone-#{$family}-text));
 
         &.forge-card--bordered {
-          border-color: var(--mp-card-tone-#{$family}-border);
+          border-color: var(--forge-card-tone-#{$family}-border, var(--mp-card-tone-#{$family}-border));
         }
 
         .forge-card__header {
-          border-bottom-color: var(--mp-card-tone-#{$family}-border);
+          border-bottom-color: var(--forge-card-tone-#{$family}-border, var(--mp-card-tone-#{$family}-border));
         }
 
         .forge-card__footer {
-          border-top-color: var(--mp-card-tone-#{$family}-border);
+          border-top-color: var(--forge-card-tone-#{$family}-border, var(--mp-card-tone-#{$family}-border));
         }
       }
     }
 
     &__header {
-      border-bottom: var(--mp-card-border-width) solid var(--mp-card-border);
+      border-bottom: var(--forge-card-border-width, var(--mp-card-border-width)) solid
+        var(--forge-card-border, var(--mp-card-border));
     }
 
     &__footer {
-      border-top: var(--mp-card-border-width) solid var(--mp-card-border);
+      border-top: var(--forge-card-border-width, var(--mp-card-border-width)) solid
+        var(--forge-card-border, var(--mp-card-border));
     }
   }
 }

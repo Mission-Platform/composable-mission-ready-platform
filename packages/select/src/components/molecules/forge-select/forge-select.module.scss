@@ -12,11 +12,13 @@
  * own `direction` prop).
  */
 
+@use './forge-select-properties';
+
 @layer mp.select {
   .forge-select {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-select-field-gap);
+    gap: var(--forge-select-field-gap, var(--mp-select-field-gap));
 
     &__label {
       &--hidden {
@@ -33,7 +35,7 @@
     }
 
     &__required {
-      color: var(--mp-field-required);
+      color: var(--forge-select-field-required, var(--mp-field-required));
       margin-left: 2px;
     }
 
@@ -53,17 +55,20 @@
     &__wrapper {
       display: flex;
       align-items: center;
-      border: var(--mp-select-border-width-default) solid var(--mp-select-border-default);
-      border-radius: var(--mp-select-radius);
-      background-color: var(--mp-select-surface-default);
+      border: var(--forge-select-border-width-default, var(--mp-select-border-width-default)) solid
+        var(--forge-select-border-default, var(--mp-select-border-default));
+      border-radius: var(--forge-select-radius, var(--mp-select-radius));
+      background-color: var(--forge-select-surface-default, var(--mp-select-surface-default));
       transition:
-        border-color var(--mp-input-transition-duration) var(--mp-input-transition-easing),
-        box-shadow var(--mp-input-transition-duration) var(--mp-input-transition-easing);
+        border-color var(--forge-select-input-transition-duration, var(--mp-input-transition-duration))
+          var(--forge-select-input-transition-easing, var(--mp-input-transition-easing)),
+        box-shadow var(--forge-select-input-transition-duration, var(--mp-input-transition-duration))
+          var(--forge-select-input-transition-easing, var(--mp-input-transition-easing));
       cursor: pointer;
 
       &:focus-within {
-        border-color: var(--mp-select-border-focus-visible);
-        box-shadow: var(--mp-select-focus-ring);
+        border-color: var(--forge-select-border-focus-visible, var(--mp-select-border-focus-visible));
+        box-shadow: var(--forge-select-focus-ring, var(--mp-select-focus-ring));
       }
     }
 
@@ -74,20 +79,20 @@
       border: none;
       outline: none;
       background: transparent;
-      color: var(--mp-select-text-secondary);
-      font-family: var(--mp-select-font-family);
-      line-height: var(--mp-select-line-height);
+      color: var(--forge-select-text-secondary, var(--mp-select-text-secondary));
+      font-family: var(--forge-select-font-family, var(--mp-select-font-family));
+      line-height: var(--forge-select-line-height, var(--mp-select-line-height));
       cursor: pointer;
       text-align: left;
 
       /* The searchable trigger is a text input: allow text entry and grey the
          placeholder that mirrors the selection/prompt. */
       &::placeholder {
-        color: var(--mp-select-text-disabled);
+        color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
       }
 
       &--placeholder {
-        color: var(--mp-select-text-disabled);
+        color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
       }
     }
 
@@ -95,7 +100,7 @@
       display: flex;
       align-items: center;
       pointer-events: none;
-      color: var(--mp-select-text-secondary);
+      color: var(--forge-select-text-secondary, var(--mp-select-text-secondary));
       flex-shrink: 0;
     }
 
@@ -104,25 +109,25 @@
       display: flex;
       align-items: center;
       flex-shrink: 0;
-      color: var(--mp-select-text-secondary);
+      color: var(--forge-select-text-secondary, var(--mp-select-text-secondary));
 
       &:empty {
         display: none;
       }
 
       &--start {
-        margin-inline-start: var(--mp-select-extension-padding-start);
+        margin-inline-start: var(--forge-select-extension-padding-start, var(--mp-select-extension-padding-start));
       }
 
       &--end {
-        margin-inline-end: var(--mp-select-extension-padding-end);
+        margin-inline-end: var(--forge-select-extension-padding-end, var(--mp-select-extension-padding-end));
       }
     }
 
     &__option-content {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-select-option-content-gap);
+      gap: var(--forge-select-option-content-gap, var(--mp-select-option-content-gap));
     }
 
     /* Plain list filling the ForgeDropdown panel (which owns the surface,
@@ -134,29 +139,31 @@
     }
 
     &__option {
-      padding: var(--mp-select-option-padding-block) var(--mp-select-option-padding-inline);
-      font-size: var(--mp-select-option-font-size);
-      color: var(--mp-select-option-text-default);
+      padding: var(--forge-select-option-padding-block, var(--mp-select-option-padding-block))
+        var(--forge-select-option-padding-inline, var(--mp-select-option-padding-inline));
+      font-size: var(--forge-select-option-font-size, var(--mp-select-option-font-size));
+      color: var(--forge-select-option-text-default, var(--mp-select-option-text-default));
       cursor: pointer;
 
       &--selected {
-        font-weight: var(--mp-select-option-font-weight-selected);
+        font-weight: var(--forge-select-option-font-weight-selected, var(--mp-select-option-font-weight-selected));
       }
 
       &--disabled {
-        color: var(--mp-select-text-disabled);
+        color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
         cursor: not-allowed;
       }
 
       &:hover:not(.forge-select__option--disabled) {
-        background-color: var(--mp-select-option-background-hover);
+        background-color: var(--forge-select-option-background-hover, var(--mp-select-option-background-hover));
       }
     }
 
     &__empty {
-      padding: var(--mp-select-option-padding-block) var(--mp-select-option-padding-inline);
-      font-size: var(--mp-select-option-font-size);
-      color: var(--mp-select-text-disabled);
+      padding: var(--forge-select-option-padding-block, var(--mp-select-option-padding-block))
+        var(--forge-select-option-padding-inline, var(--mp-select-option-padding-inline));
+      font-size: var(--forge-select-option-font-size, var(--mp-select-option-font-size));
+      color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
       font-style: italic;
     }
 
@@ -164,13 +171,16 @@
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
         .forge-select__field {
-          padding: var(--mp-select-size-#{$size}-padding-block)
-            var(--mp-select-size-#{$size}-padding-inline);
-          font-size: var(--mp-select-size-#{$size}-font-size);
+          padding: var(--forge-select-size-#{$size}-padding-block, var(--mp-select-size-#{$size}-padding-block))
+            var(--forge-select-size-#{$size}-padding-inline, var(--mp-select-size-#{$size}-padding-inline));
+          font-size: var(--forge-select-size-#{$size}-font-size, var(--mp-select-size-#{$size}-font-size));
         }
 
         .forge-select__chevron {
-          padding-right: var(--mp-select-size-#{$size}-padding-inline);
+          padding-right: var(
+            --forge-select-size-#{$size}-padding-inline,
+            var(--mp-select-size-#{$size}-padding-inline)
+          );
         }
       }
     }
@@ -178,10 +188,10 @@
     /* States */
     &--error {
       .forge-select__wrapper {
-        border-color: var(--mp-select-border-invalid);
+        border-color: var(--forge-select-border-invalid, var(--mp-select-border-invalid));
 
         &:focus-within {
-          box-shadow: var(--mp-select-focus-ring);
+          box-shadow: var(--forge-select-focus-ring, var(--mp-select-focus-ring));
         }
       }
     }
@@ -190,22 +200,22 @@
       pointer-events: none;
 
       .forge-select__wrapper {
-        background-color: var(--mp-select-surface-disabled);
+        background-color: var(--forge-select-surface-disabled, var(--mp-select-surface-disabled));
         cursor: not-allowed;
       }
 
       .forge-select__field {
-        color: var(--mp-select-text-disabled);
+        color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
         cursor: not-allowed;
       }
 
       .forge-select__chevron {
-        color: var(--mp-select-text-disabled);
+        color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
       }
     }
 
     &__error {
-      color: var(--mp-field-error);
+      color: var(--forge-select-field-error, var(--mp-field-error));
       margin: 0;
     }
 

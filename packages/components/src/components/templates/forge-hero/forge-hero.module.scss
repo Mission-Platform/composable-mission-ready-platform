@@ -12,6 +12,8 @@
  * localise class names, not element selectors).
  */
 
+@use './forge-hero-properties';
+
 @layer mp.components {
   .forge-hero {
     position: relative;
@@ -19,7 +21,7 @@
     flex-direction: column;
     justify-content: center;
     overflow: hidden;
-    border-radius: var(--mp-layout-hero-radius);
+    border-radius: var(--forge-hero-layout-hero-radius, var(--mp-layout-hero-radius));
     isolation: isolate;
 
     @supports (container-type: inline-size) {
@@ -28,46 +30,57 @@
 
     /* Vertical padding scale — canonical 2xs → 2xl. */
     &--2xs {
-      padding: var(--mp-layout-hero-padding-2xs-block) var(--mp-layout-hero-padding-2xs-inline);
+      padding: var(--forge-hero-layout-hero-padding-2xs-block, var(--mp-layout-hero-padding-2xs-block))
+        var(--forge-hero-layout-hero-padding-2xs-inline, var(--mp-layout-hero-padding-2xs-inline));
     }
 
     &--xs {
-      padding: var(--mp-layout-hero-padding-xs-block) var(--mp-layout-hero-padding-xs-inline);
+      padding: var(--forge-hero-layout-hero-padding-xs-block, var(--mp-layout-hero-padding-xs-block))
+        var(--forge-hero-layout-hero-padding-xs-inline, var(--mp-layout-hero-padding-xs-inline));
     }
 
     &--sm {
-      padding: var(--mp-layout-hero-padding-sm-block) var(--mp-layout-hero-padding-sm-inline);
+      padding: var(--forge-hero-layout-hero-padding-sm-block, var(--mp-layout-hero-padding-sm-block))
+        var(--forge-hero-layout-hero-padding-sm-inline, var(--mp-layout-hero-padding-sm-inline));
     }
 
     &--md {
-      padding: var(--mp-layout-hero-padding-md-block) var(--mp-layout-hero-padding-md-inline);
+      padding: var(--forge-hero-layout-hero-padding-md-block, var(--mp-layout-hero-padding-md-block))
+        var(--forge-hero-layout-hero-padding-md-inline, var(--mp-layout-hero-padding-md-inline));
 
       @container forge-hero (width >= 48rem) {
-        padding: var(--mp-layout-hero-padding-md-wide-block) var(--mp-layout-hero-padding-md-wide-inline);
+        padding: var(--forge-hero-layout-hero-padding-md-wide-block, var(--mp-layout-hero-padding-md-wide-block))
+          var(--forge-hero-layout-hero-padding-md-wide-inline, var(--mp-layout-hero-padding-md-wide-inline));
       }
     }
 
     &--lg {
-      padding: var(--mp-layout-hero-padding-lg-block) var(--mp-layout-hero-padding-lg-inline);
+      padding: var(--forge-hero-layout-hero-padding-lg-block, var(--mp-layout-hero-padding-lg-block))
+        var(--forge-hero-layout-hero-padding-lg-inline, var(--mp-layout-hero-padding-lg-inline));
 
       @container forge-hero (width >= 48rem) {
-        padding: var(--mp-layout-hero-padding-lg-wide-block) var(--mp-layout-hero-padding-lg-wide-inline);
+        padding: var(--forge-hero-layout-hero-padding-lg-wide-block, var(--mp-layout-hero-padding-lg-wide-block))
+          var(--forge-hero-layout-hero-padding-lg-wide-inline, var(--mp-layout-hero-padding-lg-wide-inline));
       }
     }
 
     &--xl {
-      padding: var(--mp-layout-hero-padding-xl-block) var(--mp-layout-hero-padding-xl-inline);
+      padding: var(--forge-hero-layout-hero-padding-xl-block, var(--mp-layout-hero-padding-xl-block))
+        var(--forge-hero-layout-hero-padding-xl-inline, var(--mp-layout-hero-padding-xl-inline));
 
       @container forge-hero (width >= 48rem) {
-        padding: var(--mp-layout-hero-padding-xl-wide-block) var(--mp-layout-hero-padding-xl-wide-inline);
+        padding: var(--forge-hero-layout-hero-padding-xl-wide-block, var(--mp-layout-hero-padding-xl-wide-block))
+          var(--forge-hero-layout-hero-padding-xl-wide-inline, var(--mp-layout-hero-padding-xl-wide-inline));
       }
     }
 
     &--2xl {
-      padding: var(--mp-layout-hero-padding-2xl-block) var(--mp-layout-hero-padding-2xl-inline);
+      padding: var(--forge-hero-layout-hero-padding-2xl-block, var(--mp-layout-hero-padding-2xl-block))
+        var(--forge-hero-layout-hero-padding-2xl-inline, var(--mp-layout-hero-padding-2xl-inline));
 
       @container forge-hero (width >= 48rem) {
-        padding: var(--mp-layout-hero-padding-2xl-wide-block) var(--mp-layout-hero-padding-2xl-wide-inline);
+        padding: var(--forge-hero-layout-hero-padding-2xl-wide-block, var(--mp-layout-hero-padding-2xl-wide-block))
+          var(--forge-hero-layout-hero-padding-2xl-wide-inline, var(--mp-layout-hero-padding-2xl-wide-inline));
       }
     }
 
@@ -78,7 +91,7 @@
     &__media {
       position: absolute;
       inset: 0;
-      z-index: -2;
+      z-index: var(--mp-z-index-base-media);
 
       img,
       video {
@@ -92,19 +105,19 @@
       content: '';
       position: absolute;
       inset: 0;
-      z-index: -1;
-      background-color: var(--mp-layout-hero-overlay);
+      z-index: var(--mp-z-index-base-media-overlay);
+      background-color: var(--forge-hero-layout-hero-overlay, var(--mp-layout-hero-overlay));
     }
 
     &__content {
       display: flex;
       flex-direction: column;
-      gap: var(--mp-layout-hero-content-gap-default);
+      gap: var(--forge-hero-layout-hero-content-gap-default, var(--mp-layout-hero-content-gap-default));
       max-width: 48rem;
       width: 100%;
 
       @container forge-hero (width >= 40rem) {
-        gap: var(--mp-layout-hero-content-gap-wide);
+        gap: var(--forge-hero-layout-hero-content-gap-wide, var(--mp-layout-hero-content-gap-wide));
       }
     }
 
@@ -138,11 +151,11 @@
     &__actions {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--mp-layout-hero-actions-gap-default);
-      margin-top: var(--mp-layout-hero-actions-margin-top);
+      gap: var(--forge-hero-layout-hero-actions-gap-default, var(--mp-layout-hero-actions-gap-default));
+      margin-top: var(--forge-hero-layout-hero-actions-margin-top, var(--mp-layout-hero-actions-margin-top));
 
       @container forge-hero (width >= 40rem) {
-        gap: var(--mp-layout-hero-actions-gap-wide);
+        gap: var(--forge-hero-layout-hero-actions-gap-wide, var(--mp-layout-hero-actions-gap-wide));
       }
     }
 
@@ -154,7 +167,7 @@
      * content inherits this colour here.
      */
     &--has-media {
-      color: var(--mp-layout-hero-text-inverse);
+      color: var(--forge-hero-layout-hero-text-inverse, var(--mp-layout-hero-text-inverse));
     }
   }
 }

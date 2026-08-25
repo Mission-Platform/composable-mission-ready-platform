@@ -7,11 +7,13 @@
  * BEM class names. Rules live in the shared `mp.components` cascade layer.
  */
 
+@use './forge-virtual-tree-view-properties';
+
 @layer mp.components {
   .virtual-tree {
-    font-family: var(--mp-data-virtual-tree-font-family);
-    font-size: var(--mp-data-virtual-tree-font-size);
-    color: var(--mp-data-virtual-tree-text-default);
+    font-family: var(--forge-virtual-tree-view-data-virtual-tree-font-family, var(--mp-data-virtual-tree-font-family));
+    font-size: var(--forge-virtual-tree-view-data-virtual-tree-font-size, var(--mp-data-virtual-tree-font-size));
+    color: var(--forge-virtual-tree-view-data-virtual-tree-text-default, var(--mp-data-virtual-tree-text-default));
     user-select: none;
     outline: none;
   }
@@ -23,25 +25,44 @@
 
   .virtual-tree__label {
     display: flex;
-    gap: var(--mp-data-virtual-tree-label-gap);
+    gap: var(--forge-virtual-tree-view-data-virtual-tree-label-gap, var(--mp-data-virtual-tree-label-gap));
     align-items: center;
     width: 100%;
     height: 100%;
-    padding-right: var(--mp-data-virtual-tree-label-padding-inline-end);
-    color: var(--mp-data-virtual-tree-text-default);
+    padding-right: var(
+      --forge-virtual-tree-view-data-virtual-tree-label-padding-inline-end,
+      var(--mp-data-virtual-tree-label-padding-inline-end)
+    );
+    color: var(--forge-virtual-tree-view-data-virtual-tree-text-default, var(--mp-data-virtual-tree-text-default));
     cursor: pointer;
-    border-radius: var(--mp-data-virtual-tree-label-radius);
+    border-radius: var(
+      --forge-virtual-tree-view-data-virtual-tree-label-radius,
+      var(--mp-data-virtual-tree-label-radius)
+    );
     outline: none;
-    transition: background-color var(--mp-data-virtual-tree-label-transition-duration)
-      var(--mp-data-virtual-tree-label-transition-easing);
+    transition: background-color
+      var(
+        --forge-virtual-tree-view-data-virtual-tree-label-transition-duration,
+        var(--mp-data-virtual-tree-label-transition-duration)
+      )
+      var(
+        --forge-virtual-tree-view-data-virtual-tree-label-transition-easing,
+        var(--mp-data-virtual-tree-label-transition-easing)
+      );
 
     &:hover {
-      background-color: var(--mp-data-virtual-tree-label-hover-surface);
+      background-color: var(
+        --forge-virtual-tree-view-data-virtual-tree-label-hover-surface,
+        var(--mp-data-virtual-tree-label-hover-surface)
+      );
     }
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--mp-data-virtual-tree-label-focus-ring);
+      box-shadow: var(
+        --forge-virtual-tree-view-data-virtual-tree-label-focus-ring,
+        var(--mp-data-virtual-tree-label-focus-ring)
+      );
     }
   }
 
@@ -50,19 +71,32 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: var(--mp-data-virtual-tree-toggle-size);
-    height: var(--mp-data-virtual-tree-toggle-size);
+    width: var(--forge-virtual-tree-view-data-virtual-tree-toggle-size, var(--mp-data-virtual-tree-toggle-size));
+    height: var(--forge-virtual-tree-view-data-virtual-tree-toggle-size, var(--mp-data-virtual-tree-toggle-size));
     padding: 0;
-    color: var(--mp-data-virtual-tree-text-toggle);
+    color: var(--forge-virtual-tree-view-data-virtual-tree-text-toggle, var(--mp-data-virtual-tree-text-toggle));
     cursor: pointer;
     background: none;
     border: none;
-    border-radius: var(--mp-data-virtual-tree-toggle-radius);
-    transition: color var(--mp-data-virtual-tree-toggle-transition-duration)
-      var(--mp-data-virtual-tree-toggle-transition-easing);
+    border-radius: var(
+      --forge-virtual-tree-view-data-virtual-tree-toggle-radius,
+      var(--mp-data-virtual-tree-toggle-radius)
+    );
+    transition: color
+      var(
+        --forge-virtual-tree-view-data-virtual-tree-toggle-transition-duration,
+        var(--mp-data-virtual-tree-toggle-transition-duration)
+      )
+      var(
+        --forge-virtual-tree-view-data-virtual-tree-toggle-transition-easing,
+        var(--mp-data-virtual-tree-toggle-transition-easing)
+      );
 
     &:hover {
-      color: var(--mp-data-virtual-tree-text-toggle-hover);
+      color: var(
+        --forge-virtual-tree-view-data-virtual-tree-text-toggle-hover,
+        var(--mp-data-virtual-tree-text-toggle-hover)
+      );
     }
   }
 

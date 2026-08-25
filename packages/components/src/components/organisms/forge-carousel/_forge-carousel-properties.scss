@@ -1,0 +1,381 @@
+/**
+ * Registered inherited custom properties for forge-carousel overrides.
+ */
+
+@property --forge-carousel-navigation-carousel-focus-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-focus-border-width);
+}
+
+@property --forge-carousel-navigation-carousel-focus-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-focus-border);
+}
+
+@property --forge-carousel-navigation-carousel-focus-offset {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-focus-offset);
+}
+
+@property --forge-carousel-navigation-carousel-viewport-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-viewport-radius);
+}
+
+@property --forge-carousel-navigation-carousel-track-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-track-transition-duration);
+}
+
+@property --forge-carousel-navigation-carousel-track-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-track-transition-easing);
+}
+
+@property --forge-carousel-navigation-carousel-control-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-size);
+}
+
+@property --forge-carousel-navigation-carousel-control-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-radius);
+}
+
+@property --forge-carousel-navigation-carousel-control-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-border-width);
+}
+
+@property --forge-carousel-navigation-carousel-control-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-border);
+}
+
+@property --forge-carousel-navigation-carousel-control-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-surface-default);
+}
+
+@property --forge-carousel-navigation-carousel-control-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-text);
+}
+
+@property --forge-carousel-navigation-carousel-control-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-font-size);
+}
+
+@property --forge-carousel-navigation-carousel-control-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-line-height);
+}
+
+@property --forge-carousel-navigation-carousel-control-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-shadow);
+}
+
+@property --forge-carousel-navigation-carousel-control-offset {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-offset);
+}
+
+@property --forge-carousel-navigation-carousel-control-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-opacity-disabled);
+}
+
+@property --forge-carousel-navigation-carousel-control-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-control-surface-hover);
+}
+
+@property --forge-carousel-navigation-carousel-indicators-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicators-gap);
+}
+
+@property --forge-carousel-navigation-carousel-indicators-margin-top {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicators-margin-top);
+}
+
+@property --forge-carousel-navigation-carousel-indicator-target-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-target-size);
+}
+
+@property --forge-carousel-navigation-carousel-indicator-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-radius);
+}
+
+@property --forge-carousel-navigation-carousel-indicator-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-surface-default);
+}
+
+@property --forge-carousel-navigation-carousel-indicator-dot-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-dot-size);
+}
+
+@property --forge-carousel-navigation-carousel-indicator-surface-dot-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-surface-dot-default);
+}
+
+@property --forge-carousel-navigation-carousel-indicator-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-transition-duration);
+}
+
+@property --forge-carousel-navigation-carousel-indicator-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-transition-easing);
+}
+
+@property --forge-carousel-navigation-carousel-indicator-surface-dot-selected {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-indicator-surface-dot-selected);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-size);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-margin-top {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-margin-top);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-border-width);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-border);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-radius);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-surface-default);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-text);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-font-size);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-line-height);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-shadow {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-shadow);
+}
+
+@property --forge-carousel-navigation-carousel-autoplay-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-autoplay-surface-hover);
+}
+
+@property --forge-carousel-navigation-carousel-tone-primary-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-primary-indicator);
+}
+
+@property --forge-carousel-navigation-carousel-tone-secondary-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-secondary-indicator);
+}
+
+@property --forge-carousel-navigation-carousel-tone-tertiary-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-tertiary-indicator);
+}
+
+@property --forge-carousel-navigation-carousel-tone-success-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-success-indicator);
+}
+
+@property --forge-carousel-navigation-carousel-tone-warning-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-warning-indicator);
+}
+
+@property --forge-carousel-navigation-carousel-tone-info-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-info-indicator);
+}
+
+@property --forge-carousel-navigation-carousel-tone-error-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-error-indicator);
+}
+
+@property --forge-carousel-navigation-carousel-tone-critical-indicator {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-critical-indicator);
+}
+
+@property --forge-carousel-navigation-carousel-tone-primary-control-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-primary-control-text);
+}
+
+@property --forge-carousel-navigation-carousel-tone-secondary-control-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-secondary-control-text);
+}
+
+@property --forge-carousel-navigation-carousel-tone-tertiary-control-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-tertiary-control-text);
+}
+
+@property --forge-carousel-navigation-carousel-tone-success-control-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-success-control-text);
+}
+
+@property --forge-carousel-navigation-carousel-tone-warning-control-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-warning-control-text);
+}
+
+@property --forge-carousel-navigation-carousel-tone-info-control-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-info-control-text);
+}
+
+@property --forge-carousel-navigation-carousel-tone-error-control-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-error-control-text);
+}
+
+@property --forge-carousel-navigation-carousel-tone-critical-control-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-critical-control-text);
+}
+
+@property --forge-carousel-navigation-carousel-tone-primary-control-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-primary-control-border);
+}
+
+@property --forge-carousel-navigation-carousel-tone-secondary-control-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-secondary-control-border);
+}
+
+@property --forge-carousel-navigation-carousel-tone-tertiary-control-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-tertiary-control-border);
+}
+
+@property --forge-carousel-navigation-carousel-tone-success-control-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-success-control-border);
+}
+
+@property --forge-carousel-navigation-carousel-tone-warning-control-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-warning-control-border);
+}
+
+@property --forge-carousel-navigation-carousel-tone-info-control-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-info-control-border);
+}
+
+@property --forge-carousel-navigation-carousel-tone-error-control-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-error-control-border);
+}
+
+@property --forge-carousel-navigation-carousel-tone-critical-control-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-navigation-carousel-tone-critical-control-border);
+}

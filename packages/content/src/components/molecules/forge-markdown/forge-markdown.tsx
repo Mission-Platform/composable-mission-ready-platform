@@ -1,4 +1,4 @@
-import { type MpElement, useMemo } from '@mission-platform/forge';
+import { useMemo, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 
 import styles from './forge-markdown.module.scss';
 import { MarkdownBlock } from './markdown-block';
@@ -8,6 +8,69 @@ import type { Token } from 'marked';
 
 export type { MarkdownSize } from './markdown-utilities';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface MarkdownStyleProperties {
+  readonly 'blockquote-border'?: string;
+  readonly 'blockquote-border-width'?: string;
+  readonly 'blockquote-padding-block'?: string;
+  readonly 'blockquote-padding-inline'?: string;
+  readonly 'blockquote-text'?: string;
+  readonly 'flow-block-gap'?: string;
+  readonly 'flow-heading-scroll-margin'?: string;
+  readonly 'flow-list-indent'?: string;
+  readonly 'flow-list-item-gap'?: string;
+  readonly 'flow-task-gap'?: string;
+  readonly 'image-radius'?: string;
+  readonly 'rule-border'?: string;
+  readonly 'rule-border-width'?: string;
+  readonly 'text-default'?: string;
+  readonly 'text-link'?: string;
+  readonly 'typography-font-family'?: string;
+  readonly 'typography-line-height'?: string;
+}
+
+export type MarkdownStyle = CSSStyleProperties & {
+  readonly '--forge-markdown-blockquote-border'?: string | undefined;
+  readonly '--forge-markdown-blockquote-border-width'?: string | undefined;
+  readonly '--forge-markdown-blockquote-padding-block'?: string | undefined;
+  readonly '--forge-markdown-blockquote-padding-inline'?: string | undefined;
+  readonly '--forge-markdown-blockquote-text'?: string | undefined;
+  readonly '--forge-markdown-flow-block-gap'?: string | undefined;
+  readonly '--forge-markdown-flow-heading-scroll-margin'?: string | undefined;
+  readonly '--forge-markdown-flow-list-indent'?: string | undefined;
+  readonly '--forge-markdown-flow-list-item-gap'?: string | undefined;
+  readonly '--forge-markdown-flow-task-gap'?: string | undefined;
+  readonly '--forge-markdown-image-radius'?: string | undefined;
+  readonly '--forge-markdown-rule-border'?: string | undefined;
+  readonly '--forge-markdown-rule-border-width'?: string | undefined;
+  readonly '--forge-markdown-text-default'?: string | undefined;
+  readonly '--forge-markdown-text-link'?: string | undefined;
+  readonly '--forge-markdown-typography-font-family'?: string | undefined;
+  readonly '--forge-markdown-typography-line-height'?: string | undefined;
+};
+
+function createMarkdownStyle(properties: Readonly<MarkdownStyleProperties> | undefined): MarkdownStyle | undefined {
+  return createForgeStyle({
+    '--forge-markdown-blockquote-border': properties?.['blockquote-border'],
+    '--forge-markdown-blockquote-border-width': properties?.['blockquote-border-width'],
+    '--forge-markdown-blockquote-padding-block': properties?.['blockquote-padding-block'],
+    '--forge-markdown-blockquote-padding-inline': properties?.['blockquote-padding-inline'],
+    '--forge-markdown-blockquote-text': properties?.['blockquote-text'],
+    '--forge-markdown-flow-block-gap': properties?.['flow-block-gap'],
+    '--forge-markdown-flow-heading-scroll-margin': properties?.['flow-heading-scroll-margin'],
+    '--forge-markdown-flow-list-indent': properties?.['flow-list-indent'],
+    '--forge-markdown-flow-list-item-gap': properties?.['flow-list-item-gap'],
+    '--forge-markdown-flow-task-gap': properties?.['flow-task-gap'],
+    '--forge-markdown-image-radius': properties?.['image-radius'],
+    '--forge-markdown-rule-border': properties?.['rule-border'],
+    '--forge-markdown-rule-border-width': properties?.['rule-border-width'],
+    '--forge-markdown-text-default': properties?.['text-default'],
+    '--forge-markdown-text-link': properties?.['text-link'],
+    '--forge-markdown-typography-font-family': properties?.['typography-font-family'],
+    '--forge-markdown-typography-line-height': properties?.['typography-line-height'],
+  }) as MarkdownStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface MarkdownProperties {
   /** The Markdown source to render. */
   source: string;
@@ -21,6 +84,9 @@ export interface MarkdownProperties {
    * not rewritten open in a new tab.
    */
   resolveHref?: (href: string) => string | undefined;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<MarkdownStyleProperties>;
 }
 
 /**
@@ -39,6 +105,8 @@ export interface MarkdownProperties {
  * styling through the co-located CSS Module `forge-markdown.module.scss`.
  */
 export function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement {
+  const style = createMarkdownStyle(properties.properties);
+
   const { source, size = 'md', resolveHref } = properties;
 
   const documentTokens = useMemo<Token[]>(() => lexMarkdown(source), [source]);
@@ -50,7 +118,10 @@ export function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpEleme
   const blocks = documentTokens.filter((token) => token.type !== 'space' && token.type !== 'def');
 
   return (
-    <div className={[styles['forge-markdown'], size ? `forge-size--${size}` : undefined]}>
+    <div
+      className={[styles['forge-markdown'], size ? `forge-size--${size}` : undefined]}
+      style={style}
+    >
       {blocks.map((token, index) => (
         <MarkdownBlock
           key={index}

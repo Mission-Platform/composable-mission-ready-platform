@@ -21,6 +21,7 @@
  */
 
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
+@use './forge-container-properties';
 
 @layer mp.layout {
   .forge-container--responsive {
@@ -53,13 +54,14 @@
   }
 
   .container-demo-viewport {
-    padding-block: var(--mp-layout-demo-padding);
-    border: var(--mp-layout-demo-border-width) dashed var(--mp-layout-demo-border);
-    border-radius: var(--mp-layout-demo-radius);
+    padding-block: var(--forge-container-layout-demo-padding, var(--mp-layout-demo-padding));
+    border: var(--forge-container-layout-demo-border-width, var(--mp-layout-demo-border-width)) dashed
+      var(--forge-container-layout-demo-border, var(--mp-layout-demo-border));
+    border-radius: var(--forge-container-layout-demo-radius, var(--mp-layout-demo-radius));
     background: repeating-linear-gradient(
       45deg,
-      var(--mp-layout-demo-surface-sunken),
-      var(--mp-layout-demo-surface-sunken) 8px,
+      var(--forge-container-layout-demo-surface-sunken, var(--mp-layout-demo-surface-sunken)),
+      var(--forge-container-layout-demo-surface-sunken, var(--mp-layout-demo-surface-sunken)) 8px,
       transparent 8px,
       transparent 16px
     );
@@ -70,11 +72,12 @@
     align-items: center;
     justify-content: center;
     min-height: 8rem;
-    padding: var(--mp-layout-demo-padding);
-    border: var(--mp-layout-demo-border-width) solid var(--mp-layout-demo-border);
-    border-radius: var(--mp-layout-demo-radius);
-    background: var(--mp-layout-demo-surface-raised);
-    color: var(--mp-layout-demo-text);
+    padding: var(--forge-container-layout-demo-padding, var(--mp-layout-demo-padding));
+    border: var(--forge-container-layout-demo-border-width, var(--mp-layout-demo-border-width)) solid
+      var(--forge-container-layout-demo-border, var(--mp-layout-demo-border));
+    border-radius: var(--forge-container-layout-demo-radius, var(--mp-layout-demo-radius));
+    background: var(--forge-container-layout-demo-surface-raised, var(--mp-layout-demo-surface-raised));
+    color: var(--forge-container-layout-demo-text, var(--mp-layout-demo-text));
     text-align: center;
   }
 }

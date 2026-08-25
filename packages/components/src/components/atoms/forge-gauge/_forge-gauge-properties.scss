@@ -1,0 +1,99 @@
+/**
+ * Registered inherited custom properties for forge-gauge overrides.
+ */
+
+@property --forge-gauge-feedback-gauge-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-gauge-gap, var(--mp-spacing-2));
+}
+
+@property --forge-gauge-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-gauge-feedback-gauge-label-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-gauge-label-gap, var(--mp-spacing-2));
+}
+
+@property --forge-gauge-font-family-sans {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-family-sans);
+}
+
+@property --forge-gauge-feedback-gauge-label-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-gauge-label-font-size, var(--mp-font-size-sm));
+}
+
+@property --forge-gauge-line-height-tight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-line-height-tight);
+}
+
+@property --forge-gauge-font-weight-medium {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-medium);
+}
+
+@property --forge-gauge-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-gauge-feedback-gauge-max-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-gauge-max-size, 12rem);
+}
+
+@property --forge-gauge-feedback-gauge-track {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-gauge-track, var(--mp-color-bg-muted));
+}
+
+@property --forge-gauge-feedback-gauge-fill {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-gauge-fill, var(--mp-color-primary-default));
+}
+
+@property --forge-gauge-feedback-gauge-transition-duration {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-gauge-transition-duration, var(--mp-duration-fast));
+}
+
+@property --forge-gauge-feedback-gauge-transition-easing {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-feedback-gauge-transition-easing, var(--mp-easing-standard));
+}
+
+@property --forge-gauge-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-sm);
+}
+
+@property --forge-gauge-size-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-md);
+}
+
+@property --forge-gauge-size-lg {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-lg);
+}

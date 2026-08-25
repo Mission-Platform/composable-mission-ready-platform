@@ -1,0 +1,510 @@
+/**
+ * Registered inherited custom properties for forge-scheduler overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-scheduler-container-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-border);
+}
+
+@property --forge-scheduler-container-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-border-width);
+}
+
+@property --forge-scheduler-container-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-gap);
+}
+
+@property --forge-scheduler-container-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-padding);
+}
+
+@property --forge-scheduler-container-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-radius);
+}
+
+@property --forge-scheduler-container-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-surface);
+}
+
+@property --forge-scheduler-day-heading-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-border);
+}
+
+@property --forge-scheduler-day-heading-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-gap);
+}
+
+@property --forge-scheduler-day-heading-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-padding);
+}
+
+@property --forge-scheduler-day-heading-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-surface);
+}
+
+@property --forge-scheduler-day-heading-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-text);
+}
+
+@property --forge-scheduler-day-heading-today-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-today-text);
+}
+
+@property --forge-scheduler-day-heading-today-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-today-weight);
+}
+
+@property --forge-scheduler-day-number-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-number-font-size);
+}
+
+@property --forge-scheduler-event-accent-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-accent-border-width);
+}
+
+@property --forge-scheduler-event-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-border);
+}
+
+@property --forge-scheduler-event-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-border-width);
+}
+
+@property --forge-scheduler-event-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-font-size);
+}
+
+@property --forge-scheduler-event-muted-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-muted-text);
+}
+
+@property --forge-scheduler-event-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-padding);
+}
+
+@property --forge-scheduler-event-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-radius);
+}
+
+@property --forge-scheduler-event-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-surface);
+}
+
+@property --forge-scheduler-event-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-text);
+}
+
+@property --forge-scheduler-event-time-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-time-font-family);
+}
+
+@property --forge-scheduler-event-title-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-title-weight);
+}
+
+@property --forge-scheduler-form-actions-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-form-actions-gap);
+}
+
+@property --forge-scheduler-form-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-form-gap);
+}
+
+@property --forge-scheduler-form-row-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-form-row-gap);
+}
+
+@property --forge-scheduler-grid-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-grid-border);
+}
+
+@property --forge-scheduler-grid-border-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-grid-border-subtle);
+}
+
+@property --forge-scheduler-grid-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-grid-border-width);
+}
+
+@property --forge-scheduler-grid-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-grid-surface);
+}
+
+@property --forge-scheduler-hour-label-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-hour-label-font-size);
+}
+
+@property --forge-scheduler-hour-label-padding-inline-end {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-hour-label-padding-inline-end);
+}
+
+@property --forge-scheduler-hour-label-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-hour-label-text);
+}
+
+@property --forge-scheduler-month-cell-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-cell-border);
+}
+
+@property --forge-scheduler-month-cell-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-cell-gap);
+}
+
+@property --forge-scheduler-month-cell-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-cell-padding);
+}
+
+@property --forge-scheduler-month-cell-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-cell-surface);
+}
+
+@property --forge-scheduler-month-cell-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-cell-text);
+}
+
+@property --forge-scheduler-month-chip-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-chip-font-size);
+}
+
+@property --forge-scheduler-month-chip-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-chip-padding-block);
+}
+
+@property --forge-scheduler-month-chip-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-chip-padding-inline);
+}
+
+@property --forge-scheduler-month-chip-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-chip-radius);
+}
+
+@property --forge-scheduler-month-chip-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-chip-surface);
+}
+
+@property --forge-scheduler-month-create-focus-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-create-focus-ring);
+}
+
+@property --forge-scheduler-month-create-focus-ring-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-create-focus-ring-width);
+}
+
+@property --forge-scheduler-month-create-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-create-radius);
+}
+
+@property --forge-scheduler-month-create-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-create-surface);
+}
+
+@property --forge-scheduler-month-day-number-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-day-number-font-size);
+}
+
+@property --forge-scheduler-month-events-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-events-gap);
+}
+
+@property --forge-scheduler-month-more-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-more-font-size);
+}
+
+@property --forge-scheduler-month-more-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-more-text);
+}
+
+@property --forge-scheduler-month-outside-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-outside-surface);
+}
+
+@property --forge-scheduler-month-outside-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-outside-text);
+}
+
+@property --forge-scheduler-month-today-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-today-ring);
+}
+
+@property --forge-scheduler-month-today-ring-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-today-ring-width);
+}
+
+@property --forge-scheduler-month-weekday-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-weekday-border);
+}
+
+@property --forge-scheduler-month-weekday-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-weekday-padding);
+}
+
+@property --forge-scheduler-navigation-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-navigation-gap);
+}
+
+@property --forge-scheduler-navigation-title-margin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-navigation-title-margin);
+}
+
+@property --forge-scheduler-toolbar-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-toolbar-gap);
+}
+
+@property --forge-scheduler-view-switcher-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-view-switcher-gap);
+}
+
+@property --forge-scheduler-weekday-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-weekday-font-size);
+}
+
+@property --forge-scheduler-weekday-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-weekday-text);
+}
+
+@property --forge-scheduler-year-busy-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-busy-surface);
+}
+
+@property --forge-scheduler-year-busy-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-busy-text);
+}
+
+@property --forge-scheduler-year-busy-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-busy-weight);
+}
+
+@property --forge-scheduler-year-day-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-day-font-size);
+}
+
+@property --forge-scheduler-year-day-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-day-radius);
+}
+
+@property --forge-scheduler-year-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-gap);
+}
+
+@property --forge-scheduler-year-mini-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-border);
+}
+
+@property --forge-scheduler-year-mini-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-gap);
+}
+
+@property --forge-scheduler-year-mini-grid-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-grid-gap);
+}
+
+@property --forge-scheduler-year-mini-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-padding);
+}
+
+@property --forge-scheduler-year-mini-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-radius);
+}
+
+@property --forge-scheduler-year-mini-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-surface);
+}
+
+@property --forge-scheduler-year-mini-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-text);
+}
+
+@property --forge-scheduler-year-outside-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-outside-text);
+}
+
+@property --forge-scheduler-year-outside-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-outside-weight);
+}
+
+@property --forge-scheduler-year-title-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-title-font-size);
+}
+
+@property --forge-scheduler-year-title-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-title-weight);
+}
+
+@property --forge-scheduler-year-today-ring {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-today-ring);
+}
+
+@property --forge-scheduler-year-today-ring-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-today-ring-width);
+}

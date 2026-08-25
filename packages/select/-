@@ -1,0 +1,468 @@
+@charset "UTF-8";
+/**
+ * Styling for the write-once `ForgeSelect`.
+ *
+ * `ForgeSelect` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its BEM appearance ships in the built package CSS (the
+ * two-stage compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the package-owned `mp.select` cascade layer. The floating listbox is rendered by
+ * the write-once `ForgeDropdown` (a `<Teleport>` panel anchored with CSS Anchor
+ * Positioning), so the `__listbox` here is a plain `<ul>` that fills the
+ * dropdown panel; the chevron is the write-once `IconChevron` (rotated via its
+ * own `direction` prop).
+ */
+/**
+ * Registered inherited custom properties for forge-select overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+@property --forge-select-field-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-field-gap);
+}
+@property --forge-select-field-required {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-field-required);
+}
+@property --forge-select-border-width-default {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-border-width-default);
+}
+@property --forge-select-border-default {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-border-default);
+}
+@property --forge-select-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-radius);
+}
+@property --forge-select-surface-default {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-surface-default);
+}
+@property --forge-select-input-transition-duration {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-input-transition-duration);
+}
+@property --forge-select-input-transition-easing {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-input-transition-easing);
+}
+@property --forge-select-border-focus-visible {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-border-focus-visible);
+}
+@property --forge-select-focus-ring {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-focus-ring);
+}
+@property --forge-select-text-secondary {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-text-secondary);
+}
+@property --forge-select-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-font-family);
+}
+@property --forge-select-line-height {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-line-height);
+}
+@property --forge-select-text-disabled {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-text-disabled);
+}
+@property --forge-select-extension-padding-start {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-extension-padding-start);
+}
+@property --forge-select-extension-padding-end {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-extension-padding-end);
+}
+@property --forge-select-option-content-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-option-content-gap);
+}
+@property --forge-select-option-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-option-padding-block);
+}
+@property --forge-select-option-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-option-padding-inline);
+}
+@property --forge-select-option-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-option-font-size);
+}
+@property --forge-select-option-text-default {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-option-text-default);
+}
+@property --forge-select-option-font-weight-selected {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-option-font-weight-selected);
+}
+@property --forge-select-option-background-hover {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-option-background-hover);
+}
+@property --forge-select-size-2xs-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-padding-block);
+}
+@property --forge-select-size-xs-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-padding-block);
+}
+@property --forge-select-size-sm-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-padding-block);
+}
+@property --forge-select-size-md-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-md-padding-block);
+}
+@property --forge-select-size-lg-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-padding-block);
+}
+@property --forge-select-size-xl-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-padding-block);
+}
+@property --forge-select-size-2xl-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-padding-block);
+}
+@property --forge-select-size-2xs-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-padding-inline);
+}
+@property --forge-select-size-xs-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-padding-inline);
+}
+@property --forge-select-size-sm-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-padding-inline);
+}
+@property --forge-select-size-md-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-md-padding-inline);
+}
+@property --forge-select-size-lg-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-padding-inline);
+}
+@property --forge-select-size-xl-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-padding-inline);
+}
+@property --forge-select-size-2xl-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-padding-inline);
+}
+@property --forge-select-size-2xs-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-2xs-font-size);
+}
+@property --forge-select-size-xs-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-xs-font-size);
+}
+@property --forge-select-size-sm-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-sm-font-size);
+}
+@property --forge-select-size-md-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-md-font-size);
+}
+@property --forge-select-size-lg-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-lg-font-size);
+}
+@property --forge-select-size-xl-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-xl-font-size);
+}
+@property --forge-select-size-2xl-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-size-2xl-font-size);
+}
+@property --forge-select-border-invalid {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-border-invalid);
+}
+@property --forge-select-surface-disabled {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-select-surface-disabled);
+}
+@property --forge-select-field-error {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-field-error);
+}
+@layer mp.select {
+  .forge-select {
+    display: flex;
+    flex-direction: column;
+    gap: var(--forge-select-field-gap, var(--mp-select-field-gap));
+  }
+  .forge-select__label--hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+  .forge-select__required {
+    color: var(--forge-select-field-required, var(--mp-field-required));
+    margin-left: 2px;
+  }
+  .forge-select {
+    /* Hidden native <select> backing the combobox for autofill / form submission. */
+  }
+  .forge-select__native {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+  .forge-select__wrapper {
+    display: flex;
+    align-items: center;
+    border: var(--forge-select-border-width-default, var(--mp-select-border-width-default)) solid var(--forge-select-border-default, var(--mp-select-border-default));
+    border-radius: var(--forge-select-radius, var(--mp-select-radius));
+    background-color: var(--forge-select-surface-default, var(--mp-select-surface-default));
+    transition: border-color var(--forge-select-input-transition-duration, var(--mp-input-transition-duration)) var(--forge-select-input-transition-easing, var(--mp-input-transition-easing)), box-shadow var(--forge-select-input-transition-duration, var(--mp-input-transition-duration)) var(--forge-select-input-transition-easing, var(--mp-input-transition-easing));
+    cursor: pointer;
+  }
+  .forge-select__wrapper:focus-within {
+    border-color: var(--forge-select-border-focus-visible, var(--mp-select-border-focus-visible));
+    box-shadow: var(--forge-select-focus-ring, var(--mp-select-focus-ring));
+  }
+  .forge-select__field {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--forge-select-text-secondary, var(--mp-select-text-secondary));
+    font-family: var(--forge-select-font-family, var(--mp-select-font-family));
+    line-height: var(--forge-select-line-height, var(--mp-select-line-height));
+    cursor: pointer;
+    text-align: left;
+    /* The searchable trigger is a text input: allow text entry and grey the
+       placeholder that mirrors the selection/prompt. */
+  }
+  .forge-select__field::placeholder {
+    color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
+  }
+  .forge-select__field--placeholder {
+    color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
+  }
+  .forge-select__chevron {
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    color: var(--forge-select-text-secondary, var(--mp-select-text-secondary));
+    flex-shrink: 0;
+  }
+  .forge-select {
+    /* Leading / trailing extension areas (icons, units, or buttons). */
+  }
+  .forge-select__extension {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: var(--forge-select-text-secondary, var(--mp-select-text-secondary));
+  }
+  .forge-select__extension:empty {
+    display: none;
+  }
+  .forge-select__extension--start {
+    margin-inline-start: var(--forge-select-extension-padding-start, var(--mp-select-extension-padding-start));
+  }
+  .forge-select__extension--end {
+    margin-inline-end: var(--forge-select-extension-padding-end, var(--mp-select-extension-padding-end));
+  }
+  .forge-select__option-content {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--forge-select-option-content-gap, var(--mp-select-option-content-gap));
+  }
+  .forge-select {
+    /* Plain list filling the ForgeDropdown panel (which owns the surface,
+       border, shadow, scrolling, and anchored positioning). */
+  }
+  .forge-select__listbox {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .forge-select__option {
+    padding: var(--forge-select-option-padding-block, var(--mp-select-option-padding-block)) var(--forge-select-option-padding-inline, var(--mp-select-option-padding-inline));
+    font-size: var(--forge-select-option-font-size, var(--mp-select-option-font-size));
+    color: var(--forge-select-option-text-default, var(--mp-select-option-text-default));
+    cursor: pointer;
+  }
+  .forge-select__option--selected {
+    font-weight: var(--forge-select-option-font-weight-selected, var(--mp-select-option-font-weight-selected));
+  }
+  .forge-select__option--disabled {
+    color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
+    cursor: not-allowed;
+  }
+  .forge-select__option:hover:not(.forge-select__option--disabled) {
+    background-color: var(--forge-select-option-background-hover, var(--mp-select-option-background-hover));
+  }
+  .forge-select__empty {
+    padding: var(--forge-select-option-padding-block, var(--mp-select-option-padding-block)) var(--forge-select-option-padding-inline, var(--mp-select-option-padding-inline));
+    font-size: var(--forge-select-option-font-size, var(--mp-select-option-font-size));
+    color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
+    font-style: italic;
+  }
+  .forge-select {
+    /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
+  }
+  .forge-select--2xs .forge-select__field {
+    padding: var(--forge-select-size-2xs-padding-block, var(--mp-select-size-2xs-padding-block)) var(--forge-select-size-2xs-padding-inline, var(--mp-select-size-2xs-padding-inline));
+    font-size: var(--forge-select-size-2xs-font-size, var(--mp-select-size-2xs-font-size));
+  }
+  .forge-select--2xs .forge-select__chevron {
+    padding-right: var(--forge-select-size-2xs-padding-inline, var(--mp-select-size-2xs-padding-inline));
+  }
+  .forge-select--xs .forge-select__field {
+    padding: var(--forge-select-size-xs-padding-block, var(--mp-select-size-xs-padding-block)) var(--forge-select-size-xs-padding-inline, var(--mp-select-size-xs-padding-inline));
+    font-size: var(--forge-select-size-xs-font-size, var(--mp-select-size-xs-font-size));
+  }
+  .forge-select--xs .forge-select__chevron {
+    padding-right: var(--forge-select-size-xs-padding-inline, var(--mp-select-size-xs-padding-inline));
+  }
+  .forge-select--sm .forge-select__field {
+    padding: var(--forge-select-size-sm-padding-block, var(--mp-select-size-sm-padding-block)) var(--forge-select-size-sm-padding-inline, var(--mp-select-size-sm-padding-inline));
+    font-size: var(--forge-select-size-sm-font-size, var(--mp-select-size-sm-font-size));
+  }
+  .forge-select--sm .forge-select__chevron {
+    padding-right: var(--forge-select-size-sm-padding-inline, var(--mp-select-size-sm-padding-inline));
+  }
+  .forge-select--md .forge-select__field {
+    padding: var(--forge-select-size-md-padding-block, var(--mp-select-size-md-padding-block)) var(--forge-select-size-md-padding-inline, var(--mp-select-size-md-padding-inline));
+    font-size: var(--forge-select-size-md-font-size, var(--mp-select-size-md-font-size));
+  }
+  .forge-select--md .forge-select__chevron {
+    padding-right: var(--forge-select-size-md-padding-inline, var(--mp-select-size-md-padding-inline));
+  }
+  .forge-select--lg .forge-select__field {
+    padding: var(--forge-select-size-lg-padding-block, var(--mp-select-size-lg-padding-block)) var(--forge-select-size-lg-padding-inline, var(--mp-select-size-lg-padding-inline));
+    font-size: var(--forge-select-size-lg-font-size, var(--mp-select-size-lg-font-size));
+  }
+  .forge-select--lg .forge-select__chevron {
+    padding-right: var(--forge-select-size-lg-padding-inline, var(--mp-select-size-lg-padding-inline));
+  }
+  .forge-select--xl .forge-select__field {
+    padding: var(--forge-select-size-xl-padding-block, var(--mp-select-size-xl-padding-block)) var(--forge-select-size-xl-padding-inline, var(--mp-select-size-xl-padding-inline));
+    font-size: var(--forge-select-size-xl-font-size, var(--mp-select-size-xl-font-size));
+  }
+  .forge-select--xl .forge-select__chevron {
+    padding-right: var(--forge-select-size-xl-padding-inline, var(--mp-select-size-xl-padding-inline));
+  }
+  .forge-select--2xl .forge-select__field {
+    padding: var(--forge-select-size-2xl-padding-block, var(--mp-select-size-2xl-padding-block)) var(--forge-select-size-2xl-padding-inline, var(--mp-select-size-2xl-padding-inline));
+    font-size: var(--forge-select-size-2xl-font-size, var(--mp-select-size-2xl-font-size));
+  }
+  .forge-select--2xl .forge-select__chevron {
+    padding-right: var(--forge-select-size-2xl-padding-inline, var(--mp-select-size-2xl-padding-inline));
+  }
+  .forge-select {
+    /* States */
+  }
+  .forge-select--error .forge-select__wrapper {
+    border-color: var(--forge-select-border-invalid, var(--mp-select-border-invalid));
+  }
+  .forge-select--error .forge-select__wrapper:focus-within {
+    box-shadow: var(--forge-select-focus-ring, var(--mp-select-focus-ring));
+  }
+  .forge-select--disabled {
+    pointer-events: none;
+  }
+  .forge-select--disabled .forge-select__wrapper {
+    background-color: var(--forge-select-surface-disabled, var(--mp-select-surface-disabled));
+    cursor: not-allowed;
+  }
+  .forge-select--disabled .forge-select__field {
+    color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
+    cursor: not-allowed;
+  }
+  .forge-select--disabled .forge-select__chevron {
+    color: var(--forge-select-text-disabled, var(--mp-select-text-disabled));
+  }
+  .forge-select__error {
+    color: var(--forge-select-field-error, var(--mp-field-error));
+    margin: 0;
+  }
+  .forge-select__hint {
+    margin: 0;
+  }
+}

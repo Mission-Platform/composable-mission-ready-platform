@@ -1,0 +1,183 @@
+/**
+ * Registered inherited custom properties for forge-hero overrides.
+ */
+
+@property --forge-hero-layout-hero-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-radius);
+}
+
+@property --forge-hero-layout-hero-padding-2xs-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-2xs-block);
+}
+
+@property --forge-hero-layout-hero-padding-2xs-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-2xs-inline);
+}
+
+@property --forge-hero-layout-hero-padding-xs-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-xs-block);
+}
+
+@property --forge-hero-layout-hero-padding-xs-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-xs-inline);
+}
+
+@property --forge-hero-layout-hero-padding-sm-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-sm-block);
+}
+
+@property --forge-hero-layout-hero-padding-sm-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-sm-inline);
+}
+
+@property --forge-hero-layout-hero-padding-md-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-md-block);
+}
+
+@property --forge-hero-layout-hero-padding-md-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-md-inline);
+}
+
+@property --forge-hero-layout-hero-padding-md-wide-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-md-wide-block);
+}
+
+@property --forge-hero-layout-hero-padding-md-wide-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-md-wide-inline);
+}
+
+@property --forge-hero-layout-hero-padding-lg-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-lg-block);
+}
+
+@property --forge-hero-layout-hero-padding-lg-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-lg-inline);
+}
+
+@property --forge-hero-layout-hero-padding-lg-wide-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-lg-wide-block);
+}
+
+@property --forge-hero-layout-hero-padding-lg-wide-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-lg-wide-inline);
+}
+
+@property --forge-hero-layout-hero-padding-xl-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-xl-block);
+}
+
+@property --forge-hero-layout-hero-padding-xl-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-xl-inline);
+}
+
+@property --forge-hero-layout-hero-padding-xl-wide-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-xl-wide-block);
+}
+
+@property --forge-hero-layout-hero-padding-xl-wide-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-xl-wide-inline);
+}
+
+@property --forge-hero-layout-hero-padding-2xl-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-2xl-block);
+}
+
+@property --forge-hero-layout-hero-padding-2xl-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-2xl-inline);
+}
+
+@property --forge-hero-layout-hero-padding-2xl-wide-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-2xl-wide-block);
+}
+
+@property --forge-hero-layout-hero-padding-2xl-wide-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-padding-2xl-wide-inline);
+}
+
+@property --forge-hero-layout-hero-overlay {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-overlay);
+}
+
+@property --forge-hero-layout-hero-content-gap-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-content-gap-default);
+}
+
+@property --forge-hero-layout-hero-content-gap-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-content-gap-wide);
+}
+
+@property --forge-hero-layout-hero-actions-gap-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-actions-gap-default);
+}
+
+@property --forge-hero-layout-hero-actions-margin-top {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-actions-margin-top);
+}
+
+@property --forge-hero-layout-hero-actions-gap-wide {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-actions-gap-wide);
+}
+
+@property --forge-hero-layout-hero-text-inverse {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-hero-text-inverse);
+}

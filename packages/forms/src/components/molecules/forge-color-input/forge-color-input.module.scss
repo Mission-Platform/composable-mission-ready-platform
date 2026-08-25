@@ -1,3 +1,5 @@
+@use './forge-color-input-properties';
+
 /**
  * Styling for the write-once `ForgeColorInput`.
  *
@@ -12,7 +14,7 @@
   .forge-color-input {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-color-input-gap-stack);
+    gap: var(--forge-color-input-gap-stack, var(--mp-color-input-gap-stack));
 
     &__label {
       &--hidden {
@@ -29,25 +31,27 @@
     }
 
     &__required {
-      color: var(--mp-form-text-invalid);
+      color: var(--forge-color-input-form-text-invalid, var(--mp-form-text-invalid));
       margin-left: 2px;
     }
 
     &__wrapper {
       display: flex;
       align-items: center;
-      gap: var(--mp-color-input-gap-inline);
-      border: var(--mp-color-input-border-width) solid var(--mp-color-input-border-default);
-      border-radius: var(--mp-color-input-radius);
-      background-color: var(--mp-color-input-surface-default);
+      gap: var(--forge-color-input-gap-inline, var(--mp-color-input-gap-inline));
+      border: var(--forge-color-input-border-width, var(--mp-color-input-border-width)) solid
+        var(--forge-color-input-border-default, var(--mp-color-input-border-default));
+      border-radius: var(--forge-color-input-radius, var(--mp-color-input-radius));
+      background-color: var(--forge-color-input-surface-default, var(--mp-color-input-surface-default));
       transition:
-        border-color var(--mp-color-input-transition-duration)
-          var(--mp-color-input-transition-easing),
-        box-shadow var(--mp-color-input-transition-duration) var(--mp-color-input-transition-easing);
+        border-color var(--forge-color-input-transition-duration, var(--mp-color-input-transition-duration))
+          var(--forge-color-input-transition-easing, var(--mp-color-input-transition-easing)),
+        box-shadow var(--forge-color-input-transition-duration, var(--mp-color-input-transition-duration))
+          var(--forge-color-input-transition-easing, var(--mp-color-input-transition-easing));
 
       &:focus-within {
-        border-color: var(--mp-color-input-border-focus);
-        box-shadow: var(--mp-color-input-focus-ring);
+        border-color: var(--forge-color-input-border-focus, var(--mp-color-input-border-focus));
+        box-shadow: var(--forge-color-input-focus-ring, var(--mp-color-input-focus-ring));
       }
     }
 
@@ -63,15 +67,16 @@
     &__swatch-label {
       display: block;
       flex-shrink: 0;
-      border-radius: calc(var(--mp-color-input-radius) - 2px) 0 0
-        calc(var(--mp-color-input-radius) - 2px);
-      border-right: var(--mp-color-input-border-width) solid var(--mp-color-input-border-default);
+      border-radius: calc(var(--forge-color-input-radius, var(--mp-color-input-radius)) - 2px) 0 0
+        calc(var(--forge-color-input-radius, var(--mp-color-input-radius)) - 2px);
+      border-right: var(--forge-color-input-border-width, var(--mp-color-input-border-width)) solid
+        var(--forge-color-input-border-default, var(--mp-color-input-border-default));
       cursor: pointer;
-      transition: opacity var(--mp-color-input-transition-duration)
-        var(--mp-color-input-transition-easing);
+      transition: opacity var(--forge-color-input-transition-duration, var(--mp-color-input-transition-duration))
+        var(--forge-color-input-transition-easing, var(--mp-color-input-transition-easing));
 
       &:hover {
-        opacity: var(--mp-color-input-hover-opacity);
+        opacity: var(--forge-color-input-hover-opacity, var(--mp-color-input-hover-opacity));
       }
     }
 
@@ -82,12 +87,12 @@
       border: none;
       outline: none;
       background: transparent;
-      color: var(--mp-color-input-text-default);
-      font-family: var(--mp-color-input-font-family);
-      letter-spacing: var(--mp-color-input-letter-spacing);
+      color: var(--forge-color-input-text-default, var(--mp-color-input-text-default));
+      font-family: var(--forge-color-input-font-family, var(--mp-color-input-font-family));
+      letter-spacing: var(--forge-color-input-letter-spacing, var(--mp-color-input-letter-spacing));
 
       &::placeholder {
-        color: var(--mp-color-input-text-placeholder);
+        color: var(--forge-color-input-text-placeholder, var(--mp-color-input-text-placeholder));
       }
     }
 
@@ -95,14 +100,17 @@
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
         .forge-color-input__swatch-label {
-          width: var(--mp-color-input-size-#{$size}-swatch);
-          height: var(--mp-color-input-size-#{$size}-swatch);
+          width: var(--forge-color-input-size-#{$size}-swatch, var(--mp-color-input-size-#{$size}-swatch));
+          height: var(--forge-color-input-size-#{$size}-swatch, var(--mp-color-input-size-#{$size}-swatch));
         }
 
         .forge-color-input__text {
-          padding: var(--mp-color-input-size-#{$size}-padding-block)
-            var(--mp-color-input-size-#{$size}-padding-inline);
-          font-size: var(--mp-color-input-size-#{$size}-font-size);
+          padding: var(
+              --forge-color-input-size-#{$size}-padding-block,
+              var(--mp-color-input-size-#{$size}-padding-block)
+            )
+            var(--forge-color-input-size-#{$size}-padding-inline, var(--mp-color-input-size-#{$size}-padding-inline));
+          font-size: var(--forge-color-input-size-#{$size}-font-size, var(--mp-color-input-size-#{$size}-font-size));
         }
       }
     }
@@ -110,25 +118,25 @@
     /* States */
     &--error {
       .forge-color-input__wrapper {
-        border-color: var(--mp-color-input-border-invalid);
+        border-color: var(--forge-color-input-border-invalid, var(--mp-color-input-border-invalid));
 
         &:focus-within {
-          box-shadow: var(--mp-color-input-focus-ring-invalid);
+          box-shadow: var(--forge-color-input-focus-ring-invalid, var(--mp-color-input-focus-ring-invalid));
         }
       }
     }
 
     &--disabled {
-      opacity: var(--mp-color-input-disabled-opacity);
+      opacity: var(--forge-color-input-disabled-opacity, var(--mp-color-input-disabled-opacity));
       pointer-events: none;
 
       .forge-color-input__wrapper {
-        background-color: var(--mp-color-input-surface-disabled);
+        background-color: var(--forge-color-input-surface-disabled, var(--mp-color-input-surface-disabled));
       }
     }
 
     &__error {
-      color: var(--mp-color-input-text-error);
+      color: var(--forge-color-input-text-error, var(--mp-color-input-text-error));
       margin: 0;
     }
 

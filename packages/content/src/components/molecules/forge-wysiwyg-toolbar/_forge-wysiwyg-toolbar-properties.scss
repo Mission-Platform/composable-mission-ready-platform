@@ -1,0 +1,60 @@
+/**
+ * Registered inherited custom properties for forge-wysiwyg-toolbar overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-wysiwyg-toolbar-editor-toolbar-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-toolbar-gap);
+}
+
+@property --forge-wysiwyg-toolbar-editor-toolbar-padding {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-toolbar-padding);
+}
+
+@property --forge-wysiwyg-toolbar-editor-toolbar-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-toolbar-border-width);
+}
+
+@property --forge-wysiwyg-toolbar-editor-toolbar-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-toolbar-border);
+}
+
+@property --forge-wysiwyg-toolbar-editor-toolbar-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-toolbar-surface);
+}
+
+@property --forge-wysiwyg-toolbar-editor-toolbar-group-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-toolbar-group-gap);
+}
+
+@property --forge-wysiwyg-toolbar-editor-toolbar-group-padding-inline-end {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-toolbar-group-padding-inline-end);
+}
+
+@property --forge-wysiwyg-toolbar-editor-toolbar-group-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-toolbar-group-border-width);
+}
+
+@property --forge-wysiwyg-toolbar-editor-toolbar-group-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-editor-toolbar-group-border);
+}

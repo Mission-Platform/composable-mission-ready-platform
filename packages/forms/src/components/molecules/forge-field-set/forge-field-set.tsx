@@ -1,4 +1,10 @@
-import { type ClassValue, type MpChild, type MpElement } from '@mission-platform/forge';
+import {
+  createForgeStyle,
+  type ClassValue,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 
 import styles from './forge-field-set.module.scss';
@@ -6,6 +12,42 @@ import styles from './forge-field-set.module.scss';
 /** Size token — canonical 2xs → 2xl scale. */
 export type FieldSetSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface FieldSetStyleProperties {
+  readonly border?: string;
+  readonly 'border-width'?: string;
+  readonly 'content-gap'?: string;
+  readonly 'description-margin'?: string;
+  readonly 'legend-padding'?: string;
+  readonly padding?: string;
+  readonly radius?: string;
+  readonly surface?: string;
+}
+
+export type FieldSetStyle = CSSStyleProperties & {
+  readonly '--forge-field-set-border'?: string | undefined;
+  readonly '--forge-field-set-border-width'?: string | undefined;
+  readonly '--forge-field-set-content-gap'?: string | undefined;
+  readonly '--forge-field-set-description-margin'?: string | undefined;
+  readonly '--forge-field-set-legend-padding'?: string | undefined;
+  readonly '--forge-field-set-padding'?: string | undefined;
+  readonly '--forge-field-set-radius'?: string | undefined;
+  readonly '--forge-field-set-surface'?: string | undefined;
+};
+
+function createFieldSetStyle(properties: Readonly<FieldSetStyleProperties> | undefined): FieldSetStyle | undefined {
+  return createForgeStyle({
+    '--forge-field-set-border': properties?.['border'],
+    '--forge-field-set-border-width': properties?.['border-width'],
+    '--forge-field-set-content-gap': properties?.['content-gap'],
+    '--forge-field-set-description-margin': properties?.['description-margin'],
+    '--forge-field-set-legend-padding': properties?.['legend-padding'],
+    '--forge-field-set-padding': properties?.['padding'],
+    '--forge-field-set-radius': properties?.['radius'],
+    '--forge-field-set-surface': properties?.['surface'],
+  }) as FieldSetStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface FieldSetProperties {
   /**
    * Extra class(es) merged onto the control's root element. Applied last so
@@ -24,6 +66,9 @@ export interface FieldSetProperties {
   flush?: boolean;
   /** Size token controlling the group's scale. Defaults to `'md'`. */
   size?: FieldSetSize;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<FieldSetStyleProperties>;
 }
 
 /**
@@ -44,6 +89,8 @@ export interface FieldSetProperties {
  * `legend` prop (the neutral dialect cannot introspect named-slot presence).
  */
 export function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpElement {
+  const style = createFieldSetStyle(properties.properties);
+
   const { legend, description, disabled = false, flush = false, size = 'md' } = properties;
 
   return (
@@ -55,6 +102,7 @@ export function ForgeFieldSet(properties: Readonly<FieldSetProperties>): MpEleme
         properties.className,
       ]}
       disabled={disabled ? true : undefined}
+      style={style}
     >
       {legend ? (
         <legend className={styles['forge-field-set__legend']}>

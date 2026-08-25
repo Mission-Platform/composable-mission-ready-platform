@@ -1,4 +1,11 @@
-import { classNames, type MpChild, type MpElement, Slot } from '@mission-platform/forge';
+import {
+  classNames,
+  Slot,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-device-mock.module.scss';
 
@@ -9,6 +16,74 @@ export type DeviceMockOrientation = 'portrait' | 'landscape';
 /** Size token — canonical 2xs → 2xl scale. Scales the whole frame via `em`-relative dimensions. */
 export type DeviceMockSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface DeviceMockStyleProperties {
+  readonly 'media-device-browser-address-radius'?: string;
+  readonly 'media-device-browser-address-surface'?: string;
+  readonly 'media-device-browser-address-text'?: string;
+  readonly 'media-device-browser-border'?: string;
+  readonly 'media-device-browser-border-width'?: string;
+  readonly 'media-device-browser-chrome'?: string;
+  readonly 'media-device-browser-control-radius'?: string;
+  readonly 'media-device-browser-control-surface'?: string;
+  readonly 'media-device-browser-radius'?: string;
+  readonly 'media-device-browser-surface'?: string;
+  readonly 'media-device-camera-radius'?: string;
+  readonly 'media-device-detail-surface'?: string;
+  readonly 'media-device-frame-shadow-browser'?: string;
+  readonly 'media-device-frame-shadow-desktop'?: string;
+  readonly 'media-device-frame-shadow-handheld'?: string;
+  readonly 'media-device-frame-surface'?: string;
+  readonly 'media-device-screen-surface'?: string;
+  readonly 'media-device-screen-text'?: string;
+}
+
+export type DeviceMockStyle = CSSStyleProperties & {
+  readonly '--forge-device-mock-media-device-browser-address-radius'?: string | undefined;
+  readonly '--forge-device-mock-media-device-browser-address-surface'?: string | undefined;
+  readonly '--forge-device-mock-media-device-browser-address-text'?: string | undefined;
+  readonly '--forge-device-mock-media-device-browser-border'?: string | undefined;
+  readonly '--forge-device-mock-media-device-browser-border-width'?: string | undefined;
+  readonly '--forge-device-mock-media-device-browser-chrome'?: string | undefined;
+  readonly '--forge-device-mock-media-device-browser-control-radius'?: string | undefined;
+  readonly '--forge-device-mock-media-device-browser-control-surface'?: string | undefined;
+  readonly '--forge-device-mock-media-device-browser-radius'?: string | undefined;
+  readonly '--forge-device-mock-media-device-browser-surface'?: string | undefined;
+  readonly '--forge-device-mock-media-device-camera-radius'?: string | undefined;
+  readonly '--forge-device-mock-media-device-detail-surface'?: string | undefined;
+  readonly '--forge-device-mock-media-device-frame-shadow-browser'?: string | undefined;
+  readonly '--forge-device-mock-media-device-frame-shadow-desktop'?: string | undefined;
+  readonly '--forge-device-mock-media-device-frame-shadow-handheld'?: string | undefined;
+  readonly '--forge-device-mock-media-device-frame-surface'?: string | undefined;
+  readonly '--forge-device-mock-media-device-screen-surface'?: string | undefined;
+  readonly '--forge-device-mock-media-device-screen-text'?: string | undefined;
+};
+
+function createDeviceMockStyle(
+  properties: Readonly<DeviceMockStyleProperties> | undefined,
+): DeviceMockStyle | undefined {
+  return createForgeStyle({
+    '--forge-device-mock-media-device-browser-address-radius': properties?.['media-device-browser-address-radius'],
+    '--forge-device-mock-media-device-browser-address-surface': properties?.['media-device-browser-address-surface'],
+    '--forge-device-mock-media-device-browser-address-text': properties?.['media-device-browser-address-text'],
+    '--forge-device-mock-media-device-browser-border': properties?.['media-device-browser-border'],
+    '--forge-device-mock-media-device-browser-border-width': properties?.['media-device-browser-border-width'],
+    '--forge-device-mock-media-device-browser-chrome': properties?.['media-device-browser-chrome'],
+    '--forge-device-mock-media-device-browser-control-radius': properties?.['media-device-browser-control-radius'],
+    '--forge-device-mock-media-device-browser-control-surface': properties?.['media-device-browser-control-surface'],
+    '--forge-device-mock-media-device-browser-radius': properties?.['media-device-browser-radius'],
+    '--forge-device-mock-media-device-browser-surface': properties?.['media-device-browser-surface'],
+    '--forge-device-mock-media-device-camera-radius': properties?.['media-device-camera-radius'],
+    '--forge-device-mock-media-device-detail-surface': properties?.['media-device-detail-surface'],
+    '--forge-device-mock-media-device-frame-shadow-browser': properties?.['media-device-frame-shadow-browser'],
+    '--forge-device-mock-media-device-frame-shadow-desktop': properties?.['media-device-frame-shadow-desktop'],
+    '--forge-device-mock-media-device-frame-shadow-handheld': properties?.['media-device-frame-shadow-handheld'],
+    '--forge-device-mock-media-device-frame-surface': properties?.['media-device-frame-surface'],
+    '--forge-device-mock-media-device-screen-surface': properties?.['media-device-screen-surface'],
+    '--forge-device-mock-media-device-screen-text': properties?.['media-device-screen-text'],
+  }) as DeviceMockStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface DeviceMockProperties {
   /** The content rendered inside the component. */
   children?: MpChild | readonly MpChild[];
@@ -31,6 +106,9 @@ export interface DeviceMockProperties {
   size?: DeviceMockSize;
   /** Accessible label for the frame. Defaults to a device-specific label. */
   ariaLabel?: string;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<DeviceMockStyleProperties>;
 }
 
 /** Human-readable fallback labels used when no explicit `ariaLabel` is given. */
@@ -55,6 +133,8 @@ const defaultLabels: Record<DeviceMockType, string> = {
  * `url` address bar. The default slot is projected onto the device's screen.
  */
 export function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpElement {
+  const style = createDeviceMockStyle(properties.properties);
+
   const { device = 'mobile', orientation = 'portrait', url, size = 'md', ariaLabel } = properties;
 
   const isHandheld = device === 'mobile' || device === 'tablet';
@@ -77,6 +157,7 @@ export function ForgeDeviceMock(properties: Readonly<DeviceMockProperties>): MpE
       className={className}
       role="img"
       aria-label={ariaLabel ?? defaultLabels[device]}
+      style={style}
     >
       {device === 'browser' ? (
         <div className={styles['forge-device-mock__chrome']}>

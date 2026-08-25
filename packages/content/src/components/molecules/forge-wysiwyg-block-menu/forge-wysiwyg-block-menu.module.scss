@@ -1,31 +1,58 @@
+@use './forge-wysiwyg-block-menu-properties';
+
 @layer mp.content {
   .wysiwyg-block-menu__trigger {
     display: inline-flex;
-    gap: var(--mp-editor-block-menu-trigger-gap);
+    gap: var(--forge-wysiwyg-block-menu-editor-block-menu-trigger-gap, var(--mp-editor-block-menu-trigger-gap));
     align-items: center;
     min-width: 8rem;
-    padding: var(--mp-editor-block-menu-trigger-padding-block)
-      var(--mp-editor-block-menu-trigger-padding-inline);
-    color: var(--mp-editor-block-menu-trigger-text);
+    padding: var(
+        --forge-wysiwyg-block-menu-editor-block-menu-trigger-padding-block,
+        var(--mp-editor-block-menu-trigger-padding-block)
+      )
+      var(
+        --forge-wysiwyg-block-menu-editor-block-menu-trigger-padding-inline,
+        var(--mp-editor-block-menu-trigger-padding-inline)
+      );
+    color: var(--forge-wysiwyg-block-menu-editor-block-menu-trigger-text, var(--mp-editor-block-menu-trigger-text));
     font: inherit;
     background-color: transparent;
-    border: var(--mp-editor-block-menu-trigger-border-width) solid
-      var(--mp-editor-block-menu-trigger-border);
-    border-radius: var(--mp-editor-block-menu-trigger-radius);
+    border: var(
+        --forge-wysiwyg-block-menu-editor-block-menu-trigger-border-width,
+        var(--mp-editor-block-menu-trigger-border-width)
+      )
+      solid var(--forge-wysiwyg-block-menu-editor-block-menu-trigger-border, var(--mp-editor-block-menu-trigger-border));
+    border-radius: var(
+      --forge-wysiwyg-block-menu-editor-block-menu-trigger-radius,
+      var(--mp-editor-block-menu-trigger-radius)
+    );
     cursor: pointer;
 
     &:hover:not(:disabled) {
-      background-color: var(--mp-editor-block-menu-trigger-surface-hover);
+      background-color: var(
+        --forge-wysiwyg-block-menu-editor-block-menu-trigger-surface-hover,
+        var(--mp-editor-block-menu-trigger-surface-hover)
+      );
     }
 
     &:focus-visible {
-      outline: var(--mp-editor-block-menu-trigger-focus-border-width) solid
-        var(--mp-editor-block-menu-trigger-focus-border);
+      outline: var(
+          --forge-wysiwyg-block-menu-editor-block-menu-trigger-focus-border-width,
+          var(--mp-editor-block-menu-trigger-focus-border-width)
+        )
+        solid
+        var(
+          --forge-wysiwyg-block-menu-editor-block-menu-trigger-focus-border,
+          var(--mp-editor-block-menu-trigger-focus-border)
+        );
       outline-offset: 1px;
     }
 
     &:disabled {
-      opacity: var(--mp-editor-block-menu-trigger-opacity-disabled);
+      opacity: var(
+        --forge-wysiwyg-block-menu-editor-block-menu-trigger-opacity-disabled,
+        var(--mp-editor-block-menu-trigger-opacity-disabled)
+      );
       cursor: not-allowed;
     }
   }
@@ -38,42 +65,76 @@
   .wysiwyg-block-menu__list {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-editor-block-menu-list-gap);
+    gap: var(--forge-wysiwyg-block-menu-editor-block-menu-list-gap, var(--mp-editor-block-menu-list-gap));
     min-width: 10rem;
     margin: 0;
-    padding: var(--mp-editor-block-menu-list-padding);
-    color: var(--mp-editor-block-menu-list-text);
-    background-color: var(--mp-editor-block-menu-list-surface);
-    border-radius: var(--mp-editor-block-menu-list-radius);
+    padding: var(--forge-wysiwyg-block-menu-editor-block-menu-list-padding, var(--mp-editor-block-menu-list-padding));
+    color: var(--forge-wysiwyg-block-menu-editor-block-menu-list-text, var(--mp-editor-block-menu-list-text));
+    background-color: var(
+      --forge-wysiwyg-block-menu-editor-block-menu-list-surface,
+      var(--mp-editor-block-menu-list-surface)
+    );
+    border-radius: var(
+      --forge-wysiwyg-block-menu-editor-block-menu-list-radius,
+      var(--mp-editor-block-menu-list-radius)
+    );
     list-style: none;
   }
 
   .wysiwyg-block-menu__item {
     display: block;
     width: 100%;
-    padding: var(--mp-editor-block-menu-item-padding-block)
-      var(--mp-editor-block-menu-item-padding-inline);
-    color: var(--mp-editor-block-menu-item-text-default);
+    padding: var(
+        --forge-wysiwyg-block-menu-editor-block-menu-item-padding-block,
+        var(--mp-editor-block-menu-item-padding-block)
+      )
+      var(
+        --forge-wysiwyg-block-menu-editor-block-menu-item-padding-inline,
+        var(--mp-editor-block-menu-item-padding-inline)
+      );
+    color: var(
+      --forge-wysiwyg-block-menu-editor-block-menu-item-text-default,
+      var(--mp-editor-block-menu-item-text-default)
+    );
     font: inherit;
     text-align: start;
     background-color: transparent;
     border: none;
-    border-radius: var(--mp-editor-block-menu-item-radius);
+    border-radius: var(
+      --forge-wysiwyg-block-menu-editor-block-menu-item-radius,
+      var(--mp-editor-block-menu-item-radius)
+    );
     cursor: pointer;
 
     &:hover {
-      background-color: var(--mp-editor-block-menu-item-surface-hover);
+      background-color: var(
+        --forge-wysiwyg-block-menu-editor-block-menu-item-surface-hover,
+        var(--mp-editor-block-menu-item-surface-hover)
+      );
     }
 
     &:focus-visible {
-      outline: var(--mp-editor-block-menu-item-focus-border-width) solid
-        var(--mp-editor-block-menu-item-focus-border);
+      outline: var(
+          --forge-wysiwyg-block-menu-editor-block-menu-item-focus-border-width,
+          var(--mp-editor-block-menu-item-focus-border-width)
+        )
+        solid
+        var(
+          --forge-wysiwyg-block-menu-editor-block-menu-item-focus-border,
+          var(--mp-editor-block-menu-item-focus-border)
+        );
       outline-offset: -2px;
     }
   }
 
   .wysiwyg-block-menu__item--active {
-    color: var(--mp-editor-block-menu-item-text-active);
-    font-weight: var(--mp-editor-block-menu-item-active-font-weight);
+    color: var(
+      --forge-wysiwyg-block-menu-editor-block-menu-item-text-active,
+      var(--mp-editor-block-menu-item-text-active)
+    );
+    font-weight: var(
+      --forge-wysiwyg-block-menu-editor-block-menu-item-active-font-weight,
+      var(--mp-editor-block-menu-item-active-font-weight)
+    );
   }
 }

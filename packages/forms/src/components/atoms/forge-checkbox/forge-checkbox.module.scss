@@ -1,3 +1,5 @@
+@use './forge-checkbox-properties';
+
 /**
  * Styling for the write-once `ForgeCheckbox`.
  *
@@ -12,12 +14,12 @@
   .forge-checkbox {
     display: flex;
     flex-direction: column;
-    gap: var(--mp-checkable-gap-stack);
+    gap: var(--forge-checkbox-checkable-gap-stack, var(--mp-checkable-gap-stack));
 
     &__row {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-checkable-gap-inline);
+      gap: var(--forge-checkbox-checkable-gap-inline, var(--mp-checkable-gap-inline));
       cursor: pointer;
     }
 
@@ -33,24 +35,26 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: var(--mp-checkable-control-size);
-      height: var(--mp-checkable-control-size);
-      border: var(--mp-checkable-border-width-default) solid var(--mp-checkable-border-default);
-      border-radius: var(--mp-checkable-radius);
-      background-color: var(--mp-checkable-track-default);
+      width: var(--forge-checkbox-checkable-control-size, var(--mp-checkable-control-size));
+      height: var(--forge-checkbox-checkable-control-size, var(--mp-checkable-control-size));
+      border: var(--forge-checkbox-checkable-border-width-default, var(--mp-checkable-border-width-default)) solid
+        var(--forge-checkbox-checkable-border-default, var(--mp-checkable-border-default));
+      border-radius: var(--forge-checkbox-checkable-radius, var(--mp-checkable-radius));
+      background-color: var(--forge-checkbox-checkable-track-default, var(--mp-checkable-track-default));
       color: transparent;
       transition:
-        background-color var(--mp-checkable-transition-duration)
-          var(--mp-checkable-transition-easing),
-        border-color var(--mp-checkable-transition-duration) var(--mp-checkable-transition-easing);
+        background-color var(--forge-checkbox-checkable-transition-duration, var(--mp-checkable-transition-duration))
+          var(--forge-checkbox-checkable-transition-easing, var(--mp-checkable-transition-easing)),
+        border-color var(--forge-checkbox-checkable-transition-duration, var(--mp-checkable-transition-duration))
+          var(--forge-checkbox-checkable-transition-easing, var(--mp-checkable-transition-easing));
       pointer-events: none;
     }
 
     &__glyph {
       display: block;
-      font-size: var(--mp-checkable-glyph-font-size);
+      font-size: var(--forge-checkbox-checkable-glyph-font-size, var(--mp-checkable-glyph-font-size));
       line-height: 1;
-      font-weight: var(--mp-checkable-glyph-font-weight);
+      font-weight: var(--forge-checkbox-checkable-glyph-font-weight, var(--mp-checkable-glyph-font-weight));
 
       svg {
         display: block;
@@ -75,14 +79,14 @@
     }
 
     &__required {
-      color: var(--mp-field-required);
+      color: var(--forge-checkbox-field-required, var(--mp-field-required));
       margin-left: 2px;
     }
 
     /* States */
     &--error {
       .forge-checkbox__box {
-        border-color: var(--mp-checkable-border-invalid);
+        border-color: var(--forge-checkbox-checkable-border-invalid, var(--mp-checkable-border-invalid));
       }
     }
 
@@ -95,21 +99,21 @@
       cursor: pointer;
 
       &:focus-visible ~ .forge-checkbox__box {
-        outline: var(--mp-checkable-border-width-focus) solid
-          var(--mp-checkable-border-focus-visible);
+        outline: var(--forge-checkbox-checkable-border-width-focus, var(--mp-checkable-border-width-focus)) solid
+          var(--forge-checkbox-checkable-border-focus-visible, var(--mp-checkable-border-focus-visible));
         outline-offset: 2px;
       }
 
       &:checked ~ .forge-checkbox__box,
       &:indeterminate ~ .forge-checkbox__box {
-        background-color: var(--mp-checkable-track-selected);
-        border-color: var(--mp-checkable-border-selected);
-        color: var(--mp-checkable-thumb-on-track);
+        background-color: var(--forge-checkbox-checkable-track-selected, var(--mp-checkable-track-selected));
+        border-color: var(--forge-checkbox-checkable-border-selected, var(--mp-checkable-border-selected));
+        color: var(--forge-checkbox-checkable-thumb-on-track, var(--mp-checkable-thumb-on-track));
       }
     }
 
     &--disabled {
-      opacity: var(--mp-feedback-opacity-disabled);
+      opacity: var(--forge-checkbox-feedback-opacity-disabled, var(--mp-feedback-opacity-disabled));
       pointer-events: none;
 
       .forge-checkbox__row {
@@ -118,14 +122,20 @@
     }
 
     &__error {
-      color: var(--mp-field-error);
+      color: var(--forge-checkbox-field-error, var(--mp-field-error));
       margin: 0;
-      padding-left: calc(var(--mp-checkable-control-size) + var(--mp-checkable-gap-inline));
+      padding-left: calc(
+        var(--forge-checkbox-checkable-control-size, var(--mp-checkable-control-size)) +
+          var(--forge-checkbox-checkable-gap-inline, var(--mp-checkable-gap-inline))
+      );
     }
 
     &__hint {
       margin: 0;
-      padding-left: calc(var(--mp-checkable-control-size) + var(--mp-checkable-gap-inline));
+      padding-left: calc(
+        var(--forge-checkbox-checkable-control-size, var(--mp-checkable-control-size)) +
+          var(--forge-checkbox-checkable-gap-inline, var(--mp-checkable-gap-inline))
+      );
     }
   }
 }

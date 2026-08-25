@@ -1,0 +1,108 @@
+/**
+ * Registered inherited custom properties for forge-markdown overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+
+@property --forge-markdown-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-text-default);
+}
+
+@property --forge-markdown-typography-font-family {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-typography-font-family);
+}
+
+@property --forge-markdown-typography-line-height {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-typography-line-height);
+}
+
+@property --forge-markdown-flow-block-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-flow-block-gap);
+}
+
+@property --forge-markdown-flow-heading-scroll-margin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-flow-heading-scroll-margin);
+}
+
+@property --forge-markdown-flow-list-indent {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-flow-list-indent);
+}
+
+@property --forge-markdown-flow-list-item-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-flow-list-item-gap);
+}
+
+@property --forge-markdown-flow-task-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-flow-task-gap);
+}
+
+@property --forge-markdown-blockquote-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-blockquote-padding-block);
+}
+
+@property --forge-markdown-blockquote-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-blockquote-padding-inline);
+}
+
+@property --forge-markdown-blockquote-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-blockquote-border-width);
+}
+
+@property --forge-markdown-blockquote-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-blockquote-border);
+}
+
+@property --forge-markdown-blockquote-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-blockquote-text);
+}
+
+@property --forge-markdown-rule-border-width {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-rule-border-width);
+}
+
+@property --forge-markdown-rule-border {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-rule-border);
+}
+
+@property --forge-markdown-image-radius {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-image-radius);
+}
+
+@property --forge-markdown-text-link {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-markdown-text-link);
+}

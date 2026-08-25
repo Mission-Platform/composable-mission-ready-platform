@@ -1,0 +1,703 @@
+/**
+ * Styling for the write-once `ForgeScheduler`.
+ *
+ * The rules live in the package-owned `mp.scheduler` cascade layer.
+ */
+/**
+ * Registered inherited custom properties for forge-scheduler overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+@property --forge-scheduler-container-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-border);
+}
+@property --forge-scheduler-container-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-border-width);
+}
+@property --forge-scheduler-container-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-gap);
+}
+@property --forge-scheduler-container-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-padding);
+}
+@property --forge-scheduler-container-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-radius);
+}
+@property --forge-scheduler-container-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-container-surface);
+}
+@property --forge-scheduler-day-heading-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-border);
+}
+@property --forge-scheduler-day-heading-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-gap);
+}
+@property --forge-scheduler-day-heading-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-padding);
+}
+@property --forge-scheduler-day-heading-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-surface);
+}
+@property --forge-scheduler-day-heading-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-text);
+}
+@property --forge-scheduler-day-heading-today-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-today-text);
+}
+@property --forge-scheduler-day-heading-today-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-heading-today-weight);
+}
+@property --forge-scheduler-day-number-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-day-number-font-size);
+}
+@property --forge-scheduler-event-accent-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-accent-border-width);
+}
+@property --forge-scheduler-event-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-border);
+}
+@property --forge-scheduler-event-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-border-width);
+}
+@property --forge-scheduler-event-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-font-size);
+}
+@property --forge-scheduler-event-muted-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-muted-text);
+}
+@property --forge-scheduler-event-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-padding);
+}
+@property --forge-scheduler-event-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-radius);
+}
+@property --forge-scheduler-event-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-surface);
+}
+@property --forge-scheduler-event-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-text);
+}
+@property --forge-scheduler-event-time-font-family {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-time-font-family);
+}
+@property --forge-scheduler-event-title-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-event-title-weight);
+}
+@property --forge-scheduler-form-actions-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-form-actions-gap);
+}
+@property --forge-scheduler-form-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-form-gap);
+}
+@property --forge-scheduler-form-row-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-form-row-gap);
+}
+@property --forge-scheduler-grid-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-grid-border);
+}
+@property --forge-scheduler-grid-border-subtle {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-grid-border-subtle);
+}
+@property --forge-scheduler-grid-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-grid-border-width);
+}
+@property --forge-scheduler-grid-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-grid-surface);
+}
+@property --forge-scheduler-hour-label-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-hour-label-font-size);
+}
+@property --forge-scheduler-hour-label-padding-inline-end {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-hour-label-padding-inline-end);
+}
+@property --forge-scheduler-hour-label-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-hour-label-text);
+}
+@property --forge-scheduler-month-cell-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-cell-border);
+}
+@property --forge-scheduler-month-cell-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-cell-gap);
+}
+@property --forge-scheduler-month-cell-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-cell-padding);
+}
+@property --forge-scheduler-month-cell-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-cell-surface);
+}
+@property --forge-scheduler-month-cell-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-cell-text);
+}
+@property --forge-scheduler-month-chip-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-chip-font-size);
+}
+@property --forge-scheduler-month-chip-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-chip-padding-block);
+}
+@property --forge-scheduler-month-chip-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-chip-padding-inline);
+}
+@property --forge-scheduler-month-chip-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-chip-radius);
+}
+@property --forge-scheduler-month-chip-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-chip-surface);
+}
+@property --forge-scheduler-month-create-focus-ring {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-create-focus-ring);
+}
+@property --forge-scheduler-month-create-focus-ring-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-create-focus-ring-width);
+}
+@property --forge-scheduler-month-create-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-create-radius);
+}
+@property --forge-scheduler-month-create-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-create-surface);
+}
+@property --forge-scheduler-month-day-number-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-day-number-font-size);
+}
+@property --forge-scheduler-month-events-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-events-gap);
+}
+@property --forge-scheduler-month-more-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-more-font-size);
+}
+@property --forge-scheduler-month-more-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-more-text);
+}
+@property --forge-scheduler-month-outside-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-outside-surface);
+}
+@property --forge-scheduler-month-outside-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-outside-text);
+}
+@property --forge-scheduler-month-today-ring {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-today-ring);
+}
+@property --forge-scheduler-month-today-ring-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-today-ring-width);
+}
+@property --forge-scheduler-month-weekday-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-weekday-border);
+}
+@property --forge-scheduler-month-weekday-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-month-weekday-padding);
+}
+@property --forge-scheduler-navigation-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-navigation-gap);
+}
+@property --forge-scheduler-navigation-title-margin {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-navigation-title-margin);
+}
+@property --forge-scheduler-toolbar-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-toolbar-gap);
+}
+@property --forge-scheduler-view-switcher-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-view-switcher-gap);
+}
+@property --forge-scheduler-weekday-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-weekday-font-size);
+}
+@property --forge-scheduler-weekday-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-weekday-text);
+}
+@property --forge-scheduler-year-busy-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-busy-surface);
+}
+@property --forge-scheduler-year-busy-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-busy-text);
+}
+@property --forge-scheduler-year-busy-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-busy-weight);
+}
+@property --forge-scheduler-year-day-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-day-font-size);
+}
+@property --forge-scheduler-year-day-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-day-radius);
+}
+@property --forge-scheduler-year-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-gap);
+}
+@property --forge-scheduler-year-mini-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-border);
+}
+@property --forge-scheduler-year-mini-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-gap);
+}
+@property --forge-scheduler-year-mini-grid-gap {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-grid-gap);
+}
+@property --forge-scheduler-year-mini-padding {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-padding);
+}
+@property --forge-scheduler-year-mini-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-radius);
+}
+@property --forge-scheduler-year-mini-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-surface);
+}
+@property --forge-scheduler-year-mini-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-mini-text);
+}
+@property --forge-scheduler-year-outside-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-outside-text);
+}
+@property --forge-scheduler-year-outside-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-outside-weight);
+}
+@property --forge-scheduler-year-title-font-size {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-title-font-size);
+}
+@property --forge-scheduler-year-title-weight {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-title-weight);
+}
+@property --forge-scheduler-year-today-ring {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-today-ring);
+}
+@property --forge-scheduler-year-today-ring-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-scheduler-year-today-ring-width);
+}
+@layer mp.scheduler {
+  .forge-scheduler {
+    display: flex;
+    flex-direction: column;
+    gap: var(--forge-scheduler-container-gap, var(--mp-scheduler-container-gap));
+    border: var(--forge-scheduler-container-border-width, var(--mp-scheduler-container-border-width)) solid var(--forge-scheduler-container-border, var(--mp-scheduler-container-border));
+    border-radius: var(--forge-scheduler-container-radius, var(--mp-scheduler-container-radius));
+    background-color: var(--forge-scheduler-container-surface, var(--mp-scheduler-container-surface));
+    padding: var(--forge-scheduler-container-padding, var(--mp-scheduler-container-padding));
+  }
+  .forge-scheduler__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--forge-scheduler-toolbar-gap, var(--mp-scheduler-toolbar-gap));
+  }
+  .forge-scheduler__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--forge-scheduler-navigation-gap, var(--mp-scheduler-navigation-gap));
+  }
+  .forge-scheduler__title {
+    margin: 0 var(--forge-scheduler-navigation-title-margin, var(--mp-scheduler-navigation-title-margin));
+  }
+  .forge-scheduler__spacer {
+    flex: 1;
+  }
+  .forge-scheduler__view-switcher {
+    display: inline-flex;
+    gap: var(--forge-scheduler-view-switcher-gap, var(--mp-scheduler-view-switcher-gap));
+  }
+  .forge-scheduler__body {
+    min-height: 16rem;
+    overflow: auto;
+  }
+  .forge-scheduler__time-grid {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .forge-scheduler__grid-header {
+    display: grid;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--forge-scheduler-grid-surface, var(--mp-scheduler-grid-surface));
+    border-bottom: var(--forge-scheduler-grid-border-width, var(--mp-scheduler-grid-border-width)) solid var(--forge-scheduler-grid-border, var(--mp-scheduler-grid-border));
+  }
+  .forge-scheduler__gutter-corner {
+    border-right: var(--forge-scheduler-grid-border-width, var(--mp-scheduler-grid-border-width)) solid var(--forge-scheduler-grid-border, var(--mp-scheduler-grid-border));
+  }
+  .forge-scheduler__day-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--forge-scheduler-day-heading-gap, var(--mp-scheduler-day-heading-gap));
+    padding: var(--forge-scheduler-day-heading-padding, var(--mp-scheduler-day-heading-padding));
+    border: none;
+    border-left: var(--forge-scheduler-grid-border-width, var(--mp-scheduler-grid-border-width)) solid var(--forge-scheduler-day-heading-border, var(--mp-scheduler-day-heading-border));
+    background: var(--forge-scheduler-day-heading-surface, var(--mp-scheduler-day-heading-surface));
+    cursor: pointer;
+    color: var(--forge-scheduler-day-heading-text, var(--mp-scheduler-day-heading-text));
+  }
+  .forge-scheduler__day-heading--today {
+    color: var(--forge-scheduler-day-heading-today-text, var(--mp-scheduler-day-heading-today-text));
+    font-weight: var(--forge-scheduler-day-heading-today-weight, var(--mp-scheduler-day-heading-today-weight));
+  }
+  .forge-scheduler__day-weekday {
+    font-size: var(--forge-scheduler-weekday-font-size, var(--mp-scheduler-weekday-font-size));
+    color: var(--forge-scheduler-weekday-text, var(--mp-scheduler-weekday-text));
+  }
+  .forge-scheduler__day-number {
+    font-size: var(--forge-scheduler-day-number-font-size, var(--mp-scheduler-day-number-font-size));
+  }
+  .forge-scheduler__grid-body {
+    display: grid;
+    position: relative;
+  }
+  .forge-scheduler__hours {
+    display: flex;
+    flex-direction: column;
+  }
+  .forge-scheduler__hour-label {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-right: var(--forge-scheduler-hour-label-padding-inline-end, var(--mp-scheduler-hour-label-padding-inline-end));
+    border-right: var(--forge-scheduler-grid-border-width, var(--mp-scheduler-grid-border-width)) solid var(--forge-scheduler-grid-border, var(--mp-scheduler-grid-border));
+    font-size: var(--forge-scheduler-hour-label-font-size, var(--mp-scheduler-hour-label-font-size));
+    color: var(--forge-scheduler-hour-label-text, var(--mp-scheduler-hour-label-text));
+  }
+  .forge-scheduler__day-column {
+    position: relative;
+    border-left: var(--forge-scheduler-grid-border-width, var(--mp-scheduler-grid-border-width)) solid var(--forge-scheduler-grid-border, var(--mp-scheduler-grid-border));
+  }
+  .forge-scheduler__hour-line {
+    border-bottom: var(--forge-scheduler-grid-border-width, var(--mp-scheduler-grid-border-width)) solid var(--forge-scheduler-grid-border-subtle, var(--mp-scheduler-grid-border-subtle));
+  }
+  .forge-scheduler__event {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: var(--forge-scheduler-event-padding, var(--mp-scheduler-event-padding));
+    border: var(--forge-scheduler-event-border-width, var(--mp-scheduler-event-border-width)) solid var(--forge-scheduler-event-border, var(--mp-scheduler-event-border));
+    border-inline-start: var(--forge-scheduler-event-accent-border-width, var(--mp-scheduler-event-accent-border-width)) solid var(--forge-scheduler-event-border, var(--mp-scheduler-event-border));
+    border-radius: var(--forge-scheduler-event-radius, var(--mp-scheduler-event-radius));
+    background-color: var(--forge-scheduler-event-surface, var(--mp-scheduler-event-surface));
+    cursor: grab;
+    font-size: var(--forge-scheduler-event-font-size, var(--mp-scheduler-event-font-size));
+    color: var(--forge-scheduler-event-text, var(--mp-scheduler-event-text));
+  }
+  .forge-scheduler__event:active {
+    cursor: grabbing;
+  }
+  .forge-scheduler__event-time {
+    font-family: var(--forge-scheduler-event-time-font-family, var(--mp-scheduler-event-time-font-family));
+    color: var(--forge-scheduler-event-muted-text, var(--mp-scheduler-event-muted-text));
+  }
+  .forge-scheduler__event-title {
+    font-weight: var(--forge-scheduler-event-title-weight, var(--mp-scheduler-event-title-weight));
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .forge-scheduler__event-duration {
+    color: var(--forge-scheduler-event-muted-text, var(--mp-scheduler-event-muted-text));
+  }
+  .forge-scheduler__event-resize {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 6px;
+    cursor: ns-resize;
+  }
+  .forge-scheduler__month {
+    display: flex;
+    flex-direction: column;
+  }
+  .forge-scheduler__month-weekdays, .forge-scheduler__month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+  .forge-scheduler__month-weekday {
+    padding: var(--forge-scheduler-month-weekday-padding, var(--mp-scheduler-month-weekday-padding));
+    text-align: center;
+    font-size: var(--forge-scheduler-weekday-font-size, var(--mp-scheduler-weekday-font-size));
+    color: var(--forge-scheduler-weekday-text, var(--mp-scheduler-weekday-text));
+    border-bottom: var(--forge-scheduler-grid-border-width, var(--mp-scheduler-grid-border-width)) solid var(--forge-scheduler-month-weekday-border, var(--mp-scheduler-month-weekday-border));
+  }
+  .forge-scheduler__month-cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--forge-scheduler-month-cell-gap, var(--mp-scheduler-month-cell-gap));
+    align-items: stretch;
+    min-height: 6rem;
+    padding: var(--forge-scheduler-month-cell-padding, var(--mp-scheduler-month-cell-padding));
+    border: var(--forge-scheduler-grid-border-width, var(--mp-scheduler-grid-border-width)) solid var(--forge-scheduler-month-cell-border, var(--mp-scheduler-month-cell-border));
+    margin: -0.5px;
+    background: var(--forge-scheduler-month-cell-surface, var(--mp-scheduler-month-cell-surface));
+    text-align: left;
+    color: var(--forge-scheduler-month-cell-text, var(--mp-scheduler-month-cell-text));
+  }
+  .forge-scheduler__month-cell--outside {
+    color: var(--forge-scheduler-month-outside-text, var(--mp-scheduler-month-outside-text));
+    background-color: var(--forge-scheduler-month-outside-surface, var(--mp-scheduler-month-outside-surface));
+  }
+  .forge-scheduler__month-cell--today {
+    outline: var(--forge-scheduler-month-today-ring-width, var(--mp-scheduler-month-today-ring-width)) solid var(--forge-scheduler-month-today-ring, var(--mp-scheduler-month-today-ring));
+    outline-offset: -2px;
+  }
+  .forge-scheduler__month-cell-create {
+    display: flex;
+    align-self: flex-start;
+    padding: 0;
+    border: 0;
+    background: var(--forge-scheduler-month-create-surface, var(--mp-scheduler-month-create-surface));
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+  }
+  .forge-scheduler__month-cell-create:focus-visible {
+    outline: var(--forge-scheduler-month-create-focus-ring-width, var(--mp-scheduler-month-create-focus-ring-width)) solid var(--forge-scheduler-month-create-focus-ring, var(--mp-scheduler-month-create-focus-ring));
+    outline-offset: 2px;
+    border-radius: var(--forge-scheduler-month-create-radius, var(--mp-scheduler-month-create-radius));
+  }
+  .forge-scheduler__month-day-number {
+    font-size: var(--forge-scheduler-month-day-number-font-size, var(--mp-scheduler-month-day-number-font-size));
+  }
+  .forge-scheduler__month-events {
+    display: flex;
+    flex-direction: column;
+    gap: var(--forge-scheduler-month-events-gap, var(--mp-scheduler-month-events-gap));
+  }
+  .forge-scheduler__month-chip {
+    padding: var(--forge-scheduler-month-chip-padding-block, var(--mp-scheduler-month-chip-padding-block)) var(--forge-scheduler-month-chip-padding-inline, var(--mp-scheduler-month-chip-padding-inline));
+    border-radius: var(--forge-scheduler-month-chip-radius, var(--mp-scheduler-month-chip-radius));
+    background-color: var(--forge-scheduler-month-chip-surface, var(--mp-scheduler-month-chip-surface));
+    font-size: var(--forge-scheduler-month-chip-font-size, var(--mp-scheduler-month-chip-font-size));
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .forge-scheduler__month-more {
+    font-size: var(--forge-scheduler-month-more-font-size, var(--mp-scheduler-month-more-font-size));
+    color: var(--forge-scheduler-month-more-text, var(--mp-scheduler-month-more-text));
+    cursor: pointer;
+  }
+  .forge-scheduler__year {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: var(--forge-scheduler-year-gap, var(--mp-scheduler-year-gap));
+  }
+  .forge-scheduler__mini-month {
+    display: flex;
+    flex-direction: column;
+    gap: var(--forge-scheduler-year-mini-gap, var(--mp-scheduler-year-mini-gap));
+    padding: var(--forge-scheduler-year-mini-padding, var(--mp-scheduler-year-mini-padding));
+    border: var(--forge-scheduler-grid-border-width, var(--mp-scheduler-grid-border-width)) solid var(--forge-scheduler-year-mini-border, var(--mp-scheduler-year-mini-border));
+    border-radius: var(--forge-scheduler-year-mini-radius, var(--mp-scheduler-year-mini-radius));
+    background: var(--forge-scheduler-year-mini-surface, var(--mp-scheduler-year-mini-surface));
+    cursor: pointer;
+    color: var(--forge-scheduler-year-mini-text, var(--mp-scheduler-year-mini-text));
+  }
+  .forge-scheduler__mini-title {
+    font-size: var(--forge-scheduler-year-title-font-size, var(--mp-scheduler-year-title-font-size));
+    font-weight: var(--forge-scheduler-year-title-weight, var(--mp-scheduler-year-title-weight));
+  }
+  .forge-scheduler__mini-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--forge-scheduler-year-mini-grid-gap, var(--mp-scheduler-year-mini-grid-gap));
+  }
+  .forge-scheduler__mini-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    font-size: var(--forge-scheduler-year-day-font-size, var(--mp-scheduler-year-day-font-size));
+    border-radius: var(--forge-scheduler-year-day-radius, var(--mp-scheduler-year-day-radius));
+    color: var(--forge-scheduler-year-mini-text, var(--mp-scheduler-year-mini-text));
+  }
+  .forge-scheduler__mini-day--outside {
+    color: var(--forge-scheduler-year-outside-text, var(--mp-scheduler-year-outside-text));
+    font-weight: var(--forge-scheduler-year-outside-weight, var(--mp-scheduler-year-outside-weight));
+  }
+  .forge-scheduler__mini-day--busy {
+    background-color: var(--forge-scheduler-year-busy-surface, var(--mp-scheduler-year-busy-surface));
+    color: var(--forge-scheduler-year-busy-text, var(--mp-scheduler-year-busy-text));
+    font-weight: var(--forge-scheduler-year-busy-weight, var(--mp-scheduler-year-busy-weight));
+  }
+  .forge-scheduler__mini-day--today {
+    outline: var(--forge-scheduler-year-today-ring-width, var(--mp-scheduler-year-today-ring-width)) solid var(--forge-scheduler-year-today-ring, var(--mp-scheduler-year-today-ring));
+  }
+  .forge-scheduler__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--forge-scheduler-form-gap, var(--mp-scheduler-form-gap));
+    min-width: min(28rem, 80vw);
+  }
+  .forge-scheduler__form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--forge-scheduler-form-row-gap, var(--mp-scheduler-form-row-gap));
+  }
+  .forge-scheduler__form-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--forge-scheduler-form-actions-gap, var(--mp-scheduler-form-actions-gap));
+  }
+}

@@ -21,6 +21,8 @@
 
 @use '@mission-platform/tokens/scss/breakpoints-mixins' as bp;
 
+@use './forge-modal-properties';
+
 @layer mp.components {
   .forge-modal {
     width: 100%;
@@ -28,31 +30,35 @@
     margin: auto auto 0;
     padding: 0;
     overflow: hidden;
-    background-color: var(--mp-overlay-modal-surface-default);
+    background-color: var(--forge-modal-overlay-modal-surface-default, var(--mp-overlay-modal-surface-default));
     border: none;
 
     /* Mobile: square bottom corners, rounded top corners only. */
-    border-radius: var(--mp-overlay-radius) var(--mp-overlay-radius) 0 0;
-    box-shadow: var(--mp-overlay-modal-shadow);
+    border-radius: var(--forge-modal-overlay-radius, var(--mp-overlay-radius))
+      var(--forge-modal-overlay-radius, var(--mp-overlay-radius)) 0 0;
+    box-shadow: var(--forge-modal-overlay-modal-shadow, var(--mp-overlay-modal-shadow));
     opacity: 0;
     translate: 0 0.5rem;
     transition:
-      opacity var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
-      translate var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
-      overlay var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
-        allow-discrete,
-      display var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
-        allow-discrete;
+      opacity var(--forge-modal-overlay-transition-duration, var(--mp-overlay-transition-duration))
+        var(--forge-modal-overlay-transition-easing, var(--mp-overlay-transition-easing)),
+      translate var(--forge-modal-overlay-transition-duration, var(--mp-overlay-transition-duration))
+        var(--forge-modal-overlay-transition-easing, var(--mp-overlay-transition-easing)),
+      overlay var(--forge-modal-overlay-transition-duration, var(--mp-overlay-transition-duration))
+        var(--forge-modal-overlay-transition-easing, var(--mp-overlay-transition-easing)) allow-discrete,
+      display var(--forge-modal-overlay-transition-duration, var(--mp-overlay-transition-duration))
+        var(--forge-modal-overlay-transition-easing, var(--mp-overlay-transition-easing)) allow-discrete;
 
     &::backdrop {
-      background-color: var(--mp-overlay-surface-scrim);
+      background-color: var(--forge-modal-overlay-surface-scrim, var(--mp-overlay-surface-scrim));
       opacity: 0;
       transition:
-        opacity var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing),
-        overlay var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
-          allow-discrete,
-        display var(--mp-overlay-transition-duration) var(--mp-overlay-transition-easing)
-          allow-discrete;
+        opacity var(--forge-modal-overlay-transition-duration, var(--mp-overlay-transition-duration))
+          var(--forge-modal-overlay-transition-easing, var(--mp-overlay-transition-easing)),
+        overlay var(--forge-modal-overlay-transition-duration, var(--mp-overlay-transition-duration))
+          var(--forge-modal-overlay-transition-easing, var(--mp-overlay-transition-easing)) allow-discrete,
+        display var(--forge-modal-overlay-transition-duration, var(--mp-overlay-transition-duration))
+          var(--forge-modal-overlay-transition-easing, var(--mp-overlay-transition-easing)) allow-discrete;
     }
 
     &[open] {
@@ -78,19 +84,19 @@
     /* Tablet+ (sm): centred dialog, rounded all corners, width by size. */
     @include bp.bp-up('sm') {
       margin: auto;
-      max-height: calc(100vh - var(--mp-spacing-8));
-      border-radius: var(--mp-overlay-radius);
+      max-height: calc(100vh - var(--forge-modal-spacing-8, var(--mp-spacing-8)));
+      border-radius: var(--forge-modal-overlay-radius, var(--mp-overlay-radius));
 
       @each $size,
         $max-width
           in (
-            '2xs': var(--mp-overlay-modal-size-2xs),
-            'xs': var(--mp-overlay-modal-size-xs),
-            'sm': var(--mp-overlay-modal-size-sm),
-            'md': var(--mp-overlay-modal-size-md),
-            'lg': var(--mp-overlay-modal-size-lg),
-            'xl': var(--mp-overlay-modal-size-xl),
-            '2xl': var(--mp-overlay-modal-size-2xl)
+            '2xs': var(--forge-modal-overlay-modal-size-2xs, var(--mp-overlay-modal-size-2xs)),
+            'xs': var(--forge-modal-overlay-modal-size-xs, var(--mp-overlay-modal-size-xs)),
+            'sm': var(--forge-modal-overlay-modal-size-sm, var(--mp-overlay-modal-size-sm)),
+            'md': var(--forge-modal-overlay-modal-size-md, var(--mp-overlay-modal-size-md)),
+            'lg': var(--forge-modal-overlay-modal-size-lg, var(--mp-overlay-modal-size-lg)),
+            'xl': var(--forge-modal-overlay-modal-size-xl, var(--mp-overlay-modal-size-xl)),
+            '2xl': var(--forge-modal-overlay-modal-size-2xl, var(--mp-overlay-modal-size-2xl))
           )
       {
         &--#{$size} {
@@ -99,8 +105,8 @@
       }
 
       &--full {
-        max-width: calc(100vw - var(--mp-spacing-8));
-        max-height: calc(100vh - var(--mp-spacing-8));
+        max-width: calc(100vw - var(--forge-modal-spacing-8, var(--mp-spacing-8)));
+        max-height: calc(100vh - var(--forge-modal-spacing-8, var(--mp-spacing-8)));
       }
     }
 
@@ -109,9 +115,11 @@
       flex-shrink: 0;
       align-items: center;
       justify-content: space-between;
-      gap: var(--mp-overlay-header-gap);
-      padding: var(--mp-overlay-header-padding-block) var(--mp-overlay-header-padding-inline);
-      border-bottom: var(--mp-overlay-border-width) solid var(--mp-overlay-border-default);
+      gap: var(--forge-modal-overlay-header-gap, var(--mp-overlay-header-gap));
+      padding: var(--forge-modal-overlay-header-padding-block, var(--mp-overlay-header-padding-block))
+        var(--forge-modal-overlay-header-padding-inline, var(--mp-overlay-header-padding-inline));
+      border-bottom: var(--forge-modal-overlay-border-width, var(--mp-overlay-border-width)) solid
+        var(--forge-modal-overlay-border-default, var(--mp-overlay-border-default));
     }
 
     &__title {
@@ -120,7 +128,7 @@
 
     &__body {
       flex: 1;
-      padding: var(--mp-overlay-body-padding);
+      padding: var(--forge-modal-overlay-body-padding, var(--mp-overlay-body-padding));
       overflow-y: auto;
     }
 
@@ -129,9 +137,11 @@
       flex-shrink: 0;
       align-items: center;
       justify-content: flex-end;
-      gap: var(--mp-overlay-footer-gap);
-      padding: var(--mp-overlay-footer-padding-block) var(--mp-overlay-footer-padding-inline);
-      border-top: var(--mp-overlay-border-width) solid var(--mp-overlay-border-default);
+      gap: var(--forge-modal-overlay-footer-gap, var(--mp-overlay-footer-gap));
+      padding: var(--forge-modal-overlay-footer-padding-block, var(--mp-overlay-footer-padding-block))
+        var(--forge-modal-overlay-footer-padding-inline, var(--mp-overlay-footer-padding-inline));
+      border-top: var(--forge-modal-overlay-border-width, var(--mp-overlay-border-width)) solid
+        var(--forge-modal-overlay-border-default, var(--mp-overlay-border-default));
     }
 
     /* Respect users who prefer reduced motion. */

@@ -1,0 +1,129 @@
+/**
+ * Registered inherited custom properties for forge-mention-input overrides.
+ */
+
+@property --forge-mention-input-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-mention-input-color-text-primary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-primary);
+}
+
+@property --forge-mention-input-font-weight-semibold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-semibold);
+}
+
+@property --forge-mention-input-size-pad-block-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-block-md);
+}
+
+@property --forge-mention-input-size-pad-inline-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-size-pad-inline-md);
+}
+
+@property --forge-mention-input-color-bg-surface {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-bg-surface);
+}
+
+@property --forge-mention-input-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-mention-input-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-mention-input-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-mention-input-line-height-normal {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-line-height-normal);
+}
+
+@property --forge-mention-input-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-mention-input-color-border-focus {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-focus);
+}
+
+@property --forge-mention-input-shadow-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-shadow-md);
+}
+
+@property --forge-mention-input-spacing-2 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-2);
+}
+
+@property --forge-mention-input-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-mention-input-color-primary-subtle {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-subtle);
+}
+
+@property --forge-mention-input-color-danger-text {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-danger-text);
+}
+
+@property --forge-mention-input-font-size-sm {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-sm);
+}
+
+@property --forge-mention-input-color-text-secondary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-secondary);
+}
+
+@property --forge-mention-input-color-danger-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-danger-default);
+}
+
+@property --forge-mention-input-opacity-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-opacity-disabled);
+}

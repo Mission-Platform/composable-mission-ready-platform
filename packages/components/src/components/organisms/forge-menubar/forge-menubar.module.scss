@@ -9,19 +9,22 @@
  * `@mission-platform/components` package.
  */
 
+@use './forge-menubar-properties';
+
 @layer mp.components {
   .forge-menubar {
     display: flex;
     align-items: center;
-    gap: var(--mp-navigation-menubar-gap);
+    gap: var(--forge-menubar-navigation-menubar-gap, var(--mp-navigation-menubar-gap));
     list-style: none;
     margin: 0;
-    padding: var(--mp-navigation-menubar-padding);
-    background-color: var(--mp-navigation-menubar-surface);
+    padding: var(--forge-menubar-navigation-menubar-padding, var(--mp-navigation-menubar-padding));
+    background-color: var(--forge-menubar-navigation-menubar-surface, var(--mp-navigation-menubar-surface));
 
     &--bordered {
-      border: var(--mp-navigation-menubar-border-width) solid var(--mp-navigation-menubar-border);
-      border-radius: var(--mp-navigation-menubar-radius);
+      border: var(--forge-menubar-navigation-menubar-border-width, var(--mp-navigation-menubar-border-width)) solid
+        var(--forge-menubar-navigation-menubar-border, var(--mp-navigation-menubar-border));
+      border-radius: var(--forge-menubar-navigation-menubar-radius, var(--mp-navigation-menubar-radius));
     }
 
     &__item {
@@ -29,43 +32,82 @@
       list-style: none;
 
       &--disabled {
-        opacity: var(--mp-navigation-menubar-item-opacity-disabled);
+        opacity: var(
+          --forge-menubar-navigation-menubar-item-opacity-disabled,
+          var(--mp-navigation-menubar-item-opacity-disabled)
+        );
       }
     }
 
     &__link {
       display: flex;
       align-items: center;
-      gap: var(--mp-navigation-menubar-link-gap);
-      padding: var(--mp-navigation-menubar-link-padding-block) var(--mp-navigation-menubar-link-padding-inline);
-      border-radius: var(--mp-navigation-menubar-link-radius);
-      color: var(--mp-navigation-menubar-link-text);
+      gap: var(--forge-menubar-navigation-menubar-link-gap, var(--mp-navigation-menubar-link-gap));
+      padding: var(
+          --forge-menubar-navigation-menubar-link-padding-block,
+          var(--mp-navigation-menubar-link-padding-block)
+        )
+        var(--forge-menubar-navigation-menubar-link-padding-inline, var(--mp-navigation-menubar-link-padding-inline));
+      border-radius: var(--forge-menubar-navigation-menubar-link-radius, var(--mp-navigation-menubar-link-radius));
+      color: var(--forge-menubar-navigation-menubar-link-text, var(--mp-navigation-menubar-link-text));
       background: none;
       border: none;
       cursor: pointer;
       text-decoration: none;
       text-align: left;
-      font-family: var(--mp-navigation-menubar-link-font-family);
+      font-family: var(
+        --forge-menubar-navigation-menubar-link-font-family,
+        var(--mp-navigation-menubar-link-font-family)
+      );
       white-space: nowrap;
       transition:
-        background-color var(--mp-navigation-menubar-link-transition-duration) var(--mp-navigation-menubar-link-transition-easing),
-        color var(--mp-navigation-menubar-link-transition-duration) var(--mp-navigation-menubar-link-transition-easing);
+        background-color
+          var(
+            --forge-menubar-navigation-menubar-link-transition-duration,
+            var(--mp-navigation-menubar-link-transition-duration)
+          )
+          var(
+            --forge-menubar-navigation-menubar-link-transition-easing,
+            var(--mp-navigation-menubar-link-transition-easing)
+          ),
+        color
+          var(
+            --forge-menubar-navigation-menubar-link-transition-duration,
+            var(--mp-navigation-menubar-link-transition-duration)
+          )
+          var(
+            --forge-menubar-navigation-menubar-link-transition-easing,
+            var(--mp-navigation-menubar-link-transition-easing)
+          );
 
       &:focus-visible {
-        outline: var(--mp-navigation-menubar-link-focus-border-width) solid var(--mp-navigation-menubar-link-focus-ring);
-        outline-offset: var(--mp-navigation-menubar-link-focus-offset);
+        outline: var(
+            --forge-menubar-navigation-menubar-link-focus-border-width,
+            var(--mp-navigation-menubar-link-focus-border-width)
+          )
+          solid var(--forge-menubar-navigation-menubar-link-focus-ring, var(--mp-navigation-menubar-link-focus-ring));
+        outline-offset: var(
+          --forge-menubar-navigation-menubar-link-focus-offset,
+          var(--mp-navigation-menubar-link-focus-offset)
+        );
       }
 
       &:disabled,
       &[aria-disabled='true'] {
-        color: var(--mp-navigation-menubar-link-text-disabled);
+        color: var(
+          --forge-menubar-navigation-menubar-link-text-disabled,
+          var(--mp-navigation-menubar-link-text-disabled)
+        );
         cursor: not-allowed;
         pointer-events: none;
       }
 
       &:hover:not(:disabled, [aria-disabled='true']) {
-        background-color: var(--mp-navigation-menubar-link-surface-hover);
-        color: var(--mp-navigation-menubar-link-text-hover);
+        background-color: var(
+          --forge-menubar-navigation-menubar-link-surface-hover,
+          var(--mp-navigation-menubar-link-surface-hover)
+        );
+        color: var(--forge-menubar-navigation-menubar-link-text-hover, var(--mp-navigation-menubar-link-text-hover));
       }
     }
 
@@ -79,44 +121,89 @@
 
     &__chevron {
       flex-shrink: 0;
-      color: var(--mp-navigation-menubar-chevron-text);
-      font-size: var(--mp-navigation-menubar-chevron-font-size);
+      color: var(--forge-menubar-navigation-menubar-chevron-text, var(--mp-navigation-menubar-chevron-text));
+      font-size: var(
+        --forge-menubar-navigation-menubar-chevron-font-size,
+        var(--mp-navigation-menubar-chevron-font-size)
+      );
     }
 
     &__submenu {
       position: absolute;
       top: 100%;
       left: 0;
-      z-index: 10;
+      z-index: var(--mp-z-index-navigation-menu);
       list-style: none;
-      margin: var(--mp-navigation-menubar-submenu-margin) 0 0;
-      padding: var(--mp-navigation-menubar-submenu-padding);
-      min-width: var(--mp-navigation-menubar-submenu-min-width);
+      margin: var(--forge-menubar-navigation-menubar-submenu-margin, var(--mp-navigation-menubar-submenu-margin)) 0 0;
+      padding: var(--forge-menubar-navigation-menubar-submenu-padding, var(--mp-navigation-menubar-submenu-padding));
+      min-width: var(
+        --forge-menubar-navigation-menubar-submenu-min-width,
+        var(--mp-navigation-menubar-submenu-min-width)
+      );
 
       /* Cap to the viewport so an edge-anchored submenu stays on-screen on mobile. */
-      max-width: calc(100vw - var(--mp-navigation-menubar-submenu-viewport-gutter));
+      max-width: calc(
+        100vw - var(
+            --forge-menubar-navigation-menubar-submenu-viewport-gutter,
+            var(--mp-navigation-menubar-submenu-viewport-gutter)
+          )
+      );
       display: flex;
       flex-direction: column;
-      gap: var(--mp-navigation-menubar-submenu-gap);
-      background-color: var(--mp-navigation-menubar-submenu-surface);
-      border: var(--mp-navigation-menubar-submenu-border-width) solid var(--mp-navigation-menubar-submenu-border);
-      border-radius: var(--mp-navigation-menubar-submenu-radius);
-      box-shadow: var(--mp-navigation-menubar-submenu-shadow);
+      gap: var(--forge-menubar-navigation-menubar-submenu-gap, var(--mp-navigation-menubar-submenu-gap));
+      background-color: var(
+        --forge-menubar-navigation-menubar-submenu-surface,
+        var(--mp-navigation-menubar-submenu-surface)
+      );
+      border: var(
+          --forge-menubar-navigation-menubar-submenu-border-width,
+          var(--mp-navigation-menubar-submenu-border-width)
+        )
+        solid var(--forge-menubar-navigation-menubar-submenu-border, var(--mp-navigation-menubar-submenu-border));
+      border-radius: var(
+        --forge-menubar-navigation-menubar-submenu-radius,
+        var(--mp-navigation-menubar-submenu-radius)
+      );
+      box-shadow: var(--forge-menubar-navigation-menubar-submenu-shadow, var(--mp-navigation-menubar-submenu-shadow));
       opacity: 1;
       translate: 0 0;
       transition:
-        opacity var(--mp-navigation-menubar-submenu-transition-duration) var(--mp-navigation-menubar-submenu-transition-easing),
-        translate var(--mp-navigation-menubar-submenu-transition-duration) var(--mp-navigation-menubar-submenu-transition-easing);
+        opacity
+          var(
+            --forge-menubar-navigation-menubar-submenu-transition-duration,
+            var(--mp-navigation-menubar-submenu-transition-duration)
+          )
+          var(
+            --forge-menubar-navigation-menubar-submenu-transition-easing,
+            var(--mp-navigation-menubar-submenu-transition-easing)
+          ),
+        translate
+          var(
+            --forge-menubar-navigation-menubar-submenu-transition-duration,
+            var(--mp-navigation-menubar-submenu-transition-duration)
+          )
+          var(
+            --forge-menubar-navigation-menubar-submenu-transition-easing,
+            var(--mp-navigation-menubar-submenu-transition-easing)
+          );
 
       @starting-style {
         opacity: 0;
-        translate: 0 var(--mp-navigation-menubar-submenu-starting-offset);
+        translate: 0
+          var(
+            --forge-menubar-navigation-menubar-submenu-starting-offset,
+            var(--mp-navigation-menubar-submenu-starting-offset)
+          );
       }
 
       &--nested {
         top: 0;
         left: 100%;
-        margin: 0 0 0 var(--mp-navigation-menubar-submenu-nested-margin);
+        margin: 0 0 0
+          var(
+            --forge-menubar-navigation-menubar-submenu-nested-margin,
+            var(--mp-navigation-menubar-submenu-nested-margin)
+          );
       }
     }
 

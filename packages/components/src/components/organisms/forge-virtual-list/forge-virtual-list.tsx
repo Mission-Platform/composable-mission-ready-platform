@@ -1,13 +1,15 @@
 import {
   classNames,
-  type MpChild,
-  type MpElement,
-  type MpRenderProperty,
   Slot,
   useEffect,
   useMemo,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type MpRenderProperty,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 
 /** Size token — canonical 2xs → 2xl scale. */
@@ -21,6 +23,39 @@ export interface VirtualListItemScope {
   index: number;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface VirtualListStyleProperties {
+  readonly 'data-virtual-list-row-alternate-surface'?: string;
+  readonly 'data-virtual-list-row-border'?: string;
+  readonly 'data-virtual-list-row-border-width'?: string;
+  readonly 'data-virtual-list-row-padding-block'?: string;
+  readonly 'data-virtual-list-row-padding-inline'?: string;
+  readonly 'data-virtual-list-row-text'?: string;
+}
+
+export type VirtualListStyle = CSSStyleProperties & {
+  readonly '--forge-virtual-list-data-virtual-list-row-alternate-surface'?: string | undefined;
+  readonly '--forge-virtual-list-data-virtual-list-row-border'?: string | undefined;
+  readonly '--forge-virtual-list-data-virtual-list-row-border-width'?: string | undefined;
+  readonly '--forge-virtual-list-data-virtual-list-row-padding-block'?: string | undefined;
+  readonly '--forge-virtual-list-data-virtual-list-row-padding-inline'?: string | undefined;
+  readonly '--forge-virtual-list-data-virtual-list-row-text'?: string | undefined;
+};
+
+function createVirtualListStyle(
+  properties: Readonly<VirtualListStyleProperties> | undefined,
+): VirtualListStyle | undefined {
+  return createForgeStyle({
+    '--forge-virtual-list-data-virtual-list-row-alternate-surface':
+      properties?.['data-virtual-list-row-alternate-surface'],
+    '--forge-virtual-list-data-virtual-list-row-border': properties?.['data-virtual-list-row-border'],
+    '--forge-virtual-list-data-virtual-list-row-border-width': properties?.['data-virtual-list-row-border-width'],
+    '--forge-virtual-list-data-virtual-list-row-padding-block': properties?.['data-virtual-list-row-padding-block'],
+    '--forge-virtual-list-data-virtual-list-row-padding-inline': properties?.['data-virtual-list-row-padding-inline'],
+    '--forge-virtual-list-data-virtual-list-row-text': properties?.['data-virtual-list-row-text'],
+  }) as VirtualListStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface VirtualListProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -36,6 +71,9 @@ export interface VirtualListProperties {
   size?: VirtualListSize;
   /** Renders one row; receives `{ item, index }` (a scoped slot / render-prop). */
   row?: MpRenderProperty<VirtualListItemScope>;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<VirtualListStyleProperties>;
 }
 
 /**
@@ -56,6 +94,8 @@ export interface VirtualListProperties {
  * forward named — but not default — slots as scoped functions).
  */
 export function ForgeVirtualList(properties: Readonly<VirtualListProperties>): MpElement {
+  const propertyStyle = createVirtualListStyle(properties.properties);
+
   const { items, itemHeight, overscan = 3, height = 400, size = 'md' } = properties;
 
   const [scrollTop, setScrollTop] = useState(0);
@@ -98,7 +138,7 @@ export function ForgeVirtualList(properties: Readonly<VirtualListProperties>): M
       class={classNames('forge-virtual-list', size ? `forge-size--${size}` : undefined)}
       role="list"
       tabindex={0}
-      style={{ height: `${height}px`, overflowY: 'auto', position: 'relative' }}
+      style={{ ...propertyStyle, height: `${height}px`, overflowY: 'auto', position: 'relative' }}
     >
       <div
         aria-hidden="true"

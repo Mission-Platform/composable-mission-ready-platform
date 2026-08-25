@@ -1,4 +1,11 @@
-import { classNames, type MpElement, useEffect, useState } from '@mission-platform/forge';
+import {
+  classNames,
+  useEffect,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 
 import styles from './forge-stats-section.module.scss';
 
@@ -12,6 +19,69 @@ export interface StatItem {
   detail?: string;
 }
 export type StatsSectionVariant = 'default' | 'cards' | 'minimal';
+
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface StatsSectionStyleProperties {
+  readonly 'border-width-thick'?: string;
+  readonly 'border-width-thin'?: string;
+  readonly 'color-border-default'?: string;
+  readonly 'color-primary-default'?: string;
+  readonly 'color-text-tertiary'?: string;
+  readonly 'duration-fast'?: string;
+  readonly 'easing-standard'?: string;
+  readonly 'font-size-2xl'?: string;
+  readonly 'font-size-4xl'?: string;
+  readonly 'font-weight-bold'?: string;
+  readonly 'radius-md'?: string;
+  readonly 'spacing-1'?: string;
+  readonly 'spacing-3'?: string;
+  readonly 'spacing-4'?: string;
+  readonly 'spacing-6'?: string;
+  readonly 'spacing-8'?: string;
+}
+
+export type StatsSectionStyle = CSSStyleProperties & {
+  readonly '--forge-stats-section-border-width-thick'?: string | undefined;
+  readonly '--forge-stats-section-border-width-thin'?: string | undefined;
+  readonly '--forge-stats-section-color-border-default'?: string | undefined;
+  readonly '--forge-stats-section-color-primary-default'?: string | undefined;
+  readonly '--forge-stats-section-color-text-tertiary'?: string | undefined;
+  readonly '--forge-stats-section-duration-fast'?: string | undefined;
+  readonly '--forge-stats-section-easing-standard'?: string | undefined;
+  readonly '--forge-stats-section-font-size-2xl'?: string | undefined;
+  readonly '--forge-stats-section-font-size-4xl'?: string | undefined;
+  readonly '--forge-stats-section-font-weight-bold'?: string | undefined;
+  readonly '--forge-stats-section-radius-md'?: string | undefined;
+  readonly '--forge-stats-section-spacing-1'?: string | undefined;
+  readonly '--forge-stats-section-spacing-3'?: string | undefined;
+  readonly '--forge-stats-section-spacing-4'?: string | undefined;
+  readonly '--forge-stats-section-spacing-6'?: string | undefined;
+  readonly '--forge-stats-section-spacing-8'?: string | undefined;
+};
+
+function createStatsSectionStyle(
+  properties: Readonly<StatsSectionStyleProperties> | undefined,
+): StatsSectionStyle | undefined {
+  return createForgeStyle({
+    '--forge-stats-section-border-width-thick': properties?.['border-width-thick'],
+    '--forge-stats-section-border-width-thin': properties?.['border-width-thin'],
+    '--forge-stats-section-color-border-default': properties?.['color-border-default'],
+    '--forge-stats-section-color-primary-default': properties?.['color-primary-default'],
+    '--forge-stats-section-color-text-tertiary': properties?.['color-text-tertiary'],
+    '--forge-stats-section-duration-fast': properties?.['duration-fast'],
+    '--forge-stats-section-easing-standard': properties?.['easing-standard'],
+    '--forge-stats-section-font-size-2xl': properties?.['font-size-2xl'],
+    '--forge-stats-section-font-size-4xl': properties?.['font-size-4xl'],
+    '--forge-stats-section-font-weight-bold': properties?.['font-weight-bold'],
+    '--forge-stats-section-radius-md': properties?.['radius-md'],
+    '--forge-stats-section-spacing-1': properties?.['spacing-1'],
+    '--forge-stats-section-spacing-3': properties?.['spacing-3'],
+    '--forge-stats-section-spacing-4': properties?.['spacing-4'],
+    '--forge-stats-section-spacing-6': properties?.['spacing-6'],
+    '--forge-stats-section-spacing-8': properties?.['spacing-8'],
+  }) as StatsSectionStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface StatsSectionProperties {
   stats: StatItem[];
   title?: string;
@@ -21,6 +91,9 @@ export interface StatsSectionProperties {
   description?: string;
   ariaLabel?: string;
   animationDuration?: number;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<StatsSectionStyleProperties>;
 }
 
 interface NumericValue {
@@ -50,6 +123,8 @@ function formatNumericValue(value: NumericValue, number: number): string | numbe
 }
 
 export function ForgeStatsSection(properties: Readonly<StatsSectionProperties>): MpElement {
+  const style = createStatsSectionStyle(properties.properties);
+
   const {
     title,
     description,
@@ -101,6 +176,7 @@ export function ForgeStatsSection(properties: Readonly<StatsSectionProperties>):
         [styles['forge-stats-section--animated']]: animated && !reducedMotion,
       })}
       aria-label={resolvedAriaLabel}
+      style={style}
     >
       {title ? <h2>{title}</h2> : undefined}
       {description ? <p className={styles['forge-stats-section__description']}>{description}</p> : undefined}

@@ -10,20 +10,31 @@
  * consumed through its hashed class map by `forge-virtual-list.stories.tsx`.
  */
 
+@use './forge-virtual-list-properties';
+
 @layer mp.components {
   .virtual-list-demo-row {
     display: flex;
     align-items: center;
     box-sizing: border-box;
     height: 100%;
-    padding: var(--mp-data-virtual-list-row-padding-block)
-      var(--mp-data-virtual-list-row-padding-inline);
-    border-bottom: var(--mp-data-virtual-list-row-border-width)
-      solid var(--mp-data-virtual-list-row-border);
-    color: var(--mp-data-virtual-list-row-text);
+    padding: var(
+        --forge-virtual-list-data-virtual-list-row-padding-block,
+        var(--mp-data-virtual-list-row-padding-block)
+      )
+      var(--forge-virtual-list-data-virtual-list-row-padding-inline, var(--mp-data-virtual-list-row-padding-inline));
+    border-bottom: var(
+        --forge-virtual-list-data-virtual-list-row-border-width,
+        var(--mp-data-virtual-list-row-border-width)
+      )
+      solid var(--forge-virtual-list-data-virtual-list-row-border, var(--mp-data-virtual-list-row-border));
+    color: var(--forge-virtual-list-data-virtual-list-row-text, var(--mp-data-virtual-list-row-text));
   }
 
   .virtual-list-demo-row--alt {
-    background: var(--mp-data-virtual-list-row-alternate-surface);
+    background: var(
+      --forge-virtual-list-data-virtual-list-row-alternate-surface,
+      var(--mp-data-virtual-list-row-alternate-surface)
+    );
   }
 }

@@ -6,22 +6,24 @@
  * rules live in the package-owned `mp.select` cascade layer.
  */
 
+@use './forge-tag-properties';
+
 @layer mp.select {
   .forge-tag {
     display: inline-flex;
     align-items: center;
-    gap: var(--mp-tag-gap);
-    border-radius: var(--mp-tag-radius);
-    font-family: var(--mp-tag-font-family);
-    line-height: var(--mp-tag-line-height);
+    gap: var(--forge-tag-gap, var(--mp-tag-gap));
+    border-radius: var(--forge-tag-radius, var(--mp-tag-radius));
+    font-family: var(--forge-tag-font-family, var(--mp-tag-font-family));
+    line-height: var(--forge-tag-line-height, var(--mp-tag-line-height));
     white-space: nowrap;
 
     /* Sizes — canonical 2xs → 2xl scale driven by the shared size tokens. */
     @each $size in '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl' {
       &--#{$size} {
-        padding: var(--mp-tag-size-#{$size}-padding-block)
-          var(--mp-tag-size-#{$size}-padding-inline);
-        font-size: var(--mp-tag-size-#{$size}-font-size);
+        padding: var(--forge-tag-size-#{$size}-padding-block, var(--mp-tag-size-#{$size}-padding-block))
+          var(--forge-tag-size-#{$size}-padding-inline, var(--mp-tag-size-#{$size}-padding-inline));
+        font-size: var(--forge-tag-size-#{$size}-font-size, var(--mp-tag-size-#{$size}-font-size));
       }
     }
 
@@ -45,16 +47,16 @@
         )
     {
       &--#{$name} {
-        background-color: var(--mp-tag-#{$name}-background);
-        color: var(--mp-tag-#{$name}-text);
+        background-color: var(--forge-tag-#{$name}-background, var(--mp-tag-#{$name}-background));
+        color: var(--forge-tag-#{$name}-text, var(--mp-tag-#{$name}-text));
       }
     }
 
     /* States */
     &--disabled {
       pointer-events: none;
-      background-color: var(--mp-tag-disabled-background);
-      color: var(--mp-tag-disabled-text);
+      background-color: var(--forge-tag-disabled-background, var(--mp-tag-disabled-background));
+      color: var(--forge-tag-disabled-text, var(--mp-tag-disabled-text));
     }
 
     &__label {
@@ -70,7 +72,7 @@
       background: transparent;
       cursor: pointer;
       color: inherit;
-      border-radius: var(--mp-tag-radius);
+      border-radius: var(--forge-tag-radius, var(--mp-tag-radius));
       line-height: 1;
 
       svg {
@@ -81,11 +83,11 @@
       }
 
       &:hover {
-        opacity: var(--mp-tag-remove-hover-opacity);
+        opacity: var(--forge-tag-remove-hover-opacity, var(--mp-tag-remove-hover-opacity));
       }
 
       &:focus-visible {
-        outline: var(--mp-tag-border-width-focus) solid currentcolor;
+        outline: var(--forge-tag-border-width-focus, var(--mp-tag-border-width-focus)) solid currentcolor;
         outline-offset: 1px;
       }
     }

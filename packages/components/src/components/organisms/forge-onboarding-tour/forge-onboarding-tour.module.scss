@@ -1,3 +1,5 @@
+@use './forge-onboarding-tour-properties';
+
 @layer mp.components {
   .forge-onboarding-tour,
   .forge-onboarding-tour__backdrop,
@@ -7,12 +9,15 @@
   }
 
   .forge-onboarding-tour {
-    z-index: 1100;
+    z-index: var(--mp-z-index-modal-onboarding);
     pointer-events: none;
   }
 
   .forge-onboarding-tour__backdrop {
-    background: rgb(0 0 0 / 55%);
+    background: var(
+      --forge-onboarding-tour-overlay-modal-backdrop-surface,
+      var(--mp-overlay-modal-backdrop-surface, rgb(0 0 0 / 55%))
+    );
     pointer-events: auto;
 
     &--spotlight {
@@ -22,26 +27,30 @@
 
   .forge-onboarding-tour__spotlight {
     inset: auto;
-    z-index: 1;
-    border: 2px solid var(--mp-color-action-primary);
-    border-radius: var(--mp-border-radius-sm);
-    box-shadow: 0 0 0 9999px rgb(0 0 0 / 55%);
+    z-index: var(--mp-z-index-modal-dialog);
+    border: 2px solid var(--forge-onboarding-tour-color-action-primary, var(--mp-color-action-primary));
+    border-radius: var(--forge-onboarding-tour-border-radius-sm, var(--mp-border-radius-sm));
+    box-shadow: 0 0 0 9999px
+      var(
+        --forge-onboarding-tour-overlay-modal-backdrop-surface,
+        var(--mp-overlay-modal-backdrop-surface, rgb(0 0 0 / 55%))
+      );
     pointer-events: none;
   }
 
   .forge-onboarding-tour__dialog {
     position: fixed;
-    z-index: 2;
+    z-index: var(--mp-z-index-notification-toast);
     top: 50%;
     left: 50%;
     width: min(28rem, calc(100vw - 2rem));
-    padding: var(--mp-spacing-5);
+    padding: var(--forge-onboarding-tour-spacing-5, var(--mp-spacing-5));
     transform: translate(-50%, -50%);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-border-radius-lg);
-    background: var(--mp-color-surface-primary);
-    color: var(--mp-color-text-primary);
-    box-shadow: var(--mp-shadow-xl, 0 1rem 3rem rgb(0 0 0 / 25%));
+    border: 1px solid var(--forge-onboarding-tour-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-onboarding-tour-border-radius-lg, var(--mp-border-radius-lg));
+    background: var(--forge-onboarding-tour-color-surface-primary, var(--mp-color-surface-primary));
+    color: var(--forge-onboarding-tour-color-text-primary, var(--mp-color-text-primary));
+    box-shadow: var(--forge-onboarding-tour-shadow-xl, var(--mp-shadow-xl, 0 1rem 3rem rgb(0 0 0 / 25%)));
     pointer-events: auto;
 
     &--top {
@@ -64,37 +73,38 @@
   }
 
   .forge-onboarding-tour__progress {
-    color: var(--mp-color-text-secondary);
+    color: var(--forge-onboarding-tour-color-text-secondary, var(--mp-color-text-secondary));
     font-size: 0.875rem;
   }
 
   .forge-onboarding-tour__dialog h2 {
-    margin-block: var(--mp-spacing-2);
+    margin-block: var(--forge-onboarding-tour-spacing-2, var(--mp-spacing-2));
   }
 
   .forge-onboarding-tour__dialog p {
-    color: var(--mp-color-text-secondary);
+    color: var(--forge-onboarding-tour-color-text-secondary, var(--mp-color-text-secondary));
   }
 
   .forge-onboarding-tour__actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    gap: var(--mp-spacing-2);
-    margin-block-start: var(--mp-spacing-4);
+    gap: var(--forge-onboarding-tour-spacing-2, var(--mp-spacing-2));
+    margin-block-start: var(--forge-onboarding-tour-spacing-4, var(--mp-spacing-4));
   }
 
   .forge-onboarding-tour__actions button {
-    padding: var(--mp-spacing-2) var(--mp-spacing-3);
-    border: 1px solid var(--mp-color-border-default);
-    border-radius: var(--mp-border-radius-sm);
+    padding: var(--forge-onboarding-tour-spacing-2, var(--mp-spacing-2))
+      var(--forge-onboarding-tour-spacing-3, var(--mp-spacing-3));
+    border: 1px solid var(--forge-onboarding-tour-color-border-default, var(--mp-color-border-default));
+    border-radius: var(--forge-onboarding-tour-border-radius-sm, var(--mp-border-radius-sm));
     background: transparent;
     color: inherit;
     cursor: pointer;
   }
 
   .forge-onboarding-tour__actions button:last-child {
-    background: var(--mp-color-action-primary);
-    color: var(--mp-color-text-on-action);
+    background: var(--forge-onboarding-tour-color-action-primary, var(--mp-color-action-primary));
+    color: var(--forge-onboarding-tour-color-text-on-action, var(--mp-color-text-on-action));
   }
 }

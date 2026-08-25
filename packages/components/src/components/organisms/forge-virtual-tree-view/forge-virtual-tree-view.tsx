@@ -1,11 +1,13 @@
 import {
-  type MpChild,
-  type MpElement,
-  type MpRenderProperty,
   Slot,
   useEffect,
   useRef,
   useState,
+  createForgeStyle,
+  type MpChild,
+  type MpElement,
+  type MpRenderProperty,
+  type CSSStyleProperties,
 } from '@mission-platform/forge';
 import { ForgeIconChevron } from '@mission-platform/icons';
 
@@ -38,6 +40,75 @@ export interface TreeRowScope {
   select: () => void;
 }
 
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface VirtualTreeViewStyleProperties {
+  readonly 'data-virtual-tree-font-family'?: string;
+  readonly 'data-virtual-tree-font-size'?: string;
+  readonly 'data-virtual-tree-label-focus-ring'?: string;
+  readonly 'data-virtual-tree-label-gap'?: string;
+  readonly 'data-virtual-tree-label-hover-surface'?: string;
+  readonly 'data-virtual-tree-label-padding-inline-end'?: string;
+  readonly 'data-virtual-tree-label-radius'?: string;
+  readonly 'data-virtual-tree-label-transition-duration'?: string;
+  readonly 'data-virtual-tree-label-transition-easing'?: string;
+  readonly 'data-virtual-tree-text-default'?: string;
+  readonly 'data-virtual-tree-text-toggle'?: string;
+  readonly 'data-virtual-tree-text-toggle-hover'?: string;
+  readonly 'data-virtual-tree-toggle-radius'?: string;
+  readonly 'data-virtual-tree-toggle-size'?: string;
+  readonly 'data-virtual-tree-toggle-transition-duration'?: string;
+  readonly 'data-virtual-tree-toggle-transition-easing'?: string;
+}
+
+export type VirtualTreeViewStyle = CSSStyleProperties & {
+  readonly '--forge-virtual-tree-view-data-virtual-tree-font-family'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-font-size'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-label-focus-ring'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-label-gap'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-label-hover-surface'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-label-padding-inline-end'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-label-radius'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-label-transition-duration'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-label-transition-easing'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-text-default'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-text-toggle'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-text-toggle-hover'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-toggle-radius'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-toggle-size'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-toggle-transition-duration'?: string | undefined;
+  readonly '--forge-virtual-tree-view-data-virtual-tree-toggle-transition-easing'?: string | undefined;
+};
+
+function createVirtualTreeViewStyle(
+  properties: Readonly<VirtualTreeViewStyleProperties> | undefined,
+): VirtualTreeViewStyle | undefined {
+  return createForgeStyle({
+    '--forge-virtual-tree-view-data-virtual-tree-font-family': properties?.['data-virtual-tree-font-family'],
+    '--forge-virtual-tree-view-data-virtual-tree-font-size': properties?.['data-virtual-tree-font-size'],
+    '--forge-virtual-tree-view-data-virtual-tree-label-focus-ring': properties?.['data-virtual-tree-label-focus-ring'],
+    '--forge-virtual-tree-view-data-virtual-tree-label-gap': properties?.['data-virtual-tree-label-gap'],
+    '--forge-virtual-tree-view-data-virtual-tree-label-hover-surface':
+      properties?.['data-virtual-tree-label-hover-surface'],
+    '--forge-virtual-tree-view-data-virtual-tree-label-padding-inline-end':
+      properties?.['data-virtual-tree-label-padding-inline-end'],
+    '--forge-virtual-tree-view-data-virtual-tree-label-radius': properties?.['data-virtual-tree-label-radius'],
+    '--forge-virtual-tree-view-data-virtual-tree-label-transition-duration':
+      properties?.['data-virtual-tree-label-transition-duration'],
+    '--forge-virtual-tree-view-data-virtual-tree-label-transition-easing':
+      properties?.['data-virtual-tree-label-transition-easing'],
+    '--forge-virtual-tree-view-data-virtual-tree-text-default': properties?.['data-virtual-tree-text-default'],
+    '--forge-virtual-tree-view-data-virtual-tree-text-toggle': properties?.['data-virtual-tree-text-toggle'],
+    '--forge-virtual-tree-view-data-virtual-tree-text-toggle-hover':
+      properties?.['data-virtual-tree-text-toggle-hover'],
+    '--forge-virtual-tree-view-data-virtual-tree-toggle-radius': properties?.['data-virtual-tree-toggle-radius'],
+    '--forge-virtual-tree-view-data-virtual-tree-toggle-size': properties?.['data-virtual-tree-toggle-size'],
+    '--forge-virtual-tree-view-data-virtual-tree-toggle-transition-duration':
+      properties?.['data-virtual-tree-toggle-transition-duration'],
+    '--forge-virtual-tree-view-data-virtual-tree-toggle-transition-easing':
+      properties?.['data-virtual-tree-toggle-transition-easing'],
+  }) as VirtualTreeViewStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface VirtualTreeViewProperties {
   /** The content the consumer fills the component’s slots with. */
   children?: MpChild | readonly MpChild[];
@@ -59,6 +130,9 @@ export interface VirtualTreeViewProperties {
   onSelect?: (node: TreeNode) => void;
   /** Fired when a node is expanded/collapsed. */
   onToggle?: (node: TreeNode) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<VirtualTreeViewStyleProperties>;
 }
 
 /** A node paired with its tree depth, produced by flattening the visible tree. */
@@ -85,6 +159,8 @@ interface FlatNode {
  * callback props.
  */
 export function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewProperties>): MpElement {
+  const propertyStyle = createVirtualTreeViewStyle(properties.properties);
+
   const { nodes, itemHeight = 32, overscan = 3, height = 400, defaultOpen = false, size = 'md' } = properties;
 
   const [scrollTop, setScrollTop] = useState(0);
@@ -141,7 +217,7 @@ export function ForgeVirtualTreeView(properties: Readonly<VirtualTreeViewPropert
       className={[styles['virtual-tree'], size ? `forge-size--${size}` : undefined]}
       role="tree"
       tabindex={0}
-      style={{ height: `${height}px`, overflowY: 'auto', position: 'relative' }}
+      style={{ ...propertyStyle, height: `${height}px`, overflowY: 'auto', position: 'relative' }}
     >
       <div
         aria-hidden="true"

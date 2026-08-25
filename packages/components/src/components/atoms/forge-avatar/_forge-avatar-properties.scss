@@ -1,0 +1,9 @@
+/**
+ * Registered inherited custom properties for forge-avatar overrides.
+ */
+
+@property --forge-avatar-layout-gap {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-layout-gap);
+}

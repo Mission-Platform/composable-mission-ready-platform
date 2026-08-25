@@ -1,0 +1,105 @@
+/**
+ * Registered inherited custom properties for forge-stats-section overrides.
+ */
+
+@property --forge-stats-section-spacing-8 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-8);
+}
+
+@property --forge-stats-section-spacing-4 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-4);
+}
+
+@property --forge-stats-section-spacing-3 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-3);
+}
+
+@property --forge-stats-section-color-text-tertiary {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-text-tertiary);
+}
+
+@property --forge-stats-columns {
+  syntax: '*';
+  inherits: true;
+  initial-value: 4;
+}
+
+@property --forge-stats-section-spacing-6 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-6);
+}
+
+@property --forge-stats-section-border-width-thin {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thin);
+}
+
+@property --forge-stats-section-color-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-border-default);
+}
+
+@property --forge-stats-section-radius-md {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-radius-md);
+}
+
+@property --forge-stats-section-border-width-thick {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-border-width-thick);
+}
+
+@property --forge-stats-section-color-primary-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-color-primary-default);
+}
+
+@property --forge-stats-section-spacing-1 {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-spacing-1);
+}
+
+@property --forge-stats-section-font-size-2xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-2xl);
+}
+
+@property --forge-stats-section-font-size-4xl {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-size-4xl);
+}
+
+@property --forge-stats-section-font-weight-bold {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-font-weight-bold);
+}
+
+@property --forge-stats-section-duration-fast {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-duration-fast);
+}
+
+@property --forge-stats-section-easing-standard {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-easing-standard);
+}

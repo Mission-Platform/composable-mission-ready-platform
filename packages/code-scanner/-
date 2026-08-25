@@ -1,0 +1,146 @@
+/**
+ * Styling for the write-once `ForgeCodeScanner`.
+ *
+ * `ForgeCodeScanner` owns this co-located CSS Module: it side-effect-imports the
+ * stylesheet so its appearance ships in the built package CSS (the two-stage
+ * compiler carries the import onto both the React and Vue builds).
+ *
+ * The rules live in the package-owned `mp.code-scanner` cascade layer.
+ */
+/**
+ * Registered inherited custom properties for forge-code-scanner overrides.
+ *
+ * Kept in a dedicated partial so the component module can stay focused on
+ * selectors while @property initial values remain token-backed defaults.
+ */
+@property --forge-code-scanner-gap-root {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-gap-root);
+}
+@property --forge-code-scanner-viewport-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-viewport-surface);
+}
+@property --forge-code-scanner-viewport-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-viewport-radius);
+}
+@property --forge-code-scanner-placeholder-text {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-placeholder-text);
+}
+@property --forge-code-scanner-reticle-border-width {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-reticle-border-width);
+}
+@property --forge-code-scanner-reticle-border {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-reticle-border);
+}
+@property --forge-code-scanner-reticle-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-reticle-radius);
+}
+@property --forge-code-scanner-gap-actions {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-gap-actions);
+}
+@property --forge-code-scanner-gap-result {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-gap-result);
+}
+@property --forge-code-scanner-result-padding-block {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-result-padding-block);
+}
+@property --forge-code-scanner-result-padding-inline {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-result-padding-inline);
+}
+@property --forge-code-scanner-result-surface {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-result-surface);
+}
+@property --forge-code-scanner-result-radius {
+  syntax: "*";
+  inherits: true;
+  initial-value: var(--mp-code-scanner-result-radius);
+}
+@layer mp.code-scanner {
+  .forge-code-scanner {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--forge-code-scanner-gap-root, var(--mp-code-scanner-gap-root));
+    max-width: 100%;
+  }
+  .forge-code-scanner__viewport {
+    position: relative;
+    aspect-ratio: 1/1;
+    width: 100%;
+    max-width: 20rem;
+    overflow: hidden;
+    background: var(--forge-code-scanner-viewport-surface, var(--mp-code-scanner-viewport-surface));
+    border-radius: var(--forge-code-scanner-viewport-radius, var(--mp-code-scanner-viewport-radius));
+  }
+  .forge-code-scanner__video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .forge-code-scanner__placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--forge-code-scanner-placeholder-text, var(--mp-code-scanner-placeholder-text));
+  }
+  .forge-code-scanner__reticle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    box-sizing: border-box;
+    pointer-events: none;
+    border: var(--forge-code-scanner-reticle-border-width, var(--mp-code-scanner-reticle-border-width)) solid var(--forge-code-scanner-reticle-border, var(--mp-code-scanner-reticle-border));
+    border-radius: var(--forge-code-scanner-reticle-radius, var(--mp-code-scanner-reticle-radius));
+    transform: translate(-50%, -50%);
+  }
+  .forge-code-scanner__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--forge-code-scanner-gap-actions, var(--mp-code-scanner-gap-actions));
+  }
+  .forge-code-scanner__file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .forge-code-scanner__result {
+    display: flex;
+    flex-direction: column;
+    gap: var(--forge-code-scanner-gap-result, var(--mp-code-scanner-gap-result));
+    padding: var(--forge-code-scanner-result-padding-block, var(--mp-code-scanner-result-padding-block)) var(--forge-code-scanner-result-padding-inline, var(--mp-code-scanner-result-padding-inline));
+    background: var(--forge-code-scanner-result-surface, var(--mp-code-scanner-result-surface));
+    border-radius: var(--forge-code-scanner-result-radius, var(--mp-code-scanner-result-radius));
+    word-break: break-all;
+  }
+}

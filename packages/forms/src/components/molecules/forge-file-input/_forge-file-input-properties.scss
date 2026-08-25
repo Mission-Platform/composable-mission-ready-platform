@@ -1,0 +1,275 @@
+@property --forge-file-input-input-file-gap-stack {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-gap-stack);
+}
+
+@property --forge-file-input-input-file-size-2xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-2xs-padding-block);
+}
+
+@property --forge-file-input-input-file-size-xs-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-xs-padding-block);
+}
+
+@property --forge-file-input-input-file-size-sm-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-sm-padding-block);
+}
+
+@property --forge-file-input-input-file-size-md-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-md-padding-block);
+}
+
+@property --forge-file-input-input-file-size-lg-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-lg-padding-block);
+}
+
+@property --forge-file-input-input-file-size-xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-xl-padding-block);
+}
+
+@property --forge-file-input-input-file-size-2xl-padding-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-2xl-padding-block);
+}
+
+@property --forge-file-input-input-file-size-2xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-2xs-padding-inline);
+}
+
+@property --forge-file-input-input-file-size-xs-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-xs-padding-inline);
+}
+
+@property --forge-file-input-input-file-size-sm-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-sm-padding-inline);
+}
+
+@property --forge-file-input-input-file-size-md-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-md-padding-inline);
+}
+
+@property --forge-file-input-input-file-size-lg-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-lg-padding-inline);
+}
+
+@property --forge-file-input-input-file-size-xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-xl-padding-inline);
+}
+
+@property --forge-file-input-input-file-size-2xl-padding-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-2xl-padding-inline);
+}
+
+@property --forge-file-input-input-file-size-2xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-2xs-font-size);
+}
+
+@property --forge-file-input-input-file-size-xs-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-xs-font-size);
+}
+
+@property --forge-file-input-input-file-size-sm-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-sm-font-size);
+}
+
+@property --forge-file-input-input-file-size-md-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-md-font-size);
+}
+
+@property --forge-file-input-input-file-size-lg-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-lg-font-size);
+}
+
+@property --forge-file-input-input-file-size-xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-xl-font-size);
+}
+
+@property --forge-file-input-input-file-size-2xl-font-size {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-size-2xl-font-size);
+}
+
+@property --forge-file-input-input-file-required {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-required);
+}
+
+@property --forge-file-input-input-file-gap-row {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-gap-row);
+}
+
+@property --forge-file-input-input-file-font-weight {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-font-weight);
+}
+
+@property --forge-file-input-input-file-text-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-text-default);
+}
+
+@property --forge-file-input-input-file-surface-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-surface-default);
+}
+
+@property --forge-file-input-input-file-border-width-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-border-width-default);
+}
+
+@property --forge-file-input-input-file-border-default {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-border-default);
+}
+
+@property --forge-file-input-input-file-radius-button {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-radius-button);
+}
+
+@property --forge-file-input-input-file-surface-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-surface-disabled);
+}
+
+@property --forge-file-input-input-file-text-disabled {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-text-disabled);
+}
+
+@property --forge-file-input-input-file-surface-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-surface-hover);
+}
+
+@property --forge-file-input-input-file-border-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-border-hover);
+}
+
+@property --forge-file-input-input-file-gap-dropzone {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-gap-dropzone);
+}
+
+@property --forge-file-input-input-file-padding-dropzone-block {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-padding-dropzone-block);
+}
+
+@property --forge-file-input-input-file-padding-dropzone-inline {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-padding-dropzone-inline);
+}
+
+@property --forge-file-input-input-file-border-width-dropzone {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-border-width-dropzone);
+}
+
+@property --forge-file-input-input-file-radius-dropzone {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-radius-dropzone);
+}
+
+@property --forge-file-input-input-file-border-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-border-active);
+}
+
+@property --forge-file-input-input-file-surface-active {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-surface-active);
+}
+
+@property --forge-file-input-input-file-text-muted {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-text-muted);
+}
+
+@property --forge-file-input-input-file-text-link {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-text-link);
+}
+
+@property --forge-file-input-input-file-text-link-hover {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-text-link-hover);
+}
+
+@property --forge-file-input-input-file-border-invalid {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-border-invalid);
+}
+
+@property --forge-file-input-input-file-text-error {
+  syntax: '*';
+  inherits: true;
+  initial-value: var(--mp-input-file-text-error);
+}

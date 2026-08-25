@@ -8,6 +8,7 @@
  * The rules live in the shared `mp.components` cascade layer, matching the
  * `@mission-platform/components` package.
  */
+@use './forge-tabs-properties';
 
 @layer mp.components {
   .forge-tabs {
@@ -20,7 +21,8 @@
       align-items: stretch;
 
       &--line {
-        border-bottom: var(--mp-navigation-tabs-bar-border-width) solid var(--mp-navigation-tabs-bar-border);
+        border-bottom: var(--forge-tabs-navigation-tabs-bar-border-width, var(--mp-navigation-tabs-bar-border-width))
+          solid var(--forge-tabs-navigation-tabs-bar-border, var(--mp-navigation-tabs-bar-border));
       }
     }
 
@@ -37,17 +39,20 @@
       }
 
       &--pill {
-        background-color: var(--mp-navigation-tabs-list-pill-surface);
-        border-radius: var(--mp-navigation-tabs-list-pill-radius);
-        padding: var(--mp-navigation-tabs-list-pill-padding);
-        gap: var(--mp-navigation-tabs-list-pill-gap);
+        background-color: var(
+          --forge-tabs-navigation-tabs-list-pill-surface,
+          var(--mp-navigation-tabs-list-pill-surface)
+        );
+        border-radius: var(--forge-tabs-navigation-tabs-list-pill-radius, var(--mp-navigation-tabs-list-pill-radius));
+        padding: var(--forge-tabs-navigation-tabs-list-pill-padding, var(--mp-navigation-tabs-list-pill-padding));
+        gap: var(--forge-tabs-navigation-tabs-list-pill-gap, var(--mp-navigation-tabs-list-pill-gap));
       }
     }
 
     &__tab-wrapper {
       display: inline-flex;
       align-items: center;
-      gap: var(--mp-navigation-tabs-wrapper-gap);
+      gap: var(--forge-tabs-navigation-tabs-wrapper-gap, var(--mp-navigation-tabs-wrapper-gap));
 
       /*
        * The active indicator is drawn as an `::after` **inside** the wrapper's own
@@ -59,62 +64,165 @@
        */
       &--line {
         position: relative;
-        padding: var(--mp-navigation-tabs-wrapper-line-padding-block) var(--mp-navigation-tabs-wrapper-line-padding-inline);
-        border-radius: var(--mp-navigation-tabs-wrapper-line-radius) var(--mp-navigation-tabs-wrapper-line-radius) 0 0;
-        color: var(--mp-navigation-tabs-wrapper-line-text-default);
-        transition: color var(--mp-navigation-tabs-wrapper-line-transition-duration) var(--mp-navigation-tabs-wrapper-line-transition-easing);
+        padding: var(
+            --forge-tabs-navigation-tabs-wrapper-line-padding-block,
+            var(--mp-navigation-tabs-wrapper-line-padding-block)
+          )
+          var(
+            --forge-tabs-navigation-tabs-wrapper-line-padding-inline,
+            var(--mp-navigation-tabs-wrapper-line-padding-inline)
+          );
+        border-radius: var(
+            --forge-tabs-navigation-tabs-wrapper-line-radius,
+            var(--mp-navigation-tabs-wrapper-line-radius)
+          )
+          var(--forge-tabs-navigation-tabs-wrapper-line-radius, var(--mp-navigation-tabs-wrapper-line-radius)) 0 0;
+        color: var(
+          --forge-tabs-navigation-tabs-wrapper-line-text-default,
+          var(--mp-navigation-tabs-wrapper-line-text-default)
+        );
+        transition: color
+          var(
+            --forge-tabs-navigation-tabs-wrapper-line-transition-duration,
+            var(--mp-navigation-tabs-wrapper-line-transition-duration)
+          )
+          var(
+            --forge-tabs-navigation-tabs-wrapper-line-transition-easing,
+            var(--mp-navigation-tabs-wrapper-line-transition-easing)
+          );
 
         &::after {
           content: '';
           position: absolute;
           inset-inline: 0;
           inset-block-end: 0;
-          block-size: var(--mp-navigation-tabs-wrapper-line-indicator-width);
-          background-color: var(--mp-navigation-tabs-wrapper-line-indicator-default);
-          border-radius: var(--mp-navigation-tabs-wrapper-line-indicator-radius) var(--mp-navigation-tabs-wrapper-line-indicator-radius) 0 0;
-          transition: background-color var(--mp-navigation-tabs-wrapper-line-transition-duration) var(--mp-navigation-tabs-wrapper-line-transition-easing);
+          block-size: var(
+            --forge-tabs-navigation-tabs-wrapper-line-indicator-width,
+            var(--mp-navigation-tabs-wrapper-line-indicator-width)
+          );
+          background-color: var(
+            --forge-tabs-navigation-tabs-wrapper-line-indicator-default,
+            var(--mp-navigation-tabs-wrapper-line-indicator-default)
+          );
+          border-radius: var(
+              --forge-tabs-navigation-tabs-wrapper-line-indicator-radius,
+              var(--mp-navigation-tabs-wrapper-line-indicator-radius)
+            )
+            var(
+              --forge-tabs-navigation-tabs-wrapper-line-indicator-radius,
+              var(--mp-navigation-tabs-wrapper-line-indicator-radius)
+            )
+            0 0;
+          transition: background-color
+            var(
+              --forge-tabs-navigation-tabs-wrapper-line-transition-duration,
+              var(--mp-navigation-tabs-wrapper-line-transition-duration)
+            )
+            var(
+              --forge-tabs-navigation-tabs-wrapper-line-transition-easing,
+              var(--mp-navigation-tabs-wrapper-line-transition-easing)
+            );
         }
 
         &:hover:not(.forge-tabs__tab-wrapper--disabled) {
-          color: var(--mp-navigation-tabs-wrapper-line-text-hover);
+          color: var(
+            --forge-tabs-navigation-tabs-wrapper-line-text-hover,
+            var(--mp-navigation-tabs-wrapper-line-text-hover)
+          );
 
           &::after {
-            background-color: var(--mp-navigation-tabs-wrapper-line-indicator-hover);
+            background-color: var(
+              --forge-tabs-navigation-tabs-wrapper-line-indicator-hover,
+              var(--mp-navigation-tabs-wrapper-line-indicator-hover)
+            );
           }
         }
 
         &.forge-tabs__tab-wrapper--active {
-          color: var(--mp-navigation-tabs-wrapper-line-text-active);
-          background-color: var(--mp-navigation-tabs-wrapper-line-surface-active);
+          color: var(
+            --forge-tabs-navigation-tabs-wrapper-line-text-active,
+            var(--mp-navigation-tabs-wrapper-line-text-active)
+          );
+          background-color: var(
+            --forge-tabs-navigation-tabs-wrapper-line-surface-active,
+            var(--mp-navigation-tabs-wrapper-line-surface-active)
+          );
 
           &::after {
-            background-color: var(--mp-navigation-tabs-wrapper-line-indicator-active);
+            background-color: var(
+              --forge-tabs-navigation-tabs-wrapper-line-indicator-active,
+              var(--mp-navigation-tabs-wrapper-line-indicator-active)
+            );
           }
         }
       }
 
       &--pill {
-        padding: var(--mp-navigation-tabs-wrapper-pill-padding-block) var(--mp-navigation-tabs-wrapper-pill-padding-inline);
-        border-radius: var(--mp-navigation-tabs-wrapper-pill-radius);
-        color: var(--mp-navigation-tabs-wrapper-pill-text-default);
+        padding: var(
+            --forge-tabs-navigation-tabs-wrapper-pill-padding-block,
+            var(--mp-navigation-tabs-wrapper-pill-padding-block)
+          )
+          var(
+            --forge-tabs-navigation-tabs-wrapper-pill-padding-inline,
+            var(--mp-navigation-tabs-wrapper-pill-padding-inline)
+          );
+        border-radius: var(
+          --forge-tabs-navigation-tabs-wrapper-pill-radius,
+          var(--mp-navigation-tabs-wrapper-pill-radius)
+        );
+        color: var(
+          --forge-tabs-navigation-tabs-wrapper-pill-text-default,
+          var(--mp-navigation-tabs-wrapper-pill-text-default)
+        );
         transition:
-          color var(--mp-navigation-tabs-wrapper-pill-transition-duration) var(--mp-navigation-tabs-wrapper-pill-transition-easing),
-          background-color var(--mp-navigation-tabs-wrapper-pill-transition-duration) var(--mp-navigation-tabs-wrapper-pill-transition-easing);
+          color
+            var(
+              --forge-tabs-navigation-tabs-wrapper-pill-transition-duration,
+              var(--mp-navigation-tabs-wrapper-pill-transition-duration)
+            )
+            var(
+              --forge-tabs-navigation-tabs-wrapper-pill-transition-easing,
+              var(--mp-navigation-tabs-wrapper-pill-transition-easing)
+            ),
+          background-color
+            var(
+              --forge-tabs-navigation-tabs-wrapper-pill-transition-duration,
+              var(--mp-navigation-tabs-wrapper-pill-transition-duration)
+            )
+            var(
+              --forge-tabs-navigation-tabs-wrapper-pill-transition-easing,
+              var(--mp-navigation-tabs-wrapper-pill-transition-easing)
+            );
 
         &:hover:not(.forge-tabs__tab-wrapper--active, .forge-tabs__tab-wrapper--disabled) {
-          background-color: var(--mp-navigation-tabs-wrapper-pill-surface-hover);
-          color: var(--mp-navigation-tabs-wrapper-pill-text-hover);
+          background-color: var(
+            --forge-tabs-navigation-tabs-wrapper-pill-surface-hover,
+            var(--mp-navigation-tabs-wrapper-pill-surface-hover)
+          );
+          color: var(
+            --forge-tabs-navigation-tabs-wrapper-pill-text-hover,
+            var(--mp-navigation-tabs-wrapper-pill-text-hover)
+          );
         }
 
         &.forge-tabs__tab-wrapper--active {
-          background-color: var(--mp-navigation-tabs-wrapper-pill-surface-active);
-          color: var(--mp-navigation-tabs-wrapper-pill-text-active);
-          box-shadow: var(--mp-navigation-tabs-wrapper-pill-shadow-active);
+          background-color: var(
+            --forge-tabs-navigation-tabs-wrapper-pill-surface-active,
+            var(--mp-navigation-tabs-wrapper-pill-surface-active)
+          );
+          color: var(
+            --forge-tabs-navigation-tabs-wrapper-pill-text-active,
+            var(--mp-navigation-tabs-wrapper-pill-text-active)
+          );
+          box-shadow: var(
+            --forge-tabs-navigation-tabs-wrapper-pill-shadow-active,
+            var(--mp-navigation-tabs-wrapper-pill-shadow-active)
+          );
         }
       }
 
       &--disabled {
-        opacity: var(--mp-navigation-tabs-opacity-disabled);
+        opacity: var(--forge-tabs-navigation-tabs-opacity-disabled, var(--mp-navigation-tabs-opacity-disabled));
         cursor: not-allowed;
       }
     }
@@ -132,8 +240,8 @@
 
       &:focus-visible {
         outline: none;
-        border-radius: var(--mp-navigation-tabs-radius-focus);
-        box-shadow: var(--mp-navigation-tabs-shadow-focus);
+        border-radius: var(--forge-tabs-navigation-tabs-radius-focus, var(--mp-navigation-tabs-radius-focus));
+        box-shadow: var(--forge-tabs-navigation-tabs-shadow-focus, var(--mp-navigation-tabs-shadow-focus));
       }
 
       &--disabled {
@@ -149,14 +257,17 @@
       flex-shrink: 0;
       border: none;
       background: transparent;
-      color: var(--mp-navigation-tabs-text-muted);
+      color: var(--forge-tabs-navigation-tabs-text-muted, var(--mp-navigation-tabs-text-muted));
       padding: 2px;
-      border-radius: var(--mp-navigation-tabs-radius-close);
+      border-radius: var(--forge-tabs-navigation-tabs-radius-close, var(--mp-navigation-tabs-radius-close));
       cursor: pointer;
-      font-size: var(--mp-navigation-tabs-close-font-size);
+      font-size: var(--forge-tabs-navigation-tabs-close-font-size, var(--mp-navigation-tabs-close-font-size));
       transition:
-        color var(--mp-navigation-tabs-transition-duration) var(--mp-navigation-tabs-transition-easing),
-        background-color var(--mp-navigation-tabs-transition-duration) var(--mp-navigation-tabs-transition-easing);
+        color var(--forge-tabs-navigation-tabs-transition-duration, var(--mp-navigation-tabs-transition-duration))
+          var(--forge-tabs-navigation-tabs-transition-easing, var(--mp-navigation-tabs-transition-easing)),
+        background-color
+          var(--forge-tabs-navigation-tabs-transition-duration, var(--mp-navigation-tabs-transition-duration))
+          var(--forge-tabs-navigation-tabs-transition-easing, var(--mp-navigation-tabs-transition-easing));
 
       svg {
         display: block;
@@ -176,8 +287,8 @@
       }
 
       &:hover {
-        color: var(--mp-navigation-tabs-text-hover);
-        background-color: var(--mp-navigation-tabs-surface-hover);
+        color: var(--forge-tabs-navigation-tabs-text-hover, var(--mp-navigation-tabs-text-hover));
+        background-color: var(--forge-tabs-navigation-tabs-surface-hover, var(--mp-navigation-tabs-surface-hover));
       }
     }
 
@@ -189,9 +300,12 @@
       border: none;
       background: transparent;
       cursor: pointer;
-      color: var(--mp-navigation-tabs-text-muted);
-      padding: var(--mp-navigation-tabs-padding-add-block) var(--mp-navigation-tabs-padding-add-inline);
-      transition: color var(--mp-navigation-tabs-transition-duration) var(--mp-navigation-tabs-transition-easing);
+      color: var(--forge-tabs-navigation-tabs-text-muted, var(--mp-navigation-tabs-text-muted));
+      padding: var(--forge-tabs-navigation-tabs-padding-add-block, var(--mp-navigation-tabs-padding-add-block))
+        var(--forge-tabs-navigation-tabs-padding-add-inline, var(--mp-navigation-tabs-padding-add-inline));
+      transition: color
+        var(--forge-tabs-navigation-tabs-transition-duration, var(--mp-navigation-tabs-transition-duration))
+        var(--forge-tabs-navigation-tabs-transition-easing, var(--mp-navigation-tabs-transition-easing));
 
       svg {
         display: block;
@@ -201,13 +315,13 @@
       }
 
       &:hover {
-        color: var(--mp-navigation-tabs-text-hover);
+        color: var(--forge-tabs-navigation-tabs-text-hover, var(--mp-navigation-tabs-text-hover));
       }
 
       &:focus-visible {
         outline: none;
-        border-radius: var(--mp-navigation-tabs-radius-add-focus);
-        box-shadow: var(--mp-navigation-tabs-shadow-focus);
+        border-radius: var(--forge-tabs-navigation-tabs-radius-add-focus, var(--mp-navigation-tabs-radius-add-focus));
+        box-shadow: var(--forge-tabs-navigation-tabs-shadow-focus, var(--mp-navigation-tabs-shadow-focus));
       }
 
       /*
@@ -216,12 +330,16 @@
        * box either, otherwise it no longer lines up with the bar's own rule.
        */
       &--line {
-        border-bottom: var(--mp-navigation-tabs-border-width) solid var(--mp-navigation-tabs-border-line);
+        border-bottom: var(--forge-tabs-navigation-tabs-border-width, var(--mp-navigation-tabs-border-width)) solid
+          var(--forge-tabs-navigation-tabs-border-line, var(--mp-navigation-tabs-border-line));
       }
     }
 
     &__panel {
-      padding-top: var(--mp-navigation-tabs-padding-panel-block-start);
+      padding-top: var(
+        --forge-tabs-navigation-tabs-padding-panel-block-start,
+        var(--mp-navigation-tabs-padding-panel-block-start)
+      );
       display: flex;
       flex-direction: column;
       flex: 1;
