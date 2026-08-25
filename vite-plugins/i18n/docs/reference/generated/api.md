@@ -11,32 +11,32 @@ Generated from public source declarations in `@mission-platform/vite-plugin-i18n
 **Kind:** function
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name    | Type              | Description |
-| ------- | ----------------- | ----------- |
-| options | I18nPluginOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | I18nPluginOptions |  |
 
 ### i18nPlugin
 
 **Kind:** function
 
 ```typescript
-function i18nPlugin(options: I18nPluginOptions = {}): Plugin;
+function i18nPlugin(options: I18nPluginOptions = {}): Plugin
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name    | Type              | Description |
-| ------- | ----------------- | ----------- |
-| options | I18nPluginOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | I18nPluginOptions |  |
 
 ### I18nPluginOptions
 
@@ -53,9 +53,7 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function readSupportedLocales(
-  options: ReadSupportedLocalesOptions = {},
-): string[];
+function readSupportedLocales(options: ReadSupportedLocalesOptions = {}): string[]
 ```
 
 Discover the supported locales at **build/config time**, using the exact same
@@ -66,9 +64,9 @@ of truth instead of hand-maintaining a parallel list.
 
 #### Parameters
 
-| Name    | Type                        | Description |
-| ------- | --------------------------- | ----------- |
-| options | ReadSupportedLocalesOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | ReadSupportedLocalesOptions |  |
 
 ### ReadSupportedLocalesOptions
 
