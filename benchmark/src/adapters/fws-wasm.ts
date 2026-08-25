@@ -20,6 +20,7 @@ import {
 
 import type {
   BuildArtifact,
+  FwsMode,
   InitializedAdapter,
   RuntimeAdapter,
 } from "../contracts.ts";
@@ -68,7 +69,11 @@ interface FwsExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
+  readonly fws_realloc: (
+    pointer: number,
+    oldSize: number,
+    newSize: number,
+  ) => number;
   readonly fws_reset: () => void;
 }
 
@@ -150,7 +155,10 @@ function releaseRanges(
   }
 }
 
-function withReset<T>(exports: Pick<FwsExports, "fws_reset">, operation: () => T): T {
+function withReset<T>(
+  exports: Pick<FwsExports, "fws_reset">,
+  operation: () => T,
+): T {
   exports.fws_reset();
   let operationFailed = false;
   try {
@@ -170,10 +178,17 @@ function withReset<T>(exports: Pick<FwsExports, "fws_reset">, operation: () => T
 function createFwsWasmAdapterInternal(
   source: string,
   loader: FwsWasmLoader,
+  boundsChecks: "runtime" | "excluded-by-profile" = "runtime",
+  modeOverride?: FwsMode,
 ): RuntimeAdapter {
   const generated = loader === "generated";
-  const artifactId = generated ? "fws-wasm-generated" : "fws-wasm";
-  const fwsMode = generated ? "wasm-generated" : "wasm";
+  const artifactId =
+    modeOverride === "wasm-excluded-bounds"
+      ? "fws-wasm-excluded-bounds"
+      : generated
+        ? "fws-wasm-generated"
+        : "fws-wasm";
+  const fwsMode = modeOverride ?? (generated ? "wasm-generated" : "wasm");
   let compiled:
     | {
         artifact: ForgeWebScriptArtifact;
@@ -192,6 +207,8 @@ function createFwsWasmAdapterInternal(
         source,
         fileName: SOURCE_FILE,
         compilerVersion: COMPILER_VERSION,
+        optimization: "release",
+        boundsChecks,
       });
       if (
         artifact.diagnostics.length > 0 ||
@@ -233,6 +250,18 @@ function createFwsWasmAdapterInternal(
         sizeBytes: artifact.wasm.byteLength,
         hash: artifact.contentHash,
         exports: [...REQUIRED_EXPORTS],
+        fwsPipeline: {
+          pipeline: "fws-son-wasm-two-stage",
+          frontend: "son-ir",
+          wasmStage: "wasm-ir-optimizer",
+          optimization: "release",
+          boundsChecks,
+          memoryModel:
+            artifact.sonIr?.memoryModel ?? "region-arc-checked-linear",
+          sonGraphHash: artifact.sonIr?.graphHash ?? "",
+          sonNodeCount: artifact.sonIr?.nodes.length ?? 0,
+          sonPassCount: artifact.sonOptimizationReport?.passes.length ?? 0,
+        },
         metadata: {
           abi: generated
             ? "generated-esm-over-pointer-length-v1"
@@ -243,6 +272,16 @@ function createFwsWasmAdapterInternal(
           instancePolicy: "reusable-with-reset",
           resetAbi: "fws_reset-v1",
           rawWasmBytes: artifact.wasm.byteLength,
+          pipeline: "fws-son-wasm-two-stage",
+          frontend: "son-ir",
+          wasmStage: "wasm-ir-optimizer",
+          optimization: "release",
+          boundsChecks,
+          memoryModel:
+            artifact.sonIr?.memoryModel ?? "region-arc-checked-linear",
+          sonGraphHash: artifact.sonIr?.graphHash ?? "",
+          sonNodeCount: artifact.sonIr?.nodes.length ?? 0,
+          sonPassCount: artifact.sonOptimizationReport?.passes.length ?? 0,
           generatedSourceBytes: generatedSource.byteLength,
           ...(generated
             ? { generatedSourceHash: hashArtifactBytes(generatedSource) }
@@ -289,7 +328,9 @@ function createFwsWasmAdapterInternal(
       if (generatedModule !== undefined && generatedExports === undefined)
         generatedExports = generatedModule.loadSync();
       if (generated && typeof generatedExports?.fws_reset !== "function")
-        throw new Error("Generated FWS module is missing the fws_reset ABI export.");
+        throw new Error(
+          "Generated FWS module is missing the fws_reset ABI export.",
+        );
       const preparedExports = asExports(
         new WebAssembly.Instance(module, {}).exports,
       );
@@ -428,4 +469,20 @@ export function createFwsGeneratedWasmAdapter(
   source: string = resolveSource(),
 ): RuntimeAdapter {
   return createFwsWasmAdapterInternal(source, "generated");
+}
+
+/**
+ * Explicitly builds the same SoN + Wasm pipeline with runtime bounds checks
+ * excluded by profile. It is used only as a measured comparison and is never
+ * the default benchmark artifact.
+ */
+export function createFwsExcludedBoundsWasmAdapter(
+  source: string = resolveSource(),
+): RuntimeAdapter {
+  return createFwsWasmAdapterInternal(
+    source,
+    "raw",
+    "excluded-by-profile",
+    "wasm-excluded-bounds",
+  );
 }

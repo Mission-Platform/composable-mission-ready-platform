@@ -27,8 +27,42 @@ export const FWS_MODES = [
   "aot",
   "wasm",
   "wasm-generated",
+  "wasm-excluded-bounds",
 ] as const;
 export type FwsMode = (typeof FWS_MODES)[number];
+
+export type BenchmarkMetric =
+  | "compile-time"
+  | "wasm-size"
+  | "call-throughput"
+  | "memory-behavior"
+  | "bounds-check-overhead";
+
+export interface BenchmarkMetricRecord {
+  readonly metric: BenchmarkMetric;
+  readonly implementation: Implementation;
+  readonly fwsMode?: FwsMode;
+  readonly caseId?: string;
+  readonly hostRuntime?: HostRuntime;
+  readonly value: number;
+  readonly unit: "milliseconds" | "bytes" | "calls-per-second" | "percent";
+  readonly referenceValue?: number;
+  readonly referenceMode?: FwsMode;
+  readonly explanation?: string;
+}
+
+/** Metadata identifying the FWS pipeline represented by a benchmark artifact. */
+export interface FwsBenchmarkPipelineMetadata {
+  readonly pipeline: "fws-son-wasm-two-stage" | "fws-vm-reference";
+  readonly frontend: "son-ir" | "vm-ir";
+  readonly wasmStage?: "wasm-ir-optimizer";
+  readonly optimization: "debug" | "release";
+  readonly boundsChecks?: "runtime" | "proven-safe" | "excluded-by-profile";
+  readonly memoryModel?: "region-arc-checked-linear";
+  readonly sonGraphHash?: string;
+  readonly sonNodeCount?: number;
+  readonly sonPassCount?: number;
+}
 
 export const HOST_RUNTIMES = ["node", "chromium"] as const;
 export type HostRuntime = (typeof HOST_RUNTIMES)[number];
@@ -97,6 +131,7 @@ export interface BuildArtifact {
   readonly hash?: string;
   readonly exports?: readonly string[];
   readonly metadata?: Readonly<Record<string, string | number | boolean>>;
+  readonly fwsPipeline?: FwsBenchmarkPipelineMetadata;
 }
 
 export interface InitializedAdapter<
@@ -257,6 +292,7 @@ export interface BenchmarkReport {
   readonly correctness: readonly CorrectnessResult[];
   readonly measurements: readonly PhaseMeasurement[];
   readonly failures: readonly BenchmarkFailure[];
+  readonly metrics: readonly BenchmarkMetricRecord[];
   readonly comparisons?: readonly BaselineComparison[];
   readonly performanceComparisons?: readonly PerformanceComparison[];
   readonly performanceGates?: PerformanceGateReport;

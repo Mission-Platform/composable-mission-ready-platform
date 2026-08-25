@@ -10,6 +10,7 @@ import type {
   BaselineComparison,
   BenchmarkFailure,
   BenchmarkKey,
+  BenchmarkMetricRecord,
   BenchmarkReport,
   CorrectnessResult,
   EnvironmentMetadata,
@@ -102,6 +103,122 @@ function performanceComparisonIdentity(
   >,
 ): string {
   return `${value.caseId}|${value.workload}|${value.inputSize}|${value.hostRuntime}`;
+}
+
+function metricIdentity(metric: BenchmarkMetricRecord): string {
+  return [
+    metric.metric,
+    metric.caseId ?? "-",
+    metric.implementation,
+    metric.fwsMode ?? "-",
+    metric.hostRuntime ?? "-",
+  ].join("|");
+}
+
+function benchmarkMetrics(
+  artifacts: BenchmarkReport["artifacts"],
+  measurements: readonly PhaseMeasurement[],
+): readonly BenchmarkMetricRecord[] {
+  const metrics: BenchmarkMetricRecord[] = [];
+  for (const measurement of measurements) {
+    const statistics = measurement.statistics;
+    if (statistics === undefined || measurement.status !== "measured") continue;
+    if (measurement.phase === "build") {
+      metrics.push({
+        metric: "compile-time",
+        implementation: measurement.implementation,
+        ...(measurement.fwsMode === undefined
+          ? {}
+          : { fwsMode: measurement.fwsMode }),
+        caseId: measurement.caseId,
+        hostRuntime: measurement.hostRuntime,
+        value: statistics.medianMs,
+        unit: "milliseconds",
+      });
+    } else if (measurement.phase === "execute") {
+      metrics.push({
+        metric: "call-throughput",
+        implementation: measurement.implementation,
+        ...(measurement.fwsMode === undefined
+          ? {}
+          : { fwsMode: measurement.fwsMode }),
+        caseId: measurement.caseId,
+        hostRuntime: measurement.hostRuntime,
+        value: statistics.throughputPerSecond,
+        unit: "calls-per-second",
+      });
+      if (statistics.memoryDeltaBytes !== undefined) {
+        metrics.push({
+          metric: "memory-behavior",
+          implementation: measurement.implementation,
+          ...(measurement.fwsMode === undefined
+            ? {}
+            : { fwsMode: measurement.fwsMode }),
+          caseId: measurement.caseId,
+          hostRuntime: measurement.hostRuntime,
+          value: statistics.memoryDeltaBytes,
+          unit: "bytes",
+        });
+      }
+    }
+  }
+  for (const artifact of artifacts) {
+    if (artifact.sizeBytes === undefined) continue;
+    metrics.push({
+      metric: "wasm-size",
+      implementation: artifact.implementation,
+      ...(artifact.fwsMode === undefined ? {} : { fwsMode: artifact.fwsMode }),
+      value: artifact.sizeBytes,
+      unit: "bytes",
+      ...(artifact.fwsPipeline?.pipeline === "fws-son-wasm-two-stage"
+        ? {
+            explanation:
+              "Size includes the canonical SoN frontend and Wasm-stage optimizer.",
+          }
+        : {}),
+    });
+  }
+  const checked = new Map<string, PhaseMeasurement>();
+  const excluded = new Map<string, PhaseMeasurement>();
+  for (const measurement of measurements) {
+    if (measurement.phase !== "execute" || measurement.status !== "measured")
+      continue;
+    const key = `${measurement.caseId}|${measurement.workload}|${measurement.inputSize}|${measurement.hostRuntime}`;
+    if (measurement.implementation !== "fws") continue;
+    if (measurement.fwsMode === "wasm") checked.set(key, measurement);
+    if (measurement.fwsMode === "wasm-excluded-bounds")
+      excluded.set(key, measurement);
+  }
+  for (const [key, runtime] of checked) {
+    const profile = excluded.get(key);
+    const runtimeMs = runtime.statistics?.medianMs;
+    const profileMs = profile?.statistics?.medianMs;
+    if (
+      profile === undefined ||
+      runtimeMs === undefined ||
+      profileMs === undefined ||
+      profileMs <= 0
+    )
+      continue;
+    const overhead = deltaPercent(runtimeMs, profileMs);
+    if (overhead === undefined) continue;
+    metrics.push({
+      metric: "bounds-check-overhead",
+      implementation: "fws",
+      fwsMode: "wasm",
+      caseId: runtime.caseId,
+      hostRuntime: runtime.hostRuntime,
+      value: overhead,
+      unit: "percent",
+      referenceValue: profileMs,
+      referenceMode: "wasm-excluded-bounds",
+      explanation:
+        "Checked runtime profile versus the explicit excluded-by-profile run.",
+    });
+  }
+  return metrics.toSorted((left, right) =>
+    metricIdentity(left).localeCompare(metricIdentity(right)),
+  );
 }
 
 function correctnessIdentity(
@@ -591,12 +708,17 @@ export function createBenchmarkReport(
       ...browserMeasurements,
     ]),
     failures,
+    metrics: [],
   };
-  const withGate = {
+  const measuredReport = {
     ...report,
+    metrics: benchmarkMetrics(report.artifacts, report.measurements),
+  } satisfies BenchmarkReport;
+  const withGate = {
+    ...measuredReport,
     performanceComparisons: [
-      ...compareJavaScriptPerformance(report),
-      ...compareFwsPerformance(report),
+      ...compareJavaScriptPerformance(measuredReport),
+      ...compareFwsPerformance(measuredReport),
     ].toSorted((left, right) => {
       const candidateOrder = createBenchmarkKey(
         left.candidateKey,
@@ -608,7 +730,7 @@ export function createBenchmarkReport(
           );
     }),
     performanceGates: createPerformanceGateReport(
-      report,
+      measuredReport,
       options.performanceGate ?? DEFAULT_PERFORMANCE_GATE_POLICY,
     ),
   };

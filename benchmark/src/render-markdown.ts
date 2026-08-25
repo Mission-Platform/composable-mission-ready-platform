@@ -20,12 +20,17 @@ function mode(measurement: { fwsMode?: string }): string {
 }
 
 function measurementRows(report: BenchmarkReport): string {
-  return report.measurements
+  const rows = report.measurements
     .map((measurement) => {
       const statistics = measurement.statistics;
       return `| ${text(measurement.caseId)} | ${text(measurement.workload)} | ${text(measurement.inputSize)} | ${text(measurement.implementation)} | ${mode(measurement)} | ${text(measurement.hostRuntime)} | ${text(measurement.phase)} | ${text(measurement.status)} | ${statistics === undefined ? "-" : statistics.medianMs.toFixed(3)} | ${statistics === undefined ? "-" : statistics.p95Ms.toFixed(3)} | ${statistics === undefined ? "-" : statistics.throughputPerSecond.toFixed(2)} |`;
     })
     .join("\n");
+  const metrics =
+    (report.metrics ?? []).length === 0
+      ? "No metric records were generated."
+      : `| Metric | Case | Implementation | Mode | Host | Value | Unit | Reference | Reference mode | Explanation |\n| --- | --- | --- | --- | --- | ---: | --- | ---: | --- | --- |\n${metricRows(report)}`;
+  return `${rows}\n\n## Metric Evidence\n${metrics}`;
 }
 
 function rankingRows(report: BenchmarkReport): string {
@@ -100,6 +105,15 @@ function performanceGateRows(
     .map(
       (result) =>
         `| ${text(result.key.caseId)} | ${text(result.key.workload)} | ${text(result.key.inputSize)} | ${text(result.key.implementation)} | ${mode(result.key)} | ${text(result.key.hostRuntime)} | ${text(result.status)} | ${result.measuredMedianMs === undefined ? "-" : result.measuredMedianMs.toFixed(3)} | ${result.referenceMedianMs === undefined ? "-" : result.referenceMedianMs.toFixed(3)} | ${result.ratio === undefined ? "-" : result.ratio.toFixed(2)}x | ${result.throughputRatio === undefined ? "-" : result.throughputRatio.toFixed(2)}x | ${result.timingFloorMs.toFixed(3)} | ${text(result.explanation ?? "")} |`,
+    )
+    .join("\n");
+}
+
+function metricRows(report: BenchmarkReport): string {
+  return (report.metrics ?? [])
+    .map(
+      (metric) =>
+        `| ${text(metric.metric)} | ${text(metric.caseId ?? "-")} | ${text(metric.implementation)} | ${mode(metric)} | ${text(metric.hostRuntime ?? "-")} | ${metric.value.toFixed(3)} | ${text(metric.unit)} | ${metric.referenceValue === undefined ? "-" : metric.referenceValue.toFixed(3)} | ${text(metric.referenceMode ?? "-")} | ${text(metric.explanation ?? "")} |`,
     )
     .join("\n");
 }

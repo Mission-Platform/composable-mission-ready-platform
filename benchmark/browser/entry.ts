@@ -141,12 +141,15 @@ function failed(
   };
 }
 
-function fwsWasmAdapter(artifact: BuildArtifact): RuntimeAdapter {
+function fwsWasmAdapter(
+  artifact: BuildArtifact,
+  mode: "wasm" | "wasm-excluded-bounds" = "wasm",
+): RuntimeAdapter {
   let module: WebAssembly.Module | undefined;
   return {
     implementation: "fws",
-    mode: "wasm",
-    adapterId: "fws-wasm-browser",
+    mode,
+    adapterId: `fws-${mode}-browser`,
     async build(): Promise<BuildArtifact> {
       return artifact;
     },
@@ -176,7 +179,7 @@ function fwsWasmAdapter(artifact: BuildArtifact): RuntimeAdapter {
           "FWS browser WASM module is missing required memory ABI exports.",
         );
       return {
-        adapterId: "fws-wasm-browser",
+        adapterId: `fws-${mode}-browser`,
         preparation: {
           moduleCompiled: true,
           instancePolicy: "reusable-with-reset",
@@ -391,6 +394,8 @@ function adapterFor(artifact: BuildArtifact): RuntimeAdapter {
   if (artifact.fwsMode === "wasm-generated")
     return fwsGeneratedWasmAdapter(artifact);
   if (artifact.fwsMode === "wasm") return fwsWasmAdapter(artifact);
+  if (artifact.fwsMode === "wasm-excluded-bounds")
+    return fwsWasmAdapter(artifact, "wasm-excluded-bounds");
   return createFwsVmAdapter(artifact.fwsMode ?? "interpret");
 }
 

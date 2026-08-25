@@ -558,7 +558,7 @@ function stringCapabilities(): Readonly<
 }
 
 function executeNative(
-  mode: Exclude<FwsMode, "wasm" | "wasm-generated">,
+  mode: Exclude<FwsMode, "wasm" | "wasm-generated" | "wasm-excluded-bounds">,
   module: ForgeWebScriptVmModule,
   functionName: string,
   args: readonly ForgeWebScriptVmValue[],
@@ -579,7 +579,7 @@ function executeNative(
 }
 
 export function createFwsVmAdapter(
-  mode: Exclude<FwsMode, "wasm" | "wasm-generated">,
+  mode: Exclude<FwsMode, "wasm" | "wasm-generated" | "wasm-excluded-bounds">,
 ): RuntimeAdapter {
   const module = createNativeVmModule();
   const aot =
@@ -598,6 +598,11 @@ export function createFwsVmAdapter(
         artifactKind: "fws-vm",
         hash: module.sourceHash,
         exports: ["arithmetic_reduce", "string_transform", "dataset_scan"],
+        fwsPipeline: {
+          pipeline: "fws-vm-reference",
+          frontend: "vm-ir",
+          optimization: mode === "aot" ? "release" : "debug",
+        },
         metadata: {
           abi: "vm-wasm-v1",
           compilerVersion: COMPILER_VERSION,
@@ -634,7 +639,9 @@ export function createFwsVmAdapter(
               capabilities,
               aotArtifact: mode === "aot" ? aot : undefined,
             });
-      const jitEntries = Object.keys(executor.getJitCache?.().entries ?? {}).length;
+      const jitEntries = Object.keys(
+        executor.getJitCache?.().entries ?? {},
+      ).length;
       if (prepared !== undefined && prepared.mode !== mode)
         throw new Error(`FWS ${mode} preparation returned an unexpected mode.`);
       return {
@@ -643,7 +650,8 @@ export function createFwsVmAdapter(
           compilerVersion: COMPILER_VERSION,
           jitCacheEntries: jitEntries,
           backend: prepared?.metadata.backend ?? "interpreter",
-          instancePolicy: prepared?.metadata.instancePolicy ?? "fresh-per-execute",
+          instancePolicy:
+            prepared?.metadata.instancePolicy ?? "fresh-per-execute",
           loweringVersion: prepared?.metadata.loweringVersion ?? "none",
           preparedArtifactHash: prepared?.artifact.reproducibilityHash ?? "",
           preparedArtifactSize: prepared?.artifact.wasm.byteLength ?? 0,

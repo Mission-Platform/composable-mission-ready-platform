@@ -5,6 +5,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { renderHtml } from "./render-html.ts";
+import { renderMarkdown } from "./render-markdown.ts";
 import {
   createBenchmarkReport,
   compareBenchmarkReports,
@@ -61,6 +62,7 @@ function report(measurements: readonly PhaseMeasurement[]): BenchmarkReport {
     correctness: [],
     measurements,
     failures: [],
+    metrics: [],
   };
 }
 
@@ -83,6 +85,88 @@ function correctnessFor(
 }
 
 describe("durable benchmark reports", () => {
+  it("records the five pipeline evidence metrics and renders them", () => {
+    const checked = measurement("metric-case", 4, {
+      implementation: "fws",
+      fwsMode: "wasm",
+      statistics: {
+        count: 1,
+        meanMs: 4,
+        medianMs: 4,
+        p95Ms: 4,
+        minMs: 4,
+        maxMs: 4,
+        throughputPerSecond: 250,
+        memoryDeltaBytes: 16,
+      },
+    });
+    const excluded = measurement("metric-case", 3, {
+      implementation: "fws",
+      fwsMode: "wasm-excluded-bounds",
+      statistics: {
+        count: 1,
+        meanMs: 3,
+        medianMs: 3,
+        p95Ms: 3,
+        minMs: 3,
+        maxMs: 3,
+        throughputPerSecond: 1000 / 3,
+        memoryDeltaBytes: 8,
+      },
+    });
+    const current = createBenchmarkReport({
+      node: {
+        hostRuntime: "node",
+        artifacts: [
+          {
+            id: "fws-wasm",
+            implementation: "fws",
+            fwsMode: "wasm",
+            artifactKind: "wasm",
+            sizeBytes: 128,
+            fwsPipeline: {
+              pipeline: "fws-son-wasm-two-stage",
+              frontend: "son-ir",
+              wasmStage: "wasm-ir-optimizer",
+              optimization: "release",
+              boundsChecks: "runtime",
+            },
+          },
+        ],
+        correctness: [],
+        measurements: [
+          measurement("metric-case", 2, {
+            implementation: "fws",
+            fwsMode: "wasm",
+            phase: "build",
+          }),
+          checked,
+          excluded,
+        ],
+        failures: [],
+        environment: report([]).environment,
+      },
+      warmupIterations: 0,
+      sampleIterations: 1,
+      generatedAt: "2026-08-20T00:00:00.000Z",
+    });
+    expect(new Set(current.metrics.map((metric) => metric.metric))).toEqual(
+      new Set([
+        "compile-time",
+        "wasm-size",
+        "call-throughput",
+        "memory-behavior",
+        "bounds-check-overhead",
+      ]),
+    );
+    const boundsMetric = current.metrics.find(
+      (metric) => metric.metric === "bounds-check-overhead",
+    );
+    expect(boundsMetric?.referenceMode).toBe("wasm-excluded-bounds");
+    expect(boundsMetric?.value).toBeCloseTo(100 / 3, 10);
+    expect(renderMarkdown(current)).toContain("## Metric Evidence");
+  });
+
   it("sorts report content and writes all canonical artifacts", async () => {
     const artifactMeasurements = [
       measurement("z-case", 3),

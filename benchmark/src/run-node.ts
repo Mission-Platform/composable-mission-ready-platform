@@ -5,6 +5,7 @@ import { outputsEqual, normalizeBenchmarkOutput } from "./abi.ts";
 import { createAssemblyScriptAdapter } from "./adapters/assemblyscript-wasm.ts";
 import { createFwsVmAdapter } from "./adapters/fws-vm.ts";
 import {
+  createFwsExcludedBoundsWasmAdapter,
   createFwsGeneratedWasmAdapter,
   createFwsWasmAdapter,
 } from "./adapters/fws-wasm.ts";
@@ -109,6 +110,7 @@ async function buildTargets(): Promise<readonly BuildAttempt[]> {
   const aot = createFwsVmAdapter("aot");
   const fwsWasm = createFwsWasmAdapter();
   const fwsGeneratedWasm = createFwsGeneratedWasmAdapter();
+  const fwsExcludedBoundsWasm = createFwsExcludedBoundsWasmAdapter();
   const rust = createRustWasmAdapter(rustLoader);
   const assemblyScript = createAssemblyScriptAdapter(assemblyScriptLoader);
   const targets: readonly [RuntimeAdapter, () => Promise<BuildArtifact>][] = [
@@ -118,6 +120,7 @@ async function buildTargets(): Promise<readonly BuildAttempt[]> {
     [jit, () => jit.build()],
     [aot, () => aot.build()],
     [fwsWasm, () => fwsWasm.build()],
+    [fwsExcludedBoundsWasm, () => fwsExcludedBoundsWasm.build()],
     [rust, async () => buildRustArtifact()],
     [assemblyScript, () => buildAssemblyScriptArtifact()],
   ];

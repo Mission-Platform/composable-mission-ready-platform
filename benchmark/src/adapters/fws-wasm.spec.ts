@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { BENCHMARK_CORPUS } from "../corpus.ts";
 
 import {
+  createFwsExcludedBoundsWasmAdapter,
   createFwsGeneratedWasmAdapter,
   createFwsWasmAdapter,
 } from "./fws-wasm.ts";
@@ -18,6 +19,25 @@ if (stringCase === undefined)
   throw new Error("Unicode string benchmark case is missing.");
 
 describe("FWS generated ESM benchmark adapter", () => {
+  it("labels the two-stage pipeline and its explicit bounds-policy comparison", async () => {
+    const checked = await createFwsWasmAdapter().build();
+    const excluded = await createFwsExcludedBoundsWasmAdapter().build();
+
+    expect(checked.fwsPipeline).toMatchObject({
+      pipeline: "fws-son-wasm-two-stage",
+      frontend: "son-ir",
+      wasmStage: "wasm-ir-optimizer",
+      optimization: "release",
+      boundsChecks: "runtime",
+    });
+    expect(excluded.fwsPipeline).toMatchObject({
+      pipeline: "fws-son-wasm-two-stage",
+      boundsChecks: "excluded-by-profile",
+    });
+    expect(excluded.fwsMode).toBe("wasm-excluded-bounds");
+    expect(excluded.hash).not.toBe(checked.hash);
+  }, 120_000);
+
   it("matches the raw ABI baseline and records boundary costs", async () => {
     const raw = createFwsWasmAdapter();
     const generated = createFwsGeneratedWasmAdapter();

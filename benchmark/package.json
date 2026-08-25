@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "bench": "node --experimental-strip-types src/cli.ts",
+    "bench:scanner": "node --experimental-strip-types src/scanner-cli.ts",
+    "bench:web-lua": "node --experimental-strip-types src/web-lua-cli.ts",
     "build": "tsc --project tsconfig.json --noEmit",
     "test": "vitest run --maxWorkers=1",
     "test:watch": "vitest",
@@ -16,6 +18,7 @@
   "dependencies": {
     "@mission-platform/forge-web-script": "workspace:*",
     "@mission-platform/forge-web-script-runtime": "workspace:*",
+    "@mission-platform/web-lua": "workspace:*",
     "@mission-platform/vite-plugin-assemblyscript": "workspace:*",
     "vite": "catalog:vite"
   },

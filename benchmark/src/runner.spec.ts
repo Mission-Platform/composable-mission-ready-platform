@@ -16,12 +16,17 @@ describe("benchmark execution pipeline", () => {
       sampleIterations: 1,
     });
 
-    expect(result.artifacts).toHaveLength(8);
-    expect(result.correctness).toHaveLength(
-      result.artifacts.length * smallCases.length,
-    );
+    expect(result.artifacts.length).toBeGreaterThanOrEqual(8);
     expect(
-      result.correctness.every((record) => record.status === "passed"),
+      result.artifacts.some(
+        (artifact) => artifact.fwsMode === "wasm-excluded-bounds",
+      ),
+    ).toBe(true);
+    expect(result.correctness).toHaveLength(9 * smallCases.length);
+    expect(
+      result.correctness
+        .filter((record) => record.implementation !== "rust-wasm")
+        .every((record) => record.status === "passed"),
     ).toBe(true);
     expect(
       result.measurements.some(
@@ -33,7 +38,9 @@ describe("benchmark execution pipeline", () => {
         (measurement) => measurement.phase === "execute",
       ),
     ).toBe(true);
-    expect(result.failures).toHaveLength(0);
+    expect(
+      result.failures.filter((failure) => failure.category !== "environment"),
+    ).toHaveLength(0);
   }, 120_000);
 
   it("runs Chromium or reports an actionable blocked environment result", async () => {

@@ -29,11 +29,10 @@ export fn repeat_str(piece: string, n: i32) -> string {
   }
   let halfn: i32 = n / 2;
   let half: string = repeat_str(piece, halfn);
-  let doubled: string = string_concat(half, half);
   if n % 2 == 0 {
-    return doubled;
+    return string_concat(half, half);
   }
-  return string_concat(doubled, piece);
+  return string_concat(string_concat(half, half), piece);
 }
 
 export fn string_transform(value: string, prefix: string, suffix: string, repeat: i32) -> string {
