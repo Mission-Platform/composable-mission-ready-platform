@@ -95,10 +95,10 @@ export function buildScssVariables(
  * (https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/Data_types),
  * so a token authored with any of them gets a typed registration. Only types
  * whose values are computationally-independent literals are mapped; everything
- * else (the synthetic `typography` `var()` references, plus `shadow`/`cubicBezier`
- * easing values and aliased values (which have no computationally-independent
- * `@property` initial value) falls
- * back to the universal `'*'` syntax with no `initial-value` (see
+ * else (font-family strings, the synthetic `typography` `var()` references,
+ * plus `shadow`/`cubicBezier` easing values and aliased values (which have no
+ * computationally-independent `@property` initial value) falls back to the
+ * universal `'*'` syntax with no `initial-value` (see
  * {@link buildPropertyRule}).
  */
 const PROPERTY_SYNTAX_BY_TYPE: Record<string, string> = {
@@ -106,7 +106,6 @@ const PROPERTY_SYNTAX_BY_TYPE: Record<string, string> = {
   color: '<color>',
   dimension: '<length>',
   number: '<number>',
-  string: '<string>#',
   fontWeight: '<number>',
   duration: '<time>',
   // Additional CSS `@property`-supported data types (forward-looking).

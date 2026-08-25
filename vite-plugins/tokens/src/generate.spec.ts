@@ -143,11 +143,40 @@ describe('generateTokens', () => {
     expect(readFileSync(path.join(outDirectory, 'tokens.ts'), 'utf8')).toContain('./ts/component/atoms/button.js');
   });
 
+  it('emits nested z-index paths to SCSS, CSS, and TypeScript', () => {
+    writeFileSync(
+      path.join(tokensDirectory, 'z-index.tokens.json'),
+      JSON.stringify({
+        'z-index': {
+          $description: 'Semantic stacking layers.',
+          $type: 'number',
+          modal: {
+            $description: 'Modal surfaces.',
+            dialog: { $value: 450, $description: 'Dialog surface.' },
+            onboarding: { $value: 500, $description: 'Onboarding surface.' },
+          },
+        },
+      }),
+    );
+
+    generateTokens({ outDir: outDirectory, tokensDir: tokensDirectory });
+
+    const zIndexScss = readFileSync(path.join(outDirectory, 'scss', '_z-index.scss'), 'utf8');
+    const zIndexVariables = readFileSync(path.join(outDirectory, 'scss', '_z-index-vars.scss'), 'utf8');
+    const zIndexTs = readFileSync(path.join(outDirectory, 'ts', 'z-index.ts'), 'utf8');
+    expect(zIndexVariables).toContain('$z-index-modal-dialog: 450;');
+    expect(zIndexScss).toContain('@property --mp-z-index-modal-dialog {');
+    expect(zIndexScss).toContain('--mp-z-index-modal-onboarding: #{vars.$z-index-modal-onboarding};');
+    expect(zIndexTs).toContain('"modal": {');
+    expect(zIndexTs).toContain('"dialog": 450');
+  });
+
   it('emits every recursively discovered component source and forwards them from both barrels', () => {
     generateTokens({ outDir: outDirectory, tokensDir: tokensDirectory });
 
     const scssBarrel = readFileSync(path.join(outDirectory, '_tokens.scss'), 'utf8');
     const tsBarrel = readFileSync(path.join(outDirectory, 'tokens.ts'), 'utf8');
+    expect(scssBarrel).not.toContain('@charset "UTF-8";');
     expect(scssBarrel).toContain("@forward 'scss/component/atoms/button';");
     expect(scssBarrel).toContain("@forward 'scss/component/molecules/navigation';");
     expect(tsBarrel).toContain("export * from './ts/component/atoms/button.js';");
@@ -190,7 +219,7 @@ describe('generateTokens', () => {
     const buttonScss = readFileSync(path.join(generatedDirectory, 'scss/component/atoms/_button.scss'), 'utf8');
     const publicBarrel = readFileSync(path.join(repositoryRoot, 'packages/tokens/src/tokens.ts'), 'utf8');
 
-    expect(report.summary).toEqual({ active: 135, protected: 2191, ambiguous: 549, candidate: 0 });
+    expect(report.summary).toEqual({ active: 157, protected: 2191, ambiguous: 549, candidate: 0 });
     expect(report.sources).toEqual([...report.sources].toSorted((a, b) => a.localeCompare(b)));
     expect(report.tokens.filter(({ status }) => status === 'candidate')).toHaveLength(0);
     expect(report.aliases.filter(({ resolved }) => !resolved).map(({ to }) => to)).toEqual([

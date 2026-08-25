@@ -128,7 +128,7 @@ describe('buildPropertyRule', () => {
     expect(rule).not.toContain('initial-value');
   });
 
-  it('registers string lists with interpolated SCSS initial values', () => {
+  it('uses the universal syntax without an initial-value for string values', () => {
     const rule = buildPropertyRule(
       {
         path: ['font', 'family', 'sans'],
@@ -139,8 +139,8 @@ describe('buildPropertyRule', () => {
       'mp',
       true,
     );
-    expect(rule).toContain("syntax: '<string>#';");
-    expect(rule).toContain('initial-value: #{vars.$font-family-sans};');
+    expect(rule).toContain("syntax: '*';");
+    expect(rule).not.toContain('initial-value');
   });
 });
 
