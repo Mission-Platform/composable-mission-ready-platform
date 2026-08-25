@@ -5,7 +5,7 @@ import "./matrix-encoder-core.fws" as core;
 // ---- Aztec -----------------------------------------------------------------
 
 fn aztec_high_level(data: string) -> string {
-  let bits: string = "";
+  let mut bits: string = "";
   bits = core.bits_push_value(bits, 31, 5);
   let count: i32 = string_length(data);
   if count <= 31 {
@@ -14,32 +14,32 @@ fn aztec_high_level(data: string) -> string {
     bits = core.bits_push_value(bits, 0, 5);
     bits = core.bits_push_value(bits, count, 11);
   }
-  let i: i32 = 0;
+  let mut i: i32 = 0;
   while i < count {
     bits = core.bits_push_value(bits, string_byte_at(data, i), 8);
     i = i + 1;
   }
-  return bits;
+  return string_concat(bits, "");
 }
 
 fn aztec_stuff_bits(bits: string, word_size: i32) -> string {
-  let out: string = "";
+  let mut out: string = "";
   let mask: i32 = core.pow2(word_size) - 1;
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   let length: i32 = string_length(bits);
-  let word: i32 = 0;
-  let offset: i32 = 0;
-  let on: bool = false;
-  let prefix: i32 = 0;
-  let all_ones_prefix: i32 = 0;
-  let shift: i32 = 0;
-  let special: bool = false;
-  let output: bool = false;
+  let mut word: i32 = 0;
+  let mut offset: i32 = 0;
+  let mut on: bool = false;
+  let mut prefix: i32 = 0;
+  let mut all_ones_prefix: i32 = 0;
+  let mut shift: i32 = 0;
+  let mut special: bool = false;
+  let mut output: bool = false;
   while index < length {
     word = 0;
     offset = 0;
     while offset < word_size {
-      on = bits_get_pad_one(bits, index + offset);
+      on = core.bits_get_pad_one(bits, index + offset);
       word = word * 2;
       if on { word = word + 1; }
       offset = offset + 1;
@@ -61,16 +61,16 @@ fn aztec_stuff_bits(bits: string, word_size: i32) -> string {
       index = index + word_size;
     }
   }
-  return out;
+  return string_concat(out, "");
 }
 
 fn aztec_words_to_bytes(stuffed: string, word_size: i32, total_words: i32) -> string {
-  let words: string = core.bytes_zeros(total_words);
+  let mut words: string = core.bytes_zeros(total_words);
   let message_words: i32 = string_length(stuffed) / word_size;
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < message_words {
-    let value: i32 = 0;
-    let offset: i32 = 0;
+    let mut value: i32 = 0;
+    let mut offset: i32 = 0;
     while offset < word_size {
       value = value * 2;
       if core.bits_get(stuffed, index * word_size + offset) {
@@ -81,34 +81,34 @@ fn aztec_words_to_bytes(stuffed: string, word_size: i32, total_words: i32) -> st
     words = core.bytes_set(words, index, value);
     index = index + 1;
   }
-  return words;
+  return string_concat(words, "");
 }
 
 fn aztec_generate_check_words(stuffed: string, total_bits: i32, word_size: i32, primitive: i32, field_size: i32) -> string {
   let total_words: i32 = total_bits / word_size;
   let message_words: i32 = string_length(stuffed) / word_size;
-  let words: string = aztec_words_to_bytes(stuffed, word_size, total_words);
+  let mut words: string = aztec_words_to_bytes(stuffed, word_size, total_words);
   let data_part: string = string_slice(words, 0, message_words * 3);
   let ecc_count: i32 = total_words - message_words;
   let ecc: string = core.rs_ecc(data_part, ecc_count, primitive, field_size);
   words = string_concat(data_part, ecc);
   // expand to bits with leading total_bits % word_size zeros
-  let lead: i32 = total_bits - total_words * word_size;
+  let mut lead: i32 = total_bits - total_words * word_size;
   if lead < 0 { lead = 0; }
   // total_bits % word_size
   lead = total_bits - total_bits / word_size * word_size;
-  let message: string = core.bits_zeros(lead);
-  let wi: i32 = 0;
+  let mut message: string = core.bits_zeros(lead);
+  let mut wi: i32 = 0;
   while wi < total_words {
     let word: i32 = core.bytes_get(words, wi);
-    let shift: i32 = word_size - 1;
+    let mut shift: i32 = word_size - 1;
     while shift >= 0 {
       message = core.bits_push(message, core.bit_test(word, shift));
       shift = shift - 1;
     }
     wi = wi + 1;
   }
-  return message;
+  return string_concat(message, "");
 }
 
 fn aztec_field_primitive(word_size: i32) -> i32 {

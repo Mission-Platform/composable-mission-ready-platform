@@ -5,8 +5,8 @@ import "./matrix-decoder-datamatrix-map-rect.fws" as rect;
 
 export fn mapping_map(rows: i32, cols: i32) -> string {
   let a: string = square_a.square_map_a(rows, cols);
-  if string_length(a) > 0 { return a; }
+  if string_length(a) > 0 { return string_concat(a, ""); }
   let b: string = square_b.square_map_b(rows, cols);
-  if string_length(b) > 0 { return b; }
-  return rect.rect_map(rows, cols);
+  if string_length(b) > 0 { return string_concat(b, ""); }
+  return string_concat(rect.rect_map(rows, cols), "");
 }

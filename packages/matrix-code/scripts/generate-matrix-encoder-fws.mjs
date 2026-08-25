@@ -184,9 +184,9 @@ ${cases}
 
 fn dm_place_precomputed(codewords: string, rows: i32, cols: i32) -> string {
   let total: i32 = rows * cols;
-  let bits: string = bits_zeros(total);
+  let mut bits: string = bits_zeros(total);
   let map: string = dm_placement_map(rows, cols);
-  let cell: i32 = 0;
+  let mut cell: i32 = 0;
   while cell < total {
     let bit_position: i32 = bytes_get(map, cell);
     if bit_position != 999 {
@@ -202,7 +202,7 @@ fn dm_place_precomputed(codewords: string, rows: i32, cols: i32) -> string {
     bits = bits_set(bits, last, true);
     bits = bits_set(bits, total - cols - 2, true);
   }
-  return bits;
+  return string_concat(bits, "");
 }`;
 }
 
@@ -238,12 +238,12 @@ fn itoa_rec(value: i32, acc: string) -> string {
   }
   let q: i32 = value / 10;
   let r: i32 = value - q * 10;
-  return itoa_rec(q, string_concat(digit_char(r), acc));
+  return string_concat(itoa_rec(q, string_concat(digit_char(r), acc)), "");
 }
 
 fn itoa(value: i32) -> string {
   if value == 0 { return "0"; }
-  return itoa_rec(value, "");
+  return string_concat(itoa_rec(value, ""), "");
 }
 
 fn low_bit(value: i32) -> i32 {
@@ -251,11 +251,11 @@ fn low_bit(value: i32) -> i32 {
 }
 
 fn xor_bits(a: i32, b: i32, width: i32) -> i32 {
-  let result: i32 = 0;
-  let place: i32 = 1;
-  let x: i32 = a;
-  let y: i32 = b;
-  let i: i32 = 0;
+  let mut result: i32 = 0;
+  let mut place: i32 = 1;
+  let mut x: i32 = a;
+  let mut y: i32 = b;
+  let mut i: i32 = 0;
   while i < width {
     let xb: i32 = low_bit(x);
     let yb: i32 = low_bit(y);
@@ -278,8 +278,8 @@ fn xor16(a: i32, b: i32) -> i32 {
 }
 
 fn pow2(n: i32) -> i32 {
-  let result: i32 = 1;
-  let i: i32 = 0;
+  let mut result: i32 = 1;
+  let mut i: i32 = 0;
   while i < n {
     result = result * 2;
     i = i + 1;
@@ -294,13 +294,13 @@ fn bit_test(value: i32, shift: i32) -> bool {
 }
 
 fn byte_char3(value: i32) -> string {
-  let v: i32 = value;
+  let mut v: i32 = value;
   if v < 0 { v = 0; }
   if v > 255 { v = 255; }
   let digits: string = itoa(v);
   if v < 10 { return string_concat("00", digits); }
   if v < 100 { return string_concat("0", digits); }
-  return digits;
+  return string_concat(digits, "");
 }
 
 fn bytes_get(data: string, index: i32) -> i32 {
@@ -325,13 +325,13 @@ fn bytes_push(data: string, value: i32) -> string {
 }
 
 fn bytes_zeros(count: i32) -> string {
-  let out: string = "";
-  let i: i32 = 0;
+  let mut out: string = "";
+  let mut i: i32 = 0;
   while i < count {
     out = string_concat(out, "000");
     i = i + 1;
   }
-  return out;
+  return string_concat(out, "");
 }
 
 fn bits_get(data: string, index: i32) -> bool {
@@ -349,7 +349,7 @@ fn bits_get_pad_one(data: string, index: i32) -> bool {
 fn bits_set(data: string, index: i32, on: bool) -> string {
   let left: string = string_slice(data, 0, index);
   let right: string = string_slice(data, index + 1, string_length(data));
-  return string_concat(string_concat(left, bit_char(on)), right);
+  return string_concat(string_concat(string_concat(left, bit_char(on)), right), "");
 }
 
 fn bits_push(data: string, on: bool) -> string {
@@ -357,23 +357,23 @@ fn bits_push(data: string, on: bool) -> string {
 }
 
 fn bits_zeros(count: i32) -> string {
-  let out: string = "";
-  let i: i32 = 0;
+  let mut out: string = "";
+  let mut i: i32 = 0;
   while i < count {
     out = bits_push(out, false);
     i = i + 1;
   }
-  return out;
+  return string_concat(out, "");
 }
 
 fn bits_push_value(data: string, value: i32, count: i32) -> string {
-  let out: string = data;
-  let shift: i32 = count - 1;
+  let mut out: string = data;
+  let mut shift: i32 = count - 1;
   while shift >= 0 {
     out = bits_push(out, bit_test(value, shift));
     shift = shift - 1;
   }
-  return out;
+  return string_concat(out, "");
 }
 
 fn packed_result(width: i32, height: i32, modules: string) -> string {
@@ -411,12 +411,12 @@ fn gf_mul(exp: string, log: string, a: i32, b: i32) -> i32 {
 
 // generator polynomial coefficients, highest degree first, as byte-string
 fn rs_generator(exp: string, log: string, count: i32) -> string {
-  let poly: string = bytes_push("", 1);
-  let index: i32 = 0;
+  let mut poly: string = bytes_push("", 1);
+  let mut index: i32 = 0;
   while index < count {
     let root: i32 = bytes_get(exp, index + 1);
-    let next: string = bytes_zeros(string_length(poly) / 3 + 1);
-    let position: i32 = 0;
+    let mut next: string = bytes_zeros(string_length(poly) / 3 + 1);
+    let mut position: i32 = 0;
     while position < string_length(poly) / 3 {
       let coefficient: i32 = bytes_get(poly, position);
       let existing: i32 = bytes_get(next, position);
@@ -429,7 +429,7 @@ fn rs_generator(exp: string, log: string, count: i32) -> string {
     poly = next;
     index = index + 1;
   }
-  return poly;
+  return string_concat(poly, "");
 }
 
 // Compute \`count\` ECC symbols for data byte-string over the given field.
@@ -437,8 +437,8 @@ fn rs_ecc(data: string, count: i32, primitive: i32, size: i32) -> string {
   let exp: string = field_exp_table(primitive, size);
   let log: string = field_log_table(primitive, size);
   let generator: string = rs_generator(exp, log, count);
-  let remainder: string = bytes_zeros(count);
-  let di: i32 = 0;
+  let mut remainder: string = bytes_zeros(count);
+  let mut di: i32 = 0;
   while di < string_length(data) / 3 {
     let symbol: i32 = bytes_get(data, di);
     let factor: i32 = xor16(symbol, bytes_get(remainder, 0));
@@ -446,7 +446,7 @@ fn rs_ecc(data: string, count: i32, primitive: i32, size: i32) -> string {
     let shifted: string = string_slice(remainder, 3, string_length(remainder));
     remainder = string_concat(shifted, "000");
     if factor != 0 {
-      let gi: i32 = 1;
+      let mut gi: i32 = 1;
       while gi < string_length(generator) / 3 {
         let coefficient: i32 = bytes_get(generator, gi);
         let prod: i32 = gf_mul(exp, log, coefficient, factor);
@@ -457,14 +457,14 @@ fn rs_ecc(data: string, count: i32, primitive: i32, size: i32) -> string {
     }
     di = di + 1;
   }
-  return remainder;
+  return string_concat(remainder, "");
 }
 
 // ---- Data Matrix -----------------------------------------------------------
 
 fn ascii_codewords(data: string) -> string {
-  let out: string = "";
-  let index: i32 = 0;
+  let mut out: string = "";
+  let mut index: i32 = 0;
   let length: i32 = string_length(data);
   while index < length {
     let byte: i32 = string_byte_at(data, index);
@@ -472,7 +472,7 @@ fn ascii_codewords(data: string) -> string {
     if byte >= 48 && byte <= 57 && next_index < length {
       let next_byte: i32 = string_byte_at(data, next_index);
       if next_byte >= 48 && next_byte <= 57 {
-        let pair: i32 = byte - 48;
+        let mut pair: i32 = byte - 48;
         pair = pair * 10 + next_byte - 48 + 130;
         out = bytes_push(out, pair);
         index = index + 2;
@@ -497,7 +497,7 @@ fn ascii_codewords(data: string) -> string {
       }
     }
   }
-  return out;
+  return string_concat(out, "");
 }
 
 fn pad_pseudo_random(position: i32) -> i32 {
@@ -518,10 +518,10 @@ fn pad_codeword_at(position: i32) -> i32 {
 }
 
 fn pad_codewords(codewords: string, data_count: i32) -> string {
-  let out: string = codewords;
-  let count: i32 = string_length(out) / 3;
+  let mut out: string = codewords;
+  let mut count: i32 = string_length(out) / 3;
   if count >= data_count {
-    return out;
+    return string_concat(out, "");
   }
   // First pad is the EOD marker 129.
   out = bytes_push(out, 129);
@@ -533,7 +533,7 @@ fn pad_codewords(codewords: string, data_count: i32) -> string {
     out = bytes_push(out, value);
     count = count + 1;
   }
-  return out;
+  return string_concat(out, "");
 }
 
 fn dm_pad_and_ecc(codewords: string, data_count: i32, ecc_count: i32) -> string {
@@ -547,7 +547,7 @@ fn dm_module_set(filled: string, bits: string, cols: i32, column: i32, row: i32,
   // returns concatenated filled||bits updated — use parallel via two returns not possible,
   // so caller keeps them separate; this helper only updates one string.
   let index: i32 = row * cols + column;
-  return bits_set(filled, index, true);
+  return string_concat(bits_set(filled, index, true), "");
 }
 
 fn dm_has_bit(filled: string, cols: i32, column: i32, row: i32) -> bool {
@@ -558,16 +558,16 @@ fn dm_has_bit(filled: string, cols: i32, column: i32, row: i32) -> bool {
 // Utah/corner placement implemented iteratively matching the TS/Rust algorithm.
 fn dm_place(codewords: string, rows: i32, cols: i32) -> string {
   let total: i32 = rows * cols;
-  let filled: string = bits_zeros(total);
-  let bits: string = bits_zeros(total);
+  let mut filled: string = bits_zeros(total);
+  let mut bits: string = bits_zeros(total);
 
   // local helpers inlined via repeated patterns
-  let position: i32 = 0;
-  let row: i32 = 4;
-  let column: i32 = 0;
+  let mut position: i32 = 0;
+  let mut row: i32 = 4;
+  let mut column: i32 = 0;
 
   // We use a mutable-style loop with a work flag.
-  let guard: i32 = 0;
+  let mut guard: i32 = 0;
   while guard < total * 4 {
     guard = guard + 1;
 
@@ -666,7 +666,7 @@ fn dm_place(codewords: string, rows: i32, cols: i32) -> string {
     }
 
     // up-right utah diagonal
-    let walking: bool = true;
+    let mut walking: bool = true;
     while walking {
       if row < rows && column >= 0 {
         if dm_has_bit(filled, cols, column, row) == false {
@@ -675,8 +675,8 @@ fn dm_place(codewords: string, rows: i32, cols: i32) -> string {
           // eight modules with wrap
           let places_r: string = ""; // unused marker
           // expand utah placements
-          let rr: i32 = 0;
-          let cc: i32 = 0;
+          let mut rr: i32 = 0;
+          let mut cc: i32 = 0;
           // bit 1: row-2,col-2
           rr = row - 2; cc = column - 2;
           if rr < 0 { rr = rr + rows; cc = cc + 4 - (rows + 4 - (rows + 4) / 8 * 8); }
@@ -742,8 +742,8 @@ fn dm_place(codewords: string, rows: i32, cols: i32) -> string {
       if row >= 0 && column < cols {
         if dm_has_bit(filled, cols, column, row) == false {
           let cw: i32 = bytes_get(codewords, position);
-          let rr: i32 = 0;
-          let cc: i32 = 0;
+          let mut rr: i32 = 0;
+          let mut cc: i32 = 0;
           rr = row - 2; cc = column - 2;
           if rr < 0 { rr = rr + rows; cc = cc + 4 - (rows + 4 - (rows + 4) / 8 * 8); }
           if cc < 0 { cc = cc + cols; rr = rr + 4 - (cols + 4 - (cols + 4) / 8 * 8); }
@@ -805,7 +805,7 @@ fn dm_place(codewords: string, rows: i32, cols: i32) -> string {
     bits = bits_set(bits, (rows - 1) * cols + cols - 1, true);
     bits = bits_set(bits, (rows - 2) * cols + cols - 2, true);
   }
-  return bits;
+  return string_concat(bits, "");
 }
 
 ${emitDataMatrixPlacementMaps()}
@@ -813,19 +813,19 @@ ${emitDataMatrixPlacementMaps()}
 fn dm_render(bits: string, region_rows: i32, region_cols: i32, grid_cols: i32) -> string {
   let width: i32 = grid_cols * (region_cols + 2);
   let height: i32 = region_rows + 2;
-  let matrix: string = bits_zeros(width * height);
-  let region: i32 = 0;
+  let mut matrix: string = bits_zeros(width * height);
+  let mut region: i32 = 0;
   while region < grid_cols {
     let x0: i32 = region * (region_cols + 2);
     let right: i32 = x0 + region_cols + 1;
-    let y: i32 = 0;
+    let mut y: i32 = 0;
     while y <= region_rows + 1 {
       matrix = bits_set(matrix, y * width + x0, true);
       let odd: bool = low_bit(y) == 1;
       matrix = bits_set(matrix, y * width + right, odd);
       y = y + 1;
     }
-    let x: i32 = x0;
+    let mut x: i32 = x0;
     while x <= right {
       let even: bool = low_bit(x - x0) == 0;
       matrix = bits_set(matrix, 0 * width + x, even);
@@ -834,9 +834,9 @@ fn dm_render(bits: string, region_rows: i32, region_cols: i32, grid_cols: i32) -
     }
     region = region + 1;
   }
-  let row: i32 = 0;
+  let mut row: i32 = 0;
   while row < region_rows {
-    let column: i32 = 0;
+    let mut column: i32 = 0;
     let data_cols: i32 = region_cols * grid_cols;
     while column < data_cols {
       let reg: i32 = column / region_cols;
@@ -847,20 +847,20 @@ fn dm_render(bits: string, region_rows: i32, region_cols: i32, grid_cols: i32) -
     }
     row = row + 1;
   }
-  return packed_result(width, height, matrix);
+  return string_concat(packed_result(width, height, matrix), "");
 }
 
 fn encode_datamatrix_square(data: string, gs1: bool) -> string {
   if string_length(data) == 0 { return ""; }
-  let codewords: string = ascii_codewords(data);
+  let mut codewords: string = ascii_codewords(data);
   if gs1 {
     codewords = string_concat(byte_char3(232), codewords);
   }
   // symbol table: size,data,ecc
   // 10,3,5 / 12,5,7 / 14,8,10 / 16,12,12 / 18,18,14 / 20,22,18 / 22,30,20 / 24,36,24 / 26,44,28
-  let size: i32 = 0;
-  let data_count: i32 = 0;
-  let ecc_count: i32 = 0;
+  let mut size: i32 = 0;
+  let mut data_count: i32 = 0;
+  let mut ecc_count: i32 = 0;
   let cw_len: i32 = string_length(codewords) / 3;
   if cw_len <= 3 { size = 10; data_count = 3; ecc_count = 5; }
   else {
@@ -891,18 +891,18 @@ fn encode_datamatrix_square(data: string, gs1: bool) -> string {
   let message: string = dm_pad_and_ecc(codewords, data_count, ecc_count);
   let region: i32 = size - 2;
   let placed: string = dm_place_precomputed(message, region, region);
-  return dm_render(placed, region, region, 1);
+  return string_concat(dm_render(placed, region, region, 1), "");
 }
 
 fn encode_datamatrix_rect(data: string) -> string {
   if string_length(data) == 0 { return ""; }
-  let codewords: string = ascii_codewords(data);
+  let mut codewords: string = ascii_codewords(data);
   let cw_len: i32 = string_length(codewords) / 3;
-  let region_rows: i32 = 0;
-  let region_cols: i32 = 0;
-  let grid_cols: i32 = 0;
-  let data_count: i32 = 0;
-  let ecc_count: i32 = 0;
+  let mut region_rows: i32 = 0;
+  let mut region_cols: i32 = 0;
+  let mut grid_cols: i32 = 0;
+  let mut data_count: i32 = 0;
+  let mut ecc_count: i32 = 0;
   // 6,16,1,5,7 / 6,14,2,10,11 / 10,24,1,16,14 / 10,16,2,22,18 / 14,16,2,32,24 / 14,22,2,49,28
   if cw_len <= 5 { region_rows = 6; region_cols = 16; grid_cols = 1; data_count = 5; ecc_count = 7; }
   else {
@@ -924,13 +924,13 @@ fn encode_datamatrix_rect(data: string) -> string {
   let message: string = dm_pad_and_ecc(codewords, data_count, ecc_count);
   let cols: i32 = region_cols * grid_cols;
   let placed: string = dm_place_precomputed(message, region_rows, cols);
-  return dm_render(placed, region_rows, region_cols, grid_cols);
+  return string_concat(dm_render(placed, region_rows, region_cols, grid_cols), "");
 }
 
 // ---- Aztec -----------------------------------------------------------------
 
 fn aztec_high_level(data: string) -> string {
-  let bits: string = "";
+  let mut bits: string = "";
   bits = bits_push_value(bits, 31, 5);
   let count: i32 = string_length(data);
   if count <= 31 {
@@ -939,27 +939,27 @@ fn aztec_high_level(data: string) -> string {
     bits = bits_push_value(bits, 0, 5);
     bits = bits_push_value(bits, count, 11);
   }
-  let i: i32 = 0;
+  let mut i: i32 = 0;
   while i < count {
     bits = bits_push_value(bits, string_byte_at(data, i), 8);
     i = i + 1;
   }
-  return bits;
+  return string_concat(bits, "");
 }
 
 fn aztec_stuff_bits(bits: string, word_size: i32) -> string {
-  let out: string = "";
+  let mut out: string = "";
   let mask: i32 = pow2(word_size) - 1;
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   let length: i32 = string_length(bits);
-  let word: i32 = 0;
-  let offset: i32 = 0;
-  let on: bool = false;
-  let prefix: i32 = 0;
-  let all_ones_prefix: i32 = 0;
-  let shift: i32 = 0;
-  let special: bool = false;
-  let output: bool = false;
+  let mut word: i32 = 0;
+  let mut offset: i32 = 0;
+  let mut on: bool = false;
+  let mut prefix: i32 = 0;
+  let mut all_ones_prefix: i32 = 0;
+  let mut shift: i32 = 0;
+  let mut special: bool = false;
+  let mut output: bool = false;
   while index < length {
     word = 0;
     offset = 0;
@@ -986,16 +986,16 @@ fn aztec_stuff_bits(bits: string, word_size: i32) -> string {
       index = index + word_size;
     }
   }
-  return out;
+  return string_concat(out, "");
 }
 
 fn aztec_words_to_bytes(stuffed: string, word_size: i32, total_words: i32) -> string {
-  let words: string = bytes_zeros(total_words);
+  let mut words: string = bytes_zeros(total_words);
   let message_words: i32 = string_length(stuffed) / word_size;
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < message_words {
-    let value: i32 = 0;
-    let offset: i32 = 0;
+    let mut value: i32 = 0;
+    let mut offset: i32 = 0;
     while offset < word_size {
       value = value * 2;
       if bits_get(stuffed, index * word_size + offset) {
@@ -1006,34 +1006,34 @@ fn aztec_words_to_bytes(stuffed: string, word_size: i32, total_words: i32) -> st
     words = bytes_set(words, index, value);
     index = index + 1;
   }
-  return words;
+  return string_concat(words, "");
 }
 
 fn aztec_generate_check_words(stuffed: string, total_bits: i32, word_size: i32, primitive: i32, field_size: i32) -> string {
   let total_words: i32 = total_bits / word_size;
   let message_words: i32 = string_length(stuffed) / word_size;
-  let words: string = aztec_words_to_bytes(stuffed, word_size, total_words);
+  let mut words: string = aztec_words_to_bytes(stuffed, word_size, total_words);
   let data_part: string = string_slice(words, 0, message_words * 3);
   let ecc_count: i32 = total_words - message_words;
   let ecc: string = rs_ecc(data_part, ecc_count, primitive, field_size);
   words = string_concat(data_part, ecc);
   // expand to bits with leading total_bits % word_size zeros
-  let lead: i32 = total_bits - total_words * word_size;
+  let mut lead: i32 = total_bits - total_words * word_size;
   if lead < 0 { lead = 0; }
   // total_bits % word_size
   lead = total_bits - total_bits / word_size * word_size;
-  let message: string = bits_zeros(lead);
-  let wi: i32 = 0;
+  let mut message: string = bits_zeros(lead);
+  let mut wi: i32 = 0;
   while wi < total_words {
     let word: i32 = bytes_get(words, wi);
-    let shift: i32 = word_size - 1;
+    let mut shift: i32 = word_size - 1;
     while shift >= 0 {
       message = bits_push(message, bit_test(word, shift));
       shift = shift - 1;
     }
     wi = wi + 1;
   }
-  return message;
+  return string_concat(message, "");
 }
 
 fn aztec_field_primitive(word_size: i32) -> i32 {
@@ -1048,11 +1048,11 @@ fn aztec_field_size(word_size: i32) -> i32 {
 
 fn aztec_get_pixel(row: i32, col: i32, size: i32, layers: i32, mode_message: string, message: string) -> bool {
   let center: i32 = size / 2;
-  let dr: i32 = row - center;
+  let mut dr: i32 = row - center;
   if dr < 0 { dr = 0 - dr; }
-  let dc: i32 = col - center;
+  let mut dc: i32 = col - center;
   if dc < 0 { dc = 0 - dc; }
-  let d: i32 = dr;
+  let mut d: i32 = dr;
   if dc > d { d = dc; }
   
   if d <= 4 { return d == 0 || d == 2 || d == 4; }
@@ -1077,13 +1077,13 @@ fn aztec_get_pixel(row: i32, col: i32, size: i32, layers: i32, mode_message: str
     } } } }
     return false;
   }
-  let dist_row: i32 = row;
+  let mut dist_row: i32 = row;
   let sr: i32 = size - 1 - row;
   if sr < dist_row { dist_row = sr; }
-  let dist_col: i32 = col;
+  let mut dist_col: i32 = col;
   let sc: i32 = size - 1 - col;
   if sc < dist_col { dist_col = sc; }
-  let dist_edge: i32 = dist_row;
+  let mut dist_edge: i32 = dist_row;
   if dist_col < dist_edge { dist_edge = dist_col; }
   
   let layer: i32 = dist_edge / 2;
@@ -1094,8 +1094,8 @@ fn aztec_get_pixel(row: i32, col: i32, size: i32, layers: i32, mode_message: str
   let ll: i32 = layers - layer;
   let row_size: i32 = ll * 4 + 9;
   
-  let row_offset: i32 = 0;
-  let l: i32 = 0;
+  let mut row_offset: i32 = 0;
+  let mut l: i32 = 0;
   while l < layer {
     let l_ll: i32 = layers - l;
     let l_row_size: i32 = l_ll * 4 + 9;
@@ -1174,11 +1174,11 @@ fn encode_aztec(data: string) -> string {
   let bits: string = aztec_high_level(data);
   let data_bits: i32 = string_length(bits);
   let ecc_bits: i32 = data_bits * 23 / 100 + 11;
-  let layers: i32 = 1;
+  let mut layers: i32 = 1;
   while layers <= 4 {
-    let total_bits: i32 = 88 + 16 * layers;
+    let mut total_bits: i32 = 88 + 16 * layers;
     total_bits = total_bits * layers;
-    let word_size: i32 = 8;
+    let mut word_size: i32 = 8;
     if layers <= 2 { word_size = 6; }
     let stuffed: string = aztec_stuff_bits(bits, word_size);
     let stuffed_len: i32 = string_length(stuffed);
@@ -1189,16 +1189,16 @@ fn encode_aztec(data: string) -> string {
         let field_size: i32 = aztec_field_size(word_size);
         let message: string = aztec_generate_check_words(stuffed, total_bits, word_size, primitive, field_size);
         // mode message
-        let mode_bits: string = "";
+        let mut mode_bits: string = "";
         mode_bits = bits_push_value(mode_bits, layers - 1, 2);
         mode_bits = bits_push_value(mode_bits, message_words - 1, 6);
         let mode_message: string = aztec_generate_check_words(mode_bits, 28, 4, 19, 16);
         let size: i32 = 11 + layers * 4;
         
-        let out: string = "";
-        let row: i32 = 0;
+        let mut out: string = "";
+        let mut row: i32 = 0;
         while row < size {
-          let col: i32 = 0;
+          let mut col: i32 = 0;
           while col < size {
             if aztec_get_pixel(row, col, size, layers, mode_message, message) {
               out = string_concat(out, "1");
@@ -1209,7 +1209,7 @@ fn encode_aztec(data: string) -> string {
           }
           row = row + 1;
         }
-        return packed_result(size, size, out);
+        return string_concat(packed_result(size, size, out), "");
       }
     }
     layers = layers + 1;
@@ -1226,10 +1226,10 @@ export enum MatrixSymbologyId {
 
 export fn encode_matrix(symbology: MatrixSymbologyId, data: string) -> string {
   switch symbology {
-    case DataMatrix: return encode_datamatrix_square(data, false);
-    case Gs1DataMatrix: return encode_datamatrix_square(data, true);
-    case DataMatrixRectangular: return encode_datamatrix_rect(data);
-    case Aztec: return encode_aztec(data);
+    case DataMatrix: return string_concat(encode_datamatrix_square(data, false), "");
+    case Gs1DataMatrix: return string_concat(encode_datamatrix_square(data, true), "");
+    case DataMatrixRectangular: return string_concat(encode_datamatrix_rect(data), "");
+    case Aztec: return string_concat(encode_aztec(data), "");
     default: return "";
   }
 }
@@ -1243,11 +1243,11 @@ export fn __test_gf256_mul(a: i32, b: i32) -> i32 {
 }
 
 export fn __test_ascii_codewords(data: string) -> string {
-  return ascii_codewords(data);
+  return string_concat(ascii_codewords(data), "");
 }
 
 export fn __test_dm_10x10_message(data: string) -> string {
-  return dm_pad_and_ecc(ascii_codewords(data), 3, 5);
+  return string_concat(dm_pad_and_ecc(ascii_codewords(data), 3, 5), "");
 }
 
 export fn __test_pad_codeword_at(position: i32) -> i32 {
@@ -1259,7 +1259,7 @@ export fn __test_string_byte_at(data: string, index: i32) -> i32 {
 }
 
 export fn __test_byte_char3(value: i32) -> string {
-  return byte_char3(value);
+  return string_concat(byte_char3(value), "");
 }
 
 export fn __test_bytes_get(data: string, index: i32) -> i32 {
@@ -1267,7 +1267,7 @@ export fn __test_bytes_get(data: string, index: i32) -> i32 {
 }
 
 export fn __test_dm_place_10x10(data: string) -> string {
-  return dm_place_precomputed(__test_dm_10x10_message(data), 8, 8);
+  return string_concat(dm_place_precomputed(__test_dm_10x10_message(data), 8, 8), "");
 }
 `;
 

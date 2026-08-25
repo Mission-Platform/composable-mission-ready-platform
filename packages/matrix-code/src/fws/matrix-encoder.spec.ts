@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { decodeMatrix, type MatrixCode } from '../index';
 import { load, loadSync, manifest } from './matrix-encoder.fws';
+import { loadSync as loadAztecSync } from './matrix-encoder-aztec.fws';
 
 function parsePacked(symbology: MatrixCode['symbology'], packed: string): MatrixCode {
   const [widthRaw, heightRaw, modulesRaw = ''] = packed.split(',');
@@ -45,5 +46,11 @@ describe('matrix encoder FWS artifact', () => {
     expect(code.width).toBe(code.height);
     expect(decodeMatrix(code)).toBe('HELLO');
     expect(encoder.encode_matrix(3, '')).toBe('');
+  });
+
+  it('matches modular Aztec output during migration', () => {
+    const encoder = loadSync();
+    const modular = loadAztecSync();
+    expect(encoder.encode_matrix(3, 'A')).toBe(modular.encode_aztec('A'));
   });
 });

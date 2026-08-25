@@ -37,7 +37,8 @@ async function roundTrip(
   expect(packed.length).toBeGreaterThan(0);
   const { width, height, modules } = modulesFromPacked(packed);
   const decoder = await Promise.resolve(loadDec());
-  return unpackPayload(decoder.decode_matrix(symbology, width, height, modules, new Array(width * height).fill(0)));
+  const payload = decoder.decode_matrix(symbology, width, height, modules, new Array(width * height).fill(0));
+  return unpackPayload(payload);
 }
 
 describe('matrix-decoder.fws artifact', () => {
@@ -68,6 +69,7 @@ describe('matrix-decoder.fws artifact', () => {
 
   it('round-trips square Data Matrix through sync and async loaders', async () => {
     await expect(roundTrip(loadEncoderSync, loadSync, 0, 'Hello')).resolves.toBe('Hello');
+    await expect(roundTrip(loadEncoderSync, loadSync, 0, '123456')).resolves.toBe('123456');
     await expect(roundTrip(loadEncoder, load, 0, 'A')).resolves.toBe('A');
   });
 

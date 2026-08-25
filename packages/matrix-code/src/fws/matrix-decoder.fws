@@ -15,10 +15,10 @@ export enum MatrixSymbologyId {
 
 export fn decode_matrix(symbology: MatrixSymbologyId, width: i32, height: i32, modules: Array<i32>, erasures: Array<i32>) -> string {
   switch symbology {
-    case DataMatrix: return datamatrix.decode_datamatrix(0, width, height, modules, erasures);
-    case Gs1DataMatrix: return datamatrix.decode_datamatrix(1, width, height, modules, erasures);
-    case DataMatrixRectangular: return datamatrix.decode_datamatrix(2, width, height, modules, erasures);
-    case Aztec: return aztec.decode_aztec(width, height, modules, erasures);
+    case DataMatrix: return string_concat(datamatrix.decode_datamatrix(0, width, height, modules, erasures), "");
+    case Gs1DataMatrix: return string_concat(datamatrix.decode_datamatrix(1, width, height, modules, erasures), "");
+    case DataMatrixRectangular: return string_concat(datamatrix.decode_datamatrix(2, width, height, modules, erasures), "");
+    case Aztec: return string_concat(aztec.decode_aztec(width, height, modules, erasures), "");
     default: return "";
   }
 }

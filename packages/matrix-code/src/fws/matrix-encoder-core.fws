@@ -32,12 +32,12 @@ fn itoa_rec(value: i32, acc: string) -> string {
   }
   let q: i32 = value / 10;
   let r: i32 = value - q * 10;
-  return itoa_rec(q, string_concat(digit_char(r), acc));
+  return string_concat(itoa_rec(q, string_concat(digit_char(r), acc)), "");
 }
 
 export fn itoa(value: i32) -> string {
   if value == 0 { return "0"; }
-  return itoa_rec(value, "");
+  return string_concat(itoa_rec(value, ""), "");
 }
 
 export fn low_bit(value: i32) -> i32 {
@@ -45,11 +45,11 @@ export fn low_bit(value: i32) -> i32 {
 }
 
 fn xor_bits(a: i32, b: i32, width: i32) -> i32 {
-  let result: i32 = 0;
-  let place: i32 = 1;
-  let x: i32 = a;
-  let y: i32 = b;
-  let i: i32 = 0;
+  let mut result: i32 = 0;
+  let mut place: i32 = 1;
+  let mut x: i32 = a;
+  let mut y: i32 = b;
+  let mut i: i32 = 0;
   while i < width {
     let xb: i32 = low_bit(x);
     let yb: i32 = low_bit(y);
@@ -72,8 +72,8 @@ export fn xor16(a: i32, b: i32) -> i32 {
 }
 
 export fn pow2(n: i32) -> i32 {
-  let result: i32 = 1;
-  let i: i32 = 0;
+  let mut result: i32 = 1;
+  let mut i: i32 = 0;
   while i < n {
     result = result * 2;
     i = i + 1;
@@ -88,13 +88,13 @@ export fn bit_test(value: i32, shift: i32) -> bool {
 }
 
 export fn byte_char3(value: i32) -> string {
-  let v: i32 = value;
+  let mut v: i32 = value;
   if v < 0 { v = 0; }
   if v > 255 { v = 255; }
   let digits: string = itoa(v);
   if v < 10 { return string_concat("00", digits); }
   if v < 100 { return string_concat("0", digits); }
-  return digits;
+  return string_concat(digits, "");
 }
 
 export fn bytes_get(data: string, index: i32) -> i32 {
@@ -119,13 +119,13 @@ export fn bytes_push(data: string, value: i32) -> string {
 }
 
 export fn bytes_zeros(count: i32) -> string {
-  let out: string = "";
-  let i: i32 = 0;
+  let mut out: string = "";
+  let mut i: i32 = 0;
   while i < count {
     out = string_concat(out, "000");
     i = i + 1;
   }
-  return out;
+  return string_concat(out, "");
 }
 
 export fn bits_get(data: string, index: i32) -> bool {
@@ -143,7 +143,7 @@ export fn bits_get_pad_one(data: string, index: i32) -> bool {
 export fn bits_set(data: string, index: i32, on: bool) -> string {
   let left: string = string_slice(data, 0, index);
   let right: string = string_slice(data, index + 1, string_length(data));
-  return string_concat(string_concat(left, bit_char(on)), right);
+  return string_concat(string_concat(string_concat(left, bit_char(on)), right), "");
 }
 
 export fn bits_push(data: string, on: bool) -> string {
@@ -151,23 +151,23 @@ export fn bits_push(data: string, on: bool) -> string {
 }
 
 export fn bits_zeros(count: i32) -> string {
-  let out: string = "";
-  let i: i32 = 0;
+  let mut out: string = "";
+  let mut i: i32 = 0;
   while i < count {
     out = bits_push(out, false);
     i = i + 1;
   }
-  return out;
+  return string_concat(out, "");
 }
 
 export fn bits_push_value(data: string, value: i32, count: i32) -> string {
-  let out: string = data;
-  let shift: i32 = count - 1;
+  let mut out: string = data;
+  let mut shift: i32 = count - 1;
   while shift >= 0 {
     out = bits_push(out, bit_test(value, shift));
     shift = shift - 1;
   }
-  return out;
+  return string_concat(out, "");
 }
 
 export fn packed_result(width: i32, height: i32, modules: string) -> string {
@@ -205,12 +205,12 @@ export fn gf_mul(exp: string, log: string, a: i32, b: i32) -> i32 {
 
 // generator polynomial coefficients, highest degree first, as byte-string
 fn rs_generator(exp: string, log: string, count: i32) -> string {
-  let poly: string = bytes_push("", 1);
-  let index: i32 = 0;
+  let mut poly: string = bytes_push("", 1);
+  let mut index: i32 = 0;
   while index < count {
     let root: i32 = bytes_get(exp, index + 1);
-    let next: string = bytes_zeros(string_length(poly) / 3 + 1);
-    let position: i32 = 0;
+    let mut next: string = bytes_zeros(string_length(poly) / 3 + 1);
+    let mut position: i32 = 0;
     while position < string_length(poly) / 3 {
       let coefficient: i32 = bytes_get(poly, position);
       let existing: i32 = bytes_get(next, position);
@@ -223,7 +223,7 @@ fn rs_generator(exp: string, log: string, count: i32) -> string {
     poly = next;
     index = index + 1;
   }
-  return poly;
+  return string_concat(poly, "");
 }
 
 // Compute `count` ECC symbols for data byte-string over the given field.
@@ -231,8 +231,8 @@ export fn rs_ecc(data: string, count: i32, primitive: i32, size: i32) -> string 
   let exp: string = field_exp_table(primitive, size);
   let log: string = field_log_table(primitive, size);
   let generator: string = rs_generator(exp, log, count);
-  let remainder: string = bytes_zeros(count);
-  let di: i32 = 0;
+  let mut remainder: string = bytes_zeros(count);
+  let mut di: i32 = 0;
   while di < string_length(data) / 3 {
     let symbol: i32 = bytes_get(data, di);
     let factor: i32 = xor16(symbol, bytes_get(remainder, 0));
@@ -240,7 +240,7 @@ export fn rs_ecc(data: string, count: i32, primitive: i32, size: i32) -> string 
     let shifted: string = string_slice(remainder, 3, string_length(remainder));
     remainder = string_concat(shifted, "000");
     if factor != 0 {
-      let gi: i32 = 1;
+      let mut gi: i32 = 1;
       while gi < string_length(generator) / 3 {
         let coefficient: i32 = bytes_get(generator, gi);
         let prod: i32 = gf_mul(exp, log, coefficient, factor);
@@ -251,13 +251,13 @@ export fn rs_ecc(data: string, count: i32, primitive: i32, size: i32) -> string 
     }
     di = di + 1;
   }
-  return remainder;
+  return string_concat(remainder, "");
 }
 
 
 export fn ascii_codewords(data: string) -> string {
-  let out: string = "";
-  let index: i32 = 0;
+  let mut out: string = "";
+  let mut index: i32 = 0;
   let length: i32 = string_length(data);
   while index < length {
     let byte: i32 = string_byte_at(data, index);
@@ -265,7 +265,7 @@ export fn ascii_codewords(data: string) -> string {
     if byte >= 48 && byte <= 57 && next_index < length {
       let next_byte: i32 = string_byte_at(data, next_index);
       if next_byte >= 48 && next_byte <= 57 {
-        let pair: i32 = byte - 48;
+        let mut pair: i32 = byte - 48;
         pair = pair * 10 + next_byte - 48 + 130;
         out = bytes_push(out, pair);
         index = index + 2;
@@ -290,7 +290,7 @@ export fn ascii_codewords(data: string) -> string {
       }
     }
   }
-  return out;
+  return string_concat(out, "");
 }
 
 fn pad_pseudo_random(position: i32) -> i32 {
@@ -311,10 +311,10 @@ export fn pad_codeword_at(position: i32) -> i32 {
 }
 
 export fn pad_codewords(codewords: string, data_count: i32) -> string {
-  let out: string = codewords;
-  let count: i32 = string_length(out) / 3;
+  let mut out: string = codewords;
+  let mut count: i32 = string_length(out) / 3;
   if count >= data_count {
-    return out;
+    return string_concat(out, "");
   }
   // First pad is the EOD marker 129.
   out = bytes_push(out, 129);
@@ -326,6 +326,6 @@ export fn pad_codewords(codewords: string, data_count: i32) -> string {
     out = bytes_push(out, value);
     count = count + 1;
   }
-  return out;
+  return string_concat(out, "");
 }
 

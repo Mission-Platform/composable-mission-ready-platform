@@ -16,7 +16,7 @@ fn digit_char(value: i32) -> string {
 }
 
 fn decoder_itoa(value: i32) -> string {
-  if value < 10 { return digit_char(value); }
+  if value < 10 { return string_concat(digit_char(value), ""); }
   let quotient: i32 = value / 10;
   let remainder: i32 = value - quotient * 10;
   return string_concat(decoder_itoa(quotient), digit_char(remainder));
@@ -26,15 +26,15 @@ export fn decoder_digits(value: i32) -> string {
   if value < 0 { return "000"; }
   if value < 10 { return string_concat("00", decoder_itoa(value)); }
   if value < 100 { return string_concat("0", decoder_itoa(value)); }
-  return decoder_itoa(value);
+  return string_concat(decoder_itoa(value), "");
 }
 
 export fn xor16(a: i32, b: i32) -> i32 {
-  let result: i32 = 0;
-  let place: i32 = 1;
-  let left: i32 = a;
-  let right: i32 = b;
-  let index: i32 = 0;
+  let mut result: i32 = 0;
+  let mut place: i32 = 1;
+  let mut left: i32 = a;
+  let mut right: i32 = b;
+  let mut index: i32 = 0;
   while index < 16 {
     let lbit: i32 = left - left / 2 * 2;
     let rbit: i32 = right - right / 2 * 2;
@@ -49,8 +49,8 @@ export fn xor16(a: i32, b: i32) -> i32 {
 }
 
 export fn pow2(value: i32) -> i32 {
-  let result: i32 = 1;
-  let index: i32 = 0;
+  let mut result: i32 = 1;
+  let mut index: i32 = 0;
   while index < value {
     result = result * 2;
     index = index + 1;
@@ -65,7 +65,7 @@ export fn bit_test(value: i32, shift: i32) -> bool {
 }
 
 export fn byte_char3(value: i32) -> string {
-  return decoder_digits(value);
+  return string_concat(decoder_digits(value), "");
 }
 
 export fn bits_push(data: string, on: bool) -> string {
@@ -74,23 +74,23 @@ export fn bits_push(data: string, on: bool) -> string {
 }
 
 export fn bits_zeros(count: i32) -> string {
-  let result: string = "";
-  let index: i32 = 0;
+  let mut result: string = "";
+  let mut index: i32 = 0;
   while index < count {
     result = string_concat(result, "0");
     index = index + 1;
   }
-  return result;
+  return string_concat(result, "");
 }
 
 export fn dzeros(count: i32) -> string {
-  let result: string = "";
-  let index: i32 = 0;
+  let mut result: string = "";
+  let mut index: i32 = 0;
   while index < count {
     result = string_concat(result, "000");
     index = index + 1;
   }
-  return result;
+  return string_concat(result, "");
 }
 
 export fn dget(data: string, index: i32) -> i32 {
@@ -115,17 +115,17 @@ export fn qdigits(value: i32) -> string {
   if value < 10 { return string_concat("000", decoder_itoa(value)); }
   if value < 100 { return string_concat("00", decoder_itoa(value)); }
   if value < 1000 { return string_concat("0", decoder_itoa(value)); }
-  return decoder_itoa(value);
+  return string_concat(decoder_itoa(value), "");
 }
 
 export fn qzeros(count: i32) -> string {
-  let result: string = "";
-  let index: i32 = 0;
+  let mut result: string = "";
+  let mut index: i32 = 0;
   while index < count {
     result = string_concat(result, "0000");
     index = index + 1;
   }
-  return result;
+  return string_concat(result, "");
 }
 
 export fn qget(data: string, index: i32) -> i32 {
@@ -153,7 +153,7 @@ export fn bit_array_get(data: string, index: i32) -> bool {
 }
 
 export fn bit_array_set(data: string, index: i32, value: bool) -> string {
-  let character: string = "0";
+  let mut character: string = "0";
   if value { character = "1"; }
   let head: string = string_slice(data, 0, index);
   let tail: string = string_slice(data, index + 1, string_length(data));

@@ -64,8 +64,8 @@ export fn national_prefix(region: string) -> string {
 }
 
 export fn digits_only(input: string) -> string {
-  let result: string = "";
-  let index: i32 = 0;
+  let mut result: string = "";
+  let mut index: i32 = 0;
   while index < string_length(input) {
     let value: i32 = string_byte_at(input, index);
     if value >= 48 && value <= 57 {
@@ -73,11 +73,11 @@ export fn digits_only(input: string) -> string {
     }
     index = index + 1;
   }
-  return result;
+  return string_concat(result, "");
 }
 
 export fn has_plus(input: string) -> bool {
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < string_length(input) {
     let value: i32 = string_byte_at(input, index);
     if value == 43 { return true; }
@@ -140,7 +140,7 @@ export fn strip_prefix(digits: string, region: string) -> string {
   let prefix: string = national_prefix(region);
   if string_length(prefix) == 0 || !string_starts_with(digits, prefix) { return digits; }
   let stripped: string = string_slice(digits, string_length(prefix), string_length(digits));
-  if possible_length(region, string_length(stripped)) { return stripped; }
+  if possible_length(region, string_length(stripped)) { return string_concat(stripped, ""); }
   return digits;
 }
 
@@ -148,7 +148,7 @@ export fn parsed_region(input: string, default_region: string) -> string {
   let digits: string = digits_only(input);
   if string_length(digits) == 0 { return ""; }
   if is_international(input, digits) {
-    return region_for_country_code(international_code(international_digits(input, digits)));
+    return string_concat(region_for_country_code(international_code(international_digits(input, digits))), "");
   }
   if country_code_for_region(default_region) == 0 { return ""; }
   return default_region;
@@ -171,7 +171,7 @@ export fn parsed_nsn(input: string, default_region: string) -> string {
     return string_slice(rest, code_length(code), string_length(rest));
   }
   if country_code_for_region(default_region) == 0 { return ""; }
-  return strip_prefix(digits, default_region);
+  return string_concat(strip_prefix(digits, default_region), "");
 }
 
 export fn valid_region_number(input: string, region: string) -> bool {
@@ -227,34 +227,34 @@ export fn number_type_for(input: string, region: string) -> i32 {
 
 export fn group_digits(digits: string, first: i32, second: i32, third: i32, fourth: i32) -> string {
   let length: i32 = string_length(digits);
-  let result: string = "";
-  let index: i32 = 0;
+  let mut result: string = "";
+  let mut index: i32 = 0;
   if length > index { result = string_slice(digits, index, index + first); index = index + first; }
   if second > 0 && index < length { result = string_concat(result, string_concat(" ", string_slice(digits, index, index + second))); index = index + second; }
   if third > 0 && index < length { result = string_concat(result, string_concat(" ", string_slice(digits, index, index + third))); index = index + third; }
   if fourth > 0 && index < length { result = string_concat(result, string_concat(" ", string_slice(digits, index, index + fourth))); index = index + fourth; }
   if index < length { result = string_concat(result, string_concat(" ", string_slice(digits, index, length))); }
-  return result;
+  return string_concat(result, "");
 }
 
 export fn grouped(region: string, nsn: string) -> string {
-  if region_is(region, "US") || region_is(region, "CA") { return group_digits(nsn, 3, 3, 4, 0); }
-  if region_is(region, "GB") { return group_digits(nsn, 4, 6, 0, 0); }
-  if region_is(region, "FR") { return group_digits(nsn, 1, 2, 2, 2); }
-  if region_is(region, "DE") { return group_digits(nsn, 4, 7, 0, 0); }
-  if region_is(region, "AU") { return group_digits(nsn, 1, 4, 4, 0); }
-  if region_is(region, "IN") { return group_digits(nsn, 5, 5, 0, 0); }
-  if region_is(region, "JP") { return group_digits(nsn, 2, 4, 4, 0); }
-  if region_is(region, "BR") { return group_digits(nsn, 2, 5, 4, 0); }
-  if region_is(region, "CN") { return group_digits(nsn, 3, 4, 4, 0); }
-  if region_is(region, "RU") { return group_digits(nsn, 3, 3, 2, 2); }
+  if region_is(region, "US") || region_is(region, "CA") { return string_concat(group_digits(nsn, 3, 3, 4, 0), ""); }
+  if region_is(region, "GB") { return string_concat(group_digits(nsn, 4, 6, 0, 0), ""); }
+  if region_is(region, "FR") { return string_concat(group_digits(nsn, 1, 2, 2, 2), ""); }
+  if region_is(region, "DE") { return string_concat(group_digits(nsn, 4, 7, 0, 0), ""); }
+  if region_is(region, "AU") { return string_concat(group_digits(nsn, 1, 4, 4, 0), ""); }
+  if region_is(region, "IN") { return string_concat(group_digits(nsn, 5, 5, 0, 0), ""); }
+  if region_is(region, "JP") { return string_concat(group_digits(nsn, 2, 4, 4, 0), ""); }
+  if region_is(region, "BR") { return string_concat(group_digits(nsn, 2, 5, 4, 0), ""); }
+  if region_is(region, "CN") { return string_concat(group_digits(nsn, 3, 4, 4, 0), ""); }
+  if region_is(region, "RU") { return string_concat(group_digits(nsn, 3, 3, 2, 2), ""); }
   return nsn;
 }
 
 export fn getCountryCodeForRegion(region: string) -> i32 { return country_code_for_region(region); }
-export fn getRegionCodeForCountryCode(code: i32) -> string { return region_for_country_code(code); }
-export fn getRegionCodeForNumber(input: string, default_region: string) -> string { return parsed_region(input, default_region); }
-export fn getNationalSignificantNumber(input: string, default_region: string) -> string { return parsed_nsn(input, default_region); }
+export fn getRegionCodeForCountryCode(code: i32) -> string { return string_concat(region_for_country_code(code), ""); }
+export fn getRegionCodeForNumber(input: string, default_region: string) -> string { return string_concat(parsed_region(input, default_region), ""); }
+export fn getNationalSignificantNumber(input: string, default_region: string) -> string { return string_concat(parsed_nsn(input, default_region), ""); }
 export fn isPossibleNumber(input: string, default_region: string) -> bool {
   let region: string = parsed_region(input, default_region);
   return string_length(region) != 0 && possible_length(region, string_length(parsed_nsn(input, default_region)));
@@ -284,7 +284,7 @@ export fn format(input: string, default_region: string, fmt: i32) -> string {
   let nsn: string = parsed_nsn(input, default_region);
   let code: i32 = parsed_code(input, default_region);
   if string_length(region) == 0 || code == 0 { return ""; }
-  let e164: string = "";
+  let mut e164: string = "";
   if code == 1 { e164 = string_concat("+1", nsn); }
   if code == 44 { e164 = string_concat("+44", nsn); }
   if code == 33 { e164 = string_concat("+33", nsn); }
@@ -295,7 +295,7 @@ export fn format(input: string, default_region: string, fmt: i32) -> string {
   if code == 55 { e164 = string_concat("+55", nsn); }
   if code == 86 { e164 = string_concat("+86", nsn); }
   if code == 7 { e164 = string_concat("+7", nsn); }
-  if fmt == 0 { return e164; }
+  if fmt == 0 { return string_concat(e164, ""); }
   if fmt == 3 { return string_concat("tel:", e164); }
   if fmt == 1 {
     if code == 1 { return string_concat("+1 ", grouped(region, nsn)); }
@@ -320,13 +320,13 @@ export fn formatAsYouType(input: string, region: string) -> string {
   if string_length(digits) == 0 { return ""; }
   if has_plus(input) { return string_concat("+", digits); }
   if region_is(region, "US") || region_is(region, "CA") {
-    if string_length(digits) <= 3 { return digits; }
+    if string_length(digits) <= 3 { return string_concat(digits, ""); }
     if string_length(digits) <= 6 { return string_concat(string_concat("(", string_slice(digits, 0, 3)), string_concat(") ", string_slice(digits, 3, string_length(digits)))); }
     return string_concat(string_concat("(", string_concat(string_slice(digits, 0, 3), ") ")), string_concat(string_slice(digits, 3, 6), string_concat("-", string_slice(digits, 6, string_length(digits)))));
   }
   let prefix: string = national_prefix(region);
-  let rest: string = digits;
+  let mut rest: string = digits;
   if string_length(prefix) != 0 && string_starts_with(rest, prefix) { rest = string_slice(rest, string_length(prefix), string_length(rest)); }
-  if string_length(rest) == 0 { return prefix; }
+  if string_length(rest) == 0 { return string_concat(prefix, ""); }
   return string_concat(prefix, grouped(region, rest));
 }

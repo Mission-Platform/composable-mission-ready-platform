@@ -10,12 +10,12 @@ fn rs_safe_div(a: i32, b: i32) -> i32 {
 }
 
 fn syndromes_zero(exp: string, log: string, block: string, ecc: i32) -> bool {
-  let syndrome: i32 = 0;
+  let mut syndrome: i32 = 0;
   let length: i32 = string_length(block) / 3;
   while syndrome < ecc {
     let alpha: i32 = dec.dget(exp, syndrome + 1);
-    let value: i32 = 0;
-    let index: i32 = 0;
+    let mut value: i32 = 0;
+    let mut index: i32 = 0;
     while index < length {
       value = dec.xor16(gf.gf_mul(exp, log, value, alpha), dec.dget(block, index));
       index = index + 1;
@@ -28,12 +28,12 @@ fn syndromes_zero(exp: string, log: string, block: string, ecc: i32) -> bool {
 
 fn compute_syndromes(exp: string, log: string, block: string, ecc: i32) -> string {
   let length: i32 = string_length(block) / 3;
-  let syndromes: string = dec.dzeros(ecc);
-  let syndrome_index: i32 = 0;
+  let mut syndromes: string = dec.dzeros(ecc);
+  let mut syndrome_index: i32 = 0;
   while syndrome_index < ecc {
     let alpha: i32 = dec.dget(exp, syndrome_index + 1);
-    let value: i32 = 0;
-    let index: i32 = 0;
+    let mut value: i32 = 0;
+    let mut index: i32 = 0;
     while index < length {
       value = dec.xor16(gf.gf_mul(exp, log, value, alpha), dec.dget(block, index));
       index = index + 1;
@@ -41,11 +41,11 @@ fn compute_syndromes(exp: string, log: string, block: string, ecc: i32) -> strin
     syndromes = dec.dset(syndromes, syndrome_index, value);
     syndrome_index = syndrome_index + 1;
   }
-  return syndromes;
+  return string_concat(syndromes, "");
 }
 
 fn syndromes_are_zero(syndromes: string, ecc: i32) -> bool {
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < ecc {
     if dec.dget(syndromes, index) != 0 { return false; }
     index = index + 1;
@@ -55,14 +55,14 @@ fn syndromes_are_zero(syndromes: string, ecc: i32) -> bool {
 
 fn build_erasure_locator(exp: string, log: string, order: i32, length: i32, erasure_flags: string, ecc: i32) -> string {
   // Returns packed "count|locator" or empty on failure.
-  let erasure_count: i32 = 0;
-  let erasure_locator: string = dec.dset(dec.dzeros(1), 0, 1);
-  let erasure_index: i32 = 0;
+  let mut erasure_count: i32 = 0;
+  let mut erasure_locator: string = dec.dset(dec.dzeros(1), 0, 1);
+  let mut erasure_index: i32 = 0;
   while erasure_index < length {
     if dec.dget(erasure_flags, erasure_index) != 0 {
       erasure_count = erasure_count + 1;
       if erasure_count > ecc { return ""; }
-      let factor: string = dec.dzeros(2);
+      let mut factor: string = dec.dzeros(2);
       factor = dec.dset(factor, 0, 1);
       factor = dec.dset(factor, 1, gf.field_pow(exp, order, length - 1 - erasure_index));
       erasure_locator = gf.poly_mul(exp, log, erasure_locator, factor);
@@ -73,12 +73,12 @@ fn build_erasure_locator(exp: string, log: string, order: i32, length: i32, eras
 }
 
 fn apply_erasure_forney(exp: string, log: string, order: i32, length: i32, syndromes: string, erasure_flags: string, ecc: i32) -> string {
-  let forney: string = syndromes;
-  let erasure_index: i32 = 0;
+  let mut forney: string = syndromes;
+  let mut erasure_index: i32 = 0;
   while erasure_index < length {
     if dec.dget(erasure_flags, erasure_index) != 0 {
       let x: i32 = gf.field_pow(exp, order, length - 1 - erasure_index);
-      let j: i32 = 0;
+      let mut j: i32 = 0;
       while j < ecc - 1 {
         forney = dec.dset(forney, j, dec.xor16(gf.gf_mul(exp, log, dec.dget(forney, j), x), dec.dget(forney, j + 1)));
         j = j + 1;
@@ -86,20 +86,20 @@ fn apply_erasure_forney(exp: string, log: string, order: i32, length: i32, syndr
     }
     erasure_index = erasure_index + 1;
   }
-  return forney;
+  return string_concat(forney, "");
 }
 
 fn berlekamp_massey(exp: string, log: string, field_size: i32, forney: string, rounds: i32) -> string {
   // Returns packed "errors|lambda" 
-  let lambda: string = dec.dset(dec.dzeros(1), 0, 1);
-  let previous: string = dec.dset(dec.dzeros(1), 0, 1);
-  let errors: i32 = 0;
-  let shift: i32 = 1;
-  let discrepancy_previous: i32 = 1;
-  let round: i32 = 0;
+  let mut lambda: string = dec.dset(dec.dzeros(1), 0, 1);
+  let mut previous: string = dec.dset(dec.dzeros(1), 0, 1);
+  let mut errors: i32 = 0;
+  let mut shift: i32 = 1;
+  let mut discrepancy_previous: i32 = 1;
+  let mut round: i32 = 0;
   while round < rounds {
-    let discrepancy: i32 = dec.dget(forney, round);
-    let tap: i32 = 1;
+    let mut discrepancy: i32 = dec.dget(forney, round);
+    let mut tap: i32 = 1;
     let lambda_len: i32 = string_length(lambda) / 3;
     while tap <= errors {
       if tap < lambda_len {
@@ -143,13 +143,13 @@ fn berlekamp_massey(exp: string, log: string, field_size: i32, forney: string, r
 
 fn chien_search(exp: string, log: string, order: i32, length: i32, sigma: string, total_positions: i32) -> string {
   // Returns packed positions (3-digit each) or empty on failure.
-  let found: string = dec.dzeros(length);
-  let found_count: i32 = 0;
-  let root_index: i32 = 0;
+  let mut found: string = dec.dzeros(length);
+  let mut found_count: i32 = 0;
+  let mut root_index: i32 = 0;
   let sigma_len: i32 = string_length(sigma) / 3;
   while root_index < length {
     let root_mod: i32 = root_index - rs_safe_div(root_index, order) * order;
-    let inv_exp: i32 = order - root_mod;
+    let mut inv_exp: i32 = order - root_mod;
     while inv_exp < 0 {
       inv_exp = inv_exp + order;
     }
@@ -157,9 +157,9 @@ fn chien_search(exp: string, log: string, order: i32, length: i32, sigma: string
       inv_exp = inv_exp - order;
     }
     let inverse: i32 = dec.dget(exp, inv_exp);
-    let sum: i32 = 0;
-    let power: i32 = 1;
-    let coefficient: i32 = 0;
+    let mut sum: i32 = 0;
+    let mut power: i32 = 1;
+    let mut coefficient: i32 = 0;
     while coefficient < sigma_len {
       sum = dec.xor16(sum, gf.gf_mul(exp, log, dec.dget(sigma, coefficient), power));
       power = gf.gf_mul(exp, log, power, inverse);
@@ -178,9 +178,9 @@ fn chien_search(exp: string, log: string, order: i32, length: i32, sigma: string
 
 fn eval_poly_at_inverse(exp: string, log: string, poly: string, inverse: i32) -> i32 {
   let length: i32 = string_length(poly) / 3;
-  let value: i32 = 0;
-  let power: i32 = 1;
-  let coefficient: i32 = 0;
+  let mut value: i32 = 0;
+  let mut power: i32 = 1;
+  let mut coefficient: i32 = 0;
   while coefficient < length {
     value = dec.xor16(value, gf.gf_mul(exp, log, dec.dget(poly, coefficient), power));
     power = gf.gf_mul(exp, log, power, inverse);
@@ -191,9 +191,9 @@ fn eval_poly_at_inverse(exp: string, log: string, poly: string, inverse: i32) ->
 
 fn eval_derivative_at_inverse(exp: string, log: string, sigma: string, inverse: i32) -> i32 {
   let length: i32 = string_length(sigma) / 3;
-  let derivative: i32 = 0;
-  let power: i32 = 1;
-  let coefficient: i32 = 0;
+  let mut derivative: i32 = 0;
+  let mut power: i32 = 1;
+  let mut coefficient: i32 = 0;
   while coefficient < length {
     let odd: i32 = coefficient - coefficient / 2 * 2;
     if odd == 1 {
@@ -209,7 +209,7 @@ fn eval_derivative_at_inverse(exp: string, log: string, sigma: string, inverse: 
 
 fn reduce_mod_order(value: i32, order: i32) -> i32 {
   if order <= 0 { return 0; }
-  let reduced: i32 = value;
+  let mut reduced: i32 = value;
   while reduced < 0 {
     reduced = reduced + order;
   }
@@ -230,19 +230,19 @@ fn correct_one_position(exp: string, log: string, field_size: i32, order: i32, l
   let derivative: i32 = eval_derivative_at_inverse(exp, log, sigma, inverse);
   if derivative == 0 { return ""; }
   let correction: i32 = gf.gf_mul(exp, log, omega_value, gf.field_inverse(exp, log, field_size, derivative));
-  return dec.dset(block, position, dec.xor16(dec.dget(block, position), correction));
+  return string_concat(dec.dset(block, position, dec.xor16(dec.dget(block, position), correction)), "");
 }
 
 fn forney_correct(exp: string, log: string, field_size: i32, order: i32, length: i32, block: string, syndromes: string, sigma: string, found: string, ecc: i32) -> string {
-  let corrected: string = block;
+  let mut corrected: string = block;
   let sigma_len: i32 = string_length(sigma) / 3;
   if sigma_len < 0 { return ""; }
   if sigma_len > 64 { return ""; }
-  let omega: string = dec.dzeros(ecc);
-  let omega_index: i32 = 0;
+  let mut omega: string = dec.dzeros(ecc);
+  let mut omega_index: i32 = 0;
   while omega_index < ecc {
-    let value: i32 = 0;
-    let tap: i32 = 0;
+    let mut value: i32 = 0;
+    let mut tap: i32 = 0;
     while tap <= omega_index {
       if tap < sigma_len {
         value = dec.xor16(value, gf.gf_mul(exp, log, dec.dget(sigma, tap), dec.dget(syndromes, omega_index - tap)));
@@ -256,7 +256,7 @@ fn forney_correct(exp: string, log: string, field_size: i32, order: i32, length:
   let found_count: i32 = string_length(found) / 3;
   if found_count < 0 { return ""; }
   if found_count > length { return ""; }
-  let found_index: i32 = 0;
+  let mut found_index: i32 = 0;
   while found_index < found_count {
     let position: i32 = dec.dget(found, found_index);
     let next: string = correct_one_position(exp, log, field_size, order, length, corrected, omega, sigma, position);
@@ -264,7 +264,7 @@ fn forney_correct(exp: string, log: string, field_size: i32, order: i32, length:
     corrected = next;
     found_index = found_index + 1;
   }
-  return corrected;
+  return string_concat(corrected, "");
 }
 
 export fn rs_correct(block: string, ecc: i32, primitive: i32, field_size: i32, erasure_flags: string) -> string {
@@ -282,18 +282,18 @@ export fn rs_correct(block: string, ecc: i32, primitive: i32, field_size: i32, e
   if syndromes_are_zero(syndromes, ecc) {
     return block;
   } else {
-    return rs_correct_errors(exp, log, field_size, order, length, block, syndromes, erasure_flags, ecc);
+    return string_concat(rs_correct_errors(exp, log, field_size, order, length, block, syndromes, erasure_flags, ecc), "");
   }
 }
 
 fn rs_correct_errors(exp: string, log: string, field_size: i32, order: i32, length: i32, block: string, syndromes: string, erasure_flags: string, ecc: i32) -> string {
   let erasure_pack: string = build_erasure_locator(exp, log, order, length, erasure_flags, ecc);
   if string_length(erasure_pack) == 0 { return ""; }
-  let split: i32 = 0;
+  let mut split: i32 = 0;
   while split < string_length(erasure_pack) {
     if string_byte_at(erasure_pack, split) == 124 {
-      let erasure_count: i32 = 0;
-      let pi: i32 = 0;
+      let mut erasure_count: i32 = 0;
+      let mut pi: i32 = 0;
       while pi < split {
         let digit: i32 = string_byte_at(erasure_pack, pi) - 48;
         erasure_count = erasure_count * 10 + digit;
@@ -304,11 +304,11 @@ fn rs_correct_errors(exp: string, log: string, field_size: i32, order: i32, leng
       let rounds: i32 = ecc - erasure_count;
       if rounds < 0 { return ""; }
       let bm_pack: string = berlekamp_massey(exp, log, field_size, forney, rounds);
-      let bm_split: i32 = 0;
+      let mut bm_split: i32 = 0;
       while bm_split < string_length(bm_pack) {
         if string_byte_at(bm_pack, bm_split) == 124 {
-          let errors: i32 = 0;
-          let ei: i32 = 0;
+          let mut errors: i32 = 0;
+          let mut ei: i32 = 0;
           while ei < bm_split {
             let digit2: i32 = string_byte_at(bm_pack, ei) - 48;
             errors = errors * 10 + digit2;
@@ -324,7 +324,7 @@ fn rs_correct_errors(exp: string, log: string, field_size: i32, order: i32, leng
           }
           let corrected: string = forney_correct(exp, log, field_size, order, length, block, syndromes, sigma, found, ecc);
           if string_length(corrected) == 0 { return ""; }
-          if syndromes_zero(exp, log, corrected, ecc) { return corrected; }
+          if syndromes_zero(exp, log, corrected, ecc) { return string_concat(corrected, ""); }
           return "";
         }
         bm_split = bm_split + 1;
@@ -337,12 +337,12 @@ fn rs_correct_errors(exp: string, log: string, field_size: i32, order: i32, leng
 }
 
 export fn packed_bytes(bytes: string) -> string {
-  let result: string = "";
-  let index: i32 = 0;
+  let mut result: string = "";
+  let mut index: i32 = 0;
   let length: i32 = string_length(bytes) / 3;
   while index < length {
     result = string_concat(result, dec.byte_char3(dec.dget(bytes, index)));
     index = index + 1;
   }
-  return result;
+  return string_concat(result, "");
 }

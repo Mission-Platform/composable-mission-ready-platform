@@ -1,6 +1,6 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
-import { type MpElement, useEffect, useMemo, useRef, useState } from '@mission-platform/forge';
+import { useEffect, useMemo, useRef, useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 import { encodeMatrix, type MatrixSymbology } from '@mission-platform/matrix-code';
 
@@ -45,6 +45,27 @@ export interface MatrixCodeActions {
   copyValue?: boolean;
 }
 
+
+/* ── Visual property overrides (generated) ───────────────────────────── */
+export interface MatrixCodeStyleProperties {
+  readonly 'spacing-2'?: string;
+  readonly 'spacing-3'?: string;
+}
+
+export type MatrixCodeStyle = CSSStyleProperties & {
+  readonly '--forge-matrix-code-spacing-2'?: string | undefined;
+  readonly '--forge-matrix-code-spacing-3'?: string | undefined;
+};
+
+function createMatrixCodeStyle(
+  properties: Readonly<MatrixCodeStyleProperties> | undefined,
+): MatrixCodeStyle | undefined {
+  return createForgeStyle({
+    '--forge-matrix-code-spacing-2': properties?.['spacing-2'],
+    '--forge-matrix-code-spacing-3': properties?.['spacing-3'],
+  }) as MatrixCodeStyle | undefined;
+}
+/* ── End visual property overrides ─────────────────────────────────────── */
 export interface MatrixCodeProperties {
   /** The data to encode (URL, text, digits, etc.). */
   value: string;
@@ -79,6 +100,9 @@ export interface MatrixCodeProperties {
   downloadFileName?: string;
   /** Fired when `value` cannot be encoded, or an action (save/copy) fails. */
   onError?: (error: Error) => void;
+
+  /** Component-owned CSS custom-property overrides. */
+  properties?: Readonly<MatrixCodeStyleProperties>;
 }
 
 /** The result of encoding the payload into an SVG path. */
@@ -163,6 +187,8 @@ function stableId(prefix: string, seed: string): string {
  * through the co-located CSS Module `forge-matrix-code.module.scss`.
  */
 export function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpElement {
+  const style = createMatrixCodeStyle(properties.properties);
+
   const {
     value,
     symbology = 'datamatrix',
@@ -243,7 +269,7 @@ export function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpE
         height="0"
         width="0"
         xmlns="http://www.w3.org/2000/svg"
-      />
+      style={style} />
     );
   }
 
@@ -379,7 +405,7 @@ export function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpE
       viewBox={`0 0 ${widthDimension} ${heightDimension}`}
       width={size}
       xmlns="http://www.w3.org/2000/svg"
-    >
+      style={style}>
       {gradient ? (
         <defs>
           {gradientType === 'radial' ? (
@@ -486,7 +512,7 @@ export function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpE
   }
 
   return (
-    <div className={styles['forge-matrix-code-figure']}>
+    <div className={styles['forge-matrix-code-figure']} style={style}>
       {matrixSvg}
       <div className={styles['forge-matrix-code__actions']}>
         {visibleActions.map((action) => {
