@@ -633,6 +633,19 @@ language or toolchain.
   memory layout, iterators, async boundaries, and required capabilities. Do not
   hand-edit generated adapters to bypass it.
 
+## Safe defaults and optimization audit
+- Locals and parameters are immutable unless declared \`mut\`; mutable borrows
+  require explicit \`&mut\`. POD aggregates pass by value, while non-POD values
+  pass by immutable reference unless an ownership mode is explicit.
+- Region temporaries cannot escape their scope. Values crossing a scope require
+  an explicit \`owned\` or \`shared\` boundary and checked ARC retain/release.
+- Collection bounds checks use \`runtime\` by default. \`proven-safe\` requires
+  static range facts; \`excluded-by-profile\` is explicit, auditable, and must
+  appear in analysis, manifests, optimizer reports, and cache identity.
+- The compiler optimizes a deterministic Sea-of-Nodes graph, then Wasm IR.
+  Inspect \`.sonir.json\` with \`fws_inspect_sonir\`; it is bounded, root-safe,
+  read-only metadata and must never be executed.
+
 ## Required workflow
 1. Run \`fws_analyze_source\` or \`fws_analyze_workspace\` and inspect every
    blocking finding, including its evidence and source range.
@@ -756,7 +769,7 @@ const FRAMEWORK_WEB_COMPONENTS = `# Web Components (Lit) Best Practices
 4. **Attribute Reflection:** Reflect only when necessary.`;
 
 const GUIDES: Record<GuideId, Guide> = {
-  overview: {id: "overview", title: "Overview", body: OVERVIEW},
+  overview: { id: "overview", title: "Overview", body: OVERVIEW },
   conventions: {
     id: "conventions",
     title: "Conventions & Naming",
@@ -847,14 +860,26 @@ const GUIDES: Record<GuideId, Guide> = {
     title: "Design Token Overrides",
     body: DESIGN_TOKEN_OVERRIDES,
   },
-  "fws-authoring": { id: "fws-authoring", title: "FWS Authoring", body: FWS_AUTHORING },
-  "fws-security": { id: "fws-security", title: "FWS Security", body: FWS_SECURITY },
+  "fws-authoring": {
+    id: "fws-authoring",
+    title: "FWS Authoring",
+    body: FWS_AUTHORING,
+  },
+  "fws-security": {
+    id: "fws-security",
+    title: "FWS Security",
+    body: FWS_SECURITY,
+  },
   "fws-artifact-verification": {
     id: "fws-artifact-verification",
     title: "FWS Wasm Artifact Verification",
     body: FWS_ARTIFACT_VERIFICATION,
   },
-  "fws-forensics": { id: "fws-forensics", title: "FWS Bounded Forensics", body: FWS_FORENSICS },
+  "fws-forensics": {
+    id: "fws-forensics",
+    title: "FWS Bounded Forensics",
+    body: FWS_FORENSICS,
+  },
 };
 
 export const GUIDE_IDS = Object.keys(GUIDES) as GuideId[];

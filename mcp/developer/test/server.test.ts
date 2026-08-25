@@ -60,6 +60,7 @@ describe('tools', () => {
       'fws_analyze_source',
       'fws_analyze_workspace',
       'fws_inspect_manifest',
+      'fws_inspect_sonir',
       'fws_verify_artifact',
       'fws_run_trace',
     ]) {
@@ -126,6 +127,7 @@ describe('tools', () => {
         maxAsyncTasks: 1024,
         maxRegexInputLength: 1_000_000,
       },
+      boundsChecks: 'runtime',
       blockingSeverities: ['error'],
     });
 
@@ -135,6 +137,7 @@ describe('tools', () => {
         policy: {
           profile: 'development',
           allowedCapabilities: ['scheduler.microtask'],
+          boundsChecks: 'proven-safe',
           limits: { maxCallDepth: 17, maxAsyncTasks: 8 },
         },
         targetFeatures: { simd: true, memory64: false },
@@ -162,6 +165,7 @@ describe('tools', () => {
         maxAsyncTasks: 8,
         maxRegexInputLength: 1_000_000,
       },
+      boundsChecks: 'proven-safe',
       blockingSeverities: ['error'],
     });
   });
@@ -230,6 +234,59 @@ describe('tools', () => {
     assert.equal(result.execution, 'capability-denied-self-hosted-probe');
     assert.equal(result.mode, 'interpret');
     assert.ok(result.steps <= 1_000_000);
+  });
+
+  it('inspects a .sonir.json artifact and returns a valid summary', async () => {
+    const body = await callTool('fws_inspect_sonir', {
+      sonIrPath: 'packages/forge-web-script/src/fixtures/test.sonir.json',
+      maxNodes: 10,
+      maxFunctions: 10,
+    });
+    const result = JSON.parse(body) as {
+      schemaVersion: string;
+      compilerVersion: string;
+      languageVersion: string;
+      abiVersion: string;
+      sourceHash: string;
+      graphHash: string;
+      optimization: string;
+      boundsChecks: string;
+      memoryModel: string;
+      nodeCount: number;
+      regionCount: number;
+      functionCount: number;
+      functions: unknown[];
+      optimizerPasses: unknown[];
+      nodes: unknown[];
+      truncated: boolean;
+    };
+    assert.equal(result.schemaVersion, '1.0');
+    assert.equal(result.memoryModel, 'region-arc-checked-linear');
+    assert.ok(['debug', 'release'].includes(result.optimization));
+    assert.ok(['runtime', 'proven-safe', 'excluded-by-profile'].includes(result.boundsChecks));
+    assert.ok(result.nodeCount >= 0);
+    assert.ok(result.functionCount >= 0);
+    assert.ok(result.regionCount >= 0);
+  });
+
+  it('rejects path traversal and malformed .sonir.json in fws_inspect_sonir', async () => {
+    const traversal = await client.callTool({
+      name: 'fws_inspect_sonir',
+      arguments: { sonIrPath: '../outside.sonir.json' },
+    });
+    assert.equal(traversal.isError, true);
+
+    const malformed = await client.callTool({
+      name: 'fws_inspect_sonir',
+      arguments: { sonIrPath: 'package.json' },
+    });
+    assert.equal(malformed.isError, true);
+
+    const nonexistent = await client.callTool({
+      name: 'fws_inspect_sonir',
+      arguments: { sonIrPath: 'nonexistent.sonir.json' },
+    });
+    assert.equal(nonexistent.isError, true);
   });
 
   it('lists components from the components package with atomic level', async () => {

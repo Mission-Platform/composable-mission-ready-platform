@@ -66,7 +66,8 @@ Most MCP clients accept a command + args. Point them at this entry file:
 | `add_locale` / `remove_locale`                                             | Add a language (clones the default locale's structure; `fill: source \| empty`) or remove one (refuses the default). Dry-run by default; pass `apply: true`.               |
 | `update_translation`                                                       | Set one or more translation values by dot-path key (`entries`) in a single locale/namespace. Dry-run by default; pass `apply: true`.                                       |
 | `fws_analyze_source` / `fws_analyze_workspace`                             | Run canonical FWS analysis on bounded inline source or repository-rooted `.fws` files; returns structured diagnostics, findings, facts, and policy without execution.      |
-| `fws_inspect_manifest`                                                     | Inspect a repository-rooted FWS ABI manifest without instantiating Wasm.                                                                                                   |
+| `fws_inspect_manifest`                                                     | Inspect a repository-rooted FWS ABI manifest, including bounds-check policy, without instantiating Wasm.                                                                   |
+| `fws_inspect_sonir`                                                        | Inspect a bounded, root-bounded `.sonir.json` graph summary, optimizer passes, and bounds policy without executing guest code.                                             |
 | `fws_verify_artifact`                                                      | Verify a bounded Wasm binary against its FWS manifest, metadata, hashes, target features, and capability policy; never executes it.                                        |
 | `fws_run_trace`                                                            | Capture a bounded trace from the capability-denied self-hosted FWS probe only; arbitrary Wasm, commands, imports, and ambient I/O are unavailable.                         |
 
@@ -111,3 +112,9 @@ FWS inspection is read-only and root-bounded. Source analysis and artifact
 verification delegate to the canonical FWS packages. Trace capture is opt-in,
 event/byte/snapshot capped, deterministic, redacted, and limited to the
 capability-denied self-hosted probe; it is never arbitrary guest execution.
+
+`fws_analyze_source` and `fws_analyze_workspace` accept `policy.boundsChecks`:
+`runtime` is the safe default, `proven-safe` requires proof facts, and
+`excluded-by-profile` is surfaced as an auditable finding. `fws_inspect_sonir`
+validates the schema and graph metadata, caps returned nodes/functions, rejects
+paths outside the repository root, and never evaluates graph or Wasm contents.

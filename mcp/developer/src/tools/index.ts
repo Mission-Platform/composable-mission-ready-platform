@@ -9,6 +9,7 @@ import { join, relative, resolve } from 'node:path';
 
 import {
   analyzeForgeWebScript,
+  deserializeForgeWebScriptSoN,
   prepareForgeWebScriptFrontend,
   type ForgeWebScriptAnalysisOptions,
 } from '@mission-platform/forge-web-script';
@@ -118,6 +119,7 @@ const analysisPolicySchema = z
   .object({
     profile: z.enum(['development', 'strict']).optional(),
     allowedCapabilities: z.array(z.string().trim().min(1).max(128)).max(128).optional(),
+    boundsChecks: z.enum(['runtime', 'proven-safe', 'excluded-by-profile']).optional(),
     limits: analysisLimitsSchema,
   })
   .optional();
@@ -178,6 +180,7 @@ function fwsAnalysisOptions(
       : {
           ...(policy.profile === undefined ? {} : { profile: policy.profile }),
           ...(policy.allowedCapabilities === undefined ? {} : { allowedCapabilities: policy.allowedCapabilities }),
+          ...(policy.boundsChecks === undefined ? {} : { boundsChecks: policy.boundsChecks }),
           ...(policy.limits === undefined
             ? {}
             : {
@@ -219,6 +222,7 @@ function analyzeSource(source: string, fileName: string, options: ForgeWebScript
     fileName,
     compilerVersion: 'mcp-analysis',
     requestedCapabilities: options.policy?.allowedCapabilities,
+    boundsChecks: options.policy?.boundsChecks,
     analysis: options,
   });
   const analysis = analyzeForgeWebScript(frontend, options);
@@ -382,6 +386,7 @@ export function registerTools(server: McpServer): void {
           format: manifest.format,
           moduleName: manifest.moduleName,
           graphHash: manifest.graphHash,
+          boundsChecks: manifest.boundsChecks ?? 'runtime',
           targetFeatures: manifest.targetFeatures,
           requiredCapabilities: manifest.requiredCapabilities,
           imports: manifest.imports.map(({ capability, alias, function: declaration }) => ({
@@ -406,6 +411,72 @@ export function registerTools(server: McpServer): void {
           memory: manifest.memory,
           iteratorCount: manifest.iteratorDescriptors?.length ?? 0,
           hasAsyncContract: manifest.async !== undefined,
+        });
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    'fws_inspect_sonir',
+    {
+      description:
+        'Read a bounded, repository-rooted .sonir.json artifact and return deterministic graph, optimization, and bounds-policy metadata. This is read-only inspection and never executes guest code.',
+      inputSchema: {
+        sonIrPath: z.string().max(1024).describe('Repository-rooted .sonir.json path.'),
+        maxNodes: z
+          .number()
+          .int()
+          .min(0)
+          .max(1000)
+          .optional()
+          .describe('Maximum node summaries to return (default 0).'),
+        maxFunctions: z
+          .number()
+          .int()
+          .min(0)
+          .max(1000)
+          .optional()
+          .describe('Maximum function summaries to return (default 100).'),
+      },
+    },
+    async (args) => {
+      try {
+        const fileName = repoPath(args.sonIrPath, 'sonIrPath');
+        const module = deserializeForgeWebScriptSoN(readBoundedText(fileName, MAX_ARTIFACT_BYTES, 'SoN artifact'));
+        if (module === undefined) throw new Error('SoN artifact is malformed, stale, or exceeds the safety limits.');
+        const maxNodes = args.maxNodes ?? 0;
+        const maxFunctions = args.maxFunctions ?? 100;
+        return json({
+          schemaVersion: module.schemaVersion,
+          compilerVersion: module.compilerVersion,
+          languageVersion: module.languageVersion,
+          abiVersion: module.abiVersion,
+          sourceHash: module.sourceHash,
+          graphHash: module.graphHash,
+          optimization: module.optimization,
+          boundsChecks: module.boundsChecks,
+          memoryModel: module.memoryModel,
+          nodeCount: module.nodes.length,
+          regionCount: module.regions.length,
+          functionCount: module.functions.length,
+          functions: module.functions
+            .slice(0, maxFunctions)
+            .map(({ name, entry, exported }) => ({ name, entry, exported })),
+          optimizerPasses:
+            module.optimizationReport?.passes.map(({ name, applied, skipped }) => ({ name, applied, skipped })) ?? [],
+          nodes: module.nodes
+            .slice(0, maxNodes)
+            .map(({ id, kind, functionName, effects, alias, ownership }) => ({
+              id,
+              kind,
+              functionName,
+              effects,
+              alias,
+              ownership,
+            })),
+          truncated: maxNodes < module.nodes.length || maxFunctions < module.functions.length,
         });
       } catch (error) {
         return toolError(error);
