@@ -39,6 +39,7 @@
     "format": "pnpm exec turbo run format",
     "format:write": "pnpm exec turbo run format:write",
     "validate:exports": "node scripts/validate-package-exports.mjs",
+    "validate:component-properties": "node --experimental-strip-types scripts/validate-component-property-declarations.ts",
     "validate:inventory": "node --experimental-strip-types scripts/runtime-validation/cli.ts inventory",
     "validate:framework": "node --experimental-strip-types scripts/runtime-validation/cli.ts framework",
     "validate:app": "node --experimental-strip-types scripts/runtime-validation/cli.ts app",
