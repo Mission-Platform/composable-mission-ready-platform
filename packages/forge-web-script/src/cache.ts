@@ -1,3 +1,6 @@
+import type { ForgeWebScriptSoNModule } from './son-ir.js';
+import { deserializeForgeWebScriptSoN, serializeForgeWebScriptSoN } from './son-cache.js';
+
 export interface ForgeWebScriptWatCache {
   /** Absolute or workspace-relative directory in which WAT files are stored. */
   readonly root: string;
@@ -5,6 +8,8 @@ export interface ForgeWebScriptWatCache {
   readonly writeAtomic: (fileName: string, contents: string) => void;
   /** Optional binary companion writer; implementations must use atomic replacement. */
   readonly writeBinaryAtomic?: (fileName: string, contents: Uint8Array) => void;
+  /** Optional reader used by tooling; invalid or stale values are ignored. */
+  readonly read?: (fileName: string) => string | undefined;
   readonly logger?: ForgeWebScriptCacheLogger;
 }
 
@@ -33,6 +38,10 @@ export interface ForgeWebScriptWatCacheKeyInput {
   readonly analysisPolicy?: unknown;
   readonly analysisRuleIds?: readonly string[];
   readonly analysisSourceMap?: unknown;
+  readonly sonSchemaVersion?: string;
+  readonly sonGraphHash?: string;
+  readonly memoryModel?: 'region-arc-checked-linear';
+  readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
 }
 
 function stableValue(value: unknown): unknown {
@@ -68,6 +77,54 @@ export function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput)
 
 export function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string {
   return `${cache.root.replace(/[\\/]+$/, '')}/${key}.wat`;
+}
+
+export function forgeWebScriptSoNPath(
+  cache: ForgeWebScriptWatCache,
+  key: string,
+  variant: 'optimized' | 'unoptimized' = 'optimized',
+): string {
+  return `${cache.root.replace(/[\\/]+$/, '')}/${key}${variant === 'optimized' ? '' : '.unoptimized'}.sonir.json`;
+}
+
+export function persistForgeWebScriptSoN(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  module: ForgeWebScriptSoNModule,
+  variant: 'optimized' | 'unoptimized' = 'optimized',
+): string | undefined {
+  if (cache === undefined) return undefined;
+  const path = forgeWebScriptSoNPath(cache, key, variant);
+  try {
+    cache.writeAtomic(path, serializeForgeWebScriptSoN(module));
+    cache.logger?.log('debug', 'cache.write', { path, format: 'sonir', variant, graphHash: module.graphHash });
+    return path;
+  } catch {
+    cache.logger?.log('warn', 'cache.write-failed', { path, format: 'sonir' });
+    return undefined;
+  }
+}
+
+export function readForgeWebScriptSoN(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  expected?: {
+    readonly compilerVersion?: string;
+    readonly languageVersion?: string;
+    readonly abiVersion?: string;
+    readonly sourceHash?: string;
+    readonly graphHash?: string;
+    readonly optimization?: 'debug' | 'release';
+    readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
+    readonly memoryModel?: 'region-arc-checked-linear';
+  },
+): ForgeWebScriptSoNModule | undefined {
+  if (cache?.read === undefined) return undefined;
+  try {
+    return deserializeForgeWebScriptSoN(cache.read(forgeWebScriptSoNPath(cache, key)) ?? '', expected);
+  } catch {
+    return undefined;
+  }
 }
 
 export type ForgeWebScriptDebugArtifactVariant = 'optimized' | 'unoptimized';

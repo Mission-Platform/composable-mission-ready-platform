@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0",
+  "compilerVersion": "1.0.0",
+  "languageVersion": "1.0",
+  "abiVersion": "1.2",
+  "sourceHash": "abc123",
+  "graphHash": "a4cf12d2",
+  "optimization": "debug",
+  "boundsChecks": "runtime",
+  "memoryModel": "region-arc-checked-linear",
+  "functions": [
+    {
+      "name": "answer",
+      "entry": 1,
+      "exported": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": 1,
+      "kind": "constant",
+      "functionName": "answer",
+      "type": "i32",
+      "value": 42,
+      "inputs": [],
+      "effects": ["pure"],
+      "alias": "none",
+      "ownership": "value"
+    },
+    {
+      "id": 2,
+      "kind": "return",
+      "functionName": "answer",
+      "inputs": [1],
+      "effects": ["control"],
+      "alias": "none",
+      "ownership": "value"
+    }
+  ],
+  "regions": [],
+  "sourceMap": []
+}

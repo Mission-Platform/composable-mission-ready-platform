@@ -16,17 +16,20 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-w
 **Soort:** functie
 
 ```typescript
-function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisReport
+function analyzeForgeWebScript(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisReport;
 ```
 
 Voer de geregistreerde bronanalyseregels uit op basis van één frontendresultaat.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| frontend | ForgeWebScriptFrontendResult |  |
-| opties | ForgeWebScriptAnalysisOptions |  |
+| Naam     | Typ                           | Beschrijving |
+| -------- | ----------------------------- | ------------ |
+| frontend | ForgeWebScriptFrontendResult  |              |
+| opties   | ForgeWebScriptAnalysisOptions |              |
 
 ## `src/analysis/context`
 
@@ -35,17 +38,20 @@ Voer de geregistreerde bronanalyseregels uit op basis van één frontendresultaa
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisContext
+function createForgeWebScriptAnalysisContext(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisContext;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| frontend | ForgeWebScriptFrontendResult |  |
-| opties | ForgeWebScriptAnalysisOptions |  |
+| Naam     | Typ                           | Beschrijving |
+| -------- | ----------------------------- | ------------ |
+| frontend | ForgeWebScriptFrontendResult  |              |
+| opties   | ForgeWebScriptAnalysisOptions |              |
 
 ## `src/analysis/contracts`
 
@@ -54,7 +60,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
 ```
 
 Stabiele voorvoegsels gereserveerd voor diagnostische families van bronanalyse.
@@ -286,7 +292,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[]
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[];
 ```
 
 Geen beschrijving opgegeven.
@@ -298,16 +304,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts
+function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| frontend | ForgeWebScriptFrontendResult |  |
+| Naam     | Typ                          | Beschrijving |
+| -------- | ---------------------------- | ------------ |
+| frontend | ForgeWebScriptFrontendResult |              |
 
 ## `src/analysis/policy`
 
@@ -316,23 +322,25 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptAnalysisPolicy(policy: ForgeWebScriptAnalysisOptionsLike = {}): ForgeWebScriptAnalysisPolicy
+function createForgeWebScriptAnalysisPolicy(
+  policy: ForgeWebScriptAnalysisOptionsLike = {},
+): ForgeWebScriptAnalysisPolicy;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| beleid | ForgeWebScriptAnalyseOptiesVind ik leuk |  |
+| Naam   | Typ                                     | Beschrijving |
+| ------ | --------------------------------------- | ------------ |
+| beleid | ForgeWebScriptAnalyseOptiesVind ik leuk |              |
 
 ### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits;
 ```
 
 Geen beschrijving opgegeven.
@@ -342,7 +350,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 Geen beschrijving opgegeven.
@@ -352,7 +360,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 Geen beschrijving opgegeven.
@@ -372,17 +380,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysisFinding, policy: ForgeWebScriptAnalysisPolicy): boolean
+function isForgeWebScriptAnalysisFindingBlocking(
+  finding: ForgeWebScriptAnalysisFinding,
+  policy: ForgeWebScriptAnalysisPolicy,
+): boolean;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vinden | ForgeWebScriptAnalyseFinding |  |
-| beleid | ForgeWebScriptAnalyseBeleid |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| vinden | ForgeWebScriptAnalyseFinding |              |
+| beleid | ForgeWebScriptAnalyseBeleid  |              |
 
 ## `src/analysis/registry`
 
@@ -391,16 +402,18 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptAnalysisRuleRegistry(rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES): ForgeWebScriptAnalysisRuleRegistry
+function createForgeWebScriptAnalysisRuleRegistry(
+  rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
+): ForgeWebScriptAnalysisRuleRegistry;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| regels | alleen-lezen ForgeWebScriptAnalysisRule[] |  |
+| Naam   | Typ                                       | Beschrijving |
+| ------ | ----------------------------------------- | ------------ |
+| regels | alleen-lezen ForgeWebScriptAnalysisRule[] |              |
 
 ### ForgeWebScriptAnalysisRuleRegistry
 
@@ -419,16 +432,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic
+function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vinden | ForgeWebScriptAnalyseFinding |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| vinden | ForgeWebScriptAnalyseFinding |              |
 
 ## `src/ast`
 
@@ -467,7 +480,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
+export type ForgeWebScriptBinaryOperator =
+  '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
 Geen beschrijving opgegeven.
@@ -557,7 +571,19 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptExpression = | ForgeWebScriptBinaryExpression | ForgeWebScriptCallExpression | ForgeWebScriptIdentifierExpression | ForgeWebScriptLiteralExpression | ForgeWebScriptFunctionValueExpression | ForgeWebScriptStructValueExpression | ForgeWebScriptEnumValueExpression | ForgeWebScriptArrayLiteralExpression | ForgeWebScriptVectorLiteralExpression | ForgeWebScriptIndexExpression | ForgeWebScriptMatchExpression | ForgeWebScriptUnaryExpression;
+export type ForgeWebScriptExpression =
+  | ForgeWebScriptBinaryExpression
+  | ForgeWebScriptCallExpression
+  | ForgeWebScriptIdentifierExpression
+  | ForgeWebScriptLiteralExpression
+  | ForgeWebScriptFunctionValueExpression
+  | ForgeWebScriptStructValueExpression
+  | ForgeWebScriptEnumValueExpression
+  | ForgeWebScriptArrayLiteralExpression
+  | ForgeWebScriptVectorLiteralExpression
+  | ForgeWebScriptIndexExpression
+  | ForgeWebScriptMatchExpression
+  | ForgeWebScriptUnaryExpression;
 ```
 
 Geen beschrijving opgegeven.
@@ -767,7 +793,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
 Geen beschrijving opgegeven.
@@ -797,7 +824,19 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptStatement = | ForgeWebScriptExpressionStatement | ForgeWebScriptAssignmentStatement | ForgeWebScriptIfStatement | ForgeWebScriptLetStatement | ForgeWebScriptMatchStatement | ForgeWebScriptSwitchStatement | ForgeWebScriptReturnStatement | ForgeWebScriptForStatement | ForgeWebScriptDoWhileStatement | ForgeWebScriptWhileStatement | ForgeWebScriptYieldStatement | ForgeWebScriptIteratorLoopStatement;
+export type ForgeWebScriptStatement =
+  | ForgeWebScriptExpressionStatement
+  | ForgeWebScriptAssignmentStatement
+  | ForgeWebScriptIfStatement
+  | ForgeWebScriptLetStatement
+  | ForgeWebScriptMatchStatement
+  | ForgeWebScriptSwitchStatement
+  | ForgeWebScriptReturnStatement
+  | ForgeWebScriptForStatement
+  | ForgeWebScriptDoWhileStatement
+  | ForgeWebScriptWhileStatement
+  | ForgeWebScriptYieldStatement
+  | ForgeWebScriptIteratorLoopStatement;
 ```
 
 Geen beschrijving opgegeven.
@@ -867,16 +906,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string
+function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| typ | ForgeWebScriptTypeName |  |
+| Naam | Typ                    | Beschrijving |
+| ---- | ---------------------- | ------------ |
+| typ  | ForgeWebScriptTypeName |              |
 
 ### ForgeWebScriptUnaryExpression
 
@@ -965,16 +1004,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string
+function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ForgeWebScriptWatCacheKeyInput |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| invoer | ForgeWebScriptWatCacheKeyInput |              |
 
 ### ForgeWebScriptWatCacheKeyInput
 
@@ -991,58 +1030,66 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string
+function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| cache | ForgeWebScriptWatCache |  |
-| sleutel | tekenreeks |  |
+| Naam    | Typ                    | Beschrijving |
+| ------- | ---------------------- | ------------ |
+| cache   | ForgeWebScriptWatCache |              |
+| sleutel | tekenreeks             |              |
 
 ### persistentForgeWebScriptDebugArtefacten
 
 **Soort:** functie
 
 ```typescript
-function persistForgeWebScriptDebugArtifacts(cache: ForgeWebScriptWatCache | undefined, key: string, artifacts: {
+function persistForgeWebScriptDebugArtifacts(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  artifacts: {
     readonly optimizedWat?: string;
     readonly unoptimizedWat?: string;
     readonly optimizedWasm?: Uint8Array;
     readonly unoptimizedWasm?: Uint8Array;
-  }): ForgeWebScriptDebugArtifactPaths
+  },
+): ForgeWebScriptDebugArtifactPaths;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| cache | ForgeWebScriptWatCache \| ongedefinieerd |  |
-| sleutel | tekenreeks |  |
-| artefacten | { alleen-lezen geoptimaliseerdWat?: string;     alleen-lezen niet-geoptimaliseerdWat?: string;     alleen-lezen geoptimaliseerdWasm?: Uint8Array;     alleen-lezen niet-geoptimaliseerdeWasm?: Uint8Array;   } |  |
+| Naam       | Typ                                                                                                                                                                                              | Beschrijving |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
+| cache      | ForgeWebScriptWatCache \| ongedefinieerd                                                                                                                                                         |              |
+| sleutel    | tekenreeks                                                                                                                                                                                       |              |
+| artefacten | { alleen-lezen geoptimaliseerdWat?: string; alleen-lezen niet-geoptimaliseerdWat?: string; alleen-lezen geoptimaliseerdWasm?: Uint8Array; alleen-lezen niet-geoptimaliseerdeWasm?: Uint8Array; } |              |
 
 ### persistentForgeWebScriptWat
 
 **Soort:** functie
 
 ```typescript
-function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key: string, wat: string): string | undefined
+function persistForgeWebScriptWat(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  wat: string,
+): string | undefined;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| cache | ForgeWebScriptWatCache \| ongedefinieerd |  |
-| sleutel | tekenreeks |  |
-| wat | tekenreeks |  |
+| Naam    | Typ                                      | Beschrijving |
+| ------- | ---------------------------------------- | ------------ |
+| cache   | ForgeWebScriptWatCache \| ongedefinieerd |              |
+| sleutel | tekenreeks                               |              |
+| wat     | tekenreeks                               |              |
 
 ## `src/compiler`
 
@@ -1051,23 +1098,23 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ForgeWebScriptCompileInput |  |
+| Naam   | Typ                        | Beschrijving |
+| ------ | -------------------------- | ------------ |
+| invoer | ForgeWebScriptCompileInput |              |
 
 ### compileForgeWebScriptSeed
 
 **Soort:** functie
 
 ```typescript
-function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 Het begrensde TypeScript-zaad dat door de zelf-hostende bootstrap wordt gebruikt totdat het is opgelost
@@ -1075,16 +1122,16 @@ puntpariteit promoveert de FWS-compiler naar de normale frontend-eigenaar.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ForgeWebScriptCompileInput |  |
+| Naam   | Typ                        | Beschrijving |
+| ------ | -------------------------- | ------------ |
+| invoer | ForgeWebScriptCompileInput |              |
 
 ### createForgeWebScriptCompiler
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
+function createForgeWebScriptCompiler(): ForgeWebScriptCompiler;
 ```
 
 Geen beschrijving opgegeven.
@@ -1094,16 +1141,18 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptCompilerService(options: ForgeWebScriptCompilerServiceOptions = {}): ForgeWebScriptCompilerService
+function createForgeWebScriptCompilerService(
+  options: ForgeWebScriptCompilerServiceOptions = {},
+): ForgeWebScriptCompilerService;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptCompilerServiceOptions |  |
+| Naam   | Typ                                  | Beschrijving |
+| ------ | ------------------------------------ | ------------ |
+| opties | ForgeWebScriptCompilerServiceOptions |              |
 
 ## `src/contracts`
 
@@ -1342,7 +1391,10 @@ Resultaat van de begrensde, door FWS geschreven compilerfase die wordt gebruikt 
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptSelfHostedStageRunner = ( input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, ) => ForgeWebScriptSelfHostedStageReport;
+export type ForgeWebScriptSelfHostedStageRunner = (
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+) => ForgeWebScriptSelfHostedStageReport;
 ```
 
 VM-ingangspunt geleverd door de runtime zonder de browserveilige gevel eraan te koppelen.
@@ -1374,39 +1426,48 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createDiagnostic(fileName: string, phase: ForgeWebScriptDiagnosticPhase, code: string, message: string, span: ForgeWebScriptSourceSpan, severity: ForgeWebScriptDiagnosticSeverity = 'error', hint?: string, metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>): ForgeWebScriptDiagnostic
+function createDiagnostic(
+  fileName: string,
+  phase: ForgeWebScriptDiagnosticPhase,
+  code: string,
+  message: string,
+  span: ForgeWebScriptSourceSpan,
+  severity: ForgeWebScriptDiagnosticSeverity = 'error',
+  hint?: string,
+  metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>,
+): ForgeWebScriptDiagnostic;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| fase | ForgeWebScriptDiagnosticPhase |  |
-| code | tekenreeks |  |
-| bericht | tekenreeks |  |
-| spanwijdte | ForgeWebScriptSourceSpan |  |
-| ernst | ForgeWebScriptDiagnosticSeverity |  |
-| tip | tekenreeks |  |
-| metagegevens | Kies<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |  |
+| Naam         | Typ                                                                                                    | Beschrijving |
+| ------------ | ------------------------------------------------------------------------------------------------------ | ------------ |
+| bestandsnaam | tekenreeks                                                                                             |              |
+| fase         | ForgeWebScriptDiagnosticPhase                                                                          |              |
+| code         | tekenreeks                                                                                             |              |
+| bericht      | tekenreeks                                                                                             |              |
+| spanwijdte   | ForgeWebScriptSourceSpan                                                                               |              |
+| ernst        | ForgeWebScriptDiagnosticSeverity                                                                       |              |
+| tip          | tekenreeks                                                                                             |              |
+| metagegevens | Kies<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |              |
 
 ### diagnostische sleutel
 
 **Soort:** functie
 
 ```typescript
-function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string
+function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostisch | ForgeWebScriptDiagnostisch |  |
+| Naam         | Typ                        | Beschrijving |
+| ------------ | -------------------------- | ------------ |
+| diagnostisch | ForgeWebScriptDiagnostisch |              |
 
 ### ForgeWebScriptDiagnostisch
 
@@ -1433,7 +1494,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptDiagnosticPhase = 'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+export type ForgeWebScriptDiagnosticPhase =
+  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
 Geen beschrijving opgegeven.
@@ -1465,32 +1527,32 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation
+function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| commentaar | tekenreeks |  |
+| Naam       | Typ        | Beschrijving |
+| ---------- | ---------- | ------------ |
+| commentaar | tekenreeks |              |
 
 ### renderForgeWebScriptDocumentatie
 
 **Soort:** functie
 
 ```typescript
-function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string
+function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| documentatie | ForgeWebScriptDocumentatie |  |
+| Naam         | Typ                        | Beschrijving |
+| ------------ | -------------------------- | ------------ |
+| documentatie | ForgeWebScriptDocumentatie |              |
 
 ## `src/dynamic-links`
 
@@ -1542,32 +1604,32 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ForgeWebScriptCompileInput |  |
+| Naam   | Typ                        | Beschrijving |
+| ------ | -------------------------- | ------------ |
+| invoer | ForgeWebScriptCompileInput |              |
 
 ### prepareForgeWebScriptGraphFrontend
 
 **Soort:** functie
 
 ```typescript
-function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ForgeWebScriptGraphCompileInput |  |
+| Naam   | Typ                             | Beschrijving |
+| ------ | ------------------------------- | ------------ |
+| invoer | ForgeWebScriptGraphCompileInput |              |
 
 ## `src/generics`
 
@@ -1576,35 +1638,42 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptGenericSpecialization(request: ForgeWebScriptGenericSpecializationRequest): ForgeWebScriptSpecialization
+function createForgeWebScriptGenericSpecialization(
+  request: ForgeWebScriptGenericSpecializationRequest,
+): ForgeWebScriptSpecialization;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| verzoek | ForgeWebScriptGeneriekSpecialisatieAanvraag |  |
+| Naam    | Typ                                         | Beschrijving |
+| ------- | ------------------------------------------- | ------------ |
+| verzoek | ForgeWebScriptGeneriekSpecialisatieAanvraag |              |
 
 ### createForgeWebScriptIteratorBoundaryDescriptor
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptIteratorBoundaryDescriptor(generic: string, elementType: ForgeWebScriptTypeName, nextFunction: string, ownership: ForgeWebScriptOwnership = 'borrowed'): ForgeWebScriptIteratorBoundaryDescriptor
+function createForgeWebScriptIteratorBoundaryDescriptor(
+  generic: string,
+  elementType: ForgeWebScriptTypeName,
+  nextFunction: string,
+  ownership: ForgeWebScriptOwnership = 'borrowed',
+): ForgeWebScriptIteratorBoundaryDescriptor;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| generiek | tekenreeks |  |
-| elementType | ForgeWebScriptTypeName |  |
-| volgendeFunctie | tekenreeks |  |
-| eigendom | ForgeWebScriptOwnership |  |
+| Naam            | Typ                     | Beschrijving |
+| --------------- | ----------------------- | ------------ |
+| generiek        | tekenreeks              |              |
+| elementType     | ForgeWebScriptTypeName  |              |
+| volgendeFunctie | tekenreeks              |              |
+| eigendom        | ForgeWebScriptOwnership |              |
 
 ### ForgeWebScriptGeneriekBoundary
 
@@ -1621,16 +1690,18 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptGenericRepresentation(boundary: ForgeWebScriptGenericBoundary = 'value'): ForgeWebScriptSpecialization['representation']
+function forgeWebScriptGenericRepresentation(
+  boundary: ForgeWebScriptGenericBoundary = 'value',
+): ForgeWebScriptSpecialization['representation'];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| grens | ForgeWebScriptGeneriekeBoundary |  |
+| Naam  | Typ                             | Beschrijving |
+| ----- | ------------------------------- | ------------ |
+| grens | ForgeWebScriptGeneriekeBoundary |              |
 
 ### ForgeWebScriptGeneriekSpecialisatieVerzoek
 
@@ -1647,16 +1718,18 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function sortForgeWebScriptSpecializations(specializations: readonly ForgeWebScriptSpecialization[]): readonly ForgeWebScriptSpecialization[]
+function sortForgeWebScriptSpecializations(
+  specializations: readonly ForgeWebScriptSpecialization[],
+): readonly ForgeWebScriptSpecialization[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| specialisaties | alleen-lezen ForgeWebScriptSpecialisatie[] |  |
+| Naam           | Typ                                        | Beschrijving |
+| -------------- | ------------------------------------------ | ------------ |
+| specialisaties | alleen-lezen ForgeWebScriptSpecialisatie[] |              |
 
 ## `src/graph`
 
@@ -1745,35 +1818,42 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function hashForgeWebScriptModuleGraph(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): string
+function hashForgeWebScriptModuleGraph(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| grafiek | ForgeWebScriptModuleGraph |  |
-| configuratie | ForgeWebScriptLinkConfiguratie |  |
+| Naam         | Typ                            | Beschrijving |
+| ------------ | ------------------------------ | ------------ |
+| grafiek      | ForgeWebScriptModuleGraph      |              |
+| configuratie | ForgeWebScriptLinkConfiguratie |              |
 
 ### solveForgeWebScriptModuleGraph
 
 **Soort:** functie
 
 ```typescript
-function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: ForgeWebScriptModuleResolver, configuration: ForgeWebScriptLinkConfiguration = {}): Promise<ForgeWebScriptGraphResult>
+function resolveForgeWebScriptModuleGraph(
+  entries: readonly string[],
+  resolver: ForgeWebScriptModuleResolver,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): Promise<ForgeWebScriptGraphResult>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| inzendingen | alleen-lezen tekenreeks[] |  |
-| oplosser | ForgeWebScriptModuleResolver |  |
-| configuratie | ForgeWebScriptLinkConfiguratie |  |
+| Naam         | Typ                            | Beschrijving |
+| ------------ | ------------------------------ | ------------ |
+| inzendingen  | alleen-lezen tekenreeks[]      |              |
+| oplosser     | ForgeWebScriptModuleResolver   |              |
+| configuratie | ForgeWebScriptLinkConfiguratie |              |
 
 ## `src/identity`
 
@@ -1782,33 +1862,33 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function deriveForgeWebScriptModuleId(fileName: string, root?: string): string
+function deriveForgeWebScriptModuleId(fileName: string, root?: string): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| wortel | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
+| wortel       | tekenreeks |              |
 
 ### normalizeForgeWebScriptFileId
 
 **Soort:** functie
 
 ```typescript
-function normalizeForgeWebScriptFileId(fileName: string): string
+function normalizeForgeWebScriptFileId(fileName: string): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
 
 ## `src/ir`
 
@@ -1817,16 +1897,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts
+function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptIrModule |  |
+| Naam   | Typ                    | Beschrijving |
+| ------ | ---------------------- | ------------ |
+| module | ForgeWebScriptIrModule |              |
 
 ### ForgeWebScriptCollectionOperation
 
@@ -1913,7 +1993,18 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptIrExpression = | ForgeWebScriptIrBinaryExpression | ForgeWebScriptIrCallExpression | ForgeWebScriptIrIdentifierExpression | ForgeWebScriptIrLiteralExpression | ForgeWebScriptIrFunctionValueExpression | ForgeWebScriptIrStructValueExpression | ForgeWebScriptIrEnumValueExpression | ForgeWebScriptIrMatchExpression | ForgeWebScriptIrUnaryExpression | ForgeWebScriptIrArrayLiteralExpression | ForgeWebScriptIrIndexExpression;
+export type ForgeWebScriptIrExpression =
+  | ForgeWebScriptIrBinaryExpression
+  | ForgeWebScriptIrCallExpression
+  | ForgeWebScriptIrIdentifierExpression
+  | ForgeWebScriptIrLiteralExpression
+  | ForgeWebScriptIrFunctionValueExpression
+  | ForgeWebScriptIrStructValueExpression
+  | ForgeWebScriptIrEnumValueExpression
+  | ForgeWebScriptIrMatchExpression
+  | ForgeWebScriptIrUnaryExpression
+  | ForgeWebScriptIrArrayLiteralExpression
+  | ForgeWebScriptIrIndexExpression;
 ```
 
 Geen beschrijving opgegeven.
@@ -2083,7 +2174,18 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptIrStatement = | ForgeWebScriptIrExpressionStatement | ForgeWebScriptIrAssignmentStatement | ForgeWebScriptIrIfStatement | ForgeWebScriptIrWhileStatement | ForgeWebScriptIrDoWhileStatement | ForgeWebScriptIrLetStatement | ForgeWebScriptIrReturnStatement | ForgeWebScriptIrMatchStatement | ForgeWebScriptIrSwitchStatement | ForgeWebScriptIrYieldStatement | ForgeWebScriptIrIteratorLoopStatement;
+export type ForgeWebScriptIrStatement =
+  | ForgeWebScriptIrExpressionStatement
+  | ForgeWebScriptIrAssignmentStatement
+  | ForgeWebScriptIrIfStatement
+  | ForgeWebScriptIrWhileStatement
+  | ForgeWebScriptIrDoWhileStatement
+  | ForgeWebScriptIrLetStatement
+  | ForgeWebScriptIrReturnStatement
+  | ForgeWebScriptIrMatchStatement
+  | ForgeWebScriptIrSwitchStatement
+  | ForgeWebScriptIrYieldStatement
+  | ForgeWebScriptIrIteratorLoopStatement;
 ```
 
 Geen beschrijving opgegeven.
@@ -2143,32 +2245,32 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule
+function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptIrModule |  |
+| Naam   | Typ                    | Beschrijving |
+| ------ | ---------------------- | ------------ |
+| module | ForgeWebScriptIrModule |              |
 
 ### lowerForgeWebScriptToIr
 
 **Soort:** functie
 
 ```typescript
-function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule
+function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptModule |  |
+| Naam   | Typ                  | Beschrijving |
+| ------ | -------------------- | ------------ |
+| module | ForgeWebScriptModule |              |
 
 ## `src/lexer`
 
@@ -2197,7 +2299,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
+export type ForgeWebScriptTokenKind =
+  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
 ```
 
 Geen beschrijving opgegeven.
@@ -2207,17 +2310,17 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult
+function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| bestandsnaam |  |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bron         | tekenreeks |              |
+| bestandsnaam |            |              |
 
 ## `src/linker`
 
@@ -2236,17 +2339,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): ForgeWebScriptLinkResult
+function validateForgeWebScriptLinks(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): ForgeWebScriptLinkResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| grafiek | ForgeWebScriptModuleGraph |  |
-| configuratie | ForgeWebScriptLinkConfiguratie |  |
+| Naam         | Typ                            | Beschrijving |
+| ------------ | ------------------------------ | ------------ |
+| grafiek      | ForgeWebScriptModuleGraph      |              |
+| configuratie | ForgeWebScriptLinkConfiguratie |              |
 
 ## `src/manifest`
 
@@ -2255,24 +2361,27 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptAbiManifest(module: ForgeWebScriptModule, options: ForgeWebScriptAbiManifestOptions = {}): ForgeWebScriptAbiManifest
+function createForgeWebScriptAbiManifest(
+  module: ForgeWebScriptModule,
+  options: ForgeWebScriptAbiManifestOptions = {},
+): ForgeWebScriptAbiManifest;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptModule |  |
-| opties | ForgeWebScriptAbiManifestOptions |  |
+| Naam   | Typ                              | Beschrijving |
+| ------ | -------------------------------- | ------------ |
+| module | ForgeWebScriptModule             |              |
+| opties | ForgeWebScriptAbiManifestOptions |              |
 
 ### FORGE_WEB_SCRIPT_ABI_VERSION
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION
+export const FORGE_WEB_SCRIPT_ABI_VERSION;
 ```
 
 Geen beschrijving opgegeven.
@@ -2282,7 +2391,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION
+export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
 ```
 
 Geen beschrijving opgegeven.
@@ -2472,7 +2581,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptValueRepresentation = 'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptValueRepresentation =
+  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
 ```
 
 Geen beschrijving opgegeven.
@@ -2494,17 +2604,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function resolveForgeWebScriptImportTypeEnvironment(importer: ForgeWebScriptResolvedModule, graph: ForgeWebScriptModuleGraph): ForgeWebScriptImportTypeEnvironment
+function resolveForgeWebScriptImportTypeEnvironment(
+  importer: ForgeWebScriptResolvedModule,
+  graph: ForgeWebScriptModuleGraph,
+): ForgeWebScriptImportTypeEnvironment;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| importeur | ForgeWebScriptResolvedModule |  |
-| grafiek | ForgeWebScriptModuleGraph |  |
+| Naam      | Typ                          | Beschrijving |
+| --------- | ---------------------------- | ------------ |
+| importeur | ForgeWebScriptResolvedModule |              |
+| grafiek   | ForgeWebScriptModuleGraph    |              |
 
 ## `src/optimizer`
 
@@ -2543,34 +2656,40 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function optimizeForgeWebScriptIr(input: ForgeWebScriptIrModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptIr(
+  input: ForgeWebScriptIrModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ForgeWebScriptIrModule |  |
-| modus | 'foutopsporing' \| 'vrijgeven' |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| invoer | ForgeWebScriptIrModule         |              |
+| modus  | 'foutopsporing' \| 'vrijgeven' |              |
 
 ### optimizeForgeWebScriptModule
 
 **Soort:** functie
 
 ```typescript
-function optimizeForgeWebScriptModule(module: ForgeWebScriptModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptModule(
+  module: ForgeWebScriptModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptModule |  |
-| modus | 'foutopsporing' \| 'vrijgeven' |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| module | ForgeWebScriptModule           |              |
+| modus  | 'foutopsporing' \| 'vrijgeven' |              |
 
 ## `src/parser`
 
@@ -2599,25 +2718,29 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function parseForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptParseOptions = {}): ForgeWebScriptParseResult
+function parseForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptParseOptions = {},
+): ForgeWebScriptParseResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| bestandsnaam |  |  |
-| opties | ForgeWebScriptParseOptions |  |
+| Naam         | Typ                        | Beschrijving |
+| ------------ | -------------------------- | ------------ |
+| bron         | tekenreeks                 |              |
+| bestandsnaam |                            |              |
+| opties       | ForgeWebScriptParseOptions |              |
 
 ### primitieve typen
 
 **Soort:** constant
 
 ```typescript
-export const primitiveTypes
+export const primitiveTypes;
 ```
 
 Geen beschrijving opgegeven.
@@ -2629,7 +2752,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[]
+function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[];
 ```
 
 Geen beschrijving opgegeven.
@@ -2639,32 +2762,32 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string
+function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bytes | Uint8Array |  |
+| Naam  | Typ        | Beschrijving |
+| ----- | ---------- | ------------ |
+| bytes | Uint8Array |              |
 
 ### coderenForgeWebScriptSelfHostedFingerprint
 
 **Soort:** functie
 
 ```typescript
-function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array
+function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vingerafdruk | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| vingerafdruk | tekenreeks |              |
 
 ### ForgeWebScriptSelfHostedCompilatie
 
@@ -2701,7 +2824,9 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilation(input: ForgeWebScriptCompileInput): ForgeWebScriptSelfHostedCompilation
+function prepareForgeWebScriptSelfHostedCompilation(
+  input: ForgeWebScriptCompileInput,
+): ForgeWebScriptSelfHostedCompilation;
 ```
 
 Bereid een begrensde, zelf-hostende compilatie-eenheid voor.
@@ -2711,25 +2836,25 @@ De volledige frontend/backend-compilatie blijft op het TypeScript-zaad staan ​
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ForgeWebScriptCompileInput |  |
+| Naam   | Typ                        | Beschrijving |
+| ------ | -------------------------- | ------------ |
+| invoer | ForgeWebScriptCompileInput |              |
 
 ### prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint
 
 **Soort:** functie
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string
+function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ForgeWebScriptCompileInput |  |
+| Naam   | Typ                        | Beschrijving |
+| ------ | -------------------------- | ------------ |
+| invoer | ForgeWebScriptCompileInput |              |
 
 #### Contract
 
@@ -2742,91 +2867,99 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptSelfHostedStageArtifact(stage: ForgeWebScriptSelfHostedCompilerStage, identity: ForgeWebScriptSelfHostedStageArtifactIdentity, payload: Uint8Array, diagnostics: readonly ForgeWebScriptDiagnostic[] = []): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedStageArtifact(
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  identity: ForgeWebScriptSelfHostedStageArtifactIdentity,
+  payload: Uint8Array,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| stadium | ForgeWebScriptSelfHostedCompilerStage |  |
-| identiteit | ForgeWebScriptSelfHostedStageArtifactIdentity |  |
-| lading | Uint8Array |  |
-| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |  |
+| Naam        | Typ                                           | Beschrijving |
+| ----------- | --------------------------------------------- | ------------ |
+| stadium     | ForgeWebScriptSelfHostedCompilerStage         |              |
+| identiteit  | ForgeWebScriptSelfHostedStageArtifactIdentity |              |
+| lading      | Uint8Array                                    |              |
+| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[]       |              |
 
 ### decodeForgeWebScriptSelfHostedDiagnostics
 
 **Soort:** functie
 
 ```typescript
-function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[]
+function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bytes | Uint8Array |  |
+| Naam  | Typ        | Beschrijving |
+| ----- | ---------- | ------------ |
+| bytes | Uint8Array |              |
 
 ### decodeForgeWebScriptSelfHostedStageArtefact
 
 **Soort:** functie
 
 ```typescript
-function decodeForgeWebScriptSelfHostedStageArtifact(bytes: Uint8Array, options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {}): ForgeWebScriptSelfHostedStageArtifact
+function decodeForgeWebScriptSelfHostedStageArtifact(
+  bytes: Uint8Array,
+  options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {},
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bytes | Uint8Array |  |
-| opties | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |  |
+| Naam   | Typ                                                | Beschrijving |
+| ------ | -------------------------------------------------- | ------------ |
+| bytes  | Uint8Array                                         |              |
+| opties | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |              |
 
 ### codeForgeWebScriptSelfHostedDiagnostics
 
 **Soort:** functie
 
 ```typescript
-function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array
+function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |  |
+| Naam        | Typ                                     | Beschrijving |
+| ----------- | --------------------------------------- | ------------ |
+| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |              |
 
 ### coderenForgeWebScriptSelfHostedStageArtefact
 
 **Soort:** functie
 
 ```typescript
-function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array
+function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| artefact | ForgeWebScriptSelfHostedStageArtefact |  |
+| Naam     | Typ                                   | Beschrijving |
+| -------- | ------------------------------------- | ------------ |
+| artefact | ForgeWebScriptSelfHostedStageArtefact |              |
 
 ### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 Geen beschrijving opgegeven.
@@ -2836,7 +2969,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 Geen beschrijving opgegeven.
@@ -2846,7 +2979,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 Geen beschrijving opgegeven.
@@ -2858,7 +2991,7 @@ Geen beschrijving opgegeven.
 ```typescript
 export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
   Record<ForgeWebScriptSelfHostedCompilerStage, string>
->
+>;
 ```
 
 Geen beschrijving opgegeven.
@@ -2868,7 +3001,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptSelfHostedCompilerStage = 'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
+export type ForgeWebScriptSelfHostedCompilerStage =
+  'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
 Geen beschrijving opgegeven.
@@ -2908,34 +3042,34 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string
+function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bytes | Uint8Array |  |
+| Naam  | Typ        | Beschrijving |
+| ----- | ---------- | ------------ |
+| bytes | Uint8Array |              |
 
 ### hashForgeWebScriptSelfHostedSourceIdentity
 
 **Soort:** functie
 
 ```typescript
-function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string
+function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| bestandsnaam | tekenreeks |  |
-| grafiekHash | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bron         | tekenreeks |              |
+| bestandsnaam | tekenreeks |              |
+| grafiekHash  | tekenreeks |              |
 
 ## `src/self-hosted/fws/lexer`
 
@@ -2951,8 +3085,8 @@ Retourneert waar als de byte ASCII-spatie is.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
+| Naam | Typ  | Beschrijving          |
+| ---- | ---- | --------------------- |
 | byte | ik32 | Kandidaat-bytewaarde. |
 
 #### Contract
@@ -2967,7 +3101,7 @@ Retourneert waar als de byte ASCII-spatie is.
 **Soort:** functie
 
 ```typescript
-function computeForgeWebScriptLexStageFingerprint(source: string): number
+function computeForgeWebScriptLexStageFingerprint(source: string): number;
 ```
 
 Seed-referentie voor de zelfgehoste lex-fase.
@@ -2975,16 +3109,16 @@ Moet qua gedrag identiek blijven aan {@link createForgeWebScriptLexStageVmModule
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| bron | tekenreeks |              |
 
 ### createForgeWebScriptLexStageVmModule
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule;
 ```
 
 Met de hand neergelaten VM-module voor de lex-vingerafdruktrap.
@@ -2992,9 +3126,9 @@ Invoer: lex_fingerprint (bron: ForgeWebScriptSourceBytes) -> i32
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronHash | tekenreeks |  |
+| Naam     | Typ        | Beschrijving |
+| -------- | ---------- | ------------ |
+| bronHash | tekenreeks |              |
 
 ### codeForgeWebScriptLexStageSource
 
@@ -3006,23 +3140,23 @@ function encodeForgeWebScriptLexStageSource(source: string): {
   readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
-}
+};
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| bron | tekenreeks |              |
 
 ### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
 ```
 
 Geen beschrijving opgegeven.
@@ -3032,7 +3166,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 Geen beschrijving opgegeven.
@@ -3084,48 +3218,52 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptParserModuleVmModule(sourceHash: string, fileName: string, options: ForgeWebScriptParserModuleStageOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserModuleVmModule(
+  sourceHash: string,
+  fileName: string,
+  options: ForgeWebScriptParserModuleStageOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 De met de hand verlaagde VM-module voor de begrensde parsermodulefase.
 Invoer: parse_module_stage (bron: ForgeWebScriptSourceBytes) -> bytes-envelop.
 
 Envelopindeling (alle u32 little-endian):
-  [0] failFlag (1 = grammatica buiten de begrensde v1-subset; modulepayload afwezig)
-  [4] diagFlag (1 = er is een enkelvoudige FWS-PARSE-052-diagnostiek geregistreerd)
-  [8..32) diagnostisch bereik (start,end,line,column,endLine,endColumn)
-  [32..) module payload bytes (alleen zinvol als failFlag = 0)
+[0] failFlag (1 = grammatica buiten de begrensde v1-subset; modulepayload afwezig)
+[4] diagFlag (1 = er is een enkelvoudige FWS-PARSE-052-diagnostiek geregistreerd)
+[8..32) diagnostisch bereik (start,end,line,column,endLine,endColumn)
+[32..) module payload bytes (alleen zinvol als failFlag = 0)
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronHash | tekenreeks |  |
-| bestandsnaam | tekenreeks |  |
-| opties | ForgeWebScriptParserModuleStageOptions |  |
+| Naam         | Typ                                    | Beschrijving |
+| ------------ | -------------------------------------- | ------------ |
+| bronHash     | tekenreeks                             |              |
+| bestandsnaam | tekenreeks                             |              |
+| opties       | ForgeWebScriptParserModuleStageOptions |              |
 
 ### decodeForgeWebScriptParserModuleEnvelope
 
 **Soort:** functie
 
 ```typescript
-function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope
+function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bytes | Uint8Array |  |
+| Naam  | Typ        | Beschrijving |
+| ----- | ---------- | ------------ |
+| bytes | Uint8Array |              |
 
 ### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 Geen beschrijving opgegeven.
@@ -3157,7 +3295,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function computeForgeWebScriptParserStageFingerprint(source: string): number
+function computeForgeWebScriptParserStageFingerprint(source: string): number;
 ```
 
 Seed-referentie voor de zelf-hostende parserfase.
@@ -3165,16 +3303,19 @@ Moet qua gedrag identiek blijven aan {@link createForgeWebScriptParserStageVmMod
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| bron | tekenreeks |              |
 
 ### createForgeWebScriptParserStageVmModule
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptParserStageVmModule(sourceHash: string, options: ForgeWebScriptParserStageVmModuleOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserStageVmModule(
+  sourceHash: string,
+  options: ForgeWebScriptParserStageVmModuleOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 Met de hand neergelaten VM-module voor de parser-vingerafdrukfase.
@@ -3182,17 +3323,17 @@ Invoer: parse_stage(bron: ForgeWebScriptSourceBytes) -> i32
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronHash | tekenreeks |  |
-| opties | ForgeWebScriptParserStageVmModuleOptions |  |
+| Naam     | Typ                                      | Beschrijving |
+| -------- | ---------------------------------------- | ------------ |
+| bronHash | tekenreeks                               |              |
+| opties   | ForgeWebScriptParserStageVmModuleOptions |              |
 
 ### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
 ```
 
 Geen beschrijving opgegeven.
@@ -3214,140 +3355,158 @@ Optionele fabrieksknoppen die worden gebruikt bij opzettelijke divergentietests.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptSelfHostedParserArtifact(source: string, fileName: string, module: ForgeWebScriptModule, diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedParserArtifact(
+  source: string,
+  fileName: string,
+  module: ForgeWebScriptModule,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| bestandsnaam | tekenreeks |  |
-| module | ForgeWebScriptModule |  |
-| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |  |
-| grafiekHash | tekenreeks |  |
+| Naam         | Typ                                     | Beschrijving |
+| ------------ | --------------------------------------- | ------------ |
+| bron         | tekenreeks                              |              |
+| bestandsnaam | tekenreeks                              |              |
+| module       | ForgeWebScriptModule                    |              |
+| diagnostiek  | alleen-lezen ForgeWebScriptDiagnostic[] |              |
+| grafiekHash  | tekenreeks                              |              |
 
 ### createForgeWebScriptSelfHostedTokenArtefact
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptSelfHostedTokenArtifact(source: string, fileName: string, tokens: readonly ForgeWebScriptToken[], diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedTokenArtifact(
+  source: string,
+  fileName: string,
+  tokens: readonly ForgeWebScriptToken[],
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| bestandsnaam | tekenreeks |  |
-| tokens | alleen-lezen ForgeWebScriptToken[] |  |
-| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |  |
-| grafiekHash | tekenreeks |  |
+| Naam         | Typ                                     | Beschrijving |
+| ------------ | --------------------------------------- | ------------ |
+| bron         | tekenreeks                              |              |
+| bestandsnaam | tekenreeks                              |              |
+| tokens       | alleen-lezen ForgeWebScriptToken[]      |              |
+| diagnostiek  | alleen-lezen ForgeWebScriptDiagnostic[] |              |
+| grafiekHash  | tekenreeks                              |              |
 
 ### decodeForgeWebScriptSelfHostedModule
 
 **Soort:** functie
 
 ```typescript
-function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule
+function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bytes | Uint8Array |  |
+| Naam  | Typ        | Beschrijving |
+| ----- | ---------- | ------------ |
+| bytes | Uint8Array |              |
 
 ### decodeForgeWebScriptSelfHostedTokens
 
 **Soort:** functie
 
 ```typescript
-function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[]
+function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bytes | Uint8Array |  |
+| Naam  | Typ        | Beschrijving |
+| ----- | ---------- | ------------ |
+| bytes | Uint8Array |              |
 
 ### codeForgeWebScriptSelfHostedModule
 
 **Soort:** functie
 
 ```typescript
-function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array
+function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptModule |  |
+| Naam   | Typ                  | Beschrijving |
+| ------ | -------------------- | ------------ |
+| module | ForgeWebScriptModule |              |
 
 ### codeForgeWebScriptSelfHostedTokens
 
 **Soort:** functie
 
 ```typescript
-function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array
+function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tokens | alleen-lezen ForgeWebScriptToken[] |  |
+| Naam   | Typ                                | Beschrijving |
+| ------ | ---------------------------------- | ------------ |
+| tokens | alleen-lezen ForgeWebScriptToken[] |              |
 
 ### hashForgeWebScriptSelfHostedStagePayload
 
 **Soort:** functie
 
 ```typescript
-function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string
+function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| artefact | ForgeWebScriptSelfHostedStageArtefact |  |
+| Naam     | Typ                                   | Beschrijving |
+| -------- | ------------------------------------- | ------------ |
+| artefact | ForgeWebScriptSelfHostedStageArtefact |              |
 
 ### validateForgeWebScriptSelfHostedStageArtifact
 
 **Soort:** functie
 
 ```typescript
-function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact, stage: ForgeWebScriptSelfHostedCompilerStage, source: string, fileName: string, graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function validateForgeWebScriptSelfHostedStageArtifact(
+  artifact: ForgeWebScriptSelfHostedStageArtifact,
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  source: string,
+  fileName: string,
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| artefact | ForgeWebScriptSelfHostedStageArtefact |  |
-| stadium | ForgeWebScriptSelfHostedCompilerStage |  |
-| bron | tekenreeks |  |
-| bestandsnaam | tekenreeks |  |
-| grafiekHash | tekenreeks |  |
+| Naam         | Typ                                   | Beschrijving |
+| ------------ | ------------------------------------- | ------------ |
+| artefact     | ForgeWebScriptSelfHostedStageArtefact |              |
+| stadium      | ForgeWebScriptSelfHostedCompilerStage |              |
+| bron         | tekenreeks                            |              |
+| bestandsnaam | tekenreeks                            |              |
+| grafiekHash  | tekenreeks                            |              |
 
 ## `src/stdlib/memory`
 
@@ -3356,7 +3515,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
 ```
 
 Geen beschrijving opgegeven.
@@ -3366,7 +3525,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[]
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[];
 ```
 
 Geen beschrijving opgegeven.
@@ -3386,7 +3545,15 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' | 'memory-realloc' | 'memory-load-u32' | 'memory-store-u32' | 'memory-load-f64' | 'memory-store-f64' | 'f64-from-u32';
+export type ForgeWebScriptMemoryOperation =
+  | 'memory-alloc'
+  | 'memory-dealloc'
+  | 'memory-realloc'
+  | 'memory-load-u32'
+  | 'memory-store-u32'
+  | 'memory-load-f64'
+  | 'memory-store-f64'
+  | 'f64-from-u32';
 ```
 
 Gecontroleerde gast-lineaire geheugenbewerkingen gereserveerd door de compiler.
@@ -3398,7 +3565,7 @@ Gecontroleerde gast-lineaire geheugenbewerkingen gereserveerd door de compiler.
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity;
 ```
 
 Geen beschrijving opgegeven.
@@ -3408,7 +3575,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
 ```
 
 Geen beschrijving opgegeven.
@@ -3418,7 +3585,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
 ```
 
 Geen beschrijving opgegeven.
@@ -3428,7 +3595,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[]
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[];
 ```
 
 Aanroepen die eigendom zijn van de compiler. Het zijn gereserveerde bronnamen, geen hostimports, en
@@ -3440,7 +3607,7 @@ Opnamebewerkingen retourneren `-1` voor een uitgeschakelde groep of wanneer er g
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION
+export const FORGE_WEB_SCRIPT_REGEX_VERSION;
 ```
 
 Geen beschrijving opgegeven.
@@ -3450,7 +3617,16 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptRegexOperation = | 'full-match' | 'prefix-match' | 'search' | 'full-capture-start' | 'full-capture-end' | 'prefix-capture-start' | 'prefix-capture-end' | 'search-capture-start' | 'search-capture-end';
+export type ForgeWebScriptRegexOperation =
+  | 'full-match'
+  | 'prefix-match'
+  | 'search'
+  | 'full-capture-start'
+  | 'full-capture-end'
+  | 'prefix-capture-start'
+  | 'prefix-capture-end'
+  | 'search-capture-start'
+  | 'search-capture-end';
 ```
 
 Geen beschrijving opgegeven.
@@ -3470,16 +3646,18 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptStandardLibraryIdentity(overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {}): ForgeWebScriptStandardLibraryIdentity
+function forgeWebScriptStandardLibraryIdentity(
+  overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {},
+): ForgeWebScriptStandardLibraryIdentity;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| overschrijft | Gedeeltelijk<ForgeWebScriptStandardLibraryIdentity> |  |
+| Naam         | Typ                                                 | Beschrijving |
+| ------------ | --------------------------------------------------- | ------------ |
+| overschrijft | Gedeeltelijk<ForgeWebScriptStandardLibraryIdentity> |              |
 
 ### ForgeWebScriptStandardLibraryIdentity
 
@@ -3498,7 +3676,7 @@ Stabiele identiteitsinvoer die van invloed is op de compilatie van regex en gege
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
 ```
 
 Geen beschrijving opgegeven.
@@ -3508,7 +3686,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[]
+export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[];
 ```
 
 Geen beschrijving opgegeven.
@@ -3528,7 +3706,18 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' | 'string-byte-at' | 'string-starts-with' | 'string-slice' | 'string-to-i32' | 'bytes-length' | 'bytes-length-u32' | 'bytes-byte-at' | 'bytes-byte-at-u32' | 'bytes-slice';
+export type ForgeWebScriptStringOperation =
+  | 'string-concat'
+  | 'string-length'
+  | 'string-byte-at'
+  | 'string-starts-with'
+  | 'string-slice'
+  | 'string-to-i32'
+  | 'bytes-length'
+  | 'bytes-length-u32'
+  | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
+  | 'bytes-slice';
 ```
 
 Deterministische tekenreeks- en bytebewerkingen die eigendom zijn van de compiler.
@@ -3540,18 +3729,22 @@ Deterministische tekenreeks- en bytebewerkingen die eigendom zijn van de compile
 **Soort:** functie
 
 ```typescript
-function checkForgeWebScript(module: ForgeWebScriptModule, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptTypeCheckResult
+function checkForgeWebScript(
+  module: ForgeWebScriptModule,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptTypeCheckResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptModule |  |
-| bestandsnaam |  |  |
-| opties | ForgeWebScriptTypeCheckOptions |  |
+| Naam         | Typ                            | Beschrijving |
+| ------------ | ------------------------------ | ------------ |
+| module       | ForgeWebScriptModule           |              |
+| bestandsnaam |                                |              |
+| opties       | ForgeWebScriptTypeCheckOptions |              |
 
 ### ForgeWebScriptTypeCheckOptions
 
@@ -3590,18 +3783,22 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function validateForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptValidationResult
+function validateForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptValidationResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| bestandsnaam |  |  |
-| opties | ForgeWebScriptTypeCheckOptions |  |
+| Naam         | Typ                            | Beschrijving |
+| ------------ | ------------------------------ | ------------ |
+| bron         | tekenreeks                     |              |
+| bestandsnaam |                                |              |
+| opties       | ForgeWebScriptTypeCheckOptions |              |
 
 ## `src/wat`
 
@@ -3620,14 +3817,14 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string
+function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptModule |  |
-| metagegevens | ForgeWebScriptWatMetadata |  |
+| Naam         | Typ                       | Beschrijving |
+| ------------ | ------------------------- | ------------ |
+| module       | ForgeWebScriptModule      |              |
+| metagegevens | ForgeWebScriptWatMetadata |              |

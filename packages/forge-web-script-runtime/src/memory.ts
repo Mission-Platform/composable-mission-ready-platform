@@ -279,6 +279,11 @@ export class ForgeWebScriptMemory {
       // Trace collection is observational and must never affect guest behavior.
     }
   }
+
+  /** Returns the exact caller-owned allocation size, when this runtime owns it. */
+  public allocationSize(pointer: ForgeWebScriptMemoryAddress): number | undefined {
+    return this.allocations.get(this.normalizeAddress(pointer));
+  }
 }
 
 export function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory {

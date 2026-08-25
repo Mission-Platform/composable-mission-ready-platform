@@ -39,19 +39,38 @@ function instantiateArrayIteratorRuntime(): {
 
   // alloc(size) -> bump global 0
   const allocBody = encodeBody([
-    1, 1, 0x7f, // local i32
-    0x23, 0x00, 0x21, 0x01, // global.get 0; local.set 1
-    0x23, 0x00, 0x20, 0x00, 0x6a, // global.get 0; local.get 0; i32.add
-    0x24, 0x00, // global.set 0
-    0x20, 0x01, // local.get 1
+    1,
+    1,
+    0x7f, // local i32
+    0x23,
+    0x00,
+    0x21,
+    0x01, // global.get 0; local.set 1
+    0x23,
+    0x00,
+    0x20,
+    0x00,
+    0x6a, // global.get 0; local.get 0; i32.add
+    0x24,
+    0x00, // global.set 0
+    0x20,
+    0x01, // local.get 1
     0x0b,
   ]);
   const typeSection = section(1, [
     ...uleb(2),
     // 0: (i32) -> i32  alloc / array-iter
-    0x60, 1, 0x7f, 1, 0x7f,
+    0x60,
+    1,
+    0x7f,
+    1,
+    0x7f,
     // 1: (i32) -> i64  iterator-next
-    0x60, 1, 0x7f, 1, 0x7e,
+    0x60,
+    1,
+    0x7f,
+    1,
+    0x7e,
   ]);
   const functionSection = section(3, [...uleb(3), 0, 0, 1]); // alloc, array-iter, iterator-next
   const memorySection = section(5, [1, 0, 1]);
@@ -80,7 +99,14 @@ function instantiateArrayIteratorRuntime(): {
     ...encodeBody([...iteratorNext]),
   ]);
   const bytes = new Uint8Array([
-    0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00,
+    0x00,
+    0x61,
+    0x73,
+    0x6d,
+    0x01,
+    0x00,
+    0x00,
+    0x00,
     ...typeSection,
     ...functionSection,
     ...memorySection,

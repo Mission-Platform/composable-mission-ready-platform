@@ -16,17 +16,20 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisReport
+function analyzeForgeWebScript(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisReport;
 ```
 
 Exécutez les règles d'analyse de source enregistrées sur un résultat frontal.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| interface | ForgeWebScriptFrontendResult |  |
-| options | ForgeWebScriptAnalyseOptions |  |
+| Nom       | Tapez                        | Descriptif |
+| --------- | ---------------------------- | ---------- |
+| interface | ForgeWebScriptFrontendResult |            |
+| options   | ForgeWebScriptAnalyseOptions |            |
 
 ## `src/analysis/context`
 
@@ -35,17 +38,20 @@ Exécutez les règles d'analyse de source enregistrées sur un résultat frontal
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisContext
+function createForgeWebScriptAnalysisContext(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisContext;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| interface | ForgeWebScriptFrontendResult |  |
-| options | ForgeWebScriptAnalyseOptions |  |
+| Nom       | Tapez                        | Descriptif |
+| --------- | ---------------------------- | ---------- |
+| interface | ForgeWebScriptFrontendResult |            |
+| options   | ForgeWebScriptAnalyseOptions |            |
 
 ## `src/analysis/contracts`
 
@@ -54,7 +60,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
 ```
 
 Préfixes stables réservés aux familles de diagnostics d’analyse source.
@@ -286,7 +292,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[]
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[];
 ```
 
 Aucune description fournie.
@@ -298,16 +304,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts
+function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| interface | ForgeWebScriptFrontendResult |  |
+| Nom       | Tapez                        | Descriptif |
+| --------- | ---------------------------- | ---------- |
+| interface | ForgeWebScriptFrontendResult |            |
 
 ## `src/analysis/policy`
 
@@ -316,23 +322,25 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptAnalysisPolicy(policy: ForgeWebScriptAnalysisOptionsLike = {}): ForgeWebScriptAnalysisPolicy
+function createForgeWebScriptAnalysisPolicy(
+  policy: ForgeWebScriptAnalysisOptionsLike = {},
+): ForgeWebScriptAnalysisPolicy;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| politique | ForgeWebScriptAnalysisOptionsLike |  |
+| Nom       | Tapez                             | Descriptif |
+| --------- | --------------------------------- | ---------- |
+| politique | ForgeWebScriptAnalysisOptionsLike |            |
 
 ### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits;
 ```
 
 Aucune description fournie.
@@ -342,7 +350,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 Aucune description fournie.
@@ -352,7 +360,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 Aucune description fournie.
@@ -372,17 +380,20 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysisFinding, policy: ForgeWebScriptAnalysisPolicy): boolean
+function isForgeWebScriptAnalysisFindingBlocking(
+  finding: ForgeWebScriptAnalysisFinding,
+  policy: ForgeWebScriptAnalysisPolicy,
+): boolean;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| découverte | ForgeWebScriptAnalyseRecherche |  |
-| politique | ForgeWebScriptAnalysePolitique |  |
+| Nom        | Tapez                          | Descriptif |
+| ---------- | ------------------------------ | ---------- |
+| découverte | ForgeWebScriptAnalyseRecherche |            |
+| politique  | ForgeWebScriptAnalysePolitique |            |
 
 ## `src/analysis/registry`
 
@@ -391,16 +402,18 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptAnalysisRuleRegistry(rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES): ForgeWebScriptAnalysisRuleRegistry
+function createForgeWebScriptAnalysisRuleRegistry(
+  rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
+): ForgeWebScriptAnalysisRuleRegistry;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| règles | lecture seule ForgeWebScriptAnalysisRule[] |  |
+| Nom    | Tapez                                      | Descriptif |
+| ------ | ------------------------------------------ | ---------- |
+| règles | lecture seule ForgeWebScriptAnalysisRule[] |            |
 
 ### ForgeWebScriptAnalysisRuleRegistry
 
@@ -419,16 +432,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic
+function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| découverte | ForgeWebScriptAnalyseRecherche |  |
+| Nom        | Tapez                          | Descriptif |
+| ---------- | ------------------------------ | ---------- |
+| découverte | ForgeWebScriptAnalyseRecherche |            |
 
 ## `src/ast`
 
@@ -467,7 +480,8 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
+export type ForgeWebScriptBinaryOperator =
+  '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
 Aucune description fournie.
@@ -557,7 +571,19 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptExpression = | ForgeWebScriptBinaryExpression | ForgeWebScriptCallExpression | ForgeWebScriptIdentifierExpression | ForgeWebScriptLiteralExpression | ForgeWebScriptFunctionValueExpression | ForgeWebScriptStructValueExpression | ForgeWebScriptEnumValueExpression | ForgeWebScriptArrayLiteralExpression | ForgeWebScriptVectorLiteralExpression | ForgeWebScriptIndexExpression | ForgeWebScriptMatchExpression | ForgeWebScriptUnaryExpression;
+export type ForgeWebScriptExpression =
+  | ForgeWebScriptBinaryExpression
+  | ForgeWebScriptCallExpression
+  | ForgeWebScriptIdentifierExpression
+  | ForgeWebScriptLiteralExpression
+  | ForgeWebScriptFunctionValueExpression
+  | ForgeWebScriptStructValueExpression
+  | ForgeWebScriptEnumValueExpression
+  | ForgeWebScriptArrayLiteralExpression
+  | ForgeWebScriptVectorLiteralExpression
+  | ForgeWebScriptIndexExpression
+  | ForgeWebScriptMatchExpression
+  | ForgeWebScriptUnaryExpression;
 ```
 
 Aucune description fournie.
@@ -765,7 +791,8 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
 Aucune description fournie.
@@ -795,7 +822,19 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptStatement = | ForgeWebScriptExpressionStatement | ForgeWebScriptAssignmentStatement | ForgeWebScriptIfStatement | ForgeWebScriptLetStatement | ForgeWebScriptMatchStatement | ForgeWebScriptSwitchStatement | ForgeWebScriptReturnStatement | ForgeWebScriptForStatement | ForgeWebScriptDoWhileStatement | ForgeWebScriptWhileStatement | ForgeWebScriptYieldStatement | ForgeWebScriptIteratorLoopStatement;
+export type ForgeWebScriptStatement =
+  | ForgeWebScriptExpressionStatement
+  | ForgeWebScriptAssignmentStatement
+  | ForgeWebScriptIfStatement
+  | ForgeWebScriptLetStatement
+  | ForgeWebScriptMatchStatement
+  | ForgeWebScriptSwitchStatement
+  | ForgeWebScriptReturnStatement
+  | ForgeWebScriptForStatement
+  | ForgeWebScriptDoWhileStatement
+  | ForgeWebScriptWhileStatement
+  | ForgeWebScriptYieldStatement
+  | ForgeWebScriptIteratorLoopStatement;
 ```
 
 Aucune description fournie.
@@ -865,16 +904,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string
+function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| taper | ForgeWebScriptTypeName |  |
+| Nom   | Tapez                  | Descriptif |
+| ----- | ---------------------- | ---------- |
+| taper | ForgeWebScriptTypeName |            |
 
 ### ForgeWebScriptUnaryExpression
 
@@ -963,16 +1002,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string
+function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ForgeWebScriptWatCacheKeyInput |  |
+| Nom    | Tapez                          | Descriptif |
+| ------ | ------------------------------ | ---------- |
+| entrée | ForgeWebScriptWatCacheKeyInput |            |
 
 ### ForgeWebScriptWatCacheKeyInput
 
@@ -989,58 +1028,66 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string
+function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| cache | ForgeWebScriptWatCache |  |
-| clé | chaîne |  |
+| Nom   | Tapez                  | Descriptif |
+| ----- | ---------------------- | ---------- |
+| cache | ForgeWebScriptWatCache |            |
+| clé   | chaîne                 |            |
 
 ### persistForgeWebScriptDebugArtifacts
 
 **Genre :** fonction
 
 ```typescript
-function persistForgeWebScriptDebugArtifacts(cache: ForgeWebScriptWatCache | undefined, key: string, artifacts: {
+function persistForgeWebScriptDebugArtifacts(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  artifacts: {
     readonly optimizedWat?: string;
     readonly unoptimizedWat?: string;
     readonly optimizedWasm?: Uint8Array;
     readonly unoptimizedWasm?: Uint8Array;
-  }): ForgeWebScriptDebugArtifactPaths
+  },
+): ForgeWebScriptDebugArtifactPaths;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| cache | ForgeWebScriptWatCache \| indéfini |  |
-| clé | chaîne |  |
-| artefacts | { lecture seule optimiséWat?: string;     lecture seule non optimiséWat?: chaîne ;     lecture seule optimiséWasm ? : Uint8Array ;     lecture seule non optimiséWasm ? : Uint8Array ;   } |  |
+| Nom       | Tapez                                                                                                                                                                        | Descriptif |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| cache     | ForgeWebScriptWatCache \| indéfini                                                                                                                                           |            |
+| clé       | chaîne                                                                                                                                                                       |            |
+| artefacts | { lecture seule optimiséWat?: string; lecture seule non optimiséWat?: chaîne ; lecture seule optimiséWasm ? : Uint8Array ; lecture seule non optimiséWasm ? : Uint8Array ; } |            |
 
 ### persistForgeWebScriptWat
 
 **Genre :** fonction
 
 ```typescript
-function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key: string, wat: string): string | undefined
+function persistForgeWebScriptWat(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  wat: string,
+): string | undefined;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| cache | ForgeWebScriptWatCache \| indéfini |  |
-| clé | chaîne |  |
-| quoi | chaîne |  |
+| Nom   | Tapez                              | Descriptif |
+| ----- | ---------------------------------- | ---------- |
+| cache | ForgeWebScriptWatCache \| indéfini |            |
+| clé   | chaîne                             |            |
+| quoi  | chaîne                             |            |
 
 ## `src/compiler`
 
@@ -1049,23 +1096,23 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ForgeWebScriptCompileInput |  |
+| Nom    | Tapez                      | Descriptif |
+| ------ | -------------------------- | ---------- |
+| entrée | ForgeWebScriptCompileInput |            |
 
 ### compileForgeWebScriptSeed
 
 **Genre :** fonction
 
 ```typescript
-function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 La graine TypeScript délimitée utilisée par le bootstrap auto-hébergé jusqu'à ce qu'elle soit corrigée.
@@ -1073,16 +1120,16 @@ la parité ponctuelle promeut le compilateur FWS au rang de propriétaire normal
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ForgeWebScriptCompileInput |  |
+| Nom    | Tapez                      | Descriptif |
+| ------ | -------------------------- | ---------- |
+| entrée | ForgeWebScriptCompileInput |            |
 
 ### createForgeWebScriptCompiler
 
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
+function createForgeWebScriptCompiler(): ForgeWebScriptCompiler;
 ```
 
 Aucune description fournie.
@@ -1092,16 +1139,18 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptCompilerService(options: ForgeWebScriptCompilerServiceOptions = {}): ForgeWebScriptCompilerService
+function createForgeWebScriptCompilerService(
+  options: ForgeWebScriptCompilerServiceOptions = {},
+): ForgeWebScriptCompilerService;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | ForgeWebScriptCompilerServiceOptions |  |
+| Nom     | Tapez                                | Descriptif |
+| ------- | ------------------------------------ | ---------- |
+| options | ForgeWebScriptCompilerServiceOptions |            |
 
 ## `src/contracts`
 
@@ -1340,7 +1389,10 @@ Résultat de l’étape du compilateur limitée créée par FWS et utilisée par
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptSelfHostedStageRunner = ( input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, ) => ForgeWebScriptSelfHostedStageReport;
+export type ForgeWebScriptSelfHostedStageRunner = (
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+) => ForgeWebScriptSelfHostedStageReport;
 ```
 
 Point d’entrée de la VM fourni par le runtime sans y coupler la façade sécurisée du navigateur.
@@ -1372,39 +1424,48 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createDiagnostic(fileName: string, phase: ForgeWebScriptDiagnosticPhase, code: string, message: string, span: ForgeWebScriptSourceSpan, severity: ForgeWebScriptDiagnosticSeverity = 'error', hint?: string, metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>): ForgeWebScriptDiagnostic
+function createDiagnostic(
+  fileName: string,
+  phase: ForgeWebScriptDiagnosticPhase,
+  code: string,
+  message: string,
+  span: ForgeWebScriptSourceSpan,
+  severity: ForgeWebScriptDiagnosticSeverity = 'error',
+  hint?: string,
+  metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>,
+): ForgeWebScriptDiagnostic;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| Nom du fichier | chaîne |  |
-| phases | ForgeWebScriptDiagnosticPhase |  |
-| codes | chaîne |  |
-| messages | chaîne |  |
-| durée | ForgeWebScriptSourceSpan |  |
-| gravité | ForgeWebScriptDiagnosticSeverity |  |
-| indice | chaîne |  |
-| métadonnées | Choisir<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |  |
+| Nom            | Tapez                                                                                                     | Descriptif |
+| -------------- | --------------------------------------------------------------------------------------------------------- | ---------- |
+| Nom du fichier | chaîne                                                                                                    |            |
+| phases         | ForgeWebScriptDiagnosticPhase                                                                             |            |
+| codes          | chaîne                                                                                                    |            |
+| messages       | chaîne                                                                                                    |            |
+| durée          | ForgeWebScriptSourceSpan                                                                                  |            |
+| gravité        | ForgeWebScriptDiagnosticSeverity                                                                          |            |
+| indice         | chaîne                                                                                                    |            |
+| métadonnées    | Choisir<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |            |
 
 ### Clé de diagnostic
 
 **Genre :** fonction
 
 ```typescript
-function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string
+function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| diagnostic | ForgeWebScriptDiagnostic |  |
+| Nom        | Tapez                    | Descriptif |
+| ---------- | ------------------------ | ---------- |
+| diagnostic | ForgeWebScriptDiagnostic |            |
 
 ### ForgeWebScriptDiagnostic
 
@@ -1431,7 +1492,8 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptDiagnosticPhase = 'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+export type ForgeWebScriptDiagnosticPhase =
+  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
 Aucune description fournie.
@@ -1463,32 +1525,32 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation
+function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| commentaire | chaîne |  |
+| Nom         | Tapez  | Descriptif |
+| ----------- | ------ | ---------- |
+| commentaire | chaîne |            |
 
 ### renderForgeWebScriptDocumentation
 
 **Genre :** fonction
 
 ```typescript
-function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string
+function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| documentation | ForgeWebScriptDocumentation |  |
+| Nom           | Tapez                       | Descriptif |
+| ------------- | --------------------------- | ---------- |
+| documentation | ForgeWebScriptDocumentation |            |
 
 ## `src/dynamic-links`
 
@@ -1540,32 +1602,32 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ForgeWebScriptCompileInput |  |
+| Nom    | Tapez                      | Descriptif |
+| ------ | -------------------------- | ---------- |
+| entrée | ForgeWebScriptCompileInput |            |
 
 ### préparerForgeWebScriptGraphFrontend
 
 **Genre :** fonction
 
 ```typescript
-function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ForgeWebScriptGraphCompileInput |  |
+| Nom    | Tapez                           | Descriptif |
+| ------ | ------------------------------- | ---------- |
+| entrée | ForgeWebScriptGraphCompileInput |            |
 
 ## `src/generics`
 
@@ -1574,35 +1636,42 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptGenericSpecialization(request: ForgeWebScriptGenericSpecializationRequest): ForgeWebScriptSpecialization
+function createForgeWebScriptGenericSpecialization(
+  request: ForgeWebScriptGenericSpecializationRequest,
+): ForgeWebScriptSpecialization;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| demande | ForgeWebScriptGenericSpecializationRequest |  |
+| Nom     | Tapez                                      | Descriptif |
+| ------- | ------------------------------------------ | ---------- |
+| demande | ForgeWebScriptGenericSpecializationRequest |            |
 
 ### createForgeWebScriptIteratorBoundaryDescriptor
 
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptIteratorBoundaryDescriptor(generic: string, elementType: ForgeWebScriptTypeName, nextFunction: string, ownership: ForgeWebScriptOwnership = 'borrowed'): ForgeWebScriptIteratorBoundaryDescriptor
+function createForgeWebScriptIteratorBoundaryDescriptor(
+  generic: string,
+  elementType: ForgeWebScriptTypeName,
+  nextFunction: string,
+  ownership: ForgeWebScriptOwnership = 'borrowed',
+): ForgeWebScriptIteratorBoundaryDescriptor;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| générique | chaîne |  |
-| Typeélément | ForgeWebScriptTypeName |  |
-| fonction suivante | chaîne |  |
-| propriété | ForgeWebScriptPropriété |  |
+| Nom               | Tapez                   | Descriptif |
+| ----------------- | ----------------------- | ---------- |
+| générique         | chaîne                  |            |
+| Typeélément       | ForgeWebScriptTypeName  |            |
+| fonction suivante | chaîne                  |            |
+| propriété         | ForgeWebScriptPropriété |            |
 
 ### ForgeWebScriptGenericBoundary
 
@@ -1619,16 +1688,18 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function forgeWebScriptGenericRepresentation(boundary: ForgeWebScriptGenericBoundary = 'value'): ForgeWebScriptSpecialization['representation']
+function forgeWebScriptGenericRepresentation(
+  boundary: ForgeWebScriptGenericBoundary = 'value',
+): ForgeWebScriptSpecialization['representation'];
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| frontière | ForgeWebScriptGenericBoundary |  |
+| Nom       | Tapez                         | Descriptif |
+| --------- | ----------------------------- | ---------- |
+| frontière | ForgeWebScriptGenericBoundary |            |
 
 ### ForgeWebScriptGenericSpecializationRequest
 
@@ -1645,16 +1716,18 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function sortForgeWebScriptSpecializations(specializations: readonly ForgeWebScriptSpecialization[]): readonly ForgeWebScriptSpecialization[]
+function sortForgeWebScriptSpecializations(
+  specializations: readonly ForgeWebScriptSpecialization[],
+): readonly ForgeWebScriptSpecialization[];
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| spécialisations | lecture seule ForgeWebScriptSpecialization[] |  |
+| Nom             | Tapez                                        | Descriptif |
+| --------------- | -------------------------------------------- | ---------- |
+| spécialisations | lecture seule ForgeWebScriptSpecialization[] |            |
 
 ## `src/graph`
 
@@ -1743,35 +1816,42 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function hashForgeWebScriptModuleGraph(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): string
+function hashForgeWebScriptModuleGraph(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| graphique | ForgeWebScriptModuleGraph |  |
-| configuration | ForgeWebScriptLinkConfiguration |  |
+| Nom           | Tapez                           | Descriptif |
+| ------------- | ------------------------------- | ---------- |
+| graphique     | ForgeWebScriptModuleGraph       |            |
+| configuration | ForgeWebScriptLinkConfiguration |            |
 
 ### résoudreForgeWebScriptModuleGraph
 
 **Genre :** fonction
 
 ```typescript
-function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: ForgeWebScriptModuleResolver, configuration: ForgeWebScriptLinkConfiguration = {}): Promise<ForgeWebScriptGraphResult>
+function resolveForgeWebScriptModuleGraph(
+  entries: readonly string[],
+  resolver: ForgeWebScriptModuleResolver,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): Promise<ForgeWebScriptGraphResult>;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrées | chaîne en lecture seule[] |  |
-| résolveur | ForgeWebScriptModuleRésolveur |  |
-| configuration | ForgeWebScriptLinkConfiguration |  |
+| Nom           | Tapez                           | Descriptif |
+| ------------- | ------------------------------- | ---------- |
+| entrées       | chaîne en lecture seule[]       |            |
+| résolveur     | ForgeWebScriptModuleRésolveur   |            |
+| configuration | ForgeWebScriptLinkConfiguration |            |
 
 ## `src/identity`
 
@@ -1780,33 +1860,33 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function deriveForgeWebScriptModuleId(fileName: string, root?: string): string
+function deriveForgeWebScriptModuleId(fileName: string, root?: string): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| Nom du fichier | chaîne |  |
-| racine | chaîne |  |
+| Nom            | Tapez  | Descriptif |
+| -------------- | ------ | ---------- |
+| Nom du fichier | chaîne |            |
+| racine         | chaîne |            |
 
 ### normalizeForgeWebScriptFileId
 
 **Genre :** fonction
 
 ```typescript
-function normalizeForgeWebScriptFileId(fileName: string): string
+function normalizeForgeWebScriptFileId(fileName: string): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| Nom du fichier | chaîne |  |
+| Nom            | Tapez  | Descriptif |
+| -------------- | ------ | ---------- |
+| Nom du fichier | chaîne |            |
 
 ## `src/ir`
 
@@ -1815,16 +1895,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts
+function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | ForgeWebScriptIrModule |  |
+| Nom     | Tapez                  | Descriptif |
+| ------- | ---------------------- | ---------- |
+| modules | ForgeWebScriptIrModule |            |
 
 ### ForgeWebScriptCollectionOpération
 
@@ -1911,7 +1991,18 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptIrExpression = | ForgeWebScriptIrBinaryExpression | ForgeWebScriptIrCallExpression | ForgeWebScriptIrIdentifierExpression | ForgeWebScriptIrLiteralExpression | ForgeWebScriptIrFunctionValueExpression | ForgeWebScriptIrStructValueExpression | ForgeWebScriptIrEnumValueExpression | ForgeWebScriptIrMatchExpression | ForgeWebScriptIrUnaryExpression | ForgeWebScriptIrArrayLiteralExpression | ForgeWebScriptIrIndexExpression;
+export type ForgeWebScriptIrExpression =
+  | ForgeWebScriptIrBinaryExpression
+  | ForgeWebScriptIrCallExpression
+  | ForgeWebScriptIrIdentifierExpression
+  | ForgeWebScriptIrLiteralExpression
+  | ForgeWebScriptIrFunctionValueExpression
+  | ForgeWebScriptIrStructValueExpression
+  | ForgeWebScriptIrEnumValueExpression
+  | ForgeWebScriptIrMatchExpression
+  | ForgeWebScriptIrUnaryExpression
+  | ForgeWebScriptIrArrayLiteralExpression
+  | ForgeWebScriptIrIndexExpression;
 ```
 
 Aucune description fournie.
@@ -2081,7 +2172,18 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptIrStatement = | ForgeWebScriptIrExpressionStatement | ForgeWebScriptIrAssignmentStatement | ForgeWebScriptIrIfStatement | ForgeWebScriptIrWhileStatement | ForgeWebScriptIrDoWhileStatement | ForgeWebScriptIrLetStatement | ForgeWebScriptIrReturnStatement | ForgeWebScriptIrMatchStatement | ForgeWebScriptIrSwitchStatement | ForgeWebScriptIrYieldStatement | ForgeWebScriptIrIteratorLoopStatement;
+export type ForgeWebScriptIrStatement =
+  | ForgeWebScriptIrExpressionStatement
+  | ForgeWebScriptIrAssignmentStatement
+  | ForgeWebScriptIrIfStatement
+  | ForgeWebScriptIrWhileStatement
+  | ForgeWebScriptIrDoWhileStatement
+  | ForgeWebScriptIrLetStatement
+  | ForgeWebScriptIrReturnStatement
+  | ForgeWebScriptIrMatchStatement
+  | ForgeWebScriptIrSwitchStatement
+  | ForgeWebScriptIrYieldStatement
+  | ForgeWebScriptIrIteratorLoopStatement;
 ```
 
 Aucune description fournie.
@@ -2141,32 +2243,32 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule
+function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | ForgeWebScriptIrModule |  |
+| Nom     | Tapez                  | Descriptif |
+| ------- | ---------------------- | ---------- |
+| modules | ForgeWebScriptIrModule |            |
 
 ### LowerForgeWebScriptToIr
 
 **Genre :** fonction
 
 ```typescript
-function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule
+function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | ForgeWebScriptModule |  |
+| Nom     | Tapez                | Descriptif |
+| ------- | -------------------- | ---------- |
+| modules | ForgeWebScriptModule |            |
 
 ## `src/lexer`
 
@@ -2195,7 +2297,8 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
+export type ForgeWebScriptTokenKind =
+  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
 ```
 
 Aucune description fournie.
@@ -2205,17 +2308,17 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult
+function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
-| Nom du fichier |  |  |
+| Nom            | Tapez  | Descriptif |
+| -------------- | ------ | ---------- |
+| source         | chaîne |            |
+| Nom du fichier |        |            |
 
 ## `src/linker`
 
@@ -2234,17 +2337,20 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): ForgeWebScriptLinkResult
+function validateForgeWebScriptLinks(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): ForgeWebScriptLinkResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| graphique | ForgeWebScriptModuleGraph |  |
-| configuration | ForgeWebScriptLinkConfiguration |  |
+| Nom           | Tapez                           | Descriptif |
+| ------------- | ------------------------------- | ---------- |
+| graphique     | ForgeWebScriptModuleGraph       |            |
+| configuration | ForgeWebScriptLinkConfiguration |            |
 
 ## `src/manifest`
 
@@ -2253,24 +2359,27 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptAbiManifest(module: ForgeWebScriptModule, options: ForgeWebScriptAbiManifestOptions = {}): ForgeWebScriptAbiManifest
+function createForgeWebScriptAbiManifest(
+  module: ForgeWebScriptModule,
+  options: ForgeWebScriptAbiManifestOptions = {},
+): ForgeWebScriptAbiManifest;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | ForgeWebScriptModule |  |
-| options | ForgeWebScriptAbiManifestOptions |  |
+| Nom     | Tapez                            | Descriptif |
+| ------- | -------------------------------- | ---------- |
+| modules | ForgeWebScriptModule             |            |
+| options | ForgeWebScriptAbiManifestOptions |            |
 
 ### FORGE_WEB_SCRIPT_ABI_VERSION
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION
+export const FORGE_WEB_SCRIPT_ABI_VERSION;
 ```
 
 Aucune description fournie.
@@ -2280,7 +2389,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION
+export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
 ```
 
 Aucune description fournie.
@@ -2470,7 +2579,8 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptValueRepresentation = 'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptValueRepresentation =
+  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
 ```
 
 Aucune description fournie.
@@ -2492,17 +2602,20 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function resolveForgeWebScriptImportTypeEnvironment(importer: ForgeWebScriptResolvedModule, graph: ForgeWebScriptModuleGraph): ForgeWebScriptImportTypeEnvironment
+function resolveForgeWebScriptImportTypeEnvironment(
+  importer: ForgeWebScriptResolvedModule,
+  graph: ForgeWebScriptModuleGraph,
+): ForgeWebScriptImportTypeEnvironment;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| importateur | ForgeWebScriptResolvedModule |  |
-| graphique | ForgeWebScriptModuleGraph |  |
+| Nom         | Tapez                        | Descriptif |
+| ----------- | ---------------------------- | ---------- |
+| importateur | ForgeWebScriptResolvedModule |            |
+| graphique   | ForgeWebScriptModuleGraph    |            |
 
 ## `src/optimizer`
 
@@ -2541,34 +2654,40 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function optimizeForgeWebScriptIr(input: ForgeWebScriptIrModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptIr(
+  input: ForgeWebScriptIrModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ForgeWebScriptIrModule |  |
-| mode | 'débogage' \| 'libération' |  |
+| Nom    | Tapez                      | Descriptif |
+| ------ | -------------------------- | ---------- |
+| entrée | ForgeWebScriptIrModule     |            |
+| mode   | 'débogage' \| 'libération' |            |
 
 ### optimiserForgeWebScriptModule
 
 **Genre :** fonction
 
 ```typescript
-function optimizeForgeWebScriptModule(module: ForgeWebScriptModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptModule(
+  module: ForgeWebScriptModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | ForgeWebScriptModule |  |
-| mode | 'débogage' \| 'libération' |  |
+| Nom     | Tapez                      | Descriptif |
+| ------- | -------------------------- | ---------- |
+| modules | ForgeWebScriptModule       |            |
+| mode    | 'débogage' \| 'libération' |            |
 
 ## `src/parser`
 
@@ -2597,25 +2716,29 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function parseForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptParseOptions = {}): ForgeWebScriptParseResult
+function parseForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptParseOptions = {},
+): ForgeWebScriptParseResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
-| Nom du fichier |  |  |
-| options | ForgeWebScriptParseOptions |  |
+| Nom            | Tapez                      | Descriptif |
+| -------------- | -------------------------- | ---------- |
+| source         | chaîne                     |            |
+| Nom du fichier |                            |            |
+| options        | ForgeWebScriptParseOptions |            |
 
 ### Types primitifs
 
 **Genre :** constante
 
 ```typescript
-export const primitiveTypes
+export const primitiveTypes;
 ```
 
 Aucune description fournie.
@@ -2627,7 +2750,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[]
+function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[];
 ```
 
 Aucune description fournie.
@@ -2637,32 +2760,32 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string
+function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| octets | Uint8Array |  |
+| Nom    | Tapez      | Descriptif |
+| ------ | ---------- | ---------- |
+| octets | Uint8Array |            |
 
 ### encodeForgeWebScriptSelfHostedFingerprint
 
 **Genre :** fonction
 
 ```typescript
-function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array
+function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| empreinte digitale | chaîne |  |
+| Nom                | Tapez  | Descriptif |
+| ------------------ | ------ | ---------- |
+| empreinte digitale | chaîne |            |
 
 ### ForgeWebScriptSelfHostedCompilation
 
@@ -2699,7 +2822,9 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilation(input: ForgeWebScriptCompileInput): ForgeWebScriptSelfHostedCompilation
+function prepareForgeWebScriptSelfHostedCompilation(
+  input: ForgeWebScriptCompileInput,
+): ForgeWebScriptSelfHostedCompilation;
 ```
 
 Préparez une unité de compilation auto-hébergée limitée.
@@ -2709,25 +2834,25 @@ La compilation complète frontend/backend reste sur la graine TypeScript jusqu'�
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ForgeWebScriptCompileInput |  |
+| Nom    | Tapez                      | Descriptif |
+| ------ | -------------------------- | ---------- |
+| entrée | ForgeWebScriptCompileInput |            |
 
 ### prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint
 
 **Genre :** fonction
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string
+function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ForgeWebScriptCompileInput |  |
+| Nom    | Tapez                      | Descriptif |
+| ------ | -------------------------- | ---------- |
+| entrée | ForgeWebScriptCompileInput |            |
 
 #### Contracter
 
@@ -2740,91 +2865,99 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptSelfHostedStageArtifact(stage: ForgeWebScriptSelfHostedCompilerStage, identity: ForgeWebScriptSelfHostedStageArtifactIdentity, payload: Uint8Array, diagnostics: readonly ForgeWebScriptDiagnostic[] = []): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedStageArtifact(
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  identity: ForgeWebScriptSelfHostedStageArtifactIdentity,
+  payload: Uint8Array,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| étape | ForgeWebScriptSelfHostedCompilerStage |  |
-| identité | ForgeWebScriptSelfHostedStageArtifactIdentity |  |
-| charge utile | Uint8Array |  |
-| diagnostic | lecture seule ForgeWebScriptDiagnostic[] |  |
+| Nom          | Tapez                                         | Descriptif |
+| ------------ | --------------------------------------------- | ---------- |
+| étape        | ForgeWebScriptSelfHostedCompilerStage         |            |
+| identité     | ForgeWebScriptSelfHostedStageArtifactIdentity |            |
+| charge utile | Uint8Array                                    |            |
+| diagnostic   | lecture seule ForgeWebScriptDiagnostic[]      |            |
 
 ### decodeForgeWebScriptSelfHostedDiagnostics
 
 **Genre :** fonction
 
 ```typescript
-function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[]
+function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[];
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| octets | Uint8Array |  |
+| Nom    | Tapez      | Descriptif |
+| ------ | ---------- | ---------- |
+| octets | Uint8Array |            |
 
 ### decodeForgeWebScriptSelfHostedStageArtifact
 
 **Genre :** fonction
 
 ```typescript
-function decodeForgeWebScriptSelfHostedStageArtifact(bytes: Uint8Array, options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {}): ForgeWebScriptSelfHostedStageArtifact
+function decodeForgeWebScriptSelfHostedStageArtifact(
+  bytes: Uint8Array,
+  options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {},
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| octets | Uint8Array |  |
-| options | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |  |
+| Nom     | Tapez                                              | Descriptif |
+| ------- | -------------------------------------------------- | ---------- |
+| octets  | Uint8Array                                         |            |
+| options | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |            |
 
 ### encodeForgeWebScriptSelfHostedDiagnostics
 
 **Genre :** fonction
 
 ```typescript
-function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array
+function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| diagnostic | lecture seule ForgeWebScriptDiagnostic[] |  |
+| Nom        | Tapez                                    | Descriptif |
+| ---------- | ---------------------------------------- | ---------- |
+| diagnostic | lecture seule ForgeWebScriptDiagnostic[] |            |
 
 ### encodeForgeWebScriptSelfHostedStageArtifact
 
 **Genre :** fonction
 
 ```typescript
-function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array
+function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| artefact | ForgeWebScriptSelfHostedStageArtifact |  |
+| Nom      | Tapez                                 | Descriptif |
+| -------- | ------------------------------------- | ---------- |
+| artefact | ForgeWebScriptSelfHostedStageArtifact |            |
 
 ### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 Aucune description fournie.
@@ -2834,7 +2967,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 Aucune description fournie.
@@ -2844,7 +2977,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 Aucune description fournie.
@@ -2856,7 +2989,7 @@ Aucune description fournie.
 ```typescript
 export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
   Record<ForgeWebScriptSelfHostedCompilerStage, string>
->
+>;
 ```
 
 Aucune description fournie.
@@ -2866,7 +2999,8 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptSelfHostedCompilerStage = 'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
+export type ForgeWebScriptSelfHostedCompilerStage =
+  'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
 Aucune description fournie.
@@ -2906,34 +3040,34 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string
+function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| octets | Uint8Array |  |
+| Nom    | Tapez      | Descriptif |
+| ------ | ---------- | ---------- |
+| octets | Uint8Array |            |
 
 ### hashForgeWebScriptSelfHostedSourceIdentity
 
 **Genre :** fonction
 
 ```typescript
-function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string
+function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
-| Nom du fichier | chaîne |  |
-| graphHash | chaîne |  |
+| Nom            | Tapez  | Descriptif |
+| -------------- | ------ | ---------- |
+| source         | chaîne |            |
+| Nom du fichier | chaîne |            |
+| graphHash      | chaîne |            |
 
 ## `src/self-hosted/fws/lexer`
 
@@ -2949,9 +3083,9 @@ Renvoie vrai lorsque l'octet est un espace ASCII.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| octet | i32 | Valeur de l'octet candidat. |
+| Nom   | Tapez | Descriptif                  |
+| ----- | ----- | --------------------------- |
+| octet | i32   | Valeur de l'octet candidat. |
 
 #### Contracter
 
@@ -2965,7 +3099,7 @@ Renvoie vrai lorsque l'octet est un espace ASCII.
 **Genre :** fonction
 
 ```typescript
-function computeForgeWebScriptLexStageFingerprint(source: string): number
+function computeForgeWebScriptLexStageFingerprint(source: string): number;
 ```
 
 Référence de départ pour l'étape lex auto-hébergée.
@@ -2973,16 +3107,16 @@ Doit rester comportementalement identique à {@link createForgeWebScriptLexStage
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| source | chaîne |            |
 
 ### createForgeWebScriptLexStageVmModule
 
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule;
 ```
 
 Module VM abaissé à la main pour l'étape d'empreinte digitale Lex.
@@ -2990,9 +3124,9 @@ Entrée : lex_fingerprint(source : ForgeWebScriptSourceBytes) -> i32
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| sourceHash | chaîne |  |
+| Nom        | Tapez  | Descriptif |
+| ---------- | ------ | ---------- |
+| sourceHash | chaîne |            |
 
 ### encodeForgeWebScriptLexStageSource
 
@@ -3004,23 +3138,23 @@ function encodeForgeWebScriptLexStageSource(source: string): {
   readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
-}
+};
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| source | chaîne |            |
 
 ### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
 ```
 
 Aucune description fournie.
@@ -3030,7 +3164,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 Aucune description fournie.
@@ -3082,48 +3216,52 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptParserModuleVmModule(sourceHash: string, fileName: string, options: ForgeWebScriptParserModuleStageOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserModuleVmModule(
+  sourceHash: string,
+  fileName: string,
+  options: ForgeWebScriptParserModuleStageOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 Le module VM abaissé à la main pour l'étape limitée du module analyseur.
 Entrée : parse_module_stage (source : ForgeWebScriptSourceBytes) -> enveloppe d'octets.
 
 Disposition des enveloppes (tous les u32 little-endian) :
-  [0] failFlag (1 = grammaire en dehors du sous-ensemble v1 délimité ; charge utile du module absente)
-  [4] diagFlag (1 = un seul diagnostic FWS-PARSE-052 délimité a été enregistré)
-  [8..32) étendue de diagnostic (début, fin, ligne, colonne, ligne de fin, colonne de fin)
-  [32..) octets de charge utile du module (uniquement significatif lorsque failFlag = 0)
+[0] failFlag (1 = grammaire en dehors du sous-ensemble v1 délimité ; charge utile du module absente)
+[4] diagFlag (1 = un seul diagnostic FWS-PARSE-052 délimité a été enregistré)
+[8..32) étendue de diagnostic (début, fin, ligne, colonne, ligne de fin, colonne de fin)
+[32..) octets de charge utile du module (uniquement significatif lorsque failFlag = 0)
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| sourceHash | chaîne |  |
-| Nom du fichier | chaîne |  |
-| options | ForgeWebScriptParserModuleStageOptions |  |
+| Nom            | Tapez                                  | Descriptif |
+| -------------- | -------------------------------------- | ---------- |
+| sourceHash     | chaîne                                 |            |
+| Nom du fichier | chaîne                                 |            |
+| options        | ForgeWebScriptParserModuleStageOptions |            |
 
 ### decodeForgeWebScriptParserModuleEnvelope
 
 **Genre :** fonction
 
 ```typescript
-function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope
+function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| octets | Uint8Array |  |
+| Nom    | Tapez      | Descriptif |
+| ------ | ---------- | ---------- |
+| octets | Uint8Array |            |
 
 ### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 Aucune description fournie.
@@ -3155,7 +3293,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function computeForgeWebScriptParserStageFingerprint(source: string): number
+function computeForgeWebScriptParserStageFingerprint(source: string): number;
 ```
 
 Référence de départ pour l'étape d'analyseur auto-hébergée.
@@ -3163,16 +3301,19 @@ Doit rester comportementalement identique à {@link createForgeWebScriptParserSt
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| source | chaîne |            |
 
 ### createForgeWebScriptParserStageVmModule
 
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptParserStageVmModule(sourceHash: string, options: ForgeWebScriptParserStageVmModuleOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserStageVmModule(
+  sourceHash: string,
+  options: ForgeWebScriptParserStageVmModuleOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 Module VM abaissé à la main pour l'étape d'empreinte digitale de l'analyseur.
@@ -3180,17 +3321,17 @@ Entrée : parse_stage (source : ForgeWebScriptSourceBytes) -> i32
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| sourceHash | chaîne |  |
-| options | ForgeWebScriptParserStageVmModuleOptions |  |
+| Nom        | Tapez                                    | Descriptif |
+| ---------- | ---------------------------------------- | ---------- |
+| sourceHash | chaîne                                   |            |
+| options    | ForgeWebScriptParserStageVmModuleOptions |            |
 
 ### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
 ```
 
 Aucune description fournie.
@@ -3212,140 +3353,158 @@ Boutons d'usine en option utilisés par des tests de divergence délibérés.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptSelfHostedParserArtifact(source: string, fileName: string, module: ForgeWebScriptModule, diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedParserArtifact(
+  source: string,
+  fileName: string,
+  module: ForgeWebScriptModule,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
-| Nom du fichier | chaîne |  |
-| modules | ForgeWebScriptModule |  |
-| diagnostic | lecture seule ForgeWebScriptDiagnostic[] |  |
-| graphHash | chaîne |  |
+| Nom            | Tapez                                    | Descriptif |
+| -------------- | ---------------------------------------- | ---------- |
+| source         | chaîne                                   |            |
+| Nom du fichier | chaîne                                   |            |
+| modules        | ForgeWebScriptModule                     |            |
+| diagnostic     | lecture seule ForgeWebScriptDiagnostic[] |            |
+| graphHash      | chaîne                                   |            |
 
 ### createForgeWebScriptSelfHostedTokenArtifact
 
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptSelfHostedTokenArtifact(source: string, fileName: string, tokens: readonly ForgeWebScriptToken[], diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedTokenArtifact(
+  source: string,
+  fileName: string,
+  tokens: readonly ForgeWebScriptToken[],
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
-| Nom du fichier | chaîne |  |
-| jetons | lecture seule ForgeWebScriptToken[] |  |
-| diagnostic | lecture seule ForgeWebScriptDiagnostic[] |  |
-| graphHash | chaîne |  |
+| Nom            | Tapez                                    | Descriptif |
+| -------------- | ---------------------------------------- | ---------- |
+| source         | chaîne                                   |            |
+| Nom du fichier | chaîne                                   |            |
+| jetons         | lecture seule ForgeWebScriptToken[]      |            |
+| diagnostic     | lecture seule ForgeWebScriptDiagnostic[] |            |
+| graphHash      | chaîne                                   |            |
 
 ### decodeForgeWebScriptSelfHostedModule
 
 **Genre :** fonction
 
 ```typescript
-function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule
+function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| octets | Uint8Array |  |
+| Nom    | Tapez      | Descriptif |
+| ------ | ---------- | ---------- |
+| octets | Uint8Array |            |
 
 ### decodeForgeWebScriptSelfHostedTokens
 
 **Genre :** fonction
 
 ```typescript
-function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[]
+function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[];
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| octets | Uint8Array |  |
+| Nom    | Tapez      | Descriptif |
+| ------ | ---------- | ---------- |
+| octets | Uint8Array |            |
 
 ### encodeForgeWebScriptSelfHostedModule
 
 **Genre :** fonction
 
 ```typescript
-function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array
+function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | ForgeWebScriptModule |  |
+| Nom     | Tapez                | Descriptif |
+| ------- | -------------------- | ---------- |
+| modules | ForgeWebScriptModule |            |
 
 ### encodeForgeWebScriptSelfHostedTokens
 
 **Genre :** fonction
 
 ```typescript
-function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array
+function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| jetons | lecture seule ForgeWebScriptToken[] |  |
+| Nom    | Tapez                               | Descriptif |
+| ------ | ----------------------------------- | ---------- |
+| jetons | lecture seule ForgeWebScriptToken[] |            |
 
 ### hashForgeWebScriptSelfHostedStagePayload
 
 **Genre :** fonction
 
 ```typescript
-function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string
+function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| artefact | ForgeWebScriptSelfHostedStageArtifact |  |
+| Nom      | Tapez                                 | Descriptif |
+| -------- | ------------------------------------- | ---------- |
+| artefact | ForgeWebScriptSelfHostedStageArtifact |            |
 
 ### validateForgeWebScriptSelfHostedStageArtifact
 
 **Genre :** fonction
 
 ```typescript
-function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact, stage: ForgeWebScriptSelfHostedCompilerStage, source: string, fileName: string, graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function validateForgeWebScriptSelfHostedStageArtifact(
+  artifact: ForgeWebScriptSelfHostedStageArtifact,
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  source: string,
+  fileName: string,
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| artefact | ForgeWebScriptSelfHostedStageArtifact |  |
-| étape | ForgeWebScriptSelfHostedCompilerStage |  |
-| source | chaîne |  |
-| Nom du fichier | chaîne |  |
-| graphHash | chaîne |  |
+| Nom            | Tapez                                 | Descriptif |
+| -------------- | ------------------------------------- | ---------- |
+| artefact       | ForgeWebScriptSelfHostedStageArtifact |            |
+| étape          | ForgeWebScriptSelfHostedCompilerStage |            |
+| source         | chaîne                                |            |
+| Nom du fichier | chaîne                                |            |
+| graphHash      | chaîne                                |            |
 
 ## `src/stdlib/memory`
 
@@ -3354,7 +3513,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
 ```
 
 Aucune description fournie.
@@ -3364,7 +3523,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[]
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[];
 ```
 
 Aucune description fournie.
@@ -3384,7 +3543,15 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' | 'memory-realloc' | 'memory-load-u32' | 'memory-store-u32' | 'memory-load-f64' | 'memory-store-f64' | 'f64-from-u32';
+export type ForgeWebScriptMemoryOperation =
+  | 'memory-alloc'
+  | 'memory-dealloc'
+  | 'memory-realloc'
+  | 'memory-load-u32'
+  | 'memory-store-u32'
+  | 'memory-load-f64'
+  | 'memory-store-f64'
+  | 'f64-from-u32';
 ```
 
 Vérification des opérations de mémoire linéaire invité réservées par le compilateur.
@@ -3396,7 +3563,7 @@ Vérification des opérations de mémoire linéaire invité réservées par le c
 **Genre :** constante
 
 ```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity;
 ```
 
 Aucune description fournie.
@@ -3406,7 +3573,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
 ```
 
 Aucune description fournie.
@@ -3416,7 +3583,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
 ```
 
 Aucune description fournie.
@@ -3426,7 +3593,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[]
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[];
 ```
 
 Appels appartenant au compilateur. Ce sont des noms de source réservés, pas des importations d'hôtes, et
@@ -3438,7 +3605,7 @@ Les opérations de capture renvoient `-1` pour un groupe non défini ou lorsqu'a
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION
+export const FORGE_WEB_SCRIPT_REGEX_VERSION;
 ```
 
 Aucune description fournie.
@@ -3448,7 +3615,16 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptRegexOperation = | 'full-match' | 'prefix-match' | 'search' | 'full-capture-start' | 'full-capture-end' | 'prefix-capture-start' | 'prefix-capture-end' | 'search-capture-start' | 'search-capture-end';
+export type ForgeWebScriptRegexOperation =
+  | 'full-match'
+  | 'prefix-match'
+  | 'search'
+  | 'full-capture-start'
+  | 'full-capture-end'
+  | 'prefix-capture-start'
+  | 'prefix-capture-end'
+  | 'search-capture-start'
+  | 'search-capture-end';
 ```
 
 Aucune description fournie.
@@ -3468,16 +3644,18 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function forgeWebScriptStandardLibraryIdentity(overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {}): ForgeWebScriptStandardLibraryIdentity
+function forgeWebScriptStandardLibraryIdentity(
+  overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {},
+): ForgeWebScriptStandardLibraryIdentity;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| remplacements | Partielle<ForgeWebScriptStandardLibraryIdentity> |  |
+| Nom           | Tapez                                            | Descriptif |
+| ------------- | ------------------------------------------------ | ---------- |
+| remplacements | Partielle<ForgeWebScriptStandardLibraryIdentity> |            |
 
 ### ForgeWebScriptStandardLibraryIdentity
 
@@ -3496,7 +3674,7 @@ Entrées d'identité stables qui affectent la compilation des regex et les artef
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
 ```
 
 Aucune description fournie.
@@ -3506,7 +3684,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[]
+export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[];
 ```
 
 Aucune description fournie.
@@ -3526,7 +3704,18 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' | 'string-byte-at' | 'string-starts-with' | 'string-slice' | 'string-to-i32' | 'bytes-length' | 'bytes-length-u32' | 'bytes-byte-at' | 'bytes-byte-at-u32' | 'bytes-slice';
+export type ForgeWebScriptStringOperation =
+  | 'string-concat'
+  | 'string-length'
+  | 'string-byte-at'
+  | 'string-starts-with'
+  | 'string-slice'
+  | 'string-to-i32'
+  | 'bytes-length'
+  | 'bytes-length-u32'
+  | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
+  | 'bytes-slice';
 ```
 
 Opérations déterministes sur les chaînes et les octets appartenant au compilateur.
@@ -3538,18 +3727,22 @@ Opérations déterministes sur les chaînes et les octets appartenant au compila
 **Genre :** fonction
 
 ```typescript
-function checkForgeWebScript(module: ForgeWebScriptModule, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptTypeCheckResult
+function checkForgeWebScript(
+  module: ForgeWebScriptModule,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptTypeCheckResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | ForgeWebScriptModule |  |
-| Nom du fichier |  |  |
-| options | ForgeWebScriptTypeCheckOptions |  |
+| Nom            | Tapez                          | Descriptif |
+| -------------- | ------------------------------ | ---------- |
+| modules        | ForgeWebScriptModule           |            |
+| Nom du fichier |                                |            |
+| options        | ForgeWebScriptTypeCheckOptions |            |
 
 ### ForgeWebScriptTypeCheckOptions
 
@@ -3588,18 +3781,22 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function validateForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptValidationResult
+function validateForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptValidationResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
-| Nom du fichier |  |  |
-| options | ForgeWebScriptTypeCheckOptions |  |
+| Nom            | Tapez                          | Descriptif |
+| -------------- | ------------------------------ | ---------- |
+| source         | chaîne                         |            |
+| Nom du fichier |                                |            |
+| options        | ForgeWebScriptTypeCheckOptions |            |
 
 ## `src/wat`
 
@@ -3618,14 +3815,14 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string
+function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | ForgeWebScriptModule |  |
-| métadonnées | ForgeWebScriptWatMétadonnées |  |
+| Nom         | Tapez                        | Descriptif |
+| ----------- | ---------------------------- | ---------- |
+| modules     | ForgeWebScriptModule         |            |
+| métadonnées | ForgeWebScriptWatMétadonnées |            |

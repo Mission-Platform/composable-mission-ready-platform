@@ -50,13 +50,14 @@ function finding(
   message: string,
   span: ForgeWebScriptAnalysisFinding['span'],
   hint: string,
-  options?: Pick<ForgeWebScriptAnalysisFinding, 'severity' | 'evidence' | 'owasp' | 'cwe'>,
+  options?: Pick<ForgeWebScriptAnalysisFinding, 'severity' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>,
 ): ForgeWebScriptAnalysisFinding {
   return {
     code,
     ruleId,
     category,
     severity: options?.severity ?? 'error',
+    ...(options?.blocking === undefined ? {} : { blocking: options.blocking }),
     message,
     fileName: context.fileName,
     span,
@@ -1055,10 +1056,68 @@ const capabilityRule: ForgeWebScriptAnalysisRule = {
   },
 };
 
+const optimizationSafetyRule: ForgeWebScriptAnalysisRule = {
+  id: 'fws.optimization.safety-policy',
+  category: 'optimization',
+  analyze: (context) => {
+    const findings: ForgeWebScriptAnalysisFinding[] = [];
+    if (context.policy.boundsChecks === 'excluded-by-profile')
+      findings.push(
+        finding(
+          context,
+          'fws.optimization.safety-policy',
+          'optimization',
+          `${FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES.optimization}-001`,
+          'Runtime bounds checks are excluded by the active compilation profile.',
+          context.frontend.sonIr?.nodes[0]?.span ??
+            context.frontend.module?.functions[0]?.span ?? {
+              start: 0,
+              end: 0,
+              line: 1,
+              column: 1,
+              endLine: 1,
+              endColumn: 1,
+            },
+          'Use the runtime policy unless every indexed access has independently audited proof facts.',
+          {
+            severity: context.policy.profile === 'strict' ? 'error' : 'warning',
+            blocking: context.policy.profile === 'strict',
+          },
+        ),
+      );
+    if (
+      context.facts.arrayBounds.some(({ status }) => status === 'unknown') &&
+      context.policy.boundsChecks === 'proven-safe'
+    )
+      findings.push(
+        finding(
+          context,
+          'fws.optimization.safety-policy',
+          'optimization',
+          `${FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES.optimization}-002`,
+          'The proven-safe bounds policy was requested but at least one access lacks a static range proof.',
+          context.facts.arrayBounds.find(({ status }) => status === 'unknown')?.span ??
+            context.frontend.module?.functions[0]?.span ?? {
+              start: 0,
+              end: 0,
+              line: 1,
+              column: 1,
+              endLine: 1,
+              endColumn: 1,
+            },
+          'Keep runtime checks enabled or provide a proof-producing frontend fact.',
+          { severity: 'error' },
+        ),
+      );
+    return findings;
+  },
+};
+
 export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[] = [
   correctnessRule,
   rangeRule,
   ownershipRule,
   resourceRule,
   capabilityRule,
+  optimizationSafetyRule,
 ];

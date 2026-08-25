@@ -16,6 +16,12 @@ export interface ForgeWebScriptDynamicLinkIdentity {
 }
 
 function signature(declaration: ForgeWebScriptAbiFunction): string {
+  const defaultPassing = (type: string, reference: string | undefined): 'value' | 'immutable-reference' =>
+    reference === undefined && type !== 'bytes' && type !== 'string' ? 'value' : 'immutable-reference';
+  return `${declaration.parameters.map(({ type, reference, passing, referenceMode }) => `${type}:${reference ?? ''}:${passing ?? defaultPassing(type, reference)}:${referenceMode ?? ''}`).join(',')}->${declaration.result}:${declaration.resultReference ?? ''}:${declaration.resultPassing ?? defaultPassing(declaration.result, declaration.resultReference)}:${declaration.resultReferenceMode ?? ''}`;
+}
+
+function legacySignature(declaration: ForgeWebScriptAbiFunction): string {
   return `${declaration.parameters.map(({ type, reference }) => `${type}:${reference ?? ''}`).join(',')}->${declaration.result}:${declaration.resultReference ?? ''}`;
 }
 
@@ -131,7 +137,7 @@ export class ForgeWebScriptDynamicLinkCache {
     }
     const expected = signature(declaration);
     const received = module.signatures?.[exportName];
-    if (received !== undefined && received !== expected) {
+    if (received !== undefined && received !== expected && received !== legacySignature(declaration)) {
       const diagnostic = diagnosticFor(moduleId, exportName, expected, received);
       this._diagnostics.push(diagnostic);
       throw new Error(diagnostic.message);

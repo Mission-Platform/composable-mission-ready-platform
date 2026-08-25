@@ -99,9 +99,9 @@ compileer invoer en worden vastgelegd in het ABI-manifest en de cachesleutel:
 ```ts
 const artifact = compileForgeWebScript({
   source,
-  fileName: "runtime.fws",
-  compilerVersion: "1.0.0",
-  optimization: "release",
+  fileName: 'runtime.fws',
+  compilerVersion: '1.0.0',
+  optimization: 'release',
   targetFeatures: { simd: true, tailCall: true, memory64: true },
   compilerHints: { iteratorUnrollLimit: 4 },
 });
@@ -224,13 +224,13 @@ vorige label. Tagvolgorde en dubbele tags blijven behouden.
 
 De veelgebruikte tagvormen zijn:
 
-| Tagformulier | Gestructureerde velden |
-| -------------------------------------------------------- | -------------------------------------------- |
+| Tagformulier                                            | Gestructureerde velden                 |
+| ------------------------------------------------------- | -------------------------------------- |
 | `@param name text`, `@arg`, `@argument` of `@parameter` | `name` is `subject`; de rest is `text` |
-| `@typeparam name text` | `name` is `subject`; de rest is `text` |
-| `@throws type text` of `@exception type text` | `type` is `subject`; de rest is `text` |
-| `@return text` of `@returns text` | Alleen `text` |
-| `@deprecated text` | Alleen `text` |
+| `@typeparam name text`                                  | `name` is `subject`; de rest is `text` |
+| `@throws type text` of `@exception type text`           | `type` is `subject`; de rest is `text` |
+| `@return text` of `@returns text`                       | Alleen `text`                          |
+| `@deprecated text`                                      | Alleen `text`                          |
 
 Andere `@name`-formulieren worden geaccepteerd en bewaard als bestelde tags in plaats van
 gerapporteerd als diagnostiek. Ze hebben geen afgeleid onderwerp; hun resterende tekst
@@ -380,14 +380,12 @@ De ondersteunde syntaxis is opzettelijk beperkt tot letterlijke tekens, `.`, tek
 klassen en bereiken (inclusief `^`-ontkenning), `\d`, `\D`, `\w`, `\W`, `\s`,
 `\S`, ontsnapte letterlijke waarden, groepen vastleggen en niet vastleggen, afwisseling,
 `*`, `+`, `?`, begrensde `{n}`, `{n,}`, `{n,m}` kwantoren, luie kwantoren,
-en `^`/`
-Forge Web Script biedt een deterministische standaardbibliotheek met reguliere expressies.
-De oproepen `regex_full_match(pattern, value) -> bool`,
+en `^`/`Forge Web Script biedt een deterministische standaardbibliotheek met reguliere expressies.
+De oproepen`regex_full_match(pattern, value) -> bool`,
 `regex_prefix_match(pattern, value) -> bool`, en
-`regex_search(pattern, value, start: i32) -> bool` voert gehele waarde uit,
+`regex_search(pattern, value, start: i32) -> bool`voert gehele waarde uit,
 respectievelijk positie-nul voorvoegsel en meest linkse zoekopdracht. Grenzen vastleggen
-zijn beschikbaar via de overeenkomstige `regex_*_capture_start` en
-`regex_*_capture_end`-oproepen; ze nemen een groepsindex en retourneren een UTF-16-tekenreeks
+zijn beschikbaar via de overeenkomstige`regex__*capture_start`en`regex*__capture_end`-oproepen; ze nemen een groepsindex en retourneren een UTF-16-tekenreeks
 offset of `-1` wanneer er geen overeenkomst is of de groep is uitgeschakeld. Zoek opname
 oproepen nemen bovendien de startoffset vóór de groepsindex.
 
@@ -429,18 +427,18 @@ Het uitgebreide incassocontract is structureel en ontvangersgericht; dat doet he
 voeg geen willekeurige objectmethoden toe. Vaste arrays worden geschreven `[T; N]` en
 vectoren als `Vector<T>`. De ondersteunde handtekeningen zijn:
 
-| Ontvanger | Werkwijze | Handtekening |
+| Ontvanger   | Werkwijze       | Handtekening            |
 | ----------- | --------------- | ----------------------- |
-| `Array<T>` | `length` | `() -> u32` |
-| `Array<T>` | `get` | `(u32) -> Option<T>` |
-| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
-| `Array<T>` | `iter` | `() -> Iterator<T>` |
-| `Vector<T>` | `length` | `() -> u32` |
-| `Vector<T>` | `get` | `(u32) -> Option<T>` |
-| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` of `add` | `(T) -> Vector<T>` |
-| `Vector<T>` | `pop` | `() -> Option<T>` |
-| `Vector<T>` | `iter` | `() -> Iterator<T>` |
+| `Array<T>`  | `length`        | `() -> u32`             |
+| `Array<T>`  | `get`           | `(u32) -> Option<T>`    |
+| `Array<T>`  | `set`           | `(u32, T) -> Array<T>`  |
+| `Array<T>`  | `iter`          | `() -> Iterator<T>`     |
+| `Vector<T>` | `length`        | `() -> u32`             |
+| `Vector<T>` | `get`           | `(u32) -> Option<T>`    |
+| `Vector<T>` | `set`           | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` of `add` | `(T) -> Vector<T>`      |
+| `Vector<T>` | `pop`           | `() -> Option<T>`       |
+| `Vector<T>` | `iter`          | `() -> Iterator<T>`     |
 
 De spelling `add` is opzettelijk een compatibiliteitsalias voor vector
 `push`; het is geen arraymethode. Indices zijn `u32`, elementargumenten moeten
@@ -549,13 +547,13 @@ stille no-op.
 De module maakt gebruik van één WebAssembly lineair geheugen met 64 KiB-pagina's en little-endian
 scalaire waarden. Scalaire waarden worden als volgt toegewezen:
 
-| Webscript smeden | WebAssembly-vertegenwoordiging |
-| ----------------- | ------------------------------------------ |
-| `bool` | `i32`, waarbij `0` onwaar is en `1` waar is |
-| `i32`, `u32` | `i32` |
-| `i64`, `u64` | `i64` |
-| `f32`, `f64` | bijpassende WebAssembly vlotter |
-| `unit` | geen resultaatwaarde |
+| Webscript smeden  | WebAssembly-vertegenwoordiging                       |
+| ----------------- | ---------------------------------------------------- |
+| `bool`            | `i32`, waarbij `0` onwaar is en `1` waar is          |
+| `i32`, `u32`      | `i32`                                                |
+| `i64`, `u64`      | `i64`                                                |
+| `f32`, `f64`      | bijpassende WebAssembly vlotter                      |
+| `unit`            | geen resultaatwaarde                                 |
 | `string`, `bytes` | twee `u32`-waarden: pointer en vervolgens bytelengte |
 
 Het manifest declareert dezelfde toewijzing in `valueRepresentations`. EEN
@@ -641,11 +639,7 @@ interface ForgeWebScriptExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: (
-    pointer: number,
-    oldSize: number,
-    newSize: number,
-  ) => number;
+  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
   readonly fws_reset: () => void;
   readonly echo: (value: string) => string;
   readonly processBytes: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;
@@ -782,12 +776,9 @@ Het harnas accepteert alleen hostfuncties via expliciet ingetoetste capaciteitsk
 op basis van manifeste capaciteitsnamen, bijvoorbeeld:
 
 ```ts
-const exports = await harness.load<{ current: () => bigint }>(
-  "capabilities/clock-now.fws",
-  {
-    "clock.now": { now: () => 123n },
-  },
-);
+const exports = await harness.load<{ current: () => bigint }>('capabilities/clock-now.fws', {
+  'clock.now': { now: () => 123n },
+});
 ```
 
 Ontbrekende aangegeven invoer en niet-aangegeven geleverde invoer zijn mislukkingen. Testen
@@ -814,13 +805,13 @@ Diagnostische gegevens zijn gestructureerde records met `code`, `severity`, `pha
 De fase is een van `lex`, `parse`, `type-check` of `abi`. Stabiele v1-code
 gezinnen zijn onder meer:
 
-| Codeer familie | Betekenis |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `FWS-LEX-*` | ongeldige tekens/escapes, onbewerkte tekenreeksregelterminators of niet-afgesloten tekenreeksen/opmerkingen |
-| `FWS-PARSE-*` | ongeldige syntaxis van module, declaratie, instructie of expressie |
-| `FWS-TYPE-*` | ongeldig primitief type, naam, operator, argument of return |
-| `FWS-ABI-*` | dubbele namen, geweigerde mogelijkheden, export of import |
-| `FWS-REGEX-*` | niet-ondersteunde of verkeerd ingedeelde regex-patronen die eigendom zijn van de compiler |
+| Codeer familie | Betekenis                                                                                                   |
+| -------------- | ----------------------------------------------------------------------------------------------------------- |
+| `FWS-LEX-*`    | ongeldige tekens/escapes, onbewerkte tekenreeksregelterminators of niet-afgesloten tekenreeksen/opmerkingen |
+| `FWS-PARSE-*`  | ongeldige syntaxis van module, declaratie, instructie of expressie                                          |
+| `FWS-TYPE-*`   | ongeldig primitief type, naam, operator, argument of return                                                 |
+| `FWS-ABI-*`    | dubbele namen, geweigerde mogelijkheden, export of import                                                   |
+| `FWS-REGEX-*`  | niet-ondersteunde of verkeerd ingedeelde regex-patronen die eigendom zijn van de compiler                   |
 
 Fouten voorkomen het genereren van artefacten. Waarschuwingen en informatieve diagnostiek doen dat wel
 de semantiek niet veranderen. Diagnostische volgorde is bronvolgorde, gevolgd door fase
@@ -919,14 +910,14 @@ doen alsof de twee exporten qua gedrag al uitwisselbaar zijn.
 
 ### Een implementatie selecteren
 
-| Werklast of vereiste | Selecteer | Reden |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Bestaand QR- of matrixpakketgedrag | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | Pakketspecifieke ESM-wrappers blijven beschikbaar voor deze openbare API's.                                       |
-| Neutraal beeld- en camerascannergedrag | `@mission-platform/code-scanner` | Maakt standaard gebruik van een statisch gekoppelde FWS-grafiek, of een expliciet dynamisch bronmoduleprofiel met verzending in de cache. |
-| Bestaand streepjescodegedrag | `@mission-platform/barcode` | Pakket-lokale Forge Web Script-grafieken bieden de getypte barcode-façade.                                           |
-| Nieuw browserveilig computergebruik voor algemeen gebruik met expliciete hosteffecten | Webscript smeden plus `@mission-platform/vite-plugin-forge-web-script` | `.fws`-bron-, manifest-, getypte lader en standaard-deny-by-default-mogelijkheden met versieversie.                                |
-| Bestaande AssemblyScript-bron of een AssemblyScript-specifieke migratie | `@mission-platform/vite-plugin-assemblyscript` | Compileert `.ts` AssemblyScript-vermeldingen en behoudt het gegenereerde onbewerkte exportcontract.                            |
-| Kaderneutrale UI/componentcompilatie | Componentcompiler smeden | Forge Web Script is geen vervanging voor `FrameworkOutputPlugin` of componentdoelen.                           |
+| Werklast of vereiste                                                                  | Selecteer                                                              | Reden                                                                                                                                     |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Bestaand QR- of matrixpakketgedrag                                                    | `@mission-platform/qr-code` / `@mission-platform/matrix-code`          | Pakketspecifieke ESM-wrappers blijven beschikbaar voor deze openbare API's.                                                               |
+| Neutraal beeld- en camerascannergedrag                                                | `@mission-platform/code-scanner`                                       | Maakt standaard gebruik van een statisch gekoppelde FWS-grafiek, of een expliciet dynamisch bronmoduleprofiel met verzending in de cache. |
+| Bestaand streepjescodegedrag                                                          | `@mission-platform/barcode`                                            | Pakket-lokale Forge Web Script-grafieken bieden de getypte barcode-façade.                                                                |
+| Nieuw browserveilig computergebruik voor algemeen gebruik met expliciete hosteffecten | Webscript smeden plus `@mission-platform/vite-plugin-forge-web-script` | `.fws`-bron-, manifest-, getypte lader en standaard-deny-by-default-mogelijkheden met versieversie.                                       |
+| Bestaande AssemblyScript-bron of een AssemblyScript-specifieke migratie               | `@mission-platform/vite-plugin-assemblyscript`                         | Compileert `.ts` AssemblyScript-vermeldingen en behoudt het gegenereerde onbewerkte exportcontract.                                       |
+| Kaderneutrale UI/componentcompilatie                                                  | Componentcompiler smeden                                               | Forge Web Script is geen vervanging voor `FrameworkOutputPlugin` of componentdoelen.                                                      |
 
 Gebruik de Forge Web Script Vite-plug-in alleen voor `.fws`-vermeldingen. Gebruik de
 AssemblyScript-plug-in voor bestaande AssemblyScript-vermeldingen. Tijdens de migratie kan een

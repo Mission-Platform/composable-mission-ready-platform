@@ -5,7 +5,12 @@ import {
   type ForgeWebScriptWasmFeatureRequirements,
 } from '@mission-platform/forge-web-script-wasm';
 
-import { forgeWebScriptWatCacheKey, persistForgeWebScriptDebugArtifacts, persistForgeWebScriptWat } from './cache.js';
+import {
+  forgeWebScriptWatCacheKey,
+  persistForgeWebScriptDebugArtifacts,
+  persistForgeWebScriptSoN,
+  persistForgeWebScriptWat,
+} from './cache.js';
 import { createDiagnostic, type ForgeWebScriptDiagnostic } from './diagnostics.js';
 import { analyzeForgeWebScript } from './analysis/analyze.js';
 import type { ForgeWebScriptAnalysisOptions, ForgeWebScriptAnalysisReport } from './analysis/contracts.js';
@@ -159,6 +164,8 @@ function declarationFunction(declaration: ForgeWebScriptAbiFunction, enumNames?:
     ...(declaration.resultArguments === undefined ? {} : { arguments: declaration.resultArguments }),
     ...(declaration.resultLength === undefined ? {} : { length: declaration.resultLength }),
     ...(declaration.resultOwnership === undefined ? {} : { ownership: declaration.resultOwnership }),
+    ...(declaration.resultPassing === undefined ? {} : { passing: declaration.resultPassing }),
+    ...(declaration.resultReferenceMode === undefined ? {} : { referenceMode: declaration.resultReferenceMode }),
   } satisfies ForgeWebScriptAbiParameter;
   return `(${declaration.parameters.map((parameter) => `${declarationProperty(parameter.name)}: ${declarationType(parameter, enumNames)}`).join(', ')}) => ${declarationType(result, enumNames)}`;
 }
@@ -910,6 +917,7 @@ function compileForgeWebScriptModule(
       // public compilation contract.
       ir: {
         ...frontend.ir!,
+        memoryModel: 'region-arc-checked-linear' as const,
         enumDeclarations: frontend.ir!.enums.map((declaration) => ({
           name: declaration.name,
           exported: declaration.exported,
@@ -919,6 +927,7 @@ function compileForgeWebScriptModule(
       } as unknown as Parameters<typeof compileForgeWebScriptWasm>[0]['ir'],
       optimizedIr: {
         ...frontend.optimizedIr!,
+        memoryModel: 'region-arc-checked-linear' as const,
         enumDeclarations: frontend.optimizedIr!.enums.map((declaration) => ({
           name: declaration.name,
           exported: declaration.exported,
@@ -933,9 +942,18 @@ function compileForgeWebScriptModule(
         optimization,
         sourceFiles,
         sourceHash: sourceHashForArtifact(input.source, input.fileName),
+        memoryModel: 'region-arc-checked-linear' as const,
         ...(graphMetadata.graphHash === undefined ? {} : { graphHash: graphMetadata.graphHash }),
         ...(input.targetFeatures === undefined ? {} : { targetFeatures: input.targetFeatures }),
         ...(input.compilerHints === undefined ? {} : { compilerHints: input.compilerHints }),
+        boundsChecks: input.boundsChecks ?? 'runtime',
+        ...(frontend.sonIr === undefined
+          ? {}
+          : {
+              sonSchemaVersion: frontend.sonIr.schemaVersion,
+              sonGraphHash: frontend.sonIr.graphHash,
+              sonOptimizationPasses: frontend.sonIr.optimizationReport?.passes.map(({ name }) => name),
+            }),
         ...(input.logger === undefined ? {} : { loggerScope: input.logger.scope }),
       },
       logger: input.logger,
@@ -1019,6 +1037,10 @@ function compileForgeWebScriptModule(
       .rules?.map(({ id }) => id)
       .toSorted(),
     analysisSourceMap: input.analysisSourceMap ?? input.analysis?.sourceMap,
+    sonSchemaVersion: frontend.sonIr?.schemaVersion,
+    sonGraphHash: frontend.sonIr?.graphHash,
+    memoryModel: 'region-arc-checked-linear',
+    boundsChecks: input.boundsChecks ?? 'runtime',
   });
   const debugArtifacts =
     optimization === 'debug'
@@ -1033,6 +1055,11 @@ function compileForgeWebScriptModule(
     input.watCache === undefined
       ? undefined
       : { ...input.watCache, ...(input.logger === undefined ? {} : { logger: input.logger }) };
+  const sonIrPath = persistForgeWebScriptSoN(cache, cacheKey, frontend.sonIr!);
+  const unoptimizedSonIrPath =
+    optimization === 'debug' && frontend.unoptimizedSonIr !== undefined
+      ? persistForgeWebScriptSoN(cache, cacheKey, frontend.unoptimizedSonIr, 'unoptimized')
+      : undefined;
   const debugPaths =
     cache?.writeBinaryAtomic === undefined
       ? {}
@@ -1048,6 +1075,8 @@ function compileForgeWebScriptModule(
     contentHash,
     wat,
     ...(watPath === undefined ? {} : { watPath }),
+    ...(sonIrPath === undefined ? {} : { sonIrPath }),
+    ...(unoptimizedSonIrPath === undefined ? {} : { unoptimizedSonIrPath }),
     ...(debugPaths.unoptimizedWatPath === undefined ? {} : { unoptimizedWatPath: debugPaths.unoptimizedWatPath }),
     ...(debugPaths.optimizedWasmPath === undefined ? {} : { optimizedWasmPath: debugPaths.optimizedWasmPath }),
     ...(debugPaths.unoptimizedWasmPath === undefined ? {} : { unoptimizedWasmPath: debugPaths.unoptimizedWasmPath }),
@@ -1056,6 +1085,8 @@ function compileForgeWebScriptModule(
     ...(input.targetFeatures === undefined ? {} : { targetFeatures: input.targetFeatures }),
     ...(input.compilerHints === undefined ? {} : { compilerHints: input.compilerHints }),
     optimizationReport: frontend.optimizationReport,
+    sonIr: frontend.sonIr,
+    sonOptimizationReport: frontend.sonOptimizationReport,
     ...(dynamicMetadata === undefined ? {} : { dynamicLinkMetadata: dynamicMetadata }),
     diagnostics: [...analysis.diagnostics, ...verificationDiagnostics],
     analysis,
@@ -1105,6 +1136,7 @@ function compileForgeWebScriptGraph(input: ForgeWebScriptGraphCompileInput): For
       standardLibrary: input.standardLibrary,
       targetFeatures: input.targetFeatures,
       compilerHints: input.compilerHints,
+      boundsChecks: input.boundsChecks,
       logger: input.logger,
       analysis: {
         ...(input.analysis ?? {}),

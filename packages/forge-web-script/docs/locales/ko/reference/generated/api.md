@@ -16,17 +16,20 @@
 **종류:** 기능
 
 ```typescript
-function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisReport
+function analyzeForgeWebScript(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisReport;
 ```
 
 하나의 프런트엔드 결과에 대해 등록된 소스 분석 규칙을 실행합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프론트엔드 | ForgeWebScriptFrontendResult |  |
-| 옵션 | ForgeWebScriptAnalytic옵션 |  |
+| 이름       | 유형                         | 설명 |
+| ---------- | ---------------------------- | ---- |
+| 프론트엔드 | ForgeWebScriptFrontendResult |      |
+| 옵션       | ForgeWebScriptAnalytic옵션   |      |
 
 ## `src/analysis/context`
 
@@ -35,17 +38,20 @@ function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisContext
+function createForgeWebScriptAnalysisContext(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisContext;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프론트엔드 | ForgeWebScriptFrontendResult |  |
-| 옵션 | ForgeWebScriptAnalytic옵션 |  |
+| 이름       | 유형                         | 설명 |
+| ---------- | ---------------------------- | ---- |
+| 프론트엔드 | ForgeWebScriptFrontendResult |      |
+| 옵션       | ForgeWebScriptAnalytic옵션   |      |
 
 ## `src/analysis/contracts`
 
@@ -54,7 +60,7 @@ function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendRes
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
 ```
 
 소스 분석 진단 제품군을 위해 예약된 안정적인 접두사입니다.
@@ -286,7 +292,7 @@ export interface ForgeWebScriptAnalysisTypeFact
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[]
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[];
 ```
 
 설명이 제공되지 않았습니다.
@@ -298,16 +304,16 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAna
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts
+function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프론트엔드 | ForgeWebScriptFrontendResult |  |
+| 이름       | 유형                         | 설명 |
+| ---------- | ---------------------------- | ---- |
+| 프론트엔드 | ForgeWebScriptFrontendResult |      |
 
 ## `src/analysis/policy`
 
@@ -316,23 +322,25 @@ function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResul
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptAnalysisPolicy(policy: ForgeWebScriptAnalysisOptionsLike = {}): ForgeWebScriptAnalysisPolicy
+function createForgeWebScriptAnalysisPolicy(
+  policy: ForgeWebScriptAnalysisOptionsLike = {},
+): ForgeWebScriptAnalysisPolicy;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 정책 | ForgeWebScriptAnalyticOptionsLike |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 정책 | ForgeWebScriptAnalyticOptionsLike |      |
 
 ### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits;
 ```
 
 설명이 제공되지 않았습니다.
@@ -342,7 +350,7 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLim
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 설명이 제공되지 않았습니다.
@@ -352,7 +360,7 @@ export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysi
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 설명이 제공되지 않았습니다.
@@ -372,17 +380,20 @@ export type ForgeWebScriptAnalysisOptionsLike = Omit<Partial<ForgeWebScriptAnaly
 **종류:** 기능
 
 ```typescript
-function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysisFinding, policy: ForgeWebScriptAnalysisPolicy): boolean
+function isForgeWebScriptAnalysisFindingBlocking(
+  finding: ForgeWebScriptAnalysisFinding,
+  policy: ForgeWebScriptAnalysisPolicy,
+): boolean;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 찾기 | ForgeWebScript분석찾기 |  |
-| 정책 | ForgeWebScriptAnalyticPolicy |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 찾기 | ForgeWebScript분석찾기       |      |
+| 정책 | ForgeWebScriptAnalyticPolicy |      |
 
 ## `src/analysis/registry`
 
@@ -391,16 +402,18 @@ function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysis
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptAnalysisRuleRegistry(rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES): ForgeWebScriptAnalysisRuleRegistry
+function createForgeWebScriptAnalysisRuleRegistry(
+  rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
+): ForgeWebScriptAnalysisRuleRegistry;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 규칙 | 읽기 전용 ForgeWebScriptAnalyticRule[] |  |
+| 이름 | 유형                                   | 설명 |
+| ---- | -------------------------------------- | ---- |
+| 규칙 | 읽기 전용 ForgeWebScriptAnalyticRule[] |      |
 
 ### ForgeWebScript분석규칙레지스트리
 
@@ -419,16 +432,16 @@ export interface ForgeWebScriptAnalysisRuleRegistry
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic
+function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 찾기 | ForgeWebScript분석찾기 |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 찾기 | ForgeWebScript분석찾기 |      |
 
 ## `src/ast`
 
@@ -467,7 +480,8 @@ export interface ForgeWebScriptBinaryExpression
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
+export type ForgeWebScriptBinaryOperator =
+  '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
 설명이 제공되지 않았습니다.
@@ -557,7 +571,19 @@ export interface ForgeWebScriptEnumVariant
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptExpression = | ForgeWebScriptBinaryExpression | ForgeWebScriptCallExpression | ForgeWebScriptIdentifierExpression | ForgeWebScriptLiteralExpression | ForgeWebScriptFunctionValueExpression | ForgeWebScriptStructValueExpression | ForgeWebScriptEnumValueExpression | ForgeWebScriptArrayLiteralExpression | ForgeWebScriptVectorLiteralExpression | ForgeWebScriptIndexExpression | ForgeWebScriptMatchExpression | ForgeWebScriptUnaryExpression;
+export type ForgeWebScriptExpression =
+  | ForgeWebScriptBinaryExpression
+  | ForgeWebScriptCallExpression
+  | ForgeWebScriptIdentifierExpression
+  | ForgeWebScriptLiteralExpression
+  | ForgeWebScriptFunctionValueExpression
+  | ForgeWebScriptStructValueExpression
+  | ForgeWebScriptEnumValueExpression
+  | ForgeWebScriptArrayLiteralExpression
+  | ForgeWebScriptVectorLiteralExpression
+  | ForgeWebScriptIndexExpression
+  | ForgeWebScriptMatchExpression
+  | ForgeWebScriptUnaryExpression;
 ```
 
 설명이 제공되지 않았습니다.
@@ -767,7 +793,8 @@ export type ForgeWebScriptPattern = |
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
 설명이 제공되지 않았습니다.
@@ -797,7 +824,19 @@ export interface ForgeWebScriptSourceModuleImport
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptStatement = | ForgeWebScriptExpressionStatement | ForgeWebScriptAssignmentStatement | ForgeWebScriptIfStatement | ForgeWebScriptLetStatement | ForgeWebScriptMatchStatement | ForgeWebScriptSwitchStatement | ForgeWebScriptReturnStatement | ForgeWebScriptForStatement | ForgeWebScriptDoWhileStatement | ForgeWebScriptWhileStatement | ForgeWebScriptYieldStatement | ForgeWebScriptIteratorLoopStatement;
+export type ForgeWebScriptStatement =
+  | ForgeWebScriptExpressionStatement
+  | ForgeWebScriptAssignmentStatement
+  | ForgeWebScriptIfStatement
+  | ForgeWebScriptLetStatement
+  | ForgeWebScriptMatchStatement
+  | ForgeWebScriptSwitchStatement
+  | ForgeWebScriptReturnStatement
+  | ForgeWebScriptForStatement
+  | ForgeWebScriptDoWhileStatement
+  | ForgeWebScriptWhileStatement
+  | ForgeWebScriptYieldStatement
+  | ForgeWebScriptIteratorLoopStatement;
 ```
 
 설명이 제공되지 않았습니다.
@@ -867,16 +906,16 @@ export interface ForgeWebScriptTypeName
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string
+function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 유형 | ForgeWebScript유형이름 |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 유형 | ForgeWebScript유형이름 |      |
 
 ### ForgeWebScriptUnaryExpression
 
@@ -965,16 +1004,16 @@ export interface ForgeWebScriptWatCache
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string
+function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | ForgeWebScriptWatCacheKeyInput |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 입력 | ForgeWebScriptWatCacheKeyInput |      |
 
 ### ForgeWebScriptWatCacheKey입력
 
@@ -991,58 +1030,66 @@ export interface ForgeWebScriptWatCacheKeyInput
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string
+function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 캐시 | ForgeWebScriptWatCache |  |
-| 키 | 문자열 |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 캐시 | ForgeWebScriptWatCache |      |
+| 키   | 문자열                 |      |
 
 ### persistForgeWebScriptDebugArtifacts
 
 **종류:** 기능
 
 ```typescript
-function persistForgeWebScriptDebugArtifacts(cache: ForgeWebScriptWatCache | undefined, key: string, artifacts: {
+function persistForgeWebScriptDebugArtifacts(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  artifacts: {
     readonly optimizedWat?: string;
     readonly unoptimizedWat?: string;
     readonly optimizedWasm?: Uint8Array;
     readonly unoptimizedWasm?: Uint8Array;
-  }): ForgeWebScriptDebugArtifactPaths
+  },
+): ForgeWebScriptDebugArtifactPaths;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 캐시 | ForgeWebScriptWatCache \| 정의되지 않음 |  |
-| 키 | 문자열 |  |
-| 유물 | { 읽기 전용 OptimizeWat?: 문자열;     읽기 전용 최적화되지 않은Wat?: 문자열;     읽기 전용optimizedWasm?: Uint8Array;     읽기 전용 unoptimizedWasm?: Uint8Array;   } |  |
+| 이름 | 유형                                                                                                                                                    | 설명 |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 캐시 | ForgeWebScriptWatCache \| 정의되지 않음                                                                                                                 |      |
+| 키   | 문자열                                                                                                                                                  |      |
+| 유물 | { 읽기 전용 OptimizeWat?: 문자열; 읽기 전용 최적화되지 않은Wat?: 문자열; 읽기 전용optimizedWasm?: Uint8Array; 읽기 전용 unoptimizedWasm?: Uint8Array; } |      |
 
 ### persistForgeWebScriptWat
 
 **종류:** 기능
 
 ```typescript
-function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key: string, wat: string): string | undefined
+function persistForgeWebScriptWat(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  wat: string,
+): string | undefined;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 캐시 | ForgeWebScriptWatCache \| 정의되지 않음 |  |
-| 키 | 문자열 |  |
-| 와트 | 문자열 |  |
+| 이름 | 유형                                    | 설명 |
+| ---- | --------------------------------------- | ---- |
+| 캐시 | ForgeWebScriptWatCache \| 정의되지 않음 |      |
+| 키   | 문자열                                  |      |
+| 와트 | 문자열                                  |      |
 
 ## `src/compiler`
 
@@ -1051,23 +1098,23 @@ function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key
 **종류:** 기능
 
 ```typescript
-function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | ForgeWebScript컴파일 입력 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 입력 | ForgeWebScript컴파일 입력 |      |
 
 ### compileForgeWebScriptSeed
 
 **종류:** 기능
 
 ```typescript
-function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 고정될 때까지 자체 호스팅 부트스트랩에서 사용되는 제한된 TypeScript 시드
@@ -1075,16 +1122,16 @@ function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebS
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | ForgeWebScript컴파일 입력 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 입력 | ForgeWebScript컴파일 입력 |      |
 
 ### createForgeWebScript컴파일러
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
+function createForgeWebScriptCompiler(): ForgeWebScriptCompiler;
 ```
 
 설명이 제공되지 않았습니다.
@@ -1094,16 +1141,18 @@ function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptCompilerService(options: ForgeWebScriptCompilerServiceOptions = {}): ForgeWebScriptCompilerService
+function createForgeWebScriptCompilerService(
+  options: ForgeWebScriptCompilerServiceOptions = {},
+): ForgeWebScriptCompilerService;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptCompilerServiceOptions |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 옵션 | ForgeWebScriptCompilerServiceOptions |      |
 
 ## `src/contracts`
 
@@ -1342,7 +1391,10 @@ export interface ForgeWebScriptSelfHostedStageReport
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptSelfHostedStageRunner = ( input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, ) => ForgeWebScriptSelfHostedStageReport;
+export type ForgeWebScriptSelfHostedStageRunner = (
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+) => ForgeWebScriptSelfHostedStageReport;
 ```
 
 브라우저 안전 외관을 결합하지 않고 런타임에서 제공하는 VM 진입점입니다.
@@ -1374,39 +1426,48 @@ export type ForgeWebScriptVmExecutionMode = 'interpret' | 'jit' | 'aot';
 **종류:** 기능
 
 ```typescript
-function createDiagnostic(fileName: string, phase: ForgeWebScriptDiagnosticPhase, code: string, message: string, span: ForgeWebScriptSourceSpan, severity: ForgeWebScriptDiagnosticSeverity = 'error', hint?: string, metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>): ForgeWebScriptDiagnostic
+function createDiagnostic(
+  fileName: string,
+  phase: ForgeWebScriptDiagnosticPhase,
+  code: string,
+  message: string,
+  span: ForgeWebScriptSourceSpan,
+  severity: ForgeWebScriptDiagnosticSeverity = 'error',
+  hint?: string,
+  metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>,
+): ForgeWebScriptDiagnostic;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 단계 | ForgeWebScriptDiagnosticPhase |  |
-| 코드 | 문자열 |  |
-| 메시지 | 문자열 |  |
-| 범위 | ForgeWebScriptSourceSpan |  |
-| 심각도 | ForgeWebScript진단심각도 |  |
-| 힌트 | 문자열 |  |
-| 메타데이터 | Pick<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |  |
+| 이름       | 유형                                                                                                   | 설명 |
+| ---------- | ------------------------------------------------------------------------------------------------------ | ---- |
+| 파일 이름  | 문자열                                                                                                 |      |
+| 단계       | ForgeWebScriptDiagnosticPhase                                                                          |      |
+| 코드       | 문자열                                                                                                 |      |
+| 메시지     | 문자열                                                                                                 |      |
+| 범위       | ForgeWebScriptSourceSpan                                                                               |      |
+| 심각도     | ForgeWebScript진단심각도                                                                               |      |
+| 힌트       | 문자열                                                                                                 |      |
+| 메타데이터 | Pick<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |      |
 
 ### 진단키
 
 **종류:** 기능
 
 ```typescript
-function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string
+function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | ForgeWebScript진단 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 진단 | ForgeWebScript진단 |      |
 
 ### ForgeWebScript진단
 
@@ -1433,7 +1494,8 @@ export interface ForgeWebScriptDiagnosticEvidence
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptDiagnosticPhase = 'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+export type ForgeWebScriptDiagnosticPhase =
+  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
 설명이 제공되지 않았습니다.
@@ -1465,32 +1527,32 @@ export interface ForgeWebScriptSourceSpan
 **종류:** 기능
 
 ```typescript
-function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation
+function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 댓글 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 댓글 | 문자열 |      |
 
 ### renderForgeWebScript문서화
 
 **종류:** 기능
 
 ```typescript
-function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string
+function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 문서 | ForgeWebScript문서화 |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 문서 | ForgeWebScript문서화 |      |
 
 ## `src/dynamic-links`
 
@@ -1542,32 +1604,32 @@ export interface ForgeWebScriptDynamicModule
 **종류:** 기능
 
 ```typescript
-function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | ForgeWebScript컴파일 입력 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 입력 | ForgeWebScript컴파일 입력 |      |
 
 ### prepareForgeWebScriptGraph프런트엔드
 
 **종류:** 기능
 
 ```typescript
-function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | ForgeWebScriptGraphCompileInput |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 입력 | ForgeWebScriptGraphCompileInput |      |
 
 ## `src/generics`
 
@@ -1576,35 +1638,42 @@ function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInp
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptGenericSpecialization(request: ForgeWebScriptGenericSpecializationRequest): ForgeWebScriptSpecialization
+function createForgeWebScriptGenericSpecialization(
+  request: ForgeWebScriptGenericSpecializationRequest,
+): ForgeWebScriptSpecialization;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 요청 | ForgeWebScriptGenericSpecializationRequest |  |
+| 이름 | 유형                                       | 설명 |
+| ---- | ------------------------------------------ | ---- |
+| 요청 | ForgeWebScriptGenericSpecializationRequest |      |
 
 ### createForgeWebScriptIteratorBoundaryDescriptor
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptIteratorBoundaryDescriptor(generic: string, elementType: ForgeWebScriptTypeName, nextFunction: string, ownership: ForgeWebScriptOwnership = 'borrowed'): ForgeWebScriptIteratorBoundaryDescriptor
+function createForgeWebScriptIteratorBoundaryDescriptor(
+  generic: string,
+  elementType: ForgeWebScriptTypeName,
+  nextFunction: string,
+  ownership: ForgeWebScriptOwnership = 'borrowed',
+): ForgeWebScriptIteratorBoundaryDescriptor;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 일반 | 문자열 |  |
-| 요소 유형 | ForgeWebScript유형이름 |  |
-| next함수 | 문자열 |  |
-| 소유권 | ForgeWebScript소유권 |  |
+| 이름      | 유형                   | 설명 |
+| --------- | ---------------------- | ---- |
+| 일반      | 문자열                 |      |
+| 요소 유형 | ForgeWebScript유형이름 |      |
+| next함수  | 문자열                 |      |
+| 소유권    | ForgeWebScript소유권   |      |
 
 ### ForgeWebScript일반 경계
 
@@ -1621,16 +1690,18 @@ export type ForgeWebScriptGenericBoundary = 'value' | 'interface' | 'iterator';
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptGenericRepresentation(boundary: ForgeWebScriptGenericBoundary = 'value'): ForgeWebScriptSpecialization['representation']
+function forgeWebScriptGenericRepresentation(
+  boundary: ForgeWebScriptGenericBoundary = 'value',
+): ForgeWebScriptSpecialization['representation'];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 경계 | ForgeWebScriptGenericBoundary |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 경계 | ForgeWebScriptGenericBoundary |      |
 
 ### ForgeWebScriptGenericSpecializationRequest
 
@@ -1647,16 +1718,18 @@ export interface ForgeWebScriptGenericSpecializationRequest
 **종류:** 기능
 
 ```typescript
-function sortForgeWebScriptSpecializations(specializations: readonly ForgeWebScriptSpecialization[]): readonly ForgeWebScriptSpecialization[]
+function sortForgeWebScriptSpecializations(
+  specializations: readonly ForgeWebScriptSpecialization[],
+): readonly ForgeWebScriptSpecialization[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 전문 분야 | 읽기 전용 ForgeWebScriptSpecialization[] |  |
+| 이름      | 유형                                     | 설명 |
+| --------- | ---------------------------------------- | ---- |
+| 전문 분야 | 읽기 전용 ForgeWebScriptSpecialization[] |      |
 
 ## `src/graph`
 
@@ -1745,35 +1818,42 @@ export interface ForgeWebScriptResolvedModule
 **종류:** 기능
 
 ```typescript
-function hashForgeWebScriptModuleGraph(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): string
+function hashForgeWebScriptModuleGraph(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 그래프 | ForgeWebScript모듈그래프 |  |
-| 구성 | ForgeWebScriptLink구성 |  |
+| 이름   | 유형                     | 설명 |
+| ------ | ------------------------ | ---- |
+| 그래프 | ForgeWebScript모듈그래프 |      |
+| 구성   | ForgeWebScriptLink구성   |      |
 
 ### 해결ForgeWebScriptModuleGraph
 
 **종류:** 기능
 
 ```typescript
-function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: ForgeWebScriptModuleResolver, configuration: ForgeWebScriptLinkConfiguration = {}): Promise<ForgeWebScriptGraphResult>
+function resolveForgeWebScriptModuleGraph(
+  entries: readonly string[],
+  resolver: ForgeWebScriptModuleResolver,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): Promise<ForgeWebScriptGraphResult>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 항목 | 읽기 전용 문자열[] |  |
-| 리졸버 | ForgeWebScriptModuleResolver |  |
-| 구성 | ForgeWebScriptLink구성 |  |
+| 이름   | 유형                         | 설명 |
+| ------ | ---------------------------- | ---- |
+| 항목   | 읽기 전용 문자열[]           |      |
+| 리졸버 | ForgeWebScriptModuleResolver |      |
+| 구성   | ForgeWebScriptLink구성       |      |
 
 ## `src/identity`
 
@@ -1782,33 +1862,33 @@ function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: 
 **종류:** 기능
 
 ```typescript
-function deriveForgeWebScriptModuleId(fileName: string, root?: string): string
+function deriveForgeWebScriptModuleId(fileName: string, root?: string): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 루트 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
+| 루트      | 문자열 |      |
 
 ### NormalizeForgeWebScriptFileId
 
 **종류:** 기능
 
 ```typescript
-function normalizeForgeWebScriptFileId(fileName: string): string
+function normalizeForgeWebScriptFileId(fileName: string): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
 
 ## `src/ir`
 
@@ -1817,16 +1897,16 @@ function normalizeForgeWebScriptFileId(fileName: string): string
 **종류:** 기능
 
 ```typescript
-function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts
+function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScriptIr모듈 |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 모듈 | ForgeWebScriptIr모듈 |      |
 
 ### ForgeWebScriptCollection작업
 
@@ -1913,7 +1993,18 @@ export interface ForgeWebScriptIrEnumValueExpression
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptIrExpression = | ForgeWebScriptIrBinaryExpression | ForgeWebScriptIrCallExpression | ForgeWebScriptIrIdentifierExpression | ForgeWebScriptIrLiteralExpression | ForgeWebScriptIrFunctionValueExpression | ForgeWebScriptIrStructValueExpression | ForgeWebScriptIrEnumValueExpression | ForgeWebScriptIrMatchExpression | ForgeWebScriptIrUnaryExpression | ForgeWebScriptIrArrayLiteralExpression | ForgeWebScriptIrIndexExpression;
+export type ForgeWebScriptIrExpression =
+  | ForgeWebScriptIrBinaryExpression
+  | ForgeWebScriptIrCallExpression
+  | ForgeWebScriptIrIdentifierExpression
+  | ForgeWebScriptIrLiteralExpression
+  | ForgeWebScriptIrFunctionValueExpression
+  | ForgeWebScriptIrStructValueExpression
+  | ForgeWebScriptIrEnumValueExpression
+  | ForgeWebScriptIrMatchExpression
+  | ForgeWebScriptIrUnaryExpression
+  | ForgeWebScriptIrArrayLiteralExpression
+  | ForgeWebScriptIrIndexExpression;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2083,7 +2174,18 @@ export interface ForgeWebScriptIrReturnStatement
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptIrStatement = | ForgeWebScriptIrExpressionStatement | ForgeWebScriptIrAssignmentStatement | ForgeWebScriptIrIfStatement | ForgeWebScriptIrWhileStatement | ForgeWebScriptIrDoWhileStatement | ForgeWebScriptIrLetStatement | ForgeWebScriptIrReturnStatement | ForgeWebScriptIrMatchStatement | ForgeWebScriptIrSwitchStatement | ForgeWebScriptIrYieldStatement | ForgeWebScriptIrIteratorLoopStatement;
+export type ForgeWebScriptIrStatement =
+  | ForgeWebScriptIrExpressionStatement
+  | ForgeWebScriptIrAssignmentStatement
+  | ForgeWebScriptIrIfStatement
+  | ForgeWebScriptIrWhileStatement
+  | ForgeWebScriptIrDoWhileStatement
+  | ForgeWebScriptIrLetStatement
+  | ForgeWebScriptIrReturnStatement
+  | ForgeWebScriptIrMatchStatement
+  | ForgeWebScriptIrSwitchStatement
+  | ForgeWebScriptIrYieldStatement
+  | ForgeWebScriptIrIteratorLoopStatement;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2143,32 +2245,32 @@ export interface ForgeWebScriptIrYieldStatement
 **종류:** 기능
 
 ```typescript
-function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule
+function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScriptIr모듈 |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 모듈 | ForgeWebScriptIr모듈 |      |
 
 ### lowerForgeWebScriptToIr
 
 **종류:** 기능
 
 ```typescript
-function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule
+function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScript모듈 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 모듈 | ForgeWebScript모듈 |      |
 
 ## `src/lexer`
 
@@ -2197,7 +2299,8 @@ export interface ForgeWebScriptToken
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
+export type ForgeWebScriptTokenKind =
+  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
 ```
 
 설명이 제공되지 않았습니다.
@@ -2207,17 +2310,17 @@ export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number
 **종류:** 기능
 
 ```typescript
-function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult
+function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 파일 이름 |  |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 출처      | 문자열 |      |
+| 파일 이름 |        |      |
 
 ## `src/linker`
 
@@ -2236,17 +2339,20 @@ export interface ForgeWebScriptLinkResult
 **종류:** 기능
 
 ```typescript
-function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): ForgeWebScriptLinkResult
+function validateForgeWebScriptLinks(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): ForgeWebScriptLinkResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 그래프 | ForgeWebScript모듈그래프 |  |
-| 구성 | ForgeWebScriptLink구성 |  |
+| 이름   | 유형                     | 설명 |
+| ------ | ------------------------ | ---- |
+| 그래프 | ForgeWebScript모듈그래프 |      |
+| 구성   | ForgeWebScriptLink구성   |      |
 
 ## `src/manifest`
 
@@ -2255,24 +2361,27 @@ function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configura
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptAbiManifest(module: ForgeWebScriptModule, options: ForgeWebScriptAbiManifestOptions = {}): ForgeWebScriptAbiManifest
+function createForgeWebScriptAbiManifest(
+  module: ForgeWebScriptModule,
+  options: ForgeWebScriptAbiManifestOptions = {},
+): ForgeWebScriptAbiManifest;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScript모듈 |  |
-| 옵션 | ForgeWebScriptAbiManifestOptions |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 모듈 | ForgeWebScript모듈               |      |
+| 옵션 | ForgeWebScriptAbiManifestOptions |      |
 
 ### FORGE_WEB_SCRIPT_ABI_VERSION
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION
+export const FORGE_WEB_SCRIPT_ABI_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2282,7 +2391,7 @@ export const FORGE_WEB_SCRIPT_ABI_VERSION
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION
+export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2472,7 +2581,8 @@ export interface ForgeWebScriptSpecialization
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptValueRepresentation = 'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptValueRepresentation =
+  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
 ```
 
 설명이 제공되지 않았습니다.
@@ -2494,17 +2604,20 @@ export interface ForgeWebScriptImportTypeEnvironment
 **종류:** 기능
 
 ```typescript
-function resolveForgeWebScriptImportTypeEnvironment(importer: ForgeWebScriptResolvedModule, graph: ForgeWebScriptModuleGraph): ForgeWebScriptImportTypeEnvironment
+function resolveForgeWebScriptImportTypeEnvironment(
+  importer: ForgeWebScriptResolvedModule,
+  graph: ForgeWebScriptModuleGraph,
+): ForgeWebScriptImportTypeEnvironment;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 수입업자 | ForgeWebScriptResolvedModule |  |
-| 그래프 | ForgeWebScript모듈그래프 |  |
+| 이름     | 유형                         | 설명 |
+| -------- | ---------------------------- | ---- |
+| 수입업자 | ForgeWebScriptResolvedModule |      |
+| 그래프   | ForgeWebScript모듈그래프     |      |
 
 ## `src/optimizer`
 
@@ -2543,34 +2656,40 @@ export interface ForgeWebScriptOptimizationResult
 **종류:** 기능
 
 ```typescript
-function optimizeForgeWebScriptIr(input: ForgeWebScriptIrModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptIr(
+  input: ForgeWebScriptIrModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | ForgeWebScriptIr모듈 |  |
-| 모드 | '디버그' \| '출시' |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 입력 | ForgeWebScriptIr모듈 |      |
+| 모드 | '디버그' \| '출시'   |      |
 
 ### 최적화ForgeWebScript모듈
 
 **종류:** 기능
 
 ```typescript
-function optimizeForgeWebScriptModule(module: ForgeWebScriptModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptModule(
+  module: ForgeWebScriptModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScript모듈 |  |
-| 모드 | '디버그' \| '출시' |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 모듈 | ForgeWebScript모듈 |      |
+| 모드 | '디버그' \| '출시' |      |
 
 ## `src/parser`
 
@@ -2599,25 +2718,29 @@ export interface ForgeWebScriptParseResult
 **종류:** 기능
 
 ```typescript
-function parseForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptParseOptions = {}): ForgeWebScriptParseResult
+function parseForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptParseOptions = {},
+): ForgeWebScriptParseResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 파일 이름 |  |  |
-| 옵션 | ForgeWebScriptParse옵션 |  |
+| 이름      | 유형                    | 설명 |
+| --------- | ----------------------- | ---- |
+| 출처      | 문자열                  |      |
+| 파일 이름 |                         |      |
+| 옵션      | ForgeWebScriptParse옵션 |      |
 
 ### 기본 유형
 
 **종류:** 상수
 
 ```typescript
-export const primitiveTypes
+export const primitiveTypes;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2629,7 +2752,7 @@ export const primitiveTypes
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[]
+function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[];
 ```
 
 설명이 제공되지 않았습니다.
@@ -2639,32 +2762,32 @@ function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeW
 **종류:** 기능
 
 ```typescript
-function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string
+function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바이트 | Uint8Array |  |
+| 이름   | 유형       | 설명 |
+| ------ | ---------- | ---- |
+| 바이트 | Uint8Array |      |
 
 ### encodeForgeWebScriptSelfHostedFingerprint
 
 **종류:** 기능
 
 ```typescript
-function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array
+function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지문 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 지문 | 문자열 |      |
 
 ### ForgeWebScriptSelfHosted컴파일
 
@@ -2701,7 +2824,9 @@ export type ForgeWebScriptSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot
 **종류:** 기능
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilation(input: ForgeWebScriptCompileInput): ForgeWebScriptSelfHostedCompilation
+function prepareForgeWebScriptSelfHostedCompilation(
+  input: ForgeWebScriptCompileInput,
+): ForgeWebScriptSelfHostedCompilation;
 ```
 
 제한된 자체 호스팅 컴파일 단위를 준비합니다.
@@ -2711,25 +2836,25 @@ VM 모듈은 입력 소스에서 실제 lex/token-normalization 단계를 실행
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | ForgeWebScript컴파일 입력 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 입력 | ForgeWebScript컴파일 입력 |      |
 
 ### prepareForgeWebScriptSelfHostedCompilation레거시지문
 
 **종류:** 기능
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string
+function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | ForgeWebScript컴파일 입력 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 입력 | ForgeWebScript컴파일 입력 |      |
 
 #### 계약
 
@@ -2742,91 +2867,99 @@ function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: Forg
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptSelfHostedStageArtifact(stage: ForgeWebScriptSelfHostedCompilerStage, identity: ForgeWebScriptSelfHostedStageArtifactIdentity, payload: Uint8Array, diagnostics: readonly ForgeWebScriptDiagnostic[] = []): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedStageArtifact(
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  identity: ForgeWebScriptSelfHostedStageArtifactIdentity,
+  payload: Uint8Array,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 무대 | ForgeWebScriptSelfHostedCompilerStage |  |
-| 정체성 | ForgeWebScriptSelfHostedStageArtifactIdentity |  |
-| 페이로드 | Uint8Array |  |
-| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |  |
+| 이름     | 유형                                          | 설명 |
+| -------- | --------------------------------------------- | ---- |
+| 무대     | ForgeWebScriptSelfHostedCompilerStage         |      |
+| 정체성   | ForgeWebScriptSelfHostedStageArtifactIdentity |      |
+| 페이로드 | Uint8Array                                    |      |
+| 진단     | 읽기 전용 ForgeWebScriptDiagnostic[]          |      |
 
 ### decodeForgeWebScriptSelfHostedDiagnostics
 
 **종류:** 기능
 
 ```typescript
-function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[]
+function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바이트 | Uint8Array |  |
+| 이름   | 유형       | 설명 |
+| ------ | ---------- | ---- |
+| 바이트 | Uint8Array |      |
 
 ### decodeForgeWebScriptSelfHostedStageArtifact
 
 **종류:** 기능
 
 ```typescript
-function decodeForgeWebScriptSelfHostedStageArtifact(bytes: Uint8Array, options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {}): ForgeWebScriptSelfHostedStageArtifact
+function decodeForgeWebScriptSelfHostedStageArtifact(
+  bytes: Uint8Array,
+  options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {},
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바이트 | Uint8Array |  |
-| 옵션 | ForgeWebScriptSelfHostedStageArtifactDecode옵션 |  |
+| 이름   | 유형                                            | 설명 |
+| ------ | ----------------------------------------------- | ---- |
+| 바이트 | Uint8Array                                      |      |
+| 옵션   | ForgeWebScriptSelfHostedStageArtifactDecode옵션 |      |
 
 ### encodeForgeWebScriptSelfHostedDiagnostics
 
 **종류:** 기능
 
 ```typescript
-function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array
+function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |      |
 
 ### encodeForgeWebScriptSelfHostedStageArtifact
 
 **종류:** 기능
 
 ```typescript
-function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array
+function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 유물 | ForgeWebScriptSelfHostedStageArtifact |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 유물 | ForgeWebScriptSelfHostedStageArtifact |      |
 
 ### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2836,7 +2969,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2846,7 +2979,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2858,7 +2991,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 ```typescript
 export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
   Record<ForgeWebScriptSelfHostedCompilerStage, string>
->
+>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2868,7 +3001,8 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptSelfHostedCompilerStage = 'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
+export type ForgeWebScriptSelfHostedCompilerStage =
+  'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
 설명이 제공되지 않았습니다.
@@ -2908,34 +3042,34 @@ export interface ForgeWebScriptSelfHostedStageArtifactIdentity
 **종류:** 기능
 
 ```typescript
-function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string
+function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바이트 | Uint8Array |  |
+| 이름   | 유형       | 설명 |
+| ------ | ---------- | ---- |
+| 바이트 | Uint8Array |      |
 
 ### hashForgeWebScriptSelfHostedSourceIdentity
 
 **종류:** 기능
 
 ```typescript
-function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string
+function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 파일 이름 | 문자열 |  |
-| 그래프해시 | 문자열 |  |
+| 이름       | 유형   | 설명 |
+| ---------- | ------ | ---- |
+| 출처       | 문자열 |      |
+| 파일 이름  | 문자열 |      |
+| 그래프해시 | 문자열 |      |
 
 ## `src/self-hosted/fws/lexer`
 
@@ -2951,9 +3085,9 @@ export fn is_ws(byte: i32) -> bool
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바이트 | i32 | 후보 바이트 값. |
+| 이름   | 유형 | 설명            |
+| ------ | ---- | --------------- |
+| 바이트 | i32  | 후보 바이트 값. |
 
 #### 계약
 
@@ -2967,7 +3101,7 @@ export fn is_ws(byte: i32) -> bool
 **종류:** 기능
 
 ```typescript
-function computeForgeWebScriptLexStageFingerprint(source: string): number
+function computeForgeWebScriptLexStageFingerprint(source: string): number;
 ```
 
 자체 호스팅 lex 단계에 대한 시드 참조입니다.
@@ -2975,16 +3109,16 @@ function computeForgeWebScriptLexStageFingerprint(source: string): number
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 출처 | 문자열 |      |
 
 ### createForgeWebScriptLexStageVmModule
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule;
 ```
 
 lex 지문 단계를 위한 손으로 내리는 VM 모듈입니다.
@@ -2992,9 +3126,9 @@ lex 지문 단계를 위한 손으로 내리는 VM 모듈입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스해시 | 문자열 |  |
+| 이름     | 유형   | 설명 |
+| -------- | ------ | ---- |
+| 소스해시 | 문자열 |      |
 
 ### encodeForgeWebScriptLexStageSource
 
@@ -3006,23 +3140,23 @@ function encodeForgeWebScriptLexStageSource(source: string): {
   readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
-}
+};
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 출처 | 문자열 |      |
 
 ### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3032,7 +3166,7 @@ export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3084,48 +3218,52 @@ export type ForgeWebScriptSelfHostedVmValue = |
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptParserModuleVmModule(sourceHash: string, fileName: string, options: ForgeWebScriptParserModuleStageOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserModuleVmModule(
+  sourceHash: string,
+  fileName: string,
+  options: ForgeWebScriptParserModuleStageOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 제한된 파서 모듈 단계를 위한 손으로 내린 VM 모듈입니다.
 항목:parse_module_stage(출처: ForgeWebScriptSourceBytes) -> 바이트 봉투.
 
 봉투 레이아웃(모두 u32 리틀 엔디안):
-  [0] 실패 플래그(1 = 제한된 v1 하위 집합 외부의 문법, 모듈 페이로드 없음)
-  [4] diagFlag(1 = 단일 경계 FWS-PARSE-052 진단이 기록됨)
-  [8..32) 진단 범위(start,end,line,column,endLine,endColumn)
-  [32..) 모듈 페이로드 바이트(failFlag = 0인 경우에만 의미 있음)
+[0] 실패 플래그(1 = 제한된 v1 하위 집합 외부의 문법, 모듈 페이로드 없음)
+[4] diagFlag(1 = 단일 경계 FWS-PARSE-052 진단이 기록됨)
+[8..32) 진단 범위(start,end,line,column,endLine,endColumn)
+[32..) 모듈 페이로드 바이트(failFlag = 0인 경우에만 의미 있음)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스해시 | 문자열 |  |
-| 파일 이름 | 문자열 |  |
-| 옵션 | ForgeWebScriptParserModuleStageOptions |  |
+| 이름      | 유형                                   | 설명 |
+| --------- | -------------------------------------- | ---- |
+| 소스해시  | 문자열                                 |      |
+| 파일 이름 | 문자열                                 |      |
+| 옵션      | ForgeWebScriptParserModuleStageOptions |      |
 
 ### decodeForgeWebScriptParserModuleEnvelope
 
 **종류:** 기능
 
 ```typescript
-function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope
+function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바이트 | Uint8Array |  |
+| 이름   | 유형       | 설명 |
+| ------ | ---------- | ---- |
+| 바이트 | Uint8Array |      |
 
 ### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3157,7 +3295,7 @@ export interface ForgeWebScriptParserModuleStageOptions
 **종류:** 기능
 
 ```typescript
-function computeForgeWebScriptParserStageFingerprint(source: string): number
+function computeForgeWebScriptParserStageFingerprint(source: string): number;
 ```
 
 자체 호스팅 파서 단계에 대한 시드 참조입니다.
@@ -3165,16 +3303,19 @@ function computeForgeWebScriptParserStageFingerprint(source: string): number
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 출처 | 문자열 |      |
 
 ### createForgeWebScriptParserStageVmModule
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptParserStageVmModule(sourceHash: string, options: ForgeWebScriptParserStageVmModuleOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserStageVmModule(
+  sourceHash: string,
+  options: ForgeWebScriptParserStageVmModuleOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 파서 지문 단계를 위한 손으로 내리는 VM 모듈입니다.
@@ -3182,17 +3323,17 @@ function createForgeWebScriptParserStageVmModule(sourceHash: string, options: Fo
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스해시 | 문자열 |  |
-| 옵션 | ForgeWebScriptParserStageVmModuleOptions |  |
+| 이름     | 유형                                     | 설명 |
+| -------- | ---------------------------------------- | ---- |
+| 소스해시 | 문자열                                   |      |
+| 옵션     | ForgeWebScriptParserStageVmModuleOptions |      |
 
 ### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3214,140 +3355,158 @@ export interface ForgeWebScriptParserStageVmModuleOptions
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptSelfHostedParserArtifact(source: string, fileName: string, module: ForgeWebScriptModule, diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedParserArtifact(
+  source: string,
+  fileName: string,
+  module: ForgeWebScriptModule,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 파일 이름 | 문자열 |  |
-| 모듈 | ForgeWebScript모듈 |  |
-| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |  |
-| 그래프해시 | 문자열 |  |
+| 이름       | 유형                                 | 설명 |
+| ---------- | ------------------------------------ | ---- |
+| 출처       | 문자열                               |      |
+| 파일 이름  | 문자열                               |      |
+| 모듈       | ForgeWebScript모듈                   |      |
+| 진단       | 읽기 전용 ForgeWebScriptDiagnostic[] |      |
+| 그래프해시 | 문자열                               |      |
 
 ### createForgeWebScriptSelfHostedTokenArtifact
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptSelfHostedTokenArtifact(source: string, fileName: string, tokens: readonly ForgeWebScriptToken[], diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedTokenArtifact(
+  source: string,
+  fileName: string,
+  tokens: readonly ForgeWebScriptToken[],
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 파일 이름 | 문자열 |  |
-| 토큰 | 읽기 전용 ForgeWebScriptToken[] |  |
-| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |  |
-| 그래프해시 | 문자열 |  |
+| 이름       | 유형                                 | 설명 |
+| ---------- | ------------------------------------ | ---- |
+| 출처       | 문자열                               |      |
+| 파일 이름  | 문자열                               |      |
+| 토큰       | 읽기 전용 ForgeWebScriptToken[]      |      |
+| 진단       | 읽기 전용 ForgeWebScriptDiagnostic[] |      |
+| 그래프해시 | 문자열                               |      |
 
 ### decodeForgeWebScriptSelfHostedModule
 
 **종류:** 기능
 
 ```typescript
-function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule
+function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바이트 | Uint8Array |  |
+| 이름   | 유형       | 설명 |
+| ------ | ---------- | ---- |
+| 바이트 | Uint8Array |      |
 
 ### decodeForgeWebScriptSelfHostedTokens
 
 **종류:** 기능
 
 ```typescript
-function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[]
+function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바이트 | Uint8Array |  |
+| 이름   | 유형       | 설명 |
+| ------ | ---------- | ---- |
+| 바이트 | Uint8Array |      |
 
 ### encodeForgeWebScriptSelfHostedModule
 
 **종류:** 기능
 
 ```typescript
-function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array
+function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScript모듈 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 모듈 | ForgeWebScript모듈 |      |
 
 ### encodeForgeWebScriptSelfHostedTokens
 
 **종류:** 기능
 
 ```typescript
-function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array
+function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 토큰 | 읽기 전용 ForgeWebScriptToken[] |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 토큰 | 읽기 전용 ForgeWebScriptToken[] |      |
 
 ### hashForgeWebScriptSelfHostedStagePayload
 
 **종류:** 기능
 
 ```typescript
-function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string
+function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 유물 | ForgeWebScriptSelfHostedStageArtifact |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 유물 | ForgeWebScriptSelfHostedStageArtifact |      |
 
 ### verifyForgeWebScriptSelfHostedStageArtifact
 
 **종류:** 기능
 
 ```typescript
-function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact, stage: ForgeWebScriptSelfHostedCompilerStage, source: string, fileName: string, graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function validateForgeWebScriptSelfHostedStageArtifact(
+  artifact: ForgeWebScriptSelfHostedStageArtifact,
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  source: string,
+  fileName: string,
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 유물 | ForgeWebScriptSelfHostedStageArtifact |  |
-| 무대 | ForgeWebScriptSelfHostedCompilerStage |  |
-| 출처 | 문자열 |  |
-| 파일 이름 | 문자열 |  |
-| 그래프해시 | 문자열 |  |
+| 이름       | 유형                                  | 설명 |
+| ---------- | ------------------------------------- | ---- |
+| 유물       | ForgeWebScriptSelfHostedStageArtifact |      |
+| 무대       | ForgeWebScriptSelfHostedCompilerStage |      |
+| 출처       | 문자열                                |      |
+| 파일 이름  | 문자열                                |      |
+| 그래프해시 | 문자열                                |      |
 
 ## `src/stdlib/memory`
 
@@ -3356,7 +3515,7 @@ function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptS
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3366,7 +3525,7 @@ export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[]
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[];
 ```
 
 설명이 제공되지 않았습니다.
@@ -3386,7 +3545,15 @@ export interface ForgeWebScriptMemoryFunction
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' | 'memory-realloc' | 'memory-load-u32' | 'memory-store-u32' | 'memory-load-f64' | 'memory-store-f64' | 'f64-from-u32';
+export type ForgeWebScriptMemoryOperation =
+  | 'memory-alloc'
+  | 'memory-dealloc'
+  | 'memory-realloc'
+  | 'memory-load-u32'
+  | 'memory-store-u32'
+  | 'memory-load-f64'
+  | 'memory-store-f64'
+  | 'f64-from-u32';
 ```
 
 컴파일러에서 예약한 게스트 선형 메모리 작업을 확인했습니다.
@@ -3398,7 +3565,7 @@ export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' 
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3408,7 +3575,7 @@ export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptS
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3418,7 +3585,7 @@ export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3428,7 +3595,7 @@ export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[]
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[];
 ```
 
 컴파일러 소유 호출. 호스트 가져오기가 아닌 예약된 소스 이름입니다.
@@ -3440,7 +3607,7 @@ export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLi
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION
+export const FORGE_WEB_SCRIPT_REGEX_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3450,7 +3617,16 @@ export const FORGE_WEB_SCRIPT_REGEX_VERSION
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptRegexOperation = | 'full-match' | 'prefix-match' | 'search' | 'full-capture-start' | 'full-capture-end' | 'prefix-capture-start' | 'prefix-capture-end' | 'search-capture-start' | 'search-capture-end';
+export type ForgeWebScriptRegexOperation =
+  | 'full-match'
+  | 'prefix-match'
+  | 'search'
+  | 'full-capture-start'
+  | 'full-capture-end'
+  | 'prefix-capture-start'
+  | 'prefix-capture-end'
+  | 'search-capture-start'
+  | 'search-capture-end';
 ```
 
 설명이 제공되지 않았습니다.
@@ -3470,16 +3646,18 @@ export interface ForgeWebScriptStandardLibraryFunction
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptStandardLibraryIdentity(overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {}): ForgeWebScriptStandardLibraryIdentity
+function forgeWebScriptStandardLibraryIdentity(
+  overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {},
+): ForgeWebScriptStandardLibraryIdentity;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 재정의 | 부분<ForgeWebScriptStandardLibraryIdentity> |  |
+| 이름   | 유형                                        | 설명 |
+| ------ | ------------------------------------------- | ---- |
+| 재정의 | 부분<ForgeWebScriptStandardLibraryIdentity> |      |
 
 ### ForgeWebScriptStandardLibraryIdentity
 
@@ -3498,7 +3676,7 @@ export interface ForgeWebScriptStandardLibraryIdentity
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
 ```
 
 설명이 제공되지 않았습니다.
@@ -3508,7 +3686,7 @@ export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[]
+export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[];
 ```
 
 설명이 제공되지 않았습니다.
@@ -3528,7 +3706,18 @@ export interface ForgeWebScriptStringFunction
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' | 'string-byte-at' | 'string-starts-with' | 'string-slice' | 'string-to-i32' | 'bytes-length' | 'bytes-length-u32' | 'bytes-byte-at' | 'bytes-byte-at-u32' | 'bytes-slice';
+export type ForgeWebScriptStringOperation =
+  | 'string-concat'
+  | 'string-length'
+  | 'string-byte-at'
+  | 'string-starts-with'
+  | 'string-slice'
+  | 'string-to-i32'
+  | 'bytes-length'
+  | 'bytes-length-u32'
+  | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
+  | 'bytes-slice';
 ```
 
 컴파일러 소유의 결정적 문자열 및 바이트 작업.
@@ -3540,18 +3729,22 @@ export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' 
 **종류:** 기능
 
 ```typescript
-function checkForgeWebScript(module: ForgeWebScriptModule, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptTypeCheckResult
+function checkForgeWebScript(
+  module: ForgeWebScriptModule,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptTypeCheckResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScript모듈 |  |
-| 파일 이름 |  |  |
-| 옵션 | ForgeWebScriptTypeCheckOptions |  |
+| 이름      | 유형                           | 설명 |
+| --------- | ------------------------------ | ---- |
+| 모듈      | ForgeWebScript모듈             |      |
+| 파일 이름 |                                |      |
+| 옵션      | ForgeWebScriptTypeCheckOptions |      |
 
 ### ForgeWebScriptTypeCheck옵션
 
@@ -3590,18 +3783,22 @@ export interface ForgeWebScriptValidationResult
 **종류:** 기능
 
 ```typescript
-function validateForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptValidationResult
+function validateForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptValidationResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 파일 이름 |  |  |
-| 옵션 | ForgeWebScriptTypeCheckOptions |  |
+| 이름      | 유형                           | 설명 |
+| --------- | ------------------------------ | ---- |
+| 출처      | 문자열                         |      |
+| 파일 이름 |                                |      |
+| 옵션      | ForgeWebScriptTypeCheckOptions |      |
 
 ## `src/wat`
 
@@ -3620,14 +3817,14 @@ export interface ForgeWebScriptWatMetadata
 **종류:** 기능
 
 ```typescript
-function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string
+function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScript모듈 |  |
-| 메타데이터 | ForgeWebScriptWat메타데이터 |  |
+| 이름       | 유형                        | 설명 |
+| ---------- | --------------------------- | ---- |
+| 모듈       | ForgeWebScript모듈          |      |
+| 메타데이터 | ForgeWebScriptWat메타데이터 |      |

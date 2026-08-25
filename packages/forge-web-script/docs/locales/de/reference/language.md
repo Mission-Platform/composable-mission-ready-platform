@@ -99,9 +99,9 @@ kompilieren Eingaben und werden im ABI-Manifest und Cache-Schlüssel aufgezeichn
 ```ts
 const artifact = compileForgeWebScript({
   source,
-  fileName: "runtime.fws",
-  compilerVersion: "1.0.0",
-  optimization: "release",
+  fileName: 'runtime.fws',
+  compilerVersion: '1.0.0',
+  optimization: 'release',
   targetFeatures: { simd: true, tailCall: true, memory64: true },
   compilerHints: { iteratorUnrollLimit: 4 },
 });
@@ -224,13 +224,13 @@ vorheriges Tag. Tag-Reihenfolge und doppelte Tags bleiben erhalten.
 
 Die am häufigsten verwendeten Tag-Formen sind:
 
-| Tag-Formular | Strukturierte Felder |
-| -------------------------------------------------------- | -------------------------------------------- |
+| Tag-Formular                                              | Strukturierte Felder                      |
+| --------------------------------------------------------- | ----------------------------------------- |
 | `@param name text`, `@arg`, `@argument` oder `@parameter` | `name` ist `subject`; der Rest ist `text` |
-| `@typeparam name text` | `name` ist `subject`; der Rest ist `text` |
-| `@throws type text` oder `@exception type text` | `type` ist `subject`; der Rest ist `text` |
-| `@return text` oder `@returns text` | Nur `text` |
-| `@deprecated text` | Nur `text` |
+| `@typeparam name text`                                    | `name` ist `subject`; der Rest ist `text` |
+| `@throws type text` oder `@exception type text`           | `type` ist `subject`; der Rest ist `text` |
+| `@return text` oder `@returns text`                       | Nur `text`                                |
+| `@deprecated text`                                        | Nur `text`                                |
 
 Andere `@name`-Formulare werden nicht als geordnete Tags akzeptiert und beibehalten
 als Diagnose gemeldet. Sie haben kein abgeleitetes Thema; ihren restlichen Text
@@ -380,15 +380,12 @@ Die unterstützte Syntax ist absichtlich auf Literale, `.`, Zeichen beschränkt
 Klassen und Bereiche (einschließlich `^` Negation), `\d`, `\D`, `\w`, `\W`, `\s`,
 `\S`, maskierte Literale, einfangende und nicht einfangende Gruppen, Alternation,
 `*`, `+`, `?`, begrenzte Quantoren `{n}`, `{n,}`, `{n,m}`, Lazy Quantoren,
-und `^`/`
-Forge Web Script bietet eine deterministische Standardbibliothek für reguläre Ausdrücke.
-Die Aufrufe `regex_full_match(pattern, value) -> bool`,
-`regex_prefix_match(pattern, value) -> bool` und
-`regex_search(pattern, value, start: i32) -> bool` Ganzwert durchführen,
+und `^`/`Forge Web Script bietet eine deterministische Standardbibliothek für reguläre Ausdrücke.
+Die Aufrufe`regex_full_match(pattern, value) -> bool`,
+`regex_prefix_match(pattern, value) -> bool`und`regex_search(pattern, value, start: i32) -> bool`Ganzwert durchführen,
 Positions-Null-Präfix bzw. Suchübereinstimmung ganz links. Erobere Grenzen
-sind über die entsprechenden `regex_*_capture_start` und verfügbar
-`regex_*_capture_end` Aufrufe; Sie nehmen einen Gruppenindex und geben eine UTF-16-Zeichenfolge zurück
-Offset oder `-1`, wenn keine Übereinstimmung vorliegt oder die Gruppe nicht festgelegt ist. Sucherfassung
+sind über die entsprechenden`regex__*capture_start`und verfügbar`regex*__capture_end`Aufrufe; Sie nehmen einen Gruppenindex und geben eine UTF-16-Zeichenfolge zurück
+Offset oder`-1`, wenn keine Übereinstimmung vorliegt oder die Gruppe nicht festgelegt ist. Sucherfassung
 Aufrufe nehmen zusätzlich den Startoffset vor dem Gruppenindex an.
 
 Regex-Aufrufe sind Compiler-eigene Standardbibliotheksfunktionen. Sie werden von getippt
@@ -429,18 +426,18 @@ Der erweiterte Inkassovertrag ist strukturell und empfängerorientiert; das tut 
 Fügen Sie keine beliebigen Objektmethoden hinzu. Feste Arrays werden in `[T; N]` und geschrieben
 Vektoren als `Vector<T>`. Die unterstützten Signaturen sind:
 
-| Empfänger | Methode | Unterschrift |
-| ----------- | --------------- | ----------------------- |
-| `Array<T>` | `length` | `() -> u32` |
-| `Array<T>` | `get` | `(u32) -> Option<T>` |
-| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
-| `Array<T>` | `iter` | `() -> Iterator<T>` |
-| `Vector<T>` | `length` | `() -> u32` |
-| `Vector<T>` | `get` | `(u32) -> Option<T>` |
-| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` oder `add` | `(T) -> Vector<T>` |
-| `Vector<T>` | `pop` | `() -> Option<T>` |
-| `Vector<T>` | `iter` | `() -> Iterator<T>` |
+| Empfänger   | Methode           | Unterschrift            |
+| ----------- | ----------------- | ----------------------- |
+| `Array<T>`  | `length`          | `() -> u32`             |
+| `Array<T>`  | `get`             | `(u32) -> Option<T>`    |
+| `Array<T>`  | `set`             | `(u32, T) -> Array<T>`  |
+| `Array<T>`  | `iter`            | `() -> Iterator<T>`     |
+| `Vector<T>` | `length`          | `() -> u32`             |
+| `Vector<T>` | `get`             | `(u32) -> Option<T>`    |
+| `Vector<T>` | `set`             | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` oder `add` | `(T) -> Vector<T>`      |
+| `Vector<T>` | `pop`             | `() -> Option<T>`       |
+| `Vector<T>` | `iter`            | `() -> Iterator<T>`     |
 
 Die Schreibweise `add` ist absichtlich ein Kompatibilitätsalias für Vektor
 `push`; Es handelt sich nicht um eine Array-Methode. Indizes sind `u32`, Elementargumente müssen
@@ -549,14 +546,14 @@ Stilles No-Op.
 Das Modul verwendet einen linearen WebAssembly-Speicher mit 64 KiB-Seiten und Little-Endian
 Skalare Werte. Skalarwerte werden wie folgt abgebildet:
 
-| Forge-Webskript | WebAssembly-Darstellung |
-| ----------------- | ------------------------------------------ |
-| `bool` | `i32`, wobei `0` „false“ und `1` „true“ ist |
-| `i32`, `u32` | `i32` |
-| `i64`, `u64` | `i64` |
-| `f32`, `f64` | passender WebAssembly-Float |
-| `unit` | kein Ergebniswert |
-| `string`, `bytes` | zwei `u32`-Werte: Zeiger, dann Bytelänge |
+| Forge-Webskript   | WebAssembly-Darstellung                     |
+| ----------------- | ------------------------------------------- |
+| `bool`            | `i32`, wobei `0` „false“ und `1` „true“ ist |
+| `i32`, `u32`      | `i32`                                       |
+| `i64`, `u64`      | `i64`                                       |
+| `f32`, `f64`      | passender WebAssembly-Float                 |
+| `unit`            | kein Ergebniswert                           |
+| `string`, `bytes` | zwei `u32`-Werte: Zeiger, dann Bytelänge    |
 
 Das Manifest deklariert dieselbe Zuordnung in `valueRepresentations`. A
 Das Zeigerlängenpaar wird vor dem Lesen von oder immer als vorzeichenloser Bereich überprüft
@@ -641,11 +638,7 @@ interface ForgeWebScriptExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: (
-    pointer: number,
-    oldSize: number,
-    newSize: number,
-  ) => number;
+  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
   readonly fws_reset: () => void;
   readonly echo: (value: string) => string;
   readonly processBytes: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;
@@ -782,12 +775,9 @@ Der Kabelbaum akzeptiert Hostfunktionen nur über explizite, verschlüsselte Fä
 nach Manifest-Funktionsnamen, zum Beispiel:
 
 ```ts
-const exports = await harness.load<{ current: () => bigint }>(
-  "capabilities/clock-now.fws",
-  {
-    "clock.now": { now: () => 123n },
-  },
-);
+const exports = await harness.load<{ current: () => bigint }>('capabilities/clock-now.fws', {
+  'clock.now': { now: () => 123n },
+});
 ```
 
 Fehlende deklarierte Importe und nicht deklarierte gelieferte Importe sind Fehler. Testen
@@ -814,13 +804,13 @@ Diagnosen sind strukturierte Datensätze mit `code`, `severity`, `phase`, `messa
 Die Phase ist eine von `lex`, `parse`, `type-check` oder `abi`. Stabiler v1-Code
 Zu den Familien gehören:
 
-| Codefamilie | Bedeutung |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `FWS-LEX-*` | ungültige Zeichen/Escapezeichen, rohe Zeichenfolgenzeilen-Abschlusszeichen oder nicht abgeschlossene Zeichenfolgen/Kommentare |
-| `FWS-PARSE-*` | Ungültige Modul-, Deklarations-, Anweisungs- oder Ausdruckssyntax |
-| `FWS-TYPE-*` | Ungültiger primitiver Typ, Name, Operator, Argument oder Rückgabewert |
-| `FWS-ABI-*` | doppelte Namen, verweigerte Funktionen, Exporte oder Importe |
-| `FWS-REGEX-*` | nicht unterstützte oder fehlerhafte Compiler-eigene Regex-Muster |
+| Codefamilie   | Bedeutung                                                                                                                     |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `FWS-LEX-*`   | ungültige Zeichen/Escapezeichen, rohe Zeichenfolgenzeilen-Abschlusszeichen oder nicht abgeschlossene Zeichenfolgen/Kommentare |
+| `FWS-PARSE-*` | Ungültige Modul-, Deklarations-, Anweisungs- oder Ausdruckssyntax                                                             |
+| `FWS-TYPE-*`  | Ungültiger primitiver Typ, Name, Operator, Argument oder Rückgabewert                                                         |
+| `FWS-ABI-*`   | doppelte Namen, verweigerte Funktionen, Exporte oder Importe                                                                  |
+| `FWS-REGEX-*` | nicht unterstützte oder fehlerhafte Compiler-eigene Regex-Muster                                                              |
 
 Fehler verhindern die Erzeugung von Artefakten. Warnungen und Informationsdiagnosen funktionieren
 Semantik nicht ändern. Die diagnostische Reihenfolge ist die Reihenfolge der Quelle, gefolgt von der Phase
@@ -919,14 +909,14 @@ Stellen Sie sich vor, dass die beiden Exporte verhaltensmäßig noch austauschba
 
 ### Auswahl einer Implementierung
 
-| Arbeitsaufwand oder Anforderung | Wählen Sie | Grund |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Bestehendes QR- oder Matrix-Paketverhalten | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | Für diese öffentlichen APIs bleiben paketspezifische typisierte ESM-Wrapper verfügbar.                                       |
-| Neutrales Bild- und Kamerascannerverhalten | `@mission-platform/code-scanner` | Verwendet standardmäßig ein statisch verknüpftes FWS-Diagramm oder ein explizites dynamisches Quellmodulprofil mit zwischengespeichertem Versand. |
-| Vorhandenes Barcode-Verhalten | `@mission-platform/barcode` | Paketlokale Forge Web Script-Diagramme stellen die typisierte Barcode-Fassade bereit.                                           |
-| Neue universelle, browsersichere Datenverarbeitung mit expliziten Hosteffekten | Forge Web Script plus `@mission-platform/vite-plugin-forge-web-script` | Versionierte `.fws`-Quelle, Manifest, typisierter Loader und Standardverweigerungsfunktionen.                                |
-| Vorhandene AssemblyScript-Quelle oder eine AssemblyScript-spezifische Migration | `@mission-platform/vite-plugin-assemblyscript` | Kompiliert `.ts` AssemblyScript-Einträge und behält den generierten Rohexportvertrag bei.                            |
-| Frameworkneutrale UI-/Komponentenkompilierung | Forge-Komponenten-Compiler | Forge Web Script ist kein Ersatz für `FrameworkOutputPlugin` oder Komponentenziele.                           |
+| Arbeitsaufwand oder Anforderung                                                 | Wählen Sie                                                             | Grund                                                                                                                                             |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bestehendes QR- oder Matrix-Paketverhalten                                      | `@mission-platform/qr-code` / `@mission-platform/matrix-code`          | Für diese öffentlichen APIs bleiben paketspezifische typisierte ESM-Wrapper verfügbar.                                                            |
+| Neutrales Bild- und Kamerascannerverhalten                                      | `@mission-platform/code-scanner`                                       | Verwendet standardmäßig ein statisch verknüpftes FWS-Diagramm oder ein explizites dynamisches Quellmodulprofil mit zwischengespeichertem Versand. |
+| Vorhandenes Barcode-Verhalten                                                   | `@mission-platform/barcode`                                            | Paketlokale Forge Web Script-Diagramme stellen die typisierte Barcode-Fassade bereit.                                                             |
+| Neue universelle, browsersichere Datenverarbeitung mit expliziten Hosteffekten  | Forge Web Script plus `@mission-platform/vite-plugin-forge-web-script` | Versionierte `.fws`-Quelle, Manifest, typisierter Loader und Standardverweigerungsfunktionen.                                                     |
+| Vorhandene AssemblyScript-Quelle oder eine AssemblyScript-spezifische Migration | `@mission-platform/vite-plugin-assemblyscript`                         | Kompiliert `.ts` AssemblyScript-Einträge und behält den generierten Rohexportvertrag bei.                                                         |
+| Frameworkneutrale UI-/Komponentenkompilierung                                   | Forge-Komponenten-Compiler                                             | Forge Web Script ist kein Ersatz für `FrameworkOutputPlugin` oder Komponentenziele.                                                               |
 
 Verwenden Sie das Forge Web Script Vite-Plugin nur für `.fws`-Einträge. Benutzen Sie die
 AssemblyScript-Plugin für vorhandene AssemblyScript-Einträge. Während der Migration, ein

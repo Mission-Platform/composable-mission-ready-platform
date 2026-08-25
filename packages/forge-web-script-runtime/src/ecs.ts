@@ -86,7 +86,9 @@ export interface ForgeWebScriptEcsScheduleResult<TValue = Uint8Array> {
 }
 
 type MutableForgeWebScriptEcsWorld<TValue> = {
-  -readonly [Property in keyof ForgeWebScriptEcsWorld<TValue>]: ForgeWebScriptEcsWorld<TValue>[Property] extends ReadonlyMap<infer TKey, infer TValueEntry>
+  -readonly [
+    Property in keyof ForgeWebScriptEcsWorld<TValue>
+  ]: ForgeWebScriptEcsWorld<TValue>[Property] extends ReadonlyMap<infer TKey, infer TValueEntry>
     ? Map<TKey, TValueEntry>
     : ForgeWebScriptEcsWorld<TValue>[Property] extends readonly (infer TEntry)[]
       ? TEntry[]
@@ -101,7 +103,8 @@ type ForgeWebScriptEcsFailure = {
 
 const entityKey = (entity: ForgeWebScriptEcsEntity): string => `${entity.index}:${entity.generation}`;
 
-const sortedNumbers = (values: Iterable<number>): readonly number[] => [...new Set(values)].toSorted((left, right) => left - right);
+const sortedNumbers = (values: Iterable<number>): readonly number[] =>
+  [...new Set(values)].toSorted((left, right) => left - right);
 
 function copyWorld<TValue>(world: ForgeWebScriptEcsWorld<TValue>): MutableForgeWebScriptEcsWorld<TValue> {
   return {
@@ -173,7 +176,8 @@ export function despawnForgeWebScriptEcsEntity<TValue>(
   world: ForgeWebScriptEcsWorld<TValue>,
   entity: ForgeWebScriptEcsEntity,
 ): ForgeWebScriptEcsResult<TValue> {
-  if (!isForgeWebScriptEcsEntityAlive(world, entity)) return failure('stale-entity', `Entity ${entityKey(entity)} is stale.`);
+  if (!isForgeWebScriptEcsEntityAlive(world, entity))
+    return failure('stale-entity', `Entity ${entityKey(entity)} is stale.`);
   const next = copyWorld(world);
   next.freeEntityIndices = [...sortedNumbers([...next.freeEntityIndices, entity.index])];
   next.generations.set(entity.index, entity.generation + 1);
@@ -195,9 +199,11 @@ export function addForgeWebScriptEcsComponent<TValue>(
   component: string,
   value: TValue,
 ): ForgeWebScriptEcsResult<TValue> {
-  if (!isForgeWebScriptEcsEntityAlive(world, entity)) return failure('stale-entity', `Entity ${entityKey(entity)} is stale.`);
+  if (!isForgeWebScriptEcsEntityAlive(world, entity))
+    return failure('stale-entity', `Entity ${entityKey(entity)} is stale.`);
   const existing = world.stores.get(component);
-  if (existing?.values.has(entity.index)) return failure('duplicate-component', `Entity already has component '${component}'.`);
+  if (existing?.values.has(entity.index))
+    return failure('duplicate-component', `Entity already has component '${component}'.`);
   const next = copyWorld(world);
   const values = new Map(existing?.values);
   values.set(entity.index, value);
@@ -211,7 +217,8 @@ export function setForgeWebScriptEcsComponent<TValue>(
   component: string,
   value: TValue,
 ): ForgeWebScriptEcsResult<TValue> {
-  if (!isForgeWebScriptEcsEntityAlive(world, entity)) return failure('stale-entity', `Entity ${entityKey(entity)} is stale.`);
+  if (!isForgeWebScriptEcsEntityAlive(world, entity))
+    return failure('stale-entity', `Entity ${entityKey(entity)} is stale.`);
   const existing = world.stores.get(component);
   const next = copyWorld(world);
   const values = new Map(existing?.values);
@@ -225,7 +232,8 @@ export function removeForgeWebScriptEcsComponent<TValue>(
   entity: ForgeWebScriptEcsEntity,
   component: string,
 ): ForgeWebScriptEcsResult<TValue> {
-  if (!isForgeWebScriptEcsEntityAlive(world, entity)) return failure('stale-entity', `Entity ${entityKey(entity)} is stale.`);
+  if (!isForgeWebScriptEcsEntityAlive(world, entity))
+    return failure('stale-entity', `Entity ${entityKey(entity)} is stale.`);
   const existing = world.stores.get(component);
   if (existing === undefined || !existing.values.has(entity.index))
     return { ok: true, transition: transition(world, world, [], []) };
@@ -306,7 +314,8 @@ export function runForgeWebScriptEcsScheduler<TValue>(
   scheduler: ForgeWebScriptEcsScheduler<TValue>,
 ): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }> {
   const signalValidation = validateForgeWebScriptEcsSignals(scheduler.signals);
-  if (!signalValidation.valid) return failure('signal-cycle', `Signal dependency cycle: ${signalValidation.cycle.join(' -> ')}.`);
+  if (!signalValidation.valid)
+    return failure('signal-cycle', `Signal dependency cycle: ${signalValidation.cycle.join(' -> ')}.`);
   if (scheduler.systems.length + scheduler.subscriptions.length > scheduler.maxSteps)
     return failure('scheduler-limit', 'The deterministic scheduler step limit was exceeded.');
   let current = world;

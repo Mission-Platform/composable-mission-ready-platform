@@ -5,6 +5,15 @@ export type ForgeWebScriptPrimitiveType =
 
 export type ForgeWebScriptOwnership = 'borrowed' | 'owned' | 'shared';
 
+/** Source-level mutability of a binding. Bindings are immutable by default. */
+export type ForgeWebScriptMutability = 'immutable' | 'mutable';
+
+/** A reference is immutable unless `&mut` is written explicitly. */
+export type ForgeWebScriptReferenceMode = 'value' | 'ref' | 'mut-ref';
+
+/** ABI passing mode derived from the recursive POD classification. */
+export type ForgeWebScriptPassingMode = 'value' | 'immutable-reference' | 'mutable-reference';
+
 export interface ForgeWebScriptGenericParameter {
   readonly kind: 'generic-parameter';
   readonly name: string;
@@ -22,21 +31,77 @@ export interface ForgeWebScriptTypeName {
   /** Fixed arrays carry their length in the type, while vectors omit it. */
   readonly length?: number;
   readonly ownership?: ForgeWebScriptOwnership;
+  /** Explicit `&T` / `&mut T`; omitted means the safe default for this type. */
+  readonly referenceMode?: Exclude<ForgeWebScriptReferenceMode, 'value'>;
   readonly span: ForgeWebScriptSourceSpan;
 }
 
 export function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string {
   const name = type.reference ?? type.name;
-  const generic = type.arguments === undefined || type.arguments.length === 0
-    ? name
-    : `${name}<${type.arguments.map(forgeWebScriptTypeNameToString).join(', ')}>`;
-  return type.length === undefined ? generic : `${generic}[${type.length}]`;
+  const generic =
+    type.arguments === undefined || type.arguments.length === 0
+      ? name
+      : `${name}<${type.arguments.map(forgeWebScriptTypeNameToString).join(', ')}>`;
+  const qualified =
+    type.referenceMode === undefined ? generic : `&${type.referenceMode === 'mut-ref' ? 'mut ' : ''}${generic}`;
+  return type.length === undefined ? qualified : `${qualified}[${type.length}]`;
+}
+
+const podPrimitives = new Set<ForgeWebScriptPrimitiveType>(['bool', 'f32', 'f64', 'i32', 'i64', 'u32', 'u64', 'unit']);
+
+/**
+ * Classifies a type without relying on its ABI carrier. Strings, bytes, and
+ * collections are handles even though some of them use scalar carriers.
+ * Recursive aggregate walks are cycle-safe and conservatively classify
+ * unresolved generic/cyclic values as non-POD.
+ */
+export function isForgeWebScriptPodType(
+  type: ForgeWebScriptTypeName,
+  module?: Pick<ForgeWebScriptModule, 'structs' | 'enums'>,
+  visiting = new Set<string>(),
+): boolean {
+  if (type.referenceMode !== undefined || type.ownership !== undefined) return false;
+  const name = type.reference ?? type.name;
+  if (podPrimitives.has(type.name) && type.reference === undefined) return true;
+  if (name === 'Array' || name === 'Vector' || name === 'Iterable' || name === 'Iterator' || name === 'Fn')
+    return false;
+  if (name === 'Option' || name === 'Result' || name === 'iterResult')
+    return (type.arguments ?? []).every((argument) => isForgeWebScriptPodType(argument, module, visiting));
+  if (module === undefined) return false;
+  const key = forgeWebScriptTypeNameToString(type);
+  if (visiting.has(key)) return false;
+  const nextVisiting = new Set(visiting).add(key);
+  const struct = module.structs.find((declaration) => declaration.name === name);
+  if (struct !== undefined)
+    return struct.fields.every(
+      (field) => field.ownership === undefined && isForgeWebScriptPodType(field.type, module, nextVisiting),
+    );
+  const enumeration = module.enums.find((declaration) => declaration.name === name);
+  return (
+    enumeration !== undefined &&
+    enumeration.variants.every((variant) =>
+      variant.fields.every(
+        (field) => field.type.ownership === undefined && isForgeWebScriptPodType(field.type, module, nextVisiting),
+      ),
+    )
+  );
+}
+
+export function forgeWebScriptDefaultPassingMode(
+  type: ForgeWebScriptTypeName,
+  module?: Pick<ForgeWebScriptModule, 'structs' | 'enums'>,
+): ForgeWebScriptPassingMode {
+  if (type.referenceMode === 'mut-ref') return 'mutable-reference';
+  if (type.referenceMode === 'ref') return 'immutable-reference';
+  return isForgeWebScriptPodType(type, module) ? 'value' : 'immutable-reference';
 }
 
 export interface ForgeWebScriptParameter {
   readonly kind: 'parameter';
   readonly name: string;
   readonly type: ForgeWebScriptTypeName;
+  /** Explicit `mut` on a parameter controls rebinding; pointee mutation uses `&mut`. */
+  readonly mutable?: true;
   readonly span: ForgeWebScriptSourceSpan;
 }
 
@@ -262,6 +327,8 @@ export interface ForgeWebScriptLetStatement {
   readonly kind: 'let';
   readonly name: string;
   readonly type: ForgeWebScriptTypeName;
+  /** Locals are immutable unless declared as `let mut`. */
+  readonly mutable?: true;
   readonly value: ForgeWebScriptExpression;
   readonly span: ForgeWebScriptSourceSpan;
 }

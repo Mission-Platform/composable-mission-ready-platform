@@ -154,4 +154,168 @@ describe('forge-web-script CLI', () => {
     const wasm = await readFile(path.join(outputDirectory, 'main.wasm'));
     expect(WebAssembly.Module.exports(new WebAssembly.Module(wasm)).map(({ name }) => name)).toContain('helper');
   });
+
+  it('inspects a .sonir.json artifact and returns a valid summary', async () => {
+    const { root } = await project('export fn answer() -> i32 { return 42; }');
+
+    // Create a minimal valid .sonir.json artifact for testing
+    const sonirPath = path.join(root, 'test.sonir.json');
+    const sonirContent = JSON.stringify({
+      schemaVersion: '1.0',
+      compilerVersion: '1.0.0',
+      languageVersion: '1.0',
+      abiVersion: '1.2',
+      sourceHash: 'abc123',
+      graphHash: 'a4cf12d2',
+      optimization: 'debug',
+      boundsChecks: 'runtime',
+      memoryModel: 'region-arc-checked-linear',
+      functions: [{ name: 'answer', entry: 1, exported: true }],
+      nodes: [
+        {
+          id: 1,
+          kind: 'constant',
+          functionName: 'answer',
+          type: 'i32',
+          value: 42,
+          inputs: [],
+          effects: ['pure'],
+          alias: 'none',
+          ownership: 'value',
+        },
+        {
+          id: 2,
+          kind: 'return',
+          functionName: 'answer',
+          inputs: [1],
+          effects: ['control'],
+          alias: 'none',
+          ownership: 'value',
+        },
+      ],
+      regions: [],
+      sourceMap: [],
+    });
+    await writeFile(sonirPath, sonirContent, 'utf8');
+
+    const inspectCapture = ioCapture();
+
+    // Inspect the artifact in JSON format
+    const status = await runForgeWebScriptCli(
+      ['inspect-sonir', sonirPath, '--format', 'json'],
+      inspectCapture.io,
+      root,
+    );
+    expect(status).toBe(0);
+    expect(inspectCapture.stderr).toEqual([]);
+    expect(inspectCapture.stdout.length).toBe(1);
+
+    const summary = JSON.parse(inspectCapture.stdout[0]) as Record<string, unknown>;
+    expect(summary).toMatchObject({
+      schemaVersion: '1.0',
+      compilerVersion: '1.0.0',
+      sourceHash: 'abc123',
+      graphHash: 'a4cf12d2',
+      optimization: 'debug',
+      boundsChecks: 'runtime',
+      memoryModel: 'region-arc-checked-linear',
+      functions: 1,
+      nodes: 2,
+      regions: 0,
+    });
+  });
+
+  it('inspects a .sonir.json artifact in text format', async () => {
+    const { root } = await project('export fn answer() -> i32 { return 42; }');
+
+    // Create a minimal valid .sonir.json artifact for testing
+    const sonirPath = path.join(root, 'test.sonir.json');
+    const sonirContent = JSON.stringify({
+      schemaVersion: '1.0',
+      compilerVersion: '1.0.0',
+      languageVersion: '1.0',
+      abiVersion: '1.2',
+      sourceHash: 'def789',
+      graphHash: 'bedad28b',
+      optimization: 'release',
+      boundsChecks: 'proven-safe',
+      memoryModel: 'region-arc-checked-linear',
+      functions: [{ name: 'answer', entry: 1, exported: true }],
+      nodes: [
+        {
+          id: 1,
+          kind: 'constant',
+          functionName: 'answer',
+          type: 'i32',
+          value: 42,
+          inputs: [],
+          effects: ['pure'],
+          alias: 'none',
+          ownership: 'value',
+        },
+        {
+          id: 2,
+          kind: 'return',
+          functionName: 'answer',
+          inputs: [1],
+          effects: ['control'],
+          alias: 'none',
+          ownership: 'value',
+        },
+      ],
+      regions: [],
+      sourceMap: [],
+    });
+    await writeFile(sonirPath, sonirContent, 'utf8');
+
+    const inspectCapture = ioCapture();
+
+    // Inspect the artifact in text format
+    const status = await runForgeWebScriptCli(
+      ['inspect-sonir', sonirPath, '--format', 'text'],
+      inspectCapture.io,
+      root,
+    );
+    expect(status).toBe(0);
+    expect(inspectCapture.stderr).toEqual([]);
+    expect(inspectCapture.stdout.length).toBe(1);
+
+    const text = inspectCapture.stdout[0];
+    expect(text).toMatch(
+      /^SoN bedad28b: 2 nodes, 1 functions, 0 regions; release optimization; bounds checks proven-safe\./,
+    );
+  });
+
+  it('rejects path traversal in inspect-sonir', async () => {
+    const { root } = await project('export fn answer() -> i32 { return 42; }');
+    const capture = ioCapture();
+
+    const status = await runForgeWebScriptCli(['inspect-sonir', '../outside.sonir.json'], capture.io, root);
+    expect(status).toBe(1);
+    expect(capture.stderr.join('\n')).toContain('must remain under the current working directory');
+  });
+
+  it('rejects malformed .sonir.json in inspect-sonir', async () => {
+    const { root } = await project('export fn answer() -> i32 { return 42; }');
+    const malformedPath = path.join(root, 'malformed.sonir.json');
+    await writeFile(malformedPath, 'not valid json', 'utf8');
+    const capture = ioCapture();
+
+    const status = await runForgeWebScriptCli(['inspect-sonir', malformedPath], capture.io, root);
+    expect(status).toBe(1);
+    expect(capture.stderr.join('\n')).toContain('Unable to inspect SoN artifact');
+  });
+
+  it('rejects nonexistent .sonir.json in inspect-sonir', async () => {
+    const { root } = await project('export fn answer() -> i32 { return 42; }');
+    const capture = ioCapture();
+
+    const status = await runForgeWebScriptCli(
+      ['inspect-sonir', path.join(root, 'nonexistent.sonir.json')],
+      capture.io,
+      root,
+    );
+    expect(status).toBe(1);
+    expect(capture.stderr.join('\n')).toContain('Unable to inspect SoN artifact');
+  });
 });

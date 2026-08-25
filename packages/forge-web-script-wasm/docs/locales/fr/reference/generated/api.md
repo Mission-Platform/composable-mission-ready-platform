@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function buildForgeWebScriptWasmCollectionRuntimeBodies(): readonly ForgeWebScriptWasmRuntimeBody[]
+function buildForgeWebScriptWasmCollectionRuntimeBodies(): readonly ForgeWebScriptWasmRuntimeBody[];
 ```
 
 Aucune description fournie.
@@ -26,7 +26,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorIndex: number): readonly number[][]
+function buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorIndex: number): readonly number[][];
 ```
 
 Les corps d’exécution utilisent des handles i32. Les tableaux sont [longueur, éléments...] et vecteurs
@@ -36,9 +36,9 @@ emballé i64 `(done << 32) | i32 value` ABI.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| allocatorIndex | numéro |  |
+| Nom            | Tapez  | Descriptif |
+| -------------- | ------ | ---------- |
+| allocatorIndex | numéro |            |
 
 ### ForgeWebScriptWasmRuntimeBody
 
@@ -117,7 +117,8 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
+export type ForgeWebScriptWasmBinaryOperator =
+  '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
 Aucune description fournie.
@@ -287,7 +288,8 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptWasmPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptWasmPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
 Aucune description fournie.
@@ -317,7 +319,55 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ForgeWebScriptWasmStandardLibraryOperation = | 'full-match' | 'prefix-match' | 'search' | 'full-capture-start' | 'full-capture-end' | 'prefix-capture-start' | 'prefix-capture-end' | 'search-capture-start' | 'search-capture-end' | 'string-concat' | 'string-length' | 'string-byte-at' | 'string-starts-with' | 'string-slice' | 'string-to-i32' | 'bytes-length' | 'bytes-length-u32' | 'bytes-byte-at' | 'bytes-byte-at-u32' | 'bytes-slice' | 'memory-alloc' | 'memory-dealloc' | 'memory-realloc' | 'memory-load-u32' | 'memory-store-u32' | 'memory-load-f64' | 'memory-store-f64' | 'f64-from-u32' | 'vector-new' | 'vector-push' | 'vector-get' | 'vector-set' | 'vector-length' | 'vector-pop' | 'array-new' | 'array-get' | 'array-set' | 'array-length' | 'array-iter' | 'iterator-next' | 'set-has' | 'map-get' | 'ecs-query' | 'ecs-transition' | 'signal-schedule' | 'async-schedule-microtask' | 'async-worker-post' | 'async-worker-receive';
+export type ForgeWebScriptWasmStandardLibraryOperation =
+  | 'full-match'
+  | 'prefix-match'
+  | 'search'
+  | 'full-capture-start'
+  | 'full-capture-end'
+  | 'prefix-capture-start'
+  | 'prefix-capture-end'
+  | 'search-capture-start'
+  | 'search-capture-end'
+  | 'string-concat'
+  | 'string-length'
+  | 'string-byte-at'
+  | 'string-starts-with'
+  | 'string-slice'
+  | 'string-to-i32'
+  | 'bytes-length'
+  | 'bytes-length-u32'
+  | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
+  | 'bytes-slice'
+  | 'memory-alloc'
+  | 'memory-dealloc'
+  | 'memory-realloc'
+  | 'memory-load-u32'
+  | 'memory-store-u32'
+  | 'memory-load-f64'
+  | 'memory-store-f64'
+  | 'f64-from-u32'
+  | 'vector-new'
+  | 'vector-push'
+  | 'vector-get'
+  | 'vector-set'
+  | 'vector-length'
+  | 'vector-pop'
+  | 'array-new'
+  | 'array-get'
+  | 'array-set'
+  | 'array-length'
+  | 'array-iter'
+  | 'iterator-next'
+  | 'set-has'
+  | 'map-get'
+  | 'ecs-query'
+  | 'ecs-transition'
+  | 'signal-schedule'
+  | 'async-schedule-microtask'
+  | 'async-worker-post'
+  | 'async-worker-receive';
 ```
 
 Aucune description fournie.
@@ -349,17 +399,20 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function compileForgeWebScriptWasm(input: ForgeWebScriptWasmBackendInput, fileName = '<input>'): ForgeWebScriptWasmBackendResult
+function compileForgeWebScriptWasm(
+  input: ForgeWebScriptWasmBackendInput,
+  fileName = '<input>',
+): ForgeWebScriptWasmBackendResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ForgeWebScriptWasmBackendInput |  |
-| Nom du fichier |  |  |
+| Nom            | Tapez                          | Descriptif |
+| -------------- | ------------------------------ | ---------- |
+| entrée         | ForgeWebScriptWasmBackendInput |            |
+| Nom du fichier |                                |            |
 
 ## `src/verifier`
 
@@ -468,16 +521,18 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function verifyForgeWebScriptWasmArtifact(input: ForgeWebScriptWasmArtifactVerificationInput): ForgeWebScriptWasmArtifactVerificationResult
+function verifyForgeWebScriptWasmArtifact(
+  input: ForgeWebScriptWasmArtifactVerificationInput,
+): ForgeWebScriptWasmArtifactVerificationResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | ForgeWebScriptWasmArtifactVerificationInput |  |
+| Nom    | Tapez                                       | Descriptif |
+| ------ | ------------------------------------------- | ---------- |
+| entrée | ForgeWebScriptWasmArtifactVerificationInput |            |
 
 ## `src/wat`
 
@@ -496,14 +551,17 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function renderForgeWebScriptWasmWat(module: ForgeWebScriptWasmModule, metadata: ForgeWebScriptWasmWatMetadata = {}): string
+function renderForgeWebScriptWasmWat(
+  module: ForgeWebScriptWasmModule,
+  metadata: ForgeWebScriptWasmWatMetadata = {},
+): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| modules | ForgeWebScriptWasmModule |  |
-| métadonnées | ForgeWebScriptWasmWatMétadonnées |  |
+| Nom         | Tapez                            | Descriptif |
+| ----------- | -------------------------------- | ---------- |
+| modules     | ForgeWebScriptWasmModule         |            |
+| métadonnées | ForgeWebScriptWasmWatMétadonnées |            |

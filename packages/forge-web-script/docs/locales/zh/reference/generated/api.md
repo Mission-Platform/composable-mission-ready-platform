@@ -16,17 +16,20 @@
 **种类：**功能
 
 ```typescript
-function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisReport
+function analyzeForgeWebScript(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisReport;
 ```
 
 针对一个前端结果运行注册的源分析规则。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|前端 | ForgeWebScriptFrontendResult |  |
-|选项 | ForgeWebScript 分析选项 |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 前端 | ForgeWebScriptFrontendResult |      |
+| 选项 | ForgeWebScript 分析选项      |      |
 
 ## `src/analysis/context`
 
@@ -35,17 +38,20 @@ function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisContext
+function createForgeWebScriptAnalysisContext(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisContext;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|前端 | ForgeWebScriptFrontendResult |  |
-|选项 | ForgeWebScript 分析选项 |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 前端 | ForgeWebScriptFrontendResult |      |
+| 选项 | ForgeWebScript 分析选项      |      |
 
 ## `src/analysis/contracts`
 
@@ -54,7 +60,7 @@ function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendRes
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
 ```
 
 为源分析诊断系列保留的稳定前缀。
@@ -286,7 +292,7 @@ export interface ForgeWebScriptAnalysisTypeFact
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[]
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[];
 ```
 
 没有提供描述。
@@ -298,16 +304,16 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAna
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts
+function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|前端 | ForgeWebScriptFrontendResult |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 前端 | ForgeWebScriptFrontendResult |      |
 
 ## `src/analysis/policy`
 
@@ -316,23 +322,25 @@ function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResul
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptAnalysisPolicy(policy: ForgeWebScriptAnalysisOptionsLike = {}): ForgeWebScriptAnalysisPolicy
+function createForgeWebScriptAnalysisPolicy(
+  policy: ForgeWebScriptAnalysisOptionsLike = {},
+): ForgeWebScriptAnalysisPolicy;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|政策| ForgeWebScriptAnalysisOptions 类似 |  |
+| 名称 | 类型                               | 描述 |
+| ---- | ---------------------------------- | ---- |
+| 政策 | ForgeWebScriptAnalysisOptions 类似 |      |
 
 ### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits;
 ```
 
 没有提供描述。
@@ -342,7 +350,7 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLim
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 没有提供描述。
@@ -352,7 +360,7 @@ export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysi
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 没有提供描述。
@@ -372,17 +380,20 @@ export type ForgeWebScriptAnalysisOptionsLike = Omit<Partial<ForgeWebScriptAnaly
 **种类：**功能
 
 ```typescript
-function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysisFinding, policy: ForgeWebScriptAnalysisPolicy): boolean
+function isForgeWebScriptAnalysisFindingBlocking(
+  finding: ForgeWebScriptAnalysisFinding,
+  policy: ForgeWebScriptAnalysisPolicy,
+): boolean;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|发现| ForgeWebScript 分析查找 |  |
-|政策| ForgeWebScript 分析策略 |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 发现 | ForgeWebScript 分析查找 |      |
+| 政策 | ForgeWebScript 分析策略 |      |
 
 ## `src/analysis/registry`
 
@@ -391,16 +402,18 @@ function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysis
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptAnalysisRuleRegistry(rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES): ForgeWebScriptAnalysisRuleRegistry
+function createForgeWebScriptAnalysisRuleRegistry(
+  rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
+): ForgeWebScriptAnalysisRuleRegistry;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|规则|只读 ForgeWebScriptAnalysisRule[] |  |
+| 名称 | 类型                              | 描述 |
+| ---- | --------------------------------- | ---- |
+| 规则 | 只读 ForgeWebScriptAnalysisRule[] |      |
 
 ### ForgeWebScriptAnalysisRuleRegistry
 
@@ -419,16 +432,16 @@ export interface ForgeWebScriptAnalysisRuleRegistry
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic
+function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|发现| ForgeWebScript 分析查找 |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 发现 | ForgeWebScript 分析查找 |      |
 
 ## `src/ast`
 
@@ -467,7 +480,8 @@ export interface ForgeWebScriptBinaryExpression
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
+export type ForgeWebScriptBinaryOperator =
+  '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
 没有提供描述。
@@ -557,7 +571,19 @@ export interface ForgeWebScriptEnumVariant
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptExpression = | ForgeWebScriptBinaryExpression | ForgeWebScriptCallExpression | ForgeWebScriptIdentifierExpression | ForgeWebScriptLiteralExpression | ForgeWebScriptFunctionValueExpression | ForgeWebScriptStructValueExpression | ForgeWebScriptEnumValueExpression | ForgeWebScriptArrayLiteralExpression | ForgeWebScriptVectorLiteralExpression | ForgeWebScriptIndexExpression | ForgeWebScriptMatchExpression | ForgeWebScriptUnaryExpression;
+export type ForgeWebScriptExpression =
+  | ForgeWebScriptBinaryExpression
+  | ForgeWebScriptCallExpression
+  | ForgeWebScriptIdentifierExpression
+  | ForgeWebScriptLiteralExpression
+  | ForgeWebScriptFunctionValueExpression
+  | ForgeWebScriptStructValueExpression
+  | ForgeWebScriptEnumValueExpression
+  | ForgeWebScriptArrayLiteralExpression
+  | ForgeWebScriptVectorLiteralExpression
+  | ForgeWebScriptIndexExpression
+  | ForgeWebScriptMatchExpression
+  | ForgeWebScriptUnaryExpression;
 ```
 
 没有提供描述。
@@ -767,7 +793,8 @@ export type ForgeWebScriptPattern = |
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
 没有提供描述。
@@ -797,7 +824,19 @@ export interface ForgeWebScriptSourceModuleImport
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptStatement = | ForgeWebScriptExpressionStatement | ForgeWebScriptAssignmentStatement | ForgeWebScriptIfStatement | ForgeWebScriptLetStatement | ForgeWebScriptMatchStatement | ForgeWebScriptSwitchStatement | ForgeWebScriptReturnStatement | ForgeWebScriptForStatement | ForgeWebScriptDoWhileStatement | ForgeWebScriptWhileStatement | ForgeWebScriptYieldStatement | ForgeWebScriptIteratorLoopStatement;
+export type ForgeWebScriptStatement =
+  | ForgeWebScriptExpressionStatement
+  | ForgeWebScriptAssignmentStatement
+  | ForgeWebScriptIfStatement
+  | ForgeWebScriptLetStatement
+  | ForgeWebScriptMatchStatement
+  | ForgeWebScriptSwitchStatement
+  | ForgeWebScriptReturnStatement
+  | ForgeWebScriptForStatement
+  | ForgeWebScriptDoWhileStatement
+  | ForgeWebScriptWhileStatement
+  | ForgeWebScriptYieldStatement
+  | ForgeWebScriptIteratorLoopStatement;
 ```
 
 没有提供描述。
@@ -867,16 +906,16 @@ export interface ForgeWebScriptTypeName
 **种类：**功能
 
 ```typescript
-function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string
+function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|类型 | ForgeWebScript 类型名称 |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 类型 | ForgeWebScript 类型名称 |      |
 
 ### ForgeWebScriptUnaryExpression
 
@@ -965,16 +1004,16 @@ export interface ForgeWebScriptWatCache
 **种类：**功能
 
 ```typescript
-function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string
+function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptWatCacheKeyInput |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 输入 | ForgeWebScriptWatCacheKeyInput |      |
 
 ### ForgeWebScriptWatCacheKeyInput
 
@@ -991,58 +1030,66 @@ export interface ForgeWebScriptWatCacheKeyInput
 **种类：**功能
 
 ```typescript
-function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string
+function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|缓存| ForgeWebScriptWatCache |  |
-|关键|字符串|  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 缓存 | ForgeWebScriptWatCache |      |
+| 关键 | 字符串                 |      |
 
 ### persistForgeWebScriptDebugArtifacts
 
 **种类：**功能
 
 ```typescript
-function persistForgeWebScriptDebugArtifacts(cache: ForgeWebScriptWatCache | undefined, key: string, artifacts: {
+function persistForgeWebScriptDebugArtifacts(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  artifacts: {
     readonly optimizedWat?: string;
     readonly unoptimizedWat?: string;
     readonly optimizedWasm?: Uint8Array;
     readonly unoptimizedWasm?: Uint8Array;
-  }): ForgeWebScriptDebugArtifactPaths
+  },
+): ForgeWebScriptDebugArtifactPaths;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|缓存| ForgeWebScriptWatCache \|未定义 |  |
-|关键|字符串|  |
-|文物| { 只读optimizedWat?: 字符串;     只读未优化Wat？：字符串；     只读optimizedWasm？：Uint8Array；     只读未优化的Wasm？：Uint8Array；   } |  |
+| 名称 | 类型                                                                                                                        | 描述 |
+| ---- | --------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 缓存 | ForgeWebScriptWatCache \|未定义                                                                                             |      |
+| 关键 | 字符串                                                                                                                      |      |
+| 文物 | { 只读optimizedWat?: 字符串; 只读未优化Wat？：字符串； 只读optimizedWasm？：Uint8Array； 只读未优化的Wasm？：Uint8Array； } |      |
 
 ### persistForgeWebScriptWat
 
 **种类：**功能
 
 ```typescript
-function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key: string, wat: string): string | undefined
+function persistForgeWebScriptWat(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  wat: string,
+): string | undefined;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|缓存| ForgeWebScriptWatCache \|未定义 |  |
-|关键|字符串|  |
-|扫管笏 |字符串|  |
+| 名称   | 类型                            | 描述 |
+| ------ | ------------------------------- | ---- |
+| 缓存   | ForgeWebScriptWatCache \|未定义 |      |
+| 关键   | 字符串                          |      |
+| 扫管笏 | 字符串                          |      |
 
 ## `src/compiler`
 
@@ -1051,23 +1098,23 @@ function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key
 **种类：**功能
 
 ```typescript
-function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |  |
+| 名称 | 类型                       | 描述                       |
+| ---- | -------------------------- | -------------------------- |
+| 输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |     |
 
 ### 编译ForgeWebScriptSeed
 
 **种类：**功能
 
 ```typescript
-function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 自托管引导程序使用的有界 TypeScript 种子，直到修复 -
@@ -1075,16 +1122,16 @@ function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebS
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |  |
+| 名称 | 类型                       | 描述                       |
+| ---- | -------------------------- | -------------------------- |
+| 输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |     |
 
 ### 创建ForgeWebScript编译器
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
+function createForgeWebScriptCompiler(): ForgeWebScriptCompiler;
 ```
 
 没有提供描述。
@@ -1094,16 +1141,18 @@ function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptCompilerService(options: ForgeWebScriptCompilerServiceOptions = {}): ForgeWebScriptCompilerService
+function createForgeWebScriptCompilerService(
+  options: ForgeWebScriptCompilerServiceOptions = {},
+): ForgeWebScriptCompilerService;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptCompilerServiceOptions | ForgeWebScriptCompilerServiceOptions | ForgeWebScriptCompilerServiceOptions | ForgeWebScriptCompilerServiceOptions  |
+| 名称 | 类型                                 | 描述                                 |
+| ---- | ------------------------------------ | ------------------------------------ |
+| 选项 | ForgeWebScriptCompilerServiceOptions | ForgeWebScriptCompilerServiceOptions | ForgeWebScriptCompilerServiceOptions | ForgeWebScriptCompilerServiceOptions |
 
 ## `src/contracts`
 
@@ -1342,7 +1391,10 @@ export interface ForgeWebScriptSelfHostedStageReport
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptSelfHostedStageRunner = ( input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, ) => ForgeWebScriptSelfHostedStageReport;
+export type ForgeWebScriptSelfHostedStageRunner = (
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+) => ForgeWebScriptSelfHostedStageReport;
 ```
 
 VM 入口点由运行时提供，无需将浏览器安全外观耦合到它。
@@ -1374,39 +1426,48 @@ export type ForgeWebScriptVmExecutionMode = 'interpret' | 'jit' | 'aot';
 **种类：**功能
 
 ```typescript
-function createDiagnostic(fileName: string, phase: ForgeWebScriptDiagnosticPhase, code: string, message: string, span: ForgeWebScriptSourceSpan, severity: ForgeWebScriptDiagnosticSeverity = 'error', hint?: string, metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>): ForgeWebScriptDiagnostic
+function createDiagnostic(
+  fileName: string,
+  phase: ForgeWebScriptDiagnosticPhase,
+  code: string,
+  message: string,
+  span: ForgeWebScriptSourceSpan,
+  severity: ForgeWebScriptDiagnosticSeverity = 'error',
+  hint?: string,
+  metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>,
+): ForgeWebScriptDiagnostic;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件名 |字符串|  |
-|相| ForgeWebScriptDiagnosticPhase |  |
-|代码|字符串|  |
-|留言 |字符串|  |
-|跨度| ForgeWebScriptSourceSpan |  |
-|严重程度 | ForgeWebScriptDiagnosticSeverity | ForgeWebScriptDiagnosticSeverity |  |
-|提示|字符串|  |
-|元数据 |选择<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |  |
+| 名称     | 类型                                                                                                   | 描述                             |
+| -------- | ------------------------------------------------------------------------------------------------------ | -------------------------------- |
+| 文件名   | 字符串                                                                                                 |                                  |
+| 相       | ForgeWebScriptDiagnosticPhase                                                                          |                                  |
+| 代码     | 字符串                                                                                                 |                                  |
+| 留言     | 字符串                                                                                                 |                                  |
+| 跨度     | ForgeWebScriptSourceSpan                                                                               |                                  |
+| 严重程度 | ForgeWebScriptDiagnosticSeverity                                                                       | ForgeWebScriptDiagnosticSeverity |     |
+| 提示     | 字符串                                                                                                 |                                  |
+| 元数据   | 选择<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |                                  |
 
 ### 诊断键
 
 **种类：**功能
 
 ```typescript
-function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string
+function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断| ForgeWebScript 诊断 |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 诊断 | ForgeWebScript 诊断 |      |
 
 ### ForgeWebScript诊断
 
@@ -1433,7 +1494,8 @@ export interface ForgeWebScriptDiagnosticEvidence
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptDiagnosticPhase = 'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+export type ForgeWebScriptDiagnosticPhase =
+  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
 没有提供描述。
@@ -1465,32 +1527,32 @@ export interface ForgeWebScriptSourceSpan
 **种类：**功能
 
 ```typescript
-function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation
+function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|评论 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 评论 | 字符串 |      |
 
 ### renderForgeWebScript文档
 
 **种类：**功能
 
 ```typescript
-function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string
+function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文档 | ForgeWebScript 文档 |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 文档 | ForgeWebScript 文档 |      |
 
 ## `src/dynamic-links`
 
@@ -1542,32 +1604,32 @@ export interface ForgeWebScriptDynamicModule
 **种类：**功能
 
 ```typescript
-function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |  |
+| 名称 | 类型                       | 描述                       |
+| ---- | -------------------------- | -------------------------- |
+| 输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |     |
 
 ### 准备ForgeWebScriptGraphFrontend
 
 **种类：**功能
 
 ```typescript
-function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptGraphCompileInput | ForgeWebScriptGraphCompileInput |  |
+| 名称 | 类型                            | 描述                            |
+| ---- | ------------------------------- | ------------------------------- |
+| 输入 | ForgeWebScriptGraphCompileInput | ForgeWebScriptGraphCompileInput |     |
 
 ## `src/generics`
 
@@ -1576,35 +1638,42 @@ function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInp
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptGenericSpecialization(request: ForgeWebScriptGenericSpecializationRequest): ForgeWebScriptSpecialization
+function createForgeWebScriptGenericSpecialization(
+  request: ForgeWebScriptGenericSpecializationRequest,
+): ForgeWebScriptSpecialization;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|请求| ForgeWebScriptGeneric专业化请求 |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 请求 | ForgeWebScriptGeneric专业化请求 |      |
 
 ### createForgeWebScriptIteratorBoundaryDescriptor
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptIteratorBoundaryDescriptor(generic: string, elementType: ForgeWebScriptTypeName, nextFunction: string, ownership: ForgeWebScriptOwnership = 'borrowed'): ForgeWebScriptIteratorBoundaryDescriptor
+function createForgeWebScriptIteratorBoundaryDescriptor(
+  generic: string,
+  elementType: ForgeWebScriptTypeName,
+  nextFunction: string,
+  ownership: ForgeWebScriptOwnership = 'borrowed',
+): ForgeWebScriptIteratorBoundaryDescriptor;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|通用|字符串|  |
-|元素类型 | ForgeWebScript 类型名称 |  |
-|下一个功能 |字符串|  |
-|所有权 | ForgeWebScript 所有权 |  |
+| 名称       | 类型                    | 描述 |
+| ---------- | ----------------------- | ---- |
+| 通用       | 字符串                  |      |
+| 元素类型   | ForgeWebScript 类型名称 |      |
+| 下一个功能 | 字符串                  |      |
+| 所有权     | ForgeWebScript 所有权   |      |
 
 ### ForgeWebScript通用边界
 
@@ -1621,16 +1690,18 @@ export type ForgeWebScriptGenericBoundary = 'value' | 'interface' | 'iterator';
 **种类：**功能
 
 ```typescript
-function forgeWebScriptGenericRepresentation(boundary: ForgeWebScriptGenericBoundary = 'value'): ForgeWebScriptSpecialization['representation']
+function forgeWebScriptGenericRepresentation(
+  boundary: ForgeWebScriptGenericBoundary = 'value',
+): ForgeWebScriptSpecialization['representation'];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|边界| ForgeWebScriptGenericBoundary | ForgeWebScriptGenericBoundary |  |
+| 名称 | 类型                          | 描述                          |
+| ---- | ----------------------------- | ----------------------------- |
+| 边界 | ForgeWebScriptGenericBoundary | ForgeWebScriptGenericBoundary |     |
 
 ### ForgeWebScriptGenericSpecializationRequest
 
@@ -1647,16 +1718,18 @@ export interface ForgeWebScriptGenericSpecializationRequest
 **种类：**功能
 
 ```typescript
-function sortForgeWebScriptSpecializations(specializations: readonly ForgeWebScriptSpecialization[]): readonly ForgeWebScriptSpecialization[]
+function sortForgeWebScriptSpecializations(
+  specializations: readonly ForgeWebScriptSpecialization[],
+): readonly ForgeWebScriptSpecialization[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|专业 |只读 ForgeWebScriptSpecialization[] |  |
+| 名称 | 类型                                | 描述 |
+| ---- | ----------------------------------- | ---- |
+| 专业 | 只读 ForgeWebScriptSpecialization[] |      |
 
 ## `src/graph`
 
@@ -1745,35 +1818,42 @@ export interface ForgeWebScriptResolvedModule
 **种类：**功能
 
 ```typescript
-function hashForgeWebScriptModuleGraph(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): string
+function hashForgeWebScriptModuleGraph(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图表| ForgeWebScriptModuleGraph |  |
-|配置| ForgeWebScriptLink 配置 |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 图表 | ForgeWebScriptModuleGraph |      |
+| 配置 | ForgeWebScriptLink 配置   |      |
 
 ### 解析ForgeWebScriptModuleGraph
 
 **种类：**功能
 
 ```typescript
-function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: ForgeWebScriptModuleResolver, configuration: ForgeWebScriptLinkConfiguration = {}): Promise<ForgeWebScriptGraphResult>
+function resolveForgeWebScriptModuleGraph(
+  entries: readonly string[],
+  resolver: ForgeWebScriptModuleResolver,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): Promise<ForgeWebScriptGraphResult>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|条目 |只读字符串[] |  |
-|解析器 | ForgeWebScriptModuleResolver |  |
-|配置| ForgeWebScriptLink 配置 |  |
+| 名称   | 类型                         | 描述 |
+| ------ | ---------------------------- | ---- |
+| 条目   | 只读字符串[]                 |      |
+| 解析器 | ForgeWebScriptModuleResolver |      |
+| 配置   | ForgeWebScriptLink 配置      |      |
 
 ## `src/identity`
 
@@ -1782,33 +1862,33 @@ function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: 
 **种类：**功能
 
 ```typescript
-function deriveForgeWebScriptModuleId(fileName: string, root?: string): string
+function deriveForgeWebScriptModuleId(fileName: string, root?: string): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件名 |字符串|  |
-|根 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 文件名 | 字符串 |      |
+| 根     | 字符串 |      |
 
 ### NormalizeForgeWebScriptFileId
 
 **种类：**功能
 
 ```typescript
-function normalizeForgeWebScriptFileId(fileName: string): string
+function normalizeForgeWebScriptFileId(fileName: string): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件名 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 文件名 | 字符串 |      |
 
 ## `src/ir`
 
@@ -1817,16 +1897,16 @@ function normalizeForgeWebScriptFileId(fileName: string): string
 **种类：**功能
 
 ```typescript
-function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts
+function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScriptIrModule |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 模块 | ForgeWebScriptIrModule |      |
 
 ### ForgeWebScriptCollection操作
 
@@ -1913,7 +1993,18 @@ export interface ForgeWebScriptIrEnumValueExpression
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptIrExpression = | ForgeWebScriptIrBinaryExpression | ForgeWebScriptIrCallExpression | ForgeWebScriptIrIdentifierExpression | ForgeWebScriptIrLiteralExpression | ForgeWebScriptIrFunctionValueExpression | ForgeWebScriptIrStructValueExpression | ForgeWebScriptIrEnumValueExpression | ForgeWebScriptIrMatchExpression | ForgeWebScriptIrUnaryExpression | ForgeWebScriptIrArrayLiteralExpression | ForgeWebScriptIrIndexExpression;
+export type ForgeWebScriptIrExpression =
+  | ForgeWebScriptIrBinaryExpression
+  | ForgeWebScriptIrCallExpression
+  | ForgeWebScriptIrIdentifierExpression
+  | ForgeWebScriptIrLiteralExpression
+  | ForgeWebScriptIrFunctionValueExpression
+  | ForgeWebScriptIrStructValueExpression
+  | ForgeWebScriptIrEnumValueExpression
+  | ForgeWebScriptIrMatchExpression
+  | ForgeWebScriptIrUnaryExpression
+  | ForgeWebScriptIrArrayLiteralExpression
+  | ForgeWebScriptIrIndexExpression;
 ```
 
 没有提供描述。
@@ -2083,7 +2174,18 @@ export interface ForgeWebScriptIrReturnStatement
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptIrStatement = | ForgeWebScriptIrExpressionStatement | ForgeWebScriptIrAssignmentStatement | ForgeWebScriptIrIfStatement | ForgeWebScriptIrWhileStatement | ForgeWebScriptIrDoWhileStatement | ForgeWebScriptIrLetStatement | ForgeWebScriptIrReturnStatement | ForgeWebScriptIrMatchStatement | ForgeWebScriptIrSwitchStatement | ForgeWebScriptIrYieldStatement | ForgeWebScriptIrIteratorLoopStatement;
+export type ForgeWebScriptIrStatement =
+  | ForgeWebScriptIrExpressionStatement
+  | ForgeWebScriptIrAssignmentStatement
+  | ForgeWebScriptIrIfStatement
+  | ForgeWebScriptIrWhileStatement
+  | ForgeWebScriptIrDoWhileStatement
+  | ForgeWebScriptIrLetStatement
+  | ForgeWebScriptIrReturnStatement
+  | ForgeWebScriptIrMatchStatement
+  | ForgeWebScriptIrSwitchStatement
+  | ForgeWebScriptIrYieldStatement
+  | ForgeWebScriptIrIteratorLoopStatement;
 ```
 
 没有提供描述。
@@ -2143,32 +2245,32 @@ export interface ForgeWebScriptIrYieldStatement
 **种类：**功能
 
 ```typescript
-function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule
+function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScriptIrModule |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 模块 | ForgeWebScriptIrModule |      |
 
 ### lowerForgeWebScriptToIr
 
 **种类：**功能
 
 ```typescript
-function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule
+function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScript 模块 |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 模块 | ForgeWebScript 模块 |      |
 
 ## `src/lexer`
 
@@ -2197,7 +2299,8 @@ export interface ForgeWebScriptToken
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
+export type ForgeWebScriptTokenKind =
+  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
 ```
 
 没有提供描述。
@@ -2207,17 +2310,17 @@ export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number
 **种类：**功能
 
 ```typescript
-function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult
+function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|文件名 |  |  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 来源   | 字符串 |      |
+| 文件名 |        |      |
 
 ## `src/linker`
 
@@ -2236,17 +2339,20 @@ export interface ForgeWebScriptLinkResult
 **种类：**功能
 
 ```typescript
-function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): ForgeWebScriptLinkResult
+function validateForgeWebScriptLinks(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): ForgeWebScriptLinkResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图表| ForgeWebScriptModuleGraph |  |
-|配置| ForgeWebScriptLink 配置 |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 图表 | ForgeWebScriptModuleGraph |      |
+| 配置 | ForgeWebScriptLink 配置   |      |
 
 ## `src/manifest`
 
@@ -2255,24 +2361,27 @@ function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configura
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptAbiManifest(module: ForgeWebScriptModule, options: ForgeWebScriptAbiManifestOptions = {}): ForgeWebScriptAbiManifest
+function createForgeWebScriptAbiManifest(
+  module: ForgeWebScriptModule,
+  options: ForgeWebScriptAbiManifestOptions = {},
+): ForgeWebScriptAbiManifest;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScript 模块 |  |
-|选项 | ForgeWebScriptAbiManifestOptions | ForgeWebScriptAbiManifestOptions  |
+| 名称 | 类型                             | 描述                             |
+| ---- | -------------------------------- | -------------------------------- |
+| 模块 | ForgeWebScript 模块              |                                  |
+| 选项 | ForgeWebScriptAbiManifestOptions | ForgeWebScriptAbiManifestOptions |
 
 ### FORGE_WEB_SCRIPT_ABI_VERSION
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION
+export const FORGE_WEB_SCRIPT_ABI_VERSION;
 ```
 
 没有提供描述。
@@ -2282,7 +2391,7 @@ export const FORGE_WEB_SCRIPT_ABI_VERSION
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION
+export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
 ```
 
 没有提供描述。
@@ -2472,7 +2581,8 @@ export interface ForgeWebScriptSpecialization
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptValueRepresentation = 'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptValueRepresentation =
+  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
 ```
 
 没有提供描述。
@@ -2494,17 +2604,20 @@ export interface ForgeWebScriptImportTypeEnvironment
 **种类：**功能
 
 ```typescript
-function resolveForgeWebScriptImportTypeEnvironment(importer: ForgeWebScriptResolvedModule, graph: ForgeWebScriptModuleGraph): ForgeWebScriptImportTypeEnvironment
+function resolveForgeWebScriptImportTypeEnvironment(
+  importer: ForgeWebScriptResolvedModule,
+  graph: ForgeWebScriptModuleGraph,
+): ForgeWebScriptImportTypeEnvironment;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|进口商| ForgeWebScriptResolvedModule |  |
-|图表| ForgeWebScriptModuleGraph |  |
+| 名称   | 类型                         | 描述 |
+| ------ | ---------------------------- | ---- |
+| 进口商 | ForgeWebScriptResolvedModule |      |
+| 图表   | ForgeWebScriptModuleGraph    |      |
 
 ## `src/optimizer`
 
@@ -2543,34 +2656,40 @@ export interface ForgeWebScriptOptimizationResult
 **种类：**功能
 
 ```typescript
-function optimizeForgeWebScriptIr(input: ForgeWebScriptIrModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptIr(
+  input: ForgeWebScriptIrModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptIrModule |  |
-|模式 | ‘调试’\| '释放' |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 输入 | ForgeWebScriptIrModule |      |
+| 模式 | ‘调试’\| '释放'        |      |
 
 ### 优化ForgeWebScriptModule
 
 **种类：**功能
 
 ```typescript
-function optimizeForgeWebScriptModule(module: ForgeWebScriptModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptModule(
+  module: ForgeWebScriptModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScript 模块 |  |
-|模式 | ‘调试’\| '释放' |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 模块 | ForgeWebScript 模块 |      |
+| 模式 | ‘调试’\| '释放'     |      |
 
 ## `src/parser`
 
@@ -2599,25 +2718,29 @@ export interface ForgeWebScriptParseResult
 **种类：**功能
 
 ```typescript
-function parseForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptParseOptions = {}): ForgeWebScriptParseResult
+function parseForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptParseOptions = {},
+): ForgeWebScriptParseResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|文件名 |  |  |
-|选项 | ForgeWebScriptParseOptions | ForgeWebScriptParseOptions | ForgeWebScriptParseOptions  |
+| 名称   | 类型                       | 描述                       |
+| ------ | -------------------------- | -------------------------- |
+| 来源   | 字符串                     |                            |
+| 文件名 |                            |                            |
+| 选项   | ForgeWebScriptParseOptions | ForgeWebScriptParseOptions | ForgeWebScriptParseOptions |
 
 ### 原始类型
 
 **种类：**常数
 
 ```typescript
-export const primitiveTypes
+export const primitiveTypes;
 ```
 
 没有提供描述。
@@ -2629,7 +2752,7 @@ export const primitiveTypes
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[]
+function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[];
 ```
 
 没有提供描述。
@@ -2639,32 +2762,32 @@ function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeW
 **种类：**功能
 
 ```typescript
-function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string
+function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|字节 | Uint8Array |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 字节 | Uint8Array |      |
 
 ### 编码ForgeWebScriptSelfHostedFingerprint
 
 **种类：**功能
 
 ```typescript
-function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array
+function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|指纹|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 指纹 | 字符串 |      |
 
 ### ForgeWebScriptSelfHostedCompilation
 
@@ -2701,7 +2824,9 @@ export type ForgeWebScriptSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot
 **种类：**功能
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilation(input: ForgeWebScriptCompileInput): ForgeWebScriptSelfHostedCompilation
+function prepareForgeWebScriptSelfHostedCompilation(
+  input: ForgeWebScriptCompileInput,
+): ForgeWebScriptSelfHostedCompilation;
 ```
 
 准备一个有界的自托管编译单元。
@@ -2711,25 +2836,25 @@ VM 模块在输入源上运行真正的 lex/token 标准化阶段。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |  |
+| 名称 | 类型                       | 描述                       |
+| ---- | -------------------------- | -------------------------- |
+| 输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |     |
 
 ### 准备ForgeWebScriptSelfHostedCompilationLegacyFingerprint
 
 **种类：**功能
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string
+function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |  |
+| 名称 | 类型                       | 描述                       |
+| ---- | -------------------------- | -------------------------- |
+| 输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |     |
 
 #### 合同
 
@@ -2742,91 +2867,99 @@ function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: Forg
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptSelfHostedStageArtifact(stage: ForgeWebScriptSelfHostedCompilerStage, identity: ForgeWebScriptSelfHostedStageArtifactIdentity, payload: Uint8Array, diagnostics: readonly ForgeWebScriptDiagnostic[] = []): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedStageArtifact(
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  identity: ForgeWebScriptSelfHostedStageArtifactIdentity,
+  payload: Uint8Array,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|舞台| ForgeWebScriptSelfHostedCompilerStage |  |
-|身份| ForgeWebScriptSelfHostedStageArtifactIdentity | ForgeWebScriptSelfHostedStageArtifactIdentity |  |
-|有效载荷| Uint8Array |  |
-|诊断 |只读 ForgeWebScriptDiagnostic[] |  |
+| 名称     | 类型                                          | 描述                                          |
+| -------- | --------------------------------------------- | --------------------------------------------- |
+| 舞台     | ForgeWebScriptSelfHostedCompilerStage         |                                               |
+| 身份     | ForgeWebScriptSelfHostedStageArtifactIdentity | ForgeWebScriptSelfHostedStageArtifactIdentity |     |
+| 有效载荷 | Uint8Array                                    |                                               |
+| 诊断     | 只读 ForgeWebScriptDiagnostic[]               |                                               |
 
 ### 解码ForgeWebScriptSelfHostedDiagnostics
 
 **种类：**功能
 
 ```typescript
-function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[]
+function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|字节 | Uint8Array |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 字节 | Uint8Array |      |
 
 ### 解码ForgeWebScriptSelfHostedStageArtifact
 
 **种类：**功能
 
 ```typescript
-function decodeForgeWebScriptSelfHostedStageArtifact(bytes: Uint8Array, options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {}): ForgeWebScriptSelfHostedStageArtifact
+function decodeForgeWebScriptSelfHostedStageArtifact(
+  bytes: Uint8Array,
+  options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {},
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|字节 | Uint8Array |  |
-|选项 | ForgeWebScriptSelfHostedStageArtifactDecodeOptions | ForgeWebScriptSelfHostedStageArtifactDecodeOptions | ForgeWebScriptSelfHostedStageArtifactDecodeOptions  |
+| 名称 | 类型                                               | 描述                                               |
+| ---- | -------------------------------------------------- | -------------------------------------------------- |
+| 字节 | Uint8Array                                         |                                                    |
+| 选项 | ForgeWebScriptSelfHostedStageArtifactDecodeOptions | ForgeWebScriptSelfHostedStageArtifactDecodeOptions | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |
 
 ### 编码ForgeWebScriptSelfHostedDiagnostics
 
 **种类：**功能
 
 ```typescript
-function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array
+function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断 |只读 ForgeWebScriptDiagnostic[] |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 诊断 | 只读 ForgeWebScriptDiagnostic[] |      |
 
 ### 编码ForgeWebScriptSelfHostedStageArtifact
 
 **种类：**功能
 
 ```typescript
-function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array
+function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|神器| ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact  |
+| 名称 | 类型                                  | 描述                                  |
+| ---- | ------------------------------------- | ------------------------------------- |
+| 神器 | ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact |
 
 ### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 没有提供描述。
@@ -2836,7 +2969,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 没有提供描述。
@@ -2846,7 +2979,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 没有提供描述。
@@ -2858,7 +2991,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 ```typescript
 export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
   Record<ForgeWebScriptSelfHostedCompilerStage, string>
->
+>;
 ```
 
 没有提供描述。
@@ -2868,7 +3001,8 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptSelfHostedCompilerStage = 'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
+export type ForgeWebScriptSelfHostedCompilerStage =
+  'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
 没有提供描述。
@@ -2908,34 +3042,34 @@ export interface ForgeWebScriptSelfHostedStageArtifactIdentity
 **种类：**功能
 
 ```typescript
-function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string
+function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|字节 | Uint8Array |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 字节 | Uint8Array |      |
 
 ### hashForgeWebScriptSelfHostedSourceIdentity
 
 **种类：**功能
 
 ```typescript
-function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string
+function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|文件名 |字符串|  |
-|图哈希 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 来源   | 字符串 |      |
+| 文件名 | 字符串 |      |
+| 图哈希 | 字符串 |      |
 
 ## `src/self-hosted/fws/lexer`
 
@@ -2951,9 +3085,9 @@ export fn is_ws(byte: i32) -> bool
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|字节| i32 |候选字节值。 |
+| 名称 | 类型 | 描述         |
+| ---- | ---- | ------------ |
+| 字节 | i32  | 候选字节值。 |
 
 #### 合同
 
@@ -2967,7 +3101,7 @@ export fn is_ws(byte: i32) -> bool
 **种类：**功能
 
 ```typescript
-function computeForgeWebScriptLexStageFingerprint(source: string): number
+function computeForgeWebScriptLexStageFingerprint(source: string): number;
 ```
 
 自托管 lex 阶段的种子参考。
@@ -2975,16 +3109,16 @@ function computeForgeWebScriptLexStageFingerprint(source: string): number
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 来源 | 字符串 |      |
 
 ### createForgeWebScriptLexStageVmModule
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule;
 ```
 
 用于 lex 指纹阶段的手动降低 VM 模块。
@@ -2992,9 +3126,9 @@ function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScrip
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|源哈希 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 源哈希 | 字符串 |      |
 
 ### 编码ForgeWebScriptLexStageSource
 
@@ -3006,23 +3140,23 @@ function encodeForgeWebScriptLexStageSource(source: string): {
   readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
-}
+};
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 来源 | 字符串 |      |
 
 ### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
 ```
 
 没有提供描述。
@@ -3032,7 +3166,7 @@ export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 没有提供描述。
@@ -3084,48 +3218,52 @@ export type ForgeWebScriptSelfHostedVmValue = |
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptParserModuleVmModule(sourceHash: string, fileName: string, options: ForgeWebScriptParserModuleStageOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserModuleVmModule(
+  sourceHash: string,
+  fileName: string,
+  options: ForgeWebScriptParserModuleStageOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 用于有界解析器模块阶段的手动降低的 VM 模块。
 条目：parse_module_stage（来源：ForgeWebScriptSourceBytes）->字节信封。
 
 信封布局（所有 u32 小端）：
-  [0]failFlag（1 = 有界 v1 子集之外的语法；模块有效负载不存在）
-  [4] diagFlag（1 = 记录了单个有界 FWS-PARSE-052 诊断）
-  [8..32) 诊断范围（开始、结束、行、列、结束行、结束列）
-  [32..) 模块负载字节（仅当failFlag = 0时才有意义）
+[0]failFlag（1 = 有界 v1 子集之外的语法；模块有效负载不存在）
+[4] diagFlag（1 = 记录了单个有界 FWS-PARSE-052 诊断）
+[8..32) 诊断范围（开始、结束、行、列、结束行、结束列）
+[32..) 模块负载字节（仅当failFlag = 0时才有意义）
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|源哈希 |字符串|  |
-|文件名 |字符串|  |
-|选项 | ForgeWebScriptParserModuleStageOptions | ForgeWebScriptParserModuleStageOptions  |
+| 名称   | 类型                                   | 描述                                   |
+| ------ | -------------------------------------- | -------------------------------------- |
+| 源哈希 | 字符串                                 |                                        |
+| 文件名 | 字符串                                 |                                        |
+| 选项   | ForgeWebScriptParserModuleStageOptions | ForgeWebScriptParserModuleStageOptions |
 
 ### 解码ForgeWebScriptParserModuleEnvelope
 
 **种类：**功能
 
 ```typescript
-function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope
+function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|字节 | Uint8Array |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 字节 | Uint8Array |      |
 
 ### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 没有提供描述。
@@ -3157,7 +3295,7 @@ export interface ForgeWebScriptParserModuleStageOptions
 **种类：**功能
 
 ```typescript
-function computeForgeWebScriptParserStageFingerprint(source: string): number
+function computeForgeWebScriptParserStageFingerprint(source: string): number;
 ```
 
 自托管解析器阶段的种子参考。
@@ -3165,16 +3303,19 @@ function computeForgeWebScriptParserStageFingerprint(source: string): number
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 来源 | 字符串 |      |
 
 ### createForgeWebScriptParserStageVmModule
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptParserStageVmModule(sourceHash: string, options: ForgeWebScriptParserStageVmModuleOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserStageVmModule(
+  sourceHash: string,
+  options: ForgeWebScriptParserStageVmModuleOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 用于解析器指纹阶段的手动降低的 VM 模块。
@@ -3182,17 +3323,17 @@ function createForgeWebScriptParserStageVmModule(sourceHash: string, options: Fo
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|源哈希 |字符串|  |
-|选项 | ForgeWebScriptParserStageVmModuleOptions | ForgeWebScriptParserStageVmModuleOptions |  |
+| 名称   | 类型                                     | 描述                                     |
+| ------ | ---------------------------------------- | ---------------------------------------- |
+| 源哈希 | 字符串                                   |                                          |
+| 选项   | ForgeWebScriptParserStageVmModuleOptions | ForgeWebScriptParserStageVmModuleOptions |     |
 
 ### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
 ```
 
 没有提供描述。
@@ -3214,140 +3355,158 @@ export interface ForgeWebScriptParserStageVmModuleOptions
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptSelfHostedParserArtifact(source: string, fileName: string, module: ForgeWebScriptModule, diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedParserArtifact(
+  source: string,
+  fileName: string,
+  module: ForgeWebScriptModule,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|文件名 |字符串|  |
-|模块| ForgeWebScript 模块 |  |
-|诊断 |只读 ForgeWebScriptDiagnostic[] |  |
-|图哈希 |字符串|  |
+| 名称   | 类型                            | 描述 |
+| ------ | ------------------------------- | ---- |
+| 来源   | 字符串                          |      |
+| 文件名 | 字符串                          |      |
+| 模块   | ForgeWebScript 模块             |      |
+| 诊断   | 只读 ForgeWebScriptDiagnostic[] |      |
+| 图哈希 | 字符串                          |      |
 
 ### createForgeWebScriptSelfHostedTokenArtifact
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptSelfHostedTokenArtifact(source: string, fileName: string, tokens: readonly ForgeWebScriptToken[], diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedTokenArtifact(
+  source: string,
+  fileName: string,
+  tokens: readonly ForgeWebScriptToken[],
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|文件名 |字符串|  |
-|代币 |只读 ForgeWebScriptToken[] |  |
-|诊断 |只读 ForgeWebScriptDiagnostic[] |  |
-|图哈希 |字符串|  |
+| 名称   | 类型                            | 描述 |
+| ------ | ------------------------------- | ---- |
+| 来源   | 字符串                          |      |
+| 文件名 | 字符串                          |      |
+| 代币   | 只读 ForgeWebScriptToken[]      |      |
+| 诊断   | 只读 ForgeWebScriptDiagnostic[] |      |
+| 图哈希 | 字符串                          |      |
 
 ### 解码ForgeWebScriptSelfHostedModule
 
 **种类：**功能
 
 ```typescript
-function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule
+function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|字节 | Uint8Array |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 字节 | Uint8Array |      |
 
 ### 解码ForgeWebScriptSelfHostedTokens
 
 **种类：**功能
 
 ```typescript
-function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[]
+function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|字节 | Uint8Array |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 字节 | Uint8Array |      |
 
 ### 编码ForgeWebScriptSelfHostedModule
 
 **种类：**功能
 
 ```typescript
-function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array
+function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScript 模块 |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 模块 | ForgeWebScript 模块 |      |
 
 ### 编码ForgeWebScriptSelfHostedTokens
 
 **种类：**功能
 
 ```typescript
-function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array
+function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|代币 |只读 ForgeWebScriptToken[] |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 代币 | 只读 ForgeWebScriptToken[] |      |
 
 ### hashForgeWebScriptSelfHostedStagePayload
 
 **种类：**功能
 
 ```typescript
-function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string
+function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|神器| ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact  |
+| 名称 | 类型                                  | 描述                                  |
+| ---- | ------------------------------------- | ------------------------------------- |
+| 神器 | ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact |
 
 ### validateForgeWebScriptSelfHostedStageArtifact
 
 **种类：**功能
 
 ```typescript
-function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact, stage: ForgeWebScriptSelfHostedCompilerStage, source: string, fileName: string, graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function validateForgeWebScriptSelfHostedStageArtifact(
+  artifact: ForgeWebScriptSelfHostedStageArtifact,
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  source: string,
+  fileName: string,
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|神器| ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact  |
-|舞台| ForgeWebScriptSelfHostedCompilerStage |  |
-|来源 |字符串|  |
-|文件名 |字符串|  |
-|图哈希 |字符串|  |
+| 名称   | 类型                                  | 描述                                  |
+| ------ | ------------------------------------- | ------------------------------------- |
+| 神器   | ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact | ForgeWebScriptSelfHostedStageArtifact |
+| 舞台   | ForgeWebScriptSelfHostedCompilerStage |                                       |
+| 来源   | 字符串                                |                                       |
+| 文件名 | 字符串                                |                                       |
+| 图哈希 | 字符串                                |                                       |
 
 ## `src/stdlib/memory`
 
@@ -3356,7 +3515,7 @@ function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptS
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
 ```
 
 没有提供描述。
@@ -3366,7 +3525,7 @@ export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[]
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[];
 ```
 
 没有提供描述。
@@ -3386,7 +3545,15 @@ export interface ForgeWebScriptMemoryFunction
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' | 'memory-realloc' | 'memory-load-u32' | 'memory-store-u32' | 'memory-load-f64' | 'memory-store-f64' | 'f64-from-u32';
+export type ForgeWebScriptMemoryOperation =
+  | 'memory-alloc'
+  | 'memory-dealloc'
+  | 'memory-realloc'
+  | 'memory-load-u32'
+  | 'memory-store-u32'
+  | 'memory-load-f64'
+  | 'memory-store-f64'
+  | 'f64-from-u32';
 ```
 
 检查编译器保留的来宾线性内存操作。
@@ -3398,7 +3565,7 @@ export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' 
 **种类：**常数
 
 ```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity;
 ```
 
 没有提供描述。
@@ -3408,7 +3575,7 @@ export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptS
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
 ```
 
 没有提供描述。
@@ -3418,7 +3585,7 @@ export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
 ```
 
 没有提供描述。
@@ -3428,7 +3595,7 @@ export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[]
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[];
 ```
 
 编译器拥有的调用。它们是保留的源名称，而不是主机导入，并且
@@ -3440,7 +3607,7 @@ export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLi
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION
+export const FORGE_WEB_SCRIPT_REGEX_VERSION;
 ```
 
 没有提供描述。
@@ -3450,7 +3617,16 @@ export const FORGE_WEB_SCRIPT_REGEX_VERSION
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptRegexOperation = | 'full-match' | 'prefix-match' | 'search' | 'full-capture-start' | 'full-capture-end' | 'prefix-capture-start' | 'prefix-capture-end' | 'search-capture-start' | 'search-capture-end';
+export type ForgeWebScriptRegexOperation =
+  | 'full-match'
+  | 'prefix-match'
+  | 'search'
+  | 'full-capture-start'
+  | 'full-capture-end'
+  | 'prefix-capture-start'
+  | 'prefix-capture-end'
+  | 'search-capture-start'
+  | 'search-capture-end';
 ```
 
 没有提供描述。
@@ -3470,16 +3646,18 @@ export interface ForgeWebScriptStandardLibraryFunction
 **种类：**功能
 
 ```typescript
-function forgeWebScriptStandardLibraryIdentity(overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {}): ForgeWebScriptStandardLibraryIdentity
+function forgeWebScriptStandardLibraryIdentity(
+  overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {},
+): ForgeWebScriptStandardLibraryIdentity;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|覆盖 |部分<ForgeWebScriptStandardLibraryIdentity> |  |
+| 名称 | 类型                                        | 描述 |
+| ---- | ------------------------------------------- | ---- |
+| 覆盖 | 部分<ForgeWebScriptStandardLibraryIdentity> |      |
 
 ### ForgeWebScriptStandardLibraryIdentity
 
@@ -3498,7 +3676,7 @@ export interface ForgeWebScriptStandardLibraryIdentity
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
 ```
 
 没有提供描述。
@@ -3508,7 +3686,7 @@ export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[]
+export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[];
 ```
 
 没有提供描述。
@@ -3528,7 +3706,18 @@ export interface ForgeWebScriptStringFunction
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' | 'string-byte-at' | 'string-starts-with' | 'string-slice' | 'string-to-i32' | 'bytes-length' | 'bytes-length-u32' | 'bytes-byte-at' | 'bytes-byte-at-u32' | 'bytes-slice';
+export type ForgeWebScriptStringOperation =
+  | 'string-concat'
+  | 'string-length'
+  | 'string-byte-at'
+  | 'string-starts-with'
+  | 'string-slice'
+  | 'string-to-i32'
+  | 'bytes-length'
+  | 'bytes-length-u32'
+  | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
+  | 'bytes-slice';
 ```
 
 编译器拥有的确定性字符串和字节操作。
@@ -3540,18 +3729,22 @@ export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' 
 **种类：**功能
 
 ```typescript
-function checkForgeWebScript(module: ForgeWebScriptModule, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptTypeCheckResult
+function checkForgeWebScript(
+  module: ForgeWebScriptModule,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptTypeCheckResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScript 模块 |  |
-|文件名 |  |  |
-|选项 | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions  |
+| 名称   | 类型                           | 描述                           |
+| ------ | ------------------------------ | ------------------------------ |
+| 模块   | ForgeWebScript 模块            |                                |
+| 文件名 |                                |                                |
+| 选项   | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions |
 
 ### ForgeWebScriptTypeCheckOptions
 
@@ -3590,18 +3783,22 @@ export interface ForgeWebScriptValidationResult
 **种类：**功能
 
 ```typescript
-function validateForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptValidationResult
+function validateForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptValidationResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|文件名 |  |  |
-|选项 | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions  |
+| 名称   | 类型                           | 描述                           |
+| ------ | ------------------------------ | ------------------------------ |
+| 来源   | 字符串                         |                                |
+| 文件名 |                                |                                |
+| 选项   | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions | ForgeWebScriptTypeCheckOptions |
 
 ## `src/wat`
 
@@ -3620,14 +3817,14 @@ export interface ForgeWebScriptWatMetadata
 **种类：**功能
 
 ```typescript
-function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string
+function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScript 模块 |  |
-|元数据 | ForgeWebScriptWatMetadata |  |
+| 名称   | 类型                      | 描述 |
+| ------ | ------------------------- | ---- |
+| 模块   | ForgeWebScript 模块       |      |
+| 元数据 | ForgeWebScriptWatMetadata |      |

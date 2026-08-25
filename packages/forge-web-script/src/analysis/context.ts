@@ -29,6 +29,6 @@ export function createForgeWebScriptAnalysisContext(
     links: frontend.links,
     targetFeatures: options.targetFeatures ?? policy.targetFeatures,
     policy,
-    facts: createForgeWebScriptAnalysisFacts(frontend),
+    facts: createForgeWebScriptAnalysisFacts(frontend, policy.boundsChecks),
   };
 }

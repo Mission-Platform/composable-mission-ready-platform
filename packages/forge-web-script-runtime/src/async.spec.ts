@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  createForgeWebScriptAsyncRuntime,
-  FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES,
-} from './async.ts';
+import { createForgeWebScriptAsyncRuntime, FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES } from './async.ts';
 
 describe('Forge Web Script async runtime', () => {
   it('requires explicit microtask capabilities and runs VM tasks in sequence order', () => {
@@ -24,10 +21,7 @@ describe('Forge Web Script async runtime', () => {
   it('copies worker messages at the owned byte boundary and resumes through a microtask', () => {
     const posted: number[] = [];
     const runtime = createForgeWebScriptAsyncRuntime({
-      capabilities: [
-        FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.microtask,
-        FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.worker,
-      ],
+      capabilities: [FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.microtask, FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.worker],
       host: {
         postWorkerMessage: (message) => posted.push(message.taskId),
         scheduleMicrotask: () => {},
@@ -45,10 +39,7 @@ describe('Forge Web Script async runtime', () => {
 
   it('rejects oversized and duplicate worker handoffs deterministically', () => {
     const runtime = createForgeWebScriptAsyncRuntime({
-      capabilities: [
-        FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.microtask,
-        FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.worker,
-      ],
+      capabilities: [FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.microtask, FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES.worker],
       maxMessageBytes: 2,
     });
     expect(runtime.spawnWorker(new Uint8Array([1, 2, 3]), (payload) => payload)).toMatchObject({

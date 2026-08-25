@@ -67,7 +67,12 @@ describe('Forge Web Script flat source modules', () => {
     expect(result.diagnostics).toEqual([]);
     expect(result.module?.functions[0].body[0]).toMatchObject({
       kind: 'return',
-      value: { kind: 'enum-value', type: { reference: 'Result' }, variant: 'Ok', arguments: [{ kind: 'identifier', name: 'value' }] },
+      value: {
+        kind: 'enum-value',
+        type: { reference: 'Result' },
+        variant: 'Ok',
+        arguments: [{ kind: 'identifier', name: 'value' }],
+      },
     });
     expect(lowerForgeWebScriptToIr(result.module!).functions[0].body[0]).toMatchObject({
       kind: 'return',
@@ -238,7 +243,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
 
   it('type-checks vector indexed assignments', () => {
     const result = parseForgeWebScript(
-      'export fn mutate(values: Vector<i32>) -> unit { values[0] = 1; }',
+      'export fn mutate(mut values: Vector<i32>) -> unit { values[0] = 1; }',
       'vector-bounds.fws',
     );
     expect(result.module).toBeDefined();
@@ -475,9 +480,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
         { name: 'Error', fields: [{ name: '_0', type: { reference: 'E' } }] },
       ],
     });
-    expect(result.module?.functions[0].documentation?.description).toBe(
-      'Returns true when the option holds a value.',
-    );
+    expect(result.module?.functions[0].documentation?.description).toBe('Returns true when the option holds a value.');
   });
 
   it('parses imperative while and do while loops', () => {
@@ -496,7 +499,7 @@ export fn add(left: i32, right: i32) -> i32 { return left + right; }`,
 
     const result = parseForgeWebScript(
       `export fn loops() -> i32 {
-        let value: i32 = 0;
+        let mut value: i32 = 0;
         while value < 2 { value = value + 1; }
         do { value = value + 1; } while false;
         return value;

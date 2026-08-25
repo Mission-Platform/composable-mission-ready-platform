@@ -16,7 +16,7 @@
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE
+export const FORGE_WEB_SCRIPT_CLI_USAGE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -66,17 +66,17 @@ export class ForgeWebScriptCliUsageError extends Error
 **النوع:** الوظيفة
 
 ```typescript
-function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions
+function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| argv | سلسلة للقراءة فقط[] |  |
-| كود |  |  |
+| الاسم | اكتب                | الوصف |
+| ----- | ------------------- | ----- |
+| argv  | سلسلة للقراءة فقط[] |       |
+| كود   |                     |       |
 
 ## `src/main`
 
@@ -85,7 +85,7 @@ function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -95,7 +95,7 @@ export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
 ```
 
 لم يتم تقديم أي وصف.
@@ -115,18 +115,22 @@ export interface ForgeWebScriptCliIo
 **النوع:** الوظيفة
 
 ```typescript
-function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), io: ForgeWebScriptCliIo = defaultIo, cwd = process.cwd()): Promise<number>
+function runForgeWebScriptCli(
+  argv: readonly string[] = process.argv.slice(2),
+  io: ForgeWebScriptCliIo = defaultIo,
+  cwd = process.cwd(),
+): Promise<number>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| argv | سلسلة للقراءة فقط[] |  |
-| ايو | فورجي ويب سكريبت كليو |  |
-| كود |  |  |
+| الاسم | اكتب                  | الوصف |
+| ----- | --------------------- | ----- |
+| argv  | سلسلة للقراءة فقط[]   |       |
+| ايو   | فورجي ويب سكريبت كليو |       |
+| كود   |                       |       |
 
 ## `src/output`
 
@@ -135,32 +139,32 @@ function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), i
 **النوع:** الوظيفة
 
 ```typescript
-function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles
+function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| قطعة أثرية | ForgeWebScriptArtifact |  |
+| الاسم      | اكتب                   | الوصف |
+| ---------- | ---------------------- | ----- |
+| قطعة أثرية | ForgeWebScriptArtifact |       |
 
 ### forgeWebScriptArtifactBaseName
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptArtifactBaseName(entryFileName: string): string
+function forgeWebScriptArtifactBaseName(entryFileName: string): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم ملف الإدخال | سلسلة |  |
+| الاسم           | اكتب  | الوصف |
+| --------------- | ----- | ----- |
+| اسم ملف الإدخال | سلسلة |       |
 
 ### ForgeWebScriptCliArtifactFiles
 
@@ -177,7 +181,8 @@ export interface ForgeWebScriptCliArtifactFiles
 **النوع:** الوظيفة
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly {
+function formatForgeWebScriptDiagnostics(
+  diagnostics: readonly {
     readonly code: string;
     readonly severity: string;
     readonly phase: string;
@@ -190,48 +195,56 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly {
       readonly endColumn: number;
     };
     readonly hint?: string;
-  }[]): string
+  }[],
+): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | للقراءة فقط {رمز للقراءة فقط: سلسلة؛     خطورة للقراءة فقط: سلسلة؛     مرحلة القراءة فقط: سلسلة؛     رسالة للقراءة فقط: سلسلة؛     اسم الملف للقراءة فقط: سلسلة؛     نطاق للقراءة فقط: { سطر للقراءة فقط: رقم؛       عمود للقراءة فقط: الرقم؛       خط النهاية للقراءة فقط: الرقم؛       عمود النهاية للقراءة فقط: الرقم؛     };     تلميح للقراءة فقط ؟: سلسلة؛   }[] |  |
+| الاسم   | اكتب                                                                                                                                                                                                                                                                                                                   | الوصف |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| التشخيص | للقراءة فقط {رمز للقراءة فقط: سلسلة؛ خطورة للقراءة فقط: سلسلة؛ مرحلة القراءة فقط: سلسلة؛ رسالة للقراءة فقط: سلسلة؛ اسم الملف للقراءة فقط: سلسلة؛ نطاق للقراءة فقط: { سطر للقراءة فقط: رقم؛ عمود للقراءة فقط: الرقم؛ خط النهاية للقراءة فقط: الرقم؛ عمود النهاية للقراءة فقط: الرقم؛ }; تلميح للقراءة فقط ؟: سلسلة؛ }[] |       |
 
 ### OutputDirectoryFor
 
 **النوع:** الوظيفة
 
 ```typescript
-function outputDirectoryFor(entryFileName: string, outputDirectory = path.join(path.dirname(entryFileName), 'dist')): string
+function outputDirectoryFor(
+  entryFileName: string,
+  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
+): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم ملف الإدخال | سلسلة |  |
-| دليل الإخراج |  |  |
+| الاسم           | اكتب  | الوصف |
+| --------------- | ----- | ----- |
+| اسم ملف الإدخال | سلسلة |       |
+| دليل الإخراج    |       |       |
 
 ### writeForgeWebScriptArtifacts
 
 **النوع:** الوظيفة
 
 ```typescript
-function writeForgeWebScriptArtifacts(outputDirectory: string, entryFileName: string, artifact: ForgeWebScriptArtifact): Promise<readonly string[]>
+function writeForgeWebScriptArtifacts(
+  outputDirectory: string,
+  entryFileName: string,
+  artifact: ForgeWebScriptArtifact,
+): Promise<readonly string[]>;
 ```
 
 اكتب المجموعة الكاملة من خلال دليل مؤقت وأعد تسمية كل ملف إلى مكانه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| دليل الإخراج | سلسلة |  |
-| اسم ملف الإدخال | سلسلة |  |
-| قطعة أثرية | ForgeWebScriptArtifact |  |
+| الاسم           | اكتب                   | الوصف |
+| --------------- | ---------------------- | ----- |
+| دليل الإخراج    | سلسلة                  |       |
+| اسم ملف الإدخال | سلسلة                  |       |
+| قطعة أثرية      | ForgeWebScriptArtifact |       |

@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function buildForgeWebScriptWasmCollectionRuntimeBodies(): readonly ForgeWebScriptWasmRuntimeBody[]
+function buildForgeWebScriptWasmCollectionRuntimeBodies(): readonly ForgeWebScriptWasmRuntimeBody[];
 ```
 
 没有提供描述。
@@ -26,7 +26,7 @@ function buildForgeWebScriptWasmCollectionRuntimeBodies(): readonly ForgeWebScri
 **种类：**功能
 
 ```typescript
-function buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorIndex: number): readonly number[][]
+function buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorIndex: number): readonly number[][];
 ```
 
 运行时主体使用 i32 句柄。数组是[长度，元素...]和向量
@@ -36,9 +36,9 @@ function buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorIndex: numb
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|分配器索引 |数量 |  |
+| 名称       | 类型 | 描述 |
+| ---------- | ---- | ---- |
+| 分配器索引 | 数量 |      |
 
 ### ForgeWebScriptWasmRuntimeBody
 
@@ -117,7 +117,8 @@ export interface ForgeWebScriptWasmBackendResult
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
+export type ForgeWebScriptWasmBinaryOperator =
+  '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
 没有提供描述。
@@ -287,7 +288,8 @@ export interface ForgeWebScriptWasmParameter
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptWasmPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptWasmPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
 没有提供描述。
@@ -317,7 +319,55 @@ export interface ForgeWebScriptWasmSourceSpan
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptWasmStandardLibraryOperation = | 'full-match' | 'prefix-match' | 'search' | 'full-capture-start' | 'full-capture-end' | 'prefix-capture-start' | 'prefix-capture-end' | 'search-capture-start' | 'search-capture-end' | 'string-concat' | 'string-length' | 'string-byte-at' | 'string-starts-with' | 'string-slice' | 'string-to-i32' | 'bytes-length' | 'bytes-length-u32' | 'bytes-byte-at' | 'bytes-byte-at-u32' | 'bytes-slice' | 'memory-alloc' | 'memory-dealloc' | 'memory-realloc' | 'memory-load-u32' | 'memory-store-u32' | 'memory-load-f64' | 'memory-store-f64' | 'f64-from-u32' | 'vector-new' | 'vector-push' | 'vector-get' | 'vector-set' | 'vector-length' | 'vector-pop' | 'array-new' | 'array-get' | 'array-set' | 'array-length' | 'array-iter' | 'iterator-next' | 'set-has' | 'map-get' | 'ecs-query' | 'ecs-transition' | 'signal-schedule' | 'async-schedule-microtask' | 'async-worker-post' | 'async-worker-receive';
+export type ForgeWebScriptWasmStandardLibraryOperation =
+  | 'full-match'
+  | 'prefix-match'
+  | 'search'
+  | 'full-capture-start'
+  | 'full-capture-end'
+  | 'prefix-capture-start'
+  | 'prefix-capture-end'
+  | 'search-capture-start'
+  | 'search-capture-end'
+  | 'string-concat'
+  | 'string-length'
+  | 'string-byte-at'
+  | 'string-starts-with'
+  | 'string-slice'
+  | 'string-to-i32'
+  | 'bytes-length'
+  | 'bytes-length-u32'
+  | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
+  | 'bytes-slice'
+  | 'memory-alloc'
+  | 'memory-dealloc'
+  | 'memory-realloc'
+  | 'memory-load-u32'
+  | 'memory-store-u32'
+  | 'memory-load-f64'
+  | 'memory-store-f64'
+  | 'f64-from-u32'
+  | 'vector-new'
+  | 'vector-push'
+  | 'vector-get'
+  | 'vector-set'
+  | 'vector-length'
+  | 'vector-pop'
+  | 'array-new'
+  | 'array-get'
+  | 'array-set'
+  | 'array-length'
+  | 'array-iter'
+  | 'iterator-next'
+  | 'set-has'
+  | 'map-get'
+  | 'ecs-query'
+  | 'ecs-transition'
+  | 'signal-schedule'
+  | 'async-schedule-microtask'
+  | 'async-worker-post'
+  | 'async-worker-receive';
 ```
 
 没有提供描述。
@@ -349,17 +399,20 @@ export interface ForgeWebScriptWasmTypeName
 **种类：**功能
 
 ```typescript
-function compileForgeWebScriptWasm(input: ForgeWebScriptWasmBackendInput, fileName = '<input>'): ForgeWebScriptWasmBackendResult
+function compileForgeWebScriptWasm(
+  input: ForgeWebScriptWasmBackendInput,
+  fileName = '<input>',
+): ForgeWebScriptWasmBackendResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptWasmBackendInput |  |
-|文件名 |  |  |
+| 名称   | 类型                           | 描述 |
+| ------ | ------------------------------ | ---- |
+| 输入   | ForgeWebScriptWasmBackendInput |      |
+| 文件名 |                                |      |
 
 ## `src/verifier`
 
@@ -468,16 +521,18 @@ export interface ForgeWebScriptWasmMemoryLayout
 **种类：**功能
 
 ```typescript
-function verifyForgeWebScriptWasmArtifact(input: ForgeWebScriptWasmArtifactVerificationInput): ForgeWebScriptWasmArtifactVerificationResult
+function verifyForgeWebScriptWasmArtifact(
+  input: ForgeWebScriptWasmArtifactVerificationInput,
+): ForgeWebScriptWasmArtifactVerificationResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptWasmArtifactVerificationInput | ForgeWebScriptWasmArtifactVerificationInput |  |
+| 名称 | 类型                                        | 描述                                        |
+| ---- | ------------------------------------------- | ------------------------------------------- |
+| 输入 | ForgeWebScriptWasmArtifactVerificationInput | ForgeWebScriptWasmArtifactVerificationInput |     |
 
 ## `src/wat`
 
@@ -496,14 +551,17 @@ export interface ForgeWebScriptWasmWatMetadata
 **种类：**功能
 
 ```typescript
-function renderForgeWebScriptWasmWat(module: ForgeWebScriptWasmModule, metadata: ForgeWebScriptWasmWatMetadata = {}): string
+function renderForgeWebScriptWasmWat(
+  module: ForgeWebScriptWasmModule,
+  metadata: ForgeWebScriptWasmWatMetadata = {},
+): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScriptWasmModule |  |
-|元数据 | ForgeWebScriptWasmWatMetadata |  |
+| 名称   | 类型                          | 描述 |
+| ------ | ----------------------------- | ---- |
+| 模块   | ForgeWebScriptWasmModule      |      |
+| 元数据 | ForgeWebScriptWasmWatMetadata |      |

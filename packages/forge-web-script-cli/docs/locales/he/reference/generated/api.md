@@ -16,7 +16,7 @@
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE
+export const FORGE_WEB_SCRIPT_CLI_USAGE;
 ```
 
 לא סופק תיאור.
@@ -66,17 +66,17 @@ export class ForgeWebScriptCliUsageError extends Error
 פונקציה **סוג:**
 
 ```typescript
-function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions
+function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| argv | מחרוזת לקריאה בלבד[] |  |
-| cwd |  |  |
+| שם   | הקלד                 | תיאור |
+| ---- | -------------------- | ----- |
+| argv | מחרוזת לקריאה בלבד[] |       |
+| cwd  |                      |       |
 
 ## `src/main`
 
@@ -85,7 +85,7 @@ function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
 ```
 
 לא סופק תיאור.
@@ -95,7 +95,7 @@ export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
 ```
 
 לא סופק תיאור.
@@ -115,18 +115,22 @@ export interface ForgeWebScriptCliIo
 פונקציה **סוג:**
 
 ```typescript
-function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), io: ForgeWebScriptCliIo = defaultIo, cwd = process.cwd()): Promise<number>
+function runForgeWebScriptCli(
+  argv: readonly string[] = process.argv.slice(2),
+  io: ForgeWebScriptCliIo = defaultIo,
+  cwd = process.cwd(),
+): Promise<number>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| argv | מחרוזת לקריאה בלבד[] |  |
-| io | ForgeWebScriptCliIo |  |
-| cwd |  |  |
+| שם   | הקלד                 | תיאור |
+| ---- | -------------------- | ----- |
+| argv | מחרוזת לקריאה בלבד[] |       |
+| io   | ForgeWebScriptCliIo  |       |
+| cwd  |                      |       |
 
 ## `src/output`
 
@@ -135,32 +139,32 @@ function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), i
 פונקציה **סוג:**
 
 ```typescript
-function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles
+function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חפץ | ForgeWebScriptArtifact |  |
+| שם  | הקלד                   | תיאור |
+| --- | ---------------------- | ----- |
+| חפץ | ForgeWebScriptArtifact |       |
 
 ### forgeWebScriptArtifactBaseName
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptArtifactBaseName(entryFileName: string): string
+function forgeWebScriptArtifactBaseName(entryFileName: string): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| entryFileName | מחרוזת |  |
+| שם            | הקלד   | תיאור |
+| ------------- | ------ | ----- |
+| entryFileName | מחרוזת |       |
 
 ### ForgeWebScriptCliArtifactFiles
 
@@ -177,7 +181,8 @@ export interface ForgeWebScriptCliArtifactFiles
 פונקציה **סוג:**
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly {
+function formatForgeWebScriptDiagnostics(
+  diagnostics: readonly {
     readonly code: string;
     readonly severity: string;
     readonly phase: string;
@@ -190,48 +195,56 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly {
       readonly endColumn: number;
     };
     readonly hint?: string;
-  }[]): string
+  }[],
+): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | readonly { readonly code: מחרוזת;     חומרת קריאה בלבד: מחרוזת;     שלב לקריאה בלבד: מחרוזת;     הודעה לקריאה בלבד: מחרוזת;     שם קובץ לקריאה בלבד: מחרוזת;     readonly span: { readonly line: number;       עמודה לקריאה בלבד: מספר;       Readonly endLine: מספר;       readonly endColumn: מספר;     };     רמז לקריאה בלבד?: מחרוזת;   }[] |  |
+| שם    | הקלד                                                                                                                                                                                                                                                                                             | תיאור |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| אבחון | readonly { readonly code: מחרוזת; חומרת קריאה בלבד: מחרוזת; שלב לקריאה בלבד: מחרוזת; הודעה לקריאה בלבד: מחרוזת; שם קובץ לקריאה בלבד: מחרוזת; readonly span: { readonly line: number; עמודה לקריאה בלבד: מספר; Readonly endLine: מספר; readonly endColumn: מספר; }; רמז לקריאה בלבד?: מחרוזת; }[] |       |
 
 ### outputDirectoryFor
 
 פונקציה **סוג:**
 
 ```typescript
-function outputDirectoryFor(entryFileName: string, outputDirectory = path.join(path.dirname(entryFileName), 'dist')): string
+function outputDirectoryFor(
+  entryFileName: string,
+  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
+): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| entryFileName | מחרוזת |  |
-| outputDirectory |  |  |
+| שם              | הקלד   | תיאור |
+| --------------- | ------ | ----- |
+| entryFileName   | מחרוזת |       |
+| outputDirectory |        |       |
 
 ### writeForgeWebScriptArtifacts
 
 פונקציה **סוג:**
 
 ```typescript
-function writeForgeWebScriptArtifacts(outputDirectory: string, entryFileName: string, artifact: ForgeWebScriptArtifact): Promise<readonly string[]>
+function writeForgeWebScriptArtifacts(
+  outputDirectory: string,
+  entryFileName: string,
+  artifact: ForgeWebScriptArtifact,
+): Promise<readonly string[]>;
 ```
 
 כתוב את ערכת החפצים המלאה דרך ספרייה זמנית ושנה את שם כל קובץ למקומו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| outputDirectory | מחרוזת |  |
-| entryFileName | מחרוזת |  |
-| חפץ | ForgeWebScriptArtifact |  |
+| שם              | הקלד                   | תיאור |
+| --------------- | ---------------------- | ----- |
+| outputDirectory | מחרוזת                 |       |
+| entryFileName   | מחרוזת                 |       |
+| חפץ             | ForgeWebScriptArtifact |       |

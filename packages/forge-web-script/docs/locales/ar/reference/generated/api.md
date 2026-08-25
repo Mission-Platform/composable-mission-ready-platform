@@ -16,17 +16,20 @@
 **النوع:** الوظيفة
 
 ```typescript
-function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisReport
+function analyzeForgeWebScript(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisReport;
 ```
 
 قم بتشغيل قواعد تحليل المصدر المسجلة مقابل نتيجة واجهة أمامية واحدة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الواجهة الأمامية | ForgeWebScriptFrontendResult |  |
-| خيارات | خيارات تحليل فورجي ويب سكريبت |  |
+| الاسم            | اكتب                          | الوصف |
+| ---------------- | ----------------------------- | ----- |
+| الواجهة الأمامية | ForgeWebScriptFrontendResult  |       |
+| خيارات           | خيارات تحليل فورجي ويب سكريبت |       |
 
 ## `src/analysis/context`
 
@@ -35,17 +38,20 @@ function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisContext
+function createForgeWebScriptAnalysisContext(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisContext;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الواجهة الأمامية | ForgeWebScriptFrontendResult |  |
-| خيارات | خيارات تحليل فورجي ويب سكريبت |  |
+| الاسم            | اكتب                          | الوصف |
+| ---------------- | ----------------------------- | ----- |
+| الواجهة الأمامية | ForgeWebScriptFrontendResult  |       |
+| خيارات           | خيارات تحليل فورجي ويب سكريبت |       |
 
 ## `src/analysis/contracts`
 
@@ -54,7 +60,7 @@ function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendRes
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
 ```
 
 البادئات المستقرة محفوظة لعائلات تشخيص تحليل المصدر.
@@ -286,7 +292,7 @@ export interface ForgeWebScriptAnalysisTypeFact
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[]
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[];
 ```
 
 لم يتم تقديم أي وصف.
@@ -298,16 +304,16 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAna
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts
+function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الواجهة الأمامية | ForgeWebScriptFrontendResult |  |
+| الاسم            | اكتب                         | الوصف |
+| ---------------- | ---------------------------- | ----- |
+| الواجهة الأمامية | ForgeWebScriptFrontendResult |       |
 
 ## `src/analysis/policy`
 
@@ -316,23 +322,25 @@ function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResul
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptAnalysisPolicy(policy: ForgeWebScriptAnalysisOptionsLike = {}): ForgeWebScriptAnalysisPolicy
+function createForgeWebScriptAnalysisPolicy(
+  policy: ForgeWebScriptAnalysisOptionsLike = {},
+): ForgeWebScriptAnalysisPolicy;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| سياسة | فورج ويب سكريبت أناليسيسوبتيونس مثل |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| سياسة | فورج ويب سكريبت أناليسيسوبتيونس مثل |       |
 
 ### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits;
 ```
 
 لم يتم تقديم أي وصف.
@@ -342,7 +350,7 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLim
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 لم يتم تقديم أي وصف.
@@ -352,7 +360,7 @@ export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysi
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 لم يتم تقديم أي وصف.
@@ -372,17 +380,20 @@ export type ForgeWebScriptAnalysisOptionsLike = Omit<Partial<ForgeWebScriptAnaly
 **النوع:** الوظيفة
 
 ```typescript
-function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysisFinding, policy: ForgeWebScriptAnalysisPolicy): boolean
+function isForgeWebScriptAnalysisFindingBlocking(
+  finding: ForgeWebScriptAnalysisFinding,
+  policy: ForgeWebScriptAnalysisPolicy,
+): boolean;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العثور على | البحث عن تحليل ForgeWebScript |  |
-| سياسة | سياسة تحليل ForgeWebScript |  |
+| الاسم      | اكتب                          | الوصف |
+| ---------- | ----------------------------- | ----- |
+| العثور على | البحث عن تحليل ForgeWebScript |       |
+| سياسة      | سياسة تحليل ForgeWebScript    |       |
 
 ## `src/analysis/registry`
 
@@ -391,16 +402,18 @@ function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysis
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptAnalysisRuleRegistry(rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES): ForgeWebScriptAnalysisRuleRegistry
+function createForgeWebScriptAnalysisRuleRegistry(
+  rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
+): ForgeWebScriptAnalysisRuleRegistry;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القواعد | للقراءة فقط ForgeWebScriptAnalogyRule[] |  |
+| الاسم   | اكتب                                    | الوصف |
+| ------- | --------------------------------------- | ----- |
+| القواعد | للقراءة فقط ForgeWebScriptAnalogyRule[] |       |
 
 ### ForgeWebScriptAnalogyRuleRegistry
 
@@ -419,16 +432,16 @@ export interface ForgeWebScriptAnalysisRuleRegistry
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic
+function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العثور على | البحث عن تحليل ForgeWebScript |  |
+| الاسم      | اكتب                          | الوصف |
+| ---------- | ----------------------------- | ----- |
+| العثور على | البحث عن تحليل ForgeWebScript |       |
 
 ## `src/ast`
 
@@ -467,7 +480,8 @@ export interface ForgeWebScriptBinaryExpression
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
+export type ForgeWebScriptBinaryOperator =
+  '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
 لم يتم تقديم أي وصف.
@@ -557,7 +571,19 @@ export interface ForgeWebScriptEnumVariant
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptExpression = | ForgeWebScriptBinaryExpression | ForgeWebScriptCallExpression | ForgeWebScriptIdentifierExpression | ForgeWebScriptLiteralExpression | ForgeWebScriptFunctionValueExpression | ForgeWebScriptStructValueExpression | ForgeWebScriptEnumValueExpression | ForgeWebScriptArrayLiteralExpression | ForgeWebScriptVectorLiteralExpression | ForgeWebScriptIndexExpression | ForgeWebScriptMatchExpression | ForgeWebScriptUnaryExpression;
+export type ForgeWebScriptExpression =
+  | ForgeWebScriptBinaryExpression
+  | ForgeWebScriptCallExpression
+  | ForgeWebScriptIdentifierExpression
+  | ForgeWebScriptLiteralExpression
+  | ForgeWebScriptFunctionValueExpression
+  | ForgeWebScriptStructValueExpression
+  | ForgeWebScriptEnumValueExpression
+  | ForgeWebScriptArrayLiteralExpression
+  | ForgeWebScriptVectorLiteralExpression
+  | ForgeWebScriptIndexExpression
+  | ForgeWebScriptMatchExpression
+  | ForgeWebScriptUnaryExpression;
 ```
 
 لم يتم تقديم أي وصف.
@@ -767,7 +793,8 @@ export type ForgeWebScriptPattern = |
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
 لم يتم تقديم أي وصف.
@@ -797,7 +824,19 @@ export interface ForgeWebScriptSourceModuleImport
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptStatement = | ForgeWebScriptExpressionStatement | ForgeWebScriptAssignmentStatement | ForgeWebScriptIfStatement | ForgeWebScriptLetStatement | ForgeWebScriptMatchStatement | ForgeWebScriptSwitchStatement | ForgeWebScriptReturnStatement | ForgeWebScriptForStatement | ForgeWebScriptDoWhileStatement | ForgeWebScriptWhileStatement | ForgeWebScriptYieldStatement | ForgeWebScriptIteratorLoopStatement;
+export type ForgeWebScriptStatement =
+  | ForgeWebScriptExpressionStatement
+  | ForgeWebScriptAssignmentStatement
+  | ForgeWebScriptIfStatement
+  | ForgeWebScriptLetStatement
+  | ForgeWebScriptMatchStatement
+  | ForgeWebScriptSwitchStatement
+  | ForgeWebScriptReturnStatement
+  | ForgeWebScriptForStatement
+  | ForgeWebScriptDoWhileStatement
+  | ForgeWebScriptWhileStatement
+  | ForgeWebScriptYieldStatement
+  | ForgeWebScriptIteratorLoopStatement;
 ```
 
 لم يتم تقديم أي وصف.
@@ -867,16 +906,16 @@ export interface ForgeWebScriptTypeName
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string
+function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اكتب | ForgeWebScriptTypeName |  |
+| الاسم | اكتب                   | الوصف |
+| ----- | ---------------------- | ----- |
+| اكتب  | ForgeWebScriptTypeName |       |
 
 ### ForgeWebScriptUnaryExpression
 
@@ -965,16 +1004,16 @@ export interface ForgeWebScriptWatCache
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string
+function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | ForgeWebScriptWatCacheKeyInput |  |
+| الاسم   | اكتب                           | الوصف |
+| ------- | ------------------------------ | ----- |
+| الإدخال | ForgeWebScriptWatCacheKeyInput |       |
 
 ### ForgeWebScriptWatCacheKeyInput
 
@@ -991,58 +1030,66 @@ export interface ForgeWebScriptWatCacheKeyInput
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string
+function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ذاكرة التخزين المؤقت | فورجي ويب سكريبت وات كاش |  |
-| مفتاح | سلسلة |  |
+| الاسم                | اكتب                     | الوصف |
+| -------------------- | ------------------------ | ----- |
+| ذاكرة التخزين المؤقت | فورجي ويب سكريبت وات كاش |       |
+| مفتاح                | سلسلة                    |       |
 
 ### استمرار ForgeWebScriptDebugArtifacts
 
 **النوع:** الوظيفة
 
 ```typescript
-function persistForgeWebScriptDebugArtifacts(cache: ForgeWebScriptWatCache | undefined, key: string, artifacts: {
+function persistForgeWebScriptDebugArtifacts(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  artifacts: {
     readonly optimizedWat?: string;
     readonly unoptimizedWat?: string;
     readonly optimizedWasm?: Uint8Array;
     readonly unoptimizedWasm?: Uint8Array;
-  }): ForgeWebScriptDebugArtifactPaths
+  },
+): ForgeWebScriptDebugArtifactPaths;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ذاكرة التخزين المؤقت | ForgeWebScriptWatCache \| غير محدد |  |
-| مفتاح | سلسلة |  |
-| التحف | { للقراءة فقط الأمثل؟: سلسلة؛     للقراءة فقط غير محسّنة؟: string;     للقراءة فقط الأمثل Wasm ؟: Uint8Array;     readonly unoptimizedWasm ؟: Uint8Array;   } |  |
+| الاسم                | اكتب                                                                                                                                            | الوصف |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| ذاكرة التخزين المؤقت | ForgeWebScriptWatCache \| غير محدد                                                                                                              |       |
+| مفتاح                | سلسلة                                                                                                                                           |       |
+| التحف                | { للقراءة فقط الأمثل؟: سلسلة؛ للقراءة فقط غير محسّنة؟: string; للقراءة فقط الأمثل Wasm ؟: Uint8Array; readonly unoptimizedWasm ؟: Uint8Array; } |       |
 
 ### استمرار ForgeWebScriptWat
 
 **النوع:** الوظيفة
 
 ```typescript
-function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key: string, wat: string): string | undefined
+function persistForgeWebScriptWat(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  wat: string,
+): string | undefined;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ذاكرة التخزين المؤقت | ForgeWebScriptWatCache \| غير محدد |  |
-| مفتاح | سلسلة |  |
-| وات | سلسلة |  |
+| الاسم                | اكتب                               | الوصف |
+| -------------------- | ---------------------------------- | ----- |
+| ذاكرة التخزين المؤقت | ForgeWebScriptWatCache \| غير محدد |       |
+| مفتاح                | سلسلة                              |       |
+| وات                  | سلسلة                              |       |
 
 ## `src/compiler`
 
@@ -1051,23 +1098,23 @@ function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key
 **النوع:** الوظيفة
 
 ```typescript
-function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |  |
+| الاسم   | اكتب                      | الوصف |
+| ------- | ------------------------- | ----- |
+| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
 
 ### compileForgeWebScriptSeed
 
 **النوع:** الوظيفة
 
 ```typescript
-function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 بذرة TypeScript المقيدة المستخدمة بواسطة bootstrap المستضاف ذاتيًا حتى يتم إصلاحها
@@ -1075,16 +1122,16 @@ function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebS
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |  |
+| الاسم   | اكتب                      | الوصف |
+| ------- | ------------------------- | ----- |
+| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
 
 ### createForgeWebScriptCompiler
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
+function createForgeWebScriptCompiler(): ForgeWebScriptCompiler;
 ```
 
 لم يتم تقديم أي وصف.
@@ -1094,16 +1141,18 @@ function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptCompilerService(options: ForgeWebScriptCompilerServiceOptions = {}): ForgeWebScriptCompilerService
+function createForgeWebScriptCompilerService(
+  options: ForgeWebScriptCompilerServiceOptions = {},
+): ForgeWebScriptCompilerService;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجيويبسكريبتكومبيليرسيرفيسيوبشنز |  |
+| الاسم  | اكتب                               | الوصف |
+| ------ | ---------------------------------- | ----- |
+| خيارات | فورجيويبسكريبتكومبيليرسيرفيسيوبشنز |       |
 
 ## `src/contracts`
 
@@ -1342,7 +1391,10 @@ export interface ForgeWebScriptSelfHostedStageReport
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptSelfHostedStageRunner = ( input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, ) => ForgeWebScriptSelfHostedStageReport;
+export type ForgeWebScriptSelfHostedStageRunner = (
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+) => ForgeWebScriptSelfHostedStageReport;
 ```
 
 نقطة إدخال VM التي يوفرها وقت التشغيل دون اقتران الواجهة الآمنة للمتصفح بها.
@@ -1374,39 +1426,48 @@ export type ForgeWebScriptVmExecutionMode = 'interpret' | 'jit' | 'aot';
 **النوع:** الوظيفة
 
 ```typescript
-function createDiagnostic(fileName: string, phase: ForgeWebScriptDiagnosticPhase, code: string, message: string, span: ForgeWebScriptSourceSpan, severity: ForgeWebScriptDiagnosticSeverity = 'error', hint?: string, metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>): ForgeWebScriptDiagnostic
+function createDiagnostic(
+  fileName: string,
+  phase: ForgeWebScriptDiagnosticPhase,
+  code: string,
+  message: string,
+  span: ForgeWebScriptSourceSpan,
+  severity: ForgeWebScriptDiagnosticSeverity = 'error',
+  hint?: string,
+  metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>,
+): ForgeWebScriptDiagnostic;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| المرحلة | مرحلة تشخيص فورجي ويب سكريبت |  |
-| كود | سلسلة |  |
-| رسالة | سلسلة |  |
-| فترة | فورجيويبسكريبتسورسسبان |  |
-| خطورة | ForgeWebScriptDiagnosticSeverity |  |
-| تلميح | سلسلة |  |
-| البيانات الوصفية | يختار<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |  |
+| الاسم            | اكتب                                                                                                    | الوصف |
+| ---------------- | ------------------------------------------------------------------------------------------------------- | ----- |
+| اسم الملف        | سلسلة                                                                                                   |       |
+| المرحلة          | مرحلة تشخيص فورجي ويب سكريبت                                                                            |       |
+| كود              | سلسلة                                                                                                   |       |
+| رسالة            | سلسلة                                                                                                   |       |
+| فترة             | فورجيويبسكريبتسورسسبان                                                                                  |       |
+| خطورة            | ForgeWebScriptDiagnosticSeverity                                                                        |       |
+| تلميح            | سلسلة                                                                                                   |       |
+| البيانات الوصفية | يختار<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |       |
 
 ### مفتاح التشخيص
 
 **النوع:** الوظيفة
 
 ```typescript
-function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string
+function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | فورجي ويب سكريبت التشخيص |  |
+| الاسم   | اكتب                     | الوصف |
+| ------- | ------------------------ | ----- |
+| التشخيص | فورجي ويب سكريبت التشخيص |       |
 
 ### ForgeWebScriptDiagnostic
 
@@ -1433,7 +1494,8 @@ export interface ForgeWebScriptDiagnosticEvidence
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptDiagnosticPhase = 'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+export type ForgeWebScriptDiagnosticPhase =
+  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
 لم يتم تقديم أي وصف.
@@ -1465,32 +1527,32 @@ export interface ForgeWebScriptSourceSpan
 **النوع:** الوظيفة
 
 ```typescript
-function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation
+function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعليق | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| تعليق | سلسلة |       |
 
 ### renderForgeWebScriptDocumentation
 
 **النوع:** الوظيفة
 
 ```typescript
-function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string
+function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| توثيق | توثيق ForgeWebScript |  |
+| الاسم | اكتب                 | الوصف |
+| ----- | -------------------- | ----- |
+| توثيق | توثيق ForgeWebScript |       |
 
 ## `src/dynamic-links`
 
@@ -1542,32 +1604,32 @@ export interface ForgeWebScriptDynamicModule
 **النوع:** الوظيفة
 
 ```typescript
-function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |  |
+| الاسم   | اكتب                      | الوصف |
+| ------- | ------------------------- | ----- |
+| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
 
 ### PreparForgeWebScriptGraphFrontend
 
 **النوع:** الوظيفة
 
 ```typescript
-function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | ForgeWebScriptGraphCompileInput |  |
+| الاسم   | اكتب                            | الوصف |
+| ------- | ------------------------------- | ----- |
+| الإدخال | ForgeWebScriptGraphCompileInput |       |
 
 ## `src/generics`
 
@@ -1576,35 +1638,42 @@ function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInp
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptGenericSpecialization(request: ForgeWebScriptGenericSpecializationRequest): ForgeWebScriptSpecialization
+function createForgeWebScriptGenericSpecialization(
+  request: ForgeWebScriptGenericSpecializationRequest,
+): ForgeWebScriptSpecialization;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| طلب | ForgeWebScriptGenericSpecializationRequest |  |
+| الاسم | اكتب                                       | الوصف |
+| ----- | ------------------------------------------ | ----- |
+| طلب   | ForgeWebScriptGenericSpecializationRequest |       |
 
 ### createForgeWebScriptIteratorBoundaryDescriptor
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptIteratorBoundaryDescriptor(generic: string, elementType: ForgeWebScriptTypeName, nextFunction: string, ownership: ForgeWebScriptOwnership = 'borrowed'): ForgeWebScriptIteratorBoundaryDescriptor
+function createForgeWebScriptIteratorBoundaryDescriptor(
+  generic: string,
+  elementType: ForgeWebScriptTypeName,
+  nextFunction: string,
+  ownership: ForgeWebScriptOwnership = 'borrowed',
+): ForgeWebScriptIteratorBoundaryDescriptor;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| عام | سلسلة |  |
-| نوع العنصر | ForgeWebScriptTypeName |  |
-| الوظيفة التالية | سلسلة |  |
-| ملكية | ملكية ForgeWebScript |  |
+| الاسم           | اكتب                   | الوصف |
+| --------------- | ---------------------- | ----- |
+| عام             | سلسلة                  |       |
+| نوع العنصر      | ForgeWebScriptTypeName |       |
+| الوظيفة التالية | سلسلة                  |       |
+| ملكية           | ملكية ForgeWebScript   |       |
 
 ### ForgeWebScriptGenericBoundary
 
@@ -1621,16 +1690,18 @@ export type ForgeWebScriptGenericBoundary = 'value' | 'interface' | 'iterator';
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptGenericRepresentation(boundary: ForgeWebScriptGenericBoundary = 'value'): ForgeWebScriptSpecialization['representation']
+function forgeWebScriptGenericRepresentation(
+  boundary: ForgeWebScriptGenericBoundary = 'value',
+): ForgeWebScriptSpecialization['representation'];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الحدود | ForgeWebScriptGenericBoundary |  |
+| الاسم  | اكتب                          | الوصف |
+| ------ | ----------------------------- | ----- |
+| الحدود | ForgeWebScriptGenericBoundary |       |
 
 ### ForgeWebScriptGenericSpecializationRequest
 
@@ -1647,16 +1718,18 @@ export interface ForgeWebScriptGenericSpecializationRequest
 **النوع:** الوظيفة
 
 ```typescript
-function sortForgeWebScriptSpecializations(specializations: readonly ForgeWebScriptSpecialization[]): readonly ForgeWebScriptSpecialization[]
+function sortForgeWebScriptSpecializations(
+  specializations: readonly ForgeWebScriptSpecialization[],
+): readonly ForgeWebScriptSpecialization[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التخصصات | للقراءة فقط ForgeWebScriptSpecialization[] |  |
+| الاسم    | اكتب                                       | الوصف |
+| -------- | ------------------------------------------ | ----- |
+| التخصصات | للقراءة فقط ForgeWebScriptSpecialization[] |       |
 
 ## `src/graph`
 
@@ -1745,35 +1818,42 @@ export interface ForgeWebScriptResolvedModule
 **النوع:** الوظيفة
 
 ```typescript
-function hashForgeWebScriptModuleGraph(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): string
+function hashForgeWebScriptModuleGraph(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رسم بياني | ForgeWebScriptModuleGraph |  |
-| التكوين | ForgeWebScriptLinkConfiguration |  |
+| الاسم     | اكتب                            | الوصف |
+| --------- | ------------------------------- | ----- |
+| رسم بياني | ForgeWebScriptModuleGraph       |       |
+| التكوين   | ForgeWebScriptLinkConfiguration |       |
 
 ### ResolveForgeWebScriptModuleGraph
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: ForgeWebScriptModuleResolver, configuration: ForgeWebScriptLinkConfiguration = {}): Promise<ForgeWebScriptGraphResult>
+function resolveForgeWebScriptModuleGraph(
+  entries: readonly string[],
+  resolver: ForgeWebScriptModuleResolver,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): Promise<ForgeWebScriptGraphResult>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مداخل | سلسلة للقراءة فقط[] |  |
-| محلل | ForgeWebScriptModuleResolver |  |
-| التكوين | ForgeWebScriptLinkConfiguration |  |
+| الاسم   | اكتب                            | الوصف |
+| ------- | ------------------------------- | ----- |
+| مداخل   | سلسلة للقراءة فقط[]             |       |
+| محلل    | ForgeWebScriptModuleResolver    |       |
+| التكوين | ForgeWebScriptLinkConfiguration |       |
 
 ## `src/identity`
 
@@ -1782,33 +1862,33 @@ function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: 
 **النوع:** الوظيفة
 
 ```typescript
-function deriveForgeWebScriptModuleId(fileName: string, root?: string): string
+function deriveForgeWebScriptModuleId(fileName: string, root?: string): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| الجذر | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| اسم الملف | سلسلة |       |
+| الجذر     | سلسلة |       |
 
 ### تطبيع ForgeWebScriptFileId
 
 **النوع:** الوظيفة
 
 ```typescript
-function normalizeForgeWebScriptFileId(fileName: string): string
+function normalizeForgeWebScriptFileId(fileName: string): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| اسم الملف | سلسلة |       |
 
 ## `src/ir`
 
@@ -1817,16 +1897,16 @@ function normalizeForgeWebScriptFileId(fileName: string): string
 **النوع:** الوظيفة
 
 ```typescript
-function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts
+function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptIrModule |  |
+| الاسم          | اكتب                   | الوصف |
+| -------------- | ---------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptIrModule |       |
 
 ### ForgeWebScriptCollectionOperation
 
@@ -1913,7 +1993,18 @@ export interface ForgeWebScriptIrEnumValueExpression
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptIrExpression = | ForgeWebScriptIrBinaryExpression | ForgeWebScriptIrCallExpression | ForgeWebScriptIrIdentifierExpression | ForgeWebScriptIrLiteralExpression | ForgeWebScriptIrFunctionValueExpression | ForgeWebScriptIrStructValueExpression | ForgeWebScriptIrEnumValueExpression | ForgeWebScriptIrMatchExpression | ForgeWebScriptIrUnaryExpression | ForgeWebScriptIrArrayLiteralExpression | ForgeWebScriptIrIndexExpression;
+export type ForgeWebScriptIrExpression =
+  | ForgeWebScriptIrBinaryExpression
+  | ForgeWebScriptIrCallExpression
+  | ForgeWebScriptIrIdentifierExpression
+  | ForgeWebScriptIrLiteralExpression
+  | ForgeWebScriptIrFunctionValueExpression
+  | ForgeWebScriptIrStructValueExpression
+  | ForgeWebScriptIrEnumValueExpression
+  | ForgeWebScriptIrMatchExpression
+  | ForgeWebScriptIrUnaryExpression
+  | ForgeWebScriptIrArrayLiteralExpression
+  | ForgeWebScriptIrIndexExpression;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2083,7 +2174,18 @@ export interface ForgeWebScriptIrReturnStatement
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptIrStatement = | ForgeWebScriptIrExpressionStatement | ForgeWebScriptIrAssignmentStatement | ForgeWebScriptIrIfStatement | ForgeWebScriptIrWhileStatement | ForgeWebScriptIrDoWhileStatement | ForgeWebScriptIrLetStatement | ForgeWebScriptIrReturnStatement | ForgeWebScriptIrMatchStatement | ForgeWebScriptIrSwitchStatement | ForgeWebScriptIrYieldStatement | ForgeWebScriptIrIteratorLoopStatement;
+export type ForgeWebScriptIrStatement =
+  | ForgeWebScriptIrExpressionStatement
+  | ForgeWebScriptIrAssignmentStatement
+  | ForgeWebScriptIrIfStatement
+  | ForgeWebScriptIrWhileStatement
+  | ForgeWebScriptIrDoWhileStatement
+  | ForgeWebScriptIrLetStatement
+  | ForgeWebScriptIrReturnStatement
+  | ForgeWebScriptIrMatchStatement
+  | ForgeWebScriptIrSwitchStatement
+  | ForgeWebScriptIrYieldStatement
+  | ForgeWebScriptIrIteratorLoopStatement;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2143,32 +2245,32 @@ export interface ForgeWebScriptIrYieldStatement
 **النوع:** الوظيفة
 
 ```typescript
-function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule
+function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptIrModule |  |
+| الاسم          | اكتب                   | الوصف |
+| -------------- | ---------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptIrModule |       |
 
 ### LowerForgeWebScriptToIr
 
 **النوع:** الوظيفة
 
 ```typescript
-function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule
+function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptModule |  |
+| الاسم          | اكتب                 | الوصف |
+| -------------- | -------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptModule |       |
 
 ## `src/lexer`
 
@@ -2197,7 +2299,8 @@ export interface ForgeWebScriptToken
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
+export type ForgeWebScriptTokenKind =
+  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
 ```
 
 لم يتم تقديم أي وصف.
@@ -2207,17 +2310,17 @@ export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number
 **النوع:** الوظيفة
 
 ```typescript
-function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult
+function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| اسم الملف |  |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| المصدر    | سلسلة |       |
+| اسم الملف |       |       |
 
 ## `src/linker`
 
@@ -2236,17 +2339,20 @@ export interface ForgeWebScriptLinkResult
 **النوع:** الوظيفة
 
 ```typescript
-function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): ForgeWebScriptLinkResult
+function validateForgeWebScriptLinks(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): ForgeWebScriptLinkResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رسم بياني | ForgeWebScriptModuleGraph |  |
-| التكوين | ForgeWebScriptLinkConfiguration |  |
+| الاسم     | اكتب                            | الوصف |
+| --------- | ------------------------------- | ----- |
+| رسم بياني | ForgeWebScriptModuleGraph       |       |
+| التكوين   | ForgeWebScriptLinkConfiguration |       |
 
 ## `src/manifest`
 
@@ -2255,24 +2361,27 @@ function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configura
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptAbiManifest(module: ForgeWebScriptModule, options: ForgeWebScriptAbiManifestOptions = {}): ForgeWebScriptAbiManifest
+function createForgeWebScriptAbiManifest(
+  module: ForgeWebScriptModule,
+  options: ForgeWebScriptAbiManifestOptions = {},
+): ForgeWebScriptAbiManifest;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptModule |  |
-| خيارات | ForgeWebScriptAbiManifestOptions |  |
+| الاسم          | اكتب                             | الوصف |
+| -------------- | -------------------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptModule             |       |
+| خيارات         | ForgeWebScriptAbiManifestOptions |       |
 
 ### FORGE_WEB_SCRIPT_ABI_VERSION
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION
+export const FORGE_WEB_SCRIPT_ABI_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2282,7 +2391,7 @@ export const FORGE_WEB_SCRIPT_ABI_VERSION
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION
+export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2472,7 +2581,8 @@ export interface ForgeWebScriptSpecialization
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptValueRepresentation = 'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptValueRepresentation =
+  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
 ```
 
 لم يتم تقديم أي وصف.
@@ -2494,17 +2604,20 @@ export interface ForgeWebScriptImportTypeEnvironment
 **النوع:** الوظيفة
 
 ```typescript
-function resolveForgeWebScriptImportTypeEnvironment(importer: ForgeWebScriptResolvedModule, graph: ForgeWebScriptModuleGraph): ForgeWebScriptImportTypeEnvironment
+function resolveForgeWebScriptImportTypeEnvironment(
+  importer: ForgeWebScriptResolvedModule,
+  graph: ForgeWebScriptModuleGraph,
+): ForgeWebScriptImportTypeEnvironment;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مستورد | ForgeWebScriptResolvedModule |  |
-| رسم بياني | ForgeWebScriptModuleGraph |  |
+| الاسم     | اكتب                         | الوصف |
+| --------- | ---------------------------- | ----- |
+| مستورد    | ForgeWebScriptResolvedModule |       |
+| رسم بياني | ForgeWebScriptModuleGraph    |       |
 
 ## `src/optimizer`
 
@@ -2543,34 +2656,40 @@ export interface ForgeWebScriptOptimizationResult
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeForgeWebScriptIr(input: ForgeWebScriptIrModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptIr(
+  input: ForgeWebScriptIrModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | ForgeWebScriptIrModule |  |
-| الوضع | 'تصحيح' \| "الإفراج" |  |
+| الاسم   | اكتب                   | الوصف |
+| ------- | ---------------------- | ----- |
+| الإدخال | ForgeWebScriptIrModule |       |
+| الوضع   | 'تصحيح' \| "الإفراج"   |       |
 
 ### optimForgeWebScriptModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeForgeWebScriptModule(module: ForgeWebScriptModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptModule(
+  module: ForgeWebScriptModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptModule |  |
-| الوضع | 'تصحيح' \| "الإفراج" |  |
+| الاسم          | اكتب                 | الوصف |
+| -------------- | -------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptModule |       |
+| الوضع          | 'تصحيح' \| "الإفراج" |       |
 
 ## `src/parser`
 
@@ -2599,25 +2718,29 @@ export interface ForgeWebScriptParseResult
 **النوع:** الوظيفة
 
 ```typescript
-function parseForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptParseOptions = {}): ForgeWebScriptParseResult
+function parseForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptParseOptions = {},
+): ForgeWebScriptParseResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| اسم الملف |  |  |
-| خيارات | فورجيويبسكريبتبارسيوبتيونس |  |
+| الاسم     | اكتب                       | الوصف |
+| --------- | -------------------------- | ----- |
+| المصدر    | سلسلة                      |       |
+| اسم الملف |                            |       |
+| خيارات    | فورجيويبسكريبتبارسيوبتيونس |       |
 
 ### أنواع بدائية
 
 **النوع:** ثابت
 
 ```typescript
-export const primitiveTypes
+export const primitiveTypes;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2629,7 +2752,7 @@ export const primitiveTypes
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[]
+function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[];
 ```
 
 لم يتم تقديم أي وصف.
@@ -2639,32 +2762,32 @@ function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeW
 **النوع:** الوظيفة
 
 ```typescript
-function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string
+function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بايت | Uint8Array |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| بايت  | Uint8Array |       |
 
 ### encodeForgeWebScriptSelfHostedFingerprint
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array
+function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بصمة | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| بصمة  | سلسلة |       |
 
 ### ForgeWebScriptSelfHostedCompilation
 
@@ -2701,7 +2824,9 @@ export type ForgeWebScriptSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot
 **النوع:** الوظيفة
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilation(input: ForgeWebScriptCompileInput): ForgeWebScriptSelfHostedCompilation
+function prepareForgeWebScriptSelfHostedCompilation(
+  input: ForgeWebScriptCompileInput,
+): ForgeWebScriptSelfHostedCompilation;
 ```
 
 إعداد وحدة تجميع مستضافة ذاتيا يحدها.
@@ -2711,25 +2836,25 @@ function prepareForgeWebScriptSelfHostedCompilation(input: ForgeWebScriptCompile
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |  |
+| الاسم   | اكتب                      | الوصف |
+| ------- | ------------------------- | ----- |
+| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
 
 ### PreparForgeWebScriptSelfHostedCompilationLegacyFingerprint
 
 **النوع:** الوظيفة
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string
+function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |  |
+| الاسم   | اكتب                      | الوصف |
+| ------- | ------------------------- | ----- |
+| الإدخال | فورجيويبسكريبتكومبيلينبوت |       |
 
 #### عقد
 
@@ -2742,91 +2867,99 @@ function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: Forg
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptSelfHostedStageArtifact(stage: ForgeWebScriptSelfHostedCompilerStage, identity: ForgeWebScriptSelfHostedStageArtifactIdentity, payload: Uint8Array, diagnostics: readonly ForgeWebScriptDiagnostic[] = []): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedStageArtifact(
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  identity: ForgeWebScriptSelfHostedStageArtifactIdentity,
+  payload: Uint8Array,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المرحلة | ForgeWebScriptSelfHostedCompilerStage |  |
-| الهوية | ForgeWebScriptSelfHostedStageArtifactIdentity |  |
-| الحمولة | Uint8Array |  |
-| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |  |
+| الاسم   | اكتب                                          | الوصف |
+| ------- | --------------------------------------------- | ----- |
+| المرحلة | ForgeWebScriptSelfHostedCompilerStage         |       |
+| الهوية  | ForgeWebScriptSelfHostedStageArtifactIdentity |       |
+| الحمولة | Uint8Array                                    |       |
+| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[]        |       |
 
 ### decodeForgeWebScriptSelfHostedDiagnostics
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[]
+function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بايت | Uint8Array |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| بايت  | Uint8Array |       |
 
 ### decodeForgeWebScriptSelfHostedStageArtifact
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeForgeWebScriptSelfHostedStageArtifact(bytes: Uint8Array, options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {}): ForgeWebScriptSelfHostedStageArtifact
+function decodeForgeWebScriptSelfHostedStageArtifact(
+  bytes: Uint8Array,
+  options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {},
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بايت | Uint8Array |  |
-| خيارات | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |  |
+| الاسم  | اكتب                                               | الوصف |
+| ------ | -------------------------------------------------- | ----- |
+| بايت   | Uint8Array                                         |       |
+| خيارات | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |       |
 
 ### encodeForgeWebScriptSelfHostedDiagnostics
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array
+function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |  |
+| الاسم   | اكتب                                   | الوصف |
+| ------- | -------------------------------------- | ----- |
+| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |       |
 
 ### encodeForgeWebScriptSelfHostedStageArtifact
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array
+function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| قطعة أثرية | ForgeWebScriptSelfHostedStageArtifact |  |
+| الاسم      | اكتب                                  | الوصف |
+| ---------- | ------------------------------------- | ----- |
+| قطعة أثرية | ForgeWebScriptSelfHostedStageArtifact |       |
 
 ### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2836,7 +2969,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2846,7 +2979,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2858,7 +2991,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 ```typescript
 export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
   Record<ForgeWebScriptSelfHostedCompilerStage, string>
->
+>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2868,7 +3001,8 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptSelfHostedCompilerStage = 'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
+export type ForgeWebScriptSelfHostedCompilerStage =
+  'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
 لم يتم تقديم أي وصف.
@@ -2908,34 +3042,34 @@ export interface ForgeWebScriptSelfHostedStageArtifactIdentity
 **النوع:** الوظيفة
 
 ```typescript
-function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string
+function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بايت | Uint8Array |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| بايت  | Uint8Array |       |
 
 ### hashForgeWebScriptSelfHostedSourceIdentity
 
 **النوع:** الوظيفة
 
 ```typescript
-function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string
+function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| اسم الملف | سلسلة |  |
-| الرسم البياني هاش | سلسلة |  |
+| الاسم             | اكتب  | الوصف |
+| ----------------- | ----- | ----- |
+| المصدر            | سلسلة |       |
+| اسم الملف         | سلسلة |       |
+| الرسم البياني هاش | سلسلة |       |
 
 ## `src/self-hosted/fws/lexer`
 
@@ -2951,9 +3085,9 @@ export fn is_ws(byte: i32) -> bool
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بايت | i32 | قيمة البايت المرشح. |
+| الاسم | اكتب | الوصف               |
+| ----- | ---- | ------------------- |
+| بايت  | i32  | قيمة البايت المرشح. |
 
 #### عقد
 
@@ -2967,7 +3101,7 @@ export fn is_ws(byte: i32) -> bool
 **النوع:** الوظيفة
 
 ```typescript
-function computeForgeWebScriptLexStageFingerprint(source: string): number
+function computeForgeWebScriptLexStageFingerprint(source: string): number;
 ```
 
 مرجع البذور لمرحلة ليكس المستضافة ذاتيا.
@@ -2975,16 +3109,16 @@ function computeForgeWebScriptLexStageFingerprint(source: string): number
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المصدر | سلسلة |       |
 
 ### createForgeWebScriptLexStageVmModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule;
 ```
 
 وحدة VM تم إنزالها يدويًا لمرحلة بصمة الإصبع.
@@ -2992,9 +3126,9 @@ function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScrip
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصدرهاش | سلسلة |  |
+| الاسم   | اكتب  | الوصف |
+| ------- | ----- | ----- |
+| مصدرهاش | سلسلة |       |
 
 ### encodeForgeWebScriptLexStageSource
 
@@ -3006,23 +3140,23 @@ function encodeForgeWebScriptLexStageSource(source: string): {
   readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
-}
+};
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المصدر | سلسلة |       |
 
 ### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3032,7 +3166,7 @@ export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3084,48 +3218,52 @@ export type ForgeWebScriptSelfHostedVmValue = |
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptParserModuleVmModule(sourceHash: string, fileName: string, options: ForgeWebScriptParserModuleStageOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserModuleVmModule(
+  sourceHash: string,
+  fileName: string,
+  options: ForgeWebScriptParserModuleStageOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 وحدة VM التي تم إنزالها يدويًا لمرحلة وحدة المحلل اللغوي المحدودة.
 الإدخال: parse_module_stage (المصدر: ForgeWebScriptSourceBytes) -> مغلف البايت.
 
 تخطيط المغلف (جميع u32 Little-Endian):
-  [0] FailFlag (1 = القواعد خارج المجموعة الفرعية v1 المحدودة؛ حمولة الوحدة غائبة)
-  [4] diagFlag (1 = تم تسجيل تشخيص FWS-PARSE-052 محدد)
-  [8..32) فترة التشخيص (البداية، النهاية، السطر، العمود، خط النهاية، عمود النهاية)
-  [32..) بايتات الحمولة النافعة للوحدة (ذات معنى فقط عندما يكون FailFlag = 0)
+[0] FailFlag (1 = القواعد خارج المجموعة الفرعية v1 المحدودة؛ حمولة الوحدة غائبة)
+[4] diagFlag (1 = تم تسجيل تشخيص FWS-PARSE-052 محدد)
+[8..32) فترة التشخيص (البداية، النهاية، السطر، العمود، خط النهاية، عمود النهاية)
+[32..) بايتات الحمولة النافعة للوحدة (ذات معنى فقط عندما يكون FailFlag = 0)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصدرهاش | سلسلة |  |
-| اسم الملف | سلسلة |  |
-| خيارات | ForgeWebScriptParserModuleStageOptions |  |
+| الاسم     | اكتب                                   | الوصف |
+| --------- | -------------------------------------- | ----- |
+| مصدرهاش   | سلسلة                                  |       |
+| اسم الملف | سلسلة                                  |       |
+| خيارات    | ForgeWebScriptParserModuleStageOptions |       |
 
 ### decodeForgeWebScriptParserModuleEnvelope
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope
+function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بايت | Uint8Array |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| بايت  | Uint8Array |       |
 
 ### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3157,7 +3295,7 @@ export interface ForgeWebScriptParserModuleStageOptions
 **النوع:** الوظيفة
 
 ```typescript
-function computeForgeWebScriptParserStageFingerprint(source: string): number
+function computeForgeWebScriptParserStageFingerprint(source: string): number;
 ```
 
 مرجع أولي لمرحلة المحلل اللغوي المستضافة ذاتيًا.
@@ -3165,16 +3303,19 @@ function computeForgeWebScriptParserStageFingerprint(source: string): number
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المصدر | سلسلة |       |
 
 ### createForgeWebScriptParserStageVmModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptParserStageVmModule(sourceHash: string, options: ForgeWebScriptParserStageVmModuleOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserStageVmModule(
+  sourceHash: string,
+  options: ForgeWebScriptParserStageVmModuleOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 وحدة VM تم إنزالها يدويًا لمرحلة محلل بصمات الأصابع.
@@ -3182,17 +3323,17 @@ function createForgeWebScriptParserStageVmModule(sourceHash: string, options: Fo
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصدرهاش | سلسلة |  |
-| خيارات | ForgeWebScriptParserStageVmModuleOptions |  |
+| الاسم   | اكتب                                     | الوصف |
+| ------- | ---------------------------------------- | ----- |
+| مصدرهاش | سلسلة                                    |       |
+| خيارات  | ForgeWebScriptParserStageVmModuleOptions |       |
 
 ### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3214,140 +3355,158 @@ export interface ForgeWebScriptParserStageVmModuleOptions
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptSelfHostedParserArtifact(source: string, fileName: string, module: ForgeWebScriptModule, diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedParserArtifact(
+  source: string,
+  fileName: string,
+  module: ForgeWebScriptModule,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| اسم الملف | سلسلة |  |
-| الوحدة النمطية | ForgeWebScriptModule |  |
-| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |  |
-| الرسم البياني هاش | سلسلة |  |
+| الاسم             | اكتب                                   | الوصف |
+| ----------------- | -------------------------------------- | ----- |
+| المصدر            | سلسلة                                  |       |
+| اسم الملف         | سلسلة                                  |       |
+| الوحدة النمطية    | ForgeWebScriptModule                   |       |
+| التشخيص           | للقراءة فقط ForgeWebScriptDiagnostic[] |       |
+| الرسم البياني هاش | سلسلة                                  |       |
 
 ### createForgeWebScriptSelfHostedTokenArtifact
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptSelfHostedTokenArtifact(source: string, fileName: string, tokens: readonly ForgeWebScriptToken[], diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedTokenArtifact(
+  source: string,
+  fileName: string,
+  tokens: readonly ForgeWebScriptToken[],
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| اسم الملف | سلسلة |  |
-| الرموز | للقراءة فقط ForgeWebScriptToken[] |  |
-| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |  |
-| الرسم البياني هاش | سلسلة |  |
+| الاسم             | اكتب                                   | الوصف |
+| ----------------- | -------------------------------------- | ----- |
+| المصدر            | سلسلة                                  |       |
+| اسم الملف         | سلسلة                                  |       |
+| الرموز            | للقراءة فقط ForgeWebScriptToken[]      |       |
+| التشخيص           | للقراءة فقط ForgeWebScriptDiagnostic[] |       |
+| الرسم البياني هاش | سلسلة                                  |       |
 
 ### decodeForgeWebScriptSelfHostedModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule
+function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بايت | Uint8Array |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| بايت  | Uint8Array |       |
 
 ### decodeForgeWebScriptSelfHostedTokens
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[]
+function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بايت | Uint8Array |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| بايت  | Uint8Array |       |
 
 ### encodeForgeWebScriptSelfHostedModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array
+function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptModule |  |
+| الاسم          | اكتب                 | الوصف |
+| -------------- | -------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptModule |       |
 
 ### encodeForgeWebScriptSelfHostedTokens
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array
+function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الرموز | للقراءة فقط ForgeWebScriptToken[] |  |
+| الاسم  | اكتب                              | الوصف |
+| ------ | --------------------------------- | ----- |
+| الرموز | للقراءة فقط ForgeWebScriptToken[] |       |
 
 ### hashForgeWebScriptSelfHostedStagePayload
 
 **النوع:** الوظيفة
 
 ```typescript
-function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string
+function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| قطعة أثرية | ForgeWebScriptSelfHostedStageArtifact |  |
+| الاسم      | اكتب                                  | الوصف |
+| ---------- | ------------------------------------- | ----- |
+| قطعة أثرية | ForgeWebScriptSelfHostedStageArtifact |       |
 
 ### validateForgeWebScriptSelfHostedStageArtifact
 
 **النوع:** الوظيفة
 
 ```typescript
-function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact, stage: ForgeWebScriptSelfHostedCompilerStage, source: string, fileName: string, graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function validateForgeWebScriptSelfHostedStageArtifact(
+  artifact: ForgeWebScriptSelfHostedStageArtifact,
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  source: string,
+  fileName: string,
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| قطعة أثرية | ForgeWebScriptSelfHostedStageArtifact |  |
-| المرحلة | ForgeWebScriptSelfHostedCompilerStage |  |
-| المصدر | سلسلة |  |
-| اسم الملف | سلسلة |  |
-| الرسم البياني هاش | سلسلة |  |
+| الاسم             | اكتب                                  | الوصف |
+| ----------------- | ------------------------------------- | ----- |
+| قطعة أثرية        | ForgeWebScriptSelfHostedStageArtifact |       |
+| المرحلة           | ForgeWebScriptSelfHostedCompilerStage |       |
+| المصدر            | سلسلة                                 |       |
+| اسم الملف         | سلسلة                                 |       |
+| الرسم البياني هاش | سلسلة                                 |       |
 
 ## `src/stdlib/memory`
 
@@ -3356,7 +3515,7 @@ function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptS
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3366,7 +3525,7 @@ export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[]
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[];
 ```
 
 لم يتم تقديم أي وصف.
@@ -3386,7 +3545,15 @@ export interface ForgeWebScriptMemoryFunction
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' | 'memory-realloc' | 'memory-load-u32' | 'memory-store-u32' | 'memory-load-f64' | 'memory-store-f64' | 'f64-from-u32';
+export type ForgeWebScriptMemoryOperation =
+  | 'memory-alloc'
+  | 'memory-dealloc'
+  | 'memory-realloc'
+  | 'memory-load-u32'
+  | 'memory-store-u32'
+  | 'memory-load-f64'
+  | 'memory-store-f64'
+  | 'f64-from-u32';
 ```
 
 تم التحقق من عمليات الذاكرة الخطية الضيف المحجوزة بواسطة المترجم.
@@ -3398,7 +3565,7 @@ export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' 
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3408,7 +3575,7 @@ export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptS
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3418,7 +3585,7 @@ export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3428,7 +3595,7 @@ export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[]
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[];
 ```
 
 المكالمات المملوكة للمترجم. إنها أسماء مصادر محجوزة، وليست واردات المضيف، و
@@ -3440,7 +3607,7 @@ export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLi
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION
+export const FORGE_WEB_SCRIPT_REGEX_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3450,7 +3617,16 @@ export const FORGE_WEB_SCRIPT_REGEX_VERSION
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptRegexOperation = | 'full-match' | 'prefix-match' | 'search' | 'full-capture-start' | 'full-capture-end' | 'prefix-capture-start' | 'prefix-capture-end' | 'search-capture-start' | 'search-capture-end';
+export type ForgeWebScriptRegexOperation =
+  | 'full-match'
+  | 'prefix-match'
+  | 'search'
+  | 'full-capture-start'
+  | 'full-capture-end'
+  | 'prefix-capture-start'
+  | 'prefix-capture-end'
+  | 'search-capture-start'
+  | 'search-capture-end';
 ```
 
 لم يتم تقديم أي وصف.
@@ -3470,16 +3646,18 @@ export interface ForgeWebScriptStandardLibraryFunction
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptStandardLibraryIdentity(overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {}): ForgeWebScriptStandardLibraryIdentity
+function forgeWebScriptStandardLibraryIdentity(
+  overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {},
+): ForgeWebScriptStandardLibraryIdentity;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| يتجاوز | جزئي<ForgeWebScriptStandardLibraryIdentity> |  |
+| الاسم  | اكتب                                        | الوصف |
+| ------ | ------------------------------------------- | ----- |
+| يتجاوز | جزئي<ForgeWebScriptStandardLibraryIdentity> |       |
 
 ### ForgeWebScriptStandardLibraryIdentity
 
@@ -3498,7 +3676,7 @@ export interface ForgeWebScriptStandardLibraryIdentity
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
 ```
 
 لم يتم تقديم أي وصف.
@@ -3508,7 +3686,7 @@ export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[]
+export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[];
 ```
 
 لم يتم تقديم أي وصف.
@@ -3528,7 +3706,18 @@ export interface ForgeWebScriptStringFunction
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' | 'string-byte-at' | 'string-starts-with' | 'string-slice' | 'string-to-i32' | 'bytes-length' | 'bytes-length-u32' | 'bytes-byte-at' | 'bytes-byte-at-u32' | 'bytes-slice';
+export type ForgeWebScriptStringOperation =
+  | 'string-concat'
+  | 'string-length'
+  | 'string-byte-at'
+  | 'string-starts-with'
+  | 'string-slice'
+  | 'string-to-i32'
+  | 'bytes-length'
+  | 'bytes-length-u32'
+  | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
+  | 'bytes-slice';
 ```
 
 سلسلة حتمية مملوكة للمترجم وعمليات البايت.
@@ -3540,18 +3729,22 @@ export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' 
 **النوع:** الوظيفة
 
 ```typescript
-function checkForgeWebScript(module: ForgeWebScriptModule, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptTypeCheckResult
+function checkForgeWebScript(
+  module: ForgeWebScriptModule,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptTypeCheckResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptModule |  |
-| اسم الملف |  |  |
-| خيارات | فورجي ويب سكريبت تايب تشيك أوبتيونس |  |
+| الاسم          | اكتب                                | الوصف |
+| -------------- | ----------------------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptModule                |       |
+| اسم الملف      |                                     |       |
+| خيارات         | فورجي ويب سكريبت تايب تشيك أوبتيونس |       |
 
 ### ForgeWebScriptTypeCheckOptions
 
@@ -3590,18 +3783,22 @@ export interface ForgeWebScriptValidationResult
 **النوع:** الوظيفة
 
 ```typescript
-function validateForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptValidationResult
+function validateForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptValidationResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| اسم الملف |  |  |
-| خيارات | فورجي ويب سكريبت تايب تشيك أوبتيونس |  |
+| الاسم     | اكتب                                | الوصف |
+| --------- | ----------------------------------- | ----- |
+| المصدر    | سلسلة                               |       |
+| اسم الملف |                                     |       |
+| خيارات    | فورجي ويب سكريبت تايب تشيك أوبتيونس |       |
 
 ## `src/wat`
 
@@ -3620,14 +3817,14 @@ export interface ForgeWebScriptWatMetadata
 **النوع:** الوظيفة
 
 ```typescript
-function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string
+function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptModule |  |
-| البيانات الوصفية | ForgeWebScriptWatMetadata |  |
+| الاسم            | اكتب                      | الوصف |
+| ---------------- | ------------------------- | ----- |
+| الوحدة النمطية   | ForgeWebScriptModule      |       |
+| البيانات الوصفية | ForgeWebScriptWatMetadata |       |

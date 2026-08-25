@@ -16,33 +16,33 @@
 פונקציה **סוג:**
 
 ```typescript
-function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void
+function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מניפסט | ForgeWebScriptAbiManifest |  |
+| שם     | הקלד                      | תיאור |
+| ------ | ------------------------- | ----- |
+| מניפסט | ForgeWebScriptAbiManifest |       |
 
 ### equalFunction
 
 פונקציה **סוג:**
 
 ```typescript
-function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean
+function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שמאל | ForgeWebScriptAbiFunction |  |
-| נכון | ForgeWebScriptAbiFunction |  |
+| שם   | הקלד                      | תיאור |
+| ---- | ------------------------- | ----- |
+| שמאל | ForgeWebScriptAbiFunction |       |
+| נכון | ForgeWebScriptAbiFunction |       |
 
 ### ForgeWebScriptAbiValidationResult
 
@@ -59,16 +59,16 @@ export interface ForgeWebScriptAbiValidationResult
 פונקציה **סוג:**
 
 ```typescript
-function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult
+function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מניפסט | ForgeWebScriptAbiManifest |  |
+| שם     | הקלד                      | תיאור |
+| ------ | ------------------------- | ----- |
+| מניפסט | ForgeWebScriptAbiManifest |       |
 
 ## `src/async`
 
@@ -77,23 +77,23 @@ function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest):
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime
+function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptAsyncRuntimeOptions |  |
+| שם       | הקלד                              | תיאור |
+| -------- | --------------------------------- | ----- |
+| אפשרויות | ForgeWebScriptAsyncRuntimeOptions |       |
 
 ### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
 ```
 
 לא סופק תיאור.
@@ -103,7 +103,8 @@ export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptAsyncCapability = (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type ForgeWebScriptAsyncCapability =
+  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
 ```
 
 לא סופק תיאור.
@@ -143,7 +144,8 @@ export interface ForgeWebScriptAsyncFailure
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptAsyncFailureCode = | 'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
+export type ForgeWebScriptAsyncFailureCode =
+  'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
 לא סופק תיאור.
@@ -245,104 +247,124 @@ export interface ForgeWebScriptAsyncWorkerMessage
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptArray(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function createForgeWebScriptArray(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 צור מערך קבוע על ידי העתקת הערכים שסופקו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערכים | קריאה בלבד TValue[] |  |
-| בעלות | ForgeWebScriptCollectionOwnership |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| ערכים | קריאה בלבד TValue[]               |       |
+| בעלות | ForgeWebScriptCollectionOwnership |       |
 
 ### createForgeWebScriptIterator
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptIterator(values: Iterable<TValue>, descriptor: ForgeWebScriptIteratorDescriptor): ForgeWebScriptIterator<TValue>
+function createForgeWebScriptIterator(
+  values: Iterable<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 התאם איטרטור לאיטרטור עצלן עם מתאר ABI שסופק.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערכים | Iterable<TValue> |  |
-| מתאר | ForgeWebScriptIteratorDescriptor |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| ערכים | Iterable<TValue>                 |       |
+| מתאר  | ForgeWebScriptIteratorDescriptor |       |
 
 ### createForgeWebScriptIteratorDescriptor
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptIteratorDescriptor(id: string, elementType = 'unknown', capability: ForgeWebScriptIteratorCapability = 'linear', ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptIteratorDescriptor
+function createForgeWebScriptIteratorDescriptor(
+  id: string,
+  elementType = 'unknown',
+  capability: ForgeWebScriptIteratorCapability = 'linear',
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptIteratorDescriptor;
 ```
 
 צור מטא נתונים של גבול מתאר; מתקשרים מדור קודם לגישה לינארית כברירת מחדל.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מזהה | מחרוזת |  |
-| elementType |  |  |
-| יכולת | ForgeWebScriptIteratorCapability |  |
-| בעלות | ForgeWebScriptCollectionOwnership |  |
+| שם          | הקלד                              | תיאור |
+| ----------- | --------------------------------- | ----- |
+| מזהה        | מחרוזת                            |       |
+| elementType |                                   |       |
+| יכולת       | ForgeWebScriptIteratorCapability  |       |
+| בעלות       | ForgeWebScriptCollectionOwnership |       |
 
 ### createForgeWebScriptMap
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptMap(entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [], strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>()): ForgeWebScriptMap<TKey, TValue>
+function createForgeWebScriptMap(
+  entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [],
+  strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>(),
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערכים | לקריאה בלבד ForgeWebScriptMapEntry<TKey, TValue>[] |  |
-| אסטרטגיה | ForgeWebScriptHashStrategy<TKey> |  |
+| שם       | הקלד                                               | תיאור |
+| -------- | -------------------------------------------------- | ----- |
+| ערכים    | לקריאה בלבד ForgeWebScriptMapEntry<TKey, TValue>[] |       |
+| אסטרטגיה | ForgeWebScriptHashStrategy<TKey>                   |       |
 
 ### createForgeWebScriptSet
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptSet(values: readonly TValue[] = [], strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>()): ForgeWebScriptSet<TValue>
+function createForgeWebScriptSet(
+  values: readonly TValue[] = [],
+  strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>(),
+): ForgeWebScriptSet<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערכים | קריאה בלבד TValue[] |  |
-| אסטרטגיה | ForgeWebScriptHashStrategy<TValue> |  |
+| שם       | הקלד                               | תיאור |
+| -------- | ---------------------------------- | ----- |
+| ערכים    | קריאה בלבד TValue[]                |       |
+| אסטרטגיה | ForgeWebScriptHashStrategy<TValue> |       |
 
 ### createForgeWebScriptVector
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptVector(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptVector<TValue>
+function createForgeWebScriptVector(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptVector<TValue>;
 ```
 
 צור וקטור בבעלות על ידי העתקת הערכים שסופקו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערכים | קריאה בלבד TValue[] |  |
-| בעלות | ForgeWebScriptCollectionOwnership |  |
+| שם    | הקלד                              | תיאור |
+| ----- | --------------------------------- | ----- |
+| ערכים | קריאה בלבד TValue[]               |       |
+| בעלות | ForgeWebScriptCollectionOwnership |       |
 
 ### ForgeWebScriptArray
 
@@ -359,69 +381,77 @@ export interface ForgeWebScriptArray<TValue>
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 קרא אלמנט מערך; מדדים לא חוקיים מחזירים Option.none.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מערך | ForgeWebScriptArray<TValue> |  |
-| אינדקס | מספר |  |
+| שם     | הקלד                        | תיאור |
+| ------ | --------------------------- | ----- |
+| מערך   | ForgeWebScriptArray<TValue> |       |
+| אינדקס | מספר                        |       |
 
 ### forgeWebScriptArrayLength
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number
+function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number;
 ```
 
 החזר אורך מערך מבלי לצרוך או להעתיק את האלמנטים שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מערך | ForgeWebScriptArray<TValue> |  |
+| שם   | הקלד                        | תיאור |
+| ---- | --------------------------- | ----- |
+| מערך | ForgeWebScriptArray<TValue> |       |
 
 ### forgeWebScriptArraySet
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptArraySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptArray<TValue>
+function forgeWebScriptArraySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptArray<TValue>;
 ```
 
 החלף אלמנט מערך; מדדים לא חוקיים זורקים RangeError.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מערך | ForgeWebScriptArray<TValue> |  |
-| אינדקס | מספר |  |
-| ערך | TValue |  |
+| שם     | הקלד                        | תיאור |
+| ------ | --------------------------- | ----- |
+| מערך   | ForgeWebScriptArray<TValue> |       |
+| אינדקס | מספר                        |       |
+| ערך    | TValue                      |       |
 
 ### forgeWebScriptArrayTrySet
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptArrayTrySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>
+function forgeWebScriptArrayTrySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>;
 ```
 
 החלף אלמנט מערך מבלי לזרוק; מדדים לא חוקיים מחזירים תוצאת שגיאה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מערך | ForgeWebScriptArray<TValue> |  |
-| אינדקס | מספר |  |
-| ערך | TValue |  |
+| שם     | הקלד                        | תיאור |
+| ------ | --------------------------- | ----- |
+| מערך   | ForgeWebScriptArray<TValue> |       |
+| אינדקס | מספר                        |       |
+| ערך    | TValue                      |       |
 
 ### ForgeWebScriptCollectionOwnership
 
@@ -438,7 +468,7 @@ export type ForgeWebScriptCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
+function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>;
 ```
 
 לא סופק תיאור.
@@ -448,7 +478,7 @@ function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
 **סוג:** קבוע
 
 ```typescript
-export const forgeWebScriptError
+export const forgeWebScriptError;
 ```
 
 בנה שגיאה ערך תוצאה ללא זריקה.
@@ -468,7 +498,8 @@ export interface ForgeWebScriptHashStrategy<TValue>
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptIterable<TValue> = ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
+export type ForgeWebScriptIterable<TValue> =
+  ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
 ```
 
 כל מקור מקובל על ידי פעולות איטרטור טוריות ומקבילות.
@@ -488,34 +519,40 @@ export interface ForgeWebScriptIterator<TValue>
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorAdd(source: ForgeWebScriptIterator<TValue>, value: TValue): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorAdd(
+  source: ForgeWebScriptIterator<TValue>,
+  value: TValue,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 מוסיף בעצלתיים ערך אחד לאיטרטור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterator<TValue> |  |
-| ערך | TValue |  |
+| שם   | הקלד                           | תיאור |
+| ---- | ------------------------------ | ----- |
+| מקור | ForgeWebScriptIterator<TValue> |       |
+| ערך  | TValue                         |       |
 
 ### forgeWebScriptIteratorAt
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorAt(iterator: ForgeWebScriptIterator<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorAt(
+  iterator: ForgeWebScriptIterator<TValue>,
+  index: number,
+): ForgeWebScriptOption<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| איטרטור | ForgeWebScriptIterator<TValue> |  |
-| אינדקס | מספר |  |
+| שם      | הקלד                           | תיאור |
+| ------- | ------------------------------ | ----- |
+| איטרטור | ForgeWebScriptIterator<TValue> |       |
+| אינדקס  | מספר                           |       |
 
 ### ForgeWebScriptIteratorCapability
 
@@ -532,33 +569,36 @@ export type ForgeWebScriptIteratorCapability = 'linear' | 'random-access';
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| איטרטור | ForgeWebScriptIterator<TValue> |  |
+| שם      | הקלד                           | תיאור |
+| ------- | ------------------------------ | ----- |
+| איטרטור | ForgeWebScriptIterator<TValue> |       |
 
 ### forgeWebScriptIteratorConcat
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorConcat(first: ForgeWebScriptIterator<TValue>, second: ForgeWebScriptIterable<TValue>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorConcat(
+  first: ForgeWebScriptIterator<TValue>,
+  second: ForgeWebScriptIterable<TValue>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 משרשרת בעצלתיים שני מקורות מבלי לשנות את הסדר של אף אחד מהמקורות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ראשון | ForgeWebScriptIterator<TValue> |  |
-| שני | ForgeWebScriptIterable<TValue> |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| ראשון | ForgeWebScriptIterator<TValue> |       |
+| שני   | ForgeWebScriptIterable<TValue> |       |
 
 ### ForgeWebScriptIteratorDescriptor
 
@@ -575,163 +615,186 @@ export interface ForgeWebScriptIteratorDescriptor
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorFilter(source: ForgeWebScriptIterator<TValue>, predicate: (value: TValue) => boolean): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFilter(
+  source: ForgeWebScriptIterator<TValue>,
+  predicate: (value: TValue) => boolean,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 סינון ערכים בעצלתיים; סינון תמיד משדרג את היכולת לגישה ליניארית.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterator<TValue> |  |
-| פרידיקט | (ערך: TValue) => בוליאני |  |
+| שם      | הקלד                           | תיאור |
+| ------- | ------------------------------ | ----- |
+| מקור    | ForgeWebScriptIterator<TValue> |       |
+| פרידיקט | (ערך: TValue) => בוליאני       |       |
 
 ### forgeWebScriptIteratorFirst
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| איטרטור | ForgeWebScriptIterator<TValue> |  |
+| שם      | הקלד                           | תיאור |
+| ------- | ------------------------------ | ----- |
+| איטרטור | ForgeWebScriptIterator<TValue> |       |
 
 ### forgeWebScriptIteratorFlatten
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorFlatten(source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFlatten(
+  source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 שטחו בעצלתיים מקורות מקוננים בסדר מקורות חיצוני ופנימי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |  |
+| שם   | הקלד                                                   | תיאור |
+| ---- | ------------------------------------------------------ | ----- |
+| מקור | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |       |
 
 ### forgeWebScriptIteratorFold
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorFold(iterator: ForgeWebScriptIterator<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptIteratorFold(
+  iterator: ForgeWebScriptIterator<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| איטרטור | ForgeWebScriptIterator<TValue> |  |
-| ראשי | TResult |  |
-| מפחית | (מצבר: TResult, ערך: TValue, index: number) => TResult |  |
+| שם      | הקלד                                                   | תיאור |
+| ------- | ------------------------------------------------------ | ----- |
+| איטרטור | ForgeWebScriptIterator<TValue>                         |       |
+| ראשי    | TResult                                                |       |
+| מפחית   | (מצבר: TResult, ערך: TValue, index: number) => TResult |       |
 
 ### forgeWebScriptIteratorFromArray
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorFromArray(array: ForgeWebScriptArray<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromArray(
+  array: ForgeWebScriptArray<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'array',
     'unknown',
     'random-access',
     array.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 צור איטרטור בגישה אקראית על מערך קבוע מבלי לשנות את הבעלות שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מערך | ForgeWebScriptArray<TValue> |  |
-| מתאר | ForgeWebScriptIteratorDescriptor |  |
+| שם   | הקלד                             | תיאור |
+| ---- | -------------------------------- | ----- |
+| מערך | ForgeWebScriptArray<TValue>      |       |
+| מתאר | ForgeWebScriptIteratorDescriptor |       |
 
 ### forgeWebScriptIteratorFromIterable
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorFromIterable(values: Iterable<TValue>, elementType = 'unknown', id = 'iterable'): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFromIterable(
+  values: Iterable<TValue>,
+  elementType = 'unknown',
+  id = 'iterable',
+): ForgeWebScriptIterator<TValue>;
 ```
 
 התאם איטרציה שרירותית לאיטרטור ליניארי של Forge Web Script.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערכים | Iterable<TValue> |  |
-| elementType |  |  |
-| מזהה |  |  |
+| שם          | הקלד             | תיאור |
+| ----------- | ---------------- | ----- |
+| ערכים       | Iterable<TValue> |       |
+| elementType |                  |       |
+| מזהה        |                  |       |
 
 ### forgeWebScriptIteratorFromVector
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorFromVector(vector: ForgeWebScriptVector<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromVector(
+  vector: ForgeWebScriptVector<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'vector',
     'unknown',
     'random-access',
     vector.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 צור איטרטור בגישה אקראית על וקטור מבלי לשנות את הבעלות שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וקטור | ForgeWebScriptVector<TValue> |  |
-| מתאר | ForgeWebScriptIteratorDescriptor |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| וקטור | ForgeWebScriptVector<TValue>     |       |
+| מתאר  | ForgeWebScriptIteratorDescriptor |       |
 
 ### forgeWebScriptIteratorLast
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| איטרטור | ForgeWebScriptIterator<TValue> |  |
+| שם      | הקלד                           | תיאור |
+| ------- | ------------------------------ | ----- |
+| איטרטור | ForgeWebScriptIterator<TValue> |       |
 
 ### forgeWebScriptIteratorMap
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorMap(source: ForgeWebScriptIterator<TValue>, map: (value: TValue) => TResult, elementType = source.descriptor.elementType): ForgeWebScriptIterator<TResult>
+function forgeWebScriptIteratorMap(
+  source: ForgeWebScriptIterator<TValue>,
+  map: (value: TValue) => TResult,
+  elementType = source.descriptor.elementType,
+): ForgeWebScriptIterator<TResult>;
 ```
 
 ממפה בעצלתיים ערכים תוך שמירה על גישה אקראית רק כאשר המקור תומך בכך.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterator<TValue> |  |
-| מפה | (ערך: TValue) => TResult |  |
-| elementType |  |  |
+| שם          | הקלד                           | תיאור |
+| ----------- | ------------------------------ | ----- |
+| מקור        | ForgeWebScriptIterator<TValue> |       |
+| מפה         | (ערך: TValue) => TResult       |       |
+| elementType |                                |       |
 
 ### ForgeWebScriptIteratorResult
 
@@ -748,34 +811,40 @@ export interface ForgeWebScriptIteratorResult<TValue>
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorTake(source: ForgeWebScriptIterator<TValue>, count: number): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorTake(
+  source: ForgeWebScriptIterator<TValue>,
+  count: number,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 הגבל בעצלתיים מקור לערכי ספירה לכל היותר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterator<TValue> |  |
-| לספור | מספר |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| מקור  | ForgeWebScriptIterator<TValue> |       |
+| לספור | מספר                           |       |
 
 ### forgeWebScriptIteratorToArray
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorToArray(iterator: ForgeWebScriptIterator<TValue>, ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function forgeWebScriptIteratorToArray(
+  iterator: ForgeWebScriptIterator<TValue>,
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| איטרטור | ForgeWebScriptIterator<TValue> |  |
-| בעלות | ForgeWebScriptCollectionOwnership |  |
+| שם      | הקלד                              | תיאור |
+| ------- | --------------------------------- | ----- |
+| איטרטור | ForgeWebScriptIterator<TValue>    |       |
+| בעלות   | ForgeWebScriptCollectionOwnership |       |
 
 ### ForgeWebScriptMap
 
@@ -792,33 +861,35 @@ export interface ForgeWebScriptMap<TKey, TValue>
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפה | ForgeWebScriptMap<TKey, TValue> |  |
-| מפתח | TKey |  |
+| שם   | הקלד                            | תיאור |
+| ---- | ------------------------------- | ----- |
+| מפה  | ForgeWebScriptMap<TKey, TValue> |       |
+| מפתח | TKey                            |       |
 
 ### forgeWebScriptMapEntries
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptMapEntries(map: ForgeWebScriptMap<TKey, TValue>): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>
+function forgeWebScriptMapEntries(
+  map: ForgeWebScriptMap<TKey, TValue>,
+): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפה | ForgeWebScriptMap<TKey, TValue> |  |
+| שם  | הקלד                            | תיאור |
+| --- | ------------------------------- | ----- |
+| מפה | ForgeWebScriptMap<TKey, TValue> |       |
 
 ### ForgeWebScriptMapEntry
 
@@ -835,42 +906,46 @@ export interface ForgeWebScriptMapEntry<TKey, TValue>
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>
+function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפה | ForgeWebScriptMap<TKey, TValue> |  |
-| מפתח | TKey |  |
+| שם   | הקלד                            | תיאור |
+| ---- | ------------------------------- | ----- |
+| מפה  | ForgeWebScriptMap<TKey, TValue> |       |
+| מפתח | TKey                            |       |
 
 ### forgeWebScriptMapSet
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptMapSet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey, value: TValue): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapSet(
+  map: ForgeWebScriptMap<TKey, TValue>,
+  key: TKey,
+  value: TValue,
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפה | ForgeWebScriptMap<TKey, TValue> |  |
-| מפתח | TKey |  |
-| ערך | TValue |  |
+| שם   | הקלד                            | תיאור |
+| ---- | ------------------------------- | ----- |
+| מפה  | ForgeWebScriptMap<TKey, TValue> |       |
+| מפתח | TKey                            |       |
+| ערך  | TValue                          |       |
 
 ### forgeWebScriptNone
 
 **סוג:** קבוע
 
 ```typescript
-export const forgeWebScriptNone
+export const forgeWebScriptNone;
 ```
 
 בנה ערך אופציה ריק.
@@ -880,7 +955,7 @@ export const forgeWebScriptNone
 **סוג:** קבוע
 
 ```typescript
-export const forgeWebScriptOk
+export const forgeWebScriptOk;
 ```
 
 בנה ערך תוצאה מוצלח.
@@ -920,74 +995,74 @@ export interface ForgeWebScriptSet<TValue>
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| להגדיר | ForgeWebScriptSet<TValue> |  |
-| ערך | TValue |  |
+| שם     | הקלד                      | תיאור |
+| ------ | ------------------------- | ----- |
+| להגדיר | ForgeWebScriptSet<TValue> |       |
+| ערך    | TValue                    |       |
 
 ### forgeWebScriptSetDelete
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| להגדיר | ForgeWebScriptSet<TValue> |  |
-| ערך | TValue |  |
+| שם     | הקלד                      | תיאור |
+| ------ | ------------------------- | ----- |
+| להגדיר | ForgeWebScriptSet<TValue> |       |
+| ערך    | TValue                    |       |
 
 ### forgeWebScriptSetHas
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean
+function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| להגדיר | ForgeWebScriptSet<TValue> |  |
-| ערך | TValue |  |
+| שם     | הקלד                      | תיאור |
+| ------ | ------------------------- | ----- |
+| להגדיר | ForgeWebScriptSet<TValue> |       |
+| ערך    | TValue                    |       |
 
 ### forgeWebScriptSetValues
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| להגדיר | ForgeWebScriptSet<TValue> |  |
+| שם     | הקלד                      | תיאור |
+| ------ | ------------------------- | ----- |
+| להגדיר | ForgeWebScriptSet<TValue> |       |
 
 ### forgeWebScriptSome
 
 **סוג:** קבוע
 
 ```typescript
-export const forgeWebScriptSome
+export const forgeWebScriptSome;
 ```
 
 בנה ערך אופציה נוכחי.
@@ -1008,7 +1083,7 @@ export interface ForgeWebScriptVector<TValue>
 **סוג:** קבוע
 
 ```typescript
-export const forgeWebScriptVectorAdd
+export const forgeWebScriptVectorAdd;
 ```
 
 כינוי לדחיפה וקטורית, תואם את אוצר המילים של איטרטור stdlib `add`.
@@ -1018,85 +1093,95 @@ export const forgeWebScriptVectorAdd
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptVectorFilter(vector: ForgeWebScriptVector<TValue>, predicate: (value: TValue, index: number) => boolean): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorFilter(
+  vector: ForgeWebScriptVector<TValue>,
+  predicate: (value: TValue, index: number) => boolean,
+): ForgeWebScriptVector<TValue>;
 ```
 
 סנן וקטור בשקיקה לוקטור חדש תוך שמירה על סדר המקור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וקטור | ForgeWebScriptVector<TValue> |  |
-| פרידיקט | (ערך: TValue, אינדקס: מספר) => בוליאני |  |
+| שם      | הקלד                                   | תיאור |
+| ------- | -------------------------------------- | ----- |
+| וקטור   | ForgeWebScriptVector<TValue>           |       |
+| פרידיקט | (ערך: TValue, אינדקס: מספר) => בוליאני |       |
 
 ### forgeWebScriptVectorFold
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptVectorFold(vector: ForgeWebScriptVector<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptVectorFold(
+  vector: ForgeWebScriptVector<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 קפל ערכי וקטור משמאל לימין, כולל המצבר הראשוני שסופק.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וקטור | ForgeWebScriptVector<TValue> |  |
-| ראשי | TResult |  |
-| מפחית | (מצבר: TResult, ערך: TValue, index: number) => TResult |  |
+| שם    | הקלד                                                   | תיאור |
+| ----- | ------------------------------------------------------ | ----- |
+| וקטור | ForgeWebScriptVector<TValue>                           |       |
+| ראשי  | TResult                                                |       |
+| מפחית | (מצבר: TResult, ערך: TValue, index: number) => TResult |       |
 
 ### forgeWebScriptVectorGet
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 קרא אלמנט וקטור; מדדים לא חוקיים מחזירים Option.none.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וקטור | ForgeWebScriptVector<TValue> |  |
-| אינדקס | מספר |  |
+| שם     | הקלד                         | תיאור |
+| ------ | ---------------------------- | ----- |
+| וקטור  | ForgeWebScriptVector<TValue> |       |
+| אינדקס | מספר                         |       |
 
 ### forgeWebScriptVectorLength
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number
+function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number;
 ```
 
 החזר את מספר האלמנטים הווקטוריים המאתחלים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וקטור | ForgeWebScriptVector<TValue> |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| וקטור | ForgeWebScriptVector<TValue> |       |
 
 ### forgeWebScriptVectorMap
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform: (value: TValue, index: number) => TResult): ForgeWebScriptVector<TResult>
+function forgeWebScriptVectorMap(
+  vector: ForgeWebScriptVector<TValue>,
+  transform: (value: TValue, index: number) => TResult,
+): ForgeWebScriptVector<TResult>;
 ```
 
 ממפה בשקיקה וקטור לוקטור חדש בסדר אינדקס מקור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וקטור | ForgeWebScriptVector<TValue> |  |
-| להפוך | (ערך: TValue, אינדקס: מספר) => TResult |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| וקטור | ForgeWebScriptVector<TValue>           |       |
+| להפוך | (ערך: TValue, אינדקס: מספר) => TResult |       |
 
 ### forgeWebScriptVectorPop
 
@@ -1106,69 +1191,77 @@ function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform
 function forgeWebScriptVectorPop(vector: ForgeWebScriptVector<TValue>): {
   readonly vector: ForgeWebScriptVector<TValue>;
   readonly value: ForgeWebScriptOption<TValue>;
-}
+};
 ```
 
 הסר את ערך הוקטור הסופי והחזר את תוצאת הווקטור המעודכנת בתוספת Option.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וקטור | ForgeWebScriptVector<TValue> |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| וקטור | ForgeWebScriptVector<TValue> |       |
 
 ### forgeWebScriptVectorPush
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>;
 ```
 
 הוסף ערך והגדל את היכולת לפי הצורך, תוך שמירה על בעלות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וקטור | ForgeWebScriptVector<TValue> |  |
-| ערך | TValue |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| וקטור | ForgeWebScriptVector<TValue> |       |
+| ערך   | TValue                       |       |
 
 ### forgeWebScriptVectorSet
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptVectorSet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorSet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptVector<TValue>;
 ```
 
 החלף אלמנט וקטור; מדדים לא חוקיים זורקים RangeError.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וקטור | ForgeWebScriptVector<TValue> |  |
-| אינדקס | מספר |  |
-| ערך | TValue |  |
+| שם     | הקלד                         | תיאור |
+| ------ | ---------------------------- | ----- |
+| וקטור  | ForgeWebScriptVector<TValue> |       |
+| אינדקס | מספר                         |       |
+| ערך    | TValue                       |       |
 
 ### forgeWebScriptVectorTrySet
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>
+function forgeWebScriptVectorTrySet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>;
 ```
 
 החלף אלמנט וקטור מבלי לזרוק; מדדים לא חוקיים מחזירים תוצאת שגיאה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וקטור | ForgeWebScriptVector<TValue> |  |
-| אינדקס | מספר |  |
-| ערך | TValue |  |
+| שם     | הקלד                         | תיאור |
+| ------ | ---------------------------- | ----- |
+| וקטור  | ForgeWebScriptVector<TValue> |       |
+| אינדקס | מספר                         |       |
+| ערך    | TValue                       |       |
 
 ## `src/ecs`
 
@@ -1177,45 +1270,55 @@ function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index:
 פונקציה **סוג:**
 
 ```typescript
-function addForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function addForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| העולם | ForgeWebScriptEcsWorld<TValue> |  |
-| ישות | ForgeWebScriptEcsEntity |  |
-| רכיב | מחרוזת |  |
-| ערך | TValue |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| העולם | ForgeWebScriptEcsWorld<TValue> |       |
+| ישות  | ForgeWebScriptEcsEntity        |       |
+| רכיב  | מחרוזת                         |       |
+| ערך   | TValue                         |       |
 
 ### createForgeWebScriptEcsScheduler
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptEcsScheduler(systems: readonly ForgeWebScriptEcsSystem<TValue>[], signals: readonly ForgeWebScriptEcsSignal[] = [], subscriptions: readonly ForgeWebScriptEcsSubscription[] = [], maxSteps = 1000): ForgeWebScriptEcsScheduler<TValue>
+function createForgeWebScriptEcsScheduler(
+  systems: readonly ForgeWebScriptEcsSystem<TValue>[],
+  signals: readonly ForgeWebScriptEcsSignal[] = [],
+  subscriptions: readonly ForgeWebScriptEcsSubscription[] = [],
+  maxSteps = 1000,
+): ForgeWebScriptEcsScheduler<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מערכות | לקריאה בלבד ForgeWebScriptEcsSystem<TValue>[] |  |
-| אותות | לקריאה בלבד ForgeWebScriptEcsSignal[] |  |
-| מנויים | לקריאה בלבד ForgeWebScriptEcsSubscription[] |  |
-| maxSteps |  |  |
+| שם       | הקלד                                          | תיאור |
+| -------- | --------------------------------------------- | ----- |
+| מערכות   | לקריאה בלבד ForgeWebScriptEcsSystem<TValue>[] |       |
+| אותות    | לקריאה בלבד ForgeWebScriptEcsSignal[]         |       |
+| מנויים   | לקריאה בלבד ForgeWebScriptEcsSubscription[]   |       |
+| maxSteps |                                               |       |
 
 ### createForgeWebScriptEcsWorld
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
+function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>;
 ```
 
 לא סופק תיאור.
@@ -1225,17 +1328,20 @@ function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
 פונקציה **סוג:**
 
 ```typescript
-function despawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): ForgeWebScriptEcsResult<TValue>
+function despawnForgeWebScriptEcsEntity(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| העולם | ForgeWebScriptEcsWorld<TValue> |  |
-| ישות | ForgeWebScriptEcsEntity |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| העולם | ForgeWebScriptEcsWorld<TValue> |       |
+| ישות  | ForgeWebScriptEcsEntity        |       |
 
 ### ForgeWebScriptEcsComponentStore
 
@@ -1362,138 +1468,162 @@ export interface ForgeWebScriptEcsWorld<TValue = Uint8Array>
 פונקציה **סוג:**
 
 ```typescript
-function getForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): TValue | undefined
+function getForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): TValue | undefined;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| העולם | ForgeWebScriptEcsWorld<TValue> |  |
-| ישות | ForgeWebScriptEcsEntity |  |
-| רכיב | מחרוזת |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| העולם | ForgeWebScriptEcsWorld<TValue> |       |
+| ישות  | ForgeWebScriptEcsEntity        |       |
+| רכיב  | מחרוזת                         |       |
 
 ### isForgeWebScriptEcsEntityAlive
 
 פונקציה **סוג:**
 
 ```typescript
-function isForgeWebScriptEcsEntityAlive(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): boolean
+function isForgeWebScriptEcsEntityAlive(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): boolean;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| העולם | ForgeWebScriptEcsWorld<TValue> |  |
-| ישות | ForgeWebScriptEcsEntity |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| העולם | ForgeWebScriptEcsWorld<TValue> |       |
+| ישות  | ForgeWebScriptEcsEntity        |       |
 
 ### queryForgeWebScriptEcsEntities
 
 פונקציה **סוג:**
 
 ```typescript
-function queryForgeWebScriptEcsEntities(world: ForgeWebScriptEcsWorld<TValue>, query: ForgeWebScriptEcsQuery): readonly ForgeWebScriptEcsEntity[]
+function queryForgeWebScriptEcsEntities(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  query: ForgeWebScriptEcsQuery,
+): readonly ForgeWebScriptEcsEntity[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| העולם | ForgeWebScriptEcsWorld<TValue> |  |
-| שאילתה | ForgeWebScriptEcsQuery |  |
+| שם     | הקלד                           | תיאור |
+| ------ | ------------------------------ | ----- |
+| העולם  | ForgeWebScriptEcsWorld<TValue> |       |
+| שאילתה | ForgeWebScriptEcsQuery         |       |
 
 ### removeForgeWebScriptEcsComponent
 
 פונקציה **סוג:**
 
 ```typescript
-function removeForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): ForgeWebScriptEcsResult<TValue>
+function removeForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| העולם | ForgeWebScriptEcsWorld<TValue> |  |
-| ישות | ForgeWebScriptEcsEntity |  |
-| רכיב | מחרוזת |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| העולם | ForgeWebScriptEcsWorld<TValue> |       |
+| ישות  | ForgeWebScriptEcsEntity        |       |
+| רכיב  | מחרוזת                         |       |
 
 ### runForgeWebScriptEcsScheduler
 
 פונקציה **סוג:**
 
 ```typescript
-function runForgeWebScriptEcsScheduler(world: ForgeWebScriptEcsWorld<TValue>, scheduler: ForgeWebScriptEcsScheduler<TValue>): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>
+function runForgeWebScriptEcsScheduler(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  scheduler: ForgeWebScriptEcsScheduler<TValue>,
+): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| העולם | ForgeWebScriptEcsWorld<TValue> |  |
-| מתזמן | ForgeWebScriptEcsScheduler<TValue> |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| העולם | ForgeWebScriptEcsWorld<TValue>     |       |
+| מתזמן | ForgeWebScriptEcsScheduler<TValue> |       |
 
 ### setForgeWebScriptEcsComponent
 
 פונקציה **סוג:**
 
 ```typescript
-function setForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function setForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| העולם | ForgeWebScriptEcsWorld<TValue> |  |
-| ישות | ForgeWebScriptEcsEntity |  |
-| רכיב | מחרוזת |  |
-| ערך | TValue |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| העולם | ForgeWebScriptEcsWorld<TValue> |       |
+| ישות  | ForgeWebScriptEcsEntity        |       |
+| רכיב  | מחרוזת                         |       |
+| ערך   | TValue                         |       |
 
 ### spawnForgeWebScriptEcsEntity
 
 פונקציה **סוג:**
 
 ```typescript
-function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>
+function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| העולם | ForgeWebScriptEcsWorld<TValue> |  |
+| שם    | הקלד                           | תיאור |
+| ----- | ------------------------------ | ----- |
+| העולם | ForgeWebScriptEcsWorld<TValue> |       |
 
 ### validateForgeWebScriptEcsSignals
 
 פונקציה **סוג:**
 
 ```typescript
-function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSignal[]): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] }
+function validateForgeWebScriptEcsSignals(
+  signals: readonly ForgeWebScriptEcsSignal[],
+): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אותות | לקריאה בלבד ForgeWebScriptEcsSignal[] |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| אותות | לקריאה בלבד ForgeWebScriptEcsSignal[] |       |
 
 ## `src/host`
 
@@ -1502,34 +1632,40 @@ function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSig
 פונקציה **סוג:**
 
 ```typescript
-function createDefaultForgeWebScriptCapabilities(options: ForgeWebScriptDefaultHostOptions = {}): ForgeWebScriptCapabilityRegistry
+function createDefaultForgeWebScriptCapabilities(
+  options: ForgeWebScriptDefaultHostOptions = {},
+): ForgeWebScriptCapabilityRegistry;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptDefaultHostOptions |  |
+| שם       | הקלד                             | תיאור |
+| -------- | -------------------------------- | ----- |
+| אפשרויות | ForgeWebScriptDefaultHostOptions |       |
 
 ### createForgeWebScriptHost
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptHost(manifest: ForgeWebScriptAbiManifest, registry: ForgeWebScriptCapabilityRegistry, options: ForgeWebScriptHostOptions = {}): ForgeWebScriptHost
+function createForgeWebScriptHost(
+  manifest: ForgeWebScriptAbiManifest,
+  registry: ForgeWebScriptCapabilityRegistry,
+  options: ForgeWebScriptHostOptions = {},
+): ForgeWebScriptHost;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מניפסט | ForgeWebScriptAbiManifest |  |
-| רישום | ForgeWebScriptCapabilityRegistry |  |
-| אפשרויות | ForgeWebScriptHostOptions |  |
+| שם       | הקלד                             | תיאור |
+| -------- | -------------------------------- | ----- |
+| מניפסט   | ForgeWebScriptAbiManifest        |       |
+| רישום    | ForgeWebScriptCapabilityRegistry |       |
+| אפשרויות | ForgeWebScriptHostOptions        |       |
 
 ### ForgeWebScriptCapabilityImplementation
 
@@ -1598,36 +1734,44 @@ export interface ForgeWebScriptHostOptions
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptWasmIterator(handle: number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIterator(
+  handle: number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): ForgeWebScriptWasmIterator<TValue>;
 ```
 
 מתאים את ידית ה-i32 שבבעלות הקצה האחורי והפרוטוקול הבא של i64 ארוז לאיטרציה של JS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ידית | מספר |  |
-| הבא | (handle: number) => ForgeWebScriptPackedIteratorResult |  |
-| אפשרויות | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| שם       | הקלד                                                   | תיאור |
+| -------- | ------------------------------------------------------ | ----- |
+| ידית     | מספר                                                   |       |
+| הבא      | (handle: number) => ForgeWebScriptPackedIteratorResult |       |
+| אפשרויות | ForgeWebScriptWasmIteratorOptions<TValue>              |       |
 
 ### createForgeWebScriptWasmIteratorFactory
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptWasmIteratorFactory(factory: (...arguments_: TArguments) => number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIteratorFactory(
+  factory: (...arguments_: TArguments) => number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>;
 ```
 
 בונה מפעל איטרטור הפונה ל-JS ממפעל אחורי ויצוא `.next` שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | (... arguments_: TArguments) => מספר |  |
-| הבא | (handle: number) => ForgeWebScriptPackedIteratorResult |  |
-| אפשרויות | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| שם       | הקלד                                                   | תיאור |
+| -------- | ------------------------------------------------------ | ----- |
+| מפעל     | (... arguments_: TArguments) => מספר                   |       |
+| הבא      | (handle: number) => ForgeWebScriptPackedIteratorResult |       |
+| אפשרויות | ForgeWebScriptWasmIteratorOptions<TValue>              |       |
 
 ### ForgeWebScriptPackedIteratorResult
 
@@ -1666,16 +1810,16 @@ export interface ForgeWebScriptWasmIteratorOptions<TValue>
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger
+function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptLoggerOptions |  |
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| אפשרויות | ForgeWebScriptLoggerOptions |       |
 
 ### ForgeWebScriptLogEvent
 
@@ -1734,23 +1878,23 @@ export type ForgeWebScriptLogSink = (event: ForgeWebScriptLogEvent) => void;
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory
+function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptMemoryOptions |  |
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| אפשרויות | ForgeWebScriptMemoryOptions |       |
 
 ### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 ```
 
 לא סופק תיאור.
@@ -1792,7 +1936,7 @@ export interface ForgeWebScriptMemoryOptions
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
 ```
 
 שמות יכולות המשמשים לאשר ביצוע של עובד, חוט, אטומי וזיכרון משותף.
@@ -1804,7 +1948,7 @@ export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
 ```typescript
 export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<ForgeWebScriptParallelOperation, ForgeWebScriptParallelOperationDescriptor>
->
+>;
 ```
 
 מתארים יציבים עבור כל פעולה מקבילה עם יכולת החזרה טורית.
@@ -1814,42 +1958,53 @@ export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorParAt(source: ForgeWebScriptIterable<TValue>, index: number, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParAt(
+  source: ForgeWebScriptIterable<TValue>,
+  index: number,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 החזר את התוצאה המסודרת על בסיס אפס, או Option.none כאשר האינדקס אינו חוקי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterable<TValue> |  |
-| אינדקס | מספר |  |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| מקור     | ForgeWebScriptIterable<TValue> |       |
+| אינדקס   | מספר                           |       |
+| אפשרויות | ForgeWebScriptParallelOptions  |       |
 
 ### forgeWebScriptIteratorParCollect
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorParCollect(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptVector<TValue>>
+function forgeWebScriptIteratorParCollect(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptVector<TValue>>;
 ```
 
 מימש תוצאות מקבילות מסודרות לוקטור בבעלות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterable<TValue> |  |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| מקור     | ForgeWebScriptIterable<TValue> |       |
+| אפשרויות | ForgeWebScriptParallelOptions  |       |
 
 ### forgeWebScriptIteratorParFilter
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>, predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFilter(
+  source: ForgeWebScriptIterable<TValue>,
+  predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 הערך פרדיקט במקביל ושמור על ערכים מקובלים בסדר המקור.
@@ -1857,88 +2012,106 @@ function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>,
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterable<TValue> |  |
-| פרידיקט | (ערך: TValue, אינדקס: מספר) => בווליאני \| הבטחהכמו<boolean> |  |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                                                         | תיאור |
+| -------- | ------------------------------------------------------------ | ----- |
+| מקור     | ForgeWebScriptIterable<TValue>                               |       |
+| פרידיקט  | (ערך: TValue, אינדקס: מספר) => בווליאני \| הבטחהכמו<boolean> |       |
+| אפשרויות | ForgeWebScriptParallelOptions                                |       |
 
 ### forgeWebScriptIteratorParFirst
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorParFirst(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParFirst(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 החזר את התוצאה המוזמנת הראשונה, או ערך Option.none עבור מקור ריק.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterable<TValue> |  |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| מקור     | ForgeWebScriptIterable<TValue> |       |
+| אפשרויות | ForgeWebScriptParallelOptions  |       |
 
 ### forgeWebScriptIteratorParFlatten
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorParFlatten(source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFlatten(
+  source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 שטחו מקורות מקוננים במקביל תוך שמירה על הסדר החיצוני והפנימי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |  |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                                                   | תיאור |
+| -------- | ------------------------------------------------------ | ----- |
+| מקור     | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |       |
+| אפשרויות | ForgeWebScriptParallelOptions                          |       |
 
 ### forgeWebScriptIteratorParFold
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorParFold(source: ForgeWebScriptIterable<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult, options: ForgeWebScriptParallelOptions = {}): Promise<TResult>
+function forgeWebScriptIteratorParFold(
+  source: ForgeWebScriptIterable<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<TResult>;
 ```
 
 מקפלים תוצאות מסודרות משמאל לימין, כולל המצבר הראשוני שסופק.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterable<TValue> |  |
-| ראשי | TResult |  |
-| מפחית | (מצבר: TResult, ערך: TValue, index: number) => TResult |  |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                                                   | תיאור |
+| -------- | ------------------------------------------------------ | ----- |
+| מקור     | ForgeWebScriptIterable<TValue>                         |       |
+| ראשי     | TResult                                                |       |
+| מפחית    | (מצבר: TResult, ערך: TValue, index: number) => TResult |       |
+| אפשרויות | ForgeWebScriptParallelOptions                          |       |
 
 ### forgeWebScriptIteratorParLast
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorParLast(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParLast(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 החזר את התוצאה שהוזמנה האחרונה, או ערך Option.none עבור מקור ריק.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterable<TValue> |  |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| מקור     | ForgeWebScriptIterable<TValue> |       |
+| אפשרויות | ForgeWebScriptParallelOptions  |       |
 
 ### forgeWebScriptIteratorParMap
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, map: (value: TValue, index: number) => TResult | PromiseLike<TResult>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TResult>>
+function forgeWebScriptIteratorParMap(
+  source: ForgeWebScriptIterable<TValue>,
+  map: (value: TValue, index: number) => TResult | PromiseLike<TResult>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TResult>>;
 ```
 
 החל התקשרות חוזרת במקביל והחזר איטרטור שהוזמן תואם עצלן.
@@ -1946,45 +2119,51 @@ function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, ma
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterable<TValue> |  |
-| מפה | (ערך: TValue, אינדקס: מספר) => TResult \| הבטחהכמו<TResult> |  |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                                                        | תיאור |
+| -------- | ----------------------------------------------------------- | ----- |
+| מקור     | ForgeWebScriptIterable<TValue>                              |       |
+| מפה      | (ערך: TValue, אינדקס: מספר) => TResult \| הבטחהכמו<TResult> |       |
+| אפשרויות | ForgeWebScriptParallelOptions                               |       |
 
 ### forgeWebScriptIteratorParToArray
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptIteratorParToArray(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptArray<TValue>>
+function forgeWebScriptIteratorParToArray(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptArray<TValue>>;
 ```
 
 הגש תוצאות מקבילות מסודרות למערך קבוע בבעלות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | ForgeWebScriptIterable<TValue> |  |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| מקור     | ForgeWebScriptIterable<TValue> |       |
+| אפשרויות | ForgeWebScriptParallelOptions  |       |
 
 ### forgeWebScriptParallelDescriptor
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptParallelDescriptor(operation: ForgeWebScriptParallelOperation, options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy }
+function forgeWebScriptParallelDescriptor(
+  operation: ForgeWebScriptParallelOperation,
+  options: ForgeWebScriptParallelOptions = {},
+): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy };
 ```
 
 תאר פעולה וצרף את האסטרטגיה שנבחרה מהאפשרויות המסופקות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מבצע | ForgeWebScriptParallelOperation |  |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                            | תיאור |
+| -------- | ------------------------------- | ----- |
+| מבצע     | ForgeWebScriptParallelOperation |       |
+| אפשרויות | ForgeWebScriptParallelOptions   |       |
 
 ### ForgeWebScriptParallelExecutor
 
@@ -2001,7 +2180,16 @@ export interface ForgeWebScriptParallelExecutor
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptParallelOperation = | 'par_map' | 'par_filter' | 'par_flatten' | 'par_collect' | 'par_to_array' | 'par_fold' | 'par_first' | 'par_last' | 'par_at';
+export type ForgeWebScriptParallelOperation =
+  | 'par_map'
+  | 'par_filter'
+  | 'par_flatten'
+  | 'par_collect'
+  | 'par_to_array'
+  | 'par_fold'
+  | 'par_first'
+  | 'par_last'
+  | 'par_at';
 ```
 
 שמות פעולות מקבילות קנוניות שנחשפו על ידי זמן הריצה; `par_filter` הוא מכוון.
@@ -2053,16 +2241,16 @@ export type ForgeWebScriptParallelStrategy = 'serial' | 'host-workers' | 'wasm-t
 פונקציה **סוג:**
 
 ```typescript
-function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan
+function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan;
 ```
 
 בחר אסטרטגיה מותרת מבלי לשנות את חוזה התוצאה של הפעולה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptParallelOptions |  |
+| שם       | הקלד                          | תיאור |
+| -------- | ----------------------------- | ----- |
+| אפשרויות | ForgeWebScriptParallelOptions |       |
 
 ## `src/self-hosted`
 
@@ -2091,7 +2279,11 @@ export interface ForgeWebScriptSelfHostedVmRun
 פונקציה **סוג:**
 
 ```typescript
-function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedVmRun
+function runForgeWebScriptSelfHostedCompiler(
+  input: ForgeWebScriptCompileInput,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedVmRun;
 ```
 
 הפעל את רצועת האתחול של המהדר המתארח בעצמו.
@@ -2103,29 +2295,33 @@ function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ForgeWebScriptCompileInput |  |
-| מצב | ForgeWebScriptVmExecutionMode |  |
-| אפשרויות | ForgeWebScriptSelfHostedRunOptions |  |
+| שם       | הקלד                               | תיאור |
+| -------- | ---------------------------------- | ----- |
+| קלט      | ForgeWebScriptCompileInput         |       |
+| מצב      | ForgeWebScriptVmExecutionMode      |       |
+| אפשרויות | ForgeWebScriptSelfHostedRunOptions |       |
 
 ### runForgeWebScriptSelfHostedLexStage
 
 פונקציה **סוג:**
 
 ```typescript
-function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedStageReport
+function runForgeWebScriptSelfHostedLexStage(
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedStageReport;
 ```
 
 בצע רק את שלב ה-lex המוגבל של FWS עבור צרכני מהדר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | Pick<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |  |
-| מצב | ForgeWebScriptVmExecutionMode |  |
-| אפשרויות | ForgeWebScriptSelfHostedRunOptions |  |
+| שם       | הקלד                                                                                                     | תיאור |
+| -------- | -------------------------------------------------------------------------------------------------------- | ----- |
+| קלט      | Pick<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |       |
+| מצב      | ForgeWebScriptVmExecutionMode                                                                            |       |
+| אפשרויות | ForgeWebScriptSelfHostedRunOptions                                                                       |       |
 
 ## `src/threading`
 
@@ -2134,7 +2330,10 @@ function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileIn
 פונקציה **סוג:**
 
 ```typescript
-function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined, capabilities: readonly string[] | undefined): boolean
+function canUseForgeWebScriptWasmThreads(
+  targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined,
+  capabilities: readonly string[] | undefined,
+): boolean;
 ```
 
 הפעלת שרשור היא הסכמה הן בגבולות ההידור והן בגבולות זמן הריצה. ב
@@ -2142,34 +2341,39 @@ function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThrea
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| targetFeatures | ForgeWebScriptWasmThreadTargetFeatures \| לא מוגדר |  |
-| יכולות | מחרוזת לקריאה בלבד[] \| לא מוגדר |  |
+| שם             | הקלד                                               | תיאור |
+| -------------- | -------------------------------------------------- | ----- |
+| targetFeatures | ForgeWebScriptWasmThreadTargetFeatures \| לא מוגדר |       |
+| יכולות         | מחרוזת לקריאה בלבד[] \| לא מוגדר                   |       |
 
 ### createForgeWebScriptAtomicI32
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptAtomicI32(length = 1, options: ForgeWebScriptAtomicI32Options = {}): ForgeWebScriptAtomicI32
+function createForgeWebScriptAtomicI32(
+  length = 1,
+  options: ForgeWebScriptAtomicI32Options = {},
+): ForgeWebScriptAtomicI32;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אורך |  |  |
-| אפשרויות | ForgeWebScriptAtomicI32Options |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| אורך     |                                |       |
+| אפשרויות | ForgeWebScriptAtomicI32Options |       |
 
 ### createForgeWebScriptWasmThreadScheduler
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThreadSchedulerOptions): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWasmThreadScheduler(
+  options: ForgeWebScriptWasmThreadSchedulerOptions,
+): ForgeWebScriptWorkerScheduler;
 ```
 
 עוטף גשר חוטי WASM מלוקט עם חשבונאות מפורשת של זיכרון משותף.
@@ -2178,35 +2382,42 @@ function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThre
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptWasmThreadSchedulerOptions |  |
+| שם       | הקלד                                     | תיאור |
+| -------- | ---------------------------------------- | ----- |
+| אפשרויות | ForgeWebScriptWasmThreadSchedulerOptions |       |
 
 ### createForgeWebScriptWorkerRuntime
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptWorkerRuntime(createWorker: () => ForgeWebScriptWorkerPort, onMessage: (message: unknown) => void, onError: (error: unknown) => void = () => {}, options: ForgeWebScriptWorkerRuntimeOptions = {}): ForgeWebScriptWorkerRuntime
+function createForgeWebScriptWorkerRuntime(
+  createWorker: () => ForgeWebScriptWorkerPort,
+  onMessage: (message: unknown) => void,
+  onError: (error: unknown) => void = () => {},
+  options: ForgeWebScriptWorkerRuntimeOptions = {},
+): ForgeWebScriptWorkerRuntime;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| createWorker | () => ForgeWebScriptWorkerPort |  |
-| onMessage | (הודעה: לא ידוע) => ריק |  |
-| onError | (שגיאה: לא ידוע) => ריק |  |
-| אפשרויות | ForgeWebScriptWorkerRuntimeOptions |  |
+| שם           | הקלד                               | תיאור |
+| ------------ | ---------------------------------- | ----- |
+| createWorker | () => ForgeWebScriptWorkerPort     |       |
+| onMessage    | (הודעה: לא ידוע) => ריק            |       |
+| onError      | (שגיאה: לא ידוע) => ריק            |       |
+| אפשרויות     | ForgeWebScriptWorkerRuntimeOptions |       |
 
 ### createForgeWebScriptWorkerScheduler
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedulerOptions = {}): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWorkerScheduler(
+  options: ForgeWebScriptWorkerSchedulerOptions = {},
+): ForgeWebScriptWorkerScheduler;
 ```
 
 יוצר את גבול התזמון בצד המארח המשמש בפעולות איטרטור מקבילות.
@@ -2218,16 +2429,16 @@ function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedu
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptWorkerSchedulerOptions |  |
+| שם       | הקלד                                 | תיאור |
+| -------- | ------------------------------------ | ----- |
+| אפשרויות | ForgeWebScriptWorkerSchedulerOptions |       |
 
 ### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 ```
 
 לא סופק תיאור.
@@ -2329,17 +2540,20 @@ export interface ForgeWebScriptWorkerSchedulerOptions
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptTraceRecorder(options: ForgeWebScriptTraceOptions, functionName: string): ForgeWebScriptTraceRecorder
+function createForgeWebScriptTraceRecorder(
+  options: ForgeWebScriptTraceOptions,
+  functionName: string,
+): ForgeWebScriptTraceRecorder;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptTraceOptions |  |
-| שם פונקציה | מחרוזת |  |
+| שם         | הקלד                       | תיאור |
+| ---------- | -------------------------- | ----- |
+| אפשרויות   | ForgeWebScriptTraceOptions |       |
+| שם פונקציה | מחרוזת                     |       |
 
 ### ForgeWebScriptTraceCaptureMode
 
@@ -2376,7 +2590,8 @@ export interface ForgeWebScriptTraceEvent
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptTraceEventType = 'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
+export type ForgeWebScriptTraceEventType =
+  'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
 לא סופק תיאור.
@@ -2436,17 +2651,20 @@ export interface ForgeWebScriptTraceSourceLocation extends ForgeWebScriptVmDebug
 פונקציה **סוג:**
 
 ```typescript
-function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (value: ForgeWebScriptVmValue) => string): string
+function summarizeForgeWebScriptVmValue(
+  value: ForgeWebScriptVmValue,
+  redact?: (value: ForgeWebScriptVmValue) => string,
+): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | ForgeWebScriptVmValue |  |
-| לערוך | (ערך: ForgeWebScriptVmValue) => מחרוזת |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| ערך   | ForgeWebScriptVmValue                  |       |
+| לערוך | (ערך: ForgeWebScriptVmValue) => מחרוזת |       |
 
 ## `src/traps`
 
@@ -2455,17 +2673,17 @@ function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (
 פונקציה **סוג:**
 
 ```typescript
-function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void
+function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שגיאה | לא ידוע |  |
-| עקבות | ForgeWebScriptTraceReport |  |
+| שם    | הקלד                      | תיאור |
+| ----- | ------------------------- | ----- |
+| שגיאה | לא ידוע                   |       |
+| עקבות | ForgeWebScriptTraceReport |       |
 
 ### ForgeWebScriptTrap
 
@@ -2482,7 +2700,14 @@ export class ForgeWebScriptTrap extends Error
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptTrapCode = | 'CapabilityDenied' | 'HostError' | 'InvalidAbi' | 'InvalidOwnership' | 'MemoryExhausted' | 'MemoryOutOfBounds' | 'GuestTrap';
+export type ForgeWebScriptTrapCode =
+  | 'CapabilityDenied'
+  | 'HostError'
+  | 'InvalidAbi'
+  | 'InvalidOwnership'
+  | 'MemoryExhausted'
+  | 'MemoryOutOfBounds'
+  | 'GuestTrap';
 ```
 
 לא סופק תיאור.
@@ -2502,18 +2727,22 @@ export interface ForgeWebScriptTrapOptions extends ErrorOptions
 פונקציה **סוג:**
 
 ```typescript
-function toForgeWebScriptHostError(error: unknown, capability: string, logger?: ForgeWebScriptLogger): ForgeWebScriptTrap
+function toForgeWebScriptHostError(
+  error: unknown,
+  capability: string,
+  logger?: ForgeWebScriptLogger,
+): ForgeWebScriptTrap;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שגיאה | לא ידוע |  |
-| יכולת | מחרוזת |  |
-| לוגר | ForgeWebScriptLogger |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| שגיאה | לא ידוע              |       |
+| יכולת | מחרוזת               |       |
+| לוגר  | ForgeWebScriptLogger |       |
 
 ## `src/vm-executor`
 
@@ -2522,71 +2751,86 @@ function toForgeWebScriptHostError(error: unknown, capability: string, logger?: 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptVmAotArtifact(module: ForgeWebScriptVmModule, compilerVersion: string): ForgeWebScriptVmAotArtifact
+function createForgeWebScriptVmAotArtifact(
+  module: ForgeWebScriptVmModule,
+  compilerVersion: string,
+): ForgeWebScriptVmAotArtifact;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptVmModule |  |
-| גירסת מהדר | מחרוזת |  |
+| שם         | הקלד                   | תיאור |
+| ---------- | ---------------------- | ----- |
+| מודול      | ForgeWebScriptVmModule |       |
+| גירסת מהדר | מחרוזת                 |       |
 
 ### createForgeWebScriptVmExecutor
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptVmExecutor(executorOptions: ForgeWebScriptVmExecutorOptions = {}): ForgeWebScriptVmExecutor
+function createForgeWebScriptVmExecutor(
+  executorOptions: ForgeWebScriptVmExecutorOptions = {},
+): ForgeWebScriptVmExecutor;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| executorOptions | ForgeWebScriptVmExecutorOptions |  |
+| שם              | הקלד                            | תיאור |
+| --------------- | ------------------------------- | ----- |
+| executorOptions | ForgeWebScriptVmExecutorOptions |       |
 
 ### executeForgeWebScriptVm
 
 פונקציה **סוג:**
 
 ```typescript
-function executeForgeWebScriptVm(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: ForgeWebScriptVmExecutionOptions): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVm(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: ForgeWebScriptVmExecutionOptions,
+): ForgeWebScriptVmExecutionResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptVmModule |  |
-| שם פונקציה | מחרוזת |  |
-| טיעונים_ | לקריאה בלבד ForgeWebScriptVmValue[] |  |
-| אפשרויות | ForgeWebScriptVmExecutionOptions |  |
+| שם         | הקלד                                | תיאור |
+| ---------- | ----------------------------------- | ----- |
+| מודול      | ForgeWebScriptVmModule              |       |
+| שם פונקציה | מחרוזת                              |       |
+| טיעונים_   | לקריאה בלבד ForgeWebScriptVmValue[] |       |
+| אפשרויות   | ForgeWebScriptVmExecutionOptions    |       |
 
 ### executeForgeWebScriptVmAotArtifact
 
 פונקציה **סוג:**
 
 ```typescript
-function executeForgeWebScriptVmAotArtifact(artifact: ForgeWebScriptVmAotArtifact, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVmAotArtifact(
+  artifact: ForgeWebScriptVmAotArtifact,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חפץ | ForgeWebScriptVmAotArtifact |  |
-| שם פונקציה | מחרוזת |  |
-| טיעונים_ | לקריאה בלבד ForgeWebScriptVmValue[] |  |
-| אפשרויות | השמט<ForgeWebScriptVmExecutionOptions, 'mode'> |  |
+| שם         | הקלד                                           | תיאור |
+| ---------- | ---------------------------------------------- | ----- |
+| חפץ        | ForgeWebScriptVmAotArtifact                    |       |
+| שם פונקציה | מחרוזת                                         |       |
+| טיעונים_   | לקריאה בלבד ForgeWebScriptVmValue[]            |       |
+| אפשרויות   | השמט<ForgeWebScriptVmExecutionOptions, 'mode'> |       |
 
 ### ForgeWebScriptVmExecutorOptions
 
@@ -2603,36 +2847,42 @@ export interface ForgeWebScriptVmExecutorOptions
 פונקציה **סוג:**
 
 ```typescript
-function runForgeWebScriptVmBootstrap(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], mode: ForgeWebScriptVmExecutionMode = 'interpret', options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function runForgeWebScriptVmBootstrap(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  mode: ForgeWebScriptVmExecutionMode = 'interpret',
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptVmModule |  |
-| שם פונקציה | מחרוזת |  |
-| טיעונים_ | לקריאה בלבד ForgeWebScriptVmValue[] |  |
-| מצב | ForgeWebScriptVmExecutionMode |  |
-| אפשרויות | השמט<ForgeWebScriptVmExecutionOptions, 'mode'> |  |
+| שם         | הקלד                                           | תיאור |
+| ---------- | ---------------------------------------------- | ----- |
+| מודול      | ForgeWebScriptVmModule                         |       |
+| שם פונקציה | מחרוזת                                         |       |
+| טיעונים_   | לקריאה בלבד ForgeWebScriptVmValue[]            |       |
+| מצב        | ForgeWebScriptVmExecutionMode                  |       |
+| אפשרויות   | השמט<ForgeWebScriptVmExecutionOptions, 'mode'> |       |
 
 ### validateForgeWebScriptVmModule
 
 פונקציה **סוג:**
 
 ```typescript
-function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
+function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptVmModule |  |
+| שם    | הקלד                   | תיאור |
+| ----- | ---------------------- | ----- |
+| מודול | ForgeWebScriptVmModule |       |
 
 ## `src/vm-wasm`
 
@@ -2641,17 +2891,20 @@ function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
 פונקציה **סוג:**
 
 ```typescript
-function compileForgeWebScriptVmWasm(module: ForgeWebScriptVmModule, options: ForgeWebScriptVmWasmCompileOptions = {}): ForgeWebScriptVmWasmArtifact
+function compileForgeWebScriptVmWasm(
+  module: ForgeWebScriptVmModule,
+  options: ForgeWebScriptVmWasmCompileOptions = {},
+): ForgeWebScriptVmWasmArtifact;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptVmModule |  |
-| אפשרויות | ForgeWebScriptVmWasmCompileOptions |  |
+| שם       | הקלד                               | תיאור |
+| -------- | ---------------------------------- | ----- |
+| מודול    | ForgeWebScriptVmModule             |       |
+| אפשרויות | ForgeWebScriptVmWasmCompileOptions |       |
 
 ### ForgeWebScriptVmWasmCompileOptions
 
@@ -2668,7 +2921,7 @@ export interface ForgeWebScriptVmWasmCompileOptions
 **סוג:** קבוע
 
 ```typescript
-export const prepareForgeWebScriptVm
+export const prepareForgeWebScriptVm;
 ```
 
 לא סופק תיאור.
@@ -2678,17 +2931,20 @@ export const prepareForgeWebScriptVm
 פונקציה **סוג:**
 
 ```typescript
-function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact, options: ForgeWebScriptVmPreparedExecutorOptions = {}): ForgeWebScriptVmPreparedExecutor
+function prepareForgeWebScriptVmWasm(
+  moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact,
+  options: ForgeWebScriptVmPreparedExecutorOptions = {},
+): ForgeWebScriptVmPreparedExecutor;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| moduleOrArtifact | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |  |
-| אפשרויות | ForgeWebScriptVmPreparedExecutorOptions |  |
+| שם               | הקלד                                                   | תיאור |
+| ---------------- | ------------------------------------------------------ | ----- |
+| moduleOrArtifact | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |       |
+| אפשרויות         | ForgeWebScriptVmPreparedExecutorOptions                |       |
 
 ## `src/vm`
 
@@ -2697,7 +2953,7 @@ function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
 ```
 
 לא סופק תיאור.
@@ -2707,7 +2963,7 @@ export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 ```
 
 לא סופק תיאור.

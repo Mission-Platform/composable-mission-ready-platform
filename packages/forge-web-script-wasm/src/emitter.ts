@@ -31,6 +31,7 @@ import {
   type ForgeWebScriptWasmSsaBindings,
   type ForgeWebScriptWasmSsaValue,
 } from './cfg.js';
+import { optimizeForgeWebScriptWasmModule } from './optimizer.js';
 
 const STATIC_DATA_START = 1024;
 const encoder = new TextEncoder();
@@ -1291,20 +1292,22 @@ function emitWasm(
           body.push(0x21, ...unsignedLeb(access.receiver.indexes[0]!));
           emitExpression(expression.index, visible);
           body.push(0x21, ...unsignedLeb(access.index.indexes[0]!));
-          body.push(
-            0x20,
-            ...unsignedLeb(access.receiver.indexes[0]!),
-            0x28,
-            0x02,
-            receiver.reference === 'Array' ? 0 : 4,
-            0x20,
-            ...unsignedLeb(access.index.indexes[0]!),
-            0x4d,
-            0x04,
-            0x40,
-            0x00,
-            0x0b,
-          );
+          if (expression.boundsCheck !== 'proven-safe') {
+            body.push(
+              0x20,
+              ...unsignedLeb(access.receiver.indexes[0]!),
+              0x28,
+              0x02,
+              receiver.reference === 'Array' ? 0 : 4,
+              0x20,
+              ...unsignedLeb(access.index.indexes[0]!),
+              0x4d,
+              0x04,
+              0x40,
+              0x00,
+              0x0b,
+            );
+          }
           if (receiver.reference === 'Array') {
             body.push(
               0x20,
@@ -1702,7 +1705,12 @@ function emitWasm(
       const minimum = values.length === 0 ? 0 : Math.min(...values);
       const maximum = values.length === 0 ? 0 : Math.max(...values);
       const tableLength = maximum - minimum + 1;
-      const useBrTable = values.length > 0 && tableLength <= 65_536 && tableLength <= values.length * 4;
+      const useBrTable =
+        statement.strategy === 'br-table' ||
+        (statement.strategy === undefined &&
+          values.length > 0 &&
+          tableLength <= 65_536 &&
+          tableLength <= values.length * 4);
       emitPhiPrelude(statement);
       emitExpression(statement.value, visible);
       body.push(0x21, ...unsignedLeb(location.indexes[0]!));
@@ -1757,12 +1765,38 @@ function emitWasm(
           }
           body.push(0x0b);
         } else {
-          for (const [index, value] of values.entries()) {
-            body.push(0x20, ...unsignedLeb(location.indexes[0]!), 0x41, ...signedLeb(value), 0x46, 0x04, 0x40);
-            emitStatements(statement.cases[index]!.body, visible);
-            emitBranchCopies(statement, index);
-            body.push(0x0c, 0x01, 0x0b);
-          }
+          const sorted = values
+            .map((value, index) => ({ value, index }))
+            .toSorted((left, right) => left.value - right.value);
+          const emitSparse = (start: number, end: number, depth: number): void => {
+            if (start >= end) return;
+            const middle = start + Math.floor((end - start) / 2);
+            const selected = sorted[middle]!;
+            body.push(0x20, ...unsignedLeb(location.indexes[0]!), 0x41, ...signedLeb(selected.value), 0x46, 0x04, 0x40);
+            emitStatements(statement.cases[selected.index]!.body, visible);
+            emitBranchCopies(statement, selected.index);
+            body.push(0x0c, ...unsignedLeb(depth + 1), 0x05);
+            const leftEnd = middle;
+            const rightStart = middle + 1;
+            if (start < leftEnd && rightStart < end) {
+              body.push(
+                0x20,
+                ...unsignedLeb(location.indexes[0]!),
+                0x41,
+                ...signedLeb(selected.value),
+                0x48,
+                0x04,
+                0x40,
+              );
+              emitSparse(start, leftEnd, depth + 2);
+              body.push(0x05);
+              emitSparse(rightStart, end, depth + 2);
+              body.push(0x0b);
+            } else if (start < leftEnd) emitSparse(start, leftEnd, depth + 1);
+            else if (rightStart < end) emitSparse(rightStart, end, depth + 1);
+            body.push(0x0b);
+          };
+          emitSparse(0, sorted.length, 0);
         }
       }
       if (statement.defaultCase !== undefined) {
@@ -1775,14 +1809,17 @@ function emitWasm(
       statements: readonly ForgeWebScriptWasmStatement[],
       initial: ReadonlyMap<string, ValueLocation>,
     ): void => {
-      const visible = new Map(initial);
+      let visible = new Map(initial);
       for (const statement of statements) {
         const current = bindingsForStatement(statement, visible);
         if (statement.kind === 'let') {
           emitExpression(statement.value, current);
           const location = locations.get(statement);
-          if (location !== undefined)
+          if (location !== undefined) {
             for (const index of location.indexes.toReversed()) body.push(0x21, ...unsignedLeb(index));
+            // Update visible map with the new binding for subsequent statements
+            visible.set(statement.name, location);
+          }
         } else if (statement.kind === 'assignment') {
           const location = locations.get(statement) ?? current.get(statement.name);
           const access = statement.index === undefined ? undefined : collectionAccessLocations.get(statement.index);
@@ -2676,14 +2713,20 @@ function emitVariant(
   fileName: string,
 ): EmittedVariant {
   const lowered = lowerIteratorModule(module);
-  const wat = renderForgeWebScriptWasmWat(lowered.module, { ...metadata, targetFeatures });
+  const stage = optimizeForgeWebScriptWasmModule(lowered.module, metadata.optimization);
+  const stageDiagnostics: ForgeWebScriptWasmDiagnostic[] = stage.diagnostics.map((diagnostic) => ({
+    ...backendDiagnostic(fileName, diagnostic.message, diagnostic.span),
+    code: diagnostic.code,
+  }));
+  const wat = renderForgeWebScriptWasmWat(stage.module, { ...metadata, targetFeatures });
   const diagnostics: ForgeWebScriptWasmDiagnostic[] = [
-    ...validateReturnPaths(lowered.module, fileName),
-    ...validateTargetFeatures(lowered.module, targetFeatures, fileName),
+    ...stageDiagnostics,
+    ...validateReturnPaths(stage.module, fileName),
+    ...validateTargetFeatures(stage.module, targetFeatures, fileName),
   ];
   if (diagnostics.length > 0) return { wat, diagnostics, iteratorExports: lowered.iteratorExports };
   try {
-    const wasm = emitWasm(lowered.module, targetFeatures, compilerHints, metadata);
+    const wasm = emitWasm(stage.module, targetFeatures, compilerHints, metadata);
     if (!WebAssembly.validate(wasm.buffer as ArrayBuffer)) {
       let validationDetail = '';
       try {
@@ -2695,7 +2738,7 @@ function emitVariant(
         backendDiagnostic(
           fileName,
           `The Forge Web Script backend emitted invalid WebAssembly.${validationDetail}`,
-          module.span,
+          stage.module.span,
         ),
       );
       return { wat, diagnostics, iteratorExports: lowered.iteratorExports };
@@ -2726,11 +2769,14 @@ export function compileForgeWebScriptWasm(
     ...(targetFeatures === undefined ? {} : { targetFeatures }),
     ...(compilerHints === undefined ? {} : { compilerHints }),
   };
-  const optimized = emitVariant(input.optimizedIr, metadata, targetFeatures, compilerHints, fileName);
+  const optimizedStage = optimizeForgeWebScriptWasmModule(input.optimizedIr, metadata.optimization);
+  const wasmPasses = optimizedStage.report.passes.map(({ name, applied, skipped }) => `${name}:${applied}/${skipped}`);
+  const backendMetadata = { ...metadata, wasmOptimizationPasses: wasmPasses };
+  const optimized = emitVariant(input.optimizedIr, backendMetadata, targetFeatures, compilerHints, fileName);
   const diagnostics = [...optimized.diagnostics];
   let unoptimized: EmittedVariant | undefined;
   if (metadata.optimization === 'debug' && diagnostics.length === 0) {
-    unoptimized = emitVariant(input.ir, metadata, targetFeatures, compilerHints, fileName);
+    unoptimized = emitVariant(input.ir, backendMetadata, targetFeatures, compilerHints, fileName);
     diagnostics.push(...unoptimized.diagnostics);
   }
   const wasm = optimized.wasm;
@@ -2762,7 +2808,7 @@ export function compileForgeWebScriptWasm(
     ...(compilerHints === undefined ? {} : { compilerHints }),
     sourceMap,
     contentHash,
-    metadata,
+    metadata: backendMetadata,
     diagnostics,
   };
 }

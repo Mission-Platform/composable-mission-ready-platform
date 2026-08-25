@@ -32,12 +32,10 @@ describe('Forge Web Script dynamic link cache', () => {
   it('reports incompatible ABI signatures before dispatch', () => {
     const cache = new ForgeWebScriptDynamicLinkCache();
     expect(() =>
-      cache.resolveExportSync(
-        { artifactId: 'scanner-a', manifestHash: 'manifest-a' },
-        binding,
-        'decode',
-        () => ({ exports: { decode: () => 1 }, signatures: { decode: 'i64->i32:' } }),
-      ),
+      cache.resolveExportSync({ artifactId: 'scanner-a', manifestHash: 'manifest-a' }, binding, 'decode', () => ({
+        exports: { decode: () => 1 },
+        signatures: { decode: 'i64->i32:' },
+      })),
     ).toThrow(/incompatible signature/);
     expect(cache.diagnostics).toHaveLength(1);
     expect(cache.diagnostics[0]?.code).toBe('FWS-LINK-006');

@@ -71,16 +71,14 @@ describe('Forge Web Script module graph', () => {
       '/workspace/app/main.fws': 'import "../../shared/helper.fws" as helper; export fn main() -> i32 { return 1; }',
       '/workspace/shared/helper.fws': 'export fn helper() -> i32 { return 2; }',
     };
-    const staticResult = await resolveForgeWebScriptModuleGraph(
-      ['/workspace/app/main.fws'],
-      resolver(files),
-      { projectRoots: ['/workspace/app', '/workspace/shared'], linkProfile: 'static' },
-    );
-    const dynamicResult = await resolveForgeWebScriptModuleGraph(
-      ['/workspace/app/main.fws'],
-      resolver(files),
-      { projectRoots: ['/workspace/app', '/workspace/shared'], linkProfile: 'dynamic' },
-    );
+    const staticResult = await resolveForgeWebScriptModuleGraph(['/workspace/app/main.fws'], resolver(files), {
+      projectRoots: ['/workspace/app', '/workspace/shared'],
+      linkProfile: 'static',
+    });
+    const dynamicResult = await resolveForgeWebScriptModuleGraph(['/workspace/app/main.fws'], resolver(files), {
+      projectRoots: ['/workspace/app', '/workspace/shared'],
+      linkProfile: 'dynamic',
+    });
     expect(staticResult.graph.edges[0]?.linkMode).toBe('static');
     expect(dynamicResult.graph.edges[0]?.linkMode).toBe('dynamic');
   });

@@ -7,6 +7,7 @@ import {
   createDiagnostic,
   createForgeWebScriptCompilerService,
   diagnosticKey,
+  deserializeForgeWebScriptSoN,
   resolveForgeWebScriptModuleGraph,
   type ForgeWebScriptDiagnostic,
   type ForgeWebScriptLinkConfiguration,
@@ -25,7 +26,12 @@ import {
   parseForgeWebScriptCliArgs,
   type ForgeWebScriptCliOptions,
 } from './args.js';
-import { formatForgeWebScriptDiagnostics, outputDirectoryFor, writeForgeWebScriptArtifacts } from './output.js';
+import {
+  formatForgeWebScriptDiagnostics,
+  formatForgeWebScriptSoNSummary,
+  outputDirectoryFor,
+  writeForgeWebScriptArtifacts,
+} from './output.js';
 
 export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE = 2;
 export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE = 1;
@@ -129,6 +135,7 @@ async function compileOptions(options: ForgeWebScriptCliOptions): Promise<{
       compilerVersion: options.compilerVersion,
       optimization: options.optimization,
       requestedCapabilities: options.capabilities,
+      boundsChecks: options.boundsChecks,
       linkConfiguration: linkConfigurationFor(options, projectRoots),
     });
     return {
@@ -162,6 +169,26 @@ export async function runForgeWebScriptCli(
     return FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
   }
 
+  if (options.command === 'inspect-sonir') {
+    const artifactFileName = options.entries[0];
+    if (artifactFileName === undefined) return FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
+    const relative = path.relative(cwd, artifactFileName);
+    if (relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+      io.stderr('SoN inspection path must remain under the current working directory.');
+      return FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
+    }
+    try {
+      const sonIr = deserializeForgeWebScriptSoN(await readFile(artifactFileName, 'utf8'));
+      if (sonIr === undefined) throw new Error('Invalid, stale, or oversized SoN artifact.');
+      const summary = formatForgeWebScriptSoNSummary(sonIr);
+      io.stdout(options.format === 'json' ? JSON.stringify(summary.json) : summary.text);
+      return 0;
+    } catch (error: unknown) {
+      io.stderr(`Unable to inspect SoN artifact: ${error instanceof Error ? error.message : String(error)}`);
+      return FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
+    }
+  }
+
   let result: Awaited<ReturnType<typeof compileOptions>>;
   try {
     result = await compileOptions(options);
@@ -183,6 +210,8 @@ export async function runForgeWebScriptCli(
         verification: result.artifact.artifactVerification,
         verified: result.artifact.artifactVerification?.verified === true,
         wasmEmitted: result.artifact.wasm !== undefined,
+        boundsChecks: result.artifact.manifest?.boundsChecks ?? options.boundsChecks,
+        ...(options.showOptimizerReport ? { optimizerReport: result.artifact.optimizationReport } : {}),
         ...(options.command === 'trace' ? { trace: result.trace } : {}),
       }),
     );
@@ -191,7 +220,12 @@ export async function runForgeWebScriptCli(
   if (hasErrors || result.artifact.wasm === undefined || result.artifact.manifest === undefined)
     return FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
   if (options.command === 'check') {
-    if (options.format !== 'json') io.stdout(`Checked ${result.entryFileName}.`);
+    if (options.format !== 'json') {
+      io.stdout(`Checked ${result.entryFileName}.`);
+      if (options.showOptimizerReport || options.boundsChecks !== 'runtime')
+        io.stdout(`Bounds checks: ${options.boundsChecks}.`);
+      if (options.showOptimizerReport) io.stdout(JSON.stringify(result.artifact.optimizationReport ?? {}));
+    }
     return 0;
   }
   if (options.command === 'trace') {
@@ -208,7 +242,16 @@ export async function runForgeWebScriptCli(
     const outputFiles = await writeForgeWebScriptArtifacts(outputDirectory, result.entryFileName, result.artifact);
     if (options.format !== 'json')
       io.stdout(`Compiled ${result.entryFileName} to ${outputDirectory}: ${outputFiles.join(', ')}.`);
-    else io.stdout(JSON.stringify({ entryFileName: result.entryFileName, outputDirectory, outputFiles }));
+    else
+      io.stdout(
+        JSON.stringify({
+          entryFileName: result.entryFileName,
+          outputDirectory,
+          outputFiles,
+          boundsChecks: result.artifact.manifest?.boundsChecks ?? options.boundsChecks,
+          ...(options.showOptimizerReport ? { optimizerReport: result.artifact.optimizationReport } : {}),
+        }),
+      );
     return 0;
   } catch (error: unknown) {
     io.stderr(`Unable to write Forge Web Script artifacts: ${error instanceof Error ? error.message : String(error)}`);

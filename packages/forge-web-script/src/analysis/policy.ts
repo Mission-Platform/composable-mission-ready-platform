@@ -4,6 +4,7 @@ import type {
   ForgeWebScriptAnalysisPolicy,
   ForgeWebScriptAnalysisSeverity,
 } from './contracts.js';
+import type { ForgeWebScriptSoNBoundsChecks } from '../son-ir.js';
 
 export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits = {
   maxFindings: 1000,
@@ -17,6 +18,7 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLim
 export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy = {
   profile: 'strict',
   allowedCapabilities: [],
+  boundsChecks: 'runtime',
   limits: FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS,
   blockingSeverities: ['error'],
 };
@@ -37,6 +39,7 @@ export function createForgeWebScriptAnalysisPolicy(
     ...base,
     ...policy,
     allowedCapabilities: [...(policy.allowedCapabilities ?? base.allowedCapabilities)].toSorted(),
+    boundsChecks: (policy.boundsChecks ?? base.boundsChecks) as ForgeWebScriptSoNBoundsChecks,
     blockingSeverities: [...(policy.blockingSeverities ?? base.blockingSeverities)],
     limits: { ...base.limits, ...policy.limits },
   };

@@ -381,10 +381,17 @@ class Parser {
     const parameters: ForgeWebScriptParameter[] = [];
     while (!this.is(')') && !this.is('eof')) {
       const start = this.current().span;
+      const mutable = this.match('mut');
       const name = this.expectIdentifier('FWS-PARSE-015', 'Expected a parameter name.');
       this.expect(':', 'FWS-PARSE-016', "Expected ':' after a parameter name.");
       const type = this.parseType();
-      parameters.push({ kind: 'parameter', name: name ?? '<missing>', type, span: mergeSpans(start, type.span) });
+      parameters.push({
+        kind: 'parameter',
+        name: name ?? '<missing>',
+        ...(mutable ? { mutable: true as const } : {}),
+        type,
+        span: mergeSpans(start, type.span),
+      });
       if (!this.match(',')) break;
     }
     this.expect(')', 'FWS-PARSE-017', "Expected ')'.");
@@ -401,8 +408,7 @@ class Parser {
     let index = 0;
     while (!this.is(')') && !this.is('eof')) {
       const start = this.current().span;
-      const named =
-        (this.current().kind === 'identifier' || this.current().kind === 'keyword') && this.isNext(':');
+      const named = (this.current().kind === 'identifier' || this.current().kind === 'keyword') && this.isNext(':');
       if (named) {
         const name = this.expectIdentifier('FWS-PARSE-015', 'Expected a parameter name.');
         this.expect(':', 'FWS-PARSE-016', "Expected ':' after a parameter name.");
@@ -421,6 +427,9 @@ class Parser {
 
   private parseType(): ForgeWebScriptTypeName {
     const token = this.current();
+    const referenceStart = this.match('&');
+    const mutableReference = referenceStart && this.match('mut');
+    const typeStart = referenceStart ? token.span : this.current().span;
     if (this.match('[')) {
       const element = this.parseType();
       this.expect(';', 'FWS-PARSE-080', "Expected ';' before a fixed array length.");
@@ -432,10 +441,12 @@ class Parser {
         reference: 'Array',
         arguments: [element],
         length: Number(lengthToken.text || '0'),
-        span: mergeSpans(token.span, end),
+        ...(referenceStart ? { referenceMode: mutableReference ? ('mut-ref' as const) : ('ref' as const) } : {}),
+        span: mergeSpans(typeStart, end),
       };
     }
-    const name = token.kind === 'identifier' || token.kind === 'keyword' ? token.text : 'unit';
+    const nameToken = this.current();
+    const name = nameToken.kind === 'identifier' || nameToken.kind === 'keyword' ? nameToken.text : 'unit';
     this.consume();
     const arguments_ = this.is('<') ? this.parseTypeArguments() : undefined;
     const primitive = primitiveTypes.has(name as ForgeWebScriptPrimitiveType)
@@ -446,7 +457,8 @@ class Parser {
       name: primitive,
       ...(primitive === 'unit' && name !== 'unit' ? { reference: name } : {}),
       ...(arguments_ === undefined ? {} : { arguments: arguments_ }),
-      span: mergeSpans(token.span, this.previous().span),
+      ...(referenceStart ? { referenceMode: mutableReference ? ('mut-ref' as const) : ('ref' as const) } : {}),
+      span: mergeSpans(typeStart, this.previous().span),
     };
   }
 
@@ -481,17 +493,31 @@ class Parser {
       this.consume();
       const value = this.parseExpression();
       const end = this.expect(';', 'FWS-PARSE-030', "Expected ';' after an assignment.").span;
-      return { kind: 'assignment', name, ...(index === undefined ? {} : { index }), value, span: mergeSpans(start, end) };
+      return {
+        kind: 'assignment',
+        name,
+        ...(index === undefined ? {} : { index }),
+        value,
+        span: mergeSpans(start, end),
+      };
     }
     if (this.match('let')) {
       const start = this.previous().span;
+      const mutable = this.match('mut');
       const name = this.expectIdentifier('FWS-PARSE-020', 'Expected a local variable name.');
       this.expect(':', 'FWS-PARSE-021', "Expected ':' after a local variable name.");
       const type = this.parseType();
       this.expect('=', 'FWS-PARSE-022', "Expected '=' in a local variable declaration.");
       const value = this.parseExpression();
       const end = this.expect(';', 'FWS-PARSE-023', "Expected ';' after a local variable declaration.").span;
-      return { kind: 'let', name: name ?? '<missing>', type, value, span: mergeSpans(start, end) };
+      return {
+        kind: 'let',
+        name: name ?? '<missing>',
+        ...(mutable ? { mutable: true as const } : {}),
+        type,
+        value,
+        span: mergeSpans(start, end),
+      };
     }
     if (this.match('return')) {
       const start = this.previous().span;
@@ -507,7 +533,8 @@ class Parser {
     }
     if (this.match('loop')) {
       const start = this.previous().span;
-      const binding = this.expectIdentifier('FWS-PARSE-072', "Expected an iterator loop binding after 'loop'.") ?? '<missing>';
+      const binding =
+        this.expectIdentifier('FWS-PARSE-072', "Expected an iterator loop binding after 'loop'.") ?? '<missing>';
       this.expect('=', 'FWS-PARSE-073', "Expected '=' after an iterator loop binding.");
       const iterator = this.parseExpression();
       const body = this.parseBlock();
@@ -604,12 +631,26 @@ class Parser {
         this.expect(':', 'FWS-PARSE-086', "Expected ':' after a switch default arm.");
         defaultCase = this.parseSwitchArmBody();
       } else {
-        this.diagnostics.push(createDiagnostic(this.fileName, 'parse', 'FWS-PARSE-087', "Expected 'case' or 'default' in a switch.", this.current().span));
+        this.diagnostics.push(
+          createDiagnostic(
+            this.fileName,
+            'parse',
+            'FWS-PARSE-087',
+            "Expected 'case' or 'default' in a switch.",
+            this.current().span,
+          ),
+        );
         this.consume();
       }
     }
     const end = this.expect('}', 'FWS-PARSE-088', "Expected '}' after switch arms.").span;
-    return { kind: 'switch', value, cases, ...(defaultCase === undefined ? {} : { defaultCase }), span: mergeSpans(start, end) };
+    return {
+      kind: 'switch',
+      value,
+      cases,
+      ...(defaultCase === undefined ? {} : { defaultCase }),
+      span: mergeSpans(start, end),
+    };
   }
 
   private parseSwitchCaseValue(): number | string {
@@ -645,12 +686,20 @@ class Parser {
   private parseForClauseStatement(): ForgeWebScriptStatement {
     if (this.match('let')) {
       const start = this.previous().span;
+      const mutable = this.match('mut');
       const name = this.expectIdentifier('FWS-PARSE-020', 'Expected a local variable name.');
       this.expect(':', 'FWS-PARSE-021', "Expected ':' after a local variable name.");
       const type = this.parseType();
       this.expect('=', 'FWS-PARSE-022', "Expected '=' in a local variable declaration.");
       const value = this.parseExpression();
-      return { kind: 'let', name: name ?? '<missing>', type, value, span: mergeSpans(start, value.span) };
+      return {
+        kind: 'let',
+        name: name ?? '<missing>',
+        ...(mutable ? { mutable: true as const } : {}),
+        type,
+        value,
+        span: mergeSpans(start, value.span),
+      };
     }
     if (this.current().kind === 'identifier' && this.isNext('=')) {
       const start = this.consume().span;
@@ -705,13 +754,21 @@ class Parser {
         if (!this.match(',')) break;
       }
       const end = this.expect(']', 'FWS-PARSE-090', "Expected ']' after an array literal.").span;
-      const element = elements[0]?.kind === 'literal'
-        ? { kind: 'type-name' as const, name: elements[0].type, span: elements[0].span }
-        : { kind: 'type-name' as const, name: 'unit' as const, span: token.span };
+      const element =
+        elements[0]?.kind === 'literal'
+          ? { kind: 'type-name' as const, name: elements[0].type, span: elements[0].span }
+          : { kind: 'type-name' as const, name: 'unit' as const, span: token.span };
       return {
         kind: 'array-literal',
         elements,
-        type: { kind: 'type-name', name: 'unit', reference: 'Array', arguments: [element], length: elements.length, span: mergeSpans(token.span, end) },
+        type: {
+          kind: 'type-name',
+          name: 'unit',
+          reference: 'Array',
+          arguments: [element],
+          length: elements.length,
+          span: mergeSpans(token.span, end),
+        },
         span: mergeSpans(token.span, end),
       };
     }
@@ -724,13 +781,20 @@ class Parser {
         if (!this.match(',')) break;
       }
       const end = this.expect(']', 'FWS-PARSE-091', "Expected ']' after a vector literal.").span;
-      const element = elements[0]?.kind === 'literal'
-        ? { kind: 'type-name' as const, name: elements[0].type, span: elements[0].span }
-        : { kind: 'type-name' as const, name: 'unit' as const, span: token.span };
+      const element =
+        elements[0]?.kind === 'literal'
+          ? { kind: 'type-name' as const, name: elements[0].type, span: elements[0].span }
+          : { kind: 'type-name' as const, name: 'unit' as const, span: token.span };
       return {
         kind: 'vector-literal',
         elements,
-        type: { kind: 'type-name', name: 'unit', reference: 'Vector', arguments: [element], span: mergeSpans(token.span, end) },
+        type: {
+          kind: 'type-name',
+          name: 'unit',
+          reference: 'Vector',
+          arguments: [element],
+          span: mergeSpans(token.span, end),
+        },
         span: mergeSpans(token.span, end),
       };
     }
@@ -762,7 +826,7 @@ class Parser {
       let qualifiedName = token.text;
       let expression: ForgeWebScriptExpression = { kind: 'identifier', name: qualifiedName, span: token.span };
       if (this.match('::')) {
-        const variant = this.expectIdentifier('FWS-PARSE-093', 'Expected an enum variant after \'::\'.');
+        const variant = this.expectIdentifier('FWS-PARSE-093', "Expected an enum variant after '::'.");
         const constructorStart = token.span;
         qualifiedName = `${qualifiedName}::${variant ?? '<missing>'}`;
         const arguments_ = this.is('(') ? this.parseCallArguments('FWS-PARSE-026') : [];
@@ -773,10 +837,14 @@ class Parser {
           arguments: arguments_,
           span: mergeSpans(constructorStart, this.previous().span),
         };
-      }
-      else if (this.match('(')) {
+      } else if (this.match('(')) {
         const arguments_ = this.parseCallArguments('FWS-PARSE-026', true);
-        expression = { kind: 'call', callee: qualifiedName, arguments: arguments_, span: mergeSpans(token.span, this.previous().span) };
+        expression = {
+          kind: 'call',
+          callee: qualifiedName,
+          arguments: arguments_,
+          span: mergeSpans(token.span, this.previous().span),
+        };
       }
       while (this.match('.')) {
         const member = this.expectMemberName('FWS-PARSE-078', 'Expected a member name after ".".');
@@ -788,7 +856,12 @@ class Parser {
             if (!this.match(',')) break;
           }
           const end = this.expect(')', 'FWS-PARSE-079', "Expected ')' after member call arguments.").span;
-          expression = { kind: 'call', callee: qualifiedName, arguments: arguments_, span: mergeSpans(token.span, end) };
+          expression = {
+            kind: 'call',
+            callee: qualifiedName,
+            arguments: arguments_,
+            span: mergeSpans(token.span, end),
+          };
         } else {
           expression = { kind: 'identifier', name: qualifiedName, span: mergeSpans(token.span, this.previous().span) };
         }
@@ -862,7 +935,7 @@ class Parser {
     const name = this.expectIdentifier('FWS-PARSE-062', 'Expected a match pattern.');
     let qualifiedName = name ?? '<missing>';
     if (this.match('::')) {
-      const variant = this.expectIdentifier('FWS-PARSE-094', 'Expected an enum variant after \'::\'.');
+      const variant = this.expectIdentifier('FWS-PARSE-094', "Expected an enum variant after '::'.");
       qualifiedName = `${qualifiedName}::${variant ?? '<missing>'}`;
     }
     const bindings: string[] = [];

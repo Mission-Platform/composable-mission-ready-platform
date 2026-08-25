@@ -51,12 +51,14 @@ describe('Forge Web Script structured CFG/SSA lowering', () => {
         right: index32(4),
         span,
       },
-      body: [{
-        kind: 'assignment',
-        name: 'value',
-        value: { kind: 'binary', operator: '+', left: identifier('value'), right: index32(1), span },
-        span,
-      }],
+      body: [
+        {
+          kind: 'assignment',
+          name: 'value',
+          value: { kind: 'binary', operator: '+', left: identifier('value'), right: index32(1), span },
+          span,
+        },
+      ],
       span,
     };
     const plan = lowerForgeWebScriptWasmFunctionToSsa(

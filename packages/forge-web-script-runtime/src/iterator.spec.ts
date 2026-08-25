@@ -12,7 +12,7 @@ const descriptor = {
 describe('Forge Web Script WASM iterator adapter', () => {
   it('decodes packed i64 results and keeps completion stable', () => {
     const values = [7n, 11n, (1n << 32n) | 0n];
-    const iterator = createForgeWebScriptWasmIterator(3, () => values.shift() ?? (1n << 32n), { descriptor });
+    const iterator = createForgeWebScriptWasmIterator(3, () => values.shift() ?? 1n << 32n, { descriptor });
 
     expect(iterator.next()).toEqual({ value: 7, done: false });
     expect(iterator.next()).toEqual({ value: 11, done: false });

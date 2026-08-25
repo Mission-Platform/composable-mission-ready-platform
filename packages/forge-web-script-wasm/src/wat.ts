@@ -70,7 +70,11 @@ function renderExpression(value: ForgeWebScriptWasmExpression, indent: string): 
     ];
   if (value.kind === 'index') {
     const isArray = value.receiver.kind === 'array-literal';
-    return [...renderExpression(value.receiver, indent), ...renderExpression(value.index, indent), `${indent}call $fws_${isArray ? 'array' : 'vector'}-get`];
+    return [
+      ...renderExpression(value.receiver, indent),
+      ...renderExpression(value.index, indent),
+      `${indent}call $fws_${isArray ? 'array' : 'vector'}-get`,
+    ];
   }
   if (value.kind !== 'binary') return [];
   if (value.operator === '&&' || value.operator === '||') {
@@ -157,7 +161,12 @@ function statements(items: readonly ForgeWebScriptWasmStatement[], indent: strin
       const minimum = values.length === 0 ? 0 : Math.min(...values);
       const maximum = values.length === 0 ? 0 : Math.max(...values);
       const tableLength = maximum - minimum + 1;
-      const useBrTable = values.length > 0 && tableLength <= 65_536 && tableLength <= values.length * 4;
+      const useBrTable =
+        statement.strategy === 'br-table' ||
+        (statement.strategy === undefined &&
+          values.length > 0 &&
+          tableLength <= 65_536 &&
+          tableLength <= values.length * 4);
       lines.push(...renderExpression(statement.value, indent), `${indent}local.set $__switch_${statement.span.start}`);
       lines.push(`${indent}block ;; switch-exit`);
       if (values.length > 0) {
@@ -177,7 +186,8 @@ function statements(items: readonly ForgeWebScriptWasmStatement[], indent: strin
             `${indent}      br 1 ;; exit switch (out-of-range)`,
             `${indent}    end`,
           );
-          for (let index = 0; index < values.length; index += 1) lines.push(`${indent}    block ;; case ${values[index]}`);
+          for (let index = 0; index < values.length; index += 1)
+            lines.push(`${indent}    block ;; case ${values[index]}`);
           lines.push(
             `${indent}    local.get $__switch_${statement.span.start}`,
             `${indent}    i32.const ${minimum}`,
@@ -188,7 +198,11 @@ function statements(items: readonly ForgeWebScriptWasmStatement[], indent: strin
             }).join(' ')} ${values.length}`,
           );
           for (let index = values.length - 1; index >= 0; index -= 1) {
-            lines.push(`${indent}    end`, ...statements(statement.cases[index]!.body, `${indent}    `), `${indent}    br ${index + 1}`);
+            lines.push(
+              `${indent}    end`,
+              ...statements(statement.cases[index]!.body, `${indent}    `),
+              `${indent}    br ${index + 1}`,
+            );
           }
           lines.push(`${indent}  end`);
         } else {
@@ -242,11 +256,7 @@ function statements(items: readonly ForgeWebScriptWasmStatement[], indent: strin
         `${indent}end`,
       );
     } else if (statement.kind === 'yield') {
-      lines.push(
-        ...renderExpression(statement.value, indent),
-        `${indent}i64.extend_i32_u`,
-        `${indent}return ;; yield`,
-      );
+      lines.push(...renderExpression(statement.value, indent), `${indent}i64.extend_i32_u`, `${indent}return ;; yield`);
     } else if (statement.kind === 'iterator-loop') {
       lines.push(`${indent};; iterator-loop ${statement.binding}`, `${indent}i64.const 4294967296`, `${indent}return`);
     }
@@ -260,6 +270,10 @@ export interface ForgeWebScriptWasmWatMetadata {
   readonly graphHash?: string;
   readonly sourceFiles?: readonly string[];
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
+  readonly sonSchemaVersion?: string;
+  readonly sonGraphHash?: string;
+  readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
+  readonly wasmOptimizationPasses?: readonly string[];
 }
 
 function renderMemory(targetFeatures: ForgeWebScriptTargetFeatures | undefined): string {
@@ -280,6 +294,12 @@ export function renderForgeWebScriptWasmWat(
     ...(metadata.compilerVersion === undefined ? [] : [`  ;; compiler: ${metadata.compilerVersion}`]),
     ...(metadata.optimization === undefined ? [] : [`  ;; optimization: ${metadata.optimization}`]),
     ...(metadata.graphHash === undefined ? [] : [`  ;; graph-hash: ${metadata.graphHash}`]),
+    ...(metadata.sonSchemaVersion === undefined ? [] : [`  ;; son-schema: ${metadata.sonSchemaVersion}`]),
+    ...(metadata.sonGraphHash === undefined ? [] : [`  ;; son-graph-hash: ${metadata.sonGraphHash}`]),
+    ...(metadata.boundsChecks === undefined ? [] : [`  ;; bounds-checks: ${metadata.boundsChecks}`]),
+    ...(metadata.wasmOptimizationPasses === undefined
+      ? []
+      : [`  ;; wasm-optimization-passes: ${metadata.wasmOptimizationPasses.join(',')}`]),
     ...(metadata.sourceFiles === undefined
       ? []
       : metadata.sourceFiles.toSorted().map((fileName) => `  ;; source: ${fileName}`)),

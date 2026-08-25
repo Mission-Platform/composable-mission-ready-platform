@@ -16,33 +16,33 @@
 **種類:** 関数
 
 ```typescript
-function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void
+function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|マニフェスト | ForgeWebScriptAbiManifest |  |
+| 名前         | タイプ                    | 説明 |
+| ------------ | ------------------------- | ---- |
+| マニフェスト | ForgeWebScriptAbiManifest |      |
 
 ### 等しい関数
 
 **種類:** 関数
 
 ```typescript
-function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean
+function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|左 | ForgeWebScriptAbiFunction |  |
-|右 | ForgeWebScriptAbiFunction |  |
+| 名前 | タイプ                    | 説明 |
+| ---- | ------------------------- | ---- |
+| 左   | ForgeWebScriptAbiFunction |      |
+| 右   | ForgeWebScriptAbiFunction |      |
 
 ### ForgeWebScriptAbiValidationResult
 
@@ -59,16 +59,16 @@ export interface ForgeWebScriptAbiValidationResult
 **種類:** 関数
 
 ```typescript
-function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult
+function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|マニフェスト | ForgeWebScriptAbiManifest |  |
+| 名前         | タイプ                    | 説明 |
+| ------------ | ------------------------- | ---- |
+| マニフェスト | ForgeWebScriptAbiManifest |      |
 
 ## `src/async`
 
@@ -77,23 +77,23 @@ function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest):
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime
+function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptAsyncRuntimeOptions |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| オプション | ForgeWebScriptAsyncRuntimeOptions |      |
 
 ### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
 ```
 
 説明はありません。
@@ -103,7 +103,8 @@ export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptAsyncCapability = (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type ForgeWebScriptAsyncCapability =
+  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
 ```
 
 説明はありません。
@@ -143,7 +144,8 @@ export interface ForgeWebScriptAsyncFailure
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptAsyncFailureCode = | 'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
+export type ForgeWebScriptAsyncFailureCode =
+  'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
 説明はありません。
@@ -245,104 +247,124 @@ export interface ForgeWebScriptAsyncWorkerMessage
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptArray(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function createForgeWebScriptArray(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 指定された値をコピーして、固定配列を作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |読み取り専用 TValue[] |  |
-|所有権 | ForgeWebScriptCollection の所有権 |  |
+| 名前   | タイプ                            | 説明 |
+| ------ | --------------------------------- | ---- |
+| 値     | 読み取り専用 TValue[]             |      |
+| 所有権 | ForgeWebScriptCollection の所有権 |      |
 
 ### createForgeWebScriptIterator
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptIterator(values: Iterable<TValue>, descriptor: ForgeWebScriptIteratorDescriptor): ForgeWebScriptIterator<TValue>
+function createForgeWebScriptIterator(
+  values: Iterable<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 提供された ABI 記述子を使用して反復可能を遅延反復子に適応させます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 | Iterable<TValue> |  |
-|記述子 | ForgeWebScriptIterator記述子 |  |
+| 名前   | タイプ                       | 説明 |
+| ------ | ---------------------------- | ---- |
+| 値     | Iterable<TValue>             |      |
+| 記述子 | ForgeWebScriptIterator記述子 |      |
 
 ### createForgeWebScriptIteratorDescriptor
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptIteratorDescriptor(id: string, elementType = 'unknown', capability: ForgeWebScriptIteratorCapability = 'linear', ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptIteratorDescriptor
+function createForgeWebScriptIteratorDescriptor(
+  id: string,
+  elementType = 'unknown',
+  capability: ForgeWebScriptIteratorCapability = 'linear',
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptIteratorDescriptor;
 ```
 
 記述子境界メタデータを作成します。従来の呼び出し元はデフォルトで線形アクセスを使用します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| ID |文字列 |  |
-|要素タイプ |  |  |
-|能力 | ForgeWebScriptIteratorCapability |  |
-|所有権 | ForgeWebScriptCollection の所有権 |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| ID         | 文字列                            |      |
+| 要素タイプ |                                   |      |
+| 能力       | ForgeWebScriptIteratorCapability  |      |
+| 所有権     | ForgeWebScriptCollection の所有権 |      |
 
 ### createForgeWebScriptMap
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptMap(entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [], strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>()): ForgeWebScriptMap<TKey, TValue>
+function createForgeWebScriptMap(
+  entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [],
+  strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>(),
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|エントリー | ForgeWebScriptMapEntry<TKey, TValue>[] | readonly  |
-|戦略 | ForgeWebScriptHashStrategy<TKey> |  |
+| 名前       | タイプ                                 | 説明     |
+| ---------- | -------------------------------------- | -------- |
+| エントリー | ForgeWebScriptMapEntry<TKey, TValue>[] | readonly |
+| 戦略       | ForgeWebScriptHashStrategy<TKey>       |          |
 
 ### createForgeWebScriptSet
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptSet(values: readonly TValue[] = [], strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>()): ForgeWebScriptSet<TValue>
+function createForgeWebScriptSet(
+  values: readonly TValue[] = [],
+  strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>(),
+): ForgeWebScriptSet<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |読み取り専用 TValue[] |  |
-|戦略 | ForgeWebScriptHashStrategy<TValue> |  |
+| 名前 | タイプ                             | 説明 |
+| ---- | ---------------------------------- | ---- |
+| 値   | 読み取り専用 TValue[]              |      |
+| 戦略 | ForgeWebScriptHashStrategy<TValue> |      |
 
 ### createForgeWebScriptVector
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptVector(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptVector<TValue>
+function createForgeWebScriptVector(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptVector<TValue>;
 ```
 
 指定された値をコピーして、所有ベクトルを作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |読み取り専用 TValue[] |  |
-|所有権 | ForgeWebScriptCollection の所有権 |  |
+| 名前   | タイプ                            | 説明 |
+| ------ | --------------------------------- | ---- |
+| 値     | 読み取り専用 TValue[]             |      |
+| 所有権 | ForgeWebScriptCollection の所有権 |      |
 
 ### ForgeWebScriptArray
 
@@ -359,69 +381,77 @@ export interface ForgeWebScriptArray<TValue>
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 配列要素を読み取ります。無効なインデックスは Option.none を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|配列 | ForgeWebScriptArray<TValue> |  |
-|インデックス |番号 |  |
+| 名前         | タイプ                      | 説明 |
+| ------------ | --------------------------- | ---- |
+| 配列         | ForgeWebScriptArray<TValue> |      |
+| インデックス | 番号                        |      |
 
 ### forgeWebScriptArrayLength
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number
+function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number;
 ```
 
 要素を消費したりコピーしたりせずに、配列の長さを返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|配列 | ForgeWebScriptArray<TValue> |  |
+| 名前 | タイプ                      | 説明 |
+| ---- | --------------------------- | ---- |
+| 配列 | ForgeWebScriptArray<TValue> |      |
 
 ### forgeWebScriptArraySet
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptArraySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptArray<TValue>
+function forgeWebScriptArraySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptArray<TValue>;
 ```
 
 配列要素を置き換えます。無効なインデックスは RangeError をスローします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|配列 | ForgeWebScriptArray<TValue> |  |
-|インデックス |番号 |  |
-|値 | T値 |  |
+| 名前         | タイプ                      | 説明 |
+| ------------ | --------------------------- | ---- |
+| 配列         | ForgeWebScriptArray<TValue> |      |
+| インデックス | 番号                        |      |
+| 値           | T値                         |      |
 
 ### forgeWebScriptArrayTrySet
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptArrayTrySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>
+function forgeWebScriptArrayTrySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>;
 ```
 
 配列要素をスローせずに置き換えます。無効なインデックスはエラー結果を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|配列 | ForgeWebScriptArray<TValue> |  |
-|インデックス |番号 |  |
-|値 | T値 |  |
+| 名前         | タイプ                      | 説明 |
+| ------------ | --------------------------- | ---- |
+| 配列         | ForgeWebScriptArray<TValue> |      |
+| インデックス | 番号                        |      |
+| 値           | T値                         |      |
 
 ### ForgeWebScriptCollection の所有権
 
@@ -438,7 +468,7 @@ export type ForgeWebScriptCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
+function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>;
 ```
 
 説明はありません。
@@ -448,7 +478,7 @@ function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
 **種類:** 定数
 
 ```typescript
-export const forgeWebScriptError
+export const forgeWebScriptError;
 ```
 
 スローせずにエラーの結果値を構築します。
@@ -468,7 +498,8 @@ export interface ForgeWebScriptHashStrategy<TValue>
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptIterable<TValue> = ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
+export type ForgeWebScriptIterable<TValue> =
+  ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
 ```
 
 シリアルおよびパラレル反復子操作で受け入れられる任意のソース。
@@ -488,34 +519,40 @@ export interface ForgeWebScriptIterator<TValue>
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorAdd(source: ForgeWebScriptIterator<TValue>, value: TValue): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorAdd(
+  source: ForgeWebScriptIterator<TValue>,
+  value: TValue,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 1 つの値を反復子に遅延的に追加します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterator<TValue> |  |
-|値 | T値 |  |
+| 名前   | タイプ                         | 説明 |
+| ------ | ------------------------------ | ---- |
+| ソース | ForgeWebScriptIterator<TValue> |      |
+| 値     | T値                            |      |
 
 ### forgeWebScriptIteratorAt
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorAt(iterator: ForgeWebScriptIterator<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorAt(
+  iterator: ForgeWebScriptIterator<TValue>,
+  index: number,
+): ForgeWebScriptOption<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イテレータ | ForgeWebScriptIterator<TValue> |  |
-|インデックス |番号 |  |
+| 名前         | タイプ                         | 説明 |
+| ------------ | ------------------------------ | ---- |
+| イテレータ   | ForgeWebScriptIterator<TValue> |      |
+| インデックス | 番号                           |      |
 
 ### ForgeWebScriptIterator機能
 
@@ -532,33 +569,36 @@ export type ForgeWebScriptIteratorCapability = 'linear' | 'random-access';
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イテレータ | ForgeWebScriptIterator<TValue> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| イテレータ | ForgeWebScriptIterator<TValue> |      |
 
 ### forgeWebScriptIteratorConcat
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorConcat(first: ForgeWebScriptIterator<TValue>, second: ForgeWebScriptIterable<TValue>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorConcat(
+  first: ForgeWebScriptIterator<TValue>,
+  second: ForgeWebScriptIterable<TValue>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 どちらのソースの順序も変更せずに、2 つのソースを遅延連結します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|最初 | ForgeWebScriptIterator<TValue> |  |
-| 2番目 | ForgeWebScriptIterable<TValue> |  |
+| 名前  | タイプ                         | 説明 |
+| ----- | ------------------------------ | ---- |
+| 最初  | ForgeWebScriptIterator<TValue> |      |
+| 2番目 | ForgeWebScriptIterable<TValue> |      |
 
 ### ForgeWebScriptIterator記述子
 
@@ -575,163 +615,186 @@ export interface ForgeWebScriptIteratorDescriptor
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorFilter(source: ForgeWebScriptIterator<TValue>, predicate: (value: TValue) => boolean): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFilter(
+  source: ForgeWebScriptIterator<TValue>,
+  predicate: (value: TValue) => boolean,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 値を遅延フィルターします。フィルタリングは常に機能を線形アクセスにダウングレードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterator<TValue> |  |
-|述語 | (値: TValue) => ブール値 |  |
+| 名前   | タイプ                         | 説明 |
+| ------ | ------------------------------ | ---- |
+| ソース | ForgeWebScriptIterator<TValue> |      |
+| 述語   | (値: TValue) => ブール値       |      |
 
 ### forgeWebScriptIteratorFirst
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イテレータ | ForgeWebScriptIterator<TValue> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| イテレータ | ForgeWebScriptIterator<TValue> |      |
 
 ### forgeWebScriptIteratorFlatten
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorFlatten(source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFlatten(
+  source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 ネストされたソースを外部ソースと内部ソースの順序で遅延平坦化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |  |
+| 名前   | タイプ                                                 | 説明 |
+| ------ | ------------------------------------------------------ | ---- |
+| ソース | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |      |
 
 ### forgeWebScriptIteratorFold
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorFold(iterator: ForgeWebScriptIterator<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptIteratorFold(
+  iterator: ForgeWebScriptIterator<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イテレータ | ForgeWebScriptIterator<TValue> |  |
-|イニシャル |結果 |  |
-|減速機 | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |  |
+| 名前       | タイプ                                                               | 説明 |
+| ---------- | -------------------------------------------------------------------- | ---- |
+| イテレータ | ForgeWebScriptIterator<TValue>                                       |      |
+| イニシャル | 結果                                                                 |      |
+| 減速機     | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |      |
 
 ### forgeWebScriptIteratorFromArray
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorFromArray(array: ForgeWebScriptArray<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromArray(
+  array: ForgeWebScriptArray<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'array',
     'unknown',
     'random-access',
     array.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 所有権を変更せずに、固定配列に対してランダム アクセス反復子を作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|配列 | ForgeWebScriptArray<TValue> |  |
-|記述子 | ForgeWebScriptIterator記述子 |  |
+| 名前   | タイプ                       | 説明 |
+| ------ | ---------------------------- | ---- |
+| 配列   | ForgeWebScriptArray<TValue>  |      |
+| 記述子 | ForgeWebScriptIterator記述子 |      |
 
 ### forgeWebScriptIteratorFromIterable
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorFromIterable(values: Iterable<TValue>, elementType = 'unknown', id = 'iterable'): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFromIterable(
+  values: Iterable<TValue>,
+  elementType = 'unknown',
+  id = 'iterable',
+): ForgeWebScriptIterator<TValue>;
 ```
 
 任意のイテラブルを遅延線形 Forge Web Script イテレータに適応させます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 | Iterable<TValue> |  |
-|要素タイプ |  |  |
-| ID |  |  |
+| 名前       | タイプ           | 説明 |
+| ---------- | ---------------- | ---- |
+| 値         | Iterable<TValue> |      |
+| 要素タイプ |                  |      |
+| ID         |                  |      |
 
 ### forgeWebScriptIteratorFromVector
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorFromVector(vector: ForgeWebScriptVector<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromVector(
+  vector: ForgeWebScriptVector<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'vector',
     'unknown',
     'random-access',
     vector.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 所有権を変更せずに、ベクトルに対するランダム アクセス反復子を作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベクトル | ForgeWebScriptVector<TValue> |  |
-|記述子 | ForgeWebScriptIterator記述子 |  |
+| 名前     | タイプ                       | 説明 |
+| -------- | ---------------------------- | ---- |
+| ベクトル | ForgeWebScriptVector<TValue> |      |
+| 記述子   | ForgeWebScriptIterator記述子 |      |
 
 ### forgeWebScriptIteratorLast
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イテレータ | ForgeWebScriptIterator<TValue> |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| イテレータ | ForgeWebScriptIterator<TValue> |      |
 
 ### forgeWebScriptIteratorMap
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorMap(source: ForgeWebScriptIterator<TValue>, map: (value: TValue) => TResult, elementType = source.descriptor.elementType): ForgeWebScriptIterator<TResult>
+function forgeWebScriptIteratorMap(
+  source: ForgeWebScriptIterator<TValue>,
+  map: (value: TValue) => TResult,
+  elementType = source.descriptor.elementType,
+): ForgeWebScriptIterator<TResult>;
 ```
 
 ソースがサポートしている場合にのみランダム アクセスを保持しながら、値を遅延マップします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterator<TValue> |  |
-|地図 | (値: TValue) => TResult |  |
-|要素タイプ |  |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| ソース     | ForgeWebScriptIterator<TValue> |      |
+| 地図       | (値: TValue) => TResult        |      |
+| 要素タイプ |                                |      |
 
 ### ForgeWebScriptIteratorResult
 
@@ -748,34 +811,40 @@ export interface ForgeWebScriptIteratorResult<TValue>
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorTake(source: ForgeWebScriptIterator<TValue>, count: number): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorTake(
+  source: ForgeWebScriptIterator<TValue>,
+  count: number,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 ソースを最大 count 値に遅延制限します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterator<TValue> |  |
-|カウント |番号 |  |
+| 名前     | タイプ                         | 説明 |
+| -------- | ------------------------------ | ---- |
+| ソース   | ForgeWebScriptIterator<TValue> |      |
+| カウント | 番号                           |      |
 
 ### forgeWebScriptIteratorToArray
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorToArray(iterator: ForgeWebScriptIterator<TValue>, ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function forgeWebScriptIteratorToArray(
+  iterator: ForgeWebScriptIterator<TValue>,
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イテレータ | ForgeWebScriptIterator<TValue> |  |
-|所有権 | ForgeWebScriptCollection の所有権 |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| イテレータ | ForgeWebScriptIterator<TValue>    |      |
+| 所有権     | ForgeWebScriptCollection の所有権 |      |
 
 ### ForgeWebScriptMap
 
@@ -792,33 +861,35 @@ export interface ForgeWebScriptMap<TKey, TValue>
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地図 | ForgeWebScriptMap<TKey, TValue> |  |
-|キー | Tキー |  |
+| 名前 | タイプ                          | 説明 |
+| ---- | ------------------------------- | ---- |
+| 地図 | ForgeWebScriptMap<TKey, TValue> |      |
+| キー | Tキー                           |      |
 
 ### forgeWebScriptMapEntries
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptMapEntries(map: ForgeWebScriptMap<TKey, TValue>): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>
+function forgeWebScriptMapEntries(
+  map: ForgeWebScriptMap<TKey, TValue>,
+): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地図 | ForgeWebScriptMap<TKey, TValue> |  |
+| 名前 | タイプ                          | 説明 |
+| ---- | ------------------------------- | ---- |
+| 地図 | ForgeWebScriptMap<TKey, TValue> |      |
 
 ### ForgeWebScriptMapEntry
 
@@ -835,42 +906,46 @@ export interface ForgeWebScriptMapEntry<TKey, TValue>
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>
+function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地図 | ForgeWebScriptMap<TKey, TValue> |  |
-|キー | Tキー |  |
+| 名前 | タイプ                          | 説明 |
+| ---- | ------------------------------- | ---- |
+| 地図 | ForgeWebScriptMap<TKey, TValue> |      |
+| キー | Tキー                           |      |
 
 ### forgeWebScriptMapSet
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptMapSet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey, value: TValue): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapSet(
+  map: ForgeWebScriptMap<TKey, TValue>,
+  key: TKey,
+  value: TValue,
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地図 | ForgeWebScriptMap<TKey, TValue> |  |
-|キー | Tキー |  |
-|値 | T値 |  |
+| 名前 | タイプ                          | 説明 |
+| ---- | ------------------------------- | ---- |
+| 地図 | ForgeWebScriptMap<TKey, TValue> |      |
+| キー | Tキー                           |      |
+| 値   | T値                             |      |
 
 ### forgeWebScriptなし
 
 **種類:** 定数
 
 ```typescript
-export const forgeWebScriptNone
+export const forgeWebScriptNone;
 ```
 
 空のオプション値を作成します。
@@ -880,7 +955,7 @@ export const forgeWebScriptNone
 **種類:** 定数
 
 ```typescript
-export const forgeWebScriptOk
+export const forgeWebScriptOk;
 ```
 
 成功した結果値を構築します。
@@ -920,74 +995,74 @@ export interface ForgeWebScriptSet<TValue>
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|セット | ForgeWebScriptSet<TValue> |  |
-|値 | T値 |  |
+| 名前   | タイプ                    | 説明 |
+| ------ | ------------------------- | ---- |
+| セット | ForgeWebScriptSet<TValue> |      |
+| 値     | T値                       |      |
 
 ### forgeWebScriptSetDelete
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|セット | ForgeWebScriptSet<TValue> |  |
-|値 | T値 |  |
+| 名前   | タイプ                    | 説明 |
+| ------ | ------------------------- | ---- |
+| セット | ForgeWebScriptSet<TValue> |      |
+| 値     | T値                       |      |
 
 ### forgeWebScriptSet がある
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean
+function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|セット | ForgeWebScriptSet<TValue> |  |
-|値 | T値 |  |
+| 名前   | タイプ                    | 説明 |
+| ------ | ------------------------- | ---- |
+| セット | ForgeWebScriptSet<TValue> |      |
+| 値     | T値                       |      |
 
 ### forgeWebScriptSetValues
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|セット | ForgeWebScriptSet<TValue> |  |
+| 名前   | タイプ                    | 説明 |
+| ------ | ------------------------- | ---- |
+| セット | ForgeWebScriptSet<TValue> |      |
 
 ### forgeWebScriptいくつか
 
 **種類:** 定数
 
 ```typescript
-export const forgeWebScriptSome
+export const forgeWebScriptSome;
 ```
 
 現在のオプション値を構築します。
@@ -1008,7 +1083,7 @@ export interface ForgeWebScriptVector<TValue>
 **種類:** 定数
 
 ```typescript
-export const forgeWebScriptVectorAdd
+export const forgeWebScriptVectorAdd;
 ```
 
 stdlib イテレータ `add` 語彙に一致する、ベクトル プッシュのエイリアス。
@@ -1018,85 +1093,95 @@ stdlib イテレータ `add` 語彙に一致する、ベクトル プッシュ�
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptVectorFilter(vector: ForgeWebScriptVector<TValue>, predicate: (value: TValue, index: number) => boolean): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorFilter(
+  vector: ForgeWebScriptVector<TValue>,
+  predicate: (value: TValue, index: number) => boolean,
+): ForgeWebScriptVector<TValue>;
 ```
 
 ソースの順序を維持しながら、ベクトルをフィルタリングして新しいベクトルにします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベクトル | ForgeWebScriptVector<TValue> |  |
-|述語 | (値: TValue、インデックス: 数値) => ブール値 |  |
+| 名前     | タイプ                                       | 説明 |
+| -------- | -------------------------------------------- | ---- |
+| ベクトル | ForgeWebScriptVector<TValue>                 |      |
+| 述語     | (値: TValue、インデックス: 数値) => ブール値 |      |
 
 ### forgeWebScriptVectorFold
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptVectorFold(vector: ForgeWebScriptVector<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptVectorFold(
+  vector: ForgeWebScriptVector<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 指定された初期アキュムレータを含む、ベクトル値を左から右に折り畳みます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベクトル | ForgeWebScriptVector<TValue> |  |
-|イニシャル |結果 |  |
-|減速機 | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |  |
+| 名前       | タイプ                                                               | 説明 |
+| ---------- | -------------------------------------------------------------------- | ---- |
+| ベクトル   | ForgeWebScriptVector<TValue>                                         |      |
+| イニシャル | 結果                                                                 |      |
+| 減速機     | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |      |
 
 ### forgeWebScriptVectorGet
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 ベクター要素を読み取ります。無効なインデックスは Option.none を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベクトル | ForgeWebScriptVector<TValue> |  |
-|インデックス |番号 |  |
+| 名前         | タイプ                       | 説明 |
+| ------------ | ---------------------------- | ---- |
+| ベクトル     | ForgeWebScriptVector<TValue> |      |
+| インデックス | 番号                         |      |
 
 ### forgeWebScriptVectorLength
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number
+function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number;
 ```
 
 初期化されたベクトル要素の数を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベクトル | ForgeWebScriptVector<TValue> |  |
+| 名前     | タイプ                       | 説明 |
+| -------- | ---------------------------- | ---- |
+| ベクトル | ForgeWebScriptVector<TValue> |      |
 
 ### forgeWebScriptVectorMap
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform: (value: TValue, index: number) => TResult): ForgeWebScriptVector<TResult>
+function forgeWebScriptVectorMap(
+  vector: ForgeWebScriptVector<TValue>,
+  transform: (value: TValue, index: number) => TResult,
+): ForgeWebScriptVector<TResult>;
 ```
 
 ソース インデックス順にベクトルを新しいベクトルに迅速にマッピングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベクトル | ForgeWebScriptVector<TValue> |  |
-|変換 | (値: TValue、インデックス: 数値) => TResult |  |
+| 名前     | タイプ                                      | 説明 |
+| -------- | ------------------------------------------- | ---- |
+| ベクトル | ForgeWebScriptVector<TValue>                |      |
+| 変換     | (値: TValue、インデックス: 数値) => TResult |      |
 
 ### forgeWebScriptベクターポップ
 
@@ -1106,69 +1191,77 @@ function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform
 function forgeWebScriptVectorPop(vector: ForgeWebScriptVector<TValue>): {
   readonly vector: ForgeWebScriptVector<TValue>;
   readonly value: ForgeWebScriptOption<TValue>;
-}
+};
 ```
 
 最終的なベクトル値を削除し、更新されたベクトルとオプションの結果を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベクトル | ForgeWebScriptVector<TValue> |  |
+| 名前     | タイプ                       | 説明 |
+| -------- | ---------------------------- | ---- |
+| ベクトル | ForgeWebScriptVector<TValue> |      |
 
 ### forgeWebScriptVectorPush
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>;
 ```
 
 値を追加し、所有権を維持しながら、必要に応じて容量を拡張します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベクトル | ForgeWebScriptVector<TValue> |  |
-|値 | T値 |  |
+| 名前     | タイプ                       | 説明 |
+| -------- | ---------------------------- | ---- |
+| ベクトル | ForgeWebScriptVector<TValue> |      |
+| 値       | T値                          |      |
 
 ### forgeWebScriptVectorSet
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptVectorSet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorSet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptVector<TValue>;
 ```
 
 ベクター要素を置き換えます。無効なインデックスは RangeError をスローします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベクトル | ForgeWebScriptVector<TValue> |  |
-|インデックス |番号 |  |
-|値 | T値 |  |
+| 名前         | タイプ                       | 説明 |
+| ------------ | ---------------------------- | ---- |
+| ベクトル     | ForgeWebScriptVector<TValue> |      |
+| インデックス | 番号                         |      |
+| 値           | T値                          |      |
 
 ### forgeWebScriptVectorTrySet
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>
+function forgeWebScriptVectorTrySet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>;
 ```
 
 ベクター要素をスローせずに置き換えます。無効なインデックスはエラー結果を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベクトル | ForgeWebScriptVector<TValue> |  |
-|インデックス |番号 |  |
-|値 | T値 |  |
+| 名前         | タイプ                       | 説明 |
+| ------------ | ---------------------------- | ---- |
+| ベクトル     | ForgeWebScriptVector<TValue> |      |
+| インデックス | 番号                         |      |
+| 値           | T値                          |      |
 
 ## `src/ecs`
 
@@ -1177,45 +1270,55 @@ function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index:
 **種類:** 関数
 
 ```typescript
-function addForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function addForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|エンティティ | ForgeWebScriptEcsEntity |  |
-|コンポーネント |文字列 |  |
-|値 | T値 |  |
+| 名前           | タイプ                         | 説明 |
+| -------------- | ------------------------------ | ---- |
+| 世界           | ForgeWebScriptEcsWorld<TValue> |      |
+| エンティティ   | ForgeWebScriptEcsEntity        |      |
+| コンポーネント | 文字列                         |      |
+| 値             | T値                            |      |
 
 ### createForgeWebScriptEcsScheduler
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptEcsScheduler(systems: readonly ForgeWebScriptEcsSystem<TValue>[], signals: readonly ForgeWebScriptEcsSignal[] = [], subscriptions: readonly ForgeWebScriptEcsSubscription[] = [], maxSteps = 1000): ForgeWebScriptEcsScheduler<TValue>
+function createForgeWebScriptEcsScheduler(
+  systems: readonly ForgeWebScriptEcsSystem<TValue>[],
+  signals: readonly ForgeWebScriptEcsSignal[] = [],
+  subscriptions: readonly ForgeWebScriptEcsSubscription[] = [],
+  maxSteps = 1000,
+): ForgeWebScriptEcsScheduler<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|システム | ForgeWebScriptEcsSystem<TValue>[] | readonly  |
-|信号 | ForgeWebScriptEcsSignal[] | readonly  |
-|サブスクリプション | Readonly ForgeWebScriptEcsSubscription[] |  |
-|最大ステップ数 |  |  |
+| 名前               | タイプ                                   | 説明     |
+| ------------------ | ---------------------------------------- | -------- |
+| システム           | ForgeWebScriptEcsSystem<TValue>[]        | readonly |
+| 信号               | ForgeWebScriptEcsSignal[]                | readonly |
+| サブスクリプション | Readonly ForgeWebScriptEcsSubscription[] |          |
+| 最大ステップ数     |                                          |          |
 
 ### createForgeWebScriptEcsWorld
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
+function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>;
 ```
 
 説明はありません。
@@ -1225,17 +1328,20 @@ function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
 **種類:** 関数
 
 ```typescript
-function despawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): ForgeWebScriptEcsResult<TValue>
+function despawnForgeWebScriptEcsEntity(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|エンティティ | ForgeWebScriptEcsEntity |  |
+| 名前         | タイプ                         | 説明 |
+| ------------ | ------------------------------ | ---- |
+| 世界         | ForgeWebScriptEcsWorld<TValue> |      |
+| エンティティ | ForgeWebScriptEcsEntity        |      |
 
 ### ForgeWebScriptEcsComponentStore
 
@@ -1362,138 +1468,162 @@ export interface ForgeWebScriptEcsWorld<TValue = Uint8Array>
 **種類:** 関数
 
 ```typescript
-function getForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): TValue | undefined
+function getForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): TValue | undefined;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|エンティティ | ForgeWebScriptEcsEntity |  |
-|コンポーネント |文字列 |  |
+| 名前           | タイプ                         | 説明 |
+| -------------- | ------------------------------ | ---- |
+| 世界           | ForgeWebScriptEcsWorld<TValue> |      |
+| エンティティ   | ForgeWebScriptEcsEntity        |      |
+| コンポーネント | 文字列                         |      |
 
 ### isForgeWebScriptEcsEntityAlive
 
 **種類:** 関数
 
 ```typescript
-function isForgeWebScriptEcsEntityAlive(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): boolean
+function isForgeWebScriptEcsEntityAlive(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): boolean;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|エンティティ | ForgeWebScriptEcsEntity |  |
+| 名前         | タイプ                         | 説明 |
+| ------------ | ------------------------------ | ---- |
+| 世界         | ForgeWebScriptEcsWorld<TValue> |      |
+| エンティティ | ForgeWebScriptEcsEntity        |      |
 
 ### queryForgeWebScriptEcsEntities
 
 **種類:** 関数
 
 ```typescript
-function queryForgeWebScriptEcsEntities(world: ForgeWebScriptEcsWorld<TValue>, query: ForgeWebScriptEcsQuery): readonly ForgeWebScriptEcsEntity[]
+function queryForgeWebScriptEcsEntities(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  query: ForgeWebScriptEcsQuery,
+): readonly ForgeWebScriptEcsEntity[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|クエリ | ForgeWebScriptEcsQuery |  |
+| 名前   | タイプ                         | 説明 |
+| ------ | ------------------------------ | ---- |
+| 世界   | ForgeWebScriptEcsWorld<TValue> |      |
+| クエリ | ForgeWebScriptEcsQuery         |      |
 
 ### RemoveForgeWebScriptEcsComponent
 
 **種類:** 関数
 
 ```typescript
-function removeForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): ForgeWebScriptEcsResult<TValue>
+function removeForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|エンティティ | ForgeWebScriptEcsEntity |  |
-|コンポーネント |文字列 |  |
+| 名前           | タイプ                         | 説明 |
+| -------------- | ------------------------------ | ---- |
+| 世界           | ForgeWebScriptEcsWorld<TValue> |      |
+| エンティティ   | ForgeWebScriptEcsEntity        |      |
+| コンポーネント | 文字列                         |      |
 
 ### runForgeWebScriptEcsScheduler
 
 **種類:** 関数
 
 ```typescript
-function runForgeWebScriptEcsScheduler(world: ForgeWebScriptEcsWorld<TValue>, scheduler: ForgeWebScriptEcsScheduler<TValue>): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>
+function runForgeWebScriptEcsScheduler(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  scheduler: ForgeWebScriptEcsScheduler<TValue>,
+): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|スケジューラー | ForgeWebScriptEcsScheduler<TValue> |  |
+| 名前           | タイプ                             | 説明 |
+| -------------- | ---------------------------------- | ---- |
+| 世界           | ForgeWebScriptEcsWorld<TValue>     |      |
+| スケジューラー | ForgeWebScriptEcsScheduler<TValue> |      |
 
 ### setForgeWebScriptEcsComponent
 
 **種類:** 関数
 
 ```typescript
-function setForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function setForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|エンティティ | ForgeWebScriptEcsEntity |  |
-|コンポーネント |文字列 |  |
-|値 | T値 |  |
+| 名前           | タイプ                         | 説明 |
+| -------------- | ------------------------------ | ---- |
+| 世界           | ForgeWebScriptEcsWorld<TValue> |      |
+| エンティティ   | ForgeWebScriptEcsEntity        |      |
+| コンポーネント | 文字列                         |      |
+| 値             | T値                            |      |
 
 ### spawnForgeWebScriptEcsEntity
 
 **種類:** 関数
 
 ```typescript
-function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>
+function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
+| 名前 | タイプ                         | 説明 |
+| ---- | ------------------------------ | ---- |
+| 世界 | ForgeWebScriptEcsWorld<TValue> |      |
 
 ### validateForgeWebScriptEcsSignals
 
 **種類:** 関数
 
 ```typescript
-function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSignal[]): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] }
+function validateForgeWebScriptEcsSignals(
+  signals: readonly ForgeWebScriptEcsSignal[],
+): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|信号 | ForgeWebScriptEcsSignal[] | readonly  |
+| 名前 | タイプ                    | 説明     |
+| ---- | ------------------------- | -------- |
+| 信号 | ForgeWebScriptEcsSignal[] | readonly |
 
 ## `src/host`
 
@@ -1502,34 +1632,40 @@ function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSig
 **種類:** 関数
 
 ```typescript
-function createDefaultForgeWebScriptCapabilities(options: ForgeWebScriptDefaultHostOptions = {}): ForgeWebScriptCapabilityRegistry
+function createDefaultForgeWebScriptCapabilities(
+  options: ForgeWebScriptDefaultHostOptions = {},
+): ForgeWebScriptCapabilityRegistry;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptDefaultHostOptions |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| オプション | ForgeWebScriptDefaultHostOptions |      |
 
 ### createForgeWebScriptホスト
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptHost(manifest: ForgeWebScriptAbiManifest, registry: ForgeWebScriptCapabilityRegistry, options: ForgeWebScriptHostOptions = {}): ForgeWebScriptHost
+function createForgeWebScriptHost(
+  manifest: ForgeWebScriptAbiManifest,
+  registry: ForgeWebScriptCapabilityRegistry,
+  options: ForgeWebScriptHostOptions = {},
+): ForgeWebScriptHost;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|マニフェスト | ForgeWebScriptAbiManifest |  |
-|レジストリ | ForgeWebScriptCapabilityレジストリ |  |
-|オプション | ForgeWebScriptHostOptions |  |
+| 名前         | タイプ                             | 説明 |
+| ------------ | ---------------------------------- | ---- |
+| マニフェスト | ForgeWebScriptAbiManifest          |      |
+| レジストリ   | ForgeWebScriptCapabilityレジストリ |      |
+| オプション   | ForgeWebScriptHostOptions          |      |
 
 ### ForgeWebScript機能の実装
 
@@ -1598,36 +1734,44 @@ export interface ForgeWebScriptHostOptions
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptWasmIterator(handle: number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIterator(
+  handle: number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): ForgeWebScriptWasmIterator<TValue>;
 ```
 
 バックエンドが所有する i32 ハンドルとパックされた i64 次プロトコルを JS 反復に適応させます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ハンドル |番号 |  |
-|次へ | (ハンドル: 数値) => ForgeWebScriptPackedIteratorResult |  |
-|オプション | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| 名前       | タイプ                                                 | 説明 |
+| ---------- | ------------------------------------------------------ | ---- |
+| ハンドル   | 番号                                                   |      |
+| 次へ       | (ハンドル: 数値) => ForgeWebScriptPackedIteratorResult |      |
+| オプション | ForgeWebScriptWasmIteratorOptions<TValue>              |      |
 
 ### createForgeWebScriptWasmIteratorFactory
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptWasmIteratorFactory(factory: (...arguments_: TArguments) => number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIteratorFactory(
+  factory: (...arguments_: TArguments) => number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>;
 ```
 
 バックエンド ファクトリとその `.next` エクスポートから JS 向きのイテレータ ファクトリを構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | (...arguments_: TArguments) => 数値 |  |
-|次へ | (ハンドル: 数値) => ForgeWebScriptPackedIteratorResult |  |
-|オプション | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| 名前       | タイプ                                                 | 説明 |
+| ---------- | ------------------------------------------------------ | ---- |
+| 工場       | (...arguments_: TArguments) => 数値                    |      |
+| 次へ       | (ハンドル: 数値) => ForgeWebScriptPackedIteratorResult |      |
+| オプション | ForgeWebScriptWasmIteratorOptions<TValue>              |      |
 
 ### ForgeWebScriptPackedIteratorResult
 
@@ -1666,16 +1810,16 @@ export interface ForgeWebScriptWasmIteratorOptions<TValue>
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger
+function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptLoggerオプション |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| オプション | ForgeWebScriptLoggerオプション |      |
 
 ### ForgeWebScriptLogEvent
 
@@ -1734,23 +1878,23 @@ export type ForgeWebScriptLogSink = (event: ForgeWebScriptLogEvent) => void;
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory
+function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptMemoryOptions |  |
+| 名前       | タイプ                      | 説明 |
+| ---------- | --------------------------- | ---- |
+| オプション | ForgeWebScriptMemoryOptions |      |
 
 ### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 ```
 
 説明はありません。
@@ -1792,7 +1936,7 @@ export interface ForgeWebScriptMemoryOptions
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
 ```
 
 ワーカー、スレッド、アトミック、および共有メモリの実行を承認するために使用される機能名。
@@ -1804,7 +1948,7 @@ export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
 ```typescript
 export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<ForgeWebScriptParallelOperation, ForgeWebScriptParallelOperationDescriptor>
->
+>;
 ```
 
 すべてのシリアル フォールバック可能な並列操作に対する安定した記述子。
@@ -1814,42 +1958,53 @@ export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorParAt(source: ForgeWebScriptIterable<TValue>, index: number, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParAt(
+  source: ForgeWebScriptIterable<TValue>,
+  index: number,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 ゼロから順序付けされた結果、またはインデックスが無効な場合は Option.none を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterable<TValue> |  |
-|インデックス |番号 |  |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前         | タイプ                         | 説明 |
+| ------------ | ------------------------------ | ---- |
+| ソース       | ForgeWebScriptIterable<TValue> |      |
+| インデックス | 番号                           |      |
+| オプション   | ForgeWebScriptParallelOptions  |      |
 
 ### forgeWebScriptIteratorParCollect
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorParCollect(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptVector<TValue>>
+function forgeWebScriptIteratorParCollect(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptVector<TValue>>;
 ```
 
 順序付けされた並列結果を所有ベクトルに具体化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterable<TValue> |  |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| ソース     | ForgeWebScriptIterable<TValue> |      |
+| オプション | ForgeWebScriptParallelOptions  |      |
 
 ### forgeWebScriptIteratorParFilter
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>, predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFilter(
+  source: ForgeWebScriptIterable<TValue>,
+  predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 述語を並行して評価し、受け入れられた値をソースの順序で保持します。
@@ -1857,88 +2012,106 @@ function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>,
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterable<TValue> |  |
-|述語 | (値: TValue、インデックス: 数値) => ブール値 \| PromiseLike<boolean> |  |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前       | タイプ                                                               | 説明 |
+| ---------- | -------------------------------------------------------------------- | ---- |
+| ソース     | ForgeWebScriptIterable<TValue>                                       |      |
+| 述語       | (値: TValue、インデックス: 数値) => ブール値 \| PromiseLike<boolean> |      |
+| オプション | ForgeWebScriptParallelOptions                                        |      |
 
 ### forgeWebScriptIteratorParFirst
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorParFirst(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParFirst(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 最初に順序付けされた結果、または空のソースの Option.none 値を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterable<TValue> |  |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| ソース     | ForgeWebScriptIterable<TValue> |      |
+| オプション | ForgeWebScriptParallelOptions  |      |
 
 ### forgeWebScriptIteratorParFlatten
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorParFlatten(source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFlatten(
+  source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 外側と内側の順序を維持しながら、ネストされたソースを並行して平坦化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |  |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前       | タイプ                                                 | 説明 |
+| ---------- | ------------------------------------------------------ | ---- |
+| ソース     | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |      |
+| オプション | ForgeWebScriptParallelOptions                          |      |
 
 ### forgeWebScriptIteratorParFold
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorParFold(source: ForgeWebScriptIterable<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult, options: ForgeWebScriptParallelOptions = {}): Promise<TResult>
+function forgeWebScriptIteratorParFold(
+  source: ForgeWebScriptIterable<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<TResult>;
 ```
 
 指定された初期アキュムレータを含め、順序付けされた結果を左から右に折り畳みます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterable<TValue> |  |
-|イニシャル |結果 |  |
-|減速機 | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |  |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前       | タイプ                                                               | 説明 |
+| ---------- | -------------------------------------------------------------------- | ---- |
+| ソース     | ForgeWebScriptIterable<TValue>                                       |      |
+| イニシャル | 結果                                                                 |      |
+| 減速機     | (アキュムレータ: TResult、値: TValue、インデックス: 数値) => TResult |      |
+| オプション | ForgeWebScriptParallelOptions                                        |      |
 
 ### forgeWebScriptIteratorParLast
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorParLast(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParLast(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 最後に順序付けされた結果、または空のソースの Option.none 値を返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterable<TValue> |  |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| ソース     | ForgeWebScriptIterable<TValue> |      |
+| オプション | ForgeWebScriptParallelOptions  |      |
 
 ### forgeWebScriptIteratorParMap
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, map: (value: TValue, index: number) => TResult | PromiseLike<TResult>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TResult>>
+function forgeWebScriptIteratorParMap(
+  source: ForgeWebScriptIterable<TValue>,
+  map: (value: TValue, index: number) => TResult | PromiseLike<TResult>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TResult>>;
 ```
 
 コールバックを並列に適用し、遅延互換の順序付きイテレータを返します。
@@ -1946,45 +2119,51 @@ function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, ma
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterable<TValue> |  |
-|地図 | (値: TValue、インデックス: 数値) => TResult \| PromiseLike<TResult> |  |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前       | タイプ                                                              | 説明 |
+| ---------- | ------------------------------------------------------------------- | ---- |
+| ソース     | ForgeWebScriptIterable<TValue>                                      |      |
+| 地図       | (値: TValue、インデックス: 数値) => TResult \| PromiseLike<TResult> |      |
+| オプション | ForgeWebScriptParallelOptions                                       |      |
 
 ### forgeWebScriptIteratorParToArray
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptIteratorParToArray(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptArray<TValue>>
+function forgeWebScriptIteratorParToArray(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptArray<TValue>>;
 ```
 
 順序付けされた並列結果を所有する固定配列に具体化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース | ForgeWebScriptIterable<TValue> |  |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| ソース     | ForgeWebScriptIterable<TValue> |      |
+| オプション | ForgeWebScriptParallelOptions  |      |
 
 ### forgeWebScriptParallelDescriptor
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptParallelDescriptor(operation: ForgeWebScriptParallelOperation, options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy }
+function forgeWebScriptParallelDescriptor(
+  operation: ForgeWebScriptParallelOperation,
+  options: ForgeWebScriptParallelOptions = {},
+): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy };
 ```
 
 操作を説明し、提供されたオプションから選択した戦略を添付します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|操作 | ForgeWebScriptParallelOperation |  |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| 操作       | ForgeWebScriptParallelOperation |      |
+| オプション | ForgeWebScriptParallelOptions   |      |
 
 ### ForgeWebScriptParallelExecutor
 
@@ -2001,7 +2180,16 @@ export interface ForgeWebScriptParallelExecutor
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptParallelOperation = | 'par_map' | 'par_filter' | 'par_flatten' | 'par_collect' | 'par_to_array' | 'par_fold' | 'par_first' | 'par_last' | 'par_at';
+export type ForgeWebScriptParallelOperation =
+  | 'par_map'
+  | 'par_filter'
+  | 'par_flatten'
+  | 'par_collect'
+  | 'par_to_array'
+  | 'par_fold'
+  | 'par_first'
+  | 'par_last'
+  | 'par_at';
 ```
 
 ランタイムによって公開される正規の並列操作名。 `par_filter` は意図的です。
@@ -2053,16 +2241,16 @@ export type ForgeWebScriptParallelStrategy = 'serial' | 'host-workers' | 'wasm-t
 **種類:** 関数
 
 ```typescript
-function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan
+function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan;
 ```
 
 操作の結果コントラクトを変更せずに、許可された戦略を選択します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptParallelOptions |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| オプション | ForgeWebScriptParallelOptions |      |
 
 ## `src/self-hosted`
 
@@ -2091,7 +2279,11 @@ export interface ForgeWebScriptSelfHostedVmRun
 **種類:** 関数
 
 ```typescript
-function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedVmRun
+function runForgeWebScriptSelfHostedCompiler(
+  input: ForgeWebScriptCompileInput,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedVmRun;
 ```
 
 制限付きセルフホスト コンパイラ ブートストラップを実行します。
@@ -2103,29 +2295,33 @@ Wasm の完全な放出はシードバックされたままであり、次の場
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | ForgeWebScriptCompileInput |  |
-|モード | ForgeWebScriptVm実行モード |  |
-|オプション | ForgeWebScriptSelfHostedRunOptions |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| 入力       | ForgeWebScriptCompileInput         |      |
+| モード     | ForgeWebScriptVm実行モード         |      |
+| オプション | ForgeWebScriptSelfHostedRunOptions |      |
 
 ### runForgeWebScriptSelfHostedLexStage
 
 **種類:** 関数
 
 ```typescript
-function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedStageReport
+function runForgeWebScriptSelfHostedLexStage(
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedStageReport;
 ```
 
 コンパイラ コンシューマに対しては、制限された FWS で作成された lex ステージのみを実行します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | Pick<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |  |
-|モード | ForgeWebScriptVm実行モード |  |
-|オプション | ForgeWebScriptSelfHostedRunOptions |  |
+| 名前       | タイプ                                                                                                   | 説明 |
+| ---------- | -------------------------------------------------------------------------------------------------------- | ---- |
+| 入力       | Pick<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |      |
+| モード     | ForgeWebScriptVm実行モード                                                                               |      |
+| オプション | ForgeWebScriptSelfHostedRunOptions                                                                       |      |
 
 ## `src/threading`
 
@@ -2134,7 +2330,10 @@ function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileIn
 **種類:** 関数
 
 ```typescript
-function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined, capabilities: readonly string[] | undefined): boolean
+function canUseForgeWebScriptWasmThreads(
+  targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined,
+  capabilities: readonly string[] | undefined,
+): boolean;
 ```
 
 スレッドの実行は、コンパイル境界とランタイム境界の両方でオプトインされます。で
@@ -2142,34 +2341,39 @@ function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThrea
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ターゲット機能 | ForgeWebScriptWasmThreadTarget features \|未定義 |  |
-|能力 |読み取り専用文字列[] \|未定義 |  |
+| 名前           | タイプ                                           | 説明 |
+| -------------- | ------------------------------------------------ | ---- |
+| ターゲット機能 | ForgeWebScriptWasmThreadTarget features \|未定義 |      |
+| 能力           | 読み取り専用文字列[] \|未定義                    |      |
 
 ### createForgeWebScriptAtomicI32
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptAtomicI32(length = 1, options: ForgeWebScriptAtomicI32Options = {}): ForgeWebScriptAtomicI32
+function createForgeWebScriptAtomicI32(
+  length = 1,
+  options: ForgeWebScriptAtomicI32Options = {},
+): ForgeWebScriptAtomicI32;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|長さ |  |  |
-|オプション | ForgeWebScriptAtomicI32オプション |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| 長さ       |                                   |      |
+| オプション | ForgeWebScriptAtomicI32オプション |      |
 
 ### createForgeWebScriptWasmThreadScheduler
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThreadSchedulerOptions): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWasmThreadScheduler(
+  options: ForgeWebScriptWasmThreadSchedulerOptions,
+): ForgeWebScriptWorkerScheduler;
 ```
 
 コンパイルされた WASM スレッド ブリッジを明示的な共有メモリ アカウンティングでラップします。
@@ -2178,35 +2382,42 @@ function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThre
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptWasmThreadSchedulerオプション |  |
+| 名前       | タイプ                                      | 説明 |
+| ---------- | ------------------------------------------- | ---- |
+| オプション | ForgeWebScriptWasmThreadSchedulerオプション |      |
 
 ### createForgeWebScriptWorkerRuntime
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptWorkerRuntime(createWorker: () => ForgeWebScriptWorkerPort, onMessage: (message: unknown) => void, onError: (error: unknown) => void = () => {}, options: ForgeWebScriptWorkerRuntimeOptions = {}): ForgeWebScriptWorkerRuntime
+function createForgeWebScriptWorkerRuntime(
+  createWorker: () => ForgeWebScriptWorkerPort,
+  onMessage: (message: unknown) => void,
+  onError: (error: unknown) => void = () => {},
+  options: ForgeWebScriptWorkerRuntimeOptions = {},
+): ForgeWebScriptWorkerRuntime;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|作成ワーカー | () => ForgeWebScriptWorkerPort |  |
-|メッセージ | (メッセージ: 不明) => void |  |
-| onエラー | (エラー: 不明) => 無効 |  |
-|オプション | ForgeWebScriptWorkerRuntimeOptions |  |
+| 名前         | タイプ                             | 説明 |
+| ------------ | ---------------------------------- | ---- |
+| 作成ワーカー | () => ForgeWebScriptWorkerPort     |      |
+| メッセージ   | (メッセージ: 不明) => void         |      |
+| onエラー     | (エラー: 不明) => 無効             |      |
+| オプション   | ForgeWebScriptWorkerRuntimeOptions |      |
 
 ### createForgeWebScriptWorkerScheduler
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedulerOptions = {}): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWorkerScheduler(
+  options: ForgeWebScriptWorkerSchedulerOptions = {},
+): ForgeWebScriptWorkerScheduler;
 ```
 
 並列イテレータ操作で使用されるホスト側のスケジューリング境界を作成します。
@@ -2218,16 +2429,16 @@ function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedu
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptWorkerSchedulerオプション |  |
+| 名前       | タイプ                                  | 説明 |
+| ---------- | --------------------------------------- | ---- |
+| オプション | ForgeWebScriptWorkerSchedulerオプション |      |
 
 ### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 ```
 
 説明はありません。
@@ -2329,17 +2540,20 @@ export interface ForgeWebScriptWorkerSchedulerOptions
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptTraceRecorder(options: ForgeWebScriptTraceOptions, functionName: string): ForgeWebScriptTraceRecorder
+function createForgeWebScriptTraceRecorder(
+  options: ForgeWebScriptTraceOptions,
+  functionName: string,
+): ForgeWebScriptTraceRecorder;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptTraceOptions |  |
-|関数名 |文字列 |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| オプション | ForgeWebScriptTraceOptions |      |
+| 関数名     | 文字列                     |      |
 
 ### ForgeWebScriptTraceCaptureMode
 
@@ -2376,7 +2590,8 @@ export interface ForgeWebScriptTraceEvent
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptTraceEventType = 'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
+export type ForgeWebScriptTraceEventType =
+  'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
 説明はありません。
@@ -2436,17 +2651,20 @@ export interface ForgeWebScriptTraceSourceLocation extends ForgeWebScriptVmDebug
 **種類:** 関数
 
 ```typescript
-function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (value: ForgeWebScriptVmValue) => string): string
+function summarizeForgeWebScriptVmValue(
+  value: ForgeWebScriptVmValue,
+  redact?: (value: ForgeWebScriptVmValue) => string,
+): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 | ForgeWebScriptVmValue |  |
-|編集 | (値: ForgeWebScriptVmValue) => 文字列 |  |
+| 名前 | タイプ                                | 説明 |
+| ---- | ------------------------------------- | ---- |
+| 値   | ForgeWebScriptVmValue                 |      |
+| 編集 | (値: ForgeWebScriptVmValue) => 文字列 |      |
 
 ## `src/traps`
 
@@ -2455,17 +2673,17 @@ function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (
 **種類:** 関数
 
 ```typescript
-function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void
+function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|エラー |不明 |  |
-|トレース | ForgeWebScriptTraceReport |  |
+| 名前     | タイプ                    | 説明 |
+| -------- | ------------------------- | ---- |
+| エラー   | 不明                      |      |
+| トレース | ForgeWebScriptTraceReport |      |
 
 ### ForgeWebScriptTrap
 
@@ -2482,7 +2700,14 @@ export class ForgeWebScriptTrap extends Error
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptTrapCode = | 'CapabilityDenied' | 'HostError' | 'InvalidAbi' | 'InvalidOwnership' | 'MemoryExhausted' | 'MemoryOutOfBounds' | 'GuestTrap';
+export type ForgeWebScriptTrapCode =
+  | 'CapabilityDenied'
+  | 'HostError'
+  | 'InvalidAbi'
+  | 'InvalidOwnership'
+  | 'MemoryExhausted'
+  | 'MemoryOutOfBounds'
+  | 'GuestTrap';
 ```
 
 説明はありません。
@@ -2502,18 +2727,22 @@ export interface ForgeWebScriptTrapOptions extends ErrorOptions
 **種類:** 関数
 
 ```typescript
-function toForgeWebScriptHostError(error: unknown, capability: string, logger?: ForgeWebScriptLogger): ForgeWebScriptTrap
+function toForgeWebScriptHostError(
+  error: unknown,
+  capability: string,
+  logger?: ForgeWebScriptLogger,
+): ForgeWebScriptTrap;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|エラー |不明 |  |
-|能力 |文字列 |  |
-|ロガー | ForgeWebScriptLogger |  |
+| 名前   | タイプ               | 説明 |
+| ------ | -------------------- | ---- |
+| エラー | 不明                 |      |
+| 能力   | 文字列               |      |
+| ロガー | ForgeWebScriptLogger |      |
 
 ## `src/vm-executor`
 
@@ -2522,71 +2751,86 @@ function toForgeWebScriptHostError(error: unknown, capability: string, logger?: 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptVmAotArtifact(module: ForgeWebScriptVmModule, compilerVersion: string): ForgeWebScriptVmAotArtifact
+function createForgeWebScriptVmAotArtifact(
+  module: ForgeWebScriptVmModule,
+  compilerVersion: string,
+): ForgeWebScriptVmAotArtifact;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptVmモジュール |  |
-|コンパイラのバージョン |文字列 |  |
+| 名前                   | タイプ                     | 説明 |
+| ---------------------- | -------------------------- | ---- |
+| モジュール             | ForgeWebScriptVmモジュール |      |
+| コンパイラのバージョン | 文字列                     |      |
 
 ### createForgeWebScriptVmExecutor
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptVmExecutor(executorOptions: ForgeWebScriptVmExecutorOptions = {}): ForgeWebScriptVmExecutor
+function createForgeWebScriptVmExecutor(
+  executorOptions: ForgeWebScriptVmExecutorOptions = {},
+): ForgeWebScriptVmExecutor;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| executorオプション | ForgeWebScriptVmExecutorオプション |  |
+| 名前               | タイプ                             | 説明 |
+| ------------------ | ---------------------------------- | ---- |
+| executorオプション | ForgeWebScriptVmExecutorオプション |      |
 
 ### executeForgeWebScriptVm
 
 **種類:** 関数
 
 ```typescript
-function executeForgeWebScriptVm(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: ForgeWebScriptVmExecutionOptions): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVm(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: ForgeWebScriptVmExecutionOptions,
+): ForgeWebScriptVmExecutionResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptVmモジュール |  |
-|関数名 |文字列 |  |
-|引数_ | ForgeWebScriptVmValue[] | readonly  |
-|オプション | ForgeWebScriptVmExecutionOptions |  |
+| 名前       | タイプ                           | 説明     |
+| ---------- | -------------------------------- | -------- |
+| モジュール | ForgeWebScriptVmモジュール       |          |
+| 関数名     | 文字列                           |          |
+| 引数_      | ForgeWebScriptVmValue[]          | readonly |
+| オプション | ForgeWebScriptVmExecutionOptions |          |
 
 ### executeForgeWebScriptVmAotArtifact
 
 **種類:** 関数
 
 ```typescript
-function executeForgeWebScriptVmAotArtifact(artifact: ForgeWebScriptVmAotArtifact, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVmAotArtifact(
+  artifact: ForgeWebScriptVmAotArtifact,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|アーティファクト | ForgeWebScriptVmAotArtifact |  |
-|関数名 |文字列 |  |
-|引数_ | ForgeWebScriptVmValue[] | readonly  |
-|オプション |省略<ForgeWebScriptVmExecutionOptions, 'mode'> |  |
+| 名前             | タイプ                                         | 説明     |
+| ---------------- | ---------------------------------------------- | -------- |
+| アーティファクト | ForgeWebScriptVmAotArtifact                    |          |
+| 関数名           | 文字列                                         |          |
+| 引数_            | ForgeWebScriptVmValue[]                        | readonly |
+| オプション       | 省略<ForgeWebScriptVmExecutionOptions, 'mode'> |          |
 
 ### ForgeWebScriptVmExecutorオプション
 
@@ -2603,36 +2847,42 @@ export interface ForgeWebScriptVmExecutorOptions
 **種類:** 関数
 
 ```typescript
-function runForgeWebScriptVmBootstrap(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], mode: ForgeWebScriptVmExecutionMode = 'interpret', options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function runForgeWebScriptVmBootstrap(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  mode: ForgeWebScriptVmExecutionMode = 'interpret',
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptVmモジュール |  |
-|関数名 |文字列 |  |
-|引数_ | ForgeWebScriptVmValue[] | readonly  |
-|モード | ForgeWebScriptVm実行モード |  |
-|オプション |省略<ForgeWebScriptVmExecutionOptions, 'mode'> |  |
+| 名前       | タイプ                                         | 説明     |
+| ---------- | ---------------------------------------------- | -------- |
+| モジュール | ForgeWebScriptVmモジュール                     |          |
+| 関数名     | 文字列                                         |          |
+| 引数_      | ForgeWebScriptVmValue[]                        | readonly |
+| モード     | ForgeWebScriptVm実行モード                     |          |
+| オプション | 省略<ForgeWebScriptVmExecutionOptions, 'mode'> |          |
 
 ### validateForgeWebScriptVmModule
 
 **種類:** 関数
 
 ```typescript
-function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
+function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptVmモジュール |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| モジュール | ForgeWebScriptVmモジュール |      |
 
 ## `src/vm-wasm`
 
@@ -2641,17 +2891,20 @@ function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
 **種類:** 関数
 
 ```typescript
-function compileForgeWebScriptVmWasm(module: ForgeWebScriptVmModule, options: ForgeWebScriptVmWasmCompileOptions = {}): ForgeWebScriptVmWasmArtifact
+function compileForgeWebScriptVmWasm(
+  module: ForgeWebScriptVmModule,
+  options: ForgeWebScriptVmWasmCompileOptions = {},
+): ForgeWebScriptVmWasmArtifact;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptVmモジュール |  |
-|オプション | ForgeWebScriptVmWasmCompileOptions |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| モジュール | ForgeWebScriptVmモジュール         |      |
+| オプション | ForgeWebScriptVmWasmCompileOptions |      |
 
 ### ForgeWebScriptVmWasmCompileOptions
 
@@ -2668,7 +2921,7 @@ export interface ForgeWebScriptVmWasmCompileOptions
 **種類:** 定数
 
 ```typescript
-export const prepareForgeWebScriptVm
+export const prepareForgeWebScriptVm;
 ```
 
 説明はありません。
@@ -2678,17 +2931,20 @@ export const prepareForgeWebScriptVm
 **種類:** 関数
 
 ```typescript
-function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact, options: ForgeWebScriptVmPreparedExecutorOptions = {}): ForgeWebScriptVmPreparedExecutor
+function prepareForgeWebScriptVmWasm(
+  moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact,
+  options: ForgeWebScriptVmPreparedExecutorOptions = {},
+): ForgeWebScriptVmPreparedExecutor;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュールまたはアーティファクト | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |  |
-|オプション | ForgeWebScriptVmPreparedExecutorOptions |  |
+| 名前                             | タイプ                                                 | 説明 |
+| -------------------------------- | ------------------------------------------------------ | ---- |
+| モジュールまたはアーティファクト | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |      |
+| オプション                       | ForgeWebScriptVmPreparedExecutorOptions                |      |
 
 ## `src/vm`
 
@@ -2697,7 +2953,7 @@ function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
 ```
 
 説明はありません。
@@ -2707,7 +2963,7 @@ export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 ```
 
 説明はありません。

@@ -116,12 +116,22 @@ describe('Forge Web Script typed IR optimizer', () => {
     // Regression: release constant propagation used to keep `x = 0` after a
     // branch reassigned it, so `return x` folded to 0 even when the branch ran.
     const source = `export fn f(cond: i32) -> i32 {
-      let x: i32 = 0;
+      let mut x: i32 = 0;
       if cond == 1 { x = 7; }
       return x;
     }`;
-    const debug = compileForgeWebScript({ source, fileName: 'reassign.fws', compilerVersion: '0.1.0', optimization: 'debug' });
-    const release = compileForgeWebScript({ source, fileName: 'reassign.fws', compilerVersion: '0.1.0', optimization: 'release' });
+    const debug = compileForgeWebScript({
+      source,
+      fileName: 'reassign.fws',
+      compilerVersion: '0.1.0',
+      optimization: 'debug',
+    });
+    const release = compileForgeWebScript({
+      source,
+      fileName: 'reassign.fws',
+      compilerVersion: '0.1.0',
+      optimization: 'release',
+    });
 
     expect(debug.diagnostics).toEqual([]);
     expect(release.diagnostics).toEqual([]);
@@ -141,14 +151,19 @@ describe('Forge Web Script typed IR optimizer', () => {
 
   it('invalidates a constant when a local is reassigned inside a switch case', () => {
     const source = `export fn f(cond: i32) -> i32 {
-      let x: i32 = 0;
+      let mut x: i32 = 0;
       switch cond {
         case 1: { x = 9; }
         default: {}
       }
       return x;
     }`;
-    const release = compileForgeWebScript({ source, fileName: 'switch-reassign.fws', compilerVersion: '0.1.0', optimization: 'release' });
+    const release = compileForgeWebScript({
+      source,
+      fileName: 'switch-reassign.fws',
+      compilerVersion: '0.1.0',
+      optimization: 'release',
+    });
     expect(release.diagnostics).toEqual([]);
     const releaseExports = new WebAssembly.Instance(new WebAssembly.Module(release.wasm!), {}).exports as unknown as {
       f: (cond: number) => number;
@@ -198,7 +213,11 @@ describe('Forge Web Script typed IR optimizer', () => {
     expect(release.ir.functions.find(({ name }) => name === 'consume')?.body).toHaveLength(0);
     expect(release.report.iteratorUnrolled).toBe(1);
     expect(release.report.appliedTransformations).toContainEqual(
-      expect.objectContaining({ transformation: 'iterator-unroll', status: 'applied', reason: expect.stringContaining('zero-length') }),
+      expect.objectContaining({
+        transformation: 'iterator-unroll',
+        status: 'applied',
+        reason: expect.stringContaining('zero-length'),
+      }),
     );
   });
 

@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-w
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE
+export const FORGE_WEB_SCRIPT_CLI_USAGE;
 ```
 
 Geen beschrijving opgegeven.
@@ -66,17 +66,17 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions
+function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| argv | alleen-lezen tekenreeks[] |  |
-| cwd |  |  |
+| Naam | Typ                       | Beschrijving |
+| ---- | ------------------------- | ------------ |
+| argv | alleen-lezen tekenreeks[] |              |
+| cwd  |                           |              |
 
 ## `src/main`
 
@@ -85,7 +85,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
 ```
 
 Geen beschrijving opgegeven.
@@ -95,7 +95,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
 ```
 
 Geen beschrijving opgegeven.
@@ -115,18 +115,22 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), io: ForgeWebScriptCliIo = defaultIo, cwd = process.cwd()): Promise<number>
+function runForgeWebScriptCli(
+  argv: readonly string[] = process.argv.slice(2),
+  io: ForgeWebScriptCliIo = defaultIo,
+  cwd = process.cwd(),
+): Promise<number>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| argv | alleen-lezen tekenreeks[] |  |
-| io | ForgeWebScriptCliIo |  |
-| cwd |  |  |
+| Naam | Typ                       | Beschrijving |
+| ---- | ------------------------- | ------------ |
+| argv | alleen-lezen tekenreeks[] |              |
+| io   | ForgeWebScriptCliIo       |              |
+| cwd  |                           |              |
 
 ## `src/output`
 
@@ -135,32 +139,32 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles
+function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| artefact | ForgeWebScriptArtefact |  |
+| Naam     | Typ                    | Beschrijving |
+| -------- | ---------------------- | ------------ |
+| artefact | ForgeWebScriptArtefact |              |
 
 ### forgeWebScriptArtifactBaseName
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptArtifactBaseName(entryFileName: string): string
+function forgeWebScriptArtifactBaseName(entryFileName: string): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| entryBestandsnaam | tekenreeks |  |
+| Naam              | Typ        | Beschrijving |
+| ----------------- | ---------- | ------------ |
+| entryBestandsnaam | tekenreeks |              |
 
 ### ForgeWebScriptCliArtifactFiles
 
@@ -177,7 +181,8 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly {
+function formatForgeWebScriptDiagnostics(
+  diagnostics: readonly {
     readonly code: string;
     readonly severity: string;
     readonly phase: string;
@@ -190,48 +195,56 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly {
       readonly endColumn: number;
     };
     readonly hint?: string;
-  }[]): string
+  }[],
+): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostiek | alleen-lezen { alleen-lezen code: string;     alleen-lezen ernst: string;     alleen-lezen fase: string;     alleen-lezen bericht: string;     alleen-lezen bestandsnaam: string;     alleen-lezen span: { alleen-lezen regel: nummer;       alleen-lezen kolom: nummer;       alleen-lezen eindregel: nummer;       alleen-lezen endColumn: nummer;     };     alleen-lezen hint?: string;   }[] |  |
+| Naam        | Typ                                                                                                                                                                                                                                                                                                                                               | Beschrijving |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| diagnostiek | alleen-lezen { alleen-lezen code: string; alleen-lezen ernst: string; alleen-lezen fase: string; alleen-lezen bericht: string; alleen-lezen bestandsnaam: string; alleen-lezen span: { alleen-lezen regel: nummer; alleen-lezen kolom: nummer; alleen-lezen eindregel: nummer; alleen-lezen endColumn: nummer; }; alleen-lezen hint?: string; }[] |              |
 
 ### outputDirectoryFor
 
 **Soort:** functie
 
 ```typescript
-function outputDirectoryFor(entryFileName: string, outputDirectory = path.join(path.dirname(entryFileName), 'dist')): string
+function outputDirectoryFor(
+  entryFileName: string,
+  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
+): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| entryBestandsnaam | tekenreeks |  |
-| uitvoerDirectory |  |  |
+| Naam              | Typ        | Beschrijving |
+| ----------------- | ---------- | ------------ |
+| entryBestandsnaam | tekenreeks |              |
+| uitvoerDirectory  |            |              |
 
 ### writeForgeWebScriptArtefacten
 
 **Soort:** functie
 
 ```typescript
-function writeForgeWebScriptArtifacts(outputDirectory: string, entryFileName: string, artifact: ForgeWebScriptArtifact): Promise<readonly string[]>
+function writeForgeWebScriptArtifacts(
+  outputDirectory: string,
+  entryFileName: string,
+  artifact: ForgeWebScriptArtifact,
+): Promise<readonly string[]>;
 ```
 
 Schrijf de volledige artefactset naar een tijdelijke map en hernoem elk bestand op zijn plaats.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| uitvoerDirectory | tekenreeks |  |
-| entryBestandsnaam | tekenreeks |  |
-| artefact | ForgeWebScriptArtefact |  |
+| Naam              | Typ                    | Beschrijving |
+| ----------------- | ---------------------- | ------------ |
+| uitvoerDirectory  | tekenreeks             |              |
+| entryBestandsnaam | tekenreeks             |              |
+| artefact          | ForgeWebScriptArtefact |              |

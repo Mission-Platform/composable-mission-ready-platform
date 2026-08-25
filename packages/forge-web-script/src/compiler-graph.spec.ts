@@ -121,6 +121,81 @@ describe('Forge Web Script graph compiler service', () => {
     service.dispose();
   });
 
+  it('preserves string return values across statically linked modules', async () => {
+    const result = await graphFor(
+      {
+        '/workspace/app/main.fws':
+          'import "./helper.fws" as helper; export fn main(value: string) -> string { return string_concat(helper.suffix(value), ""); }',
+        '/workspace/app/helper.fws': 'export fn suffix(value: string) -> string { return string_concat(value, "!"); }',
+      },
+      { projectRoots: ['/workspace/app'] },
+    );
+    const service = createForgeWebScriptCompilerService();
+    const artifact = service.compileGraph({
+      graph: result.graph,
+      entryFileName: '/workspace/app/main.fws',
+      compilerVersion: '0.1.0',
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(artifact.diagnostics).toEqual([]);
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!));
+    const allocate = instance.exports.fws_alloc as (size: number) => number;
+    const pointer = allocate(3);
+    new Uint8Array((instance.exports.memory as WebAssembly.Memory).buffer, pointer, 3).set([97, 98, 99]);
+    const returned = (instance.exports.main as (pointer: number, length: number) => readonly [number, number])(
+      pointer,
+      3,
+    );
+    expect(returned[1]).toBe(4);
+    expect(
+      new TextDecoder().decode(
+        new Uint8Array((instance.exports.memory as WebAssembly.Memory).buffer, returned[0], returned[1]),
+      ),
+    ).toBe('abc!');
+    service.dispose();
+  });
+
+  it('preserves loop-carried strings in statically linked modules', async () => {
+    const result = await graphFor(
+      {
+        '/workspace/app/main.fws':
+          'import "./helper.fws" as helper; export fn main(value: string) -> string { return string_concat(helper.collect(value), ""); }',
+        '/workspace/app/helper.fws': `export fn collect(value: string) -> string {
+  let mut result: string = "";
+  let mut index: i32 = 0;
+  while index < string_length(value) {
+    result = string_concat(result, string_slice(value, index, index + 1));
+    index = index + 1;
+  }
+  return string_concat(result, "");
+}`,
+      },
+      { projectRoots: ['/workspace/app'] },
+    );
+    const service = createForgeWebScriptCompilerService();
+    const artifact = service.compileGraph({
+      graph: result.graph,
+      entryFileName: '/workspace/app/main.fws',
+      compilerVersion: '0.1.0',
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(artifact.diagnostics).toEqual([]);
+    const instance = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!));
+    const allocate = instance.exports.fws_alloc as (size: number) => number;
+    const pointer = allocate(3);
+    const memory = instance.exports.memory as WebAssembly.Memory;
+    new Uint8Array(memory.buffer, pointer, 3).set([97, 98, 99]);
+    const returned = (instance.exports.main as (pointer: number, length: number) => readonly [number, number])(
+      pointer,
+      3,
+    );
+    expect(returned[1]).toBe(3);
+    expect(new TextDecoder().decode(new Uint8Array(memory.buffer, returned[0], returned[1]))).toBe('abc');
+    service.dispose();
+  });
+
   it('keeps cross-project dynamic links separate and supports explicit static links', async () => {
     const files = {
       '/workspace/app/main.fws': 'import "../shared/helper.fws" as helper; export fn main() -> i32 { return 1; }',
@@ -169,7 +244,6 @@ describe('Forge Web Script graph compiler service', () => {
     expect(staticArtifact.linkedModules).toEqual(['main', 'helper']);
     staticService.dispose();
   });
-
 
   it('rejects colliding static exports and invalidates graph dependents', async () => {
     const result = await graphFor(

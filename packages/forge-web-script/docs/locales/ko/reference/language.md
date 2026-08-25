@@ -99,9 +99,9 @@ tail-call 분석 및 안전한 조건부 폴딩이 가능합니다. `noinline` �
 ```ts
 const artifact = compileForgeWebScript({
   source,
-  fileName: "runtime.fws",
-  compilerVersion: "1.0.0",
-  optimization: "release",
+  fileName: 'runtime.fws',
+  compilerVersion: '1.0.0',
+  optimization: 'release',
   targetFeatures: { simd: true, tailCall: true, memory64: true },
   compilerHints: { iteratorUnrollLimit: 4 },
 });
@@ -224,13 +224,13 @@ interface ForgeWebScriptDocumentationTag {
 
 일반적으로 사용되는 태그 형식은 다음과 같습니다.
 
-| 태그 양식 | 구조화된 필드 |
-| -------------------------------------------------------- | -------------------------------------------- |
+| 태그 양식                                                 | 구조화된 필드                                   |
+| --------------------------------------------------------- | ----------------------------------------------- |
 | `@param name text`, `@arg`, `@argument` 또는 `@parameter` | `name`는 `subject`입니다. 나머지는 `text`입니다 |
-| `@typeparam name text` | `name`은 `subject`입니다. 나머지는 `text`입니다 |
-| `@throws type text` 또는 `@exception type text` | `type`은 `subject`입니다. 나머지는 `text`입니다 |
-| `@return text` 또는 `@returns text` | `text` 전용 |
-| `@deprecated text` | `text` 전용 |
+| `@typeparam name text`                                    | `name`은 `subject`입니다. 나머지는 `text`입니다 |
+| `@throws type text` 또는 `@exception type text`           | `type`은 `subject`입니다. 나머지는 `text`입니다 |
+| `@return text` 또는 `@returns text`                       | `text` 전용                                     |
+| `@deprecated text`                                        | `text` 전용                                     |
 
 다른 `@name` 양식은 주문된 태그가 아닌 주문된 태그로 허용되고 유지됩니다.
 진단명으로 보고됩니다. 추론된 주제가 없습니다. 남은 텍스트
@@ -380,15 +380,11 @@ IR에 주석이 달린 프런트엔드이며 결코 기능 가져오기가 아�
 클래스 및 범위(`^` 부정 포함), `\d`, `\D`, `\w`, `\W`, `\s`,
 `\S`, 이스케이프된 리터럴, 캡처 및 비캡처 그룹, 교대,
 `*`, `+`, `?`, 제한된 `{n}`, `{n,}`, `{n,m}` 수량자, 지연 수량자,
-및 `^`/`
-Forge 웹 스크립트는 결정적 정규식 표준 라이브러리를 제공합니다.
-`regex_full_match(pattern, value) -> bool` 호출,
-`regex_prefix_match(pattern, value) -> bool` 및
-`regex_search(pattern, value, start: i32) -> bool`는 전체 값을 수행합니다.
+및 `^`/`Forge 웹 스크립트는 결정적 정규식 표준 라이브러리를 제공합니다.`regex_full_match(pattern, value) -> bool`호출,`regex_prefix_match(pattern, value) -> bool`및`regex_search(pattern, value, start: i32) -> bool`는 전체 값을 수행합니다.
 위치 0 접두사 및 가장 왼쪽 검색 일치. 캡처 범위
-해당 `regex_*_capture_start`을 통해 사용할 수 있으며
-`regex_*_capture_end` 호출; 그룹 인덱스를 가져와 UTF-16 문자열을 반환합니다.
-일치하는 항목이 없거나 그룹이 설정되지 않은 경우 오프셋 또는 `-1`입니다. 검색 캡쳐
+해당 `regex__*capture_start`을 통해 사용할 수 있으며
+`regex*__capture_end`호출; 그룹 인덱스를 가져와 UTF-16 문자열을 반환합니다.
+일치하는 항목이 없거나 그룹이 설정되지 않은 경우 오프셋 또는`-1`입니다. 검색 캡쳐
 호출은 추가로 그룹 인덱스 이전의 시작 오프셋을 사용합니다.
 
 Regex 호출은 컴파일러 소유의 표준 라이브러리 함수입니다. 그들은 다음과 같이 입력됩니다.
@@ -429,18 +425,18 @@ ABI 경계에서 UTF-8로 표현되는 유니코드 스칼라 값의 시퀀스�
 임의의 객체 메서드를 추가하지 마세요. 고정 배열은 `[T; N]`으로 작성되고
 벡터는 `Vector<T>`입니다. 지원되는 서명은 다음과 같습니다.
 
-| 수신기 | 방법 | 서명 |
-| ----------- | --------------- | ----------------------- |
-| `Array<T>` | `length` | `() -> u32` |
-| `Array<T>` | `get` | `(u32) -> Option<T>` |
-| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
-| `Array<T>` | `iter` | `() -> Iterator<T>` |
-| `Vector<T>` | `length` | `() -> u32` |
-| `Vector<T>` | `get` | `(u32) -> Option<T>` |
-| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` 또는 `add` | `(T) -> Vector<T>` |
-| `Vector<T>` | `pop` | `() -> Option<T>` |
-| `Vector<T>` | `iter` | `() -> Iterator<T>` |
+| 수신기      | 방법              | 서명                    |
+| ----------- | ----------------- | ----------------------- |
+| `Array<T>`  | `length`          | `() -> u32`             |
+| `Array<T>`  | `get`             | `(u32) -> Option<T>`    |
+| `Array<T>`  | `set`             | `(u32, T) -> Array<T>`  |
+| `Array<T>`  | `iter`            | `() -> Iterator<T>`     |
+| `Vector<T>` | `length`          | `() -> u32`             |
+| `Vector<T>` | `get`             | `(u32) -> Option<T>`    |
+| `Vector<T>` | `set`             | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` 또는 `add` | `(T) -> Vector<T>`      |
+| `Vector<T>` | `pop`             | `() -> Option<T>`       |
+| `Vector<T>` | `iter`            | `() -> Iterator<T>`     |
 
 `add` 철자는 의도적으로 벡터에 대한 호환성 별칭입니다.
 `push`; 배열 방법이 아닙니다. 인덱스는 `u32`이며 요소 인수는 다음과 같아야 합니다.
@@ -549,14 +545,14 @@ WASI 호환성. 기능은 다음과 같이 좁고 명시적인 호스트 기능�
 모듈은 64KiB 페이지와 리틀 엔디안을 갖춘 하나의 WebAssembly 선형 메모리를 사용합니다.
 스칼라 값. 스칼라 값은 다음과 같이 매핑됩니다.
 
-| 포지 웹 스크립트 | 웹어셈블리 표현 |
+| 포지 웹 스크립트  | 웹어셈블리 표현                            |
 | ----------------- | ------------------------------------------ |
-| `bool` | `i32`(여기서 `0`는 false이고 `1`은 true임) |
-| `i32`, `u32` | `i32` |
-| `i64`, `u64` | `i64` |
-| `f32`, `f64` | WebAssembly float 일치 |
-| `unit` | 결과 값 없음 |
-| `string`, `bytes` | 두 개의 `u32` 값: 포인터, 바이트 길이 |
+| `bool`            | `i32`(여기서 `0`는 false이고 `1`은 true임) |
+| `i32`, `u32`      | `i32`                                      |
+| `i64`, `u64`      | `i64`                                      |
+| `f32`, `f64`      | WebAssembly float 일치                     |
+| `unit`            | 결과 값 없음                               |
+| `string`, `bytes` | 두 개의 `u32` 값: 포인터, 바이트 길이      |
 
 매니페스트는 `valueRepresentations`에서 동일한 매핑을 선언합니다. 에이
 포인터 길이 쌍은 읽기 전에 항상 부호 없는 범위로 확인됩니다.
@@ -641,11 +637,7 @@ interface ForgeWebScriptExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: (
-    pointer: number,
-    oldSize: number,
-    newSize: number,
-  ) => number;
+  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
   readonly fws_reset: () => void;
   readonly echo: (value: string) => string;
   readonly processBytes: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;
@@ -782,12 +774,9 @@ Vitest 제품군이 필요한 경우 `@mission-platform/forge-web-script-vitest`
 매니페스트 기능 이름을 기준으로 합니다. 예를 들면 다음과 같습니다.
 
 ```ts
-const exports = await harness.load<{ current: () => bigint }>(
-  "capabilities/clock-now.fws",
-  {
-    "clock.now": { now: () => 123n },
-  },
-);
+const exports = await harness.load<{ current: () => bigint }>('capabilities/clock-now.fws', {
+  'clock.now': { now: () => 123n },
+});
 ```
 
 누락된 선언된 가져오기 및 선언되지 않은 공급된 가져오기는 실패입니다. 테스트
@@ -814,13 +803,13 @@ TypeScript `types` 목록 또는 참조된 테스트 유형 진입점입니다.
 단계는 `lex`, `parse`, `type-check` 또는 `abi` 중 하나입니다. 안정적인 v1 코드
 가족에는 다음이 포함됩니다:
 
-| 코드 계열 | 의미 |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `FWS-LEX-*` | 잘못된 문자/이스케이프, 원시 문자열 줄 종결자 또는 종료되지 않은 문자열/주석 |
-| `FWS-PARSE-*` | 잘못된 모듈, 선언, 명령문 또는 표현식 구문 |
-| `FWS-TYPE-*` | 잘못된 기본 유형, 이름, 연산자, 인수 또는 반환 |
-| `FWS-ABI-*` | 중복된 이름, 거부된 기능, 내보내기 또는 가져오기 |
-| `FWS-REGEX-*` | 지원되지 않거나 잘못된 형식의 컴파일러 소유 정규식 패턴 |
+| 코드 계열     | 의미                                                                         |
+| ------------- | ---------------------------------------------------------------------------- |
+| `FWS-LEX-*`   | 잘못된 문자/이스케이프, 원시 문자열 줄 종결자 또는 종료되지 않은 문자열/주석 |
+| `FWS-PARSE-*` | 잘못된 모듈, 선언, 명령문 또는 표현식 구문                                   |
+| `FWS-TYPE-*`  | 잘못된 기본 유형, 이름, 연산자, 인수 또는 반환                               |
+| `FWS-ABI-*`   | 중복된 이름, 거부된 기능, 내보내기 또는 가져오기                             |
+| `FWS-REGEX-*` | 지원되지 않거나 잘못된 형식의 컴파일러 소유 정규식 패턴                      |
 
 오류로 인해 아티팩트 생성이 방지됩니다. 경고 및 정보 진단은 다음과 같습니다.
 의미론을 변경하지 마십시오. 진단 순서는 소스 순서이고 그 뒤에 단계가 따릅니다.
@@ -919,14 +908,14 @@ ABI 소유 `bytes` 쌍을 반환합니다. 그 의도적인 차이는
 
 ### 구현 선택
 
-| 워크로드 또는 요구사항 | 선택 | 이유 |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| 기존 QR 또는 매트릭스 패키지 동작 | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | 패키지별 유형의 ESM 래퍼는 해당 공용 API에 계속 사용할 수 있습니다.                                       |
-| 중립 이미지 및 카메라 스캐너 동작 | `@mission-platform/code-scanner` | 기본적으로 정적으로 연결된 FWS 그래프를 사용하거나 캐시된 디스패치와 함께 명시적인 동적 소스 모듈 프로필을 사용합니다. |
-| 기존 바코드 동작 | `@mission-platform/barcode` | 패키지 로컬 Forge 웹 스크립트 그래프는 입력된 바코드 외관을 제공합니다.                                           |
-| 명시적인 호스트 효과를 갖춘 새로운 범용 브라우저 안전 컴퓨팅 | Forge 웹 스크립트 플러스 `@mission-platform/vite-plugin-forge-web-script` | 버전이 지정된 `.fws` 소스, 매니페스트, 형식화된 로더 및 기본 거부 기능.                                |
-| 기존 AssemblyScript 소스 또는 AssemblyScript 관련 마이그레이션 | `@mission-platform/vite-plugin-assemblyscript` | `.ts` AssemblyScript 항목을 컴파일하고 생성된 원시 내보내기 계약을 유지합니다.                            |
-| 프레임워크 중립적인 UI/구성 요소 컴파일 | Forge 구성 요소 컴파일러 | Forge Web Script는 `FrameworkOutputPlugin` 또는 구성 요소 대상을 대체하지 않습니다.                           |
+| 워크로드 또는 요구사항                                         | 선택                                                                      | 이유                                                                                                                   |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 기존 QR 또는 매트릭스 패키지 동작                              | `@mission-platform/qr-code` / `@mission-platform/matrix-code`             | 패키지별 유형의 ESM 래퍼는 해당 공용 API에 계속 사용할 수 있습니다.                                                    |
+| 중립 이미지 및 카메라 스캐너 동작                              | `@mission-platform/code-scanner`                                          | 기본적으로 정적으로 연결된 FWS 그래프를 사용하거나 캐시된 디스패치와 함께 명시적인 동적 소스 모듈 프로필을 사용합니다. |
+| 기존 바코드 동작                                               | `@mission-platform/barcode`                                               | 패키지 로컬 Forge 웹 스크립트 그래프는 입력된 바코드 외관을 제공합니다.                                                |
+| 명시적인 호스트 효과를 갖춘 새로운 범용 브라우저 안전 컴퓨팅   | Forge 웹 스크립트 플러스 `@mission-platform/vite-plugin-forge-web-script` | 버전이 지정된 `.fws` 소스, 매니페스트, 형식화된 로더 및 기본 거부 기능.                                                |
+| 기존 AssemblyScript 소스 또는 AssemblyScript 관련 마이그레이션 | `@mission-platform/vite-plugin-assemblyscript`                            | `.ts` AssemblyScript 항목을 컴파일하고 생성된 원시 내보내기 계약을 유지합니다.                                         |
+| 프레임워크 중립적인 UI/구성 요소 컴파일                        | Forge 구성 요소 컴파일러                                                  | Forge Web Script는 `FrameworkOutputPlugin` 또는 구성 요소 대상을 대체하지 않습니다.                                    |
 
 `.fws` 항목에만 Forge Web Script Vite 플러그인을 사용하세요. 사용
 기존 AssemblyScript 항목을 위한 AssemblyScript 플러그인입니다. 마이그레이션하는 동안

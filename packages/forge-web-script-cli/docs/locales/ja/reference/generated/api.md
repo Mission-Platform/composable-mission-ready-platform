@@ -16,7 +16,7 @@
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE
+export const FORGE_WEB_SCRIPT_CLI_USAGE;
 ```
 
 説明はありません。
@@ -66,17 +66,17 @@ export class ForgeWebScriptCliUsageError extends Error
 **種類:** 関数
 
 ```typescript
-function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions
+function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|引数 |読み取り専用文字列[] |  |
-| CWD |  |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| 引数 | 読み取り専用文字列[] |      |
+| CWD  |                      |      |
 
 ## `src/main`
 
@@ -85,7 +85,7 @@ function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
 ```
 
 説明はありません。
@@ -95,7 +95,7 @@ export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
 ```
 
 説明はありません。
@@ -115,18 +115,22 @@ export interface ForgeWebScriptCliIo
 **種類:** 関数
 
 ```typescript
-function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), io: ForgeWebScriptCliIo = defaultIo, cwd = process.cwd()): Promise<number>
+function runForgeWebScriptCli(
+  argv: readonly string[] = process.argv.slice(2),
+  io: ForgeWebScriptCliIo = defaultIo,
+  cwd = process.cwd(),
+): Promise<number>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|引数 |読み取り専用文字列[] |  |
-|イオ | ForgeWebScriptCliIo |  |
-| CWD |  |  |
+| 名前 | タイプ               | 説明 |
+| ---- | -------------------- | ---- |
+| 引数 | 読み取り専用文字列[] |      |
+| イオ | ForgeWebScriptCliIo  |      |
+| CWD  |                      |      |
 
 ## `src/output`
 
@@ -135,32 +139,32 @@ function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), i
 **種類:** 関数
 
 ```typescript
-function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles
+function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|アーティファクト | ForgeWebScriptアーティファクト |  |
+| 名前             | タイプ                         | 説明 |
+| ---------------- | ------------------------------ | ---- |
+| アーティファクト | ForgeWebScriptアーティファクト |      |
 
 ### forgeWebScriptArtifactBaseName
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptArtifactBaseName(entryFileName: string): string
+function forgeWebScriptArtifactBaseName(entryFileName: string): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|エントリファイル名 |文字列 |  |
+| 名前               | タイプ | 説明 |
+| ------------------ | ------ | ---- |
+| エントリファイル名 | 文字列 |      |
 
 ### ForgeWebScriptCliArtifactFiles
 
@@ -177,7 +181,8 @@ export interface ForgeWebScriptCliArtifactFiles
 **種類:** 関数
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly {
+function formatForgeWebScriptDiagnostics(
+  diagnostics: readonly {
     readonly code: string;
     readonly severity: string;
     readonly phase: string;
@@ -190,48 +195,56 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly {
       readonly endColumn: number;
     };
     readonly hint?: string;
-  }[]): string
+  }[],
+): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 | readonly { 読み取り専用コード: 文字列;     読み取り専用重大度: 文字列;     読み取り専用フェーズ: 文字列;     読み取り専用メッセージ: 文字列;     読み取り専用ファイル名: 文字列;     読み取り専用スパン: {読み取り専用行: 番号;       読み取り専用列: 数値;       読み取り専用 endLine: 数値;       readonly endColumn: 数値;     };     読み取り専用ヒント?: 文字列;   }[] |  |
+| 名前 | タイプ                                                                                                                                                                                                                                                                                                                      | 説明 |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 診断 | readonly { 読み取り専用コード: 文字列; 読み取り専用重大度: 文字列; 読み取り専用フェーズ: 文字列; 読み取り専用メッセージ: 文字列; 読み取り専用ファイル名: 文字列; 読み取り専用スパン: {読み取り専用行: 番号; 読み取り専用列: 数値; 読み取り専用 endLine: 数値; readonly endColumn: 数値; }; 読み取り専用ヒント?: 文字列; }[] |      |
 
 ### 出力ディレクトリ用
 
 **種類:** 関数
 
 ```typescript
-function outputDirectoryFor(entryFileName: string, outputDirectory = path.join(path.dirname(entryFileName), 'dist')): string
+function outputDirectoryFor(
+  entryFileName: string,
+  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
+): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|エントリファイル名 |文字列 |  |
-|出力ディレクトリ |  |  |
+| 名前               | タイプ | 説明 |
+| ------------------ | ------ | ---- |
+| エントリファイル名 | 文字列 |      |
+| 出力ディレクトリ   |        |      |
 
 ### writeForgeWebScriptアーティファクト
 
 **種類:** 関数
 
 ```typescript
-function writeForgeWebScriptArtifacts(outputDirectory: string, entryFileName: string, artifact: ForgeWebScriptArtifact): Promise<readonly string[]>
+function writeForgeWebScriptArtifacts(
+  outputDirectory: string,
+  entryFileName: string,
+  artifact: ForgeWebScriptArtifact,
+): Promise<readonly string[]>;
 ```
 
 一時ディレクトリを介して完全なアーティファクト セットを書き込み、各ファイルの名前を所定の場所に変更します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|出力ディレクトリ |文字列 |  |
-|エントリファイル名 |文字列 |  |
-|アーティファクト | ForgeWebScriptアーティファクト |  |
+| 名前               | タイプ                         | 説明 |
+| ------------------ | ------------------------------ | ---- |
+| 出力ディレクトリ   | 文字列                         |      |
+| エントリファイル名 | 文字列                         |      |
+| アーティファクト   | ForgeWebScriptアーティファクト |      |

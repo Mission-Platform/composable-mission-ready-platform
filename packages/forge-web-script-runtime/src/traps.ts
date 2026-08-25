@@ -8,7 +8,11 @@ export type ForgeWebScriptTrapCode =
   | 'InvalidOwnership'
   | 'MemoryExhausted'
   | 'MemoryOutOfBounds'
-  | 'GuestTrap';
+  | 'GuestTrap'
+  | 'BorrowViolation'
+  | 'RegionExpired'
+  | 'UseAfterRelease'
+  | 'DoubleRelease';
 
 export interface ForgeWebScriptTrapOptions extends ErrorOptions {
   readonly logger?: ForgeWebScriptLogger;

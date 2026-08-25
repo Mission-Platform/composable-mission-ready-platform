@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE
+export const FORGE_WEB_SCRIPT_CLI_USAGE;
 ```
 
 Aucune description fournie.
@@ -66,17 +66,17 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions
+function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| argv | chaîne en lecture seule[] |  |
-| cwd |  |  |
+| Nom  | Tapez                     | Descriptif |
+| ---- | ------------------------- | ---------- |
+| argv | chaîne en lecture seule[] |            |
+| cwd  |                           |            |
 
 ## `src/main`
 
@@ -85,7 +85,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
 ```
 
 Aucune description fournie.
@@ -95,7 +95,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
 ```
 
 Aucune description fournie.
@@ -115,18 +115,22 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), io: ForgeWebScriptCliIo = defaultIo, cwd = process.cwd()): Promise<number>
+function runForgeWebScriptCli(
+  argv: readonly string[] = process.argv.slice(2),
+  io: ForgeWebScriptCliIo = defaultIo,
+  cwd = process.cwd(),
+): Promise<number>;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| argv | chaîne en lecture seule[] |  |
-| io | ForgeWebScriptCliIo |  |
-| cwd |  |  |
+| Nom  | Tapez                     | Descriptif |
+| ---- | ------------------------- | ---------- |
+| argv | chaîne en lecture seule[] |            |
+| io   | ForgeWebScriptCliIo       |            |
+| cwd  |                           |            |
 
 ## `src/output`
 
@@ -135,32 +139,32 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles
+function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| artefact | ForgeWebScriptArtefact |  |
+| Nom      | Tapez                  | Descriptif |
+| -------- | ---------------------- | ---------- |
+| artefact | ForgeWebScriptArtefact |            |
 
 ### forgeWebScriptArtifactBaseName
 
 **Genre :** fonction
 
 ```typescript
-function forgeWebScriptArtifactBaseName(entryFileName: string): string
+function forgeWebScriptArtifactBaseName(entryFileName: string): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| NomFichierEntrée | chaîne |  |
+| Nom              | Tapez  | Descriptif |
+| ---------------- | ------ | ---------- |
+| NomFichierEntrée | chaîne |            |
 
 ### ForgeWebScriptCliArtifactFiles
 
@@ -177,7 +181,8 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly {
+function formatForgeWebScriptDiagnostics(
+  diagnostics: readonly {
     readonly code: string;
     readonly severity: string;
     readonly phase: string;
@@ -190,48 +195,56 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly {
       readonly endColumn: number;
     };
     readonly hint?: string;
-  }[]): string
+  }[],
+): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| diagnostic | lecture seule { code en lecture seule : chaîne ;     gravité en lecture seule : chaîne ;     phase en lecture seule : chaîne ;     message en lecture seule : chaîne ;     nom de fichier en lecture seule : chaîne ;     étendue en lecture seule : { ligne en lecture seule : nombre ;       colonne en lecture seule : numéro ;       lecture seule endLine : numéro ;       lecture seule endColumn : nombre ;     } ;     indice en lecture seule ? : chaîne ;   }[] |  |
+| Nom        | Tapez                                                                                                                                                                                                                                                                                                                                                                                                                     | Descriptif |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| diagnostic | lecture seule { code en lecture seule : chaîne ; gravité en lecture seule : chaîne ; phase en lecture seule : chaîne ; message en lecture seule : chaîne ; nom de fichier en lecture seule : chaîne ; étendue en lecture seule : { ligne en lecture seule : nombre ; colonne en lecture seule : numéro ; lecture seule endLine : numéro ; lecture seule endColumn : nombre ; } ; indice en lecture seule ? : chaîne ; }[] |            |
 
 ### Répertoire de sortiePour
 
 **Genre :** fonction
 
 ```typescript
-function outputDirectoryFor(entryFileName: string, outputDirectory = path.join(path.dirname(entryFileName), 'dist')): string
+function outputDirectoryFor(
+  entryFileName: string,
+  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
+): string;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| NomFichierEntrée | chaîne |  |
-| Répertoire de sortie |  |  |
+| Nom                  | Tapez  | Descriptif |
+| -------------------- | ------ | ---------- |
+| NomFichierEntrée     | chaîne |            |
+| Répertoire de sortie |        |            |
 
 ### writeForgeWebScriptArtifacts
 
 **Genre :** fonction
 
 ```typescript
-function writeForgeWebScriptArtifacts(outputDirectory: string, entryFileName: string, artifact: ForgeWebScriptArtifact): Promise<readonly string[]>
+function writeForgeWebScriptArtifacts(
+  outputDirectory: string,
+  entryFileName: string,
+  artifact: ForgeWebScriptArtifact,
+): Promise<readonly string[]>;
 ```
 
 Écrivez l'ensemble complet d'artefacts dans un répertoire temporaire et renommez chaque fichier en place.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| Répertoire de sortie | chaîne |  |
-| NomFichierEntrée | chaîne |  |
-| artefact | ForgeWebScriptArtefact |  |
+| Nom                  | Tapez                  | Descriptif |
+| -------------------- | ---------------------- | ---------- |
+| Répertoire de sortie | chaîne                 |            |
+| NomFichierEntrée     | chaîne                 |            |
+| artefact             | ForgeWebScriptArtefact |            |

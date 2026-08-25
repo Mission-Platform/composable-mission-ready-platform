@@ -16,7 +16,7 @@
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE
+export const FORGE_WEB_SCRIPT_CLI_USAGE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -66,17 +66,17 @@ export class ForgeWebScriptCliUsageError extends Error
 **종류:** 기능
 
 ```typescript
-function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions
+function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 인수 | 읽기 전용 문자열[] |  |
-| CWD |  |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 인수 | 읽기 전용 문자열[] |      |
+| CWD  |                    |      |
 
 ## `src/main`
 
@@ -85,7 +85,7 @@ function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -95,7 +95,7 @@ export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
 ```
 
 설명이 제공되지 않았습니다.
@@ -115,18 +115,22 @@ export interface ForgeWebScriptCliIo
 **종류:** 기능
 
 ```typescript
-function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), io: ForgeWebScriptCliIo = defaultIo, cwd = process.cwd()): Promise<number>
+function runForgeWebScriptCli(
+  argv: readonly string[] = process.argv.slice(2),
+  io: ForgeWebScriptCliIo = defaultIo,
+  cwd = process.cwd(),
+): Promise<number>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 인수 | 읽기 전용 문자열[] |  |
-| 이오 | ForgeWebScriptCliIo |  |
-| CWD |  |  |
+| 이름 | 유형                | 설명 |
+| ---- | ------------------- | ---- |
+| 인수 | 읽기 전용 문자열[]  |      |
+| 이오 | ForgeWebScriptCliIo |      |
+| CWD  |                     |      |
 
 ## `src/output`
 
@@ -135,32 +139,32 @@ function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), i
 **종류:** 기능
 
 ```typescript
-function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles
+function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 유물 | ForgeWebScript아티팩트 |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 유물 | ForgeWebScript아티팩트 |      |
 
 ### forgeWebScriptArtifactBaseName
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptArtifactBaseName(entryFileName: string): string
+function forgeWebScriptArtifactBaseName(entryFileName: string): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 항목파일이름 | 문자열 |  |
+| 이름         | 유형   | 설명 |
+| ------------ | ------ | ---- |
+| 항목파일이름 | 문자열 |      |
 
 ### ForgeWebScriptCliArtifact파일
 
@@ -177,7 +181,8 @@ export interface ForgeWebScriptCliArtifactFiles
 **종류:** 기능
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly {
+function formatForgeWebScriptDiagnostics(
+  diagnostics: readonly {
     readonly code: string;
     readonly severity: string;
     readonly phase: string;
@@ -190,48 +195,56 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly {
       readonly endColumn: number;
     };
     readonly hint?: string;
-  }[]): string
+  }[],
+): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | 읽기 전용 { 읽기 전용 코드: 문자열;     읽기 전용 심각도: 문자열;     읽기 전용 단계: 문자열;     읽기 전용 메시지: 문자열;     읽기 전용 파일 이름: 문자열;     읽기 전용 범위: { 읽기 전용 줄: 번호;       읽기 전용 열: 숫자;       읽기전용 endLine: 숫자;       읽기전용 endColumn: 숫자;     };     읽기 전용 힌트?: 문자열;   }[] |  |
+| 이름 | 유형                                                                                                                                                                                                                                                                                     | 설명 |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 진단 | 읽기 전용 { 읽기 전용 코드: 문자열; 읽기 전용 심각도: 문자열; 읽기 전용 단계: 문자열; 읽기 전용 메시지: 문자열; 읽기 전용 파일 이름: 문자열; 읽기 전용 범위: { 읽기 전용 줄: 번호; 읽기 전용 열: 숫자; 읽기전용 endLine: 숫자; 읽기전용 endColumn: 숫자; }; 읽기 전용 힌트?: 문자열; }[] |      |
 
 ### 출력디렉터리For
 
 **종류:** 기능
 
 ```typescript
-function outputDirectoryFor(entryFileName: string, outputDirectory = path.join(path.dirname(entryFileName), 'dist')): string
+function outputDirectoryFor(
+  entryFileName: string,
+  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
+): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 항목파일이름 | 문자열 |  |
-| 출력디렉토리 |  |  |
+| 이름         | 유형   | 설명 |
+| ------------ | ------ | ---- |
+| 항목파일이름 | 문자열 |      |
+| 출력디렉토리 |        |      |
 
 ### 쓰기ForgeWebScript아티팩트
 
 **종류:** 기능
 
 ```typescript
-function writeForgeWebScriptArtifacts(outputDirectory: string, entryFileName: string, artifact: ForgeWebScriptArtifact): Promise<readonly string[]>
+function writeForgeWebScriptArtifacts(
+  outputDirectory: string,
+  entryFileName: string,
+  artifact: ForgeWebScriptArtifact,
+): Promise<readonly string[]>;
 ```
 
 임시 디렉터리를 통해 전체 아티팩트 세트를 작성하고 각 파일의 이름을 제자리에 바꿉니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출력디렉토리 | 문자열 |  |
-| 항목파일이름 | 문자열 |  |
-| 유물 | ForgeWebScript아티팩트 |  |
+| 이름         | 유형                   | 설명 |
+| ------------ | ---------------------- | ---- |
+| 출력디렉토리 | 문자열                 |      |
+| 항목파일이름 | 문자열                 |      |
+| 유물         | ForgeWebScript아티팩트 |      |

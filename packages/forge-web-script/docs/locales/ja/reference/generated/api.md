@@ -16,17 +16,20 @@
 **種類:** 関数
 
 ```typescript
-function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisReport
+function analyzeForgeWebScript(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisReport;
 ```
 
 登録されたソース分析ルールを 1 つのフロントエンド結果に対して実行します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フロントエンド | ForgeWebScriptフロントエンド結果 |  |
-|オプション | ForgeWebScriptAnalysisオプション |  |
+| 名前           | タイプ                           | 説明 |
+| -------------- | -------------------------------- | ---- |
+| フロントエンド | ForgeWebScriptフロントエンド結果 |      |
+| オプション     | ForgeWebScriptAnalysisオプション |      |
 
 ## `src/analysis/context`
 
@@ -35,17 +38,20 @@ function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisContext
+function createForgeWebScriptAnalysisContext(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisContext;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フロントエンド | ForgeWebScriptフロントエンド結果 |  |
-|オプション | ForgeWebScriptAnalysisオプション |  |
+| 名前           | タイプ                           | 説明 |
+| -------------- | -------------------------------- | ---- |
+| フロントエンド | ForgeWebScriptフロントエンド結果 |      |
+| オプション     | ForgeWebScriptAnalysisオプション |      |
 
 ## `src/analysis/contracts`
 
@@ -54,7 +60,7 @@ function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendRes
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
 ```
 
 ソース分析診断ファミリー用に予約されている安定したプレフィックス。
@@ -286,7 +292,7 @@ export interface ForgeWebScriptAnalysisTypeFact
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[]
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[];
 ```
 
 説明はありません。
@@ -298,16 +304,16 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAna
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts
+function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フロントエンド | ForgeWebScriptフロントエンド結果 |  |
+| 名前           | タイプ                           | 説明 |
+| -------------- | -------------------------------- | ---- |
+| フロントエンド | ForgeWebScriptフロントエンド結果 |      |
 
 ## `src/analysis/policy`
 
@@ -316,23 +322,25 @@ function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResul
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptAnalysisPolicy(policy: ForgeWebScriptAnalysisOptionsLike = {}): ForgeWebScriptAnalysisPolicy
+function createForgeWebScriptAnalysisPolicy(
+  policy: ForgeWebScriptAnalysisOptionsLike = {},
+): ForgeWebScriptAnalysisPolicy;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ポリシー | ForgeWebScriptAnaizationOptionsLike |  |
+| 名前     | タイプ                              | 説明 |
+| -------- | ----------------------------------- | ---- |
+| ポリシー | ForgeWebScriptAnaizationOptionsLike |      |
 
 ### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits;
 ```
 
 説明はありません。
@@ -342,7 +350,7 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLim
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 説明はありません。
@@ -352,7 +360,7 @@ export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysi
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 説明はありません。
@@ -372,17 +380,20 @@ export type ForgeWebScriptAnalysisOptionsLike = Omit<Partial<ForgeWebScriptAnaly
 **種類:** 関数
 
 ```typescript
-function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysisFinding, policy: ForgeWebScriptAnalysisPolicy): boolean
+function isForgeWebScriptAnalysisFindingBlocking(
+  finding: ForgeWebScriptAnalysisFinding,
+  policy: ForgeWebScriptAnalysisPolicy,
+): boolean;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|発見 | ForgeWebScript分析結果 |  |
-|ポリシー | ForgeWebScript分析ポリシー |  |
+| 名前     | タイプ                     | 説明 |
+| -------- | -------------------------- | ---- |
+| 発見     | ForgeWebScript分析結果     |      |
+| ポリシー | ForgeWebScript分析ポリシー |      |
 
 ## `src/analysis/registry`
 
@@ -391,16 +402,18 @@ function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysis
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptAnalysisRuleRegistry(rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES): ForgeWebScriptAnalysisRuleRegistry
+function createForgeWebScriptAnalysisRuleRegistry(
+  rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
+): ForgeWebScriptAnalysisRuleRegistry;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルール | ForgeWebScriptAnalysisRule[] | readonly  |
+| 名前   | タイプ                       | 説明     |
+| ------ | ---------------------------- | -------- |
+| ルール | ForgeWebScriptAnalysisRule[] | readonly |
 
 ### ForgeWebScriptAnalysisRuleRegistry
 
@@ -419,16 +432,16 @@ export interface ForgeWebScriptAnalysisRuleRegistry
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic
+function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|発見 | ForgeWebScript分析結果 |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 発見 | ForgeWebScript分析結果 |      |
 
 ## `src/ast`
 
@@ -467,7 +480,8 @@ export interface ForgeWebScriptBinaryExpression
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
+export type ForgeWebScriptBinaryOperator =
+  '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
 説明はありません。
@@ -557,7 +571,19 @@ export interface ForgeWebScriptEnumVariant
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptExpression = | ForgeWebScriptBinaryExpression | ForgeWebScriptCallExpression | ForgeWebScriptIdentifierExpression | ForgeWebScriptLiteralExpression | ForgeWebScriptFunctionValueExpression | ForgeWebScriptStructValueExpression | ForgeWebScriptEnumValueExpression | ForgeWebScriptArrayLiteralExpression | ForgeWebScriptVectorLiteralExpression | ForgeWebScriptIndexExpression | ForgeWebScriptMatchExpression | ForgeWebScriptUnaryExpression;
+export type ForgeWebScriptExpression =
+  | ForgeWebScriptBinaryExpression
+  | ForgeWebScriptCallExpression
+  | ForgeWebScriptIdentifierExpression
+  | ForgeWebScriptLiteralExpression
+  | ForgeWebScriptFunctionValueExpression
+  | ForgeWebScriptStructValueExpression
+  | ForgeWebScriptEnumValueExpression
+  | ForgeWebScriptArrayLiteralExpression
+  | ForgeWebScriptVectorLiteralExpression
+  | ForgeWebScriptIndexExpression
+  | ForgeWebScriptMatchExpression
+  | ForgeWebScriptUnaryExpression;
 ```
 
 説明はありません。
@@ -767,7 +793,8 @@ export type ForgeWebScriptPattern = |
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
 説明はありません。
@@ -797,7 +824,19 @@ export interface ForgeWebScriptSourceModuleImport
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptStatement = | ForgeWebScriptExpressionStatement | ForgeWebScriptAssignmentStatement | ForgeWebScriptIfStatement | ForgeWebScriptLetStatement | ForgeWebScriptMatchStatement | ForgeWebScriptSwitchStatement | ForgeWebScriptReturnStatement | ForgeWebScriptForStatement | ForgeWebScriptDoWhileStatement | ForgeWebScriptWhileStatement | ForgeWebScriptYieldStatement | ForgeWebScriptIteratorLoopStatement;
+export type ForgeWebScriptStatement =
+  | ForgeWebScriptExpressionStatement
+  | ForgeWebScriptAssignmentStatement
+  | ForgeWebScriptIfStatement
+  | ForgeWebScriptLetStatement
+  | ForgeWebScriptMatchStatement
+  | ForgeWebScriptSwitchStatement
+  | ForgeWebScriptReturnStatement
+  | ForgeWebScriptForStatement
+  | ForgeWebScriptDoWhileStatement
+  | ForgeWebScriptWhileStatement
+  | ForgeWebScriptYieldStatement
+  | ForgeWebScriptIteratorLoopStatement;
 ```
 
 説明はありません。
@@ -867,16 +906,16 @@ export interface ForgeWebScriptTypeName
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string
+function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|タイプ | ForgeWebScript タイプ名 |  |
+| 名前   | タイプ                  | 説明 |
+| ------ | ----------------------- | ---- |
+| タイプ | ForgeWebScript タイプ名 |      |
 
 ### ForgeWebScriptUnaryExpression
 
@@ -965,16 +1004,16 @@ export interface ForgeWebScriptWatCache
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string
+function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | ForgeWebScriptWatCacheKeyInput |  |
+| 名前 | タイプ                         | 説明 |
+| ---- | ------------------------------ | ---- |
+| 入力 | ForgeWebScriptWatCacheKeyInput |      |
 
 ### ForgeWebScriptWatCacheKeyInput
 
@@ -991,58 +1030,66 @@ export interface ForgeWebScriptWatCacheKeyInput
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string
+function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|キャッシュ | ForgeWebScriptWatCache |  |
-|キー |文字列 |  |
+| 名前       | タイプ                 | 説明 |
+| ---------- | ---------------------- | ---- |
+| キャッシュ | ForgeWebScriptWatCache |      |
+| キー       | 文字列                 |      |
 
 ### persistForgeWebScriptDebugArtifacts
 
 **種類:** 関数
 
 ```typescript
-function persistForgeWebScriptDebugArtifacts(cache: ForgeWebScriptWatCache | undefined, key: string, artifacts: {
+function persistForgeWebScriptDebugArtifacts(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  artifacts: {
     readonly optimizedWat?: string;
     readonly unoptimizedWat?: string;
     readonly optimizedWasm?: Uint8Array;
     readonly unoptimizedWasm?: Uint8Array;
-  }): ForgeWebScriptDebugArtifactPaths
+  },
+): ForgeWebScriptDebugArtifactPaths;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|キャッシュ | ForgeWebScriptWatCache \|未定義 |  |
-|キー |文字列 |  |
-|アーティファクト | {読み取り専用最適化Wat?:文字列;     readonly unoptimizedWat?: 文字列;     読み取り専用最適化Wasm?: Uint8Array;     readonly unoptimizedWasm?: Uint8Array;   } |  |
+| 名前             | タイプ                                                                                                                                          | 説明 |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| キャッシュ       | ForgeWebScriptWatCache \|未定義                                                                                                                 |      |
+| キー             | 文字列                                                                                                                                          |      |
+| アーティファクト | {読み取り専用最適化Wat?:文字列; readonly unoptimizedWat?: 文字列; 読み取り専用最適化Wasm?: Uint8Array; readonly unoptimizedWasm?: Uint8Array; } |      |
 
 ### persistForgeWebScriptWat
 
 **種類:** 関数
 
 ```typescript
-function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key: string, wat: string): string | undefined
+function persistForgeWebScriptWat(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  wat: string,
+): string | undefined;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|キャッシュ | ForgeWebScriptWatCache \|未定義 |  |
-|キー |文字列 |  |
-|ワット |文字列 |  |
+| 名前       | タイプ                          | 説明 |
+| ---------- | ------------------------------- | ---- |
+| キャッシュ | ForgeWebScriptWatCache \|未定義 |      |
+| キー       | 文字列                          |      |
+| ワット     | 文字列                          |      |
 
 ## `src/compiler`
 
@@ -1051,23 +1098,23 @@ function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key
 **種類:** 関数
 
 ```typescript
-function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | ForgeWebScriptCompileInput |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| 入力 | ForgeWebScriptCompileInput |      |
 
 ### コンパイルフォージWebScriptシード
 
 **種類:** 関数
 
 ```typescript
-function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 修正されるまで自己ホスト型ブートストラップによって使用される境界付き TypeScript シード -
@@ -1075,16 +1122,16 @@ function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebS
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | ForgeWebScriptCompileInput |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| 入力 | ForgeWebScriptCompileInput |      |
 
 ### createForgeWebScriptコンパイラ
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
+function createForgeWebScriptCompiler(): ForgeWebScriptCompiler;
 ```
 
 説明はありません。
@@ -1094,16 +1141,18 @@ function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptCompilerService(options: ForgeWebScriptCompilerServiceOptions = {}): ForgeWebScriptCompilerService
+function createForgeWebScriptCompilerService(
+  options: ForgeWebScriptCompilerServiceOptions = {},
+): ForgeWebScriptCompilerService;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptCompilerServiceOptions |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| オプション | ForgeWebScriptCompilerServiceOptions |      |
 
 ## `src/contracts`
 
@@ -1342,7 +1391,10 @@ export interface ForgeWebScriptSelfHostedStageReport
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptSelfHostedStageRunner = ( input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, ) => ForgeWebScriptSelfHostedStageReport;
+export type ForgeWebScriptSelfHostedStageRunner = (
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+) => ForgeWebScriptSelfHostedStageReport;
 ```
 
 ブラウザセーフなファサードを結合せずに、ランタイムによって提供される VM エントリ ポイント。
@@ -1374,39 +1426,48 @@ export type ForgeWebScriptVmExecutionMode = 'interpret' | 'jit' | 'aot';
 **種類:** 関数
 
 ```typescript
-function createDiagnostic(fileName: string, phase: ForgeWebScriptDiagnosticPhase, code: string, message: string, span: ForgeWebScriptSourceSpan, severity: ForgeWebScriptDiagnosticSeverity = 'error', hint?: string, metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>): ForgeWebScriptDiagnostic
+function createDiagnostic(
+  fileName: string,
+  phase: ForgeWebScriptDiagnosticPhase,
+  code: string,
+  message: string,
+  span: ForgeWebScriptSourceSpan,
+  severity: ForgeWebScriptDiagnosticSeverity = 'error',
+  hint?: string,
+  metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>,
+): ForgeWebScriptDiagnostic;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|位相 | ForgeWebScriptDiagnosticPhase |  |
-|コード |文字列 |  |
-|メッセージ |文字列 |  |
-|スパン | ForgeWebScriptソーススパン |  |
-|重大度 | ForgeWebScriptDiagnosticSeverity |  |
-|ヒント |文字列 |  |
-|メタデータ | Pick<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |  |
+| 名前       | タイプ                                                                                                 | 説明 |
+| ---------- | ------------------------------------------------------------------------------------------------------ | ---- |
+| ファイル名 | 文字列                                                                                                 |      |
+| 位相       | ForgeWebScriptDiagnosticPhase                                                                          |      |
+| コード     | 文字列                                                                                                 |      |
+| メッセージ | 文字列                                                                                                 |      |
+| スパン     | ForgeWebScriptソーススパン                                                                             |      |
+| 重大度     | ForgeWebScriptDiagnosticSeverity                                                                       |      |
+| ヒント     | 文字列                                                                                                 |      |
+| メタデータ | Pick<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |      |
 
 ### 診断キー
 
 **種類:** 関数
 
 ```typescript
-function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string
+function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 | ForgeWebScriptDiagnostic |  |
+| 名前 | タイプ                   | 説明 |
+| ---- | ------------------------ | ---- |
+| 診断 | ForgeWebScriptDiagnostic |      |
 
 ### ForgeWebScriptDiagnostic
 
@@ -1433,7 +1494,8 @@ export interface ForgeWebScriptDiagnosticEvidence
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptDiagnosticPhase = 'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+export type ForgeWebScriptDiagnosticPhase =
+  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
 説明はありません。
@@ -1465,32 +1527,32 @@ export interface ForgeWebScriptSourceSpan
 **種類:** 関数
 
 ```typescript
-function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation
+function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コメント |文字列 |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| コメント | 文字列 |      |
 
 ### renderForgeWebScriptドキュメント
 
 **種類:** 関数
 
 ```typescript
-function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string
+function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ドキュメント | ForgeWebScriptドキュメント |  |
+| 名前         | タイプ                     | 説明 |
+| ------------ | -------------------------- | ---- |
+| ドキュメント | ForgeWebScriptドキュメント |      |
 
 ## `src/dynamic-links`
 
@@ -1542,32 +1604,32 @@ export interface ForgeWebScriptDynamicModule
 **種類:** 関数
 
 ```typescript
-function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | ForgeWebScriptCompileInput |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| 入力 | ForgeWebScriptCompileInput |      |
 
 ### prepareForgeWebScriptGraphフロントエンド
 
 **種類:** 関数
 
 ```typescript
-function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | ForgeWebScriptGraphCompileInput |  |
+| 名前 | タイプ                          | 説明 |
+| ---- | ------------------------------- | ---- |
+| 入力 | ForgeWebScriptGraphCompileInput |      |
 
 ## `src/generics`
 
@@ -1576,35 +1638,42 @@ function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInp
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptGenericSpecialization(request: ForgeWebScriptGenericSpecializationRequest): ForgeWebScriptSpecialization
+function createForgeWebScriptGenericSpecialization(
+  request: ForgeWebScriptGenericSpecializationRequest,
+): ForgeWebScriptSpecialization;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|リクエスト | ForgeWebScriptGenericSpecializationRequest |  |
+| 名前       | タイプ                                     | 説明 |
+| ---------- | ------------------------------------------ | ---- |
+| リクエスト | ForgeWebScriptGenericSpecializationRequest |      |
 
 ### createForgeWebScriptIteratorBoundaryDescriptor
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptIteratorBoundaryDescriptor(generic: string, elementType: ForgeWebScriptTypeName, nextFunction: string, ownership: ForgeWebScriptOwnership = 'borrowed'): ForgeWebScriptIteratorBoundaryDescriptor
+function createForgeWebScriptIteratorBoundaryDescriptor(
+  generic: string,
+  elementType: ForgeWebScriptTypeName,
+  nextFunction: string,
+  ownership: ForgeWebScriptOwnership = 'borrowed',
+): ForgeWebScriptIteratorBoundaryDescriptor;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|一般 |文字列 |  |
-|要素タイプ | ForgeWebScript タイプ名 |  |
-|次の関数 |文字列 |  |
-|所有権 | ForgeWebScript の所有権 |  |
+| 名前       | タイプ                  | 説明 |
+| ---------- | ----------------------- | ---- |
+| 一般       | 文字列                  |      |
+| 要素タイプ | ForgeWebScript タイプ名 |      |
+| 次の関数   | 文字列                  |      |
+| 所有権     | ForgeWebScript の所有権 |      |
 
 ### ForgeWebScriptGenericBoundary
 
@@ -1621,16 +1690,18 @@ export type ForgeWebScriptGenericBoundary = 'value' | 'interface' | 'iterator';
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptGenericRepresentation(boundary: ForgeWebScriptGenericBoundary = 'value'): ForgeWebScriptSpecialization['representation']
+function forgeWebScriptGenericRepresentation(
+  boundary: ForgeWebScriptGenericBoundary = 'value',
+): ForgeWebScriptSpecialization['representation'];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|境界 | ForgeWebScriptGenericBoundary |  |
+| 名前 | タイプ                        | 説明 |
+| ---- | ----------------------------- | ---- |
+| 境界 | ForgeWebScriptGenericBoundary |      |
 
 ### ForgeWebScriptGenericSpecializationRequest
 
@@ -1647,16 +1718,18 @@ export interface ForgeWebScriptGenericSpecializationRequest
 **種類:** 関数
 
 ```typescript
-function sortForgeWebScriptSpecializations(specializations: readonly ForgeWebScriptSpecialization[]): readonly ForgeWebScriptSpecialization[]
+function sortForgeWebScriptSpecializations(
+  specializations: readonly ForgeWebScriptSpecialization[],
+): readonly ForgeWebScriptSpecialization[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|専門分野 | Readonly ForgeWebScriptSpecialization[] |  |
+| 名前     | タイプ                                  | 説明 |
+| -------- | --------------------------------------- | ---- |
+| 専門分野 | Readonly ForgeWebScriptSpecialization[] |      |
 
 ## `src/graph`
 
@@ -1745,35 +1818,42 @@ export interface ForgeWebScriptResolvedModule
 **種類:** 関数
 
 ```typescript
-function hashForgeWebScriptModuleGraph(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): string
+function hashForgeWebScriptModuleGraph(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|グラフ | ForgeWebScriptModuleグラフ |  |
-|構成 | ForgeWebScriptLink設定 |  |
+| 名前   | タイプ                     | 説明 |
+| ------ | -------------------------- | ---- |
+| グラフ | ForgeWebScriptModuleグラフ |      |
+| 構成   | ForgeWebScriptLink設定     |      |
 
 ### solveForgeWebScriptModuleGraph
 
 **種類:** 関数
 
 ```typescript
-function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: ForgeWebScriptModuleResolver, configuration: ForgeWebScriptLinkConfiguration = {}): Promise<ForgeWebScriptGraphResult>
+function resolveForgeWebScriptModuleGraph(
+  entries: readonly string[],
+  resolver: ForgeWebScriptModuleResolver,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): Promise<ForgeWebScriptGraphResult>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|エントリー |読み取り専用文字列[] |  |
-|リゾルバ | ForgeWebScriptModuleResolver |  |
-|構成 | ForgeWebScriptLink設定 |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| エントリー | 読み取り専用文字列[]         |      |
+| リゾルバ   | ForgeWebScriptModuleResolver |      |
+| 構成       | ForgeWebScriptLink設定       |      |
 
 ## `src/identity`
 
@@ -1782,33 +1862,33 @@ function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: 
 **種類:** 関数
 
 ```typescript
-function deriveForgeWebScriptModuleId(fileName: string, root?: string): string
+function deriveForgeWebScriptModuleId(fileName: string, root?: string): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|ルート |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ファイル名 | 文字列 |      |
+| ルート     | 文字列 |      |
 
 ### NormalizeForgeWebScriptFileId
 
 **種類:** 関数
 
 ```typescript
-function normalizeForgeWebScriptFileId(fileName: string): string
+function normalizeForgeWebScriptFileId(fileName: string): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ファイル名 | 文字列 |      |
 
 ## `src/ir`
 
@@ -1817,16 +1897,16 @@ function normalizeForgeWebScriptFileId(fileName: string): string
 **種類:** 関数
 
 ```typescript
-function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts
+function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptIrModule |  |
+| 名前       | タイプ                 | 説明 |
+| ---------- | ---------------------- | ---- |
+| モジュール | ForgeWebScriptIrModule |      |
 
 ### ForgeWebScriptCollection 操作
 
@@ -1913,7 +1993,18 @@ export interface ForgeWebScriptIrEnumValueExpression
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptIrExpression = | ForgeWebScriptIrBinaryExpression | ForgeWebScriptIrCallExpression | ForgeWebScriptIrIdentifierExpression | ForgeWebScriptIrLiteralExpression | ForgeWebScriptIrFunctionValueExpression | ForgeWebScriptIrStructValueExpression | ForgeWebScriptIrEnumValueExpression | ForgeWebScriptIrMatchExpression | ForgeWebScriptIrUnaryExpression | ForgeWebScriptIrArrayLiteralExpression | ForgeWebScriptIrIndexExpression;
+export type ForgeWebScriptIrExpression =
+  | ForgeWebScriptIrBinaryExpression
+  | ForgeWebScriptIrCallExpression
+  | ForgeWebScriptIrIdentifierExpression
+  | ForgeWebScriptIrLiteralExpression
+  | ForgeWebScriptIrFunctionValueExpression
+  | ForgeWebScriptIrStructValueExpression
+  | ForgeWebScriptIrEnumValueExpression
+  | ForgeWebScriptIrMatchExpression
+  | ForgeWebScriptIrUnaryExpression
+  | ForgeWebScriptIrArrayLiteralExpression
+  | ForgeWebScriptIrIndexExpression;
 ```
 
 説明はありません。
@@ -2083,7 +2174,18 @@ export interface ForgeWebScriptIrReturnStatement
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptIrStatement = | ForgeWebScriptIrExpressionStatement | ForgeWebScriptIrAssignmentStatement | ForgeWebScriptIrIfStatement | ForgeWebScriptIrWhileStatement | ForgeWebScriptIrDoWhileStatement | ForgeWebScriptIrLetStatement | ForgeWebScriptIrReturnStatement | ForgeWebScriptIrMatchStatement | ForgeWebScriptIrSwitchStatement | ForgeWebScriptIrYieldStatement | ForgeWebScriptIrIteratorLoopStatement;
+export type ForgeWebScriptIrStatement =
+  | ForgeWebScriptIrExpressionStatement
+  | ForgeWebScriptIrAssignmentStatement
+  | ForgeWebScriptIrIfStatement
+  | ForgeWebScriptIrWhileStatement
+  | ForgeWebScriptIrDoWhileStatement
+  | ForgeWebScriptIrLetStatement
+  | ForgeWebScriptIrReturnStatement
+  | ForgeWebScriptIrMatchStatement
+  | ForgeWebScriptIrSwitchStatement
+  | ForgeWebScriptIrYieldStatement
+  | ForgeWebScriptIrIteratorLoopStatement;
 ```
 
 説明はありません。
@@ -2143,32 +2245,32 @@ export interface ForgeWebScriptIrYieldStatement
 **種類:** 関数
 
 ```typescript
-function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule
+function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptIrModule |  |
+| 名前       | タイプ                 | 説明 |
+| ---------- | ---------------------- | ---- |
+| モジュール | ForgeWebScriptIrModule |      |
 
 ### lowerForgeWebScriptToIr
 
 **種類:** 関数
 
 ```typescript
-function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule
+function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptモジュール |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| モジュール | ForgeWebScriptモジュール |      |
 
 ## `src/lexer`
 
@@ -2197,7 +2299,8 @@ export interface ForgeWebScriptToken
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
+export type ForgeWebScriptTokenKind =
+  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
 ```
 
 説明はありません。
@@ -2207,17 +2310,17 @@ export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number
 **種類:** 関数
 
 ```typescript
-function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult
+function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|ファイル名 |  |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ソース     | 文字列 |      |
+| ファイル名 |        |      |
 
 ## `src/linker`
 
@@ -2236,17 +2339,20 @@ export interface ForgeWebScriptLinkResult
 **種類:** 関数
 
 ```typescript
-function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): ForgeWebScriptLinkResult
+function validateForgeWebScriptLinks(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): ForgeWebScriptLinkResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|グラフ | ForgeWebScriptModuleグラフ |  |
-|構成 | ForgeWebScriptLink設定 |  |
+| 名前   | タイプ                     | 説明 |
+| ------ | -------------------------- | ---- |
+| グラフ | ForgeWebScriptModuleグラフ |      |
+| 構成   | ForgeWebScriptLink設定     |      |
 
 ## `src/manifest`
 
@@ -2255,24 +2361,27 @@ function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configura
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptAbiManifest(module: ForgeWebScriptModule, options: ForgeWebScriptAbiManifestOptions = {}): ForgeWebScriptAbiManifest
+function createForgeWebScriptAbiManifest(
+  module: ForgeWebScriptModule,
+  options: ForgeWebScriptAbiManifestOptions = {},
+): ForgeWebScriptAbiManifest;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptモジュール |  |
-|オプション | ForgeWebScriptAbiManifestOptions |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| モジュール | ForgeWebScriptモジュール         |      |
+| オプション | ForgeWebScriptAbiManifestOptions |      |
 
 ### FORGE_WEB_SCRIPT_ABI_VERSION
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION
+export const FORGE_WEB_SCRIPT_ABI_VERSION;
 ```
 
 説明はありません。
@@ -2282,7 +2391,7 @@ export const FORGE_WEB_SCRIPT_ABI_VERSION
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION
+export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
 ```
 
 説明はありません。
@@ -2472,7 +2581,8 @@ export interface ForgeWebScriptSpecialization
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptValueRepresentation = 'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptValueRepresentation =
+  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
 ```
 
 説明はありません。
@@ -2494,17 +2604,20 @@ export interface ForgeWebScriptImportTypeEnvironment
 **種類:** 関数
 
 ```typescript
-function resolveForgeWebScriptImportTypeEnvironment(importer: ForgeWebScriptResolvedModule, graph: ForgeWebScriptModuleGraph): ForgeWebScriptImportTypeEnvironment
+function resolveForgeWebScriptImportTypeEnvironment(
+  importer: ForgeWebScriptResolvedModule,
+  graph: ForgeWebScriptModuleGraph,
+): ForgeWebScriptImportTypeEnvironment;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|輸入業者 | ForgeWebScriptResolvedModule |  |
-|グラフ | ForgeWebScriptModuleグラフ |  |
+| 名前     | タイプ                       | 説明 |
+| -------- | ---------------------------- | ---- |
+| 輸入業者 | ForgeWebScriptResolvedModule |      |
+| グラフ   | ForgeWebScriptModuleグラフ   |      |
 
 ## `src/optimizer`
 
@@ -2543,34 +2656,40 @@ export interface ForgeWebScriptOptimizationResult
 **種類:** 関数
 
 ```typescript
-function optimizeForgeWebScriptIr(input: ForgeWebScriptIrModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptIr(
+  input: ForgeWebScriptIrModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | ForgeWebScriptIrModule |  |
-|モード | 'デバッグ' \| 'リリース' |  |
+| 名前   | タイプ                   | 説明 |
+| ------ | ------------------------ | ---- |
+| 入力   | ForgeWebScriptIrModule   |      |
+| モード | 'デバッグ' \| 'リリース' |      |
 
 ### optimizeForgeWebScriptモジュール
 
 **種類:** 関数
 
 ```typescript
-function optimizeForgeWebScriptModule(module: ForgeWebScriptModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptModule(
+  module: ForgeWebScriptModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptモジュール |  |
-|モード | 'デバッグ' \| 'リリース' |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| モジュール | ForgeWebScriptモジュール |      |
+| モード     | 'デバッグ' \| 'リリース' |      |
 
 ## `src/parser`
 
@@ -2599,25 +2718,29 @@ export interface ForgeWebScriptParseResult
 **種類:** 関数
 
 ```typescript
-function parseForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptParseOptions = {}): ForgeWebScriptParseResult
+function parseForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptParseOptions = {},
+): ForgeWebScriptParseResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|ファイル名 |  |  |
-|オプション | ForgeWebScriptParseオプション |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| ソース     | 文字列                        |      |
+| ファイル名 |                               |      |
+| オプション | ForgeWebScriptParseオプション |      |
 
 ### プリミティブタイプ
 
 **種類:** 定数
 
 ```typescript
-export const primitiveTypes
+export const primitiveTypes;
 ```
 
 説明はありません。
@@ -2629,7 +2752,7 @@ export const primitiveTypes
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[]
+function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[];
 ```
 
 説明はありません。
@@ -2639,32 +2762,32 @@ function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeW
 **種類:** 関数
 
 ```typescript
-function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string
+function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バイト | Uint8Array |  |
+| 名前   | タイプ     | 説明 |
+| ------ | ---------- | ---- |
+| バイト | Uint8Array |      |
 
 ### encodeForgeWebScriptSelfHostedフィンガープリント
 
 **種類:** 関数
 
 ```typescript
-function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array
+function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|指紋 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 指紋 | 文字列 |      |
 
 ### ForgeWebScriptSelfHostedCompilation
 
@@ -2701,7 +2824,9 @@ export type ForgeWebScriptSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot
 **種類:** 関数
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilation(input: ForgeWebScriptCompileInput): ForgeWebScriptSelfHostedCompilation
+function prepareForgeWebScriptSelfHostedCompilation(
+  input: ForgeWebScriptCompileInput,
+): ForgeWebScriptSelfHostedCompilation;
 ```
 
 制限された自己ホスト型コンパイル ユニットを準備します。
@@ -2711,25 +2836,25 @@ VM モジュールは、入力ソース上で実際の lex/トークン正規化
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | ForgeWebScriptCompileInput |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| 入力 | ForgeWebScriptCompileInput |      |
 
 ### prepareForgeWebScriptSelfHostedコンピレーションレガシーフィンガープリント
 
 **種類:** 関数
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string
+function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | ForgeWebScriptCompileInput |  |
+| 名前 | タイプ                     | 説明 |
+| ---- | -------------------------- | ---- |
+| 入力 | ForgeWebScriptCompileInput |      |
 
 #### 契約
 
@@ -2742,91 +2867,99 @@ function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: Forg
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptSelfHostedStageArtifact(stage: ForgeWebScriptSelfHostedCompilerStage, identity: ForgeWebScriptSelfHostedStageArtifactIdentity, payload: Uint8Array, diagnostics: readonly ForgeWebScriptDiagnostic[] = []): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedStageArtifact(
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  identity: ForgeWebScriptSelfHostedStageArtifactIdentity,
+  payload: Uint8Array,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ステージ | ForgeWebScriptSelfHostedCompilerステージ |  |
-|アイデンティティ | ForgeWebScriptSelfHostedStageArtifactIdentity |  |
-|ペイロード | Uint8Array |  |
-|診断 | Readonly ForgeWebScriptDiagnostic[] |  |
+| 名前             | タイプ                                        | 説明 |
+| ---------------- | --------------------------------------------- | ---- |
+| ステージ         | ForgeWebScriptSelfHostedCompilerステージ      |      |
+| アイデンティティ | ForgeWebScriptSelfHostedStageArtifactIdentity |      |
+| ペイロード       | Uint8Array                                    |      |
+| 診断             | Readonly ForgeWebScriptDiagnostic[]           |      |
 
 ### decodeForgeWebScriptSelfHostedDiagnostics
 
 **種類:** 関数
 
 ```typescript
-function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[]
+function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バイト | Uint8Array |  |
+| 名前   | タイプ     | 説明 |
+| ------ | ---------- | ---- |
+| バイト | Uint8Array |      |
 
 ### decodeForgeWebScriptSelfHostedStageArtifact
 
 **種類:** 関数
 
 ```typescript
-function decodeForgeWebScriptSelfHostedStageArtifact(bytes: Uint8Array, options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {}): ForgeWebScriptSelfHostedStageArtifact
+function decodeForgeWebScriptSelfHostedStageArtifact(
+  bytes: Uint8Array,
+  options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {},
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バイト | Uint8Array |  |
-|オプション | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |  |
+| 名前       | タイプ                                             | 説明 |
+| ---------- | -------------------------------------------------- | ---- |
+| バイト     | Uint8Array                                         |      |
+| オプション | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |      |
 
 ### encodeForgeWebScriptSelfHostedDiagnostics
 
 **種類:** 関数
 
 ```typescript
-function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array
+function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 | Readonly ForgeWebScriptDiagnostic[] |  |
+| 名前 | タイプ                              | 説明 |
+| ---- | ----------------------------------- | ---- |
+| 診断 | Readonly ForgeWebScriptDiagnostic[] |      |
 
 ### encodeForgeWebScriptSelfHostedStageArtifact
 
 **種類:** 関数
 
 ```typescript
-function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array
+function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|アーティファクト | ForgeWebScriptSelfHostedStageArtifact |  |
+| 名前             | タイプ                                | 説明 |
+| ---------------- | ------------------------------------- | ---- |
+| アーティファクト | ForgeWebScriptSelfHostedStageArtifact |      |
 
 ### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 説明はありません。
@@ -2836,7 +2969,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 説明はありません。
@@ -2846,7 +2979,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 説明はありません。
@@ -2858,7 +2991,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 ```typescript
 export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
   Record<ForgeWebScriptSelfHostedCompilerStage, string>
->
+>;
 ```
 
 説明はありません。
@@ -2868,7 +3001,8 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptSelfHostedCompilerStage = 'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
+export type ForgeWebScriptSelfHostedCompilerStage =
+  'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
 説明はありません。
@@ -2908,34 +3042,34 @@ export interface ForgeWebScriptSelfHostedStageArtifactIdentity
 **種類:** 関数
 
 ```typescript
-function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string
+function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バイト | Uint8Array |  |
+| 名前   | タイプ     | 説明 |
+| ------ | ---------- | ---- |
+| バイト | Uint8Array |      |
 
 ### hashForgeWebScriptSelfHostedSourceIdentity
 
 **種類:** 関数
 
 ```typescript
-function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string
+function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|ファイル名 |文字列 |  |
-|グラフハッシュ |文字列 |  |
+| 名前           | タイプ | 説明 |
+| -------------- | ------ | ---- |
+| ソース         | 文字列 |      |
+| ファイル名     | 文字列 |      |
+| グラフハッシュ | 文字列 |      |
 
 ## `src/self-hosted/fws/lexer`
 
@@ -2951,9 +3085,9 @@ export fn is_ws(byte: i32) -> bool
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バイト | i32 |バイト値の候補。 |
+| 名前   | タイプ | 説明             |
+| ------ | ------ | ---------------- |
+| バイト | i32    | バイト値の候補。 |
 
 #### 契約
 
@@ -2967,7 +3101,7 @@ export fn is_ws(byte: i32) -> bool
 **種類:** 関数
 
 ```typescript
-function computeForgeWebScriptLexStageFingerprint(source: string): number
+function computeForgeWebScriptLexStageFingerprint(source: string): number;
 ```
 
 自己ホスト型 lex ステージのシード リファレンス。
@@ -2975,16 +3109,16 @@ function computeForgeWebScriptLexStageFingerprint(source: string): number
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ソース | 文字列 |      |
 
 ### createForgeWebScriptLexStageVmModule
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule;
 ```
 
 lex フィンガープリント ステージ用の手で降ろされる VM モジュール。
@@ -2992,9 +3126,9 @@ lex フィンガープリント ステージ用の手で降ろされる VM モ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースハッシュ |文字列 |  |
+| 名前           | タイプ | 説明 |
+| -------------- | ------ | ---- |
+| ソースハッシュ | 文字列 |      |
 
 ### encodeForgeWebScriptLexStageSource
 
@@ -3006,23 +3140,23 @@ function encodeForgeWebScriptLexStageSource(source: string): {
   readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
-}
+};
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ソース | 文字列 |      |
 
 ### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
 ```
 
 説明はありません。
@@ -3032,7 +3166,7 @@ export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 説明はありません。
@@ -3084,48 +3218,52 @@ export type ForgeWebScriptSelfHostedVmValue = |
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptParserModuleVmModule(sourceHash: string, fileName: string, options: ForgeWebScriptParserModuleStageOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserModuleVmModule(
+  sourceHash: string,
+  fileName: string,
+  options: ForgeWebScriptParserModuleStageOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 境界パーサーモジュールステージ用に手動で降ろされる VM モジュール。
 エントリ: parse_module_stage(ソース: ForgeWebScriptSourceBytes) -> バイトエンベロープ。
 
 エンベロープ レイアウト (すべて u32 リトル エンディアン):
-  [0] failedFlag (1 = 境界のある v1 サブセット外の文法、モジュール ペイロードが存在しない)
-  [4] diagFlag (1 = 単一の境界付き FWS-PARSE-052 診断が記録されました)
-  [8..32) 診断スパン (開始、終了、行、列、終了ライン、終了列)
-  [32..) モジュール ペイロード バイト (failFlag = 0 の場合のみ意味があります)
+[0] failedFlag (1 = 境界のある v1 サブセット外の文法、モジュール ペイロードが存在しない)
+[4] diagFlag (1 = 単一の境界付き FWS-PARSE-052 診断が記録されました)
+[8..32) 診断スパン (開始、終了、行、列、終了ライン、終了列)
+[32..) モジュール ペイロード バイト (failFlag = 0 の場合のみ意味があります)
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースハッシュ |文字列 |  |
-|ファイル名 |文字列 |  |
-|オプション | ForgeWebScriptParserModuleStageOptions |  |
+| 名前           | タイプ                                 | 説明 |
+| -------------- | -------------------------------------- | ---- |
+| ソースハッシュ | 文字列                                 |      |
+| ファイル名     | 文字列                                 |      |
+| オプション     | ForgeWebScriptParserModuleStageOptions |      |
 
 ### decodeForgeWebScriptParserModuleEnvelope
 
 **種類:** 関数
 
 ```typescript
-function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope
+function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バイト | Uint8Array |  |
+| 名前   | タイプ     | 説明 |
+| ------ | ---------- | ---- |
+| バイト | Uint8Array |      |
 
 ### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 説明はありません。
@@ -3157,7 +3295,7 @@ export interface ForgeWebScriptParserModuleStageOptions
 **種類:** 関数
 
 ```typescript
-function computeForgeWebScriptParserStageFingerprint(source: string): number
+function computeForgeWebScriptParserStageFingerprint(source: string): number;
 ```
 
 自己ホスト型パーサー ステージのシード リファレンス。
@@ -3165,16 +3303,19 @@ function computeForgeWebScriptParserStageFingerprint(source: string): number
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ソース | 文字列 |      |
 
 ### createForgeWebScriptParserStageVmModule
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptParserStageVmModule(sourceHash: string, options: ForgeWebScriptParserStageVmModuleOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserStageVmModule(
+  sourceHash: string,
+  options: ForgeWebScriptParserStageVmModuleOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 パーサー フィンガープリント ステージ用の手で降ろされる VM モジュール。
@@ -3182,17 +3323,17 @@ function createForgeWebScriptParserStageVmModule(sourceHash: string, options: Fo
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースハッシュ |文字列 |  |
-|オプション | ForgeWebScriptParserStageVmModuleOptions |  |
+| 名前           | タイプ                                   | 説明 |
+| -------------- | ---------------------------------------- | ---- |
+| ソースハッシュ | 文字列                                   |      |
+| オプション     | ForgeWebScriptParserStageVmModuleOptions |      |
 
 ### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
 ```
 
 説明はありません。
@@ -3214,140 +3355,158 @@ export interface ForgeWebScriptParserStageVmModuleOptions
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptSelfHostedParserArtifact(source: string, fileName: string, module: ForgeWebScriptModule, diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedParserArtifact(
+  source: string,
+  fileName: string,
+  module: ForgeWebScriptModule,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|ファイル名 |文字列 |  |
-|モジュール | ForgeWebScriptモジュール |  |
-|診断 | Readonly ForgeWebScriptDiagnostic[] |  |
-|グラフハッシュ |文字列 |  |
+| 名前           | タイプ                              | 説明 |
+| -------------- | ----------------------------------- | ---- |
+| ソース         | 文字列                              |      |
+| ファイル名     | 文字列                              |      |
+| モジュール     | ForgeWebScriptモジュール            |      |
+| 診断           | Readonly ForgeWebScriptDiagnostic[] |      |
+| グラフハッシュ | 文字列                              |      |
 
 ### createForgeWebScriptSelfHostedTokenArtifact
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptSelfHostedTokenArtifact(source: string, fileName: string, tokens: readonly ForgeWebScriptToken[], diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedTokenArtifact(
+  source: string,
+  fileName: string,
+  tokens: readonly ForgeWebScriptToken[],
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|ファイル名 |文字列 |  |
-|トークン | ForgeWebScriptToken[] | readonly  |
-|診断 | Readonly ForgeWebScriptDiagnostic[] |  |
-|グラフハッシュ |文字列 |  |
+| 名前           | タイプ                              | 説明     |
+| -------------- | ----------------------------------- | -------- |
+| ソース         | 文字列                              |          |
+| ファイル名     | 文字列                              |          |
+| トークン       | ForgeWebScriptToken[]               | readonly |
+| 診断           | Readonly ForgeWebScriptDiagnostic[] |          |
+| グラフハッシュ | 文字列                              |          |
 
 ### decodeForgeWebScriptSelfHostedModule
 
 **種類:** 関数
 
 ```typescript
-function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule
+function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バイト | Uint8Array |  |
+| 名前   | タイプ     | 説明 |
+| ------ | ---------- | ---- |
+| バイト | Uint8Array |      |
 
 ### decodeForgeWebScriptSelfHostedTokens
 
 **種類:** 関数
 
 ```typescript
-function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[]
+function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バイト | Uint8Array |  |
+| 名前   | タイプ     | 説明 |
+| ------ | ---------- | ---- |
+| バイト | Uint8Array |      |
 
 ### encodeForgeWebScriptSelfHostedModule
 
 **種類:** 関数
 
 ```typescript
-function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array
+function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptモジュール |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| モジュール | ForgeWebScriptモジュール |      |
 
 ### encodeForgeWebScriptSelfHostedTokens
 
 **種類:** 関数
 
 ```typescript
-function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array
+function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|トークン | ForgeWebScriptToken[] | readonly  |
+| 名前     | タイプ                | 説明     |
+| -------- | --------------------- | -------- |
+| トークン | ForgeWebScriptToken[] | readonly |
 
 ### hashForgeWebScriptSelfHostedStageペイロード
 
 **種類:** 関数
 
 ```typescript
-function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string
+function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|アーティファクト | ForgeWebScriptSelfHostedStageArtifact |  |
+| 名前             | タイプ                                | 説明 |
+| ---------------- | ------------------------------------- | ---- |
+| アーティファクト | ForgeWebScriptSelfHostedStageArtifact |      |
 
 ### validateForgeWebScriptSelfHostedStageArtifact
 
 **種類:** 関数
 
 ```typescript
-function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact, stage: ForgeWebScriptSelfHostedCompilerStage, source: string, fileName: string, graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function validateForgeWebScriptSelfHostedStageArtifact(
+  artifact: ForgeWebScriptSelfHostedStageArtifact,
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  source: string,
+  fileName: string,
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|アーティファクト | ForgeWebScriptSelfHostedStageArtifact |  |
-|ステージ | ForgeWebScriptSelfHostedCompilerステージ |  |
-|ソース |文字列 |  |
-|ファイル名 |文字列 |  |
-|グラフハッシュ |文字列 |  |
+| 名前             | タイプ                                   | 説明 |
+| ---------------- | ---------------------------------------- | ---- |
+| アーティファクト | ForgeWebScriptSelfHostedStageArtifact    |      |
+| ステージ         | ForgeWebScriptSelfHostedCompilerステージ |      |
+| ソース           | 文字列                                   |      |
+| ファイル名       | 文字列                                   |      |
+| グラフハッシュ   | 文字列                                   |      |
 
 ## `src/stdlib/memory`
 
@@ -3356,7 +3515,7 @@ function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptS
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
 ```
 
 説明はありません。
@@ -3366,7 +3525,7 @@ export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[]
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[];
 ```
 
 説明はありません。
@@ -3386,7 +3545,15 @@ export interface ForgeWebScriptMemoryFunction
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' | 'memory-realloc' | 'memory-load-u32' | 'memory-store-u32' | 'memory-load-f64' | 'memory-store-f64' | 'f64-from-u32';
+export type ForgeWebScriptMemoryOperation =
+  | 'memory-alloc'
+  | 'memory-dealloc'
+  | 'memory-realloc'
+  | 'memory-load-u32'
+  | 'memory-store-u32'
+  | 'memory-load-f64'
+  | 'memory-store-f64'
+  | 'f64-from-u32';
 ```
 
 コンパイラによって予約されているゲストリニアメモリ操作を確認しました。
@@ -3398,7 +3565,7 @@ export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' 
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity;
 ```
 
 説明はありません。
@@ -3408,7 +3575,7 @@ export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptS
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
 ```
 
 説明はありません。
@@ -3418,7 +3585,7 @@ export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
 ```
 
 説明はありません。
@@ -3428,7 +3595,7 @@ export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[]
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[];
 ```
 
 コンパイラ所有の呼び出し。これらは予約されたソース名であり、ホスト インポートではありません。
@@ -3440,7 +3607,7 @@ export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLi
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION
+export const FORGE_WEB_SCRIPT_REGEX_VERSION;
 ```
 
 説明はありません。
@@ -3450,7 +3617,16 @@ export const FORGE_WEB_SCRIPT_REGEX_VERSION
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptRegexOperation = | 'full-match' | 'prefix-match' | 'search' | 'full-capture-start' | 'full-capture-end' | 'prefix-capture-start' | 'prefix-capture-end' | 'search-capture-start' | 'search-capture-end';
+export type ForgeWebScriptRegexOperation =
+  | 'full-match'
+  | 'prefix-match'
+  | 'search'
+  | 'full-capture-start'
+  | 'full-capture-end'
+  | 'prefix-capture-start'
+  | 'prefix-capture-end'
+  | 'search-capture-start'
+  | 'search-capture-end';
 ```
 
 説明はありません。
@@ -3470,16 +3646,18 @@ export interface ForgeWebScriptStandardLibraryFunction
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptStandardLibraryIdentity(overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {}): ForgeWebScriptStandardLibraryIdentity
+function forgeWebScriptStandardLibraryIdentity(
+  overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {},
+): ForgeWebScriptStandardLibraryIdentity;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オーバーライド |部分<ForgeWebScriptStandardLibraryIdentity> |  |
+| 名前           | タイプ                                      | 説明 |
+| -------------- | ------------------------------------------- | ---- |
+| オーバーライド | 部分<ForgeWebScriptStandardLibraryIdentity> |      |
 
 ### ForgeWebScriptStandardLibraryIdentity
 
@@ -3498,7 +3676,7 @@ export interface ForgeWebScriptStandardLibraryIdentity
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
 ```
 
 説明はありません。
@@ -3508,7 +3686,7 @@ export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[]
+export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[];
 ```
 
 説明はありません。
@@ -3528,7 +3706,18 @@ export interface ForgeWebScriptStringFunction
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' | 'string-byte-at' | 'string-starts-with' | 'string-slice' | 'string-to-i32' | 'bytes-length' | 'bytes-length-u32' | 'bytes-byte-at' | 'bytes-byte-at-u32' | 'bytes-slice';
+export type ForgeWebScriptStringOperation =
+  | 'string-concat'
+  | 'string-length'
+  | 'string-byte-at'
+  | 'string-starts-with'
+  | 'string-slice'
+  | 'string-to-i32'
+  | 'bytes-length'
+  | 'bytes-length-u32'
+  | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
+  | 'bytes-slice';
 ```
 
 コンパイラが所有する確定的な文字列およびバイト操作。
@@ -3540,18 +3729,22 @@ export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' 
 **種類:** 関数
 
 ```typescript
-function checkForgeWebScript(module: ForgeWebScriptModule, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptTypeCheckResult
+function checkForgeWebScript(
+  module: ForgeWebScriptModule,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptTypeCheckResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptモジュール |  |
-|ファイル名 |  |  |
-|オプション | ForgeWebScriptTypeCheckOptions |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| モジュール | ForgeWebScriptモジュール       |      |
+| ファイル名 |                                |      |
+| オプション | ForgeWebScriptTypeCheckOptions |      |
 
 ### ForgeWebScriptTypeCheckOptions
 
@@ -3590,18 +3783,22 @@ export interface ForgeWebScriptValidationResult
 **種類:** 関数
 
 ```typescript
-function validateForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptValidationResult
+function validateForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptValidationResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|ファイル名 |  |  |
-|オプション | ForgeWebScriptTypeCheckOptions |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| ソース     | 文字列                         |      |
+| ファイル名 |                                |      |
+| オプション | ForgeWebScriptTypeCheckOptions |      |
 
 ## `src/wat`
 
@@ -3620,14 +3817,14 @@ export interface ForgeWebScriptWatMetadata
 **種類:** 関数
 
 ```typescript
-function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string
+function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptモジュール |  |
-|メタデータ | ForgeWebScriptWatMetadata |  |
+| 名前       | タイプ                    | 説明 |
+| ---------- | ------------------------- | ---- |
+| モジュール | ForgeWebScriptモジュール  |      |
+| メタデータ | ForgeWebScriptWatMetadata |      |

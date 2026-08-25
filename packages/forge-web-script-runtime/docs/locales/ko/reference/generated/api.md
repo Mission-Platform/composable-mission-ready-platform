@@ -16,33 +16,33 @@
 **종류:** 기능
 
 ```typescript
-function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void
+function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 매니페스트 | ForgeWebScriptAbi매니페스트 |  |
+| 이름       | 유형                        | 설명 |
+| ---------- | --------------------------- | ---- |
+| 매니페스트 | ForgeWebScriptAbi매니페스트 |      |
 
 ### 동등함수
 
 **종류:** 기능
 
 ```typescript
-function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean
+function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 왼쪽 | ForgeWebScriptAbiFunction |  |
-| 맞다 | ForgeWebScriptAbiFunction |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 왼쪽 | ForgeWebScriptAbiFunction |      |
+| 맞다 | ForgeWebScriptAbiFunction |      |
 
 ### ForgeWebScriptAbiValidationResult
 
@@ -59,16 +59,16 @@ export interface ForgeWebScriptAbiValidationResult
 **종류:** 기능
 
 ```typescript
-function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult
+function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 매니페스트 | ForgeWebScriptAbi매니페스트 |  |
+| 이름       | 유형                        | 설명 |
+| ---------- | --------------------------- | ---- |
+| 매니페스트 | ForgeWebScriptAbi매니페스트 |      |
 
 ## `src/async`
 
@@ -77,23 +77,23 @@ function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest):
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime
+function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptAsyncRuntime옵션 |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 옵션 | ForgeWebScriptAsyncRuntime옵션 |      |
 
 ### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
 ```
 
 설명이 제공되지 않았습니다.
@@ -103,7 +103,8 @@ export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptAsyncCapability = (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type ForgeWebScriptAsyncCapability =
+  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
 ```
 
 설명이 제공되지 않았습니다.
@@ -143,7 +144,8 @@ export interface ForgeWebScriptAsyncFailure
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptAsyncFailureCode = | 'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
+export type ForgeWebScriptAsyncFailureCode =
+  'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
 설명이 제공되지 않았습니다.
@@ -245,104 +247,124 @@ export interface ForgeWebScriptAsyncWorkerMessage
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptArray(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function createForgeWebScriptArray(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 제공된 값을 복사하여 고정 배열을 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 읽기 전용 TValue[] |  |
-| 소유권 | ForgeWebScriptCollection소유권 |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 가치   | 읽기 전용 TValue[]             |      |
+| 소유권 | ForgeWebScriptCollection소유권 |      |
 
 ### createForgeWebScriptIterator
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptIterator(values: Iterable<TValue>, descriptor: ForgeWebScriptIteratorDescriptor): ForgeWebScriptIterator<TValue>
+function createForgeWebScriptIterator(
+  values: Iterable<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 제공된 ABI 설명자를 사용하여 반복 가능 항목을 게으른 반복자에 맞게 조정합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 반복 가능한<TValue> |  |
-| 설명자 | ForgeWebScriptIteratorDescriptor |  |
+| 이름   | 유형                             | 설명 |
+| ------ | -------------------------------- | ---- |
+| 가치   | 반복 가능한<TValue>              |      |
+| 설명자 | ForgeWebScriptIteratorDescriptor |      |
 
 ### createForgeWebScriptIteratorDescriptor
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptIteratorDescriptor(id: string, elementType = 'unknown', capability: ForgeWebScriptIteratorCapability = 'linear', ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptIteratorDescriptor
+function createForgeWebScriptIteratorDescriptor(
+  id: string,
+  elementType = 'unknown',
+  capability: ForgeWebScriptIteratorCapability = 'linear',
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptIteratorDescriptor;
 ```
 
 설명자 경계 메타데이터를 생성합니다. 레거시 호출자는 기본적으로 선형 액세스를 사용합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 아이디 | 문자열 |  |
-| 요소 유형 |  |  |
-| 능력 | ForgeWebScriptIteratorCapability |  |
-| 소유권 | ForgeWebScriptCollection소유권 |  |
+| 이름      | 유형                             | 설명 |
+| --------- | -------------------------------- | ---- |
+| 아이디    | 문자열                           |      |
+| 요소 유형 |                                  |      |
+| 능력      | ForgeWebScriptIteratorCapability |      |
+| 소유권    | ForgeWebScriptCollection소유권   |      |
 
 ### createForgeWebScriptMap
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptMap(entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [], strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>()): ForgeWebScriptMap<TKey, TValue>
+function createForgeWebScriptMap(
+  entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [],
+  strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>(),
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 항목 | 읽기 전용 ForgeWebScriptMapEntry<TKey, TValue>[] |  |
-| 전략 | ForgeWebScriptHashStrategy<TKey> |  |
+| 이름 | 유형                                             | 설명 |
+| ---- | ------------------------------------------------ | ---- |
+| 항목 | 읽기 전용 ForgeWebScriptMapEntry<TKey, TValue>[] |      |
+| 전략 | ForgeWebScriptHashStrategy<TKey>                 |      |
 
 ### createForgeWebScriptSet
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptSet(values: readonly TValue[] = [], strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>()): ForgeWebScriptSet<TValue>
+function createForgeWebScriptSet(
+  values: readonly TValue[] = [],
+  strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>(),
+): ForgeWebScriptSet<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 읽기 전용 TValue[] |  |
-| 전략 | ForgeWebScriptHashStrategy<TValue> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 가치 | 읽기 전용 TValue[]                 |      |
+| 전략 | ForgeWebScriptHashStrategy<TValue> |      |
 
 ### createForgeWebScriptVector
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptVector(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptVector<TValue>
+function createForgeWebScriptVector(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptVector<TValue>;
 ```
 
 제공된 값을 복사하여 소유된 벡터를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 읽기 전용 TValue[] |  |
-| 소유권 | ForgeWebScriptCollection소유권 |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 가치   | 읽기 전용 TValue[]             |      |
+| 소유권 | ForgeWebScriptCollection소유권 |      |
 
 ### ForgeWebScriptArray
 
@@ -359,69 +381,77 @@ export interface ForgeWebScriptArray<TValue>
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 배열 요소를 읽습니다. 잘못된 인덱스는 Option.none을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 배열 | ForgeWebScriptArray<TValue> |  |
-| 색인 | 번호 |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 배열 | ForgeWebScriptArray<TValue> |      |
+| 색인 | 번호                        |      |
 
 ### forgeWebScriptArray길이
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number
+function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number;
 ```
 
 해당 요소를 사용하거나 복사하지 않고 배열 길이를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 배열 | ForgeWebScriptArray<TValue> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 배열 | ForgeWebScriptArray<TValue> |      |
 
 ### forgeWebScriptArraySet
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptArraySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptArray<TValue>
+function forgeWebScriptArraySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptArray<TValue>;
 ```
 
 배열 요소를 교체합니다. 잘못된 인덱스는 RangeError를 발생시킵니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 배열 | ForgeWebScriptArray<TValue> |  |
-| 색인 | 번호 |  |
-| 가치 | T값 |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 배열 | ForgeWebScriptArray<TValue> |      |
+| 색인 | 번호                        |      |
+| 가치 | T값                         |      |
 
 ### forgeWebScriptArrayTrySet
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptArrayTrySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>
+function forgeWebScriptArrayTrySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>;
 ```
 
 던지지 않고 배열 요소를 교체합니다. 잘못된 인덱스는 오류 결과를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 배열 | ForgeWebScriptArray<TValue> |  |
-| 색인 | 번호 |  |
-| 가치 | T값 |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 배열 | ForgeWebScriptArray<TValue> |      |
+| 색인 | 번호                        |      |
+| 가치 | T값                         |      |
 
 ### ForgeWebScriptCollection소유권
 
@@ -438,7 +468,7 @@ export type ForgeWebScriptCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
+function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -448,7 +478,7 @@ function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
 **종류:** 상수
 
 ```typescript
-export const forgeWebScriptError
+export const forgeWebScriptError;
 ```
 
 던지지 않고 오류 결과 값을 구성합니다.
@@ -468,7 +498,8 @@ export interface ForgeWebScriptHashStrategy<TValue>
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptIterable<TValue> = ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
+export type ForgeWebScriptIterable<TValue> =
+  ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
 ```
 
 직렬 및 병렬 반복기 작업에서 허용되는 모든 소스입니다.
@@ -488,34 +519,40 @@ export interface ForgeWebScriptIterator<TValue>
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorAdd(source: ForgeWebScriptIterator<TValue>, value: TValue): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorAdd(
+  source: ForgeWebScriptIterator<TValue>,
+  value: TValue,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 반복자에 하나의 값을 느리게 추가합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterator<TValue> |  |
-| 가치 | T값 |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 출처 | ForgeWebScriptIterator<TValue> |      |
+| 가치 | T값                            |      |
 
 ### forgeWebScriptIteratorAt
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorAt(iterator: ForgeWebScriptIterator<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorAt(
+  iterator: ForgeWebScriptIterator<TValue>,
+  index: number,
+): ForgeWebScriptOption<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 반복자 | ForgeWebScriptIterator<TValue> |  |
-| 색인 | 번호 |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 반복자 | ForgeWebScriptIterator<TValue> |      |
+| 색인   | 번호                           |      |
 
 ### ForgeWebScriptIterator 기능
 
@@ -532,33 +569,36 @@ export type ForgeWebScriptIteratorCapability = 'linear' | 'random-access';
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 반복자 | ForgeWebScriptIterator<TValue> |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 반복자 | ForgeWebScriptIterator<TValue> |      |
 
 ### forgeWebScriptIteratorConcat
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorConcat(first: ForgeWebScriptIterator<TValue>, second: ForgeWebScriptIterable<TValue>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorConcat(
+  first: ForgeWebScriptIterator<TValue>,
+  second: ForgeWebScriptIterable<TValue>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 두 소스 중 하나의 순서를 변경하지 않고 두 소스를 느리게 연결합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 먼저 | ForgeWebScriptIterator<TValue> |  |
-| 두 번째 | ForgeWebScriptIterable<TValue> |  |
+| 이름    | 유형                           | 설명 |
+| ------- | ------------------------------ | ---- |
+| 먼저    | ForgeWebScriptIterator<TValue> |      |
+| 두 번째 | ForgeWebScriptIterable<TValue> |      |
 
 ### ForgeWebScriptIterator설명자
 
@@ -575,163 +615,186 @@ export interface ForgeWebScriptIteratorDescriptor
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorFilter(source: ForgeWebScriptIterator<TValue>, predicate: (value: TValue) => boolean): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFilter(
+  source: ForgeWebScriptIterator<TValue>,
+  predicate: (value: TValue) => boolean,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 지연 필터 값; 필터링은 항상 기능을 선형 액세스로 다운그레이드합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterator<TValue> |  |
-| 술어 | (값: TValue) => 부울 |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 출처 | ForgeWebScriptIterator<TValue> |      |
+| 술어 | (값: TValue) => 부울           |      |
 
 ### 위조WebScriptIteratorFirst
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 반복자 | ForgeWebScriptIterator<TValue> |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 반복자 | ForgeWebScriptIterator<TValue> |      |
 
 ### forgeWebScriptIteratorFlatten
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorFlatten(source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFlatten(
+  source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 중첩된 소스를 외부 및 내부 소스 순서로 느리게 평면화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |  |
+| 이름 | 유형                                                   | 설명 |
+| ---- | ------------------------------------------------------ | ---- |
+| 출처 | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |      |
 
 ### forgeWebScriptIteratorFold
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorFold(iterator: ForgeWebScriptIterator<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptIteratorFold(
+  iterator: ForgeWebScriptIterator<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 반복자 | ForgeWebScriptIterator<TValue> |  |
-| 초기 | 결과 |  |
-| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |  |
+| 이름   | 유형                                                   | 설명 |
+| ------ | ------------------------------------------------------ | ---- |
+| 반복자 | ForgeWebScriptIterator<TValue>                         |      |
+| 초기   | 결과                                                   |      |
+| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |      |
 
 ### forgeWebScriptIteratorFromArray
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorFromArray(array: ForgeWebScriptArray<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromArray(
+  array: ForgeWebScriptArray<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'array',
     'unknown',
     'random-access',
     array.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 소유권을 변경하지 않고 고정 배열에 대해 임의 액세스 반복기를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 배열 | ForgeWebScriptArray<TValue> |  |
-| 설명자 | ForgeWebScriptIteratorDescriptor |  |
+| 이름   | 유형                             | 설명 |
+| ------ | -------------------------------- | ---- |
+| 배열   | ForgeWebScriptArray<TValue>      |      |
+| 설명자 | ForgeWebScriptIteratorDescriptor |      |
 
 ### forgeWebScriptIteratorFromIterable
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorFromIterable(values: Iterable<TValue>, elementType = 'unknown', id = 'iterable'): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFromIterable(
+  values: Iterable<TValue>,
+  elementType = 'unknown',
+  id = 'iterable',
+): ForgeWebScriptIterator<TValue>;
 ```
 
 임의의 반복 가능 항목을 게으른 선형 Forge 웹 스크립트 반복자에 적용합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 반복 가능한<TValue> |  |
-| 요소 유형 |  |  |
-| 아이디 |  |  |
+| 이름      | 유형                | 설명 |
+| --------- | ------------------- | ---- |
+| 가치      | 반복 가능한<TValue> |      |
+| 요소 유형 |                     |      |
+| 아이디    |                     |      |
 
 ### forgeWebScriptIteratorFromVector
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorFromVector(vector: ForgeWebScriptVector<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromVector(
+  vector: ForgeWebScriptVector<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'vector',
     'unknown',
     'random-access',
     vector.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 소유권을 변경하지 않고 벡터에 대한 임의 액세스 반복기를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 벡터 | ForgeWebScriptVector<TValue> |  |
-| 설명자 | ForgeWebScriptIteratorDescriptor |  |
+| 이름   | 유형                             | 설명 |
+| ------ | -------------------------------- | ---- |
+| 벡터   | ForgeWebScriptVector<TValue>     |      |
+| 설명자 | ForgeWebScriptIteratorDescriptor |      |
 
 ### forgeWebScriptIteratorLast
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 반복자 | ForgeWebScriptIterator<TValue> |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 반복자 | ForgeWebScriptIterator<TValue> |      |
 
 ### forgeWebScriptIteratorMap
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorMap(source: ForgeWebScriptIterator<TValue>, map: (value: TValue) => TResult, elementType = source.descriptor.elementType): ForgeWebScriptIterator<TResult>
+function forgeWebScriptIteratorMap(
+  source: ForgeWebScriptIterator<TValue>,
+  map: (value: TValue) => TResult,
+  elementType = source.descriptor.elementType,
+): ForgeWebScriptIterator<TResult>;
 ```
 
 소스가 지원하는 경우에만 임의 액세스를 유지하면서 값을 느리게 매핑합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterator<TValue> |  |
-| 지도 | (값: TValue) => TResult |  |
-| 요소 유형 |  |  |
+| 이름      | 유형                           | 설명 |
+| --------- | ------------------------------ | ---- |
+| 출처      | ForgeWebScriptIterator<TValue> |      |
+| 지도      | (값: TValue) => TResult        |      |
+| 요소 유형 |                                |      |
 
 ### ForgeWebScriptIteratorResult
 
@@ -748,34 +811,40 @@ export interface ForgeWebScriptIteratorResult<TValue>
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorTake(source: ForgeWebScriptIterator<TValue>, count: number): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorTake(
+  source: ForgeWebScriptIterator<TValue>,
+  count: number,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 최대 카운트 값으로 소스를 느리게 제한합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterator<TValue> |  |
-| 카운트 | 번호 |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 출처   | ForgeWebScriptIterator<TValue> |      |
+| 카운트 | 번호                           |      |
 
 ### forgeWebScriptIteratorToArray
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorToArray(iterator: ForgeWebScriptIterator<TValue>, ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function forgeWebScriptIteratorToArray(
+  iterator: ForgeWebScriptIterator<TValue>,
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 반복자 | ForgeWebScriptIterator<TValue> |  |
-| 소유권 | ForgeWebScriptCollection소유권 |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 반복자 | ForgeWebScriptIterator<TValue> |      |
+| 소유권 | ForgeWebScriptCollection소유권 |      |
 
 ### ForgeWebScript지도
 
@@ -792,33 +861,35 @@ export interface ForgeWebScriptMap<TKey, TValue>
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지도 | ForgeWebScriptMap<TKey, TValue> |  |
-| 키 | T키 |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 지도 | ForgeWebScriptMap<TKey, TValue> |      |
+| 키   | T키                             |      |
 
 ### forgeWebScriptMapEntries
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptMapEntries(map: ForgeWebScriptMap<TKey, TValue>): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>
+function forgeWebScriptMapEntries(
+  map: ForgeWebScriptMap<TKey, TValue>,
+): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지도 | ForgeWebScriptMap<TKey, TValue> |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 지도 | ForgeWebScriptMap<TKey, TValue> |      |
 
 ### ForgeWebScriptMapEntry
 
@@ -835,42 +906,46 @@ export interface ForgeWebScriptMapEntry<TKey, TValue>
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>
+function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지도 | ForgeWebScriptMap<TKey, TValue> |  |
-| 키 | T키 |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 지도 | ForgeWebScriptMap<TKey, TValue> |      |
+| 키   | T키                             |      |
 
 ### forgeWebScriptMapSet
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptMapSet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey, value: TValue): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapSet(
+  map: ForgeWebScriptMap<TKey, TValue>,
+  key: TKey,
+  value: TValue,
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지도 | ForgeWebScriptMap<TKey, TValue> |  |
-| 키 | T키 |  |
-| 가치 | T값 |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 지도 | ForgeWebScriptMap<TKey, TValue> |      |
+| 키   | T키                             |      |
+| 가치 | T값                             |      |
 
 ### forgeWebScript없음
 
 **종류:** 상수
 
 ```typescript
-export const forgeWebScriptNone
+export const forgeWebScriptNone;
 ```
 
 빈 옵션 값을 구성합니다.
@@ -880,7 +955,7 @@ export const forgeWebScriptNone
 **종류:** 상수
 
 ```typescript
-export const forgeWebScriptOk
+export const forgeWebScriptOk;
 ```
 
 성공적인 결과 값을 구성합니다.
@@ -920,74 +995,74 @@ export interface ForgeWebScriptSet<TValue>
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 설정 | ForgeWebScriptSet<TValue> |  |
-| 가치 | T값 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 설정 | ForgeWebScriptSet<TValue> |      |
+| 가치 | T값                       |      |
 
 ### forgeWebScriptSetDelete
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 설정 | ForgeWebScriptSet<TValue> |  |
-| 가치 | T값 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 설정 | ForgeWebScriptSet<TValue> |      |
+| 가치 | T값                       |      |
 
 ### forgeWebScriptSetHas
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean
+function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 설정 | ForgeWebScriptSet<TValue> |  |
-| 가치 | T값 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 설정 | ForgeWebScriptSet<TValue> |      |
+| 가치 | T값                       |      |
 
 ### forgeWebScriptSetValues
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 설정 | ForgeWebScriptSet<TValue> |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 설정 | ForgeWebScriptSet<TValue> |      |
 
 ### 위조WebScriptSome
 
 **종류:** 상수
 
 ```typescript
-export const forgeWebScriptSome
+export const forgeWebScriptSome;
 ```
 
 현재 옵션 값을 구성합니다.
@@ -1008,7 +1083,7 @@ export interface ForgeWebScriptVector<TValue>
 **종류:** 상수
 
 ```typescript
-export const forgeWebScriptVectorAdd
+export const forgeWebScriptVectorAdd;
 ```
 
 stdlib 반복자 `add` 어휘와 일치하는 벡터 푸시의 별칭입니다.
@@ -1018,85 +1093,95 @@ stdlib 반복자 `add` 어휘와 일치하는 벡터 푸시의 별칭입니다.
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptVectorFilter(vector: ForgeWebScriptVector<TValue>, predicate: (value: TValue, index: number) => boolean): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorFilter(
+  vector: ForgeWebScriptVector<TValue>,
+  predicate: (value: TValue, index: number) => boolean,
+): ForgeWebScriptVector<TValue>;
 ```
 
 소스 순서를 유지하면서 벡터를 새 벡터로 필터링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 벡터 | ForgeWebScriptVector<TValue> |  |
-| 술어 | (값: TValue, 인덱스: 숫자) => boolean |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 벡터 | ForgeWebScriptVector<TValue>          |      |
+| 술어 | (값: TValue, 인덱스: 숫자) => boolean |      |
 
 ### forgeWebScriptVectorFold
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptVectorFold(vector: ForgeWebScriptVector<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptVectorFold(
+  vector: ForgeWebScriptVector<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 제공된 초기 누산기를 포함하여 벡터 값을 왼쪽에서 오른쪽으로 접습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 벡터 | ForgeWebScriptVector<TValue> |  |
-| 초기 | 결과 |  |
-| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |  |
+| 이름   | 유형                                                   | 설명 |
+| ------ | ------------------------------------------------------ | ---- |
+| 벡터   | ForgeWebScriptVector<TValue>                           |      |
+| 초기   | 결과                                                   |      |
+| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |      |
 
 ### 위조WebScriptVectorGet
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 벡터 요소를 읽습니다. 잘못된 인덱스는 Option.none을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 벡터 | ForgeWebScriptVector<TValue> |  |
-| 색인 | 번호 |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 벡터 | ForgeWebScriptVector<TValue> |      |
+| 색인 | 번호                         |      |
 
 ### forgeWebScript벡터길이
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number
+function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number;
 ```
 
 초기화된 벡터 요소의 수를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 벡터 | ForgeWebScriptVector<TValue> |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 벡터 | ForgeWebScriptVector<TValue> |      |
 
 ### 위조WebScriptVectorMap
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform: (value: TValue, index: number) => TResult): ForgeWebScriptVector<TResult>
+function forgeWebScriptVectorMap(
+  vector: ForgeWebScriptVector<TValue>,
+  transform: (value: TValue, index: number) => TResult,
+): ForgeWebScriptVector<TResult>;
 ```
 
 소스 인덱스 순서에 따라 벡터를 새 벡터에 매핑합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 벡터 | ForgeWebScriptVector<TValue> |  |
-| 변환 | (값: TValue, 인덱스: 숫자) => TResult |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 벡터 | ForgeWebScriptVector<TValue>          |      |
+| 변환 | (값: TValue, 인덱스: 숫자) => TResult |      |
 
 ### 위조WebScriptVectorPop
 
@@ -1106,69 +1191,77 @@ function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform
 function forgeWebScriptVectorPop(vector: ForgeWebScriptVector<TValue>): {
   readonly vector: ForgeWebScriptVector<TValue>;
   readonly value: ForgeWebScriptOption<TValue>;
-}
+};
 ```
 
 최종 벡터 값을 제거하고 업데이트된 벡터와 옵션 결과를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 벡터 | ForgeWebScriptVector<TValue> |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 벡터 | ForgeWebScriptVector<TValue> |      |
 
 ### 위조WebScriptVectorPush
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>;
 ```
 
 필요에 따라 가치를 추가하고 용량을 늘리면서 소유권을 보존하세요.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 벡터 | ForgeWebScriptVector<TValue> |  |
-| 가치 | T값 |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 벡터 | ForgeWebScriptVector<TValue> |      |
+| 가치 | T값                          |      |
 
 ### 위조WebScriptVectorSet
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptVectorSet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorSet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptVector<TValue>;
 ```
 
 벡터 요소를 교체합니다. 잘못된 인덱스는 RangeError를 발생시킵니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 벡터 | ForgeWebScriptVector<TValue> |  |
-| 색인 | 번호 |  |
-| 가치 | T값 |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 벡터 | ForgeWebScriptVector<TValue> |      |
+| 색인 | 번호                         |      |
+| 가치 | T값                          |      |
 
 ### forgeWebScriptVectorTrySet
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>
+function forgeWebScriptVectorTrySet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>;
 ```
 
 던지지 않고 벡터 요소를 교체합니다. 잘못된 인덱스는 오류 결과를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 벡터 | ForgeWebScriptVector<TValue> |  |
-| 색인 | 번호 |  |
-| 가치 | T값 |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 벡터 | ForgeWebScriptVector<TValue> |      |
+| 색인 | 번호                         |      |
+| 가치 | T값                          |      |
 
 ## `src/ecs`
 
@@ -1177,45 +1270,55 @@ function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index:
 **종류:** 기능
 
 ```typescript
-function addForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function addForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 세계 | ForgeWebScriptEcsWorld<TValue> |  |
-| 엔터티 | ForgeWebScriptEcsEntity |  |
-| 구성요소 | 문자열 |  |
-| 가치 | T값 |  |
+| 이름     | 유형                           | 설명 |
+| -------- | ------------------------------ | ---- |
+| 세계     | ForgeWebScriptEcsWorld<TValue> |      |
+| 엔터티   | ForgeWebScriptEcsEntity        |      |
+| 구성요소 | 문자열                         |      |
+| 가치     | T값                            |      |
 
 ### createForgeWebScriptEcsScheduler
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptEcsScheduler(systems: readonly ForgeWebScriptEcsSystem<TValue>[], signals: readonly ForgeWebScriptEcsSignal[] = [], subscriptions: readonly ForgeWebScriptEcsSubscription[] = [], maxSteps = 1000): ForgeWebScriptEcsScheduler<TValue>
+function createForgeWebScriptEcsScheduler(
+  systems: readonly ForgeWebScriptEcsSystem<TValue>[],
+  signals: readonly ForgeWebScriptEcsSignal[] = [],
+  subscriptions: readonly ForgeWebScriptEcsSubscription[] = [],
+  maxSteps = 1000,
+): ForgeWebScriptEcsScheduler<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 시스템 | 읽기 전용 ForgeWebScriptEcsSystem<TValue>[] |  |
-| 신호 | 읽기 전용 ForgeWebScriptEcsSignal[] |  |
-| 구독 | 읽기 전용 ForgeWebScriptEcsSubscription[] |  |
-| 최대 단계 |  |  |
+| 이름      | 유형                                        | 설명 |
+| --------- | ------------------------------------------- | ---- |
+| 시스템    | 읽기 전용 ForgeWebScriptEcsSystem<TValue>[] |      |
+| 신호      | 읽기 전용 ForgeWebScriptEcsSignal[]         |      |
+| 구독      | 읽기 전용 ForgeWebScriptEcsSubscription[]   |      |
+| 최대 단계 |                                             |      |
 
 ### createForgeWebScriptEcsWorld
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
+function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -1225,17 +1328,20 @@ function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
 **종류:** 기능
 
 ```typescript
-function despawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): ForgeWebScriptEcsResult<TValue>
+function despawnForgeWebScriptEcsEntity(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 세계 | ForgeWebScriptEcsWorld<TValue> |  |
-| 엔터티 | ForgeWebScriptEcsEntity |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 세계   | ForgeWebScriptEcsWorld<TValue> |      |
+| 엔터티 | ForgeWebScriptEcsEntity        |      |
 
 ### ForgeWebScriptEcsComponentStore
 
@@ -1362,138 +1468,162 @@ export interface ForgeWebScriptEcsWorld<TValue = Uint8Array>
 **종류:** 기능
 
 ```typescript
-function getForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): TValue | undefined
+function getForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): TValue | undefined;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 세계 | ForgeWebScriptEcsWorld<TValue> |  |
-| 엔터티 | ForgeWebScriptEcsEntity |  |
-| 구성요소 | 문자열 |  |
+| 이름     | 유형                           | 설명 |
+| -------- | ------------------------------ | ---- |
+| 세계     | ForgeWebScriptEcsWorld<TValue> |      |
+| 엔터티   | ForgeWebScriptEcsEntity        |      |
+| 구성요소 | 문자열                         |      |
 
 ### isForgeWebScriptEcsEntityAlive
 
 **종류:** 기능
 
 ```typescript
-function isForgeWebScriptEcsEntityAlive(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): boolean
+function isForgeWebScriptEcsEntityAlive(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): boolean;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 세계 | ForgeWebScriptEcsWorld<TValue> |  |
-| 엔터티 | ForgeWebScriptEcsEntity |  |
+| 이름   | 유형                           | 설명 |
+| ------ | ------------------------------ | ---- |
+| 세계   | ForgeWebScriptEcsWorld<TValue> |      |
+| 엔터티 | ForgeWebScriptEcsEntity        |      |
 
 ### queryForgeWebScriptEcs엔티티
 
 **종류:** 기능
 
 ```typescript
-function queryForgeWebScriptEcsEntities(world: ForgeWebScriptEcsWorld<TValue>, query: ForgeWebScriptEcsQuery): readonly ForgeWebScriptEcsEntity[]
+function queryForgeWebScriptEcsEntities(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  query: ForgeWebScriptEcsQuery,
+): readonly ForgeWebScriptEcsEntity[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 세계 | ForgeWebScriptEcsWorld<TValue> |  |
-| 쿼리 | ForgeWebScriptEcsQuery |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 세계 | ForgeWebScriptEcsWorld<TValue> |      |
+| 쿼리 | ForgeWebScriptEcsQuery         |      |
 
 ### 제거ForgeWebScriptEcsComponent
 
 **종류:** 기능
 
 ```typescript
-function removeForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): ForgeWebScriptEcsResult<TValue>
+function removeForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 세계 | ForgeWebScriptEcsWorld<TValue> |  |
-| 엔터티 | ForgeWebScriptEcsEntity |  |
-| 구성요소 | 문자열 |  |
+| 이름     | 유형                           | 설명 |
+| -------- | ------------------------------ | ---- |
+| 세계     | ForgeWebScriptEcsWorld<TValue> |      |
+| 엔터티   | ForgeWebScriptEcsEntity        |      |
+| 구성요소 | 문자열                         |      |
 
 ### runForgeWebScriptEcsScheduler
 
 **종류:** 기능
 
 ```typescript
-function runForgeWebScriptEcsScheduler(world: ForgeWebScriptEcsWorld<TValue>, scheduler: ForgeWebScriptEcsScheduler<TValue>): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>
+function runForgeWebScriptEcsScheduler(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  scheduler: ForgeWebScriptEcsScheduler<TValue>,
+): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 세계 | ForgeWebScriptEcsWorld<TValue> |  |
-| 스케줄러 | ForgeWebScriptEcsScheduler<TValue> |  |
+| 이름     | 유형                               | 설명 |
+| -------- | ---------------------------------- | ---- |
+| 세계     | ForgeWebScriptEcsWorld<TValue>     |      |
+| 스케줄러 | ForgeWebScriptEcsScheduler<TValue> |      |
 
 ### setForgeWebScriptEcsComponent
 
 **종류:** 기능
 
 ```typescript
-function setForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function setForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 세계 | ForgeWebScriptEcsWorld<TValue> |  |
-| 엔터티 | ForgeWebScriptEcsEntity |  |
-| 구성요소 | 문자열 |  |
-| 가치 | T값 |  |
+| 이름     | 유형                           | 설명 |
+| -------- | ------------------------------ | ---- |
+| 세계     | ForgeWebScriptEcsWorld<TValue> |      |
+| 엔터티   | ForgeWebScriptEcsEntity        |      |
+| 구성요소 | 문자열                         |      |
+| 가치     | T값                            |      |
 
 ### SpawnForgeWebScriptEcsEntity
 
 **종류:** 기능
 
 ```typescript
-function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>
+function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 세계 | ForgeWebScriptEcsWorld<TValue> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 세계 | ForgeWebScriptEcsWorld<TValue> |      |
 
 ### verifyForgeWebScriptEcsSignals
 
 **종류:** 기능
 
 ```typescript
-function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSignal[]): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] }
+function validateForgeWebScriptEcsSignals(
+  signals: readonly ForgeWebScriptEcsSignal[],
+): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 신호 | 읽기 전용 ForgeWebScriptEcsSignal[] |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 신호 | 읽기 전용 ForgeWebScriptEcsSignal[] |      |
 
 ## `src/host`
 
@@ -1502,34 +1632,40 @@ function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSig
 **종류:** 기능
 
 ```typescript
-function createDefaultForgeWebScriptCapabilities(options: ForgeWebScriptDefaultHostOptions = {}): ForgeWebScriptCapabilityRegistry
+function createDefaultForgeWebScriptCapabilities(
+  options: ForgeWebScriptDefaultHostOptions = {},
+): ForgeWebScriptCapabilityRegistry;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptDefaultHostOptions |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 옵션 | ForgeWebScriptDefaultHostOptions |      |
 
 ### createForgeWebScriptHost
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptHost(manifest: ForgeWebScriptAbiManifest, registry: ForgeWebScriptCapabilityRegistry, options: ForgeWebScriptHostOptions = {}): ForgeWebScriptHost
+function createForgeWebScriptHost(
+  manifest: ForgeWebScriptAbiManifest,
+  registry: ForgeWebScriptCapabilityRegistry,
+  options: ForgeWebScriptHostOptions = {},
+): ForgeWebScriptHost;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 매니페스트 | ForgeWebScriptAbi매니페스트 |  |
-| 레지스트리 | ForgeWebScriptCapabilityRegistry |  |
-| 옵션 | ForgeWebScriptHost옵션 |  |
+| 이름       | 유형                             | 설명 |
+| ---------- | -------------------------------- | ---- |
+| 매니페스트 | ForgeWebScriptAbi매니페스트      |      |
+| 레지스트리 | ForgeWebScriptCapabilityRegistry |      |
+| 옵션       | ForgeWebScriptHost옵션           |      |
 
 ### ForgeWebScript기능구현
 
@@ -1598,36 +1734,44 @@ export interface ForgeWebScriptHostOptions
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptWasmIterator(handle: number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIterator(
+  handle: number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): ForgeWebScriptWasmIterator<TValue>;
 ```
 
 백엔드 소유의 i32 핸들과 압축된 i64 다음 프로토콜을 JS 반복에 적용합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 핸들 | 번호 |  |
-| 다음 | (핸들: 번호) => ForgeWebScriptPackedIteratorResult |  |
-| 옵션 | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| 이름 | 유형                                               | 설명 |
+| ---- | -------------------------------------------------- | ---- |
+| 핸들 | 번호                                               |      |
+| 다음 | (핸들: 번호) => ForgeWebScriptPackedIteratorResult |      |
+| 옵션 | ForgeWebScriptWasmIteratorOptions<TValue>          |      |
 
 ### createForgeWebScriptWasmIteratorFactory
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptWasmIteratorFactory(factory: (...arguments_: TArguments) => number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIteratorFactory(
+  factory: (...arguments_: TArguments) => number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>;
 ```
 
 백엔드 팩토리와 해당 `.next` 내보내기에서 JS 방향 반복기 팩토리를 빌드합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | (...arguments_: TArguments) => 숫자 |  |
-| 다음 | (핸들: 번호) => ForgeWebScriptPackedIteratorResult |  |
-| 옵션 | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| 이름 | 유형                                               | 설명 |
+| ---- | -------------------------------------------------- | ---- |
+| 공장 | (...arguments_: TArguments) => 숫자                |      |
+| 다음 | (핸들: 번호) => ForgeWebScriptPackedIteratorResult |      |
+| 옵션 | ForgeWebScriptWasmIteratorOptions<TValue>          |      |
 
 ### ForgeWebScriptPackedIteratorResult
 
@@ -1666,16 +1810,16 @@ export interface ForgeWebScriptWasmIteratorOptions<TValue>
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger
+function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptLogger옵션 |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 옵션 | ForgeWebScriptLogger옵션 |      |
 
 ### ForgeWebScriptLogEvent
 
@@ -1734,23 +1878,23 @@ export type ForgeWebScriptLogSink = (event: ForgeWebScriptLogEvent) => void;
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory
+function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptMemory옵션 |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 옵션 | ForgeWebScriptMemory옵션 |      |
 
 ### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 ```
 
 설명이 제공되지 않았습니다.
@@ -1792,7 +1936,7 @@ export interface ForgeWebScriptMemoryOptions
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
 ```
 
 작업자, 스레드, 원자성 및 공유 메모리 실행을 인증하는 데 사용되는 기능 이름입니다.
@@ -1804,7 +1948,7 @@ export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
 ```typescript
 export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<ForgeWebScriptParallelOperation, ForgeWebScriptParallelOperationDescriptor>
->
+>;
 ```
 
 모든 직렬 대체 가능 병렬 작업에 대한 안정적인 설명자입니다.
@@ -1814,42 +1958,53 @@ export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorParAt(source: ForgeWebScriptIterable<TValue>, index: number, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParAt(
+  source: ForgeWebScriptIterable<TValue>,
+  index: number,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 0부터 시작하는 정렬된 결과를 반환하거나 인덱스가 유효하지 않은 경우 Option.none을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterable<TValue> |  |
-| 색인 | 번호 |  |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 출처 | ForgeWebScriptIterable<TValue> |      |
+| 색인 | 번호                           |      |
+| 옵션 | ForgeWebScriptParallelOptions  |      |
 
 ### forgeWebScriptIteratorParCollect
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorParCollect(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptVector<TValue>>
+function forgeWebScriptIteratorParCollect(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptVector<TValue>>;
 ```
 
 정렬된 병렬 결과를 소유된 벡터로 구체화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterable<TValue> |  |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 출처 | ForgeWebScriptIterable<TValue> |      |
+| 옵션 | ForgeWebScriptParallelOptions  |      |
 
 ### forgeWebScriptIteratorParFilter
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>, predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFilter(
+  source: ForgeWebScriptIterable<TValue>,
+  predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 조건자를 병렬로 평가하고 허용된 값을 소스 순서대로 유지합니다.
@@ -1857,88 +2012,106 @@ function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>,
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterable<TValue> |  |
-| 술어 | (값: TValue, 인덱스: 숫자) => 부울 \| PromiseLike<boolean> |  |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름 | 유형                                                       | 설명 |
+| ---- | ---------------------------------------------------------- | ---- |
+| 출처 | ForgeWebScriptIterable<TValue>                             |      |
+| 술어 | (값: TValue, 인덱스: 숫자) => 부울 \| PromiseLike<boolean> |      |
+| 옵션 | ForgeWebScriptParallelOptions                              |      |
 
 ### forgeWebScriptIteratorParFirst
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorParFirst(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParFirst(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 첫 번째로 정렬된 결과를 반환하거나, 빈 소스의 경우 Option.none 값을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterable<TValue> |  |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 출처 | ForgeWebScriptIterable<TValue> |      |
+| 옵션 | ForgeWebScriptParallelOptions  |      |
 
 ### forgeWebScriptIteratorParFlaten
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorParFlatten(source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFlatten(
+  source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 외부 및 내부 순서를 유지하면서 중첩된 소스를 병렬로 평면화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |  |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름 | 유형                                                   | 설명 |
+| ---- | ------------------------------------------------------ | ---- |
+| 출처 | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |      |
+| 옵션 | ForgeWebScriptParallelOptions                          |      |
 
 ### forgeWebScriptIteratorParFold
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorParFold(source: ForgeWebScriptIterable<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult, options: ForgeWebScriptParallelOptions = {}): Promise<TResult>
+function forgeWebScriptIteratorParFold(
+  source: ForgeWebScriptIterable<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<TResult>;
 ```
 
 제공된 초기 누산기를 포함하여 순서가 지정된 결과를 왼쪽에서 오른쪽으로 접습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterable<TValue> |  |
-| 초기 | 결과 |  |
-| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |  |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름   | 유형                                                   | 설명 |
+| ------ | ------------------------------------------------------ | ---- |
+| 출처   | ForgeWebScriptIterable<TValue>                         |      |
+| 초기   | 결과                                                   |      |
+| 감속기 | (누산기: TResult, 값: TValue, 인덱스: 숫자) => TResult |      |
+| 옵션   | ForgeWebScriptParallelOptions                          |      |
 
 ### forgeWebScriptIteratorParLast
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorParLast(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParLast(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 마지막으로 정렬된 결과를 반환하거나, 빈 소스의 경우 Option.none 값을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterable<TValue> |  |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 출처 | ForgeWebScriptIterable<TValue> |      |
+| 옵션 | ForgeWebScriptParallelOptions  |      |
 
 ### forgeWebScriptIteratorParMap
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, map: (value: TValue, index: number) => TResult | PromiseLike<TResult>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TResult>>
+function forgeWebScriptIteratorParMap(
+  source: ForgeWebScriptIterable<TValue>,
+  map: (value: TValue, index: number) => TResult | PromiseLike<TResult>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TResult>>;
 ```
 
 콜백을 병렬로 적용하고 지연 호환 순서 반복자를 반환합니다.
@@ -1946,45 +2119,51 @@ function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, ma
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterable<TValue> |  |
-| 지도 | (값: TValue, 인덱스: 숫자) => TResult \| PromiseLike<TResult> |  |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름 | 유형                                                          | 설명 |
+| ---- | ------------------------------------------------------------- | ---- |
+| 출처 | ForgeWebScriptIterable<TValue>                                |      |
+| 지도 | (값: TValue, 인덱스: 숫자) => TResult \| PromiseLike<TResult> |      |
+| 옵션 | ForgeWebScriptParallelOptions                                 |      |
 
 ### forgeWebScriptIteratorParToArray
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptIteratorParToArray(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptArray<TValue>>
+function forgeWebScriptIteratorParToArray(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptArray<TValue>>;
 ```
 
 정렬된 병렬 결과를 자체 고정 배열로 구체화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | ForgeWebScriptIterable<TValue> |  |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 출처 | ForgeWebScriptIterable<TValue> |      |
+| 옵션 | ForgeWebScriptParallelOptions  |      |
 
 ### forgeWebScriptParallelDescriptor
 
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptParallelDescriptor(operation: ForgeWebScriptParallelOperation, options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy }
+function forgeWebScriptParallelDescriptor(
+  operation: ForgeWebScriptParallelOperation,
+  options: ForgeWebScriptParallelOptions = {},
+): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy };
 ```
 
 작업을 설명하고 제공된 옵션에서 선택한 전략을 첨부합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 운영 | ForgeWebScriptParallelOperation |  |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 운영 | ForgeWebScriptParallelOperation |      |
+| 옵션 | ForgeWebScriptParallelOptions   |      |
 
 ### ForgeWebScriptParallelExecutor
 
@@ -2001,7 +2180,16 @@ export interface ForgeWebScriptParallelExecutor
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptParallelOperation = | 'par_map' | 'par_filter' | 'par_flatten' | 'par_collect' | 'par_to_array' | 'par_fold' | 'par_first' | 'par_last' | 'par_at';
+export type ForgeWebScriptParallelOperation =
+  | 'par_map'
+  | 'par_filter'
+  | 'par_flatten'
+  | 'par_collect'
+  | 'par_to_array'
+  | 'par_fold'
+  | 'par_first'
+  | 'par_last'
+  | 'par_at';
 ```
 
 런타임에 의해 노출되는 정식 병렬 작업 이름입니다. `par_filter`은 의도적인 것입니다.
@@ -2053,16 +2241,16 @@ export type ForgeWebScriptParallelStrategy = 'serial' | 'host-workers' | 'wasm-t
 **종류:** 기능
 
 ```typescript
-function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan
+function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan;
 ```
 
 작업의 결과 계약을 변경하지 않고 허용되는 전략을 선택합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptParallelOptions |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 옵션 | ForgeWebScriptParallelOptions |      |
 
 ## `src/self-hosted`
 
@@ -2091,7 +2279,11 @@ export interface ForgeWebScriptSelfHostedVmRun
 **종류:** 기능
 
 ```typescript
-function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedVmRun
+function runForgeWebScriptSelfHostedCompiler(
+  input: ForgeWebScriptCompileInput,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedVmRun;
 ```
 
 제한된 자체 호스팅 컴파일러 부트스트랩을 실행합니다.
@@ -2103,29 +2295,33 @@ function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | ForgeWebScript컴파일 입력 |  |
-| 모드 | ForgeWebScriptVmExecutionMode |  |
-| 옵션 | ForgeWebScriptSelfHostedRunOptions |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 입력 | ForgeWebScript컴파일 입력          |      |
+| 모드 | ForgeWebScriptVmExecutionMode      |      |
+| 옵션 | ForgeWebScriptSelfHostedRunOptions |      |
 
 ### runForgeWebScriptSelfHostedLexStage
 
 **종류:** 기능
 
 ```typescript
-function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedStageReport
+function runForgeWebScriptSelfHostedLexStage(
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedStageReport;
 ```
 
 컴파일러 소비자를 위해 제한된 FWS 작성 lex 단계만 실행합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | Pick<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |  |
-| 모드 | ForgeWebScriptVmExecutionMode |  |
-| 옵션 | ForgeWebScriptSelfHostedRunOptions |  |
+| 이름 | 유형                                                                                                     | 설명 |
+| ---- | -------------------------------------------------------------------------------------------------------- | ---- |
+| 입력 | Pick<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |      |
+| 모드 | ForgeWebScriptVmExecutionMode                                                                            |      |
+| 옵션 | ForgeWebScriptSelfHostedRunOptions                                                                       |      |
 
 ## `src/threading`
 
@@ -2134,7 +2330,10 @@ function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileIn
 **종류:** 기능
 
 ```typescript
-function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined, capabilities: readonly string[] | undefined): boolean
+function canUseForgeWebScriptWasmThreads(
+  targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined,
+  capabilities: readonly string[] | undefined,
+): boolean;
 ```
 
 스레드 실행은 컴파일 및 런타임 경계 모두에서 선택적으로 수행됩니다. 에서
@@ -2142,34 +2341,39 @@ function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThrea
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 대상 기능 | ForgeWebScriptWasmThreadTargetFeatures \| 정의되지 않음 |  |
-| 능력 | 읽기 전용 문자열[] \| 정의되지 않음 |  |
+| 이름      | 유형                                                    | 설명 |
+| --------- | ------------------------------------------------------- | ---- |
+| 대상 기능 | ForgeWebScriptWasmThreadTargetFeatures \| 정의되지 않음 |      |
+| 능력      | 읽기 전용 문자열[] \| 정의되지 않음                     |      |
 
 ### createForgeWebScriptAtomicI32
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptAtomicI32(length = 1, options: ForgeWebScriptAtomicI32Options = {}): ForgeWebScriptAtomicI32
+function createForgeWebScriptAtomicI32(
+  length = 1,
+  options: ForgeWebScriptAtomicI32Options = {},
+): ForgeWebScriptAtomicI32;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 길이 |  |  |
-| 옵션 | ForgeWebScriptAtomicI32옵션 |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 길이 |                             |      |
+| 옵션 | ForgeWebScriptAtomicI32옵션 |      |
 
 ### createForgeWebScriptWasmThreadScheduler
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThreadSchedulerOptions): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWasmThreadScheduler(
+  options: ForgeWebScriptWasmThreadSchedulerOptions,
+): ForgeWebScriptWorkerScheduler;
 ```
 
 명시적인 공유 메모리 계정을 사용하여 컴파일된 WASM 스레드 브리지를 래핑합니다.
@@ -2178,35 +2382,42 @@ function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThre
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptWasmThreadScheduler옵션 |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 옵션 | ForgeWebScriptWasmThreadScheduler옵션 |      |
 
 ### createForgeWebScriptWorkerRuntime
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptWorkerRuntime(createWorker: () => ForgeWebScriptWorkerPort, onMessage: (message: unknown) => void, onError: (error: unknown) => void = () => {}, options: ForgeWebScriptWorkerRuntimeOptions = {}): ForgeWebScriptWorkerRuntime
+function createForgeWebScriptWorkerRuntime(
+  createWorker: () => ForgeWebScriptWorkerPort,
+  onMessage: (message: unknown) => void,
+  onError: (error: unknown) => void = () => {},
+  options: ForgeWebScriptWorkerRuntimeOptions = {},
+): ForgeWebScriptWorkerRuntime;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| createWorker | () => ForgeWebScriptWorkerPort |  |
-| 메시지 | (메시지: 알 수 없음) => 무효 |  |
-| 오류 발생 | (오류: 알 수 없음) => 무효 |  |
-| 옵션 | ForgeWebScriptWorkerRuntime옵션 |  |
+| 이름         | 유형                            | 설명 |
+| ------------ | ------------------------------- | ---- |
+| createWorker | () => ForgeWebScriptWorkerPort  |      |
+| 메시지       | (메시지: 알 수 없음) => 무효    |      |
+| 오류 발생    | (오류: 알 수 없음) => 무효      |      |
+| 옵션         | ForgeWebScriptWorkerRuntime옵션 |      |
 
 ### createForgeWebScriptWorkerScheduler
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedulerOptions = {}): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWorkerScheduler(
+  options: ForgeWebScriptWorkerSchedulerOptions = {},
+): ForgeWebScriptWorkerScheduler;
 ```
 
 병렬 반복기 작업에 사용되는 호스트 측 예약 경계를 만듭니다.
@@ -2218,16 +2429,16 @@ function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedu
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptWorkerScheduler옵션 |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 옵션 | ForgeWebScriptWorkerScheduler옵션 |      |
 
 ### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2329,17 +2540,20 @@ export interface ForgeWebScriptWorkerSchedulerOptions
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptTraceRecorder(options: ForgeWebScriptTraceOptions, functionName: string): ForgeWebScriptTraceRecorder
+function createForgeWebScriptTraceRecorder(
+  options: ForgeWebScriptTraceOptions,
+  functionName: string,
+): ForgeWebScriptTraceRecorder;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptTrace옵션 |  |
-| 함수이름 | 문자열 |  |
+| 이름     | 유형                    | 설명 |
+| -------- | ----------------------- | ---- |
+| 옵션     | ForgeWebScriptTrace옵션 |      |
+| 함수이름 | 문자열                  |      |
 
 ### ForgeWebScriptTraceCaptureMode
 
@@ -2376,7 +2590,8 @@ export interface ForgeWebScriptTraceEvent
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptTraceEventType = 'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
+export type ForgeWebScriptTraceEventType =
+  'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
 설명이 제공되지 않았습니다.
@@ -2436,17 +2651,20 @@ export interface ForgeWebScriptTraceSourceLocation extends ForgeWebScriptVmDebug
 **종류:** 기능
 
 ```typescript
-function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (value: ForgeWebScriptVmValue) => string): string
+function summarizeForgeWebScriptVmValue(
+  value: ForgeWebScriptVmValue,
+  redact?: (value: ForgeWebScriptVmValue) => string,
+): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | ForgeWebScriptVm값 |  |
-| 수정 | (값: ForgeWebScriptVmValue) => 문자열 |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 가치 | ForgeWebScriptVm값                    |      |
+| 수정 | (값: ForgeWebScriptVmValue) => 문자열 |      |
 
 ## `src/traps`
 
@@ -2455,17 +2673,17 @@ function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (
 **종류:** 기능
 
 ```typescript
-function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void
+function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 오류 | 알 수 없음 |  |
-| 추적 | ForgeWebScriptTraceReport |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 오류 | 알 수 없음                |      |
+| 추적 | ForgeWebScriptTraceReport |      |
 
 ### ForgeWebScript트랩
 
@@ -2482,7 +2700,14 @@ export class ForgeWebScriptTrap extends Error
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptTrapCode = | 'CapabilityDenied' | 'HostError' | 'InvalidAbi' | 'InvalidOwnership' | 'MemoryExhausted' | 'MemoryOutOfBounds' | 'GuestTrap';
+export type ForgeWebScriptTrapCode =
+  | 'CapabilityDenied'
+  | 'HostError'
+  | 'InvalidAbi'
+  | 'InvalidOwnership'
+  | 'MemoryExhausted'
+  | 'MemoryOutOfBounds'
+  | 'GuestTrap';
 ```
 
 설명이 제공되지 않았습니다.
@@ -2502,18 +2727,22 @@ export interface ForgeWebScriptTrapOptions extends ErrorOptions
 **종류:** 기능
 
 ```typescript
-function toForgeWebScriptHostError(error: unknown, capability: string, logger?: ForgeWebScriptLogger): ForgeWebScriptTrap
+function toForgeWebScriptHostError(
+  error: unknown,
+  capability: string,
+  logger?: ForgeWebScriptLogger,
+): ForgeWebScriptTrap;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 오류 | 알 수 없음 |  |
-| 능력 | 문자열 |  |
-| 로거 | ForgeWebScriptLogger |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 오류 | 알 수 없음           |      |
+| 능력 | 문자열               |      |
+| 로거 | ForgeWebScriptLogger |      |
 
 ## `src/vm-executor`
 
@@ -2522,71 +2751,86 @@ function toForgeWebScriptHostError(error: unknown, capability: string, logger?: 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptVmAotArtifact(module: ForgeWebScriptVmModule, compilerVersion: string): ForgeWebScriptVmAotArtifact
+function createForgeWebScriptVmAotArtifact(
+  module: ForgeWebScriptVmModule,
+  compilerVersion: string,
+): ForgeWebScriptVmAotArtifact;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScriptVm모듈 |  |
-| 컴파일러버전 | 문자열 |  |
+| 이름         | 유형                 | 설명 |
+| ------------ | -------------------- | ---- |
+| 모듈         | ForgeWebScriptVm모듈 |      |
+| 컴파일러버전 | 문자열               |      |
 
 ### createForgeWebScriptVmExecutor
 
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptVmExecutor(executorOptions: ForgeWebScriptVmExecutorOptions = {}): ForgeWebScriptVmExecutor
+function createForgeWebScriptVmExecutor(
+  executorOptions: ForgeWebScriptVmExecutorOptions = {},
+): ForgeWebScriptVmExecutor;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 실행자옵션 | ForgeWebScriptVmExecutor옵션 |  |
+| 이름       | 유형                         | 설명 |
+| ---------- | ---------------------------- | ---- |
+| 실행자옵션 | ForgeWebScriptVmExecutor옵션 |      |
 
 ### ExecuteForgeWebScriptVm
 
 **종류:** 기능
 
 ```typescript
-function executeForgeWebScriptVm(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: ForgeWebScriptVmExecutionOptions): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVm(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: ForgeWebScriptVmExecutionOptions,
+): ForgeWebScriptVmExecutionResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScriptVm모듈 |  |
-| 함수이름 | 문자열 |  |
-| 인수_ | 읽기 전용 ForgeWebScriptVmValue[] |  |
-| 옵션 | ForgeWebScriptVmExecutionOptions |  |
+| 이름     | 유형                              | 설명 |
+| -------- | --------------------------------- | ---- |
+| 모듈     | ForgeWebScriptVm모듈              |      |
+| 함수이름 | 문자열                            |      |
+| 인수_    | 읽기 전용 ForgeWebScriptVmValue[] |      |
+| 옵션     | ForgeWebScriptVmExecutionOptions  |      |
 
 ### ExecuteForgeWebScriptVmAotArtifact
 
 **종류:** 기능
 
 ```typescript
-function executeForgeWebScriptVmAotArtifact(artifact: ForgeWebScriptVmAotArtifact, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVmAotArtifact(
+  artifact: ForgeWebScriptVmAotArtifact,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 유물 | ForgeWebScriptVmAotArtifact |  |
-| 함수이름 | 문자열 |  |
-| 인수_ | 읽기 전용 ForgeWebScriptVmValue[] |  |
-| 옵션 | <ForgeWebScriptVmExecutionOptions, 'mode'> 생략 |  |
+| 이름     | 유형                                            | 설명 |
+| -------- | ----------------------------------------------- | ---- |
+| 유물     | ForgeWebScriptVmAotArtifact                     |      |
+| 함수이름 | 문자열                                          |      |
+| 인수_    | 읽기 전용 ForgeWebScriptVmValue[]               |      |
+| 옵션     | <ForgeWebScriptVmExecutionOptions, 'mode'> 생략 |      |
 
 ### ForgeWebScriptVmExecutor옵션
 
@@ -2603,36 +2847,42 @@ export interface ForgeWebScriptVmExecutorOptions
 **종류:** 기능
 
 ```typescript
-function runForgeWebScriptVmBootstrap(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], mode: ForgeWebScriptVmExecutionMode = 'interpret', options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function runForgeWebScriptVmBootstrap(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  mode: ForgeWebScriptVmExecutionMode = 'interpret',
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScriptVm모듈 |  |
-| 함수이름 | 문자열 |  |
-| 인수_ | 읽기 전용 ForgeWebScriptVmValue[] |  |
-| 모드 | ForgeWebScriptVmExecutionMode |  |
-| 옵션 | <ForgeWebScriptVmExecutionOptions, 'mode'> 생략 |  |
+| 이름     | 유형                                            | 설명 |
+| -------- | ----------------------------------------------- | ---- |
+| 모듈     | ForgeWebScriptVm모듈                            |      |
+| 함수이름 | 문자열                                          |      |
+| 인수_    | 읽기 전용 ForgeWebScriptVmValue[]               |      |
+| 모드     | ForgeWebScriptVmExecutionMode                   |      |
+| 옵션     | <ForgeWebScriptVmExecutionOptions, 'mode'> 생략 |      |
 
 ### verifyForgeWebScriptVmModule
 
 **종류:** 기능
 
 ```typescript
-function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
+function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScriptVm모듈 |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 모듈 | ForgeWebScriptVm모듈 |      |
 
 ## `src/vm-wasm`
 
@@ -2641,17 +2891,20 @@ function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
 **종류:** 기능
 
 ```typescript
-function compileForgeWebScriptVmWasm(module: ForgeWebScriptVmModule, options: ForgeWebScriptVmWasmCompileOptions = {}): ForgeWebScriptVmWasmArtifact
+function compileForgeWebScriptVmWasm(
+  module: ForgeWebScriptVmModule,
+  options: ForgeWebScriptVmWasmCompileOptions = {},
+): ForgeWebScriptVmWasmArtifact;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScriptVm모듈 |  |
-| 옵션 | ForgeWebScriptVmWasmCompileOptions |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 모듈 | ForgeWebScriptVm모듈               |      |
+| 옵션 | ForgeWebScriptVmWasmCompileOptions |      |
 
 ### ForgeWebScriptVmWasmCompile옵션
 
@@ -2668,7 +2921,7 @@ export interface ForgeWebScriptVmWasmCompileOptions
 **종류:** 상수
 
 ```typescript
-export const prepareForgeWebScriptVm
+export const prepareForgeWebScriptVm;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2678,17 +2931,20 @@ export const prepareForgeWebScriptVm
 **종류:** 기능
 
 ```typescript
-function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact, options: ForgeWebScriptVmPreparedExecutorOptions = {}): ForgeWebScriptVmPreparedExecutor
+function prepareForgeWebScriptVmWasm(
+  moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact,
+  options: ForgeWebScriptVmPreparedExecutorOptions = {},
+): ForgeWebScriptVmPreparedExecutor;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈또는아티팩트 | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |  |
-| 옵션 | ForgeWebScriptVmPreparedExecutorOptions |  |
+| 이름             | 유형                                                   | 설명 |
+| ---------------- | ------------------------------------------------------ | ---- |
+| 모듈또는아티팩트 | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |      |
+| 옵션             | ForgeWebScriptVmPreparedExecutorOptions                |      |
 
 ## `src/vm`
 
@@ -2697,7 +2953,7 @@ function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | 
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2707,7 +2963,7 @@ export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 ```
 
 설명이 제공되지 않았습니다.

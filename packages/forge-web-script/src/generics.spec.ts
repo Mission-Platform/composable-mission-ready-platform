@@ -13,11 +13,16 @@ const type = (name: 'i32' | 'bytes') => ({
 
 describe('Forge Web Script hybrid generic contracts', () => {
   it('monomorphizes value collections and retains iterator descriptors at boundaries', () => {
+    expect(createForgeWebScriptGenericSpecialization({ generic: 'Vector', arguments: [type('i32')] })).toMatchObject({
+      id: 'Vector<i32>:value',
+      representation: 'monomorphized',
+    });
     expect(
-      createForgeWebScriptGenericSpecialization({ generic: 'Vector', arguments: [type('i32')] }),
-    ).toMatchObject({ id: 'Vector<i32>:value', representation: 'monomorphized' });
-    expect(
-      createForgeWebScriptGenericSpecialization({ generic: 'Iterator', arguments: [type('bytes')], boundary: 'iterator' }),
+      createForgeWebScriptGenericSpecialization({
+        generic: 'Iterator',
+        arguments: [type('bytes')],
+        boundary: 'iterator',
+      }),
     ).toMatchObject({ id: 'Iterator<bytes>:iterator', representation: 'descriptor-boundary' });
     expect(createForgeWebScriptIteratorBoundaryDescriptor('Iterator', type('i32'), 'next_i32')).toMatchObject({
       elementType: 'i32',

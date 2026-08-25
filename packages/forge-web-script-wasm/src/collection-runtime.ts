@@ -39,19 +39,15 @@ function unsignedLeb(value: number): number[] {
 
 const call = (index: number): number[] => [0x10, ...unsignedLeb(index)];
 const memoryCopy = (): number[] => [0xfc, 0x0a, 0x00, 0x00];
-const localBody = (count: number, instructions: readonly number[]): number[] => [count === 0 ? 0 : 1, ...(count === 0 ? [] : [count, 0x7f]), ...instructions, 0x0b];
+const localBody = (count: number, instructions: readonly number[]): number[] => [
+  count === 0 ? 0 : 1,
+  ...(count === 0 ? [] : [count, 0x7f]),
+  ...instructions,
+  0x0b,
+];
 
 function boundsCheck(handle: number, index: number, lengthOffset: number): number[] {
-  return [
-    ...get(handle),
-    ...load(lengthOffset),
-    ...get(index),
-    0x4d,
-    0x04,
-    0x40,
-    0x00,
-    0x0b,
-  ];
+  return [...get(handle), ...load(lengthOffset), ...get(index), 0x4d, 0x04, 0x40, 0x00, 0x0b];
 }
 
 /**
@@ -297,21 +293,57 @@ export function buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorInde
 const collectionOperations: readonly ForgeWebScriptWasmRuntimeBody[] = [
   { name: 'fws_array_new', operation: 'array-new', parameters: ['i32'], results: ['i32'], deterministic: true },
   { name: 'fws_array_get', operation: 'array-get', parameters: ['i32', 'i32'], results: ['i32'], deterministic: true },
-  { name: 'fws_array_set', operation: 'array-set', parameters: ['i32', 'i32', 'i32'], results: [], deterministic: true },
+  {
+    name: 'fws_array_set',
+    operation: 'array-set',
+    parameters: ['i32', 'i32', 'i32'],
+    results: [],
+    deterministic: true,
+  },
   { name: 'fws_array_length', operation: 'array-length', parameters: ['i32'], results: ['i32'], deterministic: true },
   { name: 'fws_array_iter', operation: 'array-iter', parameters: ['i32'], results: ['i32'], deterministic: true },
   { name: 'fws_vector_new', operation: 'vector-new', parameters: ['i32'], results: ['i32'], deterministic: true },
-  { name: 'fws_vector_push', operation: 'vector-push', parameters: ['i32', 'i32'], results: ['i32'], deterministic: true },
-  { name: 'fws_vector_get', operation: 'vector-get', parameters: ['i32', 'i32'], results: ['i32'], deterministic: true },
-  { name: 'fws_vector_set', operation: 'vector-set', parameters: ['i32', 'i32', 'i32'], results: [], deterministic: true },
+  {
+    name: 'fws_vector_push',
+    operation: 'vector-push',
+    parameters: ['i32', 'i32'],
+    results: ['i32'],
+    deterministic: true,
+  },
+  {
+    name: 'fws_vector_get',
+    operation: 'vector-get',
+    parameters: ['i32', 'i32'],
+    results: ['i32'],
+    deterministic: true,
+  },
+  {
+    name: 'fws_vector_set',
+    operation: 'vector-set',
+    parameters: ['i32', 'i32', 'i32'],
+    results: [],
+    deterministic: true,
+  },
   { name: 'fws_vector_length', operation: 'vector-length', parameters: ['i32'], results: ['i32'], deterministic: true },
   { name: 'fws_vector_pop', operation: 'vector-pop', parameters: ['i32'], results: ['i32'], deterministic: true },
   { name: 'fws_iterator_next', operation: 'iterator-next', parameters: ['i32'], results: ['i64'], deterministic: true },
   { name: 'fws_set_has', operation: 'set-has', parameters: ['i32', 'i32'], results: ['i32'], deterministic: true },
   { name: 'fws_map_get', operation: 'map-get', parameters: ['i32', 'i32'], results: ['i32'], deterministic: true },
   { name: 'fws_ecs_query', operation: 'ecs-query', parameters: ['i32', 'i32'], results: ['i32'], deterministic: true },
-  { name: 'fws_ecs_transition', operation: 'ecs-transition', parameters: ['i32', 'i32'], results: ['i32'], deterministic: true },
-  { name: 'fws_signal_schedule', operation: 'signal-schedule', parameters: ['i32'], results: ['i32'], deterministic: true },
+  {
+    name: 'fws_ecs_transition',
+    operation: 'ecs-transition',
+    parameters: ['i32', 'i32'],
+    results: ['i32'],
+    deterministic: true,
+  },
+  {
+    name: 'fws_signal_schedule',
+    operation: 'signal-schedule',
+    parameters: ['i32'],
+    results: ['i32'],
+    deterministic: true,
+  },
   {
     name: 'fws_async_schedule_microtask',
     operation: 'async-schedule-microtask',

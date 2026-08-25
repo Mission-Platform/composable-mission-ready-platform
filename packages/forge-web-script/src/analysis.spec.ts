@@ -108,7 +108,7 @@ export fn safe() -> i32 {
     const artifact = compileForgeWebScript({
       source: `
 export fn safe(flag: bool) -> i32 {
-  let n: i32 = 0;
+  let mut n: i32 = 0;
   let values: [i32; 2] = [1, 2];
   if flag { n = 100; return n; } else { return values[n]; }
 }`,

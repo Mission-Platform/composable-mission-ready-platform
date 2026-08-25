@@ -36,6 +36,7 @@ const keywords = new Set([
   'let',
   'match',
   'module',
+  'mut',
   'new',
   'return',
   'struct',
@@ -53,7 +54,7 @@ const keywords = new Set([
   'unlikely',
 ]);
 const twoCharacterOperators = new Set(['!=', '&&', '==', '||', '<=', '>=', '->', '=>', '::']);
-const oneCharacterOperators = new Set(['!', '%', '*', '+', '-', '/', '<', '>', '=']);
+const oneCharacterOperators = new Set(['!', '%', '*', '+', '-', '/', '<', '>', '=', '&']);
 const punctuation = new Set(['{', '}', '(', ')', '[', ']', ':', ';', ',', '|', '.']);
 const stringEscapes = new Set(['"', '\\', '/', 'b', 'f', 'n', 'r', 't']);
 
@@ -79,11 +80,7 @@ function isDecimalDigit(character: string | undefined): boolean {
 function isHexDigit(character: string | undefined): boolean {
   if (character === undefined) return false;
   const code = character.charCodeAt(0);
-  return (
-    (code >= 0x30 && code <= 0x39) ||
-    (code >= 0x41 && code <= 0x46) ||
-    (code >= 0x61 && code <= 0x66)
-  );
+  return (code >= 0x30 && code <= 0x39) || (code >= 0x41 && code <= 0x46) || (code >= 0x61 && code <= 0x66);
 }
 
 function isWhitespace(character: string | undefined): boolean {

@@ -11,7 +11,7 @@ Generated from public source declarations in `@mission-platform/forge-web-script
 **Kind:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE
+export const FORGE_WEB_SCRIPT_CLI_USAGE;
 ```
 
 No description provided.
@@ -21,7 +21,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type ForgeWebScriptCliCommand = 'check' | 'compile' | 'trace';
+export type ForgeWebScriptCliCommand = 'check' | 'compile' | 'trace' | 'inspect-sonir';
 ```
 
 No description provided.
@@ -61,17 +61,17 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions
+function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| argv | readonly string[] |  |
-| cwd |  |  |
+| Name | Type              | Description |
+| ---- | ----------------- | ----------- |
+| argv | readonly string[] |             |
+| cwd  |                   |             |
 
 ## `src/main`
 
@@ -80,7 +80,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
 ```
 
 No description provided.
@@ -90,7 +90,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
 ```
 
 No description provided.
@@ -110,18 +110,22 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), io: ForgeWebScriptCliIo = defaultIo, cwd = process.cwd()): Promise<number>
+function runForgeWebScriptCli(
+  argv: readonly string[] = process.argv.slice(2),
+  io: ForgeWebScriptCliIo = defaultIo,
+  cwd = process.cwd(),
+): Promise<number>;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| argv | readonly string[] |  |
-| io | ForgeWebScriptCliIo |  |
-| cwd |  |  |
+| Name | Type                | Description |
+| ---- | ------------------- | ----------- |
+| argv | readonly string[]   |             |
+| io   | ForgeWebScriptCliIo |             |
+| cwd  |                     |             |
 
 ## `src/output`
 
@@ -130,32 +134,32 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles
+function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| artifact | ForgeWebScriptArtifact |  |
+| Name     | Type                   | Description |
+| -------- | ---------------------- | ----------- |
+| artifact | ForgeWebScriptArtifact |             |
 
 ### forgeWebScriptArtifactBaseName
 
 **Kind:** function
 
 ```typescript
-function forgeWebScriptArtifactBaseName(entryFileName: string): string
+function forgeWebScriptArtifactBaseName(entryFileName: string): string;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| entryFileName | string |  |
+| Name          | Type   | Description |
+| ------------- | ------ | ----------- |
+| entryFileName | string |             |
 
 ### ForgeWebScriptCliArtifactFiles
 
@@ -172,7 +176,8 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly {
+function formatForgeWebScriptDiagnostics(
+  diagnostics: readonly {
     readonly code: string;
     readonly severity: string;
     readonly phase: string;
@@ -185,48 +190,75 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly {
       readonly endColumn: number;
     };
     readonly hint?: string;
-  }[]): string
+  }[],
+): string;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| diagnostics | readonly {     readonly code: string;     readonly severity: string;     readonly phase: string;     readonly message: string;     readonly fileName: string;     readonly span: {       readonly line: number;       readonly column: number;       readonly endLine: number;       readonly endColumn: number;     };     readonly hint?: string;   }[] |  |
+| Name        | Type                                                                                                                                                                                                                                                                                            | Description |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| diagnostics | readonly { readonly code: string; readonly severity: string; readonly phase: string; readonly message: string; readonly fileName: string; readonly span: { readonly line: number; readonly column: number; readonly endLine: number; readonly endColumn: number; }; readonly hint?: string; }[] |             |
+
+### formatForgeWebScriptSoNSummary
+
+**Kind:** function
+
+```typescript
+function formatForgeWebScriptSoNSummary(module: ForgeWebScriptSoNModule): {
+  readonly json: Readonly<Record<string, unknown>>;
+  readonly text: string;
+};
+```
+
+No description provided.
+
+#### Parameters
+
+| Name   | Type                    | Description |
+| ------ | ----------------------- | ----------- |
+| module | ForgeWebScriptSoNModule |             |
 
 ### outputDirectoryFor
 
 **Kind:** function
 
 ```typescript
-function outputDirectoryFor(entryFileName: string, outputDirectory = path.join(path.dirname(entryFileName), 'dist')): string
+function outputDirectoryFor(
+  entryFileName: string,
+  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
+): string;
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| entryFileName | string |  |
-| outputDirectory |  |  |
+| Name            | Type   | Description |
+| --------------- | ------ | ----------- |
+| entryFileName   | string |             |
+| outputDirectory |        |             |
 
 ### writeForgeWebScriptArtifacts
 
 **Kind:** function
 
 ```typescript
-function writeForgeWebScriptArtifacts(outputDirectory: string, entryFileName: string, artifact: ForgeWebScriptArtifact): Promise<readonly string[]>
+function writeForgeWebScriptArtifacts(
+  outputDirectory: string,
+  entryFileName: string,
+  artifact: ForgeWebScriptArtifact,
+): Promise<readonly string[]>;
 ```
 
 Write the complete artifact set through a temporary directory and rename each file into place.
 
 #### Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-| outputDirectory | string |  |
-| entryFileName | string |  |
-| artifact | ForgeWebScriptArtifact |  |
+| Name            | Type                   | Description |
+| --------------- | ---------------------- | ----------- |
+| outputDirectory | string                 |             |
+| entryFileName   | string                 |             |
+| artifact        | ForgeWebScriptArtifact |             |

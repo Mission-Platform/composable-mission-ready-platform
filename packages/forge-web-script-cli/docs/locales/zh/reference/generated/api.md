@@ -16,7 +16,7 @@
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE
+export const FORGE_WEB_SCRIPT_CLI_USAGE;
 ```
 
 没有提供描述。
@@ -66,17 +66,17 @@ export class ForgeWebScriptCliUsageError extends Error
 **种类：**功能
 
 ```typescript
-function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions
+function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| argv |只读字符串[] |  |
-|西德 |  |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| argv | 只读字符串[] |      |
+| 西德 |              |      |
 
 ## `src/main`
 
@@ -85,7 +85,7 @@ function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
 ```
 
 没有提供描述。
@@ -95,7 +95,7 @@ export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
 ```
 
 没有提供描述。
@@ -115,18 +115,22 @@ export interface ForgeWebScriptCliIo
 **种类：**功能
 
 ```typescript
-function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), io: ForgeWebScriptCliIo = defaultIo, cwd = process.cwd()): Promise<number>
+function runForgeWebScriptCli(
+  argv: readonly string[] = process.argv.slice(2),
+  io: ForgeWebScriptCliIo = defaultIo,
+  cwd = process.cwd(),
+): Promise<number>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| argv |只读字符串[] |  |
-| io | ForgeWebScriptCliIo |  |
-|西德 |  |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| argv | 只读字符串[]        |      |
+| io   | ForgeWebScriptCliIo |      |
+| 西德 |                     |      |
 
 ## `src/output`
 
@@ -135,32 +139,32 @@ function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), i
 **种类：**功能
 
 ```typescript
-function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles
+function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|神器| ForgeWebScriptArtifact |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 神器 | ForgeWebScriptArtifact |      |
 
 ### forgeWebScriptArtifactBaseName
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptArtifactBaseName(entryFileName: string): string
+function forgeWebScriptArtifactBaseName(entryFileName: string): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|条目文件名 |字符串|  |
+| 名称       | 类型   | 描述 |
+| ---------- | ------ | ---- |
+| 条目文件名 | 字符串 |      |
 
 ### ForgeWebScriptCliArtifactFiles
 
@@ -177,7 +181,8 @@ export interface ForgeWebScriptCliArtifactFiles
 **种类：**功能
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly {
+function formatForgeWebScriptDiagnostics(
+  diagnostics: readonly {
     readonly code: string;
     readonly severity: string;
     readonly phase: string;
@@ -190,48 +195,56 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly {
       readonly endColumn: number;
     };
     readonly hint?: string;
-  }[]): string
+  }[],
+): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断 |只读 { 只读代码：字符串；     只读严重性：字符串；     只读阶段：字符串；     只读消息：字符串；     只读文件名：字符串；     只读跨度：{ 只读行：数字；       只读列：数字；       只读结束行：数字；       只读结束列：数字；     };     只读提示？：字符串；   }[] |  |
+| 名称 | 类型                                                                                                                                                                                                                  | 描述 |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 诊断 | 只读 { 只读代码：字符串； 只读严重性：字符串； 只读阶段：字符串； 只读消息：字符串； 只读文件名：字符串； 只读跨度：{ 只读行：数字； 只读列：数字； 只读结束行：数字； 只读结束列：数字； }; 只读提示？：字符串； }[] |      |
 
 ### 输出目录
 
 **种类：**功能
 
 ```typescript
-function outputDirectoryFor(entryFileName: string, outputDirectory = path.join(path.dirname(entryFileName), 'dist')): string
+function outputDirectoryFor(
+  entryFileName: string,
+  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
+): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|条目文件名 |字符串|  |
-|输出目录 |  |  |
+| 名称       | 类型   | 描述 |
+| ---------- | ------ | ---- |
+| 条目文件名 | 字符串 |      |
+| 输出目录   |        |      |
 
 ### writeForgeWebScriptArtifacts
 
 **种类：**功能
 
 ```typescript
-function writeForgeWebScriptArtifacts(outputDirectory: string, entryFileName: string, artifact: ForgeWebScriptArtifact): Promise<readonly string[]>
+function writeForgeWebScriptArtifacts(
+  outputDirectory: string,
+  entryFileName: string,
+  artifact: ForgeWebScriptArtifact,
+): Promise<readonly string[]>;
 ```
 
 通过临时目录写入完整的工件集并将每个文件重命名到位。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输出目录 |字符串|  |
-|条目文件名 |字符串|  |
-|神器| ForgeWebScriptArtifact |  |
+| 名称       | 类型                   | 描述 |
+| ---------- | ---------------------- | ---- |
+| 输出目录   | 字符串                 |      |
+| 条目文件名 | 字符串                 |      |
+| 神器       | ForgeWebScriptArtifact |      |

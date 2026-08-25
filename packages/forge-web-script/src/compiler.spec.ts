@@ -111,12 +111,12 @@ export fn currentTime() -> i64 { return now(); }`,
   it('executes while and do while loops, including a do while false condition', () => {
     const source = `
 export fn whileLoop() -> i32 {
-  let value: i32 = 0;
+  let mut value: i32 = 0;
   while value < 2 { value = value + 1; }
   return value;
 }
 export fn doWhileLoop() -> i32 {
-  let value: i32 = 0;
+  let mut value: i32 = 0;
   do { value = value + 1; } while false;
   return value;
 }`;
@@ -141,7 +141,7 @@ export fn exhausted(items: Array<i32>) -> Option<i32> {
   return iterator.next();
 }
 export fn sumParam(items: Array<i32>) -> i32 {
-  let total: i32 = 0;
+  let mut total: i32 = 0;
   loop value = items.iter() {
     total = total + value;
   }
@@ -149,14 +149,14 @@ export fn sumParam(items: Array<i32>) -> i32 {
 }
 export fn sumLiteral() -> i32 {
   let items: [i32; 3] = [10, 20, 30];
-  let total: i32 = 0;
+  let mut total: i32 = 0;
   loop value = items.iter() {
     total = total + value;
   }
   return total;
 }
 export fn emptySum(items: Array<i32>) -> i32 {
-  let total: i32 = 0;
+  let mut total: i32 = 0;
   loop value = items.iter() {
     total = total + value;
   }

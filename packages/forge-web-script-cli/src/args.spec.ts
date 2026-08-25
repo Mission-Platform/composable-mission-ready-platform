@@ -40,6 +40,8 @@ describe('parseForgeWebScriptCliArgs', () => {
       linkMode: 'static',
       capabilities: ['clock.now', 'codec.encode'],
       optimization: 'release',
+      boundsChecks: 'runtime',
+      showOptimizerReport: false,
       outputDirectory: '/workspace/artifacts',
       compilerVersion: '0.1.0',
       vmMode: 'jit',
@@ -58,6 +60,21 @@ describe('parseForgeWebScriptCliArgs', () => {
       command: 'check',
       entries: ['/workspace/main.fws'],
       format: 'json',
+    });
+  });
+
+  it('parses explicit bounds policy and optimizer reporting', () => {
+    expect(
+      parseForgeWebScriptCliArgs(['check', 'main.fws', '--bounds-checks', 'proven-safe', '--optimizer-report']),
+    ).toMatchObject({
+      boundsChecks: 'proven-safe',
+      showOptimizerReport: true,
+    });
+    expect(() => parseForgeWebScriptCliArgs(['check', 'main.fws', '--bounds-checks', 'guess'])).toThrow(
+      'Invalid bounds-check policy',
+    );
+    expect(parseForgeWebScriptCliArgs(['inspect-sonir', '.cache/main.sonir.json'])).toMatchObject({
+      command: 'inspect-sonir',
     });
   });
 

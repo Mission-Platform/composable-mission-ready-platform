@@ -112,6 +112,7 @@ export interface ForgeWebScriptIrIndexExpression {
   readonly kind: 'index';
   readonly receiver: ForgeWebScriptIrExpression;
   readonly index: ForgeWebScriptIrExpression;
+  readonly boundsCheck?: 'required' | 'proven-safe';
   readonly span: ForgeWebScriptSourceSpan;
 }
 
@@ -282,7 +283,14 @@ function lowerAstExpression(expression: ForgeWebScriptExpression): ForgeWebScrip
     const dot = expression.callee.lastIndexOf('.');
     const receiver = dot > 0 ? expression.callee.slice(0, dot) : undefined;
     const method = dot > 0 ? expression.callee.slice(dot + 1) : undefined;
-    const collectionOperation = method === 'iter' ? 'array-iter' : method === 'next' ? 'iterator-next' : method === 'length' ? 'array-length' : undefined;
+    const collectionOperation =
+      method === 'iter'
+        ? 'array-iter'
+        : method === 'next'
+          ? 'iterator-next'
+          : method === 'length'
+            ? 'array-length'
+            : undefined;
     const standardLibrary =
       FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP.get(expression.callee)?.operation ??
       FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP.get(expression.callee)?.operation ??
@@ -319,7 +327,11 @@ function lowerAstExpression(expression: ForgeWebScriptExpression): ForgeWebScrip
   if (expression.kind === 'array-literal' || expression.kind === 'vector-literal')
     return { ...expression, elements: expression.elements.map((element) => lowerAstExpression(element)) };
   if (expression.kind === 'index')
-    return { ...expression, receiver: lowerAstExpression(expression.receiver), index: lowerAstExpression(expression.index) };
+    return {
+      ...expression,
+      receiver: lowerAstExpression(expression.receiver),
+      index: lowerAstExpression(expression.index),
+    };
   if (expression.kind === 'unary') return { ...expression, operand: lowerAstExpression(expression.operand) };
   return { ...expression, left: lowerAstExpression(expression.left), right: lowerAstExpression(expression.right) };
 }
@@ -423,9 +435,10 @@ function lowerStatements(
         return { ...statement, value: lowerAstExpression(statement.value) };
       case 'iterator-loop': {
         const iteratorState = stateAllocator.value++;
-        const boundedLength = statement.iterator.kind === 'call' && statement.iterator.arguments.length === 0
-          ? boundedIterators.get(statement.iterator.callee)
-          : undefined;
+        const boundedLength =
+          statement.iterator.kind === 'call' && statement.iterator.arguments.length === 0
+            ? boundedIterators.get(statement.iterator.callee)
+            : undefined;
         return {
           ...statement,
           iterator: lowerAstExpression(statement.iterator),

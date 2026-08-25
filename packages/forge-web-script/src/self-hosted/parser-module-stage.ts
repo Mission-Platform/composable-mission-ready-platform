@@ -695,7 +695,14 @@ function buildParseType(pool: ConstPool, types: readonly TypeWire[]): ForgeWebSc
   const wantAlpha = K(b, pool, PK_ALPHA);
   const one = K(b, pool, 1);
   const flag = b.alloc();
-  const last = { start: b.alloc(), end: b.alloc(), line: b.alloc(), col: b.alloc(), endLine: b.alloc(), endCol: b.alloc() };
+  const last = {
+    start: b.alloc(),
+    end: b.alloc(),
+    line: b.alloc(),
+    col: b.alloc(),
+    endLine: b.alloc(),
+    endCol: b.alloc(),
+  };
   b.call(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantAlpha);
@@ -1599,7 +1606,13 @@ function buildSkipClassBody(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction
 // envelope returned to the host.
 // ---------------------------------------------------------------------------
 
-function buildEntry(pool: ConstPool, nameWire: number, classWord: number, exportWord: number, fnWord: number): ForgeWebScriptSelfHostedVmFunction {
+function buildEntry(
+  pool: ConstPool,
+  nameWire: number,
+  classWord: number,
+  exportWord: number,
+  fnWord: number,
+): ForgeWebScriptSelfHostedVmFunction {
   const b = createBuilder(1); // parameter 0 = source aggregate
   const dummy = b.alloc();
   const srcLen = b.alloc();
@@ -1926,7 +1939,10 @@ export function createForgeWebScriptParserModuleVmModule(
       return value?.kind === 'aggregate' && value.bytes.length === 5 && value.bytes[0] === 0x46;
     });
     if (magicIndex !== undefined) {
-      const original = pool.values[magicIndex] as Extract<ForgeWebScriptSelfHostedVmValue, { readonly kind: 'aggregate' }>;
+      const original = pool.values[magicIndex] as Extract<
+        ForgeWebScriptSelfHostedVmValue,
+        { readonly kind: 'aggregate' }
+      >;
       const mutated = new Uint8Array(original.bytes);
       mutated[4] = (mutated[4] ?? 0) ^ (saltXor & 0xff);
       pool.values[magicIndex] = { ...original, bytes: mutated };

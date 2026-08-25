@@ -83,3 +83,22 @@ cache is configured, debug compilation writes deterministic
 `<key>.optimized.wat`, `<key>.unoptimized.wat`, `<key>.optimized.wasm`, and
 `<key>.unoptimized.wasm` companions when the cache provides a binary writer.
 Cache failures are logged and do not fail compilation.
+
+## Safety, bounds, and SoN inspection
+
+FWS locals and parameters are immutable by default; use `mut` for mutation and
+`&mut` for an explicit mutable borrow. POD aggregates are passed by value;
+non-POD values use immutable references by default. Region temporaries cannot
+escape, while `owned`/`shared` boundaries use checked ARC ownership.
+
+Collection bounds checks use the `runtime` policy by default. `proven-safe`
+requires static range facts, and `excluded-by-profile` is an explicit audited
+profile that is recorded in manifests, reports, and cache keys. The compiler
+pipeline is SoN optimization followed by Wasm-stage optimization. A bounded,
+read-only `.sonir.json` artifact contains graph hashes, source spans, effects,
+policy, node/function summaries, and ordered pass reports; malformed or stale
+artifacts must be ignored.
+
+The CLI supports `--bounds-checks`, `--optimizer-report`, and
+`inspect-sonir`. MCP consumers can use `fws_inspect_sonir` for the same metadata
+without instantiating or executing Wasm.

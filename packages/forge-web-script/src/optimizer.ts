@@ -11,7 +11,23 @@ import {
 } from './ir.js';
 
 import type { ForgeWebScriptModule } from './ast.js';
+import type { ForgeWebScriptSoNPassReport } from './son-ir.js';
 
+/**
+ * Legacy tree-IR optimizer, kept only as a compatibility adapter.
+ *
+ * `son-ir.ts`'s Sea-of-Nodes optimizer is the canonical optimization
+ * boundary: `frontend.ts` builds the SoN graph from the *unoptimized* IR and
+ * derives `optimizedIr`/`optimizedModule` (what the Wasm backend actually
+ * compiles) from the SoN graph's own constant/copy-propagation, CSE, and
+ * reachability passes. This module's `optimizeForgeWebScriptModule`/
+ * `optimizeForgeWebScriptIr` no longer influence the compiled output; they
+ * are retained solely to populate the backward-compatible
+ * `ForgeWebScriptOptimizationReport` shape (and its richer pass-level detail
+ * such as inlining/tail-call/iterator-unroll counters) for existing
+ * consumers, and may be superseded once those decisions move onto the SoN
+ * graph as well.
+ */
 export interface ForgeWebScriptOptimizationReport {
   readonly mode: 'debug' | 'release';
   readonly passes: readonly (
@@ -43,15 +59,12 @@ export interface ForgeWebScriptOptimizationReport {
   readonly optimisticBranches: number;
   readonly pureFunctions: readonly string[];
   readonly effectfulFunctions: readonly string[];
+  /** Ordered canonical SoN passes; legacy tree-IR pass data remains above. */
+  readonly sonPasses?: readonly ForgeWebScriptSoNPassReport['name'][];
 }
 
 export interface ForgeWebScriptOptimizationDecision {
-  readonly transformation:
-    | 'iterator-unroll'
-    | 'inline'
-    | 'tail-call'
-    | 'optimistic-conditional'
-    | 'dead-code';
+  readonly transformation: 'iterator-unroll' | 'inline' | 'tail-call' | 'optimistic-conditional' | 'dead-code';
   readonly status: 'applied' | 'skipped';
   readonly functionName?: string;
   readonly span?: ForgeWebScriptIrStatement['span'];
@@ -219,9 +232,12 @@ function expressionPurity(
         : 'effectful';
     case 'array-literal':
     case 'vector-literal':
-      return expression.elements.every((element) => expressionPurity(element, functions) === 'pure') ? 'pure' : 'effectful';
+      return expression.elements.every((element) => expressionPurity(element, functions) === 'pure')
+        ? 'pure'
+        : 'effectful';
     case 'index':
-      return expressionPurity(expression.receiver, functions) === 'pure' && expressionPurity(expression.index, functions) === 'pure'
+      return expressionPurity(expression.receiver, functions) === 'pure' &&
+        expressionPurity(expression.index, functions) === 'pure'
         ? 'pure'
         : 'effectful';
     case 'match':
@@ -236,8 +252,10 @@ function containsYield(statements: readonly ForgeWebScriptIrStatement[]): boolea
   return statements.some((statement) => {
     if (statement.kind === 'yield') return true;
     if (statement.kind === 'if')
-      return containsYield(statement.consequent) ||
-        (statement.alternate === undefined ? false : containsYield(statement.alternate));
+      return (
+        containsYield(statement.consequent) ||
+        (statement.alternate === undefined ? false : containsYield(statement.alternate))
+      );
     if (statement.kind === 'while' || statement.kind === 'do-while') return containsYield(statement.body);
     if (statement.kind === 'iterator-loop') return true;
     if (statement.kind === 'match-statement') return false;
@@ -271,8 +289,11 @@ function analyzeFunctions(module: ForgeWebScriptIrModule): {
         : calls.size === 0
           ? 'pure'
           : [...calls].every((callee) => byName.has(callee) && purity.get(callee) === 'pure') &&
-              declaration.body.every((statement) => statement.kind !== 'expression-statement' ||
-                expressionPurity(statement.expression, purity) === 'pure')
+              declaration.body.every(
+                (statement) =>
+                  statement.kind !== 'expression-statement' ||
+                  expressionPurity(statement.expression, purity) === 'pure',
+              )
             ? 'pure'
             : 'effectful';
       if (purity.get(declaration.name) !== localPurity) {
@@ -286,13 +307,12 @@ function analyzeFunctions(module: ForgeWebScriptIrModule): {
     const calls = new Set<string>();
     calledFunctionsInStatements(declaration.body, calls);
     const lastStatement = declaration.body.at(-1);
-    const boundedLength = declaration.iterable === true
-      ? staticallyBoundedIteratorYields(declaration.body)
-      : undefined;
+    const boundedLength = declaration.iterable === true ? staticallyBoundedIteratorYields(declaration.body) : undefined;
     analyses.set(declaration.name, {
       purity: purity.get(declaration.name) ?? 'unknown',
       calls: [...calls].toSorted(),
-      tailCallable: purity.get(declaration.name) === 'pure' &&
+      tailCallable:
+        purity.get(declaration.name) === 'pure' &&
         lastStatement?.kind === 'return' &&
         lastStatement.value?.kind === 'call',
       ...(boundedLength === undefined ? {} : { iteratorBoundedLength: boundedLength }),
@@ -336,7 +356,10 @@ function optimizeExpression(
       arms: expression.arms.map((arm) => ({ ...arm, value: optimizeExpression(arm.value, locals, counters) })),
     };
   if (expression.kind === 'array-literal' || expression.kind === 'vector-literal')
-    return { ...expression, elements: expression.elements.map((element) => optimizeExpression(element, locals, counters)) };
+    return {
+      ...expression,
+      elements: expression.elements.map((element) => optimizeExpression(element, locals, counters)),
+    };
   if (expression.kind === 'index')
     return {
       ...expression,
@@ -438,12 +461,18 @@ function optimizeStatements(
       result.push({
         ...statement,
         value: optimizeExpression(statement.value, locals, counters),
-        cases: statement.cases.map((arm) => ({ ...arm, body: optimizeStatements(arm.body, new Map(locals), counters) })),
-        ...(statement.defaultCase === undefined ? {} : { defaultCase: optimizeStatements(statement.defaultCase, new Map(locals), counters) }),
+        cases: statement.cases.map((arm) => ({
+          ...arm,
+          body: optimizeStatements(arm.body, new Map(locals), counters),
+        })),
+        ...(statement.defaultCase === undefined
+          ? {}
+          : { defaultCase: optimizeStatements(statement.defaultCase, new Map(locals), counters) }),
       });
       // A value reassigned in any case is no longer a known constant after the switch.
       for (const arm of statement.cases) for (const name of assignedNames(arm.body)) locals.delete(name);
-      if (statement.defaultCase !== undefined) for (const name of assignedNames(statement.defaultCase)) locals.delete(name);
+      if (statement.defaultCase !== undefined)
+        for (const name of assignedNames(statement.defaultCase)) locals.delete(name);
       continue;
     }
     if (statement.kind === 'yield') {
@@ -505,8 +534,7 @@ function optimizeStatements(
           : optimizeStatements(statement.alternate, new Map(locals), counters);
       // A value reassigned in either branch is no longer a known constant after the if.
       for (const name of assignedNames(statement.consequent)) locals.delete(name);
-      if (statement.alternate !== undefined)
-        for (const name of assignedNames(statement.alternate)) locals.delete(name);
+      if (statement.alternate !== undefined) for (const name of assignedNames(statement.alternate)) locals.delete(name);
       result.push({ ...statement, condition, consequent, ...(alternate === undefined ? {} : { alternate }) });
     }
   }
@@ -632,7 +660,10 @@ function substituteExpression(
       ),
     };
   if (expression.kind === 'enum-value')
-    return { ...expression, arguments: expression.arguments.map((argument) => substituteExpression(argument, substitutions)) };
+    return {
+      ...expression,
+      arguments: expression.arguments.map((argument) => substituteExpression(argument, substitutions)),
+    };
   if (expression.kind === 'match')
     return {
       ...expression,
@@ -644,14 +675,20 @@ function substituteExpression(
 
 function identifierUses(expression: ForgeWebScriptIrExpression, name: string): number {
   if (expression.kind === 'identifier') return expression.name === name ? 1 : 0;
-  if (expression.kind === 'call') return expression.arguments.reduce((count, argument) => count + identifierUses(argument, name), 0);
+  if (expression.kind === 'call')
+    return expression.arguments.reduce((count, argument) => count + identifierUses(argument, name), 0);
   if (expression.kind === 'unary') return identifierUses(expression.operand, name);
-  if (expression.kind === 'binary') return identifierUses(expression.left, name) + identifierUses(expression.right, name);
-  if (expression.kind === 'struct-value') return Object.values(expression.fields).reduce((count, value) => count + identifierUses(value, name), 0);
-  if (expression.kind === 'enum-value') return expression.arguments.reduce((count, argument) => count + identifierUses(argument, name), 0);
+  if (expression.kind === 'binary')
+    return identifierUses(expression.left, name) + identifierUses(expression.right, name);
+  if (expression.kind === 'struct-value')
+    return Object.values(expression.fields).reduce((count, value) => count + identifierUses(value, name), 0);
+  if (expression.kind === 'enum-value')
+    return expression.arguments.reduce((count, argument) => count + identifierUses(argument, name), 0);
   if (expression.kind === 'match')
-    return identifierUses(expression.value, name) +
-      expression.arms.reduce((count, arm) => count + identifierUses(arm.value, name), 0);
+    return (
+      identifierUses(expression.value, name) +
+      expression.arms.reduce((count, arm) => count + identifierUses(arm.value, name), 0)
+    );
   return 0;
 }
 
@@ -663,19 +700,27 @@ function inlineExpression(
   functionName: string,
 ): ForgeWebScriptIrExpression {
   const visit = (value: ForgeWebScriptIrExpression): ForgeWebScriptIrExpression => {
-    const nested = value.kind === 'call'
-      ? { ...value, arguments: value.arguments.map(visit) }
-      : value.kind === 'unary'
-        ? { ...value, operand: visit(value.operand) }
-        : value.kind === 'binary'
-          ? { ...value, left: visit(value.left), right: visit(value.right) }
-          : value.kind === 'struct-value'
-            ? { ...value, fields: Object.fromEntries(Object.entries(value.fields).map(([name, field]) => [name, visit(field)])) }
-            : value.kind === 'enum-value'
-              ? { ...value, arguments: value.arguments.map(visit) }
-              : value.kind === 'match'
-                ? { ...value, value: visit(value.value), arms: value.arms.map((arm) => ({ ...arm, value: visit(arm.value) })) }
-                : value;
+    const nested =
+      value.kind === 'call'
+        ? { ...value, arguments: value.arguments.map(visit) }
+        : value.kind === 'unary'
+          ? { ...value, operand: visit(value.operand) }
+          : value.kind === 'binary'
+            ? { ...value, left: visit(value.left), right: visit(value.right) }
+            : value.kind === 'struct-value'
+              ? {
+                  ...value,
+                  fields: Object.fromEntries(Object.entries(value.fields).map(([name, field]) => [name, visit(field)])),
+                }
+              : value.kind === 'enum-value'
+                ? { ...value, arguments: value.arguments.map(visit) }
+                : value.kind === 'match'
+                  ? {
+                      ...value,
+                      value: visit(value.value),
+                      arms: value.arms.map((arm) => ({ ...arm, value: visit(arm.value) })),
+                    }
+                  : value;
     if (nested.kind !== 'call') return nested;
     const declaration = functions.get(nested.callee);
     if (declaration === undefined) return nested;
@@ -689,9 +734,8 @@ function inlineExpression(
       });
       return nested;
     }
-    const returnStatement = declaration.body.length === 1 && declaration.body[0]?.kind === 'return'
-      ? declaration.body[0]
-      : undefined;
+    const returnStatement =
+      declaration.body.length === 1 && declaration.body[0]?.kind === 'return' ? declaration.body[0] : undefined;
     if (returnStatement?.value === undefined || purity.get(nested.callee) !== 'pure') {
       counters.skipped.push({
         transformation: 'inline',
@@ -758,47 +802,72 @@ function transformStatements(
         status: 'skipped',
         functionName: declaration.name,
         span: statement.span,
-        reason: statement.boundedLength === undefined
-          ? 'Iterator length is not statically bounded.'
-          : 'The proven bound is not safe to unroll without duplicating resumable state.',
+        reason:
+          statement.boundedLength === undefined
+            ? 'Iterator length is not statically bounded.'
+            : 'The proven bound is not safe to unroll without duplicating resumable state.',
       });
-      return [{
-        ...statement,
-        iterator: inlineExpression(statement.iterator, functions, purity, counters, declaration.name),
-        body: transformStatements(statement.body, declaration, functions, purity, counters),
-      }];
+      return [
+        {
+          ...statement,
+          iterator: inlineExpression(statement.iterator, functions, purity, counters, declaration.name),
+          body: transformStatements(statement.body, declaration, functions, purity, counters),
+        },
+      ];
     }
     if (statement.kind === 'if')
-      return [{
-        ...statement,
-        condition: inlineExpression(statement.condition, functions, purity, counters, declaration.name),
-        consequent: transformStatements(statement.consequent, declaration, functions, purity, counters),
-        ...(statement.alternate === undefined
-          ? {}
-          : { alternate: transformStatements(statement.alternate, declaration, functions, purity, counters) }),
-      }];
+      return [
+        {
+          ...statement,
+          condition: inlineExpression(statement.condition, functions, purity, counters, declaration.name),
+          consequent: transformStatements(statement.consequent, declaration, functions, purity, counters),
+          ...(statement.alternate === undefined
+            ? {}
+            : { alternate: transformStatements(statement.alternate, declaration, functions, purity, counters) }),
+        },
+      ];
     if (statement.kind === 'while' || statement.kind === 'do-while')
-      return [{
-        ...statement,
-        condition: inlineExpression(statement.condition, functions, purity, counters, declaration.name),
-        body: transformStatements(statement.body, declaration, functions, purity, counters),
-      }];
+      return [
+        {
+          ...statement,
+          condition: inlineExpression(statement.condition, functions, purity, counters, declaration.name),
+          body: transformStatements(statement.body, declaration, functions, purity, counters),
+        },
+      ];
     if (statement.kind === 'let')
-      return [{ ...statement, value: inlineExpression(statement.value, functions, purity, counters, declaration.name) }];
+      return [
+        { ...statement, value: inlineExpression(statement.value, functions, purity, counters, declaration.name) },
+      ];
     if (statement.kind === 'assignment')
-      return [{ ...statement, value: inlineExpression(statement.value, functions, purity, counters, declaration.name) }];
+      return [
+        { ...statement, value: inlineExpression(statement.value, functions, purity, counters, declaration.name) },
+      ];
     if (statement.kind === 'return' && statement.value !== undefined)
-      return [{ ...statement, value: inlineExpression(statement.value, functions, purity, counters, declaration.name) }];
+      return [
+        { ...statement, value: inlineExpression(statement.value, functions, purity, counters, declaration.name) },
+      ];
     if (statement.kind === 'expression-statement')
-      return [{ ...statement, expression: inlineExpression(statement.expression, functions, purity, counters, declaration.name) }];
+      return [
+        {
+          ...statement,
+          expression: inlineExpression(statement.expression, functions, purity, counters, declaration.name),
+        },
+      ];
     if (statement.kind === 'yield')
-      return [{ ...statement, value: inlineExpression(statement.value, functions, purity, counters, declaration.name) }];
+      return [
+        { ...statement, value: inlineExpression(statement.value, functions, purity, counters, declaration.name) },
+      ];
     if (statement.kind === 'match-statement')
-      return [{
-        ...statement,
-        value: inlineExpression(statement.value, functions, purity, counters, declaration.name),
-        arms: statement.arms.map((arm) => ({ ...arm, value: inlineExpression(arm.value, functions, purity, counters, declaration.name) })),
-      }];
+      return [
+        {
+          ...statement,
+          value: inlineExpression(statement.value, functions, purity, counters, declaration.name),
+          arms: statement.arms.map((arm) => ({
+            ...arm,
+            value: inlineExpression(arm.value, functions, purity, counters, declaration.name),
+          })),
+        },
+      ];
     return [statement];
   });
 }
@@ -838,7 +907,10 @@ function annotateTailCalls(
   });
 }
 
-function pruneFunctions(module: ForgeWebScriptIrModule, minimumReachable: readonly string[] = []): {
+function pruneFunctions(
+  module: ForgeWebScriptIrModule,
+  minimumReachable: readonly string[] = [],
+): {
   module: ForgeWebScriptIrModule;
   removed: number;
   reachable: readonly string[];
@@ -904,7 +976,10 @@ export function optimizeForgeWebScriptIr(
         functionsInlined: 0,
         tailCallsDetected: 0,
         optimisticBranches: 0,
-        pureFunctions: [...analysis.purity].filter(([, purity]) => purity === 'pure').map(([name]) => name).toSorted(),
+        pureFunctions: [...analysis.purity]
+          .filter(([, purity]) => purity === 'pure')
+          .map(([name]) => name)
+          .toSorted(),
         effectfulFunctions: [...analysis.purity]
           .filter(([, purity]) => purity !== 'pure')
           .map(([name]) => name)

@@ -108,12 +108,7 @@ function linkModeFor(
   const configured = configuration.linkModes?.[key] ?? configuration.linkModes?.[target.projectRoot];
   if (configured !== undefined) return configured;
   if (importer.projectRoot === target.projectRoot) return 'static';
-  return (
-    configuration.crossProjectLinkMode ??
-    configuration.defaultLinkMode ??
-    configuration.linkProfile ??
-    'dynamic'
-  );
+  return configuration.crossProjectLinkMode ?? configuration.defaultLinkMode ?? configuration.linkProfile ?? 'dynamic';
 }
 
 export async function resolveForgeWebScriptModuleGraph(

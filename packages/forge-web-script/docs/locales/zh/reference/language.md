@@ -99,9 +99,9 @@ export iter fn forward(source: Iterator<i32>) -> Iterator<i32> {
 ```ts
 const artifact = compileForgeWebScript({
   source,
-  fileName: "runtime.fws",
-  compilerVersion: "1.0.0",
-  optimization: "release",
+  fileName: 'runtime.fws',
+  compilerVersion: '1.0.0',
+  optimization: 'release',
   targetFeatures: { simd: true, tailCall: true, memory64: true },
   compilerHints: { iteratorUnrollLimit: 4 },
 });
@@ -224,13 +224,13 @@ interface ForgeWebScriptDocumentationTag {
 
 常用的标签形式有：
 
-|标签形式 |结构化字段 |
-| -------------------------------------------------------- | -------------------------------------------- |
-| | `@param name text`、`@arg`、`@argument` 或 `@parameter` | `name` 是 `subject`；剩下的就是 `text` |
-| `@typeparam name text` | `name` 是 `subject`；剩下的就是 `text` |
-| `@throws type text` 或 `@exception type text` | `type` 是 `subject`；剩下的就是 `text` |
-| `@return text` 或 `@returns text` |仅限 `text` |
-| `@deprecated text` |仅限 `text` |
+| 标签形式                                      | 结构化字段                                              |
+| --------------------------------------------- | ------------------------------------------------------- |
+|                                               | `@param name text`、`@arg`、`@argument` 或 `@parameter` | `name` 是 `subject`；剩下的就是 `text` |
+| `@typeparam name text`                        | `name` 是 `subject`；剩下的就是 `text`                  |
+| `@throws type text` 或 `@exception type text` | `type` 是 `subject`；剩下的就是 `text`                  |
+| `@return text` 或 `@returns text`             | 仅限 `text`                                             |
+| `@deprecated text`                            | 仅限 `text`                                             |
 
 其他 `@name` 表单被接受并保留为有序标签，而不是
 报告为诊断。他们没有推断的主题；他们的剩余文本
@@ -380,15 +380,13 @@ Forge Web Script 提供了一个确定性正则表达式标准库。
 类别和范围（包括 `^` 否定）、`\d`、`\D`、`\w`、`\W`、`\s`、
 `\S`、转义文字、捕获和非捕获组、交替、
 `*`、`+`、`?`、有界 `{n}`、`{n,}`、`{n,m}` 量词、惰性量词、
-和 `^`/`
-Forge Web Script 提供了一个确定性正则表达式标准库。
-调用 `regex_full_match(pattern, value) -> bool`，
+和 `^`/`Forge Web Script 提供了一个确定性正则表达式标准库。
+调用`regex_full_match(pattern, value) -> bool`，
 `regex_prefix_match(pattern, value) -> bool`，以及
-`regex_search(pattern, value, start: i32) -> bool` 执行全值，
+`regex_search(pattern, value, start: i32) -> bool`执行全值，
 分别是位置零前缀和最左边搜索匹配。捕获边界
-可通过相应的 `regex_*_capture_start` 和
-`regex_*_capture_end` 调用；他们采用组索引并返回 UTF-16 字符串
-当没有匹配或组未设置时，偏移量或 `-1`。搜索捕获
+可通过相应的`regex__*capture_start`和`regex*__capture_end`调用；他们采用组索引并返回 UTF-16 字符串
+当没有匹配或组未设置时，偏移量或`-1`。搜索捕获
 调用还采用组索引之前的起始偏移量。
 
 正则表达式调用是编译器拥有的标准库函数。它们的输入方式为
@@ -429,18 +427,18 @@ Forge Web Script 提供了一个确定性正则表达式标准库。
 不添加任意对象方法。固定数组写入 `[T; N]` 和
 向量为 `Vector<T>`。支持的签名有：
 
-|接收器|方法|签名|
+| 接收器      | 方法            | 签名                    |
 | ----------- | --------------- | ----------------------- |
-| `Array<T>` | `length` | `() -> u32` |
-| `Array<T>` | `get` | `(u32) -> Option<T>` |
-| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
-| `Array<T>` | `iter` | `() -> Iterator<T>` |
-| `Vector<T>` | `length` | `() -> u32` |
-| `Vector<T>` | `get` | `(u32) -> Option<T>` |
-| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` 或 `add` | `(T) -> Vector<T>` |
-| `Vector<T>` | `pop` | `() -> Option<T>` |
-| `Vector<T>` | `iter` | `() -> Iterator<T>` |
+| `Array<T>`  | `length`        | `() -> u32`             |
+| `Array<T>`  | `get`           | `(u32) -> Option<T>`    |
+| `Array<T>`  | `set`           | `(u32, T) -> Array<T>`  |
+| `Array<T>`  | `iter`          | `() -> Iterator<T>`     |
+| `Vector<T>` | `length`        | `() -> u32`             |
+| `Vector<T>` | `get`           | `(u32) -> Option<T>`    |
+| `Vector<T>` | `set`           | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` 或 `add` | `(T) -> Vector<T>`      |
+| `Vector<T>` | `pop`           | `() -> Option<T>`       |
+| `Vector<T>` | `iter`          | `() -> Iterator<T>`     |
 
 `add` 拼写是有意为向量的兼容性别名
 `push`；它不是一个数组方法。索引为 `u32`，元素参数必须
@@ -549,14 +547,14 @@ WASI 兼容性。能力是一种狭窄的、显式的宿主功能，例如
 该模块使用一个具有 64 KiB 页面和小端字节序的 WebAssembly 线性内存
 标量值。标量值映射如下：
 
-|伪造网页脚本 | WebAssembly 表示 |
-| ----------------- | ------------------------------------------ |
-| `bool` | `i32`，其中 `0` 为 false，`1` 为 true |
-| `i32`、`u32` | `i32` |
-| `i64`、`u64` | `i64` |
-| `f32`、`f64` |匹配 WebAssembly 浮动 |
-| `unit` |无结果值 |
-| `string`、`bytes` |两个 `u32` 值：指针然后字节长度 |
+| 伪造网页脚本      | WebAssembly 表示                      |
+| ----------------- | ------------------------------------- |
+| `bool`            | `i32`，其中 `0` 为 false，`1` 为 true |
+| `i32`、`u32`      | `i32`                                 |
+| `i64`、`u64`      | `i64`                                 |
+| `f32`、`f64`      | 匹配 WebAssembly 浮动                 |
+| `unit`            | 无结果值                              |
+| `string`、`bytes` | 两个 `u32` 值：指针然后字节长度       |
 
 清单在 `valueRepresentations` 中声明了相同的映射。一个
 在读取或读取之前，指针长度对始终被检查为无符号范围
@@ -641,11 +639,7 @@ interface ForgeWebScriptExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: (
-    pointer: number,
-    oldSize: number,
-    newSize: number,
-  ) => number;
+  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
   readonly fws_reset: () => void;
   readonly echo: (value: string) => string;
   readonly processBytes: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;
@@ -782,12 +776,9 @@ forge-web-script compile <entry.fws> --out-dir <directory>
 通过清单功能名称，例如：
 
 ```ts
-const exports = await harness.load<{ current: () => bigint }>(
-  "capabilities/clock-now.fws",
-  {
-    "clock.now": { now: () => 123n },
-  },
-);
+const exports = await harness.load<{ current: () => bigint }>('capabilities/clock-now.fws', {
+  'clock.now': { now: () => 123n },
+});
 ```
 
 缺少申报进口和未申报供应进口均属失败。测试
@@ -814,13 +805,13 @@ TypeScript `types` 列表或引用的测试类型入口点。
 该阶段是 `lex`、`parse`、`type-check` 或 `abi` 之一。稳定的 v1 代码
 家庭包括：
 
-|代码家族|意义|
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `FWS-LEX-*` |无效字符/转义符、原始字符串行终止符或未终止的字符串/注释 |
-| `FWS-PARSE-*` |无效的模块、声明、语句或表达式语法 |
-| `FWS-TYPE-*` |无效的基本类型、名称、运算符、参数或返回 |
-| `FWS-ABI-*` |重复名称、被拒绝的功能、导出或导入 |
-| `FWS-REGEX-*` |不支持或格式错误的编译器拥有的正则表达式模式
+| 代码家族      | 意义                                                     |
+| ------------- | -------------------------------------------------------- |
+| `FWS-LEX-*`   | 无效字符/转义符、原始字符串行终止符或未终止的字符串/注释 |
+| `FWS-PARSE-*` | 无效的模块、声明、语句或表达式语法                       |
+| `FWS-TYPE-*`  | 无效的基本类型、名称、运算符、参数或返回                 |
+| `FWS-ABI-*`   | 重复名称、被拒绝的功能、导出或导入                       |
+| `FWS-REGEX-*` | 不支持或格式错误的编译器拥有的正则表达式模式             |
 
 错误会阻止工件的生成。警告和信息诊断
 不改变语义。诊断顺序是源顺序，然后是阶段
@@ -919,14 +910,14 @@ Forge Web Script 是中立的生产目标
 
 ### 选择实施方案
 
-|工作量或要求|选择|原因 |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-|现有的 QR 或矩阵包行为 | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | `@mission-platform/qr-code` / `@mission-platform/matrix-code` |特定于包的类型 ESM 包装器仍然可用于这些公共 API。                                       |
-|中性图像和相机扫描仪行为 | `@mission-platform/code-scanner` |默认情况下使用静态链接的 FWS 图，或具有缓存调度的显式动态源模块配置文件。 |
-|现有的条码行为 | `@mission-platform/barcode` |包本地 Forge Web 脚本图形提供了类型化条形码外观。                                           |
-|具有显式主机效应的新型通用浏览器安全计算 | Forge Web 脚本加上 `@mission-platform/vite-plugin-forge-web-script` |版本化 `.fws` 源、清单、类型化加载程序和默认拒绝功能。                                |
-|现有的 AssemblyScript 源或特定于 AssemblyScript 的迁移 | `@mission-platform/vite-plugin-assemblyscript` |编译 `.ts` AssemblyScript 条目并保留其生成的原始导出协定。                            |
-|框架中立的 UI/组件编译 | Forge 组件编译器 | Forge Web 脚本不能替代 `FrameworkOutputPlugin` 或组件目标。                           |
+| 工作量或要求                                           | 选择                                                                | 原因                                                                      |
+| ------------------------------------------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| 现有的 QR 或矩阵包行为                                 | `@mission-platform/qr-code` / `@mission-platform/matrix-code`       | `@mission-platform/qr-code` / `@mission-platform/matrix-code`             | 特定于包的类型 ESM 包装器仍然可用于这些公共 API。 |
+| 中性图像和相机扫描仪行为                               | `@mission-platform/code-scanner`                                    | 默认情况下使用静态链接的 FWS 图，或具有缓存调度的显式动态源模块配置文件。 |
+| 现有的条码行为                                         | `@mission-platform/barcode`                                         | 包本地 Forge Web 脚本图形提供了类型化条形码外观。                         |
+| 具有显式主机效应的新型通用浏览器安全计算               | Forge Web 脚本加上 `@mission-platform/vite-plugin-forge-web-script` | 版本化 `.fws` 源、清单、类型化加载程序和默认拒绝功能。                    |
+| 现有的 AssemblyScript 源或特定于 AssemblyScript 的迁移 | `@mission-platform/vite-plugin-assemblyscript`                      | 编译 `.ts` AssemblyScript 条目并保留其生成的原始导出协定。                |
+| 框架中立的 UI/组件编译                                 | Forge 组件编译器                                                    | Forge Web 脚本不能替代 `FrameworkOutputPlugin` 或组件目标。               |
 
 仅对 `.fws` 条目使用 Forge Web 脚本 Vite 插件。使用
 用于现有 AssemblyScript 条目的 AssemblyScript 插件。在迁移过程中，

@@ -236,8 +236,10 @@ function statements(statementsToRender: readonly ForgeWebScriptStatement[], inde
       case 'switch': {
         lines.push(`${indent};; switch source ${statement.span.line}:${statement.span.column}`);
         lines.push(...renderExpression(statement.value, indent), `${indent}drop`);
-        for (const arm of statement.cases) lines.push(`${indent};; case ${String(arm.value)}`, ...statements(arm.body, `${indent}  `));
-        if (statement.defaultCase !== undefined) lines.push(`${indent};; default`, ...statements(statement.defaultCase, `${indent}  `));
+        for (const arm of statement.cases)
+          lines.push(`${indent};; case ${String(arm.value)}`, ...statements(arm.body, `${indent}  `));
+        if (statement.defaultCase !== undefined)
+          lines.push(`${indent};; default`, ...statements(statement.defaultCase, `${indent}  `));
         break;
       }
       case 'yield': {
@@ -245,10 +247,7 @@ function statements(statementsToRender: readonly ForgeWebScriptStatement[], inde
         break;
       }
       case 'iterator-loop': {
-        lines.push(
-          `${indent};; iterator loop ${statement.binding}`,
-          ...statements(statement.body, `${indent}  `),
-        );
+        lines.push(`${indent};; iterator loop ${statement.binding}`, ...statements(statement.body, `${indent}  `));
         break;
       }
       case 'if': {

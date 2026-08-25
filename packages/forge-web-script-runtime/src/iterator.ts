@@ -15,7 +15,7 @@ function unpack(value: ForgeWebScriptPackedIteratorResult): { readonly value: nu
   const packed = typeof value === 'bigint' ? value : BigInt(value);
   return {
     value: Number(BigInt.asIntN(32, packed & 0xffff_ffffn)),
-    done: (packed >> 32n) !== 0n,
+    done: packed >> 32n !== 0n,
   };
 }
 

@@ -109,6 +109,7 @@ export interface ForgeWebScriptWasmTypeName {
   readonly reference?: 'Array' | 'Vector' | string;
   readonly arguments?: readonly ForgeWebScriptWasmTypeName[];
   readonly length?: number;
+  readonly referenceMode?: 'ref' | 'mut-ref';
 }
 
 export interface ForgeWebScriptWasmEnumDeclaration {
@@ -136,10 +137,11 @@ export interface ForgeWebScriptWasmIteratorCapabilityDescriptor {
   readonly operation: 'source' | 'map' | 'filter' | 'flatten' | 'at';
 }
 
-
 export interface ForgeWebScriptWasmParameter {
   readonly name: string;
   readonly type: ForgeWebScriptWasmTypeName;
+  readonly passing?: 'value' | 'immutable-reference' | 'mutable-reference';
+  readonly mutable?: true;
 }
 
 export interface ForgeWebScriptWasmCapabilityImport {
@@ -196,6 +198,8 @@ export type ForgeWebScriptWasmExpression =
       readonly kind: 'index';
       readonly receiver: ForgeWebScriptWasmExpression;
       readonly index: ForgeWebScriptWasmExpression;
+      /** Present only when a prior proof establishes that the access is in range. */
+      readonly boundsCheck?: 'required' | 'proven-safe';
       readonly span: ForgeWebScriptWasmSourceSpan;
     }
   | {
@@ -248,6 +252,7 @@ export type ForgeWebScriptWasmStatement =
         readonly body: readonly ForgeWebScriptWasmStatement[];
       }[];
       readonly defaultCase?: readonly ForgeWebScriptWasmStatement[];
+      readonly strategy?: 'br-table' | 'sparse' | 'constant';
       readonly span: ForgeWebScriptWasmSourceSpan;
     }
   | {
@@ -340,6 +345,7 @@ export interface ForgeWebScriptWasmModule {
   readonly iteratorCapabilities?: readonly ForgeWebScriptWasmIteratorCapabilityDescriptor[];
   readonly featureRequirements?: ForgeWebScriptWasmFeatureRequirements;
   readonly async?: ForgeWebScriptWasmAsyncContract;
+  readonly memoryModel?: 'region-arc-checked-linear';
   readonly span: ForgeWebScriptWasmSourceSpan;
 }
 
@@ -363,6 +369,12 @@ export interface ForgeWebScriptWasmArtifactMetadata {
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
   readonly compilerHints?: ForgeWebScriptWasmCompilerHints;
   readonly loggerScope?: string;
+  readonly memoryModel?: 'region-arc-checked-linear';
+  readonly sonSchemaVersion?: string;
+  readonly sonGraphHash?: string;
+  readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
+  readonly sonOptimizationPasses?: readonly string[];
+  readonly wasmOptimizationPasses?: readonly string[];
 }
 
 export interface ForgeWebScriptWasmDiagnostic {

@@ -94,9 +94,9 @@ compile input and are recorded in the ABI manifest and cache key:
 ```ts
 const artifact = compileForgeWebScript({
   source,
-  fileName: "runtime.fws",
-  compilerVersion: "1.0.0",
-  optimization: "release",
+  fileName: 'runtime.fws',
+  compilerVersion: '1.0.0',
+  optimization: 'release',
   targetFeatures: { simd: true, tailCall: true, memory64: true },
   compilerHints: { iteratorUnrollLimit: 4 },
 });
@@ -108,6 +108,34 @@ addresses and pointer-length-u64 values. In debug mode, a configured cache may
 persist deterministic `<key>.optimized.wat`, `<key>.unoptimized.wat`,
 `<key>.optimized.wasm`, and `<key>.unoptimized.wasm` artifacts. Cache writes
 are additive and unavailable or failing caches do not fail compilation.
+
+## Safety defaults and bounds profiles
+
+Locals and parameters are immutable unless declared with `mut`. A borrow is
+immutable by default; write access requires the explicit `&mut` form and cannot
+overlap another borrow. POD values (unit, scalars, and aggregates composed only
+of POD fields) are passed by value by default. Non-POD values are passed by
+immutable reference by default; `owned`, `borrowed`, and `shared` remain
+explicit ABI ownership contracts. Region-managed temporaries may not escape
+their scope. Values that cross a scope use an explicit ownership/promotion
+boundary and deterministic ARC retain/release handling.
+
+Array and collection indexing is checked at runtime by default. The compiler
+may annotate a check as `proven-safe` only when interval and length facts prove
+the complete access. `excluded-by-profile` is an explicit release-only policy;
+it is recorded in the analysis report, ABI manifest, optimizer metadata, and
+cache identity. Prefer `runtime` for untrusted indexes and development builds.
+
+The optimization boundary is a deterministic Sea-of-Nodes graph followed by a
+Wasm-stage optimizer. Configured caches contain a schema/versioned
+`<key>.sonir.json` artifact with canonical node IDs, source spans, graph hash,
+effects, ownership facts, bounds policy, and ordered pass reports. It is safe
+to delete or ignore this artifact: malformed, stale, oversized, or mismatched
+cache data is never trusted.
+
+Dense integer `switch` domains may lower to Wasm `br_table`; sparse domains
+use deterministic comparison lowering. Duplicate cases are diagnostics, and a
+default arm is required when coverage is not statically complete.
 
 ## Cross-project link profiles
 
@@ -614,11 +642,7 @@ interface ForgeWebScriptExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: (
-    pointer: number,
-    oldSize: number,
-    newSize: number,
-  ) => number;
+  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
   readonly fws_reset: () => void;
   readonly echo: (value: string) => string;
   readonly processBytes: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;
@@ -755,12 +779,9 @@ The harness accepts host functions only through explicit capability maps keyed
 by manifest capability names, for example:
 
 ```ts
-const exports = await harness.load<{ current: () => bigint }>(
-  "capabilities/clock-now.fws",
-  {
-    "clock.now": { now: () => 123n },
-  },
-);
+const exports = await harness.load<{ current: () => bigint }>('capabilities/clock-now.fws', {
+  'clock.now': { now: () => 123n },
+});
 ```
 
 Missing declared imports and undeclared supplied imports are failures. Test

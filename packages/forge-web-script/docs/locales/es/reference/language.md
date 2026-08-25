@@ -99,9 +99,9 @@ compilan la entrada y se registran en el manifiesto ABI y la clave de caché:
 ```ts
 const artifact = compileForgeWebScript({
   source,
-  fileName: "runtime.fws",
-  compilerVersion: "1.0.0",
-  optimization: "release",
+  fileName: 'runtime.fws',
+  compilerVersion: '1.0.0',
+  optimization: 'release',
   targetFeatures: { simd: true, tailCall: true, memory64: true },
   compilerHints: { iteratorUnrollLimit: 4 },
 });
@@ -224,13 +224,13 @@ etiqueta anterior. Se conservan el orden de las etiquetas y las etiquetas duplic
 
 Las formas de etiquetas comúnmente utilizadas son:
 
-| Formulario de etiqueta | Campos estructurados |
-| -------------------------------------------------------- | -------------------------------------------- |
+| Formulario de etiqueta                                 | Campos estructurados                    |
+| ------------------------------------------------------ | --------------------------------------- |
 | `@param name text`, `@arg`, `@argument` o `@parameter` | `name` es `subject`; el resto es `text` |
-| `@typeparam name text` | `name` es `subject`; el resto es `text` |
-| `@throws type text` o `@exception type text` | `type` es `subject`; el resto es `text` |
-| `@return text` o `@returns text` | Sólo `text` |
-| `@deprecated text` | Sólo `text` |
+| `@typeparam name text`                                 | `name` es `subject`; el resto es `text` |
+| `@throws type text` o `@exception type text`           | `type` es `subject`; el resto es `text` |
+| `@return text` o `@returns text`                       | Sólo `text`                             |
+| `@deprecated text`                                     | Sólo `text`                             |
 
 Otros formularios `@name` se aceptan y conservan como etiquetas ordenadas en lugar de
 reportados como diagnósticos. No tienen sujeto inferido; su texto restante
@@ -380,15 +380,13 @@ La sintaxis admitida está restringida intencionalmente a literales, `.`, carác
 clases y rangos (incluida la negación `^`), `\d`, `\D`, `\w`, `\W`, `\s`,
 `\S`, literales escapados, grupos de captura y no captura, alternancia,
 `*`, `+`, `?`, cuantificadores `{n}`, `{n,}`, `{n,m}` acotados, cuantificadores diferidos,
-y anclajes `^`/`
-Forge Web Script proporciona una biblioteca estándar determinista de expresiones regulares.
-Las llamadas `regex_full_match(pattern, value) -> bool`,
+y anclajes `^`/`Forge Web Script proporciona una biblioteca estándar determinista de expresiones regulares.
+Las llamadas`regex_full_match(pattern, value) -> bool`,
 `regex_prefix_match(pattern, value) -> bool`, y
-`regex_search(pattern, value, start: i32) -> bool` realiza valor total,
+`regex_search(pattern, value, start: i32) -> bool`realiza valor total,
 prefijo de posición cero y coincidencia de búsqueda más a la izquierda, respectivamente. Límites de captura
-están disponibles a través del correspondiente `regex_*_capture_start` y
-`regex_*_capture_end` llamadas; toman un índice de grupo y devuelven una cadena UTF-16
-offset, o `-1` cuando no hay coincidencia o el grupo no está configurado. captura de búsqueda
+están disponibles a través del correspondiente`regex__*capture_start`y`regex*__capture_end`llamadas; toman un índice de grupo y devuelven una cadena UTF-16
+offset, o`-1` cuando no hay coincidencia o el grupo no está configurado. captura de búsqueda
 Las llamadas además toman el desplazamiento inicial antes del índice del grupo.
 
 Las llamadas Regex son funciones de biblioteca estándar propiedad del compilador. Están escritos por
@@ -429,18 +427,18 @@ El contrato de cobro ampliado es estructural y basado en receptores; lo hace
 No agregue métodos de objetos arbitrarios. Las matrices fijas se escriben `[T; N]` y
 vectores como `Vector<T>`. Las firmas admitidas son:
 
-| Receptor | Método | Firma |
-| ----------- | --------------- | ----------------------- |
-| `Array<T>` | `length` | `() -> u32` |
-| `Array<T>` | `get` | `(u32) -> Option<T>` |
-| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
-| `Array<T>` | `iter` | `() -> Iterator<T>` |
-| `Vector<T>` | `length` | `() -> u32` |
-| `Vector<T>` | `get` | `(u32) -> Option<T>` |
-| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` o `add` | `(T) -> Vector<T>` |
-| `Vector<T>` | `pop` | `() -> Option<T>` |
-| `Vector<T>` | `iter` | `() -> Iterator<T>` |
+| Receptor    | Método         | Firma                   |
+| ----------- | -------------- | ----------------------- |
+| `Array<T>`  | `length`       | `() -> u32`             |
+| `Array<T>`  | `get`          | `(u32) -> Option<T>`    |
+| `Array<T>`  | `set`          | `(u32, T) -> Array<T>`  |
+| `Array<T>`  | `iter`         | `() -> Iterator<T>`     |
+| `Vector<T>` | `length`       | `() -> u32`             |
+| `Vector<T>` | `get`          | `(u32) -> Option<T>`    |
+| `Vector<T>` | `set`          | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` o `add` | `(T) -> Vector<T>`      |
+| `Vector<T>` | `pop`          | `() -> Option<T>`       |
+| `Vector<T>` | `iter`         | `() -> Iterator<T>`     |
 
 La ortografía `add` es intencionalmente un alias de compatibilidad para vector
 `push`; no es un método de matriz. Los índices son `u32`, los argumentos de los elementos deben
@@ -549,13 +547,13 @@ silencio sin operación.
 El módulo utiliza una memoria lineal WebAssembly con páginas de 64 KiB y little-endian.
 valores escalares. Los valores escalares se asignan de la siguiente manera:
 
-| Forjar script web | Representación de WebAssembly |
-| ----------------- | ------------------------------------------ |
-| `bool` | `i32`, donde `0` es falso y `1` es verdadero |
-| `i32`, `u32` | `i32` |
-| `i64`, `u64` | `i64` |
-| `f32`, `f64` | flotante WebAssembly coincidente |
-| `unit` | sin valor de resultado |
+| Forjar script web | Representación de WebAssembly                        |
+| ----------------- | ---------------------------------------------------- |
+| `bool`            | `i32`, donde `0` es falso y `1` es verdadero         |
+| `i32`, `u32`      | `i32`                                                |
+| `i64`, `u64`      | `i64`                                                |
+| `f32`, `f64`      | flotante WebAssembly coincidente                     |
+| `unit`            | sin valor de resultado                               |
 | `string`, `bytes` | dos valores `u32`: puntero y luego longitud del byte |
 
 El manifiesto declara la misma asignación en `valueRepresentations`. un
@@ -641,11 +639,7 @@ interface ForgeWebScriptExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: (
-    pointer: number,
-    oldSize: number,
-    newSize: number,
-  ) => number;
+  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
   readonly fws_reset: () => void;
   readonly echo: (value: string) => string;
   readonly processBytes: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;
@@ -782,12 +776,9 @@ El arnés acepta funciones de host sólo a través de mapas de capacidad explíc
 por nombres de capacidades manifiestas, por ejemplo:
 
 ```ts
-const exports = await harness.load<{ current: () => bigint }>(
-  "capabilities/clock-now.fws",
-  {
-    "clock.now": { now: () => 123n },
-  },
-);
+const exports = await harness.load<{ current: () => bigint }>('capabilities/clock-now.fws', {
+  'clock.now': { now: () => 123n },
+});
 ```
 
 Las importaciones declaradas faltantes y las importaciones suministradas no declaradas son fracasos. prueba
@@ -814,13 +805,13 @@ Los diagnósticos son registros estructurados con `code`, `severity`, `phase`, `
 La fase es una de `lex`, `parse`, `type-check` o `abi`. Código v1 estable
 Las familias incluyen:
 
-| Familia de códigos | Significado |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `FWS-LEX-*` | caracteres/escapes no válidos, terminadores de línea de cadena sin formato o cadenas/comentarios sin terminar |
-| `FWS-PARSE-*` | sintaxis de módulo, declaración, declaración o expresión no válida |
-| `FWS-TYPE-*` | tipo primitivo, nombre, operador, argumento o retorno no válido |
-| `FWS-ABI-*` | nombres duplicados, capacidades denegadas, exportaciones o importaciones |
-| `FWS-REGEX-*` | patrones de expresiones regulares propiedad del compilador no compatibles o con formato incorrecto |
+| Familia de códigos | Significado                                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `FWS-LEX-*`        | caracteres/escapes no válidos, terminadores de línea de cadena sin formato o cadenas/comentarios sin terminar |
+| `FWS-PARSE-*`      | sintaxis de módulo, declaración, declaración o expresión no válida                                            |
+| `FWS-TYPE-*`       | tipo primitivo, nombre, operador, argumento o retorno no válido                                               |
+| `FWS-ABI-*`        | nombres duplicados, capacidades denegadas, exportaciones o importaciones                                      |
+| `FWS-REGEX-*`      | patrones de expresiones regulares propiedad del compilador no compatibles o con formato incorrecto            |
 
 Los errores impiden la generación de artefactos. Las advertencias y los diagnósticos informativos no
 no cambiar la semántica. El orden de diagnóstico es el orden de origen, seguido de la fase.
@@ -919,14 +910,14 @@ Pretender que las dos exportaciones sean conductualmente intercambiables todaví
 
 ### Seleccionar una implementación
 
-| Carga de trabajo o requisito | Seleccionar | Razón |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Comportamiento existente del paquete QR o matricial | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | Los contenedores ESM tipificados específicos del paquete permanecen disponibles para esas API públicas.                                       |
-| Comportamiento neutral del escáner de cámara y imagen | `@mission-platform/code-scanner` | Utiliza un gráfico FWS vinculado estáticamente de forma predeterminada o un perfil de módulo de origen dinámico explícito con distribución en caché. |
-| Comportamiento del código de barras existente | `@mission-platform/barcode` | Los gráficos de Forge Web Script locales del paquete proporcionan la fachada del código de barras escrito.                                           |
-| Nueva computación de uso general segura para el navegador con efectos de host explícitos | Forge Web Script más `@mission-platform/vite-plugin-forge-web-script` | Fuente `.fws` versionada, manifiesto, cargador escrito y capacidades de denegación predeterminada.                                |
-| Fuente existente de AssemblyScript o una migración específica de AssemblyScript | `@mission-platform/vite-plugin-assemblyscript` | Compila `.ts` entradas de AssemblyScript y conserva su contrato de exportación sin formato generado.                            |
-| Compilación de componentes/UI neutral en el marco | Compilador de componentes de Forge | Forge Web Script no reemplaza `FrameworkOutputPlugin` ni los destinos de los componentes.                           |
+| Carga de trabajo o requisito                                                             | Seleccionar                                                           | Razón                                                                                                                                                |
+| ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Comportamiento existente del paquete QR o matricial                                      | `@mission-platform/qr-code` / `@mission-platform/matrix-code`         | Los contenedores ESM tipificados específicos del paquete permanecen disponibles para esas API públicas.                                              |
+| Comportamiento neutral del escáner de cámara y imagen                                    | `@mission-platform/code-scanner`                                      | Utiliza un gráfico FWS vinculado estáticamente de forma predeterminada o un perfil de módulo de origen dinámico explícito con distribución en caché. |
+| Comportamiento del código de barras existente                                            | `@mission-platform/barcode`                                           | Los gráficos de Forge Web Script locales del paquete proporcionan la fachada del código de barras escrito.                                           |
+| Nueva computación de uso general segura para el navegador con efectos de host explícitos | Forge Web Script más `@mission-platform/vite-plugin-forge-web-script` | Fuente `.fws` versionada, manifiesto, cargador escrito y capacidades de denegación predeterminada.                                                   |
+| Fuente existente de AssemblyScript o una migración específica de AssemblyScript          | `@mission-platform/vite-plugin-assemblyscript`                        | Compila `.ts` entradas de AssemblyScript y conserva su contrato de exportación sin formato generado.                                                 |
+| Compilación de componentes/UI neutral en el marco                                        | Compilador de componentes de Forge                                    | Forge Web Script no reemplaza `FrameworkOutputPlugin` ni los destinos de los componentes.                                                            |
 
 Utilice el complemento Vite de Forge Web Script solo para las entradas `.fws`. Utilice el
 Complemento de AssemblyScript para entradas existentes de AssemblyScript. Durante la migración, un

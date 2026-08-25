@@ -39,7 +39,10 @@ function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbi
         parameter.reference === other.reference &&
         JSON.stringify(parameter.arguments) === JSON.stringify(other.arguments) &&
         parameter.length === other.length &&
-        parameter.ownership === other.ownership
+        parameter.ownership === other.ownership &&
+        parameter.passing === other.passing &&
+        parameter.mutable === other.mutable &&
+        parameter.referenceMode === other.referenceMode
       );
     })
   );
@@ -75,6 +78,10 @@ export function validateForgeWebScriptAbiManifest(
         if (parameter.ownership !== undefined && parameter.ownership !== 'owned')
           errors.push('Array<i32> ABI parameters must be owned.');
       }
+      if (parameter.passing === 'mutable-reference' && parameter.referenceMode !== 'mut-ref')
+        errors.push(`Mutable ABI parameter '${parameter.name}' must use an explicit &mut reference.`);
+      if (parameter.passing === 'immutable-reference' && parameter.referenceMode === 'mut-ref')
+        errors.push(`Mutable reference ABI parameter '${parameter.name}' cannot be immutable.`);
     }
     if (!primitiveTypes.has(declaration.result)) errors.push(`Unknown ABI result type '${declaration.result}'.`);
     if (declaration.resultReference === 'Array') {
@@ -83,6 +90,8 @@ export function validateForgeWebScriptAbiManifest(
         errors.push('Unsupported collection element type; only Array<i32> is supported.');
     }
   }
+  if (manifest.memory.safetyModel !== undefined && manifest.memory.safetyModel !== 'region-arc-checked-linear')
+    errors.push('Unsupported memory safety model.');
   const capabilities = [...manifest.requiredCapabilities].toSorted();
   if (JSON.stringify(capabilities) !== JSON.stringify(manifest.requiredCapabilities))
     errors.push('Required capabilities must be sorted.');

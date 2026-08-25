@@ -5,7 +5,7 @@ import {
   type ForgeWebScriptModuleGraph,
 } from './graph.js';
 import { normalizeForgeWebScriptFileId } from './identity.js';
-import { lowerForgeWebScriptToIr } from './ir.js';
+import { lowerForgeWebScriptIrToModule, lowerForgeWebScriptToIr } from './ir.js';
 import { validateForgeWebScriptLinks } from './linker.js';
 import {
   createForgeWebScriptAbiManifest,
@@ -13,7 +13,9 @@ import {
   type ForgeWebScriptSourceImport,
 } from './manifest.js';
 import { optimizeForgeWebScriptModule } from './optimizer.js';
+import { lexForgeWebScript } from './lexer.js';
 import { parseForgeWebScript } from './parser.js';
+import { buildForgeWebScriptSoN, optimizeForgeWebScriptSoN } from './son-ir.js';
 import { forgeWebScriptStandardLibraryIdentity } from './stdlib/regex.js';
 import { checkForgeWebScript } from './type-checker.js';
 
@@ -27,9 +29,23 @@ import type {
 } from './contracts.js';
 import type { ForgeWebScriptAbiFunction } from './manifest.js';
 
+function frontendSourceHash(source: string, fileName: string): string {
+  let result = 2_166_136_261;
+  const tokens = lexForgeWebScript(source, fileName)
+    .tokens.filter(({ kind }) => kind !== 'comment' && kind !== 'eof')
+    .map(({ kind, text }) => `${kind}\0${text}`)
+    .join('\0');
+  for (const character of tokens) {
+    result ^= character.codePointAt(0) ?? 0;
+    result = Math.imul(result, 16_777_619) >>> 0;
+  }
+  return result.toString(16).padStart(8, '0');
+}
+
 function abiCarrierType(type: {
   readonly name: ForgeWebScriptPrimitiveType;
   readonly reference?: string;
+  readonly referenceMode?: 'ref' | 'mut-ref';
 }): ForgeWebScriptPrimitiveType {
   return type.reference === undefined ? type.name : 'i32';
 }
@@ -41,6 +57,16 @@ function abiFunction(declaration: ForgeWebScriptModule['functions'][number]): Fo
       name,
       type: abiCarrierType(type),
       ...(type.reference === undefined ? {} : { reference: type.reference }),
+      passing:
+        type.referenceMode === 'mut-ref'
+          ? 'mutable-reference'
+          : type.referenceMode === 'ref' ||
+              type.reference !== undefined ||
+              type.name === 'bytes' ||
+              type.name === 'string'
+            ? 'immutable-reference'
+            : 'value',
+      ...(type.referenceMode === undefined ? {} : { referenceMode: type.referenceMode }),
       ...(type.arguments === undefined ? {} : { arguments: type.arguments }),
       ...(type.length === undefined ? {} : { length: type.length }),
       ...(type.reference === 'Array'
@@ -106,12 +132,14 @@ function resultFor(
     ForgeWebScriptCompileInput,
     | 'source'
     | 'fileName'
+    | 'compilerVersion'
     | 'optimization'
     | 'standardLibrary'
     | 'async'
     | 'targetFeatures'
     | 'compilerHints'
     | 'linkProfile'
+    | 'boundsChecks'
   >,
   module: ForgeWebScriptModule | undefined,
   diagnostics: readonly ForgeWebScriptDiagnostic[],
@@ -122,20 +150,37 @@ function resultFor(
     return { source: input.source, fileName: input.fileName, links, sourceFiles, diagnostics };
   }
   const profile = input.linkProfile;
+  const optimization = input.optimization ?? (profile === undefined ? 'debug' : 'release');
+  // SoN is the canonical optimization boundary: it is built from the
+  // unoptimized semantic IR, performs its own real optimization, and its
+  // compatibility-lowered tree is what the backend below actually consumes.
+  // The legacy tree-IR optimizer is retained only to populate the
+  // backward-compatible `optimizationReport` shape; it no longer decides the
+  // compiled output.
   const ir = lowerForgeWebScriptToIr(module);
-  const optimized = optimizeForgeWebScriptModule(
-    module,
-    input.optimization ?? (profile === undefined ? 'debug' : 'release'),
-  );
+  const sonOptions = {
+    compilerVersion: input.compilerVersion,
+    sourceHash: frontendSourceHash(input.source, input.fileName),
+    optimization,
+    ...(input.boundsChecks === undefined ? {} : { boundsChecks: input.boundsChecks }),
+  } as const;
+  const unoptimizedSonIr = buildForgeWebScriptSoN(ir, sonOptions);
+  const sonOptimized = optimizeForgeWebScriptSoN(unoptimizedSonIr, ir, optimization);
+  const optimizedIr = sonOptimized.ir;
+  const optimizedModule = lowerForgeWebScriptIrToModule(optimizedIr);
+  const legacyOptimized = optimizeForgeWebScriptModule(module, optimization);
   return {
     source: input.source,
     fileName: input.fileName,
     module,
     ir,
-    optimizedModule: optimized.module,
-    optimizedIr: optimized.ir,
-    optimizationReport: optimized.report,
-    abi: createForgeWebScriptAbiManifest(optimized.module, {
+    optimizedModule,
+    optimizedIr,
+    unoptimizedSonIr,
+    sonIr: sonOptimized.module,
+    sonOptimizationReport: sonOptimized.report,
+    optimizationReport: { ...legacyOptimized.report, sonPasses: sonOptimized.report.passes.map(({ name }) => name) },
+    abi: createForgeWebScriptAbiManifest(optimizedModule, {
       ...(links.graphHash === undefined ? {} : { graphHash: links.graphHash }),
       ...(links.projectRoot === undefined ? {} : { projectRoot: links.projectRoot }),
       ...(links.linkMode === undefined ? {} : { linkMode: links.linkMode }),
@@ -144,6 +189,7 @@ function resultFor(
       ...(links.sourceImports === undefined ? {} : { sourceImports: links.sourceImports }),
       ...(links.linkedExports === undefined ? {} : { linkedExports: links.linkedExports }),
       standardLibrary: forgeWebScriptStandardLibraryIdentity(input.standardLibrary),
+      boundsChecks: input.boundsChecks ?? 'runtime',
       ...(input.async === undefined ? {} : { async: input.async }),
       ...(input.targetFeatures === undefined ? {} : { targetFeatures: input.targetFeatures }),
     }),
@@ -291,12 +337,14 @@ export function prepareForgeWebScriptGraphFrontend(
     {
       source,
       fileName: input.entryFileName,
+      compilerVersion: input.compilerVersion,
       optimization: input.optimization,
       linkProfile: input.linkProfile ?? input.linkConfiguration?.linkProfile,
       standardLibrary: input.standardLibrary,
       async: input.async,
       targetFeatures: input.targetFeatures,
       compilerHints: input.compilerHints,
+      boundsChecks: input.boundsChecks,
     },
     module,
     uniqueDiagnostics(diagnostics),

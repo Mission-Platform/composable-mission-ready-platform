@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-web-s
 **Art:** Funktion
 
 ```typescript
-function buildForgeWebScriptWasmCollectionRuntimeBodies(): readonly ForgeWebScriptWasmRuntimeBody[]
+function buildForgeWebScriptWasmCollectionRuntimeBodies(): readonly ForgeWebScriptWasmRuntimeBody[];
 ```
 
 Keine Beschreibung angegeben.
@@ -26,7 +26,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorIndex: number): readonly number[][]
+function buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorIndex: number): readonly number[][];
 ```
 
 Laufzeitkörper verwenden i32-Handles. Arrays sind [Länge, Elemente...] und Vektoren
@@ -36,9 +36,9 @@ verpackt i64 `(done << 32) | i32 value` ABI.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| allocatorIndex | Zahl |  |
+| Name           | Geben Sie | ein Beschreibung |
+| -------------- | --------- | ---------------- |
+| allocatorIndex | Zahl      |                  |
 
 ### ForgeWebScriptWasmRuntimeBody
 
@@ -117,7 +117,8 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptWasmBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
+export type ForgeWebScriptWasmBinaryOperator =
+  '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
 Keine Beschreibung angegeben.
@@ -287,7 +288,8 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptWasmPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptWasmPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
 Keine Beschreibung angegeben.
@@ -317,7 +319,55 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptWasmStandardLibraryOperation = | 'full-match' | 'prefix-match' | 'search' | 'full-capture-start' | 'full-capture-end' | 'prefix-capture-start' | 'prefix-capture-end' | 'search-capture-start' | 'search-capture-end' | 'string-concat' | 'string-length' | 'string-byte-at' | 'string-starts-with' | 'string-slice' | 'string-to-i32' | 'bytes-length' | 'bytes-length-u32' | 'bytes-byte-at' | 'bytes-byte-at-u32' | 'bytes-slice' | 'memory-alloc' | 'memory-dealloc' | 'memory-realloc' | 'memory-load-u32' | 'memory-store-u32' | 'memory-load-f64' | 'memory-store-f64' | 'f64-from-u32' | 'vector-new' | 'vector-push' | 'vector-get' | 'vector-set' | 'vector-length' | 'vector-pop' | 'array-new' | 'array-get' | 'array-set' | 'array-length' | 'array-iter' | 'iterator-next' | 'set-has' | 'map-get' | 'ecs-query' | 'ecs-transition' | 'signal-schedule' | 'async-schedule-microtask' | 'async-worker-post' | 'async-worker-receive';
+export type ForgeWebScriptWasmStandardLibraryOperation =
+  | 'full-match'
+  | 'prefix-match'
+  | 'search'
+  | 'full-capture-start'
+  | 'full-capture-end'
+  | 'prefix-capture-start'
+  | 'prefix-capture-end'
+  | 'search-capture-start'
+  | 'search-capture-end'
+  | 'string-concat'
+  | 'string-length'
+  | 'string-byte-at'
+  | 'string-starts-with'
+  | 'string-slice'
+  | 'string-to-i32'
+  | 'bytes-length'
+  | 'bytes-length-u32'
+  | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
+  | 'bytes-slice'
+  | 'memory-alloc'
+  | 'memory-dealloc'
+  | 'memory-realloc'
+  | 'memory-load-u32'
+  | 'memory-store-u32'
+  | 'memory-load-f64'
+  | 'memory-store-f64'
+  | 'f64-from-u32'
+  | 'vector-new'
+  | 'vector-push'
+  | 'vector-get'
+  | 'vector-set'
+  | 'vector-length'
+  | 'vector-pop'
+  | 'array-new'
+  | 'array-get'
+  | 'array-set'
+  | 'array-length'
+  | 'array-iter'
+  | 'iterator-next'
+  | 'set-has'
+  | 'map-get'
+  | 'ecs-query'
+  | 'ecs-transition'
+  | 'signal-schedule'
+  | 'async-schedule-microtask'
+  | 'async-worker-post'
+  | 'async-worker-receive';
 ```
 
 Keine Beschreibung angegeben.
@@ -349,17 +399,20 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function compileForgeWebScriptWasm(input: ForgeWebScriptWasmBackendInput, fileName = '<input>'): ForgeWebScriptWasmBackendResult
+function compileForgeWebScriptWasm(
+  input: ForgeWebScriptWasmBackendInput,
+  fileName = '<input>',
+): ForgeWebScriptWasmBackendResult;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | ForgeWebScriptWasmBackendInput |  |
-| Dateiname |  |  |
+| Name      | Geben Sie                      | ein Beschreibung |
+| --------- | ------------------------------ | ---------------- |
+| Eingabe   | ForgeWebScriptWasmBackendInput |                  |
+| Dateiname |                                |                  |
 
 ## `src/verifier`
 
@@ -468,16 +521,18 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function verifyForgeWebScriptWasmArtifact(input: ForgeWebScriptWasmArtifactVerificationInput): ForgeWebScriptWasmArtifactVerificationResult
+function verifyForgeWebScriptWasmArtifact(
+  input: ForgeWebScriptWasmArtifactVerificationInput,
+): ForgeWebScriptWasmArtifactVerificationResult;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | ForgeWebScriptWasmArtifactVerificationInput |  |
+| Name    | Geben Sie                                   | ein Beschreibung |
+| ------- | ------------------------------------------- | ---------------- |
+| Eingabe | ForgeWebScriptWasmArtifactVerificationInput |                  |
 
 ## `src/wat`
 
@@ -496,14 +551,17 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function renderForgeWebScriptWasmWat(module: ForgeWebScriptWasmModule, metadata: ForgeWebScriptWasmWatMetadata = {}): string
+function renderForgeWebScriptWasmWat(
+  module: ForgeWebScriptWasmModule,
+  metadata: ForgeWebScriptWasmWatMetadata = {},
+): string;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | ForgeWebScriptWasmModule |  |
-| Metadaten | ForgeWebScriptWasmWatMetadata |  |
+| Name      | Geben Sie                     | ein Beschreibung |
+| --------- | ----------------------------- | ---------------- |
+| Modul     | ForgeWebScriptWasmModule      |                  |
+| Metadaten | ForgeWebScriptWasmWatMetadata |                  |

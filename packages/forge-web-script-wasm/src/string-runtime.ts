@@ -290,7 +290,10 @@ function toI32(): number[] {
   ]);
 }
 
-export function buildStringRuntimeBodies(allocatorIndex: number, simd = false): {
+export function buildStringRuntimeBodies(
+  allocatorIndex: number,
+  simd = false,
+): {
   readonly concat: number[];
   readonly length: number[];
   readonly byteAt: number[];

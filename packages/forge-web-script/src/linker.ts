@@ -53,7 +53,10 @@ function namespacePrivateFunctions(
       case 'unary':
         return { ...value, operand: expression(value.operand) };
       case 'struct-value':
-        return { ...value, fields: Object.fromEntries(Object.entries(value.fields).map(([name, field]) => [name, expression(field)])) };
+        return {
+          ...value,
+          fields: Object.fromEntries(Object.entries(value.fields).map(([name, field]) => [name, expression(field)])),
+        };
       case 'enum-value':
         return { ...value, arguments: value.arguments.map(expression) };
       case 'array-literal':
@@ -74,53 +77,58 @@ function namespacePrivateFunctions(
     }
   };
 
-  const statements = (values: readonly ForgeWebScriptStatement[]): ForgeWebScriptStatement[] => values.map((value) => {
-    switch (value.kind) {
-      case 'let':
-        return { ...value, value: expression(value.value) };
-      case 'assignment':
-        return { ...value, value: expression(value.value), ...(value.index === undefined ? {} : { index: expression(value.index) }) };
-      case 'return':
-        return { ...value, ...(value.value === undefined ? {} : { value: expression(value.value) }) };
-      case 'expression-statement':
-        return { ...value, expression: expression(value.expression) };
-      case 'if':
-        return {
-          ...value,
-          condition: expression(value.condition),
-          consequent: statements(value.consequent),
-          ...(value.alternate === undefined ? {} : { alternate: statements(value.alternate) }),
-        };
-      case 'while':
-      case 'do-while':
-        return { ...value, condition: expression(value.condition), body: statements(value.body) };
-      case 'for':
-        return {
-          ...value,
-          ...(value.initializer === undefined ? {} : { initializer: statements([value.initializer])[0] }),
-          condition: expression(value.condition),
-          ...(value.update === undefined ? {} : { update: statements([value.update])[0] }),
-          body: statements(value.body),
-        };
-      case 'iterator-loop':
-        return { ...value, iterator: expression(value.iterator), body: statements(value.body) };
-      case 'yield':
-        return { ...value, value: expression(value.value) };
-      case 'match-statement':
-        return {
-          ...value,
-          value: expression(value.value),
-          arms: value.arms.map((arm) => ({ ...arm, value: expression(arm.value) })),
-        };
-      case 'switch':
-        return {
-          ...value,
-          value: expression(value.value),
-          cases: value.cases.map((arm) => ({ ...arm, body: statements(arm.body) })),
-          ...(value.defaultCase === undefined ? {} : { defaultCase: statements(value.defaultCase) }),
-        };
-    }
-  });
+  const statements = (values: readonly ForgeWebScriptStatement[]): ForgeWebScriptStatement[] =>
+    values.map((value) => {
+      switch (value.kind) {
+        case 'let':
+          return { ...value, value: expression(value.value) };
+        case 'assignment':
+          return {
+            ...value,
+            value: expression(value.value),
+            ...(value.index === undefined ? {} : { index: expression(value.index) }),
+          };
+        case 'return':
+          return { ...value, ...(value.value === undefined ? {} : { value: expression(value.value) }) };
+        case 'expression-statement':
+          return { ...value, expression: expression(value.expression) };
+        case 'if':
+          return {
+            ...value,
+            condition: expression(value.condition),
+            consequent: statements(value.consequent),
+            ...(value.alternate === undefined ? {} : { alternate: statements(value.alternate) }),
+          };
+        case 'while':
+        case 'do-while':
+          return { ...value, condition: expression(value.condition), body: statements(value.body) };
+        case 'for':
+          return {
+            ...value,
+            ...(value.initializer === undefined ? {} : { initializer: statements([value.initializer])[0] }),
+            condition: expression(value.condition),
+            ...(value.update === undefined ? {} : { update: statements([value.update])[0] }),
+            body: statements(value.body),
+          };
+        case 'iterator-loop':
+          return { ...value, iterator: expression(value.iterator), body: statements(value.body) };
+        case 'yield':
+          return { ...value, value: expression(value.value) };
+        case 'match-statement':
+          return {
+            ...value,
+            value: expression(value.value),
+            arms: value.arms.map((arm) => ({ ...arm, value: expression(arm.value) })),
+          };
+        case 'switch':
+          return {
+            ...value,
+            value: expression(value.value),
+            cases: value.cases.map((arm) => ({ ...arm, body: statements(arm.body) })),
+            ...(value.defaultCase === undefined ? {} : { defaultCase: statements(value.defaultCase) }),
+          };
+      }
+    });
 
   return module.functions.map((functionDeclaration) => {
     const nextName = rename(functionDeclaration.name);
@@ -169,9 +177,10 @@ function staticComponents(
       // Cross-project exports are namespaced during flattening, so they cannot collide.
       // Only same-project bare ABI exports can genuinely clash.
       if (linkedModule.projectRoot !== root.projectRoot) continue;
-      for (const declaration of (Array.isArray(linkedModule.module.functions) ? linkedModule.module.functions : []).filter(
-        ({ exported }) => exported,
-      )) {
+      for (const declaration of (Array.isArray(linkedModule.module.functions)
+        ? linkedModule.module.functions
+        : []
+      ).filter(({ exported }) => exported)) {
         const signature = callableSignature(declaration);
         const previous = exports.get(declaration.name);
         if (previous === undefined) exports.set(declaration.name, { moduleId: linkedModule.moduleId, signature });
@@ -209,7 +218,9 @@ function staticComponents(
         for (const sourceImport of module.sourceImports) {
           const edge = graph.edges.find(
             (candidate) =>
-              candidate.importer === fileName && candidate.source === sourceImport.source && candidate.linkMode === 'static',
+              candidate.importer === fileName &&
+              candidate.source === sourceImport.source &&
+              candidate.linkMode === 'static',
           );
           const target = edge === undefined ? undefined : byFile.get(edge.resolved);
           if (target === undefined) continue;

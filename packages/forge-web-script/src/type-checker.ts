@@ -3,6 +3,7 @@ import { primitiveTypes } from './parser.js';
 import { FORGE_WEB_SCRIPT_REGEX_FUNCTIONS, type ForgeWebScriptStandardLibraryFunction } from './stdlib/regex.js';
 import { FORGE_WEB_SCRIPT_STRING_FUNCTIONS, type ForgeWebScriptStringFunction } from './stdlib/string.js';
 import { FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS, type ForgeWebScriptMemoryFunction } from './stdlib/memory.js';
+import { checkForgeWebScriptSafety } from './safety.js';
 
 import type {
   ForgeWebScriptExpression,
@@ -303,6 +304,7 @@ export function checkForgeWebScript(
   }
   for (const functionDeclaration of module.functions)
     checkFunction(functionDeclaration, callables, fileName, diagnostics, module, enumValues);
+  checkForgeWebScriptSafety(module, fileName, diagnostics);
   return { diagnostics, valid: diagnostics.every((diagnostic) => diagnostic.severity !== 'error') };
 }
 
@@ -382,7 +384,16 @@ function checkStatement(
     }
     case 'assignment': {
       const localType = locals.get(statement.name);
-      const valueType = inferExpression(statement.value, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+      const valueType = inferExpression(
+        statement.value,
+        locals,
+        callables,
+        fileName,
+        diagnostics,
+        enumValues,
+        undefined,
+        module,
+      );
       if (localType === undefined) {
         diagnostics.push(
           createDiagnostic(
@@ -394,7 +405,16 @@ function checkStatement(
           ),
         );
       } else if (statement.index !== undefined) {
-        const indexType = inferExpression(statement.index, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+        const indexType = inferExpression(
+          statement.index,
+          locals,
+          callables,
+          fileName,
+          diagnostics,
+          enumValues,
+          undefined,
+          module,
+        );
         if (!['i32', 'u32'].includes(indexType))
           mismatch(statement.index.span, fileName, diagnostics, 'Collection indexes must have integer type.');
         const isArray = localType.startsWith('Array<');
@@ -457,7 +477,18 @@ function checkStatement(
       break;
     }
     case 'if': {
-      if (inferExpression(statement.condition, locals, callables, fileName, diagnostics, enumValues, undefined, module) !== 'bool')
+      if (
+        inferExpression(
+          statement.condition,
+          locals,
+          callables,
+          fileName,
+          diagnostics,
+          enumValues,
+          undefined,
+          module,
+        ) !== 'bool'
+      )
         mismatch(statement.condition.span, fileName, diagnostics, 'An if condition must have type bool.');
       {
         const consequentLocals = new Map(locals);
@@ -495,7 +526,16 @@ function checkStatement(
       break;
     }
     case 'switch': {
-      const discriminant = inferExpression(statement.value, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+      const discriminant = inferExpression(
+        statement.value,
+        locals,
+        callables,
+        fileName,
+        diagnostics,
+        enumValues,
+        undefined,
+        module,
+      );
       const enumCases = enumValues.get(discriminant);
       if (!['i32', 'u32'].includes(discriminant) && enumCases === undefined)
         diagnostics.push(
@@ -572,7 +612,18 @@ function checkStatement(
     }
     case 'while':
     case 'do-while': {
-      if (inferExpression(statement.condition, locals, callables, fileName, diagnostics, enumValues, undefined, module) !== 'bool')
+      if (
+        inferExpression(
+          statement.condition,
+          locals,
+          callables,
+          fileName,
+          diagnostics,
+          enumValues,
+          undefined,
+          module,
+        ) !== 'bool'
+      )
         mismatch(statement.condition.span, fileName, diagnostics, `A ${statement.kind} condition must have type bool.`);
       const bodyLocals = new Map(locals);
       for (const nested of statement.body)
@@ -604,7 +655,16 @@ function checkStatement(
       break;
     }
     case 'yield': {
-      const valueType = inferExpression(statement.value, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+      const valueType = inferExpression(
+        statement.value,
+        locals,
+        callables,
+        fileName,
+        diagnostics,
+        enumValues,
+        undefined,
+        module,
+      );
       if (!iterable)
         diagnostics.push(
           createDiagnostic(
@@ -627,7 +687,16 @@ function checkStatement(
       break;
     }
     case 'iterator-loop': {
-      const iteratorType = inferExpression(statement.iterator, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+      const iteratorType = inferExpression(
+        statement.iterator,
+        locals,
+        callables,
+        fileName,
+        diagnostics,
+        enumValues,
+        undefined,
+        module,
+      );
       const nextValue = isOptionType(iteratorType) ? elementType(iteratorType) : undefined;
       const iterableValue = isIteratorLike(iteratorType) ? elementType(iteratorType) : undefined;
       if (nextValue === undefined && iterableValue === undefined)
@@ -724,7 +793,16 @@ function inferExpression(
           );
         const element = elementType(receiverType);
         for (const [index, argument] of expression.arguments.entries()) {
-          const actual = inferExpression(argument, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+          const actual = inferExpression(
+            argument,
+            locals,
+            callables,
+            fileName,
+            diagnostics,
+            enumValues,
+            undefined,
+            module,
+          );
           const parameter = contract.parameters[index];
           if (parameter === 'index' && !['i32', 'u32'].includes(actual))
             mismatch(
@@ -804,7 +882,12 @@ function inferExpression(
     }
     const type = functionTypeKey(callable);
     if (expectedType !== undefined && expectedType !== type)
-      mismatch(expression.span, fileName, diagnostics, `Function value '${expression.name}' has type '${type}', expected '${expectedType}'.`);
+      mismatch(
+        expression.span,
+        fileName,
+        diagnostics,
+        `Function value '${expression.name}' has type '${type}', expected '${expectedType}'.`,
+      );
     return type;
   }
   if (expression.kind === 'struct-value') {
@@ -818,9 +901,19 @@ function inferExpression(
     const variant = declaration?.variants.find(({ name }) => name === expression.variant);
     const fields = variant?.fields ?? builtInEnumFields(enumName, expression.variant, expectedType);
     if (declaration === undefined && fields === undefined)
-      diagnostics.push(createDiagnostic(fileName, 'type-check', 'FWS-TYPE-020', `Unknown enum '${enumName}'.`, expression.span));
+      diagnostics.push(
+        createDiagnostic(fileName, 'type-check', 'FWS-TYPE-020', `Unknown enum '${enumName}'.`, expression.span),
+      );
     if (declaration !== undefined && variant === undefined)
-      diagnostics.push(createDiagnostic(fileName, 'type-check', 'FWS-TYPE-020', `Unknown variant '${expression.variant}' for enum '${enumName}'.`, expression.span));
+      diagnostics.push(
+        createDiagnostic(
+          fileName,
+          'type-check',
+          'FWS-TYPE-020',
+          `Unknown variant '${expression.variant}' for enum '${enumName}'.`,
+          expression.span,
+        ),
+      );
     if (fields !== undefined && expression.arguments.length !== fields.length)
       diagnostics.push(
         createDiagnostic(
@@ -838,13 +931,20 @@ function inferExpression(
     for (const [index, actual] of actualArguments.entries()) {
       const expectedArgument = expectedArguments[index];
       if (expectedArgument !== undefined && expectedArgument !== 'unit' && actual !== expectedArgument)
-        mismatch(expression.arguments[index]?.span ?? expression.span, fileName, diagnostics, `Enum field ${index + 1} has type '${actual}', expected '${expectedArgument}'.`);
+        mismatch(
+          expression.arguments[index]?.span ?? expression.span,
+          fileName,
+          diagnostics,
+          `Enum field ${index + 1} has type '${actual}', expected '${expectedArgument}'.`,
+        );
     }
     if (expectedType !== undefined && expectedType.startsWith(`${enumName}<`)) return expectedType;
     if (declaration !== undefined) {
       const inferred = declaration.genericParameters.map((parameter) => {
-        const index = variant?.fields.findIndex(({ type }) => type.reference === parameter.name || type.name === parameter.name) ?? -1;
-        return index < 0 ? 'unit' : actualArguments[index] ?? 'unit';
+        const index =
+          variant?.fields.findIndex(({ type }) => type.reference === parameter.name || type.name === parameter.name) ??
+          -1;
+        return index < 0 ? 'unit' : (actualArguments[index] ?? 'unit');
       });
       return `${enumName}<${inferred.join(',')}>`;
     }
@@ -865,14 +965,41 @@ function inferExpression(
     return `${collection}<${element}>${fixedLength}`;
   }
   if (expression.kind === 'index') {
-    const receiver = inferExpression(expression.receiver, locals, callables, fileName, diagnostics, enumValues, undefined, module);
-    const index = inferExpression(expression.index, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+    const receiver = inferExpression(
+      expression.receiver,
+      locals,
+      callables,
+      fileName,
+      diagnostics,
+      enumValues,
+      undefined,
+      module,
+    );
+    const index = inferExpression(
+      expression.index,
+      locals,
+      callables,
+      fileName,
+      diagnostics,
+      enumValues,
+      undefined,
+      module,
+    );
     if (!['i32', 'u32'].includes(index))
       mismatch(expression.index.span, fileName, diagnostics, 'Collection indexes must have integer type.');
     return receiver.startsWith('Array<') || receiver.startsWith('Vector<') ? elementType(receiver) : 'unit';
   }
   if (expression.kind === 'match') {
-    const matchedType = inferExpression(expression.value, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+    const matchedType = inferExpression(
+      expression.value,
+      locals,
+      callables,
+      fileName,
+      diagnostics,
+      enumValues,
+      undefined,
+      module,
+    );
     const enumName = matchedType.split('<', 1)[0];
     const declaration = module?.enums.find(({ name }) => name === enumName);
     const required = enumName === 'Option' ? ['Some', 'None'] : enumName === 'Result' ? ['Ok', 'Error'] : undefined;
@@ -886,17 +1013,49 @@ function inferExpression(
         const variantName = qualified.length === 2 ? qualified[1] : qualified[0];
         const knownAggregate = declaration !== undefined || required !== undefined || matchedType.includes('<');
         if (knownAggregate && qualified.length === 2 && patternEnum !== enumName)
-          diagnostics.push(createDiagnostic(fileName, 'type-check', 'FWS-TYPE-020', `Pattern '${arm.pattern.name}' does not match '${enumName}'.`, arm.pattern.span));
+          diagnostics.push(
+            createDiagnostic(
+              fileName,
+              'type-check',
+              'FWS-TYPE-020',
+              `Pattern '${arm.pattern.name}' does not match '${enumName}'.`,
+              arm.pattern.span,
+            ),
+          );
         const variant = declaration?.variants.find(({ name }) => name === variantName);
         const fields = variant?.fields ?? builtInEnumFields(enumName, variantName, matchedType);
         if (knownAggregate && fields === undefined)
-          diagnostics.push(createDiagnostic(fileName, 'type-check', 'FWS-TYPE-020', `Unknown variant '${variantName}' for enum '${enumName}'.`, arm.pattern.span));
+          diagnostics.push(
+            createDiagnostic(
+              fileName,
+              'type-check',
+              'FWS-TYPE-020',
+              `Unknown variant '${variantName}' for enum '${enumName}'.`,
+              arm.pattern.span,
+            ),
+          );
         if (knownAggregate && fields !== undefined && arm.pattern.bindings.length !== fields.length)
-          diagnostics.push(createDiagnostic(fileName, 'type-check', 'FWS-TYPE-021', `Variant '${variantName}' expects ${fields.length} binding(s), received ${arm.pattern.bindings.length}.`, arm.pattern.span));
+          diagnostics.push(
+            createDiagnostic(
+              fileName,
+              'type-check',
+              'FWS-TYPE-021',
+              `Variant '${variantName}' expects ${fields.length} binding(s), received ${arm.pattern.bindings.length}.`,
+              arm.pattern.span,
+            ),
+          );
         const seenBindings = new Set<string>();
         for (const [index, binding] of arm.pattern.bindings.entries()) {
           if (seenBindings.has(binding))
-            diagnostics.push(createDiagnostic(fileName, 'type-check', 'FWS-TYPE-024', `Duplicate match binding '${binding}'.`, arm.pattern.span));
+            diagnostics.push(
+              createDiagnostic(
+                fileName,
+                'type-check',
+                'FWS-TYPE-024',
+                `Duplicate match binding '${binding}'.`,
+                arm.pattern.span,
+              ),
+            );
           seenBindings.add(binding);
           const field = knownAggregate ? fields?.[index] : undefined;
           if (field !== undefined) armLocals.set(binding, resolveEnumFieldType(field.type, declaration, matchedType));
@@ -923,7 +1082,16 @@ function inferExpression(
     return first;
   }
   if (expression.kind === 'unary') {
-    const operand = inferExpression(expression.operand, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+    const operand = inferExpression(
+      expression.operand,
+      locals,
+      callables,
+      fileName,
+      diagnostics,
+      enumValues,
+      undefined,
+      module,
+    );
     if (expression.operator === '!' && operand !== 'bool')
       mismatch(expression.span, fileName, diagnostics, "The '!' operator requires bool.");
     if (expression.operator === '-' && !isNumber(operand))
@@ -931,7 +1099,16 @@ function inferExpression(
     return expression.operator === '!' ? 'bool' : operand;
   }
   if (expression.kind !== 'binary') return 'unit';
-  const left = inferExpression(expression.left, locals, callables, fileName, diagnostics, enumValues, undefined, module);
+  const left = inferExpression(
+    expression.left,
+    locals,
+    callables,
+    fileName,
+    diagnostics,
+    enumValues,
+    undefined,
+    module,
+  );
   const right = inferExpression(
     expression.right,
     locals,
@@ -990,13 +1167,14 @@ function validateType(
     );
   const argumentsList = type.arguments ?? [];
   if (builtIn.has(baseType) || declared !== undefined) {
-    const expected = baseType === 'Fn'
-      ? 1
-      : builtIn.has(baseType)
-      ? baseType === 'Result' || baseType === 'iterResult'
-        ? 2
-        : 1
-      : (declared?.genericParameters.length ?? 0);
+    const expected =
+      baseType === 'Fn'
+        ? 1
+        : builtIn.has(baseType)
+          ? baseType === 'Result' || baseType === 'iterResult'
+            ? 2
+            : 1
+          : (declared?.genericParameters.length ?? 0);
     const arity = argumentsList.length;
     if ((baseType === 'Fn' && arity < expected) || (baseType !== 'Fn' && arity !== expected))
       diagnostics.push(
@@ -1113,7 +1291,9 @@ function builtInEnumFields(
   variantName: string,
   aggregateType: string | undefined,
 ): readonly ForgeWebScriptParameter[] | undefined {
-  const typeArguments = aggregateType?.startsWith(`${enumName}<`) ? splitGenericArguments(aggregateType.slice(enumName.length + 1, -1)) : [];
+  const typeArguments = aggregateType?.startsWith(`${enumName}<`)
+    ? splitGenericArguments(aggregateType.slice(enumName.length + 1, -1))
+    : [];
   const span = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 };
   const field = (index: number): ForgeWebScriptParameter => ({
     kind: 'parameter',
@@ -1137,7 +1317,9 @@ function resolveEnumFieldType(
   const genericIndex = declaration?.genericParameters.findIndex(({ name: genericName }) => genericName === name) ?? -1;
   if (genericIndex >= 0 && aggregateType !== undefined) {
     const enumName = declaration?.name ?? '';
-    const arguments_ = aggregateType.startsWith(`${enumName}<`) ? splitGenericArguments(aggregateType.slice(enumName.length + 1, -1)) : [];
+    const arguments_ = aggregateType.startsWith(`${enumName}<`)
+      ? splitGenericArguments(aggregateType.slice(enumName.length + 1, -1))
+      : [];
     return arguments_[genericIndex] ?? 'unit';
   }
   return typeNameKey(type);

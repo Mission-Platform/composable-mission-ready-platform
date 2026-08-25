@@ -41,7 +41,7 @@ describe('Forge Web Script codec migration fixture', () => {
       exports: [
         {
           name: 'encode_payload',
-          parameters: [{ name: 'payload', type: 'string' }],
+          parameters: [{ name: 'payload', type: 'string', passing: 'immutable-reference' }],
           result: 'bytes',
         },
       ],

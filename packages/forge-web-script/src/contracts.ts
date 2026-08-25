@@ -18,6 +18,11 @@ import type {
 } from './manifest.js';
 import type { ForgeWebScriptOptimizationReport } from './optimizer.js';
 import type {
+  ForgeWebScriptSoNBoundsChecks,
+  ForgeWebScriptSoNModule,
+  ForgeWebScriptSoNOptimizationReport,
+} from './son-ir.js';
+import type {
   ForgeWebScriptSelfHostedCompilerStage,
   ForgeWebScriptSelfHostedStageArtifact,
 } from './self-hosted/artifact.js';
@@ -133,6 +138,8 @@ export interface ForgeWebScriptCompileInput {
   readonly async?: ForgeWebScriptAsyncCompilationContract;
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
   readonly compilerHints?: ForgeWebScriptCompilerHints;
+  /** Runtime bounds checks are part of the semantic/cache identity. */
+  readonly boundsChecks?: ForgeWebScriptSoNBoundsChecks;
   readonly logger?: ForgeWebScriptCompilerLogger;
   /** Analysis is additive; `analysisPolicy` and `analysisRules` are compatibility shortcuts. */
   readonly analysis?: ForgeWebScriptAnalysisOptions;
@@ -161,6 +168,7 @@ export interface ForgeWebScriptGraphCompileInput {
   readonly analysisPolicy?: ForgeWebScriptAnalysisPolicy;
   readonly analysisRules?: readonly ForgeWebScriptAnalysisRule[];
   readonly analysisSourceMap?: ForgeWebScriptAnalysisSourceMap;
+  readonly boundsChecks?: ForgeWebScriptSoNBoundsChecks;
 }
 
 export interface ForgeWebScriptFrontendLinkMetadata {
@@ -182,6 +190,10 @@ export interface ForgeWebScriptFrontendResult {
   readonly ir?: ForgeWebScriptIrModule;
   readonly optimizedModule?: ForgeWebScriptModule;
   readonly optimizedIr?: ForgeWebScriptIrModule;
+  /** Canonical semantic graph; the optimized graph is the backend boundary. */
+  readonly unoptimizedSonIr?: ForgeWebScriptSoNModule;
+  readonly sonIr?: ForgeWebScriptSoNModule;
+  readonly sonOptimizationReport?: ForgeWebScriptSoNOptimizationReport;
   readonly optimizationReport?: ForgeWebScriptOptimizationReport;
   readonly abi?: ForgeWebScriptAbiManifest;
   readonly links: ForgeWebScriptFrontendLinkMetadata;
@@ -199,6 +211,7 @@ export interface ForgeWebScriptBackendInput {
   readonly metadata: ForgeWebScriptDeterministicArtifactMetadata;
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
   readonly compilerHints?: ForgeWebScriptCompilerHints;
+  readonly boundsChecks?: ForgeWebScriptSoNBoundsChecks;
 }
 
 export interface ForgeWebScriptDeterministicArtifactMetadata {
@@ -210,6 +223,9 @@ export interface ForgeWebScriptDeterministicArtifactMetadata {
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
   readonly compilerHints?: ForgeWebScriptCompilerHints;
   readonly loggerScope?: string;
+  readonly memoryModel?: 'region-arc-checked-linear';
+  readonly boundsChecks?: ForgeWebScriptSoNBoundsChecks;
+  readonly sonGraphHash?: string;
 }
 
 /** Backend output is deliberately independent from the compatibility facade's ESM artifact. */
@@ -243,6 +259,10 @@ export interface ForgeWebScriptArtifact {
   readonly unoptimizedWatPath?: string;
   readonly optimizedWasmPath?: string;
   readonly unoptimizedWasmPath?: string;
+  readonly sonIr?: ForgeWebScriptSoNModule;
+  readonly sonOptimizationReport?: ForgeWebScriptSoNOptimizationReport;
+  readonly sonIrPath?: string;
+  readonly unoptimizedSonIrPath?: string;
   readonly debugArtifacts?: ForgeWebScriptDebugArtifacts;
   readonly iteratorExports?: readonly ForgeWebScriptIteratorExport[];
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;

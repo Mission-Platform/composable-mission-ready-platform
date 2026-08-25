@@ -57,6 +57,7 @@ export interface ForgeWebScriptWasmArtifactManifest {
   readonly requiredCapabilities: readonly string[];
   readonly memory: ForgeWebScriptWasmMemoryLayout;
   readonly graphHash?: string;
+  readonly boundsChecks?: 'runtime' | 'proven-safe' | 'excluded-by-profile';
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
   readonly async?: {
     readonly capabilities: readonly string[];
@@ -698,7 +699,13 @@ function verifyVariant(
         encoded.optimization !== input.metadata.optimization ||
         JSON.stringify(encoded.sourceFiles?.toSorted()) !== JSON.stringify(input.metadata.sourceFiles.toSorted()) ||
         encoded.sourceHash !== input.metadata.sourceHash ||
-        encoded.graphHash !== input.metadata.graphHash
+        encoded.graphHash !== input.metadata.graphHash ||
+        encoded.sonSchemaVersion !== input.metadata.sonSchemaVersion ||
+        encoded.sonGraphHash !== input.metadata.sonGraphHash ||
+        encoded.boundsChecks !== input.metadata.boundsChecks ||
+        JSON.stringify(encoded.sonOptimizationPasses) !== JSON.stringify(input.metadata.sonOptimizationPasses) ||
+        (input.metadata.wasmOptimizationPasses !== undefined &&
+          JSON.stringify(encoded.wasmOptimizationPasses) !== JSON.stringify(input.metadata.wasmOptimizationPasses))
       )
         diagnostics.push(
           diagnostic(

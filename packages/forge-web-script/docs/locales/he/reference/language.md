@@ -99,9 +99,9 @@ export iter fn forward(source: Iterator<i32>) -> Iterator<i32> {
 ```ts
 const artifact = compileForgeWebScript({
   source,
-  fileName: "runtime.fws",
-  compilerVersion: "1.0.0",
-  optimization: "release",
+  fileName: 'runtime.fws',
+  compilerVersion: '1.0.0',
+  optimization: 'release',
   targetFeatures: { simd: true, tailCall: true, memory64: true },
   compilerHints: { iteratorUnrollLimit: 4 },
 });
@@ -224,13 +224,13 @@ interface ForgeWebScriptDocumentationTag {
 
 צורות התגים הנפוצות הן:
 
-| טופס תג | שדות מובנים |
-| -------------------------------------------------------- | -------------------------------------------- |
+| טופס תג                                                  | שדות מובנים                           |
+| -------------------------------------------------------- | ------------------------------------- |
 | `@param name text`, `@arg`, `@argument`, או `@parameter` | `name` הוא `subject`; השאר הוא `text` |
-| `@typeparam name text` | `name` הוא `subject`; השאר הוא `text` |
-| `@throws type text` או `@exception type text` | `type` הוא `subject`; השאר הוא `text` |
-| `@return text` או `@returns text` | `text` בלבד |
-| `@deprecated text` | `text` בלבד |
+| `@typeparam name text`                                   | `name` הוא `subject`; השאר הוא `text` |
+| `@throws type text` או `@exception type text`            | `type` הוא `subject`; השאר הוא `text` |
+| `@return text` או `@returns text`                        | `text` בלבד                           |
+| `@deprecated text`                                       | `text` בלבד                           |
 
 טפסים אחרים של `@name` מתקבלים ונשמרים כתגיות מסודרות במקום
 דווח כאבחון. אין להם נושא משוער; הטקסט הנותר שלהם
@@ -380,15 +380,13 @@ offset, או `-1` כאשר אין התאמה או שהקבוצה אינה מוג
 מחלקות וטווחים (כולל שלילת `^`), `\d`, `\D`, `\w`, `\W`, `\s`,
 `\S`, מילוליות נמלטות, קבוצות לכידה ולא לכידה, לסירוגין,
 `*`, `+`, `?`, תחום `{n}`, `{n,}`, `{n,m}` מכמתים, מכמים עצלים,
-ועוגנים `^`/`
-Forge Web Script מספק ספרייה סטנדרטית של ביטוי רגיל דטרמיניסטי.
-השיחות `regex_full_match(pattern, value) -> bool`,
+ועוגנים `^`/`Forge Web Script מספק ספרייה סטנדרטית של ביטוי רגיל דטרמיניסטי.
+השיחות`regex_full_match(pattern, value) -> bool`,
 `regex_prefix_match(pattern, value) -> bool`, ו
-`regex_search(pattern, value, start: i32) -> bool` לבצע ערך שלם,
+`regex_search(pattern, value, start: i32) -> bool`לבצע ערך שלם,
 קידומת מיקום אפס, והתאמת חיפוש השמאלית ביותר בהתאמה. ללכוד גבולות
-זמינים דרך `regex_*_capture_start` המקביל ו
-`regex_*_capture_end` שיחות; הם לוקחים אינדקס קבוצתי ומחזירים מחרוזת UTF-16
-offset, או `-1` כאשר אין התאמה או שהקבוצה אינה מוגדרת. חיפוש לכידת
+זמינים דרך`regex__*capture_start`המקביל ו`regex*__capture_end`שיחות; הם לוקחים אינדקס קבוצתי ומחזירים מחרוזת UTF-16
+offset, או`-1` כאשר אין התאמה או שהקבוצה אינה מוגדרת. חיפוש לכידת
 שיחות לוקחות בנוסף את הקיזוז ההתחלתי לפני המדד הקבוצתי.
 
 קריאות Regex הן פונקציות של ספרייה סטנדרטית בבעלות מהדר. הם מוקלדים על ידי
@@ -429,18 +427,18 @@ bytecode (`FORGE_REGEX_BYTECODE_VERSION`) ומהדר בזמן בנייה. זה �
 לא להוסיף שיטות אובייקט שרירותיות. מערכים קבועים כתובים `[T; N]` ו
 וקטורים כמו `Vector<T>`. החתימות הנתמכות הן:
 
-| מקלט | שיטה | חתימה |
+| מקלט        | שיטה            | חתימה                   |
 | ----------- | --------------- | ----------------------- |
-| `Array<T>` | `length` | `() -> u32` |
-| `Array<T>` | `get` | `(u32) -> Option<T>` |
-| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
-| `Array<T>` | `iter` | `() -> Iterator<T>` |
-| `Vector<T>` | `length` | `() -> u32` |
-| `Vector<T>` | `get` | `(u32) -> Option<T>` |
-| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` או `add` | `(T) -> Vector<T>` |
-| `Vector<T>` | `pop` | `() -> Option<T>` |
-| `Vector<T>` | `iter` | `() -> Iterator<T>` |
+| `Array<T>`  | `length`        | `() -> u32`             |
+| `Array<T>`  | `get`           | `(u32) -> Option<T>`    |
+| `Array<T>`  | `set`           | `(u32, T) -> Array<T>`  |
+| `Array<T>`  | `iter`          | `() -> Iterator<T>`     |
+| `Vector<T>` | `length`        | `() -> u32`             |
+| `Vector<T>` | `get`           | `(u32) -> Option<T>`    |
+| `Vector<T>` | `set`           | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` או `add` | `(T) -> Vector<T>`      |
+| `Vector<T>` | `pop`           | `() -> Option<T>`       |
+| `Vector<T>` | `iter`          | `() -> Iterator<T>`     |
 
 האיות `add` הוא בכוונה כינוי תאימות לוקטור
 `push`; זו לא שיטת מערך. האינדקסים הם `u32`, ארגומנטים של אלמנט חייבים
@@ -549,13 +547,13 @@ Forge Web Script משתמש בגבול _לוגי_ בהשראת WASI, לא בטע
 המודול משתמש בזיכרון ליניארי WebAssembly אחד עם 64 עמודי KiB ו-Little-endian
 ערכים סקלרים. ערכים סקלרים ממפים באופן הבא:
 
-| Forge Web Script | ייצוג WebAssembly |
-| ----------------- | ------------------------------------------ |
-| `bool` | `i32`, כאשר `0` הוא שקר ו-`1` נכון |
-| `i32`, `u32` | `i32` |
-| `i64`, `u64` | `i64` |
-| `f32`, `f64` | תואם WebAssembly float |
-| `unit` | אין ערך תוצאה |
+| Forge Web Script  | ייצוג WebAssembly                   |
+| ----------------- | ----------------------------------- |
+| `bool`            | `i32`, כאשר `0` הוא שקר ו-`1` נכון  |
+| `i32`, `u32`      | `i32`                               |
+| `i64`, `u64`      | `i64`                               |
+| `f32`, `f64`      | תואם WebAssembly float              |
+| `unit`            | אין ערך תוצאה                       |
 | `string`, `bytes` | שני ערכי `u32`: מצביע ואז אורך בתים |
 
 המניפסט מצהיר על אותו מיפוי ב-`valueRepresentations`. א
@@ -641,11 +639,7 @@ interface ForgeWebScriptExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: (
-    pointer: number,
-    oldSize: number,
-    newSize: number,
-  ) => number;
+  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
   readonly fws_reset: () => void;
   readonly echo: (value: string) => string;
   readonly processBytes: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;
@@ -782,12 +776,9 @@ forge-web-script compile <entry.fws> --out-dir <directory>
 לפי שמות יכולות מניפסט, למשל:
 
 ```ts
-const exports = await harness.load<{ current: () => bigint }>(
-  "capabilities/clock-now.fws",
-  {
-    "clock.now": { now: () => 123n },
-  },
-);
+const exports = await harness.load<{ current: () => bigint }>('capabilities/clock-now.fws', {
+  'clock.now': { now: () => 123n },
+});
 ```
 
 יבוא מוצהר חסר ויבוא מסופק לא מוצהר הם כשלים. מבחן
@@ -814,13 +805,13 @@ const exports = await harness.load<{ current: () => bigint }>(
 השלב הוא אחד של `lex`, `parse`, `type-check` או `abi`. קוד v1 יציב
 משפחות כוללות:
 
-| משפחת קוד | המשמעות |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `FWS-LEX-*` | תווים/escapes לא חוקיים, מסימי שורה גולמית של מחרוזת, או מחרוזות/הערות שלא נגמרו |
-| `FWS-PARSE-*` | תחביר מודול, הצהרה, משפט או ביטוי לא חוקי |
-| `FWS-TYPE-*` | סוג פרימיטיבי לא חוקי, שם, אופרטור, ארגומנט או החזרה |
-| `FWS-ABI-*` | שמות כפולים, יכולות שנדחו, ייצוא או יבוא |
-| `FWS-REGEX-*` | דפוסי ביטוי רגולרי לא נתמכים או פגומים בבעלות מהדר |
+| משפחת קוד     | המשמעות                                                                          |
+| ------------- | -------------------------------------------------------------------------------- |
+| `FWS-LEX-*`   | תווים/escapes לא חוקיים, מסימי שורה גולמית של מחרוזת, או מחרוזות/הערות שלא נגמרו |
+| `FWS-PARSE-*` | תחביר מודול, הצהרה, משפט או ביטוי לא חוקי                                        |
+| `FWS-TYPE-*`  | סוג פרימיטיבי לא חוקי, שם, אופרטור, ארגומנט או החזרה                             |
+| `FWS-ABI-*`   | שמות כפולים, יכולות שנדחו, ייצוא או יבוא                                         |
+| `FWS-REGEX-*` | דפוסי ביטוי רגולרי לא נתמכים או פגומים בבעלות מהדר                               |
 
 שגיאות מונעות יצירת חפצים. אזהרות ואבחון מידע כן
 לא לשנות סמנטיקה. סדר אבחון הוא סדר מקור, ואחריו שלב
@@ -919,14 +910,14 @@ ABI באורך מצביע, ומשתמש במארח הניתן להזרקה כד�
 
 ### בחירת יישום
 
-| עומס עבודה או דרישה | בחר | סיבה |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| התנהגות קיימת של QR או חבילת מטריצה ​​| `@mission-platform/qr-code` / `@mission-platform/matrix-code` | עטיפות ESM מוקלדות ספציפיות לחבילה נשארות זמינות עבור אותם ממשקי API ציבוריים.                                       |
-| התנהגות סורקת תמונה ומצלמה ניטראלית | `@mission-platform/code-scanner` | משתמש בגרף FWS מקושר סטטית כברירת מחדל, או בפרופיל מקור-מודול דינמי מפורש עם שיגור במטמון. |
-| התנהגות ברקוד קיימת | `@mission-platform/barcode` | גרפים מקומיים של Forge Web Script מספקים את חזית הברקוד המוקלדת.                                           |
-| מחשוב חדש בטוח לדפדפן לשימוש כללי עם אפקטים מארח מפורשים | Forge Web Script בתוספת `@mission-platform/vite-plugin-forge-web-script` | מקור `.fws` בגרסה, מניפסט, מטעין מודפס ויכולות הכחשה כברירת מחדל.                                |
-| מקור AssemblyScript קיים או הגירה ספציפית ל-AssemblyScript | `@mission-platform/vite-plugin-assemblyscript` | אוסף ערכי `.ts` AssemblyScript ושומר על חוזה הייצוא הגולמי שנוצר שלו.                            |
-| קומפילציה של ממשק משתמש/רכיבים ניטרליים למסגרת | מהדר רכיב Forge | Forge Web Script אינו תחליף ל-`FrameworkOutputPlugin` או יעדי רכיבים.                           |
+| עומס עבודה או דרישה                                        | בחר                                                                      | סיבה                                                                                       |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| התנהגות קיימת של QR או חבילת מטריצה ​​                     | `@mission-platform/qr-code` / `@mission-platform/matrix-code`            | עטיפות ESM מוקלדות ספציפיות לחבילה נשארות זמינות עבור אותם ממשקי API ציבוריים.             |
+| התנהגות סורקת תמונה ומצלמה ניטראלית                        | `@mission-platform/code-scanner`                                         | משתמש בגרף FWS מקושר סטטית כברירת מחדל, או בפרופיל מקור-מודול דינמי מפורש עם שיגור במטמון. |
+| התנהגות ברקוד קיימת                                        | `@mission-platform/barcode`                                              | גרפים מקומיים של Forge Web Script מספקים את חזית הברקוד המוקלדת.                           |
+| מחשוב חדש בטוח לדפדפן לשימוש כללי עם אפקטים מארח מפורשים   | Forge Web Script בתוספת `@mission-platform/vite-plugin-forge-web-script` | מקור `.fws` בגרסה, מניפסט, מטעין מודפס ויכולות הכחשה כברירת מחדל.                          |
+| מקור AssemblyScript קיים או הגירה ספציפית ל-AssemblyScript | `@mission-platform/vite-plugin-assemblyscript`                           | אוסף ערכי `.ts` AssemblyScript ושומר על חוזה הייצוא הגולמי שנוצר שלו.                      |
+| קומפילציה של ממשק משתמש/רכיבים ניטרליים למסגרת             | מהדר רכיב Forge                                                          | Forge Web Script אינו תחליף ל-`FrameworkOutputPlugin` או יעדי רכיבים.                      |
 
 השתמש בתוסף Forge Web Script Vite רק עבור ערכי `.fws`. השתמש ב-
 תוסף AssemblyScript עבור ערכי AssemblyScript קיימים. במהלך הגירה, א

@@ -59,11 +59,14 @@ export function createForgeWebScriptHost(
   return {
     capabilities: manifest.requiredCapabilities,
     invoke(alias, arguments_): unknown | Promise<unknown> {
-      if (disposed) throw new ForgeWebScriptTrap('GuestTrap', 'Forge Web Script host has been disposed.', undefined, { logger });
+      if (disposed)
+        throw new ForgeWebScriptTrap('GuestTrap', 'Forge Web Script host has been disposed.', undefined, { logger });
       const imported = findImport(manifest, alias);
       const implementation = implementations.get(alias);
       if (imported === undefined || implementation === undefined)
-        throw new ForgeWebScriptTrap('CapabilityDenied', `Capability alias '${alias}' is not declared.`, undefined, { logger });
+        throw new ForgeWebScriptTrap('CapabilityDenied', `Capability alias '${alias}' is not declared.`, undefined, {
+          logger,
+        });
       if (arguments_.length !== imported.function.parameters.length)
         throw new ForgeWebScriptTrap(
           'HostError',

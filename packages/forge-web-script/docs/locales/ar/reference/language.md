@@ -99,9 +99,9 @@ export iter fn forward(source: Iterator<i32>) -> Iterator<i32> {
 ```ts
 const artifact = compileForgeWebScript({
   source,
-  fileName: "runtime.fws",
-  compilerVersion: "1.0.0",
-  optimization: "release",
+  fileName: 'runtime.fws',
+  compilerVersion: '1.0.0',
+  optimization: 'release',
   targetFeatures: { simd: true, tailCall: true, memory64: true },
   compilerHints: { iteratorUnrollLimit: 4 },
 });
@@ -224,13 +224,13 @@ interface ForgeWebScriptDocumentationTag {
 
 نماذج العلامات شائعة الاستخدام هي:
 
-| نموذج العلامة | الحقول المنظمة |
-| -------------------------------------------------------- | -------------------------------------------- |
+| نموذج العلامة                                            | الحقول المنظمة                         |
+| -------------------------------------------------------- | -------------------------------------- |
 | `@param name text`، `@arg`، `@argument`، أو `@parameter` | `name` هو `subject`؛ والباقي هو `text` |
-| `@typeparam name text` | `name` هو `subject`؛ والباقي هو `text` |
-| `@throws type text` أو `@exception type text` | `type` هو `subject`؛ والباقي هو `text` |
-| `@return text` أو `@returns text` | `text` فقط |
-| `@deprecated text` | `text` فقط |
+| `@typeparam name text`                                   | `name` هو `subject`؛ والباقي هو `text` |
+| `@throws type text` أو `@exception type text`            | `type` هو `subject`؛ والباقي هو `text` |
+| `@return text` أو `@returns text`                        | `text` فقط                             |
+| `@deprecated text`                                       | `text` فقط                             |
 
 يتم قبول نماذج `@name` الأخرى والاحتفاظ بها كعلامات مرتبة بدلاً من ذلك
 تم الإبلاغ عنها كتشخيص. ليس لديهم موضوع مستنتج. النص المتبقي لهم
@@ -380,14 +380,13 @@ pattern      = "_" | identifier, [ "(", [ identifier, { ",", identifier } ], ")"
 الفئات والنطاقات (بما في ذلك نفي `^`)، `\d`، `\D`، `\w`، `\W`، `\s`،
 `\S`، الحروف الحرفية الهاربة، مجموعات الالتقاط وغير الالتقاط، التناوب،
 `*`، `+`، `?`، يحدها `{n}`، `{n,}`، `{n,m}` محددات الكمية، محددات الكمية البطيئة،
-و`^`/`
-يوفر Forge Web Script مكتبة قياسية محددة للتعبير العادي.
-المكالمات `regex_full_match(pattern, value) -> bool`،
+و`^`/`يوفر Forge Web Script مكتبة قياسية محددة للتعبير العادي.
+المكالمات`regex_full_match(pattern, value) -> bool`،
 `regex_prefix_match(pattern, value) -> bool`، و
-`regex_search(pattern, value, start: i32) -> bool` يؤدي القيمة الكاملة،
+`regex_search(pattern, value, start: i32) -> bool`يؤدي القيمة الكاملة،
 بادئة الموضع صفر، ومطابقة البحث في أقصى اليسار على التوالي. التقاط الحدود
-متاحة من خلال `regex_*_capture_start` و
-مكالمات `regex_*_capture_end`؛ يأخذون فهرس المجموعة ويعيدون سلسلة UTF-16
+متاحة من خلال`regex__*capture_start`و
+مكالمات`regex*__capture_end`؛ يأخذون فهرس المجموعة ويعيدون سلسلة UTF-16
 الإزاحة، أو `-1` في حالة عدم وجود تطابق أو عدم تعيين المجموعة. التقاط البحث
 بالإضافة إلى ذلك، تأخذ المكالمات إزاحة البداية قبل فهرس المجموعة.
 
@@ -429,18 +428,18 @@ bytecode (`FORGE_REGEX_BYTECODE_VERSION`) ومترجم وقت البناء. صر
 لا تضيف أساليب كائن تعسفية. تتم كتابة المصفوفات الثابتة `[T; N]` و
 المتجهات كـ `Vector<T>`. التوقيعات المدعومة هي:
 
-| ريسيفر | الطريقة | التوقيع |
+| ريسيفر      | الطريقة         | التوقيع                 |
 | ----------- | --------------- | ----------------------- |
-| `Array<T>` | `length` | `() -> u32` |
-| `Array<T>` | `get` | `(u32) -> Option<T>` |
-| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
-| `Array<T>` | `iter` | `() -> Iterator<T>` |
-| `Vector<T>` | `length` | `() -> u32` |
-| `Vector<T>` | `get` | `(u32) -> Option<T>` |
-| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` أو `add` | `(T) -> Vector<T>` |
-| `Vector<T>` | `pop` | `() -> Option<T>` |
-| `Vector<T>` | `iter` | `() -> Iterator<T>` |
+| `Array<T>`  | `length`        | `() -> u32`             |
+| `Array<T>`  | `get`           | `(u32) -> Option<T>`    |
+| `Array<T>`  | `set`           | `(u32, T) -> Array<T>`  |
+| `Array<T>`  | `iter`          | `() -> Iterator<T>`     |
+| `Vector<T>` | `length`        | `() -> u32`             |
+| `Vector<T>` | `get`           | `(u32) -> Option<T>`    |
+| `Vector<T>` | `set`           | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` أو `add` | `(T) -> Vector<T>`      |
+| `Vector<T>` | `pop`           | `() -> Option<T>`       |
+| `Vector<T>` | `iter`          | `() -> Iterator<T>`     |
 
 يعد التهجئة `add` بمثابة اسم مستعار لتوافق المتجه عن قصد
 `push`; إنها ليست طريقة صفيف. المؤشرات هي `u32`، ويجب أن تكون وسيطات العناصر
@@ -549,13 +548,13 @@ export fn current_time() -> i64 {
 تستخدم الوحدة ذاكرة خطية WebAssembly واحدة بسعة 64 كيلوبايت ونهاية صغيرة
 القيم العددية. يتم تعيين القيم العددية على النحو التالي:
 
-| صياغة ويب سكريبت | تمثيل WebAssembly |
-| ----------------- | ------------------------------------------ |
-| `bool` | `i32`، حيث يكون `0` خطأ و`1` صحيح |
-| `i32`، `u32` | `i32` |
-| `i64`، `u64` | `i64` |
-| `f32`، `f64` | مطابقة تعويم WebAssembly |
-| `unit` | لا توجد قيمة نتيجة |
+| صياغة ويب سكريبت  | تمثيل WebAssembly                  |
+| ----------------- | ---------------------------------- |
+| `bool`            | `i32`، حيث يكون `0` خطأ و`1` صحيح  |
+| `i32`، `u32`      | `i32`                              |
+| `i64`، `u64`      | `i64`                              |
+| `f32`، `f64`      | مطابقة تعويم WebAssembly           |
+| `unit`            | لا توجد قيمة نتيجة                 |
 | `string`، `bytes` | قيمتان `u32`: المؤشر ثم طول البايت |
 
 يعلن البيان عن نفس التعيين في `valueRepresentations`. أ
@@ -641,11 +640,7 @@ interface ForgeWebScriptExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: (
-    pointer: number,
-    oldSize: number,
-    newSize: number,
-  ) => number;
+  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
   readonly fws_reset: () => void;
   readonly echo: (value: string) => string;
   readonly processBytes: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;
@@ -782,12 +777,9 @@ forge-web-script compile <entry.fws> --out-dir <directory>
 حسب أسماء الإمكانات الواضحة، على سبيل المثال:
 
 ```ts
-const exports = await harness.load<{ current: () => bigint }>(
-  "capabilities/clock-now.fws",
-  {
-    "clock.now": { now: () => 123n },
-  },
-);
+const exports = await harness.load<{ current: () => bigint }>('capabilities/clock-now.fws', {
+  'clock.now': { now: () => 123n },
+});
 ```
 
 تعتبر الواردات المفقودة المعلنة والواردات الموردة غير المعلنة بمثابة فشل. اختبار
@@ -814,13 +806,13 @@ const exports = await harness.load<{ current: () => bigint }>(
 المرحلة هي إحدى `lex` أو `parse` أو `type-check` أو `abi`. رمز v1 مستقر
 تشمل العائلات:
 
-| عائلة الكود | معنى |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `FWS-LEX-*` | أحرف/هروبات غير صالحة، أو أطراف سطر سلسلة أولية، أو سلاسل/تعليقات غير منتهية |
-| `FWS-PARSE-*` | وحدة نمطية أو إعلان أو بيان أو بناء جملة تعبير غير صالح |
-| `FWS-TYPE-*` | نوع أو اسم أو عامل تشغيل أو وسيطة أو إرجاع غير صالح
-| `FWS-ABI-*` | أسماء مكررة أو قدرات مرفوضة أو صادرات أو واردات |
-| `FWS-REGEX-*` | أنماط التعبير العادي المملوكة للمترجم غير مدعومة أو مشوهة |
+| عائلة الكود   | معنى                                                                         |
+| ------------- | ---------------------------------------------------------------------------- |
+| `FWS-LEX-*`   | أحرف/هروبات غير صالحة، أو أطراف سطر سلسلة أولية، أو سلاسل/تعليقات غير منتهية |
+| `FWS-PARSE-*` | وحدة نمطية أو إعلان أو بيان أو بناء جملة تعبير غير صالح                      |
+| `FWS-TYPE-*`  | نوع أو اسم أو عامل تشغيل أو وسيطة أو إرجاع غير صالح                          |
+| `FWS-ABI-*`   | أسماء مكررة أو قدرات مرفوضة أو صادرات أو واردات                              |
+| `FWS-REGEX-*` | أنماط التعبير العادي المملوكة للمترجم غير مدعومة أو مشوهة                    |
 
 أخطاء تمنع إنشاء قطعة أثرية. التحذيرات والتشخيصات المعلوماتية تفعل ذلك
 لا تغيير الدلالات. الترتيب التشخيصي هو أمر المصدر، تليها المرحلة
@@ -919,14 +911,14 @@ ABI بطول المؤشر، ويستخدم مضيفًا قابلاً للحقن 
 
 ### اختيار التنفيذ
 
-| عبء العمل أو المتطلبات | اختر | السبب |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| سلوك حزمة QR أو المصفوفة الحالي | `@mission-platform/qr-code` / `@mission-platform/matrix-code` | تظل أغلفة ESM المكتوبة الخاصة بالحزمة متاحة لواجهات برمجة التطبيقات العامة.                                       |
-| سلوك الماسح الضوئي للصور والكاميرا المحايدة | `@mission-platform/code-scanner` | يستخدم رسمًا بيانيًا FWS مرتبطًا بشكل ثابت بشكل افتراضي، أو ملف تعريف ديناميكي واضح لوحدة المصدر مع إرسال مخبأ. |
-| سلوك الباركود الحالي | `@mission-platform/barcode` | توفر الرسوم البيانية لـ Forge Web Script للحزمة المحلية واجهة الرمز الشريطي المكتوبة.                                           |
-| حساب جديد آمن للمتصفح للأغراض العامة مع تأثيرات مضيفة واضحة | صياغة ويب سكريبت بالإضافة إلى `@mission-platform/vite-plugin-forge-web-script` | تم إصدار مصدر `.fws`، والبيان، والمحمل المكتوب، وإمكانيات الرفض الافتراضي.                                |
-| مصدر AssemblyScript موجود أو ترحيل خاص بـ AssemblyScript | `@mission-platform/vite-plugin-assemblyscript` | يجمع إدخالات `.ts` AssemblyScript ويحافظ على عقد التصدير الأولي الذي تم إنشاؤه.                            |
-| تجميع واجهة المستخدم/المكونات المحايدة للإطار | صياغة مكون المترجم | لا يعد Forge Web Script بديلاً عن `FrameworkOutputPlugin` أو أهداف المكونات.                           |
+| عبء العمل أو المتطلبات                                      | اختر                                                                           | السبب                                                                                                           |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| سلوك حزمة QR أو المصفوفة الحالي                             | `@mission-platform/qr-code` / `@mission-platform/matrix-code`                  | تظل أغلفة ESM المكتوبة الخاصة بالحزمة متاحة لواجهات برمجة التطبيقات العامة.                                     |
+| سلوك الماسح الضوئي للصور والكاميرا المحايدة                 | `@mission-platform/code-scanner`                                               | يستخدم رسمًا بيانيًا FWS مرتبطًا بشكل ثابت بشكل افتراضي، أو ملف تعريف ديناميكي واضح لوحدة المصدر مع إرسال مخبأ. |
+| سلوك الباركود الحالي                                        | `@mission-platform/barcode`                                                    | توفر الرسوم البيانية لـ Forge Web Script للحزمة المحلية واجهة الرمز الشريطي المكتوبة.                           |
+| حساب جديد آمن للمتصفح للأغراض العامة مع تأثيرات مضيفة واضحة | صياغة ويب سكريبت بالإضافة إلى `@mission-platform/vite-plugin-forge-web-script` | تم إصدار مصدر `.fws`، والبيان، والمحمل المكتوب، وإمكانيات الرفض الافتراضي.                                      |
+| مصدر AssemblyScript موجود أو ترحيل خاص بـ AssemblyScript    | `@mission-platform/vite-plugin-assemblyscript`                                 | يجمع إدخالات `.ts` AssemblyScript ويحافظ على عقد التصدير الأولي الذي تم إنشاؤه.                                 |
+| تجميع واجهة المستخدم/المكونات المحايدة للإطار               | صياغة مكون المترجم                                                             | لا يعد Forge Web Script بديلاً عن `FrameworkOutputPlugin` أو أهداف المكونات.                                    |
 
 استخدم البرنامج المساعد Forge Web Script Vite فقط لإدخالات `.fws`. استخدم
 البرنامج المساعد AssemblyScript لإدخالات AssemblyScript الموجودة. أثناء الهجرة، أ

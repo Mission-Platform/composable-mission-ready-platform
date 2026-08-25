@@ -42,14 +42,14 @@ hex-digit               = decimal-digit | "A" .. "F" | "a" .. "f" ;
 
 (* The scanner uses longest match for operators before one-character forms. *)
 operator                = "!=" | "&&" | "==" | "||" | "<=" | ">=" | "->" | "=>" | "::"
-                        | "!" | "%" | "*" | "+" | "-" | "/" | "<" | ">" | "=" ;
+                        | "!" | "%" | "*" | "+" | "-" | "/" | "<" | ">" | "=" | "&" ;
 punctuation             = "{" | "}" | "(" | ")" | "[" | "]" | ":" | ";"
                         | "," | "|" | "." ;
 
 keyword                 = "as" | "capability" | "case" | "catch" | "class"
                         | "constructor" | "default" | "do" | "else" | "enum"
                         | "extends" | "export" | "for" | "fn" | "if" | "impl"
-                        | "import" | "inline" | "interface" | "iter" | "let"
+                        | "import" | "inline" | "interface" | "iter" | "let" | "mut"
                         | "likely" | "loop" | "match" | "module" | "new"
                         | "noinline" | "return" | "struct" | "switch" | "throw"
                         | "trait" | "try" | "unlikely" | "while" | "yield" ;
@@ -73,7 +73,7 @@ capability-import       = "import", "capability", string, "as", identifier,
 source-import           = "import", [ "module" ], string, "as", identifier, ";" ;
 parameter-list          = "(", [ parameters ], ")" ;
 parameters              = parameter, { ",", parameter } ;
-parameter               = identifier, ":", type ;
+parameter               = [ "mut" ], identifier, ":", type ;
 
 function-declaration    = { function-modifier }, "fn", identifier,
                           [ generic-parameters ], parameter-list, "->", type, block ;
@@ -106,7 +106,7 @@ statement               = let-statement
                         | unsupported-exception-statement
                         | unsupported-for-statement
                         | expression-statement ;
-let-statement           = "let", identifier, ":", type, "=", expression, ";" ;
+let-statement           = "let", [ "mut" ], identifier, ":", type, "=", expression, ";" ;
 assignment-statement    = identifier, [ "[", expression, "]" ], "=", expression, ";" ;
 return-statement        = "return", [ expression ], ";" ;
 yield-statement         = "yield", expression, ";" ;
@@ -131,7 +131,7 @@ unsupported-exception-statement = ( "throw" | "try" | "catch" ),
 (* Types and expressions *)
 type                    = fixed-array-type | type-name ;
 fixed-array-type        = "[", type, ";", integer, "]" ;
-type-name               = type-atom, [ "<", type, { ",", type }, ">" ] ;
+type-name               = [ "&", [ "mut" ] ], type-atom, [ "<", type, { ",", type }, ">" ] ;
 type-atom               = primitive-type | identifier ;
 primitive-type          = "bool" | "bytes" | "f32" | "f64" | "i32" | "i64"
                         | "string" | "u32" | "u64" | "unit" ;

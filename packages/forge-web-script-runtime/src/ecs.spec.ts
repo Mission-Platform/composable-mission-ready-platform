@@ -48,8 +48,24 @@ describe('Forge Web Script ECS runtime', () => {
     ).toMatchObject({ valid: false });
     const order: string[] = [];
     const scheduler = createForgeWebScriptEcsScheduler<number>([
-      { name: 'second', order: 2, query: { required: [], excluded: [] }, run: (world) => { order.push('second'); return world; } },
-      { name: 'first', order: 1, query: { required: [], excluded: [] }, run: (world) => { order.push('first'); return world; } },
+      {
+        name: 'second',
+        order: 2,
+        query: { required: [], excluded: [] },
+        run: (world) => {
+          order.push('second');
+          return world;
+        },
+      },
+      {
+        name: 'first',
+        order: 1,
+        query: { required: [], excluded: [] },
+        run: (world) => {
+          order.push('first');
+          return world;
+        },
+      },
     ]);
     const result = runForgeWebScriptEcsScheduler(createForgeWebScriptEcsWorld<number>(), scheduler);
     expect(result).toMatchObject({ ok: true, executedSystems: ['first', 'second'] });
@@ -61,15 +77,17 @@ describe('Forge Web Script ECS runtime', () => {
     const scheduler = createForgeWebScriptEcsScheduler<number>(
       [],
       [{ id: 'changed', version: 0, dependencies: [], compute: () => true }],
-      [{
-        signal: 'changed',
-        subscriber: 'listener',
-        order: 1,
-        run: (world) => {
-          order.push('listener');
-          return world;
+      [
+        {
+          signal: 'changed',
+          subscriber: 'listener',
+          order: 1,
+          run: (world) => {
+            order.push('listener');
+            return world;
+          },
         },
-      }],
+      ],
     );
     const result = runForgeWebScriptEcsScheduler(createForgeWebScriptEcsWorld<number>(), scheduler);
     expect(result).toMatchObject({ ok: true, updatedSignals: [{ id: 'changed', version: 1 }] });

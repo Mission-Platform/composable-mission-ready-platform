@@ -2,13 +2,14 @@ import {
   DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY,
   type ForgeWebScriptStandardLibraryIdentity,
 } from './stdlib/regex.js';
-import { forgeWebScriptTypeNameToString } from './ast.js';
+import { forgeWebScriptDefaultPassingMode, forgeWebScriptTypeNameToString } from './ast.js';
 import { createForgeWebScriptIteratorBoundaryDescriptor } from './generics.js';
 
 import type {
   ForgeWebScriptModule,
   ForgeWebScriptPrimitiveType,
   ForgeWebScriptOwnership,
+  ForgeWebScriptParameter,
   ForgeWebScriptStatement,
   ForgeWebScriptTypeName,
 } from './ast.js';
@@ -20,6 +21,7 @@ import type {
   ForgeWebScriptTargetFeatures,
 } from './contracts.js';
 import type { ForgeWebScriptLinkMode } from './graph.js';
+import type { ForgeWebScriptSoNBoundsChecks } from './son-ir.js';
 
 export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION = '1.0' as const;
 export const FORGE_WEB_SCRIPT_ABI_VERSION = '1.2' as const;
@@ -34,6 +36,10 @@ export interface ForgeWebScriptAbiParameter {
   readonly arguments?: readonly ForgeWebScriptTypeName[];
   readonly length?: number;
   readonly ownership?: ForgeWebScriptOwnership;
+  /** Explicit or recursively derived source passing contract. */
+  readonly passing?: 'value' | 'immutable-reference' | 'mutable-reference';
+  readonly mutable?: true;
+  readonly referenceMode?: 'ref' | 'mut-ref';
 }
 export interface ForgeWebScriptAbiFunction {
   readonly name: string;
@@ -43,6 +49,8 @@ export interface ForgeWebScriptAbiFunction {
   readonly resultArguments?: readonly ForgeWebScriptTypeName[];
   readonly resultLength?: number;
   readonly resultOwnership?: ForgeWebScriptOwnership;
+  readonly resultPassing?: 'value' | 'immutable-reference' | 'mutable-reference';
+  readonly resultReferenceMode?: 'ref' | 'mut-ref';
 }
 export interface ForgeWebScriptHostImport {
   readonly capability: string;
@@ -59,6 +67,8 @@ export interface ForgeWebScriptMemoryLayout {
   readonly allocatorExport: 'fws_alloc';
   readonly deallocatorExport: 'fws_dealloc';
   readonly reallocatorExport: 'fws_realloc';
+  /** Raw allocator calls remain caller-owned; scoped values use this checked model. */
+  readonly safetyModel?: 'region-arc-checked-linear';
 }
 
 export type ForgeWebScriptValueRepresentation =
@@ -98,6 +108,8 @@ export interface ForgeWebScriptAbiManifest {
   readonly async?: ForgeWebScriptAsyncCompilationContract;
   /** Target features are part of the loader-visible ABI identity. */
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
+  /** Runtime bounds checks are the default and remain part of the manifest identity. */
+  readonly boundsChecks: ForgeWebScriptSoNBoundsChecks;
 }
 
 export interface ForgeWebScriptAggregateFieldLayout {
@@ -187,28 +199,15 @@ export interface ForgeWebScriptLinkedExport {
 
 type FunctionDeclaration = {
   readonly name: string;
-  readonly parameters: readonly {
-    readonly name: string;
-    readonly type: {
-      readonly name: ForgeWebScriptPrimitiveType;
-      readonly reference?: string;
-      readonly arguments?: readonly ForgeWebScriptTypeName[];
-      readonly length?: number;
-      readonly ownership?: ForgeWebScriptOwnership;
-    };
-  }[];
-  readonly result: {
-    readonly name: ForgeWebScriptPrimitiveType;
-    readonly reference?: string;
-    readonly arguments?: readonly ForgeWebScriptTypeName[];
-    readonly length?: number;
-    readonly ownership?: ForgeWebScriptOwnership;
-  };
+  readonly parameters: readonly ForgeWebScriptParameter[];
+  readonly result: ForgeWebScriptTypeName;
 };
 
-function toAbiFunction(declaration: FunctionDeclaration): ForgeWebScriptAbiFunction {
-  const carrierType = (type: { readonly name: ForgeWebScriptPrimitiveType; readonly reference?: string }): ForgeWebScriptPrimitiveType =>
-    type.reference === 'Array' || type.reference !== undefined ? 'i32' : type.name;
+function toAbiFunction(declaration: FunctionDeclaration, module?: ForgeWebScriptModule): ForgeWebScriptAbiFunction {
+  const carrierType = (type: {
+    readonly name: ForgeWebScriptPrimitiveType;
+    readonly reference?: string;
+  }): ForgeWebScriptPrimitiveType => (type.reference === 'Array' || type.reference !== undefined ? 'i32' : type.name);
   return {
     name: declaration.name,
     parameters: declaration.parameters.map((parameter) => ({
@@ -222,12 +221,21 @@ function toAbiFunction(declaration: FunctionDeclaration): ForgeWebScriptAbiFunct
         : parameter.type.ownership === undefined
           ? {}
           : { ownership: parameter.type.ownership }),
+      passing: forgeWebScriptDefaultPassingMode(parameter.type, module),
+      ...(parameter.mutable === true ? { mutable: true as const } : {}),
+      ...(parameter.type.referenceMode === undefined ? {} : { referenceMode: parameter.type.referenceMode }),
     })),
     result: carrierType(declaration.result),
     ...(declaration.result.reference === undefined ? {} : { resultReference: declaration.result.reference }),
     ...(declaration.result.arguments === undefined ? {} : { resultArguments: declaration.result.arguments }),
     ...(declaration.result.length === undefined ? {} : { resultLength: declaration.result.length }),
     ...(declaration.result.ownership === undefined ? {} : { resultOwnership: declaration.result.ownership }),
+    ...(forgeWebScriptDefaultPassingMode(declaration.result, module) === 'value'
+      ? {}
+      : { resultPassing: forgeWebScriptDefaultPassingMode(declaration.result, module) }),
+    ...(declaration.result.referenceMode === undefined
+      ? {}
+      : { resultReferenceMode: declaration.result.referenceMode }),
   };
 }
 
@@ -332,18 +340,23 @@ function collectionLayouts(module: ForgeWebScriptModule): readonly ForgeWebScrip
     statementTypes(declaration.body);
   }
   const layouts = types.flatMap((type) => {
-    const kind: ForgeWebScriptCollectionLayout['kind'] | undefined = type.reference === 'Array' ? 'array' : type.reference === 'Vector' ? 'vector' : undefined;
+    const kind: ForgeWebScriptCollectionLayout['kind'] | undefined =
+      type.reference === 'Array' ? 'array' : type.reference === 'Vector' ? 'vector' : undefined;
     if (kind === undefined || type.arguments?.[0] === undefined) return [];
-    return [{
-      type: typeKey(type),
-      kind,
-      elementType: typeKey(type.arguments[0]),
-      ...(type.length === undefined ? {} : { length: type.length }),
-      representation: kind === 'array' ? 'contiguous' as const : 'owned-handle' as const,
-      ownership: type.ownership ?? ('owned' as const),
-    }];
+    return [
+      {
+        type: typeKey(type),
+        kind,
+        elementType: typeKey(type.arguments[0]),
+        ...(type.length === undefined ? {} : { length: type.length }),
+        representation: kind === 'array' ? ('contiguous' as const) : ('owned-handle' as const),
+        ownership: type.ownership ?? ('owned' as const),
+      },
+    ];
   });
-  return [...new Map(layouts.map((layout) => [layout.type, layout])).values()].toSorted((left, right) => left.type.localeCompare(right.type));
+  return [...new Map(layouts.map((layout) => [layout.type, layout])).values()].toSorted((left, right) =>
+    left.type.localeCompare(right.type),
+  );
 }
 
 export interface ForgeWebScriptAbiManifestOptions {
@@ -360,6 +373,7 @@ export interface ForgeWebScriptAbiManifestOptions {
   readonly iteratorDescriptors?: readonly ForgeWebScriptIteratorBoundaryDescriptor[];
   readonly async?: ForgeWebScriptAsyncCompilationContract;
   readonly targetFeatures?: ForgeWebScriptTargetFeatures;
+  readonly boundsChecks?: ForgeWebScriptSoNBoundsChecks;
 }
 
 const asyncCapabilities = new Set<ForgeWebScriptAsyncCapability>(['scheduler.microtask', 'scheduler.worker']);
@@ -405,16 +419,19 @@ export function createForgeWebScriptAbiManifest(
     moduleName: module.name,
     exports: module.functions
       .filter((declaration) => declaration.exported)
-      .map((declaration) => toAbiFunction(declaration))
+      .map((declaration) => toAbiFunction(declaration, module))
       .toSorted((left, right) => left.name.localeCompare(right.name)),
     imports: module.imports.map((declaration) => ({
       capability: declaration.capability,
       alias: declaration.alias,
-      function: toAbiFunction({
-        name: declaration.alias,
-        parameters: declaration.parameters,
-        result: declaration.result,
-      }),
+      function: toAbiFunction(
+        {
+          name: declaration.alias,
+          parameters: declaration.parameters,
+          result: declaration.result,
+        },
+        module,
+      ),
     })),
     sourceImports: options.sourceImports ?? module.sourceImports.map(({ source, alias }) => ({ source, alias })),
     requiredCapabilities: [...new Set(module.imports.map((declaration) => declaration.capability))].toSorted(),
@@ -427,7 +444,9 @@ export function createForgeWebScriptAbiManifest(
       allocatorExport: 'fws_alloc',
       deallocatorExport: 'fws_dealloc',
       reallocatorExport: 'fws_realloc',
+      safetyModel: 'region-arc-checked-linear',
     },
+    boundsChecks: options.boundsChecks ?? 'runtime',
     valueRepresentations: {
       bool: 'bool-i32',
       bytes: memory64 ? 'pointer-length-u64' : 'pointer-length-u32',
@@ -443,12 +462,14 @@ export function createForgeWebScriptAbiManifest(
     trapModel: 'explicit-trap',
     standardLibrary: options.standardLibrary ?? DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY,
     aggregateLayouts: aggregateLayouts(module),
-    enumDeclarations: module.enums.map((declaration) => ({
-      name: declaration.name,
-      exported: declaration.exported,
-      representation: 'i32' as const,
-      variants: declaration.variants.map(({ name, tag }) => ({ name, value: tag })),
-    })).toSorted((left, right) => left.name.localeCompare(right.name)),
+    enumDeclarations: module.enums
+      .map((declaration) => ({
+        name: declaration.name,
+        exported: declaration.exported,
+        representation: 'i32' as const,
+        variants: declaration.variants.map(({ name, tag }) => ({ name, value: tag })),
+      }))
+      .toSorted((left, right) => left.name.localeCompare(right.name)),
     collectionLayouts: collectionLayouts(module),
     specializations: options.specializations?.toSorted((left, right) => left.id.localeCompare(right.id)) ?? [],
     iteratorDescriptors: (options.iteratorDescriptors ?? iteratorDescriptors(module)).toSorted((left, right) =>

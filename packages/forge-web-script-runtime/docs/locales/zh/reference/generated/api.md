@@ -16,33 +16,33 @@
 **种类：**功能
 
 ```typescript
-function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void
+function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|清单 | ForgeWebScriptAbiManifest |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 清单 | ForgeWebScriptAbiManifest |      |
 
 ### 等值函数
 
 **种类：**功能
 
 ```typescript
-function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean
+function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|左| ForgeWebScriptAbiFunction | ForgeWebScriptAbiFunction |  |
-|对| ForgeWebScriptAbiFunction | ForgeWebScriptAbiFunction |  |
+| 名称 | 类型                      | 描述                      |
+| ---- | ------------------------- | ------------------------- |
+| 左   | ForgeWebScriptAbiFunction | ForgeWebScriptAbiFunction |     |
+| 对   | ForgeWebScriptAbiFunction | ForgeWebScriptAbiFunction |     |
 
 ### ForgeWebScriptAbiValidationResult
 
@@ -59,16 +59,16 @@ export interface ForgeWebScriptAbiValidationResult
 **种类：**功能
 
 ```typescript
-function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult
+function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|清单 | ForgeWebScriptAbiManifest |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 清单 | ForgeWebScriptAbiManifest |      |
 
 ## `src/async`
 
@@ -77,23 +77,23 @@ function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest):
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime
+function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptAsyncRuntimeOptions | ForgeWebScriptAsyncRuntimeOptions | ForgeWebScriptAsyncRuntimeOptions  |
+| 名称 | 类型                              | 描述                              |
+| ---- | --------------------------------- | --------------------------------- |
+| 选项 | ForgeWebScriptAsyncRuntimeOptions | ForgeWebScriptAsyncRuntimeOptions | ForgeWebScriptAsyncRuntimeOptions |
 
 ### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
 ```
 
 没有提供描述。
@@ -103,7 +103,8 @@ export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptAsyncCapability = (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type ForgeWebScriptAsyncCapability =
+  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
 ```
 
 没有提供描述。
@@ -143,7 +144,8 @@ export interface ForgeWebScriptAsyncFailure
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptAsyncFailureCode = | 'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
+export type ForgeWebScriptAsyncFailureCode =
+  'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
 没有提供描述。
@@ -245,104 +247,124 @@ export interface ForgeWebScriptAsyncWorkerMessage
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptArray(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function createForgeWebScriptArray(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 通过复制提供的值创建固定数组。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值观 |只读 TValue[] |  |
-|所有权 | ForgeWebScriptCollection 所有权 |  |
+| 名称   | 类型                            | 描述 |
+| ------ | ------------------------------- | ---- |
+| 价值观 | 只读 TValue[]                   |      |
+| 所有权 | ForgeWebScriptCollection 所有权 |      |
 
 ### 创建ForgeWebScriptIterator
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptIterator(values: Iterable<TValue>, descriptor: ForgeWebScriptIteratorDescriptor): ForgeWebScriptIterator<TValue>
+function createForgeWebScriptIterator(
+  values: Iterable<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 使用提供的 ABI 描述符将可迭代对象调整为惰性迭代器。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值观 |可迭代<TValue> |  |
-|描述符| ForgeWebScriptIteratorDescriptor | ForgeWebScriptIteratorDescriptor |  |
+| 名称   | 类型                             | 描述                             |
+| ------ | -------------------------------- | -------------------------------- |
+| 价值观 | 可迭代<TValue>                   |                                  |
+| 描述符 | ForgeWebScriptIteratorDescriptor | ForgeWebScriptIteratorDescriptor |     |
 
 ### 创建ForgeWebScriptIteratorDescriptor
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptIteratorDescriptor(id: string, elementType = 'unknown', capability: ForgeWebScriptIteratorCapability = 'linear', ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptIteratorDescriptor
+function createForgeWebScriptIteratorDescriptor(
+  id: string,
+  elementType = 'unknown',
+  capability: ForgeWebScriptIteratorCapability = 'linear',
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptIteratorDescriptor;
 ```
 
 创建描述符边界元数据；传统调用者默认采用线性访问。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编号 |字符串|  |
-|元素类型 |  |  |
-|能力| ForgeWebScriptIterator 功能 |  |
-|所有权 | ForgeWebScriptCollection 所有权 |  |
+| 名称     | 类型                            | 描述 |
+| -------- | ------------------------------- | ---- |
+| 编号     | 字符串                          |      |
+| 元素类型 |                                 |      |
+| 能力     | ForgeWebScriptIterator 功能     |      |
+| 所有权   | ForgeWebScriptCollection 所有权 |      |
 
 ### 创建ForgeWebScriptMap
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptMap(entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [], strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>()): ForgeWebScriptMap<TKey, TValue>
+function createForgeWebScriptMap(
+  entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [],
+  strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>(),
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|条目 |只读 ForgeWebScriptMapEntry<TKey, TValue>[] |  |
-|战略| ForgeWebScriptHashStrategy<TKey> |  |
+| 名称 | 类型                                        | 描述 |
+| ---- | ------------------------------------------- | ---- |
+| 条目 | 只读 ForgeWebScriptMapEntry<TKey, TValue>[] |      |
+| 战略 | ForgeWebScriptHashStrategy<TKey>            |      |
 
 ### 创建ForgeWebScriptSet
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptSet(values: readonly TValue[] = [], strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>()): ForgeWebScriptSet<TValue>
+function createForgeWebScriptSet(
+  values: readonly TValue[] = [],
+  strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>(),
+): ForgeWebScriptSet<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值观 |只读 TValue[] |  |
-|战略| ForgeWebScriptHashStrategy<TValue> |  |
+| 名称   | 类型                               | 描述 |
+| ------ | ---------------------------------- | ---- |
+| 价值观 | 只读 TValue[]                      |      |
+| 战略   | ForgeWebScriptHashStrategy<TValue> |      |
 
 ### 创建ForgeWebScriptVector
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptVector(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptVector<TValue>
+function createForgeWebScriptVector(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptVector<TValue>;
 ```
 
 通过复制提供的值创建一个拥有的向量。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值观 |只读 TValue[] |  |
-|所有权 | ForgeWebScriptCollection 所有权 |  |
+| 名称   | 类型                            | 描述 |
+| ------ | ------------------------------- | ---- |
+| 价值观 | 只读 TValue[]                   |      |
+| 所有权 | ForgeWebScriptCollection 所有权 |      |
 
 ### ForgeWebScriptArray
 
@@ -359,69 +381,77 @@ export interface ForgeWebScriptArray<TValue>
 **种类：**功能
 
 ```typescript
-function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 读取数组元素；无效索引返回 Option.none。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|数组| ForgeWebScriptArray<TValue> |  |
-|索引 |数量 |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 数组 | ForgeWebScriptArray<TValue> |      |
+| 索引 | 数量                        |      |
 
 ### 伪造WebScriptArrayLength
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number
+function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number;
 ```
 
 返回数组长度而不消耗或复制其元素。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|数组| ForgeWebScriptArray<TValue> |  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 数组 | ForgeWebScriptArray<TValue> |      |
 
 ### forgeWebScriptArraySet
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptArraySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptArray<TValue>
+function forgeWebScriptArraySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptArray<TValue>;
 ```
 
 替换数组元素；无效索引抛出 RangeError。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|数组| ForgeWebScriptArray<TValue> |  |
-|索引 |数量 |  |
-|价值| T值|  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 数组 | ForgeWebScriptArray<TValue> |      |
+| 索引 | 数量                        |      |
+| 价值 | T值                         |      |
 
 ### forgeWebScriptArrayTrySet
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptArrayTrySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>
+function forgeWebScriptArrayTrySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>;
 ```
 
 替换数组元素而不抛出异常；无效索引返回错误结果。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|数组| ForgeWebScriptArray<TValue> |  |
-|索引 |数量 |  |
-|价值| T值|  |
+| 名称 | 类型                        | 描述 |
+| ---- | --------------------------- | ---- |
+| 数组 | ForgeWebScriptArray<TValue> |      |
+| 索引 | 数量                        |      |
+| 价值 | T值                         |      |
 
 ### ForgeWebScriptCollection 所有权
 
@@ -438,7 +468,7 @@ export type ForgeWebScriptCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 **种类：**功能
 
 ```typescript
-function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
+function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>;
 ```
 
 没有提供描述。
@@ -448,7 +478,7 @@ function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
 **种类：**常数
 
 ```typescript
-export const forgeWebScriptError
+export const forgeWebScriptError;
 ```
 
 构造一个错误结果值而不抛出。
@@ -468,7 +498,8 @@ export interface ForgeWebScriptHashStrategy<TValue>
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptIterable<TValue> = ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
+export type ForgeWebScriptIterable<TValue> =
+  ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
 ```
 
 串行和并行迭代器操作接受的任何源。
@@ -488,34 +519,40 @@ export interface ForgeWebScriptIterator<TValue>
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorAdd(source: ForgeWebScriptIterator<TValue>, value: TValue): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorAdd(
+  source: ForgeWebScriptIterator<TValue>,
+  value: TValue,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 惰性地将一个值附加到迭代器。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterator<TValue> |  |
-|价值| T值|  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 来源 | ForgeWebScriptIterator<TValue> |      |
+| 价值 | T值                            |      |
 
 ### forgeWebScriptIteratorAt
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorAt(iterator: ForgeWebScriptIterator<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorAt(
+  iterator: ForgeWebScriptIterator<TValue>,
+  index: number,
+): ForgeWebScriptOption<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|迭代器| ForgeWebScriptIterator<TValue> |  |
-|索引 |数量 |  |
+| 名称   | 类型                           | 描述 |
+| ------ | ------------------------------ | ---- |
+| 迭代器 | ForgeWebScriptIterator<TValue> |      |
+| 索引   | 数量                           |      |
 
 ### ForgeWebScriptIterator 功能
 
@@ -532,33 +569,36 @@ export type ForgeWebScriptIteratorCapability = 'linear' | 'random-access';
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|迭代器| ForgeWebScriptIterator<TValue> |  |
+| 名称   | 类型                           | 描述 |
+| ------ | ------------------------------ | ---- |
+| 迭代器 | ForgeWebScriptIterator<TValue> |      |
 
 ### forgeWebScriptIteratorConcat
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorConcat(first: ForgeWebScriptIterator<TValue>, second: ForgeWebScriptIterable<TValue>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorConcat(
+  first: ForgeWebScriptIterator<TValue>,
+  second: ForgeWebScriptIterable<TValue>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 延迟连接两个源而不更改任一源的顺序。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|第一 | ForgeWebScriptIterator<TValue> |  |
-|第二 | ForgeWebScriptIterable<TValue> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 第一 | ForgeWebScriptIterator<TValue> |      |
+| 第二 | ForgeWebScriptIterable<TValue> |      |
 
 ### ForgeWebScriptIteratorDescriptor
 
@@ -575,163 +615,186 @@ export interface ForgeWebScriptIteratorDescriptor
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorFilter(source: ForgeWebScriptIterator<TValue>, predicate: (value: TValue) => boolean): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFilter(
+  source: ForgeWebScriptIterator<TValue>,
+  predicate: (value: TValue) => boolean,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 延迟过滤值；过滤总是将能力降级为线性访问。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterator<TValue> |  |
-|谓词 | （值：TValue）=> 布尔值 |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 来源 | ForgeWebScriptIterator<TValue> |      |
+| 谓词 | （值：TValue）=> 布尔值        |      |
 
 ### forgeWebScriptIteratorFirst
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|迭代器| ForgeWebScriptIterator<TValue> |  |
+| 名称   | 类型                           | 描述 |
+| ------ | ------------------------------ | ---- |
+| 迭代器 | ForgeWebScriptIterator<TValue> |      |
 
 ### forgeWebScriptIteratorFlatten
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorFlatten(source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFlatten(
+  source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 按外部和内部源顺序延迟展平嵌套源。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |  |
+| 名称 | 类型                                                   | 描述 |
+| ---- | ------------------------------------------------------ | ---- |
+| 来源 | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |      |
 
 ### forgeWebScriptIteratorFold
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorFold(iterator: ForgeWebScriptIterator<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptIteratorFold(
+  iterator: ForgeWebScriptIterator<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|迭代器| ForgeWebScriptIterator<TValue> |  |
-|初始|结果 |  |
-|减速机| （累加器：TResult，值：TValue，索引：数字）=> TResult |  |
+| 名称   | 类型                                                  | 描述 |
+| ------ | ----------------------------------------------------- | ---- |
+| 迭代器 | ForgeWebScriptIterator<TValue>                        |      |
+| 初始   | 结果                                                  |      |
+| 减速机 | （累加器：TResult，值：TValue，索引：数字）=> TResult |      |
 
 ### forgeWebScriptIteratorFromArray
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorFromArray(array: ForgeWebScriptArray<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromArray(
+  array: ForgeWebScriptArray<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'array',
     'unknown',
     'random-access',
     array.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 在固定数组上创建随机访问迭代器而不更改其所有权。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|数组| ForgeWebScriptArray<TValue> |  |
-|描述符| ForgeWebScriptIteratorDescriptor | ForgeWebScriptIteratorDescriptor |  |
+| 名称   | 类型                             | 描述                             |
+| ------ | -------------------------------- | -------------------------------- |
+| 数组   | ForgeWebScriptArray<TValue>      |                                  |
+| 描述符 | ForgeWebScriptIteratorDescriptor | ForgeWebScriptIteratorDescriptor |     |
 
 ### forgeWebScriptIteratorFromIterable
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorFromIterable(values: Iterable<TValue>, elementType = 'unknown', id = 'iterable'): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFromIterable(
+  values: Iterable<TValue>,
+  elementType = 'unknown',
+  id = 'iterable',
+): ForgeWebScriptIterator<TValue>;
 ```
 
 将任意迭代器调整为惰性线性 Forge Web 脚本迭代器。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值观 |可迭代<TValue> |  |
-|元素类型 |  |  |
-|编号 |  |  |
+| 名称     | 类型           | 描述 |
+| -------- | -------------- | ---- |
+| 价值观   | 可迭代<TValue> |      |
+| 元素类型 |                |      |
+| 编号     |                |      |
 
 ### forgeWebScriptIteratorFromVector
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorFromVector(vector: ForgeWebScriptVector<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromVector(
+  vector: ForgeWebScriptVector<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'vector',
     'unknown',
     'random-access',
     vector.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 在向量上创建随机访问迭代器而不更改其所有权。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矢量| ForgeWebScriptVector<TValue> |  |
-|描述符| ForgeWebScriptIteratorDescriptor | ForgeWebScriptIteratorDescriptor |  |
+| 名称   | 类型                             | 描述                             |
+| ------ | -------------------------------- | -------------------------------- |
+| 矢量   | ForgeWebScriptVector<TValue>     |                                  |
+| 描述符 | ForgeWebScriptIteratorDescriptor | ForgeWebScriptIteratorDescriptor |     |
 
 ### forgeWebScriptIteratorLast
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|迭代器| ForgeWebScriptIterator<TValue> |  |
+| 名称   | 类型                           | 描述 |
+| ------ | ------------------------------ | ---- |
+| 迭代器 | ForgeWebScriptIterator<TValue> |      |
 
 ### forgeWebScriptIteratorMap
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorMap(source: ForgeWebScriptIterator<TValue>, map: (value: TValue) => TResult, elementType = source.descriptor.elementType): ForgeWebScriptIterator<TResult>
+function forgeWebScriptIteratorMap(
+  source: ForgeWebScriptIterator<TValue>,
+  map: (value: TValue) => TResult,
+  elementType = source.descriptor.elementType,
+): ForgeWebScriptIterator<TResult>;
 ```
 
 仅当源支持时才延迟映射值，同时保留随机访问。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterator<TValue> |  |
-|地图 | （值：TValue）=> TResult |  |
-|元素类型 |  |  |
+| 名称     | 类型                           | 描述 |
+| -------- | ------------------------------ | ---- |
+| 来源     | ForgeWebScriptIterator<TValue> |      |
+| 地图     | （值：TValue）=> TResult       |      |
+| 元素类型 |                                |      |
 
 ### ForgeWebScriptIteratorResult
 
@@ -748,34 +811,40 @@ export interface ForgeWebScriptIteratorResult<TValue>
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorTake(source: ForgeWebScriptIterator<TValue>, count: number): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorTake(
+  source: ForgeWebScriptIterator<TValue>,
+  count: number,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 延迟地将源限制为最多计数值。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterator<TValue> |  |
-|计数|数量 |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 来源 | ForgeWebScriptIterator<TValue> |      |
+| 计数 | 数量                           |      |
 
 ### forgeWebScriptIteratorToArray
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorToArray(iterator: ForgeWebScriptIterator<TValue>, ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function forgeWebScriptIteratorToArray(
+  iterator: ForgeWebScriptIterator<TValue>,
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|迭代器| ForgeWebScriptIterator<TValue> |  |
-|所有权 | ForgeWebScriptCollection 所有权 |  |
+| 名称   | 类型                            | 描述 |
+| ------ | ------------------------------- | ---- |
+| 迭代器 | ForgeWebScriptIterator<TValue>  |      |
+| 所有权 | ForgeWebScriptCollection 所有权 |      |
 
 ### ForgeWebScriptMap
 
@@ -792,33 +861,35 @@ export interface ForgeWebScriptMap<TKey, TValue>
 **种类：**功能
 
 ```typescript
-function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地图 | ForgeWebScriptMap<TKey, TValue> |  |
-|关键| T键|  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 地图 | ForgeWebScriptMap<TKey, TValue> |      |
+| 关键 | T键                             |      |
 
 ### forgeWebScriptMapEntries
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptMapEntries(map: ForgeWebScriptMap<TKey, TValue>): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>
+function forgeWebScriptMapEntries(
+  map: ForgeWebScriptMap<TKey, TValue>,
+): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地图 | ForgeWebScriptMap<TKey, TValue> |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 地图 | ForgeWebScriptMap<TKey, TValue> |      |
 
 ### ForgeWebScriptMapEntry
 
@@ -835,42 +906,46 @@ export interface ForgeWebScriptMapEntry<TKey, TValue>
 **种类：**功能
 
 ```typescript
-function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>
+function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地图 | ForgeWebScriptMap<TKey, TValue> |  |
-|关键| T键|  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 地图 | ForgeWebScriptMap<TKey, TValue> |      |
+| 关键 | T键                             |      |
 
 ### forgeWebScriptMapSet
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptMapSet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey, value: TValue): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapSet(
+  map: ForgeWebScriptMap<TKey, TValue>,
+  key: TKey,
+  value: TValue,
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地图 | ForgeWebScriptMap<TKey, TValue> |  |
-|关键| T键|  |
-|价值| T值 |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 地图 | ForgeWebScriptMap<TKey, TValue> |      |
+| 关键 | T键                             |      |
+| 价值 | T值                             |      |
 
 ### forgeWebScript无
 
 **种类：**常数
 
 ```typescript
-export const forgeWebScriptNone
+export const forgeWebScriptNone;
 ```
 
 构造一个空的 Option 值。
@@ -880,7 +955,7 @@ export const forgeWebScriptNone
 **种类：**常数
 
 ```typescript
-export const forgeWebScriptOk
+export const forgeWebScriptOk;
 ```
 
 构造成功的 Result 值。
@@ -920,74 +995,74 @@ export interface ForgeWebScriptSet<TValue>
 **种类：**功能
 
 ```typescript
-function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|集| ForgeWebScriptSet<TValue> |  |
-|价值| T值|  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 集   | ForgeWebScriptSet<TValue> |      |
+| 价值 | T值                       |      |
 
 ### forgeWebScriptSetDelete
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|集| ForgeWebScriptSet<TValue> |  |
-|价值| T值 |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 集   | ForgeWebScriptSet<TValue> |      |
+| 价值 | T值                       |      |
 
 ### forgeWebScriptSetHas
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean
+function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|集| ForgeWebScriptSet<TValue> |  |
-|价值| T值 |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 集   | ForgeWebScriptSet<TValue> |      |
+| 价值 | T值                       |      |
 
 ### forgeWebScriptSetValues
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|集| ForgeWebScriptSet<TValue> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 集   | ForgeWebScriptSet<TValue> |      |
 
 ### 伪造WebScriptSome
 
 **种类：**常数
 
 ```typescript
-export const forgeWebScriptSome
+export const forgeWebScriptSome;
 ```
 
 构造一个当前选项值。
@@ -1008,7 +1083,7 @@ export interface ForgeWebScriptVector<TValue>
 **种类：**常数
 
 ```typescript
-export const forgeWebScriptVectorAdd
+export const forgeWebScriptVectorAdd;
 ```
 
 向量推送的别名，与 stdlib 迭代器 `add` 词汇表匹配。
@@ -1018,85 +1093,95 @@ export const forgeWebScriptVectorAdd
 **种类：**功能
 
 ```typescript
-function forgeWebScriptVectorFilter(vector: ForgeWebScriptVector<TValue>, predicate: (value: TValue, index: number) => boolean): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorFilter(
+  vector: ForgeWebScriptVector<TValue>,
+  predicate: (value: TValue, index: number) => boolean,
+): ForgeWebScriptVector<TValue>;
 ```
 
 急切地将向量过滤为新向量，同时保留源顺序。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矢量| ForgeWebScriptVector<TValue> |  |
-|谓词 | （值：TValue，索引：数字）=> 布尔值 |  |
+| 名称 | 类型                                | 描述 |
+| ---- | ----------------------------------- | ---- |
+| 矢量 | ForgeWebScriptVector<TValue>        |      |
+| 谓词 | （值：TValue，索引：数字）=> 布尔值 |      |
 
 ### forgeWebScriptVectorFold
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptVectorFold(vector: ForgeWebScriptVector<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptVectorFold(
+  vector: ForgeWebScriptVector<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 从左到右折叠向量值，包括提供的初始累加器。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矢量| ForgeWebScriptVector<TValue> |  |
-|初始|结果 |  |
-|减速机| （累加器：TResult，值：TValue，索引：数字）=> TResult |  |
+| 名称   | 类型                                                  | 描述 |
+| ------ | ----------------------------------------------------- | ---- |
+| 矢量   | ForgeWebScriptVector<TValue>                          |      |
+| 初始   | 结果                                                  |      |
+| 减速机 | （累加器：TResult，值：TValue，索引：数字）=> TResult |      |
 
 ### forgeWebScriptVectorGet
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 读取向量元素；无效索引返回 Option.none。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矢量| ForgeWebScriptVector<TValue> |  |
-|索引 |数量 |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 矢量 | ForgeWebScriptVector<TValue> |      |
+| 索引 | 数量                         |      |
 
 ### 伪造WebScriptVectorLength
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number
+function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number;
 ```
 
 返回初始化向量元素的数量。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矢量| ForgeWebScriptVector<TValue> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 矢量 | ForgeWebScriptVector<TValue> |      |
 
 ### forgeWebScriptVectorMap
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform: (value: TValue, index: number) => TResult): ForgeWebScriptVector<TResult>
+function forgeWebScriptVectorMap(
+  vector: ForgeWebScriptVector<TValue>,
+  transform: (value: TValue, index: number) => TResult,
+): ForgeWebScriptVector<TResult>;
 ```
 
 按源索引顺序将向量映射到新向量。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矢量| ForgeWebScriptVector<TValue> |  |
-|变换| （值：TValue，索引：数字）=> TResult |  |
+| 名称 | 类型                                 | 描述 |
+| ---- | ------------------------------------ | ---- |
+| 矢量 | ForgeWebScriptVector<TValue>         |      |
+| 变换 | （值：TValue，索引：数字）=> TResult |      |
 
 ### forgeWebScriptVectorPop
 
@@ -1106,69 +1191,77 @@ function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform
 function forgeWebScriptVectorPop(vector: ForgeWebScriptVector<TValue>): {
   readonly vector: ForgeWebScriptVector<TValue>;
   readonly value: ForgeWebScriptOption<TValue>;
-}
+};
 ```
 
 删除最终向量值并返回更新后的向量加上选项结果。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矢量| ForgeWebScriptVector<TValue> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 矢量 | ForgeWebScriptVector<TValue> |      |
 
 ### forgeWebScriptVectorPush
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>;
 ```
 
 根据需要附加值并增加容量，保留所有权。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矢量| ForgeWebScriptVector<TValue> |  |
-|价值| T值|  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 矢量 | ForgeWebScriptVector<TValue> |      |
+| 价值 | T值                          |      |
 
 ### forgeWebScriptVectorSet
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptVectorSet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorSet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptVector<TValue>;
 ```
 
 替换向量元素；无效索引抛出 RangeError。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矢量| ForgeWebScriptVector<TValue> |  |
-|索引 |数量 |  |
-|价值| T值|  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 矢量 | ForgeWebScriptVector<TValue> |      |
+| 索引 | 数量                         |      |
+| 价值 | T值                          |      |
 
 ### forgeWebScriptVectorTrySet
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>
+function forgeWebScriptVectorTrySet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>;
 ```
 
 替换向量元素而不抛出；无效索引返回错误结果。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矢量| ForgeWebScriptVector<TValue> |  |
-|索引 |数量 |  |
-|价值| T值|  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 矢量 | ForgeWebScriptVector<TValue> |      |
+| 索引 | 数量                         |      |
+| 价值 | T值                          |      |
 
 ## `src/ecs`
 
@@ -1177,45 +1270,55 @@ function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index:
 **种类：**功能
 
 ```typescript
-function addForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function addForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|实体| ForgeWebScriptEcsEntity |  |
-|组件|字符串|  |
-|价值| T值|  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 世界 | ForgeWebScriptEcsWorld<TValue> |      |
+| 实体 | ForgeWebScriptEcsEntity        |      |
+| 组件 | 字符串                         |      |
+| 价值 | T值                            |      |
 
 ### 创建ForgeWebScriptEcsScheduler
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptEcsScheduler(systems: readonly ForgeWebScriptEcsSystem<TValue>[], signals: readonly ForgeWebScriptEcsSignal[] = [], subscriptions: readonly ForgeWebScriptEcsSubscription[] = [], maxSteps = 1000): ForgeWebScriptEcsScheduler<TValue>
+function createForgeWebScriptEcsScheduler(
+  systems: readonly ForgeWebScriptEcsSystem<TValue>[],
+  signals: readonly ForgeWebScriptEcsSignal[] = [],
+  subscriptions: readonly ForgeWebScriptEcsSubscription[] = [],
+  maxSteps = 1000,
+): ForgeWebScriptEcsScheduler<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|系统|只读 ForgeWebScriptEcsSystem<TValue>[] |  |
-|信号|只读 ForgeWebScriptEcsSignal[] |  |
-|订阅 |只读 ForgeWebScriptEcsSubscription[] |  |
-|最大步数 |  |  |
+| 名称     | 类型                                   | 描述 |
+| -------- | -------------------------------------- | ---- |
+| 系统     | 只读 ForgeWebScriptEcsSystem<TValue>[] |      |
+| 信号     | 只读 ForgeWebScriptEcsSignal[]         |      |
+| 订阅     | 只读 ForgeWebScriptEcsSubscription[]   |      |
+| 最大步数 |                                        |      |
 
 ### 创建ForgeWebScriptEcsWorld
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
+function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>;
 ```
 
 没有提供描述。
@@ -1225,17 +1328,20 @@ function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
 **种类：**功能
 
 ```typescript
-function despawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): ForgeWebScriptEcsResult<TValue>
+function despawnForgeWebScriptEcsEntity(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|实体| ForgeWebScriptEcsEntity |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 世界 | ForgeWebScriptEcsWorld<TValue> |      |
+| 实体 | ForgeWebScriptEcsEntity        |      |
 
 ### ForgeWebScriptEcsComponentStore
 
@@ -1362,138 +1468,162 @@ export interface ForgeWebScriptEcsWorld<TValue = Uint8Array>
 **种类：**功能
 
 ```typescript
-function getForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): TValue | undefined
+function getForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): TValue | undefined;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|实体| ForgeWebScriptEcsEntity |  |
-|组件|字符串|  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 世界 | ForgeWebScriptEcsWorld<TValue> |      |
+| 实体 | ForgeWebScriptEcsEntity        |      |
+| 组件 | 字符串                         |      |
 
 ### isForgeWebScriptEcsEntityAlive
 
 **种类：**功能
 
 ```typescript
-function isForgeWebScriptEcsEntityAlive(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): boolean
+function isForgeWebScriptEcsEntityAlive(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): boolean;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|实体| ForgeWebScriptEcsEntity |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 世界 | ForgeWebScriptEcsWorld<TValue> |      |
+| 实体 | ForgeWebScriptEcsEntity        |      |
 
 ### queryForgeWebScriptEcsEntities
 
 **种类：**功能
 
 ```typescript
-function queryForgeWebScriptEcsEntities(world: ForgeWebScriptEcsWorld<TValue>, query: ForgeWebScriptEcsQuery): readonly ForgeWebScriptEcsEntity[]
+function queryForgeWebScriptEcsEntities(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  query: ForgeWebScriptEcsQuery,
+): readonly ForgeWebScriptEcsEntity[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|查询 | ForgeWebScriptEcsQuery |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 世界 | ForgeWebScriptEcsWorld<TValue> |      |
+| 查询 | ForgeWebScriptEcsQuery         |      |
 
 ### 删除ForgeWebScriptEcsComponent
 
 **种类：**功能
 
 ```typescript
-function removeForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): ForgeWebScriptEcsResult<TValue>
+function removeForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|实体| ForgeWebScriptEcsEntity |  |
-|组件|字符串|  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 世界 | ForgeWebScriptEcsWorld<TValue> |      |
+| 实体 | ForgeWebScriptEcsEntity        |      |
+| 组件 | 字符串                         |      |
 
 ### runForgeWebScriptEcsScheduler
 
 **种类：**功能
 
 ```typescript
-function runForgeWebScriptEcsScheduler(world: ForgeWebScriptEcsWorld<TValue>, scheduler: ForgeWebScriptEcsScheduler<TValue>): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>
+function runForgeWebScriptEcsScheduler(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  scheduler: ForgeWebScriptEcsScheduler<TValue>,
+): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|调度程序| ForgeWebScriptEcsScheduler<TValue> |  |
+| 名称     | 类型                               | 描述 |
+| -------- | ---------------------------------- | ---- |
+| 世界     | ForgeWebScriptEcsWorld<TValue>     |      |
+| 调度程序 | ForgeWebScriptEcsScheduler<TValue> |      |
 
 ### setForgeWebScriptEcsComponent
 
 **种类：**功能
 
 ```typescript
-function setForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function setForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
-|实体| ForgeWebScriptEcsEntity |  |
-|组件|字符串|  |
-|价值| T值|  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 世界 | ForgeWebScriptEcsWorld<TValue> |      |
+| 实体 | ForgeWebScriptEcsEntity        |      |
+| 组件 | 字符串                         |      |
+| 价值 | T值                            |      |
 
 ### spawnForgeWebScriptEcsEntity
 
 **种类：**功能
 
 ```typescript
-function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>
+function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|世界 | ForgeWebScriptEcsWorld<TValue> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 世界 | ForgeWebScriptEcsWorld<TValue> |      |
 
 ### validateForgeWebScriptEcsSignals
 
 **种类：**功能
 
 ```typescript
-function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSignal[]): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] }
+function validateForgeWebScriptEcsSignals(
+  signals: readonly ForgeWebScriptEcsSignal[],
+): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|信号|只读 ForgeWebScriptEcsSignal[] |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 信号 | 只读 ForgeWebScriptEcsSignal[] |      |
 
 ## `src/host`
 
@@ -1502,34 +1632,40 @@ function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSig
 **种类：**功能
 
 ```typescript
-function createDefaultForgeWebScriptCapabilities(options: ForgeWebScriptDefaultHostOptions = {}): ForgeWebScriptCapabilityRegistry
+function createDefaultForgeWebScriptCapabilities(
+  options: ForgeWebScriptDefaultHostOptions = {},
+): ForgeWebScriptCapabilityRegistry;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptDefaultHostOptions | ForgeWebScriptDefaultHostOptions | ForgeWebScriptDefaultHostOptions | ForgeWebScriptDefaultHostOptions  |
+| 名称 | 类型                             | 描述                             |
+| ---- | -------------------------------- | -------------------------------- |
+| 选项 | ForgeWebScriptDefaultHostOptions | ForgeWebScriptDefaultHostOptions | ForgeWebScriptDefaultHostOptions | ForgeWebScriptDefaultHostOptions |
 
 ### 创建ForgeWebScriptHost
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptHost(manifest: ForgeWebScriptAbiManifest, registry: ForgeWebScriptCapabilityRegistry, options: ForgeWebScriptHostOptions = {}): ForgeWebScriptHost
+function createForgeWebScriptHost(
+  manifest: ForgeWebScriptAbiManifest,
+  registry: ForgeWebScriptCapabilityRegistry,
+  options: ForgeWebScriptHostOptions = {},
+): ForgeWebScriptHost;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|清单 | ForgeWebScriptAbiManifest |  |
-|注册表| ForgeWebScriptCapabilityRegistry | ForgeWebScriptCapabilityRegistry | ForgeWebScriptCapabilityRegistry | ForgeWebScriptCapabilityRegistry |  |
-|选项 | ForgeWebScriptHostOptions | ForgeWebScriptHostOptions | ForgeWebScriptHostOptions | ForgeWebScriptHostOptions | ForgeWebScriptHostOptions  |
+| 名称   | 类型                             | 描述                             |
+| ------ | -------------------------------- | -------------------------------- |
+| 清单   | ForgeWebScriptAbiManifest        |                                  |
+| 注册表 | ForgeWebScriptCapabilityRegistry | ForgeWebScriptCapabilityRegistry | ForgeWebScriptCapabilityRegistry | ForgeWebScriptCapabilityRegistry |                           |
+| 选项   | ForgeWebScriptHostOptions        | ForgeWebScriptHostOptions        | ForgeWebScriptHostOptions        | ForgeWebScriptHostOptions        | ForgeWebScriptHostOptions |
 
 ### ForgeWebScript功能实现
 
@@ -1598,36 +1734,44 @@ export interface ForgeWebScriptHostOptions
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptWasmIterator(handle: number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIterator(
+  handle: number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): ForgeWebScriptWasmIterator<TValue>;
 ```
 
 将后端拥有的 i32 句柄和打包的 i64 next 协议适配为 JS 迭代。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|手柄|数量 |  |
-|下一个 | （句柄：数字）=> ForgeWebScriptPackedIteratorResult |  |
-|选项 | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| 名称   | 类型                                                | 描述 |
+| ------ | --------------------------------------------------- | ---- |
+| 手柄   | 数量                                                |      |
+| 下一个 | （句柄：数字）=> ForgeWebScriptPackedIteratorResult |      |
+| 选项   | ForgeWebScriptWasmIteratorOptions<TValue>           |      |
 
 ### 创建ForgeWebScriptWasmIteratorFactory
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptWasmIteratorFactory(factory: (...arguments_: TArguments) => number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIteratorFactory(
+  factory: (...arguments_: TArguments) => number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>;
 ```
 
 从后端工厂及其 `.next` 导出构建面向 JS 的迭代器工厂。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|工厂 | (...arguments_: TArguments) => 数字 |  |
-|下一个 | （句柄：数字）=> ForgeWebScriptPackedIteratorResult |  |
-|选项 | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| 名称   | 类型                                                | 描述 |
+| ------ | --------------------------------------------------- | ---- |
+| 工厂   | (...arguments_: TArguments) => 数字                 |      |
+| 下一个 | （句柄：数字）=> ForgeWebScriptPackedIteratorResult |      |
+| 选项   | ForgeWebScriptWasmIteratorOptions<TValue>           |      |
 
 ### ForgeWebScriptPackedIteratorResult
 
@@ -1666,16 +1810,16 @@ export interface ForgeWebScriptWasmIteratorOptions<TValue>
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger
+function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptLoggerOptions | ForgeWebScriptLoggerOptions | ForgeWebScriptLoggerOptions | ForgeWebScriptLoggerOptions  |
+| 名称 | 类型                        | 描述                        |
+| ---- | --------------------------- | --------------------------- |
+| 选项 | ForgeWebScriptLoggerOptions | ForgeWebScriptLoggerOptions | ForgeWebScriptLoggerOptions | ForgeWebScriptLoggerOptions |
 
 ### ForgeWebScriptLogEvent
 
@@ -1734,23 +1878,23 @@ export type ForgeWebScriptLogSink = (event: ForgeWebScriptLogEvent) => void;
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory
+function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScript 内存选项 |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 选项 | ForgeWebScript 内存选项 |      |
 
 ### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 ```
 
 没有提供描述。
@@ -1792,7 +1936,7 @@ export interface ForgeWebScriptMemoryOptions
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
 ```
 
 用于授权工作线程、线程、原子和共享内存执行的功能名称。
@@ -1804,7 +1948,7 @@ export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
 ```typescript
 export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<ForgeWebScriptParallelOperation, ForgeWebScriptParallelOperationDescriptor>
->
+>;
 ```
 
 每个具有串行回退功能的并行操作的稳定描述符。
@@ -1814,42 +1958,53 @@ export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorParAt(source: ForgeWebScriptIterable<TValue>, index: number, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParAt(
+  source: ForgeWebScriptIterable<TValue>,
+  index: number,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 返回从零开始的排序结果，或者当索引无效时返回 Option.none。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterable<TValue> |  |
-|索引 |数量 |  |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称 | 类型                           | 描述                          |
+| ---- | ------------------------------ | ----------------------------- |
+| 来源 | ForgeWebScriptIterable<TValue> |                               |
+| 索引 | 数量                           |                               |
+| 选项 | ForgeWebScriptParallelOptions  | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ### forgeWebScriptIteratorParCollect
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorParCollect(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptVector<TValue>>
+function forgeWebScriptIteratorParCollect(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptVector<TValue>>;
 ```
 
 将有序并行结果具体化为拥有的向量。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterable<TValue> |  |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称 | 类型                           | 描述                          |
+| ---- | ------------------------------ | ----------------------------- |
+| 来源 | ForgeWebScriptIterable<TValue> |                               |
+| 选项 | ForgeWebScriptParallelOptions  | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ### forgeWebScriptIteratorParFilter
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>, predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFilter(
+  source: ForgeWebScriptIterable<TValue>,
+  predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 并行评估谓词并按源顺序保留接受的值。
@@ -1857,88 +2012,106 @@ function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>,
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterable<TValue> |  |
-|谓词 | （值：TValue，索引：数字）=> 布尔值 \| PromiseLike<boolean> |  |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称 | 类型                                                        | 描述                          |
+| ---- | ----------------------------------------------------------- | ----------------------------- |
+| 来源 | ForgeWebScriptIterable<TValue>                              |                               |
+| 谓词 | （值：TValue，索引：数字）=> 布尔值 \| PromiseLike<boolean> |                               |
+| 选项 | ForgeWebScriptParallelOptions                               | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ### forgeWebScriptIteratorParFirst
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorParFirst(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParFirst(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 返回第一个排序结果，或空源的 Option.none 值。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterable<TValue> |  |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称 | 类型                           | 描述                          |
+| ---- | ------------------------------ | ----------------------------- |
+| 来源 | ForgeWebScriptIterable<TValue> |                               |
+| 选项 | ForgeWebScriptParallelOptions  | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ### forgeWebScriptIteratorParFlatten
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorParFlatten(source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFlatten(
+  source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 并行展平嵌套源，同时保留外部和内部顺序。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |  |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称 | 类型                                                   | 描述                          |
+| ---- | ------------------------------------------------------ | ----------------------------- |
+| 来源 | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |                               |
+| 选项 | ForgeWebScriptParallelOptions                          | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ### forgeWebScriptIteratorParFold
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorParFold(source: ForgeWebScriptIterable<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult, options: ForgeWebScriptParallelOptions = {}): Promise<TResult>
+function forgeWebScriptIteratorParFold(
+  source: ForgeWebScriptIterable<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<TResult>;
 ```
 
 从左到右折叠排序结果，包括提供的初始累加器。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterable<TValue> |  |
-|初始|结果 |  |
-|减速机| （累加器：TResult，值：TValue，索引：数字）=> TResult |  |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称   | 类型                                                  | 描述                          |
+| ------ | ----------------------------------------------------- | ----------------------------- |
+| 来源   | ForgeWebScriptIterable<TValue>                        |                               |
+| 初始   | 结果                                                  |                               |
+| 减速机 | （累加器：TResult，值：TValue，索引：数字）=> TResult |                               |
+| 选项   | ForgeWebScriptParallelOptions                         | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ### forgeWebScriptIteratorParLast
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorParLast(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParLast(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 返回最后排序的结果，或空源的 Option.none 值。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterable<TValue> |  |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称 | 类型                           | 描述                          |
+| ---- | ------------------------------ | ----------------------------- |
+| 来源 | ForgeWebScriptIterable<TValue> |                               |
+| 选项 | ForgeWebScriptParallelOptions  | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ### forgeWebScriptIteratorParMap
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, map: (value: TValue, index: number) => TResult | PromiseLike<TResult>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TResult>>
+function forgeWebScriptIteratorParMap(
+  source: ForgeWebScriptIterable<TValue>,
+  map: (value: TValue, index: number) => TResult | PromiseLike<TResult>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TResult>>;
 ```
 
 并行应用回调并返回惰性兼容的有序迭代器。
@@ -1946,45 +2119,51 @@ function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, ma
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterable<TValue> |  |
-|地图 | （值：TValue，索引：数字）=> TResult \| PromiseLike<TResult> |  |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称 | 类型                                                         | 描述                          |
+| ---- | ------------------------------------------------------------ | ----------------------------- |
+| 来源 | ForgeWebScriptIterable<TValue>                               |                               |
+| 地图 | （值：TValue，索引：数字）=> TResult \| PromiseLike<TResult> |                               |
+| 选项 | ForgeWebScriptParallelOptions                                | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ### forgeWebScriptIteratorParToArray
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptIteratorParToArray(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptArray<TValue>>
+function forgeWebScriptIteratorParToArray(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptArray<TValue>>;
 ```
 
 将有序并行结果具体化为拥有的固定数组。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 | ForgeWebScriptIterable<TValue> |  |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称 | 类型                           | 描述                          |
+| ---- | ------------------------------ | ----------------------------- |
+| 来源 | ForgeWebScriptIterable<TValue> |                               |
+| 选项 | ForgeWebScriptParallelOptions  | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ### forgeWebScript并行描述符
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptParallelDescriptor(operation: ForgeWebScriptParallelOperation, options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy }
+function forgeWebScriptParallelDescriptor(
+  operation: ForgeWebScriptParallelOperation,
+  options: ForgeWebScriptParallelOptions = {},
+): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy };
 ```
 
 描述操作并附上从提供的选项中选择的策略。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|操作| ForgeWebScript 并行操作 |  |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称 | 类型                          | 描述                          |
+| ---- | ----------------------------- | ----------------------------- |
+| 操作 | ForgeWebScript 并行操作       |                               |
+| 选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ### ForgeWebScript并行执行器
 
@@ -2001,7 +2180,16 @@ export interface ForgeWebScriptParallelExecutor
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptParallelOperation = | 'par_map' | 'par_filter' | 'par_flatten' | 'par_collect' | 'par_to_array' | 'par_fold' | 'par_first' | 'par_last' | 'par_at';
+export type ForgeWebScriptParallelOperation =
+  | 'par_map'
+  | 'par_filter'
+  | 'par_flatten'
+  | 'par_collect'
+  | 'par_to_array'
+  | 'par_fold'
+  | 'par_first'
+  | 'par_last'
+  | 'par_at';
 ```
 
 运行时公开的规范并行操作名称； `par_filter` 是故意的。
@@ -2053,16 +2241,16 @@ export type ForgeWebScriptParallelStrategy = 'serial' | 'host-workers' | 'wasm-t
 **种类：**功能
 
 ```typescript
-function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan
+function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan;
 ```
 
 选择允许的策略而不更改操作的结果契约。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions  |
+| 名称 | 类型                          | 描述                          |
+| ---- | ----------------------------- | ----------------------------- |
+| 选项 | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions | ForgeWebScriptParallelOptions |
 
 ## `src/self-hosted`
 
@@ -2091,7 +2279,11 @@ export interface ForgeWebScriptSelfHostedVmRun
 **种类：**功能
 
 ```typescript
-function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedVmRun
+function runForgeWebScriptSelfHostedCompiler(
+  input: ForgeWebScriptCompileInput,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedVmRun;
 ```
 
 运行有界自承载编译器引导程序。
@@ -2103,29 +2295,33 @@ function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptCompileInput | ForgeWebScriptCompileInput |  |
-|模式 | ForgeWebScriptVmExecutionMode | ForgeWebScriptVmExecutionMode  |
-|选项 | ForgeWebScriptSelfHostedRunOptions | ForgeWebScriptSelfHostedRunOptions | ForgeWebScriptSelfHostedRunOptions  |
+| 名称 | 类型                               | 描述                               |
+| ---- | ---------------------------------- | ---------------------------------- |
+| 输入 | ForgeWebScriptCompileInput         | ForgeWebScriptCompileInput         |                                    |
+| 模式 | ForgeWebScriptVmExecutionMode      | ForgeWebScriptVmExecutionMode      |
+| 选项 | ForgeWebScriptSelfHostedRunOptions | ForgeWebScriptSelfHostedRunOptions | ForgeWebScriptSelfHostedRunOptions |
 
 ### runForgeWebScriptSelfHostedLexStage
 
 **种类：**功能
 
 ```typescript
-function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedStageReport
+function runForgeWebScriptSelfHostedLexStage(
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedStageReport;
 ```
 
 仅为编译器使用者执行有界 FWS 创作的 lex 阶段。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 |选择<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |  |
-|模式 | ForgeWebScriptVmExecutionMode | ForgeWebScriptVmExecutionMode  |
-|选项 | ForgeWebScriptSelfHostedRunOptions | ForgeWebScriptSelfHostedRunOptions | ForgeWebScriptSelfHostedRunOptions  |
+| 名称 | 类型                                                                                                     | 描述                               |
+| ---- | -------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| 输入 | 选择<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |                                    |
+| 模式 | ForgeWebScriptVmExecutionMode                                                                            | ForgeWebScriptVmExecutionMode      |
+| 选项 | ForgeWebScriptSelfHostedRunOptions                                                                       | ForgeWebScriptSelfHostedRunOptions | ForgeWebScriptSelfHostedRunOptions |
 
 ## `src/threading`
 
@@ -2134,7 +2330,10 @@ function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileIn
 **种类：**功能
 
 ```typescript
-function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined, capabilities: readonly string[] | undefined): boolean
+function canUseForgeWebScriptWasmThreads(
+  targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined,
+  capabilities: readonly string[] | undefined,
+): boolean;
 ```
 
 线程执行在编译和运行时边界都是选择加入的。在
@@ -2142,34 +2341,39 @@ function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThrea
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|目标特征 | ForgeWebScriptWasmThreadTargetFeatures \|未定义 |  |
-|能力|只读字符串[] \|未定义 |  |
+| 名称     | 类型                                            | 描述 |
+| -------- | ----------------------------------------------- | ---- |
+| 目标特征 | ForgeWebScriptWasmThreadTargetFeatures \|未定义 |      |
+| 能力     | 只读字符串[] \|未定义                           |      |
 
 ### createForgeWebScriptAtomicI32
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptAtomicI32(length = 1, options: ForgeWebScriptAtomicI32Options = {}): ForgeWebScriptAtomicI32
+function createForgeWebScriptAtomicI32(
+  length = 1,
+  options: ForgeWebScriptAtomicI32Options = {},
+): ForgeWebScriptAtomicI32;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|长度|  |  |
-|选项 | ForgeWebScriptAtomicI32Options | ForgeWebScriptAtomicI32Options | ForgeWebScriptAtomicI32Options  |
+| 名称 | 类型                           | 描述                           |
+| ---- | ------------------------------ | ------------------------------ |
+| 长度 |                                |                                |
+| 选项 | ForgeWebScriptAtomicI32Options | ForgeWebScriptAtomicI32Options | ForgeWebScriptAtomicI32Options |
 
 ### createForgeWebScriptWasmThreadScheduler
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThreadSchedulerOptions): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWasmThreadScheduler(
+  options: ForgeWebScriptWasmThreadSchedulerOptions,
+): ForgeWebScriptWorkerScheduler;
 ```
 
 使用显式共享内存记账包装已编译的 WASM 线程桥。
@@ -2178,35 +2382,42 @@ function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThre
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptWasmThreadSchedulerOptions | ForgeWebScriptWasmThreadSchedulerOptions |  |
+| 名称 | 类型                                     | 描述                                     |
+| ---- | ---------------------------------------- | ---------------------------------------- |
+| 选项 | ForgeWebScriptWasmThreadSchedulerOptions | ForgeWebScriptWasmThreadSchedulerOptions |     |
 
 ### 创建ForgeWebScriptWorkerRuntime
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptWorkerRuntime(createWorker: () => ForgeWebScriptWorkerPort, onMessage: (message: unknown) => void, onError: (error: unknown) => void = () => {}, options: ForgeWebScriptWorkerRuntimeOptions = {}): ForgeWebScriptWorkerRuntime
+function createForgeWebScriptWorkerRuntime(
+  createWorker: () => ForgeWebScriptWorkerPort,
+  onMessage: (message: unknown) => void,
+  onError: (error: unknown) => void = () => {},
+  options: ForgeWebScriptWorkerRuntimeOptions = {},
+): ForgeWebScriptWorkerRuntime;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|创建工人| () => ForgeWebScriptWorkerPort |  |
-|消息 | （消息：未知）=> 无效 |  |
-|错误 | （错误：未知）=> 无效 |  |
-|选项 | ForgeWebScriptWorkerRuntimeOptions | ForgeWebScriptWorkerRuntimeOptions | ForgeWebScriptWorkerRuntimeOptions  |
+| 名称     | 类型                               | 描述                               |
+| -------- | ---------------------------------- | ---------------------------------- |
+| 创建工人 | () => ForgeWebScriptWorkerPort     |                                    |
+| 消息     | （消息：未知）=> 无效              |                                    |
+| 错误     | （错误：未知）=> 无效              |                                    |
+| 选项     | ForgeWebScriptWorkerRuntimeOptions | ForgeWebScriptWorkerRuntimeOptions | ForgeWebScriptWorkerRuntimeOptions |
 
 ### 创建ForgeWebScriptWorkerScheduler
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedulerOptions = {}): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWorkerScheduler(
+  options: ForgeWebScriptWorkerSchedulerOptions = {},
+): ForgeWebScriptWorkerScheduler;
 ```
 
 创建并行迭代器操作使用的主机端调度边界。
@@ -2218,16 +2429,16 @@ function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedu
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptWorkerScheduler 选项 |  |
+| 名称 | 类型                               | 描述 |
+| ---- | ---------------------------------- | ---- |
+| 选项 | ForgeWebScriptWorkerScheduler 选项 |      |
 
 ### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 ```
 
 没有提供描述。
@@ -2329,17 +2540,20 @@ export interface ForgeWebScriptWorkerSchedulerOptions
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptTraceRecorder(options: ForgeWebScriptTraceOptions, functionName: string): ForgeWebScriptTraceRecorder
+function createForgeWebScriptTraceRecorder(
+  options: ForgeWebScriptTraceOptions,
+  functionName: string,
+): ForgeWebScriptTraceRecorder;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptTraceOptions | ForgeWebScriptTraceOptions | ForgeWebScriptTraceOptions | ForgeWebScriptTraceOptions  |
-|函数名 |字符串|  |
+| 名称   | 类型                       | 描述                       |
+| ------ | -------------------------- | -------------------------- |
+| 选项   | ForgeWebScriptTraceOptions | ForgeWebScriptTraceOptions | ForgeWebScriptTraceOptions | ForgeWebScriptTraceOptions |
+| 函数名 | 字符串                     |                            |
 
 ### ForgeWebScriptTraceCaptureMode
 
@@ -2376,7 +2590,8 @@ export interface ForgeWebScriptTraceEvent
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptTraceEventType = 'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
+export type ForgeWebScriptTraceEventType =
+  'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
 没有提供描述。
@@ -2436,17 +2651,20 @@ export interface ForgeWebScriptTraceSourceLocation extends ForgeWebScriptVmDebug
 **种类：**功能
 
 ```typescript
-function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (value: ForgeWebScriptVmValue) => string): string
+function summarizeForgeWebScriptVmValue(
+  value: ForgeWebScriptVmValue,
+  redact?: (value: ForgeWebScriptVmValue) => string,
+): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值| ForgeWebScriptVmValue |  |
-|编辑| （值：ForgeWebScriptVmValue）=> 字符串 |  |
+| 名称 | 类型                                   | 描述 |
+| ---- | -------------------------------------- | ---- |
+| 价值 | ForgeWebScriptVmValue                  |      |
+| 编辑 | （值：ForgeWebScriptVmValue）=> 字符串 |      |
 
 ## `src/traps`
 
@@ -2455,17 +2673,17 @@ function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (
 **种类：**功能
 
 ```typescript
-function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void
+function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|错误|未知 |  |
-|追踪| ForgeWebScriptTraceReport |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 错误 | 未知                      |      |
+| 追踪 | ForgeWebScriptTraceReport |      |
 
 ### 伪造WebScript陷阱
 
@@ -2482,7 +2700,14 @@ export class ForgeWebScriptTrap extends Error
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptTrapCode = | 'CapabilityDenied' | 'HostError' | 'InvalidAbi' | 'InvalidOwnership' | 'MemoryExhausted' | 'MemoryOutOfBounds' | 'GuestTrap';
+export type ForgeWebScriptTrapCode =
+  | 'CapabilityDenied'
+  | 'HostError'
+  | 'InvalidAbi'
+  | 'InvalidOwnership'
+  | 'MemoryExhausted'
+  | 'MemoryOutOfBounds'
+  | 'GuestTrap';
 ```
 
 没有提供描述。
@@ -2502,18 +2727,22 @@ export interface ForgeWebScriptTrapOptions extends ErrorOptions
 **种类：**功能
 
 ```typescript
-function toForgeWebScriptHostError(error: unknown, capability: string, logger?: ForgeWebScriptLogger): ForgeWebScriptTrap
+function toForgeWebScriptHostError(
+  error: unknown,
+  capability: string,
+  logger?: ForgeWebScriptLogger,
+): ForgeWebScriptTrap;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|错误|未知 |  |
-|能力|字符串|  |
-|记录器| ForgeWebScriptLogger |  |
+| 名称   | 类型                 | 描述 |
+| ------ | -------------------- | ---- |
+| 错误   | 未知                 |      |
+| 能力   | 字符串               |      |
+| 记录器 | ForgeWebScriptLogger |      |
 
 ## `src/vm-executor`
 
@@ -2522,71 +2751,86 @@ function toForgeWebScriptHostError(error: unknown, capability: string, logger?: 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptVmAotArtifact(module: ForgeWebScriptVmModule, compilerVersion: string): ForgeWebScriptVmAotArtifact
+function createForgeWebScriptVmAotArtifact(
+  module: ForgeWebScriptVmModule,
+  compilerVersion: string,
+): ForgeWebScriptVmAotArtifact;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScriptVmModule |  |
-|编译器版本 |字符串|  |
+| 名称       | 类型                   | 描述 |
+| ---------- | ---------------------- | ---- |
+| 模块       | ForgeWebScriptVmModule |      |
+| 编译器版本 | 字符串                 |      |
 
 ### 创建ForgeWebScriptVmExecutor
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptVmExecutor(executorOptions: ForgeWebScriptVmExecutorOptions = {}): ForgeWebScriptVmExecutor
+function createForgeWebScriptVmExecutor(
+  executorOptions: ForgeWebScriptVmExecutorOptions = {},
+): ForgeWebScriptVmExecutor;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|执行者选项 | ForgeWebScriptVmExecutorOptions | ForgeWebScriptVmExecutorOptions | ForgeWebScriptVmExecutorOptions  |
+| 名称       | 类型                            | 描述                            |
+| ---------- | ------------------------------- | ------------------------------- |
+| 执行者选项 | ForgeWebScriptVmExecutorOptions | ForgeWebScriptVmExecutorOptions | ForgeWebScriptVmExecutorOptions |
 
 ### 执行ForgeWebScriptVm
 
 **种类：**功能
 
 ```typescript
-function executeForgeWebScriptVm(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: ForgeWebScriptVmExecutionOptions): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVm(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: ForgeWebScriptVmExecutionOptions,
+): ForgeWebScriptVmExecutionResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScriptVmModule |  |
-|函数名 |字符串|  |
-|论据_ |只读 ForgeWebScriptVmValue[] |  |
-|选项 | ForgeWebScriptVmExecutionOptions | ForgeWebScriptVmExecutionOptions | ForgeWebScriptVmExecutionOptions  |
+| 名称   | 类型                             | 描述                             |
+| ------ | -------------------------------- | -------------------------------- |
+| 模块   | ForgeWebScriptVmModule           |                                  |
+| 函数名 | 字符串                           |                                  |
+| 论据_  | 只读 ForgeWebScriptVmValue[]     |                                  |
+| 选项   | ForgeWebScriptVmExecutionOptions | ForgeWebScriptVmExecutionOptions | ForgeWebScriptVmExecutionOptions |
 
 ### 执行ForgeWebScriptVmAotArtifact
 
 **种类：**功能
 
 ```typescript
-function executeForgeWebScriptVmAotArtifact(artifact: ForgeWebScriptVmAotArtifact, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVmAotArtifact(
+  artifact: ForgeWebScriptVmAotArtifact,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|神器| ForgeWebScriptVmAotArtifact |  |
-|函数名 |字符串|  |
-|论据_ |只读 ForgeWebScriptVmValue[] |  |
-|选项 |省略<ForgeWebScriptVmExecutionOptions, 'mode'> |  |
+| 名称   | 类型                                           | 描述 |
+| ------ | ---------------------------------------------- | ---- |
+| 神器   | ForgeWebScriptVmAotArtifact                    |      |
+| 函数名 | 字符串                                         |      |
+| 论据_  | 只读 ForgeWebScriptVmValue[]                   |      |
+| 选项   | 省略<ForgeWebScriptVmExecutionOptions, 'mode'> |      |
 
 ### ForgeWebScriptVmExecutorOptions
 
@@ -2603,36 +2847,42 @@ export interface ForgeWebScriptVmExecutorOptions
 **种类：**功能
 
 ```typescript
-function runForgeWebScriptVmBootstrap(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], mode: ForgeWebScriptVmExecutionMode = 'interpret', options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function runForgeWebScriptVmBootstrap(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  mode: ForgeWebScriptVmExecutionMode = 'interpret',
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScriptVmModule |  |
-|函数名 |字符串|  |
-|论据_ |只读 ForgeWebScriptVmValue[] |  |
-|模式 | ForgeWebScriptVmExecutionMode | ForgeWebScriptVmExecutionMode  |
-|选项 |省略<ForgeWebScriptVmExecutionOptions, 'mode'> |  |
+| 名称   | 类型                                           | 描述                          |
+| ------ | ---------------------------------------------- | ----------------------------- |
+| 模块   | ForgeWebScriptVmModule                         |                               |
+| 函数名 | 字符串                                         |                               |
+| 论据_  | 只读 ForgeWebScriptVmValue[]                   |                               |
+| 模式   | ForgeWebScriptVmExecutionMode                  | ForgeWebScriptVmExecutionMode |
+| 选项   | 省略<ForgeWebScriptVmExecutionOptions, 'mode'> |                               |
 
 ### validateForgeWebScriptVmModule
 
 **种类：**功能
 
 ```typescript
-function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
+function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScriptVmModule |  |
+| 名称 | 类型                   | 描述 |
+| ---- | ---------------------- | ---- |
+| 模块 | ForgeWebScriptVmModule |      |
 
 ## `src/vm-wasm`
 
@@ -2641,17 +2891,20 @@ function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
 **种类：**功能
 
 ```typescript
-function compileForgeWebScriptVmWasm(module: ForgeWebScriptVmModule, options: ForgeWebScriptVmWasmCompileOptions = {}): ForgeWebScriptVmWasmArtifact
+function compileForgeWebScriptVmWasm(
+  module: ForgeWebScriptVmModule,
+  options: ForgeWebScriptVmWasmCompileOptions = {},
+): ForgeWebScriptVmWasmArtifact;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScriptVmModule |  |
-|选项 | ForgeWebScriptVmWasmCompileOptions | ForgeWebScriptVmWasmCompileOptions |  |
+| 名称 | 类型                               | 描述                               |
+| ---- | ---------------------------------- | ---------------------------------- |
+| 模块 | ForgeWebScriptVmModule             |                                    |
+| 选项 | ForgeWebScriptVmWasmCompileOptions | ForgeWebScriptVmWasmCompileOptions |     |
 
 ### ForgeWebScriptVmWasmCompileOptions
 
@@ -2668,7 +2921,7 @@ export interface ForgeWebScriptVmWasmCompileOptions
 **种类：**常数
 
 ```typescript
-export const prepareForgeWebScriptVm
+export const prepareForgeWebScriptVm;
 ```
 
 没有提供描述。
@@ -2678,17 +2931,20 @@ export const prepareForgeWebScriptVm
 **种类：**功能
 
 ```typescript
-function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact, options: ForgeWebScriptVmPreparedExecutorOptions = {}): ForgeWebScriptVmPreparedExecutor
+function prepareForgeWebScriptVmWasm(
+  moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact,
+  options: ForgeWebScriptVmPreparedExecutorOptions = {},
+): ForgeWebScriptVmPreparedExecutor;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块或工件 | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |  |
-|选项 | ForgeWebScriptVmPreparedExecutorOptions | ForgeWebScriptVmPreparedExecutorOptions |  |
+| 名称       | 类型                                                   | 描述                                    |
+| ---------- | ------------------------------------------------------ | --------------------------------------- |
+| 模块或工件 | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |                                         |
+| 选项       | ForgeWebScriptVmPreparedExecutorOptions                | ForgeWebScriptVmPreparedExecutorOptions |     |
 
 ## `src/vm`
 
@@ -2697,7 +2953,7 @@ function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
 ```
 
 没有提供描述。
@@ -2707,7 +2963,7 @@ export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 ```
 
 没有提供描述。

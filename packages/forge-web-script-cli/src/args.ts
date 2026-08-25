@@ -7,8 +7,9 @@ import type {
   ForgeWebScriptOptimization,
   ForgeWebScriptVmExecutionMode,
 } from '@mission-platform/forge-web-script';
+import type { ForgeWebScriptSoNBoundsChecks } from '@mission-platform/forge-web-script';
 
-export type ForgeWebScriptCliCommand = 'check' | 'compile' | 'trace';
+export type ForgeWebScriptCliCommand = 'check' | 'compile' | 'trace' | 'inspect-sonir';
 
 export interface ForgeWebScriptCliTraceOptions {
   readonly capture: 'summary' | 'events' | 'snapshot';
@@ -29,6 +30,8 @@ export interface ForgeWebScriptCliOptions {
   readonly compilerVersion: string;
   readonly vmMode: ForgeWebScriptVmExecutionMode;
   readonly format?: 'text' | 'json';
+  readonly boundsChecks: ForgeWebScriptSoNBoundsChecks;
+  readonly showOptimizerReport: boolean;
   readonly trace?: ForgeWebScriptCliTraceOptions;
 }
 
@@ -39,7 +42,7 @@ export class ForgeWebScriptCliUsageError extends Error {
   }
 }
 
-export const FORGE_WEB_SCRIPT_CLI_USAGE = `Usage: forge-web-script <check|compile|trace> <entry.fws> [options]
+export const FORGE_WEB_SCRIPT_CLI_USAGE = `Usage: forge-web-script <check|compile|trace|inspect-sonir> <entry.fws|artifact.sonir.json> [options]
 
 Options:
   --entry <file>                  Entry file (alternative to the positional entry)
@@ -48,6 +51,9 @@ Options:
   --link-mode <static|dynamic>    Default and cross-project source link mode
   --capability <name>             Requested capability (repeatable or comma-separated)
   --optimization <debug|release>  Optimization mode (default: debug)
+  --bounds-checks <policy>       runtime (default), proven-safe, or excluded-by-profile
+  --optimizer-report             Include SoN/Wasm optimizer pass metadata in output
+  inspect-sonir                  Read and summarize a bounded .sonir.json artifact (no execution)
   -o, --out-dir <directory>       Artifact directory for compile (default: ./dist)
   --compiler-version <version>    Compiler version in deterministic metadata
   --vm-mode <interpret|jit|aot>   Bounded FWS stage execution mode (default: interpret)
@@ -92,6 +98,8 @@ export function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = proces
   let compilerVersion = '0.1.0';
   let vmMode: ForgeWebScriptVmExecutionMode = 'interpret';
   let format: 'text' | 'json' | undefined;
+  let boundsChecks: ForgeWebScriptSoNBoundsChecks = 'runtime';
+  let showOptimizerReport = false;
   let traceCapture: ForgeWebScriptCliTraceOptions['capture'] = 'events';
   let maxTraceEvents = 512;
   let maxTraceBytes = 65_536;
@@ -106,7 +114,7 @@ export function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = proces
     const argument = argv[index];
     if (argument === undefined) continue;
     if (argument === '--help' || argument === '-h') throw new ForgeWebScriptCliUsageError(FORGE_WEB_SCRIPT_CLI_USAGE);
-    if (argument === 'check' || argument === 'compile' || argument === 'trace') {
+    if (argument === 'check' || argument === 'compile' || argument === 'trace' || argument === 'inspect-sonir') {
       if (command !== undefined) throw new ForgeWebScriptCliUsageError('Only one command may be provided.');
       command = argument;
       continue;
@@ -154,6 +162,18 @@ export function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = proces
         throw new ForgeWebScriptCliUsageError(`Invalid optimization '${value}'.`);
       optimization = value;
       index = nextIndex;
+      continue;
+    }
+    if (argument === '--bounds-checks') {
+      const [value, nextIndex] = valueFor(argv, index, argument);
+      if (value !== 'runtime' && value !== 'proven-safe' && value !== 'excluded-by-profile')
+        throw new ForgeWebScriptCliUsageError(`Invalid bounds-check policy '${value}'.`);
+      boundsChecks = value;
+      index = nextIndex;
+      continue;
+    }
+    if (argument === '--optimizer-report') {
+      showOptimizerReport = true;
       continue;
     }
     if (argument === '--out-dir' || argument === '--output-dir' || argument === '-o') {
@@ -210,7 +230,7 @@ export function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = proces
   }
 
   if (command === undefined)
-    throw new ForgeWebScriptCliUsageError('Missing command; expected check, compile, or trace.');
+    throw new ForgeWebScriptCliUsageError('Missing command; expected check, compile, trace, or inspect-sonir.');
   if (entries.length === 0) throw new ForgeWebScriptCliUsageError('Missing entry file.');
   if (entries.length > 1) throw new ForgeWebScriptCliUsageError('Exactly one entry file is supported.');
   if (compilerVersion.length === 0) throw new ForgeWebScriptCliUsageError('Compiler version must not be empty.');
@@ -227,6 +247,8 @@ export function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = proces
     compilerVersion,
     vmMode,
     ...(format === undefined ? {} : { format }),
+    boundsChecks,
+    showOptimizerReport,
     ...(command === 'trace' || traceRequested
       ? { trace: { capture: traceCapture, maxEvents: maxTraceEvents, maxTraceBytes, maxSnapshotBytes } }
       : {}),

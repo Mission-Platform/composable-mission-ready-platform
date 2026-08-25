@@ -99,9 +99,9 @@ export iter fn forward(source: Iterator<i32>) -> Iterator<i32> {
 ```ts
 const artifact = compileForgeWebScript({
   source,
-  fileName: "runtime.fws",
-  compilerVersion: "1.0.0",
-  optimization: "release",
+  fileName: 'runtime.fws',
+  compilerVersion: '1.0.0',
+  optimization: 'release',
   targetFeatures: { simd: true, tailCall: true, memory64: true },
   compilerHints: { iteratorUnrollLimit: 4 },
 });
@@ -224,13 +224,13 @@ interface ForgeWebScriptDocumentationTag {
 
 一般的に使用されるタグ形式は次のとおりです。
 
-|タグフォーム |構造化フィールド |
-| -------------------------------------------------------- | -------------------------------------------- |
+| タグフォーム                                                 | 構造化フィールド                        |
+| ------------------------------------------------------------ | --------------------------------------- |
 | `@param name text`、`@arg`、`@argument`、または `@parameter` | `name` は `subject` です。残りは `text` |
-| `@typeparam name text` | `name` は `subject` です。残りは `text` |
-| `@throws type text` または `@exception type text` | `type` は `subject` です。残りは `text` |
-| `@return text` または `@returns text` | `text` のみ |
-| `@deprecated text` | `text` のみ |
+| `@typeparam name text`                                       | `name` は `subject` です。残りは `text` |
+| `@throws type text` または `@exception type text`            | `type` は `subject` です。残りは `text` |
+| `@return text` または `@returns text`                        | `text` のみ                             |
+| `@deprecated text`                                           | `text` のみ                             |
 
 他の `@name` フォームは、順序付きタグとして受け入れられ、保持されます。
 診断として報告されます。彼らには推測された主語がありません。残りのテキスト
@@ -380,15 +380,11 @@ offset、または一致しない場合、またはグループが設定され�
 クラスと範囲 (`^` の否定を含む)、`\d`、`\D`、`\w`、`\W`、`\s`、
 `\S`、エスケープリテラル、キャプチャグループと非キャプチャグループ、代替、
 `*`、`+`、`?`、有界 `{n}`、`{n,}`、`{n,m}` 量指定子、遅延量指定子、
-および `^`/`
-Forge Web Script は、決定論的な正規表現の標準ライブラリを提供します。
-`regex_full_match(pattern, value) -> bool` を呼び出します。
-`regex_prefix_match(pattern, value) -> bool`、および
-`regex_search(pattern, value, start: i32) -> bool` 整数値を実行します。
+および `^`/`Forge Web Script は、決定論的な正規表現の標準ライブラリを提供します。`regex_full_match(pattern, value) -> bool`を呼び出します。`regex_prefix_match(pattern, value) -> bool`、および
+`regex_search(pattern, value, start: i32) -> bool`整数値を実行します。
 それぞれ、位置ゼロのプレフィックスと左端の検索マッチングです。キャプチャ境界
-対応する `regex_*_capture_start` および
-`regex_*_capture_end` が呼び出します。グループインデックスを取得し、UTF-16 文字列を返します。
-offset、または一致しない場合、またはグループが設定されていない場合は `-1`。検索キャプチャ
+対応する`regex__*capture_start`および`regex*__capture_end`が呼び出します。グループインデックスを取得し、UTF-16 文字列を返します。
+offset、または一致しない場合、またはグループが設定されていない場合は`-1`。検索キャプチャ
 呼び出しではさらに、グループ インデックスの前に開始オフセットが取られます。
 
 正規表現呼び出しは、コンパイラが所有する標準ライブラリ関数です。それらは次によって入力されます
@@ -429,18 +425,18 @@ ABI 境界で UTF-8 として表される Unicode スカラー値のシーケン
 任意のオブジェクト メソッドを追加しないでください。固定配列は `[T; N]` および
 ベクトルは `Vector<T>` として指定されます。サポートされている署名は次のとおりです。
 
-|受信機 |方法 |署名 |
-| ----------- | --------------- | ----------------------- |
-| `Array<T>` | `length` | `() -> u32` |
-| `Array<T>` | `get` | `(u32) -> Option<T>` |
-| `Array<T>` | `set` | `(u32, T) -> Array<T>` |
-| `Array<T>` | `iter` | `() -> Iterator<T>` |
-| `Vector<T>` | `length` | `() -> u32` |
-| `Vector<T>` | `get` | `(u32) -> Option<T>` |
-| `Vector<T>` | `set` | `(u32, T) -> Vector<T>` |
-| `Vector<T>` | `push` または `add` | `(T) -> Vector<T>` |
-| `Vector<T>` | `pop` | `() -> Option<T>` |
-| `Vector<T>` | `iter` | `() -> Iterator<T>` |
+| 受信機      | 方法                | 署名                    |
+| ----------- | ------------------- | ----------------------- |
+| `Array<T>`  | `length`            | `() -> u32`             |
+| `Array<T>`  | `get`               | `(u32) -> Option<T>`    |
+| `Array<T>`  | `set`               | `(u32, T) -> Array<T>`  |
+| `Array<T>`  | `iter`              | `() -> Iterator<T>`     |
+| `Vector<T>` | `length`            | `() -> u32`             |
+| `Vector<T>` | `get`               | `(u32) -> Option<T>`    |
+| `Vector<T>` | `set`               | `(u32, T) -> Vector<T>` |
+| `Vector<T>` | `push` または `add` | `(T) -> Vector<T>`      |
+| `Vector<T>` | `pop`               | `() -> Option<T>`       |
+| `Vector<T>` | `iter`              | `() -> Iterator<T>`     |
 
 `add` のスペルは、意図的にベクターの互換性エイリアスです。
 `push`;それは配列メソッドではありません。インデックスは `u32` であり、要素の引数は次のとおりです。
@@ -549,14 +545,14 @@ WASI互換性。機能は、次のような限定された明示的なホスト�
 このモジュールは、64 KiB ページとリトル エンディアンを持つ 1 つの WebAssembly リニア メモリを使用します。
 スカラー値。スカラー値は次のようにマッピングされます。
 
-| Web スクリプトを作成する | WebAssembly 表現 |
-| ----------------- | ------------------------------------------ |
-| `bool` | `i32`、`0` は false、`1` は true |
-| `i32`、`u32` | `i32` |
-| `i64`、`u64` | `i64` |
-| `f32`、`f64` |一致する WebAssembly フロート |
-| `unit` |結果値がありません |
-| `string`、`bytes` | 2 つの `u32` 値: ポインタ、バイト長 |
+| Web スクリプトを作成する | WebAssembly 表現                    |
+| ------------------------ | ----------------------------------- |
+| `bool`                   | `i32`、`0` は false、`1` は true    |
+| `i32`、`u32`             | `i32`                               |
+| `i64`、`u64`             | `i64`                               |
+| `f32`、`f64`             | 一致する WebAssembly フロート       |
+| `unit`                   | 結果値がありません                  |
+| `string`、`bytes`        | 2 つの `u32` 値: ポインタ、バイト長 |
 
 マニフェストは、`valueRepresentations` で同じマッピングを宣言します。あ
 ポインタと長さのペアは、読み取り前に常に符号なし範囲としてチェックされます。
@@ -641,11 +637,7 @@ interface ForgeWebScriptExports {
   readonly memory: WebAssembly.Memory;
   readonly fws_alloc: (size: number) => number;
   readonly fws_dealloc: (pointer: number, size: number) => void;
-  readonly fws_realloc: (
-    pointer: number,
-    oldSize: number,
-    newSize: number,
-  ) => number;
+  readonly fws_realloc: (pointer: number, oldSize: number, newSize: number) => number;
   readonly fws_reset: () => void;
   readonly echo: (value: string) => string;
   readonly processBytes: (value: ForgeWebScriptBytes) => ForgeWebScriptBytes;
@@ -782,12 +774,9 @@ Assert コンパイラ アーティファクト、構造化診断、Wasm 動作�
 マニフェスト機能名によって、たとえば次のようになります。
 
 ```ts
-const exports = await harness.load<{ current: () => bigint }>(
-  "capabilities/clock-now.fws",
-  {
-    "clock.now": { now: () => 123n },
-  },
-);
+const exports = await harness.load<{ current: () => bigint }>('capabilities/clock-now.fws', {
+  'clock.now': { now: () => 123n },
+});
 ```
 
 宣言されたインポートが欠落していたり​​、宣言されていない提供されたインポートは失敗となります。テスト
@@ -814,13 +803,13 @@ TypeScript `types` リストまたは参照されたテスト タイプ エン�
 フェーズは、`lex`、`parse`、`type-check`、または `abi` のいずれかです。安定した v1 コード
 家族には次のものが含まれます。
 
-|コードファミリー |意味 |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `FWS-LEX-*` |無効な文字/エスケープ、生の文字列の行終端記号、または終了していない文字列/コメント。
-| `FWS-PARSE-*` |無効なモジュール、宣言、ステートメント、または式の構文です。
-| `FWS-TYPE-*` |無効なプリミティブ型、名前、演算子、引数、または戻り値 |
-| `FWS-ABI-*` |重複した名前、拒否された機能、エクスポートまたはインポート |
-| `FWS-REGEX-*` |サポートされていない、または不正な形式のコンパイラ所有の正規表現パターン |
+| コードファミリー | 意味                                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------ |
+| `FWS-LEX-*`      | 無効な文字/エスケープ、生の文字列の行終端記号、または終了していない文字列/コメント。 |
+| `FWS-PARSE-*`    | 無効なモジュール、宣言、ステートメント、または式の構文です。                         |
+| `FWS-TYPE-*`     | 無効なプリミティブ型、名前、演算子、引数、または戻り値                               |
+| `FWS-ABI-*`      | 重複した名前、拒否された機能、エクスポートまたはインポート                           |
+| `FWS-REGEX-*`    | サポートされていない、または不正な形式のコンパイラ所有の正規表現パターン             |
 
 エラーによりアーティファクトの生成が妨げられます。警告と情報診断は、
 セマンティクスを変更しないでください。診断の順序付けはソース順であり、その後にフェーズが続きます。
@@ -919,14 +908,14 @@ ABI が所有する `bytes` ペアを返します。この意図的な違いに�
 
 ### 実装の選択
 
-|ワークロードまたは要件 |選択 |理由 |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-|既存の QR またはマトリックス パッケージの動作 | `@mission-platform/qr-code` / `@mission-platform/matrix-code` |パッケージ固有の型付き ESM ラッパーは、これらのパブリック API で引き続き使用できます。                                       |
-|ニュートラルな画像とカメラ スキャナーの動作 | `@mission-platform/code-scanner` |デフォルトで静的にリンクされた FWS グラフを使用するか、キャッシュされたディスパッチを備えた明示的な動的ソース モジュール プロファイルを使用します。 |
-|既存のバーコードの動作 | `@mission-platform/barcode` |パッケージローカルの Forge Web Script グラフは、入力されたバーコードのファサードを提供します。                                           |
-|明示的なホスト効果を備えた新しい汎用ブラウザセーフ コンピューティング | Forge Web Script と `@mission-platform/vite-plugin-forge-web-script` |バージョン管理された `.fws` ソース、マニフェスト、型付きローダー、およびデフォルト拒否機能。                                |
-|既存の AssemblyScript ソースまたは AssemblyScript 固有の移行 | `@mission-platform/vite-plugin-assemblyscript` | `.ts` AssemblyScript エントリをコンパイルし、生成された raw エクスポート コントラクトを保存します。                            |
-|フレームワークに依存しない UI/コンポーネントのコンパイル | Forge コンポーネント コンパイラ | Forge Web Script は、`FrameworkOutputPlugin` またはコンポーネント ターゲットに代わるものではありません。                           |
+| ワークロードまたは要件                                                | 選択                                                                 | 理由                                                                                                                                                |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 既存の QR またはマトリックス パッケージの動作                         | `@mission-platform/qr-code` / `@mission-platform/matrix-code`        | パッケージ固有の型付き ESM ラッパーは、これらのパブリック API で引き続き使用できます。                                                              |
+| ニュートラルな画像とカメラ スキャナーの動作                           | `@mission-platform/code-scanner`                                     | デフォルトで静的にリンクされた FWS グラフを使用するか、キャッシュされたディスパッチを備えた明示的な動的ソース モジュール プロファイルを使用します。 |
+| 既存のバーコードの動作                                                | `@mission-platform/barcode`                                          | パッケージローカルの Forge Web Script グラフは、入力されたバーコードのファサードを提供します。                                                      |
+| 明示的なホスト効果を備えた新しい汎用ブラウザセーフ コンピューティング | Forge Web Script と `@mission-platform/vite-plugin-forge-web-script` | バージョン管理された `.fws` ソース、マニフェスト、型付きローダー、およびデフォルト拒否機能。                                                        |
+| 既存の AssemblyScript ソースまたは AssemblyScript 固有の移行          | `@mission-platform/vite-plugin-assemblyscript`                       | `.ts` AssemblyScript エントリをコンパイルし、生成された raw エクスポート コントラクトを保存します。                                                 |
+| フレームワークに依存しない UI/コンポーネントのコンパイル              | Forge コンポーネント コンパイラ                                      | Forge Web Script は、`FrameworkOutputPlugin` またはコンポーネント ターゲットに代わるものではありません。                                            |
 
 Forge Web Script Vite プラグインは、`.fws` エントリに対してのみ使用してください。を使用します。
 既存の AssemblyScript エントリ用の AssemblyScript プラグイン。移行中、

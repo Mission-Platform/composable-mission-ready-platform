@@ -16,33 +16,33 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-web-s
 **Art:** Funktion
 
 ```typescript
-function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void
+function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| manifestieren | ForgeWebScriptAbiManifest |  |
+| Name          | Geben Sie                 | ein Beschreibung |
+| ------------- | ------------------------- | ---------------- |
+| manifestieren | ForgeWebScriptAbiManifest |                  |
 
 ### equalFunction
 
 **Art:** Funktion
 
 ```typescript
-function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean
+function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| links | ForgeWebScriptAbiFunction |  |
-| richtig | ForgeWebScriptAbiFunction |  |
+| Name    | Geben Sie                 | ein Beschreibung |
+| ------- | ------------------------- | ---------------- |
+| links   | ForgeWebScriptAbiFunction |                  |
+| richtig | ForgeWebScriptAbiFunction |                  |
 
 ### ForgeWebScriptAbiValidationResult
 
@@ -59,16 +59,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult
+function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| manifestieren | ForgeWebScriptAbiManifest |  |
+| Name          | Geben Sie                 | ein Beschreibung |
+| ------------- | ------------------------- | ---------------- |
+| manifestieren | ForgeWebScriptAbiManifest |                  |
 
 ## `src/async`
 
@@ -77,23 +77,23 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime
+function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeWebScriptAsyncRuntimeOptions |  |
+| Name     | Geben Sie                         | ein Beschreibung |
+| -------- | --------------------------------- | ---------------- |
+| Optionen | ForgeWebScriptAsyncRuntimeOptions |                  |
 
 ### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
 ```
 
 Keine Beschreibung angegeben.
@@ -103,7 +103,8 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptAsyncCapability = (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type ForgeWebScriptAsyncCapability =
+  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
 ```
 
 Keine Beschreibung angegeben.
@@ -143,7 +144,8 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptAsyncFailureCode = | 'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
+export type ForgeWebScriptAsyncFailureCode =
+  'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
 Keine Beschreibung angegeben.
@@ -245,104 +247,124 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptArray(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function createForgeWebScriptArray(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 Erstellen Sie ein festes Array, indem Sie die angegebenen Werte kopieren.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Werte | schreibgeschützter TValue[] |  |
-| Eigentum | ForgeWebScriptCollectionOwnership |  |
+| Name     | Geben Sie                         | ein Beschreibung |
+| -------- | --------------------------------- | ---------------- |
+| Werte    | schreibgeschützter TValue[]       |                  |
+| Eigentum | ForgeWebScriptCollectionOwnership |                  |
 
 ### createForgeWebScriptIterator
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptIterator(values: Iterable<TValue>, descriptor: ForgeWebScriptIteratorDescriptor): ForgeWebScriptIterator<TValue>
+function createForgeWebScriptIterator(
+  values: Iterable<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Passen Sie einen Iterable mit dem bereitgestellten ABI-Deskriptor an einen Lazy-Iterator an.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Werte | Iterable<TValue> |  |
-| Deskriptor | ForgeWebScriptIteratorDescriptor |  |
+| Name       | Geben Sie                        | ein Beschreibung |
+| ---------- | -------------------------------- | ---------------- |
+| Werte      | Iterable<TValue>                 |                  |
+| Deskriptor | ForgeWebScriptIteratorDescriptor |                  |
 
 ### createForgeWebScriptIteratorDescriptor
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptIteratorDescriptor(id: string, elementType = 'unknown', capability: ForgeWebScriptIteratorCapability = 'linear', ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptIteratorDescriptor
+function createForgeWebScriptIteratorDescriptor(
+  id: string,
+  elementType = 'unknown',
+  capability: ForgeWebScriptIteratorCapability = 'linear',
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptIteratorDescriptor;
 ```
 
 Deskriptorgrenzen-Metadaten erstellen; Ältere Anrufer verwenden standardmäßig den linearen Zugriff.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| id | Zeichenfolge |  |
-| elementType |  |  |
-| Fähigkeit | ForgeWebScriptIteratorCapability |  |
-| Eigentum | ForgeWebScriptCollectionOwnership |  |
+| Name        | Geben Sie                         | ein Beschreibung |
+| ----------- | --------------------------------- | ---------------- |
+| id          | Zeichenfolge                      |                  |
+| elementType |                                   |                  |
+| Fähigkeit   | ForgeWebScriptIteratorCapability  |                  |
+| Eigentum    | ForgeWebScriptCollectionOwnership |                  |
 
 ### createForgeWebScriptMap
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptMap(entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [], strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>()): ForgeWebScriptMap<TKey, TValue>
+function createForgeWebScriptMap(
+  entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [],
+  strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>(),
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Einträge | readonly ForgeWebScriptMapEntry<TKey, TValue>[] |  |
-| Strategie | ForgeWebScriptHashStrategy<TKey> |  |
+| Name      | Geben Sie                                       | ein Beschreibung |
+| --------- | ----------------------------------------------- | ---------------- |
+| Einträge  | readonly ForgeWebScriptMapEntry<TKey, TValue>[] |                  |
+| Strategie | ForgeWebScriptHashStrategy<TKey>                |                  |
 
 ### createForgeWebScriptSet
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptSet(values: readonly TValue[] = [], strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>()): ForgeWebScriptSet<TValue>
+function createForgeWebScriptSet(
+  values: readonly TValue[] = [],
+  strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>(),
+): ForgeWebScriptSet<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Werte | schreibgeschützter TValue[] |  |
-| Strategie | ForgeWebScriptHashStrategy<TValue> |  |
+| Name      | Geben Sie                          | ein Beschreibung |
+| --------- | ---------------------------------- | ---------------- |
+| Werte     | schreibgeschützter TValue[]        |                  |
+| Strategie | ForgeWebScriptHashStrategy<TValue> |                  |
 
 ### createForgeWebScriptVector
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptVector(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptVector<TValue>
+function createForgeWebScriptVector(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptVector<TValue>;
 ```
 
 Erstellen Sie einen eigenen Vektor, indem Sie die angegebenen Werte kopieren.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Werte | schreibgeschützter TValue[] |  |
-| Eigentum | ForgeWebScriptCollectionOwnership |  |
+| Name     | Geben Sie                         | ein Beschreibung |
+| -------- | --------------------------------- | ---------------- |
+| Werte    | schreibgeschützter TValue[]       |                  |
+| Eigentum | ForgeWebScriptCollectionOwnership |                  |
 
 ### ForgeWebScriptArray
 
@@ -359,69 +381,77 @@ Aneinandergrenzende Sammlung fester Größe; Aktualisierungen geben einen kopier
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 Ein Array-Element lesen; Ungültige Indizes geben Option.none zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Array | ForgeWebScriptArray<TValue> |  |
-| Index | Zahl |  |
+| Name  | Geben Sie                   | ein Beschreibung |
+| ----- | --------------------------- | ---------------- |
+| Array | ForgeWebScriptArray<TValue> |                  |
+| Index | Zahl                        |                  |
 
 ### forgeWebScriptArrayLength
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number
+function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number;
 ```
 
 Gibt eine Array-Länge zurück, ohne seine Elemente zu verbrauchen oder zu kopieren.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Array | ForgeWebScriptArray<TValue> |  |
+| Name  | Geben Sie                   | ein Beschreibung |
+| ----- | --------------------------- | ---------------- |
+| Array | ForgeWebScriptArray<TValue> |                  |
 
 ### forgeWebScriptArraySet
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptArraySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptArray<TValue>
+function forgeWebScriptArraySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptArray<TValue>;
 ```
 
 Ersetzen Sie ein Array-Element. Ungültige Indizes lösen RangeError aus.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Array | ForgeWebScriptArray<TValue> |  |
-| Index | Zahl |  |
-| Wert | TValue |  |
+| Name  | Geben Sie                   | ein Beschreibung |
+| ----- | --------------------------- | ---------------- |
+| Array | ForgeWebScriptArray<TValue> |                  |
+| Index | Zahl                        |                  |
+| Wert  | TValue                      |                  |
 
 ### forgeWebScriptArrayTrySet
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptArrayTrySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>
+function forgeWebScriptArrayTrySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>;
 ```
 
 Ersetzen Sie ein Array-Element, ohne es auszulösen. Ungültige Indizes geben ein Fehlerergebnis zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Array | ForgeWebScriptArray<TValue> |  |
-| Index | Zahl |  |
-| Wert | TValue |  |
+| Name  | Geben Sie                   | ein Beschreibung |
+| ----- | --------------------------- | ---------------- |
+| Array | ForgeWebScriptArray<TValue> |                  |
+| Index | Zahl                        |                  |
+| Wert  | TValue                      |                  |
 
 ### ForgeWebScriptCollectionOwnership
 
@@ -438,7 +468,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
+function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>;
 ```
 
 Keine Beschreibung angegeben.
@@ -448,7 +478,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const forgeWebScriptError
+export const forgeWebScriptError;
 ```
 
 Konstruieren Sie einen Fehlerergebniswert, ohne ihn auszulösen.
@@ -468,7 +498,8 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptIterable<TValue> = ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
+export type ForgeWebScriptIterable<TValue> =
+  ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
 ```
 
 Jede Quelle, die von seriellen und parallelen Iteratoroperationen akzeptiert wird.
@@ -488,34 +519,40 @@ Lazy-Iterator-Ansicht mit Deskriptorfunktion und optionaler direkter Indizierung
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorAdd(source: ForgeWebScriptIterator<TValue>, value: TValue): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorAdd(
+  source: ForgeWebScriptIterator<TValue>,
+  value: TValue,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Hängt einen Wert träge an einen Iterator an.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterator<TValue> |  |
-| Wert | TValue |  |
+| Name   | Geben Sie                      | ein Beschreibung |
+| ------ | ------------------------------ | ---------------- |
+| Quelle | ForgeWebScriptIterator<TValue> |                  |
+| Wert   | TValue                         |                  |
 
 ### forgeWebScriptIteratorAt
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorAt(iterator: ForgeWebScriptIterator<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorAt(
+  iterator: ForgeWebScriptIterator<TValue>,
+  index: number,
+): ForgeWebScriptOption<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Iterator | ForgeWebScriptIterator<TValue> |  |
-| Index | Zahl |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Iterator | ForgeWebScriptIterator<TValue> |                  |
+| Index    | Zahl                           |                  |
 
 ### ForgeWebScriptIteratorCapability
 
@@ -532,33 +569,36 @@ Linearer Konsum oder nicht konsumierender Direktzugriff, unterstützt durch eine
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Iterator | ForgeWebScriptIterator<TValue> |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Iterator | ForgeWebScriptIterator<TValue> |                  |
 
 ### forgeWebScriptIteratorConcat
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorConcat(first: ForgeWebScriptIterator<TValue>, second: ForgeWebScriptIterable<TValue>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorConcat(
+  first: ForgeWebScriptIterator<TValue>,
+  second: ForgeWebScriptIterable<TValue>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Verkettet zwei Quellen langsam, ohne die Reihenfolge einer der beiden Quellen zu ändern.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zuerst | ForgeWebScriptIterator<TValue> |  |
-| zweite | ForgeWebScriptIterable<TValue> |  |
+| Name   | Geben Sie                      | ein Beschreibung |
+| ------ | ------------------------------ | ---------------- |
+| zuerst | ForgeWebScriptIterator<TValue> |                  |
+| zweite | ForgeWebScriptIterable<TValue> |                  |
 
 ### ForgeWebScriptIteratorDescriptor
 
@@ -575,163 +615,186 @@ ABI-Metadaten, die Elementdarstellung, Besitz und Zugriffsfähigkeit beschreiben
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorFilter(source: ForgeWebScriptIterator<TValue>, predicate: (value: TValue) => boolean): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFilter(
+  source: ForgeWebScriptIterator<TValue>,
+  predicate: (value: TValue) => boolean,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Werte träge filtern; Beim Filtern wird die Fähigkeit immer auf den linearen Zugriff herabgestuft.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterator<TValue> |  |
-| Prädikat | (Wert: TValue) => boolean |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Quelle   | ForgeWebScriptIterator<TValue> |                  |
+| Prädikat | (Wert: TValue) => boolean      |                  |
 
 ### forgeWebScriptIteratorFirst
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Iterator | ForgeWebScriptIterator<TValue> |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Iterator | ForgeWebScriptIterator<TValue> |                  |
 
 ### forgeWebScriptIteratorFlatten
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorFlatten(source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFlatten(
+  source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Reduzieren Sie verschachtelte Quellen langsam in der Reihenfolge der äußeren und inneren Quellen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |  |
+| Name   | Geben Sie                                              | ein Beschreibung |
+| ------ | ------------------------------------------------------ | ---------------- |
+| Quelle | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |                  |
 
 ### forgeWebScriptIteratorFold
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorFold(iterator: ForgeWebScriptIterator<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptIteratorFold(
+  iterator: ForgeWebScriptIterator<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Iterator | ForgeWebScriptIterator<TValue> |  |
-| Initiale | TResult |  |
-| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |  |
+| Name       | Geben Sie                                                    | ein Beschreibung |
+| ---------- | ------------------------------------------------------------ | ---------------- |
+| Iterator   | ForgeWebScriptIterator<TValue>                               |                  |
+| Initiale   | TResult                                                      |                  |
+| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |                  |
 
 ### forgeWebScriptIteratorFromArray
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorFromArray(array: ForgeWebScriptArray<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromArray(
+  array: ForgeWebScriptArray<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'array',
     'unknown',
     'random-access',
     array.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Erstellen Sie einen Iterator mit wahlfreiem Zugriff über ein festes Array, ohne seinen Besitzer zu ändern.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Array | ForgeWebScriptArray<TValue> |  |
-| Deskriptor | ForgeWebScriptIteratorDescriptor |  |
+| Name       | Geben Sie                        | ein Beschreibung |
+| ---------- | -------------------------------- | ---------------- |
+| Array      | ForgeWebScriptArray<TValue>      |                  |
+| Deskriptor | ForgeWebScriptIteratorDescriptor |                  |
 
 ### forgeWebScriptIteratorFromIterable
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorFromIterable(values: Iterable<TValue>, elementType = 'unknown', id = 'iterable'): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFromIterable(
+  values: Iterable<TValue>,
+  elementType = 'unknown',
+  id = 'iterable',
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Passen Sie ein beliebiges Iterable an einen Lazy-Linear-Forge-Web-Script-Iterator an.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Werte | Iterable<TValue> |  |
-| elementType |  |  |
-| id |  |  |
+| Name        | Geben Sie        | ein Beschreibung |
+| ----------- | ---------------- | ---------------- |
+| Werte       | Iterable<TValue> |                  |
+| elementType |                  |                  |
+| id          |                  |                  |
 
 ### forgeWebScriptIteratorFromVector
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorFromVector(vector: ForgeWebScriptVector<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromVector(
+  vector: ForgeWebScriptVector<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'vector',
     'unknown',
     'random-access',
     vector.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Erstellen Sie einen Iterator mit wahlfreiem Zugriff über einen Vektor, ohne seinen Besitzer zu ändern.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Vektor | ForgeWebScriptVector<TValue> |  |
-| Deskriptor | ForgeWebScriptIteratorDescriptor |  |
+| Name       | Geben Sie                        | ein Beschreibung |
+| ---------- | -------------------------------- | ---------------- |
+| Vektor     | ForgeWebScriptVector<TValue>     |                  |
+| Deskriptor | ForgeWebScriptIteratorDescriptor |                  |
 
 ### forgeWebScriptIteratorLast
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Iterator | ForgeWebScriptIterator<TValue> |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Iterator | ForgeWebScriptIterator<TValue> |                  |
 
 ### forgeWebScriptIteratorMap
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorMap(source: ForgeWebScriptIterator<TValue>, map: (value: TValue) => TResult, elementType = source.descriptor.elementType): ForgeWebScriptIterator<TResult>
+function forgeWebScriptIteratorMap(
+  source: ForgeWebScriptIterator<TValue>,
+  map: (value: TValue) => TResult,
+  elementType = source.descriptor.elementType,
+): ForgeWebScriptIterator<TResult>;
 ```
 
 Ordnen Sie Werte langsam zu und behalten Sie dabei den Direktzugriff nur dann bei, wenn die Quelle dies unterstützt.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterator<TValue> |  |
-| Karte | (Wert: TValue) => TResult |  |
-| elementType |  |  |
+| Name        | Geben Sie                      | ein Beschreibung |
+| ----------- | ------------------------------ | ---------------- |
+| Quelle      | ForgeWebScriptIterator<TValue> |                  |
+| Karte       | (Wert: TValue) => TResult      |                  |
+| elementType |                                |                  |
 
 ### ForgeWebScriptIteratorResult
 
@@ -748,34 +811,40 @@ Ein gepacktes Iterator-Pull-Ergebnis; done bleibt auch nach Erschöpfung wahr.
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorTake(source: ForgeWebScriptIterator<TValue>, count: number): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorTake(
+  source: ForgeWebScriptIterator<TValue>,
+  count: number,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Begrenzen Sie eine Quelle langsam auf höchstens Zählwerte.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterator<TValue> |  |
-| zählen | Zahl |  |
+| Name   | Geben Sie                      | ein Beschreibung |
+| ------ | ------------------------------ | ---------------- |
+| Quelle | ForgeWebScriptIterator<TValue> |                  |
+| zählen | Zahl                           |                  |
 
 ### forgeWebScriptIteratorToArray
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorToArray(iterator: ForgeWebScriptIterator<TValue>, ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function forgeWebScriptIteratorToArray(
+  iterator: ForgeWebScriptIterator<TValue>,
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Iterator | ForgeWebScriptIterator<TValue> |  |
-| Eigentum | ForgeWebScriptCollectionOwnership |  |
+| Name     | Geben Sie                         | ein Beschreibung |
+| -------- | --------------------------------- | ---------------- |
+| Iterator | ForgeWebScriptIterator<TValue>    |                  |
+| Eigentum | ForgeWebScriptCollectionOwnership |                  |
 
 ### ForgeWebScriptMap
 
@@ -792,33 +861,35 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Karte | ForgeWebScriptMap<TKey, TValue> |  |
-| Schlüssel | TKey |  |
+| Name      | Geben Sie                       | ein Beschreibung |
+| --------- | ------------------------------- | ---------------- |
+| Karte     | ForgeWebScriptMap<TKey, TValue> |                  |
+| Schlüssel | TKey                            |                  |
 
 ### forgeWebScriptMapEntries
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptMapEntries(map: ForgeWebScriptMap<TKey, TValue>): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>
+function forgeWebScriptMapEntries(
+  map: ForgeWebScriptMap<TKey, TValue>,
+): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Karte | ForgeWebScriptMap<TKey, TValue> |  |
+| Name  | Geben Sie                       | ein Beschreibung |
+| ----- | ------------------------------- | ---------------- |
+| Karte | ForgeWebScriptMap<TKey, TValue> |                  |
 
 ### ForgeWebScriptMapEntry
 
@@ -835,42 +906,46 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>
+function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Karte | ForgeWebScriptMap<TKey, TValue> |  |
-| Schlüssel | TKey |  |
+| Name      | Geben Sie                       | ein Beschreibung |
+| --------- | ------------------------------- | ---------------- |
+| Karte     | ForgeWebScriptMap<TKey, TValue> |                  |
+| Schlüssel | TKey                            |                  |
 
 ### forgeWebScriptMapSet
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptMapSet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey, value: TValue): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapSet(
+  map: ForgeWebScriptMap<TKey, TValue>,
+  key: TKey,
+  value: TValue,
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Karte | ForgeWebScriptMap<TKey, TValue> |  |
-| Schlüssel | TKey |  |
-| Wert | TValue |  |
+| Name      | Geben Sie                       | ein Beschreibung |
+| --------- | ------------------------------- | ---------------- |
+| Karte     | ForgeWebScriptMap<TKey, TValue> |                  |
+| Schlüssel | TKey                            |                  |
+| Wert      | TValue                          |                  |
 
 ### forgeWebScriptNone
 
 **Art:** konstant
 
 ```typescript
-export const forgeWebScriptNone
+export const forgeWebScriptNone;
 ```
 
 Konstruieren Sie einen leeren Optionswert.
@@ -880,7 +955,7 @@ Konstruieren Sie einen leeren Optionswert.
 **Art:** konstant
 
 ```typescript
-export const forgeWebScriptOk
+export const forgeWebScriptOk;
 ```
 
 Konstruieren Sie einen erfolgreichen Ergebniswert.
@@ -920,74 +995,74 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| einstellen | ForgeWebScriptSet<TValue> |  |
-| Wert | TValue |  |
+| Name       | Geben Sie                 | ein Beschreibung |
+| ---------- | ------------------------- | ---------------- |
+| einstellen | ForgeWebScriptSet<TValue> |                  |
+| Wert       | TValue                    |                  |
 
 ### forgeWebScriptSetDelete
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| einstellen | ForgeWebScriptSet<TValue> |  |
-| Wert | TValue |  |
+| Name       | Geben Sie                 | ein Beschreibung |
+| ---------- | ------------------------- | ---------------- |
+| einstellen | ForgeWebScriptSet<TValue> |                  |
+| Wert       | TValue                    |                  |
 
 ### forgeWebScriptSetHas
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean
+function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| einstellen | ForgeWebScriptSet<TValue> |  |
-| Wert | TValue |  |
+| Name       | Geben Sie                 | ein Beschreibung |
+| ---------- | ------------------------- | ---------------- |
+| einstellen | ForgeWebScriptSet<TValue> |                  |
+| Wert       | TValue                    |                  |
 
 ### forgeWebScriptSetValues
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| einstellen | ForgeWebScriptSet<TValue> |  |
+| Name       | Geben Sie                 | ein Beschreibung |
+| ---------- | ------------------------- | ---------------- |
+| einstellen | ForgeWebScriptSet<TValue> |                  |
 
 ### forgeWebScriptSome
 
 **Art:** konstant
 
 ```typescript
-export const forgeWebScriptSome
+export const forgeWebScriptSome;
 ```
 
 Konstruieren Sie einen aktuellen Optionswert.
@@ -1008,7 +1083,7 @@ Vertrag, während geliehenes/geteiltes Eigentum durch abgeleitete Werte erhalten
 **Art:** konstant
 
 ```typescript
-export const forgeWebScriptVectorAdd
+export const forgeWebScriptVectorAdd;
 ```
 
 Alias ​​für Vektor-Push, passend zum Vokabular des stdlib-Iterators `add`.
@@ -1018,85 +1093,95 @@ Alias ​​für Vektor-Push, passend zum Vokabular des stdlib-Iterators `add`.
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptVectorFilter(vector: ForgeWebScriptVector<TValue>, predicate: (value: TValue, index: number) => boolean): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorFilter(
+  vector: ForgeWebScriptVector<TValue>,
+  predicate: (value: TValue, index: number) => boolean,
+): ForgeWebScriptVector<TValue>;
 ```
 
 Filtern Sie einen Vektor eifrig in einen neuen Vektor und behalten Sie dabei die Quellreihenfolge bei.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Vektor | ForgeWebScriptVector<TValue> |  |
-| Prädikat | (Wert: TValue, Index: Zahl) => boolean |  |
+| Name     | Geben Sie                              | ein Beschreibung |
+| -------- | -------------------------------------- | ---------------- |
+| Vektor   | ForgeWebScriptVector<TValue>           |                  |
+| Prädikat | (Wert: TValue, Index: Zahl) => boolean |                  |
 
 ### forgeWebScriptVectorFold
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptVectorFold(vector: ForgeWebScriptVector<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptVectorFold(
+  vector: ForgeWebScriptVector<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 Vektorwerte von links nach rechts falten, einschließlich des bereitgestellten Anfangsakkumulators.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Vektor | ForgeWebScriptVector<TValue> |  |
-| Initiale | TResult |  |
-| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |  |
+| Name       | Geben Sie                                                    | ein Beschreibung |
+| ---------- | ------------------------------------------------------------ | ---------------- |
+| Vektor     | ForgeWebScriptVector<TValue>                                 |                  |
+| Initiale   | TResult                                                      |                  |
+| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |                  |
 
 ### forgeWebScriptVectorGet
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 Ein Vektorelement lesen; Ungültige Indizes geben Option.none zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Vektor | ForgeWebScriptVector<TValue> |  |
-| Index | Zahl |  |
+| Name   | Geben Sie                    | ein Beschreibung |
+| ------ | ---------------------------- | ---------------- |
+| Vektor | ForgeWebScriptVector<TValue> |                  |
+| Index  | Zahl                         |                  |
 
 ### forgeWebScriptVectorLength
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number
+function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number;
 ```
 
 Gibt die Anzahl der initialisierten Vektorelemente zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Vektor | ForgeWebScriptVector<TValue> |  |
+| Name   | Geben Sie                    | ein Beschreibung |
+| ------ | ---------------------------- | ---------------- |
+| Vektor | ForgeWebScriptVector<TValue> |                  |
 
 ### forgeWebScriptVectorMap
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform: (value: TValue, index: number) => TResult): ForgeWebScriptVector<TResult>
+function forgeWebScriptVectorMap(
+  vector: ForgeWebScriptVector<TValue>,
+  transform: (value: TValue, index: number) => TResult,
+): ForgeWebScriptVector<TResult>;
 ```
 
 Ordnen Sie einen Vektor in der Quellindexreihenfolge eifrig einem neuen Vektor zu.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Vektor | ForgeWebScriptVector<TValue> |  |
-| transformieren | (Wert: TValue, Index: Zahl) => TResult |  |
+| Name           | Geben Sie                              | ein Beschreibung |
+| -------------- | -------------------------------------- | ---------------- |
+| Vektor         | ForgeWebScriptVector<TValue>           |                  |
+| transformieren | (Wert: TValue, Index: Zahl) => TResult |                  |
 
 ### forgeWebScriptVectorPop
 
@@ -1106,69 +1191,77 @@ Ordnen Sie einen Vektor in der Quellindexreihenfolge eifrig einem neuen Vektor z
 function forgeWebScriptVectorPop(vector: ForgeWebScriptVector<TValue>): {
   readonly vector: ForgeWebScriptVector<TValue>;
   readonly value: ForgeWebScriptOption<TValue>;
-}
+};
 ```
 
 Entfernen Sie den endgültigen Vektorwert und geben Sie den aktualisierten Vektor plus Optionsergebnis zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Vektor | ForgeWebScriptVector<TValue> |  |
+| Name   | Geben Sie                    | ein Beschreibung |
+| ------ | ---------------------------- | ---------------- |
+| Vektor | ForgeWebScriptVector<TValue> |                  |
 
 ### forgeWebScriptVectorPush
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>;
 ```
 
 Fügen Sie einen Wert hinzu und erweitern Sie die Kapazität nach Bedarf, wobei das Eigentum erhalten bleibt.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Vektor | ForgeWebScriptVector<TValue> |  |
-| Wert | TValue |  |
+| Name   | Geben Sie                    | ein Beschreibung |
+| ------ | ---------------------------- | ---------------- |
+| Vektor | ForgeWebScriptVector<TValue> |                  |
+| Wert   | TValue                       |                  |
 
 ### forgeWebScriptVectorSet
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptVectorSet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorSet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptVector<TValue>;
 ```
 
 Ersetzen Sie ein Vektorelement. Ungültige Indizes lösen RangeError aus.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Vektor | ForgeWebScriptVector<TValue> |  |
-| Index | Zahl |  |
-| Wert | TValue |  |
+| Name   | Geben Sie                    | ein Beschreibung |
+| ------ | ---------------------------- | ---------------- |
+| Vektor | ForgeWebScriptVector<TValue> |                  |
+| Index  | Zahl                         |                  |
+| Wert   | TValue                       |                  |
 
 ### forgeWebScriptVectorTrySet
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>
+function forgeWebScriptVectorTrySet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>;
 ```
 
 Ersetzen Sie ein Vektorelement, ohne es auszulösen. Ungültige Indizes geben ein Fehlerergebnis zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Vektor | ForgeWebScriptVector<TValue> |  |
-| Index | Zahl |  |
-| Wert | TValue |  |
+| Name   | Geben Sie                    | ein Beschreibung |
+| ------ | ---------------------------- | ---------------- |
+| Vektor | ForgeWebScriptVector<TValue> |                  |
+| Index  | Zahl                         |                  |
+| Wert   | TValue                       |                  |
 
 ## `src/ecs`
 
@@ -1177,45 +1270,55 @@ Ersetzen Sie ein Vektorelement, ohne es auszulösen. Ungültige Indizes geben ei
 **Art:** Funktion
 
 ```typescript
-function addForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function addForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Welt | ForgeWebScriptEcsWorld<TValue> |  |
-| Entität | ForgeWebScriptEcsEntity |  |
-| Komponente | Zeichenfolge |  |
-| Wert | TValue |  |
+| Name       | Geben Sie                      | ein Beschreibung |
+| ---------- | ------------------------------ | ---------------- |
+| Welt       | ForgeWebScriptEcsWorld<TValue> |                  |
+| Entität    | ForgeWebScriptEcsEntity        |                  |
+| Komponente | Zeichenfolge                   |                  |
+| Wert       | TValue                         |                  |
 
 ### createForgeWebScriptEcsScheduler
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptEcsScheduler(systems: readonly ForgeWebScriptEcsSystem<TValue>[], signals: readonly ForgeWebScriptEcsSignal[] = [], subscriptions: readonly ForgeWebScriptEcsSubscription[] = [], maxSteps = 1000): ForgeWebScriptEcsScheduler<TValue>
+function createForgeWebScriptEcsScheduler(
+  systems: readonly ForgeWebScriptEcsSystem<TValue>[],
+  signals: readonly ForgeWebScriptEcsSignal[] = [],
+  subscriptions: readonly ForgeWebScriptEcsSubscription[] = [],
+  maxSteps = 1000,
+): ForgeWebScriptEcsScheduler<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Systeme | schreibgeschützt ForgeWebScriptEcsSystem<TValue>[] |  |
-| Signale | schreibgeschützt ForgeWebScriptEcsSignal[] |  |
-| Abonnements | readonly ForgeWebScriptEcsSubscription[] |  |
-| maxSteps |  |  |
+| Name        | Geben Sie                                          | ein Beschreibung |
+| ----------- | -------------------------------------------------- | ---------------- |
+| Systeme     | schreibgeschützt ForgeWebScriptEcsSystem<TValue>[] |                  |
+| Signale     | schreibgeschützt ForgeWebScriptEcsSignal[]         |                  |
+| Abonnements | readonly ForgeWebScriptEcsSubscription[]           |                  |
+| maxSteps    |                                                    |                  |
 
 ### createForgeWebScriptEcsWorld
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
+function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>;
 ```
 
 Keine Beschreibung angegeben.
@@ -1225,17 +1328,20 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function despawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): ForgeWebScriptEcsResult<TValue>
+function despawnForgeWebScriptEcsEntity(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Welt | ForgeWebScriptEcsWorld<TValue> |  |
-| Entität | ForgeWebScriptEcsEntity |  |
+| Name    | Geben Sie                      | ein Beschreibung |
+| ------- | ------------------------------ | ---------------- |
+| Welt    | ForgeWebScriptEcsWorld<TValue> |                  |
+| Entität | ForgeWebScriptEcsEntity        |                  |
 
 ### ForgeWebScriptEcsComponentStore
 
@@ -1362,138 +1468,162 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function getForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): TValue | undefined
+function getForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): TValue | undefined;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Welt | ForgeWebScriptEcsWorld<TValue> |  |
-| Entität | ForgeWebScriptEcsEntity |  |
-| Komponente | Zeichenfolge |  |
+| Name       | Geben Sie                      | ein Beschreibung |
+| ---------- | ------------------------------ | ---------------- |
+| Welt       | ForgeWebScriptEcsWorld<TValue> |                  |
+| Entität    | ForgeWebScriptEcsEntity        |                  |
+| Komponente | Zeichenfolge                   |                  |
 
 ### isForgeWebScriptEcsEntityAlive
 
 **Art:** Funktion
 
 ```typescript
-function isForgeWebScriptEcsEntityAlive(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): boolean
+function isForgeWebScriptEcsEntityAlive(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): boolean;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Welt | ForgeWebScriptEcsWorld<TValue> |  |
-| Entität | ForgeWebScriptEcsEntity |  |
+| Name    | Geben Sie                      | ein Beschreibung |
+| ------- | ------------------------------ | ---------------- |
+| Welt    | ForgeWebScriptEcsWorld<TValue> |                  |
+| Entität | ForgeWebScriptEcsEntity        |                  |
 
 ### queryForgeWebScriptEcsEntities
 
 **Art:** Funktion
 
 ```typescript
-function queryForgeWebScriptEcsEntities(world: ForgeWebScriptEcsWorld<TValue>, query: ForgeWebScriptEcsQuery): readonly ForgeWebScriptEcsEntity[]
+function queryForgeWebScriptEcsEntities(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  query: ForgeWebScriptEcsQuery,
+): readonly ForgeWebScriptEcsEntity[];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Welt | ForgeWebScriptEcsWorld<TValue> |  |
-| Abfrage | ForgeWebScriptEcsQuery |  |
+| Name    | Geben Sie                      | ein Beschreibung |
+| ------- | ------------------------------ | ---------------- |
+| Welt    | ForgeWebScriptEcsWorld<TValue> |                  |
+| Abfrage | ForgeWebScriptEcsQuery         |                  |
 
 ### RemoveForgeWebScriptEcsComponent
 
 **Art:** Funktion
 
 ```typescript
-function removeForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): ForgeWebScriptEcsResult<TValue>
+function removeForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Welt | ForgeWebScriptEcsWorld<TValue> |  |
-| Entität | ForgeWebScriptEcsEntity |  |
-| Komponente | Zeichenfolge |  |
+| Name       | Geben Sie                      | ein Beschreibung |
+| ---------- | ------------------------------ | ---------------- |
+| Welt       | ForgeWebScriptEcsWorld<TValue> |                  |
+| Entität    | ForgeWebScriptEcsEntity        |                  |
+| Komponente | Zeichenfolge                   |                  |
 
 ### runForgeWebScriptEcsScheduler
 
 **Art:** Funktion
 
 ```typescript
-function runForgeWebScriptEcsScheduler(world: ForgeWebScriptEcsWorld<TValue>, scheduler: ForgeWebScriptEcsScheduler<TValue>): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>
+function runForgeWebScriptEcsScheduler(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  scheduler: ForgeWebScriptEcsScheduler<TValue>,
+): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Welt | ForgeWebScriptEcsWorld<TValue> |  |
-| Planer | ForgeWebScriptEcsScheduler<TValue> |  |
+| Name   | Geben Sie                          | ein Beschreibung |
+| ------ | ---------------------------------- | ---------------- |
+| Welt   | ForgeWebScriptEcsWorld<TValue>     |                  |
+| Planer | ForgeWebScriptEcsScheduler<TValue> |                  |
 
 ### setForgeWebScriptEcsComponent
 
 **Art:** Funktion
 
 ```typescript
-function setForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function setForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Welt | ForgeWebScriptEcsWorld<TValue> |  |
-| Entität | ForgeWebScriptEcsEntity |  |
-| Komponente | Zeichenfolge |  |
-| Wert | TValue |  |
+| Name       | Geben Sie                      | ein Beschreibung |
+| ---------- | ------------------------------ | ---------------- |
+| Welt       | ForgeWebScriptEcsWorld<TValue> |                  |
+| Entität    | ForgeWebScriptEcsEntity        |                  |
+| Komponente | Zeichenfolge                   |                  |
+| Wert       | TValue                         |                  |
 
 ### spawnForgeWebScriptEcsEntity
 
 **Art:** Funktion
 
 ```typescript
-function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>
+function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Welt | ForgeWebScriptEcsWorld<TValue> |  |
+| Name | Geben Sie                      | ein Beschreibung |
+| ---- | ------------------------------ | ---------------- |
+| Welt | ForgeWebScriptEcsWorld<TValue> |                  |
 
 ### validierenForgeWebScriptEcsSignals
 
 **Art:** Funktion
 
 ```typescript
-function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSignal[]): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] }
+function validateForgeWebScriptEcsSignals(
+  signals: readonly ForgeWebScriptEcsSignal[],
+): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Signale | schreibgeschützt ForgeWebScriptEcsSignal[] |  |
+| Name    | Geben Sie                                  | ein Beschreibung |
+| ------- | ------------------------------------------ | ---------------- |
+| Signale | schreibgeschützt ForgeWebScriptEcsSignal[] |                  |
 
 ## `src/host`
 
@@ -1502,34 +1632,40 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createDefaultForgeWebScriptCapabilities(options: ForgeWebScriptDefaultHostOptions = {}): ForgeWebScriptCapabilityRegistry
+function createDefaultForgeWebScriptCapabilities(
+  options: ForgeWebScriptDefaultHostOptions = {},
+): ForgeWebScriptCapabilityRegistry;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeWebScriptDefaultHostOptions |  |
+| Name     | Geben Sie                        | ein Beschreibung |
+| -------- | -------------------------------- | ---------------- |
+| Optionen | ForgeWebScriptDefaultHostOptions |                  |
 
 ### createForgeWebScriptHost
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptHost(manifest: ForgeWebScriptAbiManifest, registry: ForgeWebScriptCapabilityRegistry, options: ForgeWebScriptHostOptions = {}): ForgeWebScriptHost
+function createForgeWebScriptHost(
+  manifest: ForgeWebScriptAbiManifest,
+  registry: ForgeWebScriptCapabilityRegistry,
+  options: ForgeWebScriptHostOptions = {},
+): ForgeWebScriptHost;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| manifestieren | ForgeWebScriptAbiManifest |  |
-| Registrierung | ForgeWebScriptCapabilityRegistry |  |
-| Optionen | ForgeWebScriptHostOptions |  |
+| Name          | Geben Sie                        | ein Beschreibung |
+| ------------- | -------------------------------- | ---------------- |
+| manifestieren | ForgeWebScriptAbiManifest        |                  |
+| Registrierung | ForgeWebScriptCapabilityRegistry |                  |
+| Optionen      | ForgeWebScriptHostOptions        |                  |
 
 ### ForgeWebScriptCapabilityImplementation
 
@@ -1598,36 +1734,44 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptWasmIterator(handle: number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIterator(
+  handle: number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): ForgeWebScriptWasmIterator<TValue>;
 ```
 
 Passt das Backend-eigene i32-Handle und das gepackte i64-Next-Protokoll an die JS-Iteration an.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Griff | Zahl |  |
-| weiter | (Handle: Zahl) => ForgeWebScriptPackedIteratorResult |  |
-| Optionen | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| Name     | Geben Sie                                            | ein Beschreibung |
+| -------- | ---------------------------------------------------- | ---------------- |
+| Griff    | Zahl                                                 |                  |
+| weiter   | (Handle: Zahl) => ForgeWebScriptPackedIteratorResult |                  |
+| Optionen | ForgeWebScriptWasmIteratorOptions<TValue>            |                  |
 
 ### createForgeWebScriptWasmIteratorFactory
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptWasmIteratorFactory(factory: (...arguments_: TArguments) => number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIteratorFactory(
+  factory: (...arguments_: TArguments) => number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>;
 ```
 
 Erstellt eine JS-orientierte Iteratorfabrik aus einer Backend-Fabrik und ihrem `.next`-Export.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Fabrik | (...arguments_: TArguments) => Zahl |  |
-| weiter | (Handle: Zahl) => ForgeWebScriptPackedIteratorResult |  |
-| Optionen | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| Name     | Geben Sie                                            | ein Beschreibung |
+| -------- | ---------------------------------------------------- | ---------------- |
+| Fabrik   | (...arguments_: TArguments) => Zahl                  |                  |
+| weiter   | (Handle: Zahl) => ForgeWebScriptPackedIteratorResult |                  |
+| Optionen | ForgeWebScriptWasmIteratorOptions<TValue>            |                  |
 
 ### ForgeWebScriptPackedIteratorResult
 
@@ -1666,16 +1810,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger
+function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeWebScriptLoggerOptions |  |
+| Name     | Geben Sie                   | ein Beschreibung |
+| -------- | --------------------------- | ---------------- |
+| Optionen | ForgeWebScriptLoggerOptions |                  |
 
 ### ForgeWebScriptLogEvent
 
@@ -1734,23 +1878,23 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory
+function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeWebScriptMemoryOptions |  |
+| Name     | Geben Sie                   | ein Beschreibung |
+| -------- | --------------------------- | ---------------- |
+| Optionen | ForgeWebScriptMemoryOptions |                  |
 
 ### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 ```
 
 Keine Beschreibung angegeben.
@@ -1792,7 +1936,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
 ```
 
 Fähigkeitsnamen, die zur Autorisierung der Worker-, Thread-, Atomic- und Shared-Memory-Ausführung verwendet werden.
@@ -1804,7 +1948,7 @@ Fähigkeitsnamen, die zur Autorisierung der Worker-, Thread-, Atomic- und Shared
 ```typescript
 export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<ForgeWebScriptParallelOperation, ForgeWebScriptParallelOperationDescriptor>
->
+>;
 ```
 
 Stabile Deskriptoren für jeden seriell-fallbackfähigen Parallelbetrieb.
@@ -1814,42 +1958,53 @@ Stabile Deskriptoren für jeden seriell-fallbackfähigen Parallelbetrieb.
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorParAt(source: ForgeWebScriptIterable<TValue>, index: number, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParAt(
+  source: ForgeWebScriptIterable<TValue>,
+  index: number,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 Gibt das auf Null basierende geordnete Ergebnis zurück oder Option.none, wenn der Index ungültig ist.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterable<TValue> |  |
-| Index | Zahl |  |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Quelle   | ForgeWebScriptIterable<TValue> |                  |
+| Index    | Zahl                           |                  |
+| Optionen | ForgeWebScriptParallelOptions  |                  |
 
 ### forgeWebScriptIteratorParCollect
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorParCollect(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptVector<TValue>>
+function forgeWebScriptIteratorParCollect(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptVector<TValue>>;
 ```
 
 Materialisieren Sie geordnete parallele Ergebnisse in einem eigenen Vektor.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterable<TValue> |  |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Quelle   | ForgeWebScriptIterable<TValue> |                  |
+| Optionen | ForgeWebScriptParallelOptions  |                  |
 
 ### forgeWebScriptIteratorParFilter
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>, predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFilter(
+  source: ForgeWebScriptIterable<TValue>,
+  predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 Bewerten Sie ein Prädikat parallel und behalten Sie akzeptierte Werte in der Quellreihenfolge bei.
@@ -1857,88 +2012,106 @@ Dies ist die kanonische `par_filter`-API.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterable<TValue> |  |
-| Prädikat | (Wert: TValue, Index: Zahl) => boolean \| PromiseLike<boolean> |  |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name     | Geben Sie                                                      | ein Beschreibung |
+| -------- | -------------------------------------------------------------- | ---------------- |
+| Quelle   | ForgeWebScriptIterable<TValue>                                 |                  |
+| Prädikat | (Wert: TValue, Index: Zahl) => boolean \| PromiseLike<boolean> |                  |
+| Optionen | ForgeWebScriptParallelOptions                                  |                  |
 
 ### forgeWebScriptIteratorParFirst
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorParFirst(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParFirst(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 Gibt das erste geordnete Ergebnis oder einen Option.none-Wert für eine leere Quelle zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterable<TValue> |  |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Quelle   | ForgeWebScriptIterable<TValue> |                  |
+| Optionen | ForgeWebScriptParallelOptions  |                  |
 
 ### forgeWebScriptIteratorParFlatten
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorParFlatten(source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFlatten(
+  source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 Glätten Sie verschachtelte Quellen parallel und bewahren Sie dabei die äußere und innere Ordnung.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |  |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name     | Geben Sie                                              | ein Beschreibung |
+| -------- | ------------------------------------------------------ | ---------------- |
+| Quelle   | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |                  |
+| Optionen | ForgeWebScriptParallelOptions                          |                  |
 
 ### forgeWebScriptIteratorParFold
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorParFold(source: ForgeWebScriptIterable<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult, options: ForgeWebScriptParallelOptions = {}): Promise<TResult>
+function forgeWebScriptIteratorParFold(
+  source: ForgeWebScriptIterable<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<TResult>;
 ```
 
 Falten Sie die geordneten Ergebnisse von links nach rechts, einschließlich des mitgelieferten Erstakkumulators.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterable<TValue> |  |
-| Initiale | TResult |  |
-| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |  |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name       | Geben Sie                                                    | ein Beschreibung |
+| ---------- | ------------------------------------------------------------ | ---------------- |
+| Quelle     | ForgeWebScriptIterable<TValue>                               |                  |
+| Initiale   | TResult                                                      |                  |
+| Reduzierer | (Akkumulator: TResult, Wert: TValue, Index: Zahl) => TResult |                  |
+| Optionen   | ForgeWebScriptParallelOptions                                |                  |
 
 ### forgeWebScriptIteratorParLast
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorParLast(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParLast(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 Gibt das zuletzt geordnete Ergebnis oder einen Option.none-Wert für eine leere Quelle zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterable<TValue> |  |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Quelle   | ForgeWebScriptIterable<TValue> |                  |
+| Optionen | ForgeWebScriptParallelOptions  |                  |
 
 ### forgeWebScriptIteratorParMap
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, map: (value: TValue, index: number) => TResult | PromiseLike<TResult>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TResult>>
+function forgeWebScriptIteratorParMap(
+  source: ForgeWebScriptIterable<TValue>,
+  map: (value: TValue, index: number) => TResult | PromiseLike<TResult>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TResult>>;
 ```
 
 Wenden Sie parallel einen Rückruf an und geben Sie einen Lazy-kompatiblen geordneten Iterator zurück.
@@ -1946,45 +2119,51 @@ Rückruffehler lehnen den Vorgang ab und werden durch serielles Fallback nicht a
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterable<TValue> |  |
-| Karte | (Wert: TValue, Index: Zahl) => TResult \| PromiseLike<TResult> |  |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name     | Geben Sie                                                      | ein Beschreibung |
+| -------- | -------------------------------------------------------------- | ---------------- |
+| Quelle   | ForgeWebScriptIterable<TValue>                                 |                  |
+| Karte    | (Wert: TValue, Index: Zahl) => TResult \| PromiseLike<TResult> |                  |
+| Optionen | ForgeWebScriptParallelOptions                                  |                  |
 
 ### forgeWebScriptIteratorParToArray
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptIteratorParToArray(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptArray<TValue>>
+function forgeWebScriptIteratorParToArray(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptArray<TValue>>;
 ```
 
 Materialisieren Sie geordnete parallele Ergebnisse in einem eigenen festen Array.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | ForgeWebScriptIterable<TValue> |  |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Quelle   | ForgeWebScriptIterable<TValue> |                  |
+| Optionen | ForgeWebScriptParallelOptions  |                  |
 
 ### forgeWebScriptParallelDescriptor
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptParallelDescriptor(operation: ForgeWebScriptParallelOperation, options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy }
+function forgeWebScriptParallelDescriptor(
+  operation: ForgeWebScriptParallelOperation,
+  options: ForgeWebScriptParallelOptions = {},
+): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy };
 ```
 
 Beschreiben Sie einen Vorgang und fügen Sie die aus den bereitgestellten Optionen ausgewählte Strategie hinzu.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Betrieb | ForgeWebScriptParallelOperation |  |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name     | Geben Sie                       | ein Beschreibung |
+| -------- | ------------------------------- | ---------------- |
+| Betrieb  | ForgeWebScriptParallelOperation |                  |
+| Optionen | ForgeWebScriptParallelOptions   |                  |
 
 ### ForgeWebScriptParallelExecutor
 
@@ -2001,7 +2180,16 @@ Minimale Scheduler-Grenze, die von Host-Workern oder einem kompilierten Wasm-Thr
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptParallelOperation = | 'par_map' | 'par_filter' | 'par_flatten' | 'par_collect' | 'par_to_array' | 'par_fold' | 'par_first' | 'par_last' | 'par_at';
+export type ForgeWebScriptParallelOperation =
+  | 'par_map'
+  | 'par_filter'
+  | 'par_flatten'
+  | 'par_collect'
+  | 'par_to_array'
+  | 'par_fold'
+  | 'par_first'
+  | 'par_last'
+  | 'par_at';
 ```
 
 Von der Laufzeit verfügbar gemachte kanonische Paralleloperationsnamen; `par_filter` ist beabsichtigt.
@@ -2053,16 +2241,16 @@ Für einen geordneten Parallelvorgang ausgewählte Ausführungsstrategie.
 **Art:** Funktion
 
 ```typescript
-function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan
+function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan;
 ```
 
 Wählen Sie eine zulässige Strategie aus, ohne den Ergebnisvertrag des Vorgangs zu ändern.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeWebScriptParallelOptions |  |
+| Name     | Geben Sie                     | ein Beschreibung |
+| -------- | ----------------------------- | ---------------- |
+| Optionen | ForgeWebScriptParallelOptions |                  |
 
 ## `src/self-hosted`
 
@@ -2091,7 +2279,11 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedVmRun
+function runForgeWebScriptSelfHostedCompiler(
+  input: ForgeWebScriptCompileInput,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedVmRun;
 ```
 
 Führen Sie den begrenzten selbstgehosteten Compiler-Bootstrap aus.
@@ -2103,29 +2295,33 @@ Jede Stufe meldet Parität.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | ForgeWebScriptCompileInput |  |
-| Modus | ForgeWebScriptVmExecutionMode |  |
-| Optionen | ForgeWebScriptSelfHostedRunOptions |  |
+| Name     | Geben Sie                          | ein Beschreibung |
+| -------- | ---------------------------------- | ---------------- |
+| Eingabe  | ForgeWebScriptCompileInput         |                  |
+| Modus    | ForgeWebScriptVmExecutionMode      |                  |
+| Optionen | ForgeWebScriptSelfHostedRunOptions |                  |
 
 ### runForgeWebScriptSelfHostedLexStage
 
 **Art:** Funktion
 
 ```typescript
-function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedStageReport
+function runForgeWebScriptSelfHostedLexStage(
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedStageReport;
 ```
 
 Führen Sie nur die begrenzte, von FWS erstellte Lex-Stufe für Compiler-Konsumenten aus.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | Pick<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |  |
-| Modus | ForgeWebScriptVmExecutionMode |  |
-| Optionen | ForgeWebScriptSelfHostedRunOptions |  |
+| Name     | Geben Sie                                                                                                | ein Beschreibung |
+| -------- | -------------------------------------------------------------------------------------------------------- | ---------------- |
+| Eingabe  | Pick<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |                  |
+| Modus    | ForgeWebScriptVmExecutionMode                                                                            |                  |
+| Optionen | ForgeWebScriptSelfHostedRunOptions                                                                       |                  |
 
 ## `src/threading`
 
@@ -2134,7 +2330,10 @@ Führen Sie nur die begrenzte, von FWS erstellte Lex-Stufe für Compiler-Konsume
 **Art:** Funktion
 
 ```typescript
-function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined, capabilities: readonly string[] | undefined): boolean
+function canUseForgeWebScriptWasmThreads(
+  targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined,
+  capabilities: readonly string[] | undefined,
+): boolean;
 ```
 
 Die Thread-Ausführung ist sowohl an Kompilierungs- als auch an Laufzeitgrenzen möglich. In
@@ -2142,34 +2341,39 @@ Insbesondere wird dieser Pfad niemals durch eine nicht deklarierte Fähigkeitsli
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| targetFeatures | ForgeWebScriptWasmThreadTargetFeatures \| undefiniert |  |
-| Fähigkeiten | schreibgeschützter String[] \| undefiniert |  |
+| Name           | Geben Sie                                             | ein Beschreibung |
+| -------------- | ----------------------------------------------------- | ---------------- |
+| targetFeatures | ForgeWebScriptWasmThreadTargetFeatures \| undefiniert |                  |
+| Fähigkeiten    | schreibgeschützter String[] \| undefiniert            |                  |
 
 ### createForgeWebScriptAtomicI32
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptAtomicI32(length = 1, options: ForgeWebScriptAtomicI32Options = {}): ForgeWebScriptAtomicI32
+function createForgeWebScriptAtomicI32(
+  length = 1,
+  options: ForgeWebScriptAtomicI32Options = {},
+): ForgeWebScriptAtomicI32;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Länge |  |  |
-| Optionen | ForgeWebScriptAtomicI32Options |  |
+| Name     | Geben Sie                      | ein Beschreibung |
+| -------- | ------------------------------ | ---------------- |
+| Länge    |                                |                  |
+| Optionen | ForgeWebScriptAtomicI32Options |                  |
 
 ### createForgeWebScriptWasmThreadScheduler
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThreadSchedulerOptions): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWasmThreadScheduler(
+  options: ForgeWebScriptWasmThreadSchedulerOptions,
+): ForgeWebScriptWorkerScheduler;
 ```
 
 Umschließt eine kompilierte WASM-Thread-Bridge mit expliziter Shared-Memory-Accounting.
@@ -2178,35 +2382,42 @@ muss den im Parallelvertrag ausgewählten seriellen Fallback verwenden.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeWebScriptWasmThreadSchedulerOptions |  |
+| Name     | Geben Sie                                | ein Beschreibung |
+| -------- | ---------------------------------------- | ---------------- |
+| Optionen | ForgeWebScriptWasmThreadSchedulerOptions |                  |
 
 ### createForgeWebScriptWorkerRuntime
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptWorkerRuntime(createWorker: () => ForgeWebScriptWorkerPort, onMessage: (message: unknown) => void, onError: (error: unknown) => void = () => {}, options: ForgeWebScriptWorkerRuntimeOptions = {}): ForgeWebScriptWorkerRuntime
+function createForgeWebScriptWorkerRuntime(
+  createWorker: () => ForgeWebScriptWorkerPort,
+  onMessage: (message: unknown) => void,
+  onError: (error: unknown) => void = () => {},
+  options: ForgeWebScriptWorkerRuntimeOptions = {},
+): ForgeWebScriptWorkerRuntime;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| createWorker | () => ForgeWebScriptWorkerPort |  |
-| onMessage | (Nachricht: unbekannt) => void |  |
-| onError | (Fehler: unbekannt) => void |  |
-| Optionen | ForgeWebScriptWorkerRuntimeOptions |  |
+| Name         | Geben Sie                          | ein Beschreibung |
+| ------------ | ---------------------------------- | ---------------- |
+| createWorker | () => ForgeWebScriptWorkerPort     |                  |
+| onMessage    | (Nachricht: unbekannt) => void     |                  |
+| onError      | (Fehler: unbekannt) => void        |                  |
+| Optionen     | ForgeWebScriptWorkerRuntimeOptions |                  |
 
 ### createForgeWebScriptWorkerScheduler
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedulerOptions = {}): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWorkerScheduler(
+  options: ForgeWebScriptWorkerSchedulerOptions = {},
+): ForgeWebScriptWorkerScheduler;
 ```
 
 Erstellt die hostseitige Planungsgrenze, die von parallelen Iteratoroperationen verwendet wird.
@@ -2218,16 +2429,16 @@ Bietet den gleichen begrenzten asynchronen Vertrag für Hosts ohne Worker-Unters
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeWebScriptWorkerSchedulerOptions |  |
+| Name     | Geben Sie                            | ein Beschreibung |
+| -------- | ------------------------------------ | ---------------- |
+| Optionen | ForgeWebScriptWorkerSchedulerOptions |                  |
 
 ### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
 
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 ```
 
 Keine Beschreibung angegeben.
@@ -2329,17 +2540,20 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptTraceRecorder(options: ForgeWebScriptTraceOptions, functionName: string): ForgeWebScriptTraceRecorder
+function createForgeWebScriptTraceRecorder(
+  options: ForgeWebScriptTraceOptions,
+  functionName: string,
+): ForgeWebScriptTraceRecorder;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | ForgeWebScriptTraceOptions |  |
-| Funktionsname | Zeichenfolge |  |
+| Name          | Geben Sie                  | ein Beschreibung |
+| ------------- | -------------------------- | ---------------- |
+| Optionen      | ForgeWebScriptTraceOptions |                  |
+| Funktionsname | Zeichenfolge               |                  |
 
 ### ForgeWebScriptTraceCaptureMode
 
@@ -2376,7 +2590,8 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptTraceEventType = 'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
+export type ForgeWebScriptTraceEventType =
+  'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
 Keine Beschreibung angegeben.
@@ -2436,17 +2651,20 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (value: ForgeWebScriptVmValue) => string): string
+function summarizeForgeWebScriptVmValue(
+  value: ForgeWebScriptVmValue,
+  redact?: (value: ForgeWebScriptVmValue) => string,
+): string;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | ForgeWebScriptVmValue |  |
-| redigieren | (Wert: ForgeWebScriptVmValue) => string |  |
+| Name       | Geben Sie                               | ein Beschreibung |
+| ---------- | --------------------------------------- | ---------------- |
+| Wert       | ForgeWebScriptVmValue                   |                  |
+| redigieren | (Wert: ForgeWebScriptVmValue) => string |                  |
 
 ## `src/traps`
 
@@ -2455,17 +2673,17 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void
+function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Fehler | unbekannt |  |
-| Spur | ForgeWebScriptTraceReport |  |
+| Name   | Geben Sie                 | ein Beschreibung |
+| ------ | ------------------------- | ---------------- |
+| Fehler | unbekannt                 |                  |
+| Spur   | ForgeWebScriptTraceReport |                  |
 
 ### ForgeWebScriptTrap
 
@@ -2482,7 +2700,14 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptTrapCode = | 'CapabilityDenied' | 'HostError' | 'InvalidAbi' | 'InvalidOwnership' | 'MemoryExhausted' | 'MemoryOutOfBounds' | 'GuestTrap';
+export type ForgeWebScriptTrapCode =
+  | 'CapabilityDenied'
+  | 'HostError'
+  | 'InvalidAbi'
+  | 'InvalidOwnership'
+  | 'MemoryExhausted'
+  | 'MemoryOutOfBounds'
+  | 'GuestTrap';
 ```
 
 Keine Beschreibung angegeben.
@@ -2502,18 +2727,22 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function toForgeWebScriptHostError(error: unknown, capability: string, logger?: ForgeWebScriptLogger): ForgeWebScriptTrap
+function toForgeWebScriptHostError(
+  error: unknown,
+  capability: string,
+  logger?: ForgeWebScriptLogger,
+): ForgeWebScriptTrap;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Fehler | unbekannt |  |
-| Fähigkeit | Zeichenfolge |  |
-| Holzfäller | ForgeWebScriptLogger |  |
+| Name       | Geben Sie            | ein Beschreibung |
+| ---------- | -------------------- | ---------------- |
+| Fehler     | unbekannt            |                  |
+| Fähigkeit  | Zeichenfolge         |                  |
+| Holzfäller | ForgeWebScriptLogger |                  |
 
 ## `src/vm-executor`
 
@@ -2522,71 +2751,86 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptVmAotArtifact(module: ForgeWebScriptVmModule, compilerVersion: string): ForgeWebScriptVmAotArtifact
+function createForgeWebScriptVmAotArtifact(
+  module: ForgeWebScriptVmModule,
+  compilerVersion: string,
+): ForgeWebScriptVmAotArtifact;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | ForgeWebScriptVmModule |  |
-| CompilerVersion | Zeichenfolge |  |
+| Name            | Geben Sie              | ein Beschreibung |
+| --------------- | ---------------------- | ---------------- |
+| Modul           | ForgeWebScriptVmModule |                  |
+| CompilerVersion | Zeichenfolge           |                  |
 
 ### createForgeWebScriptVmExecutor
 
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptVmExecutor(executorOptions: ForgeWebScriptVmExecutorOptions = {}): ForgeWebScriptVmExecutor
+function createForgeWebScriptVmExecutor(
+  executorOptions: ForgeWebScriptVmExecutorOptions = {},
+): ForgeWebScriptVmExecutor;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| executorOptions | ForgeWebScriptVmExecutorOptions |  |
+| Name            | Geben Sie                       | ein Beschreibung |
+| --------------- | ------------------------------- | ---------------- |
+| executorOptions | ForgeWebScriptVmExecutorOptions |                  |
 
 ### ausführenForgeWebScriptVm
 
 **Art:** Funktion
 
 ```typescript
-function executeForgeWebScriptVm(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: ForgeWebScriptVmExecutionOptions): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVm(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: ForgeWebScriptVmExecutionOptions,
+): ForgeWebScriptVmExecutionResult;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | ForgeWebScriptVmModule |  |
-| Funktionsname | Zeichenfolge |  |
-| Argumente_ | schreibgeschützt ForgeWebScriptVmValue[] |  |
-| Optionen | ForgeWebScriptVmExecutionOptions |  |
+| Name          | Geben Sie                                | ein Beschreibung |
+| ------------- | ---------------------------------------- | ---------------- |
+| Modul         | ForgeWebScriptVmModule                   |                  |
+| Funktionsname | Zeichenfolge                             |                  |
+| Argumente_    | schreibgeschützt ForgeWebScriptVmValue[] |                  |
+| Optionen      | ForgeWebScriptVmExecutionOptions         |                  |
 
 ### ausführenForgeWebScriptVmAotArtifact
 
 **Art:** Funktion
 
 ```typescript
-function executeForgeWebScriptVmAotArtifact(artifact: ForgeWebScriptVmAotArtifact, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVmAotArtifact(
+  artifact: ForgeWebScriptVmAotArtifact,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Artefakt | ForgeWebScriptVmAotArtifact |  |
-| Funktionsname | Zeichenfolge |  |
-| Argumente_ | schreibgeschützt ForgeWebScriptVmValue[] |  |
-| Optionen | <ForgeWebScriptVmExecutionOptions, 'mode'> weglassen |  |
+| Name          | Geben Sie                                            | ein Beschreibung |
+| ------------- | ---------------------------------------------------- | ---------------- |
+| Artefakt      | ForgeWebScriptVmAotArtifact                          |                  |
+| Funktionsname | Zeichenfolge                                         |                  |
+| Argumente_    | schreibgeschützt ForgeWebScriptVmValue[]             |                  |
+| Optionen      | <ForgeWebScriptVmExecutionOptions, 'mode'> weglassen |                  |
 
 ### ForgeWebScriptVmExecutorOptions
 
@@ -2603,36 +2847,42 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function runForgeWebScriptVmBootstrap(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], mode: ForgeWebScriptVmExecutionMode = 'interpret', options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function runForgeWebScriptVmBootstrap(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  mode: ForgeWebScriptVmExecutionMode = 'interpret',
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | ForgeWebScriptVmModule |  |
-| Funktionsname | Zeichenfolge |  |
-| Argumente_ | schreibgeschützt ForgeWebScriptVmValue[] |  |
-| Modus | ForgeWebScriptVmExecutionMode |  |
-| Optionen | <ForgeWebScriptVmExecutionOptions, 'mode'> weglassen |  |
+| Name          | Geben Sie                                            | ein Beschreibung |
+| ------------- | ---------------------------------------------------- | ---------------- |
+| Modul         | ForgeWebScriptVmModule                               |                  |
+| Funktionsname | Zeichenfolge                                         |                  |
+| Argumente_    | schreibgeschützt ForgeWebScriptVmValue[]             |                  |
+| Modus         | ForgeWebScriptVmExecutionMode                        |                  |
+| Optionen      | <ForgeWebScriptVmExecutionOptions, 'mode'> weglassen |                  |
 
 ### validierenForgeWebScriptVmModule
 
 **Art:** Funktion
 
 ```typescript
-function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
+function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | ForgeWebScriptVmModule |  |
+| Name  | Geben Sie              | ein Beschreibung |
+| ----- | ---------------------- | ---------------- |
+| Modul | ForgeWebScriptVmModule |                  |
 
 ## `src/vm-wasm`
 
@@ -2641,17 +2891,20 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function compileForgeWebScriptVmWasm(module: ForgeWebScriptVmModule, options: ForgeWebScriptVmWasmCompileOptions = {}): ForgeWebScriptVmWasmArtifact
+function compileForgeWebScriptVmWasm(
+  module: ForgeWebScriptVmModule,
+  options: ForgeWebScriptVmWasmCompileOptions = {},
+): ForgeWebScriptVmWasmArtifact;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | ForgeWebScriptVmModule |  |
-| Optionen | ForgeWebScriptVmWasmCompileOptions |  |
+| Name     | Geben Sie                          | ein Beschreibung |
+| -------- | ---------------------------------- | ---------------- |
+| Modul    | ForgeWebScriptVmModule             |                  |
+| Optionen | ForgeWebScriptVmWasmCompileOptions |                  |
 
 ### ForgeWebScriptVmWasmCompileOptions
 
@@ -2668,7 +2921,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const prepareForgeWebScriptVm
+export const prepareForgeWebScriptVm;
 ```
 
 Keine Beschreibung angegeben.
@@ -2678,17 +2931,20 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact, options: ForgeWebScriptVmPreparedExecutorOptions = {}): ForgeWebScriptVmPreparedExecutor
+function prepareForgeWebScriptVmWasm(
+  moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact,
+  options: ForgeWebScriptVmPreparedExecutorOptions = {},
+): ForgeWebScriptVmPreparedExecutor;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| moduleOrArtifact | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |  |
-| Optionen | ForgeWebScriptVmPreparedExecutorOptions |  |
+| Name             | Geben Sie                                              | ein Beschreibung |
+| ---------------- | ------------------------------------------------------ | ---------------- |
+| moduleOrArtifact | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |                  |
+| Optionen         | ForgeWebScriptVmPreparedExecutorOptions                |                  |
 
 ## `src/vm`
 
@@ -2697,7 +2953,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
 ```
 
 Keine Beschreibung angegeben.
@@ -2707,7 +2963,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 ```
 
 Keine Beschreibung angegeben.

@@ -37,11 +37,7 @@ export interface ForgeWebScriptAsyncRuntimeOptions {
 }
 
 export type ForgeWebScriptAsyncFailureCode =
-  | 'capability-denied'
-  | 'host-error'
-  | 'invalid-message'
-  | 'queue-limit'
-  | 'task-error';
+  'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 
 export interface ForgeWebScriptAsyncFailure {
   readonly ok: false;

@@ -7,7 +7,7 @@ import { validateForgeWebScript } from '../validate.js';
 
 describe('Forge iterator-first control flow and string helpers', () => {
   const source = `export fn countDigits(value: string) -> i32 {
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < string_length(value) {
     index = index + 1;
   }
@@ -25,23 +25,15 @@ describe('Forge iterator-first control flow and string helpers', () => {
     const parsed = parseForgeWebScript(source, 'loop.fws');
     expect(parsed.module).toBeDefined();
     expect(parsed.diagnostics).toEqual([]);
-    expect(parsed.module?.functions[0]?.body.map(({ kind }) => kind)).toEqual([
-      'let',
-      'while',
-      'return',
-    ]);
+    expect(parsed.module?.functions[0]?.body.map(({ kind }) => kind)).toEqual(['let', 'while', 'return']);
     const ir = lowerForgeWebScriptToIr(parsed.module!);
-    expect(ir.functions[0]?.body.map(({ kind }) => kind)).toEqual([
-      'let',
-      'while',
-      'return',
-    ]);
+    expect(ir.functions[0]?.body.map(({ kind }) => kind)).toEqual(['let', 'while', 'return']);
   });
 
   it('type-checks loop conditions and bodies', () => {
     const result = validateForgeWebScript(
       `export fn invalid() -> i32 {
-  let value: i32 = 0;
+  let mut value: i32 = 0;
   while value {
     value = "wrong";
   }
@@ -61,8 +53,8 @@ describe('Forge iterator-first control flow and string helpers', () => {
 
   it('rejects for statements while retaining do while statements', () => {
     const source = `export fn controlFlow(limit: i32) -> i32 {
-  let total: i32 = 0;
-  for (let index: i32 = 0; index < limit; index = index + 1) {
+  let mut total: i32 = 0;
+  for (let mut index: i32 = 0; index < limit; index = index + 1) {
     total = total + index;
   }
   do {
@@ -77,20 +69,10 @@ describe('Forge iterator-first control flow and string helpers', () => {
     const parsed = parseForgeWebScript(source, 'control-flow.fws');
     expect(parsed.diagnostics.map(({ code }) => code)).toEqual(['FWS-PARSE-076']);
     const statements = parsed.module?.functions[0]?.body ?? [];
-    expect(statements.map(({ kind }) => kind)).toEqual([
-      'let',
-      'expression-statement',
-      'do-while',
-      'return',
-    ]);
+    expect(statements.map(({ kind }) => kind)).toEqual(['let', 'expression-statement', 'do-while', 'return']);
 
     const loop = lowerForgeWebScriptToIr(parsed.module!).functions[0]?.body ?? [];
-    expect(loop.map(({ kind }) => kind)).toEqual([
-      'let',
-      'expression-statement',
-      'do-while',
-      'return',
-    ]);
+    expect(loop.map(({ kind }) => kind)).toEqual(['let', 'expression-statement', 'do-while', 'return']);
 
     const artifact = compileForgeWebScript({ source, fileName: 'control-flow.fws', compilerVersion: 'test' });
     expect(artifact.diagnostics.map(({ code }) => code)).toEqual(['FWS-PARSE-076']);
@@ -165,8 +147,8 @@ export fn toNumber(value: string) -> i32 {
     expect(artifact.diagnostics).toEqual([]);
     const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {})
       .exports as unknown as StringHelperExports & {
-        readonly join: (...parts: number[]) => readonly [number, number];
-      };
+      readonly join: (...parts: number[]) => readonly [number, number];
+    };
     const left = writeString(exports, '12');
     const right = writeString(exports, '345');
     expect(left).toEqual([1024, 2]);
@@ -175,5 +157,61 @@ export fn toNumber(value: string) -> i32 {
     const joined = exports.join(...left, ...right);
     expect(joined).toEqual([1029, 5]);
     expect(readString(exports, joined)).toBe('12345');
+  });
+
+  it('preserves loop-carried string values through mutable assignments', () => {
+    const artifact = compileForgeWebScript({
+      source: `export fn collect(value: string) -> string {
+  let mut result: string = "";
+  let mut index: i32 = 0;
+  while index < string_length(value) {
+    result = string_concat(result, string_slice(value, index, index + 1));
+    index = index + 1;
+  }
+  return string_concat(result, "");
+}`,
+      fileName: 'string-loop-accumulator.fws',
+      compilerVersion: 'test',
+    });
+    expect(artifact.diagnostics).toEqual([]);
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {})
+      .exports as StringHelperExports & {
+      readonly collect: (pointer: number, length: number) => readonly [number, number];
+    };
+    const result = exports.collect(...writeString(exports, 'abc'));
+    expect(readString(exports, result)).toBe('abc');
+  });
+
+  it('keeps string arguments valid when byte-at is used in a filtering loop', () => {
+    const artifact = compileForgeWebScript({
+      source: `export fn digits(value: string) -> string {
+  let mut result: string = "";
+  let mut index: i32 = 0;
+  while index < string_length(value) {
+    let byte: i32 = string_byte_at(value, index);
+    if byte >= 48 && byte <= 57 {
+      result = string_concat(result, string_slice(value, index, index + 1));
+    }
+    index = index + 1;
+  }
+  return string_concat(result, "");
+}
+export fn wrappedDigits(value: string) -> string {
+  return string_concat(digits(value), "");
+}`,
+      fileName: 'string-digit-filter.fws',
+      compilerVersion: 'test',
+      optimization: 'release',
+    });
+    expect(artifact.diagnostics).toEqual([]);
+    const exports = new WebAssembly.Instance(new WebAssembly.Module(artifact.wasm!), {})
+      .exports as StringHelperExports & {
+      readonly digits: (pointer: number, length: number) => readonly [number, number];
+      readonly wrappedDigits: (pointer: number, length: number) => readonly [number, number];
+    };
+    const result = exports.digits(...writeString(exports, 'a1-b2'));
+    expect(readString(exports, result)).toBe('12');
+    const wrappedResult = exports.wrappedDigits(...writeString(exports, 'a1-b2'));
+    expect(readString(exports, wrappedResult)).toBe('12');
   });
 });

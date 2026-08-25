@@ -16,33 +16,33 @@
 **النوع:** الوظيفة
 
 ```typescript
-function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void
+function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بيان | ForgeWebScriptAbiManifest |  |
+| الاسم | اكتب                      | الوصف |
+| ----- | ------------------------- | ----- |
+| بيان  | ForgeWebScriptAbiManifest |       |
 
 ### وظيفة متساوية
 
 **النوع:** الوظيفة
 
 ```typescript
-function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean
+function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اليسار | ForgeWebScriptAbiFunction |  |
-| حق | ForgeWebScriptAbiFunction |  |
+| الاسم  | اكتب                      | الوصف |
+| ------ | ------------------------- | ----- |
+| اليسار | ForgeWebScriptAbiFunction |       |
+| حق     | ForgeWebScriptAbiFunction |       |
 
 ### ForgeWebScriptAbiValidationResult
 
@@ -59,16 +59,16 @@ export interface ForgeWebScriptAbiValidationResult
 **النوع:** الوظيفة
 
 ```typescript
-function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult
+function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بيان | ForgeWebScriptAbiManifest |  |
+| الاسم | اكتب                      | الوصف |
+| ----- | ------------------------- | ----- |
+| بيان  | ForgeWebScriptAbiManifest |       |
 
 ## `src/async`
 
@@ -77,23 +77,23 @@ function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest):
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime
+function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | ForgeWebScriptAsyncRuntimeOptions |  |
+| الاسم  | اكتب                              | الوصف |
+| ------ | --------------------------------- | ----- |
+| خيارات | ForgeWebScriptAsyncRuntimeOptions |       |
 
 ### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
 ```
 
 لم يتم تقديم أي وصف.
@@ -103,7 +103,8 @@ export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptAsyncCapability = (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type ForgeWebScriptAsyncCapability =
+  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
 ```
 
 لم يتم تقديم أي وصف.
@@ -143,7 +144,8 @@ export interface ForgeWebScriptAsyncFailure
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptAsyncFailureCode = | 'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
+export type ForgeWebScriptAsyncFailureCode =
+  'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
 لم يتم تقديم أي وصف.
@@ -245,104 +247,124 @@ export interface ForgeWebScriptAsyncWorkerMessage
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptArray(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function createForgeWebScriptArray(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 قم بإنشاء مصفوفة ثابتة عن طريق نسخ القيم المتوفرة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيم | للقراءة فقط TValue[] |  |
-| ملكية | ForgeWebScriptCollectionOwnership |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| القيم | للقراءة فقط TValue[]              |       |
+| ملكية | ForgeWebScriptCollectionOwnership |       |
 
 ### createForgeWebScriptIterator
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptIterator(values: Iterable<TValue>, descriptor: ForgeWebScriptIteratorDescriptor): ForgeWebScriptIterator<TValue>
+function createForgeWebScriptIterator(
+  values: Iterable<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 قم بتكييف عنصر قابل للتكرار مع مكرر كسول باستخدام واصف ABI المرفق.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيم | Iterable<TValue> |  |
-| واصف | ForgeWebScriptIteratorDescriptor |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| القيم | Iterable<TValue>                 |       |
+| واصف  | ForgeWebScriptIteratorDescriptor |       |
 
 ### createForgeWebScriptIteratorDescriptor
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptIteratorDescriptor(id: string, elementType = 'unknown', capability: ForgeWebScriptIteratorCapability = 'linear', ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptIteratorDescriptor
+function createForgeWebScriptIteratorDescriptor(
+  id: string,
+  elementType = 'unknown',
+  capability: ForgeWebScriptIteratorCapability = 'linear',
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptIteratorDescriptor;
 ```
 
 إنشاء بيانات تعريفية لحدود الواصف؛ المتصلون القدامى افتراضيون للوصول الخطي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معرف | سلسلة |  |
-| نوع العنصر |  |  |
-| القدرة | ForgeWebScriptIteratorCapability |  |
-| ملكية | ForgeWebScriptCollectionOwnership |  |
+| الاسم      | اكتب                              | الوصف |
+| ---------- | --------------------------------- | ----- |
+| معرف       | سلسلة                             |       |
+| نوع العنصر |                                   |       |
+| القدرة     | ForgeWebScriptIteratorCapability  |       |
+| ملكية      | ForgeWebScriptCollectionOwnership |       |
 
 ### createForgeWebScriptMap
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptMap(entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [], strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>()): ForgeWebScriptMap<TKey, TValue>
+function createForgeWebScriptMap(
+  entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [],
+  strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>(),
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مداخل | للقراءة فقط ForgeWebScriptMapEntry<TKey, TValue>[] |  |
-| استراتيجية | فورجويبسكريبتHashStrategy<TKey> |  |
+| الاسم      | اكتب                                               | الوصف |
+| ---------- | -------------------------------------------------- | ----- |
+| مداخل      | للقراءة فقط ForgeWebScriptMapEntry<TKey, TValue>[] |       |
+| استراتيجية | فورجويبسكريبتHashStrategy<TKey>                    |       |
 
 ### createForgeWebScriptSet
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptSet(values: readonly TValue[] = [], strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>()): ForgeWebScriptSet<TValue>
+function createForgeWebScriptSet(
+  values: readonly TValue[] = [],
+  strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>(),
+): ForgeWebScriptSet<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيم | للقراءة فقط TValue[] |  |
-| استراتيجية | فورجويبسكريبتHashStrategy<TValue> |  |
+| الاسم      | اكتب                              | الوصف |
+| ---------- | --------------------------------- | ----- |
+| القيم      | للقراءة فقط TValue[]              |       |
+| استراتيجية | فورجويبسكريبتHashStrategy<TValue> |       |
 
 ### createForgeWebScriptVector
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptVector(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptVector<TValue>
+function createForgeWebScriptVector(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptVector<TValue>;
 ```
 
 قم بإنشاء ناقل مملوك عن طريق نسخ القيم المتوفرة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيم | للقراءة فقط TValue[] |  |
-| ملكية | ForgeWebScriptCollectionOwnership |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| القيم | للقراءة فقط TValue[]              |       |
+| ملكية | ForgeWebScriptCollectionOwnership |       |
 
 ### ForgeWebScriptArray
 
@@ -359,69 +381,77 @@ export interface ForgeWebScriptArray<TValue>
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 قراءة عنصر المصفوفة؛ تُرجع الفهارس غير الصالحة Option.none.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | فورج ويب سكريبت أرراي <TValue> |  |
-| الفهرس | رقم |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| مصفوفة | فورج ويب سكريبت أرراي <TValue> |       |
+| الفهرس | رقم                            |       |
 
 ### forgeWebScriptArrayLength
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number
+function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number;
 ```
 
 إرجاع طول المصفوفة دون استهلاك عناصرها أو نسخها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | فورج ويب سكريبت أرراي <TValue> |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| مصفوفة | فورج ويب سكريبت أرراي <TValue> |       |
 
 ### forgeWebScriptArraySet
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptArraySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptArray<TValue>
+function forgeWebScriptArraySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptArray<TValue>;
 ```
 
 استبدال عنصر صفيف؛ مؤشرات غير صالحة ترمي RangeError.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | فورج ويب سكريبت أرراي <TValue> |  |
-| الفهرس | رقم |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| مصفوفة | فورج ويب سكريبت أرراي <TValue> |       |
+| الفهرس | رقم                            |       |
+| القيمة | TValue                         |       |
 
 ### forgeWebScriptArrayTrySet
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptArrayTrySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>
+function forgeWebScriptArrayTrySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>;
 ```
 
 استبدال عنصر مصفوفة بدون رمي؛ تقوم المؤشرات غير الصالحة بإرجاع نتيجة خطأ.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | فورج ويب سكريبت أرراي <TValue> |  |
-| الفهرس | رقم |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| مصفوفة | فورج ويب سكريبت أرراي <TValue> |       |
+| الفهرس | رقم                            |       |
+| القيمة | TValue                         |       |
 
 ### ملكية ForgeWebScriptCollection
 
@@ -438,7 +468,7 @@ export type ForgeWebScriptCollectionOwnership = 'owned' | 'borrowed' | 'shared';
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
+function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -448,7 +478,7 @@ function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
 **النوع:** ثابت
 
 ```typescript
-export const forgeWebScriptError
+export const forgeWebScriptError;
 ```
 
 إنشاء قيمة نتيجة خطأ دون رمي.
@@ -468,7 +498,8 @@ export interface ForgeWebScriptHashStrategy<TValue>
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptIterable<TValue> = ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
+export type ForgeWebScriptIterable<TValue> =
+  ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
 ```
 
 أي مصدر مقبول من خلال عمليات التكرار التسلسلية والمتوازية.
@@ -488,34 +519,40 @@ export interface ForgeWebScriptIterator<TValue>
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorAdd(source: ForgeWebScriptIterator<TValue>, value: TValue): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorAdd(
+  source: ForgeWebScriptIterator<TValue>,
+  value: TValue,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 يضيف Lazily قيمة واحدة إلى المكرر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | فورجويبسكريبتايتيراتور<TValue> |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| المصدر | فورجويبسكريبتايتيراتور<TValue> |       |
+| القيمة | TValue                         |       |
 
 ### forgeWebScriptIteratorAt
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorAt(iterator: ForgeWebScriptIterator<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorAt(
+  iterator: ForgeWebScriptIterator<TValue>,
+  index: number,
+): ForgeWebScriptOption<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكرر | فورج ويب سكريبت إيتراتور <TValue> |  |
-| الفهرس | رقم |  |
+| الاسم  | اكتب                              | الوصف |
+| ------ | --------------------------------- | ----- |
+| مكرر   | فورج ويب سكريبت إيتراتور <TValue> |       |
+| الفهرس | رقم                               |       |
 
 ### ForgeWebScriptIteratorCapability
 
@@ -532,33 +569,36 @@ export type ForgeWebScriptIteratorCapability = 'linear' | 'random-access';
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكرر | فورجويبسكريبتايتيراتور<TValue> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| مكرر  | فورجويبسكريبتايتيراتور<TValue> |       |
 
 ### forgeWebScriptIteratorConcat
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorConcat(first: ForgeWebScriptIterator<TValue>, second: ForgeWebScriptIterable<TValue>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorConcat(
+  first: ForgeWebScriptIterator<TValue>,
+  second: ForgeWebScriptIterable<TValue>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 يقوم Lazily بربط مصدرين دون تغيير ترتيب أي من المصدرين.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأول | فورجويبسكريبتايتيراتور<TValue> |  |
-| الثانية | ForgeWebScriptIterable<TValue> |  |
+| الاسم   | اكتب                           | الوصف |
+| ------- | ------------------------------ | ----- |
+| الأول   | فورجويبسكريبتايتيراتور<TValue> |       |
+| الثانية | ForgeWebScriptIterable<TValue> |       |
 
 ### ForgeWebScriptIteratorDescriptor
 
@@ -575,163 +615,186 @@ export interface ForgeWebScriptIteratorDescriptor
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorFilter(source: ForgeWebScriptIterator<TValue>, predicate: (value: TValue) => boolean): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFilter(
+  source: ForgeWebScriptIterator<TValue>,
+  predicate: (value: TValue) => boolean,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 قيم التصفية البطيئة؛ تعمل التصفية دائمًا على تقليل القدرة على الوصول الخطي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | فورجويبسكريبتايتيراتور<TValue> |  |
-| المسند | (القيمة: TValue) => منطقية |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| المصدر | فورجويبسكريبتايتيراتور<TValue> |       |
+| المسند | (القيمة: TValue) => منطقية     |       |
 
 ### forgeWebScriptIteratorFirst
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكرر | فورجويبسكريبتايتيراتور<TValue> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| مكرر  | فورجويبسكريبتايتيراتور<TValue> |       |
 
 ### forgeWebScriptIteratorFlatten
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorFlatten(source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFlatten(
+  source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 قم بتسوية المصادر المتداخلة بتكاسل في ترتيب المصدر الخارجي والداخلي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |  |
+| الاسم  | اكتب                                                   | الوصف |
+| ------ | ------------------------------------------------------ | ----- |
+| المصدر | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |       |
 
 ### forgeWebScriptIteratorFold
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorFold(iterator: ForgeWebScriptIterator<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptIteratorFold(
+  iterator: ForgeWebScriptIterator<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكرر | فورج ويب سكريبت إيتراتور <TValue> |  |
-| الأولي | النتيجة |  |
-| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |  |
+| الاسم  | اكتب                                                      | الوصف |
+| ------ | --------------------------------------------------------- | ----- |
+| مكرر   | فورج ويب سكريبت إيتراتور <TValue>                         |       |
+| الأولي | النتيجة                                                   |       |
+| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |       |
 
 ### forgeWebScriptIteratorFromArray
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorFromArray(array: ForgeWebScriptArray<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromArray(
+  array: ForgeWebScriptArray<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'array',
     'unknown',
     'random-access',
     array.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 قم بإنشاء مكرر الوصول العشوائي عبر صفيف ثابت دون تغيير ملكيته.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | فورج ويب سكريبت أرراي <TValue> |  |
-| واصف | ForgeWebScriptIteratorDescriptor |  |
+| الاسم  | اكتب                             | الوصف |
+| ------ | -------------------------------- | ----- |
+| مصفوفة | فورج ويب سكريبت أرراي <TValue>   |       |
+| واصف   | ForgeWebScriptIteratorDescriptor |       |
 
 ### forgeWebScriptIteratorFromIterable
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorFromIterable(values: Iterable<TValue>, elementType = 'unknown', id = 'iterable'): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFromIterable(
+  values: Iterable<TValue>,
+  elementType = 'unknown',
+  id = 'iterable',
+): ForgeWebScriptIterator<TValue>;
 ```
 
 قم بتكييف عنصر تكراري عشوائي مع مكرر Forge Web Script الخطي البطيء.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيم | Iterable<TValue> |  |
-| نوع العنصر |  |  |
-| معرف |  |  |
+| الاسم      | اكتب             | الوصف |
+| ---------- | ---------------- | ----- |
+| القيم      | Iterable<TValue> |       |
+| نوع العنصر |                  |       |
+| معرف       |                  |       |
 
 ### forgeWebScriptIteratorFromVector
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorFromVector(vector: ForgeWebScriptVector<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromVector(
+  vector: ForgeWebScriptVector<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'vector',
     'unknown',
     'random-access',
     vector.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 قم بإنشاء مكرر وصول عشوائي عبر ناقل دون تغيير ملكيته.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |  |
-| واصف | ForgeWebScriptIteratorDescriptor |  |
+| الاسم  | اكتب                             | الوصف |
+| ------ | -------------------------------- | ----- |
+| ناقلات | فورج ويب سكريبت فيكتور <TValue>  |       |
+| واصف   | ForgeWebScriptIteratorDescriptor |       |
 
 ### forgeWebScriptIteratorLast
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكرر | فورجويبسكريبتايتيراتور<TValue> |  |
+| الاسم | اكتب                           | الوصف |
+| ----- | ------------------------------ | ----- |
+| مكرر  | فورجويبسكريبتايتيراتور<TValue> |       |
 
 ### forgeWebScriptIteratorMap
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorMap(source: ForgeWebScriptIterator<TValue>, map: (value: TValue) => TResult, elementType = source.descriptor.elementType): ForgeWebScriptIterator<TResult>
+function forgeWebScriptIteratorMap(
+  source: ForgeWebScriptIterator<TValue>,
+  map: (value: TValue) => TResult,
+  elementType = source.descriptor.elementType,
+): ForgeWebScriptIterator<TResult>;
 ```
 
 قم بتعيين القيم بتكاسل مع الاحتفاظ بالوصول العشوائي فقط عندما يدعمها المصدر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | فورجويبسكريبتايتيراتور<TValue> |  |
-| الخريطة | (القيمة: TValue) => TResult |  |
-| نوع العنصر |  |  |
+| الاسم      | اكتب                           | الوصف |
+| ---------- | ------------------------------ | ----- |
+| المصدر     | فورجويبسكريبتايتيراتور<TValue> |       |
+| الخريطة    | (القيمة: TValue) => TResult    |       |
+| نوع العنصر |                                |       |
 
 ### ForgeWebScriptIteratorResult
 
@@ -748,34 +811,40 @@ export interface ForgeWebScriptIteratorResult<TValue>
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorTake(source: ForgeWebScriptIterator<TValue>, count: number): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorTake(
+  source: ForgeWebScriptIterator<TValue>,
+  count: number,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 قم بقصر المصدر على قيم العد على الأكثر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | فورجويبسكريبتايتيراتور<TValue> |  |
-| العد | رقم |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| المصدر | فورجويبسكريبتايتيراتور<TValue> |       |
+| العد   | رقم                            |       |
 
 ### forgeWebScriptIteratorToArray
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorToArray(iterator: ForgeWebScriptIterator<TValue>, ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function forgeWebScriptIteratorToArray(
+  iterator: ForgeWebScriptIterator<TValue>,
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مكرر | فورجويبسكريبتايتيراتور<TValue> |  |
-| ملكية | ForgeWebScriptCollectionOwnership |  |
+| الاسم | اكتب                              | الوصف |
+| ----- | --------------------------------- | ----- |
+| مكرر  | فورجويبسكريبتايتيراتور<TValue>    |       |
+| ملكية | ForgeWebScriptCollectionOwnership |       |
 
 ### ForgeWebScriptMap
 
@@ -792,33 +861,35 @@ export interface ForgeWebScriptMap<TKey, TValue>
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |  |
-| مفتاح | مفتاح تي |  |
+| الاسم   | اكتب                             | الوصف |
+| ------- | -------------------------------- | ----- |
+| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |       |
+| مفتاح   | مفتاح تي                         |       |
 
 ### forgeWebScriptMapEntries
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptMapEntries(map: ForgeWebScriptMap<TKey, TValue>): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>
+function forgeWebScriptMapEntries(
+  map: ForgeWebScriptMap<TKey, TValue>,
+): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |  |
+| الاسم   | اكتب                             | الوصف |
+| ------- | -------------------------------- | ----- |
+| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |       |
 
 ### ForgeWebScriptMapEntry
 
@@ -835,42 +906,46 @@ export interface ForgeWebScriptMapEntry<TKey, TValue>
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>
+function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |  |
-| مفتاح | مفتاح تي |  |
+| الاسم   | اكتب                             | الوصف |
+| ------- | -------------------------------- | ----- |
+| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |       |
+| مفتاح   | مفتاح تي                         |       |
 
 ### forgeWebScriptMapSet
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptMapSet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey, value: TValue): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapSet(
+  map: ForgeWebScriptMap<TKey, TValue>,
+  key: TKey,
+  value: TValue,
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |  |
-| مفتاح | مفتاح تي |  |
-| القيمة | TValue |  |
+| الاسم   | اكتب                             | الوصف |
+| ------- | -------------------------------- | ----- |
+| الخريطة | فورجيويبسكريبت ماب<TKey, TValue> |       |
+| مفتاح   | مفتاح تي                         |       |
+| القيمة  | TValue                           |       |
 
 ### forgeWebScriptNone
 
 **النوع:** ثابت
 
 ```typescript
-export const forgeWebScriptNone
+export const forgeWebScriptNone;
 ```
 
 إنشاء قيمة خيار فارغة.
@@ -880,7 +955,7 @@ export const forgeWebScriptNone
 **النوع:** ثابت
 
 ```typescript
-export const forgeWebScriptOk
+export const forgeWebScriptOk;
 ```
 
 بناء قيمة نتيجة ناجحة.
@@ -920,74 +995,74 @@ export interface ForgeWebScriptSet<TValue>
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجموعة | فورجي ويب سكريبت سيت<TValue> |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                         | الوصف |
+| ------ | ---------------------------- | ----- |
+| مجموعة | فورجي ويب سكريبت سيت<TValue> |       |
+| القيمة | TValue                       |       |
 
 ### forgeWebScriptSetDelete
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجموعة | فورجي ويب سكريبت سيت<TValue> |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                         | الوصف |
+| ------ | ---------------------------- | ----- |
+| مجموعة | فورجي ويب سكريبت سيت<TValue> |       |
+| القيمة | TValue                       |       |
 
 ### forgeWebScriptSetHas
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean
+function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجموعة | فورجي ويب سكريبت سيت<TValue> |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                         | الوصف |
+| ------ | ---------------------------- | ----- |
+| مجموعة | فورجي ويب سكريبت سيت<TValue> |       |
+| القيمة | TValue                       |       |
 
 ### forgeWebScriptSetValues
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجموعة | فورجي ويب سكريبت سيت<TValue> |  |
+| الاسم  | اكتب                         | الوصف |
+| ------ | ---------------------------- | ----- |
+| مجموعة | فورجي ويب سكريبت سيت<TValue> |       |
 
 ### forgeWebScriptSome
 
 **النوع:** ثابت
 
 ```typescript
-export const forgeWebScriptSome
+export const forgeWebScriptSome;
 ```
 
 إنشاء قيمة الخيار الحالية.
@@ -1008,7 +1083,7 @@ export interface ForgeWebScriptVector<TValue>
 **النوع:** ثابت
 
 ```typescript
-export const forgeWebScriptVectorAdd
+export const forgeWebScriptVectorAdd;
 ```
 
 الاسم المستعار لدفع المتجه، يطابق مفردات مكرر stdlib `add`.
@@ -1018,85 +1093,95 @@ export const forgeWebScriptVectorAdd
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptVectorFilter(vector: ForgeWebScriptVector<TValue>, predicate: (value: TValue, index: number) => boolean): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorFilter(
+  vector: ForgeWebScriptVector<TValue>,
+  predicate: (value: TValue, index: number) => boolean,
+): ForgeWebScriptVector<TValue>;
 ```
 
 قم بتصفية المتجه بفارغ الصبر إلى متجه جديد مع الحفاظ على ترتيب المصدر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |  |
-| المسند | (القيمة: TValue، الفهرس: الرقم) => منطقي |  |
+| الاسم  | اكتب                                     | الوصف |
+| ------ | ---------------------------------------- | ----- |
+| ناقلات | فورج ويب سكريبت فيكتور <TValue>          |       |
+| المسند | (القيمة: TValue، الفهرس: الرقم) => منطقي |       |
 
 ### forgeWebScriptVectorFold
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptVectorFold(vector: ForgeWebScriptVector<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptVectorFold(
+  vector: ForgeWebScriptVector<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 أضعاف قيم المتجهات من اليسار إلى اليمين، بما في ذلك المجمع الأولي المرفق.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |  |
-| الأولي | النتيجة |  |
-| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |  |
+| الاسم  | اكتب                                                      | الوصف |
+| ------ | --------------------------------------------------------- | ----- |
+| ناقلات | فورج ويب سكريبت فيكتور <TValue>                           |       |
+| الأولي | النتيجة                                                   |       |
+| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |       |
 
 ### forgeWebScriptVectorGet
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 قراءة عنصر متجه؛ تُرجع الفهارس غير الصالحة Option.none.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |  |
-| الفهرس | رقم |  |
+| الاسم  | اكتب                            | الوصف |
+| ------ | ------------------------------- | ----- |
+| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
+| الفهرس | رقم                             |       |
 
 ### forgeWebScriptVectorLength
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number
+function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number;
 ```
 
 إرجاع عدد العناصر المتجهة التي تمت تهيئتها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |  |
+| الاسم  | اكتب                            | الوصف |
+| ------ | ------------------------------- | ----- |
+| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
 
 ### forgeWebScriptVectorMap
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform: (value: TValue, index: number) => TResult): ForgeWebScriptVector<TResult>
+function forgeWebScriptVectorMap(
+  vector: ForgeWebScriptVector<TValue>,
+  transform: (value: TValue, index: number) => TResult,
+): ForgeWebScriptVector<TResult>;
 ```
 
 قم بتعيين متجه بفارغ الصبر إلى متجه جديد بترتيب فهرس المصدر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |  |
-| تحويل | (القيمة: TValue، الفهرس: الرقم) => TResult |  |
+| الاسم  | اكتب                                       | الوصف |
+| ------ | ------------------------------------------ | ----- |
+| ناقلات | فورج ويب سكريبت فيكتور <TValue>            |       |
+| تحويل  | (القيمة: TValue، الفهرس: الرقم) => TResult |       |
 
 ### forgeWebScriptVectorPop
 
@@ -1106,69 +1191,77 @@ function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform
 function forgeWebScriptVectorPop(vector: ForgeWebScriptVector<TValue>): {
   readonly vector: ForgeWebScriptVector<TValue>;
   readonly value: ForgeWebScriptOption<TValue>;
-}
+};
 ```
 
 قم بإزالة قيمة المتجه النهائية وإرجاع المتجه المحدث بالإضافة إلى نتيجة الخيار.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |  |
+| الاسم  | اكتب                            | الوصف |
+| ------ | ------------------------------- | ----- |
+| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
 
 ### forgeWebScriptVectorPush
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>;
 ```
 
 قم بإلحاق قيمة وزيادة السعة حسب الحاجة، مع الحفاظ على الملكية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                            | الوصف |
+| ------ | ------------------------------- | ----- |
+| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
+| القيمة | TValue                          |       |
 
 ### forgeWebScriptVectorSet
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptVectorSet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorSet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptVector<TValue>;
 ```
 
 استبدال عنصر ناقل؛ مؤشرات غير صالحة ترمي RangeError.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |  |
-| الفهرس | رقم |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                            | الوصف |
+| ------ | ------------------------------- | ----- |
+| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
+| الفهرس | رقم                             |       |
+| القيمة | TValue                          |       |
 
 ### forgeWebScriptVectorTrySet
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>
+function forgeWebScriptVectorTrySet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>;
 ```
 
 استبدال عنصر متجه دون رمي؛ تقوم المؤشرات غير الصالحة بإرجاع نتيجة خطأ.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ناقلات | فورج ويب سكريبت فيكتور <TValue> |  |
-| الفهرس | رقم |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                            | الوصف |
+| ------ | ------------------------------- | ----- |
+| ناقلات | فورج ويب سكريبت فيكتور <TValue> |       |
+| الفهرس | رقم                             |       |
+| القيمة | TValue                          |       |
 
 ## `src/ecs`
 
@@ -1177,45 +1270,55 @@ function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index:
 **النوع:** الوظيفة
 
 ```typescript
-function addForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function addForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |  |
-| كيان | ForgeWebScriptEcsEntity |  |
-| المكون | سلسلة |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
+| كيان   | ForgeWebScriptEcsEntity        |       |
+| المكون | سلسلة                          |       |
+| القيمة | TValue                         |       |
 
 ### createForgeWebScriptEcsScheduler
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptEcsScheduler(systems: readonly ForgeWebScriptEcsSystem<TValue>[], signals: readonly ForgeWebScriptEcsSignal[] = [], subscriptions: readonly ForgeWebScriptEcsSubscription[] = [], maxSteps = 1000): ForgeWebScriptEcsScheduler<TValue>
+function createForgeWebScriptEcsScheduler(
+  systems: readonly ForgeWebScriptEcsSystem<TValue>[],
+  signals: readonly ForgeWebScriptEcsSignal[] = [],
+  subscriptions: readonly ForgeWebScriptEcsSubscription[] = [],
+  maxSteps = 1000,
+): ForgeWebScriptEcsScheduler<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أنظمة | للقراءة فقط ForgeWebScriptEcsSystem<TValue>[] |  |
-| إشارات | للقراءة فقط ForgeWebScriptEcsSignal[] |  |
-| اشتراكات | للقراءة فقط ForgeWebScriptEcsSubscription[] |  |
-| ماكس ستيبس |  |  |
+| الاسم      | اكتب                                          | الوصف |
+| ---------- | --------------------------------------------- | ----- |
+| أنظمة      | للقراءة فقط ForgeWebScriptEcsSystem<TValue>[] |       |
+| إشارات     | للقراءة فقط ForgeWebScriptEcsSignal[]         |       |
+| اشتراكات   | للقراءة فقط ForgeWebScriptEcsSubscription[]   |       |
+| ماكس ستيبس |                                               |       |
 
 ### createForgeWebScriptEcsWorld
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
+function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -1225,17 +1328,20 @@ function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
 **النوع:** الوظيفة
 
 ```typescript
-function despawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): ForgeWebScriptEcsResult<TValue>
+function despawnForgeWebScriptEcsEntity(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |  |
-| كيان | ForgeWebScriptEcsEntity |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
+| كيان   | ForgeWebScriptEcsEntity        |       |
 
 ### ForgeWebScriptEcsComponentStore
 
@@ -1362,138 +1468,162 @@ export interface ForgeWebScriptEcsWorld<TValue = Uint8Array>
 **النوع:** الوظيفة
 
 ```typescript
-function getForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): TValue | undefined
+function getForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): TValue | undefined;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |  |
-| كيان | ForgeWebScriptEcsEntity |  |
-| المكون | سلسلة |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
+| كيان   | ForgeWebScriptEcsEntity        |       |
+| المكون | سلسلة                          |       |
 
 ### isForgeWebScriptEcsEntityAlive
 
 **النوع:** الوظيفة
 
 ```typescript
-function isForgeWebScriptEcsEntityAlive(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): boolean
+function isForgeWebScriptEcsEntityAlive(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): boolean;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |  |
-| كيان | ForgeWebScriptEcsEntity |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
+| كيان   | ForgeWebScriptEcsEntity        |       |
 
 ### queryForgeWebScriptEcsEntities
 
 **النوع:** الوظيفة
 
 ```typescript
-function queryForgeWebScriptEcsEntities(world: ForgeWebScriptEcsWorld<TValue>, query: ForgeWebScriptEcsQuery): readonly ForgeWebScriptEcsEntity[]
+function queryForgeWebScriptEcsEntities(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  query: ForgeWebScriptEcsQuery,
+): readonly ForgeWebScriptEcsEntity[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |  |
-| استعلام | ForgeWebScriptEcsQuery |  |
+| الاسم   | اكتب                           | الوصف |
+| ------- | ------------------------------ | ----- |
+| العالم  | فورجويب سكريبتEcsWorld<TValue> |       |
+| استعلام | ForgeWebScriptEcsQuery         |       |
 
 ### إزالة ForgeWebScriptEcsComponent
 
 **النوع:** الوظيفة
 
 ```typescript
-function removeForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): ForgeWebScriptEcsResult<TValue>
+function removeForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |  |
-| كيان | ForgeWebScriptEcsEntity |  |
-| المكون | سلسلة |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
+| كيان   | ForgeWebScriptEcsEntity        |       |
+| المكون | سلسلة                          |       |
 
 ### runForgeWebScriptEcsScheduler
 
 **النوع:** الوظيفة
 
 ```typescript
-function runForgeWebScriptEcsScheduler(world: ForgeWebScriptEcsWorld<TValue>, scheduler: ForgeWebScriptEcsScheduler<TValue>): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>
+function runForgeWebScriptEcsScheduler(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  scheduler: ForgeWebScriptEcsScheduler<TValue>,
+): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |  |
-| مجدول | فورجيويبسكربتEcsScheduler<TValue> |  |
+| الاسم  | اكتب                              | الوصف |
+| ------ | --------------------------------- | ----- |
+| العالم | فورجويب سكريبتEcsWorld<TValue>    |       |
+| مجدول  | فورجيويبسكربتEcsScheduler<TValue> |       |
 
 ### setForgeWebScriptEcsComponent
 
 **النوع:** الوظيفة
 
 ```typescript
-function setForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function setForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |  |
-| كيان | ForgeWebScriptEcsEntity |  |
-| المكون | سلسلة |  |
-| القيمة | TValue |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
+| كيان   | ForgeWebScriptEcsEntity        |       |
+| المكون | سلسلة                          |       |
+| القيمة | TValue                         |       |
 
 ### SpawnForgeWebScriptEcsEntity
 
 **النوع:** الوظيفة
 
 ```typescript
-function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>
+function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العالم | فورجويب سكريبتEcsWorld<TValue> |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| العالم | فورجويب سكريبتEcsWorld<TValue> |       |
 
 ### validateForgeWebScriptEcsSignals
 
 **النوع:** الوظيفة
 
 ```typescript
-function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSignal[]): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] }
+function validateForgeWebScriptEcsSignals(
+  signals: readonly ForgeWebScriptEcsSignal[],
+): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إشارات | للقراءة فقط ForgeWebScriptEcsSignal[] |  |
+| الاسم  | اكتب                                  | الوصف |
+| ------ | ------------------------------------- | ----- |
+| إشارات | للقراءة فقط ForgeWebScriptEcsSignal[] |       |
 
 ## `src/host`
 
@@ -1502,34 +1632,40 @@ function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSig
 **النوع:** الوظيفة
 
 ```typescript
-function createDefaultForgeWebScriptCapabilities(options: ForgeWebScriptDefaultHostOptions = {}): ForgeWebScriptCapabilityRegistry
+function createDefaultForgeWebScriptCapabilities(
+  options: ForgeWebScriptDefaultHostOptions = {},
+): ForgeWebScriptCapabilityRegistry;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجيويبسكريبتديفولهوستوبتيونس |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| خيارات | فورجيويبسكريبتديفولهوستوبتيونس |       |
 
 ### createForgeWebScriptHost
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptHost(manifest: ForgeWebScriptAbiManifest, registry: ForgeWebScriptCapabilityRegistry, options: ForgeWebScriptHostOptions = {}): ForgeWebScriptHost
+function createForgeWebScriptHost(
+  manifest: ForgeWebScriptAbiManifest,
+  registry: ForgeWebScriptCapabilityRegistry,
+  options: ForgeWebScriptHostOptions = {},
+): ForgeWebScriptHost;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| بيان | ForgeWebScriptAbiManifest |  |
-| التسجيل | ForgeWebScriptCapabilityRegistry |  |
-| خيارات | فورجيويبسكريبت هوستوبتيونس |  |
+| الاسم   | اكتب                             | الوصف |
+| ------- | -------------------------------- | ----- |
+| بيان    | ForgeWebScriptAbiManifest        |       |
+| التسجيل | ForgeWebScriptCapabilityRegistry |       |
+| خيارات  | فورجيويبسكريبت هوستوبتيونس       |       |
 
 ### تنفيذ ForgeWebScriptCapability
 
@@ -1598,36 +1734,44 @@ export interface ForgeWebScriptHostOptions
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptWasmIterator(handle: number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIterator(
+  handle: number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): ForgeWebScriptWasmIterator<TValue>;
 ```
 
 يتكيف مع مقبض i32 المملوك للواجهة الخلفية وبروتوكول i64 التالي المعبأ لتكرار JS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مقبض | رقم |  |
-| التالي | (المقبض: الرقم) => ForgeWebScriptPackedIteratorResult |  |
-| خيارات | فورجي ويب سكريبت WasmIteratorOptions<TValue> |  |
+| الاسم  | اكتب                                                  | الوصف |
+| ------ | ----------------------------------------------------- | ----- |
+| مقبض   | رقم                                                   |       |
+| التالي | (المقبض: الرقم) => ForgeWebScriptPackedIteratorResult |       |
+| خيارات | فورجي ويب سكريبت WasmIteratorOptions<TValue>          |       |
 
 ### createForgeWebScriptWasmIteratorFactory
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptWasmIteratorFactory(factory: (...arguments_: TArguments) => number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIteratorFactory(
+  factory: (...arguments_: TArguments) => number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>;
 ```
 
 إنشاء مصنع مكرر يواجه JS من مصنع الواجهة الخلفية وتصديره `.next`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | (...arguments_: TArguments) => الرقم |  |
-| التالي | (المقبض: الرقم) => ForgeWebScriptPackedIteratorResult |  |
-| خيارات | فورجي ويب سكريبت WasmIteratorOptions<TValue> |  |
+| الاسم  | اكتب                                                  | الوصف |
+| ------ | ----------------------------------------------------- | ----- |
+| مصنع   | (...arguments_: TArguments) => الرقم                  |       |
+| التالي | (المقبض: الرقم) => ForgeWebScriptPackedIteratorResult |       |
+| خيارات | فورجي ويب سكريبت WasmIteratorOptions<TValue>          |       |
 
 ### ForgeWebScriptPackedIteratorResult
 
@@ -1666,16 +1810,16 @@ export interface ForgeWebScriptWasmIteratorOptions<TValue>
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger
+function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجيويبسكريبتلوججروبتيونس |  |
+| الاسم  | اكتب                       | الوصف |
+| ------ | -------------------------- | ----- |
+| خيارات | فورجيويبسكريبتلوججروبتيونس |       |
 
 ### ForgeWebScriptLogEvent
 
@@ -1734,23 +1878,23 @@ export type ForgeWebScriptLogSink = (event: ForgeWebScriptLogEvent) => void;
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory
+function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجي ويب سكريبت ميموري أوبتيونس |  |
+| الاسم  | اكتب                             | الوصف |
+| ------ | -------------------------------- | ----- |
+| خيارات | فورجي ويب سكريبت ميموري أوبتيونس |       |
 
 ### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 ```
 
 لم يتم تقديم أي وصف.
@@ -1792,7 +1936,7 @@ export interface ForgeWebScriptMemoryOptions
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
 ```
 
 يتم استخدام أسماء القدرات للسماح بتنفيذ العامل والخيط والذري والذاكرة المشتركة.
@@ -1804,7 +1948,7 @@ export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
 ```typescript
 export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<ForgeWebScriptParallelOperation, ForgeWebScriptParallelOperationDescriptor>
->
+>;
 ```
 
 واصفات مستقرة لكل عملية متوازية ذات قدرة احتياطية تسلسلية.
@@ -1814,42 +1958,53 @@ export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorParAt(source: ForgeWebScriptIterable<TValue>, index: number, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParAt(
+  source: ForgeWebScriptIterable<TValue>,
+  index: number,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 قم بإرجاع النتيجة المرتبة ذات الأساس الصفري، أو Option.none عندما يكون الفهرس غير صالح.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | ForgeWebScriptIterable<TValue> |  |
-| الفهرس | رقم |  |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| المصدر | ForgeWebScriptIterable<TValue> |       |
+| الفهرس | رقم                            |       |
+| خيارات | ForgeWebScriptParallelOptions  |       |
 
 ### forgeWebScriptIteratorParCollect
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorParCollect(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptVector<TValue>>
+function forgeWebScriptIteratorParCollect(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptVector<TValue>>;
 ```
 
 تجسيد النتائج الموازية المطلوبة في ناقل مملوك.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | ForgeWebScriptIterable<TValue> |  |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| المصدر | ForgeWebScriptIterable<TValue> |       |
+| خيارات | ForgeWebScriptParallelOptions  |       |
 
 ### forgeWebScriptIteratorParFilter
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>, predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFilter(
+  source: ForgeWebScriptIterable<TValue>,
+  predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 تقييم المسند بالتوازي والاحتفاظ بالقيم المقبولة بترتيب المصدر.
@@ -1857,88 +2012,106 @@ function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>,
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | ForgeWebScriptIterable<TValue> |  |
-| المسند | (القيمة: TValue، الفهرس: الرقم) => منطقي \| وعد مثل<boolean> |  |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم  | اكتب                                                         | الوصف |
+| ------ | ------------------------------------------------------------ | ----- |
+| المصدر | ForgeWebScriptIterable<TValue>                               |       |
+| المسند | (القيمة: TValue، الفهرس: الرقم) => منطقي \| وعد مثل<boolean> |       |
+| خيارات | ForgeWebScriptParallelOptions                                |       |
 
 ### forgeWebScriptIteratorParFirst
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorParFirst(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParFirst(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 قم بإرجاع النتيجة المطلوبة الأولى، أو قيمة Option.none لمصدر فارغ.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | ForgeWebScriptIterable<TValue> |  |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| المصدر | ForgeWebScriptIterable<TValue> |       |
+| خيارات | ForgeWebScriptParallelOptions  |       |
 
 ### forgeWebScriptIteratorParFlatten
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorParFlatten(source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFlatten(
+  source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 تسوية المصادر المتداخلة بالتوازي مع الحفاظ على النظام الخارجي والداخلي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |  |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم  | اكتب                                                   | الوصف |
+| ------ | ------------------------------------------------------ | ----- |
+| المصدر | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |       |
+| خيارات | ForgeWebScriptParallelOptions                          |       |
 
 ### forgeWebScriptIteratorParFold
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorParFold(source: ForgeWebScriptIterable<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult, options: ForgeWebScriptParallelOptions = {}): Promise<TResult>
+function forgeWebScriptIteratorParFold(
+  source: ForgeWebScriptIterable<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<TResult>;
 ```
 
 قم بطي النتائج المرتبة من اليسار إلى اليمين، بما في ذلك المجمع الأولي المرفق.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | ForgeWebScriptIterable<TValue> |  |
-| الأولي | النتيجة |  |
-| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |  |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم  | اكتب                                                      | الوصف |
+| ------ | --------------------------------------------------------- | ----- |
+| المصدر | ForgeWebScriptIterable<TValue>                            |       |
+| الأولي | النتيجة                                                   |       |
+| المخفض | (المجمع: TResult، القيمة: TValue، الفهرس: رقم) => TResult |       |
+| خيارات | ForgeWebScriptParallelOptions                             |       |
 
 ### forgeWebScriptIteratorParLast
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorParLast(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParLast(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 قم بإرجاع آخر نتيجة مرتبة، أو قيمة Option.none لمصدر فارغ.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | ForgeWebScriptIterable<TValue> |  |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| المصدر | ForgeWebScriptIterable<TValue> |       |
+| خيارات | ForgeWebScriptParallelOptions  |       |
 
 ### forgeWebScriptIteratorParMap
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, map: (value: TValue, index: number) => TResult | PromiseLike<TResult>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TResult>>
+function forgeWebScriptIteratorParMap(
+  source: ForgeWebScriptIterable<TValue>,
+  map: (value: TValue, index: number) => TResult | PromiseLike<TResult>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TResult>>;
 ```
 
 قم بتطبيق رد اتصال بالتوازي وإرجاع مكرر مرتب متوافق مع البطيئة.
@@ -1946,45 +2119,51 @@ function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, ma
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | ForgeWebScriptIterable<TValue> |  |
-| الخريطة | (القيمة: TValue، الفهرس: الرقم) => TResult \| وعد مثل<TResult> |  |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم   | اكتب                                                           | الوصف |
+| ------- | -------------------------------------------------------------- | ----- |
+| المصدر  | ForgeWebScriptIterable<TValue>                                 |       |
+| الخريطة | (القيمة: TValue، الفهرس: الرقم) => TResult \| وعد مثل<TResult> |       |
+| خيارات  | ForgeWebScriptParallelOptions                                  |       |
 
 ### forgeWebScriptIteratorParToArray
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptIteratorParToArray(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptArray<TValue>>
+function forgeWebScriptIteratorParToArray(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptArray<TValue>>;
 ```
 
 تجسيد النتائج المتوازية المطلوبة في مصفوفة ثابتة مملوكة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | ForgeWebScriptIterable<TValue> |  |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| المصدر | ForgeWebScriptIterable<TValue> |       |
+| خيارات | ForgeWebScriptParallelOptions  |       |
 
 ### forgeWebScriptParallelDescriptor
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptParallelDescriptor(operation: ForgeWebScriptParallelOperation, options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy }
+function forgeWebScriptParallelDescriptor(
+  operation: ForgeWebScriptParallelOperation,
+  options: ForgeWebScriptParallelOptions = {},
+): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy };
 ```
 
 قم بوصف العملية وإرفاق الإستراتيجية المحددة من الخيارات المتوفرة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| عملية | ForgeWebScriptParallelOperation |  |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم  | اكتب                            | الوصف |
+| ------ | ------------------------------- | ----- |
+| عملية  | ForgeWebScriptParallelOperation |       |
+| خيارات | ForgeWebScriptParallelOptions   |       |
 
 ### ForgeWebScriptParallelExecutor
 
@@ -2001,7 +2180,16 @@ export interface ForgeWebScriptParallelExecutor
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptParallelOperation = | 'par_map' | 'par_filter' | 'par_flatten' | 'par_collect' | 'par_to_array' | 'par_fold' | 'par_first' | 'par_last' | 'par_at';
+export type ForgeWebScriptParallelOperation =
+  | 'par_map'
+  | 'par_filter'
+  | 'par_flatten'
+  | 'par_collect'
+  | 'par_to_array'
+  | 'par_fold'
+  | 'par_first'
+  | 'par_last'
+  | 'par_at';
 ```
 
 أسماء العمليات المتوازية الأساسية التي تم الكشف عنها في وقت التشغيل؛ `par_filter` مقصود.
@@ -2053,16 +2241,16 @@ export type ForgeWebScriptParallelStrategy = 'serial' | 'host-workers' | 'wasm-t
 **النوع:** الوظيفة
 
 ```typescript
-function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan
+function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan;
 ```
 
 حدد الإستراتيجية المسموح بها دون تغيير عقد نتيجة العملية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | ForgeWebScriptParallelOptions |  |
+| الاسم  | اكتب                          | الوصف |
+| ------ | ----------------------------- | ----- |
+| خيارات | ForgeWebScriptParallelOptions |       |
 
 ## `src/self-hosted`
 
@@ -2091,7 +2279,11 @@ export interface ForgeWebScriptSelfHostedVmRun
 **النوع:** الوظيفة
 
 ```typescript
-function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedVmRun
+function runForgeWebScriptSelfHostedCompiler(
+  input: ForgeWebScriptCompileInput,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedVmRun;
 ```
 
 قم بتشغيل برنامج التمهيد للمترجم المستضاف ذاتيًا.
@@ -2103,29 +2295,33 @@ function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | فورجيويبسكريبتكومبيلينبوت |  |
-| الوضع | ForgeWebScriptVmExecutionMode |  |
-| خيارات | ForgeWebScriptSelfHostedRunOptions |  |
+| الاسم   | اكتب                               | الوصف |
+| ------- | ---------------------------------- | ----- |
+| الإدخال | فورجيويبسكريبتكومبيلينبوت          |       |
+| الوضع   | ForgeWebScriptVmExecutionMode      |       |
+| خيارات  | ForgeWebScriptSelfHostedRunOptions |       |
 
 ### runForgeWebScriptSelfHostedLexStage
 
 **النوع:** الوظيفة
 
 ```typescript
-function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedStageReport
+function runForgeWebScriptSelfHostedLexStage(
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedStageReport;
 ```
 
 قم بتنفيذ مرحلة lex المحددة بواسطة FWS فقط لعملاء المترجم.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | يختار<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |  |
-| الوضع | ForgeWebScriptVmExecutionMode |  |
-| خيارات | ForgeWebScriptSelfHostedRunOptions |  |
+| الاسم   | اكتب                                                                                                      | الوصف |
+| ------- | --------------------------------------------------------------------------------------------------------- | ----- |
+| الإدخال | يختار<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |       |
+| الوضع   | ForgeWebScriptVmExecutionMode                                                                             |       |
+| خيارات  | ForgeWebScriptSelfHostedRunOptions                                                                        |       |
 
 ## `src/threading`
 
@@ -2134,7 +2330,10 @@ function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileIn
 **النوع:** الوظيفة
 
 ```typescript
-function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined, capabilities: readonly string[] | undefined): boolean
+function canUseForgeWebScriptWasmThreads(
+  targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined,
+  capabilities: readonly string[] | undefined,
+): boolean;
 ```
 
 يتم تمكين تنفيذ مؤشر الترابط عند حدود التجميع ووقت التشغيل. في
@@ -2142,34 +2341,39 @@ function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThrea
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مميزات الهدف | ForgeWebScriptWasmThreadTargetFeatures \| غير محدد |  |
-| القدرات | سلسلة للقراءة فقط[] \| غير محدد |  |
+| الاسم        | اكتب                                               | الوصف |
+| ------------ | -------------------------------------------------- | ----- |
+| مميزات الهدف | ForgeWebScriptWasmThreadTargetFeatures \| غير محدد |       |
+| القدرات      | سلسلة للقراءة فقط[] \| غير محدد                    |       |
 
 ### createForgeWebScriptAtomicI32
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptAtomicI32(length = 1, options: ForgeWebScriptAtomicI32Options = {}): ForgeWebScriptAtomicI32
+function createForgeWebScriptAtomicI32(
+  length = 1,
+  options: ForgeWebScriptAtomicI32Options = {},
+): ForgeWebScriptAtomicI32;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الطول |  |  |
-| خيارات | خيارات ForgeWebScriptAtomicI32 |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| الطول  |                                |       |
+| خيارات | خيارات ForgeWebScriptAtomicI32 |       |
 
 ### createForgeWebScriptWasmThreadScheduler
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThreadSchedulerOptions): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWasmThreadScheduler(
+  options: ForgeWebScriptWasmThreadSchedulerOptions,
+): ForgeWebScriptWorkerScheduler;
 ```
 
 يلتف جسر مؤشر ترابط WASM المترجم مع محاسبة واضحة للذاكرة المشتركة.
@@ -2178,35 +2382,42 @@ function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThre
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | ForgeWebScriptWasmThreadSchedulerOptions |  |
+| الاسم  | اكتب                                     | الوصف |
+| ------ | ---------------------------------------- | ----- |
+| خيارات | ForgeWebScriptWasmThreadSchedulerOptions |       |
 
 ### createForgeWebScriptWorkerRuntime
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptWorkerRuntime(createWorker: () => ForgeWebScriptWorkerPort, onMessage: (message: unknown) => void, onError: (error: unknown) => void = () => {}, options: ForgeWebScriptWorkerRuntimeOptions = {}): ForgeWebScriptWorkerRuntime
+function createForgeWebScriptWorkerRuntime(
+  createWorker: () => ForgeWebScriptWorkerPort,
+  onMessage: (message: unknown) => void,
+  onError: (error: unknown) => void = () => {},
+  options: ForgeWebScriptWorkerRuntimeOptions = {},
+): ForgeWebScriptWorkerRuntime;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إنشاء عامل | () => ForgeWebScriptWorkerPort |  |
-| على الرسالة | (الرسالة: غير معروفة) => باطلة |  |
-| خطأ | (خطأ: غير معروف) => باطل |  |
-| خيارات | فورجي ويب سكريبت ووركيرونتيميوبشنز |  |
+| الاسم       | اكتب                               | الوصف |
+| ----------- | ---------------------------------- | ----- |
+| إنشاء عامل  | () => ForgeWebScriptWorkerPort     |       |
+| على الرسالة | (الرسالة: غير معروفة) => باطلة     |       |
+| خطأ         | (خطأ: غير معروف) => باطل           |       |
+| خيارات      | فورجي ويب سكريبت ووركيرونتيميوبشنز |       |
 
 ### createForgeWebScriptWorkerScheduler
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedulerOptions = {}): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWorkerScheduler(
+  options: ForgeWebScriptWorkerSchedulerOptions = {},
+): ForgeWebScriptWorkerScheduler;
 ```
 
 ينشئ حدود الجدولة من جانب المضيف المستخدمة بواسطة عمليات التكرار المتوازية.
@@ -2218,16 +2429,16 @@ function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedu
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجي ويب سكريبت ووركير شيدولير أوبتيونس |  |
+| الاسم  | اكتب                                     | الوصف |
+| ------ | ---------------------------------------- | ----- |
+| خيارات | فورجي ويب سكريبت ووركير شيدولير أوبتيونس |       |
 
 ### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2329,17 +2540,20 @@ export interface ForgeWebScriptWorkerSchedulerOptions
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptTraceRecorder(options: ForgeWebScriptTraceOptions, functionName: string): ForgeWebScriptTraceRecorder
+function createForgeWebScriptTraceRecorder(
+  options: ForgeWebScriptTraceOptions,
+  functionName: string,
+): ForgeWebScriptTraceRecorder;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | ForgeWebScriptTraceOptions |  |
-| اسم الوظيفة | سلسلة |  |
+| الاسم       | اكتب                       | الوصف |
+| ----------- | -------------------------- | ----- |
+| خيارات      | ForgeWebScriptTraceOptions |       |
+| اسم الوظيفة | سلسلة                      |       |
 
 ### ForgeWebScriptTraceCaptureMode
 
@@ -2376,7 +2590,8 @@ export interface ForgeWebScriptTraceEvent
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptTraceEventType = 'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
+export type ForgeWebScriptTraceEventType =
+  'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
 لم يتم تقديم أي وصف.
@@ -2436,17 +2651,20 @@ export interface ForgeWebScriptTraceSourceLocation extends ForgeWebScriptVmDebug
 **النوع:** الوظيفة
 
 ```typescript
-function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (value: ForgeWebScriptVmValue) => string): string
+function summarizeForgeWebScriptVmValue(
+  value: ForgeWebScriptVmValue,
+  redact?: (value: ForgeWebScriptVmValue) => string,
+): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | فورجي ويب سكريبت VmValue |  |
-| تنقيح | (القيمة: ForgeWebScriptVmValue) => سلسلة |  |
+| الاسم  | اكتب                                     | الوصف |
+| ------ | ---------------------------------------- | ----- |
+| القيمة | فورجي ويب سكريبت VmValue                 |       |
+| تنقيح  | (القيمة: ForgeWebScriptVmValue) => سلسلة |       |
 
 ## `src/traps`
 
@@ -2455,17 +2673,17 @@ function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (
 **النوع:** الوظيفة
 
 ```typescript
-function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void
+function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خطأ | غير معروف |  |
-| أثر | ForgeWebScriptTraceReport |  |
+| الاسم | اكتب                      | الوصف |
+| ----- | ------------------------- | ----- |
+| خطأ   | غير معروف                 |       |
+| أثر   | ForgeWebScriptTraceReport |       |
 
 ### ForgeWebScriptTrap
 
@@ -2482,7 +2700,14 @@ export class ForgeWebScriptTrap extends Error
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptTrapCode = | 'CapabilityDenied' | 'HostError' | 'InvalidAbi' | 'InvalidOwnership' | 'MemoryExhausted' | 'MemoryOutOfBounds' | 'GuestTrap';
+export type ForgeWebScriptTrapCode =
+  | 'CapabilityDenied'
+  | 'HostError'
+  | 'InvalidAbi'
+  | 'InvalidOwnership'
+  | 'MemoryExhausted'
+  | 'MemoryOutOfBounds'
+  | 'GuestTrap';
 ```
 
 لم يتم تقديم أي وصف.
@@ -2502,18 +2727,22 @@ export interface ForgeWebScriptTrapOptions extends ErrorOptions
 **النوع:** الوظيفة
 
 ```typescript
-function toForgeWebScriptHostError(error: unknown, capability: string, logger?: ForgeWebScriptLogger): ForgeWebScriptTrap
+function toForgeWebScriptHostError(
+  error: unknown,
+  capability: string,
+  logger?: ForgeWebScriptLogger,
+): ForgeWebScriptTrap;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خطأ | غير معروف |  |
-| القدرة | سلسلة |  |
-| مسجل | فورجي ويب سكريبت لوجر |  |
+| الاسم  | اكتب                  | الوصف |
+| ------ | --------------------- | ----- |
+| خطأ    | غير معروف             |       |
+| القدرة | سلسلة                 |       |
+| مسجل   | فورجي ويب سكريبت لوجر |       |
 
 ## `src/vm-executor`
 
@@ -2522,71 +2751,86 @@ function toForgeWebScriptHostError(error: unknown, capability: string, logger?: 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptVmAotArtifact(module: ForgeWebScriptVmModule, compilerVersion: string): ForgeWebScriptVmAotArtifact
+function createForgeWebScriptVmAotArtifact(
+  module: ForgeWebScriptVmModule,
+  compilerVersion: string,
+): ForgeWebScriptVmAotArtifact;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptVmModule |  |
-| الإصدار المترجم | سلسلة |  |
+| الاسم           | اكتب                   | الوصف |
+| --------------- | ---------------------- | ----- |
+| الوحدة النمطية  | ForgeWebScriptVmModule |       |
+| الإصدار المترجم | سلسلة                  |       |
 
 ### createForgeWebScriptVmExecutor
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptVmExecutor(executorOptions: ForgeWebScriptVmExecutorOptions = {}): ForgeWebScriptVmExecutor
+function createForgeWebScriptVmExecutor(
+  executorOptions: ForgeWebScriptVmExecutorOptions = {},
+): ForgeWebScriptVmExecutor;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات المنفذ | فورجيويبسكريبتفmExecutorOptions |  |
+| الاسم         | اكتب                            | الوصف |
+| ------------- | ------------------------------- | ----- |
+| خيارات المنفذ | فورجيويبسكريبتفmExecutorOptions |       |
 
 ### ExecuteForgeWebScriptVm
 
 **النوع:** الوظيفة
 
 ```typescript
-function executeForgeWebScriptVm(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: ForgeWebScriptVmExecutionOptions): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVm(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: ForgeWebScriptVmExecutionOptions,
+): ForgeWebScriptVmExecutionResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptVmModule |  |
-| اسم الوظيفة | سلسلة |  |
-| الحجج_ | للقراءة فقط ForgeWebScriptVmValue[] |  |
-| خيارات | ForgeWebScriptVmExecutionOptions |  |
+| الاسم          | اكتب                                | الوصف |
+| -------------- | ----------------------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptVmModule              |       |
+| اسم الوظيفة    | سلسلة                               |       |
+| الحجج_         | للقراءة فقط ForgeWebScriptVmValue[] |       |
+| خيارات         | ForgeWebScriptVmExecutionOptions    |       |
 
 ### ExecuteForgeWebScriptVmAotArtifact
 
 **النوع:** الوظيفة
 
 ```typescript
-function executeForgeWebScriptVmAotArtifact(artifact: ForgeWebScriptVmAotArtifact, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVmAotArtifact(
+  artifact: ForgeWebScriptVmAotArtifact,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| قطعة أثرية | ForgeWebScriptVmAotArtifact |  |
-| اسم الوظيفة | سلسلة |  |
-| الحجج_ | للقراءة فقط ForgeWebScriptVmValue[] |  |
-| خيارات | أوميت<ForgeWebScriptVmExecutionOptions, 'mode'> |  |
+| الاسم       | اكتب                                            | الوصف |
+| ----------- | ----------------------------------------------- | ----- |
+| قطعة أثرية  | ForgeWebScriptVmAotArtifact                     |       |
+| اسم الوظيفة | سلسلة                                           |       |
+| الحجج_      | للقراءة فقط ForgeWebScriptVmValue[]             |       |
+| خيارات      | أوميت<ForgeWebScriptVmExecutionOptions, 'mode'> |       |
 
 ### ForgeWebScriptVmExecutorOptions
 
@@ -2603,36 +2847,42 @@ export interface ForgeWebScriptVmExecutorOptions
 **النوع:** الوظيفة
 
 ```typescript
-function runForgeWebScriptVmBootstrap(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], mode: ForgeWebScriptVmExecutionMode = 'interpret', options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function runForgeWebScriptVmBootstrap(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  mode: ForgeWebScriptVmExecutionMode = 'interpret',
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptVmModule |  |
-| اسم الوظيفة | سلسلة |  |
-| الحجج_ | للقراءة فقط ForgeWebScriptVmValue[] |  |
-| الوضع | ForgeWebScriptVmExecutionMode |  |
-| خيارات | أوميت<ForgeWebScriptVmExecutionOptions, 'mode'> |  |
+| الاسم          | اكتب                                            | الوصف |
+| -------------- | ----------------------------------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptVmModule                          |       |
+| اسم الوظيفة    | سلسلة                                           |       |
+| الحجج_         | للقراءة فقط ForgeWebScriptVmValue[]             |       |
+| الوضع          | ForgeWebScriptVmExecutionMode                   |       |
+| خيارات         | أوميت<ForgeWebScriptVmExecutionOptions, 'mode'> |       |
 
 ### validateForgeWebScriptVmModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
+function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptVmModule |  |
+| الاسم          | اكتب                   | الوصف |
+| -------------- | ---------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptVmModule |       |
 
 ## `src/vm-wasm`
 
@@ -2641,17 +2891,20 @@ function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
 **النوع:** الوظيفة
 
 ```typescript
-function compileForgeWebScriptVmWasm(module: ForgeWebScriptVmModule, options: ForgeWebScriptVmWasmCompileOptions = {}): ForgeWebScriptVmWasmArtifact
+function compileForgeWebScriptVmWasm(
+  module: ForgeWebScriptVmModule,
+  options: ForgeWebScriptVmWasmCompileOptions = {},
+): ForgeWebScriptVmWasmArtifact;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptVmModule |  |
-| خيارات | فورجيويبسكريبتفmWasmCompileOptions |  |
+| الاسم          | اكتب                               | الوصف |
+| -------------- | ---------------------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptVmModule             |       |
+| خيارات         | فورجيويبسكريبتفmWasmCompileOptions |       |
 
 ### ForgeWebScriptVmWasmCompileOptions
 
@@ -2668,7 +2921,7 @@ export interface ForgeWebScriptVmWasmCompileOptions
 **النوع:** ثابت
 
 ```typescript
-export const prepareForgeWebScriptVm
+export const prepareForgeWebScriptVm;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2678,17 +2931,20 @@ export const prepareForgeWebScriptVm
 **النوع:** الوظيفة
 
 ```typescript
-function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact, options: ForgeWebScriptVmPreparedExecutorOptions = {}): ForgeWebScriptVmPreparedExecutor
+function prepareForgeWebScriptVmWasm(
+  moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact,
+  options: ForgeWebScriptVmPreparedExecutorOptions = {},
+): ForgeWebScriptVmPreparedExecutor;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| وحدة أو قطعة أثرية | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |  |
-| خيارات | ForgeWebScriptVmPreparedExecutorOptions |  |
+| الاسم              | اكتب                                                   | الوصف |
+| ------------------ | ------------------------------------------------------ | ----- |
+| وحدة أو قطعة أثرية | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |       |
+| خيارات             | ForgeWebScriptVmPreparedExecutorOptions                |       |
 
 ## `src/vm`
 
@@ -2697,7 +2953,7 @@ function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2707,7 +2963,7 @@ export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 ```
 
 لم يتم تقديم أي وصف.

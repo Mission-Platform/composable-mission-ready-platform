@@ -16,17 +16,20 @@
 פונקציה **סוג:**
 
 ```typescript
-function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisReport
+function analyzeForgeWebScript(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisReport;
 ```
 
 הפעל את כללי ניתוח המקור הרשומים כנגד תוצאת קצה אחת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חזית | ForgeWebScriptFrontendResult |  |
-| אפשרויות | ForgeWebScriptAnalysisOptions |  |
+| שם       | הקלד                          | תיאור |
+| -------- | ----------------------------- | ----- |
+| חזית     | ForgeWebScriptFrontendResult  |       |
+| אפשרויות | ForgeWebScriptAnalysisOptions |       |
 
 ## `src/analysis/context`
 
@@ -35,17 +38,20 @@ function analyzeForgeWebScript(frontend: ForgeWebScriptFrontendResult, options: 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendResult, options: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysisContext
+function createForgeWebScriptAnalysisContext(
+  frontend: ForgeWebScriptFrontendResult,
+  options: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysisContext;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חזית | ForgeWebScriptFrontendResult |  |
-| אפשרויות | ForgeWebScriptAnalysisOptions |  |
+| שם       | הקלד                          | תיאור |
+| -------- | ----------------------------- | ----- |
+| חזית     | ForgeWebScriptFrontendResult  |       |
+| אפשרויות | ForgeWebScriptAnalysisOptions |       |
 
 ## `src/analysis/contracts`
 
@@ -54,7 +60,7 @@ function createForgeWebScriptAnalysisContext(frontend: ForgeWebScriptFrontendRes
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_ANALYSIS_DIAGNOSTIC_CODES;
 ```
 
 קידומות יציבות שמורות למשפחות אבחון של ניתוח מקור.
@@ -286,7 +292,7 @@ export interface ForgeWebScriptAnalysisTypeFact
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[]
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAnalysisRule[];
 ```
 
 לא סופק תיאור.
@@ -298,16 +304,16 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES: readonly ForgeWebScriptAna
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts
+function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResult): ForgeWebScriptAnalysisFacts;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חזית | ForgeWebScriptFrontendResult |  |
+| שם   | הקלד                         | תיאור |
+| ---- | ---------------------------- | ----- |
+| חזית | ForgeWebScriptFrontendResult |       |
 
 ## `src/analysis/policy`
 
@@ -316,23 +322,25 @@ function createForgeWebScriptAnalysisFacts(frontend: ForgeWebScriptFrontendResul
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptAnalysisPolicy(policy: ForgeWebScriptAnalysisOptionsLike = {}): ForgeWebScriptAnalysisPolicy
+function createForgeWebScriptAnalysisPolicy(
+  policy: ForgeWebScriptAnalysisOptionsLike = {},
+): ForgeWebScriptAnalysisPolicy;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מדיניות | ForgeWebScript ניתוח אפשרויות כמו |  |
+| שם      | הקלד                              | תיאור |
+| ------- | --------------------------------- | ----- |
+| מדיניות | ForgeWebScript ניתוח אפשרויות כמו |       |
 
 ### FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits
+export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLimits;
 ```
 
 לא סופק תיאור.
@@ -342,7 +350,7 @@ export const FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_LIMITS: ForgeWebScriptAnalysisLim
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 לא סופק תיאור.
@@ -352,7 +360,7 @@ export const FORGE_WEB_SCRIPT_DEVELOPMENT_ANALYSIS_POLICY: ForgeWebScriptAnalysi
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy
+export const FORGE_WEB_SCRIPT_STRICT_ANALYSIS_POLICY: ForgeWebScriptAnalysisPolicy;
 ```
 
 לא סופק תיאור.
@@ -372,17 +380,20 @@ export type ForgeWebScriptAnalysisOptionsLike = Omit<Partial<ForgeWebScriptAnaly
 פונקציה **סוג:**
 
 ```typescript
-function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysisFinding, policy: ForgeWebScriptAnalysisPolicy): boolean
+function isForgeWebScriptAnalysisFindingBlocking(
+  finding: ForgeWebScriptAnalysisFinding,
+  policy: ForgeWebScriptAnalysisPolicy,
+): boolean;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מציאת | ForgeWebScriptAnalysisFinding |  |
-| מדיניות | ForgeWebScriptAnalysisPolicy |  |
+| שם      | הקלד                          | תיאור |
+| ------- | ----------------------------- | ----- |
+| מציאת   | ForgeWebScriptAnalysisFinding |       |
+| מדיניות | ForgeWebScriptAnalysisPolicy  |       |
 
 ## `src/analysis/registry`
 
@@ -391,16 +402,18 @@ function isForgeWebScriptAnalysisFindingBlocking(finding: ForgeWebScriptAnalysis
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptAnalysisRuleRegistry(rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES): ForgeWebScriptAnalysisRuleRegistry
+function createForgeWebScriptAnalysisRuleRegistry(
+  rules: readonly ForgeWebScriptAnalysisRule[] = FORGE_WEB_SCRIPT_DEFAULT_ANALYSIS_RULES,
+): ForgeWebScriptAnalysisRuleRegistry;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כללים | לקריאה בלבד ForgeWebScriptAnalysisRule[] |  |
+| שם    | הקלד                                     | תיאור |
+| ----- | ---------------------------------------- | ----- |
+| כללים | לקריאה בלבד ForgeWebScriptAnalysisRule[] |       |
 
 ### ForgeWebScriptAnalysisRuleRegistry
 
@@ -419,16 +432,16 @@ export interface ForgeWebScriptAnalysisRuleRegistry
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic
+function createForgeWebScriptAnalysisDiagnostic(finding: ForgeWebScriptAnalysisFinding): ForgeWebScriptDiagnostic;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מציאת | ForgeWebScriptAnalysisFinding |  |
+| שם    | הקלד                          | תיאור |
+| ----- | ----------------------------- | ----- |
+| מציאת | ForgeWebScriptAnalysisFinding |       |
 
 ## `src/ast`
 
@@ -467,7 +480,8 @@ export interface ForgeWebScriptBinaryExpression
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptBinaryOperator = '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
+export type ForgeWebScriptBinaryOperator =
+  '!=' | '%' | '&&' | '*' | '+' | '-' | '/' | '<' | '<=' | '==' | '>' | '>=' | '||';
 ```
 
 לא סופק תיאור.
@@ -557,7 +571,19 @@ export interface ForgeWebScriptEnumVariant
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptExpression = | ForgeWebScriptBinaryExpression | ForgeWebScriptCallExpression | ForgeWebScriptIdentifierExpression | ForgeWebScriptLiteralExpression | ForgeWebScriptFunctionValueExpression | ForgeWebScriptStructValueExpression | ForgeWebScriptEnumValueExpression | ForgeWebScriptArrayLiteralExpression | ForgeWebScriptVectorLiteralExpression | ForgeWebScriptIndexExpression | ForgeWebScriptMatchExpression | ForgeWebScriptUnaryExpression;
+export type ForgeWebScriptExpression =
+  | ForgeWebScriptBinaryExpression
+  | ForgeWebScriptCallExpression
+  | ForgeWebScriptIdentifierExpression
+  | ForgeWebScriptLiteralExpression
+  | ForgeWebScriptFunctionValueExpression
+  | ForgeWebScriptStructValueExpression
+  | ForgeWebScriptEnumValueExpression
+  | ForgeWebScriptArrayLiteralExpression
+  | ForgeWebScriptVectorLiteralExpression
+  | ForgeWebScriptIndexExpression
+  | ForgeWebScriptMatchExpression
+  | ForgeWebScriptUnaryExpression;
 ```
 
 לא סופק תיאור.
@@ -767,7 +793,8 @@ export type ForgeWebScriptPattern = |
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptPrimitiveType = 'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptPrimitiveType =
+  'bool' | 'bytes' | 'f32' | 'f64' | 'i32' | 'i64' | 'string' | 'u32' | 'u64' | 'unit';
 ```
 
 לא סופק תיאור.
@@ -797,7 +824,19 @@ export interface ForgeWebScriptSourceModuleImport
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptStatement = | ForgeWebScriptExpressionStatement | ForgeWebScriptAssignmentStatement | ForgeWebScriptIfStatement | ForgeWebScriptLetStatement | ForgeWebScriptMatchStatement | ForgeWebScriptSwitchStatement | ForgeWebScriptReturnStatement | ForgeWebScriptForStatement | ForgeWebScriptDoWhileStatement | ForgeWebScriptWhileStatement | ForgeWebScriptYieldStatement | ForgeWebScriptIteratorLoopStatement;
+export type ForgeWebScriptStatement =
+  | ForgeWebScriptExpressionStatement
+  | ForgeWebScriptAssignmentStatement
+  | ForgeWebScriptIfStatement
+  | ForgeWebScriptLetStatement
+  | ForgeWebScriptMatchStatement
+  | ForgeWebScriptSwitchStatement
+  | ForgeWebScriptReturnStatement
+  | ForgeWebScriptForStatement
+  | ForgeWebScriptDoWhileStatement
+  | ForgeWebScriptWhileStatement
+  | ForgeWebScriptYieldStatement
+  | ForgeWebScriptIteratorLoopStatement;
 ```
 
 לא סופק תיאור.
@@ -867,16 +906,16 @@ export interface ForgeWebScriptTypeName
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string
+function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הקלד | ForgeWebScriptTypeName |  |
+| שם   | הקלד                   | תיאור |
+| ---- | ---------------------- | ----- |
+| הקלד | ForgeWebScriptTypeName |       |
 
 ### ForgeWebScriptUnaryExpression
 
@@ -965,16 +1004,16 @@ export interface ForgeWebScriptWatCache
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string
+function forgeWebScriptWatCacheKey(input: ForgeWebScriptWatCacheKeyInput): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ForgeWebScriptWatCacheKeyInput |  |
+| שם  | הקלד                           | תיאור |
+| --- | ------------------------------ | ----- |
+| קלט | ForgeWebScriptWatCacheKeyInput |       |
 
 ### ForgeWebScriptWatCacheKeyInput
 
@@ -991,58 +1030,66 @@ export interface ForgeWebScriptWatCacheKeyInput
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string
+function forgeWebScriptWatPath(cache: ForgeWebScriptWatCache, key: string): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטמון | ForgeWebScriptWatCache |  |
-| מפתח | מחרוזת |  |
+| שם    | הקלד                   | תיאור |
+| ----- | ---------------------- | ----- |
+| מטמון | ForgeWebScriptWatCache |       |
+| מפתח  | מחרוזת                 |       |
 
 ### persistForgeWebScriptDebugArtifacts
 
 פונקציה **סוג:**
 
 ```typescript
-function persistForgeWebScriptDebugArtifacts(cache: ForgeWebScriptWatCache | undefined, key: string, artifacts: {
+function persistForgeWebScriptDebugArtifacts(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  artifacts: {
     readonly optimizedWat?: string;
     readonly unoptimizedWat?: string;
     readonly optimizedWasm?: Uint8Array;
     readonly unoptimizedWasm?: Uint8Array;
-  }): ForgeWebScriptDebugArtifactPaths
+  },
+): ForgeWebScriptDebugArtifactPaths;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטמון | ForgeWebScriptWatCache \| לא מוגדר |  |
-| מפתח | מחרוזת |  |
-| חפצים | { readonly optimizedWat?: string;     לקריאה בלבד unoptimizedWat?: מחרוזת;     readonly optimizedWasm?: Uint8Array;     readonly unoptimizedWasm?: Uint8Array;   } |  |
+| שם    | הקלד                                                                                                                                                 | תיאור |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| מטמון | ForgeWebScriptWatCache \| לא מוגדר                                                                                                                   |       |
+| מפתח  | מחרוזת                                                                                                                                               |       |
+| חפצים | { readonly optimizedWat?: string; לקריאה בלבד unoptimizedWat?: מחרוזת; readonly optimizedWasm?: Uint8Array; readonly unoptimizedWasm?: Uint8Array; } |       |
 
 ### persistForgeWebScriptWat
 
 פונקציה **סוג:**
 
 ```typescript
-function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key: string, wat: string): string | undefined
+function persistForgeWebScriptWat(
+  cache: ForgeWebScriptWatCache | undefined,
+  key: string,
+  wat: string,
+): string | undefined;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטמון | ForgeWebScriptWatCache \| לא מוגדר |  |
-| מפתח | מחרוזת |  |
-| מה | מחרוזת |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| מטמון | ForgeWebScriptWatCache \| לא מוגדר |       |
+| מפתח  | מחרוזת                             |       |
+| מה    | מחרוזת                             |       |
 
 ## `src/compiler`
 
@@ -1051,23 +1098,23 @@ function persistForgeWebScriptWat(cache: ForgeWebScriptWatCache | undefined, key
 פונקציה **סוג:**
 
 ```typescript
-function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScript(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ForgeWebScriptCompileInput |  |
+| שם  | הקלד                       | תיאור |
+| --- | -------------------------- | ----- |
+| קלט | ForgeWebScriptCompileInput |       |
 
 ### compileForgeWebScriptSeed
 
 פונקציה **סוג:**
 
 ```typescript
-function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact
+function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebScriptArtifact;
 ```
 
 הזרע התחום TypeScript בשימוש על ידי ה-bootstrap המתארח בעצמו עד לתיקון-
@@ -1075,16 +1122,16 @@ function compileForgeWebScriptSeed(input: ForgeWebScriptCompileInput): ForgeWebS
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ForgeWebScriptCompileInput |  |
+| שם  | הקלד                       | תיאור |
+| --- | -------------------------- | ----- |
+| קלט | ForgeWebScriptCompileInput |       |
 
 ### createForgeWebScriptCompiler
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
+function createForgeWebScriptCompiler(): ForgeWebScriptCompiler;
 ```
 
 לא סופק תיאור.
@@ -1094,16 +1141,18 @@ function createForgeWebScriptCompiler(): ForgeWebScriptCompiler
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptCompilerService(options: ForgeWebScriptCompilerServiceOptions = {}): ForgeWebScriptCompilerService
+function createForgeWebScriptCompilerService(
+  options: ForgeWebScriptCompilerServiceOptions = {},
+): ForgeWebScriptCompilerService;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptCompilerServiceOptions |  |
+| שם       | הקלד                                 | תיאור |
+| -------- | ------------------------------------ | ----- |
+| אפשרויות | ForgeWebScriptCompilerServiceOptions |       |
 
 ## `src/contracts`
 
@@ -1342,7 +1391,10 @@ export interface ForgeWebScriptSelfHostedStageReport
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptSelfHostedStageRunner = ( input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, ) => ForgeWebScriptSelfHostedStageReport;
+export type ForgeWebScriptSelfHostedStageRunner = (
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+) => ForgeWebScriptSelfHostedStageReport;
 ```
 
 נקודת כניסה ל-VM מסופקת על ידי זמן הריצה מבלי לחבר אליה את החזית הבטוחה לדפדפן.
@@ -1374,39 +1426,48 @@ export type ForgeWebScriptVmExecutionMode = 'interpret' | 'jit' | 'aot';
 פונקציה **סוג:**
 
 ```typescript
-function createDiagnostic(fileName: string, phase: ForgeWebScriptDiagnosticPhase, code: string, message: string, span: ForgeWebScriptSourceSpan, severity: ForgeWebScriptDiagnosticSeverity = 'error', hint?: string, metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>): ForgeWebScriptDiagnostic
+function createDiagnostic(
+  fileName: string,
+  phase: ForgeWebScriptDiagnosticPhase,
+  code: string,
+  message: string,
+  span: ForgeWebScriptSourceSpan,
+  severity: ForgeWebScriptDiagnosticSeverity = 'error',
+  hint?: string,
+  metadata?: Pick<ForgeWebScriptDiagnostic, 'ruleId' | 'category' | 'blocking' | 'evidence' | 'owasp' | 'cwe'>,
+): ForgeWebScriptDiagnostic;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| שלב | ForgeWebScriptDiagnosticPhase |  |
-| קוד | מחרוזת |  |
-| הודעה | מחרוזת |  |
-| span | ForgeWebScriptSourceSpan |  |
-| חומרה | ForgeWebScriptDiagnosticSeverity |  |
-| רמז | מחרוזת |  |
-| מטא נתונים | Pick<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |  |
+| שם         | הקלד                                                                                                   | תיאור |
+| ---------- | ------------------------------------------------------------------------------------------------------ | ----- |
+| שם קובץ    | מחרוזת                                                                                                 |       |
+| שלב        | ForgeWebScriptDiagnosticPhase                                                                          |       |
+| קוד        | מחרוזת                                                                                                 |       |
+| הודעה      | מחרוזת                                                                                                 |       |
+| span       | ForgeWebScriptSourceSpan                                                                               |       |
+| חומרה      | ForgeWebScriptDiagnosticSeverity                                                                       |       |
+| רמז        | מחרוזת                                                                                                 |       |
+| מטא נתונים | Pick<ForgeWebScriptDiagnostic, 'ruleId' \| 'category' \| 'blocking' \| 'evidence' \| 'owasp' \| 'cwe'> |       |
 
 ### מפתח אבחון
 
 פונקציה **סוג:**
 
 ```typescript
-function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string
+function diagnosticKey(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | ForgeWebScriptDiagnostic |  |
+| שם    | הקלד                     | תיאור |
+| ----- | ------------------------ | ----- |
+| אבחון | ForgeWebScriptDiagnostic |       |
 
 ### ForgeWebScriptDiagnostic
 
@@ -1433,7 +1494,8 @@ export interface ForgeWebScriptDiagnosticEvidence
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptDiagnosticPhase = 'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
+export type ForgeWebScriptDiagnosticPhase =
+  'lex' | 'parse' | 'type-check' | 'abi' | 'graph' | 'link' | 'analysis' | 'emit' | 'artifact';
 ```
 
 לא סופק תיאור.
@@ -1465,32 +1527,32 @@ export interface ForgeWebScriptSourceSpan
 פונקציה **סוג:**
 
 ```typescript
-function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation
+function parseForgeWebScriptDocumentation(comment: string): ForgeWebScriptDocumentation;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תגובה | מחרוזת |  |
+| שם    | הקלד   | תיאור |
+| ----- | ------ | ----- |
+| תגובה | מחרוזת |       |
 
 ### renderForgeWebScriptDocumentation
 
 פונקציה **סוג:**
 
 ```typescript
-function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string
+function renderForgeWebScriptDocumentation(documentation: ForgeWebScriptDocumentation): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תיעוד | ForgeWebScriptDocumentation |  |
+| שם    | הקלד                        | תיאור |
+| ----- | --------------------------- | ----- |
+| תיעוד | ForgeWebScriptDocumentation |       |
 
 ## `src/dynamic-links`
 
@@ -1542,32 +1604,32 @@ export interface ForgeWebScriptDynamicModule
 פונקציה **סוג:**
 
 ```typescript
-function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptFrontend(input: ForgeWebScriptCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ForgeWebScriptCompileInput |  |
+| שם  | הקלד                       | תיאור |
+| --- | -------------------------- | ----- |
+| קלט | ForgeWebScriptCompileInput |       |
 
 ### prepareForgeWebScriptGraphFrontend
 
 פונקציה **סוג:**
 
 ```typescript
-function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult
+function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInput): ForgeWebScriptFrontendResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ForgeWebScriptGraphCompileInput |  |
+| שם  | הקלד                            | תיאור |
+| --- | ------------------------------- | ----- |
+| קלט | ForgeWebScriptGraphCompileInput |       |
 
 ## `src/generics`
 
@@ -1576,35 +1638,42 @@ function prepareForgeWebScriptGraphFrontend(input: ForgeWebScriptGraphCompileInp
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptGenericSpecialization(request: ForgeWebScriptGenericSpecializationRequest): ForgeWebScriptSpecialization
+function createForgeWebScriptGenericSpecialization(
+  request: ForgeWebScriptGenericSpecializationRequest,
+): ForgeWebScriptSpecialization;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בקשה | ForgeWebScriptGenericSpecializationRequest |  |
+| שם   | הקלד                                       | תיאור |
+| ---- | ------------------------------------------ | ----- |
+| בקשה | ForgeWebScriptGenericSpecializationRequest |       |
 
 ### createForgeWebScriptIteratorBoundaryDescriptor
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptIteratorBoundaryDescriptor(generic: string, elementType: ForgeWebScriptTypeName, nextFunction: string, ownership: ForgeWebScriptOwnership = 'borrowed'): ForgeWebScriptIteratorBoundaryDescriptor
+function createForgeWebScriptIteratorBoundaryDescriptor(
+  generic: string,
+  elementType: ForgeWebScriptTypeName,
+  nextFunction: string,
+  ownership: ForgeWebScriptOwnership = 'borrowed',
+): ForgeWebScriptIteratorBoundaryDescriptor;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| גנרי | מחרוזת |  |
-| elementType | ForgeWebScriptTypeName |  |
-| NextFunction | מחרוזת |  |
-| בעלות | ForgeWebScript Ownership |  |
+| שם           | הקלד                     | תיאור |
+| ------------ | ------------------------ | ----- |
+| גנרי         | מחרוזת                   |       |
+| elementType  | ForgeWebScriptTypeName   |       |
+| NextFunction | מחרוזת                   |       |
+| בעלות        | ForgeWebScript Ownership |       |
 
 ### ForgeWebScriptGenericBoundary
 
@@ -1621,16 +1690,18 @@ export type ForgeWebScriptGenericBoundary = 'value' | 'interface' | 'iterator';
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptGenericRepresentation(boundary: ForgeWebScriptGenericBoundary = 'value'): ForgeWebScriptSpecialization['representation']
+function forgeWebScriptGenericRepresentation(
+  boundary: ForgeWebScriptGenericBoundary = 'value',
+): ForgeWebScriptSpecialization['representation'];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| גבול | ForgeWebScriptGenericBoundary |  |
+| שם   | הקלד                          | תיאור |
+| ---- | ----------------------------- | ----- |
+| גבול | ForgeWebScriptGenericBoundary |       |
 
 ### ForgeWebScriptGenericSpecializationRequest
 
@@ -1647,16 +1718,18 @@ export interface ForgeWebScriptGenericSpecializationRequest
 פונקציה **סוג:**
 
 ```typescript
-function sortForgeWebScriptSpecializations(specializations: readonly ForgeWebScriptSpecialization[]): readonly ForgeWebScriptSpecialization[]
+function sortForgeWebScriptSpecializations(
+  specializations: readonly ForgeWebScriptSpecialization[],
+): readonly ForgeWebScriptSpecialization[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| התמחויות | לקריאה בלבד ForgeWebScriptSpecialization[] |  |
+| שם       | הקלד                                       | תיאור |
+| -------- | ------------------------------------------ | ----- |
+| התמחויות | לקריאה בלבד ForgeWebScriptSpecialization[] |       |
 
 ## `src/graph`
 
@@ -1745,35 +1818,42 @@ export interface ForgeWebScriptResolvedModule
 פונקציה **סוג:**
 
 ```typescript
-function hashForgeWebScriptModuleGraph(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): string
+function hashForgeWebScriptModuleGraph(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| גרף | ForgeWebScriptModuleGraph |  |
-| תצורה | ForgeWebScriptLinkConfiguration |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| גרף   | ForgeWebScriptModuleGraph       |       |
+| תצורה | ForgeWebScriptLinkConfiguration |       |
 
 ### resolveForgeWebScriptModuleGraph
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: ForgeWebScriptModuleResolver, configuration: ForgeWebScriptLinkConfiguration = {}): Promise<ForgeWebScriptGraphResult>
+function resolveForgeWebScriptModuleGraph(
+  entries: readonly string[],
+  resolver: ForgeWebScriptModuleResolver,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): Promise<ForgeWebScriptGraphResult>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערכים | מחרוזת לקריאה בלבד[] |  |
-| פותר | ForgeWebScriptModuleResolver |  |
-| תצורה | ForgeWebScriptLinkConfiguration |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| ערכים | מחרוזת לקריאה בלבד[]            |       |
+| פותר  | ForgeWebScriptModuleResolver    |       |
+| תצורה | ForgeWebScriptLinkConfiguration |       |
 
 ## `src/identity`
 
@@ -1782,33 +1862,33 @@ function resolveForgeWebScriptModuleGraph(entries: readonly string[], resolver: 
 פונקציה **סוג:**
 
 ```typescript
-function deriveForgeWebScriptModuleId(fileName: string, root?: string): string
+function deriveForgeWebScriptModuleId(fileName: string, root?: string): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| שורש | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| שורש    | מחרוזת |       |
 
 ### normalizeForgeWebScriptFileId
 
 פונקציה **סוג:**
 
 ```typescript
-function normalizeForgeWebScriptFileId(fileName: string): string
+function normalizeForgeWebScriptFileId(fileName: string): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
 
 ## `src/ir`
 
@@ -1817,16 +1897,16 @@ function normalizeForgeWebScriptFileId(fileName: string): string
 פונקציה **סוג:**
 
 ```typescript
-function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts
+function countForgeWebScriptIr(module: ForgeWebScriptIrModule): ForgeWebScriptIrCounts;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptIrModule |  |
+| שם    | הקלד                   | תיאור |
+| ----- | ---------------------- | ----- |
+| מודול | ForgeWebScriptIrModule |       |
 
 ### ForgeWebScriptCollectionOperation
 
@@ -1913,7 +1993,18 @@ export interface ForgeWebScriptIrEnumValueExpression
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptIrExpression = | ForgeWebScriptIrBinaryExpression | ForgeWebScriptIrCallExpression | ForgeWebScriptIrIdentifierExpression | ForgeWebScriptIrLiteralExpression | ForgeWebScriptIrFunctionValueExpression | ForgeWebScriptIrStructValueExpression | ForgeWebScriptIrEnumValueExpression | ForgeWebScriptIrMatchExpression | ForgeWebScriptIrUnaryExpression | ForgeWebScriptIrArrayLiteralExpression | ForgeWebScriptIrIndexExpression;
+export type ForgeWebScriptIrExpression =
+  | ForgeWebScriptIrBinaryExpression
+  | ForgeWebScriptIrCallExpression
+  | ForgeWebScriptIrIdentifierExpression
+  | ForgeWebScriptIrLiteralExpression
+  | ForgeWebScriptIrFunctionValueExpression
+  | ForgeWebScriptIrStructValueExpression
+  | ForgeWebScriptIrEnumValueExpression
+  | ForgeWebScriptIrMatchExpression
+  | ForgeWebScriptIrUnaryExpression
+  | ForgeWebScriptIrArrayLiteralExpression
+  | ForgeWebScriptIrIndexExpression;
 ```
 
 לא סופק תיאור.
@@ -2083,7 +2174,18 @@ export interface ForgeWebScriptIrReturnStatement
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptIrStatement = | ForgeWebScriptIrExpressionStatement | ForgeWebScriptIrAssignmentStatement | ForgeWebScriptIrIfStatement | ForgeWebScriptIrWhileStatement | ForgeWebScriptIrDoWhileStatement | ForgeWebScriptIrLetStatement | ForgeWebScriptIrReturnStatement | ForgeWebScriptIrMatchStatement | ForgeWebScriptIrSwitchStatement | ForgeWebScriptIrYieldStatement | ForgeWebScriptIrIteratorLoopStatement;
+export type ForgeWebScriptIrStatement =
+  | ForgeWebScriptIrExpressionStatement
+  | ForgeWebScriptIrAssignmentStatement
+  | ForgeWebScriptIrIfStatement
+  | ForgeWebScriptIrWhileStatement
+  | ForgeWebScriptIrDoWhileStatement
+  | ForgeWebScriptIrLetStatement
+  | ForgeWebScriptIrReturnStatement
+  | ForgeWebScriptIrMatchStatement
+  | ForgeWebScriptIrSwitchStatement
+  | ForgeWebScriptIrYieldStatement
+  | ForgeWebScriptIrIteratorLoopStatement;
 ```
 
 לא סופק תיאור.
@@ -2143,32 +2245,32 @@ export interface ForgeWebScriptIrYieldStatement
 פונקציה **סוג:**
 
 ```typescript
-function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule
+function lowerForgeWebScriptIrToModule(module: ForgeWebScriptIrModule): ForgeWebScriptModule;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptIrModule |  |
+| שם    | הקלד                   | תיאור |
+| ----- | ---------------------- | ----- |
+| מודול | ForgeWebScriptIrModule |       |
 
 ### lowerForgeWebScriptToIr
 
 פונקציה **סוג:**
 
 ```typescript
-function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule
+function lowerForgeWebScriptToIr(module: ForgeWebScriptModule): ForgeWebScriptIrModule;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptModule |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| מודול | ForgeWebScriptModule |       |
 
 ## `src/lexer`
 
@@ -2197,7 +2299,8 @@ export interface ForgeWebScriptToken
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
+export type ForgeWebScriptTokenKind =
+  'eof' | 'comment' | 'identifier' | 'number' | 'string' | 'keyword' | 'operator' | 'punctuation';
 ```
 
 לא סופק תיאור.
@@ -2207,17 +2310,17 @@ export type ForgeWebScriptTokenKind = 'eof' | 'comment' | 'identifier' | 'number
 פונקציה **סוג:**
 
 ```typescript
-function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult
+function lexForgeWebScript(source: string, fileName = '<input>'): ForgeWebScriptLexResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| שם קובץ |  |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| מקור    | מחרוזת |       |
+| שם קובץ |        |       |
 
 ## `src/linker`
 
@@ -2236,17 +2339,20 @@ export interface ForgeWebScriptLinkResult
 פונקציה **סוג:**
 
 ```typescript
-function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configuration: ForgeWebScriptLinkConfiguration = {}): ForgeWebScriptLinkResult
+function validateForgeWebScriptLinks(
+  graph: ForgeWebScriptModuleGraph,
+  configuration: ForgeWebScriptLinkConfiguration = {},
+): ForgeWebScriptLinkResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| גרף | ForgeWebScriptModuleGraph |  |
-| תצורה | ForgeWebScriptLinkConfiguration |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| גרף   | ForgeWebScriptModuleGraph       |       |
+| תצורה | ForgeWebScriptLinkConfiguration |       |
 
 ## `src/manifest`
 
@@ -2255,24 +2361,27 @@ function validateForgeWebScriptLinks(graph: ForgeWebScriptModuleGraph, configura
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptAbiManifest(module: ForgeWebScriptModule, options: ForgeWebScriptAbiManifestOptions = {}): ForgeWebScriptAbiManifest
+function createForgeWebScriptAbiManifest(
+  module: ForgeWebScriptModule,
+  options: ForgeWebScriptAbiManifestOptions = {},
+): ForgeWebScriptAbiManifest;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptModule |  |
-| אפשרויות | ForgeWebScriptAbiManifestOptions |  |
+| שם       | הקלד                             | תיאור |
+| -------- | -------------------------------- | ----- |
+| מודול    | ForgeWebScriptModule             |       |
+| אפשרויות | ForgeWebScriptAbiManifestOptions |       |
 
 ### FORGE_WEB_SCRIPT_ABI_VERSION
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ABI_VERSION
+export const FORGE_WEB_SCRIPT_ABI_VERSION;
 ```
 
 לא סופק תיאור.
@@ -2282,7 +2391,7 @@ export const FORGE_WEB_SCRIPT_ABI_VERSION
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION
+export const FORGE_WEB_SCRIPT_LANGUAGE_VERSION;
 ```
 
 לא סופק תיאור.
@@ -2472,7 +2581,8 @@ export interface ForgeWebScriptSpecialization
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptValueRepresentation = 'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
+export type ForgeWebScriptValueRepresentation =
+  'bool-i32' | 'f32' | 'f64' | 'i32' | 'i64' | 'pointer-length-u32' | 'pointer-length-u64' | 'u32' | 'u64' | 'unit';
 ```
 
 לא סופק תיאור.
@@ -2494,17 +2604,20 @@ export interface ForgeWebScriptImportTypeEnvironment
 פונקציה **סוג:**
 
 ```typescript
-function resolveForgeWebScriptImportTypeEnvironment(importer: ForgeWebScriptResolvedModule, graph: ForgeWebScriptModuleGraph): ForgeWebScriptImportTypeEnvironment
+function resolveForgeWebScriptImportTypeEnvironment(
+  importer: ForgeWebScriptResolvedModule,
+  graph: ForgeWebScriptModuleGraph,
+): ForgeWebScriptImportTypeEnvironment;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| יבואן | ForgeWebScriptResolvedModule |  |
-| גרף | ForgeWebScriptModuleGraph |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| יבואן | ForgeWebScriptResolvedModule |       |
+| גרף   | ForgeWebScriptModuleGraph    |       |
 
 ## `src/optimizer`
 
@@ -2543,34 +2656,40 @@ export interface ForgeWebScriptOptimizationResult
 פונקציה **סוג:**
 
 ```typescript
-function optimizeForgeWebScriptIr(input: ForgeWebScriptIrModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptIr(
+  input: ForgeWebScriptIrModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ForgeWebScriptIrModule |  |
-| מצב | 'Debug' \| 'לשחרר' |  |
+| שם  | הקלד                   | תיאור |
+| --- | ---------------------- | ----- |
+| קלט | ForgeWebScriptIrModule |       |
+| מצב | 'Debug' \| 'לשחרר'     |       |
 
 ### optimizeForgeWebScriptModule
 
 פונקציה **סוג:**
 
 ```typescript
-function optimizeForgeWebScriptModule(module: ForgeWebScriptModule, mode: 'debug' | 'release' = 'release'): ForgeWebScriptOptimizationResult
+function optimizeForgeWebScriptModule(
+  module: ForgeWebScriptModule,
+  mode: 'debug' | 'release' = 'release',
+): ForgeWebScriptOptimizationResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptModule |  |
-| מצב | 'Debug' \| 'לשחרר' |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| מודול | ForgeWebScriptModule |       |
+| מצב   | 'Debug' \| 'לשחרר'   |       |
 
 ## `src/parser`
 
@@ -2599,25 +2718,29 @@ export interface ForgeWebScriptParseResult
 פונקציה **סוג:**
 
 ```typescript
-function parseForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptParseOptions = {}): ForgeWebScriptParseResult
+function parseForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptParseOptions = {},
+): ForgeWebScriptParseResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| שם קובץ |  |  |
-| אפשרויות | ForgeWebScriptParseOptions |  |
+| שם       | הקלד                       | תיאור |
+| -------- | -------------------------- | ----- |
+| מקור     | מחרוזת                     |       |
+| שם קובץ  |                            |       |
+| אפשרויות | ForgeWebScriptParseOptions |       |
 
 ### פרימיטיביים סוגים
 
 **סוג:** קבוע
 
 ```typescript
-export const primitiveTypes
+export const primitiveTypes;
 ```
 
 לא סופק תיאור.
@@ -2629,7 +2752,7 @@ export const primitiveTypes
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[]
+function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeWebScriptSelfHostedSourceModule[];
 ```
 
 לא סופק תיאור.
@@ -2639,32 +2762,32 @@ function createForgeWebScriptSelfHostedCompilerSourceManifest(): readonly ForgeW
 פונקציה **סוג:**
 
 ```typescript
-function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string
+function decodeForgeWebScriptSelfHostedFingerprint(bytes: Uint8Array): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בתים | Uint8Array |  |
+| שם   | הקלד       | תיאור |
+| ---- | ---------- | ----- |
+| בתים | Uint8Array |       |
 
 ### encodeForgeWebScriptSelfHostedFingerprint
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array
+function encodeForgeWebScriptSelfHostedFingerprint(fingerprint: string): Uint8Array;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טביעת אצבע | מחרוזת |  |
+| שם         | הקלד   | תיאור |
+| ---------- | ------ | ----- |
+| טביעת אצבע | מחרוזת |       |
 
 ### ForgeWebScriptSelfHostedCompilation
 
@@ -2701,7 +2824,9 @@ export type ForgeWebScriptSelfHostedVmExecutionMode = 'interpret' | 'jit' | 'aot
 פונקציה **סוג:**
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilation(input: ForgeWebScriptCompileInput): ForgeWebScriptSelfHostedCompilation
+function prepareForgeWebScriptSelfHostedCompilation(
+  input: ForgeWebScriptCompileInput,
+): ForgeWebScriptSelfHostedCompilation;
 ```
 
 הכן יחידת אוסף מתארחת עצמית.
@@ -2711,25 +2836,25 @@ function prepareForgeWebScriptSelfHostedCompilation(input: ForgeWebScriptCompile
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ForgeWebScriptCompileInput |  |
+| שם  | הקלד                       | תיאור |
+| --- | -------------------------- | ----- |
+| קלט | ForgeWebScriptCompileInput |       |
 
 ### prepareForgeWebScriptSelfHostedCompilationLegacy טביעת אצבע
 
 פונקציה **סוג:**
 
 ```typescript
-function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string
+function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: ForgeWebScriptCompileInput): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ForgeWebScriptCompileInput |  |
+| שם  | הקלד                       | תיאור |
+| --- | -------------------------- | ----- |
+| קלט | ForgeWebScriptCompileInput |       |
 
 #### חוֹזֶה
 
@@ -2742,91 +2867,99 @@ function prepareForgeWebScriptSelfHostedCompilationLegacyFingerprint(input: Forg
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptSelfHostedStageArtifact(stage: ForgeWebScriptSelfHostedCompilerStage, identity: ForgeWebScriptSelfHostedStageArtifactIdentity, payload: Uint8Array, diagnostics: readonly ForgeWebScriptDiagnostic[] = []): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedStageArtifact(
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  identity: ForgeWebScriptSelfHostedStageArtifactIdentity,
+  payload: Uint8Array,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| במה | ForgeWebScriptSelfHostedCompilerStage |  |
-| זהות | ForgeWebScriptSelfHostedStageArtifactIdentity |  |
-| מטען | Uint8Array |  |
-| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |  |
+| שם    | הקלד                                          | תיאור |
+| ----- | --------------------------------------------- | ----- |
+| במה   | ForgeWebScriptSelfHostedCompilerStage         |       |
+| זהות  | ForgeWebScriptSelfHostedStageArtifactIdentity |       |
+| מטען  | Uint8Array                                    |       |
+| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[]        |       |
 
 ### decodeForgeWebScriptSelfHostedDiagnostics
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[]
+function decodeForgeWebScriptSelfHostedDiagnostics(bytes: Uint8Array): readonly ForgeWebScriptDiagnostic[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בתים | Uint8Array |  |
+| שם   | הקלד       | תיאור |
+| ---- | ---------- | ----- |
+| בתים | Uint8Array |       |
 
 ### decodeForgeWebScriptSelfHostedStageArtifact
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeForgeWebScriptSelfHostedStageArtifact(bytes: Uint8Array, options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {}): ForgeWebScriptSelfHostedStageArtifact
+function decodeForgeWebScriptSelfHostedStageArtifact(
+  bytes: Uint8Array,
+  options: ForgeWebScriptSelfHostedStageArtifactDecodeOptions = {},
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בתים | Uint8Array |  |
-| אפשרויות | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |  |
+| שם       | הקלד                                               | תיאור |
+| -------- | -------------------------------------------------- | ----- |
+| בתים     | Uint8Array                                         |       |
+| אפשרויות | ForgeWebScriptSelfHostedStageArtifactDecodeOptions |       |
 
 ### encodeForgeWebScriptSelfHostedDiagnostics
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array
+function encodeForgeWebScriptSelfHostedDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): Uint8Array;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |       |
 
 ### encodeForgeWebScriptSelfHostedStageArtifact
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array
+function encodeForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact): Uint8Array;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חפץ | ForgeWebScriptSelfHostedStageArtifact |  |
+| שם  | הקלד                                  | תיאור |
+| --- | ------------------------------------- | ----- |
+| חפץ | ForgeWebScriptSelfHostedStageArtifact |       |
 
 ### FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION;
 ```
 
 לא סופק תיאור.
@@ -2836,7 +2969,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_DIAGNOSTIC_VERSION
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT;
 ```
 
 לא סופק תיאור.
@@ -2846,7 +2979,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_FORMAT
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
+export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION;
 ```
 
 לא סופק תיאור.
@@ -2858,7 +2991,7 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_ARTIFACT_VERSION
 ```typescript
 export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
   Record<ForgeWebScriptSelfHostedCompilerStage, string>
->
+>;
 ```
 
 לא סופק תיאור.
@@ -2868,7 +3001,8 @@ export const FORGE_WEB_SCRIPT_SELF_HOSTED_STAGE_SCHEMA_VERSIONS: Readonly<
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptSelfHostedCompilerStage = 'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
+export type ForgeWebScriptSelfHostedCompilerStage =
+  'lex' | 'parse' | 'check' | 'lower' | 'optimize' | 'link' | 'manifest' | 'emit';
 ```
 
 לא סופק תיאור.
@@ -2908,34 +3042,34 @@ export interface ForgeWebScriptSelfHostedStageArtifactIdentity
 פונקציה **סוג:**
 
 ```typescript
-function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string
+function hashForgeWebScriptSelfHostedBytes(bytes: Uint8Array): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בתים | Uint8Array |  |
+| שם   | הקלד       | תיאור |
+| ---- | ---------- | ----- |
+| בתים | Uint8Array |       |
 
 ### hashForgeWebScriptSelfHostedSourceIdentity
 
 פונקציה **סוג:**
 
 ```typescript
-function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string
+function hashForgeWebScriptSelfHostedSourceIdentity(source: string, fileName: string, graphHash?: string): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| שם קובץ | מחרוזת |  |
-| graphHash | מחרוזת |  |
+| שם        | הקלד   | תיאור |
+| --------- | ------ | ----- |
+| מקור      | מחרוזת |       |
+| שם קובץ   | מחרוזת |       |
+| graphHash | מחרוזת |       |
 
 ## `src/self-hosted/fws/lexer`
 
@@ -2951,9 +3085,9 @@ export fn is_ws(byte: i32) -> bool
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בייט | i32 | ערך בתים מועמד. |
+| שם   | הקלד | תיאור           |
+| ---- | ---- | --------------- |
+| בייט | i32  | ערך בתים מועמד. |
 
 #### חוֹזֶה
 
@@ -2967,7 +3101,7 @@ export fn is_ws(byte: i32) -> bool
 פונקציה **סוג:**
 
 ```typescript
-function computeForgeWebScriptLexStageFingerprint(source: string): number
+function computeForgeWebScriptLexStageFingerprint(source: string): number;
 ```
 
 סימוכין זרעים לשלב lex באירוח עצמי.
@@ -2975,16 +3109,16 @@ function computeForgeWebScriptLexStageFingerprint(source: string): number
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| מקור | מחרוזת |       |
 
 ### createForgeWebScriptLexStageVmModule
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScriptSelfHostedVmModule;
 ```
 
 מודול VM מונמך ביד לשלב טביעת האצבע של לקס.
@@ -2992,9 +3126,9 @@ function createForgeWebScriptLexStageVmModule(sourceHash: string): ForgeWebScrip
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceHash | מחרוזת |  |
+| שם         | הקלד   | תיאור |
+| ---------- | ------ | ----- |
+| sourceHash | מחרוזת |       |
 
 ### encodeForgeWebScriptLexStageSource
 
@@ -3006,23 +3140,23 @@ function encodeForgeWebScriptLexStageSource(source: string): {
   readonly layout: typeof FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
   readonly bytes: Uint8Array;
   readonly ownership: 'owned';
-}
+};
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| מקור | מחרוזת |       |
 
 ### FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY;
 ```
 
 לא סופק תיאור.
@@ -3032,7 +3166,7 @@ export const FORGE_WEB_SCRIPT_LEX_STAGE_ENTRY
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT
+export const FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT;
 ```
 
 לא סופק תיאור.
@@ -3084,48 +3218,52 @@ export type ForgeWebScriptSelfHostedVmValue = |
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptParserModuleVmModule(sourceHash: string, fileName: string, options: ForgeWebScriptParserModuleStageOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserModuleVmModule(
+  sourceHash: string,
+  fileName: string,
+  options: ForgeWebScriptParserModuleStageOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 מודול ה-VM המוורד ביד לשלב הנתח-מודול התחום.
 ערך: parse_module_stage(מקור: ForgeWebScriptSourceBytes) -> מעטפת בתים.
 
 פריסת מעטפה (כולם u32 little-endian):
-  [0] failFlag (1 = דקדוק מחוץ לקבוצת המשנה המוגבלת v1; מטען מודול נעדר)
-  [4] diagFlag (1 = תועד אבחון FWS-PARSE-052 עם גבולות יחיד)
-  [8..32) טווח אבחון (התחלה, סוף, שורה, עמודה, קו קצה, עמודה סוף)
-  [32..) בתים של מטען מודול (משמעותי רק כאשר failFlag = 0)
+[0] failFlag (1 = דקדוק מחוץ לקבוצת המשנה המוגבלת v1; מטען מודול נעדר)
+[4] diagFlag (1 = תועד אבחון FWS-PARSE-052 עם גבולות יחיד)
+[8..32) טווח אבחון (התחלה, סוף, שורה, עמודה, קו קצה, עמודה סוף)
+[32..) בתים של מטען מודול (משמעותי רק כאשר failFlag = 0)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceHash | מחרוזת |  |
-| שם קובץ | מחרוזת |  |
-| אפשרויות | ForgeWebScriptParserModuleStageOptions |  |
+| שם         | הקלד                                   | תיאור |
+| ---------- | -------------------------------------- | ----- |
+| sourceHash | מחרוזת                                 |       |
+| שם קובץ    | מחרוזת                                 |       |
+| אפשרויות   | ForgeWebScriptParserModuleStageOptions |       |
 
 ### decodeForgeWebScriptParserModuleEnvelope
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope
+function decodeForgeWebScriptParserModuleEnvelope(bytes: Uint8Array): ForgeWebScriptParserModuleEnvelope;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בתים | Uint8Array |  |
+| שם   | הקלד       | תיאור |
+| ---- | ---------- | ----- |
+| בתים | Uint8Array |       |
 
 ### FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY;
 ```
 
 לא סופק תיאור.
@@ -3157,7 +3295,7 @@ export interface ForgeWebScriptParserModuleStageOptions
 פונקציה **סוג:**
 
 ```typescript
-function computeForgeWebScriptParserStageFingerprint(source: string): number
+function computeForgeWebScriptParserStageFingerprint(source: string): number;
 ```
 
 הפניה למקור עבור שלב הנתח המתארח בעצמו.
@@ -3165,16 +3303,19 @@ function computeForgeWebScriptParserStageFingerprint(source: string): number
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| מקור | מחרוזת |       |
 
 ### createForgeWebScriptParserStageVmModule
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptParserStageVmModule(sourceHash: string, options: ForgeWebScriptParserStageVmModuleOptions = {}): ForgeWebScriptSelfHostedVmModule
+function createForgeWebScriptParserStageVmModule(
+  sourceHash: string,
+  options: ForgeWebScriptParserStageVmModuleOptions = {},
+): ForgeWebScriptSelfHostedVmModule;
 ```
 
 מודול VM מונמך ביד לשלב טביעת האצבע של מנתח.
@@ -3182,17 +3323,17 @@ function createForgeWebScriptParserStageVmModule(sourceHash: string, options: Fo
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceHash | מחרוזת |  |
-| אפשרויות | ForgeWebScriptParserStageVmModuleOptions |  |
+| שם         | הקלד                                     | תיאור |
+| ---------- | ---------------------------------------- | ----- |
+| sourceHash | מחרוזת                                   |       |
+| אפשרויות   | ForgeWebScriptParserStageVmModuleOptions |       |
 
 ### FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY
+export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY;
 ```
 
 לא סופק תיאור.
@@ -3214,140 +3355,158 @@ export interface ForgeWebScriptParserStageVmModuleOptions
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptSelfHostedParserArtifact(source: string, fileName: string, module: ForgeWebScriptModule, diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedParserArtifact(
+  source: string,
+  fileName: string,
+  module: ForgeWebScriptModule,
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| שם קובץ | מחרוזת |  |
-| מודול | ForgeWebScriptModule |  |
-| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |  |
-| graphHash | מחרוזת |  |
+| שם        | הקלד                                   | תיאור |
+| --------- | -------------------------------------- | ----- |
+| מקור      | מחרוזת                                 |       |
+| שם קובץ   | מחרוזת                                 |       |
+| מודול     | ForgeWebScriptModule                   |       |
+| אבחון     | לקריאה בלבד ForgeWebScriptDiagnostic[] |       |
+| graphHash | מחרוזת                                 |       |
 
 ### createForgeWebScriptSelfHostedTokenArtifact
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptSelfHostedTokenArtifact(source: string, fileName: string, tokens: readonly ForgeWebScriptToken[], diagnostics: readonly ForgeWebScriptDiagnostic[] = [], graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function createForgeWebScriptSelfHostedTokenArtifact(
+  source: string,
+  fileName: string,
+  tokens: readonly ForgeWebScriptToken[],
+  diagnostics: readonly ForgeWebScriptDiagnostic[] = [],
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| שם קובץ | מחרוזת |  |
-| אסימונים | לקריאה בלבד ForgeWebScriptToken[] |  |
-| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |  |
-| graphHash | מחרוזת |  |
+| שם        | הקלד                                   | תיאור |
+| --------- | -------------------------------------- | ----- |
+| מקור      | מחרוזת                                 |       |
+| שם קובץ   | מחרוזת                                 |       |
+| אסימונים  | לקריאה בלבד ForgeWebScriptToken[]      |       |
+| אבחון     | לקריאה בלבד ForgeWebScriptDiagnostic[] |       |
+| graphHash | מחרוזת                                 |       |
 
 ### decodeForgeWebScriptSelfHostedModule
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule
+function decodeForgeWebScriptSelfHostedModule(bytes: Uint8Array): ForgeWebScriptModule;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בתים | Uint8Array |  |
+| שם   | הקלד       | תיאור |
+| ---- | ---------- | ----- |
+| בתים | Uint8Array |       |
 
 ### decodeForgeWebScriptSelfHostedTokens
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[]
+function decodeForgeWebScriptSelfHostedTokens(bytes: Uint8Array): readonly ForgeWebScriptToken[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בתים | Uint8Array |  |
+| שם   | הקלד       | תיאור |
+| ---- | ---------- | ----- |
+| בתים | Uint8Array |       |
 
 ### encodeForgeWebScriptSelfHostedModule
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array
+function encodeForgeWebScriptSelfHostedModule(module: ForgeWebScriptModule): Uint8Array;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptModule |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| מודול | ForgeWebScriptModule |       |
 
 ### encodeForgeWebScriptSelfHostedTokens
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array
+function encodeForgeWebScriptSelfHostedTokens(tokens: readonly ForgeWebScriptToken[]): Uint8Array;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אסימונים | לקריאה בלבד ForgeWebScriptToken[] |  |
+| שם       | הקלד                              | תיאור |
+| -------- | --------------------------------- | ----- |
+| אסימונים | לקריאה בלבד ForgeWebScriptToken[] |       |
 
 ### hashForgeWebScriptSelfHostedStagePayload
 
 פונקציה **סוג:**
 
 ```typescript
-function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string
+function hashForgeWebScriptSelfHostedStagePayload(artifact: ForgeWebScriptSelfHostedStageArtifact): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חפץ | ForgeWebScriptSelfHostedStageArtifact |  |
+| שם  | הקלד                                  | תיאור |
+| --- | ------------------------------------- | ----- |
+| חפץ | ForgeWebScriptSelfHostedStageArtifact |       |
 
 ### validateForgeWebScriptSelfHostedStageArtifact
 
 פונקציה **סוג:**
 
 ```typescript
-function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptSelfHostedStageArtifact, stage: ForgeWebScriptSelfHostedCompilerStage, source: string, fileName: string, graphHash?: string): ForgeWebScriptSelfHostedStageArtifact
+function validateForgeWebScriptSelfHostedStageArtifact(
+  artifact: ForgeWebScriptSelfHostedStageArtifact,
+  stage: ForgeWebScriptSelfHostedCompilerStage,
+  source: string,
+  fileName: string,
+  graphHash?: string,
+): ForgeWebScriptSelfHostedStageArtifact;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חפץ | ForgeWebScriptSelfHostedStageArtifact |  |
-| במה | ForgeWebScriptSelfHostedCompilerStage |  |
-| מקור | מחרוזת |  |
-| שם קובץ | מחרוזת |  |
-| graphHash | מחרוזת |  |
+| שם        | הקלד                                  | תיאור |
+| --------- | ------------------------------------- | ----- |
+| חפץ       | ForgeWebScriptSelfHostedStageArtifact |       |
+| במה       | ForgeWebScriptSelfHostedCompilerStage |       |
+| מקור      | מחרוזת                                |       |
+| שם קובץ   | מחרוזת                                |       |
+| graphHash | מחרוזת                                |       |
 
 ## `src/stdlib/memory`
 
@@ -3356,7 +3515,7 @@ function validateForgeWebScriptSelfHostedStageArtifact(artifact: ForgeWebScriptS
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP;
 ```
 
 לא סופק תיאור.
@@ -3366,7 +3525,7 @@ export const FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[]
+export const FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS: readonly ForgeWebScriptMemoryFunction[];
 ```
 
 לא סופק תיאור.
@@ -3386,7 +3545,15 @@ export interface ForgeWebScriptMemoryFunction
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' | 'memory-realloc' | 'memory-load-u32' | 'memory-store-u32' | 'memory-load-f64' | 'memory-store-f64' | 'f64-from-u32';
+export type ForgeWebScriptMemoryOperation =
+  | 'memory-alloc'
+  | 'memory-dealloc'
+  | 'memory-realloc'
+  | 'memory-load-u32'
+  | 'memory-store-u32'
+  | 'memory-load-f64'
+  | 'memory-store-f64'
+  | 'f64-from-u32';
 ```
 
 בדק פעולות זיכרון ליניארי אורח ששמורים על ידי המהדר.
@@ -3398,7 +3565,7 @@ export type ForgeWebScriptMemoryOperation = | 'memory-alloc' | 'memory-dealloc' 
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity
+export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptStandardLibraryIdentity;
 ```
 
 לא סופק תיאור.
@@ -3408,7 +3575,7 @@ export const DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY: ForgeWebScriptS
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
+export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES;
 ```
 
 לא סופק תיאור.
@@ -3418,7 +3585,7 @@ export const FORGE_WEB_SCRIPT_REGEX_DIAGNOSTIC_CODES
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP;
 ```
 
 לא סופק תיאור.
@@ -3428,7 +3595,7 @@ export const FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[]
+export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLibraryFunction[];
 ```
 
 שיחות בבעלות מהדר. הם שמות מקור שמורים, לא ייבוא מארח, ו
@@ -3440,7 +3607,7 @@ export const FORGE_WEB_SCRIPT_REGEX_FUNCTIONS: readonly ForgeWebScriptStandardLi
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_REGEX_VERSION
+export const FORGE_WEB_SCRIPT_REGEX_VERSION;
 ```
 
 לא סופק תיאור.
@@ -3450,7 +3617,16 @@ export const FORGE_WEB_SCRIPT_REGEX_VERSION
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptRegexOperation = | 'full-match' | 'prefix-match' | 'search' | 'full-capture-start' | 'full-capture-end' | 'prefix-capture-start' | 'prefix-capture-end' | 'search-capture-start' | 'search-capture-end';
+export type ForgeWebScriptRegexOperation =
+  | 'full-match'
+  | 'prefix-match'
+  | 'search'
+  | 'full-capture-start'
+  | 'full-capture-end'
+  | 'prefix-capture-start'
+  | 'prefix-capture-end'
+  | 'search-capture-start'
+  | 'search-capture-end';
 ```
 
 לא סופק תיאור.
@@ -3470,16 +3646,18 @@ export interface ForgeWebScriptStandardLibraryFunction
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptStandardLibraryIdentity(overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {}): ForgeWebScriptStandardLibraryIdentity
+function forgeWebScriptStandardLibraryIdentity(
+  overrides: Partial<ForgeWebScriptStandardLibraryIdentity> = {},
+): ForgeWebScriptStandardLibraryIdentity;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| עוקף | חלקי<ForgeWebScriptStandardLibraryIdentity> |  |
+| שם   | הקלד                                        | תיאור |
+| ---- | ------------------------------------------- | ----- |
+| עוקף | חלקי<ForgeWebScriptStandardLibraryIdentity> |       |
 
 ### ForgeWebScriptStandardLibraryIdentity
 
@@ -3498,7 +3676,7 @@ export interface ForgeWebScriptStandardLibraryIdentity
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
+export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP;
 ```
 
 לא סופק תיאור.
@@ -3508,7 +3686,7 @@ export const FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[]
+export const FORGE_WEB_SCRIPT_STRING_FUNCTIONS: readonly ForgeWebScriptStringFunction[];
 ```
 
 לא סופק תיאור.
@@ -3528,7 +3706,18 @@ export interface ForgeWebScriptStringFunction
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' | 'string-byte-at' | 'string-starts-with' | 'string-slice' | 'string-to-i32' | 'bytes-length' | 'bytes-length-u32' | 'bytes-byte-at' | 'bytes-byte-at-u32' | 'bytes-slice';
+export type ForgeWebScriptStringOperation =
+  | 'string-concat'
+  | 'string-length'
+  | 'string-byte-at'
+  | 'string-starts-with'
+  | 'string-slice'
+  | 'string-to-i32'
+  | 'bytes-length'
+  | 'bytes-length-u32'
+  | 'bytes-byte-at'
+  | 'bytes-byte-at-u32'
+  | 'bytes-slice';
 ```
 
 פעולות מחרוזות ובייטים דטרמיניסטיות בבעלות מהדר.
@@ -3540,18 +3729,22 @@ export type ForgeWebScriptStringOperation = | 'string-concat' | 'string-length' 
 פונקציה **סוג:**
 
 ```typescript
-function checkForgeWebScript(module: ForgeWebScriptModule, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptTypeCheckResult
+function checkForgeWebScript(
+  module: ForgeWebScriptModule,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptTypeCheckResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptModule |  |
-| שם קובץ |  |  |
-| אפשרויות | ForgeWebScriptTypeCheckOptions |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| מודול    | ForgeWebScriptModule           |       |
+| שם קובץ  |                                |       |
+| אפשרויות | ForgeWebScriptTypeCheckOptions |       |
 
 ### ForgeWebScriptTypeCheckOptions
 
@@ -3590,18 +3783,22 @@ export interface ForgeWebScriptValidationResult
 פונקציה **סוג:**
 
 ```typescript
-function validateForgeWebScript(source: string, fileName = '<input>', options: ForgeWebScriptTypeCheckOptions = {}): ForgeWebScriptValidationResult
+function validateForgeWebScript(
+  source: string,
+  fileName = '<input>',
+  options: ForgeWebScriptTypeCheckOptions = {},
+): ForgeWebScriptValidationResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| שם קובץ |  |  |
-| אפשרויות | ForgeWebScriptTypeCheckOptions |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| מקור     | מחרוזת                         |       |
+| שם קובץ  |                                |       |
+| אפשרויות | ForgeWebScriptTypeCheckOptions |       |
 
 ## `src/wat`
 
@@ -3620,14 +3817,14 @@ export interface ForgeWebScriptWatMetadata
 פונקציה **סוג:**
 
 ```typescript
-function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string
+function renderForgeWebScriptWat(module: ForgeWebScriptModule, metadata: ForgeWebScriptWatMetadata = {}): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptModule |  |
-| מטא נתונים | ForgeWebScriptWatMetadata |  |
+| שם         | הקלד                      | תיאור |
+| ---------- | ------------------------- | ----- |
+| מודול      | ForgeWebScriptModule      |       |
+| מטא נתונים | ForgeWebScriptWatMetadata |       |

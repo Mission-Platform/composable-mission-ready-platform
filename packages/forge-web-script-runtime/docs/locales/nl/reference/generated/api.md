@@ -16,33 +16,33 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-w
 **Soort:** functie
 
 ```typescript
-function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void
+function assertValidForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): void;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| manifesteren | ForgeWebScriptAbiManifest |  |
+| Naam         | Typ                       | Beschrijving |
+| ------------ | ------------------------- | ------------ |
+| manifesteren | ForgeWebScriptAbiManifest |              |
 
 ### gelijkeFunctie
 
 **Soort:** functie
 
 ```typescript
-function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean
+function equalFunction(left: ForgeWebScriptAbiFunction, right: ForgeWebScriptAbiFunction): boolean;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| links | ForgeWebScriptAbiFunction |  |
-| juist | ForgeWebScriptAbiFunction |  |
+| Naam  | Typ                       | Beschrijving |
+| ----- | ------------------------- | ------------ |
+| links | ForgeWebScriptAbiFunction |              |
+| juist | ForgeWebScriptAbiFunction |              |
 
 ### ForgeWebScriptAbiValidationResult
 
@@ -59,16 +59,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult
+function validateForgeWebScriptAbiManifest(manifest: ForgeWebScriptAbiManifest): ForgeWebScriptAbiValidationResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| manifesteren | ForgeWebScriptAbiManifest |  |
+| Naam         | Typ                       | Beschrijving |
+| ------------ | ------------------------- | ------------ |
+| manifesteren | ForgeWebScriptAbiManifest |              |
 
 ## `src/async`
 
@@ -77,23 +77,23 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime
+function createForgeWebScriptAsyncRuntime(options: ForgeWebScriptAsyncRuntimeOptions = {}): ForgeWebScriptAsyncRuntime;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptAsyncRuntimeOptions |  |
+| Naam   | Typ                               | Beschrijving |
+| ------ | --------------------------------- | ------------ |
+| opties | ForgeWebScriptAsyncRuntimeOptions |              |
 
 ### FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES
+export const FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES;
 ```
 
 Geen beschrijving opgegeven.
@@ -103,7 +103,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptAsyncCapability = (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
+export type ForgeWebScriptAsyncCapability =
+  (typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES)[keyof typeof FORGE_WEB_SCRIPT_ASYNC_CAPABILITIES];
 ```
 
 Geen beschrijving opgegeven.
@@ -143,7 +144,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptAsyncFailureCode = | 'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
+export type ForgeWebScriptAsyncFailureCode =
+  'capability-denied' | 'host-error' | 'invalid-message' | 'queue-limit' | 'task-error';
 ```
 
 Geen beschrijving opgegeven.
@@ -245,104 +247,124 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptArray(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function createForgeWebScriptArray(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 Maak een vaste array door de opgegeven waarden te kopiëren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarden | alleen-lezen TValue[] |  |
-| eigendom | ForgeWebScriptCollectionOwnership |  |
+| Naam     | Typ                               | Beschrijving |
+| -------- | --------------------------------- | ------------ |
+| waarden  | alleen-lezen TValue[]             |              |
+| eigendom | ForgeWebScriptCollectionOwnership |              |
 
 ### createForgeWebScriptIterator
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptIterator(values: Iterable<TValue>, descriptor: ForgeWebScriptIteratorDescriptor): ForgeWebScriptIterator<TValue>
+function createForgeWebScriptIterator(
+  values: Iterable<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Pas een iterabele aan tot een luie iterator met de meegeleverde ABI-descriptor.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarden | Itereerbaar<TValue> |  |
-| omschrijving | ForgeWebScriptIteratorDescriptor |  |
+| Naam         | Typ                              | Beschrijving |
+| ------------ | -------------------------------- | ------------ |
+| waarden      | Itereerbaar<TValue>              |              |
+| omschrijving | ForgeWebScriptIteratorDescriptor |              |
 
 ### createForgeWebScriptIteratorDescriptor
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptIteratorDescriptor(id: string, elementType = 'unknown', capability: ForgeWebScriptIteratorCapability = 'linear', ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptIteratorDescriptor
+function createForgeWebScriptIteratorDescriptor(
+  id: string,
+  elementType = 'unknown',
+  capability: ForgeWebScriptIteratorCapability = 'linear',
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptIteratorDescriptor;
 ```
 
 Creëer descriptor-grensmetagegevens; oudere bellers gebruiken standaard lineaire toegang.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| ID | tekenreeks |  |
-| elementType |  |  |
-| vermogen | ForgeWebScriptIteratorCapability |  |
-| eigendom | ForgeWebScriptCollectionOwnership |  |
+| Naam        | Typ                               | Beschrijving |
+| ----------- | --------------------------------- | ------------ |
+| ID          | tekenreeks                        |              |
+| elementType |                                   |              |
+| vermogen    | ForgeWebScriptIteratorCapability  |              |
+| eigendom    | ForgeWebScriptCollectionOwnership |              |
 
 ### createForgeWebScriptMap
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptMap(entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [], strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>()): ForgeWebScriptMap<TKey, TValue>
+function createForgeWebScriptMap(
+  entries: readonly ForgeWebScriptMapEntry<TKey, TValue>[] = [],
+  strategy: ForgeWebScriptHashStrategy<TKey> = forgeWebScriptDefaultHashStrategy<TKey>(),
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| inzendingen | alleen-lezen ForgeWebScriptMapEntry<TKey, TValue>[] |  |
-| strategie | ForgeWebScriptHashStrategie<TKey> |  |
+| Naam        | Typ                                                 | Beschrijving |
+| ----------- | --------------------------------------------------- | ------------ |
+| inzendingen | alleen-lezen ForgeWebScriptMapEntry<TKey, TValue>[] |              |
+| strategie   | ForgeWebScriptHashStrategie<TKey>                   |              |
 
 ### createForgeWebScriptSet
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptSet(values: readonly TValue[] = [], strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>()): ForgeWebScriptSet<TValue>
+function createForgeWebScriptSet(
+  values: readonly TValue[] = [],
+  strategy: ForgeWebScriptHashStrategy<TValue> = forgeWebScriptDefaultHashStrategy<TValue>(),
+): ForgeWebScriptSet<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarden | alleen-lezen TValue[] |  |
-| strategie | ForgeWebScriptHashStrategie<TValue> |  |
+| Naam      | Typ                                 | Beschrijving |
+| --------- | ----------------------------------- | ------------ |
+| waarden   | alleen-lezen TValue[]               |              |
+| strategie | ForgeWebScriptHashStrategie<TValue> |              |
 
 ### createForgeWebScriptVector
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptVector(values: readonly TValue[] = [], ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptVector<TValue>
+function createForgeWebScriptVector(
+  values: readonly TValue[] = [],
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptVector<TValue>;
 ```
 
 Maak een eigen vector door de opgegeven waarden te kopiëren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarden | alleen-lezen TValue[] |  |
-| eigendom | ForgeWebScriptCollectionOwnership |  |
+| Naam     | Typ                               | Beschrijving |
+| -------- | --------------------------------- | ------------ |
+| waarden  | alleen-lezen TValue[]             |              |
+| eigendom | ForgeWebScriptCollectionOwnership |              |
 
 ### ForgeWebScriptArray
 
@@ -359,69 +381,77 @@ Aaneengesloten collectie van vaste grootte; updates retourneren een gekopieerde 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptArrayGet(array: ForgeWebScriptArray<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 Een array-element lezen; ongeldige indices retourneren Option.none.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| reeks | ForgeWebScriptArray<TValue> |  |
-| index | nummer |  |
+| Naam  | Typ                         | Beschrijving |
+| ----- | --------------------------- | ------------ |
+| reeks | ForgeWebScriptArray<TValue> |              |
+| index | nummer                      |              |
 
 ### forgeWebScriptArrayLength
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number
+function forgeWebScriptArrayLength(array: ForgeWebScriptArray<TValue>): number;
 ```
 
 Retourneer een arraylengte zonder de elementen ervan te verbruiken of te kopiëren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| reeks | ForgeWebScriptArray<TValue> |  |
+| Naam  | Typ                         | Beschrijving |
+| ----- | --------------------------- | ------------ |
+| reeks | ForgeWebScriptArray<TValue> |              |
 
 ### forgeWebScriptArraySet
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptArraySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptArray<TValue>
+function forgeWebScriptArraySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptArray<TValue>;
 ```
 
 Vervang een array-element; ongeldige indices genereren RangeError.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| reeks | ForgeWebScriptArray<TValue> |  |
-| index | nummer |  |
-| waarde | TVwaarde |  |
+| Naam   | Typ                         | Beschrijving |
+| ------ | --------------------------- | ------------ |
+| reeks  | ForgeWebScriptArray<TValue> |              |
+| index  | nummer                      |              |
+| waarde | TVwaarde                    |              |
 
 ### forgeWebScriptArrayTrySet
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptArrayTrySet(array: ForgeWebScriptArray<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>
+function forgeWebScriptArrayTrySet(
+  array: ForgeWebScriptArray<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptArray<TValue>>;
 ```
 
 Vervang een array-element zonder te gooien; ongeldige indices retourneren een foutresultaat.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| reeks | ForgeWebScriptArray<TValue> |  |
-| index | nummer |  |
-| waarde | TVwaarde |  |
+| Naam   | Typ                         | Beschrijving |
+| ------ | --------------------------- | ------------ |
+| reeks  | ForgeWebScriptArray<TValue> |              |
+| index  | nummer                      |              |
+| waarde | TVwaarde                    |              |
 
 ### ForgeWebScriptCollectionOwnership
 
@@ -438,7 +468,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>
+function forgeWebScriptDefaultHashStrategy(): ForgeWebScriptHashStrategy<TValue>;
 ```
 
 Geen beschrijving opgegeven.
@@ -448,7 +478,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const forgeWebScriptError
+export const forgeWebScriptError;
 ```
 
 Construeer een fout Resultaatwaarde zonder te gooien.
@@ -468,7 +498,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptIterable<TValue> = ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
+export type ForgeWebScriptIterable<TValue> =
+  ForgeWebScriptIterator<TValue> | ForgeWebScriptArray<TValue> | ForgeWebScriptVector<TValue> | Iterable<TValue>;
 ```
 
 Elke bron die wordt geaccepteerd door seriële en parallelle iteratorbewerkingen.
@@ -488,34 +519,40 @@ Luie iteratorweergave met descriptormogelijkheden en optionele directe indexerin
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorAdd(source: ForgeWebScriptIterator<TValue>, value: TValue): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorAdd(
+  source: ForgeWebScriptIterator<TValue>,
+  value: TValue,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Lazily voegt één waarde toe aan een iterator.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterator<TValue> |  |
-| waarde | TVwaarde |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| bron   | ForgeWebScriptIterator<TValue> |              |
+| waarde | TVwaarde                       |              |
 
 ### forgeWebScriptIteratorAt
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorAt(iterator: ForgeWebScriptIterator<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorAt(
+  iterator: ForgeWebScriptIterator<TValue>,
+  index: number,
+): ForgeWebScriptOption<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| iterator | ForgeWebScriptIterator<TValue> |  |
-| index | nummer |  |
+| Naam     | Typ                            | Beschrijving |
+| -------- | ------------------------------ | ------------ |
+| iterator | ForgeWebScriptIterator<TValue> |              |
+| index    | nummer                         |              |
 
 ### ForgeWebScriptIteratorCapability
 
@@ -532,33 +569,36 @@ Lineair verbruik of niet-consumerende willekeurige toegang ondersteund door een 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptIteratorCollect(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| iterator | ForgeWebScriptIterator<TValue> |  |
+| Naam     | Typ                            | Beschrijving |
+| -------- | ------------------------------ | ------------ |
+| iterator | ForgeWebScriptIterator<TValue> |              |
 
 ### forgeWebScriptIteratorConcat
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorConcat(first: ForgeWebScriptIterator<TValue>, second: ForgeWebScriptIterable<TValue>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorConcat(
+  first: ForgeWebScriptIterator<TValue>,
+  second: ForgeWebScriptIterable<TValue>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Voegt lui twee bronnen samen zonder de volgorde van beide bronnen te veranderen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eerste | ForgeWebScriptIterator<TValue> |  |
-| tweede | ForgeWebScriptIterable<TValue> |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| eerste | ForgeWebScriptIterator<TValue> |              |
+| tweede | ForgeWebScriptIterable<TValue> |              |
 
 ### ForgeWebScriptIteratorDescriptor
 
@@ -575,163 +615,186 @@ ABI-metagegevens die de representatie, het eigendom en de toegangsmogelijkheden 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorFilter(source: ForgeWebScriptIterator<TValue>, predicate: (value: TValue) => boolean): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFilter(
+  source: ForgeWebScriptIterator<TValue>,
+  predicate: (value: TValue) => boolean,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Lui filterwaarden; filteren verlaagt altijd de mogelijkheid tot lineaire toegang.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterator<TValue> |  |
-| predikaat | (waarde: TValue) => boolean |  |
+| Naam      | Typ                            | Beschrijving |
+| --------- | ------------------------------ | ------------ |
+| bron      | ForgeWebScriptIterator<TValue> |              |
+| predikaat | (waarde: TValue) => boolean    |              |
 
 ### forgeWebScriptIteratorFirst
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorFirst(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| iterator | ForgeWebScriptIterator<TValue> |  |
+| Naam     | Typ                            | Beschrijving |
+| -------- | ------------------------------ | ------------ |
+| iterator | ForgeWebScriptIterator<TValue> |              |
 
 ### forgeWebScriptIteratorFlatten
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorFlatten(source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFlatten(
+  source: ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>>,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Maak geneste bronnen lui plat in de volgorde van de buitenste en de binnenste bron.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |  |
+| Naam | Typ                                                    | Beschrijving |
+| ---- | ------------------------------------------------------ | ------------ |
+| bron | ForgeWebScriptIterator<ForgeWebScriptIterable<TValue>> |              |
 
 ### forgeWebScriptIteratorFold
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorFold(iterator: ForgeWebScriptIterator<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptIteratorFold(
+  iterator: ForgeWebScriptIterator<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| iterator | ForgeWebScriptIterator<TValue> |  |
-| initiële | TResultaat |  |
-| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |  |
+| Naam        | Typ                                                             | Beschrijving |
+| ----------- | --------------------------------------------------------------- | ------------ |
+| iterator    | ForgeWebScriptIterator<TValue>                                  |              |
+| initiële    | TResultaat                                                      |              |
+| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |              |
 
 ### forgeWebScriptIteratorFromArray
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorFromArray(array: ForgeWebScriptArray<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromArray(
+  array: ForgeWebScriptArray<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'array',
     'unknown',
     'random-access',
     array.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Creëer een iterator met willekeurige toegang over een vaste array zonder de eigenaar ervan te veranderen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| reeks | ForgeWebScriptArray<TValue> |  |
-| omschrijving | ForgeWebScriptIteratorDescriptor |  |
+| Naam         | Typ                              | Beschrijving |
+| ------------ | -------------------------------- | ------------ |
+| reeks        | ForgeWebScriptArray<TValue>      |              |
+| omschrijving | ForgeWebScriptIteratorDescriptor |              |
 
 ### forgeWebScriptIteratorFromIterable
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorFromIterable(values: Iterable<TValue>, elementType = 'unknown', id = 'iterable'): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorFromIterable(
+  values: Iterable<TValue>,
+  elementType = 'unknown',
+  id = 'iterable',
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Pas een willekeurige iterabele aan tot een luie lineaire Forge Web Script-iterator.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarden | Itereerbaar<TValue> |  |
-| elementType |  |  |
-| ID |  |  |
+| Naam        | Typ                 | Beschrijving |
+| ----------- | ------------------- | ------------ |
+| waarden     | Itereerbaar<TValue> |              |
+| elementType |                     |              |
+| ID          |                     |              |
 
 ### forgeWebScriptIteratorFromVector
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorFromVector(vector: ForgeWebScriptVector<TValue>, descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
+function forgeWebScriptIteratorFromVector(
+  vector: ForgeWebScriptVector<TValue>,
+  descriptor: ForgeWebScriptIteratorDescriptor = iteratorDescriptor(
     'vector',
     'unknown',
     'random-access',
     vector.ownership,
-  )): ForgeWebScriptIterator<TValue>
+  ),
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Creëer een iterator met willekeurige toegang over een vector zonder het eigendom ervan te veranderen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vector | ForgeWebScriptVector<TValue> |  |
-| omschrijving | ForgeWebScriptIteratorDescriptor |  |
+| Naam         | Typ                              | Beschrijving |
+| ------------ | -------------------------------- | ------------ |
+| vector       | ForgeWebScriptVector<TValue>     |              |
+| omschrijving | ForgeWebScriptIteratorDescriptor |              |
 
 ### forgeWebScriptIteratorLast
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>
+function forgeWebScriptIteratorLast(iterator: ForgeWebScriptIterator<TValue>): ForgeWebScriptOption<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| iterator | ForgeWebScriptIterator<TValue> |  |
+| Naam     | Typ                            | Beschrijving |
+| -------- | ------------------------------ | ------------ |
+| iterator | ForgeWebScriptIterator<TValue> |              |
 
 ### forgeWebScriptIteratorMap
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorMap(source: ForgeWebScriptIterator<TValue>, map: (value: TValue) => TResult, elementType = source.descriptor.elementType): ForgeWebScriptIterator<TResult>
+function forgeWebScriptIteratorMap(
+  source: ForgeWebScriptIterator<TValue>,
+  map: (value: TValue) => TResult,
+  elementType = source.descriptor.elementType,
+): ForgeWebScriptIterator<TResult>;
 ```
 
 Breng waarden lui in kaart en behoud willekeurige toegang alleen als de bron dit ondersteunt.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterator<TValue> |  |
-| kaart | (waarde: TVwaarde) => TResultaat |  |
-| elementType |  |  |
+| Naam        | Typ                              | Beschrijving |
+| ----------- | -------------------------------- | ------------ |
+| bron        | ForgeWebScriptIterator<TValue>   |              |
+| kaart       | (waarde: TVwaarde) => TResultaat |              |
+| elementType |                                  |              |
 
 ### ForgeWebScriptIteratorResultaat
 
@@ -748,34 +811,40 @@ Eén verpakt iterator-pull-resultaat; gedaan blijft waar na uitputting.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorTake(source: ForgeWebScriptIterator<TValue>, count: number): ForgeWebScriptIterator<TValue>
+function forgeWebScriptIteratorTake(
+  source: ForgeWebScriptIterator<TValue>,
+  count: number,
+): ForgeWebScriptIterator<TValue>;
 ```
 
 Beperk een bron lui tot maximaal telwaarden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterator<TValue> |  |
-| tellen | nummer |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| bron   | ForgeWebScriptIterator<TValue> |              |
+| tellen | nummer                         |              |
 
 ### forgeWebScriptIteratorToArray
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorToArray(iterator: ForgeWebScriptIterator<TValue>, ownership: ForgeWebScriptCollectionOwnership = 'owned'): ForgeWebScriptArray<TValue>
+function forgeWebScriptIteratorToArray(
+  iterator: ForgeWebScriptIterator<TValue>,
+  ownership: ForgeWebScriptCollectionOwnership = 'owned',
+): ForgeWebScriptArray<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| iterator | ForgeWebScriptIterator<TValue> |  |
-| eigendom | ForgeWebScriptCollectionOwnership |  |
+| Naam     | Typ                               | Beschrijving |
+| -------- | --------------------------------- | ------------ |
+| iterator | ForgeWebScriptIterator<TValue>    |              |
+| eigendom | ForgeWebScriptCollectionOwnership |              |
 
 ### ForgeWebScriptMap
 
@@ -792,33 +861,35 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapDelete(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kaart | ForgeWebScriptMap<TKey, TValue> |  |
-| sleutel | TKey |  |
+| Naam    | Typ                             | Beschrijving |
+| ------- | ------------------------------- | ------------ |
+| kaart   | ForgeWebScriptMap<TKey, TValue> |              |
+| sleutel | TKey                            |              |
 
 ### forgeWebScriptMapEntries
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptMapEntries(map: ForgeWebScriptMap<TKey, TValue>): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>
+function forgeWebScriptMapEntries(
+  map: ForgeWebScriptMap<TKey, TValue>,
+): ForgeWebScriptVector<ForgeWebScriptMapEntry<TKey, TValue>>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kaart | ForgeWebScriptMap<TKey, TValue> |  |
+| Naam  | Typ                             | Beschrijving |
+| ----- | ------------------------------- | ------------ |
+| kaart | ForgeWebScriptMap<TKey, TValue> |              |
 
 ### ForgeWebScriptMapEntry
 
@@ -835,42 +906,46 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>
+function forgeWebScriptMapGet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey): ForgeWebScriptOption<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kaart | ForgeWebScriptMap<TKey, TValue> |  |
-| sleutel | TKey |  |
+| Naam    | Typ                             | Beschrijving |
+| ------- | ------------------------------- | ------------ |
+| kaart   | ForgeWebScriptMap<TKey, TValue> |              |
+| sleutel | TKey                            |              |
 
 ### forgeWebScriptMapSet
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptMapSet(map: ForgeWebScriptMap<TKey, TValue>, key: TKey, value: TValue): ForgeWebScriptMap<TKey, TValue>
+function forgeWebScriptMapSet(
+  map: ForgeWebScriptMap<TKey, TValue>,
+  key: TKey,
+  value: TValue,
+): ForgeWebScriptMap<TKey, TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kaart | ForgeWebScriptMap<TKey, TValue> |  |
-| sleutel | TKey |  |
-| waarde | TVwaarde |  |
+| Naam    | Typ                             | Beschrijving |
+| ------- | ------------------------------- | ------------ |
+| kaart   | ForgeWebScriptMap<TKey, TValue> |              |
+| sleutel | TKey                            |              |
+| waarde  | TVwaarde                        |              |
 
 ### forgeWebScriptGeen
 
 **Soort:** constant
 
 ```typescript
-export const forgeWebScriptNone
+export const forgeWebScriptNone;
 ```
 
 Construeer een lege optiewaarde.
@@ -880,7 +955,7 @@ Construeer een lege optiewaarde.
 **Soort:** constant
 
 ```typescript
-export const forgeWebScriptOk
+export const forgeWebScriptOk;
 ```
 
 Construeer een succesvolle Resultaatwaarde.
@@ -920,74 +995,74 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetAdd(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| instellen | ForgeWebScriptSet<TValue> |  |
-| waarde | TVwaarde |  |
+| Naam      | Typ                       | Beschrijving |
+| --------- | ------------------------- | ------------ |
+| instellen | ForgeWebScriptSet<TValue> |              |
+| waarde    | TVwaarde                  |              |
 
 ### forgeWebScriptSetDelete
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>
+function forgeWebScriptSetDelete(set: ForgeWebScriptSet<TValue>, value: TValue): ForgeWebScriptSet<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| instellen | ForgeWebScriptSet<TValue> |  |
-| waarde | TVwaarde |  |
+| Naam      | Typ                       | Beschrijving |
+| --------- | ------------------------- | ------------ |
+| instellen | ForgeWebScriptSet<TValue> |              |
+| waarde    | TVwaarde                  |              |
 
 ### forgeWebScriptSetHas
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean
+function forgeWebScriptSetHas(set: ForgeWebScriptSet<TValue>, value: TValue): boolean;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| instellen | ForgeWebScriptSet<TValue> |  |
-| waarde | TVwaarde |  |
+| Naam      | Typ                       | Beschrijving |
+| --------- | ------------------------- | ------------ |
+| instellen | ForgeWebScriptSet<TValue> |              |
+| waarde    | TVwaarde                  |              |
 
 ### forgeWebScriptSetValues
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>
+function forgeWebScriptSetValues(set: ForgeWebScriptSet<TValue>): ForgeWebScriptVector<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| instellen | ForgeWebScriptSet<TValue> |  |
+| Naam      | Typ                       | Beschrijving |
+| --------- | ------------------------- | ------------ |
+| instellen | ForgeWebScriptSet<TValue> |              |
 
 ### forgeWebScriptSommige
 
 **Soort:** constant
 
 ```typescript
-export const forgeWebScriptSome
+export const forgeWebScriptSome;
 ```
 
 Construeer een huidige optiewaarde.
@@ -1008,7 +1083,7 @@ contract, terwijl geleend/gedeeld eigendom behouden blijft door afgeleide waarde
 **Soort:** constant
 
 ```typescript
-export const forgeWebScriptVectorAdd
+export const forgeWebScriptVectorAdd;
 ```
 
 Alias ​​voor vectorpush, passend bij de stdlib-iterator `add`-vocabulaire.
@@ -1018,85 +1093,95 @@ Alias ​​voor vectorpush, passend bij de stdlib-iterator `add`-vocabulaire.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptVectorFilter(vector: ForgeWebScriptVector<TValue>, predicate: (value: TValue, index: number) => boolean): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorFilter(
+  vector: ForgeWebScriptVector<TValue>,
+  predicate: (value: TValue, index: number) => boolean,
+): ForgeWebScriptVector<TValue>;
 ```
 
 Filter een vector gretig in een nieuwe vector terwijl de bronvolgorde behouden blijft.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vector | ForgeWebScriptVector<TValue> |  |
-| predikaat | (waarde: TValue, index: getal) => boolean |  |
+| Naam      | Typ                                       | Beschrijving |
+| --------- | ----------------------------------------- | ------------ |
+| vector    | ForgeWebScriptVector<TValue>              |              |
+| predikaat | (waarde: TValue, index: getal) => boolean |              |
 
 ### forgeWebScriptVectorFold
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptVectorFold(vector: ForgeWebScriptVector<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult): TResult
+function forgeWebScriptVectorFold(
+  vector: ForgeWebScriptVector<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+): TResult;
 ```
 
 Vouw vectorwaarden van links naar rechts, inclusief de meegeleverde initiële accumulator.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vector | ForgeWebScriptVector<TValue> |  |
-| initiële | TResultaat |  |
-| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |  |
+| Naam        | Typ                                                             | Beschrijving |
+| ----------- | --------------------------------------------------------------- | ------------ |
+| vector      | ForgeWebScriptVector<TValue>                                    |              |
+| initiële    | TResultaat                                                      |              |
+| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |              |
 
 ### forgeWebScriptVectorGet
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>
+function forgeWebScriptVectorGet(vector: ForgeWebScriptVector<TValue>, index: number): ForgeWebScriptOption<TValue>;
 ```
 
 Lees een vectorelement; ongeldige indices retourneren Option.none.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vector | ForgeWebScriptVector<TValue> |  |
-| index | nummer |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| vector | ForgeWebScriptVector<TValue> |              |
+| index  | nummer                       |              |
 
 ### forgeWebScriptVectorLengte
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number
+function forgeWebScriptVectorLength(vector: ForgeWebScriptVector<TValue>): number;
 ```
 
 Retourneert het aantal geïnitialiseerde vectorelementen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vector | ForgeWebScriptVector<TValue> |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| vector | ForgeWebScriptVector<TValue> |              |
 
 ### forgeWebScriptVectorMap
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptVectorMap(vector: ForgeWebScriptVector<TValue>, transform: (value: TValue, index: number) => TResult): ForgeWebScriptVector<TResult>
+function forgeWebScriptVectorMap(
+  vector: ForgeWebScriptVector<TValue>,
+  transform: (value: TValue, index: number) => TResult,
+): ForgeWebScriptVector<TResult>;
 ```
 
 Wijs een vector gretig toe aan een nieuwe vector in de volgorde van de bronindex.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vector | ForgeWebScriptVector<TValue> |  |
-| transformeren | (waarde: TValue, index: getal) => TResult |  |
+| Naam          | Typ                                       | Beschrijving |
+| ------------- | ----------------------------------------- | ------------ |
+| vector        | ForgeWebScriptVector<TValue>              |              |
+| transformeren | (waarde: TValue, index: getal) => TResult |              |
 
 ### forgeWebScriptVectorPop
 
@@ -1106,69 +1191,77 @@ Wijs een vector gretig toe aan een nieuwe vector in de volgorde van de bronindex
 function forgeWebScriptVectorPop(vector: ForgeWebScriptVector<TValue>): {
   readonly vector: ForgeWebScriptVector<TValue>;
   readonly value: ForgeWebScriptOption<TValue>;
-}
+};
 ```
 
 Verwijder de uiteindelijke vectorwaarde en retourneer de bijgewerkte vector plus Option-resultaat.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vector | ForgeWebScriptVector<TValue> |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| vector | ForgeWebScriptVector<TValue> |              |
 
 ### forgeWebScriptVectorPush
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorPush(vector: ForgeWebScriptVector<TValue>, value: TValue): ForgeWebScriptVector<TValue>;
 ```
 
 Voeg waarde toe en vergroot de capaciteit indien nodig, met behoud van eigenaarschap.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vector | ForgeWebScriptVector<TValue> |  |
-| waarde | TVwaarde |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| vector | ForgeWebScriptVector<TValue> |              |
+| waarde | TVwaarde                     |              |
 
 ### forgeWebScriptVectorSet
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptVectorSet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptVector<TValue>
+function forgeWebScriptVectorSet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptVector<TValue>;
 ```
 
 Vervang een vectorelement; ongeldige indices genereren RangeError.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vector | ForgeWebScriptVector<TValue> |  |
-| index | nummer |  |
-| waarde | TVwaarde |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| vector | ForgeWebScriptVector<TValue> |              |
+| index  | nummer                       |              |
+| waarde | TVwaarde                     |              |
 
 ### forgeWebScriptVectorTrySet
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptVectorTrySet(vector: ForgeWebScriptVector<TValue>, index: number, value: TValue): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>
+function forgeWebScriptVectorTrySet(
+  vector: ForgeWebScriptVector<TValue>,
+  index: number,
+  value: TValue,
+): ForgeWebScriptResultValue<ForgeWebScriptVector<TValue>>;
 ```
 
 Vervang een vectorelement zonder te gooien; ongeldige indices retourneren een foutresultaat.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vector | ForgeWebScriptVector<TValue> |  |
-| index | nummer |  |
-| waarde | TVwaarde |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| vector | ForgeWebScriptVector<TValue> |              |
+| index  | nummer                       |              |
+| waarde | TVwaarde                     |              |
 
 ## `src/ecs`
 
@@ -1177,45 +1270,55 @@ Vervang een vectorelement zonder te gooien; ongeldige indices retourneren een fo
 **Soort:** functie
 
 ```typescript
-function addForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function addForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| wereld | ForgeWebScriptEcsWorld<TValue> |  |
-| entiteit | ForgeWebScriptEcsEntity |  |
-| bestanddeel | tekenreeks |  |
-| waarde | TVwaarde |  |
+| Naam        | Typ                            | Beschrijving |
+| ----------- | ------------------------------ | ------------ |
+| wereld      | ForgeWebScriptEcsWorld<TValue> |              |
+| entiteit    | ForgeWebScriptEcsEntity        |              |
+| bestanddeel | tekenreeks                     |              |
+| waarde      | TVwaarde                       |              |
 
 ### createForgeWebScriptEcsScheduler
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptEcsScheduler(systems: readonly ForgeWebScriptEcsSystem<TValue>[], signals: readonly ForgeWebScriptEcsSignal[] = [], subscriptions: readonly ForgeWebScriptEcsSubscription[] = [], maxSteps = 1000): ForgeWebScriptEcsScheduler<TValue>
+function createForgeWebScriptEcsScheduler(
+  systems: readonly ForgeWebScriptEcsSystem<TValue>[],
+  signals: readonly ForgeWebScriptEcsSignal[] = [],
+  subscriptions: readonly ForgeWebScriptEcsSubscription[] = [],
+  maxSteps = 1000,
+): ForgeWebScriptEcsScheduler<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| systemen | alleen-lezen ForgeWebScriptEcsSystem<TValue>[] |  |
-| signalen | alleen-lezen ForgeWebScriptEcsSignal[] |  |
-| abonnementen | alleen-lezen ForgeWebScriptEcsSubscription[] |  |
-| maxStappen |  |  |
+| Naam         | Typ                                            | Beschrijving |
+| ------------ | ---------------------------------------------- | ------------ |
+| systemen     | alleen-lezen ForgeWebScriptEcsSystem<TValue>[] |              |
+| signalen     | alleen-lezen ForgeWebScriptEcsSignal[]         |              |
+| abonnementen | alleen-lezen ForgeWebScriptEcsSubscription[]   |              |
+| maxStappen   |                                                |              |
 
 ### createForgeWebScriptEcsWorld
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>
+function createForgeWebScriptEcsWorld(): ForgeWebScriptEcsWorld<TValue>;
 ```
 
 Geen beschrijving opgegeven.
@@ -1225,17 +1328,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function despawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): ForgeWebScriptEcsResult<TValue>
+function despawnForgeWebScriptEcsEntity(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| wereld | ForgeWebScriptEcsWorld<TValue> |  |
-| entiteit | ForgeWebScriptEcsEntity |  |
+| Naam     | Typ                            | Beschrijving |
+| -------- | ------------------------------ | ------------ |
+| wereld   | ForgeWebScriptEcsWorld<TValue> |              |
+| entiteit | ForgeWebScriptEcsEntity        |              |
 
 ### ForgeWebScriptEcsComponentStore
 
@@ -1362,138 +1468,162 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function getForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): TValue | undefined
+function getForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): TValue | undefined;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| wereld | ForgeWebScriptEcsWorld<TValue> |  |
-| entiteit | ForgeWebScriptEcsEntity |  |
-| bestanddeel | tekenreeks |  |
+| Naam        | Typ                            | Beschrijving |
+| ----------- | ------------------------------ | ------------ |
+| wereld      | ForgeWebScriptEcsWorld<TValue> |              |
+| entiteit    | ForgeWebScriptEcsEntity        |              |
+| bestanddeel | tekenreeks                     |              |
 
 ### isForgeWebScriptEcsEntityAlive
 
 **Soort:** functie
 
 ```typescript
-function isForgeWebScriptEcsEntityAlive(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity): boolean
+function isForgeWebScriptEcsEntityAlive(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+): boolean;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| wereld | ForgeWebScriptEcsWorld<TValue> |  |
-| entiteit | ForgeWebScriptEcsEntity |  |
+| Naam     | Typ                            | Beschrijving |
+| -------- | ------------------------------ | ------------ |
+| wereld   | ForgeWebScriptEcsWorld<TValue> |              |
+| entiteit | ForgeWebScriptEcsEntity        |              |
 
 ### queryForgeWebScriptEcsEntities
 
 **Soort:** functie
 
 ```typescript
-function queryForgeWebScriptEcsEntities(world: ForgeWebScriptEcsWorld<TValue>, query: ForgeWebScriptEcsQuery): readonly ForgeWebScriptEcsEntity[]
+function queryForgeWebScriptEcsEntities(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  query: ForgeWebScriptEcsQuery,
+): readonly ForgeWebScriptEcsEntity[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| wereld | ForgeWebScriptEcsWorld<TValue> |  |
-| vraag | ForgeWebScriptEcsQuery |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| wereld | ForgeWebScriptEcsWorld<TValue> |              |
+| vraag  | ForgeWebScriptEcsQuery         |              |
 
 ### verwijderForgeWebScriptEcsComponent
 
 **Soort:** functie
 
 ```typescript
-function removeForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string): ForgeWebScriptEcsResult<TValue>
+function removeForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| wereld | ForgeWebScriptEcsWorld<TValue> |  |
-| entiteit | ForgeWebScriptEcsEntity |  |
-| bestanddeel | tekenreeks |  |
+| Naam        | Typ                            | Beschrijving |
+| ----------- | ------------------------------ | ------------ |
+| wereld      | ForgeWebScriptEcsWorld<TValue> |              |
+| entiteit    | ForgeWebScriptEcsEntity        |              |
+| bestanddeel | tekenreeks                     |              |
 
 ### runForgeWebScriptEcsScheduler
 
 **Soort:** functie
 
 ```typescript
-function runForgeWebScriptEcsScheduler(world: ForgeWebScriptEcsWorld<TValue>, scheduler: ForgeWebScriptEcsScheduler<TValue>): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>
+function runForgeWebScriptEcsScheduler(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  scheduler: ForgeWebScriptEcsScheduler<TValue>,
+): ForgeWebScriptEcsScheduleResult<TValue> | Extract<ForgeWebScriptEcsResult<TValue>, { readonly ok: false }>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| wereld | ForgeWebScriptEcsWorld<TValue> |  |
-| planner | ForgeWebScriptEcsScheduler<TValue> |  |
+| Naam    | Typ                                | Beschrijving |
+| ------- | ---------------------------------- | ------------ |
+| wereld  | ForgeWebScriptEcsWorld<TValue>     |              |
+| planner | ForgeWebScriptEcsScheduler<TValue> |              |
 
 ### setForgeWebScriptEcsComponent
 
 **Soort:** functie
 
 ```typescript
-function setForgeWebScriptEcsComponent(world: ForgeWebScriptEcsWorld<TValue>, entity: ForgeWebScriptEcsEntity, component: string, value: TValue): ForgeWebScriptEcsResult<TValue>
+function setForgeWebScriptEcsComponent(
+  world: ForgeWebScriptEcsWorld<TValue>,
+  entity: ForgeWebScriptEcsEntity,
+  component: string,
+  value: TValue,
+): ForgeWebScriptEcsResult<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| wereld | ForgeWebScriptEcsWorld<TValue> |  |
-| entiteit | ForgeWebScriptEcsEntity |  |
-| bestanddeel | tekenreeks |  |
-| waarde | TVwaarde |  |
+| Naam        | Typ                            | Beschrijving |
+| ----------- | ------------------------------ | ------------ |
+| wereld      | ForgeWebScriptEcsWorld<TValue> |              |
+| entiteit    | ForgeWebScriptEcsEntity        |              |
+| bestanddeel | tekenreeks                     |              |
+| waarde      | TVwaarde                       |              |
 
 ### spawnForgeWebScriptEcsEntity
 
 **Soort:** functie
 
 ```typescript
-function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>
+function spawnForgeWebScriptEcsEntity(world: ForgeWebScriptEcsWorld<TValue>): ForgeWebScriptEcsEntityResult<TValue>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| wereld | ForgeWebScriptEcsWorld<TValue> |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| wereld | ForgeWebScriptEcsWorld<TValue> |              |
 
 ### validateForgeWebScriptEcsSignals
 
 **Soort:** functie
 
 ```typescript
-function validateForgeWebScriptEcsSignals(signals: readonly ForgeWebScriptEcsSignal[]): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] }
+function validateForgeWebScriptEcsSignals(
+  signals: readonly ForgeWebScriptEcsSignal[],
+): { readonly valid: true } | { readonly valid: false; readonly cycle: readonly string[] };
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| signalen | alleen-lezen ForgeWebScriptEcsSignal[] |  |
+| Naam     | Typ                                    | Beschrijving |
+| -------- | -------------------------------------- | ------------ |
+| signalen | alleen-lezen ForgeWebScriptEcsSignal[] |              |
 
 ## `src/host`
 
@@ -1502,34 +1632,40 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createDefaultForgeWebScriptCapabilities(options: ForgeWebScriptDefaultHostOptions = {}): ForgeWebScriptCapabilityRegistry
+function createDefaultForgeWebScriptCapabilities(
+  options: ForgeWebScriptDefaultHostOptions = {},
+): ForgeWebScriptCapabilityRegistry;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptDefaultHostOptions |  |
+| Naam   | Typ                              | Beschrijving |
+| ------ | -------------------------------- | ------------ |
+| opties | ForgeWebScriptDefaultHostOptions |              |
 
 ### createForgeWebScriptHost
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptHost(manifest: ForgeWebScriptAbiManifest, registry: ForgeWebScriptCapabilityRegistry, options: ForgeWebScriptHostOptions = {}): ForgeWebScriptHost
+function createForgeWebScriptHost(
+  manifest: ForgeWebScriptAbiManifest,
+  registry: ForgeWebScriptCapabilityRegistry,
+  options: ForgeWebScriptHostOptions = {},
+): ForgeWebScriptHost;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| manifesteren | ForgeWebScriptAbiManifest |  |
-| register | ForgeWebScriptCapabilityRegistry |  |
-| opties | ForgeWebScriptHostOptions |  |
+| Naam         | Typ                              | Beschrijving |
+| ------------ | -------------------------------- | ------------ |
+| manifesteren | ForgeWebScriptAbiManifest        |              |
+| register     | ForgeWebScriptCapabilityRegistry |              |
+| opties       | ForgeWebScriptHostOptions        |              |
 
 ### ForgeWebScriptCapabilityImplementatie
 
@@ -1598,36 +1734,44 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptWasmIterator(handle: number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIterator(
+  handle: number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): ForgeWebScriptWasmIterator<TValue>;
 ```
 
 Past de eigen i32-handle van de backend en het ingepakte i64 next-protocol aan aan JS-iteratie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| handvat | nummer |  |
-| volgende | (handle: nummer) => ForgeWebScriptPackedIteratorResult |  |
-| opties | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| Naam     | Typ                                                    | Beschrijving |
+| -------- | ------------------------------------------------------ | ------------ |
+| handvat  | nummer                                                 |              |
+| volgende | (handle: nummer) => ForgeWebScriptPackedIteratorResult |              |
+| opties   | ForgeWebScriptWasmIteratorOptions<TValue>              |              |
 
 ### createForgeWebScriptWasmIteratorFactory
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptWasmIteratorFactory(factory: (...arguments_: TArguments) => number, next: (handle: number) => ForgeWebScriptPackedIteratorResult, options: ForgeWebScriptWasmIteratorOptions<TValue>): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>
+function createForgeWebScriptWasmIteratorFactory(
+  factory: (...arguments_: TArguments) => number,
+  next: (handle: number) => ForgeWebScriptPackedIteratorResult,
+  options: ForgeWebScriptWasmIteratorOptions<TValue>,
+): (...arguments_: TArguments) => ForgeWebScriptWasmIterator<TValue>;
 ```
 
 Bouwt een JS-gerichte iteratorfabriek vanuit een backendfabriek en de bijbehorende `.next`-export.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | (...argumenten_: TArgumenten) => getal |  |
-| volgende | (handle: nummer) => ForgeWebScriptPackedIteratorResult |  |
-| opties | ForgeWebScriptWasmIteratorOptions<TValue> |  |
+| Naam     | Typ                                                    | Beschrijving |
+| -------- | ------------------------------------------------------ | ------------ |
+| fabriek  | (...argumenten_: TArgumenten) => getal                 |              |
+| volgende | (handle: nummer) => ForgeWebScriptPackedIteratorResult |              |
+| opties   | ForgeWebScriptWasmIteratorOptions<TValue>              |              |
 
 ### ForgeWebScriptPackedIteratorResult
 
@@ -1666,16 +1810,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger
+function createForgeWebScriptLogger(options: ForgeWebScriptLoggerOptions = {}): ForgeWebScriptLogger;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptLoggerOptions |  |
+| Naam   | Typ                         | Beschrijving |
+| ------ | --------------------------- | ------------ |
+| opties | ForgeWebScriptLoggerOptions |              |
 
 ### ForgeWebScriptLogEvent
 
@@ -1734,23 +1878,23 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory
+function createForgeWebScriptMemory(options?: ForgeWebScriptMemoryOptions): ForgeWebScriptMemory;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptMemoryOptions |  |
+| Naam   | Typ                         | Beschrijving |
+| ------ | --------------------------- | ------------ |
+| opties | ForgeWebScriptMemoryOptions |              |
 
 ### FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES
+export const FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES;
 ```
 
 Geen beschrijving opgegeven.
@@ -1792,7 +1936,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES
+export const FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES;
 ```
 
 Mogelijkheidsnamen die worden gebruikt om de uitvoering van worker, thread, atomic en gedeeld geheugen te autoriseren.
@@ -1804,7 +1948,7 @@ Mogelijkheidsnamen die worden gebruikt om de uitvoering van worker, thread, atom
 ```typescript
 export const FORGE_WEB_SCRIPT_PARALLEL_OPERATION_DESCRIPTORS: Readonly<
   Record<ForgeWebScriptParallelOperation, ForgeWebScriptParallelOperationDescriptor>
->
+>;
 ```
 
 Stabiele descriptors voor elke parallelle bewerking die serieel terugval mogelijk maakt.
@@ -1814,42 +1958,53 @@ Stabiele descriptors voor elke parallelle bewerking die serieel terugval mogelij
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorParAt(source: ForgeWebScriptIterable<TValue>, index: number, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParAt(
+  source: ForgeWebScriptIterable<TValue>,
+  index: number,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 Retourneert het op nul gebaseerde geordende resultaat, of Option.none wanneer de index ongeldig is.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterable<TValue> |  |
-| index | nummer |  |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| bron   | ForgeWebScriptIterable<TValue> |              |
+| index  | nummer                         |              |
+| opties | ForgeWebScriptParallelOptions  |              |
 
 ### forgeWebScriptIteratorParCollect
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorParCollect(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptVector<TValue>>
+function forgeWebScriptIteratorParCollect(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptVector<TValue>>;
 ```
 
 Materialiseer geordende parallelle resultaten in een eigen vector.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterable<TValue> |  |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| bron   | ForgeWebScriptIterable<TValue> |              |
+| opties | ForgeWebScriptParallelOptions  |              |
 
 ### forgeWebScriptIteratorParFilter
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorParFilter(source: ForgeWebScriptIterable<TValue>, predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFilter(
+  source: ForgeWebScriptIterable<TValue>,
+  predicate: (value: TValue, index: number) => boolean | PromiseLike<boolean>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 Evalueer een predikaat parallel en bewaar geaccepteerde waarden in bronvolgorde.
@@ -1857,88 +2012,106 @@ Dit is de canonieke `par_filter` API.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterable<TValue> |  |
-| predikaat | (waarde: TValue, index: getal) => boolean \| BelofteLike<boolean> |  |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam      | Typ                                                               | Beschrijving |
+| --------- | ----------------------------------------------------------------- | ------------ |
+| bron      | ForgeWebScriptIterable<TValue>                                    |              |
+| predikaat | (waarde: TValue, index: getal) => boolean \| BelofteLike<boolean> |              |
+| opties    | ForgeWebScriptParallelOptions                                     |              |
 
 ### forgeWebScriptIteratorParFirst
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorParFirst(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParFirst(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 Retourneert het eerste bestelde resultaat, of een Option.none-waarde voor een lege bron.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterable<TValue> |  |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| bron   | ForgeWebScriptIterable<TValue> |              |
+| opties | ForgeWebScriptParallelOptions  |              |
 
 ### forgeWebScriptIteratorParFlatten
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorParFlatten(source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TValue>>
+function forgeWebScriptIteratorParFlatten(
+  source: ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TValue>>;
 ```
 
 Maak geneste bronnen parallel plat, terwijl de uiterlijke en innerlijke orde behouden blijft.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |  |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam   | Typ                                                    | Beschrijving |
+| ------ | ------------------------------------------------------ | ------------ |
+| bron   | ForgeWebScriptIterable<ForgeWebScriptIterable<TValue>> |              |
+| opties | ForgeWebScriptParallelOptions                          |              |
 
 ### forgeWebScriptIteratorParFold
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorParFold(source: ForgeWebScriptIterable<TValue>, initial: TResult, reducer: (accumulator: TResult, value: TValue, index: number) => TResult, options: ForgeWebScriptParallelOptions = {}): Promise<TResult>
+function forgeWebScriptIteratorParFold(
+  source: ForgeWebScriptIterable<TValue>,
+  initial: TResult,
+  reducer: (accumulator: TResult, value: TValue, index: number) => TResult,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<TResult>;
 ```
 
 Vouw de bestelde resultaten van links naar rechts, inclusief de meegeleverde initiële accumulator.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterable<TValue> |  |
-| initiële | TResultaat |  |
-| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |  |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam        | Typ                                                             | Beschrijving |
+| ----------- | --------------------------------------------------------------- | ------------ |
+| bron        | ForgeWebScriptIterable<TValue>                                  |              |
+| initiële    | TResultaat                                                      |              |
+| verloopstuk | (accumulator: TResult, waarde: TValue, index: getal) => TResult |              |
+| opties      | ForgeWebScriptParallelOptions                                   |              |
 
 ### forgeWebScriptIteratorParLast
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorParLast(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptOption<TValue>>
+function forgeWebScriptIteratorParLast(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptOption<TValue>>;
 ```
 
 Retourneert het laatst bestelde resultaat, of een Option.none-waarde voor een lege bron.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterable<TValue> |  |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| bron   | ForgeWebScriptIterable<TValue> |              |
+| opties | ForgeWebScriptParallelOptions  |              |
 
 ### forgeWebScriptIteratorParMap
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorParMap(source: ForgeWebScriptIterable<TValue>, map: (value: TValue, index: number) => TResult | PromiseLike<TResult>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptIterator<TResult>>
+function forgeWebScriptIteratorParMap(
+  source: ForgeWebScriptIterable<TValue>,
+  map: (value: TValue, index: number) => TResult | PromiseLike<TResult>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptIterator<TResult>>;
 ```
 
 Pas parallel een callback toe en retourneer een lui-compatibele geordende iterator.
@@ -1946,45 +2119,51 @@ Terugbelfouten weigeren de bewerking en worden niet verborgen door seriële fall
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterable<TValue> |  |
-| kaart | (waarde: TValue, index: getal) => TResult \| BelofteLike<TResult> |  |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam   | Typ                                                               | Beschrijving |
+| ------ | ----------------------------------------------------------------- | ------------ |
+| bron   | ForgeWebScriptIterable<TValue>                                    |              |
+| kaart  | (waarde: TValue, index: getal) => TResult \| BelofteLike<TResult> |              |
+| opties | ForgeWebScriptParallelOptions                                     |              |
 
 ### forgeWebScriptIteratorParToArray
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptIteratorParToArray(source: ForgeWebScriptIterable<TValue>, options: ForgeWebScriptParallelOptions = {}): Promise<ForgeWebScriptArray<TValue>>
+function forgeWebScriptIteratorParToArray(
+  source: ForgeWebScriptIterable<TValue>,
+  options: ForgeWebScriptParallelOptions = {},
+): Promise<ForgeWebScriptArray<TValue>>;
 ```
 
 Materialiseer geordende parallelle resultaten in een eigen vaste array.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | ForgeWebScriptIterable<TValue> |  |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| bron   | ForgeWebScriptIterable<TValue> |              |
+| opties | ForgeWebScriptParallelOptions  |              |
 
 ### forgeWebScriptParallelDescriptor
 
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptParallelDescriptor(operation: ForgeWebScriptParallelOperation, options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy }
+function forgeWebScriptParallelDescriptor(
+  operation: ForgeWebScriptParallelOperation,
+  options: ForgeWebScriptParallelOptions = {},
+): ForgeWebScriptParallelOperationDescriptor & { readonly selectedStrategy: ForgeWebScriptParallelStrategy };
 ```
 
 Beschrijf een operatie en voeg de gekozen strategie uit de aangeboden opties toe.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| operatie | ForgeWebScriptParallelOperation |  |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam     | Typ                             | Beschrijving |
+| -------- | ------------------------------- | ------------ |
+| operatie | ForgeWebScriptParallelOperation |              |
+| opties   | ForgeWebScriptParallelOptions   |              |
 
 ### ForgeWebScriptParallelExecutor
 
@@ -2001,7 +2180,16 @@ Minimale plannergrens die wordt gebruikt door hostwerknemers of een gecompileerd
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptParallelOperation = | 'par_map' | 'par_filter' | 'par_flatten' | 'par_collect' | 'par_to_array' | 'par_fold' | 'par_first' | 'par_last' | 'par_at';
+export type ForgeWebScriptParallelOperation =
+  | 'par_map'
+  | 'par_filter'
+  | 'par_flatten'
+  | 'par_collect'
+  | 'par_to_array'
+  | 'par_fold'
+  | 'par_first'
+  | 'par_last'
+  | 'par_at';
 ```
 
 Canonieke parallelle bewerkingsnamen die door de runtime worden onthuld; `par_filter` is opzettelijk.
@@ -2053,16 +2241,16 @@ Uitvoeringsstrategie geselecteerd voor een geordende parallelle operatie.
 **Soort:** functie
 
 ```typescript
-function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan
+function selectForgeWebScriptParallelStrategy(options: ForgeWebScriptParallelOptions = {}): ForgeWebScriptParallelPlan;
 ```
 
 Selecteer een toegestane strategie zonder het resultaatcontract van de operatie te wijzigen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptParallelOptions |  |
+| Naam   | Typ                           | Beschrijving |
+| ------ | ----------------------------- | ------------ |
+| opties | ForgeWebScriptParallelOptions |              |
 
 ## `src/self-hosted`
 
@@ -2091,7 +2279,11 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function runForgeWebScriptSelfHostedCompiler(input: ForgeWebScriptCompileInput, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedVmRun
+function runForgeWebScriptSelfHostedCompiler(
+  input: ForgeWebScriptCompileInput,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedVmRun;
 ```
 
 Voer de begrensde, zelf-hostende compiler-bootstrap uit.
@@ -2103,29 +2295,33 @@ elke fase rapporteert pariteit.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ForgeWebScriptCompileInput |  |
-| modus | ForgeWebScriptVmExecutionMode |  |
-| opties | ForgeWebScriptSelfHostedRunOptions |  |
+| Naam   | Typ                                | Beschrijving |
+| ------ | ---------------------------------- | ------------ |
+| invoer | ForgeWebScriptCompileInput         |              |
+| modus  | ForgeWebScriptVmExecutionMode      |              |
+| opties | ForgeWebScriptSelfHostedRunOptions |              |
 
 ### runForgeWebScriptSelfHostedLexStage
 
 **Soort:** functie
 
 ```typescript
-function runForgeWebScriptSelfHostedLexStage(input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>, mode: ForgeWebScriptVmExecutionMode, options: ForgeWebScriptSelfHostedRunOptions = {}): ForgeWebScriptSelfHostedStageReport
+function runForgeWebScriptSelfHostedLexStage(
+  input: Pick<ForgeWebScriptCompileInput, 'source' | 'fileName' | 'compilerVersion' | 'requestedCapabilities'>,
+  mode: ForgeWebScriptVmExecutionMode,
+  options: ForgeWebScriptSelfHostedRunOptions = {},
+): ForgeWebScriptSelfHostedStageReport;
 ```
 
 Voer alleen de begrensde, door FWS geschreven lex-fase uit voor compilerconsumenten.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | Kies<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |  |
-| modus | ForgeWebScriptVmExecutionMode |  |
-| opties | ForgeWebScriptSelfHostedRunOptions |  |
+| Naam   | Typ                                                                                                      | Beschrijving |
+| ------ | -------------------------------------------------------------------------------------------------------- | ------------ |
+| invoer | Kies<ForgeWebScriptCompileInput, 'source' \| 'fileName' \| 'compilerVersion' \| 'requestedCapabilities'> |              |
+| modus  | ForgeWebScriptVmExecutionMode                                                                            |              |
+| opties | ForgeWebScriptSelfHostedRunOptions                                                                       |              |
 
 ## `src/threading`
 
@@ -2134,7 +2330,10 @@ Voer alleen de begrensde, door FWS geschreven lex-fase uit voor compilerconsumen
 **Soort:** functie
 
 ```typescript
-function canUseForgeWebScriptWasmThreads(targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined, capabilities: readonly string[] | undefined): boolean
+function canUseForgeWebScriptWasmThreads(
+  targetFeatures: ForgeWebScriptWasmThreadTargetFeatures | undefined,
+  capabilities: readonly string[] | undefined,
+): boolean;
 ```
 
 Thread-uitvoering is opt-in bij zowel compilatie- als runtime-grenzen. In
@@ -2142,34 +2341,39 @@ Met name een niet-gedeclareerde mogelijkhedenlijst maakt dit pad nooit mogelijk.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| doelKenmerken | ForgeWebScriptWasmThreadTargetFeatures \| ongedefinieerd |  |
-| mogelijkheden | alleen-lezen tekenreeks[] \| ongedefinieerd |  |
+| Naam          | Typ                                                      | Beschrijving |
+| ------------- | -------------------------------------------------------- | ------------ |
+| doelKenmerken | ForgeWebScriptWasmThreadTargetFeatures \| ongedefinieerd |              |
+| mogelijkheden | alleen-lezen tekenreeks[] \| ongedefinieerd              |              |
 
 ### createForgeWebScriptAtomicI32
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptAtomicI32(length = 1, options: ForgeWebScriptAtomicI32Options = {}): ForgeWebScriptAtomicI32
+function createForgeWebScriptAtomicI32(
+  length = 1,
+  options: ForgeWebScriptAtomicI32Options = {},
+): ForgeWebScriptAtomicI32;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| lengte |  |  |
-| opties | ForgeWebScriptAtomicI32Options |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| lengte |                                |              |
+| opties | ForgeWebScriptAtomicI32Options |              |
 
 ### createForgeWebScriptWasmThreadScheduler
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptWasmThreadScheduler(options: ForgeWebScriptWasmThreadSchedulerOptions): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWasmThreadScheduler(
+  options: ForgeWebScriptWasmThreadSchedulerOptions,
+): ForgeWebScriptWorkerScheduler;
 ```
 
 Omhult een gecompileerde WASM-threadbridge met expliciete gedeelde geheugenaccounting.
@@ -2178,35 +2382,42 @@ moet gebruik maken van de seriële fallback die is geselecteerd door het paralle
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptWasmThreadSchedulerOptions |  |
+| Naam   | Typ                                      | Beschrijving |
+| ------ | ---------------------------------------- | ------------ |
+| opties | ForgeWebScriptWasmThreadSchedulerOptions |              |
 
 ### createForgeWebScriptWorkerRuntime
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptWorkerRuntime(createWorker: () => ForgeWebScriptWorkerPort, onMessage: (message: unknown) => void, onError: (error: unknown) => void = () => {}, options: ForgeWebScriptWorkerRuntimeOptions = {}): ForgeWebScriptWorkerRuntime
+function createForgeWebScriptWorkerRuntime(
+  createWorker: () => ForgeWebScriptWorkerPort,
+  onMessage: (message: unknown) => void,
+  onError: (error: unknown) => void = () => {},
+  options: ForgeWebScriptWorkerRuntimeOptions = {},
+): ForgeWebScriptWorkerRuntime;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| createWorker | () => ForgeWebScriptWorkerPort |  |
-| opBericht | (bericht: onbekend) => ongeldig |  |
-| opFout | (fout: onbekend) => ongeldig |  |
-| opties | ForgeWebScriptWorkerRuntimeOptions |  |
+| Naam         | Typ                                | Beschrijving |
+| ------------ | ---------------------------------- | ------------ |
+| createWorker | () => ForgeWebScriptWorkerPort     |              |
+| opBericht    | (bericht: onbekend) => ongeldig    |              |
+| opFout       | (fout: onbekend) => ongeldig       |              |
+| opties       | ForgeWebScriptWorkerRuntimeOptions |              |
 
 ### createForgeWebScriptWorkerScheduler
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptWorkerScheduler(options: ForgeWebScriptWorkerSchedulerOptions = {}): ForgeWebScriptWorkerScheduler
+function createForgeWebScriptWorkerScheduler(
+  options: ForgeWebScriptWorkerSchedulerOptions = {},
+): ForgeWebScriptWorkerScheduler;
 ```
 
 Creëert de planningsgrens aan de hostzijde die wordt gebruikt door parallelle iteratorbewerkingen.
@@ -2218,16 +2429,16 @@ biedt hetzelfde begrensde asynchrone contract voor hosts zonder werkondersteunin
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptWorkerSchedulerOptions |  |
+| Naam   | Typ                                  | Beschrijving |
+| ------ | ------------------------------------ | ------------ |
+| opties | ForgeWebScriptWorkerSchedulerOptions |              |
 
 ### FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
 
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES
+export const FORGE_WEB_SCRIPT_THREADING_CAPABILITIES;
 ```
 
 Geen beschrijving opgegeven.
@@ -2329,17 +2540,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptTraceRecorder(options: ForgeWebScriptTraceOptions, functionName: string): ForgeWebScriptTraceRecorder
+function createForgeWebScriptTraceRecorder(
+  options: ForgeWebScriptTraceOptions,
+  functionName: string,
+): ForgeWebScriptTraceRecorder;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptTraceOptions |  |
-| functieNaam | tekenreeks |  |
+| Naam        | Typ                        | Beschrijving |
+| ----------- | -------------------------- | ------------ |
+| opties      | ForgeWebScriptTraceOptions |              |
+| functieNaam | tekenreeks                 |              |
 
 ### ForgeWebScriptTraceCaptureMode
 
@@ -2376,7 +2590,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptTraceEventType = 'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
+export type ForgeWebScriptTraceEventType =
+  'instruction' | 'call' | 'capability' | 'memory' | 'range-check' | 'trap' | 'resource';
 ```
 
 Geen beschrijving opgegeven.
@@ -2436,17 +2651,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function summarizeForgeWebScriptVmValue(value: ForgeWebScriptVmValue, redact?: (value: ForgeWebScriptVmValue) => string): string
+function summarizeForgeWebScriptVmValue(
+  value: ForgeWebScriptVmValue,
+  redact?: (value: ForgeWebScriptVmValue) => string,
+): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | ForgeWebScriptVmValue |  |
-| redigeren | (waarde: ForgeWebScriptVmValue) => tekenreeks |  |
+| Naam      | Typ                                           | Beschrijving |
+| --------- | --------------------------------------------- | ------------ |
+| waarde    | ForgeWebScriptVmValue                         |              |
+| redigeren | (waarde: ForgeWebScriptVmValue) => tekenreeks |              |
 
 ## `src/traps`
 
@@ -2455,17 +2673,17 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void
+function attachForgeWebScriptTrace(error: unknown, trace: ForgeWebScriptTraceReport): void;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fout | onbekend |  |
-| spoor | ForgeWebScriptTraceReport |  |
+| Naam  | Typ                       | Beschrijving |
+| ----- | ------------------------- | ------------ |
+| fout  | onbekend                  |              |
+| spoor | ForgeWebScriptTraceReport |              |
 
 ### ForgeWebScriptTrap
 
@@ -2482,7 +2700,14 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptTrapCode = | 'CapabilityDenied' | 'HostError' | 'InvalidAbi' | 'InvalidOwnership' | 'MemoryExhausted' | 'MemoryOutOfBounds' | 'GuestTrap';
+export type ForgeWebScriptTrapCode =
+  | 'CapabilityDenied'
+  | 'HostError'
+  | 'InvalidAbi'
+  | 'InvalidOwnership'
+  | 'MemoryExhausted'
+  | 'MemoryOutOfBounds'
+  | 'GuestTrap';
 ```
 
 Geen beschrijving opgegeven.
@@ -2502,18 +2727,22 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function toForgeWebScriptHostError(error: unknown, capability: string, logger?: ForgeWebScriptLogger): ForgeWebScriptTrap
+function toForgeWebScriptHostError(
+  error: unknown,
+  capability: string,
+  logger?: ForgeWebScriptLogger,
+): ForgeWebScriptTrap;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fout | onbekend |  |
-| vermogen | tekenreeks |  |
-| houthakker | ForgeWebScriptLogger |  |
+| Naam       | Typ                  | Beschrijving |
+| ---------- | -------------------- | ------------ |
+| fout       | onbekend             |              |
+| vermogen   | tekenreeks           |              |
+| houthakker | ForgeWebScriptLogger |              |
 
 ## `src/vm-executor`
 
@@ -2522,71 +2751,86 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptVmAotArtifact(module: ForgeWebScriptVmModule, compilerVersion: string): ForgeWebScriptVmAotArtifact
+function createForgeWebScriptVmAotArtifact(
+  module: ForgeWebScriptVmModule,
+  compilerVersion: string,
+): ForgeWebScriptVmAotArtifact;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptVmModule |  |
-| compilerversie | tekenreeks |  |
+| Naam           | Typ                    | Beschrijving |
+| -------------- | ---------------------- | ------------ |
+| module         | ForgeWebScriptVmModule |              |
+| compilerversie | tekenreeks             |              |
 
 ### createForgeWebScriptVmExecutor
 
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptVmExecutor(executorOptions: ForgeWebScriptVmExecutorOptions = {}): ForgeWebScriptVmExecutor
+function createForgeWebScriptVmExecutor(
+  executorOptions: ForgeWebScriptVmExecutorOptions = {},
+): ForgeWebScriptVmExecutor;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| uitvoerderOpties | ForgeWebScriptVmExecutorOptions |  |
+| Naam             | Typ                             | Beschrijving |
+| ---------------- | ------------------------------- | ------------ |
+| uitvoerderOpties | ForgeWebScriptVmExecutorOptions |              |
 
 ### executeForgeWebScriptVm
 
 **Soort:** functie
 
 ```typescript
-function executeForgeWebScriptVm(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: ForgeWebScriptVmExecutionOptions): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVm(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: ForgeWebScriptVmExecutionOptions,
+): ForgeWebScriptVmExecutionResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptVmModule |  |
-| functieNaam | tekenreeks |  |
-| argumenten_ | alleen-lezen ForgeWebScriptVmValue[] |  |
-| opties | ForgeWebScriptVmExecutionOptions |  |
+| Naam        | Typ                                  | Beschrijving |
+| ----------- | ------------------------------------ | ------------ |
+| module      | ForgeWebScriptVmModule               |              |
+| functieNaam | tekenreeks                           |              |
+| argumenten_ | alleen-lezen ForgeWebScriptVmValue[] |              |
+| opties      | ForgeWebScriptVmExecutionOptions     |              |
 
 ### executeForgeWebScriptVmAotArtifact
 
 **Soort:** functie
 
 ```typescript
-function executeForgeWebScriptVmAotArtifact(artifact: ForgeWebScriptVmAotArtifact, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function executeForgeWebScriptVmAotArtifact(
+  artifact: ForgeWebScriptVmAotArtifact,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| artefact | ForgeWebScriptVmAotArtefact |  |
-| functieNaam | tekenreeks |  |
-| argumenten_ | alleen-lezen ForgeWebScriptVmValue[] |  |
-| opties | Laat<ForgeWebScriptVmExecutionOptions, 'mode'> | weg  |
+| Naam        | Typ                                            | Beschrijving |
+| ----------- | ---------------------------------------------- | ------------ |
+| artefact    | ForgeWebScriptVmAotArtefact                    |              |
+| functieNaam | tekenreeks                                     |              |
+| argumenten_ | alleen-lezen ForgeWebScriptVmValue[]           |              |
+| opties      | Laat<ForgeWebScriptVmExecutionOptions, 'mode'> | weg          |
 
 ### ForgeWebScriptVmExecutorOptions
 
@@ -2603,36 +2847,42 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function runForgeWebScriptVmBootstrap(module: ForgeWebScriptVmModule, functionName: string, arguments_: readonly ForgeWebScriptVmValue[], mode: ForgeWebScriptVmExecutionMode = 'interpret', options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {}): ForgeWebScriptVmExecutionResult
+function runForgeWebScriptVmBootstrap(
+  module: ForgeWebScriptVmModule,
+  functionName: string,
+  arguments_: readonly ForgeWebScriptVmValue[],
+  mode: ForgeWebScriptVmExecutionMode = 'interpret',
+  options: Omit<ForgeWebScriptVmExecutionOptions, 'mode'> = {},
+): ForgeWebScriptVmExecutionResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptVmModule |  |
-| functieNaam | tekenreeks |  |
-| argumenten_ | alleen-lezen ForgeWebScriptVmValue[] |  |
-| modus | ForgeWebScriptVmExecutionMode |  |
-| opties | Laat<ForgeWebScriptVmExecutionOptions, 'mode'> | weg  |
+| Naam        | Typ                                            | Beschrijving |
+| ----------- | ---------------------------------------------- | ------------ |
+| module      | ForgeWebScriptVmModule                         |              |
+| functieNaam | tekenreeks                                     |              |
+| argumenten_ | alleen-lezen ForgeWebScriptVmValue[]           |              |
+| modus       | ForgeWebScriptVmExecutionMode                  |              |
+| opties      | Laat<ForgeWebScriptVmExecutionOptions, 'mode'> | weg          |
 
 ### validateForgeWebScriptVmModule
 
 **Soort:** functie
 
 ```typescript
-function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void
+function validateForgeWebScriptVmModule(module: ForgeWebScriptVmModule): void;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptVmModule |  |
+| Naam   | Typ                    | Beschrijving |
+| ------ | ---------------------- | ------------ |
+| module | ForgeWebScriptVmModule |              |
 
 ## `src/vm-wasm`
 
@@ -2641,17 +2891,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function compileForgeWebScriptVmWasm(module: ForgeWebScriptVmModule, options: ForgeWebScriptVmWasmCompileOptions = {}): ForgeWebScriptVmWasmArtifact
+function compileForgeWebScriptVmWasm(
+  module: ForgeWebScriptVmModule,
+  options: ForgeWebScriptVmWasmCompileOptions = {},
+): ForgeWebScriptVmWasmArtifact;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptVmModule |  |
-| opties | ForgeWebScriptVmWasmCompileOptions |  |
+| Naam   | Typ                                | Beschrijving |
+| ------ | ---------------------------------- | ------------ |
+| module | ForgeWebScriptVmModule             |              |
+| opties | ForgeWebScriptVmWasmCompileOptions |              |
 
 ### ForgeWebScriptVmWasmCompileOptions
 
@@ -2668,7 +2921,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const prepareForgeWebScriptVm
+export const prepareForgeWebScriptVm;
 ```
 
 Geen beschrijving opgegeven.
@@ -2678,17 +2931,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function prepareForgeWebScriptVmWasm(moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact, options: ForgeWebScriptVmPreparedExecutorOptions = {}): ForgeWebScriptVmPreparedExecutor
+function prepareForgeWebScriptVmWasm(
+  moduleOrArtifact: ForgeWebScriptVmModule | ForgeWebScriptVmWasmArtifact,
+  options: ForgeWebScriptVmPreparedExecutorOptions = {},
+): ForgeWebScriptVmPreparedExecutor;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| moduleOrArtefact | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |  |
-| opties | ForgeWebScriptVmPreparedExecutorOptions |  |
+| Naam             | Typ                                                    | Beschrijving |
+| ---------------- | ------------------------------------------------------ | ------------ |
+| moduleOrArtefact | ForgeWebScriptVmModule \| ForgeWebScriptVmWasmArtifact |              |
+| opties           | ForgeWebScriptVmPreparedExecutorOptions                |              |
 
 ## `src/vm`
 
@@ -2697,7 +2953,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION;
 ```
 
 Geen beschrijving opgegeven.
@@ -2707,7 +2963,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION
+export const FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION;
 ```
 
 Geen beschrijving opgegeven.

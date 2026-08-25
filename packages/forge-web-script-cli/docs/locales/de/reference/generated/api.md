@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-web-s
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE
+export const FORGE_WEB_SCRIPT_CLI_USAGE;
 ```
 
 Keine Beschreibung angegeben.
@@ -66,17 +66,17 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions
+function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = process.cwd()): ForgeWebScriptCliOptions;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| argv | schreibgeschützter String[] |  |
-| cwd |  |  |
+| Name | Geben Sie                   | ein Beschreibung |
+| ---- | --------------------------- | ---------------- |
+| argv | schreibgeschützter String[] |                  |
+| cwd  |                             |                  |
 
 ## `src/main`
 
@@ -85,7 +85,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_COMPILATION_EXIT_CODE;
 ```
 
 Keine Beschreibung angegeben.
@@ -95,7 +95,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE
+export const FORGE_WEB_SCRIPT_CLI_USAGE_EXIT_CODE;
 ```
 
 Keine Beschreibung angegeben.
@@ -115,18 +115,22 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function runForgeWebScriptCli(argv: readonly string[] = process.argv.slice(2), io: ForgeWebScriptCliIo = defaultIo, cwd = process.cwd()): Promise<number>
+function runForgeWebScriptCli(
+  argv: readonly string[] = process.argv.slice(2),
+  io: ForgeWebScriptCliIo = defaultIo,
+  cwd = process.cwd(),
+): Promise<number>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| argv | schreibgeschützter String[] |  |
-| io | ForgeWebScriptCliIo |  |
-| cwd |  |  |
+| Name | Geben Sie                   | ein Beschreibung |
+| ---- | --------------------------- | ---------------- |
+| argv | schreibgeschützter String[] |                  |
+| io   | ForgeWebScriptCliIo         |                  |
+| cwd  |                             |                  |
 
 ## `src/output`
 
@@ -135,32 +139,32 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles
+function artifactFilesFor(artifact: ForgeWebScriptArtifact): ForgeWebScriptCliArtifactFiles;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Artefakt | ForgeWebScriptArtifact |  |
+| Name     | Geben Sie              | ein Beschreibung |
+| -------- | ---------------------- | ---------------- |
+| Artefakt | ForgeWebScriptArtifact |                  |
 
 ### forgeWebScriptArtifactBaseName
 
 **Art:** Funktion
 
 ```typescript
-function forgeWebScriptArtifactBaseName(entryFileName: string): string
+function forgeWebScriptArtifactBaseName(entryFileName: string): string;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| EintragDateiname | Zeichenfolge |  |
+| Name             | Geben Sie    | ein Beschreibung |
+| ---------------- | ------------ | ---------------- |
+| EintragDateiname | Zeichenfolge |                  |
 
 ### ForgeWebScriptCliArtifactFiles
 
@@ -177,7 +181,8 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly {
+function formatForgeWebScriptDiagnostics(
+  diagnostics: readonly {
     readonly code: string;
     readonly severity: string;
     readonly phase: string;
@@ -190,48 +195,56 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly {
       readonly endColumn: number;
     };
     readonly hint?: string;
-  }[]): string
+  }[],
+): string;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Diagnose | readonly { schreibgeschützter Code: string;     schreibgeschützter Schweregrad: Zeichenfolge;     schreibgeschützte Phase: string;     schreibgeschützte Nachricht: string;     schreibgeschützter Dateiname: string;     readonly span: { readonly line: number;       schreibgeschützte Spalte: Zahl;       schreibgeschützt endLine: Zahl;       schreibgeschützt endColumn: Zahl;     };     schreibgeschützter Hinweis?: string;   }[] |  |
+| Name     | Geben Sie                                                                                                                                                                                                                                                                                                                                                                                   | ein Beschreibung |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| Diagnose | readonly { schreibgeschützter Code: string; schreibgeschützter Schweregrad: Zeichenfolge; schreibgeschützte Phase: string; schreibgeschützte Nachricht: string; schreibgeschützter Dateiname: string; readonly span: { readonly line: number; schreibgeschützte Spalte: Zahl; schreibgeschützt endLine: Zahl; schreibgeschützt endColumn: Zahl; }; schreibgeschützter Hinweis?: string; }[] |                  |
 
 ### AusgabeverzeichnisFür
 
 **Art:** Funktion
 
 ```typescript
-function outputDirectoryFor(entryFileName: string, outputDirectory = path.join(path.dirname(entryFileName), 'dist')): string
+function outputDirectoryFor(
+  entryFileName: string,
+  outputDirectory = path.join(path.dirname(entryFileName), 'dist'),
+): string;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| EintragDateiname | Zeichenfolge |  |
-| Ausgabeverzeichnis |  |  |
+| Name               | Geben Sie    | ein Beschreibung |
+| ------------------ | ------------ | ---------------- |
+| EintragDateiname   | Zeichenfolge |                  |
+| Ausgabeverzeichnis |              |                  |
 
 ### writeForgeWebScriptArtifacts
 
 **Art:** Funktion
 
 ```typescript
-function writeForgeWebScriptArtifacts(outputDirectory: string, entryFileName: string, artifact: ForgeWebScriptArtifact): Promise<readonly string[]>
+function writeForgeWebScriptArtifacts(
+  outputDirectory: string,
+  entryFileName: string,
+  artifact: ForgeWebScriptArtifact,
+): Promise<readonly string[]>;
 ```
 
 Schreiben Sie den gesamten Artefaktsatz über ein temporäres Verzeichnis und benennen Sie jede Datei an der richtigen Stelle um.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Ausgabeverzeichnis | Zeichenfolge |  |
-| EintragDateiname | Zeichenfolge |  |
-| Artefakt | ForgeWebScriptArtifact |  |
+| Name               | Geben Sie              | ein Beschreibung |
+| ------------------ | ---------------------- | ---------------- |
+| Ausgabeverzeichnis | Zeichenfolge           |                  |
+| EintragDateiname   | Zeichenfolge           |                  |
+| Artefakt           | ForgeWebScriptArtifact |                  |

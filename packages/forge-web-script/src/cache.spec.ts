@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
-import { forgeWebScriptWatCacheKey, persistForgeWebScriptWat, type ForgeWebScriptWatCache } from './cache.ts';
+import {
+  forgeWebScriptSoNPath,
+  forgeWebScriptWatCacheKey,
+  persistForgeWebScriptSoN,
+  persistForgeWebScriptWat,
+  readForgeWebScriptSoN,
+  type ForgeWebScriptWatCache,
+} from './cache.ts';
 import { compileForgeWebScript } from './compiler.ts';
+import { prepareForgeWebScriptFrontend } from './frontend.ts';
+import { serializeForgeWebScriptSoN } from './son-cache.ts';
 
 describe('Forge Web Script WAT cache', () => {
   it('keys graph, link mode, compiler, and optimization deterministically', () => {
@@ -22,6 +31,15 @@ describe('Forge Web Script WAT cache', () => {
     expect(forgeWebScriptWatCacheKey(base)).not.toBe(forgeWebScriptWatCacheKey({ ...base, graphHash: 'graph-b' }));
     expect(forgeWebScriptWatCacheKey(base)).not.toBe(
       forgeWebScriptWatCacheKey({ ...base, targetFeatures: { threads: true, atomics: true } }),
+    );
+    expect(forgeWebScriptWatCacheKey(base)).not.toBe(
+      forgeWebScriptWatCacheKey({ ...base, sonSchemaVersion: '1.0', sonGraphHash: 'son-a' }),
+    );
+    expect(forgeWebScriptWatCacheKey(base)).not.toBe(
+      forgeWebScriptWatCacheKey({ ...base, memoryModel: 'region-arc-checked-linear' }),
+    );
+    expect(forgeWebScriptWatCacheKey(base)).not.toBe(
+      forgeWebScriptWatCacheKey({ ...base, boundsChecks: 'excluded-by-profile' }),
     );
   });
 
@@ -59,8 +77,9 @@ describe('Forge Web Script WAT cache', () => {
     });
     expect(artifact.diagnostics).toEqual([]);
     expect(artifact.watPath).toMatch(/^\/cache\/[0-9a-f]+\.wat$/);
-    expect(writes).toHaveLength(1);
-    expect(writes[0]).toContain('(module');
+    expect(writes).toHaveLength(3);
+    expect(writes[0]).toMatch(/^\/cache\/[0-9a-f]+\.sonir\.json:/);
+    expect(writes[2]).toContain('(module');
   });
 
   it('persists all four debug artifacts when the cache supplies an atomic binary writer', () => {
@@ -82,7 +101,33 @@ describe('Forge Web Script WAT cache', () => {
     expect(artifact.unoptimizedWatPath).toMatch(/^\/cache\/[0-9a-f]+\.unoptimized\.wat$/);
     expect(artifact.optimizedWasmPath).toMatch(/^\/cache\/[0-9a-f]+\.optimized\.wasm$/);
     expect(artifact.unoptimizedWasmPath).toMatch(/^\/cache\/[0-9a-f]+\.unoptimized\.wasm$/);
-    expect(writes).toHaveLength(2);
+    expect(writes).toHaveLength(4);
+    expect(writes[0]).toMatch(/^\/cache\/[0-9a-f]+\.sonir\.json:/);
     expect(binaryWrites).toHaveLength(2);
+  });
+
+  it('round-trips deterministic SoN JSON and rejects malformed or stale cache data', () => {
+    const frontend = prepareForgeWebScriptFrontend({
+      source: 'export fn answer() -> i32 { return 42; }',
+      fileName: 'answer.fws',
+      compilerVersion: '0.1.0',
+      optimization: 'release',
+    });
+    const module = frontend.sonIr!;
+    const values = new Map<string, string>();
+    const cache: ForgeWebScriptWatCache = {
+      root: '/cache',
+      writeAtomic: (fileName, contents) => values.set(fileName, contents),
+      read: (fileName) => values.get(fileName),
+    };
+    expect(persistForgeWebScriptSoN(cache, 'abcd', module)).toBe('/cache/abcd.sonir.json');
+    expect(readForgeWebScriptSoN(cache, 'abcd', { compilerVersion: '0.1.0', sourceHash: module.sourceHash })).toEqual(
+      module,
+    );
+    expect(values.get(forgeWebScriptSoNPath(cache, 'abcd'))).toBe(serializeForgeWebScriptSoN(module));
+    values.set('/cache/bad.sonir.json', '{not-json');
+    expect(readForgeWebScriptSoN(cache, 'bad')).toBeUndefined();
+    values.set('/cache/stale.sonir.json', serializeForgeWebScriptSoN({ ...module, compilerVersion: 'old' }));
+    expect(readForgeWebScriptSoN(cache, 'stale', { compilerVersion: '0.1.0' })).toBeUndefined();
   });
 });

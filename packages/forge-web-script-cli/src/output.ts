@@ -1,7 +1,7 @@
 import { mkdir, mkdtemp, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import type { ForgeWebScriptArtifact } from '@mission-platform/forge-web-script';
+import type { ForgeWebScriptArtifact, ForgeWebScriptSoNModule } from '@mission-platform/forge-web-script';
 
 export interface ForgeWebScriptCliArtifactFiles {
   readonly wasm: Uint8Array;
@@ -93,6 +93,29 @@ export function formatForgeWebScriptDiagnostics(
       return `${location} ${diagnostic.severity} [${diagnostic.code}] (${diagnostic.phase}) ${diagnostic.message}${punctuation}${hint}`;
     })
     .join('\n');
+}
+
+export function formatForgeWebScriptSoNSummary(module: ForgeWebScriptSoNModule): {
+  readonly json: Readonly<Record<string, unknown>>;
+  readonly text: string;
+} {
+  const json = {
+    schemaVersion: module.schemaVersion,
+    compilerVersion: module.compilerVersion,
+    sourceHash: module.sourceHash,
+    graphHash: module.graphHash,
+    optimization: module.optimization,
+    boundsChecks: module.boundsChecks,
+    memoryModel: module.memoryModel,
+    functions: module.functions.length,
+    nodes: module.nodes.length,
+    regions: module.regions.length,
+    optimizerPasses: module.optimizationReport?.passes.map(({ name }) => name) ?? [],
+  } as const;
+  return {
+    json,
+    text: `SoN ${module.graphHash}: ${module.nodes.length} nodes, ${module.functions.length} functions, ${module.regions.length} regions; ${module.optimization} optimization; bounds checks ${module.boundsChecks}.`,
+  };
 }
 
 export function outputDirectoryFor(
