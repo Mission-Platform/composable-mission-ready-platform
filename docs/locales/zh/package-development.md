@@ -1,22 +1,17 @@
-# 封装开发
+# Package Development
 
-由规范英文源进行的机器辅助翻译。必要时请人工审校。包名、命令、路径与技术标识符保持不变。
+This guide describes how to create, develop, and publish reusable packages within the Mission Platform monorepo.
+Packages are the foundational building blocks of the platform, residing in the `packages/` directory and managed via
+pnpm workspaces and Turborepo.
 
-> 英文原文: [docs/package-development.md](../../package-development.md)
-> 语言: 简体中文 (zh)
+## Creating a New Package
 
-本指南介绍了如何在 Mission Platform monorepo 中创建、开发和发布可重用包。
-包是平台的基础构建块，位于 `packages/` 目录并通过管理
-pnpm 工作区和 Turborepo。
+The recommended way to create a package is using the Mission Platform Developer MCP tool, which ensures all
+configurations, scripts, and folder structures follow the platform's standards.
 
-## 创建新包
+### 1. Scaffold with MCP
 
-创建包的推荐方法是使用 Mission Platform Developer MCP 工具，这可确保所有
-配置、脚本和文件夹结构遵循平台的标准。
-
-### 1. MCP支架
-
-使用 `scaffold_package` 生成骨架的工具。
+Use the `scaffold_package` tool to generate the skeleton.
 
 ```bash
 # Example: Creating a new 'date-utils' package
@@ -24,18 +19,18 @@ pnpm 工作区和 Turborepo。
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
 ```
 
-这会生成一个符合约定的 `packages/date-utils/` 目录：
+This generates a convention-compliant `packages/date-utils/` directory with:
 
-- `package.json` 具有工作区就绪脚本和共享配置。
-- `tsconfig.json` 扩展平台默认设置。
-- `vite.config.ts` 用于优化构建。
-- `src/index.ts` 桶文件。
-- `llms.txt` 用于人工智能辅助文档。
+- `package.json` with workspace-ready scripts and shared configurations.
+- `tsconfig.json` extending the platform defaults.
+- `vite.config.ts` for optimized builds.
+- `src/index.ts` barrel file.
+- `llms.txt` for AI-assisted documentation.
 
-### 2. 手动设置（可选）
+### 2. Manual Setup (Optional)
 
-如果您不使用 MCP 工具，请确保您的 `package.json` 使用[pnpm 目录](https://pnpm.io/catalogs) 为了
-依赖管理并遵循范围命名约定：
+If you are not using the MCP tool, ensure your `package.json` uses [pnpm catalogs](https://pnpm.io/catalogs) for
+dependency management and follows the scoped naming convention:
 
 ```json
 {
@@ -55,10 +50,10 @@ scaffold_package(name="date-utils", description="Shared date manipulation utilit
 }
 ```
 
-## 封装结构
+## Package Structure
 
-每个封装都遵循严格的内部布局。代码单元（组件、可组合项、存储或实用程序）必须位于
-他们自己命名的子目录以及位于同一位置的测试。
+Each package follows a strict internal layout. Units of code (components, composables, stores, or utils) MUST live in
+their own named subdirectories with co-located tests.
 
 ```text
 packages/<name>/
@@ -75,6 +70,8 @@ packages/<name>/
 │   │   └── date-validator/         # date-validator.ts + .spec.ts
 │   ├── locales/                    # i18n JSON files
 │   └── index.ts                    # Package public API (barrel)
+├── docs/                           # Package-owned guides and generated API reference
+│   └── reference/generated/        # Regenerated during prebuild
 ├── llms.txt                        # Technical overview for LLMs
 ├── package.json
 ├── tsconfig.json
@@ -82,59 +79,145 @@ packages/<name>/
 └── README.md
 ```
 
-## 开发流程
+## Stylelint for style-bearing packages
 
-### 创作规则
+Packages that contain CSS, SCSS, or Vue style blocks must keep a discoverable Stylelint configuration and lint scripts:
 
-1. **TypeScript 无处不在**：所有源代码必须位于 `.ts` 或者 `.tsx` （使用 `@mission-platform/forge`)。
-2. **框架中立性**：支持与框架无关的逻辑。组件应该在 Forge JSX 中编写一次以定位
-   多个框架。
-3. **隔离**：包绝不能从以下位置导入 `apps/`。
-4. **测试**：每个单元（可组合、存储、实用程序、组件）必须有一个位于同一位置的 `.spec.ts` 文件。
+```text
+packages/<name>/
+├── src/
+│   └── styles/                     # CSS, SCSS, and Vue style sources
+├── stylelint.config.mjs            # Workspace-local ESM configuration
+└── package.json                    # Stylelint scripts and devDependencies
+```
 
-有关详细的创作说明，请参阅：
+Add the shared configuration and its direct syntax/configuration dependencies to `devDependencies`:
 
-- [原子组件设计](atomic-component-design.md)
-- [可组合创作](composable-authoring.md)
-- [商店创作](store-authoring.md)
-- [实用程序创作](util-authoring.md)
+```json
+{
+  "devDependencies": {
+    "@mission-platform/stylelint-config": "workspace:*",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint"
+  }
+}
+```
 
-### 建筑
+Use the shared configuration from `stylelint.config.mjs` instead of duplicating its `extends` entries:
 
-使用构建包 Turbo 确保以正确的顺序构建依赖项：
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
+Add scripts that cover the workspace's actual style sources, then run the check before publishing:
+
+```json
+{
+  "scripts": {
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\""
+  }
+}
+```
+
+```bash
+pnpm exec turbo run lint:style --filter @mission-platform/<name>
+```
+
+## Development Workflow
+
+### Authoring Rules
+
+1. **TypeScript Everywhere**: All source code must be in `.ts` or `.tsx` (using `@mission-platform/forge`).
+2. **Framework Neutrality**: Favor framework-agnostic logic. Components should be authored once in Forge JSX to target
+   multiple frameworks.
+3. **Isolation**: Packages must never import from `apps/`.
+4. **Testing**: Every unit (composable, store, util, component) MUST have a co-located `.spec.ts` file.
+
+For detailed authoring instructions, see:
+
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
+
+### Building
+
+Build the package using Turbo to ensure dependencies are built in the correct order:
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/<name>
 ```
 
-### 测试
+### Testing
 
-使用运行测试 Vitest:
+Run tests using Vitest:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
 
-## 文档（`llms.txt`)
+### Router packages and Web Components targets
 
-每个包裹都包含一个 `llms.txt` 文件位于其根目录下。该文件提供了简明的技术描述
-包的 API、组件和行为，使 AI 助手能够更好地理解和使用包。
+Use `@mission-platform/router` for structured route targets, pure URL helpers, and neutral compiler markers. Shared
+packages must not define or register application routes. Applications select one Forge router target independently from
+their UI target, retain ownership of native route records and router instances, and bind any target-specific runtime
+context during bootstrap. The initial targets are `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`, and `-web-components`; unsupported capability combinations must remain compiler diagnostics.
 
-- **标题**：使用作用域包名称。
-- **组件/API**：可用符号及其属性和职责的表格或列表。
-- **示例**：常见用例的简短代码片段。
+For a framework-free package or app, select the Forge Web Components condition in both build and TypeScript configs:
 
-## 出版
+```ts
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
 
-任务平台使用 [变更集](https://github.com/changesets/changesets) 用于版本控制和发布。
+export default {
+  resolve: { conditions: frameworkResolveConditions("web-component") },
+};
+```
 
-1. **添加变更集**：进行更改后，运行：
-```bash
+For Web Components applications, import the runtime from `@mission-platform/forge-router-web-components/runtime`, call
+`registerRouterElements()` once, call `setForgeRouter(appRouter)` after creating the app-owned router, pass structured
+`to` values as DOM properties, and use `MpMemoryHistory` in prerender/tests. A package that adds a reusable router
+element or changes Web Components behavior must add a neutral story under `src/**/*.stories.ts` and include the target in
+the Web Components Storybook workbench.
+
+## Documentation (`llms.txt`)
+
+Every package includes an `llms.txt` file at its root. This file provides a concise, technical description of the
+package's APIs, components, and behavior, enabling AI assistants to better understand and use the package.
+
+- **Title**: Use the scoped package name.
+- **Components/APIs**: Table or list of available symbols with their props and responsibilities.
+- **Examples**: Short code snippets for common use cases.
+
+## Package documentation ownership
+
+Package-specific installation, usage, limitations, contributor workflows, and API reference pages belong in the
+package's `docs/` directory, not in the repository-wide `docs/` tree. The docs site ingests these files directly and
+publishes them under a stable package namespace such as `/packages/barcode/index` or `/configs/eslint-config/index`.
+Project-wide concepts, architecture, workspace workflows, and cross-package troubleshooting remain in root `docs/`.
+
+Generated API pages live under `docs/reference/generated/` and are refreshed by the package `prebuild` hook; do not edit
+those files manually. To preview package documentation through the site, run the docs app build or use the all-workspace
+extractor described in the docs app README.
+
+## Publishing
+
+The Mission Platform uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+
+1. **Add a Changeset**: After making changes, run:
+   ```bash
    pnpm changeset
    ```
-   选择软件包和更改类型（补丁、次要、主要）。
-2. **Commit the Changeset**：提交生成的 `.changeset/*.md` 文件。
-3. **版本和发布**：CI/CD 处理实际的发布，但您可以使用以下方式在本地预览版本：
-```bash
+   Select the package and the type of change (patch, minor, major).
+2. **Commit the Changeset**: Commit the generated `.changeset/*.md` file.
+3. **Version and Publish**: CI/CD handles the actual publishing, but you can locally preview versions with:
+   ```bash
    pnpm changeset version
    ```
