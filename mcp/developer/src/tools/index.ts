@@ -466,16 +466,14 @@ export function registerTools(server: McpServer): void {
             .map(({ name, entry, exported }) => ({ name, entry, exported })),
           optimizerPasses:
             module.optimizationReport?.passes.map(({ name, applied, skipped }) => ({ name, applied, skipped })) ?? [],
-          nodes: module.nodes
-            .slice(0, maxNodes)
-            .map(({ id, kind, functionName, effects, alias, ownership }) => ({
-              id,
-              kind,
-              functionName,
-              effects,
-              alias,
-              ownership,
-            })),
+          nodes: module.nodes.slice(0, maxNodes).map(({ id, kind, functionName, effects, alias, ownership }) => ({
+            id,
+            kind,
+            functionName,
+            effects,
+            alias,
+            ownership,
+          })),
           truncated: maxNodes < module.nodes.length || maxFunctions < module.functions.length,
         });
       } catch (error) {

@@ -75,7 +75,7 @@ const CONVENTIONS = `# Conventions & Naming
 ## Shared tooling (re-export the base configs)
 - \`eslint.config.js\`  → \`import baseConfig from '@mission-platform/eslint-config'; export default [...baseConfig];\`
 - \`prettier.config.js\` → \`import baseConfig from '@mission-platform/prettier-config'; export default { ...baseConfig };\`
-- \`stylelint.config.js\`→ \`import baseConfig from '@mission-platform/stylelint-config'; export default { ...baseConfig };\`
+- \`stylelint.config.mjs\` → \`import baseConfig from '@mission-platform/stylelint-config'; export default { ...baseConfig };\`
 
 ## TypeScript project layout (packages)
 - \`tsconfig.json\` references \`tsconfig.build.json\`, \`tsconfig.node.json\`, \`tsconfig.test.json\`.
@@ -344,10 +344,14 @@ Packages are reusable building blocks in \`packages/<name>/\`, scoped as
 \`@mission-platform/<name>\`, framework-agnostic where possible.
 
 ## Fastest path
-Use the \`scaffold_package\` tool. It writes a convention-compliant skeleton
-(manifest with \`catalog:\`/\`workspace:*\` deps, the \`tsconfig\` set, re-exported
-shared configs, \`vite.config.ts\`, \`vitest.config.ts\`, \`turbo.json\`, \`src/index.ts\`,
-a spec, \`llms.txt\`, and \`docs/index.md\`). Pass \`apply: true\` to write files.
+Use the \`scaffold_package\` tool. Dry-run first and verify that a Vue package
+preview includes \`stylelint.config.mjs\`, the shared config, and the direct
+\`postcss-html\`, \`postcss-scss\`, \`stylelint\`,
+\`stylelint-config-recommended-vue\`, and \`stylelint-config-standard-scss\`
+catalog dependencies. It writes a convention-compliant skeleton (manifest with
+\`catalog:\`/\`workspace:*\` deps, the \`tsconfig\` set, re-exported shared configs,
+\`vite.config.ts\`, \`vitest.config.ts\`, \`turbo.json\`, \`src/index.ts\`, a spec,
+\`llms.txt\`, and \`docs/index.md\`). Pass \`apply: true\` to write files.
 
 ## Manual steps
 1. \`mkdir packages/<name>\` and add \`package.json\` (name \`@mission-platform/<name>\`,
@@ -401,9 +405,13 @@ Apps live in \`apps/<name>/\`, are \`"private": true\`, scoped \`@mission-platfo
 and are thin orchestration layers that compose \`packages/\`.
 
 ## Fastest path
-Use the \`scaffold_app\` tool (\`apply: true\` to write). It creates a Vite + Vue 3 app
-skeleton: manifest with app scripts, \`tsconfig\` set (app + node), re-exported configs,
-\`vite.config.ts\` (\`defineFrameworkAppConfig\`), \`turbo.json\`, \`index.html\`, and \`src/\` entry.
+Use the \`scaffold_app\` tool (dry-run first; pass \`apply: true\` to write). Verify
+the preview includes \`stylelint.config.mjs\`, the shared config, and the direct
+\`postcss-html\`, \`postcss-scss\`, \`stylelint\`,
+\`stylelint-config-recommended-vue\`, and \`stylelint-config-standard-scss\`
+catalog dependencies. It creates a Vite + Vue 3 app skeleton: manifest with app
+scripts, \`tsconfig\` set (app + node), re-exported configs, \`vite.config.ts\`
+(\`defineFrameworkAppConfig\`), \`turbo.json\`, \`index.html\`, and \`src/\` entry.
 
 ## Manual steps
 1. \`mkdir apps/<name>\`; add \`package.json\` (\`"private": true\`, app scripts:

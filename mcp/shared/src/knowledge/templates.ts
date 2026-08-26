@@ -186,6 +186,8 @@ export function packageFiles(options: PackageScaffoldOptions): Record<string, st
           'postcss-scss': 'catalog:stylelint',
           'sass-embedded': 'catalog:vite',
           stylelint: 'catalog:stylelint',
+          'stylelint-config-recommended-vue': 'catalog:stylelint',
+          'stylelint-config-standard-scss': 'catalog:stylelint',
           '@vue/test-utils': 'catalog:vue',
         }
         : {}),
@@ -344,7 +346,7 @@ See \`llms.txt\` for the public API and usage examples.
   };
 
   if (vue) {
-    files['stylelint.config.js'] = STYLELINT_CONFIG;
+    files['stylelint.config.mjs'] = STYLELINT_CONFIG;
   }
 
   return files;
@@ -388,8 +390,12 @@ export function appFiles(options: AppScaffoldOptions): Record<string, string> {
       '@types/node': 'catalog:typescript',
       '@vitejs/plugin-vue': 'catalog:vue',
       eslint: 'catalog:eslint',
+      'postcss-html': 'catalog:stylelint',
+      'postcss-scss': 'catalog:stylelint',
       prettier: 'catalog:prettier',
       stylelint: 'catalog:stylelint',
+      'stylelint-config-recommended-vue': 'catalog:stylelint',
+      'stylelint-config-standard-scss': 'catalog:stylelint',
       typescript: 'catalog:typescript',
       vite: 'catalog:vite',
       vitest: 'catalog:testing',
@@ -424,7 +430,7 @@ export function appFiles(options: AppScaffoldOptions): Record<string, string> {
 `,
     'eslint.config.js': ESLINT_CONFIG,
     'prettier.config.js': PRETTIER_CONFIG,
-    'stylelint.config.js': STYLELINT_CONFIG,
+    'stylelint.config.mjs': STYLELINT_CONFIG,
     '.prettierignore': PRETTIER_IGNORE,
     'vite.config.ts': `import { defineFrameworkAppConfig } from '@mission-platform/vite-config';
 
