@@ -3,7 +3,8 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "env": ["FORGE_BUILD_TARGET", "FORGE_FRAMEWORK_TARGET", "FORGE_CMS_STORYBLOK_TARGET", "FORGE_CMS_ARTIFACT_MODE", "FORGE_BUILD_STAGE_ROOT"]
     }
   }
 }
