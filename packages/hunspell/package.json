@@ -23,7 +23,6 @@
     "src/dictionaries"
   ],
   "scripts": {
-    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:watch": "tsdown --watch",
     "build:wasm": "bash build.sh",

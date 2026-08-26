@@ -40,7 +40,6 @@
     "dist"
   ],
   "scripts": {
-    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build:check": "tsc --project tsconfig.build.json --noEmit",
     "build:bundle": "vite build",
     "build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",

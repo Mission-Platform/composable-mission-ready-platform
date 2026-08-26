@@ -28,7 +28,6 @@
     "tokens/**/*.tokens.json"
   ],
   "scripts": {
-    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build": "tsdown",
     "build:watch": "tsdown --watch",
     "lint": "eslint .",

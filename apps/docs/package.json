@@ -5,7 +5,6 @@
   "description": "Framework-free Web Components documentation site for the Mission Platform.",
   "type": "module",
   "scripts": {
-    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --all",
     "predev": "pnpm exec turbo run build --filter @mission-platform/docs^...",
     "dev": "vite",
     "build": "tsc -b && vite build && node --experimental-strip-types scripts/prerender.ts && node --experimental-strip-types scripts/check-build.ts",

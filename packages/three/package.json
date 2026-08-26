@@ -39,7 +39,6 @@
     "src"
   ],
   "scripts": {
-    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build:forge": "node --experimental-strip-types ../../scripts/build-forge.ts --target forge",
     "build:react": "node --experimental-strip-types ../../scripts/build-forge.ts --target react",
     "build:vue": "node --experimental-strip-types ../../scripts/build-forge.ts --target vue",

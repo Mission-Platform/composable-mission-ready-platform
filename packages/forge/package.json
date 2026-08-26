@@ -53,7 +53,6 @@
     "jsx-globals.d.ts"
   ],
   "scripts": {
-    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build": "tsdown",
     "build:check": "vue-tsc --project tsconfig.build.json --noEmit",
     "build:watch": "tsdown --watch",

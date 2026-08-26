@@ -6,7 +6,6 @@
  *   node --experimental-strip-types scripts/extract-package-docs.ts --package .
  *   node --experimental-strip-types scripts/extract-package-docs.ts --all
  */
-import { execFileSync } from 'node:child_process';
 import { readFile, readdir, mkdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, extname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -537,14 +536,8 @@ async function main(): Promise<void> {
   const packageFlagIndex = process.argv.indexOf('--package');
   const packageArgument =
     inlinePackageArgument ?? (packageFlagIndex === -1 ? undefined : process.argv[packageFlagIndex + 1]);
-  if (packageArgument === undefined) {
-    const scriptPath = fileURLToPath(import.meta.url);
-    for (const packageRoot of await discoverPackageRoots(repoRoot)) {
-      execFileSync(process.execPath, ['--experimental-strip-types', scriptPath, '--package', packageRoot], {
-        cwd: repoRoot,
-        stdio: 'inherit',
-      });
-    }
+  if (packageArgument === undefined || process.argv.includes('--all')) {
+    await Promise.all((await discoverPackageRoots(repoRoot)).map((packageRoot) => extractPackageDocs(repoRoot, packageRoot)));
     return;
   }
   await extractPackageDocs(repoRoot, resolve(process.cwd(), packageArgument));

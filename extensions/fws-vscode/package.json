@@ -189,7 +189,6 @@
     }
   },
   "scripts": {
-    "prebuild": "node --experimental-strip-types ../../scripts/extract-package-docs.ts --package=.",
     "build": "pnpm run compile && node --experimental-strip-types scripts/stage-server.ts",
     "compile": "tsc --project tsconfig.build.json",
     "build:check": "tsc --project tsconfig.json --noEmit",
