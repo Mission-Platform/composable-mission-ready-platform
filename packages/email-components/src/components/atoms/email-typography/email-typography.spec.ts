@@ -9,9 +9,9 @@ const HEADING_SCALES = [
   { as: 'h1', fontSize: '2.25rem', fontWeight: 600 },
   { as: 'h2', fontSize: '1.875rem', fontWeight: 600 },
   { as: 'h3', fontSize: '1.5rem', fontWeight: 500 },
-  { as: 'h4', fontSize: '1.25rem', fontWeight: 500 },
-  { as: 'h5', fontSize: '1.125rem', fontWeight: 500 },
-  { as: 'h6', fontSize: '1rem', fontWeight: 500 },
+  { as: 'h4', fontSize: undefined, fontWeight: 500 },
+  { as: 'h5', fontSize: undefined, fontWeight: 500 },
+  { as: 'h6', fontSize: undefined, fontWeight: 500 },
 ] as const;
 
 describe('EmailTypography', () => {
@@ -20,7 +20,11 @@ describe('EmailTypography', () => {
 
     expect(output).toContain(`<${as} `);
     expect(output).toContain(`</${as}>`);
-    expect(output).toContain(`font-size: ${fontSize}`);
+    if (fontSize === undefined) {
+      expect(output).not.toContain('font-size:');
+    } else {
+      expect(output).toContain(`font-size: ${fontSize}`);
+    }
     expect(output).toContain(`font-weight: ${fontWeight}`);
     assertCompatibleEmailHtml(output);
   });
