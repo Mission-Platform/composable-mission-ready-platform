@@ -32,3 +32,5 @@ packages/tokens/.*-size-verification.css.map
 .artifacts/
 
 test-results/
+
+agent-lsp.json

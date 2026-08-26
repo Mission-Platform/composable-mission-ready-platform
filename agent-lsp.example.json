@@ -1,0 +1,107 @@
+{
+  "servers": [
+    {
+      "language_id": "typescript",
+      "extensions": [
+        "ts",
+        "tsx",
+        "js",
+        "jsx"
+      ],
+      "command": [
+        "pnpm",
+        "--dir",
+        "<project_dir>",
+        "exec",
+        "typescript-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "forge-web-script",
+      "extensions": [
+        "fws"
+      ],
+      "command": [
+        "pnpm",
+        "--dir",
+        "<project_dir>/packages/forge-web-script-lsp",
+        "node",
+        "dist/main.js",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "yaml",
+      "extensions": [
+        "yaml"
+      ],
+      "command": [
+        "pnpm",
+        "--dir",
+        "<project_dir>",
+        "exec",
+        "yaml-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "stylelint",
+      "extensions": [
+        "css",
+        "scss"
+      ],
+      "command": [
+        "pnpm",
+        "--dir",
+        "<project_dir>",
+        "exec",
+        "stylelint-lsp",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "json",
+      "extensions": [
+        "json"
+      ],
+      "command": [
+        "pnpm",
+        "--dir",
+        "<project_dir>",
+        "exec",
+        "vscode-json-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "css",
+      "extensions": [
+        "css",
+        "scss"
+      ],
+      "command": [
+        "pnpm",
+        "--dir",
+        "<project_dir>",
+        "exec",
+        "vscode-css-language-server",
+        "--stdio"
+      ]
+    },
+    {
+      "language_id": "html",
+      "extensions": [
+        "html"
+      ],
+      "command": [
+        "pnpm",
+        "--dir",
+        "<project_dir>",
+        "exec",
+        "vscode-html-language-server",
+        "--stdio"
+      ]
+    }
+  ]
+}
