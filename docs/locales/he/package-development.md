@@ -1,22 +1,17 @@
-# פיתוח חבילות
+# Package Development
 
-תרגום בסיוע מכונה מהמקור האנגלי הקנוני. יש לבדוק ידנית בעת הצורך. שמות חבילות, פקודות, נתיבים ומזהים טכניים נשארים ללא שינוי.
+This guide describes how to create, develop, and publish reusable packages within the Mission Platform monorepo.
+Packages are the foundational building blocks of the platform, residing in the `packages/` directory and managed via
+pnpm workspaces and Turborepo.
 
-> מקור באנגלית: [docs/package-development.md](../../package-development.md)
-> שפה: עברית (he)
+## Creating a New Package
 
-מדריך זה מתאר כיצד ליצור, לפתח ולפרסם חבילות לשימוש חוזר בתוך ה-Mission Platform monorepo.
-חבילות הן אבני היסוד של הפלטפורמה, השוכנות ב- `packages/` מדריך ומנוהל באמצעות
-pnpm חללי עבודה וטורבורפו.
+The recommended way to create a package is using the Mission Platform Developer MCP tool, which ensures all
+configurations, scripts, and folder structures follow the platform's standards.
 
-## יצירת חבילה חדשה
+### 1. Scaffold with MCP
 
-הדרך המומלצת ליצור חבילה היא שימוש בכלי Mission Platform Developer MCP, המבטיח הכל
-תצורות, סקריפטים ומבני תיקיות עומדים בסטנדרטים של הפלטפורמה.
-
-### 1. פיגום עם MCP
-
-השתמש ב- `scaffold_package` כלי ליצירת השלד.
+Use the `scaffold_package` tool to generate the skeleton.
 
 ```bash
 # Example: Creating a new 'date-utils' package
@@ -24,18 +19,18 @@ pnpm חללי עבודה וטורבורפו.
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
 ```
 
-זה יוצר תואם מוסכמות `packages/date-utils/` ספרייה עם:
+This generates a convention-compliant `packages/date-utils/` directory with:
 
-- `package.json` עם סקריפטים מוכנים לסביבת עבודה ותצורות משותפות.
-- `tsconfig.json` הרחבת ברירות המחדל של הפלטפורמה.
-- `vite.config.ts` לבנייה אופטימלית.
-- `src/index.ts` קובץ חבית.
-- `llms.txt` לתיעוד בעזרת AI.
+- `package.json` with workspace-ready scripts and shared configurations.
+- `tsconfig.json` extending the platform defaults.
+- `vite.config.ts` for optimized builds.
+- `src/index.ts` barrel file.
+- `llms.txt` for AI-assisted documentation.
 
-### 2. הגדרה ידנית (אופציונלי)
+### 2. Manual Setup (Optional)
 
-אם אינך משתמש בכלי MCP, ודא שלך `package.json` משתמש ב[pnpm קטלוגים](https://pnpm.io/catalogs) עבור
-ניהול תלות ועוקב אחר מוסכמות השמות בהיקף:
+If you are not using the MCP tool, ensure your `package.json` uses [pnpm catalogs](https://pnpm.io/catalogs) for
+dependency management and follows the scoped naming convention:
 
 ```json
 {
@@ -55,10 +50,10 @@ scaffold_package(name="date-utils", description="Shared date manipulation utilit
 }
 ```
 
-## מבנה החבילה
+## Package Structure
 
-כל חבילה עוקבת אחר פריסה פנימית קפדנית. יחידות קוד (רכיבים, חומרים מורכבים, חנויות או שימושים) חייבות לחיות בהן
-ספריות משנה בשם משלהם עם בדיקות במיקום משותף.
+Each package follows a strict internal layout. Units of code (components, composables, stores, or utils) MUST live in
+their own named subdirectories with co-located tests.
 
 ```text
 packages/<name>/
@@ -75,6 +70,8 @@ packages/<name>/
 │   │   └── date-validator/         # date-validator.ts + .spec.ts
 │   ├── locales/                    # i18n JSON files
 │   └── index.ts                    # Package public API (barrel)
+├── docs/                           # Package-owned guides and generated API reference
+│   └── reference/generated/        # Regenerated during prebuild
 ├── llms.txt                        # Technical overview for LLMs
 ├── package.json
 ├── tsconfig.json
@@ -82,59 +79,145 @@ packages/<name>/
 └── README.md
 ```
 
-## זרימת עבודה לפיתוח
+## Stylelint for style-bearing packages
 
-### כללי כתיבה
+Packages that contain CSS, SCSS, or Vue style blocks must keep a discoverable Stylelint configuration and lint scripts:
 
-1. **TypeScript בכל מקום**: כל קוד המקור חייב להיות ב `.ts` אוֹ `.tsx` (באמצעות `@mission-platform/forge`).
-2. **ניטרליות המסגרת**: העדיפו היגיון אגנוסטי של מסגרת. יש ליצור רכיבים פעם אחת ב-Forge JSX כדי למקד אותם
-   מסגרות מרובות.
-3. **בידוד**: אסור לייבא חבילות מהן `apps/`.
-4. **בדיקה**: כל יחידה (ניתנת לחיבור, חנות, שימוש, רכיב) חייבת להיות במיקום משותף `.spec.ts` קוֹבֶץ.
+```text
+packages/<name>/
+├── src/
+│   └── styles/                     # CSS, SCSS, and Vue style sources
+├── stylelint.config.mjs            # Workspace-local ESM configuration
+└── package.json                    # Stylelint scripts and devDependencies
+```
 
-להוראות כתיבה מפורטות, ראה:
+Add the shared configuration and its direct syntax/configuration dependencies to `devDependencies`:
 
-- [עיצוב רכיבים אטומיים](atomic-component-design.md)
-- [כתיבה ניתנת לחיבור](composable-authoring.md)
-- [עריכת חנות](store-authoring.md)
-- [השתמש בכתיבה](util-authoring.md)
+```json
+{
+  "devDependencies": {
+    "@mission-platform/stylelint-config": "workspace:*",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint"
+  }
+}
+```
 
-### בִּניָן
+Use the shared configuration from `stylelint.config.mjs` instead of duplicating its `extends` entries:
 
-בנה את החבילה באמצעות Turbo כדי להבטיח שתלויות נבנות בסדר הנכון:
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
+Add scripts that cover the workspace's actual style sources, then run the check before publishing:
+
+```json
+{
+  "scripts": {
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\""
+  }
+}
+```
+
+```bash
+pnpm exec turbo run lint:style --filter @mission-platform/<name>
+```
+
+## Development Workflow
+
+### Authoring Rules
+
+1. **TypeScript Everywhere**: All source code must be in `.ts` or `.tsx` (using `@mission-platform/forge`).
+2. **Framework Neutrality**: Favor framework-agnostic logic. Components should be authored once in Forge JSX to target
+   multiple frameworks.
+3. **Isolation**: Packages must never import from `apps/`.
+4. **Testing**: Every unit (composable, store, util, component) MUST have a co-located `.spec.ts` file.
+
+For detailed authoring instructions, see:
+
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
+
+### Building
+
+Build the package using Turbo to ensure dependencies are built in the correct order:
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/<name>
 ```
 
-### בּוֹחֵן
+### Testing
 
-הפעל בדיקות באמצעות Vitest:
+Run tests using Vitest:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
 
-## תיעוד (`llms.txt`)
+### Router packages and Web Components targets
 
-כל חבילה כוללת א `llms.txt` הקובץ בשורשו. קובץ זה מספק תיאור תמציתי וטכני של
-ממשקי ה-API, הרכיבים וההתנהגות של החבילה, המאפשרים לעוזרי AI להבין טוב יותר את החבילה ולהשתמש בה.
+Use `@mission-platform/router` for structured route targets, pure URL helpers, and neutral compiler markers. Shared
+packages must not define or register application routes. Applications select one Forge router target independently from
+their UI target, retain ownership of native route records and router instances, and bind any target-specific runtime
+context during bootstrap. The initial targets are `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`, and `-web-components`; unsupported capability combinations must remain compiler diagnostics.
 
-- **כותרת**: השתמש בשם החבילה בהיקף.
-- **רכיבים/ממשק API**: טבלה או רשימה של סמלים זמינים עם האביזרים והאחריות שלהם.
-- **דוגמאות**: קטעי קוד קצרים למקרי שימוש נפוצים.
+For a framework-free package or app, select the Forge Web Components condition in both build and TypeScript configs:
 
-## הוֹצָאָה לְאוֹר
+```ts
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
 
-פלטפורמת המשימה משתמשת [ערכות שינויים](https://github.com/changesets/changesets) לגירסאות ולפרסום.
+export default {
+  resolve: { conditions: frameworkResolveConditions("web-component") },
+};
+```
 
-1. **הוסף ערכת שינויים**: לאחר ביצוע שינויים, הרץ:
-```bash
+For Web Components applications, import the runtime from `@mission-platform/forge-router-web-components/runtime`, call
+`registerRouterElements()` once, call `setForgeRouter(appRouter)` after creating the app-owned router, pass structured
+`to` values as DOM properties, and use `MpMemoryHistory` in prerender/tests. A package that adds a reusable router
+element or changes Web Components behavior must add a neutral story under `src/**/*.stories.ts` and include the target in
+the Web Components Storybook workbench.
+
+## Documentation (`llms.txt`)
+
+Every package includes an `llms.txt` file at its root. This file provides a concise, technical description of the
+package's APIs, components, and behavior, enabling AI assistants to better understand and use the package.
+
+- **Title**: Use the scoped package name.
+- **Components/APIs**: Table or list of available symbols with their props and responsibilities.
+- **Examples**: Short code snippets for common use cases.
+
+## Package documentation ownership
+
+Package-specific installation, usage, limitations, contributor workflows, and API reference pages belong in the
+package's `docs/` directory, not in the repository-wide `docs/` tree. The docs site ingests these files directly and
+publishes them under a stable package namespace such as `/packages/barcode/index` or `/configs/eslint-config/index`.
+Project-wide concepts, architecture, workspace workflows, and cross-package troubleshooting remain in root `docs/`.
+
+Generated API pages live under `docs/reference/generated/` and are refreshed by the package `prebuild` hook; do not edit
+those files manually. To preview package documentation through the site, run the docs app build or use the all-workspace
+extractor described in the docs app README.
+
+## Publishing
+
+The Mission Platform uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+
+1. **Add a Changeset**: After making changes, run:
+   ```bash
    pnpm changeset
    ```
-   בחר את החבילה ואת סוג השינוי (תיקון, מינור, עיקרי).
-2. **Commit the Changeset**: Commit the שנוצר `.changeset/*.md` קוֹבֶץ.
-3. **גרסה ופרסום**: CI/CD מטפל בפרסום בפועל, אך ניתן להציג גרסאות מקומית עם:
-```bash
+   Select the package and the type of change (patch, minor, major).
+2. **Commit the Changeset**: Commit the generated `.changeset/*.md` file.
+3. **Version and Publish**: CI/CD handles the actual publishing, but you can locally preview versions with:
+   ```bash
    pnpm changeset version
    ```
