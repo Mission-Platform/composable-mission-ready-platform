@@ -16,45 +16,54 @@
 **النوع:** الوظيفة
 
 ```typescript
-function compileForgeWebScriptFile(fileName: string, options: ForgeWebScriptPluginOptions, service: ForgeWebScriptCompilerService = options.compilerService ??
+function compileForgeWebScriptFile(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+  service: ForgeWebScriptCompilerService = options.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
       selfHostedVmMode: options.selfHostedVmMode,
-    })): ForgeWebScriptCompiledModule
+    }),
+): ForgeWebScriptCompiledModule;
 ```
 
 قم بتجميع ملف FWS واحد وإرجاع عناصره بالإضافة إلى البيانات التعريفية لخريطة المصدر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| خيارات | خيارات ForgeWebScriptPlugin |  |
-| خدمة | ForgeWebScriptCompilerService |  |
+| الاسم     | اكتب                          | الوصف |
+| --------- | ----------------------------- | ----- |
+| اسم الملف | سلسلة                         |       |
+| خيارات    | خيارات ForgeWebScriptPlugin   |       |
+| خدمة      | ForgeWebScriptCompilerService |       |
 
 ### compileForgeWebScriptGraph
 
 **النوع:** الوظيفة
 
 ```typescript
-function compileForgeWebScriptGraph(fileName: string, options: ForgeWebScriptPluginOptions, resolver: ForgeWebScriptModuleResolver, service: ForgeWebScriptCompilerService = options.compilerService ??
+function compileForgeWebScriptGraph(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+  resolver: ForgeWebScriptModuleResolver,
+  service: ForgeWebScriptCompilerService = options.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
       selfHostedVmMode: options.selfHostedVmMode,
-    })): Promise<ForgeWebScriptCompiledModule>
+    }),
+): Promise<ForgeWebScriptCompiledModule>;
 ```
 
 حل وربط وتجميع الرسم البياني لوحدة FWS المستوردة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| خيارات | خيارات ForgeWebScriptPlugin |  |
-| محلل | ForgeWebScriptModuleResolver |  |
-| خدمة | ForgeWebScriptCompilerService |  |
+| الاسم     | اكتب                          | الوصف |
+| --------- | ----------------------------- | ----- |
+| اسم الملف | سلسلة                         |       |
+| خيارات    | خيارات ForgeWebScriptPlugin   |       |
+| محلل      | ForgeWebScriptModuleResolver  |       |
+| خدمة      | ForgeWebScriptCompilerService |       |
 
 ### ForgeWebScriptCompiledModule
 
@@ -81,17 +90,17 @@ export interface ForgeWebScriptPluginOptions
 **النوع:** الوظيفة
 
 ```typescript
-function resolveForgeWebScriptPath(root: string, value: string): string
+function resolveForgeWebScriptPath(root: string, value: string): string;
 ```
 
 قم بحل مسار البرنامج المساعد بالنسبة إلى الجذر ما لم تكن القيمة مطلقة بالفعل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الجذر | سلسلة |  |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| الجذر  | سلسلة |       |
+| القيمة | سلسلة |       |
 
 ## `src/generate`
 
@@ -100,7 +109,9 @@ function resolveForgeWebScriptPath(root: string, value: string): string
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptDeclarationsSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptDeclarationsSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 قم بإنشاء وحدة تحتوي على إعلانات وبيانات تعريف الارتباط واختيارية
@@ -108,32 +119,36 @@ function createForgeWebScriptDeclarationsSource(compiled: ForgeWebScriptCompiled
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجمعة | ForgeWebScriptCompiledModule |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| مجمعة | ForgeWebScriptCompiledModule |       |
 
 ### createForgeWebScriptManifestSource
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptManifestSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptManifestSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 قم بإنشاء وحدة تحتوي على بيان JSON-Serializable ABI.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجمعة | ForgeWebScriptCompiledModule |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| مجمعة | ForgeWebScriptCompiledModule |       |
 
 ### createForgeWebScriptModuleSource
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptModuleSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptModuleSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 إنشاء وحدة المستهلك العادية. تقوم الوحدة التي تم إنشاؤها بإعادة تصدير ملف
@@ -141,48 +156,54 @@ function createForgeWebScriptModuleSource(compiled: ForgeWebScriptCompiledModule
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجمعة | ForgeWebScriptCompiledModule |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| مجمعة | ForgeWebScriptCompiledModule |       |
 
 ### createForgeWebScriptSourceMapSource
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptSourceMapSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptSourceMapSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 قم بإنشاء وحدة نمطية يكون تصديرها الافتراضي هو كائن خريطة المصدر الذي تم إنشاؤه.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجمعة | ForgeWebScriptCompiledModule |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| مجمعة | ForgeWebScriptCompiledModule |       |
 
 ### createForgeWebScriptWasmSource
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptWasmSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptWasmSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 قم بإنشاء وحدة نمطية يكون تصديرها الافتراضي هو مصفوفة بايت Wasm المترجمة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجمعة | ForgeWebScriptCompiledModule |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| مجمعة | ForgeWebScriptCompiledModule |       |
 
 ### createForgeWebScriptWatSource
 
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptWatSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptWatSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 قم بإنشاء وحدة نمطية يكون تصديرها الافتراضي هو نص WAT المترجم. هذا هو
@@ -190,16 +211,16 @@ function createForgeWebScriptWatSource(compiled: ForgeWebScriptCompiledModule): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجمعة | ForgeWebScriptCompiledModule |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| مجمعة | ForgeWebScriptCompiledModule |       |
 
 ### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
 
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
 ```
 
 الاستعلام الذي يُرجع الإعلانات المرتبطة وبيانات تعريف الرسم البياني كوحدة ES.
@@ -209,7 +230,7 @@ export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY
+export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
 ```
 
 استعلام يقوم بإرجاع بيان ABI المترجم كوحدة ES.
@@ -219,7 +240,7 @@ export const FORGE_WEB_SCRIPT_MANIFEST_QUERY
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
 ```
 
 استعلام يقوم بإرجاع الخريطة المصدر التي تم إنشاؤها كوحدة التصدير الافتراضية.
@@ -229,7 +250,7 @@ export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY
+export const FORGE_WEB_SCRIPT_WASM_QUERY;
 ```
 
 الاستعلام الذي يقوم بإرجاع بايتات Wasm المترجمة كوحدة التصدير الافتراضية.
@@ -239,7 +260,7 @@ export const FORGE_WEB_SCRIPT_WASM_QUERY
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY
+export const FORGE_WEB_SCRIPT_WAT_QUERY;
 ```
 
 الاستعلام الذي يُرجع WAT المُنشأ، بما في ذلك خفض الجدول الفرعي، كسلسلة.
@@ -251,7 +272,9 @@ export const FORGE_WEB_SCRIPT_WAT_QUERY
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptPlugin(
+  options: ForgeWebScriptPluginOptions = {},
+): Plugin;
 ```
 
 قم بتثبيت مجموعة Forge Web Script واستعلامات القطع الأثرية الافتراضية في Vite.
@@ -260,16 +283,18 @@ function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات ForgeWebScriptPlugin |  |
+| الاسم  | اكتب                        | الوصف |
+| ------ | --------------------------- | ----- |
+| خيارات | خيارات ForgeWebScriptPlugin |       |
 
 ### forgeWebScriptPlugin
 
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptPlugin(
+  options: ForgeWebScriptPluginOptions = {},
+): Plugin;
 ```
 
 قم بتثبيت مجموعة Forge Web Script واستعلامات القطع الأثرية الافتراضية في Vite.
@@ -278,9 +303,9 @@ function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات ForgeWebScriptPlugin |  |
+| الاسم  | اكتب                        | الوصف |
+| ------ | --------------------------- | ----- |
+| خيارات | خيارات ForgeWebScriptPlugin |       |
 
 ### ForgeWebScriptViteError
 

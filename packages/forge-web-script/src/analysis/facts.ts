@@ -28,7 +28,7 @@ function visitExpression(
   visit: (expression: ForgeWebScriptIrExpression) => void,
 ): void {
   visit(expression);
-  if (expression.kind === 'call') expression.arguments.forEach((argument) => visitExpression(argument, visit));
+  if (expression.kind === 'call') for (const argument of expression.arguments) visitExpression(argument, visit);
   if (expression.kind === 'binary') {
     visitExpression(expression.left, visit);
     visitExpression(expression.right, visit);
@@ -39,14 +39,14 @@ function visitExpression(
     visitExpression(expression.index, visit);
   }
   if (expression.kind === 'struct-value')
-    Object.values(expression.fields).forEach((field) => visitExpression(field, visit));
-  if (expression.kind === 'enum-value') expression.arguments.forEach((argument) => visitExpression(argument, visit));
+    for (const field of Object.values(expression.fields)) visitExpression(field, visit);
+  if (expression.kind === 'enum-value') for (const argument of expression.arguments) visitExpression(argument, visit);
   if (expression.kind === 'match') {
     visitExpression(expression.value, visit);
-    expression.arms.forEach((arm) => visitExpression(arm.value, visit));
+    for (const arm of expression.arms) visitExpression(arm.value, visit);
   }
   if (expression.kind === 'array-literal' || expression.kind === 'vector-literal')
-    expression.elements.forEach((element) => visitExpression(element, visit));
+    for (const element of expression.elements) visitExpression(element, visit);
 }
 
 function visitStatements(
@@ -62,11 +62,11 @@ function visitStatements(
     if (statement.kind === 'while' || statement.kind === 'do-while' || statement.kind === 'iterator-loop')
       visitStatements(statement.body, visit);
     if (statement.kind === 'switch') {
-      statement.cases.forEach(({ body }) => visitStatements(body, visit));
+      for (const { body } of statement.cases) visitStatements(body, visit);
       if (statement.defaultCase !== undefined) visitStatements(statement.defaultCase, visit);
     }
     if (statement.kind === 'match-statement')
-      statement.arms.forEach(({ value }) => visitExpression(value, () => undefined));
+      for (const { value } of statement.arms) visitExpression(value, () => {});
   }
 }
 

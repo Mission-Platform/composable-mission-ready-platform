@@ -385,7 +385,7 @@ De oproepen`regex_full_match(pattern, value) -> bool`,
 `regex_prefix_match(pattern, value) -> bool`, en
 `regex_search(pattern, value, start: i32) -> bool`voert gehele waarde uit,
 respectievelijk positie-nul voorvoegsel en meest linkse zoekopdracht. Grenzen vastleggen
-zijn beschikbaar via de overeenkomstige`regex__*capture_start`en`regex*__capture_end`-oproepen; ze nemen een groepsindex en retourneren een UTF-16-tekenreeks
+zijn beschikbaar via de overeenkomstige`regex___capture_start`en`regex___capture_end`-oproepen; ze nemen een groepsindex en retourneren een UTF-16-tekenreeks
 offset of `-1` wanneer er geen overeenkomst is of de groep is uitgeschakeld. Zoek opname
 oproepen nemen bovendien de startoffset vóór de groepsindex.
 

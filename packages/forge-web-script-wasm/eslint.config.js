@@ -11,4 +11,13 @@ export default [
       },
     },
   },
+  {
+    files: ['src/emitter.ts', 'src/optimizer.ts', 'src/regex-runtime.ts'],
+    rules: {
+      // These modules construct ordered bytecode and capture arrays incrementally;
+      // batching pushes would obscure the control flow and increase allocations.
+      'unicorn/prefer-single-call': 'off',
+      'unicorn/no-immediate-mutation': 'off',
+    },
+  },
 ];

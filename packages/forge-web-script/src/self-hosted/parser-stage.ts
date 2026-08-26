@@ -10,7 +10,6 @@
  * boundary; this stage proves independent VM execution and parity gating.
  */
 
-import type { ForgeWebScriptAggregateLayout } from '../manifest.js';
 import {
   FORGE_WEB_SCRIPT_LEX_STAGE_SOURCE_LAYOUT,
   type ForgeWebScriptSelfHostedVmFunction,
@@ -18,6 +17,8 @@ import {
   type ForgeWebScriptSelfHostedVmModule,
   type ForgeWebScriptSelfHostedVmValue,
 } from './lex-stage.js';
+
+import type { ForgeWebScriptAggregateLayout } from '../manifest.js';
 
 export const FORGE_WEB_SCRIPT_PARSER_STAGE_ENTRY = 'parse_stage';
 
@@ -30,7 +31,7 @@ export interface ForgeWebScriptParserStageVmModuleOptions {
 const FNV_OFFSET = 2_166_136_261;
 const FNV_PRIME = 16_777_619;
 /** Distinct from the lex-stage basis so parser identity cannot echo lex. */
-const PARSE_SALT = 0x5052_5331; // 'PRS1'
+const PARSE_SALT = 0x50_52_53_31; // 'PRS1'
 
 const TAG_STRING = 1;
 const TAG_NUMBER = 2;
@@ -403,8 +404,7 @@ function createBuilder(parameterCount: number): BytecodeBuilder {
       code.push({ opcode: 'jump', target: -1 });
     },
     branch(condition, ifTrue, ifFalse) {
-      patches.push({ index: code.length, field: 'ifTrue', label: ifTrue });
-      patches.push({ index: code.length, field: 'ifFalse', label: ifFalse });
+      patches.push({ index: code.length, field: 'ifTrue', label: ifTrue }, { index: code.length, field: 'ifFalse', label: ifFalse });
       code.push({ opcode: 'branch', condition, ifTrue: -1, ifFalse: -1 });
     },
     ret(source) {

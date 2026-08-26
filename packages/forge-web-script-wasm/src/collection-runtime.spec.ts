@@ -33,9 +33,10 @@ function instantiateArrayIteratorRuntime(): {
   readonly iteratorNext: (iterator: number) => bigint;
 } {
   const allocatorIndex = 0;
-  const [arrayNew, , , , arrayIter, , , , , , , iteratorNext] =
-    buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorIndex);
-  void arrayNew;
+  const runtimeBodies = buildForgeWebScriptWasmCollectionRuntimeWasmBodies(allocatorIndex);
+  const arrayIter = runtimeBodies[4];
+  const iteratorNext = runtimeBodies[11];
+  if (arrayIter === undefined || iteratorNext === undefined) throw new Error('Collection runtime body is missing.');
 
   // alloc(size) -> bump global 0
   const allocBody = encodeBody([
@@ -76,7 +77,7 @@ function instantiateArrayIteratorRuntime(): {
   const memorySection = section(5, [1, 0, 1]);
   // i32.const 1024 uses SLEB128; 1024 encodes as 0x80 0x08.
   const globalSection = section(6, [1, 0x7f, 1, 0x41, 0x80, 0x08, 0x0b]);
-  const name = (text: string): number[] => [...uleb(text.length), ...[...text].map((c) => c.charCodeAt(0))];
+  const name = (text: string): number[] => [...uleb(text.length), ...[...text].map((c) => c.codePointAt(0) ?? 0)];
   const exportSection = section(7, [
     4,
     ...name('memory'),
@@ -165,7 +166,7 @@ describe('Forge Web Script Wasm collection runtime contracts', () => {
       const pointer = runtime.alloc((values.length + 1) * 4);
       const view = new DataView(runtime.memory.buffer, pointer, (values.length + 1) * 4);
       view.setInt32(0, values.length, true);
-      values.forEach((value, index) => view.setInt32((index + 1) * 4, value, true));
+      for (const [index, value] of values.entries()) view.setInt32((index + 1) * 4, value, true);
       return pointer;
     };
 

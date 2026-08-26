@@ -67,7 +67,10 @@ function isTypeDeclarationToken(index: number, tokens: readonly ForgeWebScriptTo
   return previous === 'struct' || previous === 'enum' || previous === 'interface';
 }
 
-function previousSignificantToken(index: number, tokens: readonly ForgeWebScriptToken[]): ForgeWebScriptToken | undefined {
+function previousSignificantToken(
+  index: number,
+  tokens: readonly ForgeWebScriptToken[],
+): ForgeWebScriptToken | undefined {
   for (let candidate = index - 1; candidate >= 0; candidate -= 1) {
     if (tokens[candidate]?.kind !== 'comment') return tokens[candidate];
   }

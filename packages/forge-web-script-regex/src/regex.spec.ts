@@ -11,12 +11,12 @@ import {
 } from "./reference-vm.js";
 
 const CASES = [
-  ["[13-689]\\d{9}", "4155552671"],
-  ["[2-9]\\d{2}[2-9]\\d{6}", "2015550123"],
-  ["1(?:800|888)\\d{7}", "18005551234"],
-  ["(\\d{3})(\\d{3})(\\d{4})", "4155552671"],
+  [String.raw`[13-689]\d{9}`, "4155552671"],
+  [String.raw`[2-9]\d{2}[2-9]\d{6}`, "2015550123"],
+  [String.raw`1(?:800|888)\d{7}`, "18005551234"],
+  [String.raw`(\d{3})(\d{3})(\d{4})`, "4155552671"],
   ["(a+?)(a+)", "aaaa"],
-  ["^0[1-9]\\d{8}$", "0612345678"],
+  [String.raw`^0[1-9]\d{8}$`, "0612345678"],
   ["[0-46-9]+", "45678901"],
 ] as const;
 
@@ -36,27 +36,27 @@ const PATTERNS: string[] = [
   "(?:ab)+",
   "a|b|c",
   "(a|b)c",
-  "\\d+",
-  "\\d{3}",
+  String.raw`\d+`,
+  String.raw`\d{3}`,
   "[0-9]{2,3}",
-  "[13-689]\\d{9}",
-  "[2-9]\\d{2}[2-9]\\d{6}",
+  String.raw`[13-689]\d{9}`,
+  String.raw`[2-9]\d{2}[2-9]\d{6}`,
   "[0-46-9]",
   "[^0-9]+",
-  "\\D",
-  "\\w+",
-  "\\s",
-  "(\\d{3})(\\d{4})",
-  "(\\d{3})(\\d{3})(\\d{4})",
-  "1(?:800|888)\\d{7}",
-  "0[1-9]\\d{8}",
+  String.raw`\D`,
+  String.raw`\w+`,
+  String.raw`\s`,
+  String.raw`(\d{3})(\d{4})`,
+  String.raw`(\d{3})(\d{3})(\d{4})`,
+  String.raw`1(?:800|888)\d{7}`,
+  String.raw`0[1-9]\d{8}`,
   "a*",
   "",
-  "(\\d+)?",
+  String.raw`(\d+)?`,
   "[-a-z]+",
   "[a-z-]+",
   "[]a]+",
-  "4\\d{8,9}",
+  String.raw`4\d{8,9}`,
 ];
 
 const INPUTS: string[] = [
@@ -155,7 +155,7 @@ describe("Forge regex compiler and reference oracle", () => {
   });
 
   it("extracts whole-match capture groups for formatting", () => {
-    const compiled = compileRegex("(\\d{3})(\\d{3})(\\d{4})");
+    const compiled = compileRegex(String.raw`(\d{3})(\d{3})(\d{4})`);
     const captures = fullMatch(compiled, "4155552671");
     expect(captures).not.toBeNull();
     expect(captures).toEqual([0, 10, 0, 3, 3, 6, 6, 10]);
@@ -169,14 +169,14 @@ describe("Forge regex compiler and reference oracle", () => {
   });
 
   it("prefixMatch does not require consuming the whole input", () => {
-    const compiled = compileRegex("\\d{3}");
+    const compiled = compileRegex(String.raw`\d{3}`);
     expect(prefixMatch(compiled, "12345")).not.toBeNull();
     expect(fullMatch(compiled, "12345")).toBeNull();
     expect(fullMatch(compiled, "123")).not.toBeNull();
   });
 
   it("search finds a leftmost match at an offset", () => {
-    const compiled = compileRegex("\\d{2}");
+    const compiled = compileRegex(String.raw`\d{2}`);
     const captures = search(compiled, "ab12cd", 0);
     expect(captures).not.toBeNull();
     expect(captures?.slice(0, 2)).toEqual([2, 4]);

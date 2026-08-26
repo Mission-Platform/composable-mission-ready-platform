@@ -126,32 +126,32 @@ export interface DapVariable
 **種類:** 関数
 
 ```typescript
-function encodeDapMessage(message: DapMessage): Buffer
+function encodeDapMessage(message: DapMessage): Buffer;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|メッセージ |ダップメッセージ |  |
+| 名前       | タイプ           | 説明 |
+| ---------- | ---------------- | ---- |
+| メッセージ | ダップメッセージ |      |
 
 ### encodeLineMessage
 
 **種類:** 関数
 
 ```typescript
-function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string
+function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|メッセージ | ForgeWebScriptRuntimeRequest |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| メッセージ | ForgeWebScriptRuntimeRequest |      |
 
 ### ForgeWebScriptDapForensicRequest
 
@@ -198,7 +198,26 @@ export interface ForgeWebScriptDapTraceRequest extends DapRequest<ForgeWebScript
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptRuntimeCommand = | 'launch' | 'setBreakpoints' | 'configurationDone' | 'continue' | 'next' | 'stepIn' | 'stepOut' | 'pause' | 'threads' | 'stackTrace' | 'scopes' | 'variables' | 'fwsTraceSummary' | 'fwsTraceEvents' | 'fwsMemoryState' | 'fwsCapabilityCalls' | 'fwsTrapEvidence' | 'terminate' | 'disconnect';
+export type ForgeWebScriptRuntimeCommand =
+  | 'launch'
+  | 'setBreakpoints'
+  | 'configurationDone'
+  | 'continue'
+  | 'next'
+  | 'stepIn'
+  | 'stepOut'
+  | 'pause'
+  | 'threads'
+  | 'stackTrace'
+  | 'scopes'
+  | 'variables'
+  | 'fwsTraceSummary'
+  | 'fwsTraceEvents'
+  | 'fwsMemoryState'
+  | 'fwsCapabilityCalls'
+  | 'fwsTrapEvidence'
+  | 'terminate'
+  | 'disconnect';
 ```
 
 説明はありません。
@@ -228,7 +247,14 @@ export interface ForgeWebScriptRuntimeErrorEvent
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptRuntimeMessage = | ForgeWebScriptRuntimeResponse | ForgeWebScriptRuntimeOutputEvent | ForgeWebScriptRuntimeStoppedEvent | ForgeWebScriptRuntimeContinuedEvent | ForgeWebScriptRuntimeThreadEvent | ForgeWebScriptRuntimeTerminatedEvent | ForgeWebScriptRuntimeErrorEvent;
+export type ForgeWebScriptRuntimeMessage =
+  | ForgeWebScriptRuntimeResponse
+  | ForgeWebScriptRuntimeOutputEvent
+  | ForgeWebScriptRuntimeStoppedEvent
+  | ForgeWebScriptRuntimeContinuedEvent
+  | ForgeWebScriptRuntimeThreadEvent
+  | ForgeWebScriptRuntimeTerminatedEvent
+  | ForgeWebScriptRuntimeErrorEvent;
 ```
 
 説明はありません。
@@ -278,7 +304,11 @@ export interface ForgeWebScriptRuntimeResponse
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptRuntimeSpawner = ( executable: string, arguments_: readonly string[], options: ForgeWebScriptRuntimeSpawnOptions, ) => ForgeWebScriptRuntimeProcess;
+export type ForgeWebScriptRuntimeSpawner = (
+  executable: string,
+  arguments_: readonly string[],
+  options: ForgeWebScriptRuntimeSpawnOptions,
+) => ForgeWebScriptRuntimeProcess;
 ```
 
 説明はありません。
@@ -328,16 +358,16 @@ export interface ForgeWebScriptRuntimeThreadEvent
 **種類:** 関数
 
 ```typescript
-function isRecord(value: unknown): value is Record<string, unknown>
+function isRecord(value: unknown): value is Record<string, unknown>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |不明 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 不明   |      |
 
 ### ランタイムラインパーサー
 
@@ -356,16 +386,16 @@ export class RuntimeLineParser
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer
+function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptDapServerOptions |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| オプション | ForgeWebScriptDapServerOptions |      |
 
 ### ForgeWebScriptDapServer
 

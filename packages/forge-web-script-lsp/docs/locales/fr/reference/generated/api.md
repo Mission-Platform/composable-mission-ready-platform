@@ -16,16 +16,16 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | ForgeWebScriptLspServerOptions |  |
+| Nom     | Tapez                          | Descriptif |
+| ------- | ------------------------------ | ---------- |
+| options | ForgeWebScriptLspServerOptions |            |
 
 ### ForgeWebScriptLspDocument
 
@@ -82,17 +82,20 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function registerForgeWebScriptLsp(
+  connection: Connection,
+  options: ForgeWebScriptLspServerOptions = {},
+): ForgeWebScriptLspServer;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| connexion | Connexion |  |
-| options | ForgeWebScriptLspServerOptions |  |
+| Nom       | Tapez                          | Descriptif |
+| --------- | ------------------------------ | ---------- |
+| connexion | Connexion                      |            |
+| options   | ForgeWebScriptLspServerOptions |            |
 
 ## `src/workspace`
 
@@ -101,16 +104,18 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptNodeWorkspaceHost(options: ForgeWebScriptNodeWorkspaceOptions): RootBoundedForgeWebScriptWorkspaceHost
+function createForgeWebScriptNodeWorkspaceHost(
+  options: ForgeWebScriptNodeWorkspaceOptions,
+): RootBoundedForgeWebScriptWorkspaceHost;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | ForgeWebScriptNodeWorkspaceOptions |  |
+| Nom     | Tapez                              | Descriptif |
+| ------- | ---------------------------------- | ---------- |
+| options | ForgeWebScriptNodeWorkspaceOptions |            |
 
 ### ForgeWebScriptNodeFileSystem
 

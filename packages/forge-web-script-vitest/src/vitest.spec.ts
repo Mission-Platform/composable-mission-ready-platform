@@ -5,12 +5,12 @@ import path from 'node:path';
 import { createServer } from 'vite';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { abiManifest, load, loadSync, manifest } from '../fixtures/valid/scalar.fws';
 import {
   abiManifest as collectionAbiManifest,
   load as loadCollections,
   loadSync as loadCollectionsSync,
 } from '../fixtures/valid/collections.fws';
+import { abiManifest, load, loadSync, manifest } from '../fixtures/valid/scalar.fws';
 
 import { defineForgeWebScriptVitestConfig, forgeWebScriptVitestPlugin } from './vitest.js';
 

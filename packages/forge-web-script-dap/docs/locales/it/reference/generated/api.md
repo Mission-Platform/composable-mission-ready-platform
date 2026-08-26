@@ -126,32 +126,32 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function encodeDapMessage(message: DapMessage): Buffer
+function encodeDapMessage(message: DapMessage): Buffer;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| messaggio | DapMessage |  |
+| Nome      | Digitare   | Descrizione |
+| --------- | ---------- | ----------- |
+| messaggio | DapMessage |             |
 
 ### codificaLineMessage
 
 **Tipo:** funzione
 
 ```typescript
-function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string
+function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| messaggio | ForgeWebScriptRuntimeRequest |  |
+| Nome      | Digitare                     | Descrizione |
+| --------- | ---------------------------- | ----------- |
+| messaggio | ForgeWebScriptRuntimeRequest |             |
 
 ### ForgeWebScriptDapForensicRequest
 
@@ -198,7 +198,26 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type ForgeWebScriptRuntimeCommand = | 'launch' | 'setBreakpoints' | 'configurationDone' | 'continue' | 'next' | 'stepIn' | 'stepOut' | 'pause' | 'threads' | 'stackTrace' | 'scopes' | 'variables' | 'fwsTraceSummary' | 'fwsTraceEvents' | 'fwsMemoryState' | 'fwsCapabilityCalls' | 'fwsTrapEvidence' | 'terminate' | 'disconnect';
+export type ForgeWebScriptRuntimeCommand =
+  | 'launch'
+  | 'setBreakpoints'
+  | 'configurationDone'
+  | 'continue'
+  | 'next'
+  | 'stepIn'
+  | 'stepOut'
+  | 'pause'
+  | 'threads'
+  | 'stackTrace'
+  | 'scopes'
+  | 'variables'
+  | 'fwsTraceSummary'
+  | 'fwsTraceEvents'
+  | 'fwsMemoryState'
+  | 'fwsCapabilityCalls'
+  | 'fwsTrapEvidence'
+  | 'terminate'
+  | 'disconnect';
 ```
 
 Nessuna descrizione fornita.
@@ -228,7 +247,14 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type ForgeWebScriptRuntimeMessage = | ForgeWebScriptRuntimeResponse | ForgeWebScriptRuntimeOutputEvent | ForgeWebScriptRuntimeStoppedEvent | ForgeWebScriptRuntimeContinuedEvent | ForgeWebScriptRuntimeThreadEvent | ForgeWebScriptRuntimeTerminatedEvent | ForgeWebScriptRuntimeErrorEvent;
+export type ForgeWebScriptRuntimeMessage =
+  | ForgeWebScriptRuntimeResponse
+  | ForgeWebScriptRuntimeOutputEvent
+  | ForgeWebScriptRuntimeStoppedEvent
+  | ForgeWebScriptRuntimeContinuedEvent
+  | ForgeWebScriptRuntimeThreadEvent
+  | ForgeWebScriptRuntimeTerminatedEvent
+  | ForgeWebScriptRuntimeErrorEvent;
 ```
 
 Nessuna descrizione fornita.
@@ -278,7 +304,11 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type ForgeWebScriptRuntimeSpawner = ( executable: string, arguments_: readonly string[], options: ForgeWebScriptRuntimeSpawnOptions, ) => ForgeWebScriptRuntimeProcess;
+export type ForgeWebScriptRuntimeSpawner = (
+  executable: string,
+  arguments_: readonly string[],
+  options: ForgeWebScriptRuntimeSpawnOptions,
+) => ForgeWebScriptRuntimeProcess;
 ```
 
 Nessuna descrizione fornita.
@@ -328,16 +358,16 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function isRecord(value: unknown): value is Record<string, unknown>
+function isRecord(value: unknown): value is Record<string, unknown>;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore | sconosciuto |  |
+| Nome   | Digitare    | Descrizione |
+| ------ | ----------- | ----------- |
+| valore | sconosciuto |             |
 
 ### RuntimeLineParser
 
@@ -356,16 +386,16 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer
+function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | ForgeWebScriptDapServerOptions |  |
+| Nome    | Digitare                       | Descrizione |
+| ------- | ------------------------------ | ----------- |
+| opzioni | ForgeWebScriptDapServerOptions |             |
 
 ### ForgeWebScriptDapServer
 

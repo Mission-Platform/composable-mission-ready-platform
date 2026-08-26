@@ -143,4 +143,33 @@ describe('Forge Web Script Wasm-stage optimizer', () => {
       { kind: 'return', value: { kind: 'literal', value: 42 } },
     ]);
   });
+
+  it('folds i32 arithmetic with WebAssembly wrapping semantics', () => {
+    const optimized = optimizeForgeWebScriptWasmModule(
+      moduleWith([
+        {
+          kind: 'return',
+          value: {
+            kind: 'binary',
+            operator: '+',
+            left: {
+              kind: 'binary',
+              operator: '*',
+              left: number(216_613_626),
+              right: number(16_777_619),
+              span,
+            },
+            right: number(1),
+            span,
+          },
+          span,
+        },
+      ]),
+    );
+
+    expect(optimized.module.functions[0]!.body).toMatchObject([
+      // eslint-disable-next-line unicorn/prefer-math-trunc -- Assertion models WebAssembly i32 wrapping.
+      { kind: 'return', value: { kind: 'literal', value: (Math.imul(216_613_626, 16_777_619) + 1) | 0 } },
+    ]);
+  });
 });

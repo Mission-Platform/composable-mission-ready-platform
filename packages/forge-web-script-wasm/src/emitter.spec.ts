@@ -23,7 +23,7 @@ function moduleWith(functions: ForgeWebScriptWasmModule['functions']): ForgeWebS
 
 const metadata = { compilerVersion: 'test', optimization: 'debug' as const, sourceFiles: ['entry.fws'] };
 const literal = (value: string) => ({ kind: 'literal' as const, value, type: 'string' as const, span });
-const i32 = (value: number) => ({ kind: 'literal' as const, value, type: 'i32' as const, span });
+const index32 = (value: number) => ({ kind: 'literal' as const, value, type: 'i32' as const, span });
 const countInstruction = (bytes: Uint8Array, instruction: readonly number[]): number => {
   let count = 0;
   for (let index = 0; index <= bytes.length - instruction.length; index += 1) {
@@ -72,9 +72,9 @@ describe('Forge Web Script WASM backend', () => {
     expect(exports.fws_realloc(tail, 4, 2)).toBe(tail);
     const replacement = exports.fws_realloc(pointer, 4, 6);
     expect(replacement).not.toBe(pointer);
-    expect(
-      Array.from(new Uint8Array((exports.memory as WebAssembly.Memory).buffer).slice(replacement, replacement + 4)),
-    ).toEqual([1, 2, 3, 4]);
+    expect(new Uint8Array((exports.memory as WebAssembly.Memory).buffer).slice(replacement, replacement + 4)).toEqual(
+      new Uint8Array([1, 2, 3, 4]),
+    );
   });
 
   it('sizes memory from static data and permits checked allocator growth', () => {
@@ -115,10 +115,10 @@ describe('Forge Web Script WASM backend', () => {
             kind: 'switch',
             value: { kind: 'identifier', name: 'value', span },
             cases: [
-              { value: 0, body: [{ kind: 'return', value: i32(10), span }] },
-              { value: 2, body: [{ kind: 'return', value: i32(20), span }] },
+              { value: 0, body: [{ kind: 'return', value: index32(10), span }] },
+              { value: 2, body: [{ kind: 'return', value: index32(20), span }] },
             ],
-            defaultCase: [{ kind: 'return', value: i32(-1), span }],
+            defaultCase: [{ kind: 'return', value: index32(-1), span }],
             span,
           },
         ],
@@ -151,10 +151,10 @@ describe('Forge Web Script WASM backend', () => {
             kind: 'switch',
             value: { kind: 'identifier', name: 'value', span },
             cases: [
-              { value: -100_000, body: [{ kind: 'return', value: i32(10), span }] },
-              { value: 100_000, body: [{ kind: 'return', value: i32(20), span }] },
+              { value: -100_000, body: [{ kind: 'return', value: index32(10), span }] },
+              { value: 100_000, body: [{ kind: 'return', value: index32(20), span }] },
             ],
-            defaultCase: [{ kind: 'return', value: i32(-1), span }],
+            defaultCase: [{ kind: 'return', value: index32(-1), span }],
             span,
           },
         ],
@@ -188,8 +188,8 @@ describe('Forge Web Script WASM backend', () => {
           {
             kind: 'switch',
             value: { kind: 'identifier', name: 'value', span },
-            cases: [{ value: 0, body: [{ kind: 'return', value: i32(42), span }] }],
-            defaultCase: [{ kind: 'return', value: i32(-1), span }],
+            cases: [{ value: 0, body: [{ kind: 'return', value: index32(42), span }] }],
+            defaultCase: [{ kind: 'return', value: index32(-1), span }],
             span,
           },
         ],
@@ -233,7 +233,7 @@ describe('Forge Web Script WASM backend', () => {
             ],
             span,
           },
-          { kind: 'return', value: i32(-1), span },
+          { kind: 'return', value: index32(-1), span },
         ],
       },
     ]);
@@ -271,7 +271,7 @@ describe('Forge Web Script WASM backend', () => {
             kind: 'let',
             name: 'values',
             type: { ...vectorType, span },
-            value: { kind: 'vector-literal', elements: [i32(7), i32(11)], type: { ...vectorType, span }, span },
+            value: { kind: 'vector-literal', elements: [index32(7), index32(11)], type: { ...vectorType, span }, span },
             span,
           },
           {
@@ -279,7 +279,7 @@ describe('Forge Web Script WASM backend', () => {
             value: {
               kind: 'index',
               receiver: { kind: 'identifier', name: 'values', span },
-              index: i32(1),
+              index: index32(1),
               span,
             },
             span,
@@ -317,13 +317,13 @@ describe('Forge Web Script WASM backend', () => {
             kind: 'let',
             name: 'values',
             type: { ...arrayType, span },
-            value: { kind: 'array-literal', elements: [i32(3), i32(5)], type: { ...arrayType, span }, span },
+            value: { kind: 'array-literal', elements: [index32(3), index32(5)], type: { ...arrayType, span }, span },
             span,
           },
-          { kind: 'assignment', name: 'values', index: i32(0), value: i32(9), span },
+          { kind: 'assignment', name: 'values', index: index32(0), value: index32(9), span },
           {
             kind: 'return',
-            value: { kind: 'index', receiver: { kind: 'identifier', name: 'values', span }, index: i32(0), span },
+            value: { kind: 'index', receiver: { kind: 'identifier', name: 'values', span }, index: index32(0), span },
             span,
           },
         ],
@@ -619,6 +619,7 @@ describe('Forge Web Script WASM backend', () => {
   });
 
   it('returns deterministic optimized and unoptimized debug artifacts', () => {
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- This fixture is specific to this test case.
     const makeModule = (value: number): ForgeWebScriptWasmModule =>
       moduleWith([
         {
@@ -628,7 +629,7 @@ describe('Forge Web Script WASM backend', () => {
           parameters: [],
           result: { name: 'i32', span },
           span,
-          body: [{ kind: 'return', value: i32(value), span }],
+          body: [{ kind: 'return', value: index32(value), span }],
         },
       ]);
     const result = compileForgeWebScriptWasm({
@@ -728,8 +729,8 @@ describe('Forge Web Script WASM backend', () => {
     const divisionByZero: ForgeWebScriptWasmExpression = {
       kind: 'binary',
       operator: '/',
-      left: i32(1),
-      right: i32(0),
+      left: index32(1),
+      right: index32(0),
       span,
     };
     const module = moduleWith([
@@ -844,7 +845,7 @@ describe('Forge Web Script WASM backend', () => {
     expect(result.wasm).toBeDefined();
     expect(WebAssembly.validate(result.wasm!.buffer as ArrayBuffer)).toBe(true);
     const exports = new WebAssembly.Instance(new WebAssembly.Module(result.wasm!), {}).exports;
-    expect(Object.keys(exports).sort()).toEqual([
+    expect(Object.keys(exports).toSorted()).toEqual([
       'fws_alloc',
       'fws_dealloc',
       'fws_realloc',
@@ -984,7 +985,7 @@ describe('Forge Web Script WASM backend', () => {
               callee: 'regex_full_capture_start',
               standardLibrary: 'full-capture-start',
               arguments: [
-                { kind: 'literal', value: 'a(\\d+)b', type: 'string', span },
+                { kind: 'literal', value: String.raw`a(\d+)b`, type: 'string', span },
                 { kind: 'literal', value: 'a123b', type: 'string', span },
                 { kind: 'literal', value: 1, type: 'i32', span },
               ],
@@ -1009,7 +1010,7 @@ describe('Forge Web Script WASM backend', () => {
               callee: 'regex_full_capture_end',
               standardLibrary: 'full-capture-end',
               arguments: [
-                { kind: 'literal', value: 'a(\\d+)b', type: 'string', span },
+                { kind: 'literal', value: String.raw`a(\d+)b`, type: 'string', span },
                 { kind: 'literal', value: 'a123b', type: 'string', span },
                 { kind: 'literal', value: 1, type: 'i32', span },
               ],
@@ -1034,7 +1035,7 @@ describe('Forge Web Script WASM backend', () => {
               callee: 'regex_full_capture_start',
               standardLibrary: 'full-capture-start',
               arguments: [
-                { kind: 'literal', value: 'a(\\d+)b', type: 'string', span },
+                { kind: 'literal', value: String.raw`a(\d+)b`, type: 'string', span },
                 { kind: 'literal', value: 'axxb', type: 'string', span },
                 { kind: 'literal', value: 1, type: 'i32', span },
               ],
@@ -1059,7 +1060,7 @@ describe('Forge Web Script WASM backend', () => {
               callee: 'regex_search_capture_start',
               standardLibrary: 'search-capture-start',
               arguments: [
-                { kind: 'literal', value: '(\\d+)', type: 'string', span },
+                { kind: 'literal', value: String.raw`(\d+)`, type: 'string', span },
                 { kind: 'literal', value: 'xx42yy', type: 'string', span },
                 { kind: 'literal', value: 0, type: 'i32', span },
                 { kind: 'literal', value: 1, type: 'i32', span },
@@ -1135,7 +1136,7 @@ describe('Forge Web Script WASM backend', () => {
               kind: 'call',
               callee: 'string_byte_at',
               standardLibrary: 'string-byte-at',
-              arguments: [literal('abc'), i32(1)],
+              arguments: [literal('abc'), index32(1)],
               span,
             },
             span,
@@ -1203,10 +1204,10 @@ describe('Forge Web Script WASM backend', () => {
                   kind: 'call',
                   callee: 'string_slice',
                   standardLibrary: 'string-slice',
-                  arguments: [literal('abcd'), i32(1), i32(4)],
+                  arguments: [literal('abcd'), index32(1), index32(4)],
                   span,
                 },
-                i32(0),
+                index32(0),
               ],
               span,
             },
@@ -1222,7 +1223,7 @@ describe('Forge Web Script WASM backend', () => {
         result: { name: 'i32', span },
         span,
         body: [
-          { kind: 'let', name: 'index', type: { name: 'i32', span }, value: i32(0), span },
+          { kind: 'let', name: 'index', type: { name: 'i32', span }, value: index32(0), span },
           {
             kind: 'while',
             condition: {
@@ -1240,7 +1241,7 @@ describe('Forge Web Script WASM backend', () => {
                   kind: 'binary',
                   operator: '+',
                   left: { kind: 'identifier', name: 'index', span },
-                  right: i32(1),
+                  right: index32(1),
                   span,
                 },
                 span,
@@ -1398,10 +1399,11 @@ describe('Forge Web Script WASM backend', () => {
   });
 
   it('traps string helpers on invalid pointer-length and slice ranges', () => {
+    /* eslint-disable unicorn/consistent-function-scoping -- This fixture is specific to this test case. */
     const invalid = (
       callee: string,
       standardLibrary: 'string-length' | 'string-slice',
-      args: ForgeWebScriptWasmExpression[],
+      arguments_: ForgeWebScriptWasmExpression[],
     ) => ({
       kind: 'function' as const,
       name: callee,
@@ -1412,14 +1414,15 @@ describe('Forge Web Script WASM backend', () => {
       body: [
         {
           kind: 'return' as const,
-          value: { kind: 'call' as const, callee, standardLibrary, arguments: args, span },
+          value: { kind: 'call' as const, callee, standardLibrary, arguments: arguments_, span },
           span,
         },
       ],
     });
+    /* eslint-enable unicorn/consistent-function-scoping */
     const module = moduleWith([
-      invalid('badLength', 'string-length', [i32(0), i32(1)]),
-      invalid('badSlice', 'string-slice', [literal('abc'), i32(3), i32(1)]),
+      invalid('badLength', 'string-length', [index32(0), index32(1)]),
+      invalid('badSlice', 'string-slice', [literal('abc'), index32(3), index32(1)]),
     ]);
     const result = compileForgeWebScriptWasm({ ir: module, optimizedIr: module, abi: {}, links: {}, metadata });
     expect(result.diagnostics).toEqual([]);
@@ -1492,7 +1495,7 @@ describe('Forge Web Script WASM backend', () => {
             span,
           } as never,
           span,
-          body: [{ kind: 'yield' as const, value: i32(1), span }],
+          body: [{ kind: 'yield' as const, value: index32(1), span }],
         },
       ]),
       iteratorDescriptors: [
@@ -1533,7 +1536,7 @@ describe('Forge Web Script WASM backend', () => {
     expect(typeof exports['values.next']).toBe('function');
     expect(exports.one()).toBe(0);
     expect(exports['one.next'](0)).toBe(1n);
-    expect(exports['one.next'](1)).toBe(0x1_0000_0000n);
+    expect(exports['one.next'](1)).toBe(0x1_00_00_00_00n);
   });
 
   it('emits and validates atomic rmw operations under a threads+atomics profile', () => {
@@ -1656,7 +1659,7 @@ describe('Forge Web Script WASM backend', () => {
     expect(allocate(8)).toBe(1024);
   });
   it('elides bounds check for proven-safe indexed reads, but retains it for required/writes', () => {
-    const arrType = { name: 'i32' as const, reference: 'Array' as const, length: 2, span };
+    const arrayType = { name: 'i32' as const, reference: 'Array' as const, length: 2, span };
 
     // Helper: create a read module with identical structure but different boundsCheck.
     // Both use identical export names to isolate the boundsCheck difference.
@@ -1673,8 +1676,8 @@ describe('Forge Web Script WASM backend', () => {
             {
               kind: 'let',
               name: 'arr',
-              type: arrType,
-              value: { kind: 'array-literal', elements: [i32(10), i32(20)], type: arrType, span },
+              type: arrayType,
+              value: { kind: 'array-literal', elements: [index32(10), index32(20)], type: arrayType, span },
               span,
             },
             {
@@ -1682,7 +1685,7 @@ describe('Forge Web Script WASM backend', () => {
               value: {
                 kind: 'index',
                 receiver: { kind: 'identifier', name: 'arr', span },
-                index: { ...i32(0), kind: 'literal', span },
+                index: { ...index32(0), kind: 'literal', span },
                 boundsCheck,
                 span,
               },
@@ -1707,22 +1710,23 @@ describe('Forge Web Script WASM backend', () => {
             {
               kind: 'let',
               name: 'arr',
-              type: arrType,
-              value: { kind: 'array-literal', elements: [i32(10), i32(20)], type: arrType, span },
+              type: arrayType,
+              value: { kind: 'array-literal', elements: [index32(10), index32(20)], type: arrayType, span },
               span,
             },
             {
               kind: 'assignment',
               name: 'arr',
               index: { kind: 'identifier', name: 'index', span },
-              value: i32(99),
+              value: index32(99),
               span,
             },
-            { kind: 'return', value: i32(0), span },
+            { kind: 'return', value: index32(0), span },
           ],
         },
       ]);
 
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- This fixture is specific to this test case.
     const compile = (module: ForgeWebScriptWasmModule) =>
       compileForgeWebScriptWasm({
         ir: module,

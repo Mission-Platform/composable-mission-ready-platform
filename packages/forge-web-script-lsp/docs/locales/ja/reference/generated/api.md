@@ -16,16 +16,16 @@
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptLspサーバーオプション |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| オプション | ForgeWebScriptLspサーバーオプション |      |
 
 ### ForgeWebScriptLspドキュメント
 
@@ -82,17 +82,20 @@ export interface ForgeWebScriptLspServerOptions
 **種類:** 関数
 
 ```typescript
-function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function registerForgeWebScriptLsp(
+  connection: Connection,
+  options: ForgeWebScriptLspServerOptions = {},
+): ForgeWebScriptLspServer;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|接続 |接続 |  |
-|オプション | ForgeWebScriptLspサーバーオプション |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| 接続       | 接続                                |      |
+| オプション | ForgeWebScriptLspサーバーオプション |      |
 
 ## `src/workspace`
 
@@ -101,16 +104,18 @@ function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScri
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptNodeWorkspaceHost(options: ForgeWebScriptNodeWorkspaceOptions): RootBoundedForgeWebScriptWorkspaceHost
+function createForgeWebScriptNodeWorkspaceHost(
+  options: ForgeWebScriptNodeWorkspaceOptions,
+): RootBoundedForgeWebScriptWorkspaceHost;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptNodeWorkspaceOptions |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| オプション | ForgeWebScriptNodeWorkspaceOptions |      |
 
 ### ForgeWebScriptNodeFileSystem
 

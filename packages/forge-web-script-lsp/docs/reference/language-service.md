@@ -454,12 +454,12 @@ The LSP server publishes `source: "forge-web-script"`. The phase and hint are
 also included in the diagnostic `data` object. Typical stable code families
 are:
 
-| Code family   | Phase        | Meaning                                                                  |
-| ------------- | ------------ | ------------------------------------------------------------------------ |
+| Code family   | Phase        | Meaning                                                                                         |
+| ------------- | ------------ | ----------------------------------------------------------------------------------------------- |
 | `FWS-LEX-*`   | `lex`        | Invalid characters/escapes, raw string line terminators, or unterminated strings/block comments |
-| `FWS-PARSE-*` | `parse`      | Invalid module, declaration, statement, or expression syntax             |
-| `FWS-TYPE-*`  | `type-check` | Invalid types, names, operators, arguments, or returns                   |
-| `FWS-ABI-*`   | `abi`        | Duplicate names, denied capabilities, exports, or imports                |
+| `FWS-PARSE-*` | `parse`      | Invalid module, declaration, statement, or expression syntax                                    |
+| `FWS-TYPE-*`  | `type-check` | Invalid types, names, operators, arguments, or returns                                          |
+| `FWS-ABI-*`   | `abi`        | Duplicate names, denied capabilities, exports, or imports                                       |
 
 Malformed input is still tokenized and analyzed where parser recovery allows
 it. For example, malformed source may produce `FWS-PARSE-017` while retaining
@@ -485,7 +485,7 @@ The simplest component usage is:
 ```tsx
 <ForgeMonacoEditor
   language="fws"
-  modelValue={"export fn add(value: i32) -> i32 {\n  return value + 1;\n}"}
+  modelValue={'export fn add(value: i32) -> i32 {\n  return value + 1;\n}'}
 />
 ```
 
@@ -502,15 +502,15 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
   readFile: async (uri) => files.get(uri),
   listFiles: async () => [...files.keys()],
   getOptions: async () => ({
-    requestedCapabilities: ["clock.now"],
-    capabilityNames: ["clock.now"],
+    requestedCapabilities: ['clock.now'],
+    capabilityNames: ['clock.now'],
     capabilitySignatures: new Map([
       [
-        "clock.now",
+        'clock.now',
         {
           parameters: [],
-          result: "i64",
-          documentation: "Read the current Unix timestamp.",
+          result: 'i64',
+          documentation: 'Read the current Unix timestamp.',
         },
       ],
     ]),
@@ -520,9 +520,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 <ForgeMonacoEditor
   language="fws"
   forgeWebScript={{ workspaceHost }}
-  modelValue={
-    'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'
-  }
+  modelValue={'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'}
 />;
 ```
 
@@ -537,10 +535,7 @@ For imperative integration, use the same adapter directly after Monaco has
 been loaded:
 
 ```ts
-import {
-  attachForgeWebScriptMonaco,
-  registerForgeWebScriptLanguage,
-} from "@mission-platform/content";
+import { attachForgeWebScriptMonaco, registerForgeWebScriptLanguage } from '@mission-platform/content';
 
 registerForgeWebScriptLanguage(monaco);
 const handle = attachForgeWebScriptMonaco(editor, monaco, { workspaceHost });

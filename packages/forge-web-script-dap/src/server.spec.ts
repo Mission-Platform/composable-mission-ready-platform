@@ -223,7 +223,11 @@ describe('Forge Web Script DAP server', () => {
       output,
       runtimeResponseTimeoutMs: 2000,
       spawnRuntime: (executable, arguments_, options) => {
-        runtimeChild = spawn(executable, [...arguments_], { cwd: options.cwd, env: options.env, stdio: ['pipe', 'pipe', 'pipe'] });
+        runtimeChild = spawn(executable, [...arguments_], {
+          cwd: options.cwd,
+          env: options.env,
+          stdio: ['pipe', 'pipe', 'pipe'],
+        });
         return runtimeChild;
       },
     });
@@ -265,7 +269,11 @@ describe('Forge Web Script DAP server', () => {
       output,
       runtimeResponseTimeoutMs: 2000,
       spawnRuntime: (executable, arguments_, options) => {
-        runtimeChild = spawn(executable, [...arguments_], { cwd: options.cwd, env: options.env, stdio: ['pipe', 'pipe', 'pipe'] });
+        runtimeChild = spawn(executable, [...arguments_], {
+          cwd: options.cwd,
+          env: options.env,
+          stdio: ['pipe', 'pipe', 'pipe'],
+        });
         return runtimeChild;
       },
     });
@@ -281,7 +289,12 @@ describe('Forge Web Script DAP server', () => {
       runtimePath: process.execPath,
       runtimeArgs: ['--input-type=module', '-e', RUNTIME_REJECTS_LAUNCH],
     });
-    const response = await nextMatching(output, parser, messages, (message) => message.type === 'response' && message.request_seq === 2);
+    const response = await nextMatching(
+      output,
+      parser,
+      messages,
+      (message) => message.type === 'response' && message.request_seq === 2,
+    );
     expect(response).toMatchObject({ request_seq: 2, success: false });
     if (response.type === 'response') expect(response.message).toMatch(/fixture rejected launch/);
 
@@ -307,7 +320,11 @@ describe('Forge Web Script DAP server', () => {
       output,
       runtimeResponseTimeoutMs: 2000,
       spawnRuntime: (executable, arguments_, options) => {
-        runtimeChild = spawn(executable, [...arguments_], { cwd: options.cwd, env: options.env, stdio: ['pipe', 'pipe', 'pipe'] });
+        runtimeChild = spawn(executable, [...arguments_], {
+          cwd: options.cwd,
+          env: options.env,
+          stdio: ['pipe', 'pipe', 'pipe'],
+        });
         return runtimeChild;
       },
     });
@@ -326,7 +343,12 @@ describe('Forge Web Script DAP server', () => {
     expect(await nextMessage(output, parser, messages)).toMatchObject({ request_seq: 2, success: true });
 
     sendRequest(input, 3, 'stackTrace', { threadId: 1 });
-    const response = await nextMatching(output, parser, messages, (message) => message.type === 'response' && message.request_seq === 3);
+    const response = await nextMatching(
+      output,
+      parser,
+      messages,
+      (message) => message.type === 'response' && message.request_seq === 3,
+    );
     expect(response).toMatchObject({ request_seq: 3, success: false });
     if (response.type === 'response') expect(response.message).toMatch(/exited before completing the request/);
 
@@ -393,7 +415,10 @@ async function waitForChildClose(
   if (child === undefined) throw new Error('Runtime process was not spawned.');
   if (child.exitCode !== null) return { code: child.exitCode, signal: undefined };
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error(`Timed out waiting for child process to close within ${timeoutMs}ms.`)), timeoutMs);
+    const timer = setTimeout(
+      () => reject(new Error(`Timed out waiting for child process to close within ${timeoutMs}ms.`)),
+      timeoutMs,
+    );
     child.once('close', (code, signal) => {
       clearTimeout(timer);
       resolve({ code, signal: signal ?? undefined });

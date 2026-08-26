@@ -1,9 +1,9 @@
 import { createDiagnostic, type ForgeWebScriptDiagnostic, type ForgeWebScriptSourceSpan } from './diagnostics.js';
 import { primitiveTypes } from './parser.js';
+import { checkForgeWebScriptSafety } from './safety.js';
+import { FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS, type ForgeWebScriptMemoryFunction } from './stdlib/memory.js';
 import { FORGE_WEB_SCRIPT_REGEX_FUNCTIONS, type ForgeWebScriptStandardLibraryFunction } from './stdlib/regex.js';
 import { FORGE_WEB_SCRIPT_STRING_FUNCTIONS, type ForgeWebScriptStringFunction } from './stdlib/string.js';
-import { FORGE_WEB_SCRIPT_MEMORY_FUNCTIONS, type ForgeWebScriptMemoryFunction } from './stdlib/memory.js';
-import { checkForgeWebScriptSafety } from './safety.js';
 
 import type {
   ForgeWebScriptExpression,
@@ -184,7 +184,7 @@ export function checkForgeWebScript(
           ),
         );
       variantNames.add(variant.name);
-      if (!Number.isSafeInteger(variant.tag) || variant.tag < -2147483648 || variant.tag > 2147483647)
+      if (!Number.isSafeInteger(variant.tag) || variant.tag < -2_147_483_648 || variant.tag > 2_147_483_647)
         diagnostics.push(
           createDiagnostic(
             fileName,
@@ -565,7 +565,7 @@ function checkStatement(
             createDiagnostic(fileName, 'type-check', 'FWS-TYPE-016', `Duplicate switch case '${arm.value}'.`, arm.span),
           );
         } else {
-          if (discriminant === 'i32' && (tag < -2147483648 || tag > 2147483647))
+          if (discriminant === 'i32' && (tag < -2_147_483_648 || tag > 2_147_483_647))
             diagnostics.push(
               createDiagnostic(
                 fileName,
@@ -1227,7 +1227,7 @@ function isOptionType(type: string): boolean {
 
 function elementType(type: string): string {
   const start = type.indexOf('<');
-  return start < 0 ? 'unit' : type.slice(start + 1, type.lastIndexOf('>')) || 'unit';
+  return start === -1 ? 'unit' : type.slice(start + 1, type.lastIndexOf('>')) || 'unit';
 }
 
 function collectionKind(type: string | undefined): CollectionKind | undefined {
@@ -1250,7 +1250,7 @@ function memberReceiverType(
   const callable = callables.get(receiver);
   if (callable !== undefined) return callable.result;
   const separator = receiver.lastIndexOf('.');
-  if (separator < 0) return undefined;
+  if (separator === -1) return undefined;
   const parent = receiver.slice(0, separator);
   const memberType = memberReceiverType(parent, locals, callables);
   return receiver.slice(separator + 1) === 'next' && memberType !== undefined && isIteratorLike(memberType)
@@ -1262,7 +1262,9 @@ function callableFromType(type: string | undefined): Callable | undefined {
   if (type === undefined || !type.startsWith('Fn<') || !type.endsWith('>')) return undefined;
   const parts = splitGenericArguments(type.slice(3, -1));
   if (parts.length === 0) return undefined;
-  return { parameters: parts.slice(0, -1), result: parts[parts.length - 1] };
+  const result = parts.at(-1);
+  if (result === undefined) return undefined;
+  return { parameters: parts.slice(0, -1), result };
 }
 
 function functionTypeKey(callable: Callable): string {

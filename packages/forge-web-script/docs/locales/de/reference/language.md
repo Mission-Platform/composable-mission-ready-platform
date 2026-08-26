@@ -384,7 +384,7 @@ und `^`/`Forge Web Script bietet eine deterministische Standardbibliothek für r
 Die Aufrufe`regex_full_match(pattern, value) -> bool`,
 `regex_prefix_match(pattern, value) -> bool`und`regex_search(pattern, value, start: i32) -> bool`Ganzwert durchführen,
 Positions-Null-Präfix bzw. Suchübereinstimmung ganz links. Erobere Grenzen
-sind über die entsprechenden`regex__*capture_start`und verfügbar`regex*__capture_end`Aufrufe; Sie nehmen einen Gruppenindex und geben eine UTF-16-Zeichenfolge zurück
+sind über die entsprechenden`regex___capture_start`und verfügbar`regex___capture_end`Aufrufe; Sie nehmen einen Gruppenindex und geben eine UTF-16-Zeichenfolge zurück
 Offset oder`-1`, wenn keine Übereinstimmung vorliegt oder die Gruppe nicht festgelegt ist. Sucherfassung
 Aufrufe nehmen zusätzlich den Startoffset vor dem Gruppenindex an.
 

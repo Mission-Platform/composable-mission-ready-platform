@@ -16,18 +16,22 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-web-s
 **Art:** Funktion
 
 ```typescript
-function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeWebScriptWorkspaceOptions, analysisOptions: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysis
+function analyzeForgeWebScript(
+  document: ForgeWebScriptDocument,
+  options: ForgeWebScriptWorkspaceOptions,
+  analysisOptions: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysis;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Dokument | ForgeWebScriptDocument |  |
-| Optionen | ForgeWebScriptWorkspaceOptions |  |
-| Analyseoptionen | ForgeWebScriptAnalysisOptions |  |
+| Name            | Geben Sie                      | ein Beschreibung |
+| --------------- | ------------------------------ | ---------------- |
+| Dokument        | ForgeWebScriptDocument         |                  |
+| Optionen        | ForgeWebScriptWorkspaceOptions |                  |
+| Analyseoptionen | ForgeWebScriptAnalysisOptions  |                  |
 
 ## `src/completion`
 
@@ -36,19 +40,24 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function completeForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): readonly ForgeWebScriptCompletion[]
+function completeForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): readonly ForgeWebScriptCompletion[];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Position | ForgeWebScriptPosition |  |
-| Symbole | schreibgeschützt ForgeWebScriptSymbol[] |  |
-| Optionen | ForgeWebScriptWorkspaceOptions |  |
+| Name     | Geben Sie                               | ein Beschreibung |
+| -------- | --------------------------------------- | ---------------- |
+| Quelle   | Zeichenfolge                            |                  |
+| Position | ForgeWebScriptPosition                  |                  |
+| Symbole  | schreibgeschützt ForgeWebScriptSymbol[] |                  |
+| Optionen | ForgeWebScriptWorkspaceOptions          |                  |
 
 ## `src/documents`
 
@@ -57,16 +66,16 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService
+function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Gastgeber | ForgeWebScriptWorkspaceHost |  |
+| Name      | Geben Sie                   | ein Beschreibung |
+| --------- | --------------------------- | ---------------- |
+| Gastgeber | ForgeWebScriptWorkspaceHost |                  |
 
 ## `src/features`
 
@@ -75,91 +84,112 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function codeLensesForgeWebScript(module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], referenceCount: (symbol: ForgeWebScriptSymbol) => number): readonly ForgeWebScriptCodeLens[]
+function codeLensesForgeWebScript(
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  referenceCount: (symbol: ForgeWebScriptSymbol) => number,
+): readonly ForgeWebScriptCodeLens[];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Modul | ForgeWebScriptModule \| undefiniert |  |
-| Symbole | schreibgeschützt ForgeWebScriptSymbol[] |  |
-| referenceCount | (Symbol: ForgeWebScriptSymbol) => Zahl |  |
+| Name           | Geben Sie                               | ein Beschreibung |
+| -------------- | --------------------------------------- | ---------------- |
+| Modul          | ForgeWebScriptModule \| undefiniert     |                  |
+| Symbole        | schreibgeschützt ForgeWebScriptSymbol[] |                  |
+| referenceCount | (Symbol: ForgeWebScriptSymbol) => Zahl  |                  |
 
 ### documentSymbolsForgeWebScript
 
 **Art:** Funktion
 
 ```typescript
-function documentSymbolsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[]): readonly ForgeWebScriptDocumentSymbol[]
+function documentSymbolsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+): readonly ForgeWebScriptDocumentSymbol[];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Modul | ForgeWebScriptModule \| undefiniert |  |
-| Symbole | schreibgeschützt ForgeWebScriptSymbol[] |  |
+| Name    | Geben Sie                               | ein Beschreibung |
+| ------- | --------------------------------------- | ---------------- |
+| Quelle  | Zeichenfolge                            |                  |
+| Modul   | ForgeWebScriptModule \| undefiniert     |                  |
+| Symbole | schreibgeschützt ForgeWebScriptSymbol[] |                  |
 
 ### faltenRangesForgeWebScript
 
 **Art:** Funktion
 
 ```typescript
-function foldingRangesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined): readonly ForgeWebScriptFoldingRange[]
+function foldingRangesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+): readonly ForgeWebScriptFoldingRange[];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Modul | ForgeWebScriptModule \| undefiniert |  |
+| Name   | Geben Sie                           | ein Beschreibung |
+| ------ | ----------------------------------- | ---------------- |
+| Quelle | Zeichenfolge                        |                  |
+| Modul  | ForgeWebScriptModule \| undefiniert |                  |
 
 ### inlayHintsForgeWebScript
 
 **Art:** Funktion
 
 ```typescript
-function inlayHintsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, requestedRange?: ForgeWebScriptRange, importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment): readonly ForgeWebScriptInlayHint[]
+function inlayHintsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  requestedRange?: ForgeWebScriptRange,
+  importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment,
+): readonly ForgeWebScriptInlayHint[];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Modul | ForgeWebScriptModule \| undefiniert |  |
-| angeforderter Bereich | ForgeWebScriptRange |  |
-| importTypeEnvironment | ForgeWebScriptImportTypeEnvironment |  |
+| Name                  | Geben Sie                           | ein Beschreibung |
+| --------------------- | ----------------------------------- | ---------------- |
+| Quelle                | Zeichenfolge                        |                  |
+| Modul                 | ForgeWebScriptModule \| undefiniert |                  |
+| angeforderter Bereich | ForgeWebScriptRange                 |                  |
+| importTypeEnvironment | ForgeWebScriptImportTypeEnvironment |                  |
 
 ### inlineValuesForgeWebScript
 
 **Art:** Funktion
 
 ```typescript
-function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], requestedRange?: ForgeWebScriptRange): readonly ForgeWebScriptInlineValue[]
+function inlineValuesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  requestedRange?: ForgeWebScriptRange,
+): readonly ForgeWebScriptInlineValue[];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Modul | ForgeWebScriptModule \| undefiniert |  |
-| Symbole | schreibgeschützt ForgeWebScriptSymbol[] |  |
-| angeforderter Bereich | ForgeWebScriptRange |  |
+| Name                  | Geben Sie                               | ein Beschreibung |
+| --------------------- | --------------------------------------- | ---------------- |
+| Quelle                | Zeichenfolge                            |                  |
+| Modul                 | ForgeWebScriptModule \| undefiniert     |                  |
+| Symbole               | schreibgeschützt ForgeWebScriptSymbol[] |                  |
+| angeforderter Bereich | ForgeWebScriptRange                     |                  |
 
 ## `src/hover`
 
@@ -168,19 +198,24 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): ForgeWebScriptHover | undefined
+function hoverForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): ForgeWebScriptHover | undefined;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Position | ForgeWebScriptPosition |  |
-| Symbole | schreibgeschützt ForgeWebScriptSymbol[] |  |
-| Optionen | ForgeWebScriptWorkspaceOptions |  |
+| Name     | Geben Sie                               | ein Beschreibung |
+| -------- | --------------------------------------- | ---------------- |
+| Quelle   | Zeichenfolge                            |                  |
+| Position | ForgeWebScriptPosition                  |                  |
+| Symbole  | schreibgeschützt ForgeWebScriptSymbol[] |                  |
+| Optionen | ForgeWebScriptWorkspaceOptions          |                  |
 
 ## `src/lsif`
 
@@ -189,7 +224,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph
+function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph;
 ```
 
 Erstellt ein deterministisches LSIF-Diagramm aus dem Snapshot des Sprachdienst-Arbeitsbereichs.
@@ -199,16 +234,16 @@ Diese Funktion passt diese Fakten nur an LSIF-Datensätze an.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | ForgeWebScriptLsifInput |  |
+| Name    | Geben Sie               | ein Beschreibung |
+| ------- | ----------------------- | ---------------- |
+| Eingabe | ForgeWebScriptLsifInput |                  |
 
 ### createForgeWebScriptLsifGraph
 
 **Art:** konstant
 
 ```typescript
-export const createForgeWebScriptLsifGraph
+export const createForgeWebScriptLsifGraph;
 ```
 
 Keine Beschreibung angegeben.
@@ -218,7 +253,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LSIF_VERSION
+export const FORGE_WEB_SCRIPT_LSIF_VERSION;
 ```
 
 Die von diesem Modul dargestellte LSIF-Version.
@@ -258,7 +293,18 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptLsifEdgeLabel = | 'contains' | 'next' | 'item' | 'textDocument/definition' | 'textDocument/declaration' | 'textDocument/implementation' | 'textDocument/references' | 'textDocument/documentSymbol' | 'textDocument/hover' | 'moniker' | 'diagnostic';
+export type ForgeWebScriptLsifEdgeLabel =
+  | 'contains'
+  | 'next'
+  | 'item'
+  | 'textDocument/definition'
+  | 'textDocument/declaration'
+  | 'textDocument/implementation'
+  | 'textDocument/references'
+  | 'textDocument/documentSymbol'
+  | 'textDocument/hover'
+  | 'moniker'
+  | 'diagnostic';
 ```
 
 Keine Beschreibung angegeben.
@@ -368,7 +414,14 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | ForgeWebScriptLsifProjectVertex | ForgeWebScriptLsifDocumentVertex | ForgeWebScriptLsifRangeVertex | ForgeWebScriptLsifResultSetVertex | ForgeWebScriptLsifResultVertex | ForgeWebScriptLsifMonikerVertex;
+export type ForgeWebScriptLsifVertex =
+  | ForgeWebScriptLsifMetadataVertex
+  | ForgeWebScriptLsifProjectVertex
+  | ForgeWebScriptLsifDocumentVertex
+  | ForgeWebScriptLsifRangeVertex
+  | ForgeWebScriptLsifResultSetVertex
+  | ForgeWebScriptLsifResultVertex
+  | ForgeWebScriptLsifMonikerVertex;
 ```
 
 Keine Beschreibung angegeben.
@@ -378,7 +431,20 @@ Keine Beschreibung angegeben.
 **Art:** Typ
 
 ```typescript
-export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document' | 'range' | 'resultSet' | 'definitionResult' | 'declarationResult' | 'implementationResult' | 'referenceResult' | 'documentSymbolResult' | 'hoverResult' | 'moniker' | 'diagnosticResult';
+export type ForgeWebScriptLsifVertexLabel =
+  | 'metaData'
+  | 'project'
+  | 'document'
+  | 'range'
+  | 'resultSet'
+  | 'definitionResult'
+  | 'declarationResult'
+  | 'implementationResult'
+  | 'referenceResult'
+  | 'documentSymbolResult'
+  | 'hoverResult'
+  | 'moniker'
+  | 'diagnosticResult';
 ```
 
 Keine Beschreibung angegeben.
@@ -388,23 +454,23 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string
+function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string;
 ```
 
 Serialisiert LSIF-Datensätze als stabiles JSONL, ohne nachgestellte Zeilenumbrüche.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Diagramm | ForgeWebScriptLsifGraph |  |
+| Name     | Geben Sie               | ein Beschreibung |
+| -------- | ----------------------- | ---------------- |
+| Diagramm | ForgeWebScriptLsifGraph |                  |
 
 ### serializeForgeWebScriptLsifGraph
 
 **Art:** konstant
 
 ```typescript
-export const serializeForgeWebScriptLsifGraph
+export const serializeForgeWebScriptLsifGraph;
 ```
 
 Keine Beschreibung angegeben.
@@ -416,86 +482,86 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function containsOffset(range: ForgeWebScriptRange, offset: number): boolean
+function containsOffset(range: ForgeWebScriptRange, offset: number): boolean;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Bereich | ForgeWebScriptRange |  |
-| Versatz | Zahl |  |
+| Name    | Geben Sie           | ein Beschreibung |
+| ------- | ------------------- | ---------------- |
+| Bereich | ForgeWebScriptRange |                  |
+| Versatz | Zahl                |                  |
 
 ### offsetAtPosition
 
 **Art:** Funktion
 
 ```typescript
-function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number
+function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Position | ForgeWebScriptPosition |  |
+| Name     | Geben Sie              | ein Beschreibung |
+| -------- | ---------------------- | ---------------- |
+| Quelle   | Zeichenfolge           |                  |
+| Position | ForgeWebScriptPosition |                  |
 
 ### positionAtOffset
 
 **Art:** Funktion
 
 ```typescript
-function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition
+function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Versatz | Zahl |  |
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| Quelle  | Zeichenfolge |                  |
+| Versatz | Zahl         |                  |
 
 ### rangeFromOffsets
 
 **Art:** Funktion
 
 ```typescript
-function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange
+function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Start | Zahl |  |
-| Ende | Zahl |  |
+| Name   | Geben Sie    | ein Beschreibung |
+| ------ | ------------ | ---------------- |
+| Quelle | Zeichenfolge |                  |
+| Start  | Zahl         |                  |
+| Ende   | Zahl         |                  |
 
 ### rangeFromSpan
 
 **Art:** Funktion
 
 ```typescript
-function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange
+function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Spanne | ForgeWebScriptSourceSpan |  |
+| Name   | Geben Sie                | ein Beschreibung |
+| ------ | ------------------------ | ---------------- |
+| Quelle | Zeichenfolge             |                  |
+| Spanne | ForgeWebScriptSourceSpan |                  |
 
 ## `src/symbols`
 
@@ -504,34 +570,38 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function buildSymbolIndex(source: string, module: ForgeWebScriptModule | undefined, tokens: readonly ForgeWebScriptTokenClassification[]): ForgeWebScriptSymbolIndex
+function buildSymbolIndex(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  tokens: readonly ForgeWebScriptTokenClassification[],
+): ForgeWebScriptSymbolIndex;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Modul | ForgeWebScriptModule \| undefiniert |  |
-| Token | readonly ForgeWebScriptTokenClassification[] |  |
+| Name   | Geben Sie                                    | ein Beschreibung |
+| ------ | -------------------------------------------- | ---------------- |
+| Quelle | Zeichenfolge                                 |                  |
+| Modul  | ForgeWebScriptModule \| undefiniert          |                  |
+| Token  | readonly ForgeWebScriptTokenClassification[] |                  |
 
 ### Ausdrucksname
 
 **Art:** Funktion
 
 ```typescript
-function expressionName(expression: ForgeWebScriptExpression): string | undefined
+function expressionName(expression: ForgeWebScriptExpression): string | undefined;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Ausdruck | ForgeWebScriptExpression |  |
+| Name     | Geben Sie                | ein Beschreibung |
+| -------- | ------------------------ | ---------------- |
+| Ausdruck | ForgeWebScriptExpression |                  |
 
 ### ForgeWebScriptSymbolIndex
 
@@ -550,33 +620,33 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[]
+function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Quelle | Zeichenfolge |  |
-| Dateiname |  |  |
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| Quelle    | Zeichenfolge |                  |
+| Dateiname |              |                  |
 
 ### tokenKindToClassification
 
 **Art:** Funktion
 
 ```typescript
-function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind']
+function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind'];
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| freundlich | ForgeWebScriptTokenKind |  |
+| Name       | Geben Sie               | ein Beschreibung |
+| ---------- | ----------------------- | ---------------- |
+| freundlich | ForgeWebScriptTokenKind |                  |
 
 ## `src/types`
 
@@ -907,17 +977,20 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function createForgeWebScriptWorkspaceIndex(callbacks: WorkspaceIndexCallbacks, host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptWorkspaceSemanticIndex
+function createForgeWebScriptWorkspaceIndex(
+  callbacks: WorkspaceIndexCallbacks,
+  host?: ForgeWebScriptWorkspaceHost,
+): ForgeWebScriptWorkspaceSemanticIndex;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Rückrufe | WorkspaceIndexCallbacks |  |
-| Gastgeber | ForgeWebScriptWorkspaceHost |  |
+| Name      | Geben Sie                   | ein Beschreibung |
+| --------- | --------------------------- | ---------------- |
+| Rückrufe  | WorkspaceIndexCallbacks     |                  |
+| Gastgeber | ForgeWebScriptWorkspaceHost |                  |
 
 ### ForgeWebScriptWorkspaceSemanticIndex
 

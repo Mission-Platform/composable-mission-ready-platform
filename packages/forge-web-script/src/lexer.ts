@@ -90,14 +90,14 @@ function isWhitespace(character: string | undefined): boolean {
     (code >= 0x09 && code <= 0x0d) ||
     code === 0x20 ||
     code === 0xa0 ||
-    code === 0x1680 ||
-    (code >= 0x2000 && code <= 0x200a) ||
-    code === 0x2028 ||
-    code === 0x2029 ||
-    code === 0x202f ||
-    code === 0x205f ||
-    code === 0x3000 ||
-    code === 0xfeff
+    code === 0x16_80 ||
+    (code >= 0x20_00 && code <= 0x20_0a) ||
+    code === 0x20_28 ||
+    code === 0x20_29 ||
+    code === 0x20_2f ||
+    code === 0x20_5f ||
+    code === 0x30_00 ||
+    code === 0xfe_ff
   );
 }
 
@@ -173,6 +173,7 @@ function scanString(state: LexerState, start: number): number {
   let reportedRawLineTerminator = false;
   while (offset < state.source.length) {
     const stringCharacter = state.source[offset];
+    // eslint-disable-next-line unicorn/prefer-switch -- Scanner branches handle distinct character classes with shared state.
     if (stringCharacter === '\\') {
       const escapeStart = offset;
       offset += 1;
@@ -191,7 +192,7 @@ function scanString(state: LexerState, start: number): number {
               'Raw line terminators are not allowed in string literals.',
               spanAt(state.source, lineTerminatorStart, offset),
               'error',
-              'Use the escaped newline sequence \\n instead.',
+              String.raw`Use the escaped newline sequence \n instead.`,
             ),
           );
           reportedRawLineTerminator = true;
@@ -237,7 +238,7 @@ function scanString(state: LexerState, start: number): number {
             'Raw line terminators are not allowed in string literals.',
             spanAt(state.source, lineTerminatorStart, offset),
             'error',
-            'Use the escaped newline sequence \\n instead.',
+            String.raw`Use the escaped newline sequence \n instead.`,
           ),
         );
         reportedRawLineTerminator = true;

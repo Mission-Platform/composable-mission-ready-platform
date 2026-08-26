@@ -16,45 +16,54 @@
 **種類:** 関数
 
 ```typescript
-function compileForgeWebScriptFile(fileName: string, options: ForgeWebScriptPluginOptions, service: ForgeWebScriptCompilerService = options.compilerService ??
+function compileForgeWebScriptFile(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+  service: ForgeWebScriptCompilerService = options.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
       selfHostedVmMode: options.selfHostedVmMode,
-    })): ForgeWebScriptCompiledModule
+    }),
+): ForgeWebScriptCompiledModule;
 ```
 
 1 つの FWS ファイルをコンパイルし、そのアーティファクトとソースマップ メタデータを返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|オプション | ForgeWebScriptPluginオプション |  |
-|サービス | ForgeWebScriptCompilerService |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| ファイル名 | 文字列                         |      |
+| オプション | ForgeWebScriptPluginオプション |      |
+| サービス   | ForgeWebScriptCompilerService  |      |
 
 ### コンパイルフォージWebScriptグラフ
 
 **種類:** 関数
 
 ```typescript
-function compileForgeWebScriptGraph(fileName: string, options: ForgeWebScriptPluginOptions, resolver: ForgeWebScriptModuleResolver, service: ForgeWebScriptCompilerService = options.compilerService ??
+function compileForgeWebScriptGraph(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+  resolver: ForgeWebScriptModuleResolver,
+  service: ForgeWebScriptCompilerService = options.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
       selfHostedVmMode: options.selfHostedVmMode,
-    })): Promise<ForgeWebScriptCompiledModule>
+    }),
+): Promise<ForgeWebScriptCompiledModule>;
 ```
 
 インポートされた FWS モジュール グラフを解決、リンク、コンパイルします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|オプション | ForgeWebScriptPluginオプション |  |
-|リゾルバ | ForgeWebScriptModuleResolver |  |
-|サービス | ForgeWebScriptCompilerService |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| ファイル名 | 文字列                         |      |
+| オプション | ForgeWebScriptPluginオプション |      |
+| リゾルバ   | ForgeWebScriptModuleResolver   |      |
+| サービス   | ForgeWebScriptCompilerService  |      |
 
 ### ForgeWebScriptCompiledModule
 
@@ -81,17 +90,17 @@ export interface ForgeWebScriptPluginOptions
 **種類:** 関数
 
 ```typescript
-function resolveForgeWebScriptPath(root: string, value: string): string
+function resolveForgeWebScriptPath(root: string, value: string): string;
 ```
 
 値がすでに絶対値でない限り、ルートに相対的なプラグイン パスを解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルート |文字列 |  |
-|値 |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ルート | 文字列 |      |
+| 値     | 文字列 |      |
 
 ## `src/generate`
 
@@ -100,7 +109,9 @@ function resolveForgeWebScriptPath(root: string, value: string): string
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptDeclarationsSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptDeclarationsSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 宣言、リンクメタデータ、およびオプションを含むモジュールを生成します。
@@ -108,32 +119,36 @@ function createForgeWebScriptDeclarationsSource(compiled: ForgeWebScriptCompiled
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンパイル済み | ForgeWebScriptCompiledModule |  |
+| 名前           | タイプ                       | 説明 |
+| -------------- | ---------------------------- | ---- |
+| コンパイル済み | ForgeWebScriptCompiledModule |      |
 
 ### createForgeWebScriptManifestSource
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptManifestSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptManifestSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 JSON シリアル化可能な ABI マニフェストを含むモジュールを生成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンパイル済み | ForgeWebScriptCompiledModule |  |
+| 名前           | タイプ                       | 説明 |
+| -------------- | ---------------------------- | ---- |
+| コンパイル済み | ForgeWebScriptCompiledModule |      |
 
 ### createForgeWebScriptModuleソース
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptModuleSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptModuleSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 通常のコンシューマ モジュールを生成します。生成されたモジュールは、
@@ -141,48 +156,54 @@ function createForgeWebScriptModuleSource(compiled: ForgeWebScriptCompiledModule
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンパイル済み | ForgeWebScriptCompiledModule |  |
+| 名前           | タイプ                       | 説明 |
+| -------------- | ---------------------------- | ---- |
+| コンパイル済み | ForgeWebScriptCompiledModule |      |
 
 ### createForgeWebScriptSourceMapSource
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptSourceMapSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptSourceMapSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 デフォルトのエクスポートが生成されたソースマップ オブジェクトであるモジュールを生成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンパイル済み | ForgeWebScriptCompiledModule |  |
+| 名前           | タイプ                       | 説明 |
+| -------------- | ---------------------------- | ---- |
+| コンパイル済み | ForgeWebScriptCompiledModule |      |
 
 ### createForgeWebScriptWasmSource
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptWasmSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptWasmSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 デフォルトのエクスポートがコンパイルされた Wasm バイト配列であるモジュールを生成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンパイル済み | ForgeWebScriptCompiledModule |  |
+| 名前           | タイプ                       | 説明 |
+| -------------- | ---------------------------- | ---- |
+| コンパイル済み | ForgeWebScriptCompiledModule |      |
 
 ### createForgeWebScriptWatSource
 
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptWatSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptWatSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 デフォルトのエクスポートがコンパイルされた WAT テキストであるモジュールを生成します。これは
@@ -190,16 +211,16 @@ Wasm の実行ではなく、検査と適合性の表明を目的としていま
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンパイル済み | ForgeWebScriptCompiledModule |  |
+| 名前           | タイプ                       | 説明 |
+| -------------- | ---------------------------- | ---- |
+| コンパイル済み | ForgeWebScriptCompiledModule |      |
 
 ### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
 
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
 ```
 
 リンクされた宣言とグラフのメタデータを ES モジュールとして返すクエリ。
@@ -209,7 +230,7 @@ export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY
+export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
 ```
 
 コンパイルされた ABI マニフェストを ES モジュールとして返すクエリ。
@@ -219,7 +240,7 @@ export const FORGE_WEB_SCRIPT_MANIFEST_QUERY
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
 ```
 
 生成されたソース マップをモジュールのデフォルト エクスポートとして返すクエリ。
@@ -229,7 +250,7 @@ export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY
+export const FORGE_WEB_SCRIPT_WASM_QUERY;
 ```
 
 コンパイルされた Wasm バイトをモジュールのデフォルトのエクスポートとして返すクエリ。
@@ -239,7 +260,7 @@ export const FORGE_WEB_SCRIPT_WASM_QUERY
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY
+export const FORGE_WEB_SCRIPT_WAT_QUERY;
 ```
 
 生成された WAT (ブランチ テーブルの引き下げを含む) を文字列として返すクエリ。
@@ -251,7 +272,9 @@ export const FORGE_WEB_SCRIPT_WAT_QUERY
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptPlugin(
+  options: ForgeWebScriptPluginOptions = {},
+): Plugin;
 ```
 
 Forge Web Script コンパイルと仮想アーティファクト クエリを Vite にインストールします。
@@ -260,16 +283,18 @@ Forge Web Script コンパイルと仮想アーティファクト クエリを V
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptPluginオプション |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| オプション | ForgeWebScriptPluginオプション |      |
 
 ### forgeWebScriptプラグイン
 
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptPlugin(
+  options: ForgeWebScriptPluginOptions = {},
+): Plugin;
 ```
 
 Forge Web Script コンパイルと仮想アーティファクト クエリを Vite にインストールします。
@@ -278,9 +303,9 @@ Forge Web Script コンパイルと仮想アーティファクト クエリを V
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptPluginオプション |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| オプション | ForgeWebScriptPluginオプション |      |
 
 ### ForgeWebScriptViteError
 

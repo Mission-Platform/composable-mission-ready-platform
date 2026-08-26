@@ -5,6 +5,7 @@ import {
   type ForgeWebScriptWasmFeatureRequirements,
 } from '@mission-platform/forge-web-script-wasm';
 
+import { analyzeForgeWebScript } from './analysis/analyze.js';
 import {
   forgeWebScriptWatCacheKey,
   persistForgeWebScriptDebugArtifacts,
@@ -12,18 +13,20 @@ import {
   persistForgeWebScriptWat,
 } from './cache.js';
 import { createDiagnostic, type ForgeWebScriptDiagnostic } from './diagnostics.js';
-import { analyzeForgeWebScript } from './analysis/analyze.js';
-import type { ForgeWebScriptAnalysisOptions, ForgeWebScriptAnalysisReport } from './analysis/contracts.js';
 import { prepareForgeWebScriptFrontend, prepareForgeWebScriptGraphFrontend } from './frontend.js';
-import { lexForgeWebScript } from './lexer.js';
 import { hashForgeWebScriptModuleGraph } from './graph.js';
+import { lexForgeWebScript } from './lexer.js';
 import {
   FORGE_WEB_SCRIPT_ABI_VERSION,
   FORGE_WEB_SCRIPT_LANGUAGE_VERSION,
+  type ForgeWebScriptAbiFunction,
+  type ForgeWebScriptAbiManifest,
+  type ForgeWebScriptAbiParameter,
   type ForgeWebScriptDynamicLinkMetadata,
 } from './manifest.js';
 import { forgeWebScriptStandardLibraryIdentity } from './stdlib/regex.js';
 
+import type { ForgeWebScriptAnalysisOptions, ForgeWebScriptAnalysisReport } from './analysis/contracts.js';
 import type { ForgeWebScriptPrimitiveType } from './ast.js';
 import type {
   ForgeWebScriptArtifact,
@@ -38,8 +41,6 @@ import type {
   ForgeWebScriptIteratorExport,
   ForgeWebScriptSelfHostedStageReport,
 } from './contracts.js';
-import type { ForgeWebScriptAbiFunction, ForgeWebScriptAbiManifest, ForgeWebScriptAbiParameter } from './manifest.js';
-
 interface ForgeWebScriptBackendCompilationResult {
   readonly wasm?: Uint8Array;
   readonly wat?: string;
@@ -994,7 +995,7 @@ function compileForgeWebScriptModule(
       allowedCapabilities: analysis.policy.allowedCapabilities,
     },
   });
-  const verificationDiagnostics = rawVerification.diagnostics.map(artifactVerificationDiagnostic);
+  const verificationDiagnostics = rawVerification.diagnostics.map((diagnostic) => artifactVerificationDiagnostic(diagnostic));
   const artifactVerification: ForgeWebScriptArtifactVerificationReport = {
     verified: rawVerification.verified,
     diagnostics: verificationDiagnostics,
@@ -1139,7 +1140,7 @@ function compileForgeWebScriptGraph(input: ForgeWebScriptGraphCompileInput): For
       boundsChecks: input.boundsChecks,
       logger: input.logger,
       analysis: {
-        ...(input.analysis ?? {}),
+        ...input.analysis,
         sourceFiles:
           input.analysis?.sourceFiles ?? input.graph.modules.map(({ fileName, source }) => ({ fileName, source })),
       },

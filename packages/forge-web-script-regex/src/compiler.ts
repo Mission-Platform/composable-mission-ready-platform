@@ -39,8 +39,8 @@ class Parser {
   private groupCounter = 0;
   private readonly src: string;
 
-  public constructor(src: string) {
-    this.src = src;
+  public constructor(source: string) {
+    this.src = source;
   }
 
   public parse(): { root: Node; groupCount: number } {
@@ -87,24 +87,40 @@ class Parser {
     const c = this.peek();
     let min: number;
     let max: number;
-    if (c === "*") {
-      this.next();
-      min = 0;
-      max = Infinity;
-    } else if (c === "+") {
-      this.next();
-      min = 1;
-      max = Infinity;
-    } else if (c === "?") {
-      this.next();
-      min = 0;
-      max = 1;
-    } else if (c === "{") {
-      const parsed = this.tryParseBrace();
-      if (parsed === null) return atom;
-      min = parsed.min;
-      max = parsed.max;
-    } else return atom;
+    switch (c) {
+      case "*": {
+        this.next();
+        min = 0;
+        max = Infinity;
+
+        break;
+      }
+      case "+": {
+        this.next();
+        min = 1;
+        max = Infinity;
+
+        break;
+      }
+      case "?": {
+        this.next();
+        min = 0;
+        max = 1;
+
+        break;
+      }
+      case "{": {
+        const parsed = this.tryParseBrace();
+        if (parsed === null) return atom;
+        min = parsed.min;
+        max = parsed.max;
+
+        break;
+      }
+      default: {
+        return atom;
+      }
+    }
     let greedy = true;
     if (!this.eof() && this.peek() === "?") {
       this.next();
@@ -120,6 +136,7 @@ class Parser {
     while (!this.eof() && /[0-9]/u.test(this.peek())) digits += this.next();
     if (digits === "") {
       this.pos = start;
+      // eslint-disable-next-line unicorn/no-null -- null signals that the brace is not a quantifier.
       return null;
     }
     const min = Number(digits);
@@ -132,6 +149,7 @@ class Parser {
     }
     if (this.eof() || this.peek() !== "}") {
       this.pos = start;
+      // eslint-disable-next-line unicorn/no-null -- null signals that the brace is not a quantifier.
       return null;
     }
     this.next();
@@ -158,6 +176,7 @@ class Parser {
     if (c === "*" || c === "+" || c === "?")
       throw new RegexSyntaxError(`Nothing to repeat at ${this.pos}`);
     this.next();
+    // eslint-disable-next-line unicorn/prefer-code-point -- Forge bytecode stores UTF-16 code units.
     return { kind: "char", code: c.charCodeAt(0) };
   }
 
@@ -229,17 +248,20 @@ class Parser {
       if (cls?.kind === "class") return { code: 0, ranges: cls.ranges };
       return { code: literalEscapeCode(escaped) };
     }
+    // eslint-disable-next-line unicorn/prefer-code-point -- Forge bytecode stores UTF-16 code units.
     return { code: c.charCodeAt(0) };
   }
 }
 
 function escapeClass(c: string): Node | null {
   switch (c) {
-    case "d":
+    case "d": {
       return { kind: "class", ranges: [CODE_0, CODE_9], negated: false };
-    case "D":
+    }
+    case "D": {
       return { kind: "class", ranges: [CODE_0, CODE_9], negated: true };
-    case "w":
+    }
+    case "w": {
       return {
         kind: "class",
         ranges: [
@@ -254,7 +276,8 @@ function escapeClass(c: string): Node | null {
         ],
         negated: false,
       };
-    case "W":
+    }
+    case "W": {
       return {
         kind: "class",
         ranges: [
@@ -269,39 +292,52 @@ function escapeClass(c: string): Node | null {
         ],
         negated: true,
       };
-    case "s":
+    }
+    case "s": {
       return {
         kind: "class",
         ranges: [9, 13, 32, 32, 160, 160],
         negated: false,
       };
-    case "S":
+    }
+    case "S": {
       return {
         kind: "class",
         ranges: [9, 13, 32, 32, 160, 160],
         negated: true,
       };
-    default:
+    }
+    default: {
+      // eslint-disable-next-line unicorn/no-null -- null distinguishes class escapes from literal escapes.
       return null;
+    }
   }
 }
 
 function literalEscapeCode(c: string): number {
   switch (c) {
-    case "n":
+    case "n": {
       return 10;
-    case "t":
+    }
+    case "t": {
       return 9;
-    case "r":
+    }
+    case "r": {
       return 13;
-    case "f":
+    }
+    case "f": {
       return 12;
-    case "v":
+    }
+    case "v": {
       return 11;
-    case "0":
+    }
+    case "0": {
       return 0;
-    default:
+    }
+    default: {
+      // eslint-disable-next-line unicorn/prefer-code-point -- Forge bytecode stores UTF-16 code units.
       return c.charCodeAt(0);
+    }
   }
 }
 
@@ -330,35 +366,43 @@ class Emitter {
 
 function compileNode(node: Node, emitter: Emitter): void {
   switch (node.kind) {
-    case "empty":
+    case "empty": {
       return;
-    case "char":
+    }
+    case "char": {
       emitter.emit(Op.CHAR, node.code);
       return;
-    case "any":
+    }
+    case "any": {
       emitter.emit(Op.ANY);
       return;
-    case "bol":
+    }
+    case "bol": {
       emitter.emit(Op.BOL);
       return;
-    case "eol":
+    }
+    case "eol": {
       emitter.emit(Op.EOL);
       return;
-    case "class":
+    }
+    case "class": {
       emitter.emit(
         Op.CLASS,
         emitter.addClass(node.ranges),
         node.negated ? 1 : 0,
       );
       return;
-    case "concat":
+    }
+    case "concat": {
       for (const part of node.parts) compileNode(part, emitter);
       return;
-    case "group":
+    }
+    case "group": {
       if (node.capturing) emitter.emit(Op.SAVE, node.index * 2);
       compileNode(node.child, emitter);
       if (node.capturing) emitter.emit(Op.SAVE, node.index * 2 + 1);
       return;
+    }
     case "alt": {
       const jumps: number[] = [];
       for (const [index, option] of node.options.entries()) {
@@ -375,9 +419,10 @@ function compileNode(node: Node, emitter: Emitter): void {
       for (const jump of jumps) emitter.instrs[jump].a = emitter.instrs.length;
       return;
     }
-    case "repeat":
+    case "repeat": {
       compileRepeat(node, emitter);
       return;
+    }
   }
 }
 

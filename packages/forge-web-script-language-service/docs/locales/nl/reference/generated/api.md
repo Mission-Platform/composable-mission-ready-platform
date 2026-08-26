@@ -16,18 +16,22 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-w
 **Soort:** functie
 
 ```typescript
-function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeWebScriptWorkspaceOptions, analysisOptions: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysis
+function analyzeForgeWebScript(
+  document: ForgeWebScriptDocument,
+  options: ForgeWebScriptWorkspaceOptions,
+  analysisOptions: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysis;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| document | ForgeWebScriptDocument |  |
-| opties | ForgeWebScriptWorkspaceOptions |  |
-| analyseOpties | ForgeWebScriptAnalysisOptions |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| document      | ForgeWebScriptDocument         |              |
+| opties        | ForgeWebScriptWorkspaceOptions |              |
+| analyseOpties | ForgeWebScriptAnalysisOptions  |              |
 
 ## `src/completion`
 
@@ -36,19 +40,24 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function completeForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): readonly ForgeWebScriptCompletion[]
+function completeForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): readonly ForgeWebScriptCompletion[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| positie | ForgeWebScriptPositie |  |
-| symbolen | alleen-lezen ForgeWebScriptSymbol[] |  |
-| opties | ForgeWebScriptWorkspaceOptions |  |
+| Naam     | Typ                                 | Beschrijving |
+| -------- | ----------------------------------- | ------------ |
+| bron     | tekenreeks                          |              |
+| positie  | ForgeWebScriptPositie               |              |
+| symbolen | alleen-lezen ForgeWebScriptSymbol[] |              |
+| opties   | ForgeWebScriptWorkspaceOptions      |              |
 
 ## `src/documents`
 
@@ -57,16 +66,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService
+function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| gastheer | ForgeWebScriptWorkspaceHost |  |
+| Naam     | Typ                         | Beschrijving |
+| -------- | --------------------------- | ------------ |
+| gastheer | ForgeWebScriptWorkspaceHost |              |
 
 ## `src/features`
 
@@ -75,91 +84,112 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function codeLensesForgeWebScript(module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], referenceCount: (symbol: ForgeWebScriptSymbol) => number): readonly ForgeWebScriptCodeLens[]
+function codeLensesForgeWebScript(
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  referenceCount: (symbol: ForgeWebScriptSymbol) => number,
+): readonly ForgeWebScriptCodeLens[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | ForgeWebScriptModule \| ongedefinieerd |  |
-| symbolen | alleen-lezen ForgeWebScriptSymbol[] |  |
-| referentieCount | (symbool: ForgeWebScriptSymbol) => getal |  |
+| Naam            | Typ                                      | Beschrijving |
+| --------------- | ---------------------------------------- | ------------ |
+| module          | ForgeWebScriptModule \| ongedefinieerd   |              |
+| symbolen        | alleen-lezen ForgeWebScriptSymbol[]      |              |
+| referentieCount | (symbool: ForgeWebScriptSymbol) => getal |              |
 
 ### documentSymbolenForgeWebScript
 
 **Soort:** functie
 
 ```typescript
-function documentSymbolsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[]): readonly ForgeWebScriptDocumentSymbol[]
+function documentSymbolsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+): readonly ForgeWebScriptDocumentSymbol[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| module | ForgeWebScriptModule \| ongedefinieerd |  |
-| symbolen | alleen-lezen ForgeWebScriptSymbol[] |  |
+| Naam     | Typ                                    | Beschrijving |
+| -------- | -------------------------------------- | ------------ |
+| bron     | tekenreeks                             |              |
+| module   | ForgeWebScriptModule \| ongedefinieerd |              |
+| symbolen | alleen-lezen ForgeWebScriptSymbol[]    |              |
 
 ### vouwRangesForgeWebScript
 
 **Soort:** functie
 
 ```typescript
-function foldingRangesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined): readonly ForgeWebScriptFoldingRange[]
+function foldingRangesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+): readonly ForgeWebScriptFoldingRange[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| module | ForgeWebScriptModule \| ongedefinieerd |  |
+| Naam   | Typ                                    | Beschrijving |
+| ------ | -------------------------------------- | ------------ |
+| bron   | tekenreeks                             |              |
+| module | ForgeWebScriptModule \| ongedefinieerd |              |
 
 ### inlayHintsForgeWebScript
 
 **Soort:** functie
 
 ```typescript
-function inlayHintsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, requestedRange?: ForgeWebScriptRange, importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment): readonly ForgeWebScriptInlayHint[]
+function inlayHintsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  requestedRange?: ForgeWebScriptRange,
+  importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment,
+): readonly ForgeWebScriptInlayHint[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| module | ForgeWebScriptModule \| ongedefinieerd |  |
-| gevraagdBereik | ForgeWebScriptRange |  |
-| importTypeOmgeving | ForgeWebScriptImportTypeEnvironment |  |
+| Naam               | Typ                                    | Beschrijving |
+| ------------------ | -------------------------------------- | ------------ |
+| bron               | tekenreeks                             |              |
+| module             | ForgeWebScriptModule \| ongedefinieerd |              |
+| gevraagdBereik     | ForgeWebScriptRange                    |              |
+| importTypeOmgeving | ForgeWebScriptImportTypeEnvironment    |              |
 
 ### inlineValuesForgeWebScript
 
 **Soort:** functie
 
 ```typescript
-function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], requestedRange?: ForgeWebScriptRange): readonly ForgeWebScriptInlineValue[]
+function inlineValuesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  requestedRange?: ForgeWebScriptRange,
+): readonly ForgeWebScriptInlineValue[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| module | ForgeWebScriptModule \| ongedefinieerd |  |
-| symbolen | alleen-lezen ForgeWebScriptSymbol[] |  |
-| gevraagdBereik | ForgeWebScriptRange |  |
+| Naam           | Typ                                    | Beschrijving |
+| -------------- | -------------------------------------- | ------------ |
+| bron           | tekenreeks                             |              |
+| module         | ForgeWebScriptModule \| ongedefinieerd |              |
+| symbolen       | alleen-lezen ForgeWebScriptSymbol[]    |              |
+| gevraagdBereik | ForgeWebScriptRange                    |              |
 
 ## `src/hover`
 
@@ -168,19 +198,24 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): ForgeWebScriptHover | undefined
+function hoverForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): ForgeWebScriptHover | undefined;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| positie | ForgeWebScriptPositie |  |
-| symbolen | alleen-lezen ForgeWebScriptSymbol[] |  |
-| opties | ForgeWebScriptWorkspaceOptions |  |
+| Naam     | Typ                                 | Beschrijving |
+| -------- | ----------------------------------- | ------------ |
+| bron     | tekenreeks                          |              |
+| positie  | ForgeWebScriptPositie               |              |
+| symbolen | alleen-lezen ForgeWebScriptSymbol[] |              |
+| opties   | ForgeWebScriptWorkspaceOptions      |              |
 
 ## `src/lsif`
 
@@ -189,7 +224,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph
+function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph;
 ```
 
 Creëert een deterministische LSIF-grafiek op basis van de momentopname van de taalservicewerkruimte.
@@ -199,16 +234,16 @@ deze functie past deze feiten alleen aan aan LSIF-records.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | ForgeWebScriptLsifInput |  |
+| Naam   | Typ                     | Beschrijving |
+| ------ | ----------------------- | ------------ |
+| invoer | ForgeWebScriptLsifInput |              |
 
 ### createForgeWebScriptLsifGraph
 
 **Soort:** constant
 
 ```typescript
-export const createForgeWebScriptLsifGraph
+export const createForgeWebScriptLsifGraph;
 ```
 
 Geen beschrijving opgegeven.
@@ -218,7 +253,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LSIF_VERSION
+export const FORGE_WEB_SCRIPT_LSIF_VERSION;
 ```
 
 De LSIF-versie die door deze module wordt vertegenwoordigd.
@@ -258,7 +293,18 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptLsifEdgeLabel = | 'contains' | 'next' | 'item' | 'textDocument/definition' | 'textDocument/declaration' | 'textDocument/implementation' | 'textDocument/references' | 'textDocument/documentSymbol' | 'textDocument/hover' | 'moniker' | 'diagnostic';
+export type ForgeWebScriptLsifEdgeLabel =
+  | 'contains'
+  | 'next'
+  | 'item'
+  | 'textDocument/definition'
+  | 'textDocument/declaration'
+  | 'textDocument/implementation'
+  | 'textDocument/references'
+  | 'textDocument/documentSymbol'
+  | 'textDocument/hover'
+  | 'moniker'
+  | 'diagnostic';
 ```
 
 Geen beschrijving opgegeven.
@@ -368,7 +414,14 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | ForgeWebScriptLsifProjectVertex | ForgeWebScriptLsifDocumentVertex | ForgeWebScriptLsifRangeVertex | ForgeWebScriptLsifResultSetVertex | ForgeWebScriptLsifResultVertex | ForgeWebScriptLsifMonikerVertex;
+export type ForgeWebScriptLsifVertex =
+  | ForgeWebScriptLsifMetadataVertex
+  | ForgeWebScriptLsifProjectVertex
+  | ForgeWebScriptLsifDocumentVertex
+  | ForgeWebScriptLsifRangeVertex
+  | ForgeWebScriptLsifResultSetVertex
+  | ForgeWebScriptLsifResultVertex
+  | ForgeWebScriptLsifMonikerVertex;
 ```
 
 Geen beschrijving opgegeven.
@@ -378,7 +431,20 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document' | 'range' | 'resultSet' | 'definitionResult' | 'declarationResult' | 'implementationResult' | 'referenceResult' | 'documentSymbolResult' | 'hoverResult' | 'moniker' | 'diagnosticResult';
+export type ForgeWebScriptLsifVertexLabel =
+  | 'metaData'
+  | 'project'
+  | 'document'
+  | 'range'
+  | 'resultSet'
+  | 'definitionResult'
+  | 'declarationResult'
+  | 'implementationResult'
+  | 'referenceResult'
+  | 'documentSymbolResult'
+  | 'hoverResult'
+  | 'moniker'
+  | 'diagnosticResult';
 ```
 
 Geen beschrijving opgegeven.
@@ -388,23 +454,23 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string
+function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string;
 ```
 
 Serialiseert LSIF-records als stabiele JSONL, zonder afsluitende nieuwe regel.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| grafiek | ForgeWebScriptLsifGraph |  |
+| Naam    | Typ                     | Beschrijving |
+| ------- | ----------------------- | ------------ |
+| grafiek | ForgeWebScriptLsifGraph |              |
 
 ### serializeForgeWebScriptLsifGraph
 
 **Soort:** constant
 
 ```typescript
-export const serializeForgeWebScriptLsifGraph
+export const serializeForgeWebScriptLsifGraph;
 ```
 
 Geen beschrijving opgegeven.
@@ -416,86 +482,86 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function containsOffset(range: ForgeWebScriptRange, offset: number): boolean
+function containsOffset(range: ForgeWebScriptRange, offset: number): boolean;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bereik | ForgeWebScriptRange |  |
-| gecompenseerd | nummer |  |
+| Naam          | Typ                 | Beschrijving |
+| ------------- | ------------------- | ------------ |
+| bereik        | ForgeWebScriptRange |              |
+| gecompenseerd | nummer              |              |
 
 ### offsetAtPositie
 
 **Soort:** functie
 
 ```typescript
-function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number
+function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| positie | ForgeWebScriptPositie |  |
+| Naam    | Typ                   | Beschrijving |
+| ------- | --------------------- | ------------ |
+| bron    | tekenreeks            |              |
+| positie | ForgeWebScriptPositie |              |
 
 ### positieBijOffset
 
 **Soort:** functie
 
 ```typescript
-function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition
+function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| gecompenseerd | nummer |  |
+| Naam          | Typ        | Beschrijving |
+| ------------- | ---------- | ------------ |
+| bron          | tekenreeks |              |
+| gecompenseerd | nummer     |              |
 
 ### bereikVanOffsets
 
 **Soort:** functie
 
 ```typescript
-function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange
+function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| begin | nummer |  |
-| einde | nummer |  |
+| Naam  | Typ        | Beschrijving |
+| ----- | ---------- | ------------ |
+| bron  | tekenreeks |              |
+| begin | nummer     |              |
+| einde | nummer     |              |
 
 ### bereikVanSpan
 
 **Soort:** functie
 
 ```typescript
-function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange
+function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| spanwijdte | ForgeWebScriptSourceSpan |  |
+| Naam       | Typ                      | Beschrijving |
+| ---------- | ------------------------ | ------------ |
+| bron       | tekenreeks               |              |
+| spanwijdte | ForgeWebScriptSourceSpan |              |
 
 ## `src/symbols`
 
@@ -504,34 +570,38 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function buildSymbolIndex(source: string, module: ForgeWebScriptModule | undefined, tokens: readonly ForgeWebScriptTokenClassification[]): ForgeWebScriptSymbolIndex
+function buildSymbolIndex(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  tokens: readonly ForgeWebScriptTokenClassification[],
+): ForgeWebScriptSymbolIndex;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| module | ForgeWebScriptModule \| ongedefinieerd |  |
-| tokens | alleen-lezen ForgeWebScriptTokenClassification[] |  |
+| Naam   | Typ                                              | Beschrijving |
+| ------ | ------------------------------------------------ | ------------ |
+| bron   | tekenreeks                                       |              |
+| module | ForgeWebScriptModule \| ongedefinieerd           |              |
+| tokens | alleen-lezen ForgeWebScriptTokenClassification[] |              |
 
 ### expressieNaam
 
 **Soort:** functie
 
 ```typescript
-function expressionName(expression: ForgeWebScriptExpression): string | undefined
+function expressionName(expression: ForgeWebScriptExpression): string | undefined;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| uitdrukking | ForgeWebScriptExpressie |  |
+| Naam        | Typ                     | Beschrijving |
+| ----------- | ----------------------- | ------------ |
+| uitdrukking | ForgeWebScriptExpressie |              |
 
 ### ForgeWebScriptSymbolIndex
 
@@ -550,33 +620,33 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[]
+function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| bestandsnaam |  |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bron         | tekenreeks |              |
+| bestandsnaam |            |              |
 
 ### tokenKindToClassification
 
 **Soort:** functie
 
 ```typescript
-function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind']
+function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind'];
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| soort | ForgeWebScriptTokenKind |  |
+| Naam  | Typ                     | Beschrijving |
+| ----- | ----------------------- | ------------ |
+| soort | ForgeWebScriptTokenKind |              |
 
 ## `src/types`
 
@@ -907,17 +977,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptWorkspaceIndex(callbacks: WorkspaceIndexCallbacks, host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptWorkspaceSemanticIndex
+function createForgeWebScriptWorkspaceIndex(
+  callbacks: WorkspaceIndexCallbacks,
+  host?: ForgeWebScriptWorkspaceHost,
+): ForgeWebScriptWorkspaceSemanticIndex;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| terugbelverzoeken | WorkspaceIndexCallbacks |  |
-| gastheer | ForgeWebScriptWorkspaceHost |  |
+| Naam              | Typ                         | Beschrijving |
+| ----------------- | --------------------------- | ------------ |
+| terugbelverzoeken | WorkspaceIndexCallbacks     |              |
+| gastheer          | ForgeWebScriptWorkspaceHost |              |
 
 ### ForgeWebScriptWorkspaceSemanticIndex
 

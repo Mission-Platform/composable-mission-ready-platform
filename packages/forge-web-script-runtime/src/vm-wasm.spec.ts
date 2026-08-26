@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { ForgeWebScriptTrap } from './traps.js';
-import { createForgeWebScriptVmExecutor } from './vm.js';
 import { compileForgeWebScriptVmWasm, prepareForgeWebScriptVmWasm } from './vm-wasm.js';
+import { createForgeWebScriptVmExecutor } from './vm.js';
 
 import type { ForgeWebScriptVmModule, ForgeWebScriptVmValue } from './vm.js';
 
@@ -14,7 +14,7 @@ const module: ForgeWebScriptVmModule = {
   format: 'forge-web-script-vm-module',
   version: '1.0',
   sourceHash: 'vm-wasm-test',
-  constants: [number(40), number(2), unsignedNumber(0xffff_ffff), unsignedNumber(2)],
+  constants: [number(40), number(2), unsignedNumber(0xff_ff_ff_ff), unsignedNumber(2)],
   aggregateLayouts: [{ name: 'Payload', kind: 'struct', size: 3, alignment: 1, fields: [], immutable: true }],
   specializations: [],
   capabilityImports: [{ name: 'now', capability: 'clock.now', parameters: [], result: 'i32' }],
@@ -257,7 +257,7 @@ describe('Forge Web Script VM WASM backend', () => {
     expect(reallocate(tail, 4, 0)).toBe(tail);
     expect(allocate(2)).toBe(tail);
     expect(() => reallocate(0, 1, 1)).toThrow(WebAssembly.RuntimeError);
-    expect(() => reallocate(tail, 4, 0x7fff_ffff)).toThrow(WebAssembly.RuntimeError);
+    expect(() => reallocate(tail, 4, 0x7f_ff_ff_ff)).toThrow(WebAssembly.RuntimeError);
   });
 
   it('supports aggregate pointer-length values and resets allocation state between calls', () => {
@@ -323,6 +323,7 @@ describe('Forge Web Script VM WASM backend', () => {
       ),
     ).toEqual(number(5));
 
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- This trap helper is specific to the parity case.
     const runTrap = (run: () => unknown): ForgeWebScriptTrap => {
       try {
         run();

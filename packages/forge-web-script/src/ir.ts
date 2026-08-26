@@ -1,7 +1,7 @@
 import { createForgeWebScriptIteratorBoundaryDescriptor } from './generics.js';
+import { FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP, type ForgeWebScriptMemoryOperation } from './stdlib/memory.js';
 import { FORGE_WEB_SCRIPT_REGEX_FUNCTION_MAP, type ForgeWebScriptRegexOperation } from './stdlib/regex.js';
 import { FORGE_WEB_SCRIPT_STRING_FUNCTION_MAP, type ForgeWebScriptStringOperation } from './stdlib/string.js';
-import { FORGE_WEB_SCRIPT_MEMORY_FUNCTION_MAP, type ForgeWebScriptMemoryOperation } from './stdlib/memory.js';
 
 import type {
   ForgeWebScriptBinaryOperator,
@@ -431,8 +431,9 @@ function lowerStatements(
           arms: statement.arms.map((arm) => ({ ...arm, value: lowerAstExpression(arm.value) })),
         };
       }
-      case 'yield':
+      case 'yield': {
         return { ...statement, value: lowerAstExpression(statement.value) };
+      }
       case 'iterator-loop': {
         const iteratorState = stateAllocator.value++;
         const boundedLength =

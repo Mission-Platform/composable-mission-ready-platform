@@ -1,10 +1,11 @@
-import type { ForgeWebScriptSoNModule, ForgeWebScriptSoNNode } from './son-ir.js';
 import { forgeWebScriptSoNGraphHash } from './son-ir.js';
+
+import type { ForgeWebScriptSoNModule, ForgeWebScriptSoNNode } from './son-ir.js';
 
 export const FORGE_WEB_SCRIPT_SON_MAX_JSON_BYTES = 16 * 1024 * 1024;
 
 function stableValue(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(stableValue);
+  if (Array.isArray(value)) return value.map((entry) => stableValue(entry));
   if (value !== null && typeof value === 'object')
     return Object.fromEntries(
       Object.entries(value)
@@ -92,7 +93,7 @@ export function validateForgeWebScriptSoN(
       return false;
     if (
       candidate.functions.some(
-        (fn) => fn === null || typeof fn !== 'object' || typeof fn.name !== 'string' || !known.has(fn.entry),
+        (function_) => function_ === null || typeof function_ !== 'object' || typeof function_.name !== 'string' || !known.has(function_.entry),
       )
     )
       return false;

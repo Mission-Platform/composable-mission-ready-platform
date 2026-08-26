@@ -1,3 +1,13 @@
+import {
+  createForgeWebScriptSelfHostedStageArtifact,
+  decodeForgeWebScriptSelfHostedStageArtifact,
+  encodeForgeWebScriptSelfHostedStageArtifact,
+  hashForgeWebScriptSelfHostedBytes,
+  hashForgeWebScriptSelfHostedSourceIdentity,
+  type ForgeWebScriptSelfHostedCompilerStage,
+  type ForgeWebScriptSelfHostedStageArtifact,
+} from './artifact.js';
+
 import type {
   ForgeWebScriptExpression,
   ForgeWebScriptFunction,
@@ -8,15 +18,6 @@ import type {
 } from '../ast.js';
 import type { ForgeWebScriptDiagnostic, ForgeWebScriptSourceSpan } from '../diagnostics.js';
 import type { ForgeWebScriptToken, ForgeWebScriptTokenKind } from '../lexer.js';
-import {
-  createForgeWebScriptSelfHostedStageArtifact,
-  decodeForgeWebScriptSelfHostedStageArtifact,
-  encodeForgeWebScriptSelfHostedStageArtifact,
-  hashForgeWebScriptSelfHostedBytes,
-  hashForgeWebScriptSelfHostedSourceIdentity,
-  type ForgeWebScriptSelfHostedCompilerStage,
-  type ForgeWebScriptSelfHostedStageArtifact,
-} from './artifact.js';
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder('utf-8', { fatal: true });
@@ -387,8 +388,8 @@ function readExpression(reader: BinaryReader): ForgeWebScriptExpression {
     }
     case 'call': {
       const callee = reader.string();
-      const args = Array.from({ length: reader.u32() }, () => readExpression(reader));
-      return { kind: 'call', callee, arguments: args, span: readSpan(reader) };
+      const arguments_ = Array.from({ length: reader.u32() }, () => readExpression(reader));
+      return { kind: 'call', callee, arguments: arguments_, span: readSpan(reader) };
     }
     case 'binary': {
       const operator = reader.string() as Extract<ForgeWebScriptExpression, { kind: 'binary' }>['operator'];
@@ -417,8 +418,8 @@ function readExpression(reader: BinaryReader): ForgeWebScriptExpression {
     case 'enum-value': {
       const type = readTypeName(reader);
       const variant = reader.string();
-      const args = Array.from({ length: reader.u32() }, () => readExpression(reader));
-      return { kind: 'enum-value', type, variant, arguments: args, span: readSpan(reader) };
+      const arguments_ = Array.from({ length: reader.u32() }, () => readExpression(reader));
+      return { kind: 'enum-value', type, variant, arguments: arguments_, span: readSpan(reader) };
     }
     case 'array-literal':
     case 'vector-literal': {
@@ -441,8 +442,9 @@ function readExpression(reader: BinaryReader): ForgeWebScriptExpression {
       }));
       return { kind: 'match', value, arms, span: readSpan(reader) };
     }
-    default:
+    default: {
       invalid(`unsupported expression kind '${kind}'`);
+    }
   }
 }
 
@@ -560,15 +562,16 @@ function writeStatement(writer: BinaryWriter, statement: ForgeWebScriptStatement
       writeSpan(writer, statement.span);
       return;
     }
-    default:
+    default: {
       invalid('unsupported statement kind');
+    }
   }
 }
 
 function readStatement(reader: BinaryReader): ForgeWebScriptStatement {
   const kind = reader.string();
   switch (kind) {
-    case 'let':
+    case 'let': {
       return {
         kind: 'let',
         name: reader.string(),
@@ -576,6 +579,7 @@ function readStatement(reader: BinaryReader): ForgeWebScriptStatement {
         value: readExpression(reader),
         span: readSpan(reader),
       };
+    }
     case 'assignment': {
       const name = reader.string();
       const value = readExpression(reader);
@@ -594,8 +598,9 @@ function readStatement(reader: BinaryReader): ForgeWebScriptStatement {
       const value = hasValue ? readExpression(reader) : undefined;
       return { kind: 'return', ...(value === undefined ? {} : { value }), span: readSpan(reader) };
     }
-    case 'expression-statement':
+    case 'expression-statement': {
       return { kind: 'expression-statement', expression: readExpression(reader), span: readSpan(reader) };
+    }
     case 'if': {
       const condition = readExpression(reader);
       const consequent = Array.from({ length: reader.u32() }, () => readStatement(reader));
@@ -611,13 +616,14 @@ function readStatement(reader: BinaryReader): ForgeWebScriptStatement {
         span: readSpan(reader),
       };
     }
-    case 'while':
+    case 'while': {
       return {
         kind: 'while',
         condition: readExpression(reader),
         body: Array.from({ length: reader.u32() }, () => readStatement(reader)),
         span: readSpan(reader),
       };
+    }
     case 'for': {
       const hasInitializer = reader.bool();
       const initializer = hasInitializer ? readStatement(reader) : undefined;
@@ -634,16 +640,18 @@ function readStatement(reader: BinaryReader): ForgeWebScriptStatement {
         span: readSpan(reader),
       };
     }
-    case 'do-while':
+    case 'do-while': {
       return {
         kind: 'do-while',
         body: Array.from({ length: reader.u32() }, () => readStatement(reader)),
         condition: readExpression(reader),
         span: readSpan(reader),
       };
-    case 'yield':
+    }
+    case 'yield': {
       return { kind: 'yield', value: readExpression(reader), span: readSpan(reader) };
-    case 'iterator-loop':
+    }
+    case 'iterator-loop': {
       return {
         kind: 'iterator-loop',
         binding: reader.string(),
@@ -651,6 +659,7 @@ function readStatement(reader: BinaryReader): ForgeWebScriptStatement {
         body: Array.from({ length: reader.u32() }, () => readStatement(reader)),
         span: readSpan(reader),
       };
+    }
     case 'match-statement': {
       const value = readExpression(reader);
       const arms = Array.from({ length: reader.u32() }, () => ({
@@ -684,8 +693,9 @@ function readStatement(reader: BinaryReader): ForgeWebScriptStatement {
         span: readSpan(reader),
       };
     }
-    default:
+    default: {
       invalid(`unsupported statement kind '${kind}'`);
+    }
   }
 }
 

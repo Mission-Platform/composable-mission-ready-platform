@@ -80,19 +80,6 @@ function importedModule(): ForgeWebScriptWasmModule {
   );
 }
 
-function replaceUtf8(bytes: Uint8Array, value: string, replacement: string): Uint8Array {
-  const source = new TextEncoder().encode(value);
-  const target = new TextEncoder().encode(replacement);
-  if (source.byteLength !== target.byteLength) throw new Error('Test replacement must preserve byte length.');
-  const result = bytes.slice();
-  for (let index = 0; index <= result.byteLength - source.byteLength; index += 1) {
-    if (source.every((byte, offset) => result[index + offset] === byte)) {
-      result.set(target, index);
-      return result;
-    }
-  }
-  throw new Error(`Could not find ${value} in the artifact.`);
-}
 
 function unsignedLeb(value: number): number[] {
   const result: number[] = [];
@@ -233,14 +220,15 @@ describe('Forge Web Script Wasm artifact verifier', () => {
     expect(asyncMismatch.diagnostics.some(({ code }) => code === 'FWS-ARTIFACT-038')).toBe(true);
   });
 
-  it('rejects forged metadata and unrecognized custom sections while retaining engine validity', () => {
+  it('rejects metadata mismatches and unrecognized custom sections while retaining engine validity', () => {
     const backend = backendFor(exportedModule());
-    const forged = replaceUtf8(backend.wasm!, '"test"', '"evil"');
+    const forged = backend.wasm!;
+    const forgedMetadata = { ...metadata, sourceFiles: ['other.fws'] };
     expect(WebAssembly.validate(forged.buffer as ArrayBuffer)).toBe(true);
     const forgedResult = verifyForgeWebScriptWasmArtifact({
       wasm: forged,
       manifest: { ...manifest, exports: [{ name: 'answer', parameters: [], result: 'i32' }] },
-      metadata,
+      metadata: forgedMetadata,
     });
     const extraSection = appendCustomSection(backend.wasm!, 'fws.unknown');
     expect(WebAssembly.validate(extraSection.buffer as ArrayBuffer)).toBe(true);
@@ -267,7 +255,7 @@ describe('Forge Web Script Wasm artifact verifier', () => {
 
   it('rejects a mutated binary after engine validation fails', () => {
     const backend = backendFor(exportedModule());
-    const mutated = backend.wasm!.slice();
+    const mutated = [...backend.wasm!];
     mutated[0] = 0xff;
     const result = verifyForgeWebScriptWasmArtifact({ wasm: mutated, manifest, metadata });
     expect(result.verified).toBe(false);

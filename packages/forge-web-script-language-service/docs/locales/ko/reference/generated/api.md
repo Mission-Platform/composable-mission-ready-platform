@@ -16,18 +16,22 @@
 **종류:** 기능
 
 ```typescript
-function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeWebScriptWorkspaceOptions, analysisOptions: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysis
+function analyzeForgeWebScript(
+  document: ForgeWebScriptDocument,
+  options: ForgeWebScriptWorkspaceOptions,
+  analysisOptions: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysis;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 문서 | ForgeWebScript문서 |  |
-| 옵션 | ForgeWebScriptWorkspace옵션 |  |
-| 분석옵션 | ForgeWebScriptAnalytic옵션 |  |
+| 이름     | 유형                        | 설명 |
+| -------- | --------------------------- | ---- |
+| 문서     | ForgeWebScript문서          |      |
+| 옵션     | ForgeWebScriptWorkspace옵션 |      |
+| 분석옵션 | ForgeWebScriptAnalytic옵션  |      |
 
 ## `src/completion`
 
@@ -36,19 +40,24 @@ function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeW
 **종류:** 기능
 
 ```typescript
-function completeForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): readonly ForgeWebScriptCompletion[]
+function completeForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): readonly ForgeWebScriptCompletion[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 위치 | ForgeWebScript위치 |  |
-| 기호 | 읽기 전용 ForgeWebScriptSymbol[] |  |
-| 옵션 | ForgeWebScriptWorkspace옵션 |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 출처 | 문자열                           |      |
+| 위치 | ForgeWebScript위치               |      |
+| 기호 | 읽기 전용 ForgeWebScriptSymbol[] |      |
+| 옵션 | ForgeWebScriptWorkspace옵션      |      |
 
 ## `src/documents`
 
@@ -57,16 +66,16 @@ function completeForgeWebScript(source: string, position: ForgeWebScriptPosition
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService
+function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 호스트 | ForgeWebScriptWorkspaceHost |  |
+| 이름   | 유형                        | 설명 |
+| ------ | --------------------------- | ---- |
+| 호스트 | ForgeWebScriptWorkspaceHost |      |
 
 ## `src/features`
 
@@ -75,91 +84,112 @@ function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost)
 **종류:** 기능
 
 ```typescript
-function codeLensesForgeWebScript(module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], referenceCount: (symbol: ForgeWebScriptSymbol) => number): readonly ForgeWebScriptCodeLens[]
+function codeLensesForgeWebScript(
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  referenceCount: (symbol: ForgeWebScriptSymbol) => number,
+): readonly ForgeWebScriptCodeLens[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | ForgeWebScript모듈 \| 정의되지 않음 |  |
-| 기호 | 읽기 전용 ForgeWebScriptSymbol[] |  |
-| 참조카운트 | (기호: ForgeWebScriptSymbol) => 숫자 |  |
+| 이름       | 유형                                 | 설명 |
+| ---------- | ------------------------------------ | ---- |
+| 모듈       | ForgeWebScript모듈 \| 정의되지 않음  |      |
+| 기호       | 읽기 전용 ForgeWebScriptSymbol[]     |      |
+| 참조카운트 | (기호: ForgeWebScriptSymbol) => 숫자 |      |
 
 ### 문서기호ForgeWebScript
 
 **종류:** 기능
 
 ```typescript
-function documentSymbolsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[]): readonly ForgeWebScriptDocumentSymbol[]
+function documentSymbolsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+): readonly ForgeWebScriptDocumentSymbol[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 모듈 | ForgeWebScript모듈 \| 정의되지 않음 |  |
-| 기호 | 읽기 전용 ForgeWebScriptSymbol[] |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 출처 | 문자열                              |      |
+| 모듈 | ForgeWebScript모듈 \| 정의되지 않음 |      |
+| 기호 | 읽기 전용 ForgeWebScriptSymbol[]    |      |
 
 ### 접는범위ForgeWebScript
 
 **종류:** 기능
 
 ```typescript
-function foldingRangesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined): readonly ForgeWebScriptFoldingRange[]
+function foldingRangesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+): readonly ForgeWebScriptFoldingRange[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 모듈 | ForgeWebScript모듈 \| 정의되지 않음 |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 출처 | 문자열                              |      |
+| 모듈 | ForgeWebScript모듈 \| 정의되지 않음 |      |
 
 ### 인레이힌트ForgeWebScript
 
 **종류:** 기능
 
 ```typescript
-function inlayHintsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, requestedRange?: ForgeWebScriptRange, importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment): readonly ForgeWebScriptInlayHint[]
+function inlayHintsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  requestedRange?: ForgeWebScriptRange,
+  importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment,
+): readonly ForgeWebScriptInlayHint[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 모듈 | ForgeWebScript모듈 \| 정의되지 않음 |  |
-| 요청된 범위 | ForgeWebScriptRange |  |
-| importType환경 | ForgeWebScriptImportTypeEnvironment |  |
+| 이름           | 유형                                | 설명 |
+| -------------- | ----------------------------------- | ---- |
+| 출처           | 문자열                              |      |
+| 모듈           | ForgeWebScript모듈 \| 정의되지 않음 |      |
+| 요청된 범위    | ForgeWebScriptRange                 |      |
+| importType환경 | ForgeWebScriptImportTypeEnvironment |      |
 
 ### inlineValuesForgeWebScript
 
 **종류:** 기능
 
 ```typescript
-function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], requestedRange?: ForgeWebScriptRange): readonly ForgeWebScriptInlineValue[]
+function inlineValuesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  requestedRange?: ForgeWebScriptRange,
+): readonly ForgeWebScriptInlineValue[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 모듈 | ForgeWebScript모듈 \| 정의되지 않음 |  |
-| 기호 | 읽기 전용 ForgeWebScriptSymbol[] |  |
-| 요청된 범위 | ForgeWebScriptRange |  |
+| 이름        | 유형                                | 설명 |
+| ----------- | ----------------------------------- | ---- |
+| 출처        | 문자열                              |      |
+| 모듈        | ForgeWebScript모듈 \| 정의되지 않음 |      |
+| 기호        | 읽기 전용 ForgeWebScriptSymbol[]    |      |
+| 요청된 범위 | ForgeWebScriptRange                 |      |
 
 ## `src/hover`
 
@@ -168,19 +198,24 @@ function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule
 **종류:** 기능
 
 ```typescript
-function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): ForgeWebScriptHover | undefined
+function hoverForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): ForgeWebScriptHover | undefined;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 위치 | ForgeWebScript위치 |  |
-| 기호 | 읽기 전용 ForgeWebScriptSymbol[] |  |
-| 옵션 | ForgeWebScriptWorkspace옵션 |  |
+| 이름 | 유형                             | 설명 |
+| ---- | -------------------------------- | ---- |
+| 출처 | 문자열                           |      |
+| 위치 | ForgeWebScript위치               |      |
+| 기호 | 읽기 전용 ForgeWebScriptSymbol[] |      |
+| 옵션 | ForgeWebScriptWorkspace옵션      |      |
 
 ## `src/lsif`
 
@@ -189,7 +224,7 @@ function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, s
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph
+function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph;
 ```
 
 언어 서비스 작업 영역 스냅샷에서 결정적 LSIF 그래프를 만듭니다.
@@ -199,16 +234,16 @@ function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScrip
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | ForgeWebScriptLsifInput |  |
+| 이름 | 유형                    | 설명 |
+| ---- | ----------------------- | ---- |
+| 입력 | ForgeWebScriptLsifInput |      |
 
 ### createForgeWebScriptLsifGraph
 
 **종류:** 상수
 
 ```typescript
-export const createForgeWebScriptLsifGraph
+export const createForgeWebScriptLsifGraph;
 ```
 
 설명이 제공되지 않았습니다.
@@ -218,7 +253,7 @@ export const createForgeWebScriptLsifGraph
 **종류:** 상수
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LSIF_VERSION
+export const FORGE_WEB_SCRIPT_LSIF_VERSION;
 ```
 
 이 모듈이 나타내는 LSIF 버전입니다.
@@ -258,7 +293,18 @@ export interface ForgeWebScriptLsifEdge
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptLsifEdgeLabel = | 'contains' | 'next' | 'item' | 'textDocument/definition' | 'textDocument/declaration' | 'textDocument/implementation' | 'textDocument/references' | 'textDocument/documentSymbol' | 'textDocument/hover' | 'moniker' | 'diagnostic';
+export type ForgeWebScriptLsifEdgeLabel =
+  | 'contains'
+  | 'next'
+  | 'item'
+  | 'textDocument/definition'
+  | 'textDocument/declaration'
+  | 'textDocument/implementation'
+  | 'textDocument/references'
+  | 'textDocument/documentSymbol'
+  | 'textDocument/hover'
+  | 'moniker'
+  | 'diagnostic';
 ```
 
 설명이 제공되지 않았습니다.
@@ -368,7 +414,14 @@ export interface ForgeWebScriptLsifResultVertex
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | ForgeWebScriptLsifProjectVertex | ForgeWebScriptLsifDocumentVertex | ForgeWebScriptLsifRangeVertex | ForgeWebScriptLsifResultSetVertex | ForgeWebScriptLsifResultVertex | ForgeWebScriptLsifMonikerVertex;
+export type ForgeWebScriptLsifVertex =
+  | ForgeWebScriptLsifMetadataVertex
+  | ForgeWebScriptLsifProjectVertex
+  | ForgeWebScriptLsifDocumentVertex
+  | ForgeWebScriptLsifRangeVertex
+  | ForgeWebScriptLsifResultSetVertex
+  | ForgeWebScriptLsifResultVertex
+  | ForgeWebScriptLsifMonikerVertex;
 ```
 
 설명이 제공되지 않았습니다.
@@ -378,7 +431,20 @@ export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | Forg
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document' | 'range' | 'resultSet' | 'definitionResult' | 'declarationResult' | 'implementationResult' | 'referenceResult' | 'documentSymbolResult' | 'hoverResult' | 'moniker' | 'diagnosticResult';
+export type ForgeWebScriptLsifVertexLabel =
+  | 'metaData'
+  | 'project'
+  | 'document'
+  | 'range'
+  | 'resultSet'
+  | 'definitionResult'
+  | 'declarationResult'
+  | 'implementationResult'
+  | 'referenceResult'
+  | 'documentSymbolResult'
+  | 'hoverResult'
+  | 'moniker'
+  | 'diagnosticResult';
 ```
 
 설명이 제공되지 않았습니다.
@@ -388,23 +454,23 @@ export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document
 **종류:** 기능
 
 ```typescript
-function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string
+function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string;
 ```
 
 LSIF 레코드를 후행 줄 바꿈 없이 안정적인 JSONL로 직렬화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 그래프 | ForgeWebScriptLsifGraph |  |
+| 이름   | 유형                    | 설명 |
+| ------ | ----------------------- | ---- |
+| 그래프 | ForgeWebScriptLsifGraph |      |
 
 ### serializeForgeWebScriptLsifGraph
 
 **종류:** 상수
 
 ```typescript
-export const serializeForgeWebScriptLsifGraph
+export const serializeForgeWebScriptLsifGraph;
 ```
 
 설명이 제공되지 않았습니다.
@@ -416,86 +482,86 @@ export const serializeForgeWebScriptLsifGraph
 **종류:** 기능
 
 ```typescript
-function containsOffset(range: ForgeWebScriptRange, offset: number): boolean
+function containsOffset(range: ForgeWebScriptRange, offset: number): boolean;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 범위 | ForgeWebScriptRange |  |
-| 오프셋 | 번호 |  |
+| 이름   | 유형                | 설명 |
+| ------ | ------------------- | ---- |
+| 범위   | ForgeWebScriptRange |      |
+| 오프셋 | 번호                |      |
 
 ### 오프셋 위치
 
 **종류:** 기능
 
 ```typescript
-function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number
+function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 위치 | ForgeWebScript위치 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 출처 | 문자열             |      |
+| 위치 | ForgeWebScript위치 |      |
 
 ### 위치 오프셋
 
 **종류:** 기능
 
 ```typescript
-function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition
+function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 오프셋 | 번호 |  |
+| 이름   | 유형   | 설명 |
+| ------ | ------ | ---- |
+| 출처   | 문자열 |      |
+| 오프셋 | 번호   |      |
 
 ### rangeFromOffsets
 
 **종류:** 기능
 
 ```typescript
-function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange
+function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 시작 | 번호 |  |
-| 끝 | 번호 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 출처 | 문자열 |      |
+| 시작 | 번호   |      |
+| 끝   | 번호   |      |
 
 ### 범위FromSpan
 
 **종류:** 기능
 
 ```typescript
-function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange
+function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 범위 | ForgeWebScriptSourceSpan |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 출처 | 문자열                   |      |
+| 범위 | ForgeWebScriptSourceSpan |      |
 
 ## `src/symbols`
 
@@ -504,34 +570,38 @@ function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWeb
 **종류:** 기능
 
 ```typescript
-function buildSymbolIndex(source: string, module: ForgeWebScriptModule | undefined, tokens: readonly ForgeWebScriptTokenClassification[]): ForgeWebScriptSymbolIndex
+function buildSymbolIndex(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  tokens: readonly ForgeWebScriptTokenClassification[],
+): ForgeWebScriptSymbolIndex;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 모듈 | ForgeWebScript모듈 \| 정의되지 않음 |  |
-| 토큰 | 읽기 전용 ForgeWebScriptTokenClassification[] |  |
+| 이름 | 유형                                          | 설명 |
+| ---- | --------------------------------------------- | ---- |
+| 출처 | 문자열                                        |      |
+| 모듈 | ForgeWebScript모듈 \| 정의되지 않음           |      |
+| 토큰 | 읽기 전용 ForgeWebScriptTokenClassification[] |      |
 
 ### 표현식이름
 
 **종류:** 기능
 
 ```typescript
-function expressionName(expression: ForgeWebScriptExpression): string | undefined
+function expressionName(expression: ForgeWebScriptExpression): string | undefined;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 표현 | ForgeWebScriptExpression |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 표현 | ForgeWebScriptExpression |      |
 
 ### ForgeWebScriptSymbolIndex
 
@@ -550,33 +620,33 @@ export interface ForgeWebScriptSymbolIndex
 **종류:** 기능
 
 ```typescript
-function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[]
+function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 파일 이름 |  |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 출처      | 문자열 |      |
+| 파일 이름 |        |      |
 
 ### tokenKindTo분류
 
 **종류:** 기능
 
 ```typescript
-function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind']
+function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind'];
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 종류 | ForgeWebScriptTokenKind |  |
+| 이름 | 유형                    | 설명 |
+| ---- | ----------------------- | ---- |
+| 종류 | ForgeWebScriptTokenKind |      |
 
 ## `src/types`
 
@@ -907,17 +977,20 @@ export interface ForgeWebScriptWorkspaceOptions
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptWorkspaceIndex(callbacks: WorkspaceIndexCallbacks, host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptWorkspaceSemanticIndex
+function createForgeWebScriptWorkspaceIndex(
+  callbacks: WorkspaceIndexCallbacks,
+  host?: ForgeWebScriptWorkspaceHost,
+): ForgeWebScriptWorkspaceSemanticIndex;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 콜백 | WorkspaceIndexCallbacks |  |
-| 호스트 | ForgeWebScriptWorkspaceHost |  |
+| 이름   | 유형                        | 설명 |
+| ------ | --------------------------- | ---- |
+| 콜백   | WorkspaceIndexCallbacks     |      |
+| 호스트 | ForgeWebScriptWorkspaceHost |      |
 
 ### ForgeWebScriptWorkspaceSemanticIndex
 

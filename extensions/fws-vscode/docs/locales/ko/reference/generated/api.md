@@ -16,42 +16,47 @@
 **종류:** 기능
 
 ```typescript
-function activate(context: vscode.ExtensionContext): Promise<void>
+function activate(context: vscode.ExtensionContext): Promise<void>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 맥락 | vscode.ExtensionContext |  |
+| 이름 | 유형                    | 설명 |
+| ---- | ----------------------- | ---- |
+| 맥락 | vscode.ExtensionContext |      |
 
 ### createLanguageClient
 
 **종류:** 기능
 
 ```typescript
-function createLanguageClient(serverOptions: ServerOptions, configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>, outputChannel: vscode.LogOutputChannel, fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*')): ForgeWebScriptLanguageClient
+function createLanguageClient(
+  serverOptions: ServerOptions,
+  configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>,
+  outputChannel: vscode.LogOutputChannel,
+  fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*'),
+): ForgeWebScriptLanguageClient;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 서버옵션 | 서버옵션 |  |
-| 구성 | 선택하다<ForgeWebScriptConfiguration, 'traceServer'> |  |
-| 출력채널 | vscode.LogOutputChannel |  |
-| 파일감시자 | vscode.FileSystemWatcher |  |
+| 이름       | 유형                                                 | 설명 |
+| ---------- | ---------------------------------------------------- | ---- |
+| 서버옵션   | 서버옵션                                             |      |
+| 구성       | 선택하다<ForgeWebScriptConfiguration, 'traceServer'> |      |
+| 출력채널   | vscode.LogOutputChannel                              |      |
+| 파일감시자 | vscode.FileSystemWatcher                             |      |
 
 ### 비활성화하다
 
 **종류:** 기능
 
 ```typescript
-function deactivate(): Promise<void>
+function deactivate(): Promise<void>;
 ```
 
 설명이 제공되지 않았습니다.

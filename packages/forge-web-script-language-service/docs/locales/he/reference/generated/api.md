@@ -16,18 +16,22 @@
 פונקציה **סוג:**
 
 ```typescript
-function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeWebScriptWorkspaceOptions, analysisOptions: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysis
+function analyzeForgeWebScript(
+  document: ForgeWebScriptDocument,
+  options: ForgeWebScriptWorkspaceOptions,
+  analysisOptions: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysis;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסמך | ForgeWebScriptDocument |  |
-| אפשרויות | ForgeWebScriptWorkspaceOptions |  |
-| ניתוח אפשרויות | ForgeWebScriptAnalysisOptions |  |
+| שם             | הקלד                           | תיאור |
+| -------------- | ------------------------------ | ----- |
+| מסמך           | ForgeWebScriptDocument         |       |
+| אפשרויות       | ForgeWebScriptWorkspaceOptions |       |
+| ניתוח אפשרויות | ForgeWebScriptAnalysisOptions  |       |
 
 ## `src/completion`
 
@@ -36,19 +40,24 @@ function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeW
 פונקציה **סוג:**
 
 ```typescript
-function completeForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): readonly ForgeWebScriptCompletion[]
+function completeForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): readonly ForgeWebScriptCompletion[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| עמדה | ForgeWebScriptPosition |  |
-| סמלים | לקריאה בלבד ForgeWebScriptSymbol[] |  |
-| אפשרויות | ForgeWebScriptWorkspaceOptions |  |
+| שם       | הקלד                               | תיאור |
+| -------- | ---------------------------------- | ----- |
+| מקור     | מחרוזת                             |       |
+| עמדה     | ForgeWebScriptPosition             |       |
+| סמלים    | לקריאה בלבד ForgeWebScriptSymbol[] |       |
+| אפשרויות | ForgeWebScriptWorkspaceOptions     |       |
 
 ## `src/documents`
 
@@ -57,16 +66,16 @@ function completeForgeWebScript(source: string, position: ForgeWebScriptPosition
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService
+function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מארח | ForgeWebScriptWorkspaceHost |  |
+| שם   | הקלד                        | תיאור |
+| ---- | --------------------------- | ----- |
+| מארח | ForgeWebScriptWorkspaceHost |       |
 
 ## `src/features`
 
@@ -75,91 +84,112 @@ function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost)
 פונקציה **סוג:**
 
 ```typescript
-function codeLensesForgeWebScript(module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], referenceCount: (symbol: ForgeWebScriptSymbol) => number): readonly ForgeWebScriptCodeLens[]
+function codeLensesForgeWebScript(
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  referenceCount: (symbol: ForgeWebScriptSymbol) => number,
+): readonly ForgeWebScriptCodeLens[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | ForgeWebScriptModule \| לא מוגדר |  |
-| סמלים | לקריאה בלבד ForgeWebScriptSymbol[] |  |
-| referenceCount | (סמל: ForgeWebScriptSymbol) => מספר |  |
+| שם             | הקלד                                | תיאור |
+| -------------- | ----------------------------------- | ----- |
+| מודול          | ForgeWebScriptModule \| לא מוגדר    |       |
+| סמלים          | לקריאה בלבד ForgeWebScriptSymbol[]  |       |
+| referenceCount | (סמל: ForgeWebScriptSymbol) => מספר |       |
 
 ### documentSymbolsForgeWebScript
 
 פונקציה **סוג:**
 
 ```typescript
-function documentSymbolsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[]): readonly ForgeWebScriptDocumentSymbol[]
+function documentSymbolsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+): readonly ForgeWebScriptDocumentSymbol[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| מודול | ForgeWebScriptModule \| לא מוגדר |  |
-| סמלים | לקריאה בלבד ForgeWebScriptSymbol[] |  |
+| שם    | הקלד                               | תיאור |
+| ----- | ---------------------------------- | ----- |
+| מקור  | מחרוזת                             |       |
+| מודול | ForgeWebScriptModule \| לא מוגדר   |       |
+| סמלים | לקריאה בלבד ForgeWebScriptSymbol[] |       |
 
 ### foldingRangesForgeWebScript
 
 פונקציה **סוג:**
 
 ```typescript
-function foldingRangesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined): readonly ForgeWebScriptFoldingRange[]
+function foldingRangesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+): readonly ForgeWebScriptFoldingRange[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| מודול | ForgeWebScriptModule \| לא מוגדר |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| מקור  | מחרוזת                           |       |
+| מודול | ForgeWebScriptModule \| לא מוגדר |       |
 
 ### inlayHintsForgeWebScript
 
 פונקציה **סוג:**
 
 ```typescript
-function inlayHintsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, requestedRange?: ForgeWebScriptRange, importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment): readonly ForgeWebScriptInlayHint[]
+function inlayHintsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  requestedRange?: ForgeWebScriptRange,
+  importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment,
+): readonly ForgeWebScriptInlayHint[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| מודול | ForgeWebScriptModule \| לא מוגדר |  |
-| requestedRange | ForgeWebScriptRange |  |
-| importTypeEnvironment | ForgeWebScriptImportTypeEnvironment |  |
+| שם                    | הקלד                                | תיאור |
+| --------------------- | ----------------------------------- | ----- |
+| מקור                  | מחרוזת                              |       |
+| מודול                 | ForgeWebScriptModule \| לא מוגדר    |       |
+| requestedRange        | ForgeWebScriptRange                 |       |
+| importTypeEnvironment | ForgeWebScriptImportTypeEnvironment |       |
 
 ### inlineValuesForgeWebScript
 
 פונקציה **סוג:**
 
 ```typescript
-function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], requestedRange?: ForgeWebScriptRange): readonly ForgeWebScriptInlineValue[]
+function inlineValuesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  requestedRange?: ForgeWebScriptRange,
+): readonly ForgeWebScriptInlineValue[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| מודול | ForgeWebScriptModule \| לא מוגדר |  |
-| סמלים | לקריאה בלבד ForgeWebScriptSymbol[] |  |
-| requestedRange | ForgeWebScriptRange |  |
+| שם             | הקלד                               | תיאור |
+| -------------- | ---------------------------------- | ----- |
+| מקור           | מחרוזת                             |       |
+| מודול          | ForgeWebScriptModule \| לא מוגדר   |       |
+| סמלים          | לקריאה בלבד ForgeWebScriptSymbol[] |       |
+| requestedRange | ForgeWebScriptRange                |       |
 
 ## `src/hover`
 
@@ -168,19 +198,24 @@ function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule
 פונקציה **סוג:**
 
 ```typescript
-function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): ForgeWebScriptHover | undefined
+function hoverForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): ForgeWebScriptHover | undefined;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| עמדה | ForgeWebScriptPosition |  |
-| סמלים | לקריאה בלבד ForgeWebScriptSymbol[] |  |
-| אפשרויות | ForgeWebScriptWorkspaceOptions |  |
+| שם       | הקלד                               | תיאור |
+| -------- | ---------------------------------- | ----- |
+| מקור     | מחרוזת                             |       |
+| עמדה     | ForgeWebScriptPosition             |       |
+| סמלים    | לקריאה בלבד ForgeWebScriptSymbol[] |       |
+| אפשרויות | ForgeWebScriptWorkspaceOptions     |       |
 
 ## `src/lsif`
 
@@ -189,7 +224,7 @@ function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, s
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph
+function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph;
 ```
 
 יוצר גרף LSIF דטרמיניסטי מתמונת מצב סביבת העבודה של שירות השפה.
@@ -199,16 +234,16 @@ function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScrip
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | ForgeWebScriptLsifInput |  |
+| שם  | הקלד                    | תיאור |
+| --- | ----------------------- | ----- |
+| קלט | ForgeWebScriptLsifInput |       |
 
 ### createForgeWebScriptLsifGraph
 
 **סוג:** קבוע
 
 ```typescript
-export const createForgeWebScriptLsifGraph
+export const createForgeWebScriptLsifGraph;
 ```
 
 לא סופק תיאור.
@@ -218,7 +253,7 @@ export const createForgeWebScriptLsifGraph
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LSIF_VERSION
+export const FORGE_WEB_SCRIPT_LSIF_VERSION;
 ```
 
 גרסת LSIF המיוצגת על ידי מודול זה.
@@ -258,7 +293,18 @@ export interface ForgeWebScriptLsifEdge
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptLsifEdgeLabel = | 'contains' | 'next' | 'item' | 'textDocument/definition' | 'textDocument/declaration' | 'textDocument/implementation' | 'textDocument/references' | 'textDocument/documentSymbol' | 'textDocument/hover' | 'moniker' | 'diagnostic';
+export type ForgeWebScriptLsifEdgeLabel =
+  | 'contains'
+  | 'next'
+  | 'item'
+  | 'textDocument/definition'
+  | 'textDocument/declaration'
+  | 'textDocument/implementation'
+  | 'textDocument/references'
+  | 'textDocument/documentSymbol'
+  | 'textDocument/hover'
+  | 'moniker'
+  | 'diagnostic';
 ```
 
 לא סופק תיאור.
@@ -368,7 +414,14 @@ export interface ForgeWebScriptLsifResultVertex
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | ForgeWebScriptLsifProjectVertex | ForgeWebScriptLsifDocumentVertex | ForgeWebScriptLsifRangeVertex | ForgeWebScriptLsifResultSetVertex | ForgeWebScriptLsifResultVertex | ForgeWebScriptLsifMonikerVertex;
+export type ForgeWebScriptLsifVertex =
+  | ForgeWebScriptLsifMetadataVertex
+  | ForgeWebScriptLsifProjectVertex
+  | ForgeWebScriptLsifDocumentVertex
+  | ForgeWebScriptLsifRangeVertex
+  | ForgeWebScriptLsifResultSetVertex
+  | ForgeWebScriptLsifResultVertex
+  | ForgeWebScriptLsifMonikerVertex;
 ```
 
 לא סופק תיאור.
@@ -378,7 +431,20 @@ export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | Forg
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document' | 'range' | 'resultSet' | 'definitionResult' | 'declarationResult' | 'implementationResult' | 'referenceResult' | 'documentSymbolResult' | 'hoverResult' | 'moniker' | 'diagnosticResult';
+export type ForgeWebScriptLsifVertexLabel =
+  | 'metaData'
+  | 'project'
+  | 'document'
+  | 'range'
+  | 'resultSet'
+  | 'definitionResult'
+  | 'declarationResult'
+  | 'implementationResult'
+  | 'referenceResult'
+  | 'documentSymbolResult'
+  | 'hoverResult'
+  | 'moniker'
+  | 'diagnosticResult';
 ```
 
 לא סופק תיאור.
@@ -388,23 +454,23 @@ export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document
 פונקציה **סוג:**
 
 ```typescript
-function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string
+function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string;
 ```
 
 מסדרת רשומות LSIF כ-JSONL יציב, ללא שורה חדשה נגררת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| גרף | ForgeWebScriptLsifGraph |  |
+| שם  | הקלד                    | תיאור |
+| --- | ----------------------- | ----- |
+| גרף | ForgeWebScriptLsifGraph |       |
 
 ### serializeForgeWebScriptLsifGraph
 
 **סוג:** קבוע
 
 ```typescript
-export const serializeForgeWebScriptLsifGraph
+export const serializeForgeWebScriptLsifGraph;
 ```
 
 לא סופק תיאור.
@@ -416,86 +482,86 @@ export const serializeForgeWebScriptLsifGraph
 פונקציה **סוג:**
 
 ```typescript
-function containsOffset(range: ForgeWebScriptRange, offset: number): boolean
+function containsOffset(range: ForgeWebScriptRange, offset: number): boolean;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טווח | ForgeWebScriptRange |  |
-| קיזוז | מספר |  |
+| שם    | הקלד                | תיאור |
+| ----- | ------------------- | ----- |
+| טווח  | ForgeWebScriptRange |       |
+| קיזוז | מספר                |       |
 
 ### offsetAtPosition
 
 פונקציה **סוג:**
 
 ```typescript
-function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number
+function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| עמדה | ForgeWebScriptPosition |  |
+| שם   | הקלד                   | תיאור |
+| ---- | ---------------------- | ----- |
+| מקור | מחרוזת                 |       |
+| עמדה | ForgeWebScriptPosition |       |
 
 ### positionAtOffset
 
 פונקציה **סוג:**
 
 ```typescript
-function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition
+function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| קיזוז | מספר |  |
+| שם    | הקלד   | תיאור |
+| ----- | ------ | ----- |
+| מקור  | מחרוזת |       |
+| קיזוז | מספר   |       |
 
 ### rangeFromOffsets
 
 פונקציה **סוג:**
 
 ```typescript
-function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange
+function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| להתחיל | מספר |  |
-| סוף | מספר |  |
+| שם     | הקלד   | תיאור |
+| ------ | ------ | ----- |
+| מקור   | מחרוזת |       |
+| להתחיל | מספר   |       |
+| סוף    | מספר   |       |
 
 ### rangeFromSpan
 
 פונקציה **סוג:**
 
 ```typescript
-function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange
+function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| span | ForgeWebScriptSourceSpan |  |
+| שם   | הקלד                     | תיאור |
+| ---- | ------------------------ | ----- |
+| מקור | מחרוזת                   |       |
+| span | ForgeWebScriptSourceSpan |       |
 
 ## `src/symbols`
 
@@ -504,34 +570,38 @@ function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWeb
 פונקציה **סוג:**
 
 ```typescript
-function buildSymbolIndex(source: string, module: ForgeWebScriptModule | undefined, tokens: readonly ForgeWebScriptTokenClassification[]): ForgeWebScriptSymbolIndex
+function buildSymbolIndex(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  tokens: readonly ForgeWebScriptTokenClassification[],
+): ForgeWebScriptSymbolIndex;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| מודול | ForgeWebScriptModule \| לא מוגדר |  |
-| אסימונים | לקריאה בלבד ForgeWebScriptTokenClassification[] |  |
+| שם       | הקלד                                            | תיאור |
+| -------- | ----------------------------------------------- | ----- |
+| מקור     | מחרוזת                                          |       |
+| מודול    | ForgeWebScriptModule \| לא מוגדר                |       |
+| אסימונים | לקריאה בלבד ForgeWebScriptTokenClassification[] |       |
 
 ### expressionName
 
 פונקציה **סוג:**
 
 ```typescript
-function expressionName(expression: ForgeWebScriptExpression): string | undefined
+function expressionName(expression: ForgeWebScriptExpression): string | undefined;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ביטוי | ForgeWebScriptExpression |  |
+| שם    | הקלד                     | תיאור |
+| ----- | ------------------------ | ----- |
+| ביטוי | ForgeWebScriptExpression |       |
 
 ### ForgeWebScriptSymbolIndex
 
@@ -550,33 +620,33 @@ export interface ForgeWebScriptSymbolIndex
 פונקציה **סוג:**
 
 ```typescript
-function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[]
+function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| שם קובץ |  |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| מקור    | מחרוזת |       |
+| שם קובץ |        |       |
 
 ### tokenKindToClassification
 
 פונקציה **סוג:**
 
 ```typescript
-function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind']
+function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind'];
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סוג | ForgeWebScriptTokenKind |  |
+| שם  | הקלד                    | תיאור |
+| --- | ----------------------- | ----- |
+| סוג | ForgeWebScriptTokenKind |       |
 
 ## `src/types`
 
@@ -907,17 +977,20 @@ export interface ForgeWebScriptWorkspaceOptions
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptWorkspaceIndex(callbacks: WorkspaceIndexCallbacks, host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptWorkspaceSemanticIndex
+function createForgeWebScriptWorkspaceIndex(
+  callbacks: WorkspaceIndexCallbacks,
+  host?: ForgeWebScriptWorkspaceHost,
+): ForgeWebScriptWorkspaceSemanticIndex;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| התקשרויות חוזרות | WorkspaceIndex Callbacks |  |
-| מארח | ForgeWebScriptWorkspaceHost |  |
+| שם               | הקלד                        | תיאור |
+| ---------------- | --------------------------- | ----- |
+| התקשרויות חוזרות | WorkspaceIndex Callbacks    |       |
+| מארח             | ForgeWebScriptWorkspaceHost |       |
 
 ### ForgeWebScriptWorkspaceSemanticIndex
 

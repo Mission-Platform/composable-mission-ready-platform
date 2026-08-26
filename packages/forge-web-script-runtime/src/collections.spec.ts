@@ -17,7 +17,6 @@ import {
   forgeWebScriptIteratorFirst,
   forgeWebScriptIteratorFlatten,
   forgeWebScriptIteratorFold,
-  forgeWebScriptIteratorFromArray,
   forgeWebScriptIteratorFromIterable,
   forgeWebScriptIteratorFromVector,
   forgeWebScriptIteratorLast,

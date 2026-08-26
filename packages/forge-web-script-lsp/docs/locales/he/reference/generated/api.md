@@ -16,16 +16,16 @@
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptLspServerOptions |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| אפשרויות | ForgeWebScriptLspServerOptions |       |
 
 ### ForgeWebScriptLspDocument
 
@@ -82,17 +82,20 @@ export interface ForgeWebScriptLspServerOptions
 פונקציה **סוג:**
 
 ```typescript
-function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function registerForgeWebScriptLsp(
+  connection: Connection,
+  options: ForgeWebScriptLspServerOptions = {},
+): ForgeWebScriptLspServer;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| חיבור | חיבור |  |
-| אפשרויות | ForgeWebScriptLspServerOptions |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| חיבור    | חיבור                          |       |
+| אפשרויות | ForgeWebScriptLspServerOptions |       |
 
 ## `src/workspace`
 
@@ -101,16 +104,18 @@ function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScri
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptNodeWorkspaceHost(options: ForgeWebScriptNodeWorkspaceOptions): RootBoundedForgeWebScriptWorkspaceHost
+function createForgeWebScriptNodeWorkspaceHost(
+  options: ForgeWebScriptNodeWorkspaceOptions,
+): RootBoundedForgeWebScriptWorkspaceHost;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptNodeWorkspaceOptions |  |
+| שם       | הקלד                               | תיאור |
+| -------- | ---------------------------------- | ----- |
+| אפשרויות | ForgeWebScriptNodeWorkspaceOptions |       |
 
 ### ForgeWebScriptNodeFileSystem
 

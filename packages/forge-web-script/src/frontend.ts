@@ -6,14 +6,15 @@ import {
 } from './graph.js';
 import { normalizeForgeWebScriptFileId } from './identity.js';
 import { lowerForgeWebScriptIrToModule, lowerForgeWebScriptToIr } from './ir.js';
+import { lexForgeWebScript } from './lexer.js';
 import { validateForgeWebScriptLinks } from './linker.js';
 import {
   createForgeWebScriptAbiManifest,
+  type ForgeWebScriptAbiFunction,
   type ForgeWebScriptLinkedExport,
   type ForgeWebScriptSourceImport,
 } from './manifest.js';
 import { optimizeForgeWebScriptModule } from './optimizer.js';
-import { lexForgeWebScript } from './lexer.js';
 import { parseForgeWebScript } from './parser.js';
 import { buildForgeWebScriptSoN, optimizeForgeWebScriptSoN } from './son-ir.js';
 import { forgeWebScriptStandardLibraryIdentity } from './stdlib/regex.js';
@@ -27,8 +28,6 @@ import type {
   ForgeWebScriptGraphCompileInput,
   ForgeWebScriptLinkOptimizationProfile,
 } from './contracts.js';
-import type { ForgeWebScriptAbiFunction } from './manifest.js';
-
 function frontendSourceHash(source: string, fileName: string): string {
   let result = 2_166_136_261;
   const tokens = lexForgeWebScript(source, fileName)
@@ -270,7 +269,7 @@ export function prepareForgeWebScriptGraphFrontend(
   input: ForgeWebScriptGraphCompileInput,
 ): ForgeWebScriptFrontendResult {
   const configuration: ForgeWebScriptLinkConfiguration = {
-    ...(input.linkConfiguration ?? {}),
+    ...input.linkConfiguration,
     ...(input.linkProfile === undefined ? {} : { linkProfile: input.linkProfile }),
   };
   const graphHash = hashForgeWebScriptModuleGraph(input.graph, configuration);

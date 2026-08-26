@@ -459,12 +459,12 @@ Node المحيط أو واجهات برمجة تطبيقات المتصفح.
 تم تضمينه أيضًا في كائن `data` التشخيصي. عائلات التعليمات البرمجية المستقرة النموذجية
 هي:
 
-| عائلة الكود | المرحلة | معنى |
-| ------------- | ------------ | ------------------------------------------------------------------------ |
-| `FWS-LEX-*` | `lex` | أحرف/حالات هروب غير صالحة، أو نهايات سطر سلسلة أولية، أو سلاسل/تعليقات كتلة غير منتهية |
-| `FWS-PARSE-*` | `parse` | بناء جملة وحدة نمطية أو تعريف أو بيان أو تعبير غير صالح
-| `FWS-TYPE-*` | `type-check` | أنواع أو أسماء أو عوامل تشغيل أو وسائط أو إرجاعات غير صالحة |
-| `FWS-ABI-*` | `abi` | أسماء مكررة أو إمكانيات مرفوضة أو صادرات أو واردات |
+| عائلة الكود   | المرحلة      | معنى                                                                                   |
+| ------------- | ------------ | -------------------------------------------------------------------------------------- |
+| `FWS-LEX-*`   | `lex`        | أحرف/حالات هروب غير صالحة، أو نهايات سطر سلسلة أولية، أو سلاسل/تعليقات كتلة غير منتهية |
+| `FWS-PARSE-*` | `parse`      | بناء جملة وحدة نمطية أو تعريف أو بيان أو تعبير غير صالح                                |
+| `FWS-TYPE-*`  | `type-check` | أنواع أو أسماء أو عوامل تشغيل أو وسائط أو إرجاعات غير صالحة                            |
+| `FWS-ABI-*`   | `abi`        | أسماء مكررة أو إمكانيات مرفوضة أو صادرات أو واردات                                     |
 
 لا يزال يتم ترميز المدخلات المشوهة وتحليلها حيثما يسمح استرداد المحلل اللغوي بذلك
 ذلك. على سبيل المثال، قد ينتج المصدر المشوه `FWS-PARSE-017` أثناء الاحتفاظ به
@@ -490,7 +490,7 @@ Node المحيط أو واجهات برمجة تطبيقات المتصفح.
 ```tsx
 <ForgeMonacoEditor
   language="fws"
-  modelValue={"export fn add(value: i32) -> i32 {\n  return value + 1;\n}"}
+  modelValue={'export fn add(value: i32) -> i32 {\n  return value + 1;\n}'}
 />
 ```
 
@@ -507,15 +507,15 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
   readFile: async (uri) => files.get(uri),
   listFiles: async () => [...files.keys()],
   getOptions: async () => ({
-    requestedCapabilities: ["clock.now"],
-    capabilityNames: ["clock.now"],
+    requestedCapabilities: ['clock.now'],
+    capabilityNames: ['clock.now'],
     capabilitySignatures: new Map([
       [
-        "clock.now",
+        'clock.now',
         {
           parameters: [],
-          result: "i64",
-          documentation: "Read the current Unix timestamp.",
+          result: 'i64',
+          documentation: 'Read the current Unix timestamp.',
         },
       ],
     ]),
@@ -525,9 +525,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 <ForgeMonacoEditor
   language="fws"
   forgeWebScript={{ workspaceHost }}
-  modelValue={
-    'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'
-  }
+  modelValue={'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'}
 />;
 ```
 
@@ -542,10 +540,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 تم تحميل:
 
 ```ts
-import {
-  attachForgeWebScriptMonaco,
-  registerForgeWebScriptLanguage,
-} from "@mission-platform/content";
+import { attachForgeWebScriptMonaco, registerForgeWebScriptLanguage } from '@mission-platform/content';
 
 registerForgeWebScriptLanguage(monaco);
 const handle = attachForgeWebScriptMonaco(editor, monaco, { workspaceHost });
@@ -562,9 +557,9 @@ handle.dispose();
 
 ## LSP مقابل مساحات عمل المتصفح
 
-| المستهلك | تنفيذ مساحة العمل | الجذر/حدود الأمان | النقل |
-| --------------- | -------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
-| عميل Node LSP | `RootBoundedForgeWebScriptWorkspaceHost` | جذور نظام الملفات المكوّنة بشكل أساسي؛ القراءات الخارجية مرفوضة | ستديو LSP |
+| المستهلك       | تنفيذ مساحة العمل                            | الجذر/حدود الأمان                                                                     | النقل            |
+| -------------- | -------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------- |
+| عميل Node LSP  | `RootBoundedForgeWebScriptWorkspaceHost`     | جذور نظام الملفات المكوّنة بشكل أساسي؛ القراءات الخارجية مرفوضة                       | ستديو LSP        |
 | موناكو/المتصفح | التطبيق المقدم `ForgeWebScriptWorkspaceHost` | يقرر المضيف عناوين URI/الملفات/الخيارات التي سيتم كشفها؛ لا يوجد افتراض لنظام الملفات | محول قيد التشغيل |
 
 يستخدم كلا المحولين نفس عقود خدمة اللغة ودلالات التحليل،

@@ -1,9 +1,9 @@
+import { forgeWebScriptDefaultPassingMode, forgeWebScriptTypeNameToString } from './ast.js';
+import { createForgeWebScriptIteratorBoundaryDescriptor } from './generics.js';
 import {
   DEFAULT_FORGE_WEB_SCRIPT_STANDARD_LIBRARY_IDENTITY,
   type ForgeWebScriptStandardLibraryIdentity,
 } from './stdlib/regex.js';
-import { forgeWebScriptDefaultPassingMode, forgeWebScriptTypeNameToString } from './ast.js';
-import { createForgeWebScriptIteratorBoundaryDescriptor } from './generics.js';
 
 import type {
   ForgeWebScriptModule,
@@ -312,25 +312,30 @@ function collectionLayouts(module: ForgeWebScriptModule): readonly ForgeWebScrip
   const statementTypes = (statements: readonly ForgeWebScriptStatement[]): void => {
     for (const statement of statements) {
       switch (statement.kind) {
-        case 'let':
+        case 'let': {
           types.push(statement.type);
           break;
-        case 'if':
+        }
+        case 'if': {
           statementTypes(statement.consequent);
           if (statement.alternate !== undefined) statementTypes(statement.alternate);
           break;
+        }
         case 'while':
         case 'do-while':
         case 'for':
-        case 'iterator-loop':
+        case 'iterator-loop': {
           statementTypes(statement.body);
           break;
-        case 'switch':
+        }
+        case 'switch': {
           for (const arm of statement.cases) statementTypes(arm.body);
           if (statement.defaultCase !== undefined) statementTypes(statement.defaultCase);
           break;
-        default:
+        }
+        default: {
           break;
+        }
       }
     }
   };
@@ -408,7 +413,7 @@ export function createForgeWebScriptAbiManifest(
   const targetFeatures = Object.fromEntries(
     (Object.keys(options.targetFeatures ?? {}) as (keyof ForgeWebScriptTargetFeatures)[])
       .filter((feature) => options.targetFeatures?.[feature] === true)
-      .sort()
+      .toSorted()
       .map((feature) => [feature, true]),
   ) as ForgeWebScriptTargetFeatures;
   const memory64 = targetFeatures.memory64 === true;

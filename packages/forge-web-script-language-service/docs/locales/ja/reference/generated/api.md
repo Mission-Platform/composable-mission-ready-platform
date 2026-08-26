@@ -16,18 +16,22 @@
 **種類:** 関数
 
 ```typescript
-function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeWebScriptWorkspaceOptions, analysisOptions: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysis
+function analyzeForgeWebScript(
+  document: ForgeWebScriptDocument,
+  options: ForgeWebScriptWorkspaceOptions,
+  analysisOptions: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysis;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ドキュメント | ForgeWebScriptドキュメント |  |
-|オプション | ForgeWebScriptワークスペースオプション |  |
-|分析オプション | ForgeWebScriptAnalysisオプション |  |
+| 名前           | タイプ                                 | 説明 |
+| -------------- | -------------------------------------- | ---- |
+| ドキュメント   | ForgeWebScriptドキュメント             |      |
+| オプション     | ForgeWebScriptワークスペースオプション |      |
+| 分析オプション | ForgeWebScriptAnalysisオプション       |      |
 
 ## `src/completion`
 
@@ -36,19 +40,24 @@ function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeW
 **種類:** 関数
 
 ```typescript
-function completeForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): readonly ForgeWebScriptCompletion[]
+function completeForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): readonly ForgeWebScriptCompletion[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|位置 | ForgeWebScript位置 |  |
-|記号 | ForgeWebScriptSymbol[] | readonly  |
-|オプション | ForgeWebScriptワークスペースオプション |  |
+| 名前       | タイプ                                 | 説明     |
+| ---------- | -------------------------------------- | -------- |
+| ソース     | 文字列                                 |          |
+| 位置       | ForgeWebScript位置                     |          |
+| 記号       | ForgeWebScriptSymbol[]                 | readonly |
+| オプション | ForgeWebScriptワークスペースオプション |          |
 
 ## `src/documents`
 
@@ -57,16 +66,16 @@ function completeForgeWebScript(source: string, position: ForgeWebScriptPosition
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService
+function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ホスト | ForgeWebScriptワークスペースホスト |  |
+| 名前   | タイプ                             | 説明 |
+| ------ | ---------------------------------- | ---- |
+| ホスト | ForgeWebScriptワークスペースホスト |      |
 
 ## `src/features`
 
@@ -75,91 +84,112 @@ function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost)
 **種類:** 関数
 
 ```typescript
-function codeLensesForgeWebScript(module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], referenceCount: (symbol: ForgeWebScriptSymbol) => number): readonly ForgeWebScriptCodeLens[]
+function codeLensesForgeWebScript(
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  referenceCount: (symbol: ForgeWebScriptSymbol) => number,
+): readonly ForgeWebScriptCodeLens[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | ForgeWebScriptモジュール \|未定義 |  |
-|記号 | ForgeWebScriptSymbol[] | readonly  |
-|参照カウント | (シンボル: ForgeWebScriptSymbol) => 数値 |  |
+| 名前         | タイプ                                   | 説明     |
+| ------------ | ---------------------------------------- | -------- |
+| モジュール   | ForgeWebScriptモジュール \|未定義        |          |
+| 記号         | ForgeWebScriptSymbol[]                   | readonly |
+| 参照カウント | (シンボル: ForgeWebScriptSymbol) => 数値 |          |
 
 ### ドキュメントシンボルForgeWebScript
 
 **種類:** 関数
 
 ```typescript
-function documentSymbolsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[]): readonly ForgeWebScriptDocumentSymbol[]
+function documentSymbolsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+): readonly ForgeWebScriptDocumentSymbol[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|モジュール | ForgeWebScriptモジュール \|未定義 |  |
-|記号 | ForgeWebScriptSymbol[] | readonly  |
+| 名前       | タイプ                            | 説明     |
+| ---------- | --------------------------------- | -------- |
+| ソース     | 文字列                            |          |
+| モジュール | ForgeWebScriptモジュール \|未定義 |          |
+| 記号       | ForgeWebScriptSymbol[]            | readonly |
 
 ### 折りたたみ範囲ForgeWebScript
 
 **種類:** 関数
 
 ```typescript
-function foldingRangesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined): readonly ForgeWebScriptFoldingRange[]
+function foldingRangesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+): readonly ForgeWebScriptFoldingRange[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|モジュール | ForgeWebScriptモジュール \|未定義 |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| ソース     | 文字列                            |      |
+| モジュール | ForgeWebScriptモジュール \|未定義 |      |
 
 ### インレイヒントForgeWebScript
 
 **種類:** 関数
 
 ```typescript
-function inlayHintsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, requestedRange?: ForgeWebScriptRange, importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment): readonly ForgeWebScriptInlayHint[]
+function inlayHintsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  requestedRange?: ForgeWebScriptRange,
+  importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment,
+): readonly ForgeWebScriptInlayHint[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|モジュール | ForgeWebScriptモジュール \|未定義 |  |
-|要求された範囲 | ForgeWebScriptRange |  |
-|インポートタイプ環境 | ForgeWebScriptImportTypeEnvironment |  |
+| 名前                 | タイプ                              | 説明 |
+| -------------------- | ----------------------------------- | ---- |
+| ソース               | 文字列                              |      |
+| モジュール           | ForgeWebScriptモジュール \|未定義   |      |
+| 要求された範囲       | ForgeWebScriptRange                 |      |
+| インポートタイプ環境 | ForgeWebScriptImportTypeEnvironment |      |
 
 ### inlineValuesForgeWebScript
 
 **種類:** 関数
 
 ```typescript
-function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], requestedRange?: ForgeWebScriptRange): readonly ForgeWebScriptInlineValue[]
+function inlineValuesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  requestedRange?: ForgeWebScriptRange,
+): readonly ForgeWebScriptInlineValue[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|モジュール | ForgeWebScriptモジュール \|未定義 |  |
-|記号 | ForgeWebScriptSymbol[] | readonly  |
-|要求された範囲 | ForgeWebScriptRange |  |
+| 名前           | タイプ                            | 説明     |
+| -------------- | --------------------------------- | -------- |
+| ソース         | 文字列                            |          |
+| モジュール     | ForgeWebScriptモジュール \|未定義 |          |
+| 記号           | ForgeWebScriptSymbol[]            | readonly |
+| 要求された範囲 | ForgeWebScriptRange               |          |
 
 ## `src/hover`
 
@@ -168,19 +198,24 @@ function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule
 **種類:** 関数
 
 ```typescript
-function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): ForgeWebScriptHover | undefined
+function hoverForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): ForgeWebScriptHover | undefined;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|位置 | ForgeWebScript位置 |  |
-|記号 | ForgeWebScriptSymbol[] | readonly  |
-|オプション | ForgeWebScriptワークスペースオプション |  |
+| 名前       | タイプ                                 | 説明     |
+| ---------- | -------------------------------------- | -------- |
+| ソース     | 文字列                                 |          |
+| 位置       | ForgeWebScript位置                     |          |
+| 記号       | ForgeWebScriptSymbol[]                 | readonly |
+| オプション | ForgeWebScriptワークスペースオプション |          |
 
 ## `src/lsif`
 
@@ -189,7 +224,7 @@ function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, s
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph
+function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph;
 ```
 
 言語サービス ワークスペースのスナップショットから決定論的な LSIF グラフを作成します。
@@ -199,16 +234,16 @@ function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScrip
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | ForgeWebScriptLsifInput |  |
+| 名前 | タイプ                  | 説明 |
+| ---- | ----------------------- | ---- |
+| 入力 | ForgeWebScriptLsifInput |      |
 
 ### createForgeWebScriptLsifGraph
 
 **種類:** 定数
 
 ```typescript
-export const createForgeWebScriptLsifGraph
+export const createForgeWebScriptLsifGraph;
 ```
 
 説明はありません。
@@ -218,7 +253,7 @@ export const createForgeWebScriptLsifGraph
 **種類:** 定数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LSIF_VERSION
+export const FORGE_WEB_SCRIPT_LSIF_VERSION;
 ```
 
 このモジュールによって表される LSIF バージョン。
@@ -258,7 +293,18 @@ export interface ForgeWebScriptLsifEdge
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptLsifEdgeLabel = | 'contains' | 'next' | 'item' | 'textDocument/definition' | 'textDocument/declaration' | 'textDocument/implementation' | 'textDocument/references' | 'textDocument/documentSymbol' | 'textDocument/hover' | 'moniker' | 'diagnostic';
+export type ForgeWebScriptLsifEdgeLabel =
+  | 'contains'
+  | 'next'
+  | 'item'
+  | 'textDocument/definition'
+  | 'textDocument/declaration'
+  | 'textDocument/implementation'
+  | 'textDocument/references'
+  | 'textDocument/documentSymbol'
+  | 'textDocument/hover'
+  | 'moniker'
+  | 'diagnostic';
 ```
 
 説明はありません。
@@ -368,7 +414,14 @@ export interface ForgeWebScriptLsifResultVertex
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | ForgeWebScriptLsifProjectVertex | ForgeWebScriptLsifDocumentVertex | ForgeWebScriptLsifRangeVertex | ForgeWebScriptLsifResultSetVertex | ForgeWebScriptLsifResultVertex | ForgeWebScriptLsifMonikerVertex;
+export type ForgeWebScriptLsifVertex =
+  | ForgeWebScriptLsifMetadataVertex
+  | ForgeWebScriptLsifProjectVertex
+  | ForgeWebScriptLsifDocumentVertex
+  | ForgeWebScriptLsifRangeVertex
+  | ForgeWebScriptLsifResultSetVertex
+  | ForgeWebScriptLsifResultVertex
+  | ForgeWebScriptLsifMonikerVertex;
 ```
 
 説明はありません。
@@ -378,7 +431,20 @@ export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | Forg
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document' | 'range' | 'resultSet' | 'definitionResult' | 'declarationResult' | 'implementationResult' | 'referenceResult' | 'documentSymbolResult' | 'hoverResult' | 'moniker' | 'diagnosticResult';
+export type ForgeWebScriptLsifVertexLabel =
+  | 'metaData'
+  | 'project'
+  | 'document'
+  | 'range'
+  | 'resultSet'
+  | 'definitionResult'
+  | 'declarationResult'
+  | 'implementationResult'
+  | 'referenceResult'
+  | 'documentSymbolResult'
+  | 'hoverResult'
+  | 'moniker'
+  | 'diagnosticResult';
 ```
 
 説明はありません。
@@ -388,23 +454,23 @@ export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document
 **種類:** 関数
 
 ```typescript
-function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string
+function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string;
 ```
 
 LSIF レコードを安定した JSONL としてシリアル化し、末尾に改行を付けません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|グラフ | ForgeWebScriptLsifGraph |  |
+| 名前   | タイプ                  | 説明 |
+| ------ | ----------------------- | ---- |
+| グラフ | ForgeWebScriptLsifGraph |      |
 
 ### SerializeForgeWebScriptLsifGraph
 
 **種類:** 定数
 
 ```typescript
-export const serializeForgeWebScriptLsifGraph
+export const serializeForgeWebScriptLsifGraph;
 ```
 
 説明はありません。
@@ -416,86 +482,86 @@ export const serializeForgeWebScriptLsifGraph
 **種類:** 関数
 
 ```typescript
-function containsOffset(range: ForgeWebScriptRange, offset: number): boolean
+function containsOffset(range: ForgeWebScriptRange, offset: number): boolean;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|範囲 | ForgeWebScriptRange |  |
-|オフセット |番号 |  |
+| 名前       | タイプ              | 説明 |
+| ---------- | ------------------- | ---- |
+| 範囲       | ForgeWebScriptRange |      |
+| オフセット | 番号                |      |
 
 ### オフセット位置
 
 **種類:** 関数
 
 ```typescript
-function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number
+function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|位置 | ForgeWebScript位置 |  |
+| 名前   | タイプ             | 説明 |
+| ------ | ------------------ | ---- |
+| ソース | 文字列             |      |
+| 位置   | ForgeWebScript位置 |      |
 
 ### オフセットの位置
 
 **種類:** 関数
 
 ```typescript
-function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition
+function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|オフセット |番号 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ソース     | 文字列 |      |
+| オフセット | 番号   |      |
 
 ### オフセットからの範囲
 
 **種類:** 関数
 
 ```typescript
-function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange
+function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|開始 |番号 |  |
-|終わり |番号 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ソース | 文字列 |      |
+| 開始   | 番号   |      |
+| 終わり | 番号   |      |
 
 ### スパンからの範囲
 
 **種類:** 関数
 
 ```typescript
-function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange
+function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|スパン | ForgeWebScriptソーススパン |  |
+| 名前   | タイプ                     | 説明 |
+| ------ | -------------------------- | ---- |
+| ソース | 文字列                     |      |
+| スパン | ForgeWebScriptソーススパン |      |
 
 ## `src/symbols`
 
@@ -504,34 +570,38 @@ function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWeb
 **種類:** 関数
 
 ```typescript
-function buildSymbolIndex(source: string, module: ForgeWebScriptModule | undefined, tokens: readonly ForgeWebScriptTokenClassification[]): ForgeWebScriptSymbolIndex
+function buildSymbolIndex(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  tokens: readonly ForgeWebScriptTokenClassification[],
+): ForgeWebScriptSymbolIndex;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|モジュール | ForgeWebScriptモジュール \|未定義 |  |
-|トークン | ForgeWebScriptTokenClassification[] | readonly  |
+| 名前       | タイプ                              | 説明     |
+| ---------- | ----------------------------------- | -------- |
+| ソース     | 文字列                              |          |
+| モジュール | ForgeWebScriptモジュール \|未定義   |          |
+| トークン   | ForgeWebScriptTokenClassification[] | readonly |
 
 ### 式名
 
 **種類:** 関数
 
 ```typescript
-function expressionName(expression: ForgeWebScriptExpression): string | undefined
+function expressionName(expression: ForgeWebScriptExpression): string | undefined;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|式 | ForgeWebScriptExpression |  |
+| 名前 | タイプ                   | 説明 |
+| ---- | ------------------------ | ---- |
+| 式   | ForgeWebScriptExpression |      |
 
 ### ForgeWebScriptSymbolIndex
 
@@ -550,33 +620,33 @@ export interface ForgeWebScriptSymbolIndex
 **種類:** 関数
 
 ```typescript
-function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[]
+function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|ファイル名 |  |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ソース     | 文字列 |      |
+| ファイル名 |        |      |
 
 ### トークンの種類と分類
 
 **種類:** 関数
 
 ```typescript
-function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind']
+function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind'];
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|種類 | ForgeWebScriptTokenKind |  |
+| 名前 | タイプ                  | 説明 |
+| ---- | ----------------------- | ---- |
+| 種類 | ForgeWebScriptTokenKind |      |
 
 ## `src/types`
 
@@ -907,17 +977,20 @@ export interface ForgeWebScriptWorkspaceOptions
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptWorkspaceIndex(callbacks: WorkspaceIndexCallbacks, host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptWorkspaceSemanticIndex
+function createForgeWebScriptWorkspaceIndex(
+  callbacks: WorkspaceIndexCallbacks,
+  host?: ForgeWebScriptWorkspaceHost,
+): ForgeWebScriptWorkspaceSemanticIndex;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コールバック | WorkspaceIndexCallbacks |  |
-|ホスト | ForgeWebScriptワークスペースホスト |  |
+| 名前         | タイプ                             | 説明 |
+| ------------ | ---------------------------------- | ---- |
+| コールバック | WorkspaceIndexCallbacks            |      |
+| ホスト       | ForgeWebScriptワークスペースホスト |      |
 
 ### ForgeWebScriptワークスペースSemanticIndex
 

@@ -139,7 +139,7 @@ Von `ForgeMonacoEditor` verwendete Anbieter:
 
 - Monaco Hover `contents` enthält die Signatur und die gerenderte Dokumentation als
   separate Markdown-kompatible Werte;
-– Das Feld `documentation` eines Quellfunktionsvorschlags enthält dasselbe
+  – Das Feld `documentation` eines Quellfunktionsvorschlags enthält dasselbe
   gerenderter String als LSP-Vervollständigung;
 - Die lexikalische `comment`-Token-Klassifizierung bleibt für beide unverändert
   gewöhnliche Kommentare und Dokumentationsblockkommentare.
@@ -459,12 +459,12 @@ Der LSP-Server veröffentlicht `source: "forge-web-script"`. Die Phase und der H
 auch im Diagnoseobjekt `data` enthalten. Typische stabile Codefamilien
 sind:
 
-| Codefamilie | Phase | Bedeutung |
-| ------------- | ------------ | ------------------------------------------------------------------------ |
-| `FWS-LEX-*` | `lex` | Ungültige Zeichen/Escapezeichen, rohe Zeichenfolgenzeilen-Abschlusszeichen oder nicht abgeschlossene Zeichenfolgen/Blockkommentare |
-| `FWS-PARSE-*` | `parse` | Ungültige Modul-, Deklarations-, Anweisungs- oder Ausdruckssyntax |
-| `FWS-TYPE-*` | `type-check` | Ungültige Typen, Namen, Operatoren, Argumente oder Rückgaben |
-| `FWS-ABI-*` | `abi` | Doppelte Namen, verweigerte Funktionen, Exporte oder Importe |
+| Codefamilie   | Phase        | Bedeutung                                                                                                                          |
+| ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `FWS-LEX-*`   | `lex`        | Ungültige Zeichen/Escapezeichen, rohe Zeichenfolgenzeilen-Abschlusszeichen oder nicht abgeschlossene Zeichenfolgen/Blockkommentare |
+| `FWS-PARSE-*` | `parse`      | Ungültige Modul-, Deklarations-, Anweisungs- oder Ausdruckssyntax                                                                  |
+| `FWS-TYPE-*`  | `type-check` | Ungültige Typen, Namen, Operatoren, Argumente oder Rückgaben                                                                       |
+| `FWS-ABI-*`   | `abi`        | Doppelte Namen, verweigerte Funktionen, Exporte oder Importe                                                                       |
 
 Fehlerhafte Eingaben werden weiterhin tokenisiert und analysiert, sofern die Parser-Wiederherstellung dies zulässt
 es. Beispielsweise kann eine fehlerhafte Quelle beim Beibehalten `FWS-PARSE-017` erzeugen
@@ -490,7 +490,7 @@ Die einfachste Komponentenverwendung ist:
 ```tsx
 <ForgeMonacoEditor
   language="fws"
-  modelValue={"export fn add(value: i32) -> i32 {\n  return value + 1;\n}"}
+  modelValue={'export fn add(value: i32) -> i32 {\n  return value + 1;\n}'}
 />
 ```
 
@@ -507,15 +507,15 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
   readFile: async (uri) => files.get(uri),
   listFiles: async () => [...files.keys()],
   getOptions: async () => ({
-    requestedCapabilities: ["clock.now"],
-    capabilityNames: ["clock.now"],
+    requestedCapabilities: ['clock.now'],
+    capabilityNames: ['clock.now'],
     capabilitySignatures: new Map([
       [
-        "clock.now",
+        'clock.now',
         {
           parameters: [],
-          result: "i64",
-          documentation: "Read the current Unix timestamp.",
+          result: 'i64',
+          documentation: 'Read the current Unix timestamp.',
         },
       ],
     ]),
@@ -525,9 +525,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 <ForgeMonacoEditor
   language="fws"
   forgeWebScript={{ workspaceHost }}
-  modelValue={
-    'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'
-  }
+  modelValue={'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'}
 />;
 ```
 
@@ -542,10 +540,7 @@ Für eine zwingende Integration verwenden Sie denselben Adapter direkt nach Mona
 geladen:
 
 ```ts
-import {
-  attachForgeWebScriptMonaco,
-  registerForgeWebScriptLanguage,
-} from "@mission-platform/content";
+import { attachForgeWebScriptMonaco, registerForgeWebScriptLanguage } from '@mission-platform/content';
 
 registerForgeWebScriptLanguage(monaco);
 const handle = attachForgeWebScriptMonaco(editor, monaco, { workspaceHost });
@@ -562,10 +557,10 @@ Marker und die eigene Sprachdienstinstanz.
 
 ## LSP versus Browser-Arbeitsbereiche
 
-| Verbraucher | Arbeitsbereichsimplementierung | Root-/Sicherheitsgrenze | Transport |
-| --------------- | -------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
-| Node LSP-Client | `RootBoundedForgeWebScriptWorkspaceHost` | Kanonisierte konfigurierte Dateisystem-Roots; Externe Lesevorgänge werden abgelehnt | stdio LSP |
-| Monaco/Browser | Von der Anwendung bereitgestelltes `ForgeWebScriptWorkspaceHost` | Der Host entscheidet, welche URIs/Dateien/Optionen verfügbar gemacht werden; keine Dateisystemannahme | In-Process-Adapter |
+| Verbraucher     | Arbeitsbereichsimplementierung                                   | Root-/Sicherheitsgrenze                                                                               | Transport          |
+| --------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------ |
+| Node LSP-Client | `RootBoundedForgeWebScriptWorkspaceHost`                         | Kanonisierte konfigurierte Dateisystem-Roots; Externe Lesevorgänge werden abgelehnt                   | stdio LSP          |
+| Monaco/Browser  | Von der Anwendung bereitgestelltes `ForgeWebScriptWorkspaceHost` | Der Host entscheidet, welche URIs/Dateien/Optionen verfügbar gemacht werden; keine Dateisystemannahme | In-Process-Adapter |
 
 Beide Adapter verwenden dieselben Sprachdienstverträge und dieselbe Analysesemantik.
 Sie teilen sich jedoch keinen Dokumentenspeicher oder Transport. Ein Browser-Host darf das nicht

@@ -61,7 +61,7 @@ describe('Forge Web Script self-hosted compiler bootstrap', () => {
   it('detects a deliberately divergent parser VM module and suppresses emission', () => {
     const source = 'export fn answer() -> i32 { return 42; }';
     const diverged = runForgeWebScriptSelfHostedCompiler(input(source), 'interpret', {
-      parserStageVmModuleOptions: { saltXor: 0xdead_beef },
+      parserStageVmModuleOptions: { saltXor: 0xde_ad_be_ef },
     });
     expect(diverged.parity).toBe(false);
     expect(diverged.stages?.[0]?.stage).toBe('lex');
@@ -74,7 +74,7 @@ describe('Forge Web Script self-hosted compiler bootstrap', () => {
     const service = createForgeWebScriptCompilerService({
       selfHostedRunner: (request, mode) =>
         runForgeWebScriptSelfHostedLexStage(request, mode, {
-          parserStageVmModuleOptions: { saltXor: 0xdead_beef },
+          parserStageVmModuleOptions: { saltXor: 0xde_ad_be_ef },
         }),
       selfHostedVmMode: 'interpret',
     });

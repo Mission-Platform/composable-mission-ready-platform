@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { ForgeWebScriptTrap } from './traps.js';
+
 import {
   createForgeWebScriptIterator,
   createForgeWebScriptWasmThreadScheduler,
@@ -18,8 +20,7 @@ import {
   selectForgeWebScriptParallelStrategy,
   FORGE_WEB_SCRIPT_PARALLEL_CAPABILITIES,
   FORGE_WEB_SCRIPT_THREADING_CAPABILITIES,
-} from './index.js';
-import { ForgeWebScriptTrap } from './traps.js';
+} from ".";
 
 const descriptor = {
   id: 'numbers',
@@ -80,7 +81,8 @@ describe('Forge Web Script parallel iterator runtime', () => {
   it('provides ordered parallel terminals and stable empty options', async () => {
     const options = { strategy: 'serial' as const };
     const source = [4, 5, 6];
-    expect((await forgeWebScriptIteratorParCollect(source, options)).values).toEqual(source);
+    const collected = await forgeWebScriptIteratorParCollect(source, options);
+    expect(collected.values).toEqual(source);
     expect(await forgeWebScriptIteratorParFold(source, 0, (sum, value) => sum + value, options)).toBe(15);
     expect(await forgeWebScriptIteratorParFirst(source, options)).toEqual({ kind: 'some', value: 4 });
     expect(await forgeWebScriptIteratorParLast(source, options)).toEqual({ kind: 'some', value: 6 });

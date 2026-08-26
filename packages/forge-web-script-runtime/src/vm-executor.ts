@@ -1,7 +1,7 @@
 import { ForgeWebScriptMemory } from './memory.js';
+import { createForgeWebScriptTraceRecorder, summarizeForgeWebScriptVmValue } from './trace.js';
 import { attachForgeWebScriptTrace, toForgeWebScriptHostError, ForgeWebScriptTrap } from './traps.js';
 import { prepareForgeWebScriptVmWasm } from './vm-wasm.js';
-import { createForgeWebScriptTraceRecorder, summarizeForgeWebScriptVmValue } from './trace.js';
 
 import type {
   ForgeWebScriptVmAotArtifact,

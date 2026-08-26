@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { checkForgeWebScript, parseForgeWebScript } from '@mission-platform/forge-web-script';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { checkForgeWebScript, parseForgeWebScript } from '@mission-platform/forge-web-script';
 
 import { assertForgeWebScriptDiagnostic, assertForgeWebScriptNoDiagnostics } from './diagnostics.js';
 import {

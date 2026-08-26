@@ -5,9 +5,8 @@ import path from 'node:path';
 import type {
   ForgeWebScriptLinkMode,
   ForgeWebScriptOptimization,
-  ForgeWebScriptVmExecutionMode,
+  ForgeWebScriptVmExecutionMode, ForgeWebScriptSoNBoundsChecks 
 } from '@mission-platform/forge-web-script';
-import type { ForgeWebScriptSoNBoundsChecks } from '@mission-platform/forge-web-script';
 
 export type ForgeWebScriptCliCommand = 'check' | 'compile' | 'trace' | 'inspect-sonir';
 
@@ -103,7 +102,7 @@ export function parseForgeWebScriptCliArgs(argv: readonly string[], cwd = proces
   let traceCapture: ForgeWebScriptCliTraceOptions['capture'] = 'events';
   let maxTraceEvents = 512;
   let maxTraceBytes = 65_536;
-  let maxSnapshotBytes = 4_096;
+  let maxSnapshotBytes = 4096;
   let traceRequested = false;
   const entries: string[] = [];
   const roots: string[] = [];

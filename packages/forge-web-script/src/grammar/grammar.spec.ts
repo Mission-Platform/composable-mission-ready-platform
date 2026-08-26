@@ -17,7 +17,7 @@ describe('Forge Web Script grammar contract', () => {
       'expression',
       'match-expression',
     ]) {
-      expect(grammar).toMatch(new RegExp(`^${production}\\s*=`, 'm'));
+      expect(grammar).toMatch(new RegExp(String.raw`^${production}\s*=`, 'm'));
     }
   });
 

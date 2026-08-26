@@ -459,12 +459,12 @@ De LSP-server publiceert `source: "forge-web-script"`. De fase en hint zijn
 ook opgenomen in het diagnostische `data`-object. Typische stabiele codefamilies
 zijn:
 
-| Codeer familie | Fase | Betekenis |
-| ------------- | ------------ | ------------------------------------------------------------------------ |
-| `FWS-LEX-*` | `lex` | Ongeldige tekens/escapes, onbewerkte tekenreeksregelbeëindigers of niet-afgesloten tekenreeksen/blokopmerkingen |
-| `FWS-PARSE-*` | `parse` | Ongeldige syntaxis van module, declaratie, instructie of expressie |
-| `FWS-TYPE-*` | `type-check` | Ongeldige typen, namen, operators, argumenten of retourneert |
-| `FWS-ABI-*` | `abi` | Dubbele namen, geweigerde mogelijkheden, export of import |
+| Codeer familie | Fase         | Betekenis                                                                                                       |
+| -------------- | ------------ | --------------------------------------------------------------------------------------------------------------- |
+| `FWS-LEX-*`    | `lex`        | Ongeldige tekens/escapes, onbewerkte tekenreeksregelbeëindigers of niet-afgesloten tekenreeksen/blokopmerkingen |
+| `FWS-PARSE-*`  | `parse`      | Ongeldige syntaxis van module, declaratie, instructie of expressie                                              |
+| `FWS-TYPE-*`   | `type-check` | Ongeldige typen, namen, operators, argumenten of retourneert                                                    |
+| `FWS-ABI-*`    | `abi`        | Dubbele namen, geweigerde mogelijkheden, export of import                                                       |
 
 Misvormde invoer wordt nog steeds getokeniseerd en geanalyseerd waar parserherstel dit mogelijk maakt
 het. Een verkeerd opgemaakte bron kan bijvoorbeeld `FWS-PARSE-017` produceren terwijl deze behouden blijft
@@ -490,7 +490,7 @@ Het eenvoudigste componentgebruik is:
 ```tsx
 <ForgeMonacoEditor
   language="fws"
-  modelValue={"export fn add(value: i32) -> i32 {\n  return value + 1;\n}"}
+  modelValue={'export fn add(value: i32) -> i32 {\n  return value + 1;\n}'}
 />
 ```
 
@@ -507,15 +507,15 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
   readFile: async (uri) => files.get(uri),
   listFiles: async () => [...files.keys()],
   getOptions: async () => ({
-    requestedCapabilities: ["clock.now"],
-    capabilityNames: ["clock.now"],
+    requestedCapabilities: ['clock.now'],
+    capabilityNames: ['clock.now'],
     capabilitySignatures: new Map([
       [
-        "clock.now",
+        'clock.now',
         {
           parameters: [],
-          result: "i64",
-          documentation: "Read the current Unix timestamp.",
+          result: 'i64',
+          documentation: 'Read the current Unix timestamp.',
         },
       ],
     ]),
@@ -525,9 +525,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 <ForgeMonacoEditor
   language="fws"
   forgeWebScript={{ workspaceHost }}
-  modelValue={
-    'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'
-  }
+  modelValue={'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'}
 />;
 ```
 
@@ -542,10 +540,7 @@ Voor imperatieve integratie gebruikt u dezelfde adapter direct nadat Monaco dat 
 geladen:
 
 ```ts
-import {
-  attachForgeWebScriptMonaco,
-  registerForgeWebScriptLanguage,
-} from "@mission-platform/content";
+import { attachForgeWebScriptMonaco, registerForgeWebScriptLanguage } from '@mission-platform/content';
 
 registerForgeWebScriptLanguage(monaco);
 const handle = attachForgeWebScriptMonaco(editor, monaco, { workspaceHost });
@@ -562,10 +557,10 @@ markers en het eigen taalservice-exemplaar.
 
 ## LSP versus browserwerkruimten
 
-| Consument | Implementatie van de werkplek | Root-/beveiligingsgrens | Vervoer |
-| --------------- | -------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
-| Node LSP-client | `RootBoundedForgeWebScriptWorkspaceHost` | Gecanoniseerde geconfigureerde bestandssysteemwortels; externe lezingen worden afgewezen | stdio LSP |
-| Monaco/browser | Door de applicatie geleverde `ForgeWebScriptWorkspaceHost` | De host beslist welke URI's/bestanden/opties beschikbaar worden gesteld; geen bestandssysteemaanname | In-procesadapter |
+| Consument       | Implementatie van de werkplek                              | Root-/beveiligingsgrens                                                                              | Vervoer          |
+| --------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------- |
+| Node LSP-client | `RootBoundedForgeWebScriptWorkspaceHost`                   | Gecanoniseerde geconfigureerde bestandssysteemwortels; externe lezingen worden afgewezen             | stdio LSP        |
+| Monaco/browser  | Door de applicatie geleverde `ForgeWebScriptWorkspaceHost` | De host beslist welke URI's/bestanden/opties beschikbaar worden gesteld; geen bestandssysteemaanname | In-procesadapter |
 
 Beide adapters gebruiken dezelfde taalservicecontracten en analysesemantiek,
 maar ze delen geen documentenopslag of -transport. Een browserhost mag dat niet

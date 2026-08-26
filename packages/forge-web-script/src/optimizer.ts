@@ -201,8 +201,9 @@ function expressionPurity(
   switch (expression.kind) {
     case 'literal':
     case 'identifier':
-    case 'function-value':
+    case 'function-value': {
       return 'pure';
+    }
     case 'call': {
       if (expression.standardLibrary !== undefined)
         return PURE_STANDARD_LIBRARY.has(expression.standardLibrary) &&
@@ -215,36 +216,43 @@ function expressionPurity(
         ? 'pure'
         : 'effectful';
     }
-    case 'unary':
+    case 'unary': {
       return expressionPurity(expression.operand, functions);
-    case 'binary':
+    }
+    case 'binary': {
       return expressionPurity(expression.left, functions) === 'pure' &&
         expressionPurity(expression.right, functions) === 'pure'
         ? 'pure'
         : 'effectful';
-    case 'struct-value':
+    }
+    case 'struct-value': {
       return Object.values(expression.fields).every((value) => expressionPurity(value, functions) === 'pure')
         ? 'pure'
         : 'effectful';
-    case 'enum-value':
+    }
+    case 'enum-value': {
       return expression.arguments.every((argument) => expressionPurity(argument, functions) === 'pure')
         ? 'pure'
         : 'effectful';
+    }
     case 'array-literal':
-    case 'vector-literal':
+    case 'vector-literal': {
       return expression.elements.every((element) => expressionPurity(element, functions) === 'pure')
         ? 'pure'
         : 'effectful';
-    case 'index':
+    }
+    case 'index': {
       return expressionPurity(expression.receiver, functions) === 'pure' &&
         expressionPurity(expression.index, functions) === 'pure'
         ? 'pure'
         : 'effectful';
-    case 'match':
+    }
+    case 'match': {
       return expressionPurity(expression.value, functions) === 'pure' &&
         expression.arms.every((arm) => expressionPurity(arm.value, functions) === 'pure')
         ? 'pure'
         : 'effectful';
+    }
   }
 }
 
@@ -573,13 +581,15 @@ function calledFunctions(expression: ForgeWebScriptIrExpression, names: Set<stri
       break;
     }
     case 'array-literal':
-    case 'vector-literal':
+    case 'vector-literal': {
       for (const element of expression.elements) calledFunctions(element, names);
       break;
-    case 'index':
+    }
+    case 'index': {
       calledFunctions(expression.receiver, names);
       calledFunctions(expression.index, names);
       break;
+    }
     // No default
   }
 }
@@ -619,13 +629,15 @@ function calledFunctionsInStatements(statements: readonly ForgeWebScriptIrStatem
           for (const arm of statement.arms) calledFunctions(arm.value, names);
           break;
         }
-        case 'yield':
+        case 'yield': {
           calledFunctions(statement.value, names);
           break;
-        case 'iterator-loop':
+        }
+        case 'iterator-loop': {
           calledFunctions(statement.iterator, names);
           calledFunctionsInStatements(statement.body, names);
           break;
+        }
         // No default
       }
   }
@@ -702,7 +714,7 @@ function inlineExpression(
   const visit = (value: ForgeWebScriptIrExpression): ForgeWebScriptIrExpression => {
     const nested =
       value.kind === 'call'
-        ? { ...value, arguments: value.arguments.map(visit) }
+        ? { ...value, arguments: value.arguments.map((argument) => visit(argument)) }
         : value.kind === 'unary'
           ? { ...value, operand: visit(value.operand) }
           : value.kind === 'binary'
@@ -713,7 +725,7 @@ function inlineExpression(
                   fields: Object.fromEntries(Object.entries(value.fields).map(([name, field]) => [name, visit(field)])),
                 }
               : value.kind === 'enum-value'
-                ? { ...value, arguments: value.arguments.map(visit) }
+                ? { ...value, arguments: value.arguments.map((argument) => visit(argument)) }
                 : value.kind === 'match'
                   ? {
                       ...value,

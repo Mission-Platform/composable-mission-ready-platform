@@ -3,7 +3,6 @@ import type {
   ForgeWebScriptFrontendResult,
   ForgeWebScriptTargetFeatures,
 } from '../contracts.js';
-import type { ForgeWebScriptSoNBoundsChecks } from '../son-ir.js';
 import type {
   ForgeWebScriptDiagnostic,
   ForgeWebScriptDiagnosticSeverity,
@@ -11,6 +10,7 @@ import type {
 } from '../diagnostics.js';
 import type { ForgeWebScriptIrModule } from '../ir.js';
 import type { ForgeWebScriptAbiManifest, ForgeWebScriptSourceImport } from '../manifest.js';
+import type { ForgeWebScriptSoNBoundsChecks } from '../son-ir.js';
 
 export type ForgeWebScriptAnalysisProfile = 'development' | 'strict';
 

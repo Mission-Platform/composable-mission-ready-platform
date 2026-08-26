@@ -1,9 +1,9 @@
+import type { ForgeWebScriptTraceOptions, ForgeWebScriptTraceReport } from './trace.js';
 import type {
   ForgeWebScriptAggregateLayout,
   ForgeWebScriptOwnership,
   ForgeWebScriptSpecialization,
 } from '@mission-platform/forge-web-script';
-import type { ForgeWebScriptTraceOptions, ForgeWebScriptTraceReport } from './trace.js';
 
 export type ForgeWebScriptVmExecutionMode = 'interpret' | 'jit' | 'aot';
 

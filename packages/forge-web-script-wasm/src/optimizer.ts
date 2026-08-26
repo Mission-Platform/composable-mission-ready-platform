@@ -49,18 +49,40 @@ type Environment = ReadonlyMap<string, ForgeWebScriptWasmExpression>;
 function assignedNames(statements: readonly ForgeWebScriptWasmStatement[], names = new Set<string>()): Set<string> {
   for (const statement of statements) {
     if (statement.kind === 'assignment' && statement.index === undefined) names.add(statement.name);
-    else if (statement.kind === 'if') {
-      assignedNames(statement.consequent, names);
-      if (statement.alternate !== undefined) assignedNames(statement.alternate, names);
-    } else if (statement.kind === 'switch') {
-      for (const arm of statement.cases) assignedNames(arm.body, names);
-      if (statement.defaultCase !== undefined) assignedNames(statement.defaultCase, names);
-    } else if (statement.kind === 'while' || statement.kind === 'do-while') assignedNames(statement.body, names);
-    else if (statement.kind === 'for') {
-      if (statement.initializer !== undefined) assignedNames([statement.initializer], names);
-      if (statement.update !== undefined) assignedNames([statement.update], names);
-      assignedNames(statement.body, names);
-    } else if (statement.kind === 'iterator-loop') assignedNames(statement.body, names);
+    else
+      switch (statement.kind) {
+        case 'if': {
+          assignedNames(statement.consequent, names);
+          if (statement.alternate !== undefined) assignedNames(statement.alternate, names);
+
+          break;
+        }
+        case 'switch': {
+          for (const arm of statement.cases) assignedNames(arm.body, names);
+          if (statement.defaultCase !== undefined) assignedNames(statement.defaultCase, names);
+
+          break;
+        }
+        case 'while':
+        case 'do-while': {
+          assignedNames(statement.body, names);
+          break;
+        }
+        case 'for': {
+          if (statement.initializer !== undefined) assignedNames([statement.initializer], names);
+          if (statement.update !== undefined) assignedNames([statement.update], names);
+          assignedNames(statement.body, names);
+
+          break;
+        }
+        case 'iterator-loop': {
+          {
+            assignedNames(statement.body, names);
+            // No default
+          }
+          break;
+        }
+      }
   }
   return names;
 }
@@ -87,6 +109,64 @@ function pure(expression: ForgeWebScriptWasmExpression): boolean {
   return false;
 }
 
+function normalizeInteger(value: number, type: ForgeWebScriptWasmPrimitiveType): number {
+  // eslint-disable-next-line unicorn/prefer-math-trunc -- i32 normalization must preserve WebAssembly wrapping semantics.
+  return type === 'u32' ? value >>> 0 : value | 0;
+}
+
+function foldNumbers(
+  operator: Extract<ForgeWebScriptWasmExpression, { kind: 'binary' }>['operator'],
+  left: number,
+  right: number,
+  type: ForgeWebScriptWasmPrimitiveType,
+): boolean | number | undefined {
+  if (type === 'i64' || type === 'u64') return undefined;
+  const integer32 = type === 'i32' || type === 'u32';
+  const a = integer32 ? normalizeInteger(left, type) : left;
+  const b = integer32 ? normalizeInteger(right, type) : right;
+  switch (operator) {
+    case '+': {
+      return integer32 ? normalizeInteger(a + b, type) : a + b;
+    }
+    case '-': {
+      return integer32 ? normalizeInteger(a - b, type) : a - b;
+    }
+    case '*': {
+      return integer32 ? normalizeInteger(Math.imul(a, b), type) : a * b;
+    }
+    case '/': {
+      if (b === 0) return undefined;
+      return integer32 ? normalizeInteger(Math.trunc(a / b), type) : Math.trunc(a / b);
+    }
+    case '%': {
+      if (b === 0) return undefined;
+      return integer32 ? normalizeInteger(a % b, type) : a % b;
+    }
+    case '<': {
+      return a < b;
+    }
+    case '<=': {
+      return a <= b;
+    }
+    case '==': {
+      return a === b;
+    }
+    case '!=': {
+      return a !== b;
+    }
+    case '>': {
+      return a > b;
+    }
+    case '>=': {
+      return a >= b;
+    }
+    case '&&':
+    case '||': {
+      return undefined;
+    }
+  }
+}
+
 function resolve(
   expression: ForgeWebScriptWasmExpression,
   environment: Environment,
@@ -108,7 +188,10 @@ function resolve(
       right: resolve(expression.right, environment, resolving),
     };
   if (expression.kind === 'call')
-    return { ...expression, arguments: expression.arguments.map((item) => resolve(item, environment, resolving)) };
+    return {
+      ...expression,
+      arguments: expression.arguments.map((item) => resolve(item, environment, resolving)),
+    };
   if (expression.kind === 'array-literal' || expression.kind === 'vector-literal')
     return { ...expression, elements: expression.elements.map((item) => resolve(item, environment, resolving)) };
   if (expression.kind === 'index')
@@ -135,7 +218,7 @@ function fold(expression: ForgeWebScriptWasmExpression): {
   readonly offsets: number;
 } {
   if (expression.kind === 'call') {
-    const argumentsWithFolds = expression.arguments.map(fold);
+    const argumentsWithFolds = expression.arguments.map((argument) => fold(argument));
     if (
       expression.standardLibrary === 'string-concat' &&
       argumentsWithFolds.length === 2 &&
@@ -170,9 +253,20 @@ function fold(expression: ForgeWebScriptWasmExpression): {
           constants: operand.constants + 1,
           offsets: operand.offsets,
         };
-      if (expression.operator === '-' && typeof operand.expression.value === 'number')
+      if (
+        expression.operator === '-' &&
+        typeof operand.expression.value === 'number' &&
+        operand.expression.type !== 'i64' &&
+        operand.expression.type !== 'u64'
+      )
         return {
-          expression: literal(-operand.expression.value, expression.span, operand.expression.type),
+          expression: literal(
+            operand.expression.type === 'i32' || operand.expression.type === 'u32'
+              ? normalizeInteger(-operand.expression.value, operand.expression.type)
+              : -operand.expression.value,
+            expression.span,
+            operand.expression.type,
+          ),
           constants: operand.constants + 1,
           offsets: operand.offsets,
         };
@@ -193,54 +287,7 @@ function fold(expression: ForgeWebScriptWasmExpression): {
     const bv = b.value;
     let result: boolean | number | string | undefined;
     if (typeof av === 'number' && typeof bv === 'number') {
-      switch (expression.operator) {
-        case '+': {
-          result = av + bv;
-          break;
-        }
-        case '-': {
-          result = av - bv;
-          break;
-        }
-        case '*': {
-          result = av * bv;
-          break;
-        }
-        default: {
-          if (expression.operator === '/' && bv !== 0) result = Math.trunc(av / bv);
-          else if (expression.operator === '%' && bv !== 0) result = av % bv;
-          else
-            switch (expression.operator) {
-              case '<': {
-                result = av < bv;
-                break;
-              }
-              case '<=': {
-                result = av <= bv;
-                break;
-              }
-              case '==': {
-                result = av === bv;
-                break;
-              }
-              case '!=': {
-                result = av !== bv;
-                break;
-              }
-              case '>': {
-                result = av > bv;
-                break;
-              }
-              case '>=': {
-                {
-                  result = av >= bv;
-                  // No default
-                }
-                break;
-              }
-            }
-        }
-      }
+      result = foldNumbers(expression.operator, av, bv, a.type);
     } else if (expression.operator === '==' || expression.operator === '!=') {
       result = expression.operator === '==' ? av === bv : av !== bv;
     } else if (expression.operator === '&&' && typeof av === 'boolean' && typeof bv === 'boolean') result = av && bv;

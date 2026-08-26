@@ -16,42 +16,47 @@ Generato da dichiarazioni di fonte pubblica in `fws-vscode`.
 **Tipo:** funzione
 
 ```typescript
-function activate(context: vscode.ExtensionContext): Promise<void>
+function activate(context: vscode.ExtensionContext): Promise<void>;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| contesto | vscode.ExtensionContext |  |
+| Nome     | Digitare                | Descrizione |
+| -------- | ----------------------- | ----------- |
+| contesto | vscode.ExtensionContext |             |
 
 ### createLanguageClient
 
 **Tipo:** funzione
 
 ```typescript
-function createLanguageClient(serverOptions: ServerOptions, configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>, outputChannel: vscode.LogOutputChannel, fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*')): ForgeWebScriptLanguageClient
+function createLanguageClient(
+  serverOptions: ServerOptions,
+  configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>,
+  outputChannel: vscode.LogOutputChannel,
+  fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*'),
+): ForgeWebScriptLanguageClient;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioniserver | Opzioni server |  |
-| configurazione | Scegliere<ForgeWebScriptConfiguration, 'traceServer'> |  |
-| canale di uscita | vscode.LogOutputChannel |  |
-| osservatore di file | vscode.FileSystemWatcher |  |
+| Nome                | Digitare                                              | Descrizione |
+| ------------------- | ----------------------------------------------------- | ----------- |
+| opzioniserver       | Opzioni server                                        |             |
+| configurazione      | Scegliere<ForgeWebScriptConfiguration, 'traceServer'> |             |
+| canale di uscita    | vscode.LogOutputChannel                               |             |
+| osservatore di file | vscode.FileSystemWatcher                              |             |
 
 ### disattivare
 
 **Tipo:** funzione
 
 ```typescript
-function deactivate(): Promise<void>
+function deactivate(): Promise<void>;
 ```
 
 Nessuna descrizione fornita.

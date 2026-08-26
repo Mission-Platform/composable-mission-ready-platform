@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { validateForgeWebScriptAbiManifest } from './abi.ts';
 import { createForgeWebScriptHost } from './host.ts';
-import { createForgeWebScriptMemory } from './memory.ts';
 import { createForgeWebScriptLogger } from './logging.ts';
+import { createForgeWebScriptMemory } from './memory.ts';
 import { ForgeWebScriptTrap } from './traps.ts';
 
 const manifest = {

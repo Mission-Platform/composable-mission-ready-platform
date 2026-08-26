@@ -126,32 +126,32 @@ export interface DapVariable
 **种类：**功能
 
 ```typescript
-function encodeDapMessage(message: DapMessage): Buffer
+function encodeDapMessage(message: DapMessage): Buffer;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|留言 | Dap留言 |  |
+| 名称 | 类型    | 描述 |
+| ---- | ------- | ---- |
+| 留言 | Dap留言 |      |
 
 ### 编码行消息
 
 **种类：**功能
 
 ```typescript
-function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string
+function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|留言 | ForgeWebScriptRuntimeRequest | ForgeWebScriptRuntimeRequest | ForgeWebScriptRuntimeRequest | ForgeWebScriptRuntimeRequest | ForgeWebScriptRuntimeRequest  |
+| 名称 | 类型                         | 描述                         |
+| ---- | ---------------------------- | ---------------------------- |
+| 留言 | ForgeWebScriptRuntimeRequest | ForgeWebScriptRuntimeRequest | ForgeWebScriptRuntimeRequest | ForgeWebScriptRuntimeRequest | ForgeWebScriptRuntimeRequest |
 
 ### ForgeWebScriptDapForensicRequest
 
@@ -198,7 +198,26 @@ export interface ForgeWebScriptDapTraceRequest extends DapRequest<ForgeWebScript
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptRuntimeCommand = | 'launch' | 'setBreakpoints' | 'configurationDone' | 'continue' | 'next' | 'stepIn' | 'stepOut' | 'pause' | 'threads' | 'stackTrace' | 'scopes' | 'variables' | 'fwsTraceSummary' | 'fwsTraceEvents' | 'fwsMemoryState' | 'fwsCapabilityCalls' | 'fwsTrapEvidence' | 'terminate' | 'disconnect';
+export type ForgeWebScriptRuntimeCommand =
+  | 'launch'
+  | 'setBreakpoints'
+  | 'configurationDone'
+  | 'continue'
+  | 'next'
+  | 'stepIn'
+  | 'stepOut'
+  | 'pause'
+  | 'threads'
+  | 'stackTrace'
+  | 'scopes'
+  | 'variables'
+  | 'fwsTraceSummary'
+  | 'fwsTraceEvents'
+  | 'fwsMemoryState'
+  | 'fwsCapabilityCalls'
+  | 'fwsTrapEvidence'
+  | 'terminate'
+  | 'disconnect';
 ```
 
 没有提供描述。
@@ -228,7 +247,14 @@ export interface ForgeWebScriptRuntimeErrorEvent
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptRuntimeMessage = | ForgeWebScriptRuntimeResponse | ForgeWebScriptRuntimeOutputEvent | ForgeWebScriptRuntimeStoppedEvent | ForgeWebScriptRuntimeContinuedEvent | ForgeWebScriptRuntimeThreadEvent | ForgeWebScriptRuntimeTerminatedEvent | ForgeWebScriptRuntimeErrorEvent;
+export type ForgeWebScriptRuntimeMessage =
+  | ForgeWebScriptRuntimeResponse
+  | ForgeWebScriptRuntimeOutputEvent
+  | ForgeWebScriptRuntimeStoppedEvent
+  | ForgeWebScriptRuntimeContinuedEvent
+  | ForgeWebScriptRuntimeThreadEvent
+  | ForgeWebScriptRuntimeTerminatedEvent
+  | ForgeWebScriptRuntimeErrorEvent;
 ```
 
 没有提供描述。
@@ -278,7 +304,11 @@ export interface ForgeWebScriptRuntimeResponse
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptRuntimeSpawner = ( executable: string, arguments_: readonly string[], options: ForgeWebScriptRuntimeSpawnOptions, ) => ForgeWebScriptRuntimeProcess;
+export type ForgeWebScriptRuntimeSpawner = (
+  executable: string,
+  arguments_: readonly string[],
+  options: ForgeWebScriptRuntimeSpawnOptions,
+) => ForgeWebScriptRuntimeProcess;
 ```
 
 没有提供描述。
@@ -328,16 +358,16 @@ export interface ForgeWebScriptRuntimeThreadEvent
 **种类：**功能
 
 ```typescript
-function isRecord(value: unknown): value is Record<string, unknown>
+function isRecord(value: unknown): value is Record<string, unknown>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|未知 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 价值 | 未知 |      |
 
 ### 运行时行解析器
 
@@ -356,16 +386,16 @@ export class RuntimeLineParser
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer
+function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptDapServerOptions | ForgeWebScriptDapServerOptions | ForgeWebScriptDapServerOptions  |
+| 名称 | 类型                           | 描述                           |
+| ---- | ------------------------------ | ------------------------------ |
+| 选项 | ForgeWebScriptDapServerOptions | ForgeWebScriptDapServerOptions | ForgeWebScriptDapServerOptions |
 
 ### ForgeWebScriptDapServer
 

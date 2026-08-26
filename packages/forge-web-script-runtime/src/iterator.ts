@@ -14,7 +14,7 @@ export interface ForgeWebScriptWasmIterator<TValue> extends Iterator<TValue>, It
 function unpack(value: ForgeWebScriptPackedIteratorResult): { readonly value: number; readonly done: boolean } {
   const packed = typeof value === 'bigint' ? value : BigInt(value);
   return {
-    value: Number(BigInt.asIntN(32, packed & 0xffff_ffffn)),
+    value: Number(BigInt.asIntN(32, packed & 0xff_ff_ff_ffn)),
     done: packed >> 32n !== 0n,
   };
 }

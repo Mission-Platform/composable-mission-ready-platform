@@ -16,42 +16,47 @@
 **种类：**功能
 
 ```typescript
-function activate(context: vscode.ExtensionContext): Promise<void>
+function activate(context: vscode.ExtensionContext): Promise<void>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|背景 | vscode.ExtensionContext |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 背景 | vscode.ExtensionContext |      |
 
 ### 创建语言客户端
 
 **种类：**功能
 
 ```typescript
-function createLanguageClient(serverOptions: ServerOptions, configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>, outputChannel: vscode.LogOutputChannel, fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*')): ForgeWebScriptLanguageClient
+function createLanguageClient(
+  serverOptions: ServerOptions,
+  configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>,
+  outputChannel: vscode.LogOutputChannel,
+  fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*'),
+): ForgeWebScriptLanguageClient;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|服务器选项 |服务器选项 |  |
-|配置|挑选<ForgeWebScriptConfiguration, 'traceServer'> |  |
-|输出通道 | vscode.LogOutputChannel |  |
-|文件观察者 | vscode.FileSystemWatcher |  |
+| 名称       | 类型                                             | 描述 |
+| ---------- | ------------------------------------------------ | ---- |
+| 服务器选项 | 服务器选项                                       |      |
+| 配置       | 挑选<ForgeWebScriptConfiguration, 'traceServer'> |      |
+| 输出通道   | vscode.LogOutputChannel                          |      |
+| 文件观察者 | vscode.FileSystemWatcher                         |      |
 
 ### 停用
 
 **种类：**功能
 
 ```typescript
-function deactivate(): Promise<void>
+function deactivate(): Promise<void>;
 ```
 
 没有提供描述。

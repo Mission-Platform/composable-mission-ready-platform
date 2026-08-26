@@ -383,7 +383,7 @@ offset、または一致しない場合、またはグループが設定され�
 および `^`/`Forge Web Script は、決定論的な正規表現の標準ライブラリを提供します。`regex_full_match(pattern, value) -> bool`を呼び出します。`regex_prefix_match(pattern, value) -> bool`、および
 `regex_search(pattern, value, start: i32) -> bool`整数値を実行します。
 それぞれ、位置ゼロのプレフィックスと左端の検索マッチングです。キャプチャ境界
-対応する`regex__*capture_start`および`regex*__capture_end`が呼び出します。グループインデックスを取得し、UTF-16 文字列を返します。
+対応する`regex___capture_start`および`regex___capture_end`が呼び出します。グループインデックスを取得し、UTF-16 文字列を返します。
 offset、または一致しない場合、またはグループが設定されていない場合は`-1`。検索キャプチャ
 呼び出しではさらに、グループ インデックスの前に開始オフセットが取られます。
 

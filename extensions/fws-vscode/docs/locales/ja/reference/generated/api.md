@@ -16,42 +16,47 @@
 **種類:** 関数
 
 ```typescript
-function activate(context: vscode.ExtensionContext): Promise<void>
+function activate(context: vscode.ExtensionContext): Promise<void>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンテキスト | vscode.ExtensionContext |  |
+| 名前         | タイプ                  | 説明 |
+| ------------ | ----------------------- | ---- |
+| コンテキスト | vscode.ExtensionContext |      |
 
 ### 言語クライアントの作成
 
 **種類:** 関数
 
 ```typescript
-function createLanguageClient(serverOptions: ServerOptions, configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>, outputChannel: vscode.LogOutputChannel, fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*')): ForgeWebScriptLanguageClient
+function createLanguageClient(
+  serverOptions: ServerOptions,
+  configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>,
+  outputChannel: vscode.LogOutputChannel,
+  fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*'),
+): ForgeWebScriptLanguageClient;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|サーバーオプション |サーバーオプション |  |
-|構成 |選ぶ<ForgeWebScriptConfiguration, 'traceServer'> |  |
-|出力チャンネル | vscode.LogOutputChannel |  |
-|ファイルウォッチャー | vscode.FileSystemWatcher |  |
+| 名前                 | タイプ                                           | 説明 |
+| -------------------- | ------------------------------------------------ | ---- |
+| サーバーオプション   | サーバーオプション                               |      |
+| 構成                 | 選ぶ<ForgeWebScriptConfiguration, 'traceServer'> |      |
+| 出力チャンネル       | vscode.LogOutputChannel                          |      |
+| ファイルウォッチャー | vscode.FileSystemWatcher                         |      |
 
 ### 非アクティブ化する
 
 **種類:** 関数
 
 ```typescript
-function deactivate(): Promise<void>
+function deactivate(): Promise<void>;
 ```
 
 説明はありません。

@@ -1,13 +1,13 @@
-import type { ForgeWebScriptFunction, ForgeWebScriptModule } from './ast.js';
-import type { ForgeWebScriptWatCache } from './cache.js';
-import type { ForgeWebScriptDiagnostic } from './diagnostics.js';
 import type {
   ForgeWebScriptAnalysisOptions,
   ForgeWebScriptAnalysisReport,
   ForgeWebScriptAnalysisRule,
   ForgeWebScriptAnalysisSourceMap,
   ForgeWebScriptAnalysisPolicy,
-} from './analysis/index.js';
+} from "./analysis";
+import type { ForgeWebScriptFunction, ForgeWebScriptModule } from './ast.js';
+import type { ForgeWebScriptWatCache } from './cache.js';
+import type { ForgeWebScriptDiagnostic } from './diagnostics.js';
 import type { ForgeWebScriptLinkConfiguration, ForgeWebScriptModuleGraph } from './graph.js';
 import type { ForgeWebScriptIrModule } from './ir.js';
 import type {
@@ -18,14 +18,14 @@ import type {
 } from './manifest.js';
 import type { ForgeWebScriptOptimizationReport } from './optimizer.js';
 import type {
+  ForgeWebScriptSelfHostedCompilerStage,
+  ForgeWebScriptSelfHostedStageArtifact,
+} from './self-hosted/artifact.js';
+import type {
   ForgeWebScriptSoNBoundsChecks,
   ForgeWebScriptSoNModule,
   ForgeWebScriptSoNOptimizationReport,
 } from './son-ir.js';
-import type {
-  ForgeWebScriptSelfHostedCompilerStage,
-  ForgeWebScriptSelfHostedStageArtifact,
-} from './self-hosted/artifact.js';
 import type { ForgeWebScriptStandardLibraryIdentity } from './stdlib/regex.js';
 
 export type ForgeWebScriptOptimization = 'debug' | 'release';

@@ -16,50 +16,56 @@
 **種類:** 関数
 
 ```typescript
-function assertForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic
+function assertForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 | Readonly ForgeWebScriptDiagnostic[] |  |
-|期待 | ForgeWebScriptDiagnosticExpectation |  |
+| 名前 | タイプ                              | 説明 |
+| ---- | ----------------------------------- | ---- |
+| 診断 | Readonly ForgeWebScriptDiagnostic[] |      |
+| 期待 | ForgeWebScriptDiagnosticExpectation |      |
 
 ### assertForgeWebScriptNoDiagnostics
 
 **種類:** 関数
 
 ```typescript
-function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void
+function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 | Readonly ForgeWebScriptDiagnostic[] |  |
+| 名前 | タイプ                              | 説明 |
+| ---- | ----------------------------------- | ---- |
+| 診断 | Readonly ForgeWebScriptDiagnostic[] |      |
 
 ### findForgeWebScriptDiagnostic
 
 **種類:** 関数
 
 ```typescript
-function findForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic | undefined
+function findForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic | undefined;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 | Readonly ForgeWebScriptDiagnostic[] |  |
-|期待 | ForgeWebScriptDiagnosticExpectation |  |
+| 名前 | タイプ                              | 説明 |
+| ---- | ----------------------------------- | ---- |
+| 診断 | Readonly ForgeWebScriptDiagnostic[] |      |
+| 期待 | ForgeWebScriptDiagnosticExpectation |      |
 
 ### ForgeWebScriptDiagnosticExpectation
 
@@ -76,32 +82,32 @@ export interface ForgeWebScriptDiagnosticExpectation
 **種類:** 関数
 
 ```typescript
-function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string
+function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 構造化された位置メタデータを破棄せずに診断をフォーマットします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 | ForgeWebScriptDiagnostic |  |
+| 名前 | タイプ                   | 説明 |
+| ---- | ------------------------ | ---- |
+| 診断 | ForgeWebScriptDiagnostic |      |
 
 ### formatForgeWebScriptDiagnostics
 
 **種類:** 関数
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string
+function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|診断 | Readonly ForgeWebScriptDiagnostic[] |  |
+| 名前 | タイプ                              | 説明 |
+| ---- | ----------------------------------- | ---- |
+| 診断 | Readonly ForgeWebScriptDiagnostic[] |      |
 
 ## `src/harness`
 
@@ -110,16 +116,16 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDia
 **種類:** 関数
 
 ```typescript
-function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness
+function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness;
 ```
 
 オプションのコンパイラ、機能、ターゲット設定を使用して、共有フィクスチャ ハーネスを作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptTestHarnessOptions |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| オプション | ForgeWebScriptTestHarnessOptions |      |
 
 ### ForgeWebScriptCapabilityFunction
 
@@ -136,7 +142,9 @@ export type ForgeWebScriptCapabilityFunction = (...arguments_: readonly unknown[
 **種類：**タイプ
 
 ```typescript
-export type ForgeWebScriptCapabilityImports = Readonly< Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>> >;
+export type ForgeWebScriptCapabilityImports = Readonly<
+  Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>>
+>;
 ```
 
 機能とマニフェスト エイリアスをキーとしたホスト関数。未申告の輸入品は拒否されます。
@@ -156,7 +164,7 @@ export interface ForgeWebScriptCompilationResult extends ForgeWebScriptCompiledM
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string
+function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string;
 ```
 
 フィクスチャ パスを安定したテスト/モジュール名に変換します。相対パスは、
@@ -164,10 +172,10 @@ fixtureRoot でルート化され、区切り文字はハイフンに正規化�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|フィクスチャルート |文字列 |  |
+| 名前               | タイプ | 説明 |
+| ------------------ | ------ | ---- |
+| ファイル名         | 文字列 |      |
+| フィクスチャルート | 文字列 |      |
 
 ### ForgeWebScriptInspection結果
 
@@ -238,7 +246,7 @@ export interface ForgeWebScriptTestHarnessOptions extends ForgeWebScriptPluginOp
 **種類:** 関数
 
 ```typescript
-function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig
+function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig;
 ```
 
 Forge Web Script を使用して、標準の Mission Platform Vitest 構成を作成します。
@@ -247,9 +255,9 @@ Forge Web Script を使用して、標準の Mission Platform Vitest 構成を�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptVitestConfigOptions |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| オプション | ForgeWebScriptVitestConfigOptions |      |
 
 ### ForgeWebScriptVitestConfigOptions
 
@@ -266,13 +274,13 @@ export interface ForgeWebScriptVitestConfigOptions extends Omit<VitestConfigOpti
 **種類:** 関数
 
 ```typescript
-function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin;
 ```
 
 Vite/Vitest 構成に本番用の Forge Web Script プラグインをインストールします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeWebScriptPluginオプション |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| オプション | ForgeWebScriptPluginオプション |      |

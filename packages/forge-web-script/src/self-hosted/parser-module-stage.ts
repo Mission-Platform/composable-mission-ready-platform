@@ -21,7 +21,6 @@
  * fallback.
  */
 
-import type { ForgeWebScriptAggregateLayout } from '../manifest.js';
 import {
   createBuilder,
   type BytecodeBuilder,
@@ -29,6 +28,8 @@ import {
   type ForgeWebScriptSelfHostedVmModule,
   type ForgeWebScriptSelfHostedVmValue,
 } from './lex-stage.js';
+
+import type { ForgeWebScriptAggregateLayout } from '../manifest.js';
 
 export const FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY = 'parse_module_stage';
 const SOURCE_LAYOUT = 'ForgeWebScriptSourceBytes';
@@ -72,7 +73,7 @@ const G = {
 const RESERVED_GLOBALS_SIZE = 300;
 const ENVELOPE_HEADER_SIZE = 32;
 const OUTPUT_CAPACITY = 16_384;
-const LEFT_BUF_CAPACITY = 4_096;
+const LEFT_BUF_CAPACITY = 4096;
 
 /** Token peek kinds (distinct from `ForgeWebScriptTokenKind`; internal to this stage). */
 const PK_EOF = 0;
@@ -149,7 +150,7 @@ function K(b: BytecodeBuilder, pool: ConstPool, value: number): number {
   return register;
 }
 
-function fn(
+function function_(
   name: string,
   parameters: readonly string[],
   result: string,
@@ -176,7 +177,7 @@ function buildReadByte(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   bytesFromMemory(b, slice, ptr, one);
   b.byteAt(result, slice, zero);
   b.ret(result);
-  return fn('pm_read_byte', ['u32'], 'u32', b);
+  return function_('pm_read_byte', ['u32'], 'u32', b);
 }
 
 function buildIsAlpha(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
@@ -205,7 +206,7 @@ function buildIsAlpha(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.num(t2, pool.u32(1));
   b.binary('==', temporary, t1, t2);
   b.ret(temporary);
-  return fn('pm_is_alpha', ['u32'], 'bool', b);
+  return function_('pm_is_alpha', ['u32'], 'bool', b);
 }
 
 function buildIsDigit(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
@@ -217,7 +218,7 @@ function buildIsDigit(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.binary('<=', t2, 0, K(b, pool, 57));
   b.binary('&&', temporary, t1, t2);
   b.ret(temporary);
-  return fn('pm_is_digit', ['u32'], 'bool', b);
+  return function_('pm_is_digit', ['u32'], 'bool', b);
 }
 
 function buildIsAlnum(): ForgeWebScriptSelfHostedVmFunction {
@@ -232,7 +233,7 @@ function buildIsAlnum(): ForgeWebScriptSelfHostedVmFunction {
   b.label('yes');
   b.num(a, 0);
   b.ret(a);
-  return fn('pm_is_alnum', ['u32'], 'bool', b);
+  return function_('pm_is_alnum', ['u32'], 'bool', b);
 }
 
 function buildIsTwoCharOp(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
@@ -266,7 +267,7 @@ function buildIsTwoCharOp(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.num(t2, pool.u32(1));
   b.binary('==', temporary, t1, t2);
   b.ret(temporary);
-  return fn('pm_is_two_char_op', ['u32', 'u32'], 'bool', b);
+  return function_('pm_is_two_char_op', ['u32', 'u32'], 'bool', b);
 }
 
 function buildIsOneCharOp(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
@@ -290,7 +291,7 @@ function buildIsOneCharOp(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.num(temporary, pool.u32(1));
   b.binary('==', temporary, c, temporary);
   b.ret(temporary);
-  return fn('pm_is_one_char_op', ['u32'], 'bool', b);
+  return function_('pm_is_one_char_op', ['u32'], 'bool', b);
 }
 
 // ---------------------------------------------------------------------------
@@ -313,7 +314,7 @@ function buildEmitSlice(): ForgeWebScriptSelfHostedVmFunction {
   b.binary('+', newCursor, cursor, length);
   st(b, G.OUT_CURSOR, newCursor);
   b.ret();
-  return fn('pm_emit_slice', ['bytes'], 'unit', b);
+  return function_('pm_emit_slice', ['bytes'], 'unit', b);
 }
 
 /** pm_emit_const(bytes: BYTES_BLOB_LAYOUT) -> unit : append a precomputed wire blob. */
@@ -332,7 +333,7 @@ function buildEmitConst(): ForgeWebScriptSelfHostedVmFunction {
   b.binary('+', newCursor, cursor, length);
   st(b, G.OUT_CURSOR, newCursor);
   b.ret();
-  return fn('pm_emit_const', [BYTES_BLOB_LAYOUT], 'unit', b);
+  return function_('pm_emit_const', [BYTES_BLOB_LAYOUT], 'unit', b);
 }
 
 /** pm_emit_u32(value: u32) -> unit : append 4 little-endian bytes. */
@@ -340,12 +341,12 @@ function buildEmitU32(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   const b = createBuilder(1);
   const zero = K(b, pool, 0);
   const four = K(b, pool, 4);
-  const tmp = b.alloc();
+  const temporary = b.alloc();
   st(b, G.SCRATCH, 0);
-  bytesFromMemory(b, tmp, zero, four);
-  b.call(undefined, 'pm_emit_slice', [tmp]);
+  bytesFromMemory(b, temporary, zero, four);
+  b.call(undefined, 'pm_emit_slice', [temporary]);
   b.ret();
-  return fn('pm_emit_u32', ['u32'], 'unit', b);
+  return function_('pm_emit_u32', ['u32'], 'unit', b);
 }
 
 /** pm_emit_u8(value: u32, 0 or 1) -> unit : append exactly 1 byte (LE low byte of value). */
@@ -353,12 +354,12 @@ function buildEmitU8(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   const b = createBuilder(1);
   const zero = K(b, pool, 0);
   const one = K(b, pool, 1);
-  const tmp = b.alloc();
+  const temporary = b.alloc();
   st(b, G.SCRATCH, 0);
-  bytesFromMemory(b, tmp, zero, one);
-  b.call(undefined, 'pm_emit_slice', [tmp]);
+  bytesFromMemory(b, temporary, zero, one);
+  b.call(undefined, 'pm_emit_slice', [temporary]);
   b.ret();
-  return fn('pm_emit_u8', ['u32'], 'unit', b);
+  return function_('pm_emit_u8', ['u32'], 'unit', b);
 }
 
 /** pm_emit_dyn_string(start: u32, end: u32) -> unit : length-prefixed source slice. */
@@ -375,7 +376,7 @@ function buildEmitDynString(): ForgeWebScriptSelfHostedVmFunction {
   bytesFromMemory(b, slice, ptr, length);
   b.call(undefined, 'pm_emit_slice', [slice]);
   b.ret();
-  return fn('pm_emit_dyn_string', ['u32', 'u32'], 'unit', b);
+  return function_('pm_emit_dyn_string', ['u32', 'u32'], 'unit', b);
 }
 
 /** pm_emit_span(start, end, line, column, endLine, endColumn) -> unit. */
@@ -383,7 +384,7 @@ function buildEmitSpan(): ForgeWebScriptSelfHostedVmFunction {
   const b = createBuilder(6);
   for (let index = 0; index < 6; index += 1) b.call(undefined, 'pm_emit_u32', [index]);
   b.ret();
-  return fn('pm_emit_span', ['u32', 'u32', 'u32', 'u32', 'u32', 'u32'], 'unit', b);
+  return function_('pm_emit_span', ['u32', 'u32', 'u32', 'u32', 'u32', 'u32'], 'unit', b);
 }
 
 /** pm_patch_u32(offset: u32, value: u32) -> unit : overwrite 4 bytes at OUTPUT_BASE + offset. */
@@ -393,14 +394,14 @@ function buildPatchU32(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   const target = b.alloc();
   const zero = K(b, pool, 0);
   const four = K(b, pool, 4);
-  const tmp = b.alloc();
+  const temporary = b.alloc();
   ld(b, outBase, G.OUTPUT_BASE);
   b.binary('+', target, outBase, 0);
   st(b, G.SCRATCH, 1);
-  bytesFromMemory(b, tmp, zero, four);
-  writeBytesOp(b, target, tmp);
+  bytesFromMemory(b, temporary, zero, four);
+  writeBytesOp(b, target, temporary);
   b.ret();
-  return fn('pm_patch_u32', ['u32', 'u32'], 'unit', b);
+  return function_('pm_patch_u32', ['u32', 'u32'], 'unit', b);
 }
 
 // ---------------------------------------------------------------------------
@@ -412,7 +413,7 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   const offset = b.alloc();
   const line = b.alloc();
   const col = b.alloc();
-  const srcLen = b.alloc();
+  const sourceLength = b.alloc();
   const cond = b.alloc();
   const byte = b.alloc();
   const nextByte = b.alloc();
@@ -423,34 +424,34 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   const one = K(b, pool, 1);
   const two = K(b, pool, 2);
   const zero = K(b, pool, 0);
-  const tmp = b.alloc();
-  const tmp2 = b.alloc();
-  const len = b.alloc();
+  const temporary = b.alloc();
+  const temporary2 = b.alloc();
+  const length = b.alloc();
 
   ld(b, offset, G.SCAN_OFFSET);
   ld(b, line, G.SCAN_LINE);
   ld(b, col, G.SCAN_COL);
-  ld(b, srcLen, G.SOURCE_LEN);
+  ld(b, sourceLength, G.SOURCE_LEN);
 
   b.label('trivia_loop');
-  b.binary('>=', cond, offset, srcLen);
+  b.binary('>=', cond, offset, sourceLength);
   b.branch(cond, 'eof', 'trivia_check');
   b.label('trivia_check');
   b.call(byte, 'pm_read_byte', [offset]);
-  b.num(tmp, pool.u32(32));
-  b.binary('==', cond, byte, tmp);
+  b.num(temporary, pool.u32(32));
+  b.binary('==', cond, byte, temporary);
   b.branch(cond, 'space', 'tab_check');
   b.label('tab_check');
-  b.num(tmp, pool.u32(9));
-  b.binary('==', cond, byte, tmp);
+  b.num(temporary, pool.u32(9));
+  b.binary('==', cond, byte, temporary);
   b.branch(cond, 'space', 'cr_check');
   b.label('cr_check');
-  b.num(tmp, pool.u32(13));
-  b.binary('==', cond, byte, tmp);
+  b.num(temporary, pool.u32(13));
+  b.binary('==', cond, byte, temporary);
   b.branch(cond, 'space', 'lf_check');
   b.label('lf_check');
-  b.num(tmp, pool.u32(10));
-  b.binary('==', cond, byte, tmp);
+  b.num(temporary, pool.u32(10));
+  b.binary('==', cond, byte, temporary);
   b.branch(cond, 'newline', 'not_trivia');
 
   b.label('space');
@@ -481,7 +482,7 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.move(end, offset);
   b.binary('+', end, end, one);
   b.label('alpha_loop');
-  b.binary('>=', cond, end, srcLen);
+  b.binary('>=', cond, end, sourceLength);
   b.branch(cond, 'alpha_done', 'alpha_check');
   b.label('alpha_check');
   b.call(byte, 'pm_read_byte', [end]);
@@ -491,10 +492,10 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.binary('+', end, end, one);
   b.jump('alpha_loop');
   b.label('alpha_done');
-  b.num(tmp, pool.u32(PK_ALPHA));
-  b.binary('-', len, end, start);
-  b.binary('+', col, startCol, len);
-  st(b, G.PEEK_KIND, tmp);
+  b.num(temporary, pool.u32(PK_ALPHA));
+  b.binary('-', length, end, start);
+  b.binary('+', col, startCol, length);
+  st(b, G.PEEK_KIND, temporary);
   st(b, G.PEEK_START, start);
   st(b, G.PEEK_END, end);
   st(b, G.PEEK_LINE, startLine);
@@ -507,7 +508,7 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.move(end, offset);
   b.binary('+', end, end, one);
   b.label('digit_loop');
-  b.binary('>=', cond, end, srcLen);
+  b.binary('>=', cond, end, sourceLength);
   b.branch(cond, 'digit_done', 'digit_check2');
   b.label('digit_check2');
   b.call(byte, 'pm_read_byte', [end]);
@@ -517,10 +518,10 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.binary('+', end, end, one);
   b.jump('digit_loop');
   b.label('digit_done');
-  b.num(tmp, pool.u32(PK_NUMBER));
-  b.binary('-', len, end, start);
-  b.binary('+', col, startCol, len);
-  st(b, G.PEEK_KIND, tmp);
+  b.num(temporary, pool.u32(PK_NUMBER));
+  b.binary('-', length, end, start);
+  b.binary('+', col, startCol, length);
+  st(b, G.PEEK_KIND, temporary);
   st(b, G.PEEK_START, start);
   st(b, G.PEEK_END, end);
   st(b, G.PEEK_LINE, startLine);
@@ -530,19 +531,19 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.ret();
 
   b.label('op_check');
-  b.binary('+', tmp2, offset, one);
-  b.binary('<', cond, tmp2, srcLen);
+  b.binary('+', temporary2, offset, one);
+  b.binary('<', cond, temporary2, sourceLength);
   b.branch(cond, 'op_two_load', 'op_one');
   b.label('op_two_load');
-  b.call(nextByte, 'pm_read_byte', [tmp2]);
+  b.call(nextByte, 'pm_read_byte', [temporary2]);
   b.call(cond, 'pm_is_two_char_op', [byte, nextByte]);
   b.branch(cond, 'op_two', 'op_one');
 
   b.label('op_two');
   b.move(end, offset);
   b.binary('+', end, end, two);
-  b.num(tmp, pool.u32(PK_OP));
-  st(b, G.PEEK_KIND, tmp);
+  b.num(temporary, pool.u32(PK_OP));
+  st(b, G.PEEK_KIND, temporary);
   st(b, G.PEEK_START, start);
   st(b, G.PEEK_END, end);
   st(b, G.PEEK_LINE, startLine);
@@ -561,8 +562,8 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.label('op_single');
   b.move(end, offset);
   b.binary('+', end, end, one);
-  b.num(tmp, pool.u32(PK_OP));
-  st(b, G.PEEK_KIND, tmp);
+  b.num(temporary, pool.u32(PK_OP));
+  st(b, G.PEEK_KIND, temporary);
   st(b, G.PEEK_START, start);
   st(b, G.PEEK_END, end);
   st(b, G.PEEK_LINE, startLine);
@@ -571,15 +572,15 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.binary('+', col, startCol, one);
   st(b, G.PEEK_END_COL, col);
   st(b, G.PEEK_BYTE0, byte);
-  b.num(tmp, zero);
-  st(b, G.PEEK_BYTE1, tmp);
+  b.num(temporary, zero);
+  st(b, G.PEEK_BYTE1, temporary);
   b.ret();
 
   b.label('fail');
-  b.num(tmp, pool.u32(1));
-  st(b, G.FAIL_FLAG, tmp);
-  b.num(tmp, pool.u32(PK_FAIL));
-  st(b, G.PEEK_KIND, tmp);
+  b.num(temporary, pool.u32(1));
+  st(b, G.FAIL_FLAG, temporary);
+  b.num(temporary, pool.u32(PK_FAIL));
+  st(b, G.PEEK_KIND, temporary);
   st(b, G.PEEK_START, start);
   st(b, G.PEEK_END, start);
   st(b, G.PEEK_LINE, startLine);
@@ -589,8 +590,8 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.ret();
 
   b.label('eof');
-  b.num(tmp, pool.u32(PK_EOF));
-  st(b, G.PEEK_KIND, tmp);
+  b.num(temporary, pool.u32(PK_EOF));
+  st(b, G.PEEK_KIND, temporary);
   st(b, G.PEEK_START, offset);
   st(b, G.PEEK_END, offset);
   st(b, G.PEEK_LINE, line);
@@ -599,7 +600,7 @@ function buildPeek(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   st(b, G.PEEK_END_COL, col);
   b.ret();
 
-  return fn('pm_peek', [], 'unit', b);
+  return function_('pm_peek', [], 'unit', b);
 }
 
 /** pm_consume() -> unit : commit PEEK_* into SCAN_* and LAST_*. Must follow a pm_peek() call. */
@@ -624,16 +625,16 @@ function buildConsume(): ForgeWebScriptSelfHostedVmFunction {
   ld(b, value, G.PEEK_END_COL);
   st(b, G.SCAN_COL, value);
   b.ret();
-  return fn('pm_consume', [], 'unit', b);
+  return function_('pm_consume', [], 'unit', b);
 }
 
 /** pm_word_equals(word: BYTES_BLOB_LAYOUT) -> bool : PEEK_START..PEEK_END text equals `word`. */
 function buildWordEquals(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   const b = createBuilder(1);
-  const wordLen = b.alloc();
+  const wordLength = b.alloc();
   const peekStart = b.alloc();
   const peekEnd = b.alloc();
-  const tokenLen = b.alloc();
+  const tokenLength = b.alloc();
   const cond = b.alloc();
   const result = b.alloc();
   const index = b.alloc();
@@ -643,16 +644,16 @@ function buildWordEquals(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   const wordByte = b.alloc();
   const zero = K(b, pool, 0);
   const one = K(b, pool, 1);
-  b.len(wordLen, 0);
+  b.len(wordLength, 0);
   ld(b, peekStart, G.PEEK_START);
   ld(b, peekEnd, G.PEEK_END);
-  b.binary('-', tokenLen, peekEnd, peekStart);
-  b.binary('==', cond, tokenLen, wordLen);
+  b.binary('-', tokenLength, peekEnd, peekStart);
+  b.binary('==', cond, tokenLength, wordLength);
   b.branch(cond, 'compare', 'no');
   b.label('compare');
   b.move(index, zero);
   b.label('loop');
-  b.binary('<', cond, index, tokenLen);
+  b.binary('<', cond, index, tokenLength);
   b.branch(cond, 'body', 'yes');
   b.label('body');
   ld(b, sourceBase, G.SOURCE_BASE);
@@ -673,7 +674,7 @@ function buildWordEquals(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
   b.num(result, pool.u32(0));
   b.binary('==', result, result, one);
   b.ret(result);
-  return fn('pm_word_equals', [BYTES_BLOB_LAYOUT], 'bool', b);
+  return function_('pm_word_equals', [BYTES_BLOB_LAYOUT], 'bool', b);
 }
 
 // ---------------------------------------------------------------------------
@@ -744,7 +745,7 @@ function buildParseType(pool: ConstPool, types: readonly TypeWire[]): ForgeWebSc
   b.call(undefined, 'pm_emit_span', [last.start, last.end, last.line, last.col, last.endLine, last.endCol]);
   b.ret();
   void flag;
-  return fn('pm_parse_type', [], 'unit', b);
+  return function_('pm_parse_type', [], 'unit', b);
 }
 
 interface ExpressionWire {
@@ -787,9 +788,9 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): ForgeWebScrip
   const identEndCol = b.alloc();
   const byte0 = b.alloc();
   const savedOffset = b.alloc();
-  const argCount = b.alloc();
+  const argumentCount = b.alloc();
   const literalWire = b.alloc();
-  const i32Wire = b.alloc();
+  const index32Wire = b.alloc();
   const three = b.alloc();
   const callWire = b.alloc();
   const identWire = b.alloc();
@@ -803,8 +804,8 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): ForgeWebScrip
   b.call(undefined, 'pm_consume', []);
   b.num(literalWire, wire.literal);
   b.call(undefined, 'pm_emit_const', [literalWire]);
-  b.num(i32Wire, wire.i32Type);
-  b.call(undefined, 'pm_emit_const', [i32Wire]);
+  b.num(index32Wire, wire.i32Type);
+  b.call(undefined, 'pm_emit_const', [index32Wire]);
   b.num(three, pool.u32(3));
   b.call(undefined, 'pm_emit_u8', [three]);
   ld(b, identStart, G.LAST_START);
@@ -857,7 +858,7 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): ForgeWebScrip
   b.call(undefined, 'pm_emit_dyn_string', [identStart, identEnd]);
   ld(b, savedOffset, G.OUT_CURSOR);
   b.call(undefined, 'pm_emit_u32', [zero]);
-  b.move(argCount, zero);
+  b.move(argumentCount, zero);
   b.call(undefined, 'pm_peek', []);
   b.label('args_loop');
   ld(b, kind, G.PEEK_KIND);
@@ -875,7 +876,7 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): ForgeWebScrip
     b.branch(failed, 'bail', 'args_after');
   }
   b.label('args_after');
-  b.binary('+', argCount, argCount, one);
+  b.binary('+', argumentCount, argumentCount, one);
   b.call(undefined, 'pm_peek', []);
   ld(b, kind, G.PEEK_KIND);
   b.binary('==', cond, kind, wantOp);
@@ -898,7 +899,7 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): ForgeWebScrip
   b.branch(cond, 'args_close', 'bail');
   b.label('args_close');
   b.call(undefined, 'pm_consume', []); // ')'
-  b.call(undefined, 'pm_patch_u32', [savedOffset, argCount]);
+  b.call(undefined, 'pm_patch_u32', [savedOffset, argumentCount]);
   {
     const lastEnd = b.alloc();
     const lastEndLine = b.alloc();
@@ -913,7 +914,7 @@ function buildParsePrimary(pool: ConstPool, wire: ExpressionWire): ForgeWebScrip
   st(b, G.FAIL_FLAG, one);
   b.ret();
 
-  return fn('pm_parse_primary', [], 'unit', b);
+  return function_('pm_parse_primary', [], 'unit', b);
 }
 
 function buildParseUnary(pool: ConstPool, wire: ExpressionWire): ForgeWebScriptSelfHostedVmFunction {
@@ -973,7 +974,7 @@ function buildParseUnary(pool: ConstPool, wire: ExpressionWire): ForgeWebScriptS
   b.call(undefined, 'pm_parse_primary', []);
   b.ret();
 
-  return fn('pm_parse_unary', [], 'unit', b);
+  return function_('pm_parse_unary', [], 'unit', b);
 }
 
 function buildParseExpression(pool: ConstPool, wire: ExpressionWire): ForgeWebScriptSelfHostedVmFunction {
@@ -984,7 +985,7 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): ForgeWebSc
   const savedBase = b.alloc();
   const savedCursor = b.alloc();
   const leftBase = b.alloc();
-  const leftLen = b.alloc();
+  const leftLength = b.alloc();
   const leftSlice = b.alloc();
   const kind = b.alloc();
   const byte0 = b.alloc();
@@ -1005,7 +1006,7 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): ForgeWebSc
   st(b, G.OUTPUT_BASE, leftBase);
   st(b, G.OUT_CURSOR, zero);
   b.call(undefined, 'pm_parse_unary', []);
-  ld(b, leftLen, G.OUT_CURSOR);
+  ld(b, leftLength, G.OUT_CURSOR);
   st(b, G.OUTPUT_BASE, savedBase);
   st(b, G.OUT_CURSOR, savedCursor);
 
@@ -1066,7 +1067,7 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): ForgeWebSc
     b.call(undefined, 'pm_emit_const', [binaryWire]);
   }
   b.call(undefined, 'pm_emit_const', [opConst]);
-  bytesFromMemory(b, leftSlice, leftBase, leftLen);
+  bytesFromMemory(b, leftSlice, leftBase, leftLength);
   b.call(undefined, 'pm_emit_slice', [leftSlice]);
   b.call(undefined, 'pm_parse_unary', []);
   {
@@ -1087,7 +1088,7 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): ForgeWebSc
   b.ret();
 
   b.label('no_operator');
-  bytesFromMemory(b, leftSlice, leftBase, leftLen);
+  bytesFromMemory(b, leftSlice, leftBase, leftLength);
   b.call(undefined, 'pm_emit_slice', [leftSlice]);
   {
     const lastEnd = b.alloc();
@@ -1107,7 +1108,7 @@ function buildParseExpression(pool: ConstPool, wire: ExpressionWire): ForgeWebSc
   }
   b.ret();
 
-  return fn('pm_parse_expression', [], 'unit', b);
+  return function_('pm_parse_expression', [], 'unit', b);
 }
 
 function buildParseParameters(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
@@ -1225,7 +1226,7 @@ function buildParseParameters(pool: ConstPool): ForgeWebScriptSelfHostedVmFuncti
   st(b, G.FAIL_FLAG, one);
   b.ret();
 
-  return fn('pm_parse_parameters', [], 'unit', b);
+  return function_('pm_parse_parameters', [], 'unit', b);
 }
 
 function buildParseReturnStatement(pool: ConstPool, returnWire: number): ForgeWebScriptSelfHostedVmFunction {
@@ -1298,7 +1299,7 @@ function buildParseReturnStatement(pool: ConstPool, returnWire: number): ForgeWe
   st(b, G.FAIL_FLAG, one);
   b.ret();
 
-  return fn('pm_parse_return_statement', [], 'unit', b);
+  return function_('pm_parse_return_statement', [], 'unit', b);
 }
 
 function buildParseBlock(pool: ConstPool, returnWord: number): ForgeWebScriptSelfHostedVmFunction {
@@ -1380,10 +1381,10 @@ function buildParseBlock(pool: ConstPool, returnWord: number): ForgeWebScriptSel
   st(b, G.FAIL_FLAG, one);
   b.ret();
 
-  return fn('pm_parse_block', [], 'unit', b);
+  return function_('pm_parse_block', [], 'unit', b);
 }
 
-function buildParseFunction(pool: ConstPool, exportWord: number, fnWord: number): ForgeWebScriptSelfHostedVmFunction {
+function buildParseFunction(pool: ConstPool, exportWord: number, functionWord: number): ForgeWebScriptSelfHostedVmFunction {
   const b = createBuilder(0);
   const kind = b.alloc();
   const cond = b.alloc();
@@ -1429,7 +1430,7 @@ function buildParseFunction(pool: ConstPool, exportWord: number, fnWord: number)
   b.label('fn_word_check');
   {
     const word = b.alloc();
-    b.num(word, fnWord);
+    b.num(word, functionWord);
     b.call(cond, 'pm_word_equals', [word]);
   }
   b.branch(cond, 'consume_fn', 'fail');
@@ -1468,11 +1469,11 @@ function buildParseFunction(pool: ConstPool, exportWord: number, fnWord: number)
   ld(b, byte0, G.PEEK_BYTE0);
   ld(b, byte1, G.PEEK_BYTE1);
   {
-    const e0 = b.alloc();
-    const e1 = b.alloc();
-    b.binary('==', e0, byte0, arrowByte0);
-    b.binary('==', e1, byte1, arrowByte1);
-    b.binary('&&', cond, e0, e1);
+    const error0 = b.alloc();
+    const error1 = b.alloc();
+    b.binary('==', error0, byte0, arrowByte0);
+    b.binary('==', error1, byte1, arrowByte1);
+    b.binary('&&', cond, error0, error1);
   }
   b.branch(cond, 'consume_arrow', 'bail');
   b.label('consume_arrow');
@@ -1506,7 +1507,7 @@ function buildParseFunction(pool: ConstPool, exportWord: number, fnWord: number)
   st(b, G.FAIL_FLAG, one);
   b.ret();
 
-  return fn('pm_parse_function', [], 'unit', b);
+  return function_('pm_parse_function', [], 'unit', b);
 }
 
 function buildSkipClassBody(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction {
@@ -1597,7 +1598,7 @@ function buildSkipClassBody(pool: ConstPool): ForgeWebScriptSelfHostedVmFunction
   b.label('stop');
   b.ret();
 
-  return fn('pm_skip_class_body', [], 'unit', b);
+  return function_('pm_skip_class_body', [], 'unit', b);
 }
 
 // ---------------------------------------------------------------------------
@@ -1611,11 +1612,11 @@ function buildEntry(
   nameWire: number,
   classWord: number,
   exportWord: number,
-  fnWord: number,
+  functionWord: number,
 ): ForgeWebScriptSelfHostedVmFunction {
   const b = createBuilder(1); // parameter 0 = source aggregate
   const dummy = b.alloc();
-  const srcLen = b.alloc();
+  const sourceLength = b.alloc();
   const sourceBase = b.alloc();
   const leftBuf = b.alloc();
   const envelopeBase = b.alloc();
@@ -1626,8 +1627,8 @@ function buildEntry(
   const moduleStartLine = b.alloc();
   const moduleStartCol = b.alloc();
   const spanOffset = b.alloc();
-  const funcCountOffset = b.alloc();
-  const funcCount = b.alloc();
+  const functionCountOffset = b.alloc();
+  const functionCount = b.alloc();
   const kind = b.alloc();
   const cond = b.alloc();
   const nameWireReg = b.alloc();
@@ -1640,9 +1641,9 @@ function buildEntry(
   st(b, G.FAIL_FLAG, zero);
   st(b, G.DIAG_FLAG, zero);
 
-  b.len(srcLen, 0);
-  st(b, G.SOURCE_LEN, srcLen);
-  allocOp(b, sourceBase, srcLen);
+  b.len(sourceLength, 0);
+  st(b, G.SOURCE_LEN, sourceLength);
+  allocOp(b, sourceBase, sourceLength);
   st(b, G.SOURCE_BASE, sourceBase);
   writeBytesOp(b, sourceBase, 0);
 
@@ -1674,9 +1675,9 @@ function buildEntry(
   b.call(undefined, 'pm_emit_u32', [zero]); // structs
   b.call(undefined, 'pm_emit_u32', [zero]); // enums
   b.call(undefined, 'pm_emit_u32', [zero]); // interfaces
-  ld(b, funcCountOffset, G.OUT_CURSOR);
+  ld(b, functionCountOffset, G.OUT_CURSOR);
   b.call(undefined, 'pm_emit_u32', [zero]); // functions placeholder
-  b.move(funcCount, zero);
+  b.move(functionCount, zero);
 
   b.label('top_loop');
   ld(b, kind, G.PEEK_KIND);
@@ -1712,14 +1713,14 @@ function buildEntry(
   b.label('top_fn_check');
   {
     const exportWordReg = b.alloc();
-    const fnWordReg = b.alloc();
+    const functionWordReg = b.alloc();
     const isExport = b.alloc();
-    const isFn = b.alloc();
+    const isFunction = b.alloc();
     b.num(exportWordReg, exportWord);
     b.call(isExport, 'pm_word_equals', [exportWordReg]);
-    b.num(fnWordReg, fnWord);
-    b.call(isFn, 'pm_word_equals', [fnWordReg]);
-    b.binary('||', cond, isExport, isFn);
+    b.num(functionWordReg, functionWord);
+    b.call(isFunction, 'pm_word_equals', [functionWordReg]);
+    b.binary('||', cond, isExport, isFunction);
   }
   b.branch(cond, 'top_function', 'top_fail');
 
@@ -1731,7 +1732,7 @@ function buildEntry(
     b.branch(failed, 'top_done', 'top_count');
   }
   b.label('top_count');
-  b.binary('+', funcCount, funcCount, one);
+  b.binary('+', functionCount, functionCount, one);
 
   b.label('top_continue');
   b.call(undefined, 'pm_peek', []);
@@ -1742,7 +1743,7 @@ function buildEntry(
   b.jump('top_done');
 
   b.label('top_done');
-  b.call(undefined, 'pm_patch_u32', [funcCountOffset, funcCount]);
+  b.call(undefined, 'pm_patch_u32', [functionCountOffset, functionCount]);
   {
     const failed = b.alloc();
     const moduleEnd = b.alloc();
@@ -1804,17 +1805,17 @@ function buildEntry(
     }
 
     const outCursor = b.alloc();
-    const totalLen = b.alloc();
+    const totalLength = b.alloc();
     const envelopeSize = K(b, pool, ENVELOPE_HEADER_SIZE);
     ld(b, outCursor, G.OUT_CURSOR);
-    b.binary('+', totalLen, envelopeSize, outCursor);
+    b.binary('+', totalLength, envelopeSize, outCursor);
     const result = b.alloc();
-    bytesFromMemory(b, result, envelopeBase, totalLen);
+    bytesFromMemory(b, result, envelopeBase, totalLength);
     b.ret(result);
     void failed;
   }
 
-  return fn(FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY, [SOURCE_LAYOUT], 'bytes', b);
+  return function_(FORGE_WEB_SCRIPT_PARSER_MODULE_STAGE_ENTRY, [SOURCE_LAYOUT], 'bytes', b);
 }
 
 /** Writes `value` (u32, LE) directly at `base + offset` without touching OUT_CURSOR. */
@@ -1823,11 +1824,11 @@ function writeU32At(b: BytecodeBuilder, pool: ConstPool, base: number, offset: n
   const off = K(b, pool, offset);
   const zero = K(b, pool, 0);
   const four = K(b, pool, 4);
-  const tmp = b.alloc();
+  const temporary = b.alloc();
   b.binary('+', target, base, off);
   st(b, G.SCRATCH, value);
-  bytesFromMemory(b, tmp, zero, four);
-  writeBytesOp(b, target, tmp);
+  bytesFromMemory(b, temporary, zero, four);
+  writeBytesOp(b, target, temporary);
 }
 
 export interface ForgeWebScriptParserModuleStageOptions {
@@ -1869,7 +1870,7 @@ export function createForgeWebScriptParserModuleVmModule(
 
   const classWord = pool.bytesConst(textEncoder.encode('class'));
   const exportWord = pool.bytesConst(textEncoder.encode('export'));
-  const fnWord = pool.bytesConst(textEncoder.encode('fn'));
+  const functionWord = pool.bytesConst(textEncoder.encode('fn'));
   const returnWord = pool.bytesConst(textEncoder.encode('return'));
   const returnWire = pool.wireString('return');
 
@@ -1922,9 +1923,9 @@ export function createForgeWebScriptParserModuleVmModule(
     buildParseParameters(pool),
     buildParseReturnStatement(pool, returnWire),
     buildParseBlock(pool, returnWord),
-    buildParseFunction(pool, exportWord, fnWord),
+    buildParseFunction(pool, exportWord, functionWord),
     buildSkipClassBody(pool),
-    buildEntry(pool, nameWire, classWord, exportWord, fnWord),
+    buildEntry(pool, nameWire, classWord, exportWord, functionWord),
   ];
 
   if (saltXor !== 0) {

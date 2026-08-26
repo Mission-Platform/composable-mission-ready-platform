@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { compileForgeWebScript } from './compiler.ts';
+
 const verification = vi.hoisted(() => ({
   verify: vi.fn(),
 }));
@@ -11,8 +13,6 @@ vi.mock('@mission-platform/forge-web-script-wasm', async (importOriginal) => {
     verifyForgeWebScriptWasmArtifact: verification.verify,
   };
 });
-
-import { compileForgeWebScript } from './compiler.ts';
 
 const span = { start: 0, end: 0, line: 1, column: 1, endLine: 1, endColumn: 1 } as const;
 

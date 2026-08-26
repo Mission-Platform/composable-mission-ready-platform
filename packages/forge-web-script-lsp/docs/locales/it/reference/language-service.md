@@ -459,12 +459,12 @@ Il server LSP pubblica `source: "forge-web-script"`. La fase e il suggerimento s
 incluso anche nell'oggetto diagnostico `data`. Tipiche famiglie di codici stabili
 sono:
 
-| Famiglia di codici | Fase | Significato |
-| ------------- | ------------ | ------------------------------------------------------------------------ |
-| `FWS-LEX-*` | `lex` | Caratteri/escape non validi, terminatori di riga di stringhe non elaborate o stringhe/commenti di blocco senza terminazione |
-| `FWS-PARSE-*` | `parse` | Sintassi di modulo, dichiarazione, istruzione o espressione non valida |
-| `FWS-TYPE-*` | `type-check` | Tipi, nomi, operatori, argomenti o risultati non validi |
-| `FWS-ABI-*` | `abi` | Nomi duplicati, funzionalità, esportazioni o importazioni negate |
+| Famiglia di codici | Fase         | Significato                                                                                                                 |
+| ------------------ | ------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `FWS-LEX-*`        | `lex`        | Caratteri/escape non validi, terminatori di riga di stringhe non elaborate o stringhe/commenti di blocco senza terminazione |
+| `FWS-PARSE-*`      | `parse`      | Sintassi di modulo, dichiarazione, istruzione o espressione non valida                                                      |
+| `FWS-TYPE-*`       | `type-check` | Tipi, nomi, operatori, argomenti o risultati non validi                                                                     |
+| `FWS-ABI-*`        | `abi`        | Nomi duplicati, funzionalità, esportazioni o importazioni negate                                                            |
 
 L'input non valido viene ancora tokenizzato e analizzato laddove consentito dal ripristino del parser
 esso. Ad esempio, un'origine non valida può produrre `FWS-PARSE-017` pur conservando
@@ -490,7 +490,7 @@ L'utilizzo del componente più semplice è:
 ```tsx
 <ForgeMonacoEditor
   language="fws"
-  modelValue={"export fn add(value: i32) -> i32 {\n  return value + 1;\n}"}
+  modelValue={'export fn add(value: i32) -> i32 {\n  return value + 1;\n}'}
 />
 ```
 
@@ -507,15 +507,15 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
   readFile: async (uri) => files.get(uri),
   listFiles: async () => [...files.keys()],
   getOptions: async () => ({
-    requestedCapabilities: ["clock.now"],
-    capabilityNames: ["clock.now"],
+    requestedCapabilities: ['clock.now'],
+    capabilityNames: ['clock.now'],
     capabilitySignatures: new Map([
       [
-        "clock.now",
+        'clock.now',
         {
           parameters: [],
-          result: "i64",
-          documentation: "Read the current Unix timestamp.",
+          result: 'i64',
+          documentation: 'Read the current Unix timestamp.',
         },
       ],
     ]),
@@ -525,9 +525,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 <ForgeMonacoEditor
   language="fws"
   forgeWebScript={{ workspaceHost }}
-  modelValue={
-    'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'
-  }
+  modelValue={'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'}
 />;
 ```
 
@@ -542,10 +540,7 @@ Per l'integrazione obbligatoria, utilizzare lo stesso adattatore direttamente do
 stato caricato:
 
 ```ts
-import {
-  attachForgeWebScriptMonaco,
-  registerForgeWebScriptLanguage,
-} from "@mission-platform/content";
+import { attachForgeWebScriptMonaco, registerForgeWebScriptLanguage } from '@mission-platform/content';
 
 registerForgeWebScriptLanguage(monaco);
 const handle = attachForgeWebScriptMonaco(editor, monaco, { workspaceHost });
@@ -562,10 +557,10 @@ marcatori e la relativa istanza del servizio linguistico di proprietà.
 
 ## LSP rispetto agli spazi di lavoro del browser
 
-| Consumatore | Implementazione dell'area di lavoro | Limite root/sicurezza | Trasporti |
-| --------------- | -------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
-| Node Client LSP | `RootBoundedForgeWebScriptWorkspaceHost` | Root del filesystem configurato canonicamente; le letture esterne vengono rifiutate | stdio LSP |
-| Monaco/browser | Applicazione fornita `ForgeWebScriptWorkspaceHost` | L'host decide quali URI/file/opzioni esporre; nessun presupposto sul filesystem | Adattatore in-process |
+| Consumatore     | Implementazione dell'area di lavoro                | Limite root/sicurezza                                                               | Trasporti             |
+| --------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------- |
+| Node Client LSP | `RootBoundedForgeWebScriptWorkspaceHost`           | Root del filesystem configurato canonicamente; le letture esterne vengono rifiutate | stdio LSP             |
+| Monaco/browser  | Applicazione fornita `ForgeWebScriptWorkspaceHost` | L'host decide quali URI/file/opzioni esporre; nessun presupposto sul filesystem     | Adattatore in-process |
 
 Entrambi gli adattatori utilizzano gli stessi contratti di servizio linguistico e la stessa semantica di analisi,
 ma non condividono un archivio o un trasporto di documenti. Un host del browser non deve

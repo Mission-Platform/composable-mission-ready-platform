@@ -1,7 +1,9 @@
+import { createForgeWebScriptTraceRecorder, summarizeForgeWebScriptVmValue } from './trace.js';
 import { attachForgeWebScriptTrace, toForgeWebScriptHostError, ForgeWebScriptTrap } from './traps.js';
 import { validateForgeWebScriptVmModule } from './vm-executor.js';
-import { createForgeWebScriptTraceRecorder, summarizeForgeWebScriptVmValue } from './trace.js';
+import { FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION, FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION } from './vm.js';
 
+import type { ForgeWebScriptTraceOptions } from './trace.js';
 import type {
   ForgeWebScriptVmCapabilityImport,
   ForgeWebScriptVmExecutionOptions,
@@ -14,11 +16,9 @@ import type {
   ForgeWebScriptVmValue,
   ForgeWebScriptVmWasmArtifact,
 } from './vm.js';
-import type { ForgeWebScriptTraceOptions } from './trace.js';
-import { FORGE_WEB_SCRIPT_VM_WASM_ABI_VERSION, FORGE_WEB_SCRIPT_VM_WASM_LOWERING_VERSION } from './vm.js';
 
 const PAGE_SIZE = 65_536;
-const STATIC_DATA_START = 1_024;
+const STATIC_DATA_START = 1024;
 const RUNTIME_IMPORT_MODULE = 'fws.runtime';
 const CAPABILITY_IMPORT_MODULE = 'fws.capability';
 const STEP_IMPORT = 'fws_step';
@@ -35,11 +35,11 @@ type VmRep =
   | { readonly kind: 'number'; readonly type: NumericType }
   | { readonly kind: 'bytes' }
   | { readonly kind: 'aggregate'; readonly layout: string };
-type LocalRef = readonly number[];
+type LocalReference = readonly number[];
 type FunctionInfo = {
   readonly function: ForgeWebScriptVmFunction;
   readonly reps: readonly VmRep[];
-  readonly locals: readonly LocalRef[];
+  readonly locals: readonly LocalReference[];
   readonly result: VmRep;
   readonly typeIndex: number;
 };
@@ -70,12 +70,12 @@ function signedLeb(value: number | bigint): number[] {
 
 function integerImmediate(type: NumericType, value: number | bigint): number | bigint {
   if (type === 'u32') {
-    const unsigned = BigInt(value) & 0xffff_ffffn;
-    return unsigned >= 0x8000_0000n ? unsigned - 0x1_0000_0000n : unsigned;
+    const unsigned = BigInt(value) & 0xff_ff_ff_ffn;
+    return unsigned >= 0x80_00_00_00n ? unsigned - 0x1_00_00_00_00n : unsigned;
   }
   if (type === 'u64') {
-    const unsigned = BigInt(value) & 0xffff_ffff_ffff_ffffn;
-    return unsigned >= 0x8000_0000_0000_0000n ? unsigned - 0x1_0000_0000_0000_0000n : unsigned;
+    const unsigned = BigInt(value) & 0xff_ff_ff_ff_ff_ff_ff_ffn;
+    return unsigned >= 0x80_00_00_00_00_00_00_00n ? unsigned - 0x1_00_00_00_00_00_00_00_00n : unsigned;
   }
   return value;
 }
@@ -131,8 +131,8 @@ function wasmTypeCode(type: WasmValueType): number {
 }
 
 function typeSignature(parameters: readonly VmRep[], result: VmRep): number[] {
-  const parameterTypes = parameters.flatMap((parameter) => flatTypes(parameter).map(wasmTypeCode));
-  const resultTypes = flatTypes(result).map(wasmTypeCode);
+  const parameterTypes = parameters.flatMap((parameter) => flatTypes(parameter).map((type) => wasmTypeCode(type)));
+  const resultTypes = flatTypes(result).map((type) => wasmTypeCode(type));
   return [0x60, ...vector(parameterTypes), ...vector(resultTypes)];
 }
 
@@ -154,20 +154,25 @@ function instructionRep(
   functions: ReadonlyMap<string, ForgeWebScriptVmFunction>,
 ): VmRep | undefined {
   switch (instruction.opcode) {
-    case 'const':
+    case 'const': {
       return repFromConstant(module.constants[instruction.constant]!);
-    case 'load':
+    }
+    case 'load': {
       if (instruction.type !== 'number') fail(`load of '${instruction.type}' is not a numeric v1 operation`);
       return { kind: 'number', type: instruction.numberType ?? 'i32' };
+    }
     case 'len':
-    case 'byte-at':
+    case 'byte-at': {
       return { kind: 'number', type: 'i32' };
-    case 'unary':
+    }
+    case 'unary': {
       return instruction.operation === 'not' ? { kind: 'bool' } : undefined;
-    case 'binary':
+    }
+    case 'binary': {
       return ['==', '===', '!=', '!==', '<', '<=', '>', '>=', '&&', '||'].includes(instruction.operation)
         ? { kind: 'bool' }
         : undefined;
+    }
     case 'call': {
       const target = functions.get(instruction.functionName);
       if (target === undefined) fail(`call target '${instruction.functionName}' does not exist`);
@@ -178,8 +183,9 @@ function instructionRep(
       if (imported === undefined) fail(`capability '${instruction.importName}' is not declared`);
       return resultRep(imported.result);
     }
-    default:
+    default: {
       return undefined;
+    }
   }
 }
 
@@ -203,25 +209,46 @@ function inferRegisters(function_: ForgeWebScriptVmFunction, module: ForgeWebScr
         instruction.opcode === 'write-bytes'
       )
         fail(`unsupported opcode '${instruction.opcode}'`);
-      if (instruction.opcode === 'const')
-        set(instruction.destination ?? 0, instructionRep(instruction, module, functions));
-      else if (instruction.opcode === 'move') set(instruction.destination, inferred[instruction.source]);
-      else if (instruction.opcode === 'unary')
-        set(
+      switch (instruction.opcode) {
+      case 'const': {
+      set(instruction.destination ?? 0, instructionRep(instruction, module, functions));
+      break;
+      }
+      case 'move': {
+      set(instruction.destination, inferred[instruction.source]);
+      break;
+      }
+      case 'unary': {
+      set(
           instruction.destination,
           instruction.operation === 'not' ? { kind: 'bool' } : inferred[instruction.operand],
         );
-      else if (instruction.opcode === 'binary')
-        set(instruction.destination, instructionRep(instruction, module, functions) ?? inferred[instruction.left]);
-      else if (instruction.opcode === 'call' || instruction.opcode === 'call-capability') {
+      break;
+      }
+      case 'binary': {
+      set(instruction.destination, instructionRep(instruction, module, functions) ?? inferred[instruction.left]);
+      break;
+      }
+      case 'call': 
+      case 'call-capability': {
         if (instruction.destination !== undefined)
           set(instruction.destination, instructionRep(instruction, module, functions));
-      } else if (instruction.opcode === 'load' || instruction.opcode === 'len' || instruction.opcode === 'byte-at')
-        set(instruction.destination, instructionRep(instruction, module, functions));
+      
+      break;
+      }
+      case 'load': 
+      case 'len': 
+      case 'byte-at': { {
+      set(instruction.destination, instructionRep(instruction, module, functions));
+      // No default
+      }
+      break;
+      }
+      }
     }
   }
   const result = resultRep(function_.result);
-  const returnInstruction = [...function_.code].reverse().find((instruction) => instruction.opcode === 'return');
+  const returnInstruction = function_.code.toReversed().find((instruction) => instruction.opcode === 'return');
   if (returnInstruction?.opcode === 'return' && returnInstruction.source !== undefined)
     set(returnInstruction.source, result);
   for (const [index, rep] of inferred.entries()) if (rep === undefined) inferred[index] = { kind: 'unit' };
@@ -231,8 +258,8 @@ function inferRegisters(function_: ForgeWebScriptVmFunction, module: ForgeWebScr
 function localDeclarations(
   function_: ForgeWebScriptVmFunction,
   reps: readonly VmRep[],
-): { readonly locals: readonly LocalRef[]; readonly declarations: number[] } {
-  const locals: LocalRef[] = [];
+): { readonly locals: readonly LocalReference[]; readonly declarations: number[] } {
+  const locals: LocalReference[] = [];
   let next = function_.parameters.flatMap((parameter) => flatTypes(typeForValue(parameter))).length;
   const declarations: number[] = [];
   for (const [index, rep] of reps.entries()) {
@@ -243,8 +270,8 @@ function localDeclarations(
         .flatMap((parameter) => flatTypes(typeForValue(parameter))).length;
       locals.push(Array.from({ length: width }, (_, offset) => first + offset));
     } else {
-      const refs = Array.from({ length: width }, (_, offset) => next + offset);
-      locals.push(refs);
+      const references = Array.from({ length: width }, (_, offset) => next + offset);
+      locals.push(references);
       for (const type of flatTypes(rep)) declarations.push(wasmTypeCode(type));
       next += width;
     }
@@ -255,12 +282,12 @@ function localDeclarations(
   return { locals, declarations: [...unsignedLeb(declarations.length), ...declarations.flatMap((type) => [1, type])] };
 }
 
-function localGet(ref: LocalRef, index = 0): number[] {
-  return ref[index] === undefined ? [] : [0x20, ...unsignedLeb(ref[index]!)];
+function localGet(reference: LocalReference, index = 0): number[] {
+  return reference[index] === undefined ? [] : [0x20, ...unsignedLeb(reference[index]!)];
 }
 
-function localSet(ref: LocalRef, value: readonly number[], index = 0): number[] {
-  return ref[index] === undefined ? [] : [...value, 0x21, ...unsignedLeb(ref[index]!)];
+function localSet(reference: LocalReference, value: readonly number[], index = 0): number[] {
+  return reference[index] === undefined ? [] : [...value, 0x21, ...unsignedLeb(reference[index]!)];
 }
 
 function emitConst(
@@ -276,12 +303,12 @@ function emitConst(
     if (rep.type === 'f32') {
       const buffer = new ArrayBuffer(4);
       new DataView(buffer).setFloat32(0, Number(number), true);
-      return [0x43, ...bytes(Array.from(new Uint8Array(buffer)))];
+      return [0x43, ...bytes([...new Uint8Array(buffer)])];
     }
     if (rep.type === 'f64') {
       const buffer = new ArrayBuffer(8);
       new DataView(buffer).setFloat64(0, Number(number), true);
-      return [0x44, ...bytes(Array.from(new Uint8Array(buffer)))];
+      return [0x44, ...bytes([...new Uint8Array(buffer)])];
     }
     return [
       rep.type === 'i64' || rep.type === 'u64' ? 0x42 : 0x41,
@@ -365,8 +392,8 @@ function emitStep(): number[] {
   return [0x10, 0x00, 0x04, 0x40, 0x00, 0x0b];
 }
 
-function flattenRef(ref: LocalRef): readonly number[] {
-  return [...ref];
+function flattenReference(reference: LocalReference): readonly number[] {
+  return [...reference];
 }
 
 function checkedRange(pointer: number, length: number, memory: WebAssembly.Memory, message: string): void {
@@ -395,16 +422,16 @@ function emitInstruction(
   functionIndex: number,
 ): number[] {
   const result: number[] = [...emitStep()];
-  const ref = (index: number): LocalRef => info.locals[index] ?? fail(`register ${index} is not available`);
+  const reference = (index: number): LocalReference => info.locals[index] ?? fail(`register ${index} is not available`);
   const rep = (index: number): VmRep => info.reps[index] ?? fail(`register ${index} is not available`);
   const set = (destination: number, value: readonly number[]): void => {
-    result.push(...localSet(ref(destination), value));
+    result.push(...localSet(reference(destination), value));
   };
   const assign = (destination: number, width = 1): void => {
-    for (let index = width - 1; index >= 0; index -= 1) result.push(...localSet(ref(destination), [], index));
+    for (let index = width - 1; index >= 0; index -= 1) result.push(...localSet(reference(destination), [], index));
   };
   switch (instruction.opcode) {
-    case 'const':
+    case 'const': {
       set(
         instruction.destination ?? 0,
         emitConst(
@@ -415,23 +442,26 @@ function emitInstruction(
         ),
       );
       break;
+    }
     case 'move': {
-      const source = flattenRef(ref(instruction.source));
+      const source = flattenReference(reference(instruction.source));
       for (let index = 0; index < source.length; index += 1)
-        result.push(...localSet(ref(instruction.destination), localGet(ref(instruction.source), index), index));
+        result.push(...localSet(reference(instruction.destination), localGet(reference(instruction.source), index), index));
       break;
     }
-    case 'load':
+    case 'load': {
       set(instruction.destination, memoryLoad(rep(instruction.destination), instruction.address));
       break;
-    case 'store':
+    }
+    case 'store': {
       result.push(
         0x41,
         ...signedLeb(instruction.address),
-        ...localGet(ref(instruction.source)),
+        ...localGet(reference(instruction.source)),
         ...memoryStore(rep(instruction.source)),
       );
       break;
+    }
     case 'alloc':
     case 'bytes-from-memory':
     case 'aggregate-from-memory':
@@ -439,25 +469,27 @@ function emitInstruction(
       fail(`unsupported opcode '${instruction.opcode}'`);
       break;
     }
-    case 'len':
-      if (flattenRef(ref(instruction.source)).length !== 2) fail('len requires a pointer-length value');
-      set(instruction.destination, localGet(ref(instruction.source), 1));
+    case 'len': {
+      if (flattenReference(reference(instruction.source)).length !== 2) fail('len requires a pointer-length value');
+      set(instruction.destination, localGet(reference(instruction.source), 1));
       break;
-    case 'byte-at':
+    }
+    case 'byte-at': {
       result.push(
-        ...localGet(ref(instruction.source), 0),
-        ...localGet(ref(instruction.source), 1),
-        ...localGet(ref(instruction.index)),
+        ...localGet(reference(instruction.source), 0),
+        ...localGet(reference(instruction.source), 1),
+        ...localGet(reference(instruction.index)),
         0x10,
         ...unsignedLeb(byteAtIndex),
       );
       assign(instruction.destination);
       break;
-    case 'unary':
+    }
+    case 'unary': {
       {
         const operand = rep(instruction.operand);
         if (instruction.operation === 'not') {
-          result.push(...localGet(ref(instruction.operand)));
+          result.push(...localGet(reference(instruction.operand)));
           if (
             operand.kind === 'bool' ||
             (operand.kind === 'number' && (operand.type === 'i32' || operand.type === 'u32'))
@@ -470,12 +502,12 @@ function emitInstruction(
         } else {
           if (operand.kind !== 'number') fail('neg requires a numeric register');
           if (operand.type === 'f32' || operand.type === 'f64') {
-            result.push(...localGet(ref(instruction.operand)), operand.type === 'f32' ? 0x8c : 0x9a);
+            result.push(...localGet(reference(instruction.operand)), operand.type === 'f32' ? 0x8c : 0x9a);
           } else {
             result.push(
               operand.type === 'i64' || operand.type === 'u64' ? 0x42 : 0x41,
               0,
-              ...localGet(ref(instruction.operand)),
+              ...localGet(reference(instruction.operand)),
               operand.type === 'i64' || operand.type === 'u64' ? 0x7d : 0x6b,
             );
           }
@@ -483,12 +515,13 @@ function emitInstruction(
       }
       assign(instruction.destination);
       break;
+    }
     case 'binary': {
       const leftRep = rep(instruction.left);
       const rightRep = rep(instruction.right);
       if (!sameRep(leftRep, rightRep)) fail('binary operands must have matching types');
-      for (const value of ref(instruction.left)) result.push(...localGet([value]));
-      for (const value of ref(instruction.right)) result.push(...localGet([value]));
+      for (const value of reference(instruction.left)) result.push(...localGet([value]));
+      for (const value of reference(instruction.right)) result.push(...localGet([value]));
       if (['==', '===', '!=', '!==', '<', '<=', '>', '>='].includes(instruction.operation)) {
         if (leftRep.kind === 'number') result.push(numericCompare(leftRep.type, instruction.operation));
         else if (leftRep.kind === 'bool')
@@ -510,14 +543,14 @@ function emitInstruction(
       const target =
         functions.get(instruction.functionName) ?? fail(`call target '${instruction.functionName}' does not exist`);
       for (const argument of instruction.arguments)
-        for (const value of ref(argument)) result.push(...localGet([value]));
+        for (const value of reference(argument)) result.push(...localGet([value]));
       result.push(0x10, ...unsignedLeb(target.typeIndex));
       const targetResult = target.result;
       if (instruction.destination === undefined) for (const _ of flatTypes(targetResult)) result.push(0x1a);
       else {
         const values = flatTypes(targetResult);
         for (let index = values.length - 1; index >= 0; index -= 1)
-          result.push(...localSet(ref(instruction.destination), [], index));
+          result.push(...localSet(reference(instruction.destination), [], index));
       }
       break;
     }
@@ -525,19 +558,19 @@ function emitInstruction(
       const importIndex =
         capabilityIndexes.get(instruction.importName) ?? fail(`capability '${instruction.importName}' is not declared`);
       for (const argument of instruction.arguments)
-        for (const value of ref(argument)) result.push(...localGet([value]));
+        for (const value of reference(argument)) result.push(...localGet([value]));
       result.push(0x10, ...unsignedLeb(importIndex));
       const imported = module.capabilityImports.find((candidate) => candidate.name === instruction.importName)!;
       if (instruction.destination === undefined)
         for (const _ of flatTypes(resultRep(imported.result))) result.push(0x1a);
       else
         for (let index = flatTypes(resultRep(imported.result)).length - 1; index >= 0; index -= 1)
-          result.push(...localSet(ref(instruction.destination), [], index));
+          result.push(...localSet(reference(instruction.destination), [], index));
       break;
     }
-    case 'branch':
+    case 'branch': {
       result.push(
-        ...localGet(ref(instruction.condition)),
+        ...localGet(reference(instruction.condition)),
         0x04,
         0x40,
         0x41,
@@ -556,7 +589,8 @@ function emitInstruction(
         0x0b,
       );
       break;
-    case 'jump':
+    }
+    case 'jump': {
       result.push(
         0x41,
         ...signedLeb(instruction.target),
@@ -566,12 +600,14 @@ function emitInstruction(
         ...unsignedLeb(stepIndex),
       );
       break;
-    case 'return':
+    }
+    case 'return': {
       if (instruction.source !== undefined)
-        for (const value of ref(instruction.source)) result.push(...localGet([value]));
+        for (const value of reference(instruction.source)) result.push(...localGet([value]));
       result.push(0x0f);
       break;
-    case 'trap':
+    }
+    case 'trap': {
       result.push(
         0x41,
         ...signedLeb(functionIndex),
@@ -582,8 +618,10 @@ function emitInstruction(
         0x00,
       );
       break;
-    default:
+    }
+    default: {
       fail('unsupported opcode');
+    }
   }
   if (
     instruction.opcode !== 'branch' &&
@@ -648,9 +686,7 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
     { kind: 'unit' },
   );
   const capabilityIndexes = new Map<string, number>();
-  const imports: Array<{ readonly module: string; readonly name: string; readonly typeIndex: number }> = [];
-  imports.push({ module: RUNTIME_IMPORT_MODULE, name: STEP_IMPORT, typeIndex: stepType });
-  imports.push({ module: RUNTIME_IMPORT_MODULE, name: COMPARE_IMPORT, typeIndex: compareType });
+  const imports: Array<{ readonly module: string; readonly name: string; readonly typeIndex: number }> = [ { module: RUNTIME_IMPORT_MODULE, name: STEP_IMPORT, typeIndex: stepType }, { module: RUNTIME_IMPORT_MODULE, name: COMPARE_IMPORT, typeIndex: compareType }];
   const byteAtIndex = imports.length;
   imports.push({ module: RUNTIME_IMPORT_MODULE, name: BYTE_AT_IMPORT, typeIndex: byteAtType });
   const trapIndex = imports.length;
@@ -661,7 +697,7 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
     imports.push({
       module: CAPABILITY_IMPORT_MODULE,
       name: imported.name,
-      typeIndex: addType(imported.parameters.map(typeForValue), resultRep(imported.result)),
+      typeIndex: addType(imported.parameters.map((parameter) => typeForValue(parameter)), resultRep(imported.result)),
     });
   }
   for (const function_ of module.functions) {
@@ -672,7 +708,7 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
       reps,
       locals: declared.locals,
       result: resultRep(function_.result),
-      typeIndex: addType(function_.parameters.map(typeForValue), resultRep(function_.result)),
+      typeIndex: addType(function_.parameters.map((parameter) => typeForValue(parameter)), resultRep(function_.result)),
     });
   }
   const userFunctionIndexes = new Map<string, number>();
@@ -685,7 +721,7 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
     userInfos.set(function_.name, { ...old, typeIndex: userFunctionIndexes.get(function_.name)! });
   }
   const functionTypeIndexes = module.functions.map((function_) =>
-    typeKeys.get(JSON.stringify([function_.parameters.map(typeForValue), resultRep(function_.result)]))!,
+    typeKeys.get(JSON.stringify([function_.parameters.map((parameter) => typeForValue(parameter)), resultRep(function_.result)]))!,
   );
   const allocType = addType([{ kind: 'number', type: 'i32' }], { kind: 'number', type: 'i32' });
   const deallocType = addType(
@@ -903,7 +939,7 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
   );
   codeBodies.push(bodyFor([0x41, ...signedLeb(STATIC_DATA_START), 0x24, ...unsignedLeb(2)], [0]));
   const output: number[] = [0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00];
-  output.push(...section(1, [...unsignedLeb(typeBodies.length), ...typeBodies.flatMap((type) => type)]));
+  output.push(...section(1, [...unsignedLeb(typeBodies.length), ...typeBodies.flat()]));
   output.push(
     ...section(2, [
       ...unsignedLeb(imports.length),
@@ -953,18 +989,17 @@ function buildModule(module: ForgeWebScriptVmModule): Uint8Array {
     [...wasmString('memory'), 0x02, 0x00],
   ];
   output.push(...section(7, [unsignedLeb(exports.length), ...exports.flat()].flat()));
-  output.push(...section(10, [...unsignedLeb(codeBodies.length), ...codeBodies.flatMap((body) => body)]));
+  output.push(...section(10, [...unsignedLeb(codeBodies.length), ...codeBodies.flat()]));
   if (dataSegments.length > 0) {
     const segments = dataSegments
-      .map((segment) => [
+      .flatMap((segment) => [
         0x00,
         0x41,
         ...signedLeb(segment.offset),
         0x0b,
         ...unsignedLeb(segment.bytes.byteLength),
-        ...bytes(Array.from(segment.bytes)),
-      ])
-      .flat();
+        ...bytes([...segment.bytes]),
+      ]);
     output.push(...section(11, [0x01, ...segments]));
   }
   return new Uint8Array(output);
@@ -1054,10 +1089,7 @@ function importValue(
   memory: WebAssembly.Memory,
   allocate: (size: number) => number,
 ): readonly (number | bigint)[] {
-  if (!sameRep(rep, repFromConstant(value))) {
-    if (!(rep.kind === 'bytes' && value.kind === 'bytes') && !(rep.kind === 'aggregate' && value.kind === 'aggregate'))
-      throw new ForgeWebScriptTrap('GuestTrap', 'VM WASM received an argument with an invalid type.');
-  }
+  if (!sameRep(rep, repFromConstant(value)) && !(rep.kind === 'bytes' && value.kind === 'bytes') && !(rep.kind === 'aggregate' && value.kind === 'aggregate')) throw new ForgeWebScriptTrap('GuestTrap', 'VM WASM received an argument with an invalid type.');
   if (value.kind === 'aggregate' && rep.kind === 'aggregate') {
     const pointer = allocate(value.bytes.byteLength);
     new Uint8Array(memory.buffer).set(value.bytes, pointer);
@@ -1099,6 +1131,7 @@ export function prepareForgeWebScriptVmWasm(
   let activeFunctionName = '';
   let activeRedact: ForgeWebScriptTraceOptions['redact'];
   let traceFinished = false;
+  // eslint-disable-next-line unicorn/consistent-function-scoping -- Keep observability scoped to one VM execution.
   const observe = (callback: () => void): void => {
     try {
       callback();
@@ -1134,7 +1167,7 @@ export function prepareForgeWebScriptVmWasm(
             imported.capability,
           );
         }
-        const parameterReps = imported.parameters.map(typeForValue);
+        const parameterReps = imported.parameters.map((parameter) => typeForValue(parameter));
         let offset = 0;
         const arguments_: ForgeWebScriptVmValue[] = [];
         for (const parameter of parameterReps) {
@@ -1225,14 +1258,10 @@ export function prepareForgeWebScriptVmWasm(
       },
       [TRAP_IMPORT]: (functionIndex: number, instructionIndex: number) => {
         const instruction = artifact.module.functions[functionIndex]?.code[instructionIndex];
-        if (instruction?.opcode !== 'trap') {
-          pendingTrap = new ForgeWebScriptTrap(
+        pendingTrap = instruction?.opcode === 'trap' ? new ForgeWebScriptTrap('GuestTrap', `${instruction.code}: ${instruction.message}`) : new ForgeWebScriptTrap(
             'GuestTrap',
             'VM WASM encountered an invalid trap instruction reference.',
           );
-        } else {
-          pendingTrap = new ForgeWebScriptTrap('GuestTrap', `${instruction.code}: ${instruction.message}`);
-        }
         observe(() =>
           activeTrace?.recordTrap(pendingTrap?.code ?? 'GuestTrap', pendingTrap?.message ?? 'VM WASM trap', steps),
         );
@@ -1275,13 +1304,13 @@ export function prepareForgeWebScriptVmWasm(
       if (requiredPages > memory!.buffer.byteLength / PAGE_SIZE)
         memory!.grow(requiredPages - memory!.buffer.byteLength / PAGE_SIZE);
       if (executionOptions.memory !== undefined) new Uint8Array(memory!.buffer).set(executionOptions.memory, 0);
-      const args = arguments_.flatMap((argument, index) =>
+      const arguments__ = arguments_.flatMap((argument, index) =>
         importValue(argument, typeForValue(function_.parameters[index]!), memory!, allocate),
       );
       const exportName = functionExports.get(functionName);
       if (exportName === undefined)
         throw new ForgeWebScriptTrap('GuestTrap', `Function '${functionName}' does not exist.`);
-      const resultValues = (exports()[exportName] as (...values: readonly (number | bigint)[]) => unknown)(...args);
+      const resultValues = (exports()[exportName] as (...values: readonly (number | bigint)[]) => unknown)(...arguments__);
       if (pendingTrap !== undefined) throw pendingTrap;
       const flatResult =
         flatTypes(resultRep(function_.result)).length === 0

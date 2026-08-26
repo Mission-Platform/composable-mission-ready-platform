@@ -1,5 +1,6 @@
-import { ForgeWebScriptMemory, type ForgeWebScriptMemoryAddress } from './memory.js';
 import { ForgeWebScriptTrap } from './traps.js';
+
+import type { ForgeWebScriptMemory, ForgeWebScriptMemoryAddress } from './memory.js';
 
 export const FORGE_WEB_SCRIPT_MEMORY_MODEL = 'region-arc-checked-linear' as const;
 
@@ -87,7 +88,7 @@ export class ForgeWebScriptSafeHeap {
   /** A suspension is legal only after every region value has been promoted. */
   public prepareSuspension(region: ForgeWebScriptRegion): void {
     const state = this.requireRegion(region);
-    if (state.allocations.size !== 0)
+    if (state.allocations.size > 0)
       throw new ForgeWebScriptTrap('BorrowViolation', 'Region borrows cannot cross an async or iterator suspension.');
   }
 

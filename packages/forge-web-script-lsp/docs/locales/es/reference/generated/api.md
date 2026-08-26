@@ -16,16 +16,16 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/forg
 **Tipo:** función
 
 ```typescript
-function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de ForgeWebScriptLspServer |  |
+| Nombre   | Tipo                                | Descripción |
+| -------- | ----------------------------------- | ----------- |
+| opciones | Opciones de ForgeWebScriptLspServer |             |
 
 ### ForgeWebScriptLspDocumento
 
@@ -82,17 +82,20 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function registerForgeWebScriptLsp(
+  connection: Connection,
+  options: ForgeWebScriptLspServerOptions = {},
+): ForgeWebScriptLspServer;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| conexión | Conexión |  |
-| opciones | Opciones de ForgeWebScriptLspServer |  |
+| Nombre   | Tipo                                | Descripción |
+| -------- | ----------------------------------- | ----------- |
+| conexión | Conexión                            |             |
+| opciones | Opciones de ForgeWebScriptLspServer |             |
 
 ## `src/workspace`
 
@@ -101,16 +104,18 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function createForgeWebScriptNodeWorkspaceHost(options: ForgeWebScriptNodeWorkspaceOptions): RootBoundedForgeWebScriptWorkspaceHost
+function createForgeWebScriptNodeWorkspaceHost(
+  options: ForgeWebScriptNodeWorkspaceOptions,
+): RootBoundedForgeWebScriptWorkspaceHost;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de ForgeWebScriptNodeWorkspace |  |
+| Nombre   | Tipo                                    | Descripción |
+| -------- | --------------------------------------- | ----------- |
+| opciones | Opciones de ForgeWebScriptNodeWorkspace |             |
 
 ### ForgeWebScriptNodeFileSystem
 

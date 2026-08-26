@@ -16,50 +16,56 @@
 **النوع:** الوظيفة
 
 ```typescript
-function assertForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic
+function assertForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |  |
-| توقع | ForgeWebScriptDiagnosticExpectation |  |
+| الاسم   | اكتب                                   | الوصف |
+| ------- | -------------------------------------- | ----- |
+| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |       |
+| توقع    | ForgeWebScriptDiagnosticExpectation    |       |
 
 ### AssurgeWebScriptNoDiagnostics
 
 **النوع:** الوظيفة
 
 ```typescript
-function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void
+function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |  |
+| الاسم   | اكتب                                   | الوصف |
+| ------- | -------------------------------------- | ----- |
+| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |       |
 
 ### findForgeWebScriptDiagnostic
 
 **النوع:** الوظيفة
 
 ```typescript
-function findForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic | undefined
+function findForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic | undefined;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |  |
-| توقع | ForgeWebScriptDiagnosticExpectation |  |
+| الاسم   | اكتب                                   | الوصف |
+| ------- | -------------------------------------- | ----- |
+| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |       |
+| توقع    | ForgeWebScriptDiagnosticExpectation    |       |
 
 ### ForgeWebScriptDiagnosticExpectation
 
@@ -76,32 +82,32 @@ export interface ForgeWebScriptDiagnosticExpectation
 **النوع:** الوظيفة
 
 ```typescript
-function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string
+function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 قم بتنسيق التشخيص دون تجاهل بيانات تعريف الموقع المنظمة الخاصة به.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | فورجي ويب سكريبت التشخيص |  |
+| الاسم   | اكتب                     | الوصف |
+| ------- | ------------------------ | ----- |
+| التشخيص | فورجي ويب سكريبت التشخيص |       |
 
 ### formatForgeWebScriptDiagnostics
 
 **النوع:** الوظيفة
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string
+function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |  |
+| الاسم   | اكتب                                   | الوصف |
+| ------- | -------------------------------------- | ----- |
+| التشخيص | للقراءة فقط ForgeWebScriptDiagnostic[] |       |
 
 ## `src/harness`
 
@@ -110,16 +116,16 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDia
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness
+function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness;
 ```
 
 قم بإنشاء مجموعة أدوات مشتركة مع المترجم الاختياري، والقدرة، وإعدادات الهدف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجي ويب سكريبت تيست هارنيس أوبتيونس |  |
+| الاسم  | اكتب                                  | الوصف |
+| ------ | ------------------------------------- | ----- |
+| خيارات | فورجي ويب سكريبت تيست هارنيس أوبتيونس |       |
 
 ### ForgeWebScriptCapabilityFunction
 
@@ -136,7 +142,9 @@ export type ForgeWebScriptCapabilityFunction = (...arguments_: readonly unknown[
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptCapabilityImports = Readonly< Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>> >;
+export type ForgeWebScriptCapabilityImports = Readonly<
+  Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>>
+>;
 ```
 
 وظائف المضيف التي تعتمد على القدرة والاسم المستعار الواضح؛ يتم رفض الواردات غير المعلنة.
@@ -156,7 +164,7 @@ export interface ForgeWebScriptCompilationResult extends ForgeWebScriptCompiledM
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string
+function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string;
 ```
 
 تحويل مسار التثبيت إلى اسم اختبار/وحدة مستقرة. المسارات النسبية هي
@@ -164,10 +172,10 @@ function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): strin
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| جذر التثبيت | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| اسم الملف   | سلسلة |       |
+| جذر التثبيت | سلسلة |       |
 
 ### ForgeWebScriptInspectionResult
 
@@ -238,7 +246,7 @@ export interface ForgeWebScriptTestHarnessOptions extends ForgeWebScriptPluginOp
 **النوع:** الوظيفة
 
 ```typescript
-function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig
+function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig;
 ```
 
 قم بتكوين تكوين Mission Platform Vitest القياسي باستخدام Forge Web Script.
@@ -247,9 +255,9 @@ function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOpt
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجيويبسكريبت فيتيستكونفيجوبتيونس |  |
+| الاسم  | اكتب                               | الوصف |
+| ------ | ---------------------------------- | ----- |
+| خيارات | فورجيويبسكريبت فيتيستكونفيجوبتيونس |       |
 
 ### ForgeWebScriptVitestConfigOptions
 
@@ -266,13 +274,13 @@ export interface ForgeWebScriptVitestConfigOptions extends Omit<VitestConfigOpti
 **النوع:** الوظيفة
 
 ```typescript
-function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin;
 ```
 
 قم بتثبيت البرنامج الإضافي Forge Web Script للإنتاج في تكوين Vite/Vitest.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات ForgeWebScriptPlugin |  |
+| الاسم  | اكتب                        | الوصف |
+| ------ | --------------------------- | ----- |
+| خيارات | خيارات ForgeWebScriptPlugin |       |

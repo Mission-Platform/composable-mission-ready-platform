@@ -41,7 +41,7 @@ export function forgeWebScriptTypeNameToString(type: ForgeWebScriptTypeName): st
   const generic =
     type.arguments === undefined || type.arguments.length === 0
       ? name
-      : `${name}<${type.arguments.map(forgeWebScriptTypeNameToString).join(', ')}>`;
+      : `${name}<${type.arguments.map((argument) => forgeWebScriptTypeNameToString(argument)).join(', ')}>`;
   const qualified =
     type.referenceMode === undefined ? generic : `&${type.referenceMode === 'mut-ref' ? 'mut ' : ''}${generic}`;
   return type.length === undefined ? qualified : `${qualified}[${type.length}]`;

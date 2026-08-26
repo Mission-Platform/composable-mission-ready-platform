@@ -459,12 +459,12 @@ ambient Node או ממשקי API של דפדפן.
 כלול גם באובייקט האבחוני `data`. משפחות קוד יציבות טיפוסיות
 הם:
 
-| משפחת קוד | שלב | המשמעות |
-| ------------- | ------------ | ------------------------------------------------------------------------ |
-| `FWS-LEX-*` | `lex` | תווים/escapes לא חוקיים, מסימי שורה גולמית של מחרוזת, או מחרוזות/הערות לחסימה שלא נגמרו |
-| `FWS-PARSE-*` | `parse` | תחביר מודול, הצהרה, משפט או ביטוי לא חוקי |
-| `FWS-TYPE-*` | `type-check` | סוגים, שמות, אופרטורים, ארגומנטים או החזרות לא חוקיים |
-| `FWS-ABI-*` | `abi` | שמות כפולים, יכולות שנדחו, ייצוא או יבוא |
+| משפחת קוד     | שלב          | המשמעות                                                                                 |
+| ------------- | ------------ | --------------------------------------------------------------------------------------- |
+| `FWS-LEX-*`   | `lex`        | תווים/escapes לא חוקיים, מסימי שורה גולמית של מחרוזת, או מחרוזות/הערות לחסימה שלא נגמרו |
+| `FWS-PARSE-*` | `parse`      | תחביר מודול, הצהרה, משפט או ביטוי לא חוקי                                               |
+| `FWS-TYPE-*`  | `type-check` | סוגים, שמות, אופרטורים, ארגומנטים או החזרות לא חוקיים                                   |
+| `FWS-ABI-*`   | `abi`        | שמות כפולים, יכולות שנדחו, ייצוא או יבוא                                                |
 
 קלט שגוי עדיין מסומן ומנתח היכן שחזור מנתח מאפשר
 זה. לדוגמה, מקור פגום עלול לייצר `FWS-PARSE-017` תוך שמירה
@@ -490,7 +490,7 @@ lexing מחרוזת מקבל רק escapes תואמות JSON (`\\`, `\"`, `\/`, `
 ```tsx
 <ForgeMonacoEditor
   language="fws"
-  modelValue={"export fn add(value: i32) -> i32 {\n  return value + 1;\n}"}
+  modelValue={'export fn add(value: i32) -> i32 {\n  return value + 1;\n}'}
 />
 ```
 
@@ -507,15 +507,15 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
   readFile: async (uri) => files.get(uri),
   listFiles: async () => [...files.keys()],
   getOptions: async () => ({
-    requestedCapabilities: ["clock.now"],
-    capabilityNames: ["clock.now"],
+    requestedCapabilities: ['clock.now'],
+    capabilityNames: ['clock.now'],
     capabilitySignatures: new Map([
       [
-        "clock.now",
+        'clock.now',
         {
           parameters: [],
-          result: "i64",
-          documentation: "Read the current Unix timestamp.",
+          result: 'i64',
+          documentation: 'Read the current Unix timestamp.',
         },
       ],
     ]),
@@ -525,9 +525,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 <ForgeMonacoEditor
   language="fws"
   forgeWebScript={{ workspaceHost }}
-  modelValue={
-    'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'
-  }
+  modelValue={'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'}
 />;
 ```
 
@@ -542,10 +540,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 נטען:
 
 ```ts
-import {
-  attachForgeWebScriptMonaco,
-  registerForgeWebScriptLanguage,
-} from "@mission-platform/content";
+import { attachForgeWebScriptMonaco, registerForgeWebScriptLanguage } from '@mission-platform/content';
 
 registerForgeWebScriptLanguage(monaco);
 const handle = attachForgeWebScriptMonaco(editor, monaco, { workspaceHost });
@@ -562,10 +557,10 @@ handle.dispose();
 
 ## LSP לעומת סביבות עבודה של דפדפן
 
-| צרכן | יישום סביבת עבודה | שורש/גבול בטחוני | תחבורה |
-| --------------- | -------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
-| לקוח Node LSP | `RootBoundedForgeWebScriptWorkspaceHost` | שורשי מערכת קבצים מוגדרים בקנה מידה; קריאות חיצוניות נדחות | stdio LSP |
-| מונקו/דפדפן | `ForgeWebScriptWorkspaceHost` המסופק באפליקציה | המארח מחליט אילו URIs/קבצים/אפשרויות לחשוף; אין הנחת מערכת קבצים | מתאם בתהליך |
+| צרכן          | יישום סביבת עבודה                              | שורש/גבול בטחוני                                                 | תחבורה      |
+| ------------- | ---------------------------------------------- | ---------------------------------------------------------------- | ----------- |
+| לקוח Node LSP | `RootBoundedForgeWebScriptWorkspaceHost`       | שורשי מערכת קבצים מוגדרים בקנה מידה; קריאות חיצוניות נדחות       | stdio LSP   |
+| מונקו/דפדפן   | `ForgeWebScriptWorkspaceHost` המסופק באפליקציה | המארח מחליט אילו URIs/קבצים/אפשרויות לחשוף; אין הנחת מערכת קבצים | מתאם בתהליך |
 
 שני המתאמים משתמשים באותם חוזי שירות שפה וסמנטיקה של ניתוח,
 אבל הם לא חולקים חנות מסמכים או הובלה. אסור למארח דפדפן

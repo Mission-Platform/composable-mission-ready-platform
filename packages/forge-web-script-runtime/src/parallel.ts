@@ -275,7 +275,8 @@ async function materializeParallel<TValue>(
 ): Promise<readonly TValue[]> {
   const iterator = asIterator(source);
   const values = forgeWebScriptIteratorCollect(iterator).values;
-  return (await runIndexed(values, (value) => value, options)).values;
+  const result = await runIndexed(values, (value) => value, options);
+  return result.values;
 }
 
 /** Materialize ordered parallel results into an owned vector. */

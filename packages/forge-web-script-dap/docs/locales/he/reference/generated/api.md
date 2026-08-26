@@ -126,32 +126,32 @@ export interface DapVariable
 פונקציה **סוג:**
 
 ```typescript
-function encodeDapMessage(message: DapMessage): Buffer
+function encodeDapMessage(message: DapMessage): Buffer;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הודעה | DapMessage |  |
+| שם    | הקלד       | תיאור |
+| ----- | ---------- | ----- |
+| הודעה | DapMessage |       |
 
 ### encodeLineMessage
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string
+function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הודעה | ForgeWebScriptRuntimeRequest |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| הודעה | ForgeWebScriptRuntimeRequest |       |
 
 ### ForgeWebScriptDapForensicRequest
 
@@ -198,7 +198,26 @@ export interface ForgeWebScriptDapTraceRequest extends DapRequest<ForgeWebScript
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptRuntimeCommand = | 'launch' | 'setBreakpoints' | 'configurationDone' | 'continue' | 'next' | 'stepIn' | 'stepOut' | 'pause' | 'threads' | 'stackTrace' | 'scopes' | 'variables' | 'fwsTraceSummary' | 'fwsTraceEvents' | 'fwsMemoryState' | 'fwsCapabilityCalls' | 'fwsTrapEvidence' | 'terminate' | 'disconnect';
+export type ForgeWebScriptRuntimeCommand =
+  | 'launch'
+  | 'setBreakpoints'
+  | 'configurationDone'
+  | 'continue'
+  | 'next'
+  | 'stepIn'
+  | 'stepOut'
+  | 'pause'
+  | 'threads'
+  | 'stackTrace'
+  | 'scopes'
+  | 'variables'
+  | 'fwsTraceSummary'
+  | 'fwsTraceEvents'
+  | 'fwsMemoryState'
+  | 'fwsCapabilityCalls'
+  | 'fwsTrapEvidence'
+  | 'terminate'
+  | 'disconnect';
 ```
 
 לא סופק תיאור.
@@ -228,7 +247,14 @@ export interface ForgeWebScriptRuntimeErrorEvent
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptRuntimeMessage = | ForgeWebScriptRuntimeResponse | ForgeWebScriptRuntimeOutputEvent | ForgeWebScriptRuntimeStoppedEvent | ForgeWebScriptRuntimeContinuedEvent | ForgeWebScriptRuntimeThreadEvent | ForgeWebScriptRuntimeTerminatedEvent | ForgeWebScriptRuntimeErrorEvent;
+export type ForgeWebScriptRuntimeMessage =
+  | ForgeWebScriptRuntimeResponse
+  | ForgeWebScriptRuntimeOutputEvent
+  | ForgeWebScriptRuntimeStoppedEvent
+  | ForgeWebScriptRuntimeContinuedEvent
+  | ForgeWebScriptRuntimeThreadEvent
+  | ForgeWebScriptRuntimeTerminatedEvent
+  | ForgeWebScriptRuntimeErrorEvent;
 ```
 
 לא סופק תיאור.
@@ -278,7 +304,11 @@ export interface ForgeWebScriptRuntimeResponse
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptRuntimeSpawner = ( executable: string, arguments_: readonly string[], options: ForgeWebScriptRuntimeSpawnOptions, ) => ForgeWebScriptRuntimeProcess;
+export type ForgeWebScriptRuntimeSpawner = (
+  executable: string,
+  arguments_: readonly string[],
+  options: ForgeWebScriptRuntimeSpawnOptions,
+) => ForgeWebScriptRuntimeProcess;
 ```
 
 לא סופק תיאור.
@@ -328,16 +358,16 @@ export interface ForgeWebScriptRuntimeThreadEvent
 פונקציה **סוג:**
 
 ```typescript
-function isRecord(value: unknown): value is Record<string, unknown>
+function isRecord(value: unknown): value is Record<string, unknown>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | לא ידוע |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| ערך | לא ידוע |       |
 
 ### RuntimeLineParser
 
@@ -356,16 +386,16 @@ export class RuntimeLineParser
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer
+function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptDapServerOptions |  |
+| שם       | הקלד                           | תיאור |
+| -------- | ------------------------------ | ----- |
+| אפשרויות | ForgeWebScriptDapServerOptions |       |
 
 ### ForgeWebScriptDapServer
 

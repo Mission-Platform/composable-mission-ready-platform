@@ -385,7 +385,7 @@ Forge Web Script 提供了一个确定性正则表达式标准库。
 `regex_prefix_match(pattern, value) -> bool`，以及
 `regex_search(pattern, value, start: i32) -> bool`执行全值，
 分别是位置零前缀和最左边搜索匹配。捕获边界
-可通过相应的`regex__*capture_start`和`regex*__capture_end`调用；他们采用组索引并返回 UTF-16 字符串
+可通过相应的`regex___capture_start`和`regex___capture_end`调用；他们采用组索引并返回 UTF-16 字符串
 当没有匹配或组未设置时，偏移量或`-1`。搜索捕获
 调用还采用组索引之前的起始偏移量。
 

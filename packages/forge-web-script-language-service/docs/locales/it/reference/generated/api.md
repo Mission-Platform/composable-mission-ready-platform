@@ -16,18 +16,22 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-web-scri
 **Tipo:** funzione
 
 ```typescript
-function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeWebScriptWorkspaceOptions, analysisOptions: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysis
+function analyzeForgeWebScript(
+  document: ForgeWebScriptDocument,
+  options: ForgeWebScriptWorkspaceOptions,
+  analysisOptions: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysis;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| documento | ForgeWebScriptDocument |  |
-| opzioni | ForgeWebScriptWorkspaceOpzioni |  |
-| analisiOpzioni | ForgeWebScriptAnalysisOptions |  |
+| Nome           | Digitare                       | Descrizione |
+| -------------- | ------------------------------ | ----------- |
+| documento      | ForgeWebScriptDocument         |             |
+| opzioni        | ForgeWebScriptWorkspaceOpzioni |             |
+| analisiOpzioni | ForgeWebScriptAnalysisOptions  |             |
 
 ## `src/completion`
 
@@ -36,19 +40,24 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function completeForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): readonly ForgeWebScriptCompletion[]
+function completeForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): readonly ForgeWebScriptCompletion[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| posizione | ForgeWebScriptPosizione |  |
-| simboli | sola lettura ForgeWebScriptSymbol[] |  |
-| opzioni | ForgeWebScriptWorkspaceOpzioni |  |
+| Nome      | Digitare                            | Descrizione |
+| --------- | ----------------------------------- | ----------- |
+| fonte     | stringa                             |             |
+| posizione | ForgeWebScriptPosizione             |             |
+| simboli   | sola lettura ForgeWebScriptSymbol[] |             |
+| opzioni   | ForgeWebScriptWorkspaceOpzioni      |             |
 
 ## `src/documents`
 
@@ -57,16 +66,16 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService
+function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ospite | ForgeWebScriptWorkspaceHost |  |
+| Nome   | Digitare                    | Descrizione |
+| ------ | --------------------------- | ----------- |
+| ospite | ForgeWebScriptWorkspaceHost |             |
 
 ## `src/features`
 
@@ -75,91 +84,112 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function codeLensesForgeWebScript(module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], referenceCount: (symbol: ForgeWebScriptSymbol) => number): readonly ForgeWebScriptCodeLens[]
+function codeLensesForgeWebScript(
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  referenceCount: (symbol: ForgeWebScriptSymbol) => number,
+): readonly ForgeWebScriptCodeLens[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| modulo | ForgeWebScriptModule \| indefinito |  |
-| simboli | sola lettura ForgeWebScriptSymbol[] |  |
-| riferimentoConteggio | (simbolo: ForgeWebScriptSymbol) => numero |  |
+| Nome                 | Digitare                                  | Descrizione |
+| -------------------- | ----------------------------------------- | ----------- |
+| modulo               | ForgeWebScriptModule \| indefinito        |             |
+| simboli              | sola lettura ForgeWebScriptSymbol[]       |             |
+| riferimentoConteggio | (simbolo: ForgeWebScriptSymbol) => numero |             |
 
 ### documentSymbolsForgeWebScript
 
 **Tipo:** funzione
 
 ```typescript
-function documentSymbolsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[]): readonly ForgeWebScriptDocumentSymbol[]
+function documentSymbolsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+): readonly ForgeWebScriptDocumentSymbol[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| modulo | ForgeWebScriptModule \| indefinito |  |
-| simboli | sola lettura ForgeWebScriptSymbol[] |  |
+| Nome    | Digitare                            | Descrizione |
+| ------- | ----------------------------------- | ----------- |
+| fonte   | stringa                             |             |
+| modulo  | ForgeWebScriptModule \| indefinito  |             |
+| simboli | sola lettura ForgeWebScriptSymbol[] |             |
 
 ### pieghevoleRangesForgeWebScript
 
 **Tipo:** funzione
 
 ```typescript
-function foldingRangesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined): readonly ForgeWebScriptFoldingRange[]
+function foldingRangesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+): readonly ForgeWebScriptFoldingRange[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| modulo | ForgeWebScriptModule \| indefinito |  |
+| Nome   | Digitare                           | Descrizione |
+| ------ | ---------------------------------- | ----------- |
+| fonte  | stringa                            |             |
+| modulo | ForgeWebScriptModule \| indefinito |             |
 
 ### inlayHintsForgeWebScript
 
 **Tipo:** funzione
 
 ```typescript
-function inlayHintsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, requestedRange?: ForgeWebScriptRange, importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment): readonly ForgeWebScriptInlayHint[]
+function inlayHintsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  requestedRange?: ForgeWebScriptRange,
+  importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment,
+): readonly ForgeWebScriptInlayHint[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| modulo | ForgeWebScriptModule \| indefinito |  |
-| requestedRange | ForgeWebScriptRange |  |
-| importTypeEnvironment | ForgeWebScriptImportTypeEnvironment |  |
+| Nome                  | Digitare                            | Descrizione |
+| --------------------- | ----------------------------------- | ----------- |
+| fonte                 | stringa                             |             |
+| modulo                | ForgeWebScriptModule \| indefinito  |             |
+| requestedRange        | ForgeWebScriptRange                 |             |
+| importTypeEnvironment | ForgeWebScriptImportTypeEnvironment |             |
 
 ### inlineValuesForgeWebScript
 
 **Tipo:** funzione
 
 ```typescript
-function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], requestedRange?: ForgeWebScriptRange): readonly ForgeWebScriptInlineValue[]
+function inlineValuesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  requestedRange?: ForgeWebScriptRange,
+): readonly ForgeWebScriptInlineValue[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| modulo | ForgeWebScriptModule \| indefinito |  |
-| simboli | sola lettura ForgeWebScriptSymbol[] |  |
-| Intervallo richiesto | ForgeWebScriptRange |  |
+| Nome                 | Digitare                            | Descrizione |
+| -------------------- | ----------------------------------- | ----------- |
+| fonte                | stringa                             |             |
+| modulo               | ForgeWebScriptModule \| indefinito  |             |
+| simboli              | sola lettura ForgeWebScriptSymbol[] |             |
+| Intervallo richiesto | ForgeWebScriptRange                 |             |
 
 ## `src/hover`
 
@@ -168,19 +198,24 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): ForgeWebScriptHover | undefined
+function hoverForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): ForgeWebScriptHover | undefined;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| posizione | ForgeWebScriptPosizione |  |
-| simboli | sola lettura ForgeWebScriptSymbol[] |  |
-| opzioni | ForgeWebScriptWorkspaceOpzioni |  |
+| Nome      | Digitare                            | Descrizione |
+| --------- | ----------------------------------- | ----------- |
+| fonte     | stringa                             |             |
+| posizione | ForgeWebScriptPosizione             |             |
+| simboli   | sola lettura ForgeWebScriptSymbol[] |             |
+| opzioni   | ForgeWebScriptWorkspaceOpzioni      |             |
 
 ## `src/lsif`
 
@@ -189,7 +224,7 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph
+function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph;
 ```
 
 Crea un grafico LSIF deterministico dallo snapshot dell'area di lavoro del servizio linguistico.
@@ -199,16 +234,16 @@ questa funzione adatta solo questi fatti ai record LSIF.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ingresso | ForgeWebScriptLsifInput |  |
+| Nome     | Digitare                | Descrizione |
+| -------- | ----------------------- | ----------- |
+| ingresso | ForgeWebScriptLsifInput |             |
 
 ### createForgeWebScriptLsifGraph
 
 **Genere:** costante
 
 ```typescript
-export const createForgeWebScriptLsifGraph
+export const createForgeWebScriptLsifGraph;
 ```
 
 Nessuna descrizione fornita.
@@ -218,7 +253,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LSIF_VERSION
+export const FORGE_WEB_SCRIPT_LSIF_VERSION;
 ```
 
 La versione LSIF rappresentata da questo modulo.
@@ -258,7 +293,18 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type ForgeWebScriptLsifEdgeLabel = | 'contains' | 'next' | 'item' | 'textDocument/definition' | 'textDocument/declaration' | 'textDocument/implementation' | 'textDocument/references' | 'textDocument/documentSymbol' | 'textDocument/hover' | 'moniker' | 'diagnostic';
+export type ForgeWebScriptLsifEdgeLabel =
+  | 'contains'
+  | 'next'
+  | 'item'
+  | 'textDocument/definition'
+  | 'textDocument/declaration'
+  | 'textDocument/implementation'
+  | 'textDocument/references'
+  | 'textDocument/documentSymbol'
+  | 'textDocument/hover'
+  | 'moniker'
+  | 'diagnostic';
 ```
 
 Nessuna descrizione fornita.
@@ -368,7 +414,14 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | ForgeWebScriptLsifProjectVertex | ForgeWebScriptLsifDocumentVertex | ForgeWebScriptLsifRangeVertex | ForgeWebScriptLsifResultSetVertex | ForgeWebScriptLsifResultVertex | ForgeWebScriptLsifMonikerVertex;
+export type ForgeWebScriptLsifVertex =
+  | ForgeWebScriptLsifMetadataVertex
+  | ForgeWebScriptLsifProjectVertex
+  | ForgeWebScriptLsifDocumentVertex
+  | ForgeWebScriptLsifRangeVertex
+  | ForgeWebScriptLsifResultSetVertex
+  | ForgeWebScriptLsifResultVertex
+  | ForgeWebScriptLsifMonikerVertex;
 ```
 
 Nessuna descrizione fornita.
@@ -378,7 +431,20 @@ Nessuna descrizione fornita.
 **Genere:** tipo
 
 ```typescript
-export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document' | 'range' | 'resultSet' | 'definitionResult' | 'declarationResult' | 'implementationResult' | 'referenceResult' | 'documentSymbolResult' | 'hoverResult' | 'moniker' | 'diagnosticResult';
+export type ForgeWebScriptLsifVertexLabel =
+  | 'metaData'
+  | 'project'
+  | 'document'
+  | 'range'
+  | 'resultSet'
+  | 'definitionResult'
+  | 'declarationResult'
+  | 'implementationResult'
+  | 'referenceResult'
+  | 'documentSymbolResult'
+  | 'hoverResult'
+  | 'moniker'
+  | 'diagnosticResult';
 ```
 
 Nessuna descrizione fornita.
@@ -388,23 +454,23 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string
+function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string;
 ```
 
 Serializza i record LSIF come JSONL stabile, senza fine riga finale.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| grafico | ForgeWebScriptLsifGraph |  |
+| Nome    | Digitare                | Descrizione |
+| ------- | ----------------------- | ----------- |
+| grafico | ForgeWebScriptLsifGraph |             |
 
 ### serializeForgeWebScriptLsifGraph
 
 **Genere:** costante
 
 ```typescript
-export const serializeForgeWebScriptLsifGraph
+export const serializeForgeWebScriptLsifGraph;
 ```
 
 Nessuna descrizione fornita.
@@ -416,86 +482,86 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function containsOffset(range: ForgeWebScriptRange, offset: number): boolean
+function containsOffset(range: ForgeWebScriptRange, offset: number): boolean;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| gamma | ForgeWebScriptRange |  |
-| compensare | numero |  |
+| Nome       | Digitare            | Descrizione |
+| ---------- | ------------------- | ----------- |
+| gamma      | ForgeWebScriptRange |             |
+| compensare | numero              |             |
 
 ### offsetAtPosition
 
 **Tipo:** funzione
 
 ```typescript
-function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number
+function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| posizione | ForgeWebScriptPosizione |  |
+| Nome      | Digitare                | Descrizione |
+| --------- | ----------------------- | ----------- |
+| fonte     | stringa                 |             |
+| posizione | ForgeWebScriptPosizione |             |
 
 ### posizioneAtOffset
 
 **Tipo:** funzione
 
 ```typescript
-function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition
+function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| compensare | numero |  |
+| Nome       | Digitare | Descrizione |
+| ---------- | -------- | ----------- |
+| fonte      | stringa  |             |
+| compensare | numero   |             |
 
 ### rangeFromOffsets
 
 **Tipo:** funzione
 
 ```typescript
-function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange
+function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| inizio | numero |  |
-| fine | numero |  |
+| Nome   | Digitare | Descrizione |
+| ------ | -------- | ----------- |
+| fonte  | stringa  |             |
+| inizio | numero   |             |
+| fine   | numero   |             |
 
 ### rangeFromSpan
 
 **Tipo:** funzione
 
 ```typescript
-function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange
+function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| arco | ForgeWebScriptSourceSpan |  |
+| Nome  | Digitare                 | Descrizione |
+| ----- | ------------------------ | ----------- |
+| fonte | stringa                  |             |
+| arco  | ForgeWebScriptSourceSpan |             |
 
 ## `src/symbols`
 
@@ -504,34 +570,38 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function buildSymbolIndex(source: string, module: ForgeWebScriptModule | undefined, tokens: readonly ForgeWebScriptTokenClassification[]): ForgeWebScriptSymbolIndex
+function buildSymbolIndex(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  tokens: readonly ForgeWebScriptTokenClassification[],
+): ForgeWebScriptSymbolIndex;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| modulo | ForgeWebScriptModule \| indefinito |  |
-| gettoni | sola lettura ForgeWebScriptTokenClassification[] |  |
+| Nome    | Digitare                                         | Descrizione |
+| ------- | ------------------------------------------------ | ----------- |
+| fonte   | stringa                                          |             |
+| modulo  | ForgeWebScriptModule \| indefinito               |             |
+| gettoni | sola lettura ForgeWebScriptTokenClassification[] |             |
 
 ### nomeespressione
 
 **Tipo:** funzione
 
 ```typescript
-function expressionName(expression: ForgeWebScriptExpression): string | undefined
+function expressionName(expression: ForgeWebScriptExpression): string | undefined;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| espressione | ForgeWebScriptExpression |  |
+| Nome        | Digitare                 | Descrizione |
+| ----------- | ------------------------ | ----------- |
+| espressione | ForgeWebScriptExpression |             |
 
 ### ForgeWebScriptSymbolIndex
 
@@ -550,33 +620,33 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[]
+function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fonte | stringa |  |
-| nomefile |  |  |
+| Nome     | Digitare | Descrizione |
+| -------- | -------- | ----------- |
+| fonte    | stringa  |             |
+| nomefile |          |             |
 
 ### tokenKindToClassification
 
 **Tipo:** funzione
 
 ```typescript
-function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind']
+function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind'];
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| gentile | ForgeWebScriptTokenKind |  |
+| Nome    | Digitare                | Descrizione |
+| ------- | ----------------------- | ----------- |
+| gentile | ForgeWebScriptTokenKind |             |
 
 ## `src/types`
 
@@ -907,17 +977,20 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function createForgeWebScriptWorkspaceIndex(callbacks: WorkspaceIndexCallbacks, host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptWorkspaceSemanticIndex
+function createForgeWebScriptWorkspaceIndex(
+  callbacks: WorkspaceIndexCallbacks,
+  host?: ForgeWebScriptWorkspaceHost,
+): ForgeWebScriptWorkspaceSemanticIndex;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| richiami | WorkspaceIndexCallback |  |
-| ospite | ForgeWebScriptWorkspaceHost |  |
+| Nome     | Digitare                    | Descrizione |
+| -------- | --------------------------- | ----------- |
+| richiami | WorkspaceIndexCallback      |             |
+| ospite   | ForgeWebScriptWorkspaceHost |             |
 
 ### ForgeWebScriptWorkspaceSemanticIndex
 

@@ -16,45 +16,54 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function compileForgeWebScriptFile(fileName: string, options: ForgeWebScriptPluginOptions, service: ForgeWebScriptCompilerService = options.compilerService ??
+function compileForgeWebScriptFile(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+  service: ForgeWebScriptCompilerService = options.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
       selfHostedVmMode: options.selfHostedVmMode,
-    })): ForgeWebScriptCompiledModule
+    }),
+): ForgeWebScriptCompiledModule;
 ```
 
 Compilez un fichier FWS et renvoyez son artefact ainsi que les métadonnées de la carte source.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| Nom du fichier | chaîne |  |
-| options | ForgeWebScriptPluginOptions |  |
-| prestations | ForgeWebScriptCompilerService |  |
+| Nom            | Tapez                         | Descriptif |
+| -------------- | ----------------------------- | ---------- |
+| Nom du fichier | chaîne                        |            |
+| options        | ForgeWebScriptPluginOptions   |            |
+| prestations    | ForgeWebScriptCompilerService |            |
 
 ### compileForgeWebScriptGraph
 
 **Genre :** fonction
 
 ```typescript
-function compileForgeWebScriptGraph(fileName: string, options: ForgeWebScriptPluginOptions, resolver: ForgeWebScriptModuleResolver, service: ForgeWebScriptCompilerService = options.compilerService ??
+function compileForgeWebScriptGraph(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+  resolver: ForgeWebScriptModuleResolver,
+  service: ForgeWebScriptCompilerService = options.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
       selfHostedVmMode: options.selfHostedVmMode,
-    })): Promise<ForgeWebScriptCompiledModule>
+    }),
+): Promise<ForgeWebScriptCompiledModule>;
 ```
 
 Résolvez, liez et compilez un graphique de module FWS importé.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| Nom du fichier | chaîne |  |
-| options | ForgeWebScriptPluginOptions |  |
-| résolveur | ForgeWebScriptModuleRésolveur |  |
-| prestations | ForgeWebScriptCompilerService |  |
+| Nom            | Tapez                         | Descriptif |
+| -------------- | ----------------------------- | ---------- |
+| Nom du fichier | chaîne                        |            |
+| options        | ForgeWebScriptPluginOptions   |            |
+| résolveur      | ForgeWebScriptModuleRésolveur |            |
+| prestations    | ForgeWebScriptCompilerService |            |
 
 ### ForgeWebScriptCompiledModule
 
@@ -81,17 +90,17 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function resolveForgeWebScriptPath(root: string, value: string): string
+function resolveForgeWebScriptPath(root: string, value: string): string;
 ```
 
 Résolvez un chemin de plugin par rapport à la racine sauf si la valeur est déjà absolue.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| racine | chaîne |  |
-| valeur | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| racine | chaîne |            |
+| valeur | chaîne |            |
 
 ## `src/generate`
 
@@ -100,7 +109,9 @@ Résolvez un chemin de plugin par rapport à la racine sauf si la valeur est dé
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptDeclarationsSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptDeclarationsSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 Générez un module contenant des déclarations, des métadonnées de lien et des éléments facultatifs
@@ -108,32 +119,36 @@ Métadonnées du compilateur auto-hébergées pour les consommateurs de luminair
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| compilé | ForgeWebScriptCompiledModule |  |
+| Nom     | Tapez                        | Descriptif |
+| ------- | ---------------------------- | ---------- |
+| compilé | ForgeWebScriptCompiledModule |            |
 
 ### createForgeWebScriptManifestSource
 
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptManifestSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptManifestSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 Générez un module contenant le manifeste ABI sérialisable JSON.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| compilé | ForgeWebScriptCompiledModule |  |
+| Nom     | Tapez                        | Descriptif |
+| ------- | ---------------------------- | ---------- |
+| compilé | ForgeWebScriptCompiledModule |            |
 
 ### createForgeWebScriptModuleSource
 
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptModuleSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptModuleSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 Générez le module consommateur normal. Le module généré réexporte le
@@ -141,48 +156,54 @@ fonctions compilées et expose le même manifeste ABI via `abiManifest`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| compilé | ForgeWebScriptCompiledModule |  |
+| Nom     | Tapez                        | Descriptif |
+| ------- | ---------------------------- | ---------- |
+| compilé | ForgeWebScriptCompiledModule |            |
 
 ### createForgeWebScriptSourceMapSource
 
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptSourceMapSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptSourceMapSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 Générez un module dont l'exportation par défaut est l'objet source-map généré.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| compilé | ForgeWebScriptCompiledModule |  |
+| Nom     | Tapez                        | Descriptif |
+| ------- | ---------------------------- | ---------- |
+| compilé | ForgeWebScriptCompiledModule |            |
 
 ### createForgeWebScriptWasmSource
 
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptWasmSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptWasmSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 Générez un module dont l'exportation par défaut est le tableau d'octets Wasm compilé.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| compilé | ForgeWebScriptCompiledModule |  |
+| Nom     | Tapez                        | Descriptif |
+| ------- | ---------------------------- | ---------- |
+| compilé | ForgeWebScriptCompiledModule |            |
 
 ### createForgeWebScriptWatSource
 
 **Genre :** fonction
 
 ```typescript
-function createForgeWebScriptWatSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptWatSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 Générez un module dont l'export par défaut est le texte WAT compilé. C'est
@@ -190,16 +211,16 @@ destiné à l’inspection et aux assertions de conformité, et non à l’exéc
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| compilé | ForgeWebScriptCompiledModule |  |
+| Nom     | Tapez                        | Descriptif |
+| ------- | ---------------------------- | ---------- |
+| compilé | ForgeWebScriptCompiledModule |            |
 
 ### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
 ```
 
 Requête qui renvoie des déclarations liées et des métadonnées graphiques en tant que module ES.
@@ -209,7 +230,7 @@ Requête qui renvoie des déclarations liées et des métadonnées graphiques en
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY
+export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
 ```
 
 Requête qui renvoie le manifeste ABI compilé en tant que module ES.
@@ -219,7 +240,7 @@ Requête qui renvoie le manifeste ABI compilé en tant que module ES.
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
 ```
 
 Requête qui renvoie la carte source générée comme exportation par défaut du module.
@@ -229,7 +250,7 @@ Requête qui renvoie la carte source générée comme exportation par défaut du
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY
+export const FORGE_WEB_SCRIPT_WASM_QUERY;
 ```
 
 Requête qui renvoie les octets Wasm compilés comme exportation par défaut du module.
@@ -239,7 +260,7 @@ Requête qui renvoie les octets Wasm compilés comme exportation par défaut du 
 **Genre :** constante
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY
+export const FORGE_WEB_SCRIPT_WAT_QUERY;
 ```
 
 Requête qui renvoie le WAT généré, y compris la réduction de la table de branchement, sous forme de chaîne.
@@ -251,7 +272,9 @@ Requête qui renvoie le WAT généré, y compris la réduction de la table de br
 **Genre :** fonction
 
 ```typescript
-function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptPlugin(
+  options: ForgeWebScriptPluginOptions = {},
+): Plugin;
 ```
 
 Installez la compilation Forge Web Script et les requêtes d'artefacts virtuels dans Vite.
@@ -260,16 +283,18 @@ déclarations, Wasm, WAT et requêtes de carte source pour les outils et les acc
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | ForgeWebScriptPluginOptions |  |
+| Nom     | Tapez                       | Descriptif |
+| ------- | --------------------------- | ---------- |
+| options | ForgeWebScriptPluginOptions |            |
 
 ### forgeWebScriptPlugin
 
 **Genre :** fonction
 
 ```typescript
-function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptPlugin(
+  options: ForgeWebScriptPluginOptions = {},
+): Plugin;
 ```
 
 Installez la compilation Forge Web Script et les requêtes d'artefacts virtuels dans Vite.
@@ -278,9 +303,9 @@ déclarations, Wasm, WAT et requêtes de carte source pour les outils et les acc
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | ForgeWebScriptPluginOptions |  |
+| Nom     | Tapez                       | Descriptif |
+| ------- | --------------------------- | ---------- |
+| options | ForgeWebScriptPluginOptions |            |
 
 ### ForgeWebScriptViteError
 

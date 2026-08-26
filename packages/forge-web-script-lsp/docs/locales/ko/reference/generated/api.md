@@ -16,16 +16,16 @@
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptLspServerOptions |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 옵션 | ForgeWebScriptLspServerOptions |      |
 
 ### ForgeWebScriptLsp문서
 
@@ -82,17 +82,20 @@ export interface ForgeWebScriptLspServerOptions
 **종류:** 기능
 
 ```typescript
-function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function registerForgeWebScriptLsp(
+  connection: Connection,
+  options: ForgeWebScriptLspServerOptions = {},
+): ForgeWebScriptLspServer;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 연결 | 연결 |  |
-| 옵션 | ForgeWebScriptLspServerOptions |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 연결 | 연결                           |      |
+| 옵션 | ForgeWebScriptLspServerOptions |      |
 
 ## `src/workspace`
 
@@ -101,16 +104,18 @@ function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScri
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptNodeWorkspaceHost(options: ForgeWebScriptNodeWorkspaceOptions): RootBoundedForgeWebScriptWorkspaceHost
+function createForgeWebScriptNodeWorkspaceHost(
+  options: ForgeWebScriptNodeWorkspaceOptions,
+): RootBoundedForgeWebScriptWorkspaceHost;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptNodeWorkspace옵션 |  |
+| 이름 | 유형                            | 설명 |
+| ---- | ------------------------------- | ---- |
+| 옵션 | ForgeWebScriptNodeWorkspace옵션 |      |
 
 ### ForgeWebScriptNodeFileSystem
 

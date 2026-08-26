@@ -1,16 +1,10 @@
-import {
-  type CompiledRegex,
-  FORGE_REGEX_BYTECODE_VERSION,
-  INSTR_WIDTH,
-  Op,
-} from "./bytecode.js";
+import { type CompiledRegex, INSTR_WIDTH, Op } from "./bytecode.js";
 
 /**
  * This module is an oracle only. Production regex execution is emitted into
  * Forge Web Script WASM by the backend; no TypeScript matcher is a runtime
  * implementation of the standard library.
  */
-export { FORGE_REGEX_BYTECODE_VERSION };
 
 /** Capture slots are `[start0, end0, start1, end1, ...]`; `-1` means unset. */
 export type Captures = number[];
@@ -56,25 +50,30 @@ class Runner {
       const a = this.program[base + 1];
       const b = this.program[base + 2];
       switch (op) {
-        case Op.MATCH:
+        case Op.MATCH: {
           return this.requireEnd ? sp === this.input.length : true;
-        case Op.CHAR:
+        }
+        case Op.CHAR: {
+          // eslint-disable-next-line unicorn/prefer-code-point -- VM mirrors the UTF-16 bytecode contract.
           if (sp < this.input.length && this.input.charCodeAt(sp) === a) {
             pc += 1;
             sp += 1;
             continue;
           }
           return false;
-        case Op.ANY:
+        }
+        case Op.ANY: {
           if (sp < this.input.length) {
             pc += 1;
             sp += 1;
             continue;
           }
           return false;
-        case Op.CLASS:
+        }
+        case Op.CLASS: {
           if (sp >= this.input.length) return false;
           if (
+            // eslint-disable-next-line unicorn/prefer-code-point -- VM mirrors the UTF-16 bytecode contract.
             classMatches(this.classes, a, this.input.charCodeAt(sp)) ===
             (b === 0)
           ) {
@@ -83,35 +82,41 @@ class Runner {
             continue;
           }
           return false;
-        case Op.BOL:
+        }
+        case Op.BOL: {
           if (sp === 0) {
             pc += 1;
             continue;
           }
           return false;
-        case Op.EOL:
+        }
+        case Op.EOL: {
           if (sp === this.input.length) {
             pc += 1;
             continue;
           }
           return false;
-        case Op.SAVE:
+        }
+        case Op.SAVE: {
           saves[a] = sp;
           pc += 1;
           continue;
-        case Op.JMP:
+        }
+        case Op.JMP: {
           pc = a;
           continue;
+        }
         case Op.SPLIT: {
-          const snapshot = saves.slice();
+          const snapshot = [...saves];
           if (this.run(a, sp, saves)) return true;
           for (let index = 0; index < snapshot.length; index++)
             saves[index] = snapshot[index];
           pc = b;
           continue;
         }
-        default:
+        default: {
           return false;
+        }
       }
     }
   }
@@ -123,14 +128,15 @@ function attempt(
   start: number,
   requireEnd: boolean,
 ): Captures | null {
-  const saves = new Array<number>(2 * (re.groupCount + 1)).fill(-1);
+  const saves = Array.from({ length: 2 * (re.groupCount + 1) }, () => -1);
   return new Runner(re.program, re.classes, input, requireEnd).run(
     0,
     start,
     saves,
   )
     ? saves
-    : null;
+    : // eslint-disable-next-line unicorn/no-null -- failed attempts are part of the reference VM contract.
+      null;
 }
 
 /** Whole-string match, anchored at position zero. */
@@ -153,6 +159,7 @@ export function search(
     const captures = attempt(re, input, position, false);
     if (captures !== null) return captures;
   }
+  // eslint-disable-next-line unicorn/no-null -- failed searches are part of the reference VM contract.
   return null;
 }
 
@@ -174,3 +181,5 @@ export function captureEnd(captures: Captures | null, group: number): number {
     ? -1
     : (captures[group * 2 + 1] ?? -1);
 }
+
+export { FORGE_REGEX_BYTECODE_VERSION } from "./bytecode.js";

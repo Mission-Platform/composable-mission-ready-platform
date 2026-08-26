@@ -16,50 +16,56 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-w
 **Soort:** functie
 
 ```typescript
-function assertForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic
+function assertForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |  |
-| verwachting | ForgeWebScriptDiagnosticExpectation |  |
+| Naam        | Typ                                     | Beschrijving |
+| ----------- | --------------------------------------- | ------------ |
+| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |              |
+| verwachting | ForgeWebScriptDiagnosticExpectation     |              |
 
 ### assertForgeWebScriptNoDiagnostics
 
 **Soort:** functie
 
 ```typescript
-function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void
+function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |  |
+| Naam        | Typ                                     | Beschrijving |
+| ----------- | --------------------------------------- | ------------ |
+| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |              |
 
 ### findForgeWebScriptDiagnostisch
 
 **Soort:** functie
 
 ```typescript
-function findForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic | undefined
+function findForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic | undefined;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |  |
-| verwachting | ForgeWebScriptDiagnosticExpectation |  |
+| Naam        | Typ                                     | Beschrijving |
+| ----------- | --------------------------------------- | ------------ |
+| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |              |
+| verwachting | ForgeWebScriptDiagnosticExpectation     |              |
 
 ### ForgeWebScriptDiagnosticExpectation
 
@@ -76,32 +82,32 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string
+function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 Formatteer een diagnose zonder de gestructureerde locatiemetagegevens te verwijderen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostisch | ForgeWebScriptDiagnostisch |  |
+| Naam         | Typ                        | Beschrijving |
+| ------------ | -------------------------- | ------------ |
+| diagnostisch | ForgeWebScriptDiagnostisch |              |
 
 ### formatForgeWebScriptDiagnostiek
 
 **Soort:** functie
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string
+function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |  |
+| Naam        | Typ                                     | Beschrijving |
+| ----------- | --------------------------------------- | ------------ |
+| diagnostiek | alleen-lezen ForgeWebScriptDiagnostic[] |              |
 
 ## `src/harness`
 
@@ -110,16 +116,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness
+function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness;
 ```
 
 Creëer een harnas met gedeelde armatuur met optionele compiler, mogelijkheden en doelinstellingen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptTestHarnessOptions |  |
+| Naam   | Typ                              | Beschrijving |
+| ------ | -------------------------------- | ------------ |
+| opties | ForgeWebScriptTestHarnessOptions |              |
 
 ### ForgeWebScriptCapabilityFunctie
 
@@ -136,7 +142,9 @@ Er wordt een host-callback geleverd voor een import van door een manifest gedecl
 **Soort:** type
 
 ```typescript
-export type ForgeWebScriptCapabilityImports = Readonly< Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>> >;
+export type ForgeWebScriptCapabilityImports = Readonly<
+  Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>>
+>;
 ```
 
 Hostfuncties gecodeerd op basis van mogelijkheden en manifeste alias; niet-aangegeven invoer wordt afgewezen.
@@ -156,7 +164,7 @@ Compilatie-uitvoer plus diagnostiek, geschikt voor geldige en diagnostische arma
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string
+function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string;
 ```
 
 Converteer een armatuurpad naar een stabiele test-/modulenaam. Relatieve paden zijn dat wel
@@ -164,10 +172,10 @@ geworteld in armatuurRoot en scheidingstekens worden genormaliseerd naar koppelt
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| armatuurRoot | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
+| armatuurRoot | tekenreeks |              |
 
 ### ForgeWebScriptInspectionResultaat
 
@@ -238,7 +246,7 @@ Compiler- en armatuur-root-opties die worden gedeeld door de conformiteitsharnas
 **Soort:** functie
 
 ```typescript
-function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig
+function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig;
 ```
 
 Stel de standaard Mission Platform Vitest-configuratie samen met Forge Web Script.
@@ -247,9 +255,9 @@ gegenereerde FWS-fixturequery's zoals `?forge-web-script-wat` blijven beschikbaa
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptVitestConfigOptions |  |
+| Naam   | Typ                               | Beschrijving |
+| ------ | --------------------------------- | ------------ |
+| opties | ForgeWebScriptVitestConfigOptions |              |
 
 ### ForgeWebScriptVitestConfigOptions
 
@@ -266,13 +274,13 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin;
 ```
 
 Installeer de productie Forge Web Script-plug-in in een Vite/Vitest-configuratie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptPluginOptions |  |
+| Naam   | Typ                         | Beschrijving |
+| ------ | --------------------------- | ------------ |
+| opties | ForgeWebScriptPluginOptions |              |

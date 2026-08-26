@@ -2,7 +2,7 @@ import { createDiagnostic, type ForgeWebScriptDiagnostic } from './diagnostics.j
 
 import type { ForgeWebScriptAbiFunction, ForgeWebScriptDynamicLinkMetadata } from './manifest.js';
 
-export type ForgeWebScriptDynamicCallable = (...args: readonly number[]) => unknown;
+export type ForgeWebScriptDynamicCallable = (...arguments_: readonly number[]) => unknown;
 
 export interface ForgeWebScriptDynamicModule {
   readonly exports: Readonly<Record<string, ForgeWebScriptDynamicCallable>>;
@@ -16,9 +16,11 @@ export interface ForgeWebScriptDynamicLinkIdentity {
 }
 
 function signature(declaration: ForgeWebScriptAbiFunction): string {
-  const defaultPassing = (type: string, reference: string | undefined): 'value' | 'immutable-reference' =>
-    reference === undefined && type !== 'bytes' && type !== 'string' ? 'value' : 'immutable-reference';
   return `${declaration.parameters.map(({ type, reference, passing, referenceMode }) => `${type}:${reference ?? ''}:${passing ?? defaultPassing(type, reference)}:${referenceMode ?? ''}`).join(',')}->${declaration.result}:${declaration.resultReference ?? ''}:${declaration.resultPassing ?? defaultPassing(declaration.result, declaration.resultReference)}:${declaration.resultReferenceMode ?? ''}`;
+}
+
+function defaultPassing(type: string, reference: string | undefined): 'value' | 'immutable-reference' {
+  return reference === undefined && type !== 'bytes' && type !== 'string' ? 'value' : 'immutable-reference';
 }
 
 function legacySignature(declaration: ForgeWebScriptAbiFunction): string {

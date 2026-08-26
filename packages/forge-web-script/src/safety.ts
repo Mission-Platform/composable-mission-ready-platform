@@ -1,5 +1,3 @@
-import { createDiagnostic, type ForgeWebScriptDiagnostic } from './diagnostics.js';
-
 import {
   forgeWebScriptDefaultPassingMode,
   isForgeWebScriptPodType,
@@ -9,6 +7,8 @@ import {
   type ForgeWebScriptStatement,
   type ForgeWebScriptTypeName,
 } from './ast.js';
+import { createDiagnostic, type ForgeWebScriptDiagnostic } from './diagnostics.js';
+
 
 interface Binding {
   readonly type: ForgeWebScriptTypeName;
@@ -83,13 +83,14 @@ function checkStatement(
         );
       return;
     }
-    case 'return':
+    case 'return': {
       if (statement.value !== undefined) {
         checkExpression(statement.value, context);
         checkEscape(statement.value, result, context);
       }
       return;
-    case 'yield':
+    }
+    case 'yield': {
       checkExpression(statement.value, context);
       if (context.iterable && statement.value.kind === 'identifier') {
         const binding = context.locals.get(statement.value.name);
@@ -108,26 +109,31 @@ function checkStatement(
           );
       }
       return;
-    case 'expression-statement':
+    }
+    case 'expression-statement': {
       checkExpression(statement.expression, context);
       return;
-    case 'if':
+    }
+    case 'if': {
       checkExpression(statement.condition, context);
       checkScopedStatements(statement.consequent, context, result);
       if (statement.alternate !== undefined) checkScopedStatements(statement.alternate, context, result);
       return;
+    }
     case 'while':
-    case 'do-while':
+    case 'do-while': {
       checkExpression(statement.condition, context);
       checkScopedStatements(statement.body, context, result);
       return;
-    case 'for':
+    }
+    case 'for': {
       if (statement.initializer !== undefined) checkStatement(statement.initializer, context, result);
       checkExpression(statement.condition, context);
       checkScopedStatements(statement.body, context, result);
       if (statement.update !== undefined) checkStatement(statement.update, context, result);
       return;
-    case 'iterator-loop':
+    }
+    case 'iterator-loop': {
       checkExpression(statement.iterator, context);
       checkScopedStatements(statement.body, context, result, [
         [
@@ -136,12 +142,14 @@ function checkStatement(
         ],
       ]);
       return;
-    case 'switch':
+    }
+    case 'switch': {
       checkExpression(statement.value, context);
       for (const arm of statement.cases) checkScopedStatements(arm.body, context, result);
       if (statement.defaultCase !== undefined) checkScopedStatements(statement.defaultCase, context, result);
       return;
-    case 'match-statement':
+    }
+    case 'match-statement': {
       checkExpression(statement.value, context);
       for (const arm of statement.arms)
         checkScopedStatements(
@@ -156,6 +164,7 @@ function checkStatement(
           result,
         );
       return;
+    }
   }
 }
 
@@ -214,33 +223,41 @@ function checkExpression(expression: ForgeWebScriptExpression, context: SafetyCo
       }
       return;
     }
-    case 'binary':
+    case 'binary': {
       checkExpression(expression.left, context);
       checkExpression(expression.right, context);
       return;
-    case 'unary':
+    }
+    case 'unary': {
       checkExpression(expression.operand, context);
       return;
-    case 'index':
+    }
+    case 'index': {
       checkExpression(expression.receiver, context);
       checkExpression(expression.index, context);
       return;
+    }
     case 'array-literal':
-    case 'vector-literal':
+    case 'vector-literal': {
       for (const element of expression.elements) checkExpression(element, context);
       return;
-    case 'struct-value':
+    }
+    case 'struct-value': {
       for (const value of Object.values(expression.fields)) checkExpression(value, context);
       return;
-    case 'enum-value':
+    }
+    case 'enum-value': {
       for (const argument of expression.arguments) checkExpression(argument, context);
       return;
-    case 'match':
+    }
+    case 'match': {
       checkExpression(expression.value, context);
       for (const arm of expression.arms) checkExpression(arm.value, context);
       return;
-    default:
+    }
+    default: {
       return;
+    }
   }
 }
 
@@ -287,34 +304,39 @@ function classifyReturnedValue(expression: ForgeWebScriptExpression, context: Sa
         message: `Region value '${expression.name}' cannot escape its enclosing scope.`,
       };
     }
-    case 'literal':
+    case 'literal': {
       // Scalar literals are POD; string literals are static ABI data, not region handles.
       return { allowed: true };
-    case 'vector-literal':
+    }
+    case 'vector-literal': {
       return {
         allowed: false,
         message: 'Region-managed value cannot escape its enclosing scope without an explicit owned/shared boundary.',
       };
-    case 'array-literal':
+    }
+    case 'array-literal': {
       if (isForgeWebScriptPodType(expression.type, context.module)) return { allowed: true };
       return {
         allowed: false,
         message: 'Region-managed value cannot escape its enclosing scope without an explicit owned/shared boundary.',
       };
-    case 'struct-value':
+    }
+    case 'struct-value': {
       if (expression.type.ownership === 'owned' || expression.type.ownership === 'shared') return { allowed: true };
       if (isForgeWebScriptPodType(expression.type, context.module)) return { allowed: true };
       return {
         allowed: false,
         message: 'Region-managed value cannot escape its enclosing scope without an explicit owned/shared boundary.',
       };
-    case 'enum-value':
+    }
+    case 'enum-value': {
       if (expression.type.ownership === 'owned' || expression.type.ownership === 'shared') return { allowed: true };
       if (isForgeWebScriptPodType(expression.type, context.module)) return { allowed: true };
       return {
         allowed: false,
         message: 'Region-managed value cannot escape its enclosing scope without an explicit owned/shared boundary.',
       };
+    }
     case 'call': {
       const declaration = context.functions.get(expression.callee);
       if (declaration === undefined) {
@@ -331,9 +353,10 @@ function classifyReturnedValue(expression: ForgeWebScriptExpression, context: Sa
         message: `Non-POD result of '${expression.callee}' cannot escape as a region-managed value without an explicit owned/shared boundary.`,
       };
     }
-    case 'index':
+    case 'index': {
       // Indexing yields a projection of the receiver; inherit its classification.
       return classifyReturnedValue(expression.receiver, context);
+    }
     case 'match': {
       for (const arm of expression.arms) {
         const classification = classifyReturnedValue(arm.value, context);
@@ -343,13 +366,15 @@ function classifyReturnedValue(expression: ForgeWebScriptExpression, context: Sa
     }
     case 'binary':
     case 'unary':
-    case 'function-value':
+    case 'function-value': {
       return { allowed: true };
-    default:
+    }
+    default: {
       return {
         allowed: false,
         message: 'Region-managed value cannot escape its enclosing scope without an explicit owned/shared boundary.',
       };
+    }
   }
 }
 

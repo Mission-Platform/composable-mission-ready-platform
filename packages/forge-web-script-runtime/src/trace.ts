@@ -102,7 +102,7 @@ export interface ForgeWebScriptTraceRecorder {
 const DEFAULT_LIMITS: Required<ForgeWebScriptTraceLimits> = {
   maxEvents: 512,
   maxTraceBytes: 65_536,
-  maxSnapshotBytes: 4_096,
+  maxSnapshotBytes: 4096,
 };
 
 function hashText(value: string): string {
@@ -126,9 +126,11 @@ function canonicalize(value: unknown): unknown {
   return value;
 }
 
+function positive(value: number | undefined, fallback: number): number {
+  return value === undefined || !Number.isFinite(value) ? fallback : Math.max(0, Math.trunc(value));
+}
+
 function safeLimits(options: ForgeWebScriptTraceOptions): Required<ForgeWebScriptTraceLimits> {
-  const positive = (value: number | undefined, fallback: number): number =>
-    value === undefined || !Number.isFinite(value) ? fallback : Math.max(0, Math.trunc(value));
   return {
     maxEvents: positive(options.maxEvents, DEFAULT_LIMITS.maxEvents),
     maxTraceBytes: positive(options.maxTraceBytes, DEFAULT_LIMITS.maxTraceBytes),
@@ -138,18 +140,24 @@ function safeLimits(options: ForgeWebScriptTraceOptions): Required<ForgeWebScrip
 
 function defaultSummary(value: ForgeWebScriptVmValue): string {
   switch (value.kind) {
-    case 'unit':
+    case 'unit': {
       return 'unit';
-    case 'bool':
+    }
+    case 'bool': {
       return 'bool';
-    case 'number':
+    }
+    case 'number': {
       return value.type;
-    case 'bytes':
+    }
+    case 'bytes': {
       return `bytes:${value.length}`;
-    case 'aggregate':
+    }
+    case 'aggregate': {
       return `aggregate:${value.layout}:${value.bytes.byteLength}`;
-    case 'function':
+    }
+    case 'function': {
       return `function:${value.functionName}`;
+    }
   }
 }
 

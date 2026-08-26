@@ -535,15 +535,15 @@ function lowerIterableFunction(declaration: ForgeWebScriptWasmFunction): readonl
   const yields = collectTopLevelYields(declaration.body);
   const nextBody =
     yields === undefined
-      ? rewriteStateInStatements(lowerIteratorStatements(declaration.body), stateParameter).concat(
-          bodyContainsIteratorNodes(declaration.body) ? [] : [returnIterResult(0, 1, span)],
-        )
+      ? [
+          ...rewriteStateInStatements(lowerIteratorStatements(declaration.body), stateParameter),
+          ...(bodyContainsIteratorNodes(declaration.body) ? [] : [returnIterResult(0, 1, span)]),
+        ]
       : buildYieldStateMachine(yields, span);
   // Ensure every next() path completes with an explicit done/value pair.
-  const ensuredNextBody =
-    nextBody.length === 0 || nextBody.every((statement) => statement.kind !== 'return')
-      ? [...nextBody, returnIterResult(0, 1, span)]
-      : nextBody;
+  const ensuredNextBody = nextBody.every((statement) => statement.kind !== 'return')
+    ? [...nextBody, returnIterResult(0, 1, span)]
+    : nextBody;
   const next: ForgeWebScriptWasmFunction = {
     name: `${declaration.name}.next`,
     exported: declaration.exported,
@@ -813,9 +813,11 @@ function validateTargetFeatures(
         hint: `Enable targetFeatures.${feature} or remove the feature-dependent operation.`,
       });
   };
-  (Object.keys(required).filter((feature) => feature !== 'parallel') as (keyof ForgeWebScriptTargetFeatures)[]).forEach(
-    check,
-  );
+  for (const feature of Object.keys(required).filter(
+    (feature) => feature !== 'parallel',
+  ) as (keyof ForgeWebScriptTargetFeatures)[]) {
+    check(feature);
+  }
   if (requested.threads === true && requested.atomics !== true)
     diagnostics.push({
       ...backendDiagnostic(
@@ -996,10 +998,10 @@ function emitWasm(
       readonly slots: number;
     }
   >();
-  const i32Bytes = (values: readonly number[]): Uint8Array => {
+  const index32Bytes = (values: readonly number[]): Uint8Array => {
     const bytes = new Uint8Array(values.length * 4);
     const view = new DataView(bytes.buffer);
-    values.forEach((value, index) => view.setInt32(index * 4, value, true));
+    for (const [index, value] of values.entries()) view.setInt32(index * 4, value, true);
     return bytes;
   };
   const getRegexTable = (pattern: string) => {
@@ -1007,8 +1009,8 @@ function emitWasm(
     if (existing !== undefined) return existing;
     const compiled = compileRegex(pattern);
     const slots = 2 * (compiled.groupCount + 1);
-    const program = addData(i32Bytes(compiled.program), 4);
-    const classes = addData(i32Bytes(compiled.classes), 4);
+    const program = addData(index32Bytes(compiled.program), 4);
+    const classes = addData(index32Bytes(compiled.classes), 4);
     const captures = addData(new Uint8Array(slots * 4), 4);
     const scratch = addData(new Uint8Array(Math.max(1, compiled.program.length) * slots * 4), 4);
     const table = { compiled, program, classes, captures, scratch, slots };
@@ -1031,7 +1033,7 @@ function emitWasm(
     const index = COLLECTION_RUNTIME_OPERATION_ORDER.indexOf(
       operation as (typeof COLLECTION_RUNTIME_OPERATION_ORDER)[number],
     );
-    if (index < 0) throw new Error(`Unknown collection runtime operation "${operation}".`);
+    if (index === -1) throw new Error(`Unknown collection runtime operation "${operation}".`);
     return allocatorFunctionIndex + 3 + index;
   };
   const enumValues = new Map<string, number>();
@@ -1120,7 +1122,7 @@ function emitWasm(
     const collectExpression = (expression: ForgeWebScriptWasmExpression): void => {
       if (expression.kind === 'array-literal' || expression.kind === 'vector-literal') {
         expressionLocations.set(expression, allocateI32());
-        expression.elements.forEach(collectExpression);
+        for (const element of expression.elements) collectExpression(element);
       } else if (expression.kind === 'call') {
         if (expression.standardLibrary === 'bytes-byte-at' || expression.standardLibrary === 'bytes-byte-at-u32')
           bytesByteAtLocations.set(expression, { pointer: allocateI32(), length: allocateI32(), index: allocateI32() });
@@ -1136,7 +1138,7 @@ function emitWasm(
           expression.standardLibrary === 'bytes-length-u32'
         )
           pointerLengthLocations.set(expression, { pointer: allocateI32(), length: allocateI32() });
-        expression.arguments.forEach(collectExpression);
+        for (const argument of expression.arguments) collectExpression(argument);
       } else if (expression.kind === 'atomic') {
         collectExpression(expression.address);
         if (expression.value !== undefined) collectExpression(expression.value);
@@ -1179,7 +1181,7 @@ function emitWasm(
         } else if (statement.kind === 'switch') {
           locations.set(statement, allocateI32());
           collectExpression(statement.value);
-          statement.cases.forEach((arm) => collect(arm.body, new Map(visible)));
+          for (const arm of statement.cases) collect(arm.body, new Map(visible));
           if (statement.defaultCase !== undefined) collect(statement.defaultCase, new Map(visible));
         } else if (statement.kind === 'while') {
           collectExpression(statement.condition);
@@ -1272,7 +1274,7 @@ function emitWasm(
           0x21,
           ...unsignedLeb(temporary.indexes[0]!),
         );
-        expression.elements.forEach((element, index) => {
+        for (const [index, element] of expression.elements.entries()) {
           body.push(0x20, ...unsignedLeb(temporary.indexes[0]!));
           if (expression.kind === 'vector-literal') {
             emitExpression(element, visible);
@@ -1282,7 +1284,7 @@ function emitWasm(
             emitExpression(element, visible);
             body.push(0x10, ...unsignedLeb(collectionFunctionIndex('array-set')));
           }
-        });
+        }
         body.push(0x20, ...unsignedLeb(temporary.indexes[0]!));
       } else if (expression.kind === 'index') {
         const receiver = expression.receiver.kind === 'identifier' ? visible.get(expression.receiver.name) : undefined;
@@ -1713,8 +1715,7 @@ function emitWasm(
           tableLength <= values.length * 4);
       emitPhiPrelude(statement);
       emitExpression(statement.value, visible);
-      body.push(0x21, ...unsignedLeb(location.indexes[0]!));
-      body.push(0x02, 0x40);
+      body.push(0x21, ...unsignedLeb(location.indexes[0]!), 0x02, 0x40);
       if (values.length > 0) {
         if (useBrTable) {
           body.push(
@@ -1740,8 +1741,9 @@ function emitWasm(
             0x0c,
             0x00,
             0x0b,
+            0x02,
+            0x40,
           );
-          body.push(0x02, 0x40);
           for (let index = 0; index < values.length; index += 1) body.push(0x02, 0x40);
           body.push(
             0x20,
@@ -1754,7 +1756,7 @@ function emitWasm(
           );
           for (let value = minimum; value <= maximum; value += 1) {
             const caseIndex = values.indexOf(value);
-            body.push(...unsignedLeb(caseIndex < 0 ? values.length : values.length - 1 - caseIndex));
+            body.push(...unsignedLeb(caseIndex === -1 ? values.length : values.length - 1 - caseIndex));
           }
           body.push(...unsignedLeb(values.length));
           for (let index = values.length - 1; index >= 0; index -= 1) {

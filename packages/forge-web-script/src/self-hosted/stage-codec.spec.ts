@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseForgeWebScript } from '../parser.ts';
 import { lexForgeWebScript } from '../lexer.ts';
+import { parseForgeWebScript } from '../parser.ts';
+
 import {
   decodeForgeWebScriptSelfHostedModule,
   decodeForgeWebScriptSelfHostedTokens,

@@ -54,15 +54,15 @@ describe('Forge Web Script bootstrap compiler', () => {
       readonly fws_reset: () => void;
     };
 
-    expect(exports.write_and_read(0xfeed_beef)).toBe(0xfeed_beef | 0);
+    expect(exports.write_and_read(0xfe_ed_be_ef)).toBe(0xfe_ed_be_ef | 0);
     expect(exports.write_and_read_f64(Math.PI)).toBe(Math.PI);
     expect(exports.convert_u32_to_f64(4_000_000_000)).toBe(4_000_000_000);
     expect(exports.recursive_sum(5)).toBe(15);
     exports.fws_reset();
-    expect(exports.write_and_read(0x1234_5678)).toBe(0x1234_5678 | 0);
+    expect(exports.write_and_read(0x12_34_56_78)).toBe(0x12_34_56_78 | 0);
     expect(exports.write_and_read_f64(-123.625)).toBe(-123.625);
-    expect(() => exports.invalid_load(0xfffffff0)).toThrow();
-    expect(() => exports.invalid_load_f64(0xfffffff0)).toThrow();
+    expect(() => exports.invalid_load(0xff_ff_ff_f0)).toThrow();
+    expect(() => exports.invalid_load_f64(0xff_ff_ff_f0)).toThrow();
   });
 
   it('compiles the package-local file fixture through the artifact contract', () => {

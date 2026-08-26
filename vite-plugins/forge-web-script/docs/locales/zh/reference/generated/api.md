@@ -16,45 +16,54 @@
 **种类：**功能
 
 ```typescript
-function compileForgeWebScriptFile(fileName: string, options: ForgeWebScriptPluginOptions, service: ForgeWebScriptCompilerService = options.compilerService ??
+function compileForgeWebScriptFile(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+  service: ForgeWebScriptCompilerService = options.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
       selfHostedVmMode: options.selfHostedVmMode,
-    })): ForgeWebScriptCompiledModule
+    }),
+): ForgeWebScriptCompiledModule;
 ```
 
 编译一个 FWS 文件并返回其工件以及源映射元数据。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件名 |字符串|  |
-|选项 | ForgeWebScriptPluginOptions | ForgeWebScriptPluginOptions |  |
-|服务 | ForgeWebScriptCompilerService | ForgeWebScriptCompilerService |  |
+| 名称   | 类型                          | 描述                          |
+| ------ | ----------------------------- | ----------------------------- |
+| 文件名 | 字符串                        |                               |
+| 选项   | ForgeWebScriptPluginOptions   | ForgeWebScriptPluginOptions   |     |
+| 服务   | ForgeWebScriptCompilerService | ForgeWebScriptCompilerService |     |
 
 ### 编译ForgeWebScriptGraph
 
 **种类：**功能
 
 ```typescript
-function compileForgeWebScriptGraph(fileName: string, options: ForgeWebScriptPluginOptions, resolver: ForgeWebScriptModuleResolver, service: ForgeWebScriptCompilerService = options.compilerService ??
+function compileForgeWebScriptGraph(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+  resolver: ForgeWebScriptModuleResolver,
+  service: ForgeWebScriptCompilerService = options.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
       selfHostedVmMode: options.selfHostedVmMode,
-    })): Promise<ForgeWebScriptCompiledModule>
+    }),
+): Promise<ForgeWebScriptCompiledModule>;
 ```
 
 解析、链接和编译导入的 FWS 模块图。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件名 |字符串|  |
-|选项 | ForgeWebScriptPluginOptions | ForgeWebScriptPluginOptions |  |
-|解析器 | ForgeWebScriptModuleResolver |  |
-|服务 | ForgeWebScriptCompilerService | ForgeWebScriptCompilerService |  |
+| 名称   | 类型                          | 描述                          |
+| ------ | ----------------------------- | ----------------------------- |
+| 文件名 | 字符串                        |                               |
+| 选项   | ForgeWebScriptPluginOptions   | ForgeWebScriptPluginOptions   |     |
+| 解析器 | ForgeWebScriptModuleResolver  |                               |
+| 服务   | ForgeWebScriptCompilerService | ForgeWebScriptCompilerService |     |
 
 ### ForgeWebScript编译模块
 
@@ -81,17 +90,17 @@ export interface ForgeWebScriptPluginOptions
 **种类：**功能
 
 ```typescript
-function resolveForgeWebScriptPath(root: string, value: string): string
+function resolveForgeWebScriptPath(root: string, value: string): string;
 ```
 
 解析相对于根的插件路径，除非值已经是绝对的。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|根 |字符串|  |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 根   | 字符串 |      |
+| 价值 | 字符串 |      |
 
 ## `src/generate`
 
@@ -100,7 +109,9 @@ function resolveForgeWebScriptPath(root: string, value: string): string
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptDeclarationsSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptDeclarationsSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 生成一个包含声明、链接元数据和可选的模块
@@ -108,32 +119,36 @@ function createForgeWebScriptDeclarationsSource(compiled: ForgeWebScriptCompiled
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编译| ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |  |
+| 名称 | 类型                         | 描述                         |
+| ---- | ---------------------------- | ---------------------------- |
+| 编译 | ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |     |
 
 ### createForgeWebScriptManifestSource
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptManifestSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptManifestSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 生成包含 JSON 可序列化 ABI 清单的模块。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编译| ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |  |
+| 名称 | 类型                         | 描述                         |
+| ---- | ---------------------------- | ---------------------------- |
+| 编译 | ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |     |
 
 ### 创建ForgeWebScriptModuleSource
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptModuleSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptModuleSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 生成正常的消费者模块。生成的模块重新导出
@@ -141,48 +156,54 @@ function createForgeWebScriptModuleSource(compiled: ForgeWebScriptCompiledModule
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编译| ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |  |
+| 名称 | 类型                         | 描述                         |
+| ---- | ---------------------------- | ---------------------------- |
+| 编译 | ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |     |
 
 ### createForgeWebScriptSourceMapSource
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptSourceMapSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptSourceMapSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 生成一个模块，其默认导出是生成的源映射对象。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编译| ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |  |
+| 名称 | 类型                         | 描述                         |
+| ---- | ---------------------------- | ---------------------------- |
+| 编译 | ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |     |
 
 ### 创建ForgeWebScriptWasmSource
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptWasmSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptWasmSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 生成一个模块，其默认导出是编译后的 Wasm 字节数组。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编译| ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |  |
+| 名称 | 类型                         | 描述                         |
+| ---- | ---------------------------- | ---------------------------- |
+| 编译 | ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |     |
 
 ### createForgeWebScriptWatSource
 
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptWatSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptWatSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 生成一个模块，其默认导出是已编译的 WAT 文本。这是
@@ -190,16 +211,16 @@ function createForgeWebScriptWatSource(compiled: ForgeWebScriptCompiledModule): 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编译| ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |  |
+| 名称 | 类型                         | 描述                         |
+| ---- | ---------------------------- | ---------------------------- |
+| 编译 | ForgeWebScriptCompiledModule | ForgeWebScriptCompiledModule |     |
 
 ### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
 
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
 ```
 
 以 ES 模块的形式返回链接声明和图形元数据的查询。
@@ -209,7 +230,7 @@ export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY
+export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
 ```
 
 将已编译的 ABI 清单作为 ES 模块返回的查询。
@@ -219,7 +240,7 @@ export const FORGE_WEB_SCRIPT_MANIFEST_QUERY
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
 ```
 
 返回生成的源映射作为模块默认导出的查询。
@@ -229,7 +250,7 @@ export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY
+export const FORGE_WEB_SCRIPT_WASM_QUERY;
 ```
 
 返回已编译的 Wasm 字节作为模块默认导出的查询。
@@ -239,7 +260,7 @@ export const FORGE_WEB_SCRIPT_WASM_QUERY
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY
+export const FORGE_WEB_SCRIPT_WAT_QUERY;
 ```
 
 以字符串形式返回生成的 WAT（包括分支表降低）的查询。
@@ -251,7 +272,9 @@ export const FORGE_WEB_SCRIPT_WAT_QUERY
 **种类：**功能
 
 ```typescript
-function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptPlugin(
+  options: ForgeWebScriptPluginOptions = {},
+): Plugin;
 ```
 
 在 Vite 中安装 Forge Web 脚本编译和虚拟工件查询。
@@ -260,16 +283,18 @@ function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptPluginOptions | ForgeWebScriptPluginOptions |  |
+| 名称 | 类型                        | 描述                        |
+| ---- | --------------------------- | --------------------------- |
+| 选项 | ForgeWebScriptPluginOptions | ForgeWebScriptPluginOptions |     |
 
 ### forgeWebScript插件
 
 **种类：**功能
 
 ```typescript
-function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptPlugin(
+  options: ForgeWebScriptPluginOptions = {},
+): Plugin;
 ```
 
 在 Vite 中安装 Forge Web 脚本编译和虚拟工件查询。
@@ -278,9 +303,9 @@ function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptPluginOptions | ForgeWebScriptPluginOptions |  |
+| 名称 | 类型                        | 描述                        |
+| ---- | --------------------------- | --------------------------- |
+| 选项 | ForgeWebScriptPluginOptions | ForgeWebScriptPluginOptions |     |
 
 ### ForgeWebScriptVite错误
 

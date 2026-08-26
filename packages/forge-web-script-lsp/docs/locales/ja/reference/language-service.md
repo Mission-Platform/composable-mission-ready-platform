@@ -459,12 +459,12 @@ LSP サーバーは `source: "forge-web-script"` を発行します。フェー�
 診断 `data` オブジェクトにも含まれています。典型的な安定したコードファミリー
 は:
 
-|コードファミリー |フェーズ |意味 |
-| ------------- | ------------ | ------------------------------------------------------------------------ |
-| `FWS-LEX-*` | `lex` |無効な文字/エスケープ、生の文字列行終端文字、または終了していない文字列/ブロック コメント |
-| `FWS-PARSE-*` | `parse` |無効なモジュール、宣言、ステートメント、または式の構文です。
-| `FWS-TYPE-*` | `type-check` |無効な型、名前、演算子、引数、または戻り値 |
-| `FWS-ABI-*` | `abi` |重複した名前、拒否された機能、エクスポートまたはインポート |
+| コードファミリー | フェーズ     | 意味                                                                                      |
+| ---------------- | ------------ | ----------------------------------------------------------------------------------------- |
+| `FWS-LEX-*`      | `lex`        | 無効な文字/エスケープ、生の文字列行終端文字、または終了していない文字列/ブロック コメント |
+| `FWS-PARSE-*`    | `parse`      | 無効なモジュール、宣言、ステートメント、または式の構文です。                              |
+| `FWS-TYPE-*`     | `type-check` | 無効な型、名前、演算子、引数、または戻り値                                                |
+| `FWS-ABI-*`      | `abi`        | 重複した名前、拒否された機能、エクスポートまたはインポート                                |
 
 不正な入力は引き続きトークン化され、パーサーの回復が可能な場合には分析されます。
 それ。たとえば、不正な形式のソースによって次のようなエラーが発生する可能性があります。 `FWS-PARSE-017` 保持しながら
@@ -490,7 +490,7 @@ LSP サーバーは `source: "forge-web-script"` を発行します。フェー�
 ```tsx
 <ForgeMonacoEditor
   language="fws"
-  modelValue={"export fn add(value: i32) -> i32 {\n  return value + 1;\n}"}
+  modelValue={'export fn add(value: i32) -> i32 {\n  return value + 1;\n}'}
 />
 ```
 
@@ -507,15 +507,15 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
   readFile: async (uri) => files.get(uri),
   listFiles: async () => [...files.keys()],
   getOptions: async () => ({
-    requestedCapabilities: ["clock.now"],
-    capabilityNames: ["clock.now"],
+    requestedCapabilities: ['clock.now'],
+    capabilityNames: ['clock.now'],
     capabilitySignatures: new Map([
       [
-        "clock.now",
+        'clock.now',
         {
           parameters: [],
-          result: "i64",
-          documentation: "Read the current Unix timestamp.",
+          result: 'i64',
+          documentation: 'Read the current Unix timestamp.',
         },
       ],
     ]),
@@ -525,9 +525,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 <ForgeMonacoEditor
   language="fws"
   forgeWebScript={{ workspaceHost }}
-  modelValue={
-    'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'
-  }
+  modelValue={'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'}
 />;
 ```
 
@@ -542,10 +540,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 ロードされました:
 
 ```ts
-import {
-  attachForgeWebScriptMonaco,
-  registerForgeWebScriptLanguage,
-} from "@mission-platform/content";
+import { attachForgeWebScriptMonaco, registerForgeWebScriptLanguage } from '@mission-platform/content';
 
 registerForgeWebScriptLanguage(monaco);
 const handle = attachForgeWebScriptMonaco(editor, monaco, { workspaceHost });
@@ -562,10 +557,10 @@ handle.dispose();
 
 ## LSP とブラウザーのワークスペース
 
-|消費者 |ワークスペースの実装 |ルート/セキュリティ境界 |輸送 |
-| --------------- | -------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
-| Node LSP クライアント | `RootBoundedForgeWebScriptWorkspaceHost` |正規化された構成済みファイルシステムのルート。外部読み取りは拒否されます。 stdio LSP |
-|モナコ/ブラウザ |アプリケーション提供の `ForgeWebScriptWorkspaceHost` |どの URI/ファイル/オプションを公開するかはホストが決定します。ファイルシステムを前提としていない |インプロセスアダプター |
+| 消費者                | ワークスペースの実装                                 | ルート/セキュリティ境界                                                                          | 輸送                   |
+| --------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------- |
+| Node LSP クライアント | `RootBoundedForgeWebScriptWorkspaceHost`             | 正規化された構成済みファイルシステムのルート。外部読み取りは拒否されます。 stdio LSP             |
+| モナコ/ブラウザ       | アプリケーション提供の `ForgeWebScriptWorkspaceHost` | どの URI/ファイル/オプションを公開するかはホストが決定します。ファイルシステムを前提としていない | インプロセスアダプター |
 
 どちらのアダプターも同じ言語サービス コントラクトと分析セマンティクスを使用します。
 ただし、ドキュメント ストアやトランスポートは共有しません。ブラウザホストは次のことを行ってはなりません

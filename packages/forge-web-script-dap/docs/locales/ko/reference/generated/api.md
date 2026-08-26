@@ -126,32 +126,32 @@ export interface DapVariable
 **종류:** 기능
 
 ```typescript
-function encodeDapMessage(message: DapMessage): Buffer
+function encodeDapMessage(message: DapMessage): Buffer;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 메시지 | 댑메시지 |  |
+| 이름   | 유형     | 설명 |
+| ------ | -------- | ---- |
+| 메시지 | 댑메시지 |      |
 
 ### 인코딩라인메시지
 
 **종류:** 기능
 
 ```typescript
-function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string
+function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 메시지 | ForgeWebScriptRuntimeRequest |  |
+| 이름   | 유형                         | 설명 |
+| ------ | ---------------------------- | ---- |
+| 메시지 | ForgeWebScriptRuntimeRequest |      |
 
 ### ForgeWebScriptDapForensicRequest
 
@@ -198,7 +198,26 @@ export interface ForgeWebScriptDapTraceRequest extends DapRequest<ForgeWebScript
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptRuntimeCommand = | 'launch' | 'setBreakpoints' | 'configurationDone' | 'continue' | 'next' | 'stepIn' | 'stepOut' | 'pause' | 'threads' | 'stackTrace' | 'scopes' | 'variables' | 'fwsTraceSummary' | 'fwsTraceEvents' | 'fwsMemoryState' | 'fwsCapabilityCalls' | 'fwsTrapEvidence' | 'terminate' | 'disconnect';
+export type ForgeWebScriptRuntimeCommand =
+  | 'launch'
+  | 'setBreakpoints'
+  | 'configurationDone'
+  | 'continue'
+  | 'next'
+  | 'stepIn'
+  | 'stepOut'
+  | 'pause'
+  | 'threads'
+  | 'stackTrace'
+  | 'scopes'
+  | 'variables'
+  | 'fwsTraceSummary'
+  | 'fwsTraceEvents'
+  | 'fwsMemoryState'
+  | 'fwsCapabilityCalls'
+  | 'fwsTrapEvidence'
+  | 'terminate'
+  | 'disconnect';
 ```
 
 설명이 제공되지 않았습니다.
@@ -228,7 +247,14 @@ export interface ForgeWebScriptRuntimeErrorEvent
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptRuntimeMessage = | ForgeWebScriptRuntimeResponse | ForgeWebScriptRuntimeOutputEvent | ForgeWebScriptRuntimeStoppedEvent | ForgeWebScriptRuntimeContinuedEvent | ForgeWebScriptRuntimeThreadEvent | ForgeWebScriptRuntimeTerminatedEvent | ForgeWebScriptRuntimeErrorEvent;
+export type ForgeWebScriptRuntimeMessage =
+  | ForgeWebScriptRuntimeResponse
+  | ForgeWebScriptRuntimeOutputEvent
+  | ForgeWebScriptRuntimeStoppedEvent
+  | ForgeWebScriptRuntimeContinuedEvent
+  | ForgeWebScriptRuntimeThreadEvent
+  | ForgeWebScriptRuntimeTerminatedEvent
+  | ForgeWebScriptRuntimeErrorEvent;
 ```
 
 설명이 제공되지 않았습니다.
@@ -278,7 +304,11 @@ export interface ForgeWebScriptRuntimeResponse
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptRuntimeSpawner = ( executable: string, arguments_: readonly string[], options: ForgeWebScriptRuntimeSpawnOptions, ) => ForgeWebScriptRuntimeProcess;
+export type ForgeWebScriptRuntimeSpawner = (
+  executable: string,
+  arguments_: readonly string[],
+  options: ForgeWebScriptRuntimeSpawnOptions,
+) => ForgeWebScriptRuntimeProcess;
 ```
 
 설명이 제공되지 않았습니다.
@@ -328,16 +358,16 @@ export interface ForgeWebScriptRuntimeThreadEvent
 **종류:** 기능
 
 ```typescript
-function isRecord(value: unknown): value is Record<string, unknown>
+function isRecord(value: unknown): value is Record<string, unknown>;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 알 수 없음 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 가치 | 알 수 없음 |      |
 
 ### RuntimeLineParser
 
@@ -356,16 +386,16 @@ export class RuntimeLineParser
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer
+function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptDapServer옵션 |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 옵션 | ForgeWebScriptDapServer옵션 |      |
 
 ### ForgeWebScriptDapServer
 

@@ -382,8 +382,8 @@ IR에 주석이 달린 프런트엔드이며 결코 기능 가져오기가 아�
 `*`, `+`, `?`, 제한된 `{n}`, `{n,}`, `{n,m}` 수량자, 지연 수량자,
 및 `^`/`Forge 웹 스크립트는 결정적 정규식 표준 라이브러리를 제공합니다.`regex_full_match(pattern, value) -> bool`호출,`regex_prefix_match(pattern, value) -> bool`및`regex_search(pattern, value, start: i32) -> bool`는 전체 값을 수행합니다.
 위치 0 접두사 및 가장 왼쪽 검색 일치. 캡처 범위
-해당 `regex__*capture_start`을 통해 사용할 수 있으며
-`regex*__capture_end`호출; 그룹 인덱스를 가져와 UTF-16 문자열을 반환합니다.
+해당 `regex___capture_start`을 통해 사용할 수 있으며
+`regex___capture_end`호출; 그룹 인덱스를 가져와 UTF-16 문자열을 반환합니다.
 일치하는 항목이 없거나 그룹이 설정되지 않은 경우 오프셋 또는`-1`입니다. 검색 캡쳐
 호출은 추가로 그룹 인덱스 이전의 시작 오프셋을 사용합니다.
 

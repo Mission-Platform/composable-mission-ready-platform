@@ -126,32 +126,32 @@ export interface DapVariable
 **النوع:** الوظيفة
 
 ```typescript
-function encodeDapMessage(message: DapMessage): Buffer
+function encodeDapMessage(message: DapMessage): Buffer;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رسالة | رسالة داب |  |
+| الاسم | اكتب      | الوصف |
+| ----- | --------- | ----- |
+| رسالة | رسالة داب |       |
 
 ### encodeLineMessage
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string
+function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رسالة | ForgeWebScriptRuntimeRequest |  |
+| الاسم | اكتب                         | الوصف |
+| ----- | ---------------------------- | ----- |
+| رسالة | ForgeWebScriptRuntimeRequest |       |
 
 ### ForgeWebScriptDapForensicRequest
 
@@ -198,7 +198,26 @@ export interface ForgeWebScriptDapTraceRequest extends DapRequest<ForgeWebScript
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptRuntimeCommand = | 'launch' | 'setBreakpoints' | 'configurationDone' | 'continue' | 'next' | 'stepIn' | 'stepOut' | 'pause' | 'threads' | 'stackTrace' | 'scopes' | 'variables' | 'fwsTraceSummary' | 'fwsTraceEvents' | 'fwsMemoryState' | 'fwsCapabilityCalls' | 'fwsTrapEvidence' | 'terminate' | 'disconnect';
+export type ForgeWebScriptRuntimeCommand =
+  | 'launch'
+  | 'setBreakpoints'
+  | 'configurationDone'
+  | 'continue'
+  | 'next'
+  | 'stepIn'
+  | 'stepOut'
+  | 'pause'
+  | 'threads'
+  | 'stackTrace'
+  | 'scopes'
+  | 'variables'
+  | 'fwsTraceSummary'
+  | 'fwsTraceEvents'
+  | 'fwsMemoryState'
+  | 'fwsCapabilityCalls'
+  | 'fwsTrapEvidence'
+  | 'terminate'
+  | 'disconnect';
 ```
 
 لم يتم تقديم أي وصف.
@@ -228,7 +247,14 @@ export interface ForgeWebScriptRuntimeErrorEvent
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptRuntimeMessage = | ForgeWebScriptRuntimeResponse | ForgeWebScriptRuntimeOutputEvent | ForgeWebScriptRuntimeStoppedEvent | ForgeWebScriptRuntimeContinuedEvent | ForgeWebScriptRuntimeThreadEvent | ForgeWebScriptRuntimeTerminatedEvent | ForgeWebScriptRuntimeErrorEvent;
+export type ForgeWebScriptRuntimeMessage =
+  | ForgeWebScriptRuntimeResponse
+  | ForgeWebScriptRuntimeOutputEvent
+  | ForgeWebScriptRuntimeStoppedEvent
+  | ForgeWebScriptRuntimeContinuedEvent
+  | ForgeWebScriptRuntimeThreadEvent
+  | ForgeWebScriptRuntimeTerminatedEvent
+  | ForgeWebScriptRuntimeErrorEvent;
 ```
 
 لم يتم تقديم أي وصف.
@@ -278,7 +304,11 @@ export interface ForgeWebScriptRuntimeResponse
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptRuntimeSpawner = ( executable: string, arguments_: readonly string[], options: ForgeWebScriptRuntimeSpawnOptions, ) => ForgeWebScriptRuntimeProcess;
+export type ForgeWebScriptRuntimeSpawner = (
+  executable: string,
+  arguments_: readonly string[],
+  options: ForgeWebScriptRuntimeSpawnOptions,
+) => ForgeWebScriptRuntimeProcess;
 ```
 
 لم يتم تقديم أي وصف.
@@ -328,16 +358,16 @@ export interface ForgeWebScriptRuntimeThreadEvent
 **النوع:** الوظيفة
 
 ```typescript
-function isRecord(value: unknown): value is Record<string, unknown>
+function isRecord(value: unknown): value is Record<string, unknown>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | غير معروف |  |
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| القيمة | غير معروف |       |
 
 ### RuntimeLineParser
 
@@ -356,16 +386,16 @@ export class RuntimeLineParser
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer
+function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجيويبسكريبتدابسيرفيروبتيونس |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| خيارات | فورجيويبسكريبتدابسيرفيروبتيونس |       |
 
 ### ForgeWebScriptDapServer
 

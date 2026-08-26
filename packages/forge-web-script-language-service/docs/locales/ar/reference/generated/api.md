@@ -16,18 +16,22 @@
 **النوع:** الوظيفة
 
 ```typescript
-function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeWebScriptWorkspaceOptions, analysisOptions: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysis
+function analyzeForgeWebScript(
+  document: ForgeWebScriptDocument,
+  options: ForgeWebScriptWorkspaceOptions,
+  analysisOptions: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysis;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| وثيقة | ForgeWebScriptDocument |  |
-| خيارات | فورجيويبسكريبت ووركسبايسأوبتيونس |  |
-| خيارات التحليل | خيارات تحليل فورجي ويب سكريبت |  |
+| الاسم          | اكتب                             | الوصف |
+| -------------- | -------------------------------- | ----- |
+| وثيقة          | ForgeWebScriptDocument           |       |
+| خيارات         | فورجيويبسكريبت ووركسبايسأوبتيونس |       |
+| خيارات التحليل | خيارات تحليل فورجي ويب سكريبت    |       |
 
 ## `src/completion`
 
@@ -36,19 +40,24 @@ function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeW
 **النوع:** الوظيفة
 
 ```typescript
-function completeForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): readonly ForgeWebScriptCompletion[]
+function completeForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): readonly ForgeWebScriptCompletion[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| موقف | ForgeWebScriptPosition |  |
-| رموز | للقراءة فقط ForgeWebScriptSymbol[] |  |
-| خيارات | فورجيويبسكريبت ووركسبايسأوبتيونس |  |
+| الاسم  | اكتب                               | الوصف |
+| ------ | ---------------------------------- | ----- |
+| المصدر | سلسلة                              |       |
+| موقف   | ForgeWebScriptPosition             |       |
+| رموز   | للقراءة فقط ForgeWebScriptSymbol[] |       |
+| خيارات | فورجيويبسكريبت ووركسبايسأوبتيونس   |       |
 
 ## `src/documents`
 
@@ -57,16 +66,16 @@ function completeForgeWebScript(source: string, position: ForgeWebScriptPosition
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService
+function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المضيف | فورجي ويب سكريبت وورك سبيس هوست |  |
+| الاسم  | اكتب                            | الوصف |
+| ------ | ------------------------------- | ----- |
+| المضيف | فورجي ويب سكريبت وورك سبيس هوست |       |
 
 ## `src/features`
 
@@ -75,91 +84,112 @@ function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost)
 **النوع:** الوظيفة
 
 ```typescript
-function codeLensesForgeWebScript(module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], referenceCount: (symbol: ForgeWebScriptSymbol) => number): readonly ForgeWebScriptCodeLens[]
+function codeLensesForgeWebScript(
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  referenceCount: (symbol: ForgeWebScriptSymbol) => number,
+): readonly ForgeWebScriptCodeLens[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | ForgeWebScriptModule \| غير محدد |  |
-| رموز | للقراءة فقط ForgeWebScriptSymbol[] |  |
-| عدد المرجع | (الرمز: ForgeWebScriptSymbol) => الرقم |  |
+| الاسم          | اكتب                                   | الوصف |
+| -------------- | -------------------------------------- | ----- |
+| الوحدة النمطية | ForgeWebScriptModule \| غير محدد       |       |
+| رموز           | للقراءة فقط ForgeWebScriptSymbol[]     |       |
+| عدد المرجع     | (الرمز: ForgeWebScriptSymbol) => الرقم |       |
 
 ### documentSymbolsForgeWebScript
 
 **النوع:** الوظيفة
 
 ```typescript
-function documentSymbolsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[]): readonly ForgeWebScriptDocumentSymbol[]
+function documentSymbolsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+): readonly ForgeWebScriptDocumentSymbol[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| الوحدة النمطية | ForgeWebScriptModule \| غير محدد |  |
-| رموز | للقراءة فقط ForgeWebScriptSymbol[] |  |
+| الاسم          | اكتب                               | الوصف |
+| -------------- | ---------------------------------- | ----- |
+| المصدر         | سلسلة                              |       |
+| الوحدة النمطية | ForgeWebScriptModule \| غير محدد   |       |
+| رموز           | للقراءة فقط ForgeWebScriptSymbol[] |       |
 
 ### FoldingRangesForgeWebScript
 
 **النوع:** الوظيفة
 
 ```typescript
-function foldingRangesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined): readonly ForgeWebScriptFoldingRange[]
+function foldingRangesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+): readonly ForgeWebScriptFoldingRange[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| الوحدة النمطية | ForgeWebScriptModule \| غير محدد |  |
+| الاسم          | اكتب                             | الوصف |
+| -------------- | -------------------------------- | ----- |
+| المصدر         | سلسلة                            |       |
+| الوحدة النمطية | ForgeWebScriptModule \| غير محدد |       |
 
 ### inlayHintsForgeWebScript
 
 **النوع:** الوظيفة
 
 ```typescript
-function inlayHintsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, requestedRange?: ForgeWebScriptRange, importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment): readonly ForgeWebScriptInlayHint[]
+function inlayHintsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  requestedRange?: ForgeWebScriptRange,
+  importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment,
+): readonly ForgeWebScriptInlayHint[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| الوحدة النمطية | ForgeWebScriptModule \| غير محدد |  |
-| النطاق المطلوب | ForgeWebScriptRange |  |
-| استيراد نوع البيئة | ForgeWebScriptImportTypeEnvironment |  |
+| الاسم              | اكتب                                | الوصف |
+| ------------------ | ----------------------------------- | ----- |
+| المصدر             | سلسلة                               |       |
+| الوحدة النمطية     | ForgeWebScriptModule \| غير محدد    |       |
+| النطاق المطلوب     | ForgeWebScriptRange                 |       |
+| استيراد نوع البيئة | ForgeWebScriptImportTypeEnvironment |       |
 
 ### inlineValuesForgeWebScript
 
 **النوع:** الوظيفة
 
 ```typescript
-function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], requestedRange?: ForgeWebScriptRange): readonly ForgeWebScriptInlineValue[]
+function inlineValuesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  requestedRange?: ForgeWebScriptRange,
+): readonly ForgeWebScriptInlineValue[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| الوحدة النمطية | ForgeWebScriptModule \| غير محدد |  |
-| رموز | للقراءة فقط ForgeWebScriptSymbol[] |  |
-| النطاق المطلوب | ForgeWebScriptRange |  |
+| الاسم          | اكتب                               | الوصف |
+| -------------- | ---------------------------------- | ----- |
+| المصدر         | سلسلة                              |       |
+| الوحدة النمطية | ForgeWebScriptModule \| غير محدد   |       |
+| رموز           | للقراءة فقط ForgeWebScriptSymbol[] |       |
+| النطاق المطلوب | ForgeWebScriptRange                |       |
 
 ## `src/hover`
 
@@ -168,19 +198,24 @@ function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule
 **النوع:** الوظيفة
 
 ```typescript
-function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): ForgeWebScriptHover | undefined
+function hoverForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): ForgeWebScriptHover | undefined;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| موقف | ForgeWebScriptPosition |  |
-| رموز | للقراءة فقط ForgeWebScriptSymbol[] |  |
-| خيارات | فورجيويبسكريبت ووركسبايسأوبتيونس |  |
+| الاسم  | اكتب                               | الوصف |
+| ------ | ---------------------------------- | ----- |
+| المصدر | سلسلة                              |       |
+| موقف   | ForgeWebScriptPosition             |       |
+| رموز   | للقراءة فقط ForgeWebScriptSymbol[] |       |
+| خيارات | فورجيويبسكريبت ووركسبايسأوبتيونس   |       |
 
 ## `src/lsif`
 
@@ -189,7 +224,7 @@ function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, s
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph
+function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph;
 ```
 
 إنشاء رسم بياني LSIF محدد من لقطة مساحة عمل خدمة اللغة.
@@ -199,16 +234,16 @@ function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScrip
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | ForgeWebScriptLsifInput |  |
+| الاسم   | اكتب                    | الوصف |
+| ------- | ----------------------- | ----- |
+| الإدخال | ForgeWebScriptLsifInput |       |
 
 ### createForgeWebScriptLsifGraph
 
 **النوع:** ثابت
 
 ```typescript
-export const createForgeWebScriptLsifGraph
+export const createForgeWebScriptLsifGraph;
 ```
 
 لم يتم تقديم أي وصف.
@@ -218,7 +253,7 @@ export const createForgeWebScriptLsifGraph
 **النوع:** ثابت
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LSIF_VERSION
+export const FORGE_WEB_SCRIPT_LSIF_VERSION;
 ```
 
 إصدار LSIF الذي تمثله هذه الوحدة.
@@ -258,7 +293,18 @@ export interface ForgeWebScriptLsifEdge
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptLsifEdgeLabel = | 'contains' | 'next' | 'item' | 'textDocument/definition' | 'textDocument/declaration' | 'textDocument/implementation' | 'textDocument/references' | 'textDocument/documentSymbol' | 'textDocument/hover' | 'moniker' | 'diagnostic';
+export type ForgeWebScriptLsifEdgeLabel =
+  | 'contains'
+  | 'next'
+  | 'item'
+  | 'textDocument/definition'
+  | 'textDocument/declaration'
+  | 'textDocument/implementation'
+  | 'textDocument/references'
+  | 'textDocument/documentSymbol'
+  | 'textDocument/hover'
+  | 'moniker'
+  | 'diagnostic';
 ```
 
 لم يتم تقديم أي وصف.
@@ -368,7 +414,14 @@ export interface ForgeWebScriptLsifResultVertex
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | ForgeWebScriptLsifProjectVertex | ForgeWebScriptLsifDocumentVertex | ForgeWebScriptLsifRangeVertex | ForgeWebScriptLsifResultSetVertex | ForgeWebScriptLsifResultVertex | ForgeWebScriptLsifMonikerVertex;
+export type ForgeWebScriptLsifVertex =
+  | ForgeWebScriptLsifMetadataVertex
+  | ForgeWebScriptLsifProjectVertex
+  | ForgeWebScriptLsifDocumentVertex
+  | ForgeWebScriptLsifRangeVertex
+  | ForgeWebScriptLsifResultSetVertex
+  | ForgeWebScriptLsifResultVertex
+  | ForgeWebScriptLsifMonikerVertex;
 ```
 
 لم يتم تقديم أي وصف.
@@ -378,7 +431,20 @@ export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | Forg
 **النوع:** النوع
 
 ```typescript
-export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document' | 'range' | 'resultSet' | 'definitionResult' | 'declarationResult' | 'implementationResult' | 'referenceResult' | 'documentSymbolResult' | 'hoverResult' | 'moniker' | 'diagnosticResult';
+export type ForgeWebScriptLsifVertexLabel =
+  | 'metaData'
+  | 'project'
+  | 'document'
+  | 'range'
+  | 'resultSet'
+  | 'definitionResult'
+  | 'declarationResult'
+  | 'implementationResult'
+  | 'referenceResult'
+  | 'documentSymbolResult'
+  | 'hoverResult'
+  | 'moniker'
+  | 'diagnosticResult';
 ```
 
 لم يتم تقديم أي وصف.
@@ -388,23 +454,23 @@ export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document
 **النوع:** الوظيفة
 
 ```typescript
-function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string
+function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string;
 ```
 
 إجراء تسلسل لسجلات LSIF باعتبارها JSONL مستقرة، بدون سطر جديد لاحق.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رسم بياني | ForgeWebScriptLsifGraph |  |
+| الاسم     | اكتب                    | الوصف |
+| --------- | ----------------------- | ----- |
+| رسم بياني | ForgeWebScriptLsifGraph |       |
 
 ### serializeForgeWebScriptLsifGraph
 
 **النوع:** ثابت
 
 ```typescript
-export const serializeForgeWebScriptLsifGraph
+export const serializeForgeWebScriptLsifGraph;
 ```
 
 لم يتم تقديم أي وصف.
@@ -416,86 +482,86 @@ export const serializeForgeWebScriptLsifGraph
 **النوع:** الوظيفة
 
 ```typescript
-function containsOffset(range: ForgeWebScriptRange, offset: number): boolean
+function containsOffset(range: ForgeWebScriptRange, offset: number): boolean;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| النطاق | ForgeWebScriptRange |  |
-| إزاحة | رقم |  |
+| الاسم  | اكتب                | الوصف |
+| ------ | ------------------- | ----- |
+| النطاق | ForgeWebScriptRange |       |
+| إزاحة  | رقم                 |       |
 
 ### OffsetAtPosition
 
 **النوع:** الوظيفة
 
 ```typescript
-function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number
+function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| موقف | ForgeWebScriptPosition |  |
+| الاسم  | اكتب                   | الوصف |
+| ------ | ---------------------- | ----- |
+| المصدر | سلسلة                  |       |
+| موقف   | ForgeWebScriptPosition |       |
 
 ### locationAtOffset
 
 **النوع:** الوظيفة
 
 ```typescript
-function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition
+function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| إزاحة | رقم |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المصدر | سلسلة |       |
+| إزاحة  | رقم   |       |
 
 ### rangeFromOffsets
 
 **النوع:** الوظيفة
 
 ```typescript
-function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange
+function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| ابدأ | رقم |  |
-| النهاية | رقم |  |
+| الاسم   | اكتب  | الوصف |
+| ------- | ----- | ----- |
+| المصدر  | سلسلة |       |
+| ابدأ    | رقم   |       |
+| النهاية | رقم   |       |
 
 ### rangeFromSpan
 
 **النوع:** الوظيفة
 
 ```typescript
-function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange
+function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| فترة | فورجيويبسكريبتسورسسبان |  |
+| الاسم  | اكتب                   | الوصف |
+| ------ | ---------------------- | ----- |
+| المصدر | سلسلة                  |       |
+| فترة   | فورجيويبسكريبتسورسسبان |       |
 
 ## `src/symbols`
 
@@ -504,34 +570,38 @@ function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWeb
 **النوع:** الوظيفة
 
 ```typescript
-function buildSymbolIndex(source: string, module: ForgeWebScriptModule | undefined, tokens: readonly ForgeWebScriptTokenClassification[]): ForgeWebScriptSymbolIndex
+function buildSymbolIndex(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  tokens: readonly ForgeWebScriptTokenClassification[],
+): ForgeWebScriptSymbolIndex;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| الوحدة النمطية | ForgeWebScriptModule \| غير محدد |  |
-| الرموز | للقراءة فقط ForgeWebScriptTokenClassification[] |  |
+| الاسم          | اكتب                                            | الوصف |
+| -------------- | ----------------------------------------------- | ----- |
+| المصدر         | سلسلة                                           |       |
+| الوحدة النمطية | ForgeWebScriptModule \| غير محدد                |       |
+| الرموز         | للقراءة فقط ForgeWebScriptTokenClassification[] |       |
 
 ### اسم التعبير
 
 **النوع:** الوظيفة
 
 ```typescript
-function expressionName(expression: ForgeWebScriptExpression): string | undefined
+function expressionName(expression: ForgeWebScriptExpression): string | undefined;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تعبير | ForgeWebScriptExpression |  |
+| الاسم | اكتب                     | الوصف |
+| ----- | ------------------------ | ----- |
+| تعبير | ForgeWebScriptExpression |       |
 
 ### ForgeWebScriptSymbolIndex
 
@@ -550,33 +620,33 @@ export interface ForgeWebScriptSymbolIndex
 **النوع:** الوظيفة
 
 ```typescript
-function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[]
+function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| اسم الملف |  |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| المصدر    | سلسلة |       |
+| اسم الملف |       |       |
 
 ### tokenKindToClassification
 
 **النوع:** الوظيفة
 
 ```typescript
-function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind']
+function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind'];
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نوع | ForgeWebScriptTokenKind |  |
+| الاسم | اكتب                    | الوصف |
+| ----- | ----------------------- | ----- |
+| نوع   | ForgeWebScriptTokenKind |       |
 
 ## `src/types`
 
@@ -907,17 +977,20 @@ export interface ForgeWebScriptWorkspaceOptions
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeWebScriptWorkspaceIndex(callbacks: WorkspaceIndexCallbacks, host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptWorkspaceSemanticIndex
+function createForgeWebScriptWorkspaceIndex(
+  callbacks: WorkspaceIndexCallbacks,
+  host?: ForgeWebScriptWorkspaceHost,
+): ForgeWebScriptWorkspaceSemanticIndex;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسترجاعات | WorkspaceIndexCallbacks |  |
-| المضيف | فورجي ويب سكريبت وورك سبيس هوست |  |
+| الاسم       | اكتب                            | الوصف |
+| ----------- | ------------------------------- | ----- |
+| الاسترجاعات | WorkspaceIndexCallbacks         |       |
+| المضيف      | فورجي ويب سكريبت وورك سبيس هوست |       |
 
 ### ForgeWebScriptWorkspaceSemanticIndex
 

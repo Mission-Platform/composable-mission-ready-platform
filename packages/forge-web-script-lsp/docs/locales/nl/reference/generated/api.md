@@ -16,16 +16,16 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-w
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptLspServerOptions |  |
+| Naam   | Typ                            | Beschrijving |
+| ------ | ------------------------------ | ------------ |
+| opties | ForgeWebScriptLspServerOptions |              |
 
 ### ForgeWebScriptLspDocument
 
@@ -82,17 +82,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function registerForgeWebScriptLsp(
+  connection: Connection,
+  options: ForgeWebScriptLspServerOptions = {},
+): ForgeWebScriptLspServer;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| verbinding | Verbinding |  |
-| opties | ForgeWebScriptLspServerOptions |  |
+| Naam       | Typ                            | Beschrijving |
+| ---------- | ------------------------------ | ------------ |
+| verbinding | Verbinding                     |              |
+| opties     | ForgeWebScriptLspServerOptions |              |
 
 ## `src/workspace`
 
@@ -101,16 +104,18 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeWebScriptNodeWorkspaceHost(options: ForgeWebScriptNodeWorkspaceOptions): RootBoundedForgeWebScriptWorkspaceHost
+function createForgeWebScriptNodeWorkspaceHost(
+  options: ForgeWebScriptNodeWorkspaceOptions,
+): RootBoundedForgeWebScriptWorkspaceHost;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeWebScriptNodeWorkspaceOptions |  |
+| Naam   | Typ                                | Beschrijving |
+| ------ | ---------------------------------- | ------------ |
+| opties | ForgeWebScriptNodeWorkspaceOptions |              |
 
 ### ForgeWebScriptNodeFileSystem
 

@@ -459,12 +459,12 @@ LSP 서버는 `source: "forge-web-script"`을 게시합니다. 단계와 힌트�
 진단 `data` 개체에도 포함됩니다. 일반적인 안정 코드 계열
 다음과 같습니다:
 
-| 코드 계열 | 단계 | 의미 |
-| ------------- | ------------ | ------------------------------------------------------------------------ |
-| `FWS-LEX-*` | `lex` | 잘못된 문자/이스케이프, 원시 문자열 줄 종결자 또는 종료되지 않은 문자열/블록 주석 |
-| `FWS-PARSE-*` | `parse` | 잘못된 모듈, 선언, 문 또는 식 구문 |
-| `FWS-TYPE-*` | `type-check` | 잘못된 유형, 이름, 연산자, 인수 또는 반환 |
-| `FWS-ABI-*` | `abi` | 중복된 이름, 거부된 기능, 내보내기 또는 가져오기 |
+| 코드 계열     | 단계         | 의미                                                                              |
+| ------------- | ------------ | --------------------------------------------------------------------------------- |
+| `FWS-LEX-*`   | `lex`        | 잘못된 문자/이스케이프, 원시 문자열 줄 종결자 또는 종료되지 않은 문자열/블록 주석 |
+| `FWS-PARSE-*` | `parse`      | 잘못된 모듈, 선언, 문 또는 식 구문                                                |
+| `FWS-TYPE-*`  | `type-check` | 잘못된 유형, 이름, 연산자, 인수 또는 반환                                         |
+| `FWS-ABI-*`   | `abi`        | 중복된 이름, 거부된 기능, 내보내기 또는 가져오기                                  |
 
 파서 복구가 허용되는 경우 잘못된 입력은 여전히 토큰화 및 분석됩니다.
 그것. 예를 들어 잘못된 소스는 `FWS-PARSE-017`을 생성할 수 있지만
@@ -490,7 +490,7 @@ LSP 서버는 `source: "forge-web-script"`을 게시합니다. 단계와 힌트�
 ```tsx
 <ForgeMonacoEditor
   language="fws"
-  modelValue={"export fn add(value: i32) -> i32 {\n  return value + 1;\n}"}
+  modelValue={'export fn add(value: i32) -> i32 {\n  return value + 1;\n}'}
 />
 ```
 
@@ -507,15 +507,15 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
   readFile: async (uri) => files.get(uri),
   listFiles: async () => [...files.keys()],
   getOptions: async () => ({
-    requestedCapabilities: ["clock.now"],
-    capabilityNames: ["clock.now"],
+    requestedCapabilities: ['clock.now'],
+    capabilityNames: ['clock.now'],
     capabilitySignatures: new Map([
       [
-        "clock.now",
+        'clock.now',
         {
           parameters: [],
-          result: "i64",
-          documentation: "Read the current Unix timestamp.",
+          result: 'i64',
+          documentation: 'Read the current Unix timestamp.',
         },
       ],
     ]),
@@ -525,9 +525,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 <ForgeMonacoEditor
   language="fws"
   forgeWebScript={{ workspaceHost }}
-  modelValue={
-    'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'
-  }
+  modelValue={'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'}
 />;
 ```
 
@@ -542,10 +540,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 로드되었습니다:
 
 ```ts
-import {
-  attachForgeWebScriptMonaco,
-  registerForgeWebScriptLanguage,
-} from "@mission-platform/content";
+import { attachForgeWebScriptMonaco, registerForgeWebScriptLanguage } from '@mission-platform/content';
 
 registerForgeWebScriptLanguage(monaco);
 const handle = attachForgeWebScriptMonaco(editor, monaco, { workspaceHost });
@@ -562,10 +557,10 @@ handle.dispose();
 
 ## LSP와 브라우저 작업 공간
 
-| 소비자 | 업무공간 구현 | 루트/보안 경계 | 교통 |
-| --------------- | -------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
-| Node LSP 클라이언트 | `RootBoundedForgeWebScriptWorkspaceHost` | 정규화된 구성된 파일 시스템 루트 외부 읽기가 거부됩니다 | 스튜디오 LSP |
-| 모나코/브라우저 | 애플리케이션 제공 `ForgeWebScriptWorkspaceHost` | 호스트는 노출할 URI/파일/옵션을 결정합니다. 파일 시스템 가정 없음 | 프로세스 내 어댑터 |
+| 소비자              | 업무공간 구현                                   | 루트/보안 경계                                                    | 교통               |
+| ------------------- | ----------------------------------------------- | ----------------------------------------------------------------- | ------------------ |
+| Node LSP 클라이언트 | `RootBoundedForgeWebScriptWorkspaceHost`        | 정규화된 구성된 파일 시스템 루트 외부 읽기가 거부됩니다           | 스튜디오 LSP       |
+| 모나코/브라우저     | 애플리케이션 제공 `ForgeWebScriptWorkspaceHost` | 호스트는 노출할 URI/파일/옵션을 결정합니다. 파일 시스템 가정 없음 | 프로세스 내 어댑터 |
 
 Both adapters use the same language-service contracts and analysis semantics,
 but they do not share a document store or transport. 브라우저 호스트는 다음을 수행해서는 안 됩니다.

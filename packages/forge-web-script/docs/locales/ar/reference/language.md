@@ -385,8 +385,8 @@ pattern      = "_" | identifier, [ "(", [ identifier, { ",", identifier } ], ")"
 `regex_prefix_match(pattern, value) -> bool`، و
 `regex_search(pattern, value, start: i32) -> bool`يؤدي القيمة الكاملة،
 بادئة الموضع صفر، ومطابقة البحث في أقصى اليسار على التوالي. التقاط الحدود
-متاحة من خلال`regex__*capture_start`و
-مكالمات`regex*__capture_end`؛ يأخذون فهرس المجموعة ويعيدون سلسلة UTF-16
+متاحة من خلال`regex___capture_start`و
+مكالمات`regex___capture_end`؛ يأخذون فهرس المجموعة ويعيدون سلسلة UTF-16
 الإزاحة، أو `-1` في حالة عدم وجود تطابق أو عدم تعيين المجموعة. التقاط البحث
 بالإضافة إلى ذلك، تأخذ المكالمات إزاحة البداية قبل فهرس المجموعة.
 

@@ -384,7 +384,7 @@ e ancoraggi `^`/`Forge Web Script fornisce una libreria standard deterministica 
 Le chiamate`regex_full_match(pattern, value) -> bool`,
 `regex_prefix_match(pattern, value) -> bool`e`regex_search(pattern, value, start: i32) -> bool`esegue valori interi,
 rispettivamente il prefisso posizione zero e la corrispondenza della ricerca più a sinistra. Cattura i limiti
-sono disponibili tramite il corrispondente`regex__*capture_start`e`regex*__capture_end`chiamate; prendono un indice di gruppo e restituiscono una stringa UTF-16
+sono disponibili tramite il corrispondente`regex___capture_start`e`regex___capture_end`chiamate; prendono un indice di gruppo e restituiscono una stringa UTF-16
 offset o`-1` quando non c'è corrispondenza o il gruppo non è impostato. Cerca cattura
 le chiamate inoltre assumono l'offset iniziale prima dell'indice del gruppo.
 

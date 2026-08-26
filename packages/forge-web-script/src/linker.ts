@@ -22,7 +22,7 @@ function callableSignature(declaration: ForgeWebScriptFunction): string {
 }
 
 function moduleLinkPrefix(moduleId: string): string {
-  return `__${moduleId.replace(/[^A-Za-z0-9_]/g, '_')}__`;
+  return `__${moduleId.replaceAll(/[^A-Za-z0-9_]/g, '_')}__`;
 }
 
 function namespacePrivateFunctions(
@@ -44,65 +44,82 @@ function namespacePrivateFunctions(
 
   const expression = (value: ForgeWebScriptExpression): ForgeWebScriptExpression => {
     switch (value.kind) {
-      case 'call':
-        return { ...value, callee: rename(value.callee), arguments: value.arguments.map(expression) };
-      case 'function-value':
+      case 'call': {
+        return { ...value, callee: rename(value.callee), arguments: value.arguments.map((argument) => expression(argument)) };
+      }
+      case 'function-value': {
         return { ...value, name: rename(value.name) };
-      case 'binary':
+      }
+      case 'binary': {
         return { ...value, left: expression(value.left), right: expression(value.right) };
-      case 'unary':
+      }
+      case 'unary': {
         return { ...value, operand: expression(value.operand) };
-      case 'struct-value':
+      }
+      case 'struct-value': {
         return {
           ...value,
           fields: Object.fromEntries(Object.entries(value.fields).map(([name, field]) => [name, expression(field)])),
         };
-      case 'enum-value':
-        return { ...value, arguments: value.arguments.map(expression) };
-      case 'array-literal':
-        return { ...value, elements: value.elements.map(expression) };
-      case 'vector-literal':
-        return { ...value, elements: value.elements.map(expression) };
-      case 'index':
+      }
+      case 'enum-value': {
+        return { ...value, arguments: value.arguments.map((argument) => expression(argument)) };
+      }
+      case 'array-literal': {
+        return { ...value, elements: value.elements.map((element) => expression(element)) };
+      }
+      case 'vector-literal': {
+        return { ...value, elements: value.elements.map((element) => expression(element)) };
+      }
+      case 'index': {
         return { ...value, receiver: expression(value.receiver), index: expression(value.index) };
-      case 'match':
+      }
+      case 'match': {
         return {
           ...value,
           value: expression(value.value),
           arms: value.arms.map((arm) => ({ ...arm, value: expression(arm.value) })),
         };
+      }
       case 'literal':
-      case 'identifier':
+      case 'identifier': {
         return value;
+      }
     }
   };
 
   const statements = (values: readonly ForgeWebScriptStatement[]): ForgeWebScriptStatement[] =>
     values.map((value) => {
       switch (value.kind) {
-        case 'let':
+        case 'let': {
           return { ...value, value: expression(value.value) };
-        case 'assignment':
+        }
+        case 'assignment': {
           return {
             ...value,
             value: expression(value.value),
             ...(value.index === undefined ? {} : { index: expression(value.index) }),
           };
-        case 'return':
+        }
+        case 'return': {
           return { ...value, ...(value.value === undefined ? {} : { value: expression(value.value) }) };
-        case 'expression-statement':
+        }
+        case 'expression-statement': {
           return { ...value, expression: expression(value.expression) };
-        case 'if':
+        }
+        case 'if': {
           return {
             ...value,
             condition: expression(value.condition),
             consequent: statements(value.consequent),
             ...(value.alternate === undefined ? {} : { alternate: statements(value.alternate) }),
           };
+        }
         case 'while':
-        case 'do-while':
+        case 'do-while': {
           return { ...value, condition: expression(value.condition), body: statements(value.body) };
-        case 'for':
+        }
+        case 'for': {
           return {
             ...value,
             ...(value.initializer === undefined ? {} : { initializer: statements([value.initializer])[0] }),
@@ -110,23 +127,28 @@ function namespacePrivateFunctions(
             ...(value.update === undefined ? {} : { update: statements([value.update])[0] }),
             body: statements(value.body),
           };
-        case 'iterator-loop':
+        }
+        case 'iterator-loop': {
           return { ...value, iterator: expression(value.iterator), body: statements(value.body) };
-        case 'yield':
+        }
+        case 'yield': {
           return { ...value, value: expression(value.value) };
-        case 'match-statement':
+        }
+        case 'match-statement': {
           return {
             ...value,
             value: expression(value.value),
             arms: value.arms.map((arm) => ({ ...arm, value: expression(arm.value) })),
           };
-        case 'switch':
+        }
+        case 'switch': {
           return {
             ...value,
             value: expression(value.value),
             cases: value.cases.map((arm) => ({ ...arm, body: statements(arm.body) })),
             ...(value.defaultCase === undefined ? {} : { defaultCase: statements(value.defaultCase) }),
           };
+        }
       }
     });
 

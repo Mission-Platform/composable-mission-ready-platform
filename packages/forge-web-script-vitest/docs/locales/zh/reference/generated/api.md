@@ -16,50 +16,56 @@
 **种类：**功能
 
 ```typescript
-function assertForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic
+function assertForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断 |只读 ForgeWebScriptDiagnostic[] |  |
-|期待| ForgeWebScriptDiagnosticExpectation | ForgeWebScriptDiagnosticExpectation | ForgeWebScriptDiagnosticExpectation  |
+| 名称 | 类型                                | 描述                                |
+| ---- | ----------------------------------- | ----------------------------------- |
+| 诊断 | 只读 ForgeWebScriptDiagnostic[]     |                                     |
+| 期待 | ForgeWebScriptDiagnosticExpectation | ForgeWebScriptDiagnosticExpectation | ForgeWebScriptDiagnosticExpectation |
 
 ### 断言ForgeWebScriptNoDiagnostics
 
 **种类：**功能
 
 ```typescript
-function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void
+function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断 |只读 ForgeWebScriptDiagnostic[] |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 诊断 | 只读 ForgeWebScriptDiagnostic[] |      |
 
 ### findForgeWebScript诊断
 
 **种类：**功能
 
 ```typescript
-function findForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic | undefined
+function findForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic | undefined;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断 |只读 ForgeWebScriptDiagnostic[] |  |
-|期待| ForgeWebScriptDiagnosticExpectation | ForgeWebScriptDiagnosticExpectation | ForgeWebScriptDiagnosticExpectation  |
+| 名称 | 类型                                | 描述                                |
+| ---- | ----------------------------------- | ----------------------------------- |
+| 诊断 | 只读 ForgeWebScriptDiagnostic[]     |                                     |
+| 期待 | ForgeWebScriptDiagnosticExpectation | ForgeWebScriptDiagnosticExpectation | ForgeWebScriptDiagnosticExpectation |
 
 ### ForgeWebScript诊断期望
 
@@ -76,32 +82,32 @@ export interface ForgeWebScriptDiagnosticExpectation
 **种类：**功能
 
 ```typescript
-function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string
+function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 格式化诊断而不丢弃其结构化位置元数据。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断| ForgeWebScript 诊断 |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 诊断 | ForgeWebScript 诊断 |      |
 
 ### formatForgeWebScriptDiagnostics
 
 **种类：**功能
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string
+function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|诊断 |只读 ForgeWebScriptDiagnostic[] |  |
+| 名称 | 类型                            | 描述 |
+| ---- | ------------------------------- | ---- |
+| 诊断 | 只读 ForgeWebScriptDiagnostic[] |      |
 
 ## `src/harness`
 
@@ -110,16 +116,16 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDia
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness
+function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness;
 ```
 
 使用可选的编译器、功能和目标设置创建共享夹具工具。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptTestHarnessOptions | ForgeWebScriptTestHarnessOptions | ForgeWebScriptTestHarnessOptions  |
+| 名称 | 类型                             | 描述                             |
+| ---- | -------------------------------- | -------------------------------- |
+| 选项 | ForgeWebScriptTestHarnessOptions | ForgeWebScriptTestHarnessOptions | ForgeWebScriptTestHarnessOptions |
 
 ### ForgeWebScriptCapability 函数
 
@@ -136,7 +142,9 @@ export type ForgeWebScriptCapabilityFunction = (...arguments_: readonly unknown[
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptCapabilityImports = Readonly< Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>> >;
+export type ForgeWebScriptCapabilityImports = Readonly<
+  Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>>
+>;
 ```
 
 由功能和清单别名键控的主机功能；未申报的进口将被拒绝。
@@ -156,7 +164,7 @@ export interface ForgeWebScriptCompilationResult extends ForgeWebScriptCompiledM
 **种类：**功能
 
 ```typescript
-function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string
+function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string;
 ```
 
 将夹具路径转换为稳定的测试/模块名称。相对路径是
@@ -164,10 +172,10 @@ function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): strin
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件名 |字符串|  |
-|固定装置根 |字符串|  |
+| 名称       | 类型   | 描述 |
+| ---------- | ------ | ---- |
+| 文件名     | 字符串 |      |
+| 固定装置根 | 字符串 |      |
 
 ### ForgeWebScriptInspectionResult
 
@@ -238,7 +246,7 @@ export interface ForgeWebScriptTestHarnessOptions extends ForgeWebScriptPluginOp
 **种类：**功能
 
 ```typescript
-function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig
+function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig;
 ```
 
 使用 Forge Web 脚本编写标准任务平台 Vitest 配置。
@@ -247,9 +255,9 @@ function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOpt
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptVitestConfigOptions | ForgeWebScriptVitestConfigOptions | ForgeWebScriptVitestConfigOptions  |
+| 名称 | 类型                              | 描述                              |
+| ---- | --------------------------------- | --------------------------------- |
+| 选项 | ForgeWebScriptVitestConfigOptions | ForgeWebScriptVitestConfigOptions | ForgeWebScriptVitestConfigOptions |
 
 ### ForgeWebScriptVitestConfigOptions
 
@@ -266,13 +274,13 @@ export interface ForgeWebScriptVitestConfigOptions extends Omit<VitestConfigOpti
 **种类：**功能
 
 ```typescript
-function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin;
 ```
 
 在 Vite/Vitest 配置中安装生产 Forge Web 脚本插件。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptPluginOptions | ForgeWebScriptPluginOptions |  |
+| 名称 | 类型                        | 描述                        |
+| ---- | --------------------------- | --------------------------- |
+| 选项 | ForgeWebScriptPluginOptions | ForgeWebScriptPluginOptions |     |

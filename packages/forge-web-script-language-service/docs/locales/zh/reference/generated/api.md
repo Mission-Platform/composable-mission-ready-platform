@@ -16,18 +16,22 @@
 **种类：**功能
 
 ```typescript
-function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeWebScriptWorkspaceOptions, analysisOptions: ForgeWebScriptAnalysisOptions = {}): ForgeWebScriptAnalysis
+function analyzeForgeWebScript(
+  document: ForgeWebScriptDocument,
+  options: ForgeWebScriptWorkspaceOptions,
+  analysisOptions: ForgeWebScriptAnalysisOptions = {},
+): ForgeWebScriptAnalysis;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件 | ForgeWebScript 文档 |  |
-|选项 | ForgeWebScriptWorkspace 选项 |  |
-|分析选项 | ForgeWebScript 分析选项 |  |
+| 名称     | 类型                         | 描述 |
+| -------- | ---------------------------- | ---- |
+| 文件     | ForgeWebScript 文档          |      |
+| 选项     | ForgeWebScriptWorkspace 选项 |      |
+| 分析选项 | ForgeWebScript 分析选项      |      |
 
 ## `src/completion`
 
@@ -36,19 +40,24 @@ function analyzeForgeWebScript(document: ForgeWebScriptDocument, options: ForgeW
 **种类：**功能
 
 ```typescript
-function completeForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): readonly ForgeWebScriptCompletion[]
+function completeForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): readonly ForgeWebScriptCompletion[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|位置| ForgeWebScript 位置 |  |
-|符号|只读 ForgeWebScriptSymbol[] |  |
-|选项 | ForgeWebScriptWorkspace 选项 |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 来源 | 字符串                       |      |
+| 位置 | ForgeWebScript 位置          |      |
+| 符号 | 只读 ForgeWebScriptSymbol[]  |      |
+| 选项 | ForgeWebScriptWorkspace 选项 |      |
 
 ## `src/documents`
 
@@ -57,16 +66,16 @@ function completeForgeWebScript(source: string, position: ForgeWebScriptPosition
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService
+function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptLanguageService;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|主持人| ForgeWebScriptWorkspaceHost |  |
+| 名称   | 类型                        | 描述 |
+| ------ | --------------------------- | ---- |
+| 主持人 | ForgeWebScriptWorkspaceHost |      |
 
 ## `src/features`
 
@@ -75,91 +84,112 @@ function createForgeWebScriptLanguageService(host?: ForgeWebScriptWorkspaceHost)
 **种类：**功能
 
 ```typescript
-function codeLensesForgeWebScript(module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], referenceCount: (symbol: ForgeWebScriptSymbol) => number): readonly ForgeWebScriptCodeLens[]
+function codeLensesForgeWebScript(
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  referenceCount: (symbol: ForgeWebScriptSymbol) => number,
+): readonly ForgeWebScriptCodeLens[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|模块| ForgeWebScriptModule \|未定义 |  |
-|符号|只读 ForgeWebScriptSymbol[] |  |
-|参考计数 | （符号：ForgeWebScriptSymbol）=> 数字 |  |
+| 名称     | 类型                                  | 描述 |
+| -------- | ------------------------------------- | ---- |
+| 模块     | ForgeWebScriptModule \|未定义         |      |
+| 符号     | 只读 ForgeWebScriptSymbol[]           |      |
+| 参考计数 | （符号：ForgeWebScriptSymbol）=> 数字 |      |
 
 ### documentSymbolsForgeWebScript
 
 **种类：**功能
 
 ```typescript
-function documentSymbolsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[]): readonly ForgeWebScriptDocumentSymbol[]
+function documentSymbolsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+): readonly ForgeWebScriptDocumentSymbol[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|模块| ForgeWebScriptModule \|未定义 |  |
-|符号|只读 ForgeWebScriptSymbol[] |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 来源 | 字符串                        |      |
+| 模块 | ForgeWebScriptModule \|未定义 |      |
+| 符号 | 只读 ForgeWebScriptSymbol[]   |      |
 
 ### foldingRangesForgeWebScript
 
 **种类：**功能
 
 ```typescript
-function foldingRangesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined): readonly ForgeWebScriptFoldingRange[]
+function foldingRangesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+): readonly ForgeWebScriptFoldingRange[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|模块| ForgeWebScriptModule \|未定义 |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 来源 | 字符串                        |      |
+| 模块 | ForgeWebScriptModule \|未定义 |      |
 
 ### inlayHintsForgeWebScript
 
 **种类：**功能
 
 ```typescript
-function inlayHintsForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, requestedRange?: ForgeWebScriptRange, importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment): readonly ForgeWebScriptInlayHint[]
+function inlayHintsForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  requestedRange?: ForgeWebScriptRange,
+  importTypeEnvironment?: ForgeWebScriptImportTypeEnvironment,
+): readonly ForgeWebScriptInlayHint[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|模块| ForgeWebScriptModule \|未定义 |  |
-|请求范围 | ForgeWebScriptRange |  |
-|导入类型环境 | ForgeWebScriptImportTypeEnvironment | ForgeWebScriptImportTypeEnvironment |  |
+| 名称         | 类型                                | 描述                                |
+| ------------ | ----------------------------------- | ----------------------------------- |
+| 来源         | 字符串                              |                                     |
+| 模块         | ForgeWebScriptModule \|未定义       |                                     |
+| 请求范围     | ForgeWebScriptRange                 |                                     |
+| 导入类型环境 | ForgeWebScriptImportTypeEnvironment | ForgeWebScriptImportTypeEnvironment |     |
 
 ### 内联值ForgeWebScript
 
 **种类：**功能
 
 ```typescript
-function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule | undefined, symbols: readonly ForgeWebScriptSymbol[], requestedRange?: ForgeWebScriptRange): readonly ForgeWebScriptInlineValue[]
+function inlineValuesForgeWebScript(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  symbols: readonly ForgeWebScriptSymbol[],
+  requestedRange?: ForgeWebScriptRange,
+): readonly ForgeWebScriptInlineValue[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|模块| ForgeWebScriptModule \|未定义 |  |
-|符号|只读 ForgeWebScriptSymbol[] |  |
-|请求范围 | ForgeWebScriptRange |  |
+| 名称     | 类型                          | 描述 |
+| -------- | ----------------------------- | ---- |
+| 来源     | 字符串                        |      |
+| 模块     | ForgeWebScriptModule \|未定义 |      |
+| 符号     | 只读 ForgeWebScriptSymbol[]   |      |
+| 请求范围 | ForgeWebScriptRange           |      |
 
 ## `src/hover`
 
@@ -168,19 +198,24 @@ function inlineValuesForgeWebScript(source: string, module: ForgeWebScriptModule
 **种类：**功能
 
 ```typescript
-function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, symbols: readonly ForgeWebScriptSymbol[], options: ForgeWebScriptWorkspaceOptions): ForgeWebScriptHover | undefined
+function hoverForgeWebScript(
+  source: string,
+  position: ForgeWebScriptPosition,
+  symbols: readonly ForgeWebScriptSymbol[],
+  options: ForgeWebScriptWorkspaceOptions,
+): ForgeWebScriptHover | undefined;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|位置| ForgeWebScript 位置 |  |
-|符号|只读 ForgeWebScriptSymbol[] |  |
-|选项 | ForgeWebScriptWorkspace 选项 |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 来源 | 字符串                       |      |
+| 位置 | ForgeWebScript 位置          |      |
+| 符号 | 只读 ForgeWebScriptSymbol[]  |      |
+| 选项 | ForgeWebScriptWorkspace 选项 |      |
 
 ## `src/lsif`
 
@@ -189,7 +224,7 @@ function hoverForgeWebScript(source: string, position: ForgeWebScriptPosition, s
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph
+function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScriptLsifGraph;
 ```
 
 从语言服务工作区快照创建确定性 LSIF 图。
@@ -199,16 +234,16 @@ function createForgeWebScriptLsif(input: ForgeWebScriptLsifInput): ForgeWebScrip
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | ForgeWebScriptLsifInput |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 输入 | ForgeWebScriptLsifInput |      |
 
 ### createForgeWebScriptLsifGraph
 
 **种类：**常数
 
 ```typescript
-export const createForgeWebScriptLsifGraph
+export const createForgeWebScriptLsifGraph;
 ```
 
 没有提供描述。
@@ -218,7 +253,7 @@ export const createForgeWebScriptLsifGraph
 **种类：**常数
 
 ```typescript
-export const FORGE_WEB_SCRIPT_LSIF_VERSION
+export const FORGE_WEB_SCRIPT_LSIF_VERSION;
 ```
 
 该模块代表的 LSIF 版本。
@@ -258,7 +293,18 @@ export interface ForgeWebScriptLsifEdge
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptLsifEdgeLabel = | 'contains' | 'next' | 'item' | 'textDocument/definition' | 'textDocument/declaration' | 'textDocument/implementation' | 'textDocument/references' | 'textDocument/documentSymbol' | 'textDocument/hover' | 'moniker' | 'diagnostic';
+export type ForgeWebScriptLsifEdgeLabel =
+  | 'contains'
+  | 'next'
+  | 'item'
+  | 'textDocument/definition'
+  | 'textDocument/declaration'
+  | 'textDocument/implementation'
+  | 'textDocument/references'
+  | 'textDocument/documentSymbol'
+  | 'textDocument/hover'
+  | 'moniker'
+  | 'diagnostic';
 ```
 
 没有提供描述。
@@ -368,7 +414,14 @@ export interface ForgeWebScriptLsifResultVertex
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | ForgeWebScriptLsifProjectVertex | ForgeWebScriptLsifDocumentVertex | ForgeWebScriptLsifRangeVertex | ForgeWebScriptLsifResultSetVertex | ForgeWebScriptLsifResultVertex | ForgeWebScriptLsifMonikerVertex;
+export type ForgeWebScriptLsifVertex =
+  | ForgeWebScriptLsifMetadataVertex
+  | ForgeWebScriptLsifProjectVertex
+  | ForgeWebScriptLsifDocumentVertex
+  | ForgeWebScriptLsifRangeVertex
+  | ForgeWebScriptLsifResultSetVertex
+  | ForgeWebScriptLsifResultVertex
+  | ForgeWebScriptLsifMonikerVertex;
 ```
 
 没有提供描述。
@@ -378,7 +431,20 @@ export type ForgeWebScriptLsifVertex = | ForgeWebScriptLsifMetadataVertex | Forg
 **种类：**类型
 
 ```typescript
-export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document' | 'range' | 'resultSet' | 'definitionResult' | 'declarationResult' | 'implementationResult' | 'referenceResult' | 'documentSymbolResult' | 'hoverResult' | 'moniker' | 'diagnosticResult';
+export type ForgeWebScriptLsifVertexLabel =
+  | 'metaData'
+  | 'project'
+  | 'document'
+  | 'range'
+  | 'resultSet'
+  | 'definitionResult'
+  | 'declarationResult'
+  | 'implementationResult'
+  | 'referenceResult'
+  | 'documentSymbolResult'
+  | 'hoverResult'
+  | 'moniker'
+  | 'diagnosticResult';
 ```
 
 没有提供描述。
@@ -388,23 +454,23 @@ export type ForgeWebScriptLsifVertexLabel = | 'metaData' | 'project' | 'document
 **种类：**功能
 
 ```typescript
-function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string
+function serializeForgeWebScriptLsif(graph: ForgeWebScriptLsifGraph): string;
 ```
 
 将 LSIF 记录序列化为稳定的 JSONL，不带尾随换行符。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图表| ForgeWebScriptLsifGraph |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 图表 | ForgeWebScriptLsifGraph |      |
 
 ### 序列化ForgeWebScriptLsifGraph
 
 **种类：**常数
 
 ```typescript
-export const serializeForgeWebScriptLsifGraph
+export const serializeForgeWebScriptLsifGraph;
 ```
 
 没有提供描述。
@@ -416,86 +482,86 @@ export const serializeForgeWebScriptLsifGraph
 **种类：**功能
 
 ```typescript
-function containsOffset(range: ForgeWebScriptRange, offset: number): boolean
+function containsOffset(range: ForgeWebScriptRange, offset: number): boolean;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|范围 | ForgeWebScriptRange |  |
-|偏移|数量 |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 范围 | ForgeWebScriptRange |      |
+| 偏移 | 数量                |      |
 
 ### 位置偏移
 
 **种类：**功能
 
 ```typescript
-function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number
+function offsetAtPosition(source: string, position: ForgeWebScriptPosition): number;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|位置| ForgeWebScript 位置 |  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 来源 | 字符串              |      |
+| 位置 | ForgeWebScript 位置 |      |
 
 ### 偏移位置
 
 **种类：**功能
 
 ```typescript
-function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition
+function positionAtOffset(source: string, offset: number): ForgeWebScriptPosition;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|偏移|数量 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 来源 | 字符串 |      |
+| 偏移 | 数量   |      |
 
 ### 偏移范围
 
 **种类：**功能
 
 ```typescript
-function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange
+function rangeFromOffsets(source: string, start: number, end: number): ForgeWebScriptRange;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|开始 |数量 |  |
-|结束 |数量 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 来源 | 字符串 |      |
+| 开始 | 数量   |      |
+| 结束 | 数量   |      |
 
 ### 范围从跨度
 
 **种类：**功能
 
 ```typescript
-function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange
+function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWebScriptRange;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|跨度| ForgeWebScriptSourceSpan |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 来源 | 字符串                   |      |
+| 跨度 | ForgeWebScriptSourceSpan |      |
 
 ## `src/symbols`
 
@@ -504,34 +570,38 @@ function rangeFromSpan(source: string, span: ForgeWebScriptSourceSpan): ForgeWeb
 **种类：**功能
 
 ```typescript
-function buildSymbolIndex(source: string, module: ForgeWebScriptModule | undefined, tokens: readonly ForgeWebScriptTokenClassification[]): ForgeWebScriptSymbolIndex
+function buildSymbolIndex(
+  source: string,
+  module: ForgeWebScriptModule | undefined,
+  tokens: readonly ForgeWebScriptTokenClassification[],
+): ForgeWebScriptSymbolIndex;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|模块| ForgeWebScriptModule \|未定义 |  |
-|代币 |只读 ForgeWebScriptTokenClassification[] |  |
+| 名称 | 类型                                     | 描述 |
+| ---- | ---------------------------------------- | ---- |
+| 来源 | 字符串                                   |      |
+| 模块 | ForgeWebScriptModule \|未定义            |      |
+| 代币 | 只读 ForgeWebScriptTokenClassification[] |      |
 
 ### 表达式名称
 
 **种类：**功能
 
 ```typescript
-function expressionName(expression: ForgeWebScriptExpression): string | undefined
+function expressionName(expression: ForgeWebScriptExpression): string | undefined;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|表达| ForgeWebScriptExpression |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 表达 | ForgeWebScriptExpression |      |
 
 ### ForgeWebScriptSymbolIndex
 
@@ -550,33 +620,33 @@ export interface ForgeWebScriptSymbolIndex
 **种类：**功能
 
 ```typescript
-function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[]
+function tokenizeForgeWebScript(source: string, fileName = '<input>'): readonly ForgeWebScriptTokenClassification[];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
-|文件名 |  |  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 来源   | 字符串 |      |
+| 文件名 |        |      |
 
 ### tokenKintoClassification
 
 **种类：**功能
 
 ```typescript
-function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind']
+function tokenKindToClassification(kind: ForgeWebScriptTokenKind): ForgeWebScriptTokenClassification['kind'];
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|善良| ForgeWebScriptTokenKind |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 善良 | ForgeWebScriptTokenKind |      |
 
 ## `src/types`
 
@@ -907,17 +977,20 @@ export interface ForgeWebScriptWorkspaceOptions
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptWorkspaceIndex(callbacks: WorkspaceIndexCallbacks, host?: ForgeWebScriptWorkspaceHost): ForgeWebScriptWorkspaceSemanticIndex
+function createForgeWebScriptWorkspaceIndex(
+  callbacks: WorkspaceIndexCallbacks,
+  host?: ForgeWebScriptWorkspaceHost,
+): ForgeWebScriptWorkspaceSemanticIndex;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|回调 |工作区索引回调 |  |
-|主持人| ForgeWebScriptWorkspaceHost |  |
+| 名称   | 类型                        | 描述 |
+| ------ | --------------------------- | ---- |
+| 回调   | 工作区索引回调              |      |
+| 主持人 | ForgeWebScriptWorkspaceHost |      |
 
 ### ForgeWebScriptWorkspace语义索引
 

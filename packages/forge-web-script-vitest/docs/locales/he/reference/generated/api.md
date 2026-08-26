@@ -16,50 +16,56 @@
 פונקציה **סוג:**
 
 ```typescript
-function assertForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic
+function assertForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |  |
-| ציפייה | ForgeWebScriptDiagnosticExpectation |  |
+| שם     | הקלד                                   | תיאור |
+| ------ | -------------------------------------- | ----- |
+| אבחון  | לקריאה בלבד ForgeWebScriptDiagnostic[] |       |
+| ציפייה | ForgeWebScriptDiagnosticExpectation    |       |
 
 ### assertForgeWebScriptNoDiagnostics
 
 פונקציה **סוג:**
 
 ```typescript
-function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void
+function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |       |
 
 ### findForgeWebScriptDiagnostic
 
 פונקציה **סוג:**
 
 ```typescript
-function findForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic | undefined
+function findForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic | undefined;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |  |
-| ציפייה | ForgeWebScriptDiagnosticExpectation |  |
+| שם     | הקלד                                   | תיאור |
+| ------ | -------------------------------------- | ----- |
+| אבחון  | לקריאה בלבד ForgeWebScriptDiagnostic[] |       |
+| ציפייה | ForgeWebScriptDiagnosticExpectation    |       |
 
 ### ForgeWebScriptDiagnosticExpectation
 
@@ -76,32 +82,32 @@ export interface ForgeWebScriptDiagnosticExpectation
 פונקציה **סוג:**
 
 ```typescript
-function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string
+function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 עצב אבחון מבלי להשליך את מטא-נתוני המיקום המובנים שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | ForgeWebScriptDiagnostic |  |
+| שם    | הקלד                     | תיאור |
+| ----- | ------------------------ | ----- |
+| אבחון | ForgeWebScriptDiagnostic |       |
 
 ### formatForgeWebScriptDiagnostics
 
 פונקציה **סוג:**
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string
+function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |  |
+| שם    | הקלד                                   | תיאור |
+| ----- | -------------------------------------- | ----- |
+| אבחון | לקריאה בלבד ForgeWebScriptDiagnostic[] |       |
 
 ## `src/harness`
 
@@ -110,16 +116,16 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDia
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness
+function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness;
 ```
 
 צור רתמת מתקן משותף עם הגדרות מהדר, יכולת והגדרות יעד אופציונליות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptTestHarnessOptions |  |
+| שם       | הקלד                             | תיאור |
+| -------- | -------------------------------- | ----- |
+| אפשרויות | ForgeWebScriptTestHarnessOptions |       |
 
 ### ForgeWebScriptCapabilityFunction
 
@@ -136,7 +142,9 @@ export type ForgeWebScriptCapabilityFunction = (...arguments_: readonly unknown[
 **סוג:** סוג
 
 ```typescript
-export type ForgeWebScriptCapabilityImports = Readonly< Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>> >;
+export type ForgeWebScriptCapabilityImports = Readonly<
+  Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>>
+>;
 ```
 
 פונקציות מארח המבוססות על יכולת וכינוי מניפסט; יבוא לא מוצהר נדחה.
@@ -156,7 +164,7 @@ export interface ForgeWebScriptCompilationResult extends ForgeWebScriptCompiledM
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string
+function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string;
 ```
 
 המרת נתיב מתקן לשם בדיקה/מודול יציב. נתיבים יחסיים הם
@@ -164,10 +172,10 @@ function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): strin
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| fixtureRoot | מחרוזת |  |
+| שם          | הקלד   | תיאור |
+| ----------- | ------ | ----- |
+| שם קובץ     | מחרוזת |       |
+| fixtureRoot | מחרוזת |       |
 
 ### ForgeWebScriptInspectionResult
 
@@ -238,7 +246,7 @@ export interface ForgeWebScriptTestHarnessOptions extends ForgeWebScriptPluginOp
 פונקציה **סוג:**
 
 ```typescript
-function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig
+function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig;
 ```
 
 חבר את התצורה הסטנדרטית של פלטפורמת המשימה Vitest עם Forge Web Script.
@@ -247,9 +255,9 @@ function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOpt
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptVitestConfigOptions |  |
+| שם       | הקלד                              | תיאור |
+| -------- | --------------------------------- | ----- |
+| אפשרויות | ForgeWebScriptVitestConfigOptions |       |
 
 ### ForgeWebScriptVitestConfigOptions
 
@@ -266,13 +274,13 @@ export interface ForgeWebScriptVitestConfigOptions extends Omit<VitestConfigOpti
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin;
 ```
 
 התקן את הפלאגין של הפקת Forge Web Script בתצורה של Vite/Vitest.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptPluginOptions |  |
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| אפשרויות | ForgeWebScriptPluginOptions |       |

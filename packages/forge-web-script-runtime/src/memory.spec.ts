@@ -3,16 +3,17 @@ import { describe, expect, it } from 'vitest';
 import { createForgeWebScriptMemory, FORGE_WEB_SCRIPT_MEMORY_CAPABILITIES } from './memory.js';
 import { ForgeWebScriptTrap } from './traps.js';
 
+const trapCode = (run: () => unknown): ForgeWebScriptTrap['code'] => {
+  try {
+    run();
+  } catch (error) {
+    expect(error).toBeInstanceOf(ForgeWebScriptTrap);
+    return (error as ForgeWebScriptTrap).code;
+  }
+  throw new Error('expected a Forge Web Script trap');
+};
+
 describe('Forge Web Script memory capabilities', () => {
-  const trapCode = (run: () => unknown): ForgeWebScriptTrap['code'] => {
-    try {
-      run();
-    } catch (error) {
-      expect(error).toBeInstanceOf(ForgeWebScriptTrap);
-      return (error as ForgeWebScriptTrap).code;
-    }
-    throw new Error('expected a Forge Web Script trap');
-  };
   it('accepts bigint addresses at the host boundary', () => {
     const memory = createForgeWebScriptMemory();
     const pointer = memory.allocate(4);

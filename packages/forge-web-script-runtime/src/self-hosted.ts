@@ -19,7 +19,6 @@ import {
   type ForgeWebScriptSelfHostedVmModule,
   type ForgeWebScriptSelfHostedVmValue,
 } from '@mission-platform/forge-web-script';
-
 import { lexForgeWebScript, parseForgeWebScript } from '@mission-platform/forge-web-script';
 
 import {
@@ -31,6 +30,7 @@ import {
   type ForgeWebScriptVmModule,
   type ForgeWebScriptVmValue,
 } from './vm.js';
+
 import type { ForgeWebScriptTraceOptions, ForgeWebScriptTraceReport } from './trace.js';
 
 export interface ForgeWebScriptSelfHostedRunOptions {
@@ -59,7 +59,7 @@ export interface ForgeWebScriptSelfHostedVmRun {
 function fingerprintHash(value: number): string {
   const bytes = new Uint8Array(4);
   const view = new DataView(bytes.buffer);
-  view.setInt32(0, value | 0, true);
+  view.setInt32(0, Math.trunc(value), true);
   return hashForgeWebScriptSelfHostedBytes(bytes);
 }
 

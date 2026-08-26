@@ -99,11 +99,6 @@ function localDeclarations(
 
         break;
       }
-      case 'switch': {
-        for (const arm of statement.cases) localDeclarations(arm.body, names);
-        if (statement.defaultCase !== undefined) localDeclarations(statement.defaultCase, names);
-        break;
-      }
       case 'while': {
         {
           localDeclarations(statement.body, names);
@@ -128,8 +123,9 @@ function localDeclarations(
       }
       case 'yield':
       case 'return':
-      case 'expression-statement':
+      case 'expression-statement': {
         break;
+      }
       case 'match-statement': {
         localDeclarations(
           [
@@ -234,8 +230,11 @@ function statements(statementsToRender: readonly ForgeWebScriptStatement[], inde
         break;
       }
       case 'switch': {
-        lines.push(`${indent};; switch source ${statement.span.line}:${statement.span.column}`);
-        lines.push(...renderExpression(statement.value, indent), `${indent}drop`);
+        lines.push(
+          `${indent};; switch source ${statement.span.line}:${statement.span.column}`,
+          ...renderExpression(statement.value, indent),
+          `${indent}drop`,
+        );
         for (const arm of statement.cases)
           lines.push(`${indent};; case ${String(arm.value)}`, ...statements(arm.body, `${indent}  `));
         if (statement.defaultCase !== undefined)

@@ -385,8 +385,8 @@ Les appels`regex_full_match(pattern, value) -> bool`,
 `regex_prefix_match(pattern, value) -> bool`, et
 `regex_search(pattern, value, start: i32) -> bool`effectue une valeur entière,
 préfixe de position zéro et correspondance de recherche la plus à gauche respectivement. Capturer les limites
-sont disponibles via les`regex__*capture_start`et
-Appels`regex*__capture_end` ; ils prennent un index de groupe et renvoient une chaîne UTF-16
+sont disponibles via les`regex___capture_start`et
+Appels`regex___capture_end` ; ils prennent un index de groupe et renvoient une chaîne UTF-16
 offset, ou `-1` lorsqu'il n'y a pas de correspondance ou que le groupe n'est pas défini. Capture de recherche
 les appels prennent en outre le décalage de départ avant l'index de groupe.
 

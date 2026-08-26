@@ -267,49 +267,82 @@ function parseWasm(bytes: Uint8Array, maxCustomSectionBytes: number): ParsedWasm
       customSections.set(name, payload.bytesValue(payload.remaining()));
       continue;
     }
-    if (id === 1) {
-      const count = payload.leb();
-      if (count > 100_000) throw new Error('WebAssembly type section is too large.');
-      for (let index = 0; index < count; index += 1) {
-        if (payload.byte() !== 0x60) throw new Error('Unsupported WebAssembly type declaration.');
-        const parameters = Array.from({ length: payload.leb() }, () => payload.byte() as WasmType);
-        const results = Array.from({ length: payload.leb() }, () => payload.byte() as WasmType);
-        if ([...parameters, ...results].some((type) => ![0x7f, 0x7e, 0x7d, 0x7c].includes(type)))
-          throw new Error('Unsupported WebAssembly value type.');
-        types.push({ parameters, results });
+    switch (id) {
+      case 1: {
+        const count = payload.leb();
+        if (count > 100_000) throw new Error('WebAssembly type section is too large.');
+        for (let index = 0; index < count; index += 1) {
+          if (payload.byte() !== 0x60) throw new Error('Unsupported WebAssembly type declaration.');
+          const parameters = Array.from({ length: payload.leb() }, () => payload.byte() as WasmType);
+          const results = Array.from({ length: payload.leb() }, () => payload.byte() as WasmType);
+          if ([...parameters, ...results].some((type) => ![0x7f, 0x7e, 0x7d, 0x7c].includes(type)))
+            throw new Error('Unsupported WebAssembly value type.');
+          types.push({ parameters, results });
+        }
+
+        break;
       }
-    } else if (id === 2) {
-      const count = payload.leb();
-      if (count > 100_000) throw new Error('WebAssembly import section is too large.');
-      for (let index = 0; index < count; index += 1) {
-        const module = payload.string(256);
-        const name = payload.string(256);
-        const kind = payload.byte();
-        if (kind === 0) imports.push({ module, name, kind, typeIndex: payload.leb() });
-        else if (kind === 1) {
-          payload.byte();
-          payload.leb();
-          if (payload.byte() === 0x70) payload.leb();
-        } else if (kind === 2) {
-          parseLimits(payload);
-        } else if (kind === 3) {
-          payload.byte();
-          payload.byte();
-        } else throw new Error('Unsupported WebAssembly import kind.');
+      case 2: {
+        const count = payload.leb();
+        if (count > 100_000) throw new Error('WebAssembly import section is too large.');
+        for (let index = 0; index < count; index += 1) {
+          const module = payload.string(256);
+          const name = payload.string(256);
+          const kind = payload.byte();
+          switch (kind) {
+            case 0: {
+              imports.push({ module, name, kind, typeIndex: payload.leb() });
+              break;
+            }
+            case 1: {
+              payload.byte();
+              payload.leb();
+              if (payload.byte() === 0x70) payload.leb();
+
+              break;
+            }
+            case 2: {
+              parseLimits(payload);
+
+              break;
+            }
+            case 3: {
+              payload.byte();
+              payload.byte();
+
+              break;
+            }
+            default: {
+              throw new Error('Unsupported WebAssembly import kind.');
+            }
+          }
+        }
+
+        break;
       }
-    } else if (id === 3) {
-      const count = payload.leb();
-      if (count > 100_000) throw new Error('WebAssembly function section is too large.');
-      for (let index = 0; index < count; index += 1) functionTypeIndexes.push(payload.leb());
-    } else if (id === 5) {
-      const count = payload.leb();
-      if (count !== 1 || memory !== undefined) throw new Error('FWS modules must declare exactly one memory.');
-      memory = parseLimits(payload);
-    } else if (id === 7) {
-      const count = payload.leb();
-      if (count > 100_000) throw new Error('WebAssembly export section is too large.');
-      for (let index = 0; index < count; index += 1)
-        exports.push({ name: payload.string(256), kind: payload.byte(), index: payload.leb() });
+      case 3: {
+        const count = payload.leb();
+        if (count > 100_000) throw new Error('WebAssembly function section is too large.');
+        for (let index = 0; index < count; index += 1) functionTypeIndexes.push(payload.leb());
+
+        break;
+      }
+      case 5: {
+        const count = payload.leb();
+        if (count !== 1 || memory !== undefined) throw new Error('FWS modules must declare exactly one memory.');
+        memory = parseLimits(payload);
+
+        break;
+      }
+      case 7: {
+        const count = payload.leb();
+        if (count > 100_000) throw new Error('WebAssembly export section is too large.');
+        for (let index = 0; index < count; index += 1)
+          exports.push({ name: payload.string(256), kind: payload.byte(), index: payload.leb() });
+
+        break;
+      }
+      // No default
     }
     // The engine validates sections that are not needed for the ABI policy checks
     // (table, global, element, code, data, and data-count sections).
@@ -447,10 +480,10 @@ function verifyVariant(
       ),
     );
   const functionIndexes = new Map<number, FunctionType>();
-  parsed.functionTypeIndexes.forEach((typeIndex, index) => {
+  for (const [index, typeIndex] of parsed.functionTypeIndexes.entries()) {
     const type = parsed.types[typeIndex];
     if (type !== undefined) functionIndexes.set(parsed.imports.filter(({ kind }) => kind === 0).length + index, type);
-  });
+  }
   const expectedExports = new Map(input.manifest.exports.map((declaration) => [declaration.name, declaration]));
   const exportedFunctions = parsed.exports.filter(({ kind }) => kind === 0);
   const iteratorNextNames = new Set((input.iteratorExports ?? []).map(({ nextFunction }) => nextFunction));

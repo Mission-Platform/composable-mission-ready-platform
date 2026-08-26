@@ -90,6 +90,22 @@ Resolve a plugin path relative to root unless value is already absolute.
 
 ## `src/generate`
 
+### createForgeWebScriptArtifactSource
+
+**Kind:** function
+
+```typescript
+function createForgeWebScriptArtifactSource(compiled: ForgeWebScriptCompiledModule): string
+```
+
+Generate one self-contained module for build-time artifact embedding.
+
+#### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| compiled | ForgeWebScriptCompiledModule |  |
+
 ### createForgeWebScriptDeclarationsSource
 
 **Kind:** function
@@ -188,6 +204,16 @@ intended for inspection and conformance assertions, not Wasm execution.
 | Name | Type | Description |
 | --- | --- | --- |
 | compiled | ForgeWebScriptCompiledModule |  |
+
+### FORGE_WEB_SCRIPT_ARTIFACT_QUERY
+
+**Kind:** constant
+
+```typescript
+export const FORGE_WEB_SCRIPT_ARTIFACT_QUERY
+```
+
+Query that returns all compiled artifact data from one graph compilation.
 
 ### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
 

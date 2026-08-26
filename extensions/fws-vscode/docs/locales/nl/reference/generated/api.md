@@ -16,42 +16,47 @@ Gegenereerd op basis van openbare bronverklaringen in `fws-vscode`.
 **Soort:** functie
 
 ```typescript
-function activate(context: vscode.ExtensionContext): Promise<void>
+function activate(context: vscode.ExtensionContext): Promise<void>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| context | vscode.ExtensionContext |  |
+| Naam    | Typ                     | Beschrijving |
+| ------- | ----------------------- | ------------ |
+| context | vscode.ExtensionContext |              |
 
 ### createLanguageClient
 
 **Soort:** functie
 
 ```typescript
-function createLanguageClient(serverOptions: ServerOptions, configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>, outputChannel: vscode.LogOutputChannel, fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*')): ForgeWebScriptLanguageClient
+function createLanguageClient(
+  serverOptions: ServerOptions,
+  configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>,
+  outputChannel: vscode.LogOutputChannel,
+  fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*'),
+): ForgeWebScriptLanguageClient;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| serveropties | Serveropties |  |
-| configuratie | Kies<ForgeWebScriptConfiguration, 'traceServer'> |  |
-| uitvoerKanaal | vscode.LogOutputChannel |  |
-| fileWatcher | vscode.FileSystemWatcher |  |
+| Naam          | Typ                                              | Beschrijving |
+| ------------- | ------------------------------------------------ | ------------ |
+| serveropties  | Serveropties                                     |              |
+| configuratie  | Kies<ForgeWebScriptConfiguration, 'traceServer'> |              |
+| uitvoerKanaal | vscode.LogOutputChannel                          |              |
+| fileWatcher   | vscode.FileSystemWatcher                         |              |
 
 ### deactiveren
 
 **Soort:** functie
 
 ```typescript
-function deactivate(): Promise<void>
+function deactivate(): Promise<void>;
 ```
 
 Geen beschrijving opgegeven.

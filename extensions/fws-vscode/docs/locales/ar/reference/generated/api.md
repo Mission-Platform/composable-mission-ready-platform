@@ -16,42 +16,47 @@
 **النوع:** الوظيفة
 
 ```typescript
-function activate(context: vscode.ExtensionContext): Promise<void>
+function activate(context: vscode.ExtensionContext): Promise<void>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| السياق | vscode.ExtensionContext |  |
+| الاسم  | اكتب                    | الوصف |
+| ------ | ----------------------- | ----- |
+| السياق | vscode.ExtensionContext |       |
 
 ### createLanguageClient
 
 **النوع:** الوظيفة
 
 ```typescript
-function createLanguageClient(serverOptions: ServerOptions, configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>, outputChannel: vscode.LogOutputChannel, fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*')): ForgeWebScriptLanguageClient
+function createLanguageClient(
+  serverOptions: ServerOptions,
+  configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>,
+  outputChannel: vscode.LogOutputChannel,
+  fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*'),
+): ForgeWebScriptLanguageClient;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات الخادم | خيارات الخادم |  |
-| التكوين | يختار<ForgeWebScriptConfiguration, 'traceServer'> |  |
-| قناة الإخراج | vscode.LogOutputChannel |  |
-| مراقب الملفات | vscode.FileSystemWatcher |  |
+| الاسم         | اكتب                                              | الوصف |
+| ------------- | ------------------------------------------------- | ----- |
+| خيارات الخادم | خيارات الخادم                                     |       |
+| التكوين       | يختار<ForgeWebScriptConfiguration, 'traceServer'> |       |
+| قناة الإخراج  | vscode.LogOutputChannel                           |       |
+| مراقب الملفات | vscode.FileSystemWatcher                          |       |
 
 ### إلغاء التنشيط
 
 **النوع:** الوظيفة
 
 ```typescript
-function deactivate(): Promise<void>
+function deactivate(): Promise<void>;
 ```
 
 لم يتم تقديم أي وصف.

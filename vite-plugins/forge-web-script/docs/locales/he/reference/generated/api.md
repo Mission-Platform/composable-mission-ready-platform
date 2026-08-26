@@ -16,45 +16,54 @@
 פונקציה **סוג:**
 
 ```typescript
-function compileForgeWebScriptFile(fileName: string, options: ForgeWebScriptPluginOptions, service: ForgeWebScriptCompilerService = options.compilerService ??
+function compileForgeWebScriptFile(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+  service: ForgeWebScriptCompilerService = options.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
       selfHostedVmMode: options.selfHostedVmMode,
-    })): ForgeWebScriptCompiledModule
+    }),
+): ForgeWebScriptCompiledModule;
 ```
 
 הרכיב קובץ FWS אחד והחזר את החפץ שלו בתוספת מטא נתונים של מפת מקור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| אפשרויות | ForgeWebScriptPluginOptions |  |
-| שירות | ForgeWebScriptCompilerService |  |
+| שם       | הקלד                          | תיאור |
+| -------- | ----------------------------- | ----- |
+| שם קובץ  | מחרוזת                        |       |
+| אפשרויות | ForgeWebScriptPluginOptions   |       |
+| שירות    | ForgeWebScriptCompilerService |       |
 
 ### compileForgeWebScriptGraph
 
 פונקציה **סוג:**
 
 ```typescript
-function compileForgeWebScriptGraph(fileName: string, options: ForgeWebScriptPluginOptions, resolver: ForgeWebScriptModuleResolver, service: ForgeWebScriptCompilerService = options.compilerService ??
+function compileForgeWebScriptGraph(
+  fileName: string,
+  options: ForgeWebScriptPluginOptions,
+  resolver: ForgeWebScriptModuleResolver,
+  service: ForgeWebScriptCompilerService = options.compilerService ??
     createForgeWebScriptCompilerService({
       selfHostedRunner: runForgeWebScriptSelfHostedLexStage,
       selfHostedVmMode: options.selfHostedVmMode,
-    })): Promise<ForgeWebScriptCompiledModule>
+    }),
+): Promise<ForgeWebScriptCompiledModule>;
 ```
 
 פתור, קשר והידור גרף מודול FWS מיובא.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| אפשרויות | ForgeWebScriptPluginOptions |  |
-| פותר | ForgeWebScriptModuleResolver |  |
-| שירות | ForgeWebScriptCompilerService |  |
+| שם       | הקלד                          | תיאור |
+| -------- | ----------------------------- | ----- |
+| שם קובץ  | מחרוזת                        |       |
+| אפשרויות | ForgeWebScriptPluginOptions   |       |
+| פותר     | ForgeWebScriptModuleResolver  |       |
+| שירות    | ForgeWebScriptCompilerService |       |
 
 ### ForgeWebScriptCompiledModule
 
@@ -81,17 +90,17 @@ export interface ForgeWebScriptPluginOptions
 פונקציה **סוג:**
 
 ```typescript
-function resolveForgeWebScriptPath(root: string, value: string): string
+function resolveForgeWebScriptPath(root: string, value: string): string;
 ```
 
 פתור נתיב תוסף ביחס לשורש אלא אם הערך כבר מוחלט.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שורש | מחרוזת |  |
-| ערך | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| שורש | מחרוזת |       |
+| ערך  | מחרוזת |       |
 
 ## `src/generate`
 
@@ -100,7 +109,9 @@ function resolveForgeWebScriptPath(root: string, value: string): string
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptDeclarationsSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptDeclarationsSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 צור מודול המכיל הצהרות, מטא נתונים של קישור ואופציונלי
@@ -108,32 +119,36 @@ function createForgeWebScriptDeclarationsSource(compiled: ForgeWebScriptCompiled
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הידור | ForgeWebScriptCompiledModule |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| הידור | ForgeWebScriptCompiledModule |       |
 
 ### createForgeWebScriptManifestSource
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptManifestSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptManifestSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 צור מודול המכיל את המניפסט ABI הניתן להמשכה של JSON.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הידור | ForgeWebScriptCompiledModule |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| הידור | ForgeWebScriptCompiledModule |       |
 
 ### createForgeWebScriptModuleSource
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptModuleSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptModuleSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 צור את מודול הצרכן הרגיל. המודול שנוצר מייצא מחדש את
@@ -141,48 +156,54 @@ function createForgeWebScriptModuleSource(compiled: ForgeWebScriptCompiledModule
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הידור | ForgeWebScriptCompiledModule |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| הידור | ForgeWebScriptCompiledModule |       |
 
 ### createForgeWebScriptSourceMapSource
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptSourceMapSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptSourceMapSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 צור מודול שיצוא ברירת המחדל שלו הוא אובייקט המקור-מפה שנוצר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הידור | ForgeWebScriptCompiledModule |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| הידור | ForgeWebScriptCompiledModule |       |
 
 ### createForgeWebScriptWasmSource
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptWasmSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptWasmSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 צור מודול שיצוא ברירת המחדל שלו הוא מערך הבתים של Wasm.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הידור | ForgeWebScriptCompiledModule |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| הידור | ForgeWebScriptCompiledModule |       |
 
 ### createForgeWebScriptWatSource
 
 פונקציה **סוג:**
 
 ```typescript
-function createForgeWebScriptWatSource(compiled: ForgeWebScriptCompiledModule): string
+function createForgeWebScriptWatSource(
+  compiled: ForgeWebScriptCompiledModule,
+): string;
 ```
 
 צור מודול שיצוא ברירת המחדל שלו הוא טקסט ה-WAT המהודר. זהו
@@ -190,16 +211,16 @@ function createForgeWebScriptWatSource(compiled: ForgeWebScriptCompiledModule): 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הידור | ForgeWebScriptCompiledModule |  |
+| שם    | הקלד                         | תיאור |
+| ----- | ---------------------------- | ----- |
+| הידור | ForgeWebScriptCompiledModule |       |
 
 ### FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
 
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
+export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY;
 ```
 
 שאילתה שמחזירה הצהרות מקושרות ומטא נתונים גרפים כמודול ES.
@@ -209,7 +230,7 @@ export const FORGE_WEB_SCRIPT_DECLARATIONS_QUERY
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_MANIFEST_QUERY
+export const FORGE_WEB_SCRIPT_MANIFEST_QUERY;
 ```
 
 שאילתה שמחזירה את מניפסט ה-ABI המהודר כמודול ES.
@@ -219,7 +240,7 @@ export const FORGE_WEB_SCRIPT_MANIFEST_QUERY
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
+export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY;
 ```
 
 שאילתה שמחזירה את מפת המקור שנוצרה כייצוא ברירת המחדל של המודול.
@@ -229,7 +250,7 @@ export const FORGE_WEB_SCRIPT_SOURCE_MAP_QUERY
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WASM_QUERY
+export const FORGE_WEB_SCRIPT_WASM_QUERY;
 ```
 
 שאילתה שמחזירה את ה- Wasm בתים שהורכבו כייצוא ברירת המחדל של המודול.
@@ -239,7 +260,7 @@ export const FORGE_WEB_SCRIPT_WASM_QUERY
 **סוג:** קבוע
 
 ```typescript
-export const FORGE_WEB_SCRIPT_WAT_QUERY
+export const FORGE_WEB_SCRIPT_WAT_QUERY;
 ```
 
 שאילתה שמחזירה WAT שנוצר, כולל הורדת טבלת ענפים, כמחרוזת.
@@ -251,7 +272,9 @@ export const FORGE_WEB_SCRIPT_WAT_QUERY
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptPlugin(
+  options: ForgeWebScriptPluginOptions = {},
+): Plugin;
 ```
 
 התקן את הידור של Forge Web Script ושאילתות חפצים וירטואליים ב-Vite.
@@ -260,16 +283,18 @@ function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptPluginOptions |  |
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| אפשרויות | ForgeWebScriptPluginOptions |       |
 
 ### forgeWebScriptPlugin
 
 פונקציה **סוג:**
 
 ```typescript
-function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptPlugin(
+  options: ForgeWebScriptPluginOptions = {},
+): Plugin;
 ```
 
 התקן את הידור של Forge Web Script ושאילתות חפצים וירטואליים ב-Vite.
@@ -278,9 +303,9 @@ function forgeWebScriptPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeWebScriptPluginOptions |  |
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| אפשרויות | ForgeWebScriptPluginOptions |       |
 
 ### ForgeWebScriptViteError
 

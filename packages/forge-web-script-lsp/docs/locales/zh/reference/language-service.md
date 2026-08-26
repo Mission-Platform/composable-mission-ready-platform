@@ -459,12 +459,12 @@ LSP服务器发布`source: "forge-web-script"`。阶段和提示是
 也包含在诊断 `data` 对象中。典型的稳定代码族
 是：
 
-|代码家族|相|意义|
-| ------------- | ------------ | ------------------------------------------------------------------------ |
-| `FWS-LEX-*` | `lex` |无效字符/转义符、原始字符串行终止符或未终止的字符串/块注释 |
-| `FWS-PARSE-*` | `parse` |无效的模块、声明、语句或表达式语法 |
-| `FWS-TYPE-*` | `type-check` |无效的类型、名称、运算符、参数或返回 |
-| `FWS-ABI-*` | `abi` |重复名称、被拒绝的功能、导出或导入 |
+| 代码家族      | 相           | 意义                                                       |
+| ------------- | ------------ | ---------------------------------------------------------- |
+| `FWS-LEX-*`   | `lex`        | 无效字符/转义符、原始字符串行终止符或未终止的字符串/块注释 |
+| `FWS-PARSE-*` | `parse`      | 无效的模块、声明、语句或表达式语法                         |
+| `FWS-TYPE-*`  | `type-check` | 无效的类型、名称、运算符、参数或返回                       |
+| `FWS-ABI-*`   | `abi`        | 重复名称、被拒绝的功能、导出或导入                         |
 
 在解析器恢复允许的情况下，仍会对格式错误的输入进行标记和分析
 它。例如，格式错误的源可能会生成 `FWS-PARSE-017`，同时保留
@@ -490,7 +490,7 @@ LSP服务器发布`source: "forge-web-script"`。阶段和提示是
 ```tsx
 <ForgeMonacoEditor
   language="fws"
-  modelValue={"export fn add(value: i32) -> i32 {\n  return value + 1;\n}"}
+  modelValue={'export fn add(value: i32) -> i32 {\n  return value + 1;\n}'}
 />
 ```
 
@@ -507,15 +507,15 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
   readFile: async (uri) => files.get(uri),
   listFiles: async () => [...files.keys()],
   getOptions: async () => ({
-    requestedCapabilities: ["clock.now"],
-    capabilityNames: ["clock.now"],
+    requestedCapabilities: ['clock.now'],
+    capabilityNames: ['clock.now'],
     capabilitySignatures: new Map([
       [
-        "clock.now",
+        'clock.now',
         {
           parameters: [],
-          result: "i64",
-          documentation: "Read the current Unix timestamp.",
+          result: 'i64',
+          documentation: 'Read the current Unix timestamp.',
         },
       ],
     ]),
@@ -525,9 +525,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 <ForgeMonacoEditor
   language="fws"
   forgeWebScript={{ workspaceHost }}
-  modelValue={
-    'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'
-  }
+  modelValue={'import capability "clock.now" as now() -> i64;\nexport fn current() -> i64 {\n  return now();\n}'}
 />;
 ```
 
@@ -542,10 +540,7 @@ const workspaceHost: ForgeWebScriptWorkspaceHost = {
 已加载：
 
 ```ts
-import {
-  attachForgeWebScriptMonaco,
-  registerForgeWebScriptLanguage,
-} from "@mission-platform/content";
+import { attachForgeWebScriptMonaco, registerForgeWebScriptLanguage } from '@mission-platform/content';
 
 registerForgeWebScriptLanguage(monaco);
 const handle = attachForgeWebScriptMonaco(editor, monaco, { workspaceHost });
@@ -562,10 +557,10 @@ handle.dispose();
 
 ## LSP 与浏览器工作区
 
-|消费者 |工作区实施 |根/安全边界|交通 |
-| --------------- | -------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------ |
-| Node LSP 客户端 | `RootBoundedForgeWebScriptWorkspaceHost` |规范化的配置文件系统根；外部读取被拒绝 | stdio LSP |
-|摩纳哥/浏览器 |应用程序提供的 `ForgeWebScriptWorkspaceHost` |主机决定公开哪些 URI/文件/选项；没有文件系统假设|进程内适配器|
+| 消费者          | 工作区实施                                   | 根/安全边界                                      | 交通         |
+| --------------- | -------------------------------------------- | ------------------------------------------------ | ------------ |
+| Node LSP 客户端 | `RootBoundedForgeWebScriptWorkspaceHost`     | 规范化的配置文件系统根；外部读取被拒绝           | stdio LSP    |
+| 摩纳哥/浏览器   | 应用程序提供的 `ForgeWebScriptWorkspaceHost` | 主机决定公开哪些 URI/文件/选项；没有文件系统假设 | 进程内适配器 |
 
 两个适配器都使用相同的语言服务契约和分析语义，
 但它们不共享文档存储或传输。浏览器主机不得

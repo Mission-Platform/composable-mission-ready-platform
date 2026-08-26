@@ -16,50 +16,56 @@
 **종류:** 기능
 
 ```typescript
-function assertForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic
+function assertForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |  |
-| 기대 | ForgeWebScriptDiagnosticExpectation |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |      |
+| 기대 | ForgeWebScriptDiagnosticExpectation  |      |
 
 ### 주장ForgeWebScriptNoDiagnostics
 
 **종류:** 기능
 
 ```typescript
-function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void
+function assertForgeWebScriptNoDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): void;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |      |
 
 ### findForgeWebScript진단
 
 **종류:** 기능
 
 ```typescript
-function findForgeWebScriptDiagnostic(diagnostics: readonly ForgeWebScriptDiagnostic[], expectation: ForgeWebScriptDiagnosticExpectation): ForgeWebScriptDiagnostic | undefined
+function findForgeWebScriptDiagnostic(
+  diagnostics: readonly ForgeWebScriptDiagnostic[],
+  expectation: ForgeWebScriptDiagnosticExpectation,
+): ForgeWebScriptDiagnostic | undefined;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |  |
-| 기대 | ForgeWebScriptDiagnosticExpectation |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |      |
+| 기대 | ForgeWebScriptDiagnosticExpectation  |      |
 
 ### ForgeWebScriptDiagnosticExpectation
 
@@ -76,32 +82,32 @@ export interface ForgeWebScriptDiagnosticExpectation
 **종류:** 기능
 
 ```typescript
-function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string
+function formatForgeWebScriptDiagnostic(diagnostic: ForgeWebScriptDiagnostic): string;
 ```
 
 구조화된 위치 메타데이터를 삭제하지 않고 진단 형식을 지정합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | ForgeWebScript진단 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 진단 | ForgeWebScript진단 |      |
 
 ### formatForgeWebScript진단
 
 **종류:** 기능
 
 ```typescript
-function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string
+function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDiagnostic[]): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |  |
+| 이름 | 유형                                 | 설명 |
+| ---- | ------------------------------------ | ---- |
+| 진단 | 읽기 전용 ForgeWebScriptDiagnostic[] |      |
 
 ## `src/harness`
 
@@ -110,16 +116,16 @@ function formatForgeWebScriptDiagnostics(diagnostics: readonly ForgeWebScriptDia
 **종류:** 기능
 
 ```typescript
-function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness
+function createForgeWebScriptTestHarness(options: ForgeWebScriptTestHarnessOptions = {}): ForgeWebScriptTestHarness;
 ```
 
 선택적 컴파일러, 기능 및 대상 설정을 사용하여 공유 고정 장치 하네스를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptTestHarness옵션 |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 옵션 | ForgeWebScriptTestHarness옵션 |      |
 
 ### ForgeWebScriptCapability함수
 
@@ -136,7 +142,9 @@ export type ForgeWebScriptCapabilityFunction = (...arguments_: readonly unknown[
 **종류:** 유형
 
 ```typescript
-export type ForgeWebScriptCapabilityImports = Readonly< Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>> >;
+export type ForgeWebScriptCapabilityImports = Readonly<
+  Record<string, Readonly<Record<string, ForgeWebScriptCapabilityFunction>>>
+>;
 ```
 
 기능 및 매니페스트 별칭으로 키가 지정된 호스트 기능 신고되지 않은 수입품은 거부됩니다.
@@ -156,7 +164,7 @@ export interface ForgeWebScriptCompilationResult extends ForgeWebScriptCompiledM
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string
+function forgeWebScriptFixtureName(fileName: string, fixtureRoot: string): string;
 ```
 
 픽스처 경로를 안정적인 테스트/모듈 이름으로 변환합니다. 상대 경로는
@@ -164,10 +172,10 @@ FixtureRoot에 뿌리를 두고 구분 기호는 하이픈으로 정규화됩니
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 고정루트 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
+| 고정루트  | 문자열 |      |
 
 ### ForgeWebScript검사결과
 
@@ -238,7 +246,7 @@ export interface ForgeWebScriptTestHarnessOptions extends ForgeWebScriptPluginOp
 **종류:** 기능
 
 ```typescript
-function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig
+function defineForgeWebScriptVitestConfig(options: ForgeWebScriptVitestConfigOptions = {}): ViteUserConfig;
 ```
 
 Forge 웹 스크립트를 사용하여 표준 Mission Platform Vitest 구성을 작성합니다.
@@ -247,9 +255,9 @@ Forge 웹 스크립트를 사용하여 표준 Mission Platform Vitest 구성을 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScriptVitestConfigOptions |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 옵션 | ForgeWebScriptVitestConfigOptions |      |
 
 ### ForgeWebScriptVitestConfig옵션
 
@@ -266,13 +274,13 @@ export interface ForgeWebScriptVitestConfigOptions extends Omit<VitestConfigOpti
 **종류:** 기능
 
 ```typescript
-function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin
+function forgeWebScriptVitestPlugin(options: ForgeWebScriptPluginOptions = {}): Plugin;
 ```
 
 Vite/Vitest 구성에 프로덕션 Forge 웹 스크립트 플러그인을 설치합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeWebScript플러그인옵션 |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 옵션 | ForgeWebScript플러그인옵션 |      |

@@ -16,16 +16,16 @@
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function createForgeWebScriptLspServer(options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptLspServerOptions | ForgeWebScriptLspServerOptions | ForgeWebScriptLspServerOptions  |
+| 名称 | 类型                           | 描述                           |
+| ---- | ------------------------------ | ------------------------------ |
+| 选项 | ForgeWebScriptLspServerOptions | ForgeWebScriptLspServerOptions | ForgeWebScriptLspServerOptions |
 
 ### ForgeWebScriptLsp文档
 
@@ -82,17 +82,20 @@ export interface ForgeWebScriptLspServerOptions
 **种类：**功能
 
 ```typescript
-function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScriptLspServerOptions = {}): ForgeWebScriptLspServer
+function registerForgeWebScriptLsp(
+  connection: Connection,
+  options: ForgeWebScriptLspServerOptions = {},
+): ForgeWebScriptLspServer;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|连接|连接 |  |
-|选项 | ForgeWebScriptLspServerOptions | ForgeWebScriptLspServerOptions | ForgeWebScriptLspServerOptions  |
+| 名称 | 类型                           | 描述                           |
+| ---- | ------------------------------ | ------------------------------ |
+| 连接 | 连接                           |                                |
+| 选项 | ForgeWebScriptLspServerOptions | ForgeWebScriptLspServerOptions | ForgeWebScriptLspServerOptions |
 
 ## `src/workspace`
 
@@ -101,16 +104,18 @@ function registerForgeWebScriptLsp(connection: Connection, options: ForgeWebScri
 **种类：**功能
 
 ```typescript
-function createForgeWebScriptNodeWorkspaceHost(options: ForgeWebScriptNodeWorkspaceOptions): RootBoundedForgeWebScriptWorkspaceHost
+function createForgeWebScriptNodeWorkspaceHost(
+  options: ForgeWebScriptNodeWorkspaceOptions,
+): RootBoundedForgeWebScriptWorkspaceHost;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | ForgeWebScriptNodeWorkspaceOptions | ForgeWebScriptNodeWorkspaceOptions | ForgeWebScriptNodeWorkspaceOptions  |
+| 名称 | 类型                               | 描述                               |
+| ---- | ---------------------------------- | ---------------------------------- |
+| 选项 | ForgeWebScriptNodeWorkspaceOptions | ForgeWebScriptNodeWorkspaceOptions | ForgeWebScriptNodeWorkspaceOptions |
 
 ### ForgeWebScriptNode文件系统
 

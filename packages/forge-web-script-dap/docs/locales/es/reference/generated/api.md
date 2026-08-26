@@ -126,32 +126,32 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function encodeDapMessage(message: DapMessage): Buffer
+function encodeDapMessage(message: DapMessage): Buffer;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| mensaje | Mensaje Dap |  |
+| Nombre  | Tipo        | Descripción |
+| ------- | ----------- | ----------- |
+| mensaje | Mensaje Dap |             |
 
 ### codificarLineMessage
 
 **Tipo:** función
 
 ```typescript
-function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string
+function encodeLineMessage(message: ForgeWebScriptRuntimeRequest): string;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| mensaje | Solicitud de tiempo de ejecución de ForgeWebScript |  |
+| Nombre  | Tipo                                               | Descripción |
+| ------- | -------------------------------------------------- | ----------- |
+| mensaje | Solicitud de tiempo de ejecución de ForgeWebScript |             |
 
 ### ForgeWebScriptDapForensicRequest
 
@@ -198,7 +198,26 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type ForgeWebScriptRuntimeCommand = | 'launch' | 'setBreakpoints' | 'configurationDone' | 'continue' | 'next' | 'stepIn' | 'stepOut' | 'pause' | 'threads' | 'stackTrace' | 'scopes' | 'variables' | 'fwsTraceSummary' | 'fwsTraceEvents' | 'fwsMemoryState' | 'fwsCapabilityCalls' | 'fwsTrapEvidence' | 'terminate' | 'disconnect';
+export type ForgeWebScriptRuntimeCommand =
+  | 'launch'
+  | 'setBreakpoints'
+  | 'configurationDone'
+  | 'continue'
+  | 'next'
+  | 'stepIn'
+  | 'stepOut'
+  | 'pause'
+  | 'threads'
+  | 'stackTrace'
+  | 'scopes'
+  | 'variables'
+  | 'fwsTraceSummary'
+  | 'fwsTraceEvents'
+  | 'fwsMemoryState'
+  | 'fwsCapabilityCalls'
+  | 'fwsTrapEvidence'
+  | 'terminate'
+  | 'disconnect';
 ```
 
 No se proporciona descripción.
@@ -228,7 +247,14 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type ForgeWebScriptRuntimeMessage = | ForgeWebScriptRuntimeResponse | ForgeWebScriptRuntimeOutputEvent | ForgeWebScriptRuntimeStoppedEvent | ForgeWebScriptRuntimeContinuedEvent | ForgeWebScriptRuntimeThreadEvent | ForgeWebScriptRuntimeTerminatedEvent | ForgeWebScriptRuntimeErrorEvent;
+export type ForgeWebScriptRuntimeMessage =
+  | ForgeWebScriptRuntimeResponse
+  | ForgeWebScriptRuntimeOutputEvent
+  | ForgeWebScriptRuntimeStoppedEvent
+  | ForgeWebScriptRuntimeContinuedEvent
+  | ForgeWebScriptRuntimeThreadEvent
+  | ForgeWebScriptRuntimeTerminatedEvent
+  | ForgeWebScriptRuntimeErrorEvent;
 ```
 
 No se proporciona descripción.
@@ -278,7 +304,11 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type ForgeWebScriptRuntimeSpawner = ( executable: string, arguments_: readonly string[], options: ForgeWebScriptRuntimeSpawnOptions, ) => ForgeWebScriptRuntimeProcess;
+export type ForgeWebScriptRuntimeSpawner = (
+  executable: string,
+  arguments_: readonly string[],
+  options: ForgeWebScriptRuntimeSpawnOptions,
+) => ForgeWebScriptRuntimeProcess;
 ```
 
 No se proporciona descripción.
@@ -328,16 +358,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function isRecord(value: unknown): value is Record<string, unknown>
+function isRecord(value: unknown): value is Record<string, unknown>;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | desconocido |  |
+| Nombre | Tipo        | Descripción |
+| ------ | ----------- | ----------- |
+| valor  | desconocido |             |
 
 ### Tiempo de ejecuciónLineParser
 
@@ -356,16 +386,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer
+function createForgeWebScriptDapServer(options: ForgeWebScriptDapServerOptions): ForgeWebScriptDapServer;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de ForgeWebScriptDapServer |  |
+| Nombre   | Tipo                                | Descripción |
+| -------- | ----------------------------------- | ----------- |
+| opciones | Opciones de ForgeWebScriptDapServer |             |
 
 ### ForgeWebScriptDapServer
 

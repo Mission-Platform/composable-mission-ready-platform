@@ -1,5 +1,6 @@
-import type { ForgeWebScriptSoNModule } from './son-ir.js';
 import { deserializeForgeWebScriptSoN, serializeForgeWebScriptSoN } from './son-cache.js';
+
+import type { ForgeWebScriptSoNModule } from './son-ir.js';
 
 export interface ForgeWebScriptWatCache {
   /** Absolute or workspace-relative directory in which WAT files are stored. */

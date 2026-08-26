@@ -1,8 +1,10 @@
-import { FORGE_WEB_SCRIPT_ABI_VERSION, FORGE_WEB_SCRIPT_LANGUAGE_VERSION } from './manifest.js';
 import { forgeWebScriptTypeNameToString, type ForgeWebScriptModule, type ForgeWebScriptTypeName } from './ast.js';
+import { lowerForgeWebScriptToIr } from './ir.js';
+import { FORGE_WEB_SCRIPT_ABI_VERSION, FORGE_WEB_SCRIPT_LANGUAGE_VERSION } from './manifest.js';
+
 import type { ForgeWebScriptSourceSpan } from './diagnostics.js';
 import type { ForgeWebScriptIrExpression, ForgeWebScriptIrModule, ForgeWebScriptIrStatement } from './ir.js';
-import { lowerForgeWebScriptToIr } from './ir.js';
+
 
 export const FORGE_WEB_SCRIPT_SON_SCHEMA_VERSION = '1.0' as const;
 export type ForgeWebScriptSoNOptimization = 'debug' | 'release';
@@ -122,7 +124,7 @@ function graphIdentity(
   const { graphHash: _graphHash, optimizationReport: _report, ...base } = module as ForgeWebScriptSoNModule;
   const sanitized = {
     ...base,
-    nodes: base.nodes.map(({ span, ...node }) => node),
+    nodes: base.nodes.map(({ span: _span, ...node }) => node),
     sourceMap: [],
   };
   return hash(JSON.stringify(stableValue(sanitized)));
@@ -202,7 +204,7 @@ class SoNBuilder {
     switch (expression.kind) {
       case 'literal':
       case 'identifier':
-      case 'function-value':
+      case 'function-value': {
         return this.node(
           functionName,
           expression.kind === 'identifier' ? 'read' : expression.kind,
@@ -210,7 +212,8 @@ class SoNBuilder {
           expression.span,
           expression,
         );
-      case 'call':
+      }
+      case 'call': {
         return this.node(
           functionName,
           'call',
@@ -218,7 +221,8 @@ class SoNBuilder {
           expression.span,
           expression,
         );
-      case 'binary':
+      }
+      case 'binary': {
         return this.node(
           functionName,
           `binary.${expression.operator}`,
@@ -226,7 +230,8 @@ class SoNBuilder {
           expression.span,
           expression,
         );
-      case 'unary':
+      }
+      case 'unary': {
         return this.node(
           functionName,
           `unary.${expression.operator}`,
@@ -234,7 +239,8 @@ class SoNBuilder {
           expression.span,
           expression,
         );
-      case 'struct-value':
+      }
+      case 'struct-value': {
         return this.node(
           functionName,
           'struct-value',
@@ -242,7 +248,8 @@ class SoNBuilder {
           expression.span,
           expression,
         );
-      case 'enum-value':
+      }
+      case 'enum-value': {
         return this.node(
           functionName,
           'enum-value',
@@ -250,8 +257,9 @@ class SoNBuilder {
           expression.span,
           expression,
         );
+      }
       case 'array-literal':
-      case 'vector-literal':
+      case 'vector-literal': {
         return this.node(
           functionName,
           expression.kind,
@@ -259,7 +267,8 @@ class SoNBuilder {
           expression.span,
           expression,
         );
-      case 'index':
+      }
+      case 'index': {
         return this.node(
           functionName,
           'index',
@@ -267,7 +276,8 @@ class SoNBuilder {
           expression.span,
           expression,
         );
-      case 'match':
+      }
+      case 'match': {
         return this.node(
           functionName,
           'match',
@@ -278,6 +288,7 @@ class SoNBuilder {
           expression.span,
           expression,
         );
+      }
     }
   }
 
@@ -301,13 +312,15 @@ class SoNBuilder {
     for (const statement of statements) {
       let node: number;
       switch (statement.kind) {
-        case 'let':
+        case 'let': {
           node = this.node(functionName, 'let', [this.expression(functionName, statement.value)], statement.span);
           break;
-        case 'assignment':
+        }
+        case 'assignment': {
           node = this.node(functionName, 'assign', [this.expression(functionName, statement.value)], statement.span);
           break;
-        case 'return':
+        }
+        case 'return': {
           node = this.node(
             functionName,
             'return',
@@ -315,7 +328,8 @@ class SoNBuilder {
             statement.span,
           );
           break;
-        case 'expression-statement':
+        }
+        case 'expression-statement': {
           node = this.node(
             functionName,
             'expression',
@@ -323,9 +337,11 @@ class SoNBuilder {
             statement.span,
           );
           break;
-        case 'yield':
+        }
+        case 'yield': {
           node = this.node(functionName, 'yield', [this.expression(functionName, statement.value)], statement.span);
           break;
+        }
         case 'if': {
           const body = this.statements(functionName, statement.consequent, parentRegion);
           const alternate =
@@ -457,11 +473,11 @@ type SoNIrLiteral = Extract<ForgeWebScriptIrExpression, { kind: 'literal' }>;
 
 function sonAnnotateBounds(module: ForgeWebScriptIrModule): number {
   let annotated = 0;
-  for (const fn of module.functions) {
+  for (const function_ of module.functions) {
     // Track local variable types to identify Array/Vector with known lengths.
     const localTypes = new Map<string, ForgeWebScriptTypeName>();
-    for (const param of fn.parameters) {
-      localTypes.set(param.name, param.type);
+    for (const parameter of function_.parameters) {
+      localTypes.set(parameter.name, parameter.type);
     }
 
     function visitExpression(expression: ForgeWebScriptIrExpression): void {
@@ -493,52 +509,105 @@ function sonAnnotateBounds(module: ForgeWebScriptIrModule): number {
         }
       }
       // Recurse
-      if (expression.kind === 'call') expression.arguments.forEach(visitExpression);
-      else if (expression.kind === 'binary') {
+      switch (expression.kind) {
+      case 'call': {
+      expression.arguments.forEach(visitExpression);
+      break;
+      }
+      case 'binary': {
         visitExpression(expression.left);
         visitExpression(expression.right);
-      } else if (expression.kind === 'unary') visitExpression(expression.operand);
-      else if (expression.kind === 'struct-value') Object.values(expression.fields).forEach(visitExpression);
-      else if (expression.kind === 'enum-value') expression.arguments.forEach(visitExpression);
-      else if (expression.kind === 'match') {
+      
+      break;
+      }
+      case 'unary': {
+      visitExpression(expression.operand);
+      break;
+      }
+      case 'struct-value': {
+      Object.values(expression.fields).forEach(visitExpression);
+      break;
+      }
+      case 'enum-value': {
+      expression.arguments.forEach(visitExpression);
+      break;
+      }
+      case 'match': {
         visitExpression(expression.value);
-        expression.arms.forEach((arm) => visitExpression(arm.value));
-      } else if (expression.kind === 'array-literal' || expression.kind === 'vector-literal')
-        expression.elements.forEach(visitExpression);
-      else if (expression.kind === 'index') {
+        for (const arm of expression.arms) visitExpression(arm.value);
+      
+      break;
+      }
+      case 'array-literal': 
+      case 'vector-literal': {
+      expression.elements.forEach(visitExpression);
+      break;
+      }
+      case 'index': {
         visitExpression(expression.receiver);
         visitExpression(expression.index);
+      
+      break;
+      }
+      // No default
       }
     }
 
     function visitStatement(statement: ForgeWebScriptIrStatement): void {
-      if (statement.kind === 'let') {
+      switch (statement.kind) {
+      case 'let': {
         localTypes.set(statement.name, statement.type);
         visitExpression(statement.value);
-      } else if (statement.kind === 'assignment') {
+      
+      break;
+      }
+      case 'assignment': {
         visitExpression(statement.value);
-      } else if (statement.kind === 'expression-statement') {
+      
+      break;
+      }
+      case 'expression-statement': {
         visitExpression(statement.expression);
-      } else if (statement.kind === 'return' && statement.value !== undefined) {
+      
+      break;
+      }
+      default: { if (statement.kind === 'return' && statement.value !== undefined) {
         visitExpression(statement.value);
-      } else if (statement.kind === 'if') {
+      } else switch (statement.kind) {
+ case 'if': {
         visitExpression(statement.condition);
         statement.consequent.forEach(visitStatement);
         statement.alternate?.forEach(visitStatement);
-      } else if (statement.kind === 'switch') {
+      
+ break;
+ }
+ case 'switch': {
         visitExpression(statement.value);
-        statement.cases.forEach((arm) => arm.body.forEach(visitStatement));
+        for (const arm of statement.cases) arm.body.forEach(visitStatement);
         statement.defaultCase?.forEach(visitStatement);
-      } else if (statement.kind === 'while' || statement.kind === 'do-while') {
+      
+ break;
+ }
+ case 'while': 
+ case 'do-while': {
         visitExpression(statement.condition);
         statement.body.forEach(visitStatement);
-      } else if (statement.kind === 'iterator-loop') {
+      
+ break;
+ }
+ case 'iterator-loop': {
         visitExpression(statement.iterator);
         statement.body.forEach(visitStatement);
+      
+ break;
+ }
+ // No default
+ }
+      }
       }
     }
 
-    fn.body.forEach(visitStatement);
+    function_.body.forEach(visitStatement);
   }
   return annotated;
 }
@@ -557,26 +626,36 @@ function sonEvaluateBinary(
   if (typeof left.value !== 'number' || typeof right.value !== 'number') return undefined;
   if ((operator === '/' || operator === '%') && right.value === 0) return undefined;
   switch (operator) {
-    case '+':
+    case '+': {
       return left.value + right.value;
-    case '-':
+    }
+    case '-': {
       return left.value - right.value;
-    case '*':
+    }
+    case '*': {
       return left.value * right.value;
-    case '/':
+    }
+    case '/': {
       return left.value / right.value;
-    case '%':
+    }
+    case '%': {
       return left.value % right.value;
-    case '<':
+    }
+    case '<': {
       return left.value < right.value;
-    case '<=':
+    }
+    case '<=': {
       return left.value <= right.value;
-    case '>':
+    }
+    case '>': {
       return left.value > right.value;
-    case '>=':
+    }
+    case '>=': {
       return left.value >= right.value;
-    default:
+    }
+    default: {
       return undefined;
+    }
   }
 }
 
@@ -588,24 +667,29 @@ interface SoNPropagationCounters {
 function sonAssignedNames(statements: readonly ForgeWebScriptIrStatement[], names = new Set<string>()): Set<string> {
   for (const statement of statements) {
     switch (statement.kind) {
-      case 'assignment':
+      case 'assignment': {
         names.add(statement.name);
         break;
-      case 'if':
+      }
+      case 'if': {
         sonAssignedNames(statement.consequent, names);
         if (statement.alternate !== undefined) sonAssignedNames(statement.alternate, names);
         break;
-      case 'switch':
+      }
+      case 'switch': {
         for (const arm of statement.cases) sonAssignedNames(arm.body, names);
         if (statement.defaultCase !== undefined) sonAssignedNames(statement.defaultCase, names);
         break;
+      }
       case 'while':
-      case 'do-while':
+      case 'do-while': {
         sonAssignedNames(statement.body, names);
         break;
-      case 'iterator-loop':
+      }
+      case 'iterator-loop': {
         sonAssignedNames(statement.body, names);
         break;
+      }
       // No default
     }
   }

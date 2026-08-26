@@ -1,5 +1,6 @@
-import { ForgeWebScriptTrap } from './traps.js';
 import { createForgeWebScriptLogger, type ForgeWebScriptLogger } from './logging.js';
+import { ForgeWebScriptTrap } from './traps.js';
+
 import type { ForgeWebScriptTraceRecorder } from './trace.js';
 
 const textEncoder = new TextEncoder();

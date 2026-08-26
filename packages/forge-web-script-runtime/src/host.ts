@@ -1,6 +1,6 @@
 import { assertValidForgeWebScriptAbiManifest, equalFunction } from './abi.js';
-import { toForgeWebScriptHostError, ForgeWebScriptTrap } from './traps.js';
 import { createForgeWebScriptLogger, type ForgeWebScriptLogger } from './logging.js';
+import { toForgeWebScriptHostError, ForgeWebScriptTrap } from './traps.js';
 
 import type {
   ForgeWebScriptAbiFunction,

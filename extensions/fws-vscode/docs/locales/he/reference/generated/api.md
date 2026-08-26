@@ -16,42 +16,47 @@
 פונקציה **סוג:**
 
 ```typescript
-function activate(context: vscode.ExtensionContext): Promise<void>
+function activate(context: vscode.ExtensionContext): Promise<void>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הקשר | vscode.ExtensionContext |  |
+| שם   | הקלד                    | תיאור |
+| ---- | ----------------------- | ----- |
+| הקשר | vscode.ExtensionContext |       |
 
 ### createLanguageClient
 
 פונקציה **סוג:**
 
 ```typescript
-function createLanguageClient(serverOptions: ServerOptions, configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>, outputChannel: vscode.LogOutputChannel, fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*')): ForgeWebScriptLanguageClient
+function createLanguageClient(
+  serverOptions: ServerOptions,
+  configuration: Pick<ForgeWebScriptConfiguration, 'traceServer'>,
+  outputChannel: vscode.LogOutputChannel,
+  fileWatcher: vscode.FileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*'),
+): ForgeWebScriptLanguageClient;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| serverOptions | אפשרויות שרת |  |
-| תצורה | לִבחוֹר<ForgeWebScriptConfiguration, 'traceServer'> |  |
-| ערוץ פלט | vscode.LogOutputChannel |  |
-| fileWatcher | vscode.FileSystemWatcher |  |
+| שם            | הקלד                                                | תיאור |
+| ------------- | --------------------------------------------------- | ----- |
+| serverOptions | אפשרויות שרת                                        |       |
+| תצורה         | לִבחוֹר<ForgeWebScriptConfiguration, 'traceServer'> |       |
+| ערוץ פלט      | vscode.LogOutputChannel                             |       |
+| fileWatcher   | vscode.FileSystemWatcher                            |       |
 
 ### להשבית
 
 פונקציה **סוג:**
 
 ```typescript
-function deactivate(): Promise<void>
+function deactivate(): Promise<void>;
 ```
 
 לא סופק תיאור.
