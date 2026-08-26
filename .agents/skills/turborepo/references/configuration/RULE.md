@@ -20,8 +20,7 @@ my-monorepo/
 
 **Always use package tasks. Only use Root Tasks if you cannot succeed with package tasks.**
 
-Package tasks enable parallelization, individual caching, and filtering. Define scripts in each package's
-`package.json`:
+Package tasks enable parallelization, individual caching, and filtering. Define scripts in each package's `package.json`:
 
 ```json
 // packages/web/package.json
@@ -59,8 +58,7 @@ Package tasks enable parallelization, individual caching, and filtering. Define 
 
 When you run `turbo run lint`, Turborepo finds all packages with a `lint` script and runs them **in parallel**.
 
-**Root Tasks are a fallback**, not the default. Only use them for tasks that truly cannot run per-package (e.g.,
-repo-level CI scripts, workspace-wide config generation).
+**Root Tasks are a fallback**, not the default. Only use them for tasks that truly cannot run per-package (e.g., repo-level CI scripts, workspace-wide config generation).
 
 ```json
 // AVOID: Task logic in root defeats parallelization
@@ -75,7 +73,7 @@ repo-level CI scripts, workspace-wide config generation).
 
 ```json
 {
-  "$schema": "https://v2-10-8.turborepo.dev/schema.json",
+  "$schema": "https://v2-10-12.turborepo.dev/schema.json",
   "globalEnv": ["CI"],
   "globalDependencies": ["tsconfig.json"],
   "tasks": {
@@ -99,7 +97,7 @@ When the `globalConfiguration` future flag is enabled, global options move under
 
 ```json
 {
-  "$schema": "https://v2-10-8.turborepo.dev/schema.json",
+  "$schema": "https://v2-10-12.turborepo.dev/schema.json",
   "futureFlags": { "globalConfiguration": true },
   "global": {
     "inputs": ["tsconfig.json"],
@@ -121,10 +119,8 @@ See the [global options reference](./global-options.md) for the full rename mapp
 
 **Global options** - Settings affecting all tasks:
 
-- Without flag: `globalEnv`, `globalDependencies`, `globalPassThroughEnv`, `cacheDir`, `daemon`, `envMode`, `ui`,
-  `remoteCache`
-- With `globalConfiguration` flag: all of the above move under the `global` key
-  (see [global options](./global-options.md))
+- Without flag: `globalEnv`, `globalDependencies`, `globalPassThroughEnv`, `cacheDir`, `daemon`, `envMode`, `ui`, `remoteCache`
+- With `globalConfiguration` flag: all of the above move under the `global` key (see [global options](./global-options.md))
 
 **Task definitions** - Per-task settings in `tasks` object:
 

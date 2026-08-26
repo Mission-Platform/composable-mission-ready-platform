@@ -19,7 +19,7 @@ Find every concrete type that implements an interface, or every subtype of an
 abstract type. Read-only — does not modify any files.
 
 Use this skill **before** changing an interface signature, adding a method to
-an interface, or removing a forge-type method. It tells you every type that
+an interface, or removing a base-type method. It tells you every type that
 must be updated.
 
 **Invocation:** User provides `type_name` (e.g. `"Handler"`, `"io.Reader"`).

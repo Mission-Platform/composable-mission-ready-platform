@@ -16,14 +16,18 @@ turbo watch build
 
 # Watch multiple tasks
 turbo watch build test lint
+
+# No tasks: lists available tasks and exits non-zero
+turbo watch
 ```
 
 Tasks re-run in order configured in `turbo.json` when source files change.
 
+By default, any file change in a package re-runs all of that package's tasks. Enable `futureFlags.watchUsingTaskInputs` in `turbo.json` to re-run only tasks whose `inputs` globs match the changed files.
+
 ## With Persistent Tasks
 
-Persistent tasks (`"persistent": true`) won't exit, so they can't be depended on. They work the same in `turbo watch` as
-`turbo run`.
+Persistent tasks (`"persistent": true`) won't exit, so they can't be depended on. They work the same in `turbo watch` as `turbo run`.
 
 ### Dependency-Aware Persistent Tasks
 
@@ -70,15 +74,14 @@ turbo watch your-tasks --experimental-write-cache
 
 ### Task Outputs in Source Control
 
-If tasks write files tracked by git, watch mode may loop infinitely. Watch mode uses file hashes to prevent this but
-it's not foolproof.
+If tasks write files tracked by git, watch mode may loop infinitely. Watch mode uses file hashes to prevent this but it's not foolproof.
 
 **Recommendation**: Remove task outputs from git.
 
 ## vs turbo run
 
 | Feature           | `turbo run` | `turbo watch` |
-|-------------------|-------------|---------------|
+| ----------------- | ----------- | ------------- |
 | Runs once         | Yes         | No            |
 | Re-runs on change | No          | Yes           |
 | Caching           | Full        | Experimental  |

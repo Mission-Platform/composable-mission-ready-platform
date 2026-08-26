@@ -78,16 +78,14 @@ Exclude variables (useful with framework inference):
 
 ## With `futureFlags.globalConfiguration`
 
-When the `globalConfiguration` future flag is enabled, global environment keys move under the `global` key with cleaner
-names:
+When the `globalConfiguration` future flag is enabled, global environment keys move under the `global` key with cleaner names:
 
 | Old (top-level)        | New (`global.`)  |
-|------------------------|------------------|
+| ---------------------- | ---------------- |
 | `globalEnv`            | `env`            |
 | `globalPassThroughEnv` | `passThroughEnv` |
 
-`global.env` and `global.passThroughEnv` behave identically to their top-level counterparts — they affect the global
-hash and all tasks, respectively. The rename is purely organizational.
+`global.env` and `global.passThroughEnv` behave identically to their top-level counterparts — they affect the global hash and all tasks, respectively. The rename is purely organizational.
 
 ```json
 {
@@ -109,7 +107,7 @@ hash and all tasks, respectively. The rename is purely organizational.
 
 ```json
 {
-  "$schema": "https://v2-10-8.turborepo.dev/schema.json",
+  "$schema": "https://v2-10-12.turborepo.dev/schema.json",
   "globalEnv": ["CI", "NODE_ENV"],
   "globalPassThroughEnv": ["GITHUB_TOKEN", "NPM_TOKEN"],
   "tasks": {

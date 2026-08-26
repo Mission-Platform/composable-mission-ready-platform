@@ -5,16 +5,11 @@ description: 'Audit GitHub Actions workflow efficiency and recommend fixes to re
 
 # GitHub Actions Efficiency
 
-Use this skill as a lean entrypoint for GitHub Actions efficiency work. Inspect the repo, identify the waste source, and
-load only the reference material needed for the current task.
+Use this skill as a lean entrypoint for GitHub Actions efficiency work. Inspect the repo, identify the waste source, and load only the reference material needed for the current task.
 
-If no workflows exist yet, load [`references/actions.md`](./references/actions.md) and define a baseline before
-proceeding with the steps below.
+If no workflows exist yet, load [`references/actions.md`](./references/actions.md) and define a baseline before proceeding with the steps below.
 
-**If shell or `gh` CLI access is unavailable:** ask the user to paste `.github/workflows/` contents and
-`gh run list --limit 10` output. If only partial files are provided, note it: "Audit based on provided files only; some
-insights may be incomplete." Begin responses from files alone with: "**Static-only analysis** (not confirmed with live
-runs)."
+**If shell or `gh` CLI access is unavailable:** ask the user to paste `.github/workflows/` contents and `gh run list --limit 10` output. If only partial files are provided, note it: "Audit based on provided files only; some insights may be incomplete." Begin responses from files alone with: "**Static-only analysis** (not confirmed with live runs)."
 
 ## Use This Skill When
 
@@ -25,8 +20,7 @@ runs)."
 
 ## Load Only What You Need
 
-- [`references/actions.md`](./references/actions.md) — audits, job gating, matrix reduction, live validation, and
-  workflow-specific fixes.
+- [`references/actions.md`](./references/actions.md) — audits, job gating, matrix reduction, live validation, and workflow-specific fixes.
 - [`references/reporting.md`](./references/reporting.md) — when the user asks for a before/after efficiency report.
 - [`references/patterns.md`](./references/patterns.md) — full YAML examples when inline audit commands are not enough.
 
@@ -41,27 +35,21 @@ run_id=$(gh run list --limit 1 --json databaseId --jq '.[0].databaseId')
 gh run view "$run_id" --log-failed
 ```
 
-Look for: missing dependency caches, missing `concurrency` cancellation, over-broad triggers, duplicate workflow
-coverage, and expensive jobs that run on every change regardless of scope.
+Look for: missing dependency caches, missing `concurrency` cancellation, over-broad triggers, duplicate workflow coverage, and expensive jobs that run on every change regardless of scope.
 
 ### 2. Apply guardrails
 
 Check each proposed fix against these rules before recommending it:
 
 1. Does not hide required validation — drop any fix that removes release, schema, migration, or shared-library checks.
-2. Does not reduce parallelism without justification — drop unless the user prioritised cost over latency *and* the new
-   critical path stays within 1.25× the original.
+2. Does not reduce parallelism without justification — drop unless the user prioritised cost over latency *and* the new critical path stays within 1.25× the original.
 3. Preserves only documented matrix legs — drop matrix legs with no explicit version or platform commitment.
-4. Write-back jobs use opt-in triggers — flag (do not drop) formatter or bot jobs that run automatically; recommend an
-   opt-in trigger instead.
-5. Repo changes stay separate from org settings — split any fix that mixes repo-editable YAML with org-level or
-   GitHub-account settings into two distinct recommendations.
+4. Write-back jobs use opt-in triggers — flag (do not drop) formatter or bot jobs that run automatically; recommend an opt-in trigger instead.
+5. Repo changes stay separate from org settings — split any fix that mixes repo-editable YAML with org-level or GitHub-account settings into two distinct recommendations.
 
 ### 3. Select the top 3 fixes
 
-From the six candidates below, keep only those supported by audit evidence from step 1 *and* passing all guardrails from
-step 2. Rank survivors by estimated daily CI minutes saved (per-run savings × runs per day). Select all candidates that
-meet both criteria, up to a maximum of 3.
+From the six candidates below, keep only those supported by audit evidence from step 1 *and* passing all guardrails from step 2. Rank survivors by estimated daily CI minutes saved (per-run savings × runs per day). Select all candidates that meet both criteria, up to a maximum of 3.
 
 1. Add dependency caching with lockfile-based keys
 2. Add or correct `concurrency` cancellation
@@ -72,8 +60,7 @@ meet both criteria, up to a maximum of 3.
 
 ### 4. Verify
 
-- If `gh` CLI access is available, validate path-gating and concurrency cancellation with a live test push on a
-  non-protected branch.
+- If `gh` CLI access is available, validate path-gating and concurrency cancellation with a live test push on a non-protected branch.
 - If live validation is not possible, state that explicitly in the output.
 - Treat unexpected live behavior as a real bug even when the YAML looks correct.
 

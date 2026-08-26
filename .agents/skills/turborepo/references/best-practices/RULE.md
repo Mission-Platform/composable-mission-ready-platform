@@ -81,7 +81,8 @@ Export TypeScript directly; let the app's bundler compile it.
 }
 ```
 
-**Pros**: Zero build config, instant changes **Cons**: Can't cache builds, requires app bundler support
+**Pros**: Zero build config, instant changes
+**Cons**: Can't cache builds, requires app bundler support
 
 ### Compiled (Recommended for Libraries)
 
@@ -102,7 +103,8 @@ Package compiles itself with `tsc` or bundler.
 }
 ```
 
-**Pros**: Cacheable by Turborepo, works everywhere **Cons**: More configuration
+**Pros**: Cacheable by Turborepo, works everywhere
+**Cons**: More configuration
 
 ## Dependency Management
 

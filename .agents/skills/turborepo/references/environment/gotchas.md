@@ -4,8 +4,7 @@ Common mistakes and how to fix them.
 
 ## .env Files Must Be in `inputs`
 
-Turbo does NOT read `.env` files. Your framework (Next.js, Vite, etc.) or `dotenv` loads them. But Turbo needs to know
-when they change.
+Turbo does NOT read `.env` files. Your framework (Next.js, Vite, etc.) or `dotenv` loads them. But Turbo needs to know when they change.
 
 **Wrong:**
 
@@ -113,7 +112,7 @@ If you use `.env.development` and `.env.production`, both should be in inputs.
 
 ```json
 {
-  "$schema": "https://v2-10-8.turborepo.dev/schema.json",
+  "$schema": "https://v2-10-12.turborepo.dev/schema.json",
   "globalEnv": ["CI", "NODE_ENV", "VERCEL"],
   "globalPassThroughEnv": ["GITHUB_TOKEN", "VERCEL_URL"],
   "tasks": {
@@ -136,19 +135,18 @@ If you use `.env.development` and `.env.production`, both should be in inputs.
 
 This config:
 
-- Hashes DATABASE *URL and NEXT_PUBLIC*\* vars (except analytics)
+- Hashes DATABASE*URL and NEXT_PUBLIC*\* vars (except analytics)
 - Passes through SENTRY_AUTH_TOKEN without hashing
 - Includes all .env file variants in the hash
 - Makes CI tokens available globally
 
 ### With `futureFlags.globalConfiguration`
 
-The same config using the `global` key. The `.env` files move to `global.inputs`, which means they get folded into each
-task's hash individually rather than the global hash. This lets tasks exclude specific `.env` files if needed.
+The same config using the `global` key. The `.env` files move to `global.inputs`, which means they get folded into each task's hash individually rather than the global hash. This lets tasks exclude specific `.env` files if needed.
 
 ```json
 {
-  "$schema": "https://v2-10-8.turborepo.dev/schema.json",
+  "$schema": "https://v2-10-12.turborepo.dev/schema.json",
   "futureFlags": { "globalConfiguration": true },
   "global": {
     "env": ["CI", "NODE_ENV", "VERCEL"],
@@ -174,5 +172,4 @@ With this approach, a task that doesn't care about `.env.production` can exclude
 }
 ```
 
-This wouldn't have been possible with `globalDependencies`, where `.env.production` would be baked into the global hash
-and affect every task unconditionally.
+This wouldn't have been possible with `globalDependencies`, where `.env.production` would be baked into the global hash and affect every task unconditionally.

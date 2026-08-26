@@ -5,19 +5,17 @@ description: Cloudflare Workers CLI for deploying, developing, and managing Work
 
 # Wrangler CLI
 
-Your knowledge of Wrangler CLI flags, config fields, and subcommands may be outdated. **Prefer retrieval over
-pre-training** for any Wrangler task.
+Your knowledge of Wrangler CLI flags, config fields, and subcommands may be outdated. **Prefer retrieval over pre-training** for any Wrangler task.
 
 ## Retrieval Sources
 
-Fetch the **latest** information before writing or reviewing Wrangler commands and config. Do not rely on baked-in
-knowledge for CLI flags, config fields, or binding shapes.
+Fetch the **latest** information before writing or reviewing Wrangler commands and config. Do not rely on baked-in knowledge for CLI flags, config fields, or binding shapes.
 
-| Source                 | How to retrieve                                             | Use for                                       |
-|------------------------|-------------------------------------------------------------|-----------------------------------------------|
-| Wrangler docs          | `https://developers.cloudflare.com/workers/wrangler/`       | CLI commands, flags, config reference         |
-| Wrangler config schema | `node_modules/wrangler/config-schema.json`                  | Config fields, binding shapes, allowed values |
-| Cloudflare docs        | Search tool or `https://developers.cloudflare.com/workers/` | API reference, compatibility dates/flags      |
+| Source | How to retrieve | Use for |
+|--------|----------------|---------|
+| Wrangler docs | `https://developers.cloudflare.com/workers/wrangler/` | CLI commands, flags, config reference |
+| Wrangler config schema | `node_modules/wrangler/config-schema.json` | Config fields, binding shapes, allowed values |
+| Cloudflare docs | Search tool or `https://developers.cloudflare.com/workers/` | API reference, compatibility dates/flags |
 
 ## FIRST: Check if Wrangler is installed, and if not, install it
 
@@ -38,12 +36,10 @@ Wherever possible, you should use Wrangler instead of manually constructing API 
 ## Key Guidelines
 
 - **Use `wrangler.jsonc`**: Prefer JSON config over TOML. Newer features are JSON-only.
-- **Set `compatibility_date`**: Use a recent date (within 30 days).
-  Check https://developers.cloudflare.com/workers/configuration/compatibility-dates/
+- **Set `compatibility_date`**: Use a recent date (within 30 days). Check https://developers.cloudflare.com/workers/configuration/compatibility-dates/
 - **Generate types after config changes**: Run `wrangler types` to update TypeScript bindings.
 - **Local dev defaults to local storage**: Bindings use local simulation unless `remote: true`.
-- **Profile Worker startup**: Run `wrangler check startup` to measure startup time and detect scripts that exceed the
-  startup time limit.
+- **Profile Worker startup**: Run `wrangler check startup` to measure startup time and detect scripts that exceed the startup time limit.
 - **Use environments for staging/prod**: Define `env.staging` and `env.production` in config.
 
 ## Quick Start: New Worker
@@ -58,16 +54,16 @@ npx create-cloudflare@latest my-app
 
 ## Quick Reference: Core Commands
 
-| Task                        | Command                     |
-|-----------------------------|-----------------------------|
-| Start local dev server      | `wrangler dev`              |
-| Deploy to Cloudflare        | `wrangler deploy`           |
-| Deploy dry run              | `wrangler deploy --dry-run` |
-| Generate TypeScript types   | `wrangler types`            |
-| Profile Worker startup time | `wrangler check startup`    |
-| View live logs              | `wrangler tail`             |
-| Delete Worker               | `wrangler delete`           |
-| Auth status                 | `wrangler whoami`           |
+| Task | Command |
+|------|---------|
+| Start local dev server | `wrangler dev` |
+| Deploy to Cloudflare | `wrangler deploy` |
+| Deploy dry run | `wrangler deploy --dry-run` |
+| Generate TypeScript types | `wrangler types` |
+| Profile Worker startup time | `wrangler check startup` |
+| View live logs | `wrangler tail` |
+| Delete Worker | `wrangler delete` |
+| Auth status | `wrangler whoami` |
 
 ---
 
@@ -464,7 +460,7 @@ wrangler d1 export my-database --remote --output schema.sql --no-data
 wrangler vectorize create my-index --dimensions 768 --metric cosine
 
 # Create with preset (auto-configures dimensions/metric)
-wrangler vectorize create my-index --preset @cf/baai/bge-forge-en-v1.5
+wrangler vectorize create my-index --preset @cf/baai/bge-base-en-v1.5
 
 # List indexes
 wrangler vectorize list
@@ -859,7 +855,6 @@ npm install -D @cloudflare/vitest-pool-workers vitest
 ```
 
 `vitest.config.ts`:
-
 ```typescript
 import { defineWorkersConfig } from "@cloudflare/vitest-pool-workers/config";
 
@@ -890,14 +885,14 @@ curl http://localhost:8787/__scheduled
 
 ### Common Issues
 
-| Issue                           | Solution                                                                  |
-|---------------------------------|---------------------------------------------------------------------------|
-| `command not found: wrangler`   | Install: `npm install -D wrangler`                                        |
-| Auth errors                     | Run `wrangler login`                                                      |
-| Startup time limit exceeded     | Run `wrangler check startup` to profile startup and generate CPU profiles |
-| Type errors after config change | Run `wrangler types`                                                      |
-| Local storage not persisting    | Check `.wrangler/state` directory                                         |
-| Binding undefined in Worker     | Verify binding name matches config exactly                                |
+| Issue | Solution |
+|-------|----------|
+| `command not found: wrangler` | Install: `npm install -D wrangler` |
+| Auth errors | Run `wrangler login` |
+| Startup time limit exceeded | Run `wrangler check startup` to profile startup and generate CPU profiles |
+| Type errors after config change | Run `wrangler types` |
+| Local storage not persisting | Check `.wrangler/state` directory |
+| Binding undefined in Worker | Verify binding name matches config exactly |
 
 ### Debug Commands
 
@@ -924,6 +919,4 @@ wrangler docs configuration
 6. **Use `.dev.vars` for local secrets**: Never commit secrets to config.
 7. **Test locally first**: `wrangler dev` with local bindings before deploying.
 8. **Use `--dry-run` before major deploys**: Validate changes without deployment.
-9. **Never embed secrets in commands**: Use interactive prompts (`wrangler secret put`), file-based input
-   (`wrangler secret bulk`), or secure CI environment variables. Never echo, log, or pass secret values as CLI
-   arguments.
+9. **Never embed secrets in commands**: Use interactive prompts (`wrangler secret put`), file-based input (`wrangler secret bulk`), or secure CI environment variables. Never echo, log, or pass secret values as CLI arguments.
