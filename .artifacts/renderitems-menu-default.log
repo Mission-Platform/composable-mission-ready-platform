@@ -1,3 +1,0 @@
-$ node --experimental-strip-types scripts/runtime-validation/cli.ts framework -- --framework svelte --package @mission-platform/components --story molecules-navigation-forgemenu--default --workers 1 --timeout-ms 120000 --port 61250
-Manifest: /Users/rogan/Developer/sources/composable_mission_ready_platform/.artifacts/runtime-validation/runtime-validation.json
-Results: pass=1
