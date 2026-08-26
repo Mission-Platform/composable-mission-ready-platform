@@ -1,6 +1,9 @@
 {
   "extends": ["//"],
   "tasks": {
+    "build": {
+      "outputs": []
+    },
     "bench": {
       "cache": false,
       "env": [

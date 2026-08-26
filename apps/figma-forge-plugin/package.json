@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build:check": "vue-tsc --project tsconfig.app.json --noEmit",
-    "build": "pnpm --filter @mission-platform/forge-figma build:bundle && pnpm --filter @mission-platform/forge-figma build:types && pnpm --filter @mission-platform/forge-figma-bridge build && pnpm build:ui && pnpm build:main",
+    "build": "pnpm build:ui && pnpm build:main",
     "build:main": "vite build --mode main",
     "build:ui": "vite build --mode ui",
     "test": "vitest run",
