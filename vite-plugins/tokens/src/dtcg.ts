@@ -147,7 +147,7 @@ export function formatCssColor(value: DtcgColorValue): string {
 /** Format a token `$value` as a CSS/SCSS literal (colours rounded; arrays become comma-separated lists). */
 export function formatCssValue(value: unknown): string {
   if (isColorValue(value)) return formatCssColor(value);
-  if (Array.isArray(value)) return value.map(formatCssValue).join(', ');
+  if (Array.isArray(value)) return value.map((entry) => formatCssValue(entry)).join(', ');
   return String(value);
 }
 

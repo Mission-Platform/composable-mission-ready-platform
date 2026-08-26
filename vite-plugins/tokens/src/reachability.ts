@@ -1,25 +1,11 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { dashedName, flattenTokens, isAlias, type DtcgGroup, type TokenRecord } from './dtcg.js';
 import { buildTypographyRecords } from './generators/scss.js';
-import {
-  dashedName,
-  flattenTokens,
-  isAlias,
-  type DtcgGroup,
-  type TokenRecord,
-} from './dtcg.js';
 
 /** Evidence collected for one token leaf. */
-export type TokenUsageEvidence =
-  | 'css'
-  | 'scss'
-  | 'typescript'
-  | 'alias'
-  | 'override'
-  | 'mcp'
-  | 'docs'
-  | 'public-api';
+export type TokenUsageEvidence = 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
 
 /** Classification assigned by the conservative reachability audit. */
 export type TokenUsageStatus = 'active' | 'protected' | 'ambiguous' | 'candidate';
@@ -131,18 +117,24 @@ const SKIPPED_DIRECTORY_NAMES = new Set([
   'vendor',
 ]);
 
-const SCSS_DYNAMIC_USAGE = /(?:\$#\{|#\{\$[A-Za-z_][A-Za-z0-9_-]*\}|map\.(?:get|deep-get|keys|values)\s*\(|@each\s+\$[A-Za-z_][A-Za-z0-9_-]*)/;
+const SCSS_DYNAMIC_USAGE =
+  /(?:\$#\{|#\{\$[A-Za-z_][A-Za-z0-9_-]*\}|map\.(?:get|deep-get|keys|values)\s*\(|@each\s+\$[A-Za-z_][A-Za-z0-9_-]*)/;
 const SCSS_INTERPOLATED_NAME = /(?:--mp-|\$)[A-Za-z0-9_-]*#\{\$[A-Za-z_][A-Za-z0-9_-]*\}[A-Za-z0-9_-]*/g;
-const TYPESCRIPT_DYNAMIC_USAGE = /(?:keyof\s+typeof|Object\.(?:keys|entries|values)\s*\(|\b[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*\s*\[\s*(?:['"][^'"]+['"]|[A-Za-z_$][A-Za-z0-9_$]*)\s*\])/;
+const TYPESCRIPT_DYNAMIC_USAGE = [
+  /keyof\s+typeof/,
+  /Object\.(?:keys|entries|values)\s*\(/,
+  /\b[\w$]+(?:\.[\w$]+)*\s*\[\s*['"][^'"]+['"]\s*\]/,
+  /\b[\w$]+(?:\.[\w$]+)*\s*\[\s*[A-Za-z_$][A-Za-z0-9_$]*\s*\]/,
+];
 const TOKEN_CONTEXT = /(?:token|design[- ]?tokens?|var\(--mp-|component\.|palette\.|typography\.|spacing\.|font\.)/i;
 
-const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapeRegExp = (value: string): string => value.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
 
 function readJson(filePath: string): DtcgGroup {
   return JSON.parse(readFileSync(filePath, 'utf8')) as DtcgGroup;
 }
 
-function sourceFiles(tokensDir: string): string[] {
+function sourceFiles(tokensDirectory: string): string[] {
   const files: string[] = [];
   const visit = (directory: string): void => {
     if (!existsSync(directory)) return;
@@ -154,7 +146,7 @@ function sourceFiles(tokensDir: string): string[] {
       else if (entry.isFile() && entry.name.endsWith('.tokens.json')) files.push(filePath);
     }
   };
-  visit(tokensDir);
+  visit(tokensDirectory);
   return files;
 }
 
@@ -164,10 +156,13 @@ function sourceNamespace(document: DtcgGroup): string | undefined {
   return Object.keys(component as DtcgGroup).find((key) => !key.startsWith('$'));
 }
 
-function discoverSources(tokensDir: string): SourceDocument[] {
+function discoverSources(tokensDirectory: string): SourceDocument[] {
   const byId = new Map<string, SourceDocument>();
-  for (const filePath of sourceFiles(tokensDir)) {
-    const sourceId = path.relative(tokensDir, filePath).replaceAll(path.sep, '/').replace(/\.tokens\.json$/, '');
+  for (const filePath of sourceFiles(tokensDirectory)) {
+    const sourceId = path
+      .relative(tokensDirectory, filePath)
+      .replaceAll(path.sep, '/')
+      .replace(/\.tokens\.json$/, '');
     // The monolith is a parity baseline, not another generated source owner.
     if (sourceId === 'component') continue;
     const document = readJson(filePath);
@@ -178,7 +173,12 @@ function discoverSources(tokensDir: string): SourceDocument[] {
         : sourceId === 'theme-light' || sourceId === 'theme-dark'
           ? 'theme'
           : 'structural';
-    byId.set(sourceId, { sourceId, document, kind, namespace: kind === 'component' ? sourceNamespace(document) : undefined });
+    byId.set(sourceId, {
+      sourceId,
+      document,
+      kind,
+      namespace: kind === 'component' ? sourceNamespace(document) : undefined,
+    });
   }
   // Keep fixtures useful when they intentionally contain only a subset of fixed files.
   return [...byId.values()].toSorted((a, b) => a.sourceId.localeCompare(b.sourceId));
@@ -189,8 +189,8 @@ function aliasesIn(value: unknown): string[] {
     const matches = [...value.matchAll(/\{([A-Za-z0-9_.-]+)\}/g)].map((match) => `{${match[1]}}`);
     return matches.length > 0 ? matches : isAlias(value) ? [value] : [];
   }
-  if (Array.isArray(value)) return value.flatMap(aliasesIn);
-  if (typeof value === 'object' && value !== null) return Object.values(value).flatMap(aliasesIn);
+  if (Array.isArray(value)) return value.flatMap((entry) => aliasesIn(entry));
+  if (typeof value === 'object' && value !== null) return Object.values(value).flatMap((entry) => aliasesIn(entry));
   return [];
 }
 
@@ -215,7 +215,7 @@ function indexedTokens(sources: SourceDocument[], prefix: string): IndexedToken[
       const projected = projectedName(source, record);
       const [namespace, variant, field] = record.path;
       const rawRecord = rawTypography?.get(`${namespace}.${variant}`);
-      const rawField = field?.replace(/-([a-z])/g, (_, character: string) => character.toUpperCase());
+      const rawField = field?.replaceAll(/-([a-z])/g, (_, character: string) => character.toUpperCase());
       return {
         source,
         path: stablePath,
@@ -249,12 +249,13 @@ function pathPattern(path_: string): RegExp {
 function sourceObjectName(source: SourceDocument): string | undefined {
   if (source.kind === 'component') return source.namespace;
   const sourceName = source.sourceId.split('/').at(-1);
-  return sourceName?.replace(/-([a-z])/g, (_, character: string) => character.toUpperCase());
+  return sourceName?.replaceAll(/-([a-z])/g, (_, character: string) => character.toUpperCase());
 }
 
 function hasTypeScriptAccess(text: string, token: IndexedToken): boolean {
   const sourceName = sourceObjectName(token.source);
-  const paths = sourceName && !token.path.startsWith(`${sourceName}.`) ? [`${sourceName}.${token.path}`, token.path] : [token.path];
+  const paths =
+    sourceName && !token.path.startsWith(`${sourceName}.`) ? [`${sourceName}.${token.path}`, token.path] : [token.path];
   if (paths.some((tokenPath) => pathPattern(tokenPath).test(text))) return true;
   const tokenPath = paths[0];
   const segments = tokenPath.split('.');
@@ -277,16 +278,18 @@ function dynamicBranchMatches(text: string, token: IndexedToken): boolean {
     text.includes(token.generatedNames[0]) ||
     text.includes(token.generatedNames[1]) ||
     pathPattern(token.path).test(text)
-  ) return false;
+  )
+    return false;
   const sourceName = sourceObjectName(token.source);
-  const qualifiedPath = sourceName && !token.path.startsWith(`${sourceName}.`) ? `${sourceName}.${token.path}` : token.path;
+  const qualifiedPath =
+    sourceName && !token.path.startsWith(`${sourceName}.`) ? `${sourceName}.${token.path}` : token.path;
   const segments = qualifiedPath.split('.');
   let longestPath = '';
   for (let index = 1; index <= segments.length; index += 1) {
     const branch = segments.slice(0, index).join('.');
     const escapedBranch = escapeRegExp(branch);
     const branchAccess = new RegExp(
-      `(?:keyof\\s+typeof\\s+|Object\\.(?:keys|entries|values)\\s*\\(\\s*)${escapedBranch}(?![A-Za-z0-9_.-])|${escapedBranch}\\s*\\[`,
+      String.raw`(?:keyof\s+typeof\s+|Object\.(?:keys|entries|values)\s*\(\s*)${escapedBranch}(?![A-Za-z0-9_.-])|${escapedBranch}\s*\[`,
     );
     if (text.includes(branch) && branchAccess.test(text)) longestPath = branch;
   }
@@ -306,14 +309,14 @@ function hasDynamicUsage(text: string, filePath: string): boolean {
   const extension = path.extname(filePath).toLowerCase();
   if (extension === '.scss' || extension === '.sass') return SCSS_DYNAMIC_USAGE.test(text);
   if (['.ts', '.tsx', '.js', '.jsx', '.vue', '.svelte'].includes(extension)) {
-    return TYPESCRIPT_DYNAMIC_USAGE.test(text);
+    return TYPESCRIPT_DYNAMIC_USAGE.some((pattern) => pattern.test(text));
   }
   return false;
 }
 
-function shouldSkip(filePath: string, tokensDir: string, reportFile: string): boolean {
+function shouldSkip(filePath: string, tokensDirectory: string, reportFile: string): boolean {
   const normalized = filePath.replaceAll(path.sep, '/');
-  const normalizedTokens = tokensDir.replaceAll(path.sep, '/').replace(/\/$/, '');
+  const normalizedTokens = tokensDirectory.replaceAll(path.sep, '/').replace(/\/$/, '');
   const baseName = path.basename(filePath);
   return (
     normalized === reportFile.replaceAll(path.sep, '/') ||
@@ -326,7 +329,7 @@ function shouldSkip(filePath: string, tokensDir: string, reportFile: string): bo
   );
 }
 
-function consumerFiles(root: string, tokensDir: string, reportFile: string): string[] {
+function consumerFiles(root: string, tokensDirectory: string, reportFile: string): string[] {
   const files: string[] = [];
   const visit = (directory: string): void => {
     if (!existsSync(directory)) return;
@@ -335,11 +338,11 @@ function consumerFiles(root: string, tokensDir: string, reportFile: string): str
     )) {
       const filePath = path.join(directory, entry.name);
       if (entry.isDirectory()) {
-        if (!shouldSkip(filePath, tokensDir, reportFile)) visit(filePath);
+        if (!shouldSkip(filePath, tokensDirectory, reportFile)) visit(filePath);
       } else if (
         entry.isFile() &&
         CONSUMER_EXTENSIONS.has(path.extname(entry.name).toLowerCase()) &&
-        !shouldSkip(filePath, tokensDir, reportFile)
+        !shouldSkip(filePath, tokensDirectory, reportFile)
       ) {
         files.push(filePath);
       }
@@ -349,11 +352,20 @@ function consumerFiles(root: string, tokensDir: string, reportFile: string): str
   return files;
 }
 
-function usageForOverrideDocument(document: DtcgGroup, tokens: IndexedToken[], usages: Map<IndexedToken, MutableUsage>): void {
+function usageForOverrideDocument(
+  document: DtcgGroup,
+  tokens: IndexedToken[],
+  usages: Map<IndexedToken, MutableUsage>,
+): void {
   for (const override of flattenTokens(document)) {
     const overridePath = override.path.join('.');
     for (const token of tokens.filter(({ path: tokenPath }) => tokenPath === overridePath)) {
-      addEvidence(usages.get(token) as MutableUsage, 'override', 'Referenced by a repository runtime override document.', 'protected');
+      addEvidence(
+        usages.get(token) as MutableUsage,
+        'override',
+        'Referenced by a repository runtime override document.',
+        'protected',
+      );
     }
   }
 }
@@ -379,7 +391,8 @@ function buildTokenIndexes(tokens: IndexedToken[]): TokenIndexes {
     for (const generatedName of token.generatedNames) add(indexes.byGeneratedName, generatedName, token);
     add(indexes.byPath, token.path, token);
     add(indexes.bySource, token.source.sourceId, token);
-    if (token.source.kind === 'component' && token.source.namespace) add(indexes.byComponentNamespace, token.source.namespace, token);
+    if (token.source.kind === 'component' && token.source.namespace)
+      add(indexes.byComponentNamespace, token.source.namespace, token);
   }
   return indexes;
 }
@@ -446,10 +459,11 @@ function matchingTokens(
   const isMcp = normalized.includes('/mcp/');
   const isPublicApi = normalized.endsWith('/packages/tokens/src/tokens.ts');
   const isOverride = normalized.includes('/overrides') || normalized.includes('/design-tokens/');
-  const isDocs = ['.md', '.mdx'].includes(path.extname(filePath).toLowerCase());
+  const isDocumentation = ['.md', '.mdx'].includes(path.extname(filePath).toLowerCase());
   const isTypeScript = ['.ts', '.tsx', '.js', '.jsx', '.vue', '.svelte'].includes(path.extname(filePath).toLowerCase());
   if (isTypeScript) {
-    const indexedAccess = /(?<object>[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*)\s*\[\s*(?:(?<quote>['"])(?<quotedKey>[^'"]+)\k<quote>|(?<numericKey>\d+))\s*\]/g;
+    const indexedAccess =
+      /(?<object>[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*)\s*\[\s*(?:(?<quote>['"])(?<quotedKey>[^'"]+)\k<quote>|(?<numericKey>\d+))\s*\]/g;
     for (const access of text.matchAll(indexedAccess)) {
       const objectPath = access.groups?.object;
       const key = access.groups?.quotedKey ?? access.groups?.numericKey;
@@ -466,7 +480,7 @@ function matchingTokens(
   if (isPublicApi) {
     for (const token of tokens) if (publicApiContractMatch(text, token)) matches.add(token);
   }
-  if (isDocs) {
+  if (isDocumentation) {
     for (const match of text.matchAll(/component\.([A-Za-z0-9-]+)/g)) {
       for (const token of indexes.byComponentNamespace.get(match[1]) ?? []) matches.add(token);
     }
@@ -497,7 +511,10 @@ function scanConsumers(
   tokens: IndexedToken[],
   usages: Map<IndexedToken, MutableUsage>,
 ): void {
-  const reportFile = path.join(options.repositoryRoot, 'vite-plugins/tokens/src/fixtures/token-reachability.report.json');
+  const reportFile = path.join(
+    options.repositoryRoot,
+    'vite-plugins/tokens/src/fixtures/token-reachability.report.json',
+  );
   const indexes = buildTokenIndexes(tokens);
   const roots = options.consumerRoots ?? [options.repositoryRoot];
   for (const root of roots.toSorted()) {
@@ -510,9 +527,10 @@ function scanConsumers(
       const isOverride = normalized.includes('/overrides') || normalized.includes('/design-tokens/');
       if (!isMcp && !isPublicApi && !isOverride && !text.includes('--mp-') && !TOKEN_CONTEXT.test(text)) continue;
       const isScss = extension === '.scss' || extension === '.sass';
-      const isCss = isScss || extension === '.css' || extension === '.vue' || extension === '.svelte' || extension === '.astro';
+      const isCss =
+        isScss || extension === '.css' || extension === '.vue' || extension === '.svelte' || extension === '.astro';
       const isTypeScript = ['.ts', '.tsx', '.js', '.jsx', '.vue', '.svelte'].includes(extension);
-      const isDocs = extension === '.md' || extension === '.mdx';
+      const isDocumentation = extension === '.md' || extension === '.mdx';
       const dynamic = hasDynamicUsage(text, filePath) && TOKEN_CONTEXT.test(text);
 
       for (const token of matchingTokens(text, filePath, tokens, indexes, usages)) {
@@ -520,7 +538,8 @@ function scanConsumers(
         const generatedMatch = text.includes(token.generatedNames[0]);
         const scssMatch = isScss && text.includes(token.generatedNames[1]);
         const pathMatch = isTypeScript ? hasTypeScriptAccess(text, token) : pathPattern(token.path).test(text);
-        if (generatedMatch && isCss) addEvidence(usage, 'css', `Uses generated CSS custom property ${token.generatedNames[0]}.`, 'direct');
+        if (generatedMatch && isCss)
+          addEvidence(usage, 'css', `Uses generated CSS custom property ${token.generatedNames[0]}.`, 'direct');
         if (scssMatch) addEvidence(usage, 'scss', `Uses generated SCSS variable ${token.generatedNames[1]}.`, 'direct');
         if (pathMatch) {
           const evidence: TokenUsageEvidence = isMcp
@@ -529,29 +548,51 @@ function scanConsumers(
               ? 'public-api'
               : isOverride
                 ? 'override'
-                : isDocs
+                : isDocumentation
                   ? 'docs'
                   : isTypeScript
                     ? 'typescript'
                     : 'css';
-          const status = evidence === 'docs' || evidence === 'override' || evidence === 'public-api' || evidence === 'mcp' ? 'protected' : 'direct';
+          const status =
+            evidence === 'docs' || evidence === 'override' || evidence === 'public-api' || evidence === 'mcp'
+              ? 'protected'
+              : 'direct';
           addEvidence(usage, evidence, `References stable DTCG path ${token.path}.`, status);
         }
 
         // The component reference describes a contract branch, not only the line
         // containing one leaf. Protect every descendant of a documented layer.
-        if (isDocs && token.path.startsWith('component.') && text.includes(`component.${token.path.split('.')[1]}`)) {
-          addEvidence(usage, 'docs', `Documented component contract branch component.${token.path.split('.')[1]}.`, 'protected');
+        if (
+          isDocumentation &&
+          token.path.startsWith('component.') &&
+          text.includes(`component.${token.path.split('.')[1]}`)
+        ) {
+          addEvidence(
+            usage,
+            'docs',
+            `Documented component contract branch component.${token.path.split('.')[1]}.`,
+            'protected',
+          );
         }
 
         if (isPublicApi && publicApiContractMatch(text, token) && token.source.kind !== 'theme') {
-          addEvidence(usage, 'public-api', 'An explicit package API contract references this token branch.', 'protected');
+          addEvidence(
+            usage,
+            'public-api',
+            'An explicit package API contract references this token branch.',
+            'protected',
+          );
         }
         if (isMcp && mcpContractMatch(text, token)) {
           addEvidence(usage, 'mcp', 'An explicit MCP source/category selector exposes this token branch.', 'protected');
         }
         if (dynamic && !(generatedMatch || scssMatch || pathMatch) && dynamicBranchMatches(text, token)) {
-          addEvidence(usage, isScss ? 'scss' : 'typescript', `Dynamic access protects the ${token.source.sourceId} branch.`, 'ambiguous');
+          addEvidence(
+            usage,
+            isScss ? 'scss' : 'typescript',
+            `Dynamic access protects the ${token.source.sourceId} branch.`,
+            'ambiguous',
+          );
         }
       }
     }
@@ -567,7 +608,8 @@ function aliasesForToken(
     const targetPath = alias.slice(1, -1);
     const direct = byPath.get(targetPath) ?? compositeTargets.get(targetPath) ?? [];
     if (token.source.kind === 'theme') return direct.filter(({ source }) => source.sourceId === 'palette');
-    if (token.source.kind === 'typography') return direct.filter(({ source }) => source.sourceId === 'font' || source.sourceId === 'spacing');
+    if (token.source.kind === 'typography')
+      return direct.filter(({ source }) => source.sourceId === 'font' || source.sourceId === 'spacing');
     if (token.source.kind === 'component') {
       return direct.filter(({ source }) => source.kind !== 'theme' || source.sourceId === 'theme-light');
     }
@@ -580,13 +622,18 @@ export function collectTokenReachability(options: TokenReachabilityOptions): Tok
   const prefix = options.prefix ?? 'mp';
   const sources = discoverSources(options.tokensDir);
   const tokens = indexedTokens(sources, prefix);
-  const usages = new Map<IndexedToken, MutableUsage>(tokens.map((token) => [token, {
-    evidence: new Set<TokenUsageEvidence>(),
-    reasons: new Set<string>(),
-    direct: false,
-    protected: false,
-    ambiguous: false,
-  }]));
+  const usages = new Map<IndexedToken, MutableUsage>(
+    tokens.map((token) => [
+      token,
+      {
+        evidence: new Set<TokenUsageEvidence>(),
+        reasons: new Set<string>(),
+        direct: false,
+        protected: false,
+        ambiguous: false,
+      },
+    ]),
+  );
   if (options.scanConsumers !== false) scanConsumers(options, tokens, usages);
 
   const byPath = new Map<string, IndexedToken[]>();
@@ -709,7 +756,9 @@ export function collectTokenReachability(options: TokenReachabilityOptions): Tok
     version: 1,
     prefix,
     sources: sources.map(({ sourceId }) => sourceId).toSorted(),
-    aliases: aliases.toSorted((a, b) => `${a.sourceId}:${a.from}:${a.to}`.localeCompare(`${b.sourceId}:${b.from}:${b.to}`)),
+    aliases: aliases.toSorted((a, b) =>
+      `${a.sourceId}:${a.from}:${a.to}`.localeCompare(`${b.sourceId}:${b.from}:${b.to}`),
+    ),
     tokens: reportTokens,
     summary,
   };

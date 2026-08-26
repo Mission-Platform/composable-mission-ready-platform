@@ -16,8 +16,8 @@ function temporaryRepository(): { root: string; tokens: string } {
   return { root, tokens };
 }
 
-function writeSource(tokensDir: string, sourceId: string, document: Record<string, unknown>): void {
-  const filePath = path.join(tokensDir, `${sourceId}.tokens.json`);
+function writeSource(tokensDirectory: string, sourceId: string, document: Record<string, unknown>): void {
+  const filePath = path.join(tokensDirectory, `${sourceId}.tokens.json`);
   mkdirSync(path.dirname(filePath), { recursive: true });
   writeFileSync(filePath, JSON.stringify(document));
 }
@@ -371,14 +371,14 @@ describe('collectTokenReachability', () => {
 
   it('matches the checked-in repository reachability report', () => {
     const repositoryRoot = path.resolve(import.meta.dirname, '../../..');
-    const tokensDir = path.join(repositoryRoot, 'packages/tokens/tokens');
+    const tokensDirectory = path.join(repositoryRoot, 'packages/tokens/tokens');
     const reportPath = path.join(import.meta.dirname, 'fixtures/token-reachability.report.json');
     const consumerRootNames = (process.env.TOKEN_REACHABILITY_ROOTS ?? 'apps,docs,mcp,packages,vite-plugins').split(
       ',',
     );
     const report = collectTokenReachability({
       repositoryRoot,
-      tokensDir,
+      tokensDir: tokensDirectory,
       consumerRoots: consumerRootNames.map((root) => path.join(repositoryRoot, root)),
       scanConsumers: process.env.TOKEN_REACHABILITY_GRAPH_ONLY !== '1',
     });

@@ -94,7 +94,10 @@ describe('split component token sources', () => {
     const manifest = readJson<ComponentSourceManifest>(manifestPath);
     const files = sourceFiles(componentDirectory);
     const sourceDocuments = files.map((filePath) => ({
-      sourceId: path.relative(componentDirectory, filePath).replaceAll(path.sep, '/').replace(/\.tokens\.json$/, ''),
+      sourceId: path
+        .relative(componentDirectory, filePath)
+        .replaceAll(path.sep, '/')
+        .replace(/\.tokens\.json$/, ''),
       document: readJson<DtcgGroup>(filePath),
     }));
     const namespaces = sourceDocuments.flatMap(({ document }) => sourceNamespaces(document));
@@ -104,12 +107,14 @@ describe('split component token sources', () => {
       path.relative(componentDirectory, filePath).replaceAll(path.sep, '/'),
     );
 
-    expect(manifest.inventory).toEqual(expect.objectContaining({
-      componentTsxSources: 249,
-      colocatedStories: 246,
-      cssModules: 219,
-      packages: 20,
-    }));
+    expect(manifest.inventory).toEqual(
+      expect.objectContaining({
+        componentTsxSources: 249,
+        colocatedStories: 246,
+        cssModules: 219,
+        packages: 20,
+      }),
+    );
     expect(files).toHaveLength(manifest.sources.length);
     expect(sourceDocuments.every(({ document }) => sourceNamespaces(document).length === 1)).toBe(true);
     expect([...discoveredFiles].toSorted()).toEqual([...manifestFiles].toSorted());
