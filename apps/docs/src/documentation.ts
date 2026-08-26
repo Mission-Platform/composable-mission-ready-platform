@@ -2,8 +2,8 @@
 // monorepo at build time. The English trees remain the source of truth for the
 // slug inventory; incomplete translations fall back to their owning English page.
 
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type DocumentationLocale } from './i18n';
 import { parseDocumentationModulePath, qualifiedSlug, type DocumentationSourceRoot } from './documentation-sources';
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type DocumentationLocale } from './i18n';
 
 const rawModules = import.meta.glob(
   [
@@ -270,8 +270,10 @@ function buildNavGroups(): NavGroup[] {
     group.items.push(entry.slug);
     packageGroups.set(key, group);
   }
-  const packageSlugs = [...packageGroups.values()].flatMap((group) => group.items);
-  for (const [routePrefix, packageGroup] of [...packageGroups.entries()].toSorted(([left], [right]) => left.localeCompare(right))) {
+  const packageSlugs = new Set([...packageGroups.values()].flatMap((group) => group.items));
+  for (const [routePrefix, packageGroup] of [...packageGroups.entries()].toSorted(([left], [right]) =>
+    left.localeCompare(right),
+  )) {
     groups.push({
       key: 'packages',
       label: packageGroup.packageName ?? routePrefix,
@@ -281,7 +283,7 @@ function buildNavGroups(): NavGroup[] {
   }
 
   const leftovers = Object.keys(documents)
-    .filter((slug) => !packageSlugs.includes(slug))
+    .filter((slug) => !packageSlugs.has(slug))
     .filter((slug) => !seen.has(slug))
     .toSorted();
   if (leftovers.length > 0) {

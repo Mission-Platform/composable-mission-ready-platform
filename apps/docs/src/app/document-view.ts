@@ -1,9 +1,11 @@
-import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
 
+import { useMarkdown } from '../composables/use-markdown';
 import { descriptionForSlug, documentationSourceRoots, getDocument, titleForSlug } from '../documentation';
 import { resolveDocumentationLocale } from '../i18n';
-import { useMarkdown } from '../composables/use-markdown';
+
 import { createElement } from './dom';
+
+import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
 
 function slugFromRoute(route: MpResolvedLocation): string {
   const value = route.params.slug;

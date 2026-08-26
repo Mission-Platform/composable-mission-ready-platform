@@ -1,8 +1,8 @@
 import { marked, type Tokens } from 'marked';
 
 import { documentPath } from '../documentation';
-import { DEFAULT_LOCALE, type DocumentationLocale } from '../i18n';
 import { docsDirectoryForRoot, qualifiedSlug, type DocumentationSourceRoot } from '../documentation-sources';
+import { DEFAULT_LOCALE, type DocumentationLocale } from '../i18n';
 
 /** A single entry in a document's table of contents. */
 export interface TocItem {
@@ -53,7 +53,8 @@ export function resolveInternalHref(
     const root = context.currentRoot;
     const localSlug = root.routePrefix === '' ? currentSlug : currentSlug.slice(`${root.routePrefix}/`.length);
     const currentFile = [...docsDirectoryForRoot(root).split('/'), ...localSlug.split('/')];
-    currentFile[currentFile.length - 1] = `${currentFile[currentFile.length - 1]}.md`;
+    const currentFileName = currentFile.pop();
+    if (currentFileName !== undefined) currentFile.push(`${currentFileName}.md`);
     const targetPath = normalizeSegments([
       ...currentFile.slice(0, -1),
       ...pathSegments(pathPart.replace(/\.md$/i, '').split('/')),

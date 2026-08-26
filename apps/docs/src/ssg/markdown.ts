@@ -3,11 +3,12 @@
  * the browser runtime. Mirrors the heading-id / internal-link rules from
  * `use-markdown` + ForgeMarkdown so static HTML matches client content closely.
  */
-import { marked, type Tokens } from 'marked';
 import hljs from 'highlight.js';
+import { marked, type Tokens } from 'marked';
+
+import { docsDirectoryForRoot, qualifiedSlug, type DocumentationSourceRoot } from '../documentation-sources.ts';
 
 import { DEFAULT_LOCALE, documentPath, type DocumentationLocale } from './site-constants.ts';
-import { docsDirectoryForRoot, qualifiedSlug, type DocumentationSourceRoot } from '../documentation-sources.ts';
 
 export interface TocItem {
   id: string;
@@ -98,7 +99,7 @@ export function resolveInternalHref(
     const root = context.currentRoot;
     const localSlug = root.routePrefix === '' ? currentSlug : currentSlug.slice(`${root.routePrefix}/`.length);
     const currentFile = [...docsDirectoryForRoot(root).split('/'), ...localSlug.split('/')];
-    currentFile[currentFile.length - 1] = `${currentFile[currentFile.length - 1]}.md`;
+    currentFile[currentFile.length - 1] = `${currentFile.at(-1)}.md`;
     const target = [...currentFile.slice(0, -1), ...pathSegments(pathPart.replace(/\.md$/i, '').split('/'))];
     const targetPath = normalizeSegments(target);
     const owner = context.roots.find((candidate) => {

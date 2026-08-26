@@ -1,12 +1,13 @@
-import type { MpResolvedLocation } from '@mission-platform/router';
 
 import { descriptionForSlug, getDocument, titleForSlug } from '../documentation';
 import { resolveDocumentationLocale } from '../i18n';
 import { applyDocsRouteSeo, buildDocumentSeo, buildSearchSeo } from '../ssg/seo';
 
+import type { MpResolvedLocation } from '@mission-platform/router';
+
 function slugFromRoute(route: MpResolvedLocation): string {
   const value = route.params.slug;
-  return Array.isArray(value) ? value.join('/') : value ?? 'overview';
+  return Array.isArray(value) ? value.join('/') : (value ?? 'overview');
 }
 
 /** Update document head metadata from the active docs route. */
@@ -28,9 +29,7 @@ export function updateRouteMetadata(route: MpResolvedLocation): void {
       locale,
       slug,
       title: documentRecord ? titleForSlug(slug, locale) : 'Page not found',
-      description: documentRecord
-        ? descriptionForSlug(slug, locale)
-        : `No documentation exists for “${slug}”.`,
+      description: documentRecord ? descriptionForSlug(slug, locale) : `No documentation exists for “${slug}”.`,
       exists: Boolean(documentRecord),
     }),
   );

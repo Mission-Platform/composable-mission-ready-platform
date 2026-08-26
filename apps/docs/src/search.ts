@@ -130,7 +130,7 @@ function slugify(text: string): string {
 function tokenize(text: string): string[] {
   const matches = text.toLocaleLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
   return matches.flatMap((token) => {
-    if (/[\u3400-\u9fff]/u.test(token)) {
+    if (/[\u3400-\u9FFF]/u.test(token)) {
       // Han-script text has no word boundaries. Indexing each character keeps
       // short queries such as `文档` useful inside a contiguous sentence.
       return [...token].filter((character) => character.length >= MIN_TOKEN_LENGTH);

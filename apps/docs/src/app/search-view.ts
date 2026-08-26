@@ -1,9 +1,11 @@
-import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
 
 import { documentPath, titleForSlug } from '../documentation';
 import { createDocumentationI18n, resolveDocumentationLocale } from '../i18n';
 import { search } from '../search';
+
 import { createElement } from './dom';
+
+import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
 
 export class DocsSearchElement extends HTMLElement {
   private router?: MpRouterAdapter;

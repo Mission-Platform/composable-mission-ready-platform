@@ -6,7 +6,6 @@
 // Import pure builders only via package subpaths. Avoid the package root entry
 // (it also exports the Vue `useSeo` composable) so the docs client stays free of
 // Vue / `@unhead/vue` peer dependencies.
-import { buildPageMeta } from '@mission-platform/seo/meta';
 import {
   breadcrumbList,
   organization,
@@ -15,6 +14,8 @@ import {
   webSite,
   webSiteId,
 } from '@mission-platform/seo/json-ld';
+import { buildPageMeta } from '@mission-platform/seo/meta';
+
 import {
   alternatesForSearch,
   alternatesForSlug,
@@ -118,9 +119,14 @@ function toGraph(nodes: readonly JsonLd[]): Record<string, unknown> {
   };
 }
 
-function pushMeta(tags: SeoMetaTag[], key: SeoMetaTag['key'], attr: string, content: string | number | undefined): void {
+function pushMeta(
+  tags: SeoMetaTag[],
+  key: SeoMetaTag['key'],
+  attribute: string,
+  content: string | number | undefined,
+): void {
   if (content === undefined || content === null || content === '') return;
-  tags.push({ key, attr, content: String(content) });
+  tags.push({ key, attr: attribute, content: String(content) });
 }
 
 /** Local Open Graph + Twitter builder (same contract as `@mission-platform/seo` `buildOpenGraph`). */
@@ -234,9 +240,9 @@ export function applyDocsRouteSeo(seo: DocsRouteSeo): void {
   document.documentElement.dir = seo.direction;
 
   const managed = 'data-docs-seo';
-  document.head.querySelectorAll(`meta[${managed}], link[${managed}], script[${managed}]`).forEach((element) => {
+  for (const element of document.head.querySelectorAll(`meta[${managed}], link[${managed}], script[${managed}]`)) {
     element.remove();
-  });
+  }
 
   // Keep a single charset/viewport if the host HTML already provided them.
   for (const tag of seo.metaTags) {
@@ -289,4 +295,3 @@ export function buildSearchSeo(locale: DocumentationLocale = DEFAULT_LOCALE): Do
     description: SITE_DESCRIPTION,
   });
 }
-

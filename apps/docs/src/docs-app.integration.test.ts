@@ -1,14 +1,13 @@
 // @vitest-environment jsdom
 
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-
 import { createMemoryHistory, registerRouterElements } from '@mission-platform/forge-router-web-components/runtime';
-
-import type { MpRouterAdapter } from '@mission-platform/router';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import './app/app-shell';
 import { updateRouteMetadata } from './app/metadata';
 import { createDocsRouter } from './app/router';
+
+import type { MpRouterAdapter } from '@mission-platform/router';
 
 interface DocsShell extends HTMLElement {
   setRouter(router: MpRouterAdapter): void;
@@ -17,17 +16,17 @@ interface DocsShell extends HTMLElement {
 const mountedRouters: MpRouterAdapter[] = [];
 
 beforeAll(() => {
-  window.scrollTo = (() => undefined) as typeof window.scrollTo;
-  window.matchMedia = ((query: string) => ({
+  window.scrollTo = (() => {}) as typeof globalThis.scrollTo;
+  globalThis.matchMedia = ((query: string) => ({
     matches: false,
     media: query,
     onchange: null,
-    addEventListener: () => undefined,
-    removeEventListener: () => undefined,
-    addListener: () => undefined,
-    removeListener: () => undefined,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
     dispatchEvent: () => false,
-  })) as typeof window.matchMedia;
+  })) as typeof globalThis.matchMedia;
 });
 
 beforeAll(async () => {
@@ -156,7 +155,7 @@ describe('docs Web Components application', () => {
 
     expect(router.current.value?.name).toBe('localized-doc');
     expect(router.current.value?.params).toEqual({ locale: 'fr', slug: 'configs/index' });
-    expect(shell.querySelector('docs-document-view')?.getAttribute('data-locale')).toBe('fr');
+    expect(shell.querySelector('docs-document-view')?.dataset.locale).toBe('fr');
     expect(shell.querySelector('docs-document-view')?.textContent).toContain('Résumé du package');
     expect(document.documentElement.lang).toBe('fr-FR');
     expect(document.title).toContain('Paquets de configuration');
@@ -273,15 +272,15 @@ describe('docs Web Components application', () => {
     updateRouteMetadata(router.current.value!);
 
     const search = shell.querySelector('docs-search-view');
-    expect(search?.getAttribute('data-locale')).toBe('fr');
-    expect(search?.getAttribute('data-query')).toBe('composable');
+    expect(search?.dataset.locale).toBe('fr');
+    expect(search?.dataset.query).toBe('composable');
     expect(search === null ? '' : renderedTextContent(search)).toContain('composable');
     expect(document.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe('noindex,follow');
 
     await router.push('/fr/overview');
     updateRouteMetadata(router.current.value!);
     expect(router.current.value?.path).toBe('/fr/overview');
-    expect(shell.querySelector('docs-document-view')?.getAttribute('data-locale')).toBe('fr');
+    expect(shell.querySelector('docs-document-view')?.dataset.locale).toBe('fr');
   });
 
   it('uses router-link events for in-app navigation and updates RTL routes', async () => {
@@ -296,7 +295,7 @@ describe('docs Web Components application', () => {
 
     await router.push('/he/configs/index');
     updateRouteMetadata(router.current.value!);
-    expect(shell.querySelector('docs-document-view')?.getAttribute('data-slug')).toBe('configs/index');
+    expect(shell.querySelector('docs-document-view')?.dataset.slug).toBe('configs/index');
     expect(document.documentElement.dir).toBe('rtl');
   });
 });

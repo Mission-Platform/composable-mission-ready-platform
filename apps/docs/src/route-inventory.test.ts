@@ -2,6 +2,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { documentationSourceRoots, documents } from './documentation';
+import { parseDocumentationModulePath, parseWorkspaceDocumentationPath } from './documentation-sources';
 import {
   buildIncludedRoutes,
   buildSitemapUrls,
@@ -9,8 +11,6 @@ import {
   discoverDocumentationRoots,
   rootForSlug,
 } from './route-inventory';
-import { parseDocumentationModulePath, parseWorkspaceDocumentationPath } from './documentation-sources';
-import { documentationSourceRoots, documents } from './documentation';
 
 describe('documentation route inventory', () => {
   const repoRoot = path.resolve(import.meta.dirname, '../../..');

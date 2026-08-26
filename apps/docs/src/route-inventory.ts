@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
-import type { SitemapUrl } from '@mission-platform/seo';
 import {
   DOCUMENTATION_WORKSPACE_FAMILIES,
   packageDocumentationSourceRoot,
@@ -9,6 +8,8 @@ import {
   qualifiedSlug,
   type DocumentationSourceRoot,
 } from './documentation-sources.ts';
+
+import type { SitemapUrl } from '@mission-platform/seo';
 
 export const SITE_ORIGIN = 'https://docs.mission-platform.dev';
 export const DEFAULT_SLUG = 'overview';
@@ -34,7 +35,9 @@ function packageRoots(repoRoot: string): DocumentationSourceRoot[] {
           const workspaceDirectory = path.relative(repoRoot, directory).split(path.sep).join('/');
           let packageName: string | undefined;
           try {
-            const manifest = JSON.parse(readFileSync(path.join(directory, 'package.json'), 'utf8')) as { name?: string };
+            const manifest = JSON.parse(readFileSync(path.join(directory, 'package.json'), 'utf8')) as {
+              name?: string;
+            };
             packageName = manifest.name;
           } catch {
             // Package validation reports malformed manifests separately.
@@ -56,15 +59,12 @@ function packageRoots(repoRoot: string): DocumentationSourceRoot[] {
       }
     }
   }
-  return roots.sort((left, right) => left.routePrefix.localeCompare(right.routePrefix));
+  return roots.toSorted((left, right) => left.routePrefix.localeCompare(right.routePrefix));
 }
 
 /** Discover project docs and every publishable package docs root. */
 export function discoverDocumentationRoots(repoRoot: string): readonly DocumentationSourceRoot[] {
-  return [
-    projectDocumentationSourceRoot(path.join(repoRoot, 'docs')),
-    ...packageRoots(repoRoot),
-  ];
+  return [projectDocumentationSourceRoot(path.join(repoRoot, 'docs')), ...packageRoots(repoRoot)];
 }
 
 export function rootForSlug(slug: string, documentationRoots: readonly DocumentationSourceRoot[]) {

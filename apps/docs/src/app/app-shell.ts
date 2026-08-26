@@ -1,4 +1,3 @@
-import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
 
 import { DEFAULT_SLUG, documentPath } from '../documentation';
 import {
@@ -10,8 +9,11 @@ import {
   type DocumentationLocale,
 } from '../i18n';
 import { LOCALE_BCP47 } from '../seo-site';
+
 import { createElement } from './dom';
 import { createSidebar } from './sidebar';
+
+import type { MpResolvedLocation, MpRouterAdapter } from '@mission-platform/router';
 
 interface RouterLinkElement extends HTMLElement {
   to: string;
@@ -259,7 +261,7 @@ export class DocsAppShellElement extends HTMLElement {
     layout.append(navbar, startSidebar, content);
     this.replaceChildren(layout);
     this.sidebarGapQuery ??=
-      typeof window === 'undefined' ? undefined : window.matchMedia('(min-width: 768px) and (max-width: 1023.98px)');
+      globalThis.window === undefined ? undefined : globalThis.matchMedia('(min-width: 768px) and (max-width: 1023.98px)');
     this.sidebarGapQuery?.addEventListener('change', this.syncSidebarGap);
     this.syncSidebarGap();
   }

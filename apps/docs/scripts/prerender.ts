@@ -37,7 +37,6 @@ function parseLocaleAndSlug(url: string): { locale: DocumentationLocale; slug: s
   return { locale: DEFAULT_LOCALE, slug: segments.join('/') || DEFAULT_SLUG };
 }
 
-
 async function markdownFor(
   locale: DocumentationLocale,
   slug: string,

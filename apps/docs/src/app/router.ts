@@ -4,10 +4,12 @@ import {
   registerRouterElements,
   setForgeRouter,
 } from '@mission-platform/forge-router-web-components/runtime';
-import type { MpHistory, MpRoute, MpRouteViewAdapter } from '@mission-platform/router';
+
 
 import { DEFAULT_SLUG } from '../documentation';
 import { SUPPORTED_LOCALES } from '../i18n';
+
+import type { MpHistory, MpRoute, MpRouteViewAdapter } from '@mission-platform/router';
 import './document-view';
 import './search-view';
 
@@ -29,7 +31,9 @@ function routerForOutlet(_outlet: HTMLElement): ReturnType<typeof createDocsRout
 }
 
 function viewForRoute(name: string | undefined): DocsRouteView {
-  return document.createElement(name === 'search' || name === 'localized-search' ? 'docs-search-view' : 'docs-document-view');
+  return document.createElement(
+    name === 'search' || name === 'localized-search' ? 'docs-search-view' : 'docs-document-view',
+  );
 }
 
 export function createDocsRoutes(): readonly MpRoute<DocsRouteView>[] {
@@ -65,7 +69,9 @@ export function createDocsRoutes(): readonly MpRoute<DocsRouteView>[] {
 
 export const routes = createDocsRoutes();
 
-export function createDocsRouter(options: { history?: MpHistory } = {}): ReturnType<typeof createWebComponentsRouter<DocsRouteView>> {
+export function createDocsRouter(
+  options: { history?: MpHistory } = {},
+): ReturnType<typeof createWebComponentsRouter<DocsRouteView>> {
   registerRouterElements();
   activeRouter = createWebComponentsRouter({
     routes,

@@ -25,8 +25,8 @@ Built with **TypeScript**, **Vite**, a small Web Components application shell, a
 | `src/search.ts`                   | Builds the tf-idf inverted index and exposes the `search()` API   |
 | `src/app/document-view.ts`        | Renders a single document plus its table of contents              |
 | `src/app/search-view.ts`          | Renders ranked search results (reuses `ForgeCard`/`ForgeBadge`)   |
-| `src/app/sidebar.ts`               | Grouped documentation navigation                                  |
-| `src/app/router.ts`                | Shared router records for SPA + static prerender                  |
+| `src/app/sidebar.ts`              | Grouped documentation navigation                                  |
+| `src/app/router.ts`               | Shared router records for SPA + static prerender                  |
 | `src/ssg/site-constants.ts`       | Site-wide SEO constants and canonical-URL helpers                 |
 | `src/route-inventory.ts`          | Discovers roots and supplies routes/sitemap input                 |
 | `src/main.ts`                     | Web Components entry; site-wide route metadata                    |
@@ -34,16 +34,16 @@ Built with **TypeScript**, **Vite**, a small Web Components application shell, a
 
 ## Available scripts
 
-| Command                                   | Description                                                          |
-| ----------------------------------------- | -------------------------------------------------------------------- |
-| `pnpm dev`                                | Start the local Vite dev server                                      |
-| `pnpm build`                              | Type-check, build the SPA bundle, and prerender the static site      |
-| `pnpm build:spa`                          | Type-check and build a client-only (non-prerendered) SPA             |
-| `pnpm preview`                            | Preview the production build locally                                 |
-| `pnpm test`                               | Run unit tests with Vitest                                           |
-| `pnpm lint` / `pnpm lint:fix`             | Lint with ESLint                                                     |
-| `pnpm lint:style` / `pnpm lint:style:fix` | Lint Vue/SCSS/CSS styles with Stylelint                              |
-| `pnpm format` / `pnpm format:write`       | Check or apply Prettier formatting                                   |
+| Command                                   | Description                                                     |
+| ----------------------------------------- | --------------------------------------------------------------- |
+| `pnpm dev`                                | Start the local Vite dev server                                 |
+| `pnpm build`                              | Type-check, build the SPA bundle, and prerender the static site |
+| `pnpm build:spa`                          | Type-check and build a client-only (non-prerendered) SPA        |
+| `pnpm preview`                            | Preview the production build locally                            |
+| `pnpm test`                               | Run unit tests with Vitest                                      |
+| `pnpm lint` / `pnpm lint:fix`             | Lint with ESLint                                                |
+| `pnpm lint:style` / `pnpm lint:style:fix` | Lint Vue/SCSS/CSS styles with Stylelint                         |
+| `pnpm format` / `pnpm format:write`       | Check or apply Prettier formatting                              |
 
 Run any of these through Turborepo with a filter, e.g.:
 
