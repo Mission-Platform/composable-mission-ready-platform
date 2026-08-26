@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { encodeBarcode } from '../encoder';
+
 import { load as loadCode128, loadSync as loadCode128Sync } from './code128.fws';
 
 describe('native Code 128 FWS encoder', () => {
@@ -35,7 +36,7 @@ describe('native Code 128 FWS encoder', () => {
     expect(code128.encode_code128('')).toBe('');
     expect(code128.encode_code128('A\nB')).toBe('');
     expect(code128.encode_gs1_128('')).toBe('');
-    expect(code128.encode_gs1_128('\u007f')).toBe('');
+    expect(code128.encode_gs1_128('\u007F')).toBe('');
   });
 
   it('uses the direct string ABI through the asynchronous loader', async () => {

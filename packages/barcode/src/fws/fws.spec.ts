@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { dataBarFixture, ean13Fixture, ean8Fixture, upcaFixture } from './fws.fixtures';
+
 import {
   decodeEan8Fws,
   decodeEan8FwsAsync,
@@ -8,10 +10,8 @@ import {
   encodeEan8Fws,
   encodeEan8FwsAsync,
   validateGs1DataBarValue,
-  validateGs1DataBarValueAsync,
+  validateGs1DataBarValueAsync, encodeEan13Fws, encodeEan13FwsAsync, encodeUpcaFws, encodeUpcaFwsAsync 
 } from '.';
-import { encodeEan13Fws, encodeEan13FwsAsync, encodeUpcaFws, encodeUpcaFwsAsync } from '.';
-import { dataBarFixture, ean13Fixture, ean8Fixture, upcaFixture } from './fws.fixtures';
 
 const moduleBits = (value: string): number[] => Array.from(value, Number);
 
@@ -43,7 +43,9 @@ describe('barcode FWS migration slice', () => {
 
   it('decodes EAN-13 parity and check digit from the module layout', () => {
     expect(decodeEan13Fws(moduleBits(ean13Fixture.modules))).toBe('5901234123457');
-    expect(decodeEan13Fws(moduleBits(ean13Fixture.modules.slice(0, 45) + '00000' + ean13Fixture.modules.slice(50)))).toBe('');
+    expect(
+      decodeEan13Fws(moduleBits(ean13Fixture.modules.slice(0, 45) + '00000' + ean13Fixture.modules.slice(50))),
+    ).toBe('');
   });
 
   it('encodes EAN-13 with a computed check digit and parity layout', () => {

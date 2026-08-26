@@ -25,14 +25,14 @@ ausgegeben werden sollte.
 
 ## Stufe → Ebenenzuordnung
 
-| Bühne | Arbeit | Stufe |
-| ---------------------------------- | ------------------------------------------------------- | ---- |
-| 1 Herstellerkorpus + Lader + Kabelbaum | Kopie/Attribution (C), Loader + Harness-Logik (B) | C→B |
-| 2 Erhöhen Sie die Leserate des unterstützten Formats | Locator-Optimierung + Wiederholungspfade | A→B |
-| 3 GS1 DataBar-Familie | Tabellen/Encoder (B), RSS-14-Locator + RS (A) | A/B |
-| 4 PDF417 | Tabellen/Encoder (B), Zeilenscan-Locator + GF(929) EC (A) | A/B |
-| 5 MaxiCode | Hex-Gitter-Locator + GF(64) RS (A), Tabellen (B) | A/B |
-| 6 Verkabelung + JS + Dokumente | Boilerplate/Dokumente + Verkabelung (C), Wasm-Umbau + Rauch (B) | C→B |
+| Bühne                                                | Arbeit                                                          | Stufe |
+| ---------------------------------------------------- | --------------------------------------------------------------- | ----- |
+| 1 Herstellerkorpus + Lader + Kabelbaum               | Kopie/Attribution (C), Loader + Harness-Logik (B)               | C→B   |
+| 2 Erhöhen Sie die Leserate des unterstützten Formats | Locator-Optimierung + Wiederholungspfade                        | A→B   |
+| 3 GS1 DataBar-Familie                                | Tabellen/Encoder (B), RSS-14-Locator + RS (A)                   | A/B   |
+| 4 PDF417                                             | Tabellen/Encoder (B), Zeilenscan-Locator + GF(929) EC (A)       | A/B   |
+| 5 MaxiCode                                           | Hex-Gitter-Locator + GF(64) RS (A), Tabellen (B)                | A/B   |
+| 6 Verkabelung + JS + Dokumente                       | Boilerplate/Dokumente + Verkabelung (C), Wasm-Umbau + Rauch (B) | C→B   |
 
 ## Kostenprinzip
 

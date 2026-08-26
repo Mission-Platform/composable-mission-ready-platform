@@ -15,7 +15,7 @@ export const BarcodeSymbology: {
   readonly Msi: 13;
   readonly Pharmacode: 14;
 };
-export type BarcodeSymbology = typeof BarcodeSymbology[keyof typeof BarcodeSymbology];
+export type BarcodeSymbology = (typeof BarcodeSymbology)[keyof typeof BarcodeSymbology];
 
 export interface ForgeBarcodeNativeExports {
   readonly decode_native: (symbology: BarcodeSymbology, modules: ArrayLike<number>) => string;

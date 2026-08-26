@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
+function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
 ```
 
 פענוח תמונה `Blob`/`File` ל-{@link ImageLike} (פיקסלים RGBA). שימושים
@@ -24,17 +24,17 @@ function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כתם | כתם |  |
-| רועי |  |  |
+| שם   | הקלד | תיאור |
+| ---- | ---- | ----- |
+| כתם  | כתם  |       |
+| רועי |      |       |
 
 ### scanFile
 
 פונקציה **סוג:**
 
 ```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>
+function scanFile(file: Blob): Promise<ScanResult | null>;
 ```
 
 פענח `file` וסרוק אותו לאיתור קוד, תוך הפעלת WebAssembly באופן סינכרוני
@@ -42,16 +42,16 @@ function scanFile(file: Blob): Promise<ScanResult | null>
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קובץ | כתם |  |
+| שם   | הקלד | תיאור |
+| ---- | ---- | ----- |
+| קובץ | כתם  |       |
 
 ### scanFileAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>
+function scanFileAsync(file: Blob): Promise<ScanResult | null>;
 ```
 
 פענח `file` וסרוק אותו לאיתור קוד, אתחול הסורק והמפענחים
@@ -59,16 +59,16 @@ function scanFileAsync(file: Blob): Promise<ScanResult | null>
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קובץ | כתם |  |
+| שם   | הקלד | תיאור |
+| ---- | ---- | ----- |
+| קובץ | כתם  |       |
 
 ### videoFrameToImageData
 
 פונקציה **סוג:**
 
 ```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike
+function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
 ```
 
 ללכוד את המסגרת הנוכחית של רכיב `<video>` שמתנגן כ-
@@ -79,10 +79,10 @@ function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): Imag
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| וידאו | HTMLVideoElement |  |
-| רועי |  |  |
+| שם    | הקלד             | תיאור |
+| ----- | ---------------- | ----- |
+| וידאו | HTMLVideoElement |       |
+| רועי  |                  |       |
 
 ## `src/debug`
 
@@ -91,7 +91,7 @@ function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): Imag
 פונקציה **סוג:**
 
 ```typescript
-function isCodeScannerDebugEnabled(): boolean
+function isCodeScannerDebugEnabled(): boolean;
 ```
 
 האם רישום אבחון של סורק מופעל כעת.
@@ -101,16 +101,16 @@ function isCodeScannerDebugEnabled(): boolean
 פונקציה **סוג:**
 
 ```typescript
-function setCodeScannerDebug(value: boolean): void
+function setCodeScannerDebug(value: boolean): void;
 ```
 
 הפעל או השבת את רישום האבחון בצד ה-JS של הסורק בזמן ריצה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | בוליאני |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| ערך | בוליאני |       |
 
 #### חוֹזֶה
 
@@ -123,7 +123,11 @@ function setCodeScannerDebug(value: boolean): void
 פונקציה **סוג:**
 
 ```typescript
-function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LOW_PERCENTILE, highPercentile: number = DEFAULT_HIGH_PERCENTILE): LumaImage
+function contrastStretchLuma(
+  luma: LumaImage,
+  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
+  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
+): LumaImage;
 ```
 
 למתוח ניגודיות של {@link LumaImage}, מיפוי `lowPercentile`..`highPercentile` שלו
@@ -143,18 +147,18 @@ function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LO
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| לומה | LumaImage |  |
-| נמוך באחוזון | מספר |  |
-| גבוה באחוזון | מספר |  |
+| שם           | הקלד      | תיאור |
+| ------------ | --------- | ----- |
+| לומה         | LumaImage |       |
+| נמוך באחוזון | מספר      |       |
+| גבוה באחוזון | מספר      |       |
 
 ### imageDataToLuma
 
 פונקציה **סוג:**
 
 ```typescript
-function imageDataToLuma(image: ImageLike): LumaImage
+function imageDataToLuma(image: ImageLike): LumaImage;
 ```
 
 המר RGBA {@link ImageLike} (לדוגמה, `ImageData` בד קנבס) ל-
@@ -163,9 +167,9 @@ function imageDataToLuma(image: ImageLike): LumaImage
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תמונה | ImageLike |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| תמונה | ImageLike |       |
 
 ### LumaImage
 
@@ -184,7 +188,7 @@ export interface LumaImage
 פונקציה **סוג:**
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
+function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
 ```
 
 אתר ופענח את הקוד הנתמך הראשון ב-`image`, תוך מופע של
@@ -192,57 +196,57 @@ function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תמונה | ImageLike |  |
-| רועי | רועי |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| תמונה | ImageLike |       |
+| רועי  | רועי      |       |
 
 #### חוֹזֶה
 
 - **@param:** אזור עניין אופציונלי (פיקסלים של תמונה) להגבלת הסריקה
 - חתוך לפני בינאריזציה, כך שמתעלמים מהעומס שמסביב.
 - **@returns:** ה-{@link ScanResult}, או `null` כאשר לא נמצא קוד. כאשר קוד
-נמצא אך לא ניתן לפענח את המטען שלו, `result.value` הוא `null`.
+  נמצא אך לא ניתן לפענח את המטען שלו, `result.value` הוא `null`.
 
 ### scanImageDataAll
 
 פונקציה **סוג:**
 
 ```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[]
+function scanImageDataAll(image: ImageLike): ScanResult[];
 ```
 
-אתר ופענח *כל* קוד מובחן ב-`image` (לא רק הראשון),
+אתר ופענח _כל_ קוד מובחן ב-`image` (לא רק הראשון),
 יצירת גרף הסורק באופן סינכרוני בשימוש הראשון.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תמונה | ImageLike |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| תמונה | ImageLike |       |
 
 #### חוֹזֶה
 
 - **@returns:** ה-{@link ScanResult} המפוענחים לפי סדר גילוי, משוכפל;
-ריק כששום דבר לא מפוענח.
+  ריק כששום דבר לא מפוענח.
 
 ### scanImageDataAllAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
+function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
 ```
 
-אתר ופענח *כל* קוד מובחן ב-`image`, טעינת גרף הסורק
+אתר ופענח _כל_ קוד מובחן ב-`image`, טעינת גרף הסורק
 באופן אסינכרוני בשימוש ראשון. כשלי אתחול וסריקה הם
 חזר כדחיות הבטחה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תמונה | ImageLike |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| תמונה | ImageLike |       |
 
 #### חוֹזֶה
 
@@ -253,7 +257,7 @@ function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
 פונקציה **סוג:**
 
 ```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>
+function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
 ```
 
 אתר ופענח את הקוד הנתמך הראשון ב-`image`, טעינת הסורק
@@ -262,10 +266,10 @@ function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | n
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תמונה | ImageLike |  |
-| רועי | רועי |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| תמונה | ImageLike |       |
+| רועי  | רועי      |       |
 
 #### חוֹזֶה
 
@@ -296,7 +300,7 @@ export interface Roi
 
 אזור מלבני של עניין, בפיקסלים של תמונה, כדי להגביל סריקה ל(למשל.
 רשת ממשק משתמש של מצלמה חיה מצייר על המסגרת). היבול מתרחש ב- wasm
-*לפני* בינאריזציה, כך שהעומס מסביב לעולם לא מגיע לאיתורים. א
+_לפני_ בינאריזציה, כך שהעומס מסביב לעולם לא מגיע לאיתורים. א
 אזור התלוי על קצה הוא מהודק; מוצא אחד לגמרי מחוץ למסגרת
 כלום.
 
@@ -318,4 +322,4 @@ export type ScanFormat = 'qr' | 'datamatrix' | 'barcode' | 'aztec' | 'pdf417' | 
 export interface ScanResult
 ```
 
-התוצאה של *זיהוי* מוצלח.
+התוצאה של _זיהוי_ מוצלח.

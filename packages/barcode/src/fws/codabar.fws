@@ -1,11 +1,11 @@
 // Codabar encoder graph with automatic A start and stop framing.
 
 fn u32_to_i32_len(value: u32) -> i32 {
-  let remaining: u32 = value;
-  let place: i32 = 1;
-  let result: i32 = 0;
+  let mut remaining: u32 = value;
+  let mut place: i32 = 1;
+  let mut result: i32 = 0;
   while remaining > 0 {
-    let bit: u32 = remaining - remaining / 2 * 2;
+    let mut bit: u32 = remaining - remaining / 2 * 2;
     if bit == 1 { result = result + place; }
     remaining = remaining / 2;
     place = place * 2;
@@ -52,9 +52,9 @@ fn run(bit: i32, width: i32) -> string {
 
 fn render(value: string, index: i32) -> string {
   if index >= string_length(value) { return ""; }
-  let bit: i32 = 0;
+  let mut bit: i32 = 0;
   if index % 2 == 0 { bit = 1; }
-  let width: i32 = 1;
+  let mut width: i32 = 1;
   if string_byte_at(value, index) == 49 { width = 3; }
   return string_concat(run(bit, width), render(value, index + 1));
 }
@@ -66,18 +66,18 @@ fn append(result: string, value: i32) -> string {
 }
 
 fn encode_payload(value: string, index: i32, result: string) -> string {
-  if index >= string_length(value) { return append(string_concat(result, "0"), 65); }
-  let code: i32 = string_byte_at(value, index);
+  if index >= string_length(value) { return string_concat(append(string_concat(result, "0"), 65), ""); }
+  let mut code: i32 = string_byte_at(value, index);
   if code >= 97 && code <= 100 { code = code - 32; }
   if code == 65 || code == 66 || code == 67 || code == 68 { return ""; }
   let next: string = append(string_concat(result, "0"), code);
   if string_length(next) == 0 { return ""; }
-  return encode_payload(value, index + 1, next);
+  return string_concat(encode_payload(value, index + 1, next), "");
 }
 
 export fn encode_codabar(value: string) -> string {
   if string_length(value) == 0 { return ""; }
-  return encode_payload(value, 0, append("", 65));
+  return string_concat(encode_payload(value, 0, append("", 65)), "");
 }
 
 fn bits_match(modules: Array<i32>, end: i32, start: i32, expected: string, index: i32) -> bool {
@@ -126,13 +126,13 @@ fn decode_symbols(modules: Array<i32>, end: i32, start: i32, result: string) -> 
   if next == end { return string_concat(result, symbol); }
   if next >= end { return ""; }
   if modules[next] != 0 { return ""; }
-  return decode_symbols(modules, end, next + 1, string_concat(result, symbol));
+  return string_concat(decode_symbols(modules, end, next + 1, string_concat(result, symbol)), "");
 }
 
 fn decode_codabar_frame(modules: Array<i32>, length: i32) -> string {
   if length > modules_len(modules) { return ""; }
   if length < 27 { return ""; }
-  let framed: string = decode_symbols(modules, length, 0, "");
+  let framed: string = string_concat(decode_symbols(modules, length, 0, ""), "");
   if string_length(framed) < 2 { return ""; }
   if string_byte_at(framed, 0) != 65 { return ""; }
   if string_byte_at(framed, string_length(framed) - 1) != 65 { return ""; }
@@ -140,9 +140,9 @@ fn decode_codabar_frame(modules: Array<i32>, length: i32) -> string {
 }
 
 export fn decode_codabar(modules: Array<i32>) -> string {
-  return decode_codabar_frame(modules, modules_len(modules));
+  return string_concat(decode_codabar_frame(modules, modules_len(modules)), "");
 }
 
 export fn decode_codabar_row(modules: Array<i32>, count: i32) -> string {
-  return decode_codabar_frame(modules, count);
+  return string_concat(decode_codabar_frame(modules, count), "");
 }

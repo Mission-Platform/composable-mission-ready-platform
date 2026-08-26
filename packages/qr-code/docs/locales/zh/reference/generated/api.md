@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function decodeQr(matrix: QrMatrix): string | null
+function decodeQr(matrix: QrMatrix): string | null;
 ```
 
 将 {@link QrMatrix} 解码回其原始文本，加载包 -
@@ -29,9 +29,9 @@ function decodeQr(matrix: QrMatrix): string | null
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矩阵| Qr矩阵|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 矩阵 | Qr矩阵 |      |
 
 #### 合同
 
@@ -42,7 +42,7 @@ function decodeQr(matrix: QrMatrix): string | null
 **种类：**功能
 
 ```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
+function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
 ```
 
 将 {@link QrMatrix} 解码回其原始文本，加载包 -
@@ -50,9 +50,9 @@ function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|矩阵| Qr矩阵|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 矩阵 | Qr矩阵 |      |
 
 #### 合同
 
@@ -65,7 +65,7 @@ function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
 **种类：**功能
 
 ```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 将 `text` 编码为 **Micro QR Code** 矩阵 (ISO/IEC 18004)，实例化
@@ -77,22 +77,22 @@ Micro QR 仅支持纠错级别 `L`、`M` 和 `Q`；请求
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串|  |
-|错误更正 | QrErrorCorrection | 错误修正  |
+| 名称     | 类型              | 描述     |
+| -------- | ----------------- | -------- |
+| 文字     | 字符串            |          |
+| 错误更正 | QrErrorCorrection | 错误修正 |
 
 #### 合同
 
 - **@throws:** 如果文本对于任何 Micro QR 版本来说太长
-选择的级别（包括对级别 `H` 的任何请求）。
+  选择的级别（包括对级别 `H` 的任何请求）。
 
 ### 编码MicroQrAsync
 
 **种类：**功能
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 将 `text` 编码为 **Micro QR Code** 矩阵，实例化 WebAssembly
@@ -100,22 +100,22 @@ function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = '
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串|  |
-|错误更正 | QrErrorCorrection | 错误修正  |
+| 名称     | 类型              | 描述     |
+| -------- | ----------------- | -------- |
+| 文字     | 字符串            |          |
+| 错误更正 | QrErrorCorrection | 错误修正 |
 
 #### 合同
 
 - **@throws:** 如果文本对于任何 Micro QR 版本来说太长
-选择的级别（包括对级别 `H` 的任何请求）。
+  选择的级别（包括对级别 `H` 的任何请求）。
 
 ### 编码Qr
 
 **种类：**功能
 
 ```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix
+function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
 ```
 
 以给定的纠错级别将 `text` 编码为 QR 码矩阵，
@@ -123,22 +123,23 @@ function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMat
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串|  |
-|错误更正 | QrErrorCorrection | 错误修正  |
+| 名称     | 类型              | 描述     |
+| -------- | ----------------- | -------- |
+| 文字     | 字符串            |          |
+| 错误更正 | QrErrorCorrection | 错误修正 |
 
 #### 合同
 
 - **@throws:** 如果文本太长而无法容纳最大的（版本
-40) 所选纠错级别的 QR 码。
+
+40. 所选纠错级别的 QR 码。
 
 ### 编码Qr异步
 
 **种类：**功能
 
 ```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>
+function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
 ```
 
 以给定的纠错级别将 `text` 编码为 QR 码矩阵，
@@ -146,22 +147,23 @@ function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串|  |
-|错误更正 | QrErrorCorrection | 错误修正  |
+| 名称     | 类型              | 描述     |
+| -------- | ----------------- | -------- |
+| 文字     | 字符串            |          |
+| 错误更正 | QrErrorCorrection | 错误修正 |
 
 #### 合同
 
 - **@throws:** 如果文本太长而无法容纳最大的（版本
-40) 所选纠错级别的 QR 码。
+
+40. 所选纠错级别的 QR 码。
 
 ### 编码Rmqr
 
 **种类：**功能
 
 ```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 将 `text` 编码为 **矩形 Micro QR (rMQR) 代码** 矩阵
@@ -174,22 +176,22 @@ function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): Com
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串|  |
-|错误更正 | QrErrorCorrection | 错误修正  |
+| 名称     | 类型              | 描述     |
+| -------- | ----------------- | -------- |
+| 文字     | 字符串            |          |
+| 错误更正 | QrErrorCorrection | 错误修正 |
 
 #### 合同
 
 - **@throws:** 如果文本对于任何 rMQR 版本来说太长
-选择的级别。
+  选择的级别。
 
 ### 编码Rmqr异步
 
 **种类：**功能
 
 ```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 将 `text` 编码为 **矩形 Micro QR (rMQR) 代码** 矩阵，
@@ -198,15 +200,15 @@ function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M')
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文字|字符串|  |
-|错误更正 | QrErrorCorrection | 错误修正  |
+| 名称     | 类型              | 描述     |
+| -------- | ----------------- | -------- |
+| 文字     | 字符串            |          |
+| 错误更正 | QrErrorCorrection | 错误修正 |
 
 #### 合同
 
 - **@throws:** 如果文本对于任何 rMQR 版本来说太长
-选择的级别。
+  选择的级别。
 
 ## `src/types`
 

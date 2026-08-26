@@ -19,27 +19,24 @@ export fn digit(value: i32) -> string {
   return "9";
 }
 
-fn itoa_inner(value: i32, tail: string) -> string {
-  if value < 10 { return string_concat(digit(value), tail); }
-  let q: i32 = value / 10;
-  let r: i32 = value - q * 10;
-  return itoa_inner(q, string_concat(digit(r), tail));
+fn itoa_inner(value: i32) -> string {
+  if value < 10 { return string_concat("", digit(value)); }
+  return string_concat(itoa_inner(value / 10), digit(value - value / 10 * 10));
 }
 
 export fn itoa(value: i32) -> string {
   if value == 0 { return "0"; }
-  if value < 0 { return string_concat("-", itoa_inner(0 - value, "")); }
-  return itoa_inner(value, "");
+  if value < 0 { return string_concat("-", itoa_inner(0 - value)); }
+  return string_concat("", itoa_inner(value));
 }
 
 export fn byte_char(value: i32) -> string {
-  let v: i32 = value;
+  let mut v: i32 = value;
   if v < 0 { v = 0; }
   if v > 255 { v = 255; }
-  let s: string = itoa(v);
-  if v < 10 { return string_concat("00", s); }
-  if v < 100 { return string_concat("0", s); }
-  return s;
+  if v < 10 { return string_concat("00", itoa(v)); }
+  if v < 100 { return string_concat("0", itoa(v)); }
+  return string_concat("", itoa(v));
 }
 
 export fn bytes_get(data: string, index: i32) -> i32 {
@@ -58,7 +55,7 @@ export fn bytes_push(data: string, value: i32) -> string {
 // Exponential doubling keeps total allocation O(n) under the bump allocator.
 export fn bytes_zeros(count: i32) -> string {
   if count <= 0 { return ""; }
-  let chunk: string = "000";
+  let mut chunk: string = "000";
   while string_length(chunk) / 3 < count {
     chunk = string_concat(chunk, chunk);
   }
@@ -78,7 +75,7 @@ export fn bits_push(data: string, on: bool) -> string {
 
 export fn bits_zeros(count: i32) -> string {
   if count <= 0 { return ""; }
-  let chunk: string = "0";
+  let mut chunk: string = "0";
   while string_length(chunk) < count {
     chunk = string_concat(chunk, chunk);
   }
@@ -86,8 +83,8 @@ export fn bits_zeros(count: i32) -> string {
 }
 
 export fn bit_test(value: i32, bit: i32) -> bool {
-  let shifted: i32 = value;
-  let index: i32 = 0;
+  let mut shifted: i32 = value;
+  let mut index: i32 = 0;
   while index < bit {
     shifted = shifted / 2;
     index = index + 1;
@@ -96,8 +93,8 @@ export fn bit_test(value: i32, bit: i32) -> bool {
 }
 
 export fn bits_push_value(data: string, value: i32, count: i32) -> string {
-  let chunk: string = "";
-  let shift: i32 = count - 1;
+  let mut chunk: string = "";
+  let mut shift: i32 = count - 1;
   while shift >= 0 {
     chunk = bits_push(chunk, bit_test(value, shift));
     shift = shift - 1;
@@ -106,8 +103,8 @@ export fn bits_push_value(data: string, value: i32, count: i32) -> string {
 }
 
 fn bits_to_byte(bits: string, start: i32) -> i32 {
-  let value: i32 = 0;
-  let bit: i32 = 0;
+  let mut value: i32 = 0;
+  let mut bit: i32 = 0;
   while bit < 8 {
     value = value * 2;
     if bits_get(bits, start + bit) { value = value + 1; }
@@ -120,15 +117,15 @@ fn bits_to_bytes_range(bits: string, start: i32, end: i32) -> string {
   if end <= start { return ""; }
   let span: i32 = end - start;
   if span <= 64 {
-    let result: string = "";
-    let index: i32 = start;
+    let mut result: string = "";
+    let mut index: i32 = start;
     while index < end {
       result = bytes_push(result, bits_to_byte(bits, index));
       index = index + 8;
     }
-    return result;
+    return string_concat("", result);
   }
-  let middle: i32 = start + span / 16 * 8;
+  let mut middle: i32 = start + span / 16 * 8;
   if middle <= start { middle = start + 8; }
   let left: string = bits_to_bytes_range(bits, start, middle);
   let right: string = bits_to_bytes_range(bits, middle, end);
@@ -138,15 +135,15 @@ fn bits_to_bytes_range(bits: string, start: i32, end: i32) -> string {
 export fn bits_to_bytes(bits: string) -> string {
   let length: i32 = string_length(bits);
   let end: i32 = length / 8 * 8;
-  return bits_to_bytes_range(bits, 0, end);
+  return string_concat("", bits_to_bytes_range(bits, 0, end));
 }
 
 export fn xor_value(left: i32, right: i32, width: i32) -> i32 {
-  let result: i32 = 0;
-  let place: i32 = 1;
-  let index: i32 = 0;
-  let a: i32 = left;
-  let b: i32 = right;
+  let mut result: i32 = 0;
+  let mut place: i32 = 1;
+  let mut index: i32 = 0;
+  let mut a: i32 = left;
+  let mut b: i32 = right;
   while index < width {
     let abit: i32 = a - a / 2 * 2;
     let bbit: i32 = b - b / 2 * 2;
@@ -161,10 +158,10 @@ export fn xor_value(left: i32, right: i32, width: i32) -> i32 {
 
 export fn gf_mul(a: i32, b: i32) -> i32 {
   if a == 0 || b == 0 { return 0; }
-  let result: i32 = 0;
-  let x: i32 = a;
-  let y: i32 = b;
-  let index: i32 = 0;
+  let mut result: i32 = 0;
+  let mut x: i32 = a;
+  let mut y: i32 = b;
+  let mut index: i32 = 0;
   while index < 8 {
     if y - y / 2 * 2 == 1 { result = xor_value(result, x, 9); }
     let high: i32 = x / 128;
@@ -182,9 +179,9 @@ export fn gf_mul(a: i32, b: i32) -> i32 {
 // Bit-decomposition (halve/double) keeps this O(log n) instead of counting up to `value`.
 export fn u32_from_i32(value: i32) -> u32 {
   if value <= 0 { return 0; }
-  let remaining: i32 = value;
-  let place: u32 = 1;
-  let result: u32 = 0;
+  let mut remaining: i32 = value;
+  let mut place: u32 = 1;
+  let mut result: u32 = 0;
   while remaining > 0 {
     if remaining - remaining / 2 * 2 == 1 { result = result + place; }
     remaining = remaining / 2;
@@ -195,9 +192,9 @@ export fn u32_from_i32(value: i32) -> u32 {
 
 // Reverse of `u32_from_i32`, also O(log n) via bit-decomposition.
 export fn i32_from_u32(value: u32) -> i32 {
-  let remaining: u32 = value;
-  let place: i32 = 1;
-  let result: i32 = 0;
+  let mut remaining: u32 = value;
+  let mut place: i32 = 1;
+  let mut result: i32 = 0;
   while remaining > 0 {
     let bit: u32 = remaining - remaining / 2 * 2;
     if bit == 1 { result = result + place; }
@@ -208,13 +205,13 @@ export fn i32_from_u32(value: u32) -> i32 {
 }
 
 export fn mem_alloc_bytes(nbytes: i32) -> u32 {
-  let aligned: i32 = nbytes;
+  let mut aligned: i32 = nbytes;
   if aligned < 4 { aligned = 4; }
   let rem: i32 = aligned - aligned / 4 * 4;
   if rem != 0 { aligned = aligned + 4 - rem; }
   let size: u32 = u32_from_i32(aligned);
   let ptr: u32 = memory_alloc(size);
-  let offset: u32 = 0;
+  let mut offset: u32 = 0;
   while offset < size {
     memory_store_u32(ptr + offset, 0);
     offset = offset + 4;
@@ -228,8 +225,8 @@ export fn mem_get_u8(ptr: u32, index: i32) -> i32 {
   let byte_index: i32 = index - word_index * 4;
   let addr: u32 = ptr + u32_from_i32(word_index * 4);
   let word: u32 = memory_load_u32(addr);
-  let shifted: u32 = word;
-  let b: i32 = 0;
+  let mut shifted: u32 = word;
+  let mut b: i32 = 0;
   while b < byte_index {
     shifted = shifted / 256;
     b = b + 1;
@@ -244,22 +241,22 @@ export fn mem_set_u8(ptr: u32, index: i32, value: i32) -> unit {
   let byte_index: i32 = index - word_index * 4;
   let addr: u32 = ptr + u32_from_i32(word_index * 4);
   let word: u32 = memory_load_u32(addr);
-  let v: i32 = value;
+  let mut v: i32 = value;
   if v < 0 { v = 0; }
   if v > 255 { v = 255; }
   // Reconstruct word with the replaced byte (little-endian byte order).
-  let tmp: u32 = word;
+  let mut tmp: u32 = word;
   let part0: u32 = tmp - tmp / 256 * 256;
-  let bytes0: i32 = i32_from_u32(part0);
+  let mut bytes0: i32 = i32_from_u32(part0);
   tmp = tmp / 256;
   let part1: u32 = tmp - tmp / 256 * 256;
-  let bytes1: i32 = i32_from_u32(part1);
+  let mut bytes1: i32 = i32_from_u32(part1);
   tmp = tmp / 256;
   let part2: u32 = tmp - tmp / 256 * 256;
-  let bytes2: i32 = i32_from_u32(part2);
+  let mut bytes2: i32 = i32_from_u32(part2);
   tmp = tmp / 256;
   let part3: u32 = tmp - tmp / 256 * 256;
-  let bytes3: i32 = i32_from_u32(part3);
+  let mut bytes3: i32 = i32_from_u32(part3);
   if byte_index == 0 { bytes0 = v; }
   if byte_index == 1 { bytes1 = v; }
   if byte_index == 2 { bytes2 = v; }
@@ -271,7 +268,7 @@ export fn mem_set_u8(ptr: u32, index: i32, value: i32) -> unit {
 export fn bitbuf_alloc(bits: i32) -> u32 {
   let padded: i32 = bits + 31;
   let words: i32 = padded / 32;
-  let nbytes: i32 = words * 4;
+  let mut nbytes: i32 = words * 4;
   if nbytes < 4 { nbytes = 4; }
   return mem_alloc_bytes(nbytes);
 }
@@ -290,11 +287,11 @@ export fn bytes_set(data: string, index: i32, value: i32) -> string {
 fn rs_generator_mem(gen: u32, count: i32) -> unit {
   // gen[0] = 1, rest 0 initially assumed.
   mem_set_u8(gen, 0, 1);
-  let root: i32 = 1;
-  let round: i32 = 0;
+  let mut root: i32 = 1;
+  let mut round: i32 = 0;
   while round < count {
     // Multiply by (x - root) in place from high to low.
-    let index: i32 = round;
+    let mut index: i32 = round;
     while index >= 0 {
       let coefficient: i32 = mem_get_u8(gen, index);
       let right: i32 = gf_mul(coefficient, root);
@@ -313,7 +310,7 @@ fn rs_generator_mem(gen: u32, count: i32) -> unit {
 // call-bearing loops in a single function body (observed as a runtime hang), so
 // the remainder pipeline is decomposed into single-loop helpers.
 fn rs_zero(rem: u32, count: i32) -> unit {
-  let i: i32 = 0;
+  let mut i: i32 = 0;
   while i < count {
     mem_set_u8(rem, i, 0);
     i = i + 1;
@@ -321,7 +318,7 @@ fn rs_zero(rem: u32, count: i32) -> unit {
 }
 
 fn rs_shift_left(rem: u32, count: i32) -> unit {
-  let i: i32 = 0;
+  let mut i: i32 = 0;
   while i < count - 1 {
     let next: i32 = mem_get_u8(rem, i + 1);
     mem_set_u8(rem, i, next);
@@ -331,7 +328,7 @@ fn rs_shift_left(rem: u32, count: i32) -> unit {
 }
 
 fn rs_apply_generator(rem: u32, gen: u32, factor: i32, count: i32) -> unit {
-  let i: i32 = 0;
+  let mut i: i32 = 0;
   while i < count {
     let coefficient: i32 = mem_get_u8(gen, i + 1);
     let product: i32 = gf_mul(coefficient, factor);
@@ -344,7 +341,7 @@ fn rs_apply_generator(rem: u32, gen: u32, factor: i32, count: i32) -> unit {
 
 fn rs_remainder_mem(data: u32, data_len: i32, gen: u32, rem: u32, count: i32) -> unit {
   rs_zero(rem, count);
-  let data_index: i32 = 0;
+  let mut data_index: i32 = 0;
   while data_index < data_len {
     let byte: i32 = mem_get_u8(data, data_index);
     let head: i32 = mem_get_u8(rem, 0);
@@ -356,7 +353,7 @@ fn rs_remainder_mem(data: u32, data_len: i32, gen: u32, rem: u32, count: i32) ->
 }
 
 fn rs_load_data(data: string, data_mem: u32, data_len: i32) -> unit {
-  let i: i32 = 0;
+  let mut i: i32 = 0;
   while i < data_len {
     let value: i32 = bytes_get(data, i);
     mem_set_u8(data_mem, i, value);
@@ -365,13 +362,13 @@ fn rs_load_data(data: string, data_mem: u32, data_len: i32) -> unit {
 }
 
 fn rs_dump(rem: u32, count: i32) -> string {
-  let result: string = "";
-  let i: i32 = 0;
+  let mut result: string = "";
+  let mut i: i32 = 0;
   while i < count {
     result = bytes_push(result, mem_get_u8(rem, i));
     i = i + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 export fn rs_remainder(data: string, count: i32) -> string {
@@ -383,7 +380,7 @@ export fn rs_remainder(data: string, count: i32) -> string {
   rs_load_data(data, data_mem, data_len);
   rs_generator_mem(gen, count);
   rs_remainder_mem(data_mem, data_len, gen, rem, count);
-  return rs_dump(rem, count);
+  return string_concat("", rs_dump(rem, count));
 }
 
 // ECC ordinal: 0=L, 1=M, 2=Q, 3=H.
@@ -696,8 +693,8 @@ export fn block_length(data_count: i32, blocks: i32, index: i32) -> i32 {
 }
 
 export fn block_offset(data_count: i32, blocks: i32, index: i32) -> i32 {
-  let offset: i32 = 0;
-  let i: i32 = 0;
+  let mut offset: i32 = 0;
+  let mut i: i32 = 0;
   while i < index {
     offset = offset + block_length(data_count, blocks, i);
     i = i + 1;
@@ -706,8 +703,8 @@ export fn block_offset(data_count: i32, blocks: i32, index: i32) -> i32 {
 }
 
 fn interleave_data_row(data: string, data_count: i32, blocks: i32, position: i32) -> string {
-  let result: string = "";
-  let block: i32 = 0;
+  let mut result: string = "";
+  let mut block: i32 = 0;
   while block < blocks {
     let length: i32 = block_length(data_count, blocks, block);
     if position < length {
@@ -716,12 +713,12 @@ fn interleave_data_row(data: string, data_count: i32, blocks: i32, position: i32
     }
     block = block + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn interleave_data_rows(data: string, data_count: i32, blocks: i32, start: i32, end: i32) -> string {
   if end <= start { return ""; }
-  if end - start == 1 { return interleave_data_row(data, data_count, blocks, start); }
+  if end - start == 1 { return string_concat("", interleave_data_row(data, data_count, blocks, start)); }
   let span: i32 = end - start;
   let middle: i32 = start + span / 2;
   let left: string = interleave_data_rows(data, data_count, blocks, start, middle);
@@ -730,19 +727,19 @@ fn interleave_data_rows(data: string, data_count: i32, blocks: i32, start: i32, 
 }
 
 fn interleave_parity_row(parity: string, blocks: i32, ecc_count: i32, position: i32) -> string {
-  let result: string = "";
-  let block: i32 = 0;
+  let mut result: string = "";
+  let mut block: i32 = 0;
   while block < blocks {
     let parity_index: i32 = block * ecc_count + position;
     result = bytes_push(result, bytes_get(parity, parity_index));
     block = block + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn interleave_parity_rows(parity: string, blocks: i32, ecc_count: i32, start: i32, end: i32) -> string {
   if end <= start { return ""; }
-  if end - start == 1 { return interleave_parity_row(parity, blocks, ecc_count, start); }
+  if end - start == 1 { return string_concat("", interleave_parity_row(parity, blocks, ecc_count, start)); }
   let span: i32 = end - start;
   let middle: i32 = start + span / 2;
   let left: string = interleave_parity_rows(parity, blocks, ecc_count, start, middle);
@@ -761,15 +758,15 @@ export fn interleave_data(data: string, version: i32, ecc: i32) -> string {
   let result: string = interleave_data_rows(data, data_count, blocks, 0, max_data);
 
   // Compute each block's parity once, then interleave.
-  let all_parity: string = "";
-  let block: i32 = 0;
+  let mut all_parity: string = "";
+  let mut block: i32 = 0;
   while block < blocks {
     let start_index: i32 = block_offset(data_count, blocks, block);
     let length: i32 = block_length(data_count, blocks, block);
     let start_char: i32 = start_index * 3;
     let finish_index: i32 = start_index + length;
     let end_char: i32 = finish_index * 3;
-    let block_bytes: string = "";
+    let mut block_bytes: string = "";
     if start_char >= 0 && end_char >= start_char && end_char <= string_length(data) {
       block_bytes = string_slice(data, start_char, end_char);
     }
@@ -827,8 +824,8 @@ export fn bitbuf_get(ptr: u32, index: i32) -> bool {
   let bit: i32 = index - word_index * 32;
   let word: u32 = u32_from_i32(word_index * 4);
   let value: u32 = memory_load_u32(ptr + word);
-  let mask: u32 = 1;
-  let b: i32 = 0;
+  let mut mask: u32 = 1;
+  let mut b: i32 = 0;
   while b < bit {
     mask = mask + mask;
     b = b + 1;
@@ -843,8 +840,8 @@ export fn bitbuf_set(ptr: u32, index: i32, on: bool) -> unit {
   let bit: i32 = index - word_index * 32;
   let word: u32 = u32_from_i32(word_index * 4);
   let value: u32 = memory_load_u32(ptr + word);
-  let mask: u32 = 1;
-  let b: i32 = 0;
+  let mut mask: u32 = 1;
+  let mut b: i32 = 0;
   while b < bit {
     mask = mask + mask;
     b = b + 1;
@@ -864,13 +861,13 @@ fn bitbuf_to_bits_range(ptr: u32, start: i32, end: i32) -> string {
   let span: i32 = end - start;
   if span <= 0 { return ""; }
   if span <= 64 {
-    let result: string = "";
-    let index: i32 = start;
+    let mut result: string = "";
+    let mut index: i32 = start;
     while index < end {
       result = bits_push(result, bitbuf_get(ptr, index));
       index = index + 1;
     }
-    return result;
+    return string_concat("", result);
   }
   let mid: i32 = start + span / 2;
   let left: string = bitbuf_to_bits_range(ptr, start, mid);
@@ -880,5 +877,5 @@ fn bitbuf_to_bits_range(ptr: u32, start: i32, end: i32) -> string {
 
 export fn bitbuf_to_bits(ptr: u32, count: i32) -> string {
   if count <= 0 { return ""; }
-  return bitbuf_to_bits_range(ptr, 0, count);
+  return string_concat("", bitbuf_to_bits_range(ptr, 0, count));
 }

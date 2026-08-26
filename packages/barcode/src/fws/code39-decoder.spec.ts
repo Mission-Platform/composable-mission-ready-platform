@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { encodeBarcode } from '../encoder';
+
 import { load as loadCode39, loadSync as loadCode39Sync } from './code39.fws';
 
 const moduleBits = (value: string): number[] => Array.from(value, Number);
@@ -18,7 +19,7 @@ describe('native Code 39 FWS decoder', () => {
   it('matches extended decoding across printable and control ASCII', () => {
     const code39 = loadCode39Sync();
 
-    for (const value of ['Hello, World!', '\u0000', '\u001f', ' ', '~', '\u007f']) {
+    for (const value of ['Hello, World!', '\u0000', '\u001F', ' ', '~', '\u007F']) {
       const modules = encodeBarcode('code39ext', value).modules.join('');
       expect(code39.decode_code39_extended(moduleBits(modules)), JSON.stringify(value)).toBe(value);
     }
@@ -31,7 +32,9 @@ describe('native Code 39 FWS decoder', () => {
     expect(code39.decode_code39([])).toBe('');
     expect(code39.decode_code39(moduleBits(modules.slice(1)))).toBe('');
     expect(code39.decode_code39(moduleBits(modules.slice(0, -1) + '0'))).toBe('');
-    expect(code39.decode_code39(moduleBits(modules.slice(0, 15) + (modules[15] === '1' ? '0' : '1') + modules.slice(16)))).toBe('');
+    expect(
+      code39.decode_code39(moduleBits(modules.slice(0, 15) + (modules[15] === '1' ? '0' : '1') + modules.slice(16))),
+    ).toBe('');
 
     const extended = encodeBarcode('code39ext', 'A').modules.join('');
     expect(code39.decode_code39_extended(moduleBits(extended))).toBe('A');

@@ -82,16 +82,16 @@ fn dm_rect_count() -> i32 {
 
 // L-finder check: left column and bottom row mostly dark.
 fn dm_l_finder_ok(modules: Array<i32>, mw: i32, mh: i32) -> bool {
-  let dark_left: i32 = 0;
-  let y: i32 = 0;
+  let mut dark_left: i32 = 0;
+  let mut y: i32 = 0;
   while y < mh {
     if modules[y * mw + 0] == 1 {
       dark_left = dark_left + 1;
     }
     y = y + 1;
   }
-  let dark_bottom: i32 = 0;
-  let x: i32 = 0;
+  let mut dark_bottom: i32 = 0;
+  let mut x: i32 = 0;
   while x < mw {
     let bottom: i32 = mh - 1;
     let bindex: i32 = bottom * mw + x;
@@ -120,17 +120,17 @@ fn dm_l_finder_ok(modules: Array<i32>, mw: i32, mh: i32) -> bool {
 // agreement) from an incorrect one (near random ~50%).
 fn dm_timing_ok(modules: Array<i32>, mw: i32, mh: i32) -> bool {
   let total: i32 = mw + mh;
-  let matches: i32 = 0;
-  let j: i32 = 0;
+  let mut matches: i32 = 0;
+  let mut j: i32 = 0;
   while j < mw {
-    let expected: i32 = 0;
+    let mut expected: i32 = 0;
     if j - j / 2 * 2 == 0 { expected = 1; }
     if modules[j] == expected { matches = matches + 1; }
     j = j + 1;
   }
-  let i: i32 = 0;
+  let mut i: i32 = 0;
   while i < mh {
-    let expected: i32 = 0;
+    let mut expected: i32 = 0;
     if i - i / 2 * 2 == 1 { expected = 1; }
     if modules[i * mw + mw - 1] == expected { matches = matches + 1; }
     i = i + 1;
@@ -144,8 +144,8 @@ export fn locate_datamatrix_modules(
   width: i32,
   height: i32,
   modules: Array<i32>,
-  erasures: Array<i32>,
-  meta: Array<i32>
+  mut erasures: Array<i32>,
+  mut meta: Array<i32>
 ) -> i32 {
   if c.array_len_i32(meta) < 5 {
     return 0;
@@ -165,10 +165,10 @@ export fn locate_datamatrix_modules(
   }
 
   // Square first.
-  let i: i32 = 0;
+  let mut i: i32 = 0;
   while i < dm_size_count() {
     let size: i32 = dm_size_at(i);
-    let pad: i32 = 0;
+    let mut pad: i32 = 0;
     while pad <= 3 {
       let ew: i32 = bw - pad * 2;
       let eh: i32 = bh - pad * 2;
@@ -214,15 +214,15 @@ export fn locate_datamatrix_modules(
     let mw: i32 = dm_rect_w(i);
     let mh: i32 = dm_rect_h(i);
     // Try both orientations.
-    let swap: i32 = 0;
+    let mut swap: i32 = 0;
     while swap < 2 {
-      let tw: i32 = mw;
-      let th: i32 = mh;
+      let mut tw: i32 = mw;
+      let mut th: i32 = mh;
       if swap == 1 {
         tw = mh;
         th = mw;
       }
-      let pad: i32 = 0;
+      let mut pad: i32 = 0;
       while pad <= 3 {
         let ew: i32 = bw - pad * 2;
         let eh: i32 = bh - pad * 2;
@@ -292,8 +292,8 @@ fn aztec_size_for_layers(layers: i32, compact: bool) -> i32 {
 // wrong size and every decode would fail. A per-ring tolerance keeps mildly noisy
 // captures decodable while still rejecting wrong dimensions.
 fn aztec_ring_matches(modules: Array<i32>, size: i32, cx: i32, cy: i32, d: i32, expected: i32) -> i32 {
-  let matches: i32 = 0;
-  let x: i32 = cx - d;
+  let mut matches: i32 = 0;
+  let mut x: i32 = cx - d;
   while x <= cx + d {
     if x >= 0 && x < size {
       let top: i32 = cy - d;
@@ -303,7 +303,7 @@ fn aztec_ring_matches(modules: Array<i32>, size: i32, cx: i32, cy: i32, d: i32, 
     }
     x = x + 1;
   }
-  let y: i32 = cy - d + 1;
+  let mut y: i32 = cy - d + 1;
   while y <= cy + d - 1 {
     if y >= 0 && y < size {
       let left: i32 = cx - d;
@@ -322,11 +322,11 @@ fn aztec_bullseye_ok(modules: Array<i32>, size: i32) -> bool {
   if modules[cy * size + cx] != 1 {
     return false;
   }
-  let total: i32 = 0;
-  let matches: i32 = 0;
-  let d: i32 = 1;
+  let mut total: i32 = 0;
+  let mut matches: i32 = 0;
+  let mut d: i32 = 1;
   while d <= 3 {
-    let expected: i32 = 0;
+    let mut expected: i32 = 0;
     if d - d / 2 * 2 == 0 { expected = 1; }
     matches = matches + aztec_ring_matches(modules, size, cx, cy, d, expected);
     total = total + 8 * d;
@@ -341,8 +341,8 @@ export fn locate_aztec_modules(
   width: i32,
   height: i32,
   modules: Array<i32>,
-  erasures: Array<i32>,
-  meta: Array<i32>
+  mut erasures: Array<i32>,
+  mut meta: Array<i32>
 ) -> i32 {
   if c.array_len_i32(meta) < 5 {
     return 0;
@@ -361,17 +361,17 @@ export fn locate_aztec_modules(
     return 0;
   }
 
-  let compact_flag: i32 = 0;
+  let mut compact_flag: i32 = 0;
   while compact_flag < 2 {
     let compact: bool = compact_flag == 1;
-    let layers: i32 = 1;
-    let max_layers: i32 = 32;
+    let mut layers: i32 = 1;
+    let mut max_layers: i32 = 32;
     if compact {
       max_layers = 4;
     }
     while layers <= max_layers {
       let size: i32 = aztec_size_for_layers(layers, compact);
-      let pad: i32 = 0;
+      let mut pad: i32 = 0;
       while pad <= 3 {
         let effective_w: i32 = bw - pad * 2;
         let effective_h: i32 = bh - pad * 2;

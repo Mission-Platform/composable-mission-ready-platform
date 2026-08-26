@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null
+function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
 ```
 
 Décoder une série de bits de module (`1` = barre, `0` = espace) du `symbology` donné
@@ -31,17 +31,17 @@ Formulaire `number system + digits + check`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| symbologie | Code-barresSymbologie |  |
-| modules | TableauLike<number> |  |
+| Nom        | Tapez                 | Descriptif |
+| ---------- | --------------------- | ---------- |
+| symbologie | Code-barresSymbologie |            |
+| modules    | TableauLike<number>   |            |
 
 ### decodeBarcodeAsync
 
 **Genre :** fonction
 
 ```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>
+function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
 ```
 
 Décoder une série de bits de module dans sa charge utile, en chargeant le FWS natif
@@ -50,10 +50,10 @@ sont renvoyés en tant que refus de promesse. Voir {@link decodeBarcode}.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| symbologie | Code-barresSymbologie |  |
-| modules | TableauLike<number> |  |
+| Nom        | Tapez                 | Descriptif |
+| ---------- | --------------------- | ---------- |
+| symbologie | Code-barresSymbologie |            |
+| modules    | TableauLike<number>   |            |
 
 ## `src/encoder/index`
 
@@ -72,7 +72,22 @@ Le résultat de {@link encodeBarcode} : les bits du module avec leur largeur to
 **Genre :** type
 
 ```typescript
-export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'ean13' | 'ean8' | 'upca' | 'upce' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode';
+export type BarcodeSymbology =
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'ean13'
+  | 'ean8'
+  | 'upca'
+  | 'upce'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode';
 ```
 
 Symbologies de codes-barres linéaires prises en charge.
@@ -82,17 +97,17 @@ Symbologies de codes-barres linéaires prises en charge.
 **Genre :** fonction
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
+function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
 Encodez `data` dans un code-barres linéaire à l’aide du graphique FWS local du package.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| symbologie | Code-barresSymbologie |  |
-| données | chaîne |  |
+| Nom        | Tapez                 | Descriptif |
+| ---------- | --------------------- | ---------- |
+| symbologie | Code-barresSymbologie |            |
+| données    | chaîne                |            |
 
 #### Contracter
 
@@ -103,17 +118,17 @@ Encodez `data` dans un code-barres linéaire à l’aide du graphique FWS local 
 **Genre :** fonction
 
 ```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>
+function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
 Encodez `data` de manière asynchrone à l’aide du graphique FWS local du package.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| symbologie | Code-barresSymbologie |  |
-| données | chaîne |  |
+| Nom        | Tapez                 | Descriptif |
+| ---------- | --------------------- | ---------- |
+| symbologie | Code-barresSymbologie |            |
+| données    | chaîne                |            |
 
 ## `src/fws/index`
 
@@ -122,233 +137,246 @@ Encodez `data` de manière asynchrone à l’aide du graphique FWS local du pack
 **Genre :** fonction
 
 ```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string
+function decodeEan13Fws(value: string | ArrayLike<number>): string;
 ```
 
 Décode les bits du module EAN-13 et valide la parité et le chiffre de contrôle.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne \| TableauLike<number> |  |
+| Nom    | Tapez                         | Descriptif |
+| ------ | ----------------------------- | ---------- |
+| valeur | chaîne \| TableauLike<number> |            |
 
 ### décoderEan13FwsAsync
 
 **Genre :** fonction
 
 ```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 Décode de manière asynchrone les bits du module EAN-13 via FWS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne \| TableauLike<number> |  |
+| Nom    | Tapez                         | Descriptif |
+| ------ | ----------------------------- | ---------- |
+| valeur | chaîne \| TableauLike<number> |            |
 
 ### décoderEan8Fws
 
 **Genre :** fonction
 
 ```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string
+function decodeEan8Fws(value: string | ArrayLike<number>): string;
 ```
 
 Décode les bits du module EAN-8 et renvoie la charge utile avec son chiffre de contrôle.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne \| TableauLike<number> |  |
+| Nom    | Tapez                         | Descriptif |
+| ------ | ----------------------------- | ---------- |
+| valeur | chaîne \| TableauLike<number> |            |
 
 ### décoderEan8FwsAsync
 
 **Genre :** fonction
 
 ```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 Décode de manière asynchrone les bits du module EAN-8 via FWS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne \| TableauLike<number> |  |
+| Nom    | Tapez                         | Descriptif |
+| ------ | ----------------------------- | ---------- |
+| valeur | chaîne \| TableauLike<number> |            |
 
 ### encodeEan13Fws
 
 **Genre :** fonction
 
 ```typescript
-function encodeEan13Fws(value: string): string
+function encodeEan13Fws(value: string): string;
 ```
 
 Encode une charge utile EAN-13 à douze chiffres et calcule son chiffre de contrôle dans FWS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| valeur | chaîne |            |
 
 ### encodeEan13FwsAsync
 
 **Genre :** fonction
 
 ```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>
+function encodeEan13FwsAsync(value: string): Promise<string>;
 ```
 
 Encode de manière asynchrone une charge utile EAN-13 à douze chiffres avec le chargeur FWS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| valeur | chaîne |            |
 
 ### encodeEan8Fws
 
 **Genre :** fonction
 
 ```typescript
-function encodeEan8Fws(value: string): string
+function encodeEan8Fws(value: string): string;
 ```
 
 Encode une charge utile EAN-8 à sept chiffres et calcule son chiffre de contrôle dans FWS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| valeur | chaîne |            |
 
 ### encodeEan8FwsAsync
 
 **Genre :** fonction
 
 ```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>
+function encodeEan8FwsAsync(value: string): Promise<string>;
 ```
 
 Encode de manière asynchrone une charge utile EAN-8 à sept chiffres avec le chargeur FWS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| valeur | chaîne |            |
 
 ### encodeUpcaFws
 
 **Genre :** fonction
 
 ```typescript
-function encodeUpcaFws(value: string): string
+function encodeUpcaFws(value: string): string;
 ```
 
 Encode une charge utile UPC-A via le graphique FWS EAN-13 avec préfixe zéro.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| valeur | chaîne |            |
 
 ### encodeUpcaFwsAsync
 
 **Genre :** fonction
 
 ```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>
+function encodeUpcaFwsAsync(value: string): Promise<string>;
 ```
 
 Encode de manière asynchrone une charge utile UPC-A via FWS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| valeur | chaîne |            |
 
 ### encodeVariableBarcodeFws
 
 **Genre :** fonction
 
 ```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string
+function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
 Encode un code-barres de longueur variable pris en charge via son graphique FWS natif lorsqu'il est disponible.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| symbologie | VariableBarcodeSymbologie |  |
-| valeur | chaîne |  |
+| Nom        | Tapez                     | Descriptif |
+| ---------- | ------------------------- | ---------- |
+| symbologie | VariableBarcodeSymbologie |            |
+| valeur     | chaîne                    |            |
 
 ### encodeVariableBarcodeFwsAsync
 
 **Genre :** fonction
 
 ```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>
+function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
 ```
 
 Encode de manière asynchrone un code-barres de longueur variable pris en charge via FWS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| symbologie | VariableBarcodeSymbologie |  |
-| valeur | chaîne |  |
+| Nom        | Tapez                     | Descriptif |
+| ---------- | ------------------------- | ---------- |
+| symbologie | VariableBarcodeSymbologie |            |
+| valeur     | chaîne                    |            |
 
 ### validerGs1DataBarValue
 
 **Genre :** fonction
 
 ```typescript
-function validateGs1DataBarValue(value: string): boolean
+function validateGs1DataBarValue(value: string): boolean;
 ```
 
 Valide une valeur GS1 DataBar/RSS-14 GTIN-14 dans le graphique FWS local du package.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| valeur | chaîne |            |
 
 ### validateGs1DataBarValueAsync
 
 **Genre :** fonction
 
 ```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>
+function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
 ```
 
 Valide de manière asynchrone une valeur GS1 DataBar/RSS-14 GTIN-14 via FWS.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| valeur | chaîne |            |
 
 ### VariableBarcodeSymbologie
 
 **Genre :** type
 
 ```typescript
-export type VariableBarcodeSymbology = Extract< BarcodeSymbology, | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode' >;
+export type VariableBarcodeSymbology = Extract<
+  BarcodeSymbology,
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode'
+>;
 ```
 
 Symbologies de longueur variable prises en charge par l'adaptateur FWS de code-barres direct.

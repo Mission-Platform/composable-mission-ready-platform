@@ -70,15 +70,15 @@ export fn multi_contains(list: string, entry: string) -> bool {
   let entry_length: i32 = string_length(entry);
   if entry_length == 0 { return true; }
   let list_length: i32 = string_length(list);
-  let start: i32 = 0;
+  let mut start: i32 = 0;
   while start < list_length {
-    let end: i32 = start;
+    let mut end: i32 = start;
     while end < list_length && string_byte_at(list, end) != 30 {
       end = end + 1;
     }
     if end - start == entry_length {
-      let index: i32 = 0;
-      let equal: bool = true;
+      let mut index: i32 = 0;
+      let mut equal: bool = true;
       while index < entry_length {
         if string_byte_at(list, start + index) != string_byte_at(entry, index) {
           equal = false;
@@ -94,9 +94,9 @@ export fn multi_contains(list: string, entry: string) -> bool {
 
 export fn u32_from_i32(value: i32) -> u32 {
   if value <= 0 { return 0; }
-  let remaining: i32 = value;
-  let place: u32 = 1;
-  let result: u32 = 0;
+  let mut remaining: i32 = value;
+  let mut place: u32 = 1;
+  let mut result: u32 = 0;
   while remaining > 0 {
     if remaining - remaining / 2 * 2 == 1 { result = result + place; }
     remaining = remaining / 2;
@@ -106,9 +106,9 @@ export fn u32_from_i32(value: i32) -> u32 {
 }
 
 export fn i32_from_u32(value: u32) -> i32 {
-  let remaining: u32 = value;
-  let place: i32 = 1;
-  let result: i32 = 0;
+  let mut remaining: u32 = value;
+  let mut place: i32 = 1;
+  let mut result: i32 = 0;
   while remaining > 0 {
     let bit: u32 = remaining - remaining / 2 * 2;
     if bit == 1 { result = result + place; }
@@ -123,13 +123,13 @@ export fn array_len_i32(values: Array<i32>) -> i32 {
 }
 
 export fn mem_alloc_bytes(nbytes: i32) -> u32 {
-  let aligned: i32 = nbytes;
+  let mut aligned: i32 = nbytes;
   if aligned < 4 { aligned = 4; }
   let rem: i32 = aligned - aligned / 4 * 4;
   if rem != 0 { aligned = aligned + 4 - rem; }
   let size: u32 = u32_from_i32(aligned);
   let ptr: u32 = memory_alloc(size);
-  let offset: u32 = 0;
+  let mut offset: u32 = 0;
   while offset < size {
     memory_store_u32(ptr + offset, 0);
     offset = offset + 4;
@@ -143,8 +143,8 @@ export fn mem_get_u8(ptr: u32, index: i32) -> i32 {
   let byte_index: i32 = index - word_index * 4;
   let addr: u32 = ptr + u32_from_i32(word_index * 4);
   let word: u32 = memory_load_u32(addr);
-  let shifted: u32 = word;
-  let b: i32 = 0;
+  let mut shifted: u32 = word;
+  let mut b: i32 = 0;
   while b < byte_index {
     shifted = shifted / 256;
     b = b + 1;
@@ -159,21 +159,21 @@ export fn mem_set_u8(ptr: u32, index: i32, value: i32) -> unit {
   let byte_index: i32 = index - word_index * 4;
   let addr: u32 = ptr + u32_from_i32(word_index * 4);
   let word: u32 = memory_load_u32(addr);
-  let v: i32 = value;
+  let mut v: i32 = value;
   if v < 0 { v = 0; }
   if v > 255 { v = 255; }
-  let tmp: u32 = word;
+  let mut tmp: u32 = word;
   let part0: u32 = tmp - tmp / 256 * 256;
-  let bytes0: i32 = i32_from_u32(part0);
+  let mut bytes0: i32 = i32_from_u32(part0);
   tmp = tmp / 256;
   let part1: u32 = tmp - tmp / 256 * 256;
-  let bytes1: i32 = i32_from_u32(part1);
+  let mut bytes1: i32 = i32_from_u32(part1);
   tmp = tmp / 256;
   let part2: u32 = tmp - tmp / 256 * 256;
-  let bytes2: i32 = i32_from_u32(part2);
+  let mut bytes2: i32 = i32_from_u32(part2);
   tmp = tmp / 256;
   let part3: u32 = tmp - tmp / 256 * 256;
-  let bytes3: i32 = i32_from_u32(part3);
+  let mut bytes3: i32 = i32_from_u32(part3);
   if byte_index == 0 { bytes0 = v; }
   if byte_index == 1 { bytes1 = v; }
   if byte_index == 2 { bytes2 = v; }
@@ -220,22 +220,22 @@ export fn digit_char(value: i32) -> string {
 }
 
 fn itoa_inner(value: i32) -> string {
-  if value < 10 { return digit_char(value); }
+  if value < 10 { return string_concat("", digit_char(value)); }
   return string_concat(itoa_inner(value / 10), digit_char(value - value / 10 * 10));
 }
 
 export fn itoa(value: i32) -> string {
   if value < 0 { return string_concat("-", itoa_inner(0 - value)); }
-  return itoa_inner(value);
+  return string_concat("", itoa_inner(value));
 }
 
 export fn byte_digits(value: i32) -> string {
-  let v: i32 = value;
+  let mut v: i32 = value;
   if v < 0 { v = 0; }
   if v > 255 { v = 255; }
   if v < 10 { return string_concat("00", itoa_inner(v)); }
   if v < 100 { return string_concat("0", itoa_inner(v)); }
-  return itoa_inner(v);
+  return string_concat("", itoa_inner(v));
 }
 
 export fn bytes_push(data: string, value: i32) -> string {
@@ -258,15 +258,15 @@ export fn bytes_len(data: string) -> i32 {
 // Map a single byte value to its ASCII string char (printable + common controls).
 // Returns "" for bytes with no representation here.
 export fn ascii_char_of(value: i32) -> string {
-  return ascii_char(value);
+  return string_concat("", ascii_char(value));
 }
 
 // ASCII-only decode of decimal-triplet payloads.
 export fn ascii_from_triplets(payload: string) -> string {
   let length: i32 = bytes_len(payload);
   if length == 0 { return ""; }
-  let result: string = "";
-  let index: i32 = 0;
+  let mut result: string = "";
+  let mut index: i32 = 0;
   while index < length {
     let value: i32 = bytes_get(payload, index);
     if value < 32 && value != 29 && value != 30 && value != 28 {
@@ -276,7 +276,7 @@ export fn ascii_from_triplets(payload: string) -> string {
     result = string_concat(result, ascii_char(value));
     index = index + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn ascii_char(value: i32) -> string {
@@ -296,7 +296,7 @@ fn ascii_char(value: i32) -> string {
   if value == 45 { return "-"; }
   if value == 46 { return "."; }
   if value == 47 { return "/"; }
-  if value >= 48 && value <= 57 { return digit_char(value - 48); }
+  if value >= 48 && value <= 57 { return string_concat("", digit_char(value - 48)); }
   if value == 58 { return ":"; }
   if value == 59 { return ";"; }
   if value == 60 { return "<"; }
@@ -304,14 +304,14 @@ fn ascii_char(value: i32) -> string {
   if value == 62 { return ">"; }
   if value == 63 { return "?"; }
   if value == 64 { return "@"; }
-  if value >= 65 && value <= 90 { return upper_char(value - 65); }
+  if value >= 65 && value <= 90 { return string_concat("", upper_char(value - 65)); }
   if value == 91 { return "["; }
   if value == 92 { return "\\"; }
   if value == 93 { return "]"; }
   if value == 94 { return "^"; }
   if value == 95 { return "_"; }
   if value == 96 { return "`"; }
-  if value >= 97 && value <= 122 { return lower_char(value - 97); }
+  if value >= 97 && value <= 122 { return string_concat("", lower_char(value - 97)); }
   if value == 123 { return "{"; }
   if value == 124 { return "|"; }
   if value == 125 { return "}"; }

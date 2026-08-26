@@ -19,23 +19,23 @@ a través de un pequeño contenedor de módulo ES completamente tipado y un comp
 
 ## Simbologías admitidas
 
-| Simbología | Notas |
-| ------------ | ---------------------------------------------------------------------- |
-| `code128` | Densidad alta. Código B para ASCII imprimible; Código C vía rápida para dígitos. |
-| `gs1-128` | Código 128 con FNC1 inicial para Identificadores de Aplicación GS1.            |
-| `code39` | Alfanumérico, autocomrobable; autoencuadrado con `*` inicio/parada.          |
-| `code39ext` | Código ASCII completo 39 mediante caracteres de desplazamiento.                               |
-| `code93` | Compacto, autocomprobable (dos caracteres de verificación).                         |
-| `code93ext` | Código ASCII completo 93 mediante caracteres de desplazamiento.                               |
-| `ean13` | 12 dígitos (cheque adjunto) o 13 (cheque verificado).                     |
-| `ean8` | 7 dígitos (cheque adjunto) u 8 (cheque verificado).                       |
-| `upca` | 11 dígitos (cheque adjunto) o 12 (cheque verificado).                     |
-| `upce` | UPC con supresión de cero; Forma de 6 dígitos o 7/8 dígitos.                       |
-| `itf` | Intercalado 2 de 5; Se requiere un recuento par de dígitos.                         |
-| `itf14` | GTIN-14 fijo de 14 dígitos.                                                |
-| `codabar` | Dígitos más `-$:/.+`; autoencuadrado con inicio/parada `A`.                 |
-| `msi` | MSI / Plessey modificado con verificación mod-10.                              |
-| `pharmacode` | Código binario farmacéutico Laetus (`3`–`131070`).                      |
+| Simbología   | Notas                                                                            |
+| ------------ | -------------------------------------------------------------------------------- |
+| `code128`    | Densidad alta. Código B para ASCII imprimible; Código C vía rápida para dígitos. |
+| `gs1-128`    | Código 128 con FNC1 inicial para Identificadores de Aplicación GS1.              |
+| `code39`     | Alfanumérico, autocomrobable; autoencuadrado con `*` inicio/parada.              |
+| `code39ext`  | Código ASCII completo 39 mediante caracteres de desplazamiento.                  |
+| `code93`     | Compacto, autocomprobable (dos caracteres de verificación).                      |
+| `code93ext`  | Código ASCII completo 93 mediante caracteres de desplazamiento.                  |
+| `ean13`      | 12 dígitos (cheque adjunto) o 13 (cheque verificado).                            |
+| `ean8`       | 7 dígitos (cheque adjunto) u 8 (cheque verificado).                              |
+| `upca`       | 11 dígitos (cheque adjunto) o 12 (cheque verificado).                            |
+| `upce`       | UPC con supresión de cero; Forma de 6 dígitos o 7/8 dígitos.                     |
+| `itf`        | Intercalado 2 de 5; Se requiere un recuento par de dígitos.                      |
+| `itf14`      | GTIN-14 fijo de 14 dígitos.                                                      |
+| `codabar`    | Dígitos más `-$:/.+`; autoencuadrado con inicio/parada `A`.                      |
+| `msi`        | MSI / Plessey modificado con verificación mod-10.                                |
+| `pharmacode` | Código binario farmacéutico Laetus (`3`–`131070`).                               |
 
 ## API y uso
 

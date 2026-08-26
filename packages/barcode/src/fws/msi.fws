@@ -1,11 +1,11 @@
 // MSI encoder graph with mod-10 validation.
 
 fn u32_to_i32_len(value: u32) -> i32 {
-  let remaining: u32 = value;
-  let place: i32 = 1;
-  let result: i32 = 0;
+  let mut remaining: u32 = value;
+  let mut place: i32 = 1;
+  let mut result: i32 = 0;
   while remaining > 0 {
-    let bit: u32 = remaining - remaining / 2 * 2;
+    let mut bit: u32 = remaining - remaining / 2 * 2;
     if bit == 1 { result = result + place; }
     remaining = remaining / 2;
     place = place * 2;
@@ -102,12 +102,12 @@ fn encode_digits(value: string, index: i32, result: string) -> string {
     let with_check: string = append_digit(result, mod10_check(value));
     return string_concat(with_check, "1001");
   }
-  return encode_digits(value, index + 1, append_digit(result, digit_at(value, index)));
+  return string_concat(encode_digits(value, index + 1, append_digit(result, digit_at(value, index))), "");
 }
 
 export fn encode_msi(value: string) -> string {
   if string_length(value) == 0 || !all_digits(value, 0) { return ""; }
-  return encode_digits(value, 0, "110");
+  return string_concat(encode_digits(value, 0, "110"), "");
 }
 
 fn msi_bit(modules: Array<i32>, start: i32) -> i32 {
@@ -127,7 +127,7 @@ fn decode_msi_digits(modules: Array<i32>, start: i32, end: i32, result: string) 
   if start >= end { return result; }
   let number: i32 = msi_digit(modules, start, 0, 0);
   if number < 0 || number > 9 { return ""; }
-  return decode_msi_digits(modules, start + 12, end, string_concat(result, digit_char(number)));
+  return string_concat(decode_msi_digits(modules, start + 12, end, string_concat(result, digit_char(number))), "");
 }
 
 fn decode_msi_frame(modules: Array<i32>, length: i32) -> string {
@@ -143,9 +143,9 @@ fn decode_msi_frame(modules: Array<i32>, length: i32) -> string {
 }
 
 export fn decode_msi(modules: Array<i32>) -> string {
-  return decode_msi_frame(modules, modules_len(modules));
+  return string_concat(decode_msi_frame(modules, modules_len(modules)), "");
 }
 
 export fn decode_msi_row(modules: Array<i32>, count: i32) -> string {
-  return decode_msi_frame(modules, count);
+  return string_concat(decode_msi_frame(modules, count), "");
 }

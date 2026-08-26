@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 אביזר נוחות עבור המופע המשותף {@link PhoneNumberUtil}.
@@ -26,7 +26,7 @@ function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
 פונקציה **סוג:**
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 אביזר נוחות עבור המופע המשותף והסינכרוני של {@link PhoneNumberUtil}.
@@ -36,7 +36,7 @@ function getPhoneNumberUtilSync(): PhoneNumberUtil
 **סוג:** קבוע
 
 ```typescript
-export const PhoneNumberFormat
+export const PhoneNumberFormat;
 ```
 
 פורמט פלט, שיקוף `PhoneNumberFormat` של libphonenumber.
@@ -46,7 +46,7 @@ export const PhoneNumberFormat
 **סוג:** קבוע
 
 ```typescript
-export const PhoneNumberType
+export const PhoneNumberType;
 ```
 
 סוג קו של מספר טלפון, שיקוף `PhoneNumberType` של libphonenumber.
@@ -86,8 +86,8 @@ export fn country_code_for_region(region: string) -> i32
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
+| שם   | הקלד   | תיאור                           |
+| ---- | ------ | ------------------------------- |
 | אזור | מחרוזת | קוד אזור ISO כגון "US" או "GB". |
 
 #### חוֹזֶה
@@ -107,8 +107,8 @@ export fn national_prefix(region: string) -> string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
+| שם   | הקלד   | תיאור         |
+| ---- | ------ | ------------- |
 | אזור | מחרוזת | קוד אזור ISO. |
 
 #### חוֹזֶה
@@ -128,9 +128,9 @@ export fn region_for_country_code(code: i32) -> string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קוד | i32 | קידומת מדינה לחיוג בינלאומי. |
+| שם  | הקלד | תיאור                        |
+| --- | ---- | ---------------------------- |
+| קוד | i32  | קידומת מדינה לחיוג בינלאומי. |
 
 #### חוֹזֶה
 
@@ -149,10 +149,10 @@ export fn region_is(region: string, expected: string) -> bool
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
+| שם   | הקלד   | תיאור               |
+| ---- | ------ | ------------------- |
 | אזור | מחרוזת | קוד אזור ISO מועמד. |
-| צפוי | מחרוזת | קוד אזור ISO צפוי. |
+| צפוי | מחרוזת | קוד אזור ISO צפוי.  |
 
 #### חוֹזֶה
 

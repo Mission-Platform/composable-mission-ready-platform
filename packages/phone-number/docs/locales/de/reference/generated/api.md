@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/phone-numbe
 **Art:** Funktion
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 Komfort-Accessor für die gemeinsam genutzte {@link PhoneNumberUtil}-Instanz.
@@ -26,7 +26,7 @@ Komfort-Accessor für die gemeinsam genutzte {@link PhoneNumberUtil}-Instanz.
 **Art:** Funktion
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 Praktischer Accessor für die gemeinsam genutzte, synchrone {@link PhoneNumberUtil}-Instanz.
@@ -36,7 +36,7 @@ Praktischer Accessor für die gemeinsam genutzte, synchrone {@link PhoneNumberUt
 **Art:** konstant
 
 ```typescript
-export const PhoneNumberFormat
+export const PhoneNumberFormat;
 ```
 
 Ausgabeformat, das `PhoneNumberFormat` von libphonenumber widerspiegelt.
@@ -46,7 +46,7 @@ Ausgabeformat, das `PhoneNumberFormat` von libphonenumber widerspiegelt.
 **Art:** konstant
 
 ```typescript
-export const PhoneNumberType
+export const PhoneNumberType;
 ```
 
 Leitungstyp einer Telefonnummer, der `PhoneNumberType` von libphonenumber widerspiegelt.
@@ -86,8 +86,8 @@ Ordnet eine unterstützte Regionalvorwahl der entsprechenden internationalen Lan
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
+| Name   | Geben Sie    | ein Beschreibung                     |
+| ------ | ------------ | ------------------------------------ |
 | Region | Zeichenfolge | ISO-Regionalcode wie „US“ oder „GB“. |
 
 #### Vertrag
@@ -107,8 +107,8 @@ Gibt das nationale Amtspräfix zurück, das beim Wählen innerhalb einer Region 
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
+| Name   | Geben Sie    | ein Beschreibung  |
+| ------ | ------------ | ----------------- |
 | Region | Zeichenfolge | ISO-Regionalcode. |
 
 #### Vertrag
@@ -128,9 +128,9 @@ Ordnet eine Landesvorwahl einer repräsentativen ISO-Region zu.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Code | i32 | Internationale Landesvorwahl. |
+| Name | Geben Sie | ein Beschreibung              |
+| ---- | --------- | ----------------------------- |
+| Code | i32       | Internationale Landesvorwahl. |
 
 #### Vertrag
 
@@ -149,10 +149,10 @@ Gibt „true“ zurück, wenn der Regionalcode dem erwarteten Wert entspricht.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Region | Zeichenfolge | ISO-Regionalcode des Kandidaten. |
-| erwartet | Zeichenfolge | Erwarteter ISO-Regionalcode. |
+| Name     | Geben Sie    | ein Beschreibung                 |
+| -------- | ------------ | -------------------------------- |
+| Region   | Zeichenfolge | ISO-Regionalcode des Kandidaten. |
+| erwartet | Zeichenfolge | Erwarteter ISO-Regionalcode.     |
 
 #### Vertrag
 

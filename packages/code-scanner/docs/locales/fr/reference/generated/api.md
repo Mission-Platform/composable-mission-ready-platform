@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
+function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
 ```
 
 Décodez une image `Blob`/`File` en un {@link ImageLike} (pixels RVBA). Utilisations
@@ -24,17 +24,17 @@ Décodez une image `Blob`/`File` en un {@link ImageLike} (pixels RVBA). Utilisat
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| goutte | Goutte |  |
-| roi |  |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| goutte | Goutte |            |
+| roi    |        |            |
 
 ### scanFichier
 
 **Genre :** fonction
 
 ```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>
+function scanFile(file: Blob): Promise<ScanResult | null>;
 ```
 
 Décodez `file` et recherchez-y un code, en exécutant de manière synchrone WebAssembly
@@ -42,16 +42,16 @@ scanner (qui s'auto-initialise à partir de son binaire intégré dans une versi
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| fichier | Goutte |  |
+| Nom     | Tapez  | Descriptif |
+| ------- | ------ | ---------- |
+| fichier | Goutte |            |
 
 ### scanFileAsync
 
 **Genre :** fonction
 
 ```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>
+function scanFileAsync(file: Blob): Promise<ScanResult | null>;
 ```
 
 Décodez `file` et scannez-le pour un code, initialisant le scanner et les décodeurs
@@ -59,16 +59,16 @@ de manière asynchrone - sûr dans n'importe quel environnement (aucun binaire e
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| fichier | Goutte |  |
+| Nom     | Tapez  | Descriptif |
+| ------- | ------ | ---------- |
+| fichier | Goutte |            |
 
 ### vidéoFrameToImageData
 
 **Genre :** fonction
 
 ```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike
+function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
 ```
 
 Capturez l'image actuelle d'un élément `<video>` en cours de lecture en tant que
@@ -79,10 +79,10 @@ La taille du réticule que l'interface utilisateur montre à l'utilisateur augme
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| vidéo | HTMLÉlémentVidéo |  |
-| roi |  |  |
+| Nom   | Tapez            | Descriptif |
+| ----- | ---------------- | ---------- |
+| vidéo | HTMLÉlémentVidéo |            |
+| roi   |                  |            |
 
 ## `src/debug`
 
@@ -91,7 +91,7 @@ La taille du réticule que l'interface utilisateur montre à l'utilisateur augme
 **Genre :** fonction
 
 ```typescript
-function isCodeScannerDebugEnabled(): boolean
+function isCodeScannerDebugEnabled(): boolean;
 ```
 
 Si la journalisation des diagnostics du scanner est actuellement activée.
@@ -101,16 +101,16 @@ Si la journalisation des diagnostics du scanner est actuellement activée.
 **Genre :** fonction
 
 ```typescript
-function setCodeScannerDebug(value: boolean): void
+function setCodeScannerDebug(value: boolean): void;
 ```
 
 Activez ou désactivez la journalisation des diagnostics côté JS du scanner au moment de l'exécution.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | booléen |  |
+| Nom    | Tapez   | Descriptif |
+| ------ | ------- | ---------- |
+| valeur | booléen |            |
 
 #### Contracter
 
@@ -123,7 +123,11 @@ Activez ou désactivez la journalisation des diagnostics côté JS du scanner au
 **Genre :** fonction
 
 ```typescript
-function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LOW_PERCENTILE, highPercentile: number = DEFAULT_HIGH_PERCENTILE): LumaImage
+function contrastStretchLuma(
+  luma: LumaImage,
+  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
+  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
+): LumaImage;
 ```
 
 Étirez par contraste une {@link LumaImage}, en mappant son `lowPercentile`..`highPercentile`
@@ -143,18 +147,18 @@ value — est renvoyée inchangée, puisqu'il n'y a rien à étirer.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| lumière | LumaImage |  |
-| basPercentile | numéro |  |
-| centile élevé | numéro |  |
+| Nom           | Tapez     | Descriptif |
+| ------------- | --------- | ---------- |
+| lumière       | LumaImage |            |
+| basPercentile | numéro    |            |
+| centile élevé | numéro    |            |
 
 ### imageDataToLuma
 
 **Genre :** fonction
 
 ```typescript
-function imageDataToLuma(image: ImageLike): LumaImage
+function imageDataToLuma(image: ImageLike): LumaImage;
 ```
 
 Convertissez un RGBA {@link ImageLike} (par exemple un canevas `ImageData`) en un
@@ -163,9 +167,9 @@ monocanal {@link LumaImage} en utilisant le Rec. 601 poids luma
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| images | ImageLike |  |
+| Nom    | Tapez     | Descriptif |
+| ------ | --------- | ---------- |
+| images | ImageLike |            |
 
 ### LumaImage
 
@@ -184,7 +188,7 @@ Une image en niveaux de gris monocanal : `width * height` octets luma.
 **Genre :** fonction
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
+function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
 ```
 
 Localisez et décodez le premier code pris en charge dans `image`, en instanciant le
@@ -192,57 +196,57 @@ graphique du scanner de manière synchrone lors de la première utilisation.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| images | ImageLike |  |
-| roi | Roi |  |
+| Nom    | Tapez     | Descriptif |
+| ------ | --------- | ---------- |
+| images | ImageLike |            |
+| roi    | Roi       |            |
 
 #### Contracter
 
 - **@param :** région d'intérêt facultative (pixels de l'image) pour restreindre l'analyse à
 - recadré avant la binarisation, donc le fouillis environnant est ignoré.
 - **@renvoie :** le {@link ScanResult} ou `null` lorsqu'aucun code n'est trouvé. Lorsqu'un code
-est localisé mais sa charge utile ne peut pas être décodée, `result.value` est `null`.
+  est localisé mais sa charge utile ne peut pas être décodée, `result.value` est `null`.
 
 ### scanImageDataAll
 
 **Genre :** fonction
 
 ```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[]
+function scanImageDataAll(image: ImageLike): ScanResult[];
 ```
 
-Localisez et décodez *chaque* code distinct dans `image` (pas seulement le premier),
+Localisez et décodez _chaque_ code distinct dans `image` (pas seulement le premier),
 instancier le graphique du scanner de manière synchrone lors de la première utilisation.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| images | ImageLike |  |
+| Nom    | Tapez     | Descriptif |
+| ------ | --------- | ---------- |
+| images | ImageLike |            |
 
 #### Contracter
 
 - **@renvoie :** les {@link ScanResult} décodés dans l'ordre de découverte, dédupliqués ;
-vide quand rien n'est décodé.
+  vide quand rien n'est décodé.
 
 ### scanImageDataAllAsync
 
 **Genre :** fonction
 
 ```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
+function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
 ```
 
-Localisez et décodez *chaque* code distinct dans `image`, en chargeant le graphique du scanner
+Localisez et décodez _chaque_ code distinct dans `image`, en chargeant le graphique du scanner
 de manière asynchrone lors de la première utilisation. Les échecs d'initialisation et d'analyse sont
 renvoyé en tant que refus de promesse.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| images | ImageLike |  |
+| Nom    | Tapez     | Descriptif |
+| ------ | --------- | ---------- |
+| images | ImageLike |            |
 
 #### Contracter
 
@@ -253,7 +257,7 @@ renvoyé en tant que refus de promesse.
 **Genre :** fonction
 
 ```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>
+function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
 ```
 
 Localisez et décodez le premier code pris en charge dans `image`, en chargeant le scanner
@@ -262,10 +266,10 @@ les échecs sont renvoyés sous forme de rejets de promesse.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| images | ImageLike |  |
-| roi | Roi |  |
+| Nom    | Tapez     | Descriptif |
+| ------ | --------- | ---------- |
+| images | ImageLike |            |
+| roi    | Roi       |            |
 
 #### Contracter
 
@@ -296,7 +300,7 @@ export interface Roi
 
 Une région d'intérêt rectangulaire, en pixels de l'image, à laquelle limiter une analyse (par ex.
 un réticule qu'une interface utilisateur de caméra en direct dessine sur le cadre). La récolte a lieu en wasm
-*avant* la binarisation, donc le fouillis environnant n'atteint jamais les localisateurs. Un
+_avant_ la binarisation, donc le fouillis environnant n'atteint jamais les localisateurs. Un
 la région surplombant un bord est serrée ; on trouve entièrement hors du cadre
 rien.
 
@@ -318,4 +322,4 @@ Les familles de codes que le scanner peut localiser et décoder.
 export interface ScanResult
 ```
 
-Le résultat d’une *détection* réussie.
+Le résultat d’une _détection_ réussie.

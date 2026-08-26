@@ -3,10 +3,7 @@
 // All supported 1D decoder families run through package-local Forge Web Script
 // graphs.
 
-import {
-  load as loadBarcodeNative,
-  loadSync as loadBarcodeNativeSync,
-} from '../fws/barcode-native.fws';
+import { load as loadBarcodeNative, loadSync as loadBarcodeNativeSync } from '../fws/barcode-native.fws';
 import { FWS_SYMBOLOGY } from '../fws/symbology';
 
 import type { BarcodeSymbology } from '../encoder';

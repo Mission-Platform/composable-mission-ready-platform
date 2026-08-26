@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null
+function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
 ```
 
 قم بفك تشفير سلسلة من وحدات البت النمطية (`1` = شريط، `0` = مسافة) لـ `symbology` المحدد
@@ -31,17 +31,17 @@ function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>):
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الرموز | رموز الباركود |  |
-| وحدات | صفيف مثل<number> |  |
+| الاسم  | اكتب             | الوصف |
+| ------ | ---------------- | ----- |
+| الرموز | رموز الباركود    |       |
+| وحدات  | صفيف مثل<number> |       |
 
 ### decodeBarcodeAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>
+function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
 ```
 
 قم بفك تشفير مجموعة من وحدات البت النمطية مرة أخرى إلى حمولتها، وتحميل FWS الأصلي
@@ -50,10 +50,10 @@ function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<numb
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الرموز | رموز الباركود |  |
-| وحدات | صفيف مثل<number> |  |
+| الاسم  | اكتب             | الوصف |
+| ------ | ---------------- | ----- |
+| الرموز | رموز الباركود    |       |
+| وحدات  | صفيف مثل<number> |       |
 
 ## `src/encoder/index`
 
@@ -72,7 +72,22 @@ export interface Barcode
 **النوع:** النوع
 
 ```typescript
-export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'ean13' | 'ean8' | 'upca' | 'upce' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode';
+export type BarcodeSymbology =
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'ean13'
+  | 'ean8'
+  | 'upca'
+  | 'upce'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode';
 ```
 
 رموز الباركود الخطية المدعومة.
@@ -82,17 +97,17 @@ export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
+function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
 قم بتشفير `data` إلى رمز شريطي خطي باستخدام الرسم البياني FWS للحزمة المحلية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الرموز | رموز الباركود |  |
-| البيانات | سلسلة |  |
+| الاسم    | اكتب          | الوصف |
+| -------- | ------------- | ----- |
+| الرموز   | رموز الباركود |       |
+| البيانات | سلسلة         |       |
 
 #### عقد
 
@@ -103,17 +118,17 @@ function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
 **النوع:** الوظيفة
 
 ```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>
+function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
 قم بتشفير `data` بشكل غير متزامن باستخدام الرسم البياني FWS للحزمة المحلية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الرموز | رموز الباركود |  |
-| البيانات | سلسلة |  |
+| الاسم    | اكتب          | الوصف |
+| -------- | ------------- | ----- |
+| الرموز   | رموز الباركود |       |
+| البيانات | سلسلة         |       |
 
 ## `src/fws/index`
 
@@ -122,233 +137,246 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 **النوع:** الوظيفة
 
 ```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string
+function decodeEan13Fws(value: string | ArrayLike<number>): string;
 ```
 
 يقوم بفك تشفير بتات وحدة EAN-13 والتحقق من صحة التكافؤ والتحقق من الأرقام.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة \| صفيف مثل<number> |  |
+| الاسم  | اكتب                      | الوصف |
+| ------ | ------------------------- | ----- |
+| القيمة | سلسلة \| صفيف مثل<number> |       |
 
 ### decodeEan13FwsAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 يقوم بفك تشفير بتات وحدة EAN-13 بشكل غير متزامن من خلال FWS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة \| صفيف مثل<number> |  |
+| الاسم  | اكتب                      | الوصف |
+| ------ | ------------------------- | ----- |
+| القيمة | سلسلة \| صفيف مثل<number> |       |
 
 ### decodeEan8Fws
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string
+function decodeEan8Fws(value: string | ArrayLike<number>): string;
 ```
 
 يقوم بفك تشفير بتات وحدة EAN-8 وإرجاع الحمولة برقم الفحص الخاص بها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة \| صفيف مثل<number> |  |
+| الاسم  | اكتب                      | الوصف |
+| ------ | ------------------------- | ----- |
+| القيمة | سلسلة \| صفيف مثل<number> |       |
 
 ### decodeEan8FwsAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 يقوم بفك تشفير بتات وحدة EAN-8 بشكل غير متزامن من خلال FWS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة \| صفيف مثل<number> |  |
+| الاسم  | اكتب                      | الوصف |
+| ------ | ------------------------- | ----- |
+| القيمة | سلسلة \| صفيف مثل<number> |       |
 
 ### encodeEan13Fws
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeEan13Fws(value: string): string
+function encodeEan13Fws(value: string): string;
 ```
 
 يقوم بتشفير حمولة EAN-13 مكونة من اثني عشر رقمًا ويحسب رقم التحقق الخاص بها في FWS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### encodeEan13FwsAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>
+function encodeEan13FwsAsync(value: string): Promise<string>;
 ```
 
 يقوم بشكل غير متزامن بتشفير حمولة EAN-13 المكونة من اثني عشر رقمًا باستخدام محمل FWS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### encodeEan8Fws
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeEan8Fws(value: string): string
+function encodeEan8Fws(value: string): string;
 ```
 
 يقوم بتشفير حمولة EAN-8 المكونة من سبعة أرقام ويحسب رقم التحقق الخاص بها في FWS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### encodeEan8FwsAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>
+function encodeEan8FwsAsync(value: string): Promise<string>;
 ```
 
 يقوم بشكل غير متزامن بتشفير حمولة EAN-8 المكونة من سبعة أرقام باستخدام محمل FWS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### com.encodeUpcaFws
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeUpcaFws(value: string): string
+function encodeUpcaFws(value: string): string;
 ```
 
 يقوم بتشفير حمولة UPC-A من خلال الرسم البياني EAN-13 FWS ذي البادئة الصفرية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### encodeUpcaFwsAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>
+function encodeUpcaFwsAsync(value: string): Promise<string>;
 ```
 
 يقوم بشكل غير متزامن بتشفير حمولة UPC-A من خلال FWS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### encodeVariableBarcodeFws
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string
+function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
 يقوم بتشفير باركود متغير الطول مدعوم من خلال الرسم البياني الأصلي لـ FWS عندما يكون متاحًا.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الرموز | رمز الباركود المتغير |  |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| الرموز | رمز الباركود المتغير |       |
+| القيمة | سلسلة                |       |
 
 ### encodeVariableBarcodeFwsAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>
+function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
 ```
 
 يقوم بتشفير باركود متغير الطول مدعوم بشكل غير متزامن من خلال FWS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الرموز | رمز الباركود المتغير |  |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| الرموز | رمز الباركود المتغير |       |
+| القيمة | سلسلة                |       |
 
 ### validateGs1DataBarValue
 
 **النوع:** الوظيفة
 
 ```typescript
-function validateGs1DataBarValue(value: string): boolean
+function validateGs1DataBarValue(value: string): boolean;
 ```
 
 التحقق من صحة قيمة GS1 DataBar/RSS-14 GTIN-14 في الرسم البياني FWS للحزمة المحلية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### validateGs1DataBarValueAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>
+function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
 ```
 
 يتحقق بشكل غير متزامن من صحة قيمة GS1 DataBar/RSS-14 GTIN-14 من خلال FWS.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### رمز الباركود المتغير
 
 **النوع:** النوع
 
 ```typescript
-export type VariableBarcodeSymbology = Extract< BarcodeSymbology, | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode' >;
+export type VariableBarcodeSymbology = Extract<
+  BarcodeSymbology,
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode'
+>;
 ```
 
 رموز متغيرة الطول مدعومة بمحول FWS المباشر للرمز الشريطي.

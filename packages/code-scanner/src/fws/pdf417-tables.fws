@@ -46,8 +46,8 @@ fn codeword_at(cws: string, index: i32) -> i32 {
 export fn get_codeword(symbol: i32) -> i32 {
   let key: i32 = symbol - symbol / 262144 * 262144;
   let syms: string = pdf_symbol_digits();
-  let lo: i32 = 0;
-  let hi: i32 = pdf_table_len() - 1;
+  let mut lo: i32 = 0;
+  let mut hi: i32 = pdf_table_len() - 1;
   while lo <= hi {
     let distance: i32 = hi - lo;
     let mid: i32 = lo + distance / 2;
@@ -55,7 +55,7 @@ export fn get_codeword(symbol: i32) -> i32 {
     if value == key {
       let raw: i32 = codeword_at(pdf_codeword_digits(), mid);
       let reduced: i32 = raw - 1;
-      let m: i32 = reduced - reduced / 929 * 929;
+      let mut m: i32 = reduced - reduced / 929 * 929;
       if m < 0 { m = m + 929; }
       return m;
     }

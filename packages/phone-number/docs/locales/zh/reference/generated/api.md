@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 共享 {@link PhoneNumberUtil} 实例的便捷访问器。
@@ -26,7 +26,7 @@ function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
 **种类：**功能
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 共享、同步 {@link PhoneNumberUtil} 实例的便捷访问器。
@@ -36,7 +36,7 @@ function getPhoneNumberUtilSync(): PhoneNumberUtil
 **种类：**常数
 
 ```typescript
-export const PhoneNumberFormat
+export const PhoneNumberFormat;
 ```
 
 输出格式，镜像libphonenumber的`PhoneNumberFormat`。
@@ -46,7 +46,7 @@ export const PhoneNumberFormat
 **种类：**常数
 
 ```typescript
-export const PhoneNumberType
+export const PhoneNumberType;
 ```
 
 电话号码的线路类型，镜像 libphonenumber 的 `PhoneNumberType`。
@@ -86,9 +86,9 @@ export fn country_code_for_region(region: string) -> i32
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地区 |字符串| ISO 区域代码，例如“US”或“GB”。 |
+| 名称 | 类型   | 描述                           |
+| ---- | ------ | ------------------------------ |
+| 地区 | 字符串 | ISO 区域代码，例如“US”或“GB”。 |
 
 #### 合同
 
@@ -107,9 +107,9 @@ export fn national_prefix(region: string) -> string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地区 |字符串| ISO 区域代码。 |
+| 名称 | 类型   | 描述           |
+| ---- | ------ | -------------- |
+| 地区 | 字符串 | ISO 区域代码。 |
 
 #### 合同
 
@@ -128,9 +128,9 @@ export fn region_for_country_code(code: i32) -> string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|代码| i32 |国际拨号国家代码。 |
+| 名称 | 类型 | 描述               |
+| ---- | ---- | ------------------ |
+| 代码 | i32  | 国际拨号国家代码。 |
 
 #### 合同
 
@@ -149,10 +149,10 @@ export fn region_is(region: string, expected: string) -> bool
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地区 |字符串|候选 ISO 区域代码。 |
-|预计|字符串|预期的 ISO 区域代码。 |
+| 名称 | 类型   | 描述                  |
+| ---- | ------ | --------------------- |
+| 地区 | 字符串 | 候选 ISO 区域代码。   |
+| 预计 | 字符串 | 预期的 ISO 区域代码。 |
 
 #### 合同
 

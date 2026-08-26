@@ -16,7 +16,7 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/phon
 **Tipo:** función
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 Accesorio de acceso conveniente para la instancia compartida {@link PhoneNumberUtil}.
@@ -26,7 +26,7 @@ Accesorio de acceso conveniente para la instancia compartida {@link PhoneNumberU
 **Tipo:** función
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 Accesorio de acceso conveniente para la instancia {@link PhoneNumberUtil} compartida y sincrónica.
@@ -36,7 +36,7 @@ Accesorio de acceso conveniente para la instancia {@link PhoneNumberUtil} compar
 **Tipo:** constante
 
 ```typescript
-export const PhoneNumberFormat
+export const PhoneNumberFormat;
 ```
 
 Formato de salida, reflejando `PhoneNumberFormat` de libphonenumber.
@@ -46,7 +46,7 @@ Formato de salida, reflejando `PhoneNumberFormat` de libphonenumber.
 **Tipo:** constante
 
 ```typescript
-export const PhoneNumberType
+export const PhoneNumberType;
 ```
 
 Tipo de línea de un número de teléfono, que refleja `PhoneNumberType` de libphonenumber.
@@ -86,8 +86,8 @@ Asigna un código de región admitido a su código de país de marcación intern
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
+| Nombre | Tipo   | Descripción                                |
+| ------ | ------ | ------------------------------------------ |
 | región | cadena | Código de región ISO como "EE.UU." o "GB". |
 
 #### Contrato
@@ -107,8 +107,8 @@ Devuelve el prefijo troncal nacional utilizado al marcar dentro de una región.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
+| Nombre | Tipo   | Descripción           |
+| ------ | ------ | --------------------- |
 | región | cadena | Código de región ISO. |
 
 #### Contrato
@@ -128,9 +128,9 @@ Asigna un código de llamada de país a una región ISO representativa.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| código | i32 | Código de país para marcación internacional. |
+| Nombre | Tipo | Descripción                                  |
+| ------ | ---- | -------------------------------------------- |
+| código | i32  | Código de país para marcación internacional. |
 
 #### Contrato
 
@@ -149,10 +149,10 @@ Devuelve verdadero cuando el código de región es igual al valor esperado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| región | cadena | Código de región ISO candidato. |
-| esperado | cadena | Código de región ISO esperado. |
+| Nombre   | Tipo   | Descripción                     |
+| -------- | ------ | ------------------------------- |
+| región   | cadena | Código de región ISO candidato. |
+| esperado | cadena | Código de región ISO esperado.  |
 
 #### Contrato
 

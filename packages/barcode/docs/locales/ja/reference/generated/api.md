@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null
+function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
 ```
 
 指定された `symbology` の一連のモジュール ビット (`1` = バー、`0` = スペース) をデコードします。
@@ -31,17 +31,17 @@ function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>):
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記号論 |バーコードシンボル |  |
-|モジュール | ArrayLike<number> |  |
+| 名前       | タイプ             | 説明 |
+| ---------- | ------------------ | ---- |
+| 記号論     | バーコードシンボル |      |
+| モジュール | ArrayLike<number>  |      |
 
 ### デコードバーコード非同期
 
 **種類:** 関数
 
 ```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>
+function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
 ```
 
 一連のモジュール ビットをデコードしてペイロードに戻し、ネイティブ FWS をロードします
@@ -50,10 +50,10 @@ Promise の拒否として返されます。 {@link decodeBarcode} を参照し�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記号論 |バーコードシンボル |  |
-|モジュール | ArrayLike<number> |  |
+| 名前       | タイプ             | 説明 |
+| ---------- | ------------------ | ---- |
+| 記号論     | バーコードシンボル |      |
+| モジュール | ArrayLike<number>  |      |
 
 ## `src/encoder/index`
 
@@ -72,7 +72,22 @@ export interface Barcode
 **種類：**タイプ
 
 ```typescript
-export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'ean13' | 'ean8' | 'upca' | 'upce' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode';
+export type BarcodeSymbology =
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'ean13'
+  | 'ean8'
+  | 'upca'
+  | 'upce'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode';
 ```
 
 線形バーコード シンボルをサポートしました。
@@ -82,17 +97,17 @@ export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' 
 **種類:** 関数
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
+function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
 パッケージローカル FWS グラフを使用して、`data` を線形バーコードにエンコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記号論 |バーコードシンボル |  |
-|データ |文字列 |  |
+| 名前   | タイプ             | 説明 |
+| ------ | ------------------ | ---- |
+| 記号論 | バーコードシンボル |      |
+| データ | 文字列             |      |
 
 #### 契約
 
@@ -103,17 +118,17 @@ function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
 **種類:** 関数
 
 ```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>
+function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
 パッケージローカル FWS グラフを使用して、`data` を非同期的にエンコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記号論 |バーコードシンボル |  |
-|データ |文字列 |  |
+| 名前   | タイプ             | 説明 |
+| ------ | ------------------ | ---- |
+| 記号論 | バーコードシンボル |      |
+| データ | 文字列             |      |
 
 ## `src/fws/index`
 
@@ -122,233 +137,246 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 **種類:** 関数
 
 ```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string
+function decodeEan13Fws(value: string | ArrayLike<number>): string;
 ```
 
 EAN-13 モジュール ビットをデコードし、パリティとチェック デジットを検証します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 \| ArrayLike<number> |  |
+| 名前 | タイプ                      | 説明 |
+| ---- | --------------------------- | ---- |
+| 値   | 文字列 \| ArrayLike<number> |      |
 
 ### decodeEan13FwsAsync
 
 **種類:** 関数
 
 ```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 FWS を通じて EAN-13 モジュール ビットを非同期的にデコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 \| ArrayLike<number> |  |
+| 名前 | タイプ                      | 説明 |
+| ---- | --------------------------- | ---- |
+| 値   | 文字列 \| ArrayLike<number> |      |
 
 ### デコードEan8Fws
 
 **種類:** 関数
 
 ```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string
+function decodeEan8Fws(value: string | ArrayLike<number>): string;
 ```
 
 EAN-8 モジュール ビットをデコードし、チェック ディジットを含むペイロードを返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 \| ArrayLike<number> |  |
+| 名前 | タイプ                      | 説明 |
+| ---- | --------------------------- | ---- |
+| 値   | 文字列 \| ArrayLike<number> |      |
 
 ### decodeEan8FwsAsync
 
 **種類:** 関数
 
 ```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 FWS を通じて EAN-8 モジュール ビットを非同期的にデコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 \| ArrayLike<number> |  |
+| 名前 | タイプ                      | 説明 |
+| ---- | --------------------------- | ---- |
+| 値   | 文字列 \| ArrayLike<number> |      |
 
 ### エンコードEan13Fws
 
 **種類:** 関数
 
 ```typescript
-function encodeEan13Fws(value: string): string
+function encodeEan13Fws(value: string): string;
 ```
 
 12 桁の EAN-13 ペイロードをエンコードし、FWS でそのチェック ディジットを計算します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### encodeEan13FwsAsync
 
 **種類:** 関数
 
 ```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>
+function encodeEan13FwsAsync(value: string): Promise<string>;
 ```
 
 FWS ローダーを使用して 12 桁の EAN-13 ペイロードを非同期的にエンコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### エンコードEan8Fws
 
 **種類:** 関数
 
 ```typescript
-function encodeEan8Fws(value: string): string
+function encodeEan8Fws(value: string): string;
 ```
 
 7 桁の EAN-8 ペイロードをエンコードし、FWS でそのチェック ディジットを計算します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### encodeEan8FwsAsync
 
 **種類:** 関数
 
 ```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>
+function encodeEan8FwsAsync(value: string): Promise<string>;
 ```
 
 FWS ローダーを使用して 7 桁の EAN-8 ペイロードを非同期的にエンコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### エンコードUpcaFws
 
 **種類:** 関数
 
 ```typescript
-function encodeUpcaFws(value: string): string
+function encodeUpcaFws(value: string): string;
 ```
 
 ゼロ接頭辞の EAN-13 FWS グラフを通じて UPC-A ペイロードをエンコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### encodeUpcaFwsAsync
 
 **種類:** 関数
 
 ```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>
+function encodeUpcaFwsAsync(value: string): Promise<string>;
 ```
 
 FWS を通じて UPC-A ペイロードを非同期的にエンコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### encodeVariableBarcodeFws
 
 **種類:** 関数
 
 ```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string
+function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
 サポートされている可変長バーコードを、利用可能な場合はネイティブ FWS グラフを通じてエンコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記号論 |変数バーコードシンボル |  |
-|値 |文字列 |  |
+| 名前   | タイプ                 | 説明 |
+| ------ | ---------------------- | ---- |
+| 記号論 | 変数バーコードシンボル |      |
+| 値     | 文字列                 |      |
 
 ### encodeVariableBarcodeFwsAsync
 
 **種類:** 関数
 
 ```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>
+function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
 ```
 
 FWS を介して、サポートされている可変長バーコードを非同期的にエンコードします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記号論 |変数バーコードシンボル |  |
-|値 |文字列 |  |
+| 名前   | タイプ                 | 説明 |
+| ------ | ---------------------- | ---- |
+| 記号論 | 変数バーコードシンボル |      |
+| 値     | 文字列                 |      |
 
 ### validateGs1DataBarValue
 
 **種類:** 関数
 
 ```typescript
-function validateGs1DataBarValue(value: string): boolean
+function validateGs1DataBarValue(value: string): boolean;
 ```
 
 パッケージローカル FWS グラフ内の GS1 DataBar/RSS-14 GTIN-14 値を検証します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### validateGs1DataBarValueAsync
 
 **種類:** 関数
 
 ```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>
+function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
 ```
 
 FWS を通じて GS1 DataBar/RSS-14 GTIN-14 値を非同期的に検証します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### 変数バーコードシンボル
 
 **種類：**タイプ
 
 ```typescript
-export type VariableBarcodeSymbology = Extract< BarcodeSymbology, | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode' >;
+export type VariableBarcodeSymbology = Extract<
+  BarcodeSymbology,
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode'
+>;
 ```
 
 可変長シンボルは、ダイレクト バーコード FWS アダプターによってサポートされます。

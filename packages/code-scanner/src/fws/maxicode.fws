@@ -10,8 +10,8 @@ export fn locate_maxicode_modules(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut meta: Array<i32>
 ) -> i32 {
   if c.array_len_i32(meta) < 5 {
     return 0;
@@ -33,7 +33,7 @@ export fn locate_maxicode_modules(
     return 0;
   }
 
-  let pad: i32 = 0;
+  let mut pad: i32 = 0;
   while pad <= 4 {
     let ew: i32 = bw - pad * 2;
     let eh: i32 = bh - pad * 2;
@@ -65,18 +65,18 @@ fn sample_maxicode_grid(
   origin_y: i32,
   module_x_fx: i32,
   module_y_fx: i32,
-  modules: Array<i32>
+  mut modules: Array<i32>
 ) -> i32 {
-  let row: i32 = 0;
+  let mut row: i32 = 0;
   while row < 33 {
     let odd: i32 = row - row / 2 * 2;
-    let shift_x_fx: i32 = 0;
+    let mut shift_x_fx: i32 = 0;
     if odd == 1 { shift_x_fx = module_x_fx / 2; }
-    let column: i32 = 0;
+    let mut column: i32 = 0;
     while column < 30 {
       let x_fx: i32 = c.fx_from_i32(origin_x) + c.fx_mul(c.fx_from_i32(column), module_x_fx) + module_x_fx / 2 + shift_x_fx;
       let y_fx: i32 = c.fx_from_i32(origin_y) + c.fx_mul(c.fx_from_i32(row), module_y_fx) + module_y_fx / 2;
-      let value: i32 = 0;
+      let mut value: i32 = 0;
       if img.bitmap_get(bits, width, height, c.fx_to_i32(x_fx), c.fx_to_i32(y_fx)) { value = 1; }
       modules[row * 30 + column] = value;
       column = column + 1;
@@ -89,7 +89,7 @@ fn sample_maxicode_grid(
 fn bit_number(row: i32, column: i32) -> i32 {
   // ISO/IEC 16023 module-to-codeword map. 999 marks orientation/finder cells.
   let map: string = "121120127126133132139138145144151150157156163162169168175174181180187186193192199198999999123122129128135134141140147146153152159158165164171170177176183182189188195194201200816999125124131130137136143142149148155154161160167166173172179178185184191190197196203202818817283282277276271270265264259258253252247246241240235234229228223222217216211210205204819999285284279278273272267266261260255254249248243242237236231230225224219218213212207206821820287286281280275274269268263262257256251250245244239238233232227226221220215214209208822999289288295294301300307306313312319318325324331330337336343342349348355354361360367366824823291290297296303302309308315314321320327326333332339338345344351350357356363362369368825999293292299298305304311310317316323322329328335334341340347346353352359358365364371370827826409408403402397396391390079078999999013012037036002999044043109108385384379378373372828999411410405404399398393392081080040999015014039038003999999045111110387386381380375374830829413412407406401400395394083082041999999999999999005004047046113112389388383382377376831999415414421420427426103102055054016999999999999999999999020019085084433432439438445444833832417416423422429428105104057056999999999999999999999022021087086435434441440447446834999419418425424431430107106059058999999999999999999999999999023089088437436443442449448836835481480475474469468048999030999999999999999999999999999999000053052463462457456451450837999483482477476471470049999999999999999999999999999999999999999999999465464459458453452839838485484479478473472051050031999999999999999999999999999999001999042467466461460455454840999487486493492499498097096061060999999999999999999999999999026091090505504511510517516842841489488495494501500099098063062999999999999999999999999028027093092507506513512519518843999491490497496503502101100065064017999999999999999999999018029095094509508515514521520845844559558553552547546541540073072032999999999999999999010067066115114535534529528523522846999561560555554549548543542075074999999007006035034011999069068117116537536531530525524848847563562557556551550545544077076999033009008025024999999071070119118539538533532527526849999565564571570577576583582589588595594601600607606613612619618625624631630637636643642851850567566573572579578585584591590597596603602609608615614621620627626633632639638645644852999569568575574581580587586593592599598605604611610617616623622629628635634641640647646854853727726721720715714709708703702697696691690685684679678673672667666661660655654649648855999729728723722717716711710705704699698693692687686681680675674669668663662657656651650857856731730725724719718713712707706701700695694689688683682677676671670665664659658653652858999733732739738745744751750757756763762769768775774781780787786793792799798805804811810860859735734741740747746753752759758765764771770777776783782789788795794801800807806813812861999737736743742749748755754761760767766773772779778785784791790797796803802809808815814863862";
-  let index: i32 = row * 30 + column;
+  let mut index: i32 = row * 30 + column;
   // The packed literal omits the central structural cell at row 13, column 17.
   if index == 407 { return 999; }
   if index > 407 { index = index - 1; }
@@ -97,10 +97,10 @@ fn bit_number(row: i32, column: i32) -> i32 {
 }
 
 fn extract_codewords(modules: Array<i32>) -> string {
-  let codewords: string = dec.dzeros(144);
-  let row: i32 = 0;
+  let mut codewords: string = dec.dzeros(144);
+  let mut row: i32 = 0;
   while row < 33 {
-    let column: i32 = 0;
+    let mut column: i32 = 0;
     while column < 30 {
       let bit: i32 = bit_number(row, column);
       if bit < 864 && modules[row * 30 + column] != 0 {
@@ -112,16 +112,16 @@ fn extract_codewords(modules: Array<i32>) -> string {
     }
     row = row + 1;
   }
-  return codewords;
+  return string_concat("", codewords);
 }
 
 fn correct_codewords(codewords: string) -> string {
-  let primary: string = string_slice(codewords, 0, 20 * 3);
+  let mut primary: string = string_slice(codewords, 0, 20 * 3);
   primary = rs.rs_correct(primary, 10, 67, 64, dec.dzeros(20));
   if string_length(primary) == 0 { return ""; }
   let mode: i32 = dec.dget(primary, 0) - dec.dget(primary, 0) / 16 * 16;
-  let secondary_data: i32 = 0;
-  let secondary_ecc: i32 = 0;
+  let mut secondary_data: i32 = 0;
+  let mut secondary_ecc: i32 = 0;
   if mode == 4 {
     secondary_data = 84;
     secondary_ecc = 40;
@@ -133,9 +133,9 @@ fn correct_codewords(codewords: string) -> string {
       return "";
     }
   }
-  let even: string = "";
-  let odd: string = "";
-  let index: i32 = 0;
+  let mut even: string = "";
+  let mut odd: string = "";
+  let mut index: i32 = 0;
   while index < secondary_data + secondary_ecc {
     let value: string = dec.decoder_digits(dec.dget(codewords, 20 + index));
     if index - index / 2 * 2 == 0 {
@@ -149,46 +149,46 @@ fn correct_codewords(codewords: string) -> string {
   even = rs.rs_correct(even, interleave_ecc, 67, 64, dec.dzeros(62));
   odd = rs.rs_correct(odd, interleave_ecc, 67, 64, dec.dzeros(62));
   if string_length(even) == 0 || string_length(odd) == 0 { return ""; }
-  let datawords: string = string_slice(primary, 0, 10 * 3);
-  let secondary_index: i32 = 0;
+  let mut datawords: string = string_slice(primary, 0, 10 * 3);
+  let mut secondary_index: i32 = 0;
   while secondary_index < secondary_data {
-    let source: string = even;
+    let mut source: string = even;
     if secondary_index - secondary_index / 2 * 2 == 1 { source = odd; }
     datawords = string_concat(datawords, dec.decoder_digits(dec.dget(source, secondary_index / 2)));
     secondary_index = secondary_index + 1;
   }
-  return datawords;
+  return string_concat("", datawords);
 }
 
 fn set_a_triplet(value: i32) -> string {
-  if value == 0 { return dec.byte_char3(13); }
-  if value >= 1 && value <= 26 { return dec.byte_char3(64 + value); }
-  if value == 32 { return dec.byte_char3(32); }
-  if value >= 34 && value <= 58 { return dec.byte_char3(value); }
+  if value == 0 { return string_concat("", dec.byte_char3(13)); }
+  if value >= 1 && value <= 26 { return string_concat("", dec.byte_char3(64 + value)); }
+  if value == 32 { return string_concat("", dec.byte_char3(32)); }
+  if value >= 34 && value <= 58 { return string_concat("", dec.byte_char3(value)); }
   return "";
 }
 
 fn set_b_triplet(value: i32) -> string {
-  if value == 0 { return dec.byte_char3(96); }
-  if value >= 1 && value <= 26 { return dec.byte_char3(96 + value); }
-  if value == 32 { return dec.byte_char3(123); }
-  if value == 34 { return dec.byte_char3(125); }
-  if value == 35 { return dec.byte_char3(126); }
-  if value == 47 { return dec.byte_char3(32); }
+  if value == 0 { return string_concat("", dec.byte_char3(96)); }
+  if value >= 1 && value <= 26 { return string_concat("", dec.byte_char3(96 + value)); }
+  if value == 32 { return string_concat("", dec.byte_char3(123)); }
+  if value == 34 { return string_concat("", dec.byte_char3(125)); }
+  if value == 35 { return string_concat("", dec.byte_char3(126)); }
+  if value == 47 { return string_concat("", dec.byte_char3(32)); }
   return "";
 }
 
 fn decode_mode_4_5(datawords: string) -> string {
   let count: i32 = string_length(datawords) / 3;
-  let active_set: i32 = 0;
-  let shift_set: i32 = -1;
-  let triplets: string = "";
-  let index: i32 = 1;
+  let mut active_set: i32 = 0;
+  let mut shift_set: i32 = -1;
+  let mut triplets: string = "";
+  let mut index: i32 = 1;
   while index < count {
     let value: i32 = dec.dget(datawords, index);
-    if active_set == 0 && value == 33 { return c.ascii_from_triplets(triplets); }
-    if active_set == 1 && value == 55 { return c.ascii_from_triplets(triplets); }
-    if active_set == 1 && value == 58 { return c.ascii_from_triplets(triplets); }
+    if active_set == 0 && value == 33 { return string_concat("", c.ascii_from_triplets(triplets)); }
+    if active_set == 1 && value == 55 { return string_concat("", c.ascii_from_triplets(triplets)); }
+    if active_set == 1 && value == 58 { return string_concat("", c.ascii_from_triplets(triplets)); }
     if value == 63 {
       if active_set == 0 { active_set = 1; } else { active_set = 0; }
       shift_set = -1;
@@ -200,9 +200,9 @@ fn decode_mode_4_5(datawords: string) -> string {
           shift_set = value - 59;
           if value > 59 { shift_set = value - 58; }
         } else {
-        let character_set: i32 = active_set;
+        let mut character_set: i32 = active_set;
         if shift_set >= 0 { character_set = shift_set; }
-        let character: string = "";
+        let mut character: string = "";
         if character_set == 0 { character = set_a_triplet(value); }
         if character_set == 1 { character = set_b_triplet(value); }
         if string_length(character) == 0 { return ""; }
@@ -213,7 +213,7 @@ fn decode_mode_4_5(datawords: string) -> string {
     }
     index = index + 1;
   }
-  return c.ascii_from_triplets(triplets);
+  return string_concat("", c.ascii_from_triplets(triplets));
 }
 
 export fn decode_maxicode_modules(modules: Array<i32>) -> string {
@@ -222,5 +222,5 @@ export fn decode_maxicode_modules(modules: Array<i32>) -> string {
   }
   let corrected: string = correct_codewords(extract_codewords(modules));
   if string_length(corrected) == 0 { return ""; }
-  return decode_mode_4_5(corrected);
+  return string_concat("", decode_mode_4_5(corrected));
 }

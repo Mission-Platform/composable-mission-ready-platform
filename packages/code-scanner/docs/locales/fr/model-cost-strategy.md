@@ -25,14 +25,14 @@ devrait être dépensé.
 
 ## Cartographie étape → niveau
 
-| Scène | Travail | Niveau |
-| ---------------------------------- | ------------------------------------------------------- | ---- |
-| 1 Corpus vendeur + chargeur + harnais | copie/attribution (C), logique chargeur + harnais (B) | C → B |
-| 2 Augmenter le taux de lecture des formats pris en charge | réglage du localisateur + nouvelle tentative de chemins | UNE→B |
-| 3 Famille GS1 DataBar | tables/encodeurs (B), localisateur RSS-14 + RS (A) | A/B |
-| 4 PDF417 | tables/encodeur (B), localisateur de balayage de lignes + GF(929) EC (A) | A/B |
-| 5 MaxiCode | localisateur de grille hexagonale + GF(64) RS (A), tableaux (B) | A/B |
-| 6 Connexion + JS + docs | passe-partout/docs + câblage (C), reconstruction wasm + fumée (B) | C → B |
+| Scène                                                     | Travail                                                                  | Niveau |
+| --------------------------------------------------------- | ------------------------------------------------------------------------ | ------ |
+| 1 Corpus vendeur + chargeur + harnais                     | copie/attribution (C), logique chargeur + harnais (B)                    | C → B  |
+| 2 Augmenter le taux de lecture des formats pris en charge | réglage du localisateur + nouvelle tentative de chemins                  | UNE→B  |
+| 3 Famille GS1 DataBar                                     | tables/encodeurs (B), localisateur RSS-14 + RS (A)                       | A/B    |
+| 4 PDF417                                                  | tables/encodeur (B), localisateur de balayage de lignes + GF(929) EC (A) | A/B    |
+| 5 MaxiCode                                                | localisateur de grille hexagonale + GF(64) RS (A), tableaux (B)          | A/B    |
+| 6 Connexion + JS + docs                                   | passe-partout/docs + câblage (C), reconstruction wasm + fumée (B)        | C → B  |
 
 ## Principe de coût
 

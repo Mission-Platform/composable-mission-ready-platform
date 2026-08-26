@@ -13,8 +13,8 @@ fn row_has_pdf_guards(modules: Array<i32>, count: i32) -> bool {
     return false;
   }
   // PDF417 start pattern begins dark-light-dark...; require some transitions.
-  let transitions: i32 = 0;
-  let i: i32 = 1;
+  let mut transitions: i32 = 0;
+  let mut i: i32 = 1;
   while i < count {
     if modules[i] != modules[i - 1] {
       transitions = transitions + 1;
@@ -31,8 +31,8 @@ export fn locate_pdf417_modules(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut meta: Array<i32>
 ) -> i32 {
   if c.array_len_i32(meta) < 5 {
     return 0;
@@ -53,12 +53,12 @@ export fn locate_pdf417_modules(
 
   // Estimate module pitch from a mid row.
   let mid_y: i32 = y0 + bh / 2;
-  let module_px: i32 = estimate_pitch(bits, width, height, x0, x1, mid_y);
+  let mut module_px: i32 = estimate_pitch(bits, width, height, x0, x1, mid_y);
   if module_px < 1 {
     module_px = 1;
   }
-  let cols: i32 = c.safe_div_i32(bw, module_px);
-  let rows: i32 = c.safe_div_i32(bh, module_px);
+  let mut cols: i32 = c.safe_div_i32(bw, module_px);
+  let mut rows: i32 = c.safe_div_i32(bh, module_px);
   if cols < 20 || rows < 3 {
     return 0;
   }
@@ -89,12 +89,12 @@ export fn locate_pdf417_modules(
   }
 
   // Validate a few rows for guard-like transitions.
-  let ok_rows: i32 = 0;
-  let r: i32 = 0;
+  let mut ok_rows: i32 = 0;
+  let mut r: i32 = 0;
   while r < rows {
     // Copy row into a temp check using modules slice via index math.
-    let transitions: i32 = 0;
-    let x: i32 = 1;
+    let mut transitions: i32 = 0;
+    let mut x: i32 = 1;
     while x < cols {
       if modules[r * cols + x] != modules[r * cols + x - 1] {
         transitions = transitions + 1;
@@ -119,18 +119,18 @@ export fn locate_pdf417_modules(
 }
 
 fn estimate_pitch(bits: u32, width: i32, height: i32, x0: i32, x1: i32, y: i32) -> i32 {
-  let x: i32 = x0;
+  let mut x: i32 = x0;
   while x < x1 && !img.bitmap_get(bits, width, height, x, y) {
     x = x + 1;
   }
   if x >= x1 {
     return 1;
   }
-  let min_run: i32 = x1 - x0;
-  let dark: bool = true;
-  let run_start: i32 = x;
+  let mut min_run: i32 = x1 - x0;
+  let mut dark: bool = true;
+  let mut run_start: i32 = x;
   while x <= x1 {
-    let is_dark: bool = false;
+    let mut is_dark: bool = false;
     if x < x1 {
       is_dark = img.bitmap_get(bits, width, height, x, y);
     }
@@ -172,9 +172,9 @@ fn word_inc(ptr: u32, index: i32) -> unit {
 
 // Index of the highest count in a vote table, or -1 when every count is zero.
 fn word_argmax(ptr: u32, size: i32) -> i32 {
-  let best_index: i32 = -1;
-  let best_count: i32 = 0;
-  let i: i32 = 0;
+  let mut best_index: i32 = -1;
+  let mut best_count: i32 = 0;
+  let mut i: i32 = 0;
   while i < size {
     let count: i32 = word_get(ptr, i);
     if count > best_count {
@@ -191,10 +191,10 @@ fn word_argmax(ptr: u32, size: i32) -> i32 {
 // (17 modules) followed by cols+2 seventeen-module codewords and a stop guard.
 fn read_row_codeword(modules: Array<i32>, cols_total: i32, r: i32, k: i32) -> i32 {
   let base: i32 = r * cols_total + 17 + k * 17;
-  let value: i32 = 0;
-  let b: i32 = 0;
+  let mut value: i32 = 0;
+  let mut b: i32 = 0;
   while b < 17 {
-    let bit: i32 = 0;
+    let mut bit: i32 = 0;
     if modules[base + b] == 1 {
       bit = 1;
     }
@@ -209,12 +209,12 @@ fn read_row_codeword(modules: Array<i32>, cols_total: i32, r: i32, k: i32) -> i3
 // multiplication is ordinary modular arithmetic; only clean symbols are accepted
 // (this decode path does not perform error correction).
 fn syndromes_clean(full_ptr: u32, n: i32, num_ec: i32) -> bool {
-  let s: i32 = 1;
-  let alpha: i32 = 1;
+  let mut s: i32 = 1;
+  let mut alpha: i32 = 1;
   while s <= num_ec {
     alpha = alpha * 3 - alpha * 3 / 929 * 929;
-    let res: i32 = word_get(full_ptr, 0) - word_get(full_ptr, 0) / 929 * 929;
-    let idx: i32 = 1;
+    let mut res: i32 = word_get(full_ptr, 0) - word_get(full_ptr, 0) / 929 * 929;
+    let mut idx: i32 = 1;
     while idx < n {
       let prod: i32 = alpha * res - alpha * res / 929 * 929;
       let sum: i32 = prod + word_get(full_ptr, idx);
@@ -233,18 +233,18 @@ fn syndromes_clean(full_ptr: u32, n: i32, num_ec: i32) -> bool {
 // Appends decoded bytes to the returned string and writes the next codeword index
 // into next_cell[0]. `mode` is 901 (byte) or 924 (byte, multiple of six).
 fn byte_compaction(mode: i32, full_ptr: u32, start: i32, count: i32, next_cell: u32) -> string {
-  let out: string = "";
+  let mut out: string = "";
   let vals: u32 = c.mem_alloc_bytes(5 * 4);
   let bytes: u32 = c.mem_alloc_bytes(6 * 4);
-  let ci: i32 = start;
-  let ended: bool = false;
+  let mut ci: i32 = start;
+  let mut ended: bool = false;
   while ci < count && !ended {
     if word_get(full_ptr, ci) >= 900 {
       ended = true;
     } else {
       // Collect up to five codewords for a candidate six-pack.
-      let n: i32 = 0;
-      let collecting: bool = true;
+      let mut n: i32 = 0;
+      let mut collecting: bool = true;
       while collecting {
         word_set(vals, n, word_get(full_ptr, ci));
         ci = ci + 1;
@@ -254,7 +254,7 @@ fn byte_compaction(mode: i32, full_ptr: u32, start: i32, count: i32, next_cell: 
           collecting = false;
         }
       }
-      let six_pack: bool = false;
+      let mut six_pack: bool = false;
       if n == 5 {
         if mode == 924 {
           six_pack = true;
@@ -267,24 +267,24 @@ fn byte_compaction(mode: i32, full_ptr: u32, start: i32, count: i32, next_cell: 
       if six_pack {
         // base-900 -> base-256 via a six-byte big-endian accumulator (48 bits,
         // avoids 64-bit arithmetic and int casts).
-        let j: i32 = 0;
+        let mut j: i32 = 0;
         while j < 6 {
           word_set(bytes, j, 0);
           j = j + 1;
         }
-        let vi: i32 = 0;
+        let mut vi: i32 = 0;
         while vi < 5 {
-          let carry: i32 = word_get(vals, vi);
-          let bj: i32 = 5;
+          let mut carry: i32 = word_get(vals, vi);
+          let mut bj: i32 = 5;
           while bj >= 0 {
-            let t: i32 = word_get(bytes, bj) * 900 + carry;
+            let mut t: i32 = word_get(bytes, bj) * 900 + carry;
             word_set(bytes, bj, t - t / 256 * 256);
             carry = t / 256;
             bj = bj - 1;
           }
           vi = vi + 1;
         }
-        let ob: i32 = 0;
+        let mut ob: i32 = 0;
         while ob < 6 {
           out = string_concat(out, c.ascii_char_of(word_get(bytes, ob)));
           ob = ob + 1;
@@ -307,7 +307,7 @@ fn byte_compaction(mode: i32, full_ptr: u32, start: i32, count: i32, next_cell: 
     }
   }
   word_set(next_cell, 0, ci);
-  return out;
+  return string_concat("", out);
 }
 
 fn mixed_byte(sub: i32) -> i32 {
@@ -367,18 +367,18 @@ fn punct_byte(sub: i32) -> i32 {
 // Punct, AlphaShift and PunctShift; shift modes restore prior_cell afterwards.
 fn text_subchar(sub: i32, state_cell: u32, prior_cell: u32) -> string {
   let state: i32 = word_get(state_cell, 0);
-  let value: i32 = -1;
+  let mut value: i32 = -1;
   if state == 0 {
-    if sub < 26 { return c.ascii_char_of(65 + sub); }
-    if sub == 26 { return c.ascii_char_of(32); }
+    if sub < 26 { return string_concat("", c.ascii_char_of(65 + sub)); }
+    if sub == 26 { return string_concat("", c.ascii_char_of(32)); }
     if sub == 27 { word_set(state_cell, 0, 1); }
     if sub == 28 { word_set(state_cell, 0, 2); }
     if sub == 29 { word_set(prior_cell, 0, state); word_set(state_cell, 0, 5); }
     return "";
   }
   if state == 1 {
-    if sub < 26 { return c.ascii_char_of(97 + sub); }
-    if sub == 26 { return c.ascii_char_of(32); }
+    if sub < 26 { return string_concat("", c.ascii_char_of(97 + sub)); }
+    if sub == 26 { return string_concat("", c.ascii_char_of(32)); }
     if sub == 27 { word_set(prior_cell, 0, state); word_set(state_cell, 0, 4); }
     if sub == 28 { word_set(state_cell, 0, 2); }
     if sub == 29 { word_set(prior_cell, 0, state); word_set(state_cell, 0, 5); }
@@ -407,14 +407,14 @@ fn text_subchar(sub: i32, state_cell: u32, prior_cell: u32) -> string {
     if sub == 29 { word_set(state_cell, 0, 0); }
   }
   if value < 0 { return ""; }
-  return c.ascii_char_of(value);
+  return string_concat("", c.ascii_char_of(value));
 }
 
 // Convert a corrected codeword array (full_ptr[0] = data codeword count) to its
 // payload. Supports Text and Byte Compaction; Numeric Compaction remains
 // unsupported and fails closed.
 fn decode_bitstream(full_ptr: u32, n: i32, num_ec: i32) -> string {
-  let count: i32 = word_get(full_ptr, 0);
+  let mut count: i32 = word_get(full_ptr, 0);
   if count == 0 {
     if num_ec < n {
       count = n - num_ec;
@@ -430,8 +430,8 @@ fn decode_bitstream(full_ptr: u32, n: i32, num_ec: i32) -> string {
   let prior_cell: u32 = c.mem_alloc_bytes(4);
   word_set(state_cell, 0, 0);
   word_set(prior_cell, 0, 0);
-  let result: string = "";
-  let ci: i32 = 1;
+  let mut result: string = "";
+  let mut ci: i32 = 1;
   while ci < count {
     let code: i32 = word_get(full_ptr, ci);
     ci = ci + 1;
@@ -461,7 +461,7 @@ fn decode_bitstream(full_ptr: u32, n: i32, num_ec: i32) -> string {
   if string_length(result) == 0 {
     return "";
   }
-  return result;
+  return string_concat("", result);
 }
 
 // Decode a sampled PDF417 module grid (cols_total module columns x rows codeword
@@ -490,7 +490,7 @@ export fn decode_pdf417_modules(cols_total: i32, rows: i32, modules: Array<i32>)
   let upper_votes: u32 = c.mem_alloc_bytes(90 * 4);
   let lower_votes: u32 = c.mem_alloc_bytes(3 * 4);
   let ec_votes: u32 = c.mem_alloc_bytes(10 * 4);
-  let r: i32 = 0;
+  let mut r: i32 = 0;
   while r < rows {
     let left: i32 = read_row_codeword(modules, cols_total, r, 0);
     if left >= 0 {
@@ -527,8 +527,8 @@ export fn decode_pdf417_modules(cols_total: i32, rows: i32, modules: Array<i32>)
 
   // Pass 2: reconstruct the codeword matrix (row-major, data then EC codewords).
   let n: i32 = rows_symbol * cols;
-  let num_ec: i32 = 1;
-  let shift: i32 = 0;
+  let mut num_ec: i32 = 1;
+  let mut shift: i32 = 0;
   while shift <= ec_level {
     num_ec = num_ec * 2;
     shift = shift + 1;
@@ -544,7 +544,7 @@ export fn decode_pdf417_modules(cols_total: i32, rows: i32, modules: Array<i32>)
       let residue: i32 = r - r / 3 * 3;
       let row_number: i32 = left / 30 * 3 + residue;
       if row_number >= 0 && row_number < rows_symbol {
-        let cc: i32 = 0;
+        let mut cc: i32 = 0;
         while cc < cols {
           let value: i32 = read_row_codeword(modules, cols_total, r, 1 + cc);
           if value >= 0 {
@@ -560,5 +560,5 @@ export fn decode_pdf417_modules(cols_total: i32, rows: i32, modules: Array<i32>)
   if !syndromes_clean(full_ptr, n, num_ec) {
     return "";
   }
-  return decode_bitstream(full_ptr, n, num_ec);
+  return string_concat("", decode_bitstream(full_ptr, n, num_ec));
 }

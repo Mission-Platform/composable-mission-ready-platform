@@ -25,14 +25,14 @@ moet worden besteed.
 
 ## Fase → niveautoewijzing
 
-| Fase | Werk | Niveau |
-| ---------------------------------- | ------------------------------------------------------- | ---- |
-| 1 Leverancierscorpus + lader + harnas | kopie/toeschrijving (C), lader + harnaslogica (B) | C → B |
-| 2 Verhoog de leessnelheid van ondersteunde formaten | locator afstemmen + paden opnieuw proberen | A → B |
-| 3 GS1 DataBar-familie | tabellen/encoders (B), RSS-14-locator + RS (A) | A/B |
-| 4 PDF417 | tabellen/encoder (B), rijscanlocator + GF(929) EC (A) | A/B |
-| 5 MaxiCode | hex-rasterzoeker + GF(64) RS (A), tabellen (B) | A/B |
-| 6 Wire-up + JS + documenten | boilerplate/docs + bedrading (C), wasrevisie + rook (B) | C → B |
+| Fase                                                | Werk                                                    | Niveau |
+| --------------------------------------------------- | ------------------------------------------------------- | ------ |
+| 1 Leverancierscorpus + lader + harnas               | kopie/toeschrijving (C), lader + harnaslogica (B)       | C → B  |
+| 2 Verhoog de leessnelheid van ondersteunde formaten | locator afstemmen + paden opnieuw proberen              | A → B  |
+| 3 GS1 DataBar-familie                               | tabellen/encoders (B), RSS-14-locator + RS (A)          | A/B    |
+| 4 PDF417                                            | tabellen/encoder (B), rijscanlocator + GF(929) EC (A)   | A/B    |
+| 5 MaxiCode                                          | hex-rasterzoeker + GF(64) RS (A), tabellen (B)          | A/B    |
+| 6 Wire-up + JS + documenten                         | boilerplate/docs + bedrading (C), wasrevisie + rook (B) | C → B  |
 
 ## Kostenprincipe
 

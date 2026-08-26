@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
 import { encodeBarcode } from '../encoder';
+
+import { loadSync as loadCodabarSync } from './codabar.fws';
 import { load as loadCode39, loadSync as loadCode39Sync } from './code39.fws';
-import { load as loadCodabar, loadSync as loadCodabarSync } from './codabar.fws';
 import { load as loadItf, loadSync as loadItfSync } from './itf.fws';
 import { load as loadMsi, loadSync as loadMsiSync } from './msi.fws';
 import { load as loadPharmacode, loadSync as loadPharmacodeSync } from './pharmacode.fws';

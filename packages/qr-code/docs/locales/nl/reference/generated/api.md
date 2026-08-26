@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/qr-code
 **Soort:** functie
 
 ```typescript
-function decodeQr(matrix: QrMatrix): string | null
+function decodeQr(matrix: QrMatrix): string | null;
 ```
 
 Decodeer een {@link QrMatrix} terug naar de originele tekst en laad het pakket-
@@ -29,9 +29,9 @@ wordt ondersteund.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| matrix | QrMatrix |  |
+| Naam   | Typ      | Beschrijving |
+| ------ | -------- | ------------ |
+| matrix | QrMatrix |              |
 
 #### Contract
 
@@ -42,7 +42,7 @@ wordt ondersteund.
 **Soort:** functie
 
 ```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
+function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
 ```
 
 Decodeer een {@link QrMatrix} terug naar de originele tekst en laad het pakket-
@@ -50,9 +50,9 @@ lokale FWS-decoder asynchroon bij eerste gebruik.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| matrix | QrMatrix |  |
+| Naam   | Typ      | Beschrijving |
+| ------ | -------- | ------------ |
+| matrix | QrMatrix |              |
 
 #### Contract
 
@@ -65,7 +65,7 @@ lokale FWS-decoder asynchroon bij eerste gebruik.
 **Soort:** functie
 
 ```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 Codeer `text` in een **Micro QR Code**-matrix (ISO/IEC 18004), waardoor
@@ -77,22 +77,22 @@ Micro QR ondersteunt alleen foutcorrectieniveaus `L`, `M` en `Q`; verzoeken
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks |  |
-| foutCorrectie | QrErrorCorrectie |  |
+| Naam          | Typ              | Beschrijving |
+| ------------- | ---------------- | ------------ |
+| tekst         | tekenreeks       |              |
+| foutCorrectie | QrErrorCorrectie |              |
 
 #### Contract
 
 - **@throws:** als de tekst te lang is voor een Micro QR-versie op de
-gekozen niveau (inclusief eventuele aanvragen voor niveau `H`).
+  gekozen niveau (inclusief eventuele aanvragen voor niveau `H`).
 
 ### coderenMicroQrAsync
 
 **Soort:** functie
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 Codeer `text` in een **Micro QR Code**-matrix, waardoor de WebAssembly wordt geïnstantieerd
@@ -100,22 +100,22 @@ encoder asynchroon bij het eerste gebruik. Zie {@link encodeMicroQr}.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks |  |
-| foutCorrectie | QrErrorCorrectie |  |
+| Naam          | Typ              | Beschrijving |
+| ------------- | ---------------- | ------------ |
+| tekst         | tekenreeks       |              |
+| foutCorrectie | QrErrorCorrectie |              |
 
 #### Contract
 
 - **@throws:** als de tekst te lang is voor een Micro QR-versie op de
-gekozen niveau (inclusief eventuele aanvragen voor niveau `H`).
+  gekozen niveau (inclusief eventuele aanvragen voor niveau `H`).
 
 ### coderenQr
 
 **Soort:** functie
 
 ```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix
+function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
 ```
 
 Codeer `text` in een QR-codematrix op het gegeven foutcorrectieniveau,
@@ -123,22 +123,23 @@ het synchroon instantiëren van de WebAssembly-encoder bij het eerste gebruik.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks |  |
-| foutCorrectie | QrErrorCorrectie |  |
+| Naam          | Typ              | Beschrijving |
+| ------------- | ---------------- | ------------ |
+| tekst         | tekenreeks       |              |
+| foutCorrectie | QrErrorCorrectie |              |
 
 #### Contract
 
 - **@throws:** als de tekst te lang is om in de grootste (versie
-40) QR-code op het gekozen foutcorrectieniveau.
+
+40. QR-code op het gekozen foutcorrectieniveau.
 
 ### codeerQrAsync
 
 **Soort:** functie
 
 ```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>
+function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
 ```
 
 Codeer `text` in een QR-codematrix op het gegeven foutcorrectieniveau,
@@ -146,22 +147,23 @@ het asynchroon instantiëren van de WebAssembly-encoder bij het eerste gebruik.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks |  |
-| foutCorrectie | QrErrorCorrectie |  |
+| Naam          | Typ              | Beschrijving |
+| ------------- | ---------------- | ------------ |
+| tekst         | tekenreeks       |              |
+| foutCorrectie | QrErrorCorrectie |              |
 
 #### Contract
 
 - **@throws:** als de tekst te lang is om in de grootste (versie
-40) QR-code op het gekozen foutcorrectieniveau.
+
+40. QR-code op het gekozen foutcorrectieniveau.
 
 ### coderenRmqr
 
 **Soort:** functie
 
 ```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 Codeer `text` in een **Rechthoekige Micro QR (rMQR) Code**-matrix
@@ -174,22 +176,22 @@ automatisch. rMQR ondersteunt alleen de foutcorrectieniveaus `M` en `H`, dus
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks |  |
-| foutCorrectie | QrErrorCorrectie |  |
+| Naam          | Typ              | Beschrijving |
+| ------------- | ---------------- | ------------ |
+| tekst         | tekenreeks       |              |
+| foutCorrectie | QrErrorCorrectie |              |
 
 #### Contract
 
 - **@throws:** als de tekst te lang is voor een rMQR-versie op de
-gekozen niveau.
+  gekozen niveau.
 
 ### coderenRmqrAsync
 
 **Soort:** functie
 
 ```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 Codeer `text` in een **Rechthoekige Micro QR (rMQR) Code**-matrix,
@@ -198,15 +200,15 @@ het asynchroon instantiëren van de WebAssembly-encoder bij het eerste gebruik. 
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tekst | tekenreeks |  |
-| foutCorrectie | QrErrorCorrectie |  |
+| Naam          | Typ              | Beschrijving |
+| ------------- | ---------------- | ------------ |
+| tekst         | tekenreeks       |              |
+| foutCorrectie | QrErrorCorrectie |              |
 
 #### Contract
 
 - **@throws:** als de tekst te lang is voor een rMQR-versie op de
-gekozen niveau.
+  gekozen niveau.
 
 ## `src/types`
 

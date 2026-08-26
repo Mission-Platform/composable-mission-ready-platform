@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/code-sc
 **Soort:** functie
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
+function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
 ```
 
 Decodeer een afbeelding `Blob`/`File` in een {@link ImageLike} (RGBA-pixels). Gebruik
@@ -24,17 +24,17 @@ Decodeer een afbeelding `Blob`/`File` in een {@link ImageLike} (RGBA-pixels). Ge
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| klodder | Blob |  |
-| roi |  |  |
+| Naam    | Typ  | Beschrijving |
+| ------- | ---- | ------------ |
+| klodder | Blob |              |
+| roi     |      |              |
 
 ### scanBestand
 
 **Soort:** functie
 
 ```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>
+function scanFile(file: Blob): Promise<ScanResult | null>;
 ```
 
 Decodeer `file` en scan het op code, waarbij de WebAssembly synchroon wordt uitgevoerd
@@ -42,16 +42,16 @@ scanner (die zichzelf initialiseert vanuit zijn inline binaire bestand in een pr
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestand | Blob |  |
+| Naam    | Typ  | Beschrijving |
+| ------- | ---- | ------------ |
+| bestand | Blob |              |
 
 ### scanFileAsync
 
 **Soort:** functie
 
 ```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>
+function scanFileAsync(file: Blob): Promise<ScanResult | null>;
 ```
 
 Decodeer `file` en scan het op een code, waarbij de scanner en de decoders worden geïnitialiseerd
@@ -59,16 +59,16 @@ asynchroon — veilig in elke omgeving (geen inline binair bestand vereist).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestand | Blob |  |
+| Naam    | Typ  | Beschrijving |
+| ------- | ---- | ------------ |
+| bestand | Blob |              |
 
 ### videoFrameToImageData
 
 **Soort:** functie
 
 ```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike
+function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
 ```
 
 Leg het huidige frame van een spelend `<video>`-element vast als een
@@ -79,10 +79,10 @@ draadkruisgrootte, de gebruikersinterface laat zien dat de gebruiker het aantal 
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| filmpje | HTMLVideoElement |  |
-| roi |  |  |
+| Naam    | Typ              | Beschrijving |
+| ------- | ---------------- | ------------ |
+| filmpje | HTMLVideoElement |              |
+| roi     |                  |              |
 
 ## `src/debug`
 
@@ -91,7 +91,7 @@ draadkruisgrootte, de gebruikersinterface laat zien dat de gebruiker het aantal 
 **Soort:** functie
 
 ```typescript
-function isCodeScannerDebugEnabled(): boolean
+function isCodeScannerDebugEnabled(): boolean;
 ```
 
 Of diagnostische logboekregistratie van de scanner momenteel is ingeschakeld.
@@ -101,16 +101,16 @@ Of diagnostische logboekregistratie van de scanner momenteel is ingeschakeld.
 **Soort:** functie
 
 ```typescript
-function setCodeScannerDebug(value: boolean): void
+function setCodeScannerDebug(value: boolean): void;
 ```
 
 Schakel de diagnostische logboekregistratie aan de JS-zijde van de scanner tijdens runtime in of uit.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | booleaans |  |
+| Naam   | Typ       | Beschrijving |
+| ------ | --------- | ------------ |
+| waarde | booleaans |              |
 
 #### Contract
 
@@ -123,7 +123,11 @@ Schakel de diagnostische logboekregistratie aan de JS-zijde van de scanner tijde
 **Soort:** functie
 
 ```typescript
-function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LOW_PERCENTILE, highPercentile: number = DEFAULT_HIGH_PERCENTILE): LumaImage
+function contrastStretchLuma(
+  luma: LumaImage,
+  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
+  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
+): LumaImage;
 ```
 
 Rek een {@link LumaImage} met contrast uit en breng de `lowPercentile`..`highPercentile` in kaart
@@ -143,18 +147,18 @@ waarde — wordt onveranderd geretourneerd, omdat er niets is om uit te rekken.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| luma | LumaAfbeelding |  |
-| laagPercentiel | nummer |  |
-| hoogPercentiel | nummer |  |
+| Naam           | Typ            | Beschrijving |
+| -------------- | -------------- | ------------ |
+| luma           | LumaAfbeelding |              |
+| laagPercentiel | nummer         |              |
+| hoogPercentiel | nummer         |              |
 
 ### imageDataToLuma
 
 **Soort:** functie
 
 ```typescript
-function imageDataToLuma(image: ImageLike): LumaImage
+function imageDataToLuma(image: ImageLike): LumaImage;
 ```
 
 Converteer een RGBA {@link ImageLike} (bijvoorbeeld een canvas `ImageData`) naar een
@@ -163,9 +167,9 @@ enkelkanaals {@link LumaImage} met behulp van de Rec. 601 lumagewichten
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| afbeelding | AfbeeldingVind ik leuk |  |
+| Naam       | Typ                    | Beschrijving |
+| ---------- | ---------------------- | ------------ |
+| afbeelding | AfbeeldingVind ik leuk |              |
 
 ### LumaAfbeelding
 
@@ -184,7 +188,7 @@ Een grijswaardenafbeelding met één kanaal: `width * height` lumabytes.
 **Soort:** functie
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
+function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
 ```
 
 Lokaliseer en decodeer de eerste ondersteunde code in `image`, waarbij u de
@@ -192,57 +196,57 @@ scannergrafiek synchroon bij het eerste gebruik.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| afbeelding | AfbeeldingVind ik leuk |  |
-| roi | Roi |  |
+| Naam       | Typ                    | Beschrijving |
+| ---------- | ---------------------- | ------------ |
+| afbeelding | AfbeeldingVind ik leuk |              |
+| roi        | Roi                    |              |
 
 #### Contract
 
 - **@param:** optioneel interessegebied (beeldpixels) waartoe de scan kan worden beperkt
-— bijgesneden vóór binarisering, zodat omringende rommel wordt genegeerd.
+  — bijgesneden vóór binarisering, zodat omringende rommel wordt genegeerd.
 - **@returns:** de {@link ScanResult}, of `null` als er geen code is gevonden. Wanneer een code
-is gelokaliseerd, maar de payload kan niet worden gedecodeerd, `result.value` is `null`.
+  is gelokaliseerd, maar de payload kan niet worden gedecodeerd, `result.value` is `null`.
 
 ### scanImageDataAll
 
 **Soort:** functie
 
 ```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[]
+function scanImageDataAll(image: ImageLike): ScanResult[];
 ```
 
-Lokaliseer en decodeer *elke* afzonderlijke code in `image` (niet alleen de eerste),
+Lokaliseer en decodeer _elke_ afzonderlijke code in `image` (niet alleen de eerste),
 het synchroon instantiëren van de scannergrafiek bij het eerste gebruik.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| afbeelding | AfbeeldingVind ik leuk |  |
+| Naam       | Typ                    | Beschrijving |
+| ---------- | ---------------------- | ------------ |
+| afbeelding | AfbeeldingVind ik leuk |              |
 
 #### Contract
 
 - **@returns:** de gedecodeerde {@link ScanResult}s in ontdekkingsvolgorde, ontdubbeld;
-leeg als er niets is gedecodeerd.
+  leeg als er niets is gedecodeerd.
 
 ### scanImageDataAllAsync
 
 **Soort:** functie
 
 ```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
+function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
 ```
 
-Lokaliseer en decodeer *elke* afzonderlijke code in `image` en laad de scannergrafiek
+Lokaliseer en decodeer _elke_ afzonderlijke code in `image` en laad de scannergrafiek
 asynchroon bij het eerste gebruik. Initialisatie- en scanfouten zijn dat wel
 geretourneerd als belofte-afwijzingen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| afbeelding | AfbeeldingVind ik leuk |  |
+| Naam       | Typ                    | Beschrijving |
+| ---------- | ---------------------- | ------------ |
+| afbeelding | AfbeeldingVind ik leuk |              |
 
 #### Contract
 
@@ -253,7 +257,7 @@ geretourneerd als belofte-afwijzingen.
 **Soort:** functie
 
 ```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>
+function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
 ```
 
 Zoek en decodeer de eerste ondersteunde code in `image` en laad de scanner
@@ -262,10 +266,10 @@ mislukkingen worden geretourneerd als afwijzingen van beloften.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| afbeelding | AfbeeldingVind ik leuk |  |
-| roi | Roi |  |
+| Naam       | Typ                    | Beschrijving |
+| ---------- | ---------------------- | ------------ |
+| afbeelding | AfbeeldingVind ik leuk |              |
+| roi        | Roi                    |              |
 
 #### Contract
 
@@ -296,7 +300,7 @@ export interface Roi
 
 Een rechthoekig interessegebied, in beeldpixels, om een scan te beperken tot (bijv.
 een dradenkruis dat een live camera-UI over het frame tekent). De teelt gebeurt in was
-*voor* binarisatie, zodat omringende rommel nooit de locators bereikt. EEN
+_voor_ binarisatie, zodat omringende rommel nooit de locators bereikt. EEN
 het gebied dat over een rand hangt, wordt vastgeklemd; men vindt het geheel buiten het kader
 niets.
 
@@ -318,4 +322,4 @@ De codefamilies die de scanner kan lokaliseren en decoderen.
 export interface ScanResult
 ```
 
-Het resultaat van een succesvolle *detectie*.
+Het resultaat van een succesvolle _detectie_.

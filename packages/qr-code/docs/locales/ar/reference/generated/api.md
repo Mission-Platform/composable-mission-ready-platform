@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function decodeQr(matrix: QrMatrix): string | null
+function decodeQr(matrix: QrMatrix): string | null;
 ```
 
 قم بفك تشفير {@link QrMatrix} وإعادته إلى نصه الأصلي، وتحميل الحزمة-
@@ -29,9 +29,9 @@ function decodeQr(matrix: QrMatrix): string | null
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | كيو آر ماتريكس |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| مصفوفة | كيو آر ماتريكس |       |
 
 #### عقد
 
@@ -42,7 +42,7 @@ function decodeQr(matrix: QrMatrix): string | null
 **النوع:** الوظيفة
 
 ```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
+function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
 ```
 
 قم بفك تشفير {@link QrMatrix} وإعادته إلى نصه الأصلي، وتحميل الحزمة-
@@ -50,9 +50,9 @@ function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصفوفة | كيو آر ماتريكس |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| مصفوفة | كيو آر ماتريكس |       |
 
 #### عقد
 
@@ -65,7 +65,7 @@ function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
 **النوع:** الوظيفة
 
 ```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 قم بتشفير `text` في مصفوفة **Micro QR Code** (ISO/IEC 18004)، لإنشاء مثيل
@@ -77,22 +77,22 @@ function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة |  |
-| تصحيح الخطأ | تصحيح الخطأ |  |
+| الاسم       | اكتب        | الوصف |
+| ----------- | ----------- | ----- |
+| نص          | سلسلة       |       |
+| تصحيح الخطأ | تصحيح الخطأ |       |
 
 #### عقد
 
 - **@throws:** إذا كان النص طويلًا جدًا لأي إصدار Micro QR في
-المستوى المختار (بما في ذلك أي طلب للمستوى `H`).
+  المستوى المختار (بما في ذلك أي طلب للمستوى `H`).
 
 ### encodeMicroQrAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 قم بتشفير `text` في مصفوفة **Micro QR Code**، لإنشاء مثيل لـ WebAssembly
@@ -100,22 +100,22 @@ function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = '
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة |  |
-| تصحيح الخطأ | تصحيح الخطأ |  |
+| الاسم       | اكتب        | الوصف |
+| ----------- | ----------- | ----- |
+| نص          | سلسلة       |       |
+| تصحيح الخطأ | تصحيح الخطأ |       |
 
 #### عقد
 
 - **@throws:** إذا كان النص طويلًا جدًا لأي إصدار Micro QR في
-المستوى المختار (بما في ذلك أي طلب للمستوى `H`).
+  المستوى المختار (بما في ذلك أي طلب للمستوى `H`).
 
 ### ترميزQr
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix
+function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
 ```
 
 قم بتشفير `text` في مصفوفة رمز QR عند مستوى تصحيح الخطأ المحدد،
@@ -123,22 +123,23 @@ function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMat
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة |  |
-| تصحيح الخطأ | تصحيح الخطأ |  |
+| الاسم       | اكتب        | الوصف |
+| ----------- | ----------- | ----- |
+| نص          | سلسلة       |       |
+| تصحيح الخطأ | تصحيح الخطأ |       |
 
 #### عقد
 
 - **@throws:** إذا كان النص طويلاً جدًا بحيث لا يتناسب مع الحجم الأكبر (version
-40) رمز الاستجابة السريعة على مستوى تصحيح الخطأ المختار.
+
+40. رمز الاستجابة السريعة على مستوى تصحيح الخطأ المختار.
 
 ### com.encodeQrAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>
+function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
 ```
 
 قم بتشفير `text` في مصفوفة رمز QR عند مستوى تصحيح الخطأ المحدد،
@@ -146,22 +147,23 @@ function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة |  |
-| تصحيح الخطأ | تصحيح الخطأ |  |
+| الاسم       | اكتب        | الوصف |
+| ----------- | ----------- | ----- |
+| نص          | سلسلة       |       |
+| تصحيح الخطأ | تصحيح الخطأ |       |
 
 #### عقد
 
 - **@throws:** إذا كان النص طويلاً جدًا بحيث لا يتناسب مع الحجم الأكبر (version
-40) رمز الاستجابة السريعة على مستوى تصحيح الخطأ المختار.
+
+40. رمز الاستجابة السريعة على مستوى تصحيح الخطأ المختار.
 
 ### com.encodeRmqr
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 قم بتشفير `text` في مصفوفة **رمز QR المستطيل الصغير (rMQR)**
@@ -174,22 +176,22 @@ function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): Com
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة |  |
-| تصحيح الخطأ | تصحيح الخطأ |  |
+| الاسم       | اكتب        | الوصف |
+| ----------- | ----------- | ----- |
+| نص          | سلسلة       |       |
+| تصحيح الخطأ | تصحيح الخطأ |       |
 
 #### عقد
 
 - **@throws:** إذا كان النص طويلًا جدًا لأي إصدار rMQR في
-المستوى المختار.
+  المستوى المختار.
 
 ### encodeRmqrAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 قم بتشفير `text` في مصفوفة **رمز QR الصغير المستطيل (rMQR)**،
@@ -198,15 +200,15 @@ function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M')
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| نص | سلسلة |  |
-| تصحيح الخطأ | تصحيح الخطأ |  |
+| الاسم       | اكتب        | الوصف |
+| ----------- | ----------- | ----- |
+| نص          | سلسلة       |       |
+| تصحيح الخطأ | تصحيح الخطأ |       |
 
 #### عقد
 
 - **@throws:** إذا كان النص طويلًا جدًا لأي إصدار rMQR في
-المستوى المختار.
+  المستوى المختار.
 
 ## `src/types`
 

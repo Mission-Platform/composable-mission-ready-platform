@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null
+function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
 ```
 
 פענוח רצף של סיביות מודול (`1` = bar, `0` = רווח) של `symbology` הנתון
@@ -31,17 +31,17 @@ function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>):
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סמליות | ברקוד סימבולוגיה |  |
-| מודולים | מערך כמו<number> |  |
+| שם      | הקלד             | תיאור |
+| ------- | ---------------- | ----- |
+| סמליות  | ברקוד סימבולוגיה |       |
+| מודולים | מערך כמו<number> |       |
 
 ### decodeBarcodeAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>
+function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
 ```
 
 פענח רצף של סיביות מודול בחזרה למטען שלה, תוך טעינת ה-FWS המקורי
@@ -50,10 +50,10 @@ function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<numb
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סמליות | ברקוד סימבולוגיה |  |
-| מודולים | מערך כמו<number> |  |
+| שם      | הקלד             | תיאור |
+| ------- | ---------------- | ----- |
+| סמליות  | ברקוד סימבולוגיה |       |
+| מודולים | מערך כמו<number> |       |
 
 ## `src/encoder/index`
 
@@ -72,7 +72,22 @@ export interface Barcode
 **סוג:** סוג
 
 ```typescript
-export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'ean13' | 'ean8' | 'upca' | 'upce' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode';
+export type BarcodeSymbology =
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'ean13'
+  | 'ean8'
+  | 'upca'
+  | 'upce'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode';
 ```
 
 סימלוגיות ברקוד ליניאריות נתמכות.
@@ -82,17 +97,17 @@ export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' 
 פונקציה **סוג:**
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
+function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
 קידוד `data` לברקוד ליניארי באמצעות גרף FWS המקומי של החבילה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סמליות | ברקוד סימבולוגיה |  |
-| נתונים | מחרוזת |  |
+| שם     | הקלד             | תיאור |
+| ------ | ---------------- | ----- |
+| סמליות | ברקוד סימבולוגיה |       |
+| נתונים | מחרוזת           |       |
 
 #### חוֹזֶה
 
@@ -103,17 +118,17 @@ function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
 פונקציה **סוג:**
 
 ```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>
+function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
 קידוד `data` באופן אסינכרוני באמצעות גרף FWS המקומי של החבילה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סמליות | ברקוד סימבולוגיה |  |
-| נתונים | מחרוזת |  |
+| שם     | הקלד             | תיאור |
+| ------ | ---------------- | ----- |
+| סמליות | ברקוד סימבולוגיה |       |
+| נתונים | מחרוזת           |       |
 
 ## `src/fws/index`
 
@@ -122,233 +137,246 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 פונקציה **סוג:**
 
 ```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string
+function decodeEan13Fws(value: string | ArrayLike<number>): string;
 ```
 
 מפענח ביטים של מודול EAN-13 ומאמת זוגיות וספרת ביקורת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת \| מערך כמו<number> |  |
+| שם  | הקלד                       | תיאור |
+| --- | -------------------------- | ----- |
+| ערך | מחרוזת \| מערך כמו<number> |       |
 
 ### decodeEan13FwsAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 מפענח באופן אסינכרוני ביטים של מודול EAN-13 באמצעות FWS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת \| מערך כמו<number> |  |
+| שם  | הקלד                       | תיאור |
+| --- | -------------------------- | ----- |
+| ערך | מחרוזת \| מערך כמו<number> |       |
 
 ### decodeEan8Fws
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string
+function decodeEan8Fws(value: string | ArrayLike<number>): string;
 ```
 
 מפענח ביטים של מודול EAN-8 ומחזיר את המטען עם ספרת הסימון שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת \| מערך כמו<number> |  |
+| שם  | הקלד                       | תיאור |
+| --- | -------------------------- | ----- |
+| ערך | מחרוזת \| מערך כמו<number> |       |
 
 ### decodeEan8FwsAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 מפענח באופן אסינכרוני ביטים של מודול EAN-8 באמצעות FWS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת \| מערך כמו<number> |  |
+| שם  | הקלד                       | תיאור |
+| --- | -------------------------- | ----- |
+| ערך | מחרוזת \| מערך כמו<number> |       |
 
 ### encodeEan13Fws
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeEan13Fws(value: string): string
+function encodeEan13Fws(value: string): string;
 ```
 
 מקודד מטען EAN-13 בן שתים עשרה ספרות ומחשב את ספרת הביקורת שלו ב-FWS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### encodeEan13FwsAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>
+function encodeEan13FwsAsync(value: string): Promise<string>;
 ```
 
 מקודד באופן אסינכרוני מטען EAN-13 בן שתים עשרה ספרות עם מטעין FWS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### encodeEan8Fws
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeEan8Fws(value: string): string
+function encodeEan8Fws(value: string): string;
 ```
 
 מקודד מטען EAN-8 בן שבע ספרות ומחשב את ספרת הביקורת שלו ב-FWS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### encodeEan8FwsAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>
+function encodeEan8FwsAsync(value: string): Promise<string>;
 ```
 
 מקודד באופן אסינכרוני מטען EAN-8 בן שבע ספרות עם מטעין FWS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### encodeUpcaFws
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeUpcaFws(value: string): string
+function encodeUpcaFws(value: string): string;
 ```
 
 מקודד מטען UPC-A דרך גרף EAN-13 FWS עם קידומת אפס.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### encodeUpcaFwsAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>
+function encodeUpcaFwsAsync(value: string): Promise<string>;
 ```
 
 מקודד באופן אסינכרוני מטען UPC-A באמצעות FWS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### encodeVariableBarcodeFws
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string
+function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
 מקודד ברקוד נתמך באורך משתנה דרך גרף ה-FWS המקורי שלו כאשר זמין.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סמליות | VariableBarcodeSymbology |  |
-| ערך | מחרוזת |  |
+| שם     | הקלד                     | תיאור |
+| ------ | ------------------------ | ----- |
+| סמליות | VariableBarcodeSymbology |       |
+| ערך    | מחרוזת                   |       |
 
 ### encodeVariableBarcodeFwsAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>
+function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
 ```
 
 מקודד באופן אסינכרוני ברקוד נתמך באורך משתנה באמצעות FWS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| סמליות | VariableBarcodeSymbology |  |
-| ערך | מחרוזת |  |
+| שם     | הקלד                     | תיאור |
+| ------ | ------------------------ | ----- |
+| סמליות | VariableBarcodeSymbology |       |
+| ערך    | מחרוזת                   |       |
 
 ### validateGs1DataBarValue
 
 פונקציה **סוג:**
 
 ```typescript
-function validateGs1DataBarValue(value: string): boolean
+function validateGs1DataBarValue(value: string): boolean;
 ```
 
 מאמת ערך GS1 DataBar/RSS-14 GTIN-14 בגרף FWS המקומי של החבילה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### validateGs1DataBarValueAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>
+function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
 ```
 
 מאמת באופן אסינכרוני ערך GS1 DataBar/RSS-14 GTIN-14 באמצעות FWS.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### VariableBarcodeSymbology
 
 **סוג:** סוג
 
 ```typescript
-export type VariableBarcodeSymbology = Extract< BarcodeSymbology, | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode' >;
+export type VariableBarcodeSymbology = Extract<
+  BarcodeSymbology,
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode'
+>;
 ```
 
 סמליות באורך משתנה הנתמכות על ידי מתאם הברקוד הישיר FWS.

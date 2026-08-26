@@ -1,10 +1,10 @@
 
 fn u32_to_i32_len(value: u32) -> i32 {
-  let remaining: u32 = value;
-  let place: i32 = 1;
-  let result: i32 = 0;
+  let mut remaining: u32 = value;
+  let mut place: i32 = 1;
+  let mut result: i32 = 0;
   while remaining > 0 {
-    let bit: u32 = remaining - remaining / 2 * 2;
+    let mut bit: u32 = remaining - remaining / 2 * 2;
     if bit == 1 { result = result + place; }
     remaining = remaining / 2;
     place = place * 2;
@@ -204,8 +204,8 @@ fn ean13_parity(value: i32) -> string {
 }
 
 fn ean13_left_pattern(parity: string, value: i32, index: i32) -> string {
-  if string_byte_at(parity, index) == 76 { return left_pattern(value); }
-  return ean13_g_pattern(value);
+  if string_byte_at(parity, index) == 76 { return string_concat(left_pattern(value), ""); }
+  return string_concat(ean13_g_pattern(value), "");
 }
 
 fn ean13_left_half(value: string) -> string {
@@ -239,11 +239,11 @@ export fn encode_upca(value: string) -> string {
   let length: i32 = string_length(value);
   if length == 11 {
     if !has_eleven_digits(value) { return ""; }
-    return encode_ean13(string_concat("0", value));
+    return string_concat(encode_ean13(string_concat("0", value)), "");
   }
   if length == 12 {
     if !has_twelve_digits(value) { return ""; }
-    return encode_ean13(string_concat("0", value));
+    return string_concat(encode_ean13(string_concat("0", value)), "");
   }
   return "";
 }
@@ -295,7 +295,7 @@ fn g_digit_from_bits(modules: Array<i32>, start: i32) -> i32 {
 }
 
 export fn decode_ean8(modules: Array<i32>) -> string {
-  return decode_ean8_row(modules, modules_len(modules));
+  return string_concat(decode_ean8_row(modules, modules_len(modules)), "");
 }
 
 // Length-aware variant: decode the first `count` sampled modules of an array
@@ -318,7 +318,7 @@ export fn decode_ean8_row(modules: Array<i32>, count: i32) -> string {
   if first < 0 || second < 0 || third < 0 || fourth < 0 || fifth < 0 || sixth < 0 || seventh < 0 || eighth < 0 { return ""; }
   let result: string = string_concat(string_concat(string_concat(digit_char(first), digit_char(second)), string_concat(digit_char(third), digit_char(fourth))), string_concat(string_concat(digit_char(fifth), digit_char(sixth)), string_concat(digit_char(seventh), digit_char(eighth))));
   if !valid_ean8(result) { return ""; }
-  return result;
+  return string_concat(result, "");
 }
 
 fn parity_matches(value: string, pattern: string) -> bool {
@@ -340,7 +340,7 @@ fn parity_digit(value: string) -> i32 {
 }
 
 export fn decode_ean13(modules: Array<i32>) -> string {
-  return decode_ean13_row(modules, modules_len(modules));
+  return string_concat(decode_ean13_row(modules, modules_len(modules)), "");
 }
 
 // Length-aware EAN-13 decode over the first `count` modules of an oversized array.
@@ -350,23 +350,23 @@ export fn decode_ean13_row(modules: Array<i32>, count: i32) -> string {
   if modules[0] != 1 || modules[1] != 0 || modules[2] != 1 { return ""; }
   if modules[45] != 0 || modules[46] != 1 || modules[47] != 0 || modules[48] != 1 || modules[49] != 0 { return ""; }
   if modules[92] != 1 || modules[93] != 0 || modules[94] != 1 { return ""; }
-  let first: i32 = left_digit_from_bits(modules, 3);
-  let first_parity: string = "L";
+  let mut first: i32 = left_digit_from_bits(modules, 3);
+  let mut first_parity: string = "L";
   if first < 0 { first = g_digit_from_bits(modules, 3); first_parity = "G"; }
-  let second: i32 = left_digit_from_bits(modules, 10);
-  let second_parity: string = "L";
+  let mut second: i32 = left_digit_from_bits(modules, 10);
+  let mut second_parity: string = "L";
   if second < 0 { second = g_digit_from_bits(modules, 10); second_parity = "G"; }
-  let third: i32 = left_digit_from_bits(modules, 17);
-  let third_parity: string = "L";
+  let mut third: i32 = left_digit_from_bits(modules, 17);
+  let mut third_parity: string = "L";
   if third < 0 { third = g_digit_from_bits(modules, 17); third_parity = "G"; }
-  let fourth: i32 = left_digit_from_bits(modules, 24);
-  let fourth_parity: string = "L";
+  let mut fourth: i32 = left_digit_from_bits(modules, 24);
+  let mut fourth_parity: string = "L";
   if fourth < 0 { fourth = g_digit_from_bits(modules, 24); fourth_parity = "G"; }
-  let fifth: i32 = left_digit_from_bits(modules, 31);
-  let fifth_parity: string = "L";
+  let mut fifth: i32 = left_digit_from_bits(modules, 31);
+  let mut fifth_parity: string = "L";
   if fifth < 0 { fifth = g_digit_from_bits(modules, 31); fifth_parity = "G"; }
-  let sixth: i32 = left_digit_from_bits(modules, 38);
-  let sixth_parity: string = "L";
+  let mut sixth: i32 = left_digit_from_bits(modules, 38);
+  let mut sixth_parity: string = "L";
   if sixth < 0 { sixth = g_digit_from_bits(modules, 38); sixth_parity = "G"; }
   let parity: string = string_concat(string_concat(string_concat(first_parity, second_parity), string_concat(third_parity, fourth_parity)), string_concat(fifth_parity, sixth_parity));
   let leading: i32 = parity_digit(parity);
@@ -379,11 +379,11 @@ export fn decode_ean13_row(modules: Array<i32>, count: i32) -> string {
   if leading < 0 || first < 0 || second < 0 || third < 0 || fourth < 0 || fifth < 0 || sixth < 0 || seventh < 0 || eighth < 0 || ninth < 0 || tenth < 0 || eleventh < 0 || twelfth < 0 { return ""; }
   let result: string = string_concat(string_concat(string_concat(string_concat(digit_char(leading), digit_char(first)), string_concat(digit_char(second), digit_char(third))), string_concat(string_concat(digit_char(fourth), digit_char(fifth)), digit_char(sixth))), string_concat(string_concat(string_concat(digit_char(seventh), digit_char(eighth)), string_concat(digit_char(ninth), digit_char(tenth))), string_concat(digit_char(eleventh), digit_char(twelfth))));
   if !valid_ean13(result) { return ""; }
-  return result;
+  return string_concat(result, "");
 }
 
 export fn decode_upca(modules: Array<i32>) -> string {
-  return decode_upca_row(modules, modules_len(modules));
+  return string_concat(decode_upca_row(modules, modules_len(modules)), "");
 }
 
 // Length-aware UPC-A decode over the first `count` modules of an oversized array.
@@ -414,21 +414,21 @@ export fn decode_upca_row(modules: Array<i32>, count: i32) -> string {
   let tail_second: string = string_concat(digit_char(eleventh), digit_char(twelfth));
   let result: string = string_concat(string_concat(string_concat(left_first, left_second), string_concat(right_first, right_second)), string_concat(tail_first, tail_second));
   if !valid_ean13(string_concat("0", result)) { return ""; }
-  return result;
+  return string_concat(result, "");
 }
 
 fn invert_upce_parity(value: string) -> string {
-  let first: string = "L";
+  let mut first: string = "L";
   if string_byte_at(value, 0) == 76 { first = "G"; }
-  let second: string = "L";
+  let mut second: string = "L";
   if string_byte_at(value, 1) == 76 { second = "G"; }
-  let third: string = "L";
+  let mut third: string = "L";
   if string_byte_at(value, 2) == 76 { third = "G"; }
-  let fourth: string = "L";
+  let mut fourth: string = "L";
   if string_byte_at(value, 3) == 76 { fourth = "G"; }
-  let fifth: string = "L";
+  let mut fifth: string = "L";
   if string_byte_at(value, 4) == 76 { fifth = "G"; }
-  let sixth: string = "L";
+  let mut sixth: string = "L";
   if string_byte_at(value, 5) == 76 { sixth = "G"; }
   return string_concat(string_concat(string_concat(string_concat(string_concat(first, second), third), fourth), fifth), sixth);
 }
@@ -480,10 +480,10 @@ fn upce_parity(value: i32) -> string {
 
 fn upce_pattern(value: i32, index: i32, check: i32, number_system: i32) -> string {
   let parity: string = upce_parity(check);
-  let use_g: bool = string_byte_at(parity, index) == 71;
+  let mut use_g: bool = string_byte_at(parity, index) == 71;
   if number_system == 1 { use_g = !use_g; }
-  if use_g { return ean13_g_pattern(value); }
-  return left_pattern(value);
+  if use_g { return string_concat(ean13_g_pattern(value), ""); }
+  return string_concat(left_pattern(value), "");
 }
 
 fn upce_half(value: string, check: i32, number_system: i32) -> string {
@@ -499,9 +499,9 @@ fn upce_half(value: string, check: i32, number_system: i32) -> string {
 // UPC-E accepts a six-digit payload, an optional number system, and an optional verified check digit.
 export fn encode_upce(value: string) -> string {
   let length: i32 = string_length(value);
-  let number_system: i32 = 0;
-  let payload: string = value;
-  let supplied_check: i32 = -1;
+  let mut number_system: i32 = 0;
+  let mut payload: string = value;
+  let mut supplied_check: i32 = -1;
   if length != 6 && length != 7 && length != 8 { return ""; }
   if length == 6 {
     if !has_six_digits(value) { return ""; }
@@ -527,7 +527,7 @@ export fn encode_upce(value: string) -> string {
 }
 
 export fn decode_upce(modules: Array<i32>) -> string {
-  return decode_upce_row(modules, modules_len(modules));
+  return string_concat(decode_upce_row(modules, modules_len(modules)), "");
 }
 
 // Length-aware UPC-E decode over the first `count` modules of an oversized array.
@@ -537,30 +537,30 @@ export fn decode_upce_row(modules: Array<i32>, count: i32) -> string {
   if modules[0] != 1 || modules[1] != 0 || modules[2] != 1 { return ""; }
   if modules[45] != 0 || modules[46] != 1 || modules[47] != 0 || modules[48] != 1 || modules[49] != 0 || modules[50] != 1 { return ""; }
 
-  let first: i32 = left_digit_from_bits(modules, 3);
-  let first_parity: string = "L";
+  let mut first: i32 = left_digit_from_bits(modules, 3);
+  let mut first_parity: string = "L";
   if first < 0 { first = g_digit_from_bits(modules, 3); first_parity = "G"; }
-  let second: i32 = left_digit_from_bits(modules, 10);
-  let second_parity: string = "L";
+  let mut second: i32 = left_digit_from_bits(modules, 10);
+  let mut second_parity: string = "L";
   if second < 0 { second = g_digit_from_bits(modules, 10); second_parity = "G"; }
-  let third: i32 = left_digit_from_bits(modules, 17);
-  let third_parity: string = "L";
+  let mut third: i32 = left_digit_from_bits(modules, 17);
+  let mut third_parity: string = "L";
   if third < 0 { third = g_digit_from_bits(modules, 17); third_parity = "G"; }
-  let fourth: i32 = left_digit_from_bits(modules, 24);
-  let fourth_parity: string = "L";
+  let mut fourth: i32 = left_digit_from_bits(modules, 24);
+  let mut fourth_parity: string = "L";
   if fourth < 0 { fourth = g_digit_from_bits(modules, 24); fourth_parity = "G"; }
-  let fifth: i32 = left_digit_from_bits(modules, 31);
-  let fifth_parity: string = "L";
+  let mut fifth: i32 = left_digit_from_bits(modules, 31);
+  let mut fifth_parity: string = "L";
   if fifth < 0 { fifth = g_digit_from_bits(modules, 31); fifth_parity = "G"; }
-  let sixth: i32 = left_digit_from_bits(modules, 38);
-  let sixth_parity: string = "L";
+  let mut sixth: i32 = left_digit_from_bits(modules, 38);
+  let mut sixth_parity: string = "L";
   if sixth < 0 { sixth = g_digit_from_bits(modules, 38); sixth_parity = "G"; }
   if first < 0 || second < 0 || third < 0 || fourth < 0 || fifth < 0 || sixth < 0 { return ""; }
 
   let digits: string = string_concat(string_concat(string_concat(string_concat(string_concat(digit_char(first), digit_char(second)), digit_char(third)), digit_char(fourth)), digit_char(fifth)), digit_char(sixth));
   let parity: string = string_concat(string_concat(string_concat(string_concat(string_concat(first_parity, second_parity), third_parity), fourth_parity), fifth_parity), sixth_parity);
-  let check: i32 = upce_check_from_parity(parity);
-  let number_system: i32 = 0;
+  let mut check: i32 = upce_check_from_parity(parity);
+  let mut number_system: i32 = 0;
   if check < 0 {
     check = upce_check_from_parity(invert_upce_parity(parity));
     number_system = 1;

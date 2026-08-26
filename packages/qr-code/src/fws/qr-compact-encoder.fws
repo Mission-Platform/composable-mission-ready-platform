@@ -23,7 +23,7 @@ fn payload_bit(text: string, index: i32) -> bool {
 }
 
 fn all_numeric(text: string) -> bool {
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < string_length(text) {
     let value: i32 = byte_at(text, index);
     if value < 48 || value > 57 { return false; }
@@ -33,8 +33,8 @@ fn all_numeric(text: string) -> bool {
 }
 
 fn numeric_bits(text: string) -> i32 {
-  let result: i32 = 0;
-  let index: i32 = 0;
+  let mut result: i32 = 0;
+  let mut index: i32 = 0;
   while index + 3 <= string_length(text) {
     result = result + 10;
     index = index + 3;
@@ -49,50 +49,51 @@ fn append_numeric_from(data: string, text: string, index: i32, count: i32) -> st
   let remaining: i32 = count - index;
   if remaining <= 0 { return data; }
   if remaining == 1 {
-    return q.bits_push_value(data, byte_at(text, index) - 48, 4);
+    return string_concat("", q.bits_push_value(data, byte_at(text, index) - 48, 4));
   }
   if remaining == 2 {
     let first: i32 = byte_at(text, index) - 48;
     let second: i32 = byte_at(text, index + 1) - 48;
-    return q.bits_push_value(data, first * 10 + second, 7);
+    return string_concat("", q.bits_push_value(data, first * 10 + second, 7));
   }
   let a: i32 = byte_at(text, index) - 48;
   let b: i32 = byte_at(text, index + 1) - 48;
   let c: i32 = byte_at(text, index + 2) - 48;
   let next: string = q.bits_push_value(data, a * 100 + b * 10 + c, 10);
-  return append_numeric_from(next, text, index + 3, count);
+  return string_concat("", append_numeric_from(next, text, index + 3, count));
 }
 
 fn append_numeric(data: string, text: string) -> string {
-  return append_numeric_from(data, text, 0, string_length(text));
+  return string_concat("", append_numeric_from(data, text, 0, string_length(text)));
 }
 
 fn micro_m1_numeric_data(text: string) -> string {
   let count: i32 = string_length(text);
-  let result: string = q.bits_push_value("", count, 3);
-  if count <= 0 { return result; }
+  let mut result: string = "";
+  result = q.bits_push_value(result, count, 3);
+  if count <= 0 { return string_concat("", result); }
   if count == 1 {
-    return q.bits_push_value(result, byte_at(text, 0) - 48, 4);
+    return string_concat("", q.bits_push_value(result, byte_at(text, 0) - 48, 4));
   }
   if count == 2 {
     let digit0: i32 = byte_at(text, 0) - 48;
     let digit1: i32 = byte_at(text, 1) - 48;
     let value: i32 = digit0 * 10 + digit1;
-    return q.bits_push_value(result, value, 7);
+    return string_concat("", q.bits_push_value(result, value, 7));
   }
   let digit0: i32 = byte_at(text, 0) - 48;
   let digit1: i32 = byte_at(text, 1) - 48;
   let digit2: i32 = byte_at(text, 2) - 48;
   let first_three: i32 = digit0 * 100 + digit1 * 10 + digit2;
-  result = q.bits_push_value(result, first_three, 10);
-  if count == 3 { return result; }
+  result = string_concat("", q.bits_push_value(result, first_three, 10));
+  if count == 3 { return string_concat("", result); }
   if count == 4 {
-    return q.bits_push_value(result, byte_at(text, 3) - 48, 4);
+    return string_concat("", q.bits_push_value(result, byte_at(text, 3) - 48, 4));
   }
   let digit3: i32 = byte_at(text, 3) - 48;
   let digit4: i32 = byte_at(text, 4) - 48;
   let tail: i32 = digit3 * 10 + digit4;
-  return q.bits_push_value(result, tail, 7);
+  return string_concat("", q.bits_push_value(result, tail, 7));
 }
 
 fn micro_capacity(version: i32, rank: i32) -> i32 {
@@ -112,79 +113,80 @@ fn micro_data_bits(text: string, version: i32, numeric: bool) -> i32 {
     let numeric_count_bits: i32 = version + 3;
     return header + numeric_count_bits + numeric_bits(text);
   }
-  let payload_count_bits: i32 = 4;
+  let mut payload_count_bits: i32 = 4;
   if version == 3 { payload_count_bits = 5; }
   return header + payload_count_bits + string_length(text) * 8;
 }
 
 fn micro_numeric_data(text: string, version: i32) -> string {
-  if version == 0 { return micro_m1_numeric_data(text); }
-  let result: string = "";
-  if version > 0 { result = q.bits_push_value(result, 0, version); }
-  result = q.bits_push_value(result, string_length(text), version + 3);
-  return append_numeric(result, text);
+  if version == 0 { return string_concat("", micro_m1_numeric_data(text)); }
+  let mut result: string = "";
+  if version > 0 { result = string_concat("", q.bits_push_value(result, 0, version)); }
+  result = string_concat("", q.bits_push_value(result, string_length(text), version + 3));
+  return string_concat("", append_numeric(result, text));
 }
 
 fn micro_byte_data(text: string, version: i32) -> string {
-  let result: string = q.bits_push_value("", 2, version);
-  let mode_count_bits: i32 = 4;
+  let mut result: string = "";
+  result = string_concat("", q.bits_push_value(result, 2, version));
+  let mut mode_count_bits: i32 = 4;
   if version == 3 { mode_count_bits = 5; }
-  result = q.bits_push_value(result, string_length(text), mode_count_bits);
-  let index: i32 = 0;
+  result = string_concat("", q.bits_push_value(result, string_length(text), mode_count_bits));
+  let mut index: i32 = 0;
   while index < string_length(text) {
-    result = q.bits_push_value(result, byte_at(text, index), 8);
+    result = string_concat("", q.bits_push_value(result, byte_at(text, index), 8));
     index = index + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn micro_pad_short(result: string, capacity: i32, terminator: i32) -> string {
-  let padded: string = string_concat(result, q.bits_zeros(terminator));
+  let mut padded: string = string_concat(result, q.bits_zeros(terminator));
   while string_length(padded) < capacity {
     padded = string_concat(padded, "0");
   }
-  return padded;
+  return string_concat("", padded);
 }
 
 fn micro_pad_full(result: string, capacity: i32, terminator: i32) -> string {
-  let padded: string = string_concat(result, q.bits_zeros(terminator));
-  let align: i32 = 8 - string_length(padded) % 8;
+  let mut padded: string = string_concat(result, q.bits_zeros(terminator));
+  let mut align: i32 = 8 - string_length(padded) % 8;
   if align == 8 { align = 0; }
   if align > capacity - string_length(padded) { align = capacity - string_length(padded); }
   padded = string_concat(padded, q.bits_zeros(align));
-  let pad: i32 = 236;
+  let mut pad: i32 = 236;
   while string_length(padded) + 8 <= capacity {
-    padded = q.bits_push_value(padded, pad, 8);
+    padded = string_concat("", q.bits_push_value(padded, pad, 8));
     if pad == 236 { pad = 17; } else { pad = 236; }
   }
   while string_length(padded) < capacity {
     padded = string_concat(padded, "0");
   }
-  return padded;
+  return string_concat("", padded);
 }
 
 fn micro_make_data(text: string, version: i32, capacity: i32, numeric: bool) -> string {
-  let result: string = "";
+  let mut result: string = "";
   if numeric {
     result = micro_numeric_data(text, version);
   } else {
     result = micro_byte_data(text, version);
   }
   let remaining: i32 = capacity - string_length(result);
-  let terminator: i32 = version * 2 + 3;
+  let mut terminator: i32 = version * 2 + 3;
   if terminator > remaining { terminator = remaining; }
   if terminator < 0 { terminator = 0; }
-  if version == 0 || version == 2 { return micro_pad_short(result, capacity, terminator); }
-  return micro_pad_full(result, capacity, terminator);
+  if version == 0 || version == 2 { return string_concat("", micro_pad_short(result, capacity, terminator)); }
+  return string_concat("", micro_pad_full(result, capacity, terminator));
 }
 
 fn micro_pack_bytes(bits: string, short: bool) -> string {
   let full: i32 = string_length(bits) / 8;
-  let result: string = "";
-  let index: i32 = 0;
+  let mut result: string = "";
+  let mut index: i32 = 0;
   while index < full {
-    let value: i32 = 0;
-    let bit: i32 = 0;
+    let mut value: i32 = 0;
+    let mut bit: i32 = 0;
     while bit < 8 {
       value = value * 2;
       if q.bits_get(bits, index * 8 + bit) { value = value + 1; }
@@ -194,8 +196,8 @@ fn micro_pack_bytes(bits: string, short: bool) -> string {
     index = index + 1;
   }
   if short && string_length(bits) - full * 8 >= 4 {
-    let value: i32 = 0;
-    let bit: i32 = 0;
+    let mut value: i32 = 0;
+    let mut bit: i32 = 0;
     while bit < 4 {
       value = value * 2;
       if q.bits_get(bits, full * 8 + bit) { value = value + 1; }
@@ -203,7 +205,7 @@ fn micro_pack_bytes(bits: string, short: bool) -> string {
     }
     result = q.bytes_push(result, value * 16);
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn micro_set(modules: u32, reserved: u32, size: i32, x: i32, y: i32, on: bool, mark: bool) -> unit {
@@ -251,29 +253,29 @@ fn micro_symbol(version: i32, rank: i32) -> i32 {
 }
 
 fn micro_data_codeword_bits(data: string, short: bool) -> string {
-  let result: string = "";
+  let mut result: string = "";
   let data_count: i32 = string_length(data) / 3;
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < data_count {
     let value: i32 = q.bytes_get(data, index);
     if short && index == data_count - 1 {
       result = q.bits_push_value(result, value / 16, 4);
     } else {
-      result = q.bits_push_value(result, value, 8);
+      result = string_concat("", q.bits_push_value(result, value, 8));
     }
     index = index + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn micro_ecc_bits(parity: string, ecc_count: i32) -> string {
-  let result: string = "";
-  let index: i32 = 0;
+  let mut result: string = "";
+  let mut index: i32 = 0;
   while index < ecc_count {
-    result = q.bits_push_value(result, q.bytes_get(parity, index), 8);
+    result = string_concat("", q.bits_push_value(result, q.bytes_get(parity, index), 8));
     index = index + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn micro_final_bits(data: string, short: bool, ecc_count: i32) -> string {
@@ -404,7 +406,7 @@ fn micro_finder(modules: u32, reserved: u32, size: i32) -> unit {
 }
 
 fn micro_timing(modules: u32, reserved: u32, size: i32) -> unit {
-  let index: i32 = 8;
+  let mut index: i32 = 8;
   while index < size {
     let delta: i32 = index - 8;
     let on: bool = delta % 2 == 0;
@@ -469,13 +471,13 @@ fn micro_format(modules: u32, reserved: u32, size: i32, symbol: i32, mask: i32) 
 }
 
 fn micro_mask(modules: u32, reserved: u32, size: i32, mask: i32) -> unit {
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   let total: i32 = size * size;
   while index < total {
     let x: i32 = index - index / size * size;
     let y: i32 = index / size;
     if !q.bitbuf_get(reserved, index) {
-      let apply: bool = false;
+      let mut apply: bool = false;
       if mask == 0 { apply = y % 2 == 0; }
       let half: i32 = y / 2 + x / 3;
       if mask == 1 { apply = half % 2 == 0; }
@@ -495,18 +497,18 @@ fn micro_mask(modules: u32, reserved: u32, size: i32, mask: i32) -> unit {
 }
 
 fn micro_place(modules: u32, reserved: u32, size: i32, version: i32, bits: string) -> unit {
-  let right: i32 = size - 1;
-  let cursor: i32 = 0;
+  let mut right: i32 = size - 1;
+  let mut cursor: i32 = 0;
   while right > 0 {
-    let vertical: i32 = 0;
+    let mut vertical: i32 = 0;
     while vertical < size {
-      let z: i32 = 0;
+      let mut z: i32 = 0;
       while z < 2 {
         let x: i32 = right - z;
-        let direction: i32 = right;
+        let mut direction: i32 = right;
         if version == 0 || version == 2 { direction = direction + 2; }
         let upwards: bool = direction % 4 == 0;
-        let y: i32 = vertical;
+        let mut y: i32 = vertical;
         if upwards { y = size - 1 - vertical; }
         let index: i32 = y * size + x;
         if !q.bitbuf_get(reserved, index) {
@@ -522,9 +524,9 @@ fn micro_place(modules: u32, reserved: u32, size: i32, version: i32, bits: strin
 }
 
 fn micro_score(modules: u32, size: i32) -> i32 {
-  let sum1: i32 = 0;
-  let sum2: i32 = 0;
-  let index: i32 = 1;
+  let mut sum1: i32 = 0;
+  let mut sum2: i32 = 0;
+  let mut index: i32 = 1;
   let bottom_row: i32 = size - 1;
   while index < size {
     let right_index: i32 = index * size + size - 1;
@@ -576,25 +578,25 @@ fn micro_matrix_real(text: string, version: i32, rank: i32, numeric: bool) -> st
   let score1: i32 = micro_candidate_score(size, version, final_bits, 1);
   let score2: i32 = micro_candidate_score(size, version, final_bits, 2);
   let score3: i32 = micro_candidate_score(size, version, final_bits, 3);
-  let best_mask: i32 = 0;
-  let best_score: i32 = score0;
+  let mut best_mask: i32 = 0;
+  let mut best_score: i32 = score0;
   if score1 > best_score { best_score = score1; best_mask = 1; }
   if score2 > best_score { best_score = score2; best_mask = 2; }
   if score3 > best_score { best_score = score3; best_mask = 3; }
-  return micro_emit(size, version, symbol, final_bits, best_mask);
+  return string_concat("", micro_emit(size, version, symbol, final_bits, best_mask));
 }
 
 export fn encode_micro_qr(ecc: i32, text: string) -> string {
   if ecc < 0 || ecc > 2 { return ""; }
   let numeric: bool = all_numeric(text);
-  let version: i32 = 0;
+  let mut version: i32 = 0;
   while version < 4 {
-    let rank: i32 = 0;
+    let mut rank: i32 = 0;
     while rank < 3 {
       let capacity: i32 = micro_capacity(version, rank);
       let version_allowed: bool = numeric || version >= 2;
       if rank >= ecc && capacity > 0 && version_allowed {
-        if micro_data_bits(text, version, numeric) <= capacity { return micro_matrix_real(text, version, rank, numeric); }
+        if micro_data_bits(text, version, numeric) <= capacity { return string_concat("", micro_matrix_real(text, version, rank, numeric)); }
       }
       rank = rank + 1;
     }
@@ -607,5 +609,5 @@ export fn encode_micro_qr(ecc: i32, text: string) -> string {
 
 
 export fn encode_rmqr(ecc: i32, text: string) -> string {
-  return rmqr.encode_rmqr_impl(ecc, text);
+  return string_concat("", rmqr.encode_rmqr_impl(ecc, text));
 }

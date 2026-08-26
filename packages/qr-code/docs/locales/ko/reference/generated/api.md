@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function decodeQr(matrix: QrMatrix): string | null
+function decodeQr(matrix: QrMatrix): string | null;
 ```
 
 {@link QrMatrix}를 원래 텍스트로 다시 디코딩하고 패키지를 로드합니다.
@@ -29,9 +29,9 @@ function decodeQr(matrix: QrMatrix): string | null
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 매트릭스 | Qr매트릭스 |  |
+| 이름     | 유형       | 설명 |
+| -------- | ---------- | ---- |
+| 매트릭스 | Qr매트릭스 |      |
 
 #### 계약
 
@@ -42,7 +42,7 @@ function decodeQr(matrix: QrMatrix): string | null
 **종류:** 기능
 
 ```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
+function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
 ```
 
 {@link QrMatrix}를 원래 텍스트로 다시 디코딩하고 패키지를 로드합니다.
@@ -50,9 +50,9 @@ function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 매트릭스 | Qr매트릭스 |  |
+| 이름     | 유형       | 설명 |
+| -------- | ---------- | ---- |
+| 매트릭스 | Qr매트릭스 |      |
 
 #### 계약
 
@@ -65,7 +65,7 @@ function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
 **종류:** 기능
 
 ```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 `text`을 **Micro QR Code** 매트릭스(ISO/IEC 18004)로 인코딩하여 인스턴스화합니다.
@@ -77,22 +77,22 @@ Micro QR은 오류 수정 수준 `L`, `M` 및 `Q`만 지원합니다. 요청
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 |  |
-| 오류수정 | Qr오류수정 |  |
+| 이름     | 유형       | 설명 |
+| -------- | ---------- | ---- |
+| 텍스트   | 문자열     |      |
+| 오류수정 | Qr오류수정 |      |
 
 #### 계약
 
 - **@throws:** 마이크로 QR 버전에 비해 텍스트가 너무 긴 경우
-선택한 레벨(`H` 레벨에 대한 요청 포함)
+  선택한 레벨(`H` 레벨에 대한 요청 포함)
 
 ### encodeMicroQrAsync
 
 **종류:** 기능
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 `text`을 **Micro QR Code** 매트릭스로 인코딩하여 WebAssembly를 인스턴스화합니다.
@@ -100,22 +100,22 @@ function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = '
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 |  |
-| 오류수정 | Qr오류수정 |  |
+| 이름     | 유형       | 설명 |
+| -------- | ---------- | ---- |
+| 텍스트   | 문자열     |      |
+| 오류수정 | Qr오류수정 |      |
 
 #### 계약
 
 - **@throws:** 마이크로 QR 버전에 비해 텍스트가 너무 긴 경우
-선택한 레벨(`H` 레벨에 대한 요청 포함)
+  선택한 레벨(`H` 레벨에 대한 요청 포함)
 
 ### 인코딩Qr
 
 **종류:** 기능
 
 ```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix
+function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
 ```
 
 주어진 오류 수정 수준에서 `text`을 QR 코드 매트릭스로 인코딩합니다.
@@ -123,22 +123,23 @@ function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMat
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 |  |
-| 오류수정 | Qr오류수정 |  |
+| 이름     | 유형       | 설명 |
+| -------- | ---------- | ---- |
+| 텍스트   | 문자열     |      |
+| 오류수정 | Qr오류수정 |      |
 
 #### 계약
 
 - **@throws:** 텍스트가 너무 길어서 가장 큰 버전에 맞지 않는 경우
-40) 선택한 오류 수정 수준의 QR 코드.
+
+40. 선택한 오류 수정 수준의 QR 코드.
 
 ### encodeQrAsync
 
 **종류:** 기능
 
 ```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>
+function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
 ```
 
 주어진 오류 수정 수준에서 `text`을 QR 코드 매트릭스로 인코딩합니다.
@@ -146,22 +147,23 @@ function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 |  |
-| 오류수정 | Qr오류수정 |  |
+| 이름     | 유형       | 설명 |
+| -------- | ---------- | ---- |
+| 텍스트   | 문자열     |      |
+| 오류수정 | Qr오류수정 |      |
 
 #### 계약
 
 - **@throws:** 텍스트가 너무 길어서 가장 큰 버전에 맞지 않는 경우
-40) 선택한 오류 수정 수준의 QR 코드.
+
+40. 선택한 오류 수정 수준의 QR 코드.
 
 ### 인코딩Rmqr
 
 **종류:** 기능
 
 ```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 `text`을 **직사각형 마이크로 QR(rMQR) 코드** 매트릭스로 인코딩합니다.
@@ -174,22 +176,22 @@ function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): Com
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 |  |
-| 오류수정 | Qr오류수정 |  |
+| 이름     | 유형       | 설명 |
+| -------- | ---------- | ---- |
+| 텍스트   | 문자열     |      |
+| 오류수정 | Qr오류수정 |      |
 
 #### 계약
 
 - **@throws:** rMQR 버전에 비해 텍스트가 너무 긴 경우
-선택한 레벨.
+  선택한 레벨.
 
 ### encodeRmqrAsync
 
 **종류:** 기능
 
 ```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 `text`을 **직사각형 마이크로 QR(rMQR) 코드** 매트릭스로 인코딩합니다.
@@ -198,15 +200,15 @@ function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M')
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 텍스트 | 문자열 |  |
-| 오류수정 | Qr오류수정 |  |
+| 이름     | 유형       | 설명 |
+| -------- | ---------- | ---- |
+| 텍스트   | 문자열     |      |
+| 오류수정 | Qr오류수정 |      |
 
 #### 계약
 
 - **@throws:** rMQR 버전에 비해 텍스트가 너무 긴 경우
-선택한 레벨.
+  선택한 레벨.
 
 ## `src/types`
 

@@ -19,23 +19,23 @@ durch einen kleinen, vollständig typisierten ES-Modul-Wrapper und ein einmal be
 
 ## Unterstützte Symbologien
 
-| Symbologie | Notizen |
-| ------------ | ---------------------------------------------------------------------- |
+| Symbologie   | Notizen                                                                      |
+| ------------ | ---------------------------------------------------------------------------- |
 | `code128`    | Hohe Dichte. Code B für druckbares ASCII; Code C schneller Pfad für Ziffern. |
-| `gs1-128`    | Code 128 mit führendem FNC1 für GS1-Anwendungskennungen.            |
-| `code39`     | Alphanumerisch, selbstprüfend; automatisch gerahmt mit `*` starten/stoppen.          |
-| `code39ext`  | Vollständiger ASCII-Code 39 über Umschaltzeichen.                               |
-| `code93`     | Kompakt, selbstprüfend (zwei Prüfzeichen).                         |
-| `code93ext`  | Vollständiger ASCII-Code 93 über Umschaltzeichen.                               |
-| `ean13`      | 12 Ziffern (Scheck beigefügt) oder 13 (Scheck bestätigt).                     |
-| `ean8`       | 7 Ziffern (Scheck beigefügt) oder 8 (Scheck bestätigt).                       |
-| `upca`       | 11 Ziffern (Scheck beigefügt) oder 12 (Scheck bestätigt).                     |
-| `upce`       | Null-unterdrückter UPC; 6-stellige oder 7/8-stellige Form.                       |
-| `itf`        | Interleaved 2 von 5; gleichmäßige Ziffernanzahl erforderlich.                         |
-| `itf14`      | Feste 14-stellige GTIN-14.                                                |
-| `codabar`    | Ziffern plus `-$:/.+`; automatisch gerahmt mit `A` starten/stoppen.                 |
-| `msi`        | MSI / Modifiziertes Plessey mit Mod-10-Check.                              |
-| `pharmacode` | Pharmazeutischer Binärcode von Laetus (`3`–`131070`).                      |
+| `gs1-128`    | Code 128 mit führendem FNC1 für GS1-Anwendungskennungen.                     |
+| `code39`     | Alphanumerisch, selbstprüfend; automatisch gerahmt mit `*` starten/stoppen.  |
+| `code39ext`  | Vollständiger ASCII-Code 39 über Umschaltzeichen.                            |
+| `code93`     | Kompakt, selbstprüfend (zwei Prüfzeichen).                                   |
+| `code93ext`  | Vollständiger ASCII-Code 93 über Umschaltzeichen.                            |
+| `ean13`      | 12 Ziffern (Scheck beigefügt) oder 13 (Scheck bestätigt).                    |
+| `ean8`       | 7 Ziffern (Scheck beigefügt) oder 8 (Scheck bestätigt).                      |
+| `upca`       | 11 Ziffern (Scheck beigefügt) oder 12 (Scheck bestätigt).                    |
+| `upce`       | Null-unterdrückter UPC; 6-stellige oder 7/8-stellige Form.                   |
+| `itf`        | Interleaved 2 von 5; gleichmäßige Ziffernanzahl erforderlich.                |
+| `itf14`      | Feste 14-stellige GTIN-14.                                                   |
+| `codabar`    | Ziffern plus `-$:/.+`; automatisch gerahmt mit `A` starten/stoppen.          |
+| `msi`        | MSI / Modifiziertes Plessey mit Mod-10-Check.                                |
+| `pharmacode` | Pharmazeutischer Binärcode von Laetus (`3`–`131070`).                        |
 
 ## API und Nutzung
 

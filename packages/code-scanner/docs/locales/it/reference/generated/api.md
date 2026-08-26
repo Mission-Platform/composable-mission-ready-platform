@@ -16,7 +16,7 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/code-scanner`.
 **Tipo:** funzione
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
+function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
 ```
 
 Decodifica un'immagine `Blob`/`File` in un {@link ImageLike} (pixel RGBA). Usi
@@ -24,17 +24,17 @@ Decodifica un'immagine `Blob`/`File` in un {@link ImageLike} (pixel RGBA). Usi
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| macchia | Macchia |  |
-| roi |  |  |
+| Nome    | Digitare | Descrizione |
+| ------- | -------- | ----------- |
+| macchia | Macchia  |             |
+| roi     |          |             |
 
 ### scanFile
 
 **Tipo:** funzione
 
 ```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>
+function scanFile(file: Blob): Promise<ScanResult | null>;
 ```
 
 Decodifica `file` ed esegui la scansione per un codice, eseguendo in modo sincrono WebAssembly
@@ -43,15 +43,15 @@ scanner (che si autoinizializza dal suo binario incorporato in una build di prod
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| file | Macchia |  |
+| ---- | -------- | ----------- |
+| file | Macchia  |             |
 
 ### scanFileAsync
 
 **Tipo:** funzione
 
 ```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>
+function scanFileAsync(file: Blob): Promise<ScanResult | null>;
 ```
 
 Decodificare `file` e scansionarlo per un codice, inizializzando scanner e decodificatori
@@ -60,15 +60,15 @@ in modo asincrono: sicuro in qualsiasi ambiente (non è richiesto il binario inl
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| file | Macchia |  |
+| ---- | -------- | ----------- |
+| file | Macchia  |             |
 
 ### videoFrameToImageData
 
 **Tipo:** funzione
 
 ```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike
+function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
 ```
 
 Cattura il fotogramma corrente di un elemento `<video>` in riproduzione come file
@@ -79,10 +79,10 @@ la dimensione del reticolo mostrata dall'interfaccia utente aumenta notevolmente
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| video | ElementoVideoHTML |  |
-| roi |  |  |
+| Nome  | Digitare          | Descrizione |
+| ----- | ----------------- | ----------- |
+| video | ElementoVideoHTML |             |
+| roi   |                   |             |
 
 ## `src/debug`
 
@@ -91,7 +91,7 @@ la dimensione del reticolo mostrata dall'interfaccia utente aumenta notevolmente
 **Tipo:** funzione
 
 ```typescript
-function isCodeScannerDebugEnabled(): boolean
+function isCodeScannerDebugEnabled(): boolean;
 ```
 
 Se la registrazione diagnostica dello scanner è attualmente abilitata.
@@ -101,16 +101,16 @@ Se la registrazione diagnostica dello scanner è attualmente abilitata.
 **Tipo:** funzione
 
 ```typescript
-function setCodeScannerDebug(value: boolean): void
+function setCodeScannerDebug(value: boolean): void;
 ```
 
 Abilita o disabilita la registrazione diagnostica lato JS dello scanner in fase di esecuzione.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore | booleano |  |
+| Nome   | Digitare | Descrizione |
+| ------ | -------- | ----------- |
+| valore | booleano |             |
 
 #### Contrarre
 
@@ -123,7 +123,11 @@ Abilita o disabilita la registrazione diagnostica lato JS dello scanner in fase 
 **Tipo:** funzione
 
 ```typescript
-function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LOW_PERCENTILE, highPercentile: number = DEFAULT_HIGH_PERCENTILE): LumaImage
+function contrastStretchLuma(
+  luma: LumaImage,
+  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
+  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
+): LumaImage;
 ```
 
 Estendi tramite contrasto una {@link LumaImage}, mappandone `lowPercentile`..`highPercentile`
@@ -143,18 +147,18 @@ valore - viene restituito invariato, poiché non c'è nulla da allungare.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| luma | LumaImmagine |  |
-| bassoPercentile | numero |  |
-| altoPercentile | numero |  |
+| Nome            | Digitare     | Descrizione |
+| --------------- | ------------ | ----------- |
+| luma            | LumaImmagine |             |
+| bassoPercentile | numero       |             |
+| altoPercentile  | numero       |             |
 
 ### imageDataToLuma
 
 **Tipo:** funzione
 
 ```typescript
-function imageDataToLuma(image: ImageLike): LumaImage
+function imageDataToLuma(image: ImageLike): LumaImage;
 ```
 
 Converti un RGBA {@link ImageLike} (ad esempio una tela `ImageData`) in un
@@ -163,9 +167,9 @@ Converti un RGBA {@link ImageLike} (ad esempio una tela `ImageData`) in un
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| immagine | ImmagineMi piace |  |
+| Nome     | Digitare         | Descrizione |
+| -------- | ---------------- | ----------- |
+| immagine | ImmagineMi piace |             |
 
 ### LumaImage
 
@@ -184,7 +188,7 @@ Un'immagine in scala di grigi a canale singolo: `width * height` byte luma.
 **Tipo:** funzione
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
+function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
 ```
 
 Individua e decodifica il primo codice supportato in `image`, istanziando il file
@@ -192,57 +196,57 @@ grafico dello scanner in modo sincrono al primo utilizzo.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| immagine | ImmagineMi piace |  |
-| roi | Roi |  |
+| Nome     | Digitare         | Descrizione |
+| -------- | ---------------- | ----------- |
+| immagine | ImmagineMi piace |             |
+| roi      | Roi              |             |
 
 #### Contrarre
 
 - **@param:** regione di interesse opzionale (pixel dell'immagine) a cui limitare la scansione
-— ritagliato prima della binarizzazione, quindi il disordine circostante viene ignorato.
+  — ritagliato prima della binarizzazione, quindi il disordine circostante viene ignorato.
 - **@returns:** il {@link ScanResult} o `null` quando non viene trovato alcun codice. Quando un codice
-si trova ma il relativo payload non può essere decodificato, `result.value` è `null`.
+  si trova ma il relativo payload non può essere decodificato, `result.value` è `null`.
 
 ### scanImageDataAll
 
 **Tipo:** funzione
 
 ```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[]
+function scanImageDataAll(image: ImageLike): ScanResult[];
 ```
 
-Individua e decodifica *ogni* codice distinto in `image` (non solo il primo),
+Individua e decodifica _ogni_ codice distinto in `image` (non solo il primo),
 istanziando il grafico dello scanner in modo sincrono al primo utilizzo.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| immagine | ImmagineMi piace |  |
+| Nome     | Digitare         | Descrizione |
+| -------- | ---------------- | ----------- |
+| immagine | ImmagineMi piace |             |
 
 #### Contrarre
 
 - **@returns:** i {@link ScanResult} decodificati in ordine di rilevamento, deduplicati;
-vuoto quando non viene decodificato nulla.
+  vuoto quando non viene decodificato nulla.
 
 ### scanImageDataAllAsync
 
 **Tipo:** funzione
 
 ```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
+function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
 ```
 
-Individua e decodifica *ogni* codice distinto in `image`, caricando il grafico dello scanner
+Individua e decodifica _ogni_ codice distinto in `image`, caricando il grafico dello scanner
 in modo asincrono al primo utilizzo. Gli errori di inizializzazione e di scansione lo sono
 restituito come rifiuto della Promessa.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| immagine | ImmagineMi piace |  |
+| Nome     | Digitare         | Descrizione |
+| -------- | ---------------- | ----------- |
+| immagine | ImmagineMi piace |             |
 
 #### Contrarre
 
@@ -253,7 +257,7 @@ restituito come rifiuto della Promessa.
 **Tipo:** funzione
 
 ```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>
+function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
 ```
 
 Individua e decodifica il primo codice supportato in `image`, caricando lo scanner
@@ -262,10 +266,10 @@ gli errori vengono restituiti come rifiuti Promise.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| immagine | ImmagineMi piace |  |
-| roi | Roi |  |
+| Nome     | Digitare         | Descrizione |
+| -------- | ---------------- | ----------- |
+| immagine | ImmagineMi piace |             |
+| roi      | Roi              |             |
 
 #### Contrarre
 
@@ -296,7 +300,7 @@ export interface Roi
 
 Una regione di interesse rettangolare, in pixel di immagine, a cui limitare una scansione (ad es.
 un reticolo che l'interfaccia utente della telecamera live disegna sull'inquadratura). Il raccolto avviene in wasm
-*prima* della binarizzazione, quindi il disordine circostante non raggiunge mai i localizzatori. A
+_prima_ della binarizzazione, quindi il disordine circostante non raggiunge mai i localizzatori. A
 la regione sovrastante un bordo è bloccata; ne trova uno completamente fuori cornice
 niente.
 
@@ -318,4 +322,4 @@ Le famiglie di codici che lo scanner può individuare e decodificare.
 export interface ScanResult
 ```
 
-Il risultato di un *rilevamento* riuscito.
+Il risultato di un _rilevamento_ riuscito.

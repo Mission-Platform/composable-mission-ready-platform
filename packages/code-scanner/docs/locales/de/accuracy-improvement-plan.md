@@ -25,7 +25,8 @@ Frames) und um die Scan-Pipeline innerhalb eines statisch verknüpften Forge Web
 Die ursprüngliche Implementierung teilte die Pipeline auf:
 
 – **Locate + Sample** wurde in einer älteren nativen/wasm-Pipeline ausgeführt: `binarize` → pro-Symbologie-Locators. Sein `scan`-Einstiegspunkt
-  hat einen **getaggten Puffer** `[format, ...payload]` zurückgegeben – er wurde **nicht** dekodiert.
+hat einen **getaggten Puffer** `[format, ...payload]` zurückgegeben – er wurde **nicht** dekodiert.
+
 - **Decode** lief in JavaScript und rief separate Decodermodule auf.
 
 Phase 1 ersetzte dies durch einen einzelnen FWS `scan_and_decode`-Aufruf (siehe §1); die
@@ -98,7 +99,7 @@ Der Fix war eine kleine, mechanische Umgestaltung – **alle vier Schritte sind 
    in den Scanner cdylib kompiliert, sodass es zu keinen Konflikten kommt – überprüft durch Neuerstellung des Scanner-Wasm.
 3. **`scan_and_decode`** in `crates/code-scan/src/lib.rs` sucht die Plain-Rust-Kerne der Decoder im laufenden Betrieb und ruft sie dann auf
    und gibt ein „ScanOutcome {“-Format zurück,
-Wert }` (a `#[wasm_bindgen]` struct; `value` is `undefiniert`, wenn nicht dekodierbar).
+   Wert }`(a`#[wasm_bindgen]`struct;`value`is`undefiniert`, wenn nicht dekodierbar).
 4. **Die JS-Fassade ist verschlankt**: Das `decodeTagged`-Routing und die Importe der drei Decoder-Pakete sind weg,
    durch einen einzelnen `scan_and_decode`-Aufruf ersetzt.
 

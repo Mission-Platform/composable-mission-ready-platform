@@ -7,7 +7,7 @@ fn byte_at(text: string, index: i32) -> i32 {
 }
 
 fn all_numeric(text: string) -> bool {
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < string_length(text) {
     let value: i32 = byte_at(text, index);
     if value < 48 || value > 57 { return false; }
@@ -17,8 +17,8 @@ fn all_numeric(text: string) -> bool {
 }
 
 fn numeric_bits(text: string) -> i32 {
-  let result: i32 = 0;
-  let index: i32 = 0;
+  let mut result: i32 = 0;
+  let mut index: i32 = 0;
   while index + 3 <= string_length(text) {
     result = result + 10;
     index = index + 3;
@@ -33,22 +33,22 @@ fn append_numeric_from(data: string, text: string, index: i32, count: i32) -> st
   let remaining: i32 = count - index;
   if remaining <= 0 { return data; }
   if remaining == 1 {
-    return q.bits_push_value(data, byte_at(text, index) - 48, 4);
+    return string_concat("", q.bits_push_value(data, byte_at(text, index) - 48, 4));
   }
   if remaining == 2 {
     let first: i32 = byte_at(text, index) - 48;
     let second: i32 = byte_at(text, index + 1) - 48;
-    return q.bits_push_value(data, first * 10 + second, 7);
+    return string_concat("", q.bits_push_value(data, first * 10 + second, 7));
   }
   let a: i32 = byte_at(text, index) - 48;
   let b: i32 = byte_at(text, index + 1) - 48;
   let c: i32 = byte_at(text, index + 2) - 48;
   let next: string = q.bits_push_value(data, a * 100 + b * 10 + c, 10);
-  return append_numeric_from(next, text, index + 3, count);
+  return string_concat("", append_numeric_from(next, text, index + 3, count));
 }
 
 fn append_numeric(data: string, text: string) -> string {
-  return append_numeric_from(data, text, 0, string_length(text));
+  return string_concat("", append_numeric_from(data, text, 0, string_length(text)));
 }
 
 fn rmqr_u2(table: string, index: i32) -> i32 {
@@ -133,8 +133,8 @@ fn rmqr_block_ecc_len(index: i32, high: bool, block: i32) -> i32 {
 }
 
 fn rmqr_block_data_offset(index: i32, high: bool, block: i32) -> i32 {
-  let offset: i32 = 0;
-  let b: i32 = 0;
+  let mut offset: i32 = 0;
+  let mut b: i32 = 0;
   while b < block {
     offset = offset + rmqr_block_data_len(index, high, b);
     b = b + 1;
@@ -144,8 +144,8 @@ fn rmqr_block_data_offset(index: i32, high: bool, block: i32) -> i32 {
 
 fn rmqr_max_block_data(index: i32, high: bool) -> i32 {
   let n: i32 = rmqr_block_count(index, high);
-  let best: i32 = 0;
-  let b: i32 = 0;
+  let mut best: i32 = 0;
+  let mut b: i32 = 0;
   while b < n {
     let len: i32 = rmqr_block_data_len(index, high, b);
     if len > best { best = len; }
@@ -156,8 +156,8 @@ fn rmqr_max_block_data(index: i32, high: bool) -> i32 {
 
 fn rmqr_max_block_ecc(index: i32, high: bool) -> i32 {
   let n: i32 = rmqr_block_count(index, high);
-  let best: i32 = 0;
-  let b: i32 = 0;
+  let mut best: i32 = 0;
+  let mut b: i32 = 0;
   while b < n {
     let len: i32 = rmqr_block_ecc_len(index, high, b);
     if len > best { best = len; }
@@ -168,8 +168,8 @@ fn rmqr_max_block_ecc(index: i32, high: bool) -> i32 {
 
 fn rmqr_bit_length(value: i32) -> i32 {
   if value <= 0 { return 0; }
-  let current: i32 = value;
-  let length: i32 = 0;
+  let mut current: i32 = value;
+  let mut length: i32 = 0;
   while current > 0 {
     current = current / 2;
     length = length + 1;
@@ -179,13 +179,13 @@ fn rmqr_bit_length(value: i32) -> i32 {
 
 fn rmqr_compute_bch(data: i32) -> i32 {
   let g: i32 = 7973;
-  let d: i32 = data * 4096;
-  let guard: i32 = 0;
+  let mut d: i32 = data * 4096;
+  let mut guard: i32 = 0;
   while rmqr_bit_length(d) >= 13 {
     if guard > 40 { return d; }
     let shift: i32 = rmqr_bit_length(d) - 13;
-    let factor: i32 = 1;
-    let s: i32 = 0;
+    let mut factor: i32 = 1;
+    let mut s: i32 = 0;
     while s < shift {
       factor = factor * 2;
       s = s + 1;
@@ -197,24 +197,24 @@ fn rmqr_compute_bch(data: i32) -> i32 {
 }
 
 fn rmqr_format_information(index: i32, high: bool) -> i32 {
-  let data: i32 = index;
+  let mut data: i32 = index;
   if high { data = data + 32; }
   return data * 4096 + rmqr_compute_bch(data);
 }
 
 fn rmqr_append_bytes(data: string, text: string) -> string {
-  let result: string = data;
-  let index: i32 = 0;
+  let mut result: string = data;
+  let mut index: i32 = 0;
   let length: i32 = string_length(text);
   while index < length {
     result = q.bits_push_value(result, byte_at(text, index), 8);
     index = index + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn rmqr_make_data(text: string, index: i32, capacity: i32, numeric: bool) -> string {
-  let result: string = "";
+  let mut result: string = "";
   if numeric {
     result = q.bits_push_value(result, 1, 3);
     result = q.bits_push_value(result, string_length(text), rmqr_cci_num(index));
@@ -227,27 +227,27 @@ fn rmqr_make_data(text: string, index: i32, capacity: i32, numeric: bool) -> str
   if string_length(result) + 3 <= capacity {
     result = q.bits_push_value(result, 0, 3);
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn rmqr_pack_pad(bits: string, data_cw: i32) -> string {
-  let padded: string = bits;
+  let mut padded: string = bits;
   while string_length(padded) - string_length(padded) / 8 * 8 != 0 {
     padded = q.bits_push(padded, false);
   }
-  let data: string = q.bits_to_bytes(padded);
-  let pad: i32 = 236;
+  let mut data: string = q.bits_to_bytes(padded);
+  let mut pad: i32 = 236;
   while string_length(data) / 3 < data_cw {
     data = q.bytes_push(data, pad);
     if pad == 236 { pad = 17; } else { pad = 236; }
   }
-  return data;
+  return string_concat("", data);
 }
 
 fn rmqr_ecc_all(data: string, index: i32, high: bool) -> string {
-  let result: string = "";
+  let mut result: string = "";
   let nblocks: i32 = rmqr_block_count(index, high);
-  let block: i32 = 0;
+  let mut block: i32 = 0;
   while block < nblocks {
     let start: i32 = rmqr_block_data_offset(index, high, block);
     let len: i32 = rmqr_block_data_len(index, high, block);
@@ -255,23 +255,23 @@ fn rmqr_ecc_all(data: string, index: i32, high: bool) -> string {
     let start_char: i32 = start * 3;
     let end_sum: i32 = start + len;
     let end_char: i32 = end_sum * 3;
-    let block_bytes: string = "";
+    let mut block_bytes: string = "";
     if start_char >= 0 && end_char >= start_char && end_char <= string_length(data) {
       block_bytes = string_slice(data, start_char, end_char);
     }
     result = string_concat(result, q.rs_remainder(block_bytes, ecc_len));
     block = block + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn rmqr_interleave_data_bits(data: string, index: i32, high: bool) -> string {
-  let result: string = "";
+  let mut result: string = "";
   let max_data: i32 = rmqr_max_block_data(index, high);
   let nblocks: i32 = rmqr_block_count(index, high);
-  let pos: i32 = 0;
+  let mut pos: i32 = 0;
   while pos < max_data {
-    let block: i32 = 0;
+    let mut block: i32 = 0;
     while block < nblocks {
       let len: i32 = rmqr_block_data_len(index, high, block);
       if pos < len {
@@ -282,17 +282,17 @@ fn rmqr_interleave_data_bits(data: string, index: i32, high: bool) -> string {
     }
     pos = pos + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn rmqr_interleave_ecc_bits(all_ecc: string, index: i32, high: bool) -> string {
-  let result: string = "";
+  let mut result: string = "";
   let max_ecc: i32 = rmqr_max_block_ecc(index, high);
   let nblocks: i32 = rmqr_block_count(index, high);
-  let pos: i32 = 0;
+  let mut pos: i32 = 0;
   while pos < max_ecc {
-    let block: i32 = 0;
-    let ecc_offset: i32 = 0;
+    let mut block: i32 = 0;
+    let mut ecc_offset: i32 = 0;
     while block < nblocks {
       let ecc_len: i32 = rmqr_block_ecc_len(index, high, block);
       if pos < ecc_len {
@@ -303,7 +303,7 @@ fn rmqr_interleave_ecc_bits(all_ecc: string, index: i32, high: bool) -> string {
     }
     pos = pos + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn rmqr_final_bits(data: string, index: i32, high: bool) -> string {
@@ -470,7 +470,7 @@ fn rmqr_alignments(modules: u32, reserved: u32, width: i32, height: i32) -> unit
 }
 
 fn rmqr_timing_horizontal(modules: u32, reserved: u32, width: i32, height: i32) -> unit {
-  let x: i32 = 0;
+  let mut x: i32 = 0;
   while x < width {
     let x1: i32 = x + 1;
     let dark: bool = x1 - x1 / 2 * 2 == 1;
@@ -481,7 +481,7 @@ fn rmqr_timing_horizontal(modules: u32, reserved: u32, width: i32, height: i32) 
 }
 
 fn rmqr_timing_vertical_col(modules: u32, reserved: u32, width: i32, height: i32, x: i32) -> unit {
-  let y: i32 = 0;
+  let mut y: i32 = 0;
   while y < height {
     let y1: i32 = y + 1;
     let dark: bool = y1 - y1 / 2 * 2 == 1;
@@ -642,19 +642,19 @@ fn rmqr_place_cell(modules: u32, reserved: u32, data_area: u32, width: i32, heig
 }
 
 fn rmqr_place(modules: u32, reserved: u32, data_area: u32, width: i32, height: i32, bits: string, remainder_bits: i32) -> unit {
-  let dy: i32 = -1;
-  let bit_index: i32 = 0;
+  let mut dy: i32 = -1;
+  let mut bit_index: i32 = 0;
   let bit_len: i32 = string_length(bits);
-  let cx: i32 = width - 2;
-  let cy: i32 = height - 6;
-  let remaining: i32 = remainder_bits;
-  let steps: i32 = 0;
+  let mut cx: i32 = width - 2;
+  let mut cy: i32 = height - 6;
+  let mut remaining: i32 = remainder_bits;
+  let mut steps: i32 = 0;
   let limit: i32 = width * height * 4 + 8;
   while steps < limit {
     if bit_index >= bit_len {
       if remaining <= 0 { return; }
     }
-    let state: i32 = rmqr_place_cell(modules, reserved, data_area, width, height, cx, cy, bits, bit_index, bit_len, remaining);
+    let mut state: i32 = rmqr_place_cell(modules, reserved, data_area, width, height, cx, cy, bits, bit_index, bit_len, remaining);
     bit_index = state - state / 100000 * 100000;
     remaining = state / 100000;
     state = rmqr_place_cell(modules, reserved, data_area, width, height, cx - 1, cy, bits, bit_index, bit_len, remaining);
@@ -684,7 +684,7 @@ fn rmqr_place(modules: u32, reserved: u32, data_area: u32, width: i32, height: i
 
 fn rmqr_mask(modules: u32, data_area: u32, width: i32, height: i32) -> unit {
   let total: i32 = width * height;
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < total {
     if q.bitbuf_get(data_area, index) {
       let x: i32 = index - index / width * width;
@@ -729,7 +729,7 @@ fn rmqr_matrix_real(text: string, index: i32, high: bool, numeric: bool) -> stri
   let final_bits: string = rmqr_final_bits(packed, index, high);
   let width: i32 = rmqr_width(index);
   let height: i32 = rmqr_height(index);
-  return rmqr_emit(width, height, index, high, final_bits);
+  return string_concat("", rmqr_emit(width, height, index, high, final_bits));
 }
 
 fn rmqr_data_bits(text: string, index: i32, numeric: bool) -> i32 {
@@ -743,10 +743,10 @@ export fn encode_rmqr_impl(ecc: i32, text: string) -> string {
   if ecc < 0 || ecc > 3 { return ""; }
   let high: bool = ecc >= 2;
   let numeric: bool = all_numeric(text);
-  let selected: i32 = -1;
-  let selected_area: i32 = 1000000000;
-  let selected_width: i32 = 1000000000;
-  let index: i32 = 0;
+  let mut selected: i32 = -1;
+  let mut selected_area: i32 = 1000000000;
+  let mut selected_width: i32 = 1000000000;
+  let mut index: i32 = 0;
   while index < 32 {
     let capacity: i32 = rmqr_capacity(index, high);
     let used: i32 = rmqr_data_bits(text, index, numeric);
@@ -754,7 +754,7 @@ export fn encode_rmqr_impl(ecc: i32, text: string) -> string {
       let width: i32 = rmqr_width(index);
       let height: i32 = rmqr_height(index);
       let area: i32 = width * height;
-      let better: bool = false;
+      let mut better: bool = false;
       if selected < 0 { better = true; }
       if selected >= 0 {
         if area < selected_area { better = true; }
@@ -771,5 +771,5 @@ export fn encode_rmqr_impl(ecc: i32, text: string) -> string {
     index = index + 1;
   }
   if selected < 0 { return ""; }
-  return rmqr_matrix_real(text, selected, high, numeric);
+  return string_concat("", rmqr_matrix_real(text, selected, high, numeric));
 }

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { encodeBarcode } from '../encoder';
-import { encodeVariableBarcodeFws, encodeVariableBarcodeFwsAsync } from './index';
+
+import { encodeVariableBarcodeFws, encodeVariableBarcodeFwsAsync } from ".";
 
 describe('variable barcode adapter', () => {
   it.each([

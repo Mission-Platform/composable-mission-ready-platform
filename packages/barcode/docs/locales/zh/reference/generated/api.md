@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null
+function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
 ```
 
 解码给定 `symbology` 的一系列模块位（`1` = 条，`0` = 空格）
@@ -31,17 +31,17 @@ function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>):
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|符号学|条码符号学 |  |
-|模块 | ArrayLike<number> |  |
+| 名称   | 类型              | 描述 |
+| ------ | ----------------- | ---- |
+| 符号学 | 条码符号学        |      |
+| 模块   | ArrayLike<number> |      |
 
 ### 解码条形码异步
 
 **种类：**功能
 
 ```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>
+function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
 ```
 
 将一系列模块位解码回其有效负载，加载本机 FWS
@@ -50,10 +50,10 @@ function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<numb
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|符号学|条码符号学 |  |
-|模块 | ArrayLike<number> |  |
+| 名称   | 类型              | 描述 |
+| ------ | ----------------- | ---- |
+| 符号学 | 条码符号学        |      |
+| 模块   | ArrayLike<number> |      |
 
 ## `src/encoder/index`
 
@@ -72,7 +72,22 @@ export interface Barcode
 **种类：**类型
 
 ```typescript
-export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'ean13' | 'ean8' | 'upca' | 'upce' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode';
+export type BarcodeSymbology =
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'ean13'
+  | 'ean8'
+  | 'upca'
+  | 'upce'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode';
 ```
 
 支持的线性条形码符号体系。
@@ -82,17 +97,17 @@ export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' 
 **种类：**功能
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
+function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
 使用包本地 FWS 图将 `data` 编码为线性条形码。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|符号学|条码符号学 |  |
-|数据|字符串|  |
+| 名称   | 类型       | 描述 |
+| ------ | ---------- | ---- |
+| 符号学 | 条码符号学 |      |
+| 数据   | 字符串     |      |
 
 #### 合同
 
@@ -103,17 +118,17 @@ function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
 **种类：**功能
 
 ```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>
+function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
 使用包本地 FWS 图异步编码 `data`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|符号学|条码符号学 |  |
-|数据|字符串|  |
+| 名称   | 类型       | 描述 |
+| ------ | ---------- | ---- |
+| 符号学 | 条码符号学 |      |
+| 数据   | 字符串     |      |
 
 ## `src/fws/index`
 
@@ -122,233 +137,246 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 **种类：**功能
 
 ```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string
+function decodeEan13Fws(value: string | ArrayLike<number>): string;
 ```
 
 解码 EAN-13 模块位并验证奇偶校验和校验位。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串\| ArrayLike<number> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 价值 | 字符串\| ArrayLike<number> |      |
 
 ### 解码Ean13FwsAsync
 
 **种类：**功能
 
 ```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 通过 FWS 异步解码 EAN-13 模块位。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串\| ArrayLike<number> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 价值 | 字符串\| ArrayLike<number> |      |
 
 ### 解码Ean8Fws
 
 **种类：**功能
 
 ```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string
+function decodeEan8Fws(value: string | ArrayLike<number>): string;
 ```
 
 解码 EAN-8 模块位并返回有效负载及其校验位。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串\| ArrayLike<number> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 价值 | 字符串\| ArrayLike<number> |      |
 
 ### 解码Ean8FwsAsync
 
 **种类：**功能
 
 ```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 通过 FWS 异步解码 EAN-8 模块位。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串\| ArrayLike<number> |  |
+| 名称 | 类型                       | 描述 |
+| ---- | -------------------------- | ---- |
+| 价值 | 字符串\| ArrayLike<number> |      |
 
 ### 编码Ean13Fws
 
 **种类：**功能
 
 ```typescript
-function encodeEan13Fws(value: string): string
+function encodeEan13Fws(value: string): string;
 ```
 
 对 12 位 EAN-13 有效负载进行编码并在 FWS 中计算其校验位。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### 编码Ean13FwsAsync
 
 **种类：**功能
 
 ```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>
+function encodeEan13FwsAsync(value: string): Promise<string>;
 ```
 
 使用 FWS 加载程序异步编码 12 位 EAN-13 有效负载。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### 编码Ean8Fws
 
 **种类：**功能
 
 ```typescript
-function encodeEan8Fws(value: string): string
+function encodeEan8Fws(value: string): string;
 ```
 
 对七位 EAN-8 有效负载进行编码并在 FWS 中计算其校验位。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### 编码Ean8FwsAsync
 
 **种类：**功能
 
 ```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>
+function encodeEan8FwsAsync(value: string): Promise<string>;
 ```
 
 使用 FWS 加载程序对七位 EAN-8 有效负载进行异步编码。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### 编码UpcaFws
 
 **种类：**功能
 
 ```typescript
-function encodeUpcaFws(value: string): string
+function encodeUpcaFws(value: string): string;
 ```
 
 通过零前缀 EAN-13 FWS 图对 UPC-A 有效负载进行编码。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### 编码UpcaFwsAsync
 
 **种类：**功能
 
 ```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>
+function encodeUpcaFwsAsync(value: string): Promise<string>;
 ```
 
 通过 FWS 异步编码 UPC-A 有效负载。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### 编码变量条形码Fws
 
 **种类：**功能
 
 ```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string
+function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
 通过其本机 FWS 图表（如果可用）对受支持的可变长度条形码进行编码。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|符号学|可变条形码符号 |  |
-|价值|字符串|  |
+| 名称   | 类型           | 描述 |
+| ------ | -------------- | ---- |
+| 符号学 | 可变条形码符号 |      |
+| 价值   | 字符串         |      |
 
 ### 编码变量条形码FwsAsync
 
 **种类：**功能
 
 ```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>
+function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
 ```
 
 通过 FWS 对支持的可变长度条形码进行异步编码。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|符号学|可变条形码符号 |  |
-|价值|字符串|  |
+| 名称   | 类型           | 描述 |
+| ------ | -------------- | ---- |
+| 符号学 | 可变条形码符号 |      |
+| 价值   | 字符串         |      |
 
 ### 验证Gs1DataBar值
 
 **种类：**功能
 
 ```typescript
-function validateGs1DataBarValue(value: string): boolean
+function validateGs1DataBarValue(value: string): boolean;
 ```
 
 验证包本地 FWS 图中的 GS1 DataBar/RSS-14 GTIN-14 值。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### validateGs1DataBarValueAsync
 
 **种类：**功能
 
 ```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>
+function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
 ```
 
 通过 FWS 异步验证 GS1 DataBar/RSS-14 GTIN-14 值。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### 可变条形码符号
 
 **种类：**类型
 
 ```typescript
-export type VariableBarcodeSymbology = Extract< BarcodeSymbology, | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode' >;
+export type VariableBarcodeSymbology = Extract<
+  BarcodeSymbology,
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode'
+>;
 ```
 
 直接条形码 FWS 适配器支持的可变长度符号体系。

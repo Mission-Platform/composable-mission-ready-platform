@@ -1,11 +1,11 @@
 // Code 128 and GS1-128 encoder graph.
 
 fn u32_to_i32_len(value: u32) -> i32 {
-  let remaining: u32 = value;
-  let place: i32 = 1;
-  let result: i32 = 0;
+  let mut remaining: u32 = value;
+  let mut place: i32 = 1;
+  let mut result: i32 = 0;
   while remaining > 0 {
-    let bit: u32 = remaining - remaining / 2 * 2;
+    let mut bit: u32 = remaining - remaining / 2 * 2;
     if bit == 1 { result = result + place; }
     remaining = remaining / 2;
     place = place * 2;
@@ -147,14 +147,14 @@ fn run(bit: i32, width: i32) -> string {
 
 fn render_pattern(value: string, index: i32) -> string {
   if index >= string_length(value) { return ""; }
-  let bit: i32 = 1;
+  let mut bit: i32 = 1;
   if index % 2 == 1 { bit = 0; }
-  let width: i32 = string_byte_at(value, index) - 48;
-  return string_concat(run(bit, width), render_pattern(value, index + 1));
+  let mut width: i32 = string_byte_at(value, index) - 48;
+  return string_concat(run(bit, width), string_concat(render_pattern(value, index + 1), ""));
 }
 
 fn render_symbol(value: i32) -> string {
-  return render_pattern(pattern(value), 0);
+  return string_concat(render_pattern(pattern(value), 0), "");
 }
 
 fn all_digits(value: string, index: i32) -> bool {
@@ -176,15 +176,15 @@ fn finish(result: string, checksum: i32) -> string {
 }
 
 fn encode_b_data(value: string, index: i32, result: string, checksum: i32, weight: i32) -> string {
-  if index >= string_length(value) { return finish(result, checksum); }
+  if index >= string_length(value) { return string_concat(finish(result, checksum), ""); }
   let symbol: i32 = string_byte_at(value, index) - 32;
-  return encode_b_data(
+  return string_concat(encode_b_data(
     value,
     index + 1,
     string_concat(result, render_symbol(symbol)),
     checksum + symbol * weight,
     weight + 1,
-  );
+  ), "");
 }
 
 fn pair_value(value: string, index: i32) -> i32 {
@@ -194,24 +194,24 @@ fn pair_value(value: string, index: i32) -> i32 {
 }
 
 fn encode_c_data(value: string, index: i32, result: string, checksum: i32, weight: i32) -> string {
-  if index >= string_length(value) { return finish(result, checksum); }
+  if index >= string_length(value) { return string_concat(finish(result, checksum), ""); }
   let symbol: i32 = pair_value(value, index);
-  return encode_c_data(
+  return string_concat(encode_c_data(
     value,
     index + 2,
     string_concat(result, render_symbol(symbol)),
     checksum + symbol * weight,
     weight + 1,
-  );
+  ), "");
 }
 
 export fn encode_code128(value: string) -> string {
   let length: i32 = string_length(value);
   if length == 0 || !all_printable(value, 0) { return ""; }
   if length % 2 == 0 && all_digits(value, 0) {
-    return encode_c_data(value, 0, render_symbol(105), 105, 1);
+    return string_concat(encode_c_data(value, 0, render_symbol(105), 105, 1), "");
   }
-  return encode_b_data(value, 0, render_symbol(104), 104, 1);
+  return string_concat(encode_b_data(value, 0, render_symbol(104), 104, 1), "");
 }
 
 export fn encode_gs1_128(value: string) -> string {
@@ -219,9 +219,9 @@ export fn encode_gs1_128(value: string) -> string {
   if length == 0 || !all_printable(value, 0) { return ""; }
   let fnc1: string = render_symbol(102);
   if length % 2 == 0 && all_digits(value, 0) {
-    return encode_c_data(value, 0, string_concat(render_symbol(105), fnc1), 207, 2);
+    return string_concat(encode_c_data(value, 0, string_concat(render_symbol(105), fnc1), 207, 2), "");
   }
-  return encode_b_data(value, 0, string_concat(render_symbol(104), fnc1), 206, 2);
+  return string_concat(encode_b_data(value, 0, string_concat(render_symbol(104), fnc1), 206, 2), "");
 }
 
 fn ascii_character(code: i32) -> string {
@@ -254,14 +254,14 @@ fn valid_modules(modules: Array<i32>, index: i32, end: i32) -> bool {
 
 fn module_mask_from_array(modules: Array<i32>, index: i32, end: i32, result: i32) -> i32 {
   if index >= end || index >= modules_len(modules) { return result; }
-  let next: i32 = result * 2;
+  let mut next: i32 = result * 2;
   if modules[index] == 1 { next = next + 1; }
   return module_mask_from_array(modules, index + 1, end, next);
 }
 
 fn module_mask(value: string, index: i32, end: i32, result: i32) -> i32 {
   if index >= end || index >= string_length(value) { return result; }
-  let next: i32 = result * 2;
+  let mut next: i32 = result * 2;
   if string_byte_at(value, index) == 49 { next = next + 1; }
   return module_mask(value, index + 1, end, next);
 }
@@ -285,7 +285,7 @@ fn decode_data(modules: Array<i32>, start: i32, end: i32, code_set: i32, checksu
   if start >= end {
     let check: i32 = decode_symbol(modules, start, 0);
     if check != remainder(checksum, 103) { return ""; }
-    return result;
+    return string_concat(result, "");
   }
 
   let symbol: i32 = decode_symbol(modules, start, 0);
@@ -293,11 +293,11 @@ fn decode_data(modules: Array<i32>, start: i32, end: i32, code_set: i32, checksu
   let next_checksum: i32 = checksum + symbol * weight;
   if code_set == 100 {
     if symbol == 99 {
-      return decode_data(modules, start + 11, end, 99, next_checksum, weight + 1, result);
+      return string_concat(decode_data(modules, start + 11, end, 99, next_checksum, weight + 1, result), "");
     }
-    if symbol == 102 { return decode_data(modules, start + 11, end, code_set, next_checksum, weight + 1, result); }
+    if symbol == 102 { return string_concat(decode_data(modules, start + 11, end, code_set, next_checksum, weight + 1, result), ""); }
     if symbol > 95 { return ""; }
-    return decode_data(
+    return string_concat(decode_data(
       modules,
       start + 11,
       end,
@@ -305,15 +305,15 @@ fn decode_data(modules: Array<i32>, start: i32, end: i32, code_set: i32, checksu
       next_checksum,
       weight + 1,
       string_concat(result, ascii_character(symbol + 32)),
-    );
+    ), "");
   }
 
   if symbol == 100 {
-    return decode_data(modules, start + 11, end, 100, next_checksum, weight + 1, result);
+    return string_concat(decode_data(modules, start + 11, end, 100, next_checksum, weight + 1, result), "");
   }
-  if symbol == 102 { return decode_data(modules, start + 11, end, code_set, next_checksum, weight + 1, result); }
+  if symbol == 102 { return string_concat(decode_data(modules, start + 11, end, code_set, next_checksum, weight + 1, result), ""); }
   if symbol > 99 { return ""; }
-  return decode_data(
+  return string_concat(decode_data(
     modules,
     start + 11,
     end,
@@ -321,7 +321,7 @@ fn decode_data(modules: Array<i32>, start: i32, end: i32, code_set: i32, checksu
     next_checksum,
     weight + 1,
     string_concat(result, decimal_pair(symbol)),
-  );
+  ), "");
 }
 
 fn decode_code128_frame(modules: Array<i32>, length: i32) -> string {
@@ -335,24 +335,24 @@ fn decode_code128_frame(modules: Array<i32>, length: i32) -> string {
   let start: i32 = decode_symbol(modules, 0, 0);
   if start != 104 && start != 105 { return ""; }
   let data_end: i32 = length - 24;
-  let code_set: i32 = 100;
+  let mut code_set: i32 = 100;
   if start == 105 { code_set = 99; }
-  return decode_data(modules, 11, data_end, code_set, start, 1, "");
+  return string_concat(decode_data(modules, 11, data_end, code_set, start, 1, ""), "");
 }
 
 export fn decode_code128(modules: Array<i32>) -> string {
-  return decode_code128_frame(modules, modules_len(modules));
+  return string_concat(decode_code128_frame(modules, modules_len(modules)), "");
 }
 
 export fn decode_code128_row(modules: Array<i32>, count: i32) -> string {
-  return decode_code128_frame(modules, count);
+  return string_concat(decode_code128_frame(modules, count), "");
 }
 
 export fn decode_gs1_128(modules: Array<i32>) -> string {
-  return decode_code128_frame(modules, modules_len(modules));
+  return string_concat(decode_code128_frame(modules, modules_len(modules)), "");
 }
 
 export fn decode_gs1_128_row(modules: Array<i32>, count: i32) -> string {
-  return decode_code128_frame(modules, count);
+  return string_concat(decode_code128_frame(modules, count), "");
 }
 

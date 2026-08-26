@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
+function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
 ```
 
 이미지 `Blob`/`File`을 {@link ImageLike}(RGBA 픽셀)로 디코딩합니다. 용도
@@ -24,17 +24,17 @@ function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 얼룩 | 블롭 |  |
-| 투자수익률 |  |  |
+| 이름       | 유형 | 설명 |
+| ---------- | ---- | ---- |
+| 얼룩       | 블롭 |      |
+| 투자수익률 |      |      |
 
 ### 스캔파일
 
 **종류:** 기능
 
 ```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>
+function scanFile(file: Blob): Promise<ScanResult | null>;
 ```
 
 `file`을 디코딩하고 코드를 스캔하여 WebAssembly를 동기적으로 실행합니다.
@@ -43,15 +43,15 @@ function scanFile(file: Blob): Promise<ScanResult | null>
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 | 블롭 |  |
+| ---- | ---- | ---- |
+| 파일 | 블롭 |      |
 
 ### 스캔파일비동기화
 
 **종류:** 기능
 
 ```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>
+function scanFileAsync(file: Blob): Promise<ScanResult | null>;
 ```
 
 `file`을 디코딩하고 코드를 스캔하여 스캐너와 디코더를 초기화합니다.
@@ -60,15 +60,15 @@ function scanFileAsync(file: Blob): Promise<ScanResult | null>
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 | 블롭 |  |
+| ---- | ---- | ---- |
+| 파일 | 블롭 |      |
 
 ### videoFrameToImageData
 
 **종류:** 기능
 
 ```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike
+function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
 ```
 
 재생 중인 `<video>` 요소의 현재 프레임을
@@ -79,10 +79,10 @@ UI에 표시되는 레티클 크기는 적중률을 크게 높입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 비디오 | HTML비디오요소 |  |
-| 투자수익률 |  |  |
+| 이름       | 유형           | 설명 |
+| ---------- | -------------- | ---- |
+| 비디오     | HTML비디오요소 |      |
+| 투자수익률 |                |      |
 
 ## `src/debug`
 
@@ -91,7 +91,7 @@ UI에 표시되는 레티클 크기는 적중률을 크게 높입니다.
 **종류:** 기능
 
 ```typescript
-function isCodeScannerDebugEnabled(): boolean
+function isCodeScannerDebugEnabled(): boolean;
 ```
 
 스캐너 진단 로깅이 현재 활성화되어 있는지 여부입니다.
@@ -101,7 +101,7 @@ function isCodeScannerDebugEnabled(): boolean
 **종류:** 기능
 
 ```typescript
-function setCodeScannerDebug(value: boolean): void
+function setCodeScannerDebug(value: boolean): void;
 ```
 
 런타임 시 스캐너의 JS 측 진단 로깅을 활성화하거나 비활성화합니다.
@@ -109,8 +109,8 @@ function setCodeScannerDebug(value: boolean): void
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 부울 |  |
+| ---- | ---- | ---- |
+| 가치 | 부울 |      |
 
 #### 계약
 
@@ -123,7 +123,11 @@ function setCodeScannerDebug(value: boolean): void
 **종류:** 기능
 
 ```typescript
-function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LOW_PERCENTILE, highPercentile: number = DEFAULT_HIGH_PERCENTILE): LumaImage
+function contrastStretchLuma(
+  luma: LumaImage,
+  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
+  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
+): LumaImage;
 ```
 
 `lowPercentile`..`highPercentile`을 매핑하여 {@link LumaImage}를 대비 확장합니다.
@@ -143,18 +147,18 @@ value — 늘릴 것이 없기 때문에 변경되지 않고 반환됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 루마 | 루마 이미지 |  |
-| 낮은백분위수 | 번호 |  |
-| 높은 백분위수 | 번호 |  |
+| 이름          | 유형        | 설명 |
+| ------------- | ----------- | ---- |
+| 루마          | 루마 이미지 |      |
+| 낮은백분위수  | 번호        |      |
+| 높은 백분위수 | 번호        |      |
 
 ### imageDataToLuma
 
 **종류:** 기능
 
 ```typescript
-function imageDataToLuma(image: ImageLike): LumaImage
+function imageDataToLuma(image: ImageLike): LumaImage;
 ```
 
 RGBA {@link ImageLike}(예: 캔버스 `ImageData`)를
@@ -163,9 +167,9 @@ Rec.를 사용하는 단일 채널 {@link LumaImage}. 601 루마 가중치
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이미지 | 이미지라이크 |  |
+| 이름   | 유형         | 설명 |
+| ------ | ------------ | ---- |
+| 이미지 | 이미지라이크 |      |
 
 ### 루마 이미지
 
@@ -184,7 +188,7 @@ export interface LumaImage
 **종류:** 기능
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
+function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
 ```
 
 `image`에서 지원되는 첫 번째 코드를 찾아 디코딩하여 인스턴스화합니다.
@@ -192,57 +196,57 @@ function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이미지 | 이미지라이크 |  |
-| 투자수익률 | 로이 |  |
+| 이름       | 유형         | 설명 |
+| ---------- | ------------ | ---- |
+| 이미지     | 이미지라이크 |      |
+| 투자수익률 | 로이         |      |
 
 #### 계약
 
 - **@param:** 스캔을 제한하는 선택적 관심 영역(이미지 픽셀)
-— 이진화 전에 잘렸으므로 주변의 혼란스러운 부분은 무시됩니다.
+  — 이진화 전에 잘렸으므로 주변의 혼란스러운 부분은 무시됩니다.
 - **@returns:** {@link ScanResult} 또는 코드가 발견되지 않은 경우 `null`입니다. 코드일 때
-위치를 찾았지만 해당 페이로드를 디코딩할 수 없습니다. `result.value`은 `null`입니다.
+  위치를 찾았지만 해당 페이로드를 디코딩할 수 없습니다. `result.value`은 `null`입니다.
 
 ### 스캔이미지데이터전체
 
 **종류:** 기능
 
 ```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[]
+function scanImageDataAll(image: ImageLike): ScanResult[];
 ```
 
-`image`에서 (첫 번째 코드뿐만 아니라) *모든* 고유 코드를 찾아서 디코딩합니다.
+`image`에서 (첫 번째 코드뿐만 아니라) _모든_ 고유 코드를 찾아서 디코딩합니다.
 처음 사용할 때 스캐너 그래프를 동기적으로 인스턴스화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이미지 | 이미지라이크 |  |
+| 이름   | 유형         | 설명 |
+| ------ | ------------ | ---- |
+| 이미지 | 이미지라이크 |      |
 
 #### 계약
 
 - **@returns:** 검색 순서대로 디코딩된 {@link ScanResult}, 중복 제거됨;
-아무것도 디코딩되지 않으면 비어 있습니다.
+  아무것도 디코딩되지 않으면 비어 있습니다.
 
 ### scanImageDataAllAsync
 
 **종류:** 기능
 
 ```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
+function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
 ```
 
-`image`에서 *모든* 고유 코드를 찾아서 디코딩하여 스캐너 그래프를 로드합니다.
+`image`에서 _모든_ 고유 코드를 찾아서 디코딩하여 스캐너 그래프를 로드합니다.
 처음 사용할 때 비동기적으로. 초기화 및 스캔 실패는 다음과 같습니다.
 약속 거부로 반환되었습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이미지 | 이미지라이크 |  |
+| 이름   | 유형         | 설명 |
+| ------ | ------------ | ---- |
+| 이미지 | 이미지라이크 |      |
 
 #### 계약
 
@@ -253,7 +257,7 @@ function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
 **종류:** 기능
 
 ```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>
+function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
 ```
 
 `image`에서 첫 번째 지원되는 코드를 찾아 디코딩하여 스캐너를 로드합니다.
@@ -262,10 +266,10 @@ function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | n
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이미지 | 이미지라이크 |  |
-| 투자수익률 | 로이 |  |
+| 이름       | 유형         | 설명 |
+| ---------- | ------------ | ---- |
+| 이미지     | 이미지라이크 |      |
+| 투자수익률 | 로이         |      |
 
 #### 계약
 

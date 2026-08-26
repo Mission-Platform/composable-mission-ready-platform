@@ -1,9 +1,6 @@
 // Public, typed wrapper around the package-local Forge Web Script barcode graphs.
 
-import {
-  load as loadBarcodeNative,
-  loadSync as loadBarcodeNativeSync,
-} from '../fws/barcode-native.fws';
+import { load as loadBarcodeNative, loadSync as loadBarcodeNativeSync } from '../fws/barcode-native.fws';
 import { FWS_SYMBOLOGY } from '../fws/symbology';
 
 /** Supported linear barcode symbologies. */

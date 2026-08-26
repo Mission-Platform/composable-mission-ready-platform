@@ -25,14 +25,14 @@ dovrebbe essere speso.
 
 ## Fase → mappatura dei livelli
 
-| Palcoscenico | Lavoro | Livello |
-| ---------------------------------- | ------------------------------------------------------- | ---- |
-| 1 Corpo del venditore + caricatore + imbracatura | copia/attribuzione (C), caricatore + logica di cablaggio (B) | DO → SI |
-| 2 Aumenta la velocità di lettura dei formati supportati | ottimizzazione del localizzatore + percorsi di tentativi | A→B |
-| 3 Famiglia GS1 DataBar | tabelle/codificatori (B), localizzatore RSS-14 + RS (A) | A/B |
-| 4PDF417 | tabelle/codificatore (B), localizzatore di scansione di riga + GF(929) EC (A) | A/B |
-| 5 MaxiCodice | localizzatore di griglia esadecimale + GF(64) RS (A), tabelle (B) | A/B |
-| 6 Cablaggio + JS + documenti | boilerplate/docs + cablaggio (C), ricostruzione wasm + fumo (B) | DO → SI |
+| Palcoscenico                                            | Lavoro                                                                        | Livello |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------- | ------- |
+| 1 Corpo del venditore + caricatore + imbracatura        | copia/attribuzione (C), caricatore + logica di cablaggio (B)                  | DO → SI |
+| 2 Aumenta la velocità di lettura dei formati supportati | ottimizzazione del localizzatore + percorsi di tentativi                      | A→B     |
+| 3 Famiglia GS1 DataBar                                  | tabelle/codificatori (B), localizzatore RSS-14 + RS (A)                       | A/B     |
+| 4PDF417                                                 | tabelle/codificatore (B), localizzatore di scansione di riga + GF(929) EC (A) | A/B     |
+| 5 MaxiCodice                                            | localizzatore di griglia esadecimale + GF(64) RS (A), tabelle (B)             | A/B     |
+| 6 Cablaggio + JS + documenti                            | boilerplate/docs + cablaggio (C), ricostruzione wasm + fumo (B)               | DO → SI |
 
 ## Principio dei costi
 

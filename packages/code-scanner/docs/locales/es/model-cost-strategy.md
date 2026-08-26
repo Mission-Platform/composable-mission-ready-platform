@@ -25,14 +25,14 @@ debe gastarse.
 
 ## Etapa → mapeo de niveles
 
-| Etapa | Trabajo | Nivel |
-| ---------------------------------- | ------------------------------------------------------- | ---- |
-| 1 Corpus de vendedor + cargador + arnés | copia/atribución (C), cargador + lógica de arnés (B) | C→B |
-| 2 Aumentar la velocidad de lectura de formatos admitidos | ajuste del localizador + rutas de reintento | A→B |
-| 3 familia GS1 DataBar | mesas/codificadores (B), localizador RSS-14 + RS (A) | A/B |
-| 4PDF417 | tablas/codificador (B), localizador de escaneo de filas + GF(929) EC (A) | A/B |
-| 5 MaxiCódigo | localizador de rejilla hexagonal + GF(64) RS (A), tablas (B) | A/B |
-| 6 Cableado + JS + documentos | texto estándar/docs + cableado (C), reconstrucción de wasm + humo (B) | C→B |
+| Etapa                                                    | Trabajo                                                                  | Nivel |
+| -------------------------------------------------------- | ------------------------------------------------------------------------ | ----- |
+| 1 Corpus de vendedor + cargador + arnés                  | copia/atribución (C), cargador + lógica de arnés (B)                     | C→B   |
+| 2 Aumentar la velocidad de lectura de formatos admitidos | ajuste del localizador + rutas de reintento                              | A→B   |
+| 3 familia GS1 DataBar                                    | mesas/codificadores (B), localizador RSS-14 + RS (A)                     | A/B   |
+| 4PDF417                                                  | tablas/codificador (B), localizador de escaneo de filas + GF(929) EC (A) | A/B   |
+| 5 MaxiCódigo                                             | localizador de rejilla hexagonal + GF(64) RS (A), tablas (B)             | A/B   |
+| 6 Cableado + JS + documentos                             | texto estándar/docs + cableado (C), reconstrucción de wasm + humo (B)    | C→B   |
 
 ## Principio de costo
 

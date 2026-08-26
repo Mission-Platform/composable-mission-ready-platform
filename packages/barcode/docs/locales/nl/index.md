@@ -19,23 +19,23 @@ via een kleine, volledig getypeerde ES-module-wrapper en een eenmalige `ForgeBar
 
 ## Ondersteunde symbologieën
 
-| Symboliek | Opmerkingen |
-| ------------ | ---------------------------------------------------------------------- |
-| `code128` | Hoge dichtheid. Code B voor afdrukbare ASCII; Code C snel pad voor cijfers. |
-| `gs1-128` | Code 128 met leidende FNC1 voor GS1 Application Identifiers.            |
-| `code39` | Alfanumeriek, zelfcontrolerend; automatisch ingelijst met `*` start/stop.          |
-| `code39ext` | Volledige ASCII-code 39 via shift-tekens.                               |
-| `code93` | Compact, zelfcontrolerend (twee controletekens).                         |
-| `code93ext` | Volledige ASCII-code 93 via shift-tekens.                               |
-| `ean13` | 12 cijfers (cheque toegevoegd) of 13 (cheque geverifieerd).                     |
-| `ean8` | 7 cijfers (cheque toegevoegd) of 8 (cheque geverifieerd).                       |
-| `upca` | 11 cijfers (cheque toegevoegd) of 12 (cheque geverifieerd).                     |
-| `upce` | Nul-onderdrukte UPC; 6-cijferig of 7/8-cijferig formulier.                       |
-| `itf` | Interleaved 2 van 5; zelfs aantal cijfers vereist.                         |
-| `itf14` | Vaste 14-cijferige GTIN-14.                                                |
-| `codabar` | Cijfers plus `-$:/.+`; automatisch ingelijst met `A` start/stop.                 |
-| `msi` | MSI / gemodificeerde Plessey met mod-10-controle.                              |
-| `pharmacode` | Laetus farmaceutische binaire code (`3`–`131070`).                      |
+| Symboliek    | Opmerkingen                                                                 |
+| ------------ | --------------------------------------------------------------------------- |
+| `code128`    | Hoge dichtheid. Code B voor afdrukbare ASCII; Code C snel pad voor cijfers. |
+| `gs1-128`    | Code 128 met leidende FNC1 voor GS1 Application Identifiers.                |
+| `code39`     | Alfanumeriek, zelfcontrolerend; automatisch ingelijst met `*` start/stop.   |
+| `code39ext`  | Volledige ASCII-code 39 via shift-tekens.                                   |
+| `code93`     | Compact, zelfcontrolerend (twee controletekens).                            |
+| `code93ext`  | Volledige ASCII-code 93 via shift-tekens.                                   |
+| `ean13`      | 12 cijfers (cheque toegevoegd) of 13 (cheque geverifieerd).                 |
+| `ean8`       | 7 cijfers (cheque toegevoegd) of 8 (cheque geverifieerd).                   |
+| `upca`       | 11 cijfers (cheque toegevoegd) of 12 (cheque geverifieerd).                 |
+| `upce`       | Nul-onderdrukte UPC; 6-cijferig of 7/8-cijferig formulier.                  |
+| `itf`        | Interleaved 2 van 5; zelfs aantal cijfers vereist.                          |
+| `itf14`      | Vaste 14-cijferige GTIN-14.                                                 |
+| `codabar`    | Cijfers plus `-$:/.+`; automatisch ingelijst met `A` start/stop.            |
+| `msi`        | MSI / gemodificeerde Plessey met mod-10-controle.                           |
+| `pharmacode` | Laetus farmaceutische binaire code (`3`–`131070`).                          |
 
 ## API en gebruik
 

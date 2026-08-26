@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { encodeBarcode } from '../encoder';
+
 import { load as loadCode128, loadSync as loadCode128Sync } from './code128.fws';
 
 interface Code128DecoderExports {
@@ -45,11 +46,11 @@ function renderSymbol(value: number): string {
 
 function renderFrame(values: readonly number[]): string {
   let checksum = 0;
-  for (let index = 0; index < values.length; index += 1) {
-    checksum += values[index] * (index === 0 ? 1 : index);
+  for (const [index, value] of values.entries()) {
+    checksum += value * (index === 0 ? 1 : index);
   }
 
-  return values.map(renderSymbol).join('') + renderSymbol(checksum % 103) + renderSymbol(106);
+  return values.map((value) => renderSymbol(value)).join('') + renderSymbol(checksum % 103) + renderSymbol(106);
 }
 
 function decoder(exports: unknown): Code128DecoderExports {
@@ -74,9 +75,7 @@ describe('native Code 128 FWS decoder', () => {
   it('drops leading and embedded FNC1 symbols for GS1-128', () => {
     const code128 = decoder(loadCode128Sync());
 
-    expect(code128.decode_gs1_128(encodeBarcode('gs1-128', '0102345678901234').modules)).toBe(
-      '0102345678901234',
-    );
+    expect(code128.decode_gs1_128(encodeBarcode('gs1-128', '0102345678901234').modules)).toBe('0102345678901234');
     expect(code128.decode_gs1_128(moduleBits(renderFrame([104, 102, 33, 102, 34])))).toBe('AB');
   });
 

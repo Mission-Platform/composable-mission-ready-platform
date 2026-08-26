@@ -187,8 +187,8 @@ fn ean13_parity(value: i32) -> string {
 }
 
 fn ean13_left_pattern(parity: string, value: i32, index: i32) -> string {
-  if string_byte_at(parity, index) == 76 { return left_pattern(value); }
-  return ean13_g_pattern(value);
+  if string_byte_at(parity, index) == 76 { return string_concat(left_pattern(value), ""); }
+  return string_concat(ean13_g_pattern(value), "");
 }
 
 fn ean13_left_half(value: string) -> string {

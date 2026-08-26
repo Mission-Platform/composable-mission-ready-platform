@@ -1,11 +1,11 @@
 // Code 93 standard and full-ASCII encoder graph with weighted check symbols.
 
 fn u32_to_i32_len(value: u32) -> i32 {
-  let remaining: u32 = value;
-  let place: i32 = 1;
-  let result: i32 = 0;
+  let mut remaining: u32 = value;
+  let mut place: i32 = 1;
+  let mut result: i32 = 0;
   while remaining > 0 {
-    let bit: u32 = remaining - remaining / 2 * 2;
+    let mut bit: u32 = remaining - remaining / 2 * 2;
     if bit == 1 { result = result + place; }
     remaining = remaining / 2;
     place = place * 2;
@@ -60,8 +60,8 @@ fn digit(value: i32) -> string {
 }
 
 fn character_for_value(value: i32) -> string {
-  if value >= 0 && value <= 9 { return digit(value); }
-  if value >= 10 && value <= 35 { return letter(value - 10); }
+  if value >= 0 && value <= 9 { return string_concat(digit(value), ""); }
+  if value >= 10 && value <= 35 { return string_concat(letter(value - 10), ""); }
   if value == 36 { return "-"; }
   if value == 37 { return "."; }
   if value == 38 { return " "; }
@@ -81,11 +81,11 @@ fn extended_sequence(value: i32) -> string {
   if value == 45 { return "-"; }
   if value == 46 { return "."; }
   if value == 47 { return "/O"; }
-  if value >= 48 && value <= 57 { return digit(value - 48); }
+  if value >= 48 && value <= 57 { return string_concat(digit(value - 48), ""); }
   if value == 58 { return "/Z"; }
   if value >= 59 && value <= 63 { return string_concat("%", letter(value - 54)); }
   if value == 64 { return "%V"; }
-  if value >= 65 && value <= 90 { return letter(value - 65); }
+  if value >= 65 && value <= 90 { return string_concat(letter(value - 65), ""); }
   if value >= 91 && value <= 95 { return string_concat("%", letter(value - 81)); }
   if value == 96 { return "%W"; }
   if value >= 97 && value <= 122 { return string_concat("+", letter(value - 97)); }
@@ -99,18 +99,18 @@ fn uppercase(value: i32) -> i32 {
 }
 
 fn standard_sequence(value: string, index: i32, result: string) -> string {
-  if index >= string_length(value) { return result; }
+  if index >= string_length(value) { return string_concat(result, ""); }
   let code: i32 = uppercase(string_byte_at(value, index));
   let symbol: string = character_for_value(base_value(code));
   if string_length(symbol) == 0 { return ""; }
-  return standard_sequence(value, index + 1, string_concat(result, symbol));
+  return string_concat(standard_sequence(value, index + 1, string_concat(result, symbol)), "");
 }
 
 fn extended_sequence_for_value(value: string, index: i32, result: string) -> string {
-  if index >= string_length(value) { return result; }
+  if index >= string_length(value) { return string_concat(result, ""); }
   let sequence: string = extended_sequence(string_byte_at(value, index));
   if string_length(sequence) == 0 { return ""; }
-  return extended_sequence_for_value(value, index + 1, string_concat(result, sequence));
+  return string_concat(extended_sequence_for_value(value, index + 1, string_concat(result, sequence)), "");
 }
 
 fn remainder(value: i32, divisor: i32) -> i32 {
@@ -120,14 +120,14 @@ fn remainder(value: i32, divisor: i32) -> i32 {
 
 fn weighted_sum(value: string, index: i32, max_weight: i32, weight: i32, extended: i32) -> i32 {
   if index >= string_length(value) { return 0; }
-  let next_weight: i32 = weight - 1;
+  let mut next_weight: i32 = weight - 1;
   if next_weight < 1 { next_weight = max_weight; }
   return sequence_value(string_byte_at(value, index), extended) * weight + weighted_sum(value, index + 1, max_weight, next_weight, extended);
 }
 
 fn render_pattern(value: string, index: i32) -> string {
   if index >= string_length(value) { return ""; }
-  let bit: string = "0";
+  let mut bit: string = "0";
   if string_byte_at(value, index) == 49 { bit = "1"; }
   return string_concat(bit, render_pattern(value, index + 1));
 }
@@ -148,7 +148,7 @@ fn render_values(value: string, index: i32, result: string, check_c: i32, check_
   }
   let next: string = append_value(result, sequence_value(string_byte_at(value, index), extended));
   if string_length(next) == 0 { return ""; }
-  return render_values(value, index + 1, next, check_c, check_k, extended);
+  return string_concat(render_values(value, index + 1, next, check_c, check_k, extended), "");
 }
 
 fn encode_sequence(value: string, extended: i32) -> string {
@@ -157,15 +157,15 @@ fn encode_sequence(value: string, extended: i32) -> string {
   let k_weight: i32 = remainder(string_length(value), 15) + 1;
   let check_c: i32 = remainder(weighted_sum(value, 0, 20, c_weight, extended), 47);
   let check_k: i32 = remainder(weighted_sum(value, 0, 15, k_weight, extended) + check_c, 47);
-  return render_values(value, 0, render_pattern("101011110", 0), check_c, check_k, extended);
+  return string_concat(render_values(value, 0, render_pattern("101011110", 0), check_c, check_k, extended), "");
 }
 
 export fn encode_code93(value: string) -> string {
-  return encode_sequence(standard_sequence(value, 0, ""), 0);
+  return string_concat(encode_sequence(standard_sequence(value, 0, ""), 0), "");
 }
 
 export fn encode_code93_extended(value: string) -> string {
-  return encode_sequence(extended_sequence_for_value(value, 0, ""), 1);
+  return string_concat(encode_sequence(extended_sequence_for_value(value, 0, ""), 1), "");
 }
 
 fn base_value(value: i32) -> i32 {
@@ -248,14 +248,14 @@ fn pattern(value: i32) -> string {
 
 fn module_mask_from_array(modules: Array<i32>, index: i32, end: i32, result: i32) -> i32 {
   if index >= end || index >= modules_len(modules) { return result; }
-  let next: i32 = result * 2;
+  let mut next: i32 = result * 2;
   if modules[index] == 1 { next = next + 1; }
   return module_mask_from_array(modules, index + 1, end, next);
 }
 
 fn module_mask_for_string(value: string, index: i32, end: i32, result: i32) -> i32 {
   if index >= end || index >= string_length(value) { return result; }
-  let next: i32 = result * 2;
+  let mut next: i32 = result * 2;
   if string_byte_at(value, index) == 49 { next = next + 1; }
   return module_mask_for_string(value, index + 1, end, next);
 }
@@ -320,7 +320,7 @@ fn symbol_value(modules: Array<i32>, end: i32, start: i32) -> i32 {
 }
 
 fn decoded_character(value: i32) -> string {
-  if value <= 42 { return character_for_value(value); }
+  if value <= 42 { return string_concat(character_for_value(value), ""); }
   if value == 43 { return "$"; }
   if value == 44 { return "%"; }
   if value == 45 { return "/"; }
@@ -344,11 +344,11 @@ fn decode_payload(
     if symbol < 0 || symbol > 46 { return ""; }
     let character: string = decoded_character(symbol);
     if string_length(character) == 0 { return ""; }
-    let next_c_weight: i32 = c_weight - 1;
+    let mut next_c_weight: i32 = c_weight - 1;
     if next_c_weight < 1 { next_c_weight = 20; }
-    let next_k_weight: i32 = k_weight - 1;
+    let mut next_k_weight: i32 = k_weight - 1;
     if next_k_weight < 1 { next_k_weight = 15; }
-    return decode_payload(
+    return string_concat(decode_payload(
       modules,
       end,
       index + 1,
@@ -358,7 +358,7 @@ fn decode_payload(
       k_sum + symbol * k_weight,
       next_c_weight,
       next_k_weight,
-    );
+    ), "");
   }
 
   let check_c: i32 = symbol_value(modules, end, index * 9);
@@ -383,13 +383,13 @@ fn decode_sequence(modules: Array<i32>, extended: i32, length: i32) -> string {
   let symbol_count: i32 = body_length / 9;
   if symbol_count < 4 || symbol_value(modules, length, 0) != 47 { return ""; }
   let data_length: i32 = symbol_count - 4;
-  let c_weight: i32 = 1;
+  let mut c_weight: i32 = 1;
   if data_length > 0 { c_weight = remainder(data_length - 1, 20) + 1; }
-  let k_weight: i32 = 1;
+  let mut k_weight: i32 = 1;
   if data_length > 0 { k_weight = remainder(data_length, 15) + 1; }
   let decoded: string = decode_payload(modules, length, 1, data_length, "", 0, 0, c_weight, k_weight);
-  if extended == 1 { return decode_extended_sequence(decoded, 0, ""); }
-  return decoded;
+  if extended == 1 { return string_concat(decode_extended_sequence(decoded, 0, ""), ""); }
+  return string_concat(decoded, "");
 }
 
 fn extended_code(shift: i32, follower: i32) -> i32 {
@@ -421,7 +421,7 @@ fn ascii_character(code: i32) -> string {
   if code >= 32 && code <= 64 {
     return string_slice(" !\u0022#$%&'()*+,-./0123456789:;<=>?@", code - 32, code - 31);
   }
-  if code >= 65 && code <= 90 { return letter(code - 65); }
+  if code >= 65 && code <= 90 { return string_concat(letter(code - 65), ""); }
   if code >= 91 && code <= 96 {
     return string_slice("\u005b\u005c\u005d^_\u0060", code - 91, code - 90);
   }
@@ -437,33 +437,33 @@ fn ascii_character(code: i32) -> string {
 fn decode_extended_pair(shift: i32, follower: i32) -> string {
   let code: i32 = extended_code(shift, follower);
   if code < 0 { return ""; }
-  return ascii_character(code);
+  return string_concat(ascii_character(code), "");
 }
 
 fn decode_extended_sequence(value: string, index: i32, result: string) -> string {
-  if index >= string_length(value) { return result; }
+  if index >= string_length(value) { return string_concat(result, ""); }
   let code: i32 = string_byte_at(value, index);
   if code == 36 || code == 37 || code == 43 || code == 47 {
     if index + 1 >= string_length(value) { return ""; }
     let decoded: string = decode_extended_pair(code, string_byte_at(value, index + 1));
     if string_length(decoded) == 0 { return ""; }
-    return decode_extended_sequence(value, index + 2, string_concat(result, decoded));
+    return string_concat(decode_extended_sequence(value, index + 2, string_concat(result, decoded)), "");
   }
-  return decode_extended_sequence(value, index + 1, string_concat(result, string_slice(value, index, index + 1)));
+  return string_concat(decode_extended_sequence(value, index + 1, string_concat(result, string_slice(value, index, index + 1))), "");
 }
 
 export fn decode_code93(modules: Array<i32>) -> string {
-  return decode_sequence(modules, 0, modules_len(modules));
+  return string_concat(decode_sequence(modules, 0, modules_len(modules)), "");
 }
 
 export fn decode_code93_row(modules: Array<i32>, count: i32) -> string {
-  return decode_sequence(modules, 0, count);
+  return string_concat(decode_sequence(modules, 0, count), "");
 }
 
 export fn decode_code93_extended(modules: Array<i32>) -> string {
-  return decode_sequence(modules, 1, modules_len(modules));
+  return string_concat(decode_sequence(modules, 1, modules_len(modules)), "");
 }
 
 export fn decode_code93_extended_row(modules: Array<i32>, count: i32) -> string {
-  return decode_sequence(modules, 1, count);
+  return string_concat(decode_sequence(modules, 1, count), "");
 }

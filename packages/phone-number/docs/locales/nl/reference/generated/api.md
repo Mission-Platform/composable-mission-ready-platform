@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/phone-n
 **Soort:** functie
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 Gemaksaccessor voor de gedeelde {@link PhoneNumberUtil}-instantie.
@@ -26,7 +26,7 @@ Gemaksaccessor voor de gedeelde {@link PhoneNumberUtil}-instantie.
 **Soort:** functie
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 Gemaksaccessor voor de gedeelde, synchrone {@link PhoneNumberUtil}-instantie.
@@ -36,7 +36,7 @@ Gemaksaccessor voor de gedeelde, synchrone {@link PhoneNumberUtil}-instantie.
 **Soort:** constant
 
 ```typescript
-export const PhoneNumberFormat
+export const PhoneNumberFormat;
 ```
 
 Uitvoerformaat, spiegeling van `PhoneNumberFormat` van libphonenumber.
@@ -46,7 +46,7 @@ Uitvoerformaat, spiegeling van `PhoneNumberFormat` van libphonenumber.
 **Soort:** constant
 
 ```typescript
-export const PhoneNumberType
+export const PhoneNumberType;
 ```
 
 Lijntype van een telefoonnummer, dat de `PhoneNumberType` van het libphonenummer weerspiegelt.
@@ -86,8 +86,8 @@ Wijst een ondersteunde regiocode toe aan de internationale landcode voor bellen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
+| Naam  | Typ        | Beschrijving                      |
+| ----- | ---------- | --------------------------------- |
 | regio | tekenreeks | ISO-regiocode zoals 'VS' of 'GB'. |
 
 #### Contract
@@ -107,8 +107,8 @@ Retourneert het nationale netlijnvoorvoegsel dat wordt gebruikt bij het bellen b
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
+| Naam  | Typ        | Beschrijving   |
+| ----- | ---------- | -------------- |
 | regio | tekenreeks | ISO-regiocode. |
 
 #### Contract
@@ -128,8 +128,8 @@ Wijst een landbelcode toe aan een representatieve ISO-regio.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
+| Naam | Typ  | Beschrijving                         |
+| ---- | ---- | ------------------------------------ |
 | code | ik32 | Landcode voor internationaal bellen. |
 
 #### Contract
@@ -149,9 +149,9 @@ Retourneert waar als de regiocode gelijk is aan de verwachte waarde.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| regio | tekenreeks | Kandidaat-ISO-regiocode. |
+| Naam     | Typ        | Beschrijving             |
+| -------- | ---------- | ------------------------ |
+| regio    | tekenreeks | Kandidaat-ISO-regiocode. |
 | verwacht | tekenreeks | Verwachte ISO-regiocode. |
 
 #### Contract

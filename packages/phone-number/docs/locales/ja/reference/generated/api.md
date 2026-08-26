@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 共有 {@link PhoneNumberUtil} インスタンスの便利なアクセサー。
@@ -26,7 +26,7 @@ function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
 **種類:** 関数
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 共有同期 {@link PhoneNumberUtil} インスタンスの便利なアクセサー。
@@ -36,7 +36,7 @@ function getPhoneNumberUtilSync(): PhoneNumberUtil
 **種類:** 定数
 
 ```typescript
-export const PhoneNumberFormat
+export const PhoneNumberFormat;
 ```
 
 出力形式、libphonenumber の `PhoneNumberFormat` をミラーリングします。
@@ -46,7 +46,7 @@ export const PhoneNumberFormat
 **種類:** 定数
 
 ```typescript
-export const PhoneNumberType
+export const PhoneNumberType;
 ```
 
 電話番号の回線タイプ。libphonenumber の `PhoneNumberType` をミラーリングします。
@@ -86,9 +86,9 @@ export fn country_code_for_region(region: string) -> i32
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地域 |文字列 | 「US」や「GB」などの ISO リージョン コード。 |
+| 名前 | タイプ | 説明                                         |
+| ---- | ------ | -------------------------------------------- |
+| 地域 | 文字列 | 「US」や「GB」などの ISO リージョン コード。 |
 
 #### 契約
 
@@ -107,9 +107,9 @@ export fn national_prefix(region: string) -> string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地域 |文字列 | ISO リージョン コード。 |
+| 名前 | タイプ | 説明                    |
+| ---- | ------ | ----------------------- |
+| 地域 | 文字列 | ISO リージョン コード。 |
 
 #### 契約
 
@@ -128,9 +128,9 @@ export fn region_for_country_code(code: i32) -> string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コード | i32 |国際ダイヤルの国番号。 |
+| 名前   | タイプ | 説明                   |
+| ------ | ------ | ---------------------- |
+| コード | i32    | 国際ダイヤルの国番号。 |
 
 #### 契約
 
@@ -149,10 +149,10 @@ export fn region_is(region: string, expected: string) -> bool
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|地域 |文字列 | ISO 地域コードの候補。 |
-|予想される |文字列 |予期される ISO リージョン コード。 |
+| 名前       | タイプ | 説明                               |
+| ---------- | ------ | ---------------------------------- |
+| 地域       | 文字列 | ISO 地域コードの候補。             |
+| 予想される | 文字列 | 予期される ISO リージョン コード。 |
 
 #### 契約
 

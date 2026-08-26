@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { encodeBarcode } from '../encoder';
+
 import { load as loadCode93, loadSync as loadCode93Sync } from './code93.fws';
 
 describe('native Code 93 FWS encoder', () => {
@@ -16,7 +17,7 @@ describe('native Code 93 FWS encoder', () => {
   it('matches extended Code 93 output across ASCII boundaries', () => {
     const code93 = loadCode93Sync();
 
-    for (const value of ['Hello, World!', '\u0000', '\u001f', ' ', '~', '\u007f']) {
+    for (const value of ['Hello, World!', '\u0000', '\u001F', ' ', '~', '\u007F']) {
       expect(code93.encode_code93_extended(value), JSON.stringify(value)).toBe(
         encodeBarcode('code93ext', value).modules.join(''),
       );

@@ -46,11 +46,11 @@ fn finder_ratio_matches(r0: i32, r1: i32, r2: i32, r3: i32, r4: i32) -> i32 {
 // refined centre rather than a plain boolean.
 fn finder_vertical_centre(bits: u32, width: i32, height: i32, x: i32, y: i32, module_px: i32) -> i32 {
   let limit: i32 = module_px * 5 + 8;
-  let up: i32 = 0;
+  let mut up: i32 = 0;
   while up < limit && img.bitmap_get(bits, width, height, x, y - up - 1) {
     up = up + 1;
   }
-  let down: i32 = 0;
+  let mut down: i32 = 0;
   while down < limit && img.bitmap_get(bits, width, height, x, y + down + 1) {
     down = down + 1;
   }
@@ -60,20 +60,20 @@ fn finder_vertical_centre(bits: u32, width: i32, height: i32, x: i32, y: i32, mo
     return 0 - 1000000;
   }
   let top: i32 = y - up - 1;
-  let light_top: i32 = 0;
+  let mut light_top: i32 = 0;
   while light_top < limit && !img.bitmap_get(bits, width, height, x, top - light_top) {
     light_top = light_top + 1;
   }
-  let dark_top: i32 = 0;
+  let mut dark_top: i32 = 0;
   while dark_top < limit && img.bitmap_get(bits, width, height, x, top - light_top - dark_top) {
     dark_top = dark_top + 1;
   }
   let bottom: i32 = y + down + 1;
-  let light_bottom: i32 = 0;
+  let mut light_bottom: i32 = 0;
   while light_bottom < limit && !img.bitmap_get(bits, width, height, x, bottom + light_bottom) {
     light_bottom = light_bottom + 1;
   }
-  let dark_bottom: i32 = 0;
+  let mut dark_bottom: i32 = 0;
   while dark_bottom < limit && img.bitmap_get(bits, width, height, x, bottom + light_bottom + dark_bottom) {
     dark_bottom = dark_bottom + 1;
   }
@@ -89,8 +89,8 @@ fn finder_vertical_centre(bits: u32, width: i32, height: i32, x: i32, y: i32, mo
 // spurious noise matches cannot crowd out the three real corner finders; the
 // caller then keeps the three best-supported clusters (matching cluster() in
 // crates/code-scan/src/qr.rs).
-fn qr_record_finder(store: Array<i32>, cap: i32, count: i32, x: i32, y: i32, module_px: i32) -> i32 {
-  let slot: i32 = 0;
+fn qr_record_finder(mut store: Array<i32>, cap: i32, count: i32, x: i32, y: i32, module_px: i32) -> i32 {
+  let mut slot: i32 = 0;
   while slot < count {
     let base: i32 = slot * 4;
     let support: i32 = store[base + 3];
@@ -152,17 +152,17 @@ fn corner_candidate(
 ) -> i32 {
   let mid_x: i32 = c.safe_div_i32(x0 + x1, 2);
   let mid_y: i32 = c.safe_div_i32(y0 + y1, 2);
-  let target_x: i32 = x0;
-  let target_y: i32 = y0;
+  let mut target_x: i32 = x0;
+  let mut target_y: i32 = y0;
   if corner == 1 { target_x = x1; }
   if corner == 2 { target_y = y1; }
-  let best: i32 = 0 - 1;
-  let best_score: i32 = 0 - 2147483647;
-  let index: i32 = 0;
+  let mut best: i32 = 0 - 1;
+  let mut best_score: i32 = 0 - 2147483647;
+  let mut index: i32 = 0;
   while index < count {
     let x: i32 = candidate_x(store, index);
     let y: i32 = candidate_y(store, index);
-    let in_corner: bool = false;
+    let mut in_corner: bool = false;
     if corner == 0 && x < mid_x && y < mid_y { in_corner = true; }
     if corner == 1 && x >= mid_x && y < mid_y { in_corner = true; }
     if corner == 2 && x < mid_x && y >= mid_y { in_corner = true; }
@@ -185,7 +185,7 @@ fn integer_sqrt(value: i32) -> i32 {
   if value <= 0 {
     return 0;
   }
-  let root: i32 = 1;
+  let mut root: i32 = 1;
   while root * root <= value {
     root = root + 1;
   }
@@ -197,9 +197,9 @@ fn locate_qr_finder_modules(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut meta: Array<i32>
 ) -> i32 {
   if c.array_len_i32(meta) < 16 {
     return 0;
@@ -207,10 +207,10 @@ fn locate_qr_finder_modules(
   // The scanner scratch array is image-sized, but tiny/blank calls may provide
   // less storage than the finder record area. Bound the record list to the
   // actual array before clearing or writing it.
-  let cap: i32 = c.array_len_i32(erasures) / 4;
+  let mut cap: i32 = c.array_len_i32(erasures) / 4;
   if cap > 512 { cap = 512; }
   if cap < 3 { return 0; }
-  let clear_index: i32 = 0;
+  let mut clear_index: i32 = 0;
   let clear_limit: i32 = cap * 4;
   while clear_index < clear_limit {
     erasures[clear_index] = 0;
@@ -221,22 +221,22 @@ fn locate_qr_finder_modules(
   let bound_y0: i32 = meta[1];
   let bound_x1: i32 = meta[2];
   let bound_y1: i32 = meta[3];
-  let cluster_count: i32 = 0;
-  let scan_row: i32 = 0;
+  let mut cluster_count: i32 = 0;
+  let mut scan_row: i32 = 0;
   while scan_row < height {
-    let y: i32 = scan_row / 2;
+    let mut y: i32 = scan_row / 2;
     if scan_row - scan_row / 2 * 2 != 0 { y = height - 1 - scan_row / 2; }
-    let r0: i32 = 0;
-    let r1: i32 = 0;
-    let r2: i32 = 0;
-    let r3: i32 = 0;
-    let r4: i32 = 0;
-    let count: i32 = 0;
-    let current_dark: bool = img.bitmap_get(bits, width, height, 0, y);
-    let run: i32 = 1;
-    let x: i32 = 1;
+    let mut r0: i32 = 0;
+    let mut r1: i32 = 0;
+    let mut r2: i32 = 0;
+    let mut r3: i32 = 0;
+    let mut r4: i32 = 0;
+    let mut count: i32 = 0;
+    let mut current_dark: bool = img.bitmap_get(bits, width, height, 0, y);
+    let mut run: i32 = 1;
+    let mut x: i32 = 1;
     while x <= width {
-      let dark: bool = false;
+      let mut dark: bool = false;
       if x < width {
         dark = img.bitmap_get(bits, width, height, x, y);
       }
@@ -256,7 +256,7 @@ fn locate_qr_finder_modules(
           if module_px > 0 {
             let half_centre: i32 = r2 / 2;
             let centre_x: i32 = x - r4 - r3 - half_centre;
-            let centre_y: i32 = finder_vertical_centre(bits, width, height, centre_x, y, module_px);
+            let mut centre_y: i32 = finder_vertical_centre(bits, width, height, centre_x, y, module_px);
             if centre_y == 0 - 1000000 {
               // Shear and perspective move the vertical centre away from the
               // horizontal run's centre by a few pixels. Search the finder
@@ -308,12 +308,12 @@ fn locate_qr_finder_modules(
   let ab: i32 = distance_sq(ax, ay, bx, by);
   let ac: i32 = distance_sq(ax, ay, cx, cy);
   let bc: i32 = distance_sq(bx, by, cx, cy);
-  let tlx: i32 = ax;
-  let tly: i32 = ay;
-  let px: i32 = bx;
-  let py: i32 = by;
-  let qx: i32 = cx;
-  let qy: i32 = cy;
+  let mut tlx: i32 = ax;
+  let mut tly: i32 = ay;
+  let mut px: i32 = bx;
+  let mut py: i32 = by;
+  let mut qx: i32 = cx;
+  let mut qy: i32 = cy;
   if ab >= ac && ab >= bc {
     tlx = cx;
     tly = cy;
@@ -355,7 +355,7 @@ fn locate_qr_finder_modules(
   let length_total: i32 = right_length + down_length;
   let average_length: i32 = c.safe_div_i32(length_total, 2);
   let modules_span_fx: i32 = c.fx_div(c.fx_from_i32(average_length), c.fx_from_i32(module_px));
-  let size: i32 = c.fx_to_i32(modules_span_fx) + 7;
+  let mut size: i32 = c.fx_to_i32(modules_span_fx) + 7;
   if size < 21 {
     return 0;
   }
@@ -406,9 +406,9 @@ export fn locate_qr_modules(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut meta: Array<i32>
 ) -> i32 {
   if c.array_len_i32(meta) < 5 {
     return 0;
@@ -445,12 +445,12 @@ export fn locate_qr_modules(
 
 
   let side: i32 = c.min_i32(bw, bh);
-  let version: i32 = 1;
+  let mut version: i32 = 1;
   if requested_version > 0 { version = requested_version; }
   while version <= 40 {
     let size: i32 = qr_version_size(version);
     // Allow a little quiet-zone leakage by trying several effective sides.
-    let pad: i32 = 0;
+    let mut pad: i32 = 0;
     while pad <= 4 {
       let effective: i32 = side - pad * 2;
       if effective >= size {
@@ -472,7 +472,7 @@ export fn locate_qr_modules(
             size,
             modules
           );
-          let accepted: bool = filled == size * size;
+          let mut accepted: bool = filled == size * size;
           if requested_version <= 0 {
             if !qr_finder_corners_ok(modules, size) { accepted = false; }
           }
@@ -586,10 +586,10 @@ fn finder_at(modules: Array<i32>, size: i32, ox: i32, oy: i32) -> bool {
     // Tolerate imperfect sampling.
   }
   // Count dark modules in the 7x7; expect roughly half+.
-  let dark: i32 = 0;
-  let y: i32 = 0;
+  let mut dark: i32 = 0;
+  let mut y: i32 = 0;
   while y < 7 {
-    let x: i32 = 0;
+    let mut x: i32 = 0;
     while x < 7 {
       let cell: i32 = oy + y;
       let cell_index: i32 = cell * size + ox + x;

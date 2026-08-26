@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 أداة الوصول الملائمة لمثيل {@link PhoneNumberUtil} المشترك.
@@ -26,7 +26,7 @@ function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
 **النوع:** الوظيفة
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 أداة وصول ملائمة لمثيل {@link PhoneNumberUtil} المشترك والمتزامن.
@@ -36,7 +36,7 @@ function getPhoneNumberUtilSync(): PhoneNumberUtil
 **النوع:** ثابت
 
 ```typescript
-export const PhoneNumberFormat
+export const PhoneNumberFormat;
 ```
 
 تنسيق الإخراج، يعكس `PhoneNumberFormat` الخاص بـ libphonenumber.
@@ -46,7 +46,7 @@ export const PhoneNumberFormat
 **النوع:** ثابت
 
 ```typescript
-export const PhoneNumberType
+export const PhoneNumberType;
 ```
 
 نوع سطر رقم الهاتف، يعكس `PhoneNumberType` الخاص بـ libphonenumber.
@@ -86,8 +86,8 @@ export fn country_code_for_region(region: string) -> i32
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
+| الاسم   | اكتب  | الوصف                           |
+| ------- | ----- | ------------------------------- |
 | المنطقة | سلسلة | رمز منطقة ISO مثل "US" أو "GB". |
 
 #### عقد
@@ -107,8 +107,8 @@ export fn national_prefix(region: string) -> string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
+| الاسم   | اكتب  | الوصف            |
+| ------- | ----- | ---------------- |
 | المنطقة | سلسلة | رمز المنطقة ISO. |
 
 #### عقد
@@ -128,9 +128,9 @@ export fn region_for_country_code(code: i32) -> string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| كود | i32 | رمز البلد للاتصال الدولي. |
+| الاسم | اكتب | الوصف                     |
+| ----- | ---- | ------------------------- |
+| كود   | i32  | رمز البلد للاتصال الدولي. |
 
 #### عقد
 
@@ -149,10 +149,10 @@ export fn region_is(region: string, expected: string) -> bool
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
+| الاسم   | اكتب  | الوصف                   |
+| ------- | ----- | ----------------------- |
 | المنطقة | سلسلة | رمز المنطقة ISO المرشح. |
-| المتوقع | سلسلة | رمز منطقة ISO المتوقع. |
+| المتوقع | سلسلة | رمز منطقة ISO المتوقع.  |
 
 #### عقد
 

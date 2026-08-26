@@ -16,7 +16,7 @@
 **النوع:** الوظيفة
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
+function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
 ```
 
 فك تشفير صورة `Blob`/`File` إلى {@link ImageLike} (بكسل RGBA). الاستخدامات
@@ -24,17 +24,17 @@ function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| فقاعة | فقاعة |  |
-| العائد على الاستثمار |  |  |
+| الاسم                | اكتب  | الوصف |
+| -------------------- | ----- | ----- |
+| فقاعة                | فقاعة |       |
+| العائد على الاستثمار |       |       |
 
 ### scanFile
 
 **النوع:** الوظيفة
 
 ```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>
+function scanFile(file: Blob): Promise<ScanResult | null>;
 ```
 
 قم بفك تشفير `file` ومسحه ضوئيًا بحثًا عن رمز، وتشغيل WebAssembly بشكل متزامن
@@ -42,16 +42,16 @@ function scanFile(file: Blob): Promise<ScanResult | null>
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف | فقاعة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| ملف   | فقاعة |       |
 
 ### scanFileAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>
+function scanFileAsync(file: Blob): Promise<ScanResult | null>;
 ```
 
 قم بفك تشفير `file` ومسحه ضوئيًا بحثًا عن رمز، وبدء تشغيل الماسح الضوئي وأجهزة فك التشفير
@@ -59,16 +59,16 @@ function scanFileAsync(file: Blob): Promise<ScanResult | null>
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف | فقاعة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| ملف   | فقاعة |       |
 
 ### videoFrameToImageData
 
 **النوع:** الوظيفة
 
 ```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike
+function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
 ```
 
 التقط الإطار الحالي لعنصر `<video>` قيد التشغيل باعتباره
@@ -79,10 +79,10 @@ function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): Imag
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| فيديو | HTMLVideoElement |  |
-| العائد على الاستثمار |  |  |
+| الاسم                | اكتب             | الوصف |
+| -------------------- | ---------------- | ----- |
+| فيديو                | HTMLVideoElement |       |
+| العائد على الاستثمار |                  |       |
 
 ## `src/debug`
 
@@ -91,7 +91,7 @@ function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): Imag
 **النوع:** الوظيفة
 
 ```typescript
-function isCodeScannerDebugEnabled(): boolean
+function isCodeScannerDebugEnabled(): boolean;
 ```
 
 ما إذا كان تسجيل تشخيص الماسح الضوئي ممكّنًا حاليًا.
@@ -101,16 +101,16 @@ function isCodeScannerDebugEnabled(): boolean
 **النوع:** الوظيفة
 
 ```typescript
-function setCodeScannerDebug(value: boolean): void
+function setCodeScannerDebug(value: boolean): void;
 ```
 
 قم بتمكين أو تعطيل التسجيل التشخيصي من جانب JS للماسحة الضوئية في وقت التشغيل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | منطقية |  |
+| الاسم  | اكتب   | الوصف |
+| ------ | ------ | ----- |
+| القيمة | منطقية |       |
 
 #### عقد
 
@@ -123,7 +123,11 @@ function setCodeScannerDebug(value: boolean): void
 **النوع:** الوظيفة
 
 ```typescript
-function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LOW_PERCENTILE, highPercentile: number = DEFAULT_HIGH_PERCENTILE): LumaImage
+function contrastStretchLuma(
+  luma: LumaImage,
+  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
+  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
+): LumaImage;
 ```
 
 قم بتمديد التباين على {@link LumaImage}، مع تعيين `lowPercentile`..`highPercentile`
@@ -143,18 +147,18 @@ function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LO
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| لوما | لوما إيماج |  |
-| نسبة مئوية منخفضة | رقم |  |
-| نسبة عالية | رقم |  |
+| الاسم             | اكتب       | الوصف |
+| ----------------- | ---------- | ----- |
+| لوما              | لوما إيماج |       |
+| نسبة مئوية منخفضة | رقم        |       |
+| نسبة عالية        | رقم        |       |
 
 ### imageDataToLuma
 
 **النوع:** الوظيفة
 
 ```typescript
-function imageDataToLuma(image: ImageLike): LumaImage
+function imageDataToLuma(image: ImageLike): LumaImage;
 ```
 
 تحويل RGBA {@link ImageLike} (على سبيل المثال لوحة قماشية `ImageData`) إلى
@@ -163,9 +167,9 @@ function imageDataToLuma(image: ImageLike): LumaImage
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| صورة | إيماج لايك |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| صورة  | إيماج لايك |       |
 
 ### LumaImage
 
@@ -184,7 +188,7 @@ export interface LumaImage
 **النوع:** الوظيفة
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
+function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
 ```
 
 حدد موقع أول رمز مدعوم في `image` وقم بفك تشفيره، مما يؤدي إلى إنشاء مثيل لـ
@@ -192,57 +196,57 @@ function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| صورة | إيماج لايك |  |
-| العائد على الاستثمار | روي |  |
+| الاسم                | اكتب       | الوصف |
+| -------------------- | ---------- | ----- |
+| صورة                 | إيماج لايك |       |
+| العائد على الاستثمار | روي        |       |
 
 #### عقد
 
 - **@param:** منطقة اهتمام اختيارية (بكسلات الصورة) لتقييد المسح الضوئي عليها
 - تم اقتصاصها قبل الدمج الثنائي، بحيث يتم تجاهل الفوضى المحيطة.
 - **@returns:** {@link ScanResult}، أو `null` في حالة عدم العثور على رمز. عندما رمز
-يقع ولكن لا يمكن فك تشفير حمولته، `result.value` هو `null`.
+  يقع ولكن لا يمكن فك تشفير حمولته، `result.value` هو `null`.
 
 ### scanImageDataAll
 
 **النوع:** الوظيفة
 
 ```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[]
+function scanImageDataAll(image: ImageLike): ScanResult[];
 ```
 
-تحديد موقع وفك تشفير *كل* رمز مميز في `image` (وليس الأول فقط)،
+تحديد موقع وفك تشفير _كل_ رمز مميز في `image` (وليس الأول فقط)،
 إنشاء مثيل للرسم البياني للماسح الضوئي بشكل متزامن عند الاستخدام الأول.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| صورة | إيماج لايك |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| صورة  | إيماج لايك |       |
 
 #### عقد
 
 - **@returns:** {@link ScanResult} التي تم فك تشفيرها بترتيب الاكتشاف، وتم إلغاء تكرارها؛
-فارغة عندما لا يتم فك تشفير أي شيء.
+  فارغة عندما لا يتم فك تشفير أي شيء.
 
 ### scanImageDataAllAsync
 
 **النوع:** الوظيفة
 
 ```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
+function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
 ```
 
-قم بتحديد موقع وفك تشفير *كل* رمز مميز في `image`، وتحميل الرسم البياني للماسح الضوئي
+قم بتحديد موقع وفك تشفير _كل_ رمز مميز في `image`، وتحميل الرسم البياني للماسح الضوئي
 بشكل غير متزامن عند الاستخدام الأول. التهيئة وفشل المسح هي
 عاد كرفض الوعد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| صورة | إيماج لايك |  |
+| الاسم | اكتب       | الوصف |
+| ----- | ---------- | ----- |
+| صورة  | إيماج لايك |       |
 
 #### عقد
 
@@ -253,7 +257,7 @@ function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
 **النوع:** الوظيفة
 
 ```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>
+function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
 ```
 
 حدد موقع أول رمز مدعوم في `image` وقم بفك تشفيره، مع تحميل الماسح الضوئي
@@ -262,10 +266,10 @@ function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | n
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| صورة | إيماج لايك |  |
-| العائد على الاستثمار | روي |  |
+| الاسم                | اكتب       | الوصف |
+| -------------------- | ---------- | ----- |
+| صورة                 | إيماج لايك |       |
+| العائد على الاستثمار | روي        |       |
 
 #### عقد
 
@@ -296,7 +300,7 @@ export interface Roi
 
 منطقة مستطيلة ذات أهمية، بوحدات بكسل الصورة، لتقييد المسح الضوئي (على سبيل المثال:
 شبكاني ترسمه واجهة مستخدم الكاميرا الحية فوق الإطار). يحدث المحصول في وسم
-*قبل* التحويل الثنائي، لذلك لا تصل الفوضى المحيطة أبدًا إلى محددات المواقع. أ
+_قبل_ التحويل الثنائي، لذلك لا تصل الفوضى المحيطة أبدًا إلى محددات المواقع. أ
 المنطقة المتدلية من الحافة مثبتة ؛ يجد المرء خارج الإطار تمامًا
 لا شيء.
 
@@ -318,4 +322,4 @@ export type ScanFormat = 'qr' | 'datamatrix' | 'barcode' | 'aztec' | 'pdf417' | 
 export interface ScanResult
 ```
 
-نتيجة *الكشف* الناجح*.
+نتيجة _الكشف_ الناجح*.

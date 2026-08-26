@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function decodeQr(matrix: QrMatrix): string | null
+function decodeQr(matrix: QrMatrix): string | null;
 ```
 
 פענוח {@link QrMatrix} בחזרה לטקסט המקורי שלו, טעינת החבילה-
@@ -29,9 +29,9 @@ function decodeQr(matrix: QrMatrix): string | null
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטריצה ​​| QrMatrix |  |
+| שם        | הקלד     | תיאור |
+| --------- | -------- | ----- |
+| מטריצה ​​ | QrMatrix |       |
 
 #### חוֹזֶה
 
@@ -42,7 +42,7 @@ function decodeQr(matrix: QrMatrix): string | null
 פונקציה **סוג:**
 
 ```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
+function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
 ```
 
 פענוח {@link QrMatrix} בחזרה לטקסט המקורי שלו, טעינת החבילה-
@@ -50,9 +50,9 @@ function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מטריצה ​​| QrMatrix |  |
+| שם        | הקלד     | תיאור |
+| --------- | -------- | ----- |
+| מטריצה ​​ | QrMatrix |       |
 
 #### חוֹזֶה
 
@@ -65,7 +65,7 @@ function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
 פונקציה **סוג:**
 
 ```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 קידוד `text` לתוך מטריצת **מיקרו QR Code** (ISO/IEC 18004), תוך מופע
@@ -77,22 +77,22 @@ Micro QR תומך רק ברמות תיקון שגיאות `L`, `M` ו-`Q`; מב�
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת |  |
-| תיקון שגיאה | QRErrorCorrection |  |
+| שם          | הקלד              | תיאור |
+| ----------- | ----------------- | ----- |
+| טקסט        | מחרוזת            |       |
+| תיקון שגיאה | QRErrorCorrection |       |
 
 #### חוֹזֶה
 
 - **@throws:** אם הטקסט ארוך מדי עבור כל גרסת Micro QR ב-
-הרמה הנבחרת (כולל כל בקשה לרמה `H`).
+  הרמה הנבחרת (כולל כל בקשה לרמה `H`).
 
 ### encodeMicroQrAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 קידוד `text` לתוך מטריצת **מיקרו QR קוד**, תוך מופע של WebAssembly
@@ -100,22 +100,22 @@ function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = '
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת |  |
-| תיקון שגיאה | QRErrorCorrection |  |
+| שם          | הקלד              | תיאור |
+| ----------- | ----------------- | ----- |
+| טקסט        | מחרוזת            |       |
+| תיקון שגיאה | QRErrorCorrection |       |
 
 #### חוֹזֶה
 
 - **@throws:** אם הטקסט ארוך מדי עבור כל גרסת Micro QR ב-
-הרמה הנבחרת (כולל כל בקשה לרמה `H`).
+  הרמה הנבחרת (כולל כל בקשה לרמה `H`).
 
 ### encodeQr
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix
+function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
 ```
 
 מקודד `text` לתוך מטריצת קוד QR ברמת תיקון השגיאה הנתונה,
@@ -123,22 +123,23 @@ function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMat
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת |  |
-| תיקון שגיאה | QRErrorCorrection |  |
+| שם          | הקלד              | תיאור |
+| ----------- | ----------------- | ----- |
+| טקסט        | מחרוזת            |       |
+| תיקון שגיאה | QRErrorCorrection |       |
 
 #### חוֹזֶה
 
 - **@throws:** אם הטקסט ארוך מכדי להתאים לגרסה הגדולה ביותר (גרסת
-40) קוד QR ברמת תיקון השגיאות שנבחרה.
+
+40. קוד QR ברמת תיקון השגיאות שנבחרה.
 
 ### encodeQrAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>
+function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
 ```
 
 מקודד `text` לתוך מטריצת קוד QR ברמת תיקון השגיאה הנתונה,
@@ -146,22 +147,23 @@ function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת |  |
-| תיקון שגיאה | QRErrorCorrection |  |
+| שם          | הקלד              | תיאור |
+| ----------- | ----------------- | ----- |
+| טקסט        | מחרוזת            |       |
+| תיקון שגיאה | QRErrorCorrection |       |
 
 #### חוֹזֶה
 
 - **@throws:** אם הטקסט ארוך מכדי להתאים לגרסה הגדולה ביותר (גרסת
-40) קוד QR ברמת תיקון השגיאות שנבחרה.
+
+40. קוד QR ברמת תיקון השגיאות שנבחרה.
 
 ### encodeRmqr
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 קידוד `text` למטריצת **קוד Micro QR (rMQR) מלבנית**
@@ -174,22 +176,22 @@ function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): Com
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת |  |
-| תיקון שגיאה | QRErrorCorrection |  |
+| שם          | הקלד              | תיאור |
+| ----------- | ----------------- | ----- |
+| טקסט        | מחרוזת            |       |
+| תיקון שגיאה | QRErrorCorrection |       |
 
 #### חוֹזֶה
 
 - **@throws:** אם הטקסט ארוך מדי עבור גרסת rMQR כלשהי ב-
-רמה נבחרת.
+  רמה נבחרת.
 
 ### encodeRmqrAsync
 
 פונקציה **סוג:**
 
 ```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 קידוד `text` למטריצת **קוד מיקרו QR (rMQR) מלבנית**,
@@ -198,15 +200,15 @@ function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M')
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טקסט | מחרוזת |  |
-| תיקון שגיאה | QRErrorCorrection |  |
+| שם          | הקלד              | תיאור |
+| ----------- | ----------------- | ----- |
+| טקסט        | מחרוזת            |       |
+| תיקון שגיאה | QRErrorCorrection |       |
 
 #### חוֹזֶה
 
 - **@throws:** אם הטקסט ארוך מדי עבור גרסת rMQR כלשהי ב-
-רמה נבחרת.
+  רמה נבחרת.
 
 ## `src/types`
 

@@ -362,7 +362,13 @@ export function ForgeQrCode(properties: Readonly<QrCodeProperties>): MpElement {
     );
   }
 
-  const { viewWidth, viewHeight, path, matrixWidth, matrixHeight } = result.rendered;
+  const { viewWidth, viewHeight, path, matrixWidth, matrixHeight } = result.rendered ?? {
+    viewWidth: 0,
+    viewHeight: 0,
+    path: '',
+    matrixWidth: 0,
+    matrixHeight: 0,
+  };
 
   // `size` sets the rendered pixel width; the height follows the symbol's aspect
   // ratio so rectangular rMQR codes are not distorted (square codes stay square).

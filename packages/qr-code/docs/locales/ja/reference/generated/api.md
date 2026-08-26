@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function decodeQr(matrix: QrMatrix): string | null
+function decodeQr(matrix: QrMatrix): string | null;
 ```
 
 {@link QrMatrix} をデコードして元のテキストに戻し、パッケージをロードします。
@@ -29,9 +29,9 @@ function decodeQr(matrix: QrMatrix): string | null
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|マトリックス | Qrマトリックス |  |
+| 名前         | タイプ         | 説明 |
+| ------------ | -------------- | ---- |
+| マトリックス | Qrマトリックス |      |
 
 #### 契約
 
@@ -42,7 +42,7 @@ function decodeQr(matrix: QrMatrix): string | null
 **種類:** 関数
 
 ```typescript
-function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
+function decodeQrAsync(matrix: QrMatrix): Promise<string | null>;
 ```
 
 {@link QrMatrix} をデコードして元のテキストに戻し、パッケージをロードします。
@@ -50,9 +50,9 @@ function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|マトリックス | Qrマトリックス |  |
+| 名前         | タイプ         | 説明 |
+| ------------ | -------------- | ---- |
+| マトリックス | Qrマトリックス |      |
 
 #### 契約
 
@@ -65,7 +65,7 @@ function decodeQrAsync(matrix: QrMatrix): Promise<string | null>
 **種類:** 関数
 
 ```typescript
-function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeMicroQr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 `text` を **Micro QR Code** マトリックス (ISO/IEC 18004) にエンコードし、インスタンス化します
@@ -77,22 +77,22 @@ Micro QR は、エラー修正レベル `L`、`M`、および `Q` のみをサ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 |  |
-|エラー修正 | Qrエラー訂正 |  |
+| 名前       | タイプ       | 説明 |
+| ---------- | ------------ | ---- |
+| テキスト   | 文字列       |      |
+| エラー修正 | Qrエラー訂正 |      |
 
 #### 契約
 
 - **@throws:** テキストがどの Micro QR バージョンにも長すぎる場合
-選択したレベル (`H` レベルのリクエストを含む)。
+  選択したレベル (`H` レベルのリクエストを含む)。
 
 ### encodeMicroQrAsync
 
 **種類:** 関数
 
 ```typescript
-function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 `text` を **マイクロ QR コード** マトリックスにエンコードし、WebAssembly をインスタンス化します。
@@ -100,22 +100,22 @@ function encodeMicroQrAsync(text: string, errorCorrection: QrErrorCorrection = '
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 |  |
-|エラー修正 | Qrエラー訂正 |  |
+| 名前       | タイプ       | 説明 |
+| ---------- | ------------ | ---- |
+| テキスト   | 文字列       |      |
+| エラー修正 | Qrエラー訂正 |      |
 
 #### 契約
 
 - **@throws:** テキストがどの Micro QR バージョンにも長すぎる場合
-選択したレベル (`H` レベルのリクエストを含む)。
+  選択したレベル (`H` レベルのリクエストを含む)。
 
 ### エンコードQr
 
 **種類:** 関数
 
 ```typescript
-function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix
+function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMatrix;
 ```
 
 `text` を指定されたエラー修正レベルで QR コード マトリックスにエンコードします。
@@ -123,22 +123,23 @@ function encodeQr(text: string, errorCorrection: QrErrorCorrection = 'M'): QrMat
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 |  |
-|エラー修正 | Qrエラー訂正 |  |
+| 名前       | タイプ       | 説明 |
+| ---------- | ------------ | ---- |
+| テキスト   | 文字列       |      |
+| エラー修正 | Qrエラー訂正 |      |
 
 #### 契約
 
 - **@throws:** テキストが長すぎて最大のサイズに収まらない場合 (バージョン
-40) 選択したエラー修正レベルの QR コード。
+
+40. 選択したエラー修正レベルの QR コード。
 
 ### encodeQrAsync
 
 **種類:** 関数
 
 ```typescript
-function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>
+function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<QrMatrix>;
 ```
 
 `text` を指定されたエラー修正レベルで QR コード マトリックスにエンコードします。
@@ -146,22 +147,23 @@ function encodeQrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 |  |
-|エラー修正 | Qrエラー訂正 |  |
+| 名前       | タイプ       | 説明 |
+| ---------- | ------------ | ---- |
+| テキスト   | 文字列       |      |
+| エラー修正 | Qrエラー訂正 |      |
 
 #### 契約
 
 - **@throws:** テキストが長すぎて最大のサイズに収まらない場合 (バージョン
-40) 選択したエラー修正レベルの QR コード。
+
+40. 選択したエラー修正レベルの QR コード。
 
 ### エンコードRmqr
 
 **種類:** 関数
 
 ```typescript
-function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix
+function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): CompactQrMatrix;
 ```
 
 `text` を **長方形マイクロ QR (rMQR) コード** マトリックスにエンコードします
@@ -174,22 +176,22 @@ function encodeRmqr(text: string, errorCorrection: QrErrorCorrection = 'M'): Com
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 |  |
-|エラー修正 | Qrエラー訂正 |  |
+| 名前       | タイプ       | 説明 |
+| ---------- | ------------ | ---- |
+| テキスト   | 文字列       |      |
+| エラー修正 | Qrエラー訂正 |      |
 
 #### 契約
 
 - **@throws:** テキストがどの rMQR バージョンにも長すぎる場合
-選択したレベル。
+  選択したレベル。
 
 ### encodeRmqrAsync
 
 **種類:** 関数
 
 ```typescript
-function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>
+function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M'): Promise<CompactQrMatrix>;
 ```
 
 `text` を **長方形マイクロ QR (rMQR) コード** マトリックスにエンコードします。
@@ -198,15 +200,15 @@ function encodeRmqrAsync(text: string, errorCorrection: QrErrorCorrection = 'M')
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|テキスト |文字列 |  |
-|エラー修正 | Qrエラー訂正 |  |
+| 名前       | タイプ       | 説明 |
+| ---------- | ------------ | ---- |
+| テキスト   | 文字列       |      |
+| エラー修正 | Qrエラー訂正 |      |
 
 #### 契約
 
 - **@throws:** テキストがどの rMQR バージョンにも長すぎる場合
-選択したレベル。
+  選択したレベル。
 
 ## `src/types`
 

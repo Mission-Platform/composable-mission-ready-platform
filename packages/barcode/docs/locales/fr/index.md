@@ -19,23 +19,23 @@ via un petit wrapper de module ES entièrement typé et un composant d'interface
 
 ## Symbologies prises en charge
 
-| Symbologie | Remarques |
-| ------------ | ---------------------------------------------------------------------- |
-| `code128` | Haute densité. Code B pour ASCII imprimable ; Chemin rapide Code C pour les chiffres. |
-| `gs1-128` | Code 128 avec FNC1 en tête pour les identifiants d'application GS1.            |
-| `code39` | Alphanumérique, autocontrôle ; encadré automatiquement avec `*` start/stop.          |
-| `code39ext` | Code 39 ASCII complet via des caractères de décalage.                               |
-| `code93` | Compact, autovérifiant (deux caractères de contrôle).                         |
-| `code93ext` | Code 93 ASCII complet via des caractères de décalage.                               |
-| `ean13` | 12 chiffres (chèque annexé) ou 13 (chèque vérifié).                     |
-| `ean8` | 7 chiffres (chèque annexé) ou 8 (chèque vérifié).                       |
-| `upca` | 11 chiffres (chèque annexé) ou 12 (chèque vérifié).                     |
-| `upce` | UPC supprimé par zéro ; Forme à 6 chiffres ou à 7/8 chiffres.                       |
-| `itf` | Entrelacé 2 sur 5 ; nombre pair de chiffres requis.                         |
-| `itf14` | GTIN-14 à 14 chiffres corrigé.                                                |
-| `codabar` | Chiffres plus `-$:/.+` ; encadré automatiquement avec le démarrage/arrêt `A`.                 |
-| `msi` | MSI / Plessey modifié avec vérification mod-10.                              |
-| `pharmacode` | Code binaire pharmaceutique Laetus (`3` – `131070`).                      |
+| Symbologie   | Remarques                                                                             |
+| ------------ | ------------------------------------------------------------------------------------- |
+| `code128`    | Haute densité. Code B pour ASCII imprimable ; Chemin rapide Code C pour les chiffres. |
+| `gs1-128`    | Code 128 avec FNC1 en tête pour les identifiants d'application GS1.                   |
+| `code39`     | Alphanumérique, autocontrôle ; encadré automatiquement avec `*` start/stop.           |
+| `code39ext`  | Code 39 ASCII complet via des caractères de décalage.                                 |
+| `code93`     | Compact, autovérifiant (deux caractères de contrôle).                                 |
+| `code93ext`  | Code 93 ASCII complet via des caractères de décalage.                                 |
+| `ean13`      | 12 chiffres (chèque annexé) ou 13 (chèque vérifié).                                   |
+| `ean8`       | 7 chiffres (chèque annexé) ou 8 (chèque vérifié).                                     |
+| `upca`       | 11 chiffres (chèque annexé) ou 12 (chèque vérifié).                                   |
+| `upce`       | UPC supprimé par zéro ; Forme à 6 chiffres ou à 7/8 chiffres.                         |
+| `itf`        | Entrelacé 2 sur 5 ; nombre pair de chiffres requis.                                   |
+| `itf14`      | GTIN-14 à 14 chiffres corrigé.                                                        |
+| `codabar`    | Chiffres plus `-$:/.+` ; encadré automatiquement avec le démarrage/arrêt `A`.         |
+| `msi`        | MSI / Plessey modifié avec vérification mod-10.                                       |
+| `pharmacode` | Code binaire pharmaceutique Laetus (`3` – `131070`).                                  |
 
 ## API et utilisation
 

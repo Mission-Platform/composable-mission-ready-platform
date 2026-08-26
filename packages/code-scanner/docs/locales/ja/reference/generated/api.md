@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
+function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
 ```
 
 イメージ `Blob`/`File` を {@link ImageLike} (RGBA ピクセル) にデコードします。用途
@@ -24,17 +24,17 @@ function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ブロブ |ブロブ |  |
-|ロイ |  |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ブロブ | ブロブ |      |
+| ロイ   |        |      |
 
 ### スキャンファイル
 
 **種類:** 関数
 
 ```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>
+function scanFile(file: Blob): Promise<ScanResult | null>;
 ```
 
 `file` をデコードしてコードをスキャンし、WebAssembly を同期的に実行します。
@@ -42,16 +42,16 @@ function scanFile(file: Blob): Promise<ScanResult | null>
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル |ブロブ |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| ファイル | ブロブ |      |
 
 ### scanFileAsync
 
 **種類:** 関数
 
 ```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>
+function scanFileAsync(file: Blob): Promise<ScanResult | null>;
 ```
 
 `file` をデコードしてコードをスキャンし、スキャナーとデコーダーを初期化します。
@@ -59,16 +59,16 @@ function scanFileAsync(file: Blob): Promise<ScanResult | null>
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル |ブロブ |  |
+| 名前     | タイプ | 説明 |
+| -------- | ------ | ---- |
+| ファイル | ブロブ |      |
 
 ### ビデオフレームから画像データへ
 
 **種類:** 関数
 
 ```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike
+function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
 ```
 
 再生中の `<video>` 要素の現在のフレームをキャプチャします。
@@ -79,10 +79,10 @@ function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): Imag
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ビデオ | HTMLビデオ要素 |  |
-|ロイ |  |  |
+| 名前   | タイプ         | 説明 |
+| ------ | -------------- | ---- |
+| ビデオ | HTMLビデオ要素 |      |
+| ロイ   |                |      |
 
 ## `src/debug`
 
@@ -91,7 +91,7 @@ function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): Imag
 **種類:** 関数
 
 ```typescript
-function isCodeScannerDebugEnabled(): boolean
+function isCodeScannerDebugEnabled(): boolean;
 ```
 
 スキャナ診断ログが現在有効かどうか。
@@ -101,16 +101,16 @@ function isCodeScannerDebugEnabled(): boolean
 **種類:** 関数
 
 ```typescript
-function setCodeScannerDebug(value: boolean): void
+function setCodeScannerDebug(value: boolean): void;
 ```
 
 実行時にスキャナーの JS 側診断ログを有効または無効にします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |ブール値 |  |
+| 名前 | タイプ   | 説明 |
+| ---- | -------- | ---- |
+| 値   | ブール値 |      |
 
 #### 契約
 
@@ -123,7 +123,11 @@ function setCodeScannerDebug(value: boolean): void
 **種類:** 関数
 
 ```typescript
-function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LOW_PERCENTILE, highPercentile: number = DEFAULT_HIGH_PERCENTILE): LumaImage
+function contrastStretchLuma(
+  luma: LumaImage,
+  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
+  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
+): LumaImage;
 ```
 
 {@link LumaImage} をコントラスト ストレッチし、`lowPercentile`..`highPercentile` をマッピングします。
@@ -143,18 +147,18 @@ value — 引き伸ばすものが何もないため、変更されずに返さ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルマ |ルマイメージ |  |
-|低いパーセンタイル |番号 |  |
-|高いパーセンタイル |番号 |  |
+| 名前               | タイプ       | 説明 |
+| ------------------ | ------------ | ---- |
+| ルマ               | ルマイメージ |      |
+| 低いパーセンタイル | 番号         |      |
+| 高いパーセンタイル | 番号         |      |
 
 ### imageDataToLuma
 
 **種類:** 関数
 
 ```typescript
-function imageDataToLuma(image: ImageLike): LumaImage
+function imageDataToLuma(image: ImageLike): LumaImage;
 ```
 
 RGBA {@link ImageLike} (例: キャンバス `ImageData`) を
@@ -163,9 +167,9 @@ Rec を使用したシングルチャネル {@link LumaImage} 601ルマウェイ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|画像 |画像のような |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| 画像 | 画像のような |      |
 
 ### ルマイメージ
 
@@ -184,7 +188,7 @@ export interface LumaImage
 **種類:** 関数
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
+function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
 ```
 
 `image` で最初にサポートされているコードを見つけてデコードし、
@@ -192,46 +196,46 @@ function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|画像 |画像のような |  |
-|ロイ |ロイ |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| 画像 | 画像のような |      |
+| ロイ | ロイ         |      |
 
 #### 契約
 
 - **@param:** スキャンを制限するオプションの関心領域 (画像ピクセル)
-— 二値化前にトリミングされるため、周囲の乱雑なものは無視されます。
+  — 二値化前にトリミングされるため、周囲の乱雑なものは無視されます。
 - **@returns:** {@link ScanResult}、またはコードが見つからない場合は `null`。コードのとき
-は見つかりましたが、そのペイロードをデコードできません。`result.value` は `null` です。
+  は見つかりましたが、そのペイロードをデコードできません。`result.value` は `null` です。
 
 ### スキャン画像データすべて
 
 **種類:** 関数
 
 ```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[]
+function scanImageDataAll(image: ImageLike): ScanResult[];
 ```
 
-`image` 内の *すべての* 個別のコード (最初のコードだけでなく) を見つけてデコードします。
+`image` 内の _すべての_ 個別のコード (最初のコードだけでなく) を見つけてデコードします。
 最初の使用時にスキャナ グラフを同期的にインスタンス化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|画像 |画像のような |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| 画像 | 画像のような |      |
 
 #### 契約
 
 - **@returns:** 検出順にデコードされた {@link ScanResult} を重複排除します。
-何もデコードされていない場合は空です。
+  何もデコードされていない場合は空です。
 
 ### scanImageDataAllAsync
 
 **種類:** 関数
 
 ```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
+function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
 ```
 
 `image` 内の「すべて」の個別のコードを見つけてデコードし、スキャナー グラフをロードします。
@@ -240,9 +244,9 @@ Promise の拒否として返されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|画像 |画像のような |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| 画像 | 画像のような |      |
 
 #### 契約
 
@@ -253,7 +257,7 @@ Promise の拒否として返されます。
 **種類:** 関数
 
 ```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>
+function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
 ```
 
 `image` で最初にサポートされているコードを見つけてデコードし、スキャナーをロードします。
@@ -262,10 +266,10 @@ function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | n
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|画像 |画像のような |  |
-|ロイ |ロイ |  |
+| 名前 | タイプ       | 説明 |
+| ---- | ------------ | ---- |
+| 画像 | 画像のような |      |
+| ロイ | ロイ         |      |
 
 #### 契約
 

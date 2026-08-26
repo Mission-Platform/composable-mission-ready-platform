@@ -8,8 +8,8 @@ export fn locate_databar_modules(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut meta: Array<i32>
 ) -> i32 {
   if c.array_len_i32(meta) < 5 {
     return 0;
@@ -28,15 +28,15 @@ export fn locate_databar_modules(
     return 0;
   }
   let mid_y: i32 = y0 + bh / 2;
-  let module_px: i32 = estimate_pitch(bits, width, height, x0, x1, mid_y);
+  let mut module_px: i32 = estimate_pitch(bits, width, height, x0, x1, mid_y);
   if module_px < 1 {
     module_px = 1;
   }
   let sample_x0: i32 = c.max_i32(0, x0 - module_px);
   let sample_x1: i32 = c.min_i32(width, x1 + module_px);
   let sample_width: i32 = sample_x1 - sample_x0;
-  let cols: i32 = c.safe_div_i32(sample_width, module_px);
-  let rows: i32 = c.max_i32(1, c.safe_div_i32(bh, module_px));
+  let mut cols: i32 = c.safe_div_i32(sample_width, module_px);
+  let mut rows: i32 = c.max_i32(1, c.safe_div_i32(bh, module_px));
   if cols < 30 {
     return 0;
   }
@@ -64,8 +64,8 @@ export fn locate_databar_modules(
     return 0;
   }
   // DataBar finder-ish: require enough transitions on first row.
-  let transitions: i32 = 0;
-  let x: i32 = 1;
+  let mut transitions: i32 = 0;
+  let mut x: i32 = 1;
   while x < cols {
     if modules[x] != modules[x - 1] {
       transitions = transitions + 1;
@@ -84,18 +84,18 @@ export fn locate_databar_modules(
 }
 
 fn estimate_pitch(bits: u32, width: i32, height: i32, x0: i32, x1: i32, y: i32) -> i32 {
-  let x: i32 = x0;
+  let mut x: i32 = x0;
   while x < x1 && !img.bitmap_get(bits, width, height, x, y) {
     x = x + 1;
   }
   if x >= x1 {
     return 1;
   }
-  let min_run: i32 = x1 - x0;
-  let dark: bool = true;
-  let run_start: i32 = x;
+  let mut min_run: i32 = x1 - x0;
+  let mut dark: bool = true;
+  let mut run_start: i32 = x;
   while x <= x1 {
-    let is_dark: bool = false;
+    let mut is_dark: bool = false;
     if x < x1 {
       is_dark = img.bitmap_get(bits, width, height, x, y);
     }
@@ -127,5 +127,5 @@ export fn decode_databar_modules(cols: i32, rows: i32, modules: Array<i32>) -> s
   if c.array_len_i32(modules) < cols * rows {
     return "";
   }
-  return rss14.decode_databar_row(modules, cols);
+  return string_concat("", rss14.decode_databar_row(modules, cols));
 }

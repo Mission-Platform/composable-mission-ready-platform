@@ -19,23 +19,23 @@ attraverso un piccolo wrapper del modulo ES completamente tipizzato e un compone
 
 ## Simbologie supportate
 
-| Simbologia | Note |
-| ------------ | ---------------------------------------------------------------------- |
-| `code128` | Alta densità. Codice B per ASCII stampabile; Percorso rapido codice C per le cifre. |
-| `gs1-128` | Codice 128 con FNC1 iniziale per gli identificatori di applicazione GS1.            |
-| `code39` | Alfanumerico, autocontrollo; incorniciato automaticamente con `*` start/stop.          |
-| `code39ext` | Codice ASCII completo 39 tramite caratteri di spostamento.                               |
-| `code93` | Compatto, autocontrollo (due caratteri di controllo).                         |
-| `code93ext` | Codice ASCII completo 93 tramite caratteri di spostamento.                               |
-| `ean13` | 12 cifre (controllo aggiunto) o 13 (controllo verificato).                     |
-| `ean8` | 7 cifre (controllo aggiunto) o 8 (controllo verificato).                       |
-| `upca` | 11 cifre (controllo aggiunto) o 12 (controllo verificato).                     |
-| `upce` | UPC soppresso con zero; Modulo a 6 cifre o 7/8 cifre.                       |
-| `itf` | Interleaved 2 di 5; è richiesto anche il conteggio delle cifre.                         |
-| `itf14` | GTIN-14 fisso a 14 cifre.                                                |
-| `codabar` | Cifre più `-$:/.+`; incorniciato automaticamente con `A` start/stop.                 |
-| `msi` | MSI / Plessey modificato con controllo mod-10.                              |
-| `pharmacode` | Codice binario farmaceutico Laetus (`3`–`131070`).                      |
+| Simbologia   | Note                                                                                |
+| ------------ | ----------------------------------------------------------------------------------- |
+| `code128`    | Alta densità. Codice B per ASCII stampabile; Percorso rapido codice C per le cifre. |
+| `gs1-128`    | Codice 128 con FNC1 iniziale per gli identificatori di applicazione GS1.            |
+| `code39`     | Alfanumerico, autocontrollo; incorniciato automaticamente con `*` start/stop.       |
+| `code39ext`  | Codice ASCII completo 39 tramite caratteri di spostamento.                          |
+| `code93`     | Compatto, autocontrollo (due caratteri di controllo).                               |
+| `code93ext`  | Codice ASCII completo 93 tramite caratteri di spostamento.                          |
+| `ean13`      | 12 cifre (controllo aggiunto) o 13 (controllo verificato).                          |
+| `ean8`       | 7 cifre (controllo aggiunto) o 8 (controllo verificato).                            |
+| `upca`       | 11 cifre (controllo aggiunto) o 12 (controllo verificato).                          |
+| `upce`       | UPC soppresso con zero; Modulo a 6 cifre o 7/8 cifre.                               |
+| `itf`        | Interleaved 2 di 5; è richiesto anche il conteggio delle cifre.                     |
+| `itf14`      | GTIN-14 fisso a 14 cifre.                                                           |
+| `codabar`    | Cifre più `-$:/.+`; incorniciato automaticamente con `A` start/stop.                |
+| `msi`        | MSI / Plessey modificato con controllo mod-10.                                      |
+| `pharmacode` | Codice binario farmaceutico Laetus (`3`–`131070`).                                  |
 
 ## API e utilizzo
 

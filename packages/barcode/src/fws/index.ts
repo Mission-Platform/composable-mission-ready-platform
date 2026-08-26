@@ -1,22 +1,17 @@
-import type { ForgeBarcodeExports } from './barcode.fws';
-import { load as loadBarcode, loadSync as loadBarcodeSync } from './barcode.fws';
-import type { ForgeDataBarExports } from './databar.fws';
-import { load as loadDataBar, loadSync as loadDataBarSync } from './databar.fws';
-import { loadSync as loadCode39Sync } from './code39.fws';
-import { loadSync as loadCodabarSync } from './codabar.fws';
-import { loadSync as loadItfSync } from './itf.fws';
-import { loadSync as loadMsiSync } from './msi.fws';
-import { loadSync as loadPharmacodeSync } from './pharmacode.fws';
-import { load as loadCode39 } from './code39.fws';
-import { load as loadCodabar } from './codabar.fws';
-import { load as loadItf } from './itf.fws';
-import { load as loadMsi } from './msi.fws';
-import { load as loadPharmacode } from './pharmacode.fws';
-import { loadSync as loadCode93Sync } from './code93.fws';
-import { load as loadCode93 } from './code93.fws';
-import { loadSync as loadCode128Sync } from './code128.fws';
-import { load as loadCode128 } from './code128.fws';
 import { encodeBarcode, encodeBarcodeAsync, type BarcodeSymbology } from '../encoder';
+
+import { load as loadBarcode, loadSync as loadBarcodeSync } from './barcode.fws';
+import { loadSync as loadCodabarSync, load as loadCodabar  } from './codabar.fws';
+import { loadSync as loadCode128Sync, load as loadCode128  } from './code128.fws';
+import { loadSync as loadCode39Sync, load as loadCode39  } from './code39.fws';
+import { loadSync as loadCode93Sync, load as loadCode93  } from './code93.fws';
+import { load as loadDataBar, loadSync as loadDataBarSync } from './databar.fws';
+import { loadSync as loadItfSync, load as loadItf  } from './itf.fws';
+import { loadSync as loadMsiSync, load as loadMsi  } from './msi.fws';
+import { loadSync as loadPharmacodeSync, load as loadPharmacode  } from './pharmacode.fws';
+
+import type { ForgeBarcodeExports } from './barcode.fws';
+import type { ForgeDataBarExports } from './databar.fws';
 
 /** Variable-length symbologies supported by the direct barcode FWS adapter. */
 export type VariableBarcodeSymbology = Extract<
@@ -58,28 +53,39 @@ function assertEncoded(value: string, symbology: NativeVariableBarcodeSymbology)
 
 function encodeNativeVariableBarcode(symbology: NativeVariableBarcodeSymbology, value: string): string {
   switch (symbology) {
-    case 'code128':
+    case 'code128': {
       return assertEncoded(loadCode128Sync().encode_code128(value), symbology);
-    case 'gs1-128':
+    }
+    case 'gs1-128': {
       return assertEncoded(loadCode128Sync().encode_gs1_128(value), symbology);
-    case 'code39':
+    }
+    case 'code39': {
       return assertEncoded(loadCode39Sync().encode_code39(value), symbology);
-    case 'code39ext':
+    }
+    case 'code39ext': {
       return assertEncoded(loadCode39Sync().encode_code39_extended(value), symbology);
-    case 'code93':
+    }
+    case 'code93': {
       return assertEncoded(loadCode93Sync().encode_code93(value), symbology);
-    case 'code93ext':
+    }
+    case 'code93ext': {
       return assertEncoded(loadCode93Sync().encode_code93_extended(value), symbology);
-    case 'codabar':
+    }
+    case 'codabar': {
       return assertEncoded(loadCodabarSync().encode_codabar(value), symbology);
-    case 'itf':
+    }
+    case 'itf': {
       return assertEncoded(loadItfSync().encode_itf(value), symbology);
-    case 'itf14':
+    }
+    case 'itf14': {
       return assertEncoded(loadItfSync().encode_itf14(value), symbology);
-    case 'msi':
+    }
+    case 'msi': {
       return assertEncoded(loadMsiSync().encode_msi(value), symbology);
-    case 'pharmacode':
+    }
+    case 'pharmacode': {
       return assertEncoded(loadPharmacodeSync().encode_pharmacode(value), symbology);
+    }
   }
 }
 
@@ -88,28 +94,39 @@ async function encodeNativeVariableBarcodeAsync(
   value: string,
 ): Promise<string> {
   switch (symbology) {
-    case 'code128':
+    case 'code128': {
       return assertEncoded((await loadCode128()).encode_code128(value), symbology);
-    case 'gs1-128':
+    }
+    case 'gs1-128': {
       return assertEncoded((await loadCode128()).encode_gs1_128(value), symbology);
-    case 'code39':
+    }
+    case 'code39': {
       return assertEncoded((await loadCode39()).encode_code39(value), symbology);
-    case 'code39ext':
+    }
+    case 'code39ext': {
       return assertEncoded((await loadCode39()).encode_code39_extended(value), symbology);
-    case 'code93':
+    }
+    case 'code93': {
       return assertEncoded((await loadCode93()).encode_code93(value), symbology);
-    case 'code93ext':
+    }
+    case 'code93ext': {
       return assertEncoded((await loadCode93()).encode_code93_extended(value), symbology);
-    case 'codabar':
+    }
+    case 'codabar': {
       return assertEncoded((await loadCodabar()).encode_codabar(value), symbology);
-    case 'itf':
+    }
+    case 'itf': {
       return assertEncoded((await loadItf()).encode_itf(value), symbology);
-    case 'itf14':
+    }
+    case 'itf14': {
       return assertEncoded((await loadItf()).encode_itf14(value), symbology);
-    case 'msi':
+    }
+    case 'msi': {
       return assertEncoded((await loadMsi()).encode_msi(value), symbology);
-    case 'pharmacode':
+    }
+    case 'pharmacode': {
       return assertEncoded((await loadPharmacode()).encode_pharmacode(value), symbology);
+    }
   }
 }
 

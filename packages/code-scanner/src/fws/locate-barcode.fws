@@ -9,7 +9,7 @@ export fn locate_barcode_modules(
   width: i32,
   height: i32,
   modules: Array<i32>,
-  meta: Array<i32>
+  mut meta: Array<i32>
 ) -> i32 {
   if c.array_len_i32(meta) < 6 {
     return -1;
@@ -41,16 +41,16 @@ export fn locate_barcode_modules(
   meta[4] = row_y;
 
   // Estimate narrow bar width from mid-row runs.
-  let module_px: i32 = estimate_module_px(bits, width, height, x0, x1, row_y);
+  let mut module_px: i32 = estimate_module_px(bits, width, height, x0, x1, row_y);
   if module_px < 1 {
     module_px = 1;
   }
   meta[5] = module_px;
 
   // Try a few rows and keep the densest valid sampling.
-  let best_count: i32 = -1;
-  let best_y: i32 = row_y;
-  let dy: i32 = -3;
+  let mut best_count: i32 = -1;
+  let mut best_y: i32 = row_y;
+  let mut dy: i32 = -3;
   while dy <= 3 {
     let y: i32 = row_y + dy;
     if y >= y0 && y < y1 {
@@ -70,27 +70,27 @@ export fn locate_barcode_modules(
 }
 
 fn estimate_module_px(bits: u32, width: i32, height: i32, x0: i32, x1: i32, y: i32) -> i32 {
-  let x: i32 = x0;
+  let mut x: i32 = x0;
   while x < x1 && !img.bitmap_get(bits, width, height, x, y) {
     x = x + 1;
   }
   if x >= x1 {
     return 1;
   }
-  let min_run: i32 = x1 - x0;
+  let mut min_run: i32 = x1 - x0;
   let span: i32 = x1 - x0;
   // A narrow module is roughly one two-hundredth of the dense span for the
   // small graph fixtures, but the degraded façade capture is wide enough that
   // a flipped pixel can leave a convincing half-module fragment. Require a
   // near-narrow run on wide captures so those fragments cannot win.
-  let minimum_run: i32 = span / 130;
+  let mut minimum_run: i32 = span / 130;
   if minimum_run < 2 {
     minimum_run = 2;
   }
-  let dark: bool = true;
-  let run_start: i32 = x;
+  let mut dark: bool = true;
+  let mut run_start: i32 = x;
   while x <= x1 {
-    let is_dark: bool = false;
+    let mut is_dark: bool = false;
     if x < x1 {
       is_dark = img.bitmap_get(bits, width, height, x, y);
     }
@@ -131,32 +131,32 @@ fn sample_row_modules(
   x1: i32,
   y: i32,
   module_px: i32,
-  modules: Array<i32>
+  mut modules: Array<i32>
 ) -> i32 {
   let capacity: i32 = c.array_len_i32(modules);
   if capacity < 20 || module_px < 1 {
     return -1;
   }
   // Start at first dark.
-  let start: i32 = x0;
+  let mut start: i32 = x0;
   while start < x1 && !img.bitmap_get(bits, width, height, start, y) {
     start = start + 1;
   }
   if start >= x1 {
     return -1;
   }
-  let end: i32 = x1 - 1;
+  let mut end: i32 = x1 - 1;
   while end > start && !img.bitmap_get(bits, width, height, end, y) {
     end = end - 1;
   }
-  let count: i32 = 0;
-  let x: i32 = start;
+  let mut count: i32 = 0;
+  let mut x: i32 = start;
   while x <= end {
-    let cx: i32 = x + module_px / 2;
+    let mut cx: i32 = x + module_px / 2;
     if cx > end {
       cx = end;
     }
-    let value: i32 = 0;
+    let mut value: i32 = 0;
     if img.bitmap_get(bits, width, height, cx, y) {
       value = 1;
     }
@@ -178,7 +178,7 @@ export fn resample_barcode_modules(
   x1: i32,
   row_y: i32,
   module_px: i32,
-  modules: Array<i32>
+  mut modules: Array<i32>
 ) -> i32 {
   return sample_row_modules(bits, width, height, x0, x1, row_y, module_px, modules);
 }
@@ -191,17 +191,17 @@ export fn resample_barcode_count(
   x1: i32,
   row_y: i32,
   module_count: i32,
-  modules: Array<i32>
+  mut modules: Array<i32>
 ) -> i32 {
   let capacity: i32 = c.array_len_i32(modules);
   if module_count < 20 || module_count > capacity {
     return -1;
   }
-  let start: i32 = x0;
+  let mut start: i32 = x0;
   while start < x1 && !img.bitmap_get(bits, width, height, start, row_y) {
     start = start + 1;
   }
-  let end: i32 = x1 - 1;
+  let mut end: i32 = x1 - 1;
   while end > start && !img.bitmap_get(bits, width, height, end, row_y) {
     end = end - 1;
   }
@@ -209,13 +209,13 @@ export fn resample_barcode_count(
   if span < module_count {
     return -1;
   }
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < module_count {
     let odd_index: i32 = index * 2 + 1;
     let numerator: i32 = odd_index * span;
     let denominator: i32 = module_count * 2;
     let centre: i32 = start + c.safe_div_i32(numerator, denominator);
-    let value: i32 = 0;
+    let mut value: i32 = 0;
     if img.bitmap_get(bits, width, height, centre, row_y) {
       value = 1;
     }
@@ -234,17 +234,17 @@ export fn resample_barcode_count_perspective(
   row_y: i32,
   module_count: i32,
   perspective: i32,
-  modules: Array<i32>
+  mut modules: Array<i32>
 ) -> i32 {
   let capacity: i32 = c.array_len_i32(modules);
   if module_count < 20 || module_count > capacity {
     return -1;
   }
-  let start: i32 = x0;
+  let mut start: i32 = x0;
   while start < x1 && !img.bitmap_get(bits, width, height, start, row_y) {
     start = start + 1;
   }
-  let end: i32 = x1 - 1;
+  let mut end: i32 = x1 - 1;
   while end > start && !img.bitmap_get(bits, width, height, end, row_y) {
     end = end - 1;
   }
@@ -252,7 +252,7 @@ export fn resample_barcode_count_perspective(
   if span < module_count {
     return -1;
   }
-  let index: i32 = 0;
+  let mut index: i32 = 0;
   while index < module_count {
     let odd_index: i32 = index * 2 + 1;
     let count_span: i32 = module_count * 2;
@@ -264,7 +264,7 @@ export fn resample_barcode_count_perspective(
     }
     let mapped_fx: i32 = c.safe_div_i32(t_fx * 256, denominator);
     let centre: i32 = start + c.safe_div_i32(mapped_fx * span, 256);
-    let value: i32 = 0;
+    let mut value: i32 = 0;
     if img.bitmap_get(bits, width, height, centre, row_y) {
       value = 1;
     }
@@ -277,8 +277,8 @@ export fn resample_barcode_count_perspective(
 // UPC-A / EAN-13 disambiguation: 13 digits starting with 0 -> 12-digit UPC-A form.
 export fn normalize_upc_ean(value: string) -> string {
   if string_length(value) == 13 && string_byte_at(value, 0) == 48 {
-    let all_digits: bool = true;
-    let i: i32 = 0;
+    let mut all_digits: bool = true;
+    let mut i: i32 = 0;
     while i < 13 {
       let b: i32 = string_byte_at(value, i);
       if b < 48 || b > 57 {

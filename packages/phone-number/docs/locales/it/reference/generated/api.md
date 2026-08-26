@@ -16,7 +16,7 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/phone-number`.
 **Tipo:** funzione
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 Comoda funzione di accesso per l'istanza condivisa {@link PhoneNumberUtil}.
@@ -26,7 +26,7 @@ Comoda funzione di accesso per l'istanza condivisa {@link PhoneNumberUtil}.
 **Tipo:** funzione
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 Comoda funzione di accesso per l'istanza {@link PhoneNumberUtil} condivisa e sincrona.
@@ -36,7 +36,7 @@ Comoda funzione di accesso per l'istanza {@link PhoneNumberUtil} condivisa e sin
 **Genere:** costante
 
 ```typescript
-export const PhoneNumberFormat
+export const PhoneNumberFormat;
 ```
 
 Formato di output, mirroring di `PhoneNumberFormat` di libphonenumber.
@@ -46,7 +46,7 @@ Formato di output, mirroring di `PhoneNumberFormat` di libphonenumber.
 **Genere:** costante
 
 ```typescript
-export const PhoneNumberType
+export const PhoneNumberType;
 ```
 
 Tipo di linea di un numero di telefono, che rispecchia `PhoneNumberType` di libphonenumber.
@@ -86,9 +86,9 @@ Associa un prefisso regionale supportato al relativo prefisso internazionale per
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| regione | stringa | Codice regionale ISO come "US" o "GB". |
+| Nome    | Digitare | Descrizione                            |
+| ------- | -------- | -------------------------------------- |
+| regione | stringa  | Codice regionale ISO come "US" o "GB". |
 
 #### Contrarre
 
@@ -107,9 +107,9 @@ Restituisce il prefisso della linea nazionale utilizzato quando si effettua la c
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| regione | stringa | Codice regionale ISO. |
+| Nome    | Digitare | Descrizione           |
+| ------- | -------- | --------------------- |
+| regione | stringa  | Codice regionale ISO. |
 
 #### Contrarre
 
@@ -128,9 +128,9 @@ Mappa un prefisso nazionale su una regione ISO rappresentativa.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| codice | i32 | Prefisso internazionale per le chiamate internazionali. |
+| Nome   | Digitare | Descrizione                                             |
+| ------ | -------- | ------------------------------------------------------- |
+| codice | i32      | Prefisso internazionale per le chiamate internazionali. |
 
 #### Contrarre
 
@@ -149,10 +149,10 @@ Restituisce vero quando il codice regionale è uguale al valore previsto.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| regione | stringa | Codice regione ISO candidato. |
-| previsto | stringa | Codice regione ISO previsto. |
+| Nome     | Digitare | Descrizione                   |
+| -------- | -------- | ----------------------------- |
+| regione  | stringa  | Codice regione ISO candidato. |
+| previsto | stringa  | Codice regione ISO previsto.  |
 
 #### Contrarre
 

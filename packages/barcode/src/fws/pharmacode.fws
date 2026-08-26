@@ -1,11 +1,11 @@
 // Pharmacode encoder graph for values from 3 through 131070.
 
 fn u32_to_i32_len(value: u32) -> i32 {
-  let remaining: u32 = value;
-  let place: i32 = 1;
-  let result: i32 = 0;
+  let mut remaining: u32 = value;
+  let mut place: i32 = 1;
+  let mut result: i32 = 0;
   while remaining > 0 {
-    let bit: u32 = remaining - remaining / 2 * 2;
+    let mut bit: u32 = remaining - remaining / 2 * 2;
     if bit == 1 { result = result + place; }
     remaining = remaining / 2;
     place = place * 2;
@@ -47,9 +47,9 @@ fn bar_widths(value: i32) -> string {
 
 fn render_bars(value: string, index: i32) -> string {
   if index >= string_length(value) { return ""; }
-  let separator: string = "";
+  let mut separator: string = "";
   if index > 0 { separator = "0"; }
-  let bar: string = "1";
+  let mut bar: string = "1";
   if string_byte_at(value, index) == 119 { bar = "111"; }
   return string_concat(string_concat(separator, bar), render_bars(value, index + 1));
 }
@@ -58,7 +58,7 @@ export fn encode_pharmacode(value: string) -> string {
   if string_length(value) == 0 { return ""; }
   let parsed: i32 = parse_value(value, 0, 0);
   if parsed < 0 { return ""; }
-  return render_bars(bar_widths(parsed), 0);
+  return string_concat(render_bars(bar_widths(parsed), 0), "");
 }
 
 fn valid_bits(modules: Array<i32>, index: i32, end: i32) -> bool {
@@ -78,7 +78,7 @@ fn run_length(modules: Array<i32>, end: i32, start: i32, bit: i32, length: i32) 
 fn narrowest_run(modules: Array<i32>, end: i32, index: i32, current: i32) -> i32 {
   if index >= end { return current; }
   let width: i32 = run_length(modules, end, index, modules[index], 0);
-  let next: i32 = current;
+  let mut next: i32 = current;
   if current == 0 || width < current { next = width; }
   return narrowest_run(modules, end, index + width, next);
 }
@@ -91,7 +91,7 @@ fn pharmacode_value(modules: Array<i32>, end: i32, index: i32, narrow: i32, resu
   let bit: i32 = modules[index];
   let width: i32 = run_length(modules, end, index, bit, 0);
   if bit == 1 {
-    let next: i32 = result * 2 + 1;
+    let mut next: i32 = result * 2 + 1;
     if width >= narrow * 2 { next = result * 2 + 2; }
     if next > 131070 { return -1; }
     return pharmacode_value(modules, end, index + width, narrow, next, bars + 1);
@@ -113,7 +113,7 @@ fn digit_char(value: i32) -> string {
 }
 
 fn decimal(value: i32) -> string {
-  if value < 10 { return digit_char(value); }
+  if value < 10 { return string_concat(digit_char(value), ""); }
   return string_concat(decimal(value / 10), digit_char(value % 10));
 }
 
@@ -123,13 +123,13 @@ fn decode_pharmacode_frame(modules: Array<i32>, length: i32) -> string {
   if narrow <= 0 { return ""; }
   let parsed: i32 = pharmacode_value(modules, length, 0, narrow, 0, 0);
   if parsed < 0 { return ""; }
-  return decimal(parsed);
+  return string_concat(decimal(parsed), "");
 }
 
 export fn decode_pharmacode(modules: Array<i32>) -> string {
-  return decode_pharmacode_frame(modules, modules_len(modules));
+  return string_concat(decode_pharmacode_frame(modules, modules_len(modules)), "");
 }
 
 export fn decode_pharmacode_row(modules: Array<i32>, count: i32) -> string {
-  return decode_pharmacode_frame(modules, count);
+  return string_concat(decode_pharmacode_frame(modules, count), "");
 }

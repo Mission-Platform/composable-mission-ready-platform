@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null
+function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>): string | null;
 ```
 
 주어진 `symbology`의 모듈 비트 실행(`1` = 바, `0` = 공백)을 디코딩합니다.
@@ -31,17 +31,17 @@ function decodeBarcode(symbology: BarcodeSymbology, modules: ArrayLike<number>):
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기호 | 바코드기호 |  |
-| 모듈 | ArrayLike<number> |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 기호 | 바코드기호        |      |
+| 모듈 | ArrayLike<number> |      |
 
 ### 디코드바코드비동기화
 
 **종류:** 기능
 
 ```typescript
-function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>
+function decodeBarcodeAsync(symbology: BarcodeSymbology, modules: ArrayLike<number>): Promise<string | null>;
 ```
 
 일련의 모듈 비트를 페이로드로 다시 디코딩하여 기본 FWS를 로드합니다.
@@ -50,10 +50,10 @@ Promise 거부로 반환됩니다. {@link decodeBarcode}를 참조하세요.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기호 | 바코드기호 |  |
-| 모듈 | ArrayLike<number> |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 기호 | 바코드기호        |      |
+| 모듈 | ArrayLike<number> |      |
 
 ## `src/encoder/index`
 
@@ -72,7 +72,22 @@ export interface Barcode
 **종류:** 유형
 
 ```typescript
-export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'ean13' | 'ean8' | 'upca' | 'upce' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode';
+export type BarcodeSymbology =
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'ean13'
+  | 'ean8'
+  | 'upca'
+  | 'upce'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode';
 ```
 
 선형 바코드 기호를 지원합니다.
@@ -82,17 +97,17 @@ export type BarcodeSymbology = | 'code128' | 'gs1-128' | 'code39' | 'code39ext' 
 **종류:** 기능
 
 ```typescript
-function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
+function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode;
 ```
 
 패키지-로컬 FWS 그래프를 사용하여 `data`을 선형 바코드로 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기호 | 바코드기호 |  |
-| 데이터 | 문자열 |  |
+| 이름   | 유형       | 설명 |
+| ------ | ---------- | ---- |
+| 기호   | 바코드기호 |      |
+| 데이터 | 문자열     |      |
 
 #### 계약
 
@@ -103,17 +118,17 @@ function encodeBarcode(symbology: BarcodeSymbology, data: string): Barcode
 **종류:** 기능
 
 ```typescript
-function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>
+function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<Barcode>;
 ```
 
 패키지-로컬 FWS 그래프를 사용하여 `data`을 비동기적으로 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기호 | 바코드기호 |  |
-| 데이터 | 문자열 |  |
+| 이름   | 유형       | 설명 |
+| ------ | ---------- | ---- |
+| 기호   | 바코드기호 |      |
+| 데이터 | 문자열     |      |
 
 ## `src/fws/index`
 
@@ -122,233 +137,246 @@ function encodeBarcodeAsync(symbology: BarcodeSymbology, data: string): Promise<
 **종류:** 기능
 
 ```typescript
-function decodeEan13Fws(value: string | ArrayLike<number>): string
+function decodeEan13Fws(value: string | ArrayLike<number>): string;
 ```
 
 EAN-13 모듈 비트를 디코딩하고 패리티 및 검사 숫자를 확인합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 \| ArrayLike<number> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 가치 | 문자열 \| ArrayLike<number> |      |
 
 ### 디코드Ean13FwsAsync
 
 **종류:** 기능
 
 ```typescript
-function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan13FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 FWS를 통해 EAN-13 모듈 비트를 비동기식으로 디코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 \| ArrayLike<number> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 가치 | 문자열 \| ArrayLike<number> |      |
 
 ### 디코드Ean8Fws
 
 **종류:** 기능
 
 ```typescript
-function decodeEan8Fws(value: string | ArrayLike<number>): string
+function decodeEan8Fws(value: string | ArrayLike<number>): string;
 ```
 
 EAN-8 모듈 비트를 디코딩하고 검사 숫자와 함께 페이로드를 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 \| ArrayLike<number> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 가치 | 문자열 \| ArrayLike<number> |      |
 
 ### 디코드Ean8FwsAsync
 
 **종류:** 기능
 
 ```typescript
-function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>
+function decodeEan8FwsAsync(value: string | ArrayLike<number>): Promise<string>;
 ```
 
 FWS를 통해 EAN-8 모듈 비트를 비동기식으로 디코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 \| ArrayLike<number> |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 가치 | 문자열 \| ArrayLike<number> |      |
 
 ### encodeEan13Fws
 
 **종류:** 기능
 
 ```typescript
-function encodeEan13Fws(value: string): string
+function encodeEan13Fws(value: string): string;
 ```
 
 12자리 EAN-13 페이로드를 인코딩하고 FWS에서 해당 검사 숫자를 계산합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### encodeEan13FwsAsync
 
 **종류:** 기능
 
 ```typescript
-function encodeEan13FwsAsync(value: string): Promise<string>
+function encodeEan13FwsAsync(value: string): Promise<string>;
 ```
 
 FWS 로더를 사용하여 12자리 EAN-13 페이로드를 비동기식으로 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### encodeEan8Fws
 
 **종류:** 기능
 
 ```typescript
-function encodeEan8Fws(value: string): string
+function encodeEan8Fws(value: string): string;
 ```
 
 7자리 EAN-8 페이로드를 인코딩하고 FWS에서 해당 검사 숫자를 계산합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### encodeEan8FwsAsync
 
 **종류:** 기능
 
 ```typescript
-function encodeEan8FwsAsync(value: string): Promise<string>
+function encodeEan8FwsAsync(value: string): Promise<string>;
 ```
 
 FWS 로더를 사용하여 7자리 EAN-8 페이로드를 비동기식으로 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### encodeUpcaFws
 
 **종류:** 기능
 
 ```typescript
-function encodeUpcaFws(value: string): string
+function encodeUpcaFws(value: string): string;
 ```
 
 접두사가 0인 EAN-13 FWS 그래프를 통해 UPC-A 페이로드를 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### encodeUpcaFwsAsync
 
 **종류:** 기능
 
 ```typescript
-function encodeUpcaFwsAsync(value: string): Promise<string>
+function encodeUpcaFwsAsync(value: string): Promise<string>;
 ```
 
 FWS를 통해 UPC-A 페이로드를 비동기식으로 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### 인코딩변수바코드Fws
 
 **종류:** 기능
 
 ```typescript
-function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string
+function encodeVariableBarcodeFws(symbology: VariableBarcodeSymbology, value: string): string;
 ```
 
 사용 가능한 경우 기본 FWS 그래프를 통해 지원되는 가변 길이 바코드를 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기호 | 가변바코드기호 |  |
-| 가치 | 문자열 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 기호 | 가변바코드기호 |      |
+| 가치 | 문자열         |      |
 
 ### encodeVariableBarcodeFwsAsync
 
 **종류:** 기능
 
 ```typescript
-function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>
+function encodeVariableBarcodeFwsAsync(symbology: VariableBarcodeSymbology, value: string): Promise<string>;
 ```
 
 FWS를 통해 지원되는 가변 길이 바코드를 비동기식으로 인코딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기호 | 가변바코드기호 |  |
-| 가치 | 문자열 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 기호 | 가변바코드기호 |      |
+| 가치 | 문자열         |      |
 
 ### verifyGs1DataBar값
 
 **종류:** 기능
 
 ```typescript
-function validateGs1DataBarValue(value: string): boolean
+function validateGs1DataBarValue(value: string): boolean;
 ```
 
 패키지-로컬 FWS 그래프에서 GS1 DataBar/RSS-14 GTIN-14 값을 검증합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### verifyGs1DataBarValueAsync
 
 **종류:** 기능
 
 ```typescript
-function validateGs1DataBarValueAsync(value: string): Promise<boolean>
+function validateGs1DataBarValueAsync(value: string): Promise<boolean>;
 ```
 
 FWS를 통해 GS1 DataBar/RSS-14 GTIN-14 값을 비동기적으로 검증합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### 가변바코드기호학
 
 **종류:** 유형
 
 ```typescript
-export type VariableBarcodeSymbology = Extract< BarcodeSymbology, | 'code128' | 'gs1-128' | 'code39' | 'code39ext' | 'code93' | 'code93ext' | 'itf' | 'itf14' | 'codabar' | 'msi' | 'pharmacode' >;
+export type VariableBarcodeSymbology = Extract<
+  BarcodeSymbology,
+  | 'code128'
+  | 'gs1-128'
+  | 'code39'
+  | 'code39ext'
+  | 'code93'
+  | 'code93ext'
+  | 'itf'
+  | 'itf14'
+  | 'codabar'
+  | 'msi'
+  | 'pharmacode'
+>;
 ```
 
 직접 바코드 FWS 어댑터가 지원하는 가변 길이 기호입니다.

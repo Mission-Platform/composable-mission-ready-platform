@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 공유된 {@link PhoneNumberUtil} 인스턴스에 대한 편리한 접근자입니다.
@@ -26,7 +26,7 @@ function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
 **종류:** 기능
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 공유된 동기식 {@link PhoneNumberUtil} 인스턴스에 대한 편리한 접근자입니다.
@@ -36,7 +36,7 @@ function getPhoneNumberUtilSync(): PhoneNumberUtil
 **종류:** 상수
 
 ```typescript
-export const PhoneNumberFormat
+export const PhoneNumberFormat;
 ```
 
 libphonenumber의 `PhoneNumberFormat`을 미러링하는 출력 형식입니다.
@@ -46,7 +46,7 @@ libphonenumber의 `PhoneNumberFormat`을 미러링하는 출력 형식입니다.
 **종류:** 상수
 
 ```typescript
-export const PhoneNumberType
+export const PhoneNumberType;
 ```
 
 libphonenumber의 `PhoneNumberType`을 미러링하는 전화번호의 회선 유형입니다.
@@ -86,8 +86,8 @@ export fn country_code_for_region(region: string) -> i32
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
+| 이름 | 유형   | 설명                                       |
+| ---- | ------ | ------------------------------------------ |
 | 지역 | 문자열 | "US" 또는 "GB"와 같은 ISO 지역 코드입니다. |
 
 #### 계약
@@ -107,8 +107,8 @@ export fn national_prefix(region: string) -> string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
+| 이름 | 유형   | 설명           |
+| ---- | ------ | -------------- |
 | 지역 | 문자열 | ISO 지역 코드. |
 
 #### 계약
@@ -128,9 +128,9 @@ export fn region_for_country_code(code: i32) -> string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 코드 | i32 | 국제 전화 걸기 국가 코드입니다. |
+| 이름 | 유형 | 설명                            |
+| ---- | ---- | ------------------------------- |
+| 코드 | i32  | 국제 전화 걸기 국가 코드입니다. |
 
 #### 계약
 
@@ -149,9 +149,9 @@ export fn region_is(region: string, expected: string) -> bool
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지역 | 문자열 | 후보 ISO 지역 코드. |
+| 이름 | 유형   | 설명                        |
+| ---- | ------ | --------------------------- |
+| 지역 | 문자열 | 후보 ISO 지역 코드.         |
 | 예상 | 문자열 | ISO 지역 코드가 필요합니다. |
 
 #### 계약

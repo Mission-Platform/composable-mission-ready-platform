@@ -16,7 +16,7 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function getPhoneNumberUtil(): Promise<PhoneNumberUtil>
+function getPhoneNumberUtil(): Promise<PhoneNumberUtil>;
 ```
 
 Accesseur pratique pour l'instance partagée {@link PhoneNumberUtil}.
@@ -26,7 +26,7 @@ Accesseur pratique pour l'instance partagée {@link PhoneNumberUtil}.
 **Genre :** fonction
 
 ```typescript
-function getPhoneNumberUtilSync(): PhoneNumberUtil
+function getPhoneNumberUtilSync(): PhoneNumberUtil;
 ```
 
 Accesseur pratique pour l'instance {@link PhoneNumberUtil} partagée et synchrone.
@@ -36,7 +36,7 @@ Accesseur pratique pour l'instance {@link PhoneNumberUtil} partagée et synchron
 **Genre :** constante
 
 ```typescript
-export const PhoneNumberFormat
+export const PhoneNumberFormat;
 ```
 
 Format de sortie, reflétant le `PhoneNumberFormat` de libphonenumber.
@@ -46,7 +46,7 @@ Format de sortie, reflétant le `PhoneNumberFormat` de libphonenumber.
 **Genre :** constante
 
 ```typescript
-export const PhoneNumberType
+export const PhoneNumberType;
 ```
 
 Type de ligne d'un numéro de téléphone, reflétant le `PhoneNumberType` de libphonenumber.
@@ -86,8 +86,8 @@ Mappe un indicatif de région pris en charge à son indicatif de pays de numéro
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
+| Nom    | Tapez  | Descriptif                                   |
+| ------ | ------ | -------------------------------------------- |
 | région | chaîne | Code de région ISO tel que « US » ou « GB ». |
 
 #### Contracter
@@ -107,8 +107,8 @@ Renvoie le préfixe national utilisé lors de la numérotation dans une région.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
+| Nom    | Tapez  | Descriptif          |
+| ------ | ------ | ------------------- |
 | région | chaîne | Code de région ISO. |
 
 #### Contracter
@@ -128,9 +128,9 @@ Mappe un indicatif de pays à une région ISO représentative.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| codes | i32 | Indicatif du pays de numérotation internationale. |
+| Nom   | Tapez | Descriptif                                        |
+| ----- | ----- | ------------------------------------------------- |
+| codes | i32   | Indicatif du pays de numérotation internationale. |
 
 #### Contracter
 
@@ -149,10 +149,10 @@ Renvoie vrai lorsque le code de région est égal à la valeur attendue.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| région | chaîne | Code de région ISO du candidat. |
-| attendu | chaîne | Code de région ISO attendu. |
+| Nom     | Tapez  | Descriptif                      |
+| ------- | ------ | ------------------------------- |
+| région  | chaîne | Code de région ISO du candidat. |
+| attendu | chaîne | Code de région ISO attendu.     |
 
 #### Contracter
 

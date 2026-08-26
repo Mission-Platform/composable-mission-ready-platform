@@ -26,12 +26,12 @@ fn FMT_MAXI() -> i32 { return 6; }
 
 
 fn decode_only_result(format: i32, value: string) -> string {
-  if string_length(value) == 0 { return c.result_none(); }
-  return c.result_decoded(format, value);
+  if string_length(value) == 0 { return string_concat("", c.result_none()); }
+  return string_concat("", c.result_decoded(format, value));
 }
 
 fn prepare_bits(data: u32, width: i32, height: i32) -> u32 {
-  let bits: u32 = img.binarize(data, width, height);
+  let mut bits: u32 = img.binarize(data, width, height);
   if bits == 0 {
     bits = img.binarize_adaptive(data, width, height);
   }
@@ -42,122 +42,122 @@ fn try_qr_upright(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let located: i32 = lqr.locate_qr_modules(bits, width, height, modules, erasures, meta);
   if located == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let version: i32 = meta[0];
   let size: i32 = lqr.qr_version_size(version);
   let value: string = dec.decode_qr_modules(size, modules, packed);
   if string_length(value) > 0 {
-    return c.result_decoded(FMT_QR(), value);
+    return string_concat("", c.result_decoded(FMT_QR(), value));
   }
   // Perspective and nearest-neighbour capture can move every sampled centre
   // by a fraction of a module even when the finder geometry is valid. Retry
   // the affine grid at small offsets before reporting a located-only result.
-  let offset: i32 = -128;
-  let offset_y: i32 = 0;
-  let resampled: i32 = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
+  let mut offset: i32 = -128;
+  let mut offset_y: i32 = 0;
+  let mut resampled: i32 = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
   if resampled == 1 {
     let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return c.result_decoded(FMT_QR(), retry_value); }
+    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
   }
   offset = -128;
   offset_y = -128;
   resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
   if resampled == 1 {
     let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return c.result_decoded(FMT_QR(), retry_value); }
+    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
   }
   offset = 128;
   resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
   if resampled == 1 {
     let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return c.result_decoded(FMT_QR(), retry_value); }
+    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
   }
   offset = -128;
   offset_y = 128;
   resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
   if resampled == 1 {
     let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return c.result_decoded(FMT_QR(), retry_value); }
+    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
   }
   offset = 128;
   resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
   if resampled == 1 {
     let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return c.result_decoded(FMT_QR(), retry_value); }
+    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
   }
   offset = -256;
   offset_y = 0;
   resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
   if resampled == 1 {
     let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return c.result_decoded(FMT_QR(), retry_value); }
+    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
   }
   offset = 256;
   resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
   if resampled == 1 {
     let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return c.result_decoded(FMT_QR(), retry_value); }
+    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
   }
   offset = 128;
   resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
   if resampled == 1 {
     let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return c.result_decoded(FMT_QR(), retry_value); }
+    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
   }
   offset = 0;
   offset_y = -128;
   resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
   if resampled == 1 {
     let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return c.result_decoded(FMT_QR(), retry_value); }
+    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
   }
   offset_y = 128;
   resampled = lqr.resample_qr_at_offset(bits, width, height, modules, meta, offset, offset_y);
   if resampled == 1 {
     let retry_value: string = dec.decode_qr_modules(size, modules, packed);
-    if string_length(retry_value) > 0 { return c.result_decoded(FMT_QR(), retry_value); }
+    if string_length(retry_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), retry_value)); }
   }
-  let dense_version: i32 = 1;
+  let mut dense_version: i32 = 1;
   while dense_version <= 20 {
     meta[15] = dense_version + 100;
     let dense_located: i32 = lqr.locate_qr_modules(bits, width, height, modules, erasures, meta);
     if dense_located == 1 {
       let dense_size: i32 = lqr.qr_version_size(meta[0]);
       let dense_value: string = dec.decode_qr_modules(dense_size, modules, packed);
-      if string_length(dense_value) > 0 { return c.result_decoded(FMT_QR(), dense_value); }
+      if string_length(dense_value) > 0 { return string_concat("", c.result_decoded(FMT_QR(), dense_value)); }
     }
     dense_version = dense_version + 1;
   }
-  return c.result_located(FMT_QR());
+  return string_concat("", c.result_located(FMT_QR()));
 }
 
 fn try_qr_partial(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let located: i32 = lqr.locate_qr_modules(bits, width, height, modules, erasures, meta);
   if located == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let size: i32 = lqr.qr_version_size(meta[0]);
   let value: string = dec.decode_qr_modules(size, modules, packed);
   if string_length(value) > 0 {
-    return c.result_decoded(0, value);
+    return string_concat("", c.result_decoded(0, value));
   }
-  return c.result_located(FMT_QR());
+  return string_concat("", c.result_located(FMT_QR()));
 }
 
 // The dense-bounds QR sampler is upright by design. Correct modest camera
@@ -167,29 +167,29 @@ fn try_qr(
   width: i32,
   height: i32,
   data: u32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let result: string = try_qr_upright(bits, width, height, modules, erasures, packed, meta);
   if c.result_is_decoded(result) {
-    return result;
+    return string_concat("", result);
   }
   let angle: i32 = img.estimate_orientation_deg(bits, width, height, meta);
   if angle == 0 {
     // A noisy/perspective frame can make the area sweep inconclusive. Keep a
     // small bounded fallback for the modest capture rotations covered by the
     // façade contract without replacing the general orientation estimator.
-    let fallback: i32 = 3;
+    let mut fallback: i32 = 3;
     while fallback <= 9 {
-      let rotated: u32 = img.rotate_luma(data, width, height, fallback, meta);
+      let mut rotated: u32 = img.rotate_luma(data, width, height, fallback, meta);
       if rotated != 0 {
         let rotated_bits: u32 = prepare_bits(rotated, meta[0], meta[1]);
         if rotated_bits != 0 {
           let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
           if c.result_is_decoded(retry) {
-            return retry;
+            return string_concat("", retry);
           }
         }
       }
@@ -199,21 +199,21 @@ fn try_qr(
         if rotated_bits != 0 {
           let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
           if c.result_is_decoded(retry) {
-            return retry;
+            return string_concat("", retry);
           }
         }
       }
       fallback = fallback + 2;
     }
-    return result;
+    return string_concat("", result);
   }
-  let rotated: u32 = img.rotate_luma(data, width, height, angle, meta);
+  let mut rotated: u32 = img.rotate_luma(data, width, height, angle, meta);
   if rotated != 0 {
     let rotated_bits: u32 = prepare_bits(rotated, meta[0], meta[1]);
     if rotated_bits != 0 {
       let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
       if c.result_is_decoded(retry) {
-        return retry;
+        return string_concat("", retry);
       }
     }
   }
@@ -223,7 +223,7 @@ fn try_qr(
     if rotated_bits != 0 {
       let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
       if c.result_is_decoded(retry) {
-        return retry;
+        return string_concat("", retry);
       }
     }
   }
@@ -237,7 +237,7 @@ fn try_qr(
       if rotated_bits != 0 {
         let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
         if c.result_is_decoded(retry) {
-          return retry;
+          return string_concat("", retry);
         }
       }
     }
@@ -247,33 +247,33 @@ fn try_qr(
       if rotated_bits != 0 {
         let retry: string = try_qr_upright(rotated_bits, meta[0], meta[1], modules, erasures, packed, meta);
         if c.result_is_decoded(retry) {
-          return retry;
+          return string_concat("", retry);
         }
       }
     }
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn try_datamatrix_upright(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   if width * 2 > height * 3 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let located: i32 = lmx.locate_datamatrix_modules(bits, width, height, modules, erasures, meta);
   if located == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let mw: i32 = meta[0];
   let mh: i32 = meta[1];
   let kind: i32 = meta[4];
-  let sym: i32 = dec.matrix_sym_datamatrix();
+  let mut sym: i32 = dec.matrix_sym_datamatrix();
   if kind == 1 {
     sym = dec.matrix_sym_datamatrix_rect();
   }
@@ -281,11 +281,11 @@ fn try_datamatrix_upright(
   if string_length(value) > 0 {
     // Strip SOH triplet marker if present — host may re-decode; treat as success text when ASCII.
     if string_byte_at(value, 0) == 1 {
-      return c.result_located(FMT_DM());
+      return string_concat("", c.result_located(FMT_DM()));
     }
-    return c.result_decoded(FMT_DM(), value);
+    return string_concat("", c.result_decoded(FMT_DM(), value));
   }
-  return c.result_located(FMT_DM());
+  return string_concat("", c.result_located(FMT_DM()));
 }
 
 // Straighten-and-retry fallback for a steeply rotated Data Matrix, mirroring
@@ -298,21 +298,21 @@ fn try_datamatrix_rotated(
   width: i32,
   height: i32,
   angle: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let rotated: u32 = img.rotate_luma(data, width, height, angle, meta);
   if rotated == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let rw: i32 = meta[0];
   let rh: i32 = meta[1];
   let bits: u32 = prepare_bits(rotated, rw, rh);
   if bits == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
-  return try_datamatrix_upright(bits, rw, rh, modules, erasures, meta);
+  return string_concat("", try_datamatrix_upright(bits, rw, rh, modules, erasures, meta));
 }
 
 fn try_datamatrix(
@@ -326,17 +326,17 @@ fn try_datamatrix(
 ) -> string {
   let result: string = try_datamatrix_upright(bits, width, height, modules, erasures, meta);
   if c.result_is_decoded(result) {
-    return result;
+    return string_concat("", result);
   }
   let angle: i32 = img.estimate_orientation_deg(bits, width, height, meta);
   if angle != 0 {
-    let straightened: string = try_datamatrix_rotated(data, width, height, angle, modules, erasures, meta);
+    let mut straightened: string = try_datamatrix_rotated(data, width, height, angle, modules, erasures, meta);
     if c.result_is_decoded(straightened) {
-      return straightened;
+      return string_concat("", straightened);
     }
     straightened = try_datamatrix_rotated(data, width, height, 0 - angle, modules, erasures, meta);
     if c.result_is_decoded(straightened) {
-      return straightened;
+      return string_concat("", straightened);
     }
   }
   // A square symbol's dense bounds do not reveal its rotation reliably. Try
@@ -344,76 +344,76 @@ fn try_datamatrix(
   // so a weak directional signal cannot select the wrong correction. Keep
   // this pair outside the angle guard so estimated ±18° still receive it,
   // while avoiding a second identical pair for all other estimated angles.
-  let straightened: string = try_datamatrix_rotated(data, width, height, 18, modules, erasures, meta);
+  let mut straightened: string = try_datamatrix_rotated(data, width, height, 18, modules, erasures, meta);
   if c.result_is_decoded(straightened) {
-    return straightened;
+    return string_concat("", straightened);
   }
   straightened = try_datamatrix_rotated(data, width, height, -18, modules, erasures, meta);
   if c.result_is_decoded(straightened) {
-    return straightened;
+    return string_concat("", straightened);
   }
-  let sweep_angle: i32 = 1;
+  let mut sweep_angle: i32 = 1;
   while sweep_angle <= 35 {
     if sweep_angle != angle && sweep_angle != 18 {
-      let swept: string = try_datamatrix_rotated(data, width, height, sweep_angle, modules, erasures, meta);
+      let mut swept: string = try_datamatrix_rotated(data, width, height, sweep_angle, modules, erasures, meta);
       if c.result_is_decoded(swept) {
-        return swept;
+        return string_concat("", swept);
       }
       swept = try_datamatrix_rotated(data, width, height, 0 - sweep_angle, modules, erasures, meta);
       if c.result_is_decoded(swept) {
-        return swept;
+        return string_concat("", swept);
       }
     }
     sweep_angle = sweep_angle + 1;
   }
-  return result;
+  return string_concat("", result);
 }
 
 fn try_aztec(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let located: i32 = lmx.locate_aztec_modules(bits, width, height, modules, erasures, meta);
   if located == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let mw: i32 = meta[0];
   let mh: i32 = meta[1];
   let value: string = dec.decode_matrix_modules(dec.matrix_sym_aztec(), mw, mh, modules, erasures);
   if string_length(value) > 0 {
     if string_byte_at(value, 0) == 1 {
-      return c.result_located(FMT_AZ());
+      return string_concat("", c.result_located(FMT_AZ()));
     }
-    return c.result_decoded(FMT_AZ(), value);
+    return string_concat("", c.result_decoded(FMT_AZ(), value));
   }
-  return c.result_located(FMT_AZ());
+  return string_concat("", c.result_located(FMT_AZ()));
 }
 
 fn try_barcode(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let count: i32 = lbc.locate_barcode_modules(bits, width, height, modules, meta);
   if count < 20 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let value: string = dec.decode_barcode_auto_n(modules, count);
   if string_length(value) > 0 {
     let normalized: string = lbc.normalize_upc_ean(value);
-    return c.result_decoded(FMT_BC(), normalized);
+    return string_concat("", c.result_decoded(FMT_BC(), normalized));
   }
-  let fixed_index: i32 = 0;
+  let mut fixed_index: i32 = 0;
   while fixed_index < 2 {
-    let fixed_count: i32 = 95;
+    let mut fixed_count: i32 = 95;
     if fixed_index == 1 { fixed_count = 67; }
-    let fixed_row: i32 = -4;
+    let mut fixed_row: i32 = -4;
     while fixed_row <= 4 {
       let fixed_sampled: i32 = lbc.resample_barcode_count(
         bits, width, height, meta[0], meta[2], meta[4] + fixed_row, fixed_count, modules
@@ -421,7 +421,7 @@ fn try_barcode(
       if fixed_sampled == fixed_count {
         let fixed_value: string = dec.decode_retail_n(modules, fixed_sampled);
         if string_length(fixed_value) > 0 {
-          return c.result_decoded(FMT_BC(), lbc.normalize_upc_ean(fixed_value));
+          return string_concat("", c.result_decoded(FMT_BC(), lbc.normalize_upc_ean(fixed_value)));
         }
       }
       fixed_row = fixed_row + 1;
@@ -431,9 +431,9 @@ fn try_barcode(
   let measured_pitch: i32 = c.max_i32(1, meta[5]);
   let measured_span: i32 = meta[2] - meta[0];
   let measured_count: i32 = c.safe_div_i32(measured_span, measured_pitch);
-  let row_offset: i32 = -8;
+  let mut row_offset: i32 = -8;
   while row_offset <= 8 {
-    let row_count: i32 = measured_count - 16;
+    let mut row_count: i32 = measured_count - 16;
     while row_count <= measured_count + 16 {
       if row_count >= 20 {
         let row_sampled: i32 = lbc.resample_barcode_count(
@@ -442,7 +442,7 @@ fn try_barcode(
         if row_sampled == row_count {
           let row_value: string = dec.decode_barcode_variable_n(modules, row_sampled);
           if string_length(row_value) > 0 {
-            return c.result_decoded(FMT_BC(), lbc.normalize_upc_ean(row_value));
+            return string_concat("", c.result_decoded(FMT_BC(), lbc.normalize_upc_ean(row_value)));
           }
         }
       }
@@ -450,7 +450,7 @@ fn try_barcode(
     }
     row_offset = row_offset + 4;
   }
-  let candidate_count: i32 = measured_count - 80;
+  let mut candidate_count: i32 = measured_count - 80;
   while candidate_count <= measured_count + 80 {
     if candidate_count >= 20 {
       let sampled: i32 = lbc.resample_barcode_count(
@@ -459,44 +459,44 @@ fn try_barcode(
       if sampled == candidate_count {
         let retry_value: string = dec.decode_barcode_variable_n(modules, sampled);
         if string_length(retry_value) > 0 {
-          return c.result_decoded(FMT_BC(), lbc.normalize_upc_ean(retry_value));
+          return string_concat("", c.result_decoded(FMT_BC(), lbc.normalize_upc_ean(retry_value)));
         }
       }
     }
     candidate_count = candidate_count + 1;
   }
   // Located barcode-like runs but undecodable.
-  return c.result_located(FMT_BC());
+  return string_concat("", c.result_located(FMT_BC()));
 }
 
 fn try_pdf417(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let located: i32 = pdf.locate_pdf417_modules(bits, width, height, modules, meta);
   if located == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let value: string = pdf.decode_pdf417_modules(meta[0], meta[1], modules);
-  return decode_only_result(FMT_PDF(), value);
+  return string_concat("", decode_only_result(FMT_PDF(), value));
 }
 
 fn try_databar(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let located: i32 = dbar.locate_databar_modules(bits, width, height, modules, meta);
   if located == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let value: string = dbar.decode_databar_modules(meta[0], meta[1], modules);
-  return decode_only_result(FMT_DB(), value);
+  return string_concat("", decode_only_result(FMT_DB(), value));
 }
 
 fn try_maxicode(
@@ -508,10 +508,10 @@ fn try_maxicode(
 ) -> string {
   let located: i32 = maxi.locate_maxicode_modules(bits, width, height, modules, meta);
   if located == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let value: string = maxi.decode_maxicode_modules(modules);
-  return decode_only_result(FMT_MAXI(), value);
+  return string_concat("", decode_only_result(FMT_MAXI(), value));
 }
 
 // Precedence mirrors crates/code-scan: QR, DataMatrix, Aztec, PDF417, DataBar, MaxiCode, Barcode.
@@ -521,9 +521,9 @@ fn try_maxicode(
 // from a lower-precedence format (matches locate_and_decode_first in Rust).
 fn consider(located: string, result: string) -> string {
   if c.result_is_located(result) && c.result_is_none(located) {
-    return result;
+    return string_concat("", result);
   }
-  return located;
+  return string_concat("", located);
 }
 
 fn scan_bitmap(
@@ -531,34 +531,34 @@ fn scan_bitmap(
   width: i32,
   height: i32,
   data: u32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
-  let located: string = c.result_none();
-  let result: string = try_qr(bits, width, height, data, modules, erasures, packed, meta);
-  if c.result_is_decoded(result) { return result; }
+  let mut located: string = c.result_none();
+  let mut result: string = try_qr(bits, width, height, data, modules, erasures, packed, meta);
+  if c.result_is_decoded(result) { return string_concat("", result); }
   located = consider(located, result);
   result = try_datamatrix(bits, width, height, data, modules, erasures, meta);
-  if c.result_is_decoded(result) { return result; }
+  if c.result_is_decoded(result) { return string_concat("", result); }
   located = consider(located, result);
   result = try_aztec(bits, width, height, modules, erasures, meta);
-  if c.result_is_decoded(result) { return result; }
+  if c.result_is_decoded(result) { return string_concat("", result); }
   located = consider(located, result);
   result = try_pdf417(bits, width, height, modules, meta);
-  if c.result_is_decoded(result) { return result; }
+  if c.result_is_decoded(result) { return string_concat("", result); }
   located = consider(located, result);
   result = try_databar(bits, width, height, modules, meta);
-  if c.result_is_decoded(result) { return result; }
+  if c.result_is_decoded(result) { return string_concat("", result); }
   located = consider(located, result);
   result = try_maxicode(bits, width, height, modules, meta);
-  if c.result_is_decoded(result) { return result; }
+  if c.result_is_decoded(result) { return string_concat("", result); }
   located = consider(located, result);
   result = try_barcode(bits, width, height, modules, meta);
-  if c.result_is_decoded(result) { return result; }
+  if c.result_is_decoded(result) { return string_concat("", result); }
   located = consider(located, result);
-  return located;
+  return string_concat("", located);
 }
 
 fn scan_prepared_data(
@@ -566,27 +566,27 @@ fn scan_prepared_data(
   width: i32,
   height: i32,
   bits: u32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
-  let result: string = scan_bitmap(bits, width, height, data, modules, erasures, packed, meta);
+  let mut result: string = scan_bitmap(bits, width, height, data, modules, erasures, packed, meta);
   if !c.result_is_none(result) && c.result_is_decoded(result) {
-    return result;
+    return string_concat("", result);
   }
   // Adaptive retry when Otsu path only located or failed.
   let adaptive: u32 = img.binarize_adaptive(data, width, height);
   if adaptive != 0 {
     let retry: string = scan_bitmap(adaptive, width, height, data, modules, erasures, packed, meta);
     if c.result_is_decoded(retry) {
-      return retry;
+      return string_concat("", retry);
     }
     if c.result_is_none(result) {
       result = retry;
     }
   }
-  return result;
+  return string_concat("", result);
 }
 
 // Scan an already-copied luma buffer. Keeping this separate from the host-array
@@ -596,52 +596,52 @@ fn scan_data(
   data: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let bits: u32 = prepare_bits(data, width, height);
   if bits == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
-  return scan_prepared_data(data, width, height, bits, modules, erasures, packed, meta);
+  return string_concat("", scan_prepared_data(data, width, height, bits, modules, erasures, packed, meta));
 }
 
 export fn scan_and_decode(
   width: i32,
   height: i32,
   luma: Array<i32>,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let pixels: i32 = img.checked_image_len(width, height);
   if pixels < 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let data: u32 = img.luma_copy_from_array(width, height, luma);
   if data == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
-  return scan_data(data, width, height, modules, erasures, packed, meta);
+  return string_concat("", scan_data(data, width, height, modules, erasures, packed, meta));
 }
 
 export fn scan_and_decode_bytes(
   width: i32,
   height: i32,
   luma: u32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let data: u32 = img.luma_from_bytes(width, height, luma);
   if data == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
-  return scan_data(data, width, height, modules, erasures, packed, meta);
+  return string_concat("", scan_data(data, width, height, modules, erasures, packed, meta));
 }
 
 export fn scan_and_decode_roi(
@@ -652,30 +652,30 @@ export fn scan_and_decode_roi(
   roi_y: i32,
   roi_w: i32,
   roi_h: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let pixels: i32 = img.checked_image_len(width, height);
   if pixels < 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let data: u32 = img.luma_copy_from_array(width, height, luma);
   if data == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let cropped: u32 = img.crop_luma(data, width, height, roi_x, roi_y, roi_w, roi_h, meta);
   if cropped == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let cw: i32 = meta[0];
   let ch: i32 = meta[1];
   let bits: u32 = prepare_bits(cropped, cw, ch);
   if bits == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
-  return scan_bitmap(bits, cw, ch, cropped, modules, erasures, packed, meta);
+  return string_concat("", scan_bitmap(bits, cw, ch, cropped, modules, erasures, packed, meta));
 }
 
 export fn scan_and_decode_bytes_roi(
@@ -686,26 +686,26 @@ export fn scan_and_decode_bytes_roi(
   roi_y: i32,
   roi_w: i32,
   roi_h: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let data: u32 = img.luma_from_bytes(width, height, luma);
   if data == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let cropped: u32 = img.crop_luma(data, width, height, roi_x, roi_y, roi_w, roi_h, meta);
   if cropped == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let cw: i32 = meta[0];
   let ch: i32 = meta[1];
   let bits: u32 = prepare_bits(cropped, cw, ch);
   if bits == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
-  return scan_bitmap(bits, cw, ch, cropped, modules, erasures, packed, meta);
+  return string_concat("", scan_bitmap(bits, cw, ch, cropped, modules, erasures, packed, meta));
 }
 
 fn scan_region(
@@ -716,14 +716,14 @@ fn scan_region(
   y: i32,
   region_width: i32,
   region_height: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let cropped: u32 = img.crop_luma(data, width, height, x, y, region_width, region_height, meta);
   if cropped == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let cropped_width: i32 = meta[0];
   let cropped_height: i32 = meta[1];
@@ -733,7 +733,7 @@ fn scan_region(
   // allowing valid symbols with their quiet zone inside a tile.
   let preview: u32 = prepare_bits(cropped, cropped_width, cropped_height);
   if preview == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let bounds_ok: i32 = img.dense_dark_bounds(preview, cropped_width, cropped_height, meta);
   if bounds_ok == 0 || meta[0] <= 0 || meta[1] <= 0 || meta[2] >= cropped_width - 1 || meta[3] >= cropped_height - 1 {
@@ -742,11 +742,11 @@ fn scan_region(
     // running every decoder on a known partial tile is needlessly expensive.
     let partial: string = try_qr_partial(preview, cropped_width, cropped_height, modules, erasures, packed, meta);
     if c.result_is_decoded(partial) {
-      return partial;
+      return string_concat("", partial);
     }
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
-  return scan_prepared_data(cropped, cropped_width, cropped_height, preview, modules, erasures, packed, meta);
+  return string_concat("", scan_prepared_data(cropped, cropped_width, cropped_height, preview, modules, erasures, packed, meta));
 }
 
 // Multi-scan regions mirror the native scanner: whole frame, overlapping
@@ -755,23 +755,23 @@ fn scan_all_data(
   data: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let pixels: i32 = img.checked_image_len(width, height);
   if pixels < 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   if data == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
 
   // The generated region set processes less than five frame areas. Reject a
   // request before allocating crops when its aggregate work can exceed the
   // same 32M-pixel budget as the native implementation.
-  let work: i32 = pixels;
+  let mut work: i32 = pixels;
   let half_width: i32 = width / 2;
   let half_height: i32 = height / 2;
   let overlap_x: i32 = width * 15 / 100;
@@ -797,11 +797,11 @@ fn scan_all_data(
     work = work + right_width * bottom_height;
   }
   if work > 32000000 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
 
-  let results: string = "";
-  let result: string = scan_data(data, width, height, modules, erasures, packed, meta);
+  let mut results: string = "";
+  let mut result: string = scan_data(data, width, height, modules, erasures, packed, meta);
   if c.result_is_decoded(result) && !c.multi_contains(results, result) {
     results = c.multi_append(results, result);
   }
@@ -833,107 +833,107 @@ fn scan_all_data(
     result = scan_region(data, width, height, half_width - overlap_x, half_height - overlap_y, width - half_width + overlap_x, height - half_height + overlap_y, modules, erasures, packed, meta);
     if c.result_is_decoded(result) && !c.multi_contains(results, result) { results = c.multi_append(results, result); }
   }
-  return results;
+  return string_concat("", results);
 }
 
 export fn scan_and_decode_all(
   width: i32,
   height: i32,
   luma: Array<i32>,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let pixels: i32 = img.checked_image_len(width, height);
   if pixels < 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
   let data: u32 = img.luma_copy_from_array(width, height, luma);
   if data == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
-  return scan_all_data(data, width, height, modules, erasures, packed, meta);
+  return string_concat("", scan_all_data(data, width, height, modules, erasures, packed, meta));
 }
 
 export fn scan_and_decode_all_bytes(
   width: i32,
   height: i32,
   luma: u32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  packed: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut packed: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let data: u32 = img.luma_from_bytes(width, height, luma);
   if data == 0 {
-    return c.result_none();
+    return string_concat("", c.result_none());
   }
-  return scan_all_data(data, width, height, modules, erasures, packed, meta);
+  return string_concat("", scan_all_data(data, width, height, modules, erasures, packed, meta));
 }
 
 // Test/helper exports for unit specs (unique names to avoid static-link collisions).
-export fn sc_result_none() -> string { return c.result_none(); }
-export fn sc_result_decoded(format: i32, value: string) -> string { return c.result_decoded(format, value); }
-export fn sc_result_located(format: i32) -> string { return c.result_located(format); }
+export fn sc_result_none() -> string { return string_concat("", c.result_none()); }
+export fn sc_result_decoded(format: i32, value: string) -> string { return string_concat("", c.result_decoded(format, value)); }
+export fn sc_result_located(format: i32) -> string { return string_concat("", c.result_located(format)); }
 export fn sc_decode_databar_modules(modules: Array<i32>) -> string {
-  return dbar.decode_databar_modules(c.array_len_i32(modules), 1, modules);
+  return string_concat("", dbar.decode_databar_modules(c.array_len_i32(modules), 1, modules));
 }
 export fn sc_decode_maxicode_modules(modules: Array<i32>) -> string {
-  return maxi.decode_maxicode_modules(modules);
+  return string_concat("", maxi.decode_maxicode_modules(modules));
 }
 export fn sc_decode_pdf417_modules(cols_total: i32, rows: i32, modules: Array<i32>) -> string {
-  return pdf.decode_pdf417_modules(cols_total, rows, modules);
+  return string_concat("", pdf.decode_pdf417_modules(cols_total, rows, modules));
 }
 export fn sc_decode_only_result(format: i32, value: string) -> string {
-  return decode_only_result(format, value);
+  return string_concat("", decode_only_result(format, value));
 }
 export fn sc_try_databar(
   width: i32,
   height: i32,
   luma: Array<i32>,
-  modules: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let data: u32 = img.luma_copy_from_array(width, height, luma);
-  if data == 0 { return c.result_none(); }
+  if data == 0 { return string_concat("", c.result_none()); }
   let bits: u32 = prepare_bits(data, width, height);
-  if bits == 0 { return c.result_none(); }
-  return try_databar(bits, width, height, modules, meta);
+  if bits == 0 { return string_concat("", c.result_none()); }
+  return string_concat("", try_databar(bits, width, height, modules, meta));
 }
 export fn sc_try_pdf417(
   width: i32,
   height: i32,
   luma: Array<i32>,
-  modules: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut meta: Array<i32>
 ) -> string {
   let data: u32 = img.luma_copy_from_array(width, height, luma);
-  if data == 0 { return c.result_none(); }
+  if data == 0 { return string_concat("", c.result_none()); }
   let bits: u32 = prepare_bits(data, width, height);
-  if bits == 0 { return c.result_none(); }
-  return try_pdf417(bits, width, height, modules, meta);
+  if bits == 0 { return string_concat("", c.result_none()); }
+  return string_concat("", try_pdf417(bits, width, height, modules, meta));
 }
 export fn sc_result_is_decoded(result: string) -> bool { return c.result_is_decoded(result); }
 export fn sc_result_is_located(result: string) -> bool { return c.result_is_located(result); }
 export fn sc_result_format(result: string) -> i32 { return c.result_format(result); }
-export fn sc_result_value(result: string) -> string { return c.result_value(result); }
+export fn sc_result_value(result: string) -> string { return string_concat("", c.result_value(result)); }
 export fn sc_checked_image_len(width: i32, height: i32) -> i32 { return img.checked_image_len(width, height); }
 export fn sc_binarize_luma(width: i32, height: i32, luma: Array<i32>) -> u32 {
   let data: u32 = img.luma_copy_from_array(width, height, luma);
   if data == 0 { return 0; }
   return img.binarize(data, width, height);
 }
-export fn sc_dense_bounds(bits: u32, width: i32, height: i32, meta: Array<i32>) -> i32 {
+export fn sc_dense_bounds(bits: u32, width: i32, height: i32, mut meta: Array<i32>) -> i32 {
   return img.dense_dark_bounds(bits, width, height, meta);
 }
 export fn sc_locate_qr_modules(
   bits: u32,
   width: i32,
   height: i32,
-  modules: Array<i32>,
-  erasures: Array<i32>,
-  meta: Array<i32>
+  mut modules: Array<i32>,
+  mut erasures: Array<i32>,
+  mut meta: Array<i32>
 ) -> i32 {
   return lqr.locate_qr_modules(bits, width, height, modules, erasures, meta);
 }
@@ -945,7 +945,7 @@ export fn sc_sample_square_grid(
   origin_y_fx: i32,
   module_fx: i32,
   size: i32,
-  modules: Array<i32>
+  mut modules: Array<i32>
 ) -> i32 {
   return img.sample_module_grid(
     bits,

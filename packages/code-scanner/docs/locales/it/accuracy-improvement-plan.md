@@ -65,7 +65,7 @@ il localizzatore e il decoder non possono cooperare:
 
 > **Stato: implementato.** Lo scanner esporta `scan_and_decode`, collega il
 > decoder FWS grafica direttamente, e la facciata JS decodifica attraverso quel singolo
->chiamare. I dettagli seguenti registrano la logica della migrazione.
+> chiamare. I dettagli seguenti registrano la logica della migrazione.
 
 ```
 image (JS)

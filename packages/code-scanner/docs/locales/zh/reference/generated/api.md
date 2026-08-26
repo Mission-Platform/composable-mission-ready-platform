@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
+function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>;
 ```
 
 将图像 `Blob`/`File` 解码为 {@link ImageLike}（RGBA 像素）。用途
@@ -24,17 +24,17 @@ function blobToImageData(blob: Blob, roi = 1): Promise<ImageLike>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|斑点|斑点|  |
-|投资回报率|  |  |
+| 名称       | 类型 | 描述 |
+| ---------- | ---- | ---- |
+| 斑点       | 斑点 |      |
+| 投资回报率 |      |      |
 
 ### 扫描文件
 
 **种类：**功能
 
 ```typescript
-function scanFile(file: Blob): Promise<ScanResult | null>
+function scanFile(file: Blob): Promise<ScanResult | null>;
 ```
 
 解码 `file` 并扫描其中的代码，同步运行 WebAssembly
@@ -42,16 +42,16 @@ function scanFile(file: Blob): Promise<ScanResult | null>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件|斑点|  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 文件 | 斑点 |      |
 
 ### 异步扫描文件
 
 **种类：**功能
 
 ```typescript
-function scanFileAsync(file: Blob): Promise<ScanResult | null>
+function scanFileAsync(file: Blob): Promise<ScanResult | null>;
 ```
 
 解码 `file` 并扫描它的代码，初始化扫描仪和解码器
@@ -59,16 +59,16 @@ function scanFileAsync(file: Blob): Promise<ScanResult | null>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件|斑点|  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 文件 | 斑点 |      |
 
 ### 视频帧到图像数据
 
 **种类：**功能
 
 ```typescript
-function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike
+function videoFrameToImageData(video: HTMLVideoElement, roi = DEFAULT_ROI): ImageLike;
 ```
 
 捕获正在播放的 `<video>` 元素的当前帧作为
@@ -79,10 +79,10 @@ UI向用户显示的标线尺寸大大提高了命中率。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|视频 | HTMLVideo 元素 |  |
-|投资回报率|  |  |
+| 名称       | 类型           | 描述 |
+| ---------- | -------------- | ---- |
+| 视频       | HTMLVideo 元素 |      |
+| 投资回报率 |                |      |
 
 ## `src/debug`
 
@@ -91,7 +91,7 @@ UI向用户显示的标线尺寸大大提高了命中率。
 **种类：**功能
 
 ```typescript
-function isCodeScannerDebugEnabled(): boolean
+function isCodeScannerDebugEnabled(): boolean;
 ```
 
 当前是否启用扫描仪诊断日志记录。
@@ -101,16 +101,16 @@ function isCodeScannerDebugEnabled(): boolean
 **种类：**功能
 
 ```typescript
-function setCodeScannerDebug(value: boolean): void
+function setCodeScannerDebug(value: boolean): void;
 ```
 
 在运行时启用或禁用扫描仪的 JS 端诊断日志记录。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|布尔 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 价值 | 布尔 |      |
 
 #### 合同
 
@@ -123,7 +123,11 @@ function setCodeScannerDebug(value: boolean): void
 **种类：**功能
 
 ```typescript
-function contrastStretchLuma(luma: LumaImage, lowPercentile: number = DEFAULT_LOW_PERCENTILE, highPercentile: number = DEFAULT_HIGH_PERCENTILE): LumaImage
+function contrastStretchLuma(
+  luma: LumaImage,
+  lowPercentile: number = DEFAULT_LOW_PERCENTILE,
+  highPercentile: number = DEFAULT_HIGH_PERCENTILE,
+): LumaImage;
 ```
 
 对比拉伸 {@link LumaImage}，映射其 `lowPercentile`..`highPercentile`
@@ -143,18 +147,18 @@ value——原样返回，因为没有什么可以拉伸的。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|亮度|亮度图像 |  |
-|低百分位数 |数量 |  |
-|高百分位数 |数量 |  |
+| 名称       | 类型     | 描述 |
+| ---------- | -------- | ---- |
+| 亮度       | 亮度图像 |      |
+| 低百分位数 | 数量     |      |
+| 高百分位数 | 数量     |      |
 
 ### 图像数据转亮度
 
 **种类：**功能
 
 ```typescript
-function imageDataToLuma(image: ImageLike): LumaImage
+function imageDataToLuma(image: ImageLike): LumaImage;
 ```
 
 将 RGBA {@link ImageLike}（例如画布 `ImageData`）转换为
@@ -163,9 +167,9 @@ function imageDataToLuma(image: ImageLike): LumaImage
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图像|图像类 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 图像 | 图像类 |      |
 
 ### 亮度图像
 
@@ -184,7 +188,7 @@ export interface LumaImage
 **种类：**功能
 
 ```typescript
-function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
+function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null;
 ```
 
 找到并解码 `image` 中第一个支持的代码，实例化
@@ -192,24 +196,24 @@ function scanImageData(image: ImageLike, roi?: Roi): ScanResult | null
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图像|图像类 |  |
-|投资回报率|罗伊 |  |
+| 名称       | 类型   | 描述 |
+| ---------- | ------ | ---- |
+| 图像       | 图像类 |      |
+| 投资回报率 | 罗伊   |      |
 
 #### 合同
 
 - **@param:** 可选的感兴趣区域（图像像素）以限制扫描
 - 在二值化之前进行裁剪，因此周围的杂乱被忽略。
 - **@returns:** {@link ScanResult}，或 `null`（当未找到代码时）。当一个代码
-已定位，但无法解码其有效负载，`result.value` 为 `null`。
+  已定位，但无法解码其有效负载，`result.value` 为 `null`。
 
 ### 扫描图像数据全部
 
 **种类：**功能
 
 ```typescript
-function scanImageDataAll(image: ImageLike): ScanResult[]
+function scanImageDataAll(image: ImageLike): ScanResult[];
 ```
 
 定位并解码 `image` 中的*每个*不同代码（不仅仅是第一个），
@@ -217,21 +221,21 @@ function scanImageDataAll(image: ImageLike): ScanResult[]
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图像|图像类 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 图像 | 图像类 |      |
 
 #### 合同
 
 - **@returns:** 按照发现顺序解码的 {@link ScanResult}，已去重；
-当没有解码任何内容时为空。
+  当没有解码任何内容时为空。
 
 ### 扫描图像数据全部异步
 
 **种类：**功能
 
 ```typescript
-function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
+function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>;
 ```
 
 找到并解码 `image` 中的*每个*不同代码，加载扫描仪图表
@@ -240,9 +244,9 @@ function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图像|图像类 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 图像 | 图像类 |      |
 
 #### 合同
 
@@ -253,7 +257,7 @@ function scanImageDataAllAsync(image: ImageLike): Promise<ScanResult[]>
 **种类：**功能
 
 ```typescript
-function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>
+function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | null>;
 ```
 
 找到并解码 `image` 中第一个支持的代码，加载扫描仪
@@ -262,10 +266,10 @@ function scanImageDataAsync(image: ImageLike, roi?: Roi): Promise<ScanResult | n
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|图像|图像类 |  |
-|投资回报率|罗伊 |  |
+| 名称       | 类型   | 描述 |
+| ---------- | ------ | ---- |
+| 图像       | 图像类 |      |
+| 投资回报率 | 罗伊   |      |
 
 #### 合同
 
