@@ -33,23 +33,83 @@ fn extract_mode_message(size: i32, modules: Array<i32>) -> string {
   return string_concat(bits, "");
 }
 
+fn aztec_nibble_value(bits: string, start: i32) -> i32 {
+  let mut b0: i32 = 0;
+  let mut b1: i32 = 0;
+  let mut b2: i32 = 0;
+  let mut b3: i32 = 0;
+  if dec.bit_array_get(bits, start) { b0 = 1; }
+  if dec.bit_array_get(bits, start + 1) { b1 = 1; }
+  if dec.bit_array_get(bits, start + 2) { b2 = 1; }
+  if dec.bit_array_get(bits, start + 3) { b3 = 1; }
+  return b0 * 8 + b1 * 4 + b2 * 2 + b3;
+}
+
+fn aztec_word_value(bits: string, start: i32, word_size: i32) -> i32 {
+  let mut b0: i32 = 0;
+  let mut b1: i32 = 0;
+  let mut b2: i32 = 0;
+  let mut b3: i32 = 0;
+  let mut b4: i32 = 0;
+  let mut b5: i32 = 0;
+  let mut b6: i32 = 0;
+  let mut b7: i32 = 0;
+  if dec.bit_array_get(bits, start) { b0 = 1; }
+  if dec.bit_array_get(bits, start + 1) { b1 = 1; }
+  if dec.bit_array_get(bits, start + 2) { b2 = 1; }
+  if dec.bit_array_get(bits, start + 3) { b3 = 1; }
+  if word_size > 4 && dec.bit_array_get(bits, start + 4) { b4 = 1; }
+  if word_size > 4 && dec.bit_array_get(bits, start + 5) { b5 = 1; }
+  if word_size > 6 && dec.bit_array_get(bits, start + 6) { b6 = 1; }
+  if word_size > 6 && dec.bit_array_get(bits, start + 7) { b7 = 1; }
+  if word_size == 4 { return b0 * 8 + b1 * 4 + b2 * 2 + b3; }
+  if word_size == 6 { return b0 * 32 + b1 * 16 + b2 * 8 + b3 * 4 + b4 * 2 + b5; }
+  return b0 * 128 + b1 * 64 + b2 * 32 + b3 * 16 + b4 * 8 + b5 * 4 + b6 * 2 + b7;
+}
+
 fn bits_to_nibbles(bits: string) -> string {
   let mut words: string = dec.dzeros(7);
   let mut index: i32 = 0;
   while index < 7 {
-    let mut value: i32 = 0;
-    let mut bit: i32 = 0;
-    while bit < 4 {
-      value = value * 2;
-      if dec.bit_array_get(bits, index * 4 + bit) {
-        value = value + 1;
-      }
-      bit = bit + 1;
-    }
+    let value: i32 = aztec_nibble_value(bits, index * 4);
     words = dec.dset(words, index, value);
     index = index + 1;
   }
   return string_concat(words, "");
+}
+
+fn aztec_bit(on: bool) -> string {
+  if on { return "1"; }
+  return "0";
+}
+
+fn aztec_append_stuffed_word(data: string, stuffed: string, start: i32, word_size: i32) -> string {
+  let mut result: string = data;
+  if word_size == 4 {
+    result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start)));
+    result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 1)));
+    result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 2)));
+    result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 3)));
+  } else {
+    if word_size == 6 {
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 1)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 2)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 3)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 4)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 5)));
+    } else {
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 1)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 2)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 3)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 4)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 5)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 6)));
+      result = string_concat(result, aztec_bit(dec.bit_array_get(stuffed, start + 7)));
+    }
+  }
+  return string_concat(result, "");
 }
 
 fn extract_message_bits(size: i32, modules: Array<i32>, erasures: Array<i32>, layers: i32, total_bits: i32) -> string {
@@ -102,62 +162,81 @@ fn extract_message_bits(size: i32, modules: Array<i32>, erasures: Array<i32>, la
 }
 
 fn unstuff_bits(stuffed: string, word_size: i32) -> string {
-  let ones_prefix: i32 = dec.pow2(word_size - 1) - 1;
+  let mut ones_prefix: i32 = 127;
+  if word_size == 6 { ones_prefix = 31; }
+  if word_size == 4 { ones_prefix = 7; }
   let mut bits: string = "";
   let mut index: i32 = 0;
   let length: i32 = string_length(stuffed);
   while index + word_size <= length {
     let mut word: i32 = 0;
-    let mut bit: i32 = 0;
-    while bit < word_size {
-      word = word * 2;
-      if dec.bit_array_get(stuffed, index + bit) {
-        word = word + 1;
-      }
-      bit = bit + 1;
-    }
+    let mut bit0: i32 = 0;
+    let mut bit1: i32 = 0;
+    let mut bit2: i32 = 0;
+    let mut bit3: i32 = 0;
+    let mut bit4: i32 = 0;
+    let mut bit5: i32 = 0;
+    let mut bit6: i32 = 0;
+    let mut bit7: i32 = 0;
+    if dec.bit_array_get(stuffed, index) { bit0 = 1; }
+    if dec.bit_array_get(stuffed, index + 1) { bit1 = 1; }
+    if dec.bit_array_get(stuffed, index + 2) { bit2 = 1; }
+    if dec.bit_array_get(stuffed, index + 3) { bit3 = 1; }
+    if word_size > 4 && dec.bit_array_get(stuffed, index + 4) { bit4 = 1; }
+    if word_size > 4 && dec.bit_array_get(stuffed, index + 5) { bit5 = 1; }
+    if word_size > 6 && dec.bit_array_get(stuffed, index + 6) { bit6 = 1; }
+    if word_size > 6 && dec.bit_array_get(stuffed, index + 7) { bit7 = 1; }
+    if word_size == 4 { word = bit0 * 8 + bit1 * 4 + bit2 * 2 + bit3; }
+    if word_size == 6 { word = bit0 * 32 + bit1 * 16 + bit2 * 8 + bit3 * 4 + bit4 * 2 + bit5; }
+    if word_size == 8 { word = bit0 * 128 + bit1 * 64 + bit2 * 32 + bit3 * 16 + bit4 * 8 + bit5 * 4 + bit6 * 2 + bit7; }
     let prefix: i32 = word / 2;
+    let mut step: i32 = word_size;
     if prefix == 0 {
-      let mut z: i32 = 0;
-      while z < word_size - 1 {
-        bits = string_concat(bits, "0");
-        z = z + 1;
-      }
+      if word_size == 4 { bits = string_concat(bits, "000"); }
+      if word_size == 6 { bits = string_concat(bits, "00000"); }
+      if word_size == 8 { bits = string_concat(bits, "0000000"); }
+      step = word_size - 1;
     } else {
       if prefix == ones_prefix {
-        let mut z2: i32 = 0;
-        while z2 < word_size - 1 {
-          bits = string_concat(bits, "1");
-          z2 = z2 + 1;
-        }
+        if word_size == 4 { bits = string_concat(bits, "111"); }
+        if word_size == 6 { bits = string_concat(bits, "11111"); }
+        if word_size == 8 { bits = string_concat(bits, "1111111"); }
+        step = word_size - 1;
       } else {
-        let mut b: i32 = 0;
-        while b < word_size {
-          if dec.bit_array_get(stuffed, index + b) {
-            bits = string_concat(bits, "1");
-          } else {
-            bits = string_concat(bits, "0");
-          }
-          b = b + 1;
-        }
+        bits = aztec_append_stuffed_word(bits, stuffed, index, word_size);
       }
     }
-    index = index + word_size;
+    index = index + step;
   }
   return string_concat(bits, "");
 }
 
 fn read_bits(bits: string, offset: i32, count: i32) -> i32 {
-  let mut value: i32 = 0;
-  let mut index: i32 = 0;
-  while index < count {
-    value = value * 2;
-    if dec.bit_array_get(bits, offset + index) {
-      value = value + 1;
-    }
-    index = index + 1;
-  }
-  return value;
+  let mut b0: i32 = 0;
+  let mut b1: i32 = 0;
+  let mut b2: i32 = 0;
+  let mut b3: i32 = 0;
+  let mut b4: i32 = 0;
+  let mut b5: i32 = 0;
+  let mut b6: i32 = 0;
+  let mut b7: i32 = 0;
+  let mut b8: i32 = 0;
+  let mut b9: i32 = 0;
+  let mut b10: i32 = 0;
+  if string_byte_at(bits, offset) == 49 { b0 = 1; }
+  if count > 1 && string_byte_at(bits, offset + 1) == 49 { b1 = 1; }
+  if count > 2 && string_byte_at(bits, offset + 2) == 49 { b2 = 1; }
+  if count > 3 && string_byte_at(bits, offset + 3) == 49 { b3 = 1; }
+  if count > 4 && string_byte_at(bits, offset + 4) == 49 { b4 = 1; }
+  if count > 5 && string_byte_at(bits, offset + 5) == 49 { b5 = 1; }
+  if count > 6 && string_byte_at(bits, offset + 6) == 49 { b6 = 1; }
+  if count > 7 && string_byte_at(bits, offset + 7) == 49 { b7 = 1; }
+  if count > 8 && string_byte_at(bits, offset + 8) == 49 { b8 = 1; }
+  if count > 9 && string_byte_at(bits, offset + 9) == 49 { b9 = 1; }
+  if count > 10 && string_byte_at(bits, offset + 10) == 49 { b10 = 1; }
+  if count == 5 { return b0 * 16 + b1 * 8 + b2 * 4 + b3 * 2 + b4; }
+  if count == 8 { return b0 * 128 + b1 * 64 + b2 * 32 + b3 * 16 + b4 * 8 + b5 * 4 + b6 * 2 + b7; }
+  return b0 * 1024 + b1 * 512 + b2 * 256 + b3 * 128 + b4 * 64 + b5 * 32 + b6 * 16 + b7 * 8 + b8 * 4 + b9 * 2 + b10;
 }
 
 fn decode_binary_payload(bits: string) -> string {
@@ -203,7 +282,6 @@ export fn decode_aztec(width: i32, height: i32, modules: Array<i32>, erasures: A
   let data_words: i32 = data_bits_mode - data_bits_mode / 64 * 64 + 1;
   if parsed_layers != layers { return ""; }
   if data_words <= 0 { return ""; }
-
   let word_size: i32 = aztec_word_size(layers);
   let total_bits: i32 = total_aztec_bits(layers);
   let total_words: i32 = total_bits / word_size;
@@ -220,15 +298,12 @@ export fn decode_aztec(width: i32, height: i32, modules: Array<i32>, erasures: A
       let mut word_erased: string = dec.dzeros(total_words);
       let mut index: i32 = 0;
       while index < total_words {
-        let mut value: i32 = 0;
+        let bit_start: i32 = start_pad + index * word_size;
+        let value: i32 = aztec_word_value(message, bit_start, word_size);
         let mut offset: i32 = 0;
         let mut erased_word: bool = false;
         while offset < word_size {
-          let bit_index: i32 = start_pad + index * word_size + offset;
-          value = value * 2;
-          if dec.bit_array_get(message, bit_index) {
-            value = value + 1;
-          }
+          let bit_index: i32 = bit_start + offset;
           if dec.bit_array_get(message_erasures, bit_index) {
             erased_word = true;
           }
@@ -247,19 +322,9 @@ export fn decode_aztec(width: i32, height: i32, modules: Array<i32>, erasures: A
         primitive = 301;
         field_size = 256;
       }
-      let corrected: string = rs.rs_correct(words, ecc_words, primitive, field_size, word_erased);
+      let corrected: string = rs.rs_correct(words, total_words - data_words, 301, 256, word_erased);
       if string_length(corrected) == 0 { return ""; }
-      let mut stuffed: string = "";
-      let mut w: i32 = 0;
-      while w < data_words {
-        let value2: i32 = dec.dget(corrected, w);
-        let mut shift: i32 = word_size - 1;
-        while shift >= 0 {
-          stuffed = dec.bits_push(stuffed, dec.bit_test(value2, shift));
-          shift = shift - 1;
-        }
-        w = w + 1;
-      }
+      let stuffed: string = string_slice(message, start_pad, start_pad + data_words * word_size);
       let payload_bits: string = unstuff_bits(stuffed, word_size);
       return string_concat(decode_binary_payload(payload_bits), "");
     }
@@ -267,3 +332,6 @@ export fn decode_aztec(width: i32, height: i32, modules: Array<i32>, erasures: A
   }
   return "";
 }
+
+
+

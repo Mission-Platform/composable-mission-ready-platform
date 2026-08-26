@@ -1,6 +1,14 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeIconCheck, ForgeIconCopy, ForgeIconDownload, ForgeIconImage } from '@mission-platform/icons';
-import { useEffect, useMemo, useRef, useState, createForgeStyle, type MpElement, type CSSStyleProperties } from '@mission-platform/forge';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  createForgeStyle,
+  type MpElement,
+  type CSSStyleProperties,
+} from '@mission-platform/forge';
 import { ForgeTypography } from '@mission-platform/typography';
 import { encodeMatrix, type MatrixSymbology } from '@mission-platform/matrix-code';
 
@@ -44,7 +52,6 @@ export interface MatrixCodeActions {
   /** Show the "copy value to clipboard" button. */
   copyValue?: boolean;
 }
-
 
 /* ── Visual property overrides (generated) ───────────────────────────── */
 export interface MatrixCodeStyleProperties {
@@ -269,7 +276,8 @@ export function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpE
         height="0"
         width="0"
         xmlns="http://www.w3.org/2000/svg"
-      style={style} />
+        style={style}
+      />
     );
   }
 
@@ -405,7 +413,8 @@ export function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpE
       viewBox={`0 0 ${widthDimension} ${heightDimension}`}
       width={size}
       xmlns="http://www.w3.org/2000/svg"
-      style={style}>
+      style={style}
+    >
       {gradient ? (
         <defs>
           {gradientType === 'radial' ? (
@@ -512,7 +521,10 @@ export function ForgeMatrixCode(properties: Readonly<MatrixCodeProperties>): MpE
   }
 
   return (
-    <div className={styles['forge-matrix-code-figure']} style={style}>
+    <div
+      className={styles['forge-matrix-code-figure']}
+      style={style}
+    >
       {matrixSvg}
       <div className={styles['forge-matrix-code__actions']}>
         {visibleActions.map((action) => {

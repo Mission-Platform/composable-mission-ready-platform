@@ -36,14 +36,7 @@ fn aztec_stuff_bits(bits: string, word_size: i32) -> string {
   let mut special: bool = false;
   let mut output: bool = false;
   while index < length {
-    word = 0;
-    offset = 0;
-    while offset < word_size {
-      on = core.bits_get_pad_one(bits, index + offset);
-      word = word * 2;
-      if on { word = word + 1; }
-      offset = offset + 1;
-    }
+    word = aztec_word_value(bits, index, word_size);
     prefix = word / 2;
     all_ones_prefix = mask / 2;
     special = prefix == 0 || prefix == all_ones_prefix;
@@ -64,20 +57,49 @@ fn aztec_stuff_bits(bits: string, word_size: i32) -> string {
   return string_concat(out, "");
 }
 
+fn aztec_word_value(stuffed: string, start: i32, word_size: i32) -> i32 {
+  let mut value: i32 = 0;
+  value = value * 2; if core.bits_get(stuffed, start) { value = value + 1; }
+  value = value * 2; if core.bits_get(stuffed, start + 1) { value = value + 1; }
+  value = value * 2; if core.bits_get(stuffed, start + 2) { value = value + 1; }
+  value = value * 2; if core.bits_get(stuffed, start + 3) { value = value + 1; }
+  if word_size > 4 {
+    value = value * 2; if core.bits_get(stuffed, start + 4) { value = value + 1; }
+    value = value * 2; if core.bits_get(stuffed, start + 5) { value = value + 1; }
+  }
+  if word_size > 6 {
+    value = value * 2; if core.bits_get(stuffed, start + 6) { value = value + 1; }
+    value = value * 2; if core.bits_get(stuffed, start + 7) { value = value + 1; }
+  }
+  return value;
+}
+
+fn aztec_append_word_bits(data: string, word: i32, word_size: i32) -> string {
+  let mut result: string = data;
+  if word_size == 4 {
+    result = core.bits_push(result, core.bit_test(word, 3)); result = core.bits_push(result, core.bit_test(word, 2));
+    result = core.bits_push(result, core.bit_test(word, 1)); result = core.bits_push(result, core.bit_test(word, 0));
+  } else {
+    if word_size == 6 {
+      result = core.bits_push(result, core.bit_test(word, 5)); result = core.bits_push(result, core.bit_test(word, 4));
+      result = core.bits_push(result, core.bit_test(word, 3)); result = core.bits_push(result, core.bit_test(word, 2));
+      result = core.bits_push(result, core.bit_test(word, 1)); result = core.bits_push(result, core.bit_test(word, 0));
+    } else {
+      result = core.bits_push(result, core.bit_test(word, 7)); result = core.bits_push(result, core.bit_test(word, 6));
+      result = core.bits_push(result, core.bit_test(word, 5)); result = core.bits_push(result, core.bit_test(word, 4));
+      result = core.bits_push(result, core.bit_test(word, 3)); result = core.bits_push(result, core.bit_test(word, 2));
+      result = core.bits_push(result, core.bit_test(word, 1)); result = core.bits_push(result, core.bit_test(word, 0));
+    }
+  }
+  return string_concat(result, "");
+}
+
 fn aztec_words_to_bytes(stuffed: string, word_size: i32, total_words: i32) -> string {
   let mut words: string = core.bytes_zeros(total_words);
   let message_words: i32 = string_length(stuffed) / word_size;
   let mut index: i32 = 0;
   while index < message_words {
-    let mut value: i32 = 0;
-    let mut offset: i32 = 0;
-    while offset < word_size {
-      value = value * 2;
-      if core.bits_get(stuffed, index * word_size + offset) {
-        value = value + 1;
-      }
-      offset = offset + 1;
-    }
+    let value: i32 = aztec_word_value(stuffed, index * word_size, word_size);
     words = core.bytes_set(words, index, value);
     index = index + 1;
   }
@@ -101,11 +123,7 @@ fn aztec_generate_check_words(stuffed: string, total_bits: i32, word_size: i32, 
   let mut wi: i32 = 0;
   while wi < total_words {
     let word: i32 = core.bytes_get(words, wi);
-    let mut shift: i32 = word_size - 1;
-    while shift >= 0 {
-      message = core.bits_push(message, core.bit_test(word, shift));
-      shift = shift - 1;
-    }
+    message = aztec_append_word_bits(message, word, word_size);
     wi = wi + 1;
   }
   return string_concat(message, "");
@@ -291,5 +309,6 @@ export fn encode_aztec(data: string) -> string {
   }
   return "";
 }
+
 
 

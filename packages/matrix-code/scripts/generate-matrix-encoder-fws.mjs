@@ -288,9 +288,17 @@ fn pow2(n: i32) -> i32 {
 }
 
 fn bit_test(value: i32, shift: i32) -> bool {
-  let denom: i32 = pow2(shift);
-  let shifted: i32 = value / denom;
-  return low_bit(shifted) == 1;
+  if shift == 0 { return low_bit(value) == 1; }
+  if shift == 1 { return low_bit(value / 2) == 1; }
+  if shift == 2 { return low_bit(value / 4) == 1; }
+  if shift == 3 { return low_bit(value / 8) == 1; }
+  if shift == 4 { return low_bit(value / 16) == 1; }
+  if shift == 5 { return low_bit(value / 32) == 1; }
+  if shift == 6 { return low_bit(value / 64) == 1; }
+  if shift == 7 { return low_bit(value / 128) == 1; }
+  if shift == 8 { return low_bit(value / 256) == 1; }
+  if shift == 9 { return low_bit(value / 512) == 1; }
+  return low_bit(value / 1024) == 1;
 }
 
 fn byte_char3(value: i32) -> string {
@@ -368,11 +376,17 @@ fn bits_zeros(count: i32) -> string {
 
 fn bits_push_value(data: string, value: i32, count: i32) -> string {
   let mut out: string = data;
-  let mut shift: i32 = count - 1;
-  while shift >= 0 {
-    out = bits_push(out, bit_test(value, shift));
-    shift = shift - 1;
-  }
+  if count > 10 { out = bits_push(out, bit_test(value, 10)); }
+  if count > 9 { out = bits_push(out, bit_test(value, 9)); }
+  if count > 8 { out = bits_push(out, bit_test(value, 8)); }
+  if count > 7 { out = bits_push(out, bit_test(value, 7)); }
+  if count > 6 { out = bits_push(out, bit_test(value, 6)); }
+  if count > 5 { out = bits_push(out, bit_test(value, 5)); }
+  if count > 4 { out = bits_push(out, bit_test(value, 4)); }
+  if count > 3 { out = bits_push(out, bit_test(value, 3)); }
+  if count > 2 { out = bits_push(out, bit_test(value, 2)); }
+  if count > 1 { out = bits_push(out, bit_test(value, 1)); }
+  if count > 0 { out = bits_push(out, bit_test(value, 0)); }
   return string_concat(out, "");
 }
 
@@ -961,14 +975,7 @@ fn aztec_stuff_bits(bits: string, word_size: i32) -> string {
   let mut special: bool = false;
   let mut output: bool = false;
   while index < length {
-    word = 0;
-    offset = 0;
-    while offset < word_size {
-      on = bits_get_pad_one(bits, index + offset);
-      word = word * 2;
-      if on { word = word + 1; }
-      offset = offset + 1;
-    }
+    word = aztec_word_value(bits, index, word_size);
     prefix = word / 2;
     all_ones_prefix = mask / 2;
     special = prefix == 0 || prefix == all_ones_prefix;
@@ -989,20 +996,46 @@ fn aztec_stuff_bits(bits: string, word_size: i32) -> string {
   return string_concat(out, "");
 }
 
+fn aztec_word_value(stuffed: string, start: i32, word_size: i32) -> i32 {
+  let mut b0: i32 = 0; if start >= string_length(stuffed) || string_byte_at(stuffed, start) == 49 { b0 = 1; }
+  let mut b1: i32 = 0; if start + 1 >= string_length(stuffed) || string_byte_at(stuffed, start + 1) == 49 { b1 = 1; }
+  let mut b2: i32 = 0; if start + 2 >= string_length(stuffed) || string_byte_at(stuffed, start + 2) == 49 { b2 = 1; }
+  let mut b3: i32 = 0; if start + 3 >= string_length(stuffed) || string_byte_at(stuffed, start + 3) == 49 { b3 = 1; }
+  let mut b4: i32 = 0; if word_size > 4 { if start + 4 >= string_length(stuffed) { b4 = 1; } else { if string_byte_at(stuffed, start + 4) == 49 { b4 = 1; } } }
+  let mut b5: i32 = 0; if word_size > 4 { if start + 5 >= string_length(stuffed) { b5 = 1; } else { if string_byte_at(stuffed, start + 5) == 49 { b5 = 1; } } }
+  let mut b6: i32 = 0; if word_size > 6 { if start + 6 >= string_length(stuffed) { b6 = 1; } else { if string_byte_at(stuffed, start + 6) == 49 { b6 = 1; } } }
+  let mut b7: i32 = 0; if word_size > 6 { if start + 7 >= string_length(stuffed) { b7 = 1; } else { if string_byte_at(stuffed, start + 7) == 49 { b7 = 1; } } }
+  if word_size == 4 { return b0 * 8 + b1 * 4 + b2 * 2 + b3; }
+  if word_size == 6 { return b0 * 32 + b1 * 16 + b2 * 8 + b3 * 4 + b4 * 2 + b5; }
+  return b0 * 128 + b1 * 64 + b2 * 32 + b3 * 16 + b4 * 8 + b5 * 4 + b6 * 2 + b7;
+}
+
+fn aztec_append_word_bits(data: string, word: i32, word_size: i32) -> string {
+  let mut result: string = data;
+  if word_size == 4 {
+    result = bits_push(result, bit_test(word, 3)); result = bits_push(result, bit_test(word, 2));
+    result = bits_push(result, bit_test(word, 1)); result = bits_push(result, bit_test(word, 0));
+  } else {
+    if word_size == 6 {
+      result = bits_push(result, bit_test(word, 5)); result = bits_push(result, bit_test(word, 4));
+      result = bits_push(result, bit_test(word, 3)); result = bits_push(result, bit_test(word, 2));
+      result = bits_push(result, bit_test(word, 1)); result = bits_push(result, bit_test(word, 0));
+    } else {
+      result = bits_push(result, bit_test(word, 7)); result = bits_push(result, bit_test(word, 6));
+      result = bits_push(result, bit_test(word, 5)); result = bits_push(result, bit_test(word, 4));
+      result = bits_push(result, bit_test(word, 3)); result = bits_push(result, bit_test(word, 2));
+      result = bits_push(result, bit_test(word, 1)); result = bits_push(result, bit_test(word, 0));
+    }
+  }
+  return string_concat(result, "");
+}
+
 fn aztec_words_to_bytes(stuffed: string, word_size: i32, total_words: i32) -> string {
   let mut words: string = bytes_zeros(total_words);
   let message_words: i32 = string_length(stuffed) / word_size;
   let mut index: i32 = 0;
   while index < message_words {
-    let mut value: i32 = 0;
-    let mut offset: i32 = 0;
-    while offset < word_size {
-      value = value * 2;
-      if bits_get(stuffed, index * word_size + offset) {
-        value = value + 1;
-      }
-      offset = offset + 1;
-    }
+    let value: i32 = aztec_word_value(stuffed, index * word_size, word_size);
     words = bytes_set(words, index, value);
     index = index + 1;
   }
@@ -1026,11 +1059,7 @@ fn aztec_generate_check_words(stuffed: string, total_bits: i32, word_size: i32, 
   let mut wi: i32 = 0;
   while wi < total_words {
     let word: i32 = bytes_get(words, wi);
-    let mut shift: i32 = word_size - 1;
-    while shift >= 0 {
-      message = bits_push(message, bit_test(word, shift));
-      shift = shift - 1;
-    }
+    message = aztec_append_word_bits(message, word, word_size);
     wi = wi + 1;
   }
   return string_concat(message, "");

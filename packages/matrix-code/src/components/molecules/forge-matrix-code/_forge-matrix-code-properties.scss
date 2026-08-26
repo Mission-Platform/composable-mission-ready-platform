@@ -6,13 +6,13 @@
  */
 
 @property --forge-matrix-code-spacing-3 {
-  syntax: "*";
+  syntax: '*';
   inherits: true;
   initial-value: var(--mp-spacing-3);
 }
 
 @property --forge-matrix-code-spacing-2 {
-  syntax: "*";
+  syntax: '*';
   inherits: true;
   initial-value: var(--mp-spacing-2);
 }

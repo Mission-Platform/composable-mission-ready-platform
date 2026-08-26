@@ -59,9 +59,17 @@ export fn pow2(value: i32) -> i32 {
 }
 
 export fn bit_test(value: i32, shift: i32) -> bool {
-  let high: i32 = pow2(shift + 1);
-  let low: i32 = pow2(shift);
-  return value / low - value / high * 2 == 1;
+  if shift == 0 { return value - value / 2 * 2 == 1; }
+  if shift == 1 { return value / 2 - value / 4 * 2 == 1; }
+  if shift == 2 { return value / 4 - value / 8 * 2 == 1; }
+  if shift == 3 { return value / 8 - value / 16 * 2 == 1; }
+  if shift == 4 { return value / 16 - value / 32 * 2 == 1; }
+  if shift == 5 { return value / 32 - value / 64 * 2 == 1; }
+  if shift == 6 { return value / 64 - value / 128 * 2 == 1; }
+  if shift == 7 { return value / 128 - value / 256 * 2 == 1; }
+  if shift == 8 { return value / 256 - value / 512 * 2 == 1; }
+  if shift == 9 { return value / 512 - value / 1024 * 2 == 1; }
+  return value / 1024 - value / 2048 * 2 == 1;
 }
 
 export fn byte_char3(value: i32) -> string {
