@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { compileWebLua } from "./compiler.js";
 import {
   WEB_LUA_ABI_MANIFEST,
   WEB_LUA_CAPABILITY_POLICIES,
   WEB_LUA_IMPORT_POLICY,
 } from "./abi.js";
+import { compileWebLua } from "./compiler.js";
 import {
   createWebLuaRuntime,
   WEB_LUA_BUILD_ARTIFACT,
@@ -119,7 +119,7 @@ describe("WebLua Step 4 embedded-runtime contract", () => {
     const runtime = await createWebLuaRuntime(undefined, { onError });
     const state = runtime.openState();
 
-    const malformed = state.load("\u001bLua");
+    const malformed = state.load("\u001BLua");
     const syntax = state.load("return (");
     const runtimeError = state.execute("return 1 / 0");
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { LUA_DIFFERENTIAL_FIXTURES } from "../fixtures/differential.js";
+
 import { runWebLuaDifferential } from "./differential.js";
 
 describe("WebLua differential corpus", () => {

@@ -19,7 +19,7 @@ export fn heap_new() -> u32 {
   memory_store_u32(at(heap, 32), roots);
   let globals: u32 = memory_alloc(512);
   memory_store_u32(at(heap, 36), globals);
-  let global_index: u32 = 0;
+  let mut global_index: u32 = 0;
   while global_index < 128 {
     memory_store_u32(at(globals, global_index * 4), 0);
     global_index = global_index + 1;
@@ -57,7 +57,7 @@ export fn heap_open(heap: u32) -> u32 {
 
 export fn heap_alloc(heap: u32, size: u32, link: u32) -> u32 {
   let free: u32 = memory_load_u32(at(heap, 4));
-  let free_size: u32 = 0;
+  let mut free_size: u32 = 0;
   if free != 0 {
     free_size = memory_load_u32(at(free, 0));
   }
@@ -172,9 +172,9 @@ export fn heap_closed(heap: u32) -> u32 {
 }
 
 export fn heap_collect(heap: u32, root: u32) -> u32 {
-  let current: u32 = heap_object_head(heap);
-  let previous: u32 = 0;
-  let reclaimed: u32 = 0;
+  let mut current: u32 = heap_object_head(heap);
+  let mut previous: u32 = 0;
+  let mut reclaimed: u32 = 0;
   while current != 0 {
     let next: u32 = memory_load_u32(at(current, 8));
     if current == root || heap_root(heap, 0) == current || heap_is_root(heap, current) == 1 {
@@ -199,7 +199,7 @@ export fn heap_is_root(heap: u32, value: u32) -> u32 {
     return 0;
   }
   let roots: u32 = memory_load_u32(at(heap, 32));
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < 64 {
     if memory_load_u32(at(roots, index * 4)) == value {
       return 1;
@@ -213,7 +213,7 @@ export fn heap_has_roots(heap: u32) -> u32 {
   if heap_valid(heap) == 0 {
     return 0;
   }
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < 64 {
     if heap_root(heap, index) != 0 {
       return 1;
@@ -244,7 +244,7 @@ export fn heap_global_get(heap: u32, name: u32) -> u32 {
     return 0;
   }
   let globals: u32 = memory_load_u32(at(heap, 36));
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < 64 {
     let address: u32 = at(globals, index * 8);
     if memory_load_u32(address) == name {
@@ -260,8 +260,8 @@ export fn heap_global_set(heap: u32, name: u32, value: u32) -> u32 {
     return 2;
   }
   let globals: u32 = memory_load_u32(at(heap, 36));
-  let index: u32 = 0;
-  let empty: u32 = 32;
+  let mut index: u32 = 0;
+  let mut empty: u32 = 32;
   while index < 64 {
     let address: u32 = at(globals, index * 8);
     if memory_load_u32(address) == name {
@@ -302,7 +302,7 @@ export fn heap_owns(heap: u32, handle: u32) -> u32 {
   if heap_is_root(heap, handle) == 1 {
     return 1;
   }
-  let current: u32 = heap_object_head(heap);
+  let mut current: u32 = heap_object_head(heap);
   while current != 0 {
     if current == handle {
       return 1;

@@ -539,11 +539,11 @@ describe("WebLua runtime foundation", () => {
     expect(runtime.status(state)).toBe(0);
     expect(runtime.call(state, parenthesized)).toBe(2);
 
-    const verticalTab = runtime.load(state, "return\u000b(3)");
+    const verticalTab = runtime.load(state, "return\u000B(3)");
     expect(runtime.status(state)).toBe(0);
     expect(runtime.call(state, verticalTab)).toBe(3);
 
-    const formFeed = runtime.load(state, "return\u000c(4)");
+    const formFeed = runtime.load(state, "return\u000C(4)");
     expect(runtime.status(state)).toBe(0);
     expect(runtime.call(state, formFeed)).toBe(4);
 
@@ -867,7 +867,7 @@ describe("WebLua runtime foundation", () => {
       ["return 0X1a", 26],
       ["return 0x10 + 1", 17],
       ["return 0", 0],
-      ["return 12345", 12345],
+      ["return 12345", 12_345],
     ] as const) {
       const prototype = runtime.load(state, source);
       expect(runtime.status(state), source).toBe(0);
@@ -1062,7 +1062,7 @@ describe("WebLua runtime foundation", () => {
     expect(runtime.call(state, multiResult)).toBe(66);
     expect(runtime.status(state)).toBe(0);
 
-    const singleVar = runtime.load(
+    const singleVariable = runtime.load(
       state,
       `
         local function countdown(state, control)
@@ -1080,7 +1080,7 @@ describe("WebLua runtime foundation", () => {
     );
     expect(runtime.status(state)).toBe(0);
     // control starts at 4 → yields 3, 2, 1 then nil; total = 6
-    expect(runtime.call(state, singleVar)).toBe(6);
+    expect(runtime.call(state, singleVariable)).toBe(6);
     expect(runtime.status(state)).toBe(0);
 
     const emptyIterator = runtime.load(

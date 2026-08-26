@@ -5,6 +5,7 @@ import {
   type WebLuaStep3Expected,
   type WebLuaStep3Fixture,
 } from "../fixtures/step3.js";
+
 import { createWebLuaRuntime, type WebLuaRuntime } from "./runtime.js";
 
 function stringValue(
@@ -44,9 +45,8 @@ function makeTable(
   values: readonly number[],
 ): number {
   const table = runtime.createEmptyTable(state);
-  values.forEach((value, index) =>
-    runtime.setTableValue(table, index + 1, runtime.integerValue(value)),
-  );
+  for (const [index, value] of values.entries()) runtime.setTableValue(table, index + 1, runtime.integerValue(value))
+  ;
   return table;
 }
 
@@ -56,9 +56,8 @@ function makeStringTable(
   values: readonly string[],
 ): number {
   const table = runtime.createEmptyTable(state);
-  values.forEach((value, index) =>
-    runtime.setTableValue(table, index + 1, stringValue(runtime, state, value)),
-  );
+  for (const [index, value] of values.entries()) runtime.setTableValue(table, index + 1, stringValue(runtime, state, value))
+  ;
   return table;
 }
 

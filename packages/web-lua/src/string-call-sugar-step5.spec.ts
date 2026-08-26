@@ -35,12 +35,12 @@ describe("WebLua Step 5 string call sugar", () => {
     const state = runtime.openState();
 
     const frame = state.execute(
-      "local function f(value) return value end; return f[[long\\nstring]]",
+      String.raw`local function f(value) return value end; return f[[long\nstring]]`,
     );
 
     expect(frame).toMatchObject({ kind: "result", status: 0 });
     if (frame.kind === "result")
-      expect(guestString(runtime, frame.values[0])).toBe("long\\nstring");
+      expect(guestString(runtime, frame.values[0])).toBe(String.raw`long\nstring`);
     state.close();
   }, 120_000);
 

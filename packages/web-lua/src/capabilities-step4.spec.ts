@@ -46,7 +46,7 @@ async function capabilityExports(): Promise<CapabilityExports> {
   const wasm = runtime.artifact.artifact.wasm! as unknown as ArrayBuffer;
   return new WebAssembly.Instance(new WebAssembly.Module(wasm), {
     "lua.io.write": {
-      io_write: () => undefined,
+      io_write: () => {},
     },
     "lua.package.load": {
       package_load: () => [1024, 0],

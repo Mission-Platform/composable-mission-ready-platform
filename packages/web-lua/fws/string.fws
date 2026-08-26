@@ -5,8 +5,8 @@ fn at(base: u32, offset: u32) -> u32 {
 }
 
 fn hash_bytes(source: bytes) -> u32 {
-  let hash: u32 = 216613626;
-  let index: u32 = 0;
+  let mut hash: u32 = 216613626;
+  let mut index: u32 = 0;
   let length: u32 = bytes_length_u32(source);
   while index < length {
     hash = hash + bytes_byte_at_u32(source, index);
@@ -20,7 +20,7 @@ fn string_matches_bytes(string: u32, source: bytes) -> u32 {
   if memory_load_u32(at(string, 16)) != length {
     return 0;
   }
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < length {
     if memory_load_u32(at(string, index * 4 + 24)) != bytes_byte_at_u32(source, index) {
       return 0;
@@ -34,7 +34,7 @@ export fn string_intern(heap: u32, hash: u32, length: u32) -> u32 {
   if memory.heap_open(heap) == 0 {
     return 0;
   }
-  let current: u32 = memory.heap_string_head(heap);
+  let mut current: u32 = memory.heap_string_head(heap);
   while current != 0 {
     if memory_load_u32(at(current, 12)) == hash {
       if memory_load_u32(at(current, 16)) == length {
@@ -62,7 +62,7 @@ export fn string_intern_bytes(heap: u32, source: bytes) -> u32 {
     return 0;
   }
   let hash: u32 = hash_bytes(source);
-  let current: u32 = memory.heap_string_head(heap);
+  let mut current: u32 = memory.heap_string_head(heap);
   while current != 0 {
     if memory_load_u32(at(current, 12)) == hash {
       if string_matches_bytes(current, source) == 1 {
@@ -82,7 +82,7 @@ export fn string_intern_bytes(heap: u32, source: bytes) -> u32 {
   memory_store_u32(at(string, 12), hash);
   memory_store_u32(at(string, 16), length);
   memory_store_u32(at(string, 20), 0);
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < length {
     memory_store_u32(at(string, index * 4 + 24), bytes_byte_at_u32(source, index));
     index = index + 1;
@@ -92,7 +92,7 @@ export fn string_intern_bytes(heap: u32, source: bytes) -> u32 {
 }
 
 export fn string_find(heap: u32, hash: u32, length: u32) -> u32 {
-  let current: u32 = memory.heap_string_head(heap);
+  let mut current: u32 = memory.heap_string_head(heap);
   while current != 0 {
     if memory_load_u32(at(current, 12)) == hash {
       if memory_load_u32(at(current, 16)) == length {
@@ -142,7 +142,7 @@ export fn string_equal(left: u32, right: u32) -> u32 {
   if string_hash(left) != string_hash(right) || lua_string_length(left) != lua_string_length(right) {
     return 0;
   }
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < lua_string_length(left) {
     if string_byte(left, index) != string_byte(right, index) {
       return 0;
@@ -153,9 +153,9 @@ export fn string_equal(left: u32, right: u32) -> u32 {
 }
 
 fn hash_record(record: u32) -> u32 {
-  let hash: u32 = 216613626;
+  let mut hash: u32 = 216613626;
   let length: u32 = memory_load_u32(at(record, 0));
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < length {
     hash = hash + memory_load_u32(at(record, index * 4 + 4));
     index = index + 1;
@@ -168,7 +168,7 @@ fn string_matches_record(string: u32, record: u32) -> u32 {
   if lua_string_length(string) != length {
     return 0;
   }
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < length {
     if string_byte(string, index) != memory_load_u32(at(record, index * 4 + 4)) {
       return 0;
@@ -187,7 +187,7 @@ export fn string_intern_record(heap: u32, record: u32) -> u32 {
   }
   let hash: u32 = hash_record(record);
   let length: u32 = memory_load_u32(at(record, 0));
-  let current: u32 = memory.heap_string_head(heap);
+  let mut current: u32 = memory.heap_string_head(heap);
   while current != 0 {
     if memory_load_u32(at(current, 12)) == hash {
       if string_matches_record(current, record) == 1 {
@@ -206,7 +206,7 @@ export fn string_intern_record(heap: u32, record: u32) -> u32 {
   memory_store_u32(at(string, 12), hash);
   memory_store_u32(at(string, 16), length);
   memory_store_u32(at(string, 20), 0);
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < length {
     memory_store_u32(at(string, index * 4 + 24), memory_load_u32(at(record, index * 4 + 4)));
     index = index + 1;
@@ -216,13 +216,13 @@ export fn string_intern_record(heap: u32, record: u32) -> u32 {
 }
 
 fn hash_concat(left: u32, right: u32) -> u32 {
-  let hash: u32 = 216613626;
-  let left_index: u32 = 0;
+  let mut hash: u32 = 216613626;
+  let mut left_index: u32 = 0;
   while left_index < lua_string_length(left) {
     hash = hash + string_byte(left, left_index);
     left_index = left_index + 1;
   }
-  let right_index: u32 = 0;
+  let mut right_index: u32 = 0;
   while right_index < lua_string_length(right) {
     hash = hash + string_byte(right, right_index);
     right_index = right_index + 1;
@@ -236,14 +236,14 @@ fn string_matches_concat(string: u32, left: u32, right: u32) -> u32 {
   if lua_string_length(string) != left_length + right_length {
     return 0;
   }
-  let left_index: u32 = 0;
+  let mut left_index: u32 = 0;
   while left_index < left_length {
     if string_byte(string, left_index) != string_byte(left, left_index) {
       return 0;
     }
     left_index = left_index + 1;
   }
-  let right_index: u32 = 0;
+  let mut right_index: u32 = 0;
   while right_index < right_length {
     if string_byte(string, left_length + right_index) != string_byte(right, right_index) {
       return 0;
@@ -264,7 +264,7 @@ export fn lua_string_concat(heap: u32, left: u32, right: u32) -> u32 {
   let right_length: u32 = lua_string_length(right);
   let length: u32 = left_length + right_length;
   let hash: u32 = hash_concat(left, right);
-  let current: u32 = memory.heap_string_head(heap);
+  let mut current: u32 = memory.heap_string_head(heap);
   while current != 0 {
     if memory_load_u32(at(current, 12)) == hash {
       if string_matches_concat(current, left, right) == 1 {
@@ -283,12 +283,12 @@ export fn lua_string_concat(heap: u32, left: u32, right: u32) -> u32 {
   memory_store_u32(at(string, 12), hash);
   memory_store_u32(at(string, 16), length);
   memory_store_u32(at(string, 20), 0);
-  let left_index: u32 = 0;
+  let mut left_index: u32 = 0;
   while left_index < left_length {
     memory_store_u32(at(string, left_index * 4 + 24), string_byte(left, left_index));
     left_index = left_index + 1;
   }
-  let right_index: u32 = 0;
+  let mut right_index: u32 = 0;
   while right_index < right_length {
     let offset: u32 = left_length + right_index;
     memory_store_u32(at(string, offset * 4 + 24), string_byte(right, right_index));

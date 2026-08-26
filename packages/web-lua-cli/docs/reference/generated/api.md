@@ -11,23 +11,23 @@ Generated from public source declarations in `@mission-platform/web-lua-cli`.
 **Kind:** function
 
 ```typescript
-function parseWebLuaCliArgs(argv: readonly string[]): WebLuaCliOptions;
+function parseWebLuaCliArgs(argv: readonly string[]): WebLuaCliOptions
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name | Type              | Description |
-| ---- | ----------------- | ----------- |
-| argv | readonly string[] |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| argv | readonly string[] |  |
 
 ### WEB_LUA_CLI_USAGE
 
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_CLI_USAGE;
+export const WEB_LUA_CLI_USAGE
 ```
 
 No description provided.
@@ -59,55 +59,49 @@ No description provided.
 **Kind:** function
 
 ```typescript
-function runWebLuaCli(
-  argv: readonly string[] = process.argv.slice(2),
-  io: WebLuaCliIo = defaultIo,
-  cwd = process.cwd(),
-  runtimeFactory: WebLuaRuntimeFactory = (options) =>
+function runWebLuaCli(argv: readonly string[] = process.argv.slice(2), io: WebLuaCliIo = defaultIo, cwd = process.cwd(), runtimeFactory: WebLuaRuntimeFactory = (options) =>
     (
       createWebLuaRuntime as unknown as (
         artifact: typeof WEB_LUA_BUILD_ARTIFACT,
         options: WebLuaCliRuntimeOptions,
       ) => Promise<WebLuaCliRuntime>
-    )(WEB_LUA_BUILD_ARTIFACT, options),
-  sourceReader: WebLuaSourceReader = readSource,
-): Promise<number>;
+    )(WEB_LUA_BUILD_ARTIFACT, options), sourceReader: WebLuaSourceReader = readSource): Promise<number>
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name           | Type                 | Description |
-| -------------- | -------------------- | ----------- |
-| argv           | readonly string[]    |             |
-| io             | WebLuaCliIo          |             |
-| cwd            |                      |             |
-| runtimeFactory | WebLuaRuntimeFactory |             |
-| sourceReader   | WebLuaSourceReader   |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| argv | readonly string[] |  |
+| io | WebLuaCliIo |  |
+| cwd |  |  |
+| runtimeFactory | WebLuaRuntimeFactory |  |
+| sourceReader | WebLuaSourceReader |  |
 
 ### stripLuaShebang
 
 **Kind:** function
 
 ```typescript
-function stripLuaShebang(source: string): string;
+function stripLuaShebang(source: string): string
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name   | Type   | Description |
-| ------ | ------ | ----------- |
-| source | string |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| source | string |  |
 
 ### WEB_LUA_CLI_RUNTIME_EXIT_CODE
 
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_CLI_RUNTIME_EXIT_CODE;
+export const WEB_LUA_CLI_RUNTIME_EXIT_CODE
 ```
 
 No description provided.
@@ -117,7 +111,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_CLI_USAGE_EXIT_CODE;
+export const WEB_LUA_CLI_USAGE_EXIT_CODE
 ```
 
 No description provided.
@@ -169,7 +163,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const DEFAULT_WEB_LUA_SUITE_DIRECTORY;
+export const DEFAULT_WEB_LUA_SUITE_DIRECTORY
 ```
 
 No description provided.
@@ -179,7 +173,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const LUA_5_5_1_SUITE_MANIFEST;
+export const LUA_5_5_1_SUITE_MANIFEST
 ```
 
 The files loaded directly or indirectly by upstream Lua 5.5.1 `all.lua`.
@@ -189,25 +183,23 @@ The files loaded directly or indirectly by upstream Lua 5.5.1 `all.lua`.
 **Kind:** function
 
 ```typescript
-function runWebLuaSuite(
-  options: WebLuaSuiteRunOptions = {},
-): Promise<WebLuaSuiteResult>;
+function runWebLuaSuite(options: WebLuaSuiteRunOptions = {}): Promise<WebLuaSuiteResult>
 ```
 
 No description provided.
 
 #### Parameters
 
-| Name    | Type                  | Description |
-| ------- | --------------------- | ----------- |
-| options | WebLuaSuiteRunOptions |             |
+| Name | Type | Description |
+| --- | --- | --- |
+| options | WebLuaSuiteRunOptions |  |
 
 ### WEB_LUA_5_5_1_SUITE_NAME
 
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_5_5_1_SUITE_NAME;
+export const WEB_LUA_5_5_1_SUITE_NAME
 ```
 
 No description provided.
@@ -217,7 +209,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_SUITE_DEFAULT_EXCLUSIONS;
+export const WEB_LUA_SUITE_DEFAULT_EXCLUSIONS
 ```
 
 No description provided.
@@ -227,7 +219,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_SUITE_ENTRY_FILE;
+export const WEB_LUA_SUITE_ENTRY_FILE
 ```
 
 No description provided.
@@ -237,7 +229,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_SUITE_FINAL_MARKER;
+export const WEB_LUA_SUITE_FINAL_MARKER
 ```
 
 No description provided.
@@ -247,7 +239,7 @@ No description provided.
 **Kind:** constant
 
 ```typescript
-export const WEB_LUA_SUITE_MANIFEST;
+export const WEB_LUA_SUITE_MANIFEST
 ```
 
 No description provided.
@@ -257,8 +249,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type WebLuaSuiteCaseKind =
-  "portable" | "capability-gated" | "unsupported";
+export type WebLuaSuiteCaseKind = "portable" | "capability-gated" | "unsupported";
 ```
 
 No description provided.
@@ -268,12 +259,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type WebLuaSuiteCliRunner = (
-  argv: readonly string[],
-  io: WebLuaCliIo,
-  cwd: string,
-  sourceReader?: WebLuaSuiteSourceReader,
-) => Promise<number>;
+export type WebLuaSuiteCliRunner = ( argv: readonly string[], io: WebLuaCliIo, cwd: string, sourceReader?: WebLuaSuiteSourceReader, ) => Promise<number>;
 ```
 
 No description provided.
@@ -313,10 +299,7 @@ No description provided.
 **Kind:** type
 
 ```typescript
-export type WebLuaSuiteSourceReader = (
-  source: string,
-  cwd: string,
-) => Promise<string>;
+export type WebLuaSuiteSourceReader = ( source: string, cwd: string, ) => Promise<string>;
 ```
 
 No description provided.

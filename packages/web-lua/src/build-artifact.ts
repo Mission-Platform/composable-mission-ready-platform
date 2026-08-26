@@ -5,10 +5,11 @@ import {
   wasm,
 } from "../fws/foundation.fws?forge-web-script-artifact";
 
-import type { ForgeWebScriptArtifact } from "@mission-platform/forge-web-script";
 
 import { WEB_LUA_ABI_MANIFEST } from "./abi.js";
+
 import type { WebLuaArtifact } from "./compiler.js";
+import type { ForgeWebScriptArtifact } from "@mission-platform/forge-web-script";
 
 const artifact: ForgeWebScriptArtifact = {
   wasm,

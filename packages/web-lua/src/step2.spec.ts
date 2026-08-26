@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { WEB_LUA_STEP_2_FIXTURES } from "../fixtures/step2.js";
+
 import { createWebLuaRuntime, type WebLuaRuntime } from "./runtime.js";
 
 const WEB_LUA_STATUS_CODES = {

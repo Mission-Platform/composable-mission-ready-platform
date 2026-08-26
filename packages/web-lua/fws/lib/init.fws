@@ -21,7 +21,7 @@ fn startup_hash(
   o: u32,
   p: u32,
 ) -> u32 {
-  let hash: u32 = 216613626;
+  let mut hash: u32 = 216613626;
   if a != 0 { hash = hash * 16777619 + a; }
   if b != 0 { hash = hash * 16777619 + b; }
   if c != 0 { hash = hash * 16777619 + c; }
@@ -133,7 +133,7 @@ export fn library_init(heap: u32) -> u32 {
   if heap == 0 {
     return 0;
   }
-  let global_table: u32 = memory_load_u32(heap + 40);
+  let mut global_table: u32 = memory_load_u32(heap + 40);
   if global_table != 0 {
     return global_table;
   }

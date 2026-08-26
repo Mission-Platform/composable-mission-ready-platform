@@ -67,15 +67,15 @@ export fn library_string_sub_impl(
   }
   let source: u32 = value.value_payload(input);
   let length: u32 = strings.lua_string_length(source);
-  let first: u32 = start;
+  let mut first: u32 = start;
   if first == 0 {
     first = start - start + 1;
   }
-  let last: u32 = finish;
+  let mut last: u32 = finish;
   if last == 0 || last > length {
     last = length;
   }
-  let count: u32 = 0;
+  let mut count: u32 = 0;
   if first <= length && first <= last {
     count = last - first + 1;
   }
@@ -84,7 +84,7 @@ export fn library_string_sub_impl(
     return value.value_nil();
   }
   memory_store_u32(record, count);
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < count {
     memory_store_u32(record + index * 4 + 4, strings.string_byte(source, first - 1 + index));
     index = index + 1;
@@ -107,7 +107,7 @@ export fn library_string_reverse_impl(heap: u32, input: u32) -> u32 {
     return value.value_nil();
   }
   memory_store_u32(record, length);
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < length {
     memory_store_u32(
       record + index * 4 + 4,
@@ -133,9 +133,9 @@ fn library_string_case_impl(heap: u32, input: u32, uppercase: u32) -> u32 {
     return value.value_nil();
   }
   memory_store_u32(record, length);
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < length {
-    let byte: u32 = strings.string_byte(source, index);
+    let mut byte: u32 = strings.string_byte(source, index);
     if uppercase == 1 {
       if byte >= 97 && byte <= 122 {
         byte = byte - 32;
@@ -164,8 +164,8 @@ fn library_string_rep_empty(heap: u32) -> u32 {
 }
 
 fn library_string_integer_is_negative(integer: u32) -> u32 {
-  let boundary: u32 = 2;
-  let steps: u32 = 30;
+  let mut boundary: u32 = 2;
+  let mut steps: u32 = 30;
   while steps != 0 {
     boundary = boundary + boundary;
     steps = steps - 1;
@@ -177,7 +177,7 @@ fn library_string_integer_is_negative(integer: u32) -> u32 {
 }
 
 fn library_string_handle(input: u32) -> u32 {
-  let handle: u32 = input;
+  let mut handle: u32 = input;
   if value.value_kind(input) == 4 {
     handle = value.value_payload(input);
   }
@@ -188,17 +188,18 @@ fn library_string_handle(input: u32) -> u32 {
 }
 
 fn library_string_floor_positive(number: f64) -> u32 {
-  let whole: u32 = 0;
-  let step: u32 = 1;
-  let step_number: f64 = f64_from_u32(1);
+  let mut remaining: f64 = number;
+  let mut whole: u32 = 0;
+  let mut step: u32 = 1;
+  let mut step_number: f64 = f64_from_u32(1);
   let two: f64 = f64_from_u32(2);
-  while step < 1073741824 && step_number + step_number <= number {
+  while step < 1073741824 && step_number + step_number <= remaining {
     step = step + step;
     step_number = step_number + step_number;
   }
   while step != 0 {
-    if step_number <= number {
-      number = number - step_number;
+    if step_number <= remaining {
+      remaining = remaining - step_number;
       whole = whole + step;
     }
     step = step / 2;
@@ -217,7 +218,7 @@ export fn library_string_rep_impl(
   if source == 0 {
     return value.value_nil();
   }
-  let count: u32 = 0;
+  let mut count: u32 = 0;
   let count_kind: u32 = value.value_kind(count_value);
   if count_kind == 2 {
     count = value.value_payload(count_value);
@@ -238,7 +239,7 @@ export fn library_string_rep_impl(
   if count == 0 {
     return library_string_rep_empty(heap);
   }
-  let separator: u32 = 0;
+  let mut separator: u32 = 0;
   if sep_value != 0 {
     separator = library_string_handle(sep_value);
     if separator == 0 {
@@ -250,7 +251,7 @@ export fn library_string_rep_impl(
   if count == 1 && separator_length == 0 {
     return input;
   }
-  let separator_count: u32 = 0;
+  let mut separator_count: u32 = 0;
   if count > 0 {
     separator_count = count - 1;
   }
@@ -268,11 +269,11 @@ export fn library_string_rep_impl(
   memory_store_u32(string + 12, 216613626);
   memory_store_u32(string + 16, length);
   memory_store_u32(string + 20, 0);
-  let hash: u32 = 216613626;
-  let offset: u32 = 0;
-  let repeat_index: u32 = 0;
+  let mut hash: u32 = 216613626;
+  let mut offset: u32 = 0;
+  let mut repeat_index: u32 = 0;
   while repeat_index < count {
-    let source_index: u32 = 0;
+    let mut source_index: u32 = 0;
     while source_index < source_length {
       let byte: u32 = strings.string_byte(source, source_index);
       memory_store_u32(string + offset * 4 + 24, byte);
@@ -281,7 +282,7 @@ export fn library_string_rep_impl(
       source_index = source_index + 1;
     }
     if repeat_index + 1 < count {
-      let separator_index: u32 = 0;
+      let mut separator_index: u32 = 0;
       while separator_index < separator_length {
         let byte: u32 = strings.string_byte(separator, separator_index);
         memory_store_u32(string + offset * 4 + 24, byte);
@@ -312,7 +313,7 @@ fn library_string_gsub_digit_run(pattern: u32) -> u32 {
 fn library_string_gsub_matches(source: u32, first: u32, pattern: u32) -> u32 {
   let length: u32 = strings.lua_string_length(pattern);
   if length == 0 || first + length > strings.lua_string_length(source) { return 0; }
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < length {
     if strings.string_byte(source, first + index) != strings.string_byte(pattern, index) {
       return 0;
@@ -329,8 +330,8 @@ fn library_string_gsub_write(
   first: u32,
   length: u32,
 ) -> u32 {
-  let output: u32 = output_index;
-  let index: u32 = 0;
+  let mut output: u32 = output_index;
+  let mut index: u32 = 0;
   while index < length {
     memory_store_u32(record + output * 4 + 4, strings.string_byte(source, first + index));
     output = output + 1;
@@ -359,9 +360,9 @@ export fn library_string_gsub_impl(
     return value.value_string(source);
   }
   let digit_run: u32 = library_string_gsub_digit_run(pattern);
-  let source_index: u32 = 0;
-  let output_length: u32 = 0;
-  let matches: u32 = 0;
+  let mut source_index: u32 = 0;
+  let mut output_length: u32 = 0;
+  let mut matches: u32 = 0;
   while source_index < source_length {
     if digit_run == 1 {
       if strings.string_byte(source, source_index) >= 48 && strings.string_byte(source, source_index) <= 57 {
@@ -392,7 +393,7 @@ export fn library_string_gsub_impl(
     return value.value_nil();
   }
   source_index = source_index - source_index;
-  let output_index: u32 = 0;
+  let mut output_index: u32 = 0;
   while source_index < source_length {
     if digit_run == 1 {
       if strings.string_byte(source, source_index) >= 48 && strings.string_byte(source, source_index) <= 57 {

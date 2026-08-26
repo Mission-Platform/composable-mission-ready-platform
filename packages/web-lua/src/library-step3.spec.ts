@@ -44,7 +44,6 @@ describe("WebLua deterministic library foundation", () => {
 
   it("returns stable failure values for invalid library operands", async () => {
     const runtime = await createWebLuaRuntime();
-    const state = runtime.createState();
     const integer = runtime.integerValue(7);
 
     expect(runtime.libraryStringLength(integer)).toBe(0);

@@ -39,7 +39,7 @@ describe("WebLua core Step 3 library contract", () => {
     expect(runtime.libraryUtf8Length(valid)).toBe(3);
     expect(runtime.libraryUtf8Codepoint(valid, 1)).toBe(0x41);
     expect(runtime.libraryUtf8Codepoint(valid, 2)).toBe(0xa2);
-    expect(runtime.libraryUtf8Codepoint(valid, 3)).toBe(0x1f600);
+    expect(runtime.libraryUtf8Codepoint(valid, 3)).toBe(0x1_f6_00);
     expect(runtime.libraryUtf8Codepoint(valid, 4)).toBe(0);
 
     for (const malformed of [

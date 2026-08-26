@@ -48,7 +48,7 @@ fn utf8_sequence_valid(string: u32, index: u32, width: u32) -> u32 {
   if first == 244 && second > 143 {
     return 0;
   }
-  let continuation: u32 = 2;
+  let mut continuation: u32 = 2;
   while continuation < width {
     if utf8_continuation(strings.string_byte(string, index + continuation)) == 0 {
       return 0;
@@ -88,8 +88,8 @@ fn utf8_scan(input: u32, target: u32) -> u32 {
     return 0;
   }
   let string: u32 = value.value_payload(input);
-  let index: u32 = 0;
-  let count: u32 = 0;
+  let mut index: u32 = 0;
+  let mut count: u32 = 0;
   while index < strings.lua_string_length(string) {
     let width: u32 = utf8_width(strings.string_byte(string, index));
     if utf8_sequence_valid(string, index, width) == 0 {

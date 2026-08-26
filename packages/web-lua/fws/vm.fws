@@ -52,7 +52,7 @@ fn vm_hash_name(
   k: u32,
   l: u32,
 ) -> u32 {
-  let hash: u32 = 216613626;
+  let mut hash: u32 = 216613626;
   if a != 0 { hash = hash * 16777619 + a; }
   if b != 0 { hash = hash * 16777619 + b; }
   if c != 0 { hash = hash * 16777619 + c; }
@@ -70,19 +70,19 @@ fn vm_hash_name(
 
 fn vm_hash_pairs() -> u32 { return vm_hash_name(112, 97, 105, 114, 115, 0, 0, 0, 0, 0, 0, 0); }
 fn vm_hash_next() -> u32 { return vm_hash_name(110, 101, 120, 116, 0, 0, 0, 0, 0, 0, 0, 0); }
-fn vm_hash_setmetatable() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 115; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 109; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 98; hash = hash * 16777619 + 108; hash = hash * 16777619 + 101; return hash; }
-fn vm_hash_getmetatable() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 103; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 109; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 98; hash = hash * 16777619 + 108; hash = hash * 16777619 + 101; return hash; }
-fn vm_hash_index() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 105; hash = hash * 16777619 + 110; hash = hash * 16777619 + 100; hash = hash * 16777619 + 101; hash = hash * 16777619 + 120; return hash; }
-fn vm_hash_newindex() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 110; hash = hash * 16777619 + 101; hash = hash * 16777619 + 119; hash = hash * 16777619 + 105; hash = hash * 16777619 + 110; hash = hash * 16777619 + 100; hash = hash * 16777619 + 101; hash = hash * 16777619 + 120; return hash; }
-fn vm_hash_add() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 97; hash = hash * 16777619 + 100; hash = hash * 16777619 + 100; return hash; }
-fn vm_hash_sub() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 115; hash = hash * 16777619 + 117; hash = hash * 16777619 + 98; return hash; }
-fn vm_hash_mul() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 109; hash = hash * 16777619 + 117; hash = hash * 16777619 + 108; return hash; }
-fn vm_hash_div() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 100; hash = hash * 16777619 + 105; hash = hash * 16777619 + 118; return hash; }
+fn vm_hash_setmetatable() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 115; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 109; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 98; hash = hash * 16777619 + 108; hash = hash * 16777619 + 101; return hash; }
+fn vm_hash_getmetatable() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 103; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 109; hash = hash * 16777619 + 101; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 116; hash = hash * 16777619 + 97; hash = hash * 16777619 + 98; hash = hash * 16777619 + 108; hash = hash * 16777619 + 101; return hash; }
+fn vm_hash_index() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 105; hash = hash * 16777619 + 110; hash = hash * 16777619 + 100; hash = hash * 16777619 + 101; hash = hash * 16777619 + 120; return hash; }
+fn vm_hash_newindex() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 110; hash = hash * 16777619 + 101; hash = hash * 16777619 + 119; hash = hash * 16777619 + 105; hash = hash * 16777619 + 110; hash = hash * 16777619 + 100; hash = hash * 16777619 + 101; hash = hash * 16777619 + 120; return hash; }
+fn vm_hash_add() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 97; hash = hash * 16777619 + 100; hash = hash * 16777619 + 100; return hash; }
+fn vm_hash_sub() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 115; hash = hash * 16777619 + 117; hash = hash * 16777619 + 98; return hash; }
+fn vm_hash_mul() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 109; hash = hash * 16777619 + 117; hash = hash * 16777619 + 108; return hash; }
+fn vm_hash_div() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 100; hash = hash * 16777619 + 105; hash = hash * 16777619 + 118; return hash; }
 fn vm_hash_idiv() -> u32 { return vm_hash_name(95, 95, 105, 100, 105, 118, 0, 0, 0, 0, 0, 0); }
 fn vm_hash_pow() -> u32 { return vm_hash_name(95, 95, 112, 111, 119, 0, 0, 0, 0, 0, 0, 0); }
-fn vm_hash_eq() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 101; hash = hash * 16777619 + 113; return hash; }
-fn vm_hash_lt() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 108; hash = hash * 16777619 + 116; return hash; }
-fn vm_hash_le() -> u32 { let hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 108; hash = hash * 16777619 + 101; return hash; }
+fn vm_hash_eq() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 101; hash = hash * 16777619 + 113; return hash; }
+fn vm_hash_lt() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 108; hash = hash * 16777619 + 116; return hash; }
+fn vm_hash_le() -> u32 { let mut hash: u32 = 216613626; hash = hash * 16777619 + 95; hash = hash * 16777619 + 95; hash = hash * 16777619 + 108; hash = hash * 16777619 + 101; return hash; }
 fn vm_hash_concat() -> u32 { return vm_hash_name(95, 95, 99, 111, 110, 99, 97, 116, 0, 0, 0, 0); }
 fn vm_hash_mod() -> u32 { return vm_hash_name(95, 95, 109, 111, 100, 0, 0, 0, 0, 0, 0, 0); }
 fn vm_hash_band() -> u32 { return vm_hash_name(95, 95, 98, 97, 110, 100, 0, 0, 0, 0, 0, 0); }
@@ -140,16 +140,18 @@ export fn vm_remainder(left: u32, right: u32) -> u32 {
 }
 
 export fn vm_bit_and(left: u32, right: u32) -> u32 {
-  let and_result: u32 = 0;
-  let place: u32 = 1;
-  let index: u32 = 0;
+  let mut left_value: u32 = left;
+  let mut right_value: u32 = right;
+  let mut and_result: u32 = 0;
+  let mut place: u32 = 1;
+  let mut index: u32 = 0;
   let two: u32 = 2;
   while index < 32 {
-    if left % two == 1 && right % two == 1 {
+    if left_value % two == 1 && right_value % two == 1 {
       and_result = and_result + place;
     }
-    left = left / two;
-    right = right / two;
+    left_value = left_value / two;
+    right_value = right_value / two;
     place = place * two;
     index = index + 1;
   }
@@ -157,16 +159,18 @@ export fn vm_bit_and(left: u32, right: u32) -> u32 {
 }
 
 export fn vm_bit_or(left: u32, right: u32) -> u32 {
-  let or_result: u32 = 0;
-  let place: u32 = 1;
-  let index: u32 = 0;
+  let mut left_value: u32 = left;
+  let mut right_value: u32 = right;
+  let mut or_result: u32 = 0;
+  let mut place: u32 = 1;
+  let mut index: u32 = 0;
   let two: u32 = 2;
   while index < 32 {
-    if left % two == 1 || right % two == 1 {
+    if left_value % two == 1 || right_value % two == 1 {
       or_result = or_result + place;
     }
-    left = left / two;
-    right = right / two;
+    left_value = left_value / two;
+    right_value = right_value / two;
     place = place * two;
     index = index + 1;
   }
@@ -174,16 +178,18 @@ export fn vm_bit_or(left: u32, right: u32) -> u32 {
 }
 
 export fn vm_bit_xor(left: u32, right: u32) -> u32 {
-  let xor_result: u32 = 0;
-  let place: u32 = 1;
-  let index: u32 = 0;
+  let mut left_value: u32 = left;
+  let mut right_value: u32 = right;
+  let mut xor_result: u32 = 0;
+  let mut place: u32 = 1;
+  let mut index: u32 = 0;
   let two: u32 = 2;
   while index < 32 {
-    if left % two != right % two {
+    if left_value % two != right_value % two {
       xor_result = xor_result + place;
     }
-    left = left / two;
-    right = right / two;
+    left_value = left_value / two;
+    right_value = right_value / two;
     place = place * two;
     index = index + 1;
   }
@@ -191,29 +197,31 @@ export fn vm_bit_xor(left: u32, right: u32) -> u32 {
 }
 
 export fn vm_shift_left(value: u32, amount: u32) -> u32 {
-  let steps: u32 = amount;
+  let mut shifted: u32 = value;
+  let mut steps: u32 = amount;
   let two: u32 = 2;
   if steps > 31 {
     return 0;
   }
   while steps != 0 {
-    value = value * two;
+    shifted = shifted * two;
     steps = steps - 1;
   }
-  return value;
+  return shifted;
 }
 
 export fn vm_shift_right(value: u32, amount: u32) -> u32 {
-  let steps: u32 = amount;
+  let mut shifted: u32 = value;
+  let mut steps: u32 = amount;
   let two: u32 = 2;
   if steps > 31 {
     return 0;
   }
   while steps != 0 {
-    value = value / two;
+    shifted = shifted / two;
     steps = steps - 1;
   }
-  return value;
+  return shifted;
 }
 
 export fn vm_bit_not(value: u32) -> u32 {
@@ -332,8 +340,8 @@ export fn vm_string_opcode(prototype: u32, opcode: u32, operand: u32, heap: u32,
     }
     let left_address: u32 = vm_stack_address(stack, depth - 2);
     let right_address: u32 = vm_stack_address(stack, depth - 1);
-    let left: u32 = memory_load_u32(left_address);
-    let right: u32 = memory_load_u32(right_address);
+    let mut left: u32 = memory_load_u32(left_address);
+    let mut right: u32 = memory_load_u32(right_address);
     let left_kind: u32 = value.value_kind(left);
     let right_kind: u32 = value.value_kind(right);
     if left_kind == 4 {
@@ -401,7 +409,7 @@ fn vm_scope_stack_address(local_base: u32, index: u32) -> u32 {
 }
 
 fn vm_scope_contains(local_base: u32, scope_depth: u32, scope: u32) -> u32 {
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index <= scope_depth {
     if memory_load_u32(vm_scope_stack_address(local_base, index)) == scope {
       return 1;
@@ -419,7 +427,7 @@ fn vm_capture_contains(capture: u32, scope: u32) -> u32 {
   if capture == 0 {
     return 1;
   }
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   let count: u32 = memory_load_u32(capture + 12);
   while index < count {
     if memory_load_u32(vm_capture_scope_address(capture, index)) == scope {
@@ -439,7 +447,7 @@ fn vm_slot_is_const(address: u32) -> u32 {
 }
 
 fn vm_find_local(local_base: u32, name: u32, scope_depth: u32) -> u32 {
-  let index: u32 = 32;
+  let mut index: u32 = 32;
   while index != 0 {
     index = index - 1;
     let address: u32 = vm_local_slot_address(local_base, index);
@@ -453,7 +461,7 @@ fn vm_find_local(local_base: u32, name: u32, scope_depth: u32) -> u32 {
 }
 
 fn vm_find_local_exact(local_base: u32, name: u32, scope: u32) -> u32 {
-  let index: u32 = 32;
+  let mut index: u32 = 32;
   while index != 0 {
     index = index - 1;
     let address: u32 = vm_local_slot_address(local_base, index);
@@ -465,10 +473,10 @@ fn vm_find_local_exact(local_base: u32, name: u32, scope: u32) -> u32 {
 }
 
 fn vm_find_captured(upvalue: u32, capture: u32, name: u32) -> u32 {
-  let current_base: u32 = upvalue;
-  let current_capture: u32 = capture;
+  let mut current_base: u32 = upvalue;
+  let mut current_capture: u32 = capture;
   while current_base != 0 {
-    let index: u32 = 32;
+    let mut index: u32 = 32;
     while index != 0 {
       index = index - 1;
       let address: u32 = vm_local_slot_address(current_base, index);
@@ -500,7 +508,7 @@ fn vm_capture_new(local_base: u32, scope_depth: u32, upvalue: u32, parent: u32) 
   memory_store_u32(capture + 4, upvalue);
   memory_store_u32(capture + 8, parent);
   memory_store_u32(capture + 12, count);
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < count {
     memory_store_u32(capture + 16 + index * 4, memory_load_u32(vm_scope_stack_address(local_base, index)));
     index = index + 1;
@@ -521,13 +529,13 @@ export fn vm_load_local(local_base: u32, name: u32) -> u32 {
 }
 
 export fn vm_store_local(local_base: u32, name: u32, value: u32) -> u32 {
-  let address: u32 = vm_find_local(local_base, name, 0);
+  let mut address: u32 = vm_find_local(local_base, name, 0);
   if address != 0 {
     memory_store_u32(address + 4, value);
     return 0;
   }
-  let index: u32 = 0;
-  let empty: u32 = 32;
+  let mut index: u32 = 0;
+  let mut empty: u32 = 32;
   while index < 32 {
     address = vm_local_slot_address(local_base, index);
     if memory_load_u32(address) == 0 {
@@ -564,9 +572,9 @@ fn vm_declare_local_at_scope(local_base: u32, declaration: u32, value: u32, scop
     memory_store_u32(existing + 8, scope * 2 + flags);
     return 0;
   }
-  let index: u32 = 0;
-  let empty: u32 = 32;
-  let address: u32 = 0;
+  let mut index: u32 = 0;
+  let mut empty: u32 = 32;
+  let mut address: u32 = 0;
   while index < 32 {
     address = vm_local_slot_address(local_base, index);
     if memory_load_u32(address) == 0 {
@@ -603,7 +611,7 @@ export fn vm_load_captured(local_base: u32, name: u32) -> u32 {
 }
 
 fn vm_load_local_or_global_with_capture(heap: u32, local_base: u32, scope_depth: u32, upvalue: u32, capture: u32, name: u32) -> u32 {
-  let address: u32 = vm_find_local(local_base, name, scope_depth);
+  let mut address: u32 = vm_find_local(local_base, name, scope_depth);
   if address != 0 {
     return memory_load_u32(address + 4);
   }
@@ -627,7 +635,7 @@ fn vm_store_local_or_global_with_capture(
   name: u32,
   value: u32,
 ) -> u32 {
-  let address: u32 = vm_find_local(local_base, name, scope_depth);
+  let mut address: u32 = vm_find_local(local_base, name, scope_depth);
   if address != 0 {
     if vm_slot_is_const(address) != 0 {
       return vm_const_error();
@@ -784,7 +792,7 @@ export fn vm_table_opcode(prototype: u32, opcode: u32, heap: u32, stack: u32, de
     let key_address: u32 = vm_stack_address(stack, depth - 1);
     let table_handle: u32 = memory_load_u32(table_address);
     let key: u32 = memory_load_u32(key_address);
-    let value: u32 = table.table_get_raw(table_handle, key);
+    let mut value: u32 = table.table_get_raw(table_handle, key);
     if value == 0 {
       let metamethod: u32 = vm_table_metafield(table_handle, vm_hash_index());
       if vm_is_table_value(metamethod) == 1 {
@@ -829,7 +837,7 @@ export fn vm_table_opcode(prototype: u32, opcode: u32, heap: u32, stack: u32, de
 }
 
 export fn vm_clear_locals(local_base: u32) -> unit {
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < 32 {
     let address: u32 = vm_local_slot_address(local_base, index);
     memory_store_u32(address, 0);
@@ -842,7 +850,7 @@ export fn vm_clear_locals(local_base: u32) -> unit {
 }
 
 export fn vm_find_function(head: u32, name: u32) -> u32 {
-  let current: u32 = head;
+  let mut current: u32 = head;
   while current != 0 {
     if memory_load_u32(current) == name {
       return current;
@@ -874,7 +882,7 @@ export fn vm_find_function(head: u32, name: u32) -> u32 {
 }
 
 fn vm_publish_dynamic_functions(heap: u32, functions: u32) -> unit {
-  let function_record: u32 = functions;
+  let mut function_record: u32 = functions;
   while function_record != 0 {
     let name: u32 = memory_load_u32(function_record);
     if name != 0 {
@@ -1167,7 +1175,7 @@ fn vm_is_string_comparison_value(input: u32) -> u32 {
 }
 
 fn vm_is_closure_value(heap: u32, input: u32) -> u32 {
-  let handle: u32 = input;
+  let mut handle: u32 = input;
   if value.value_kind(input) == 6 {
     handle = value.value_payload(input);
   }
@@ -1213,8 +1221,8 @@ fn vm_format_append(record: u32, count: u32, byte: u32) -> u32 {
 }
 
 fn vm_format_append_string(record: u32, count: u32, input: u32) -> u32 {
-  let output_count: u32 = count;
-  let index: u32 = 0;
+  let mut output_count: u32 = count;
+  let mut index: u32 = 0;
   while index < string.lua_string_length(input) {
     output_count = vm_format_append(record, output_count, string.string_byte(input, index));
     index = index + 1;
@@ -1223,17 +1231,17 @@ fn vm_format_append_string(record: u32, count: u32, input: u32) -> u32 {
 }
 
 fn vm_format_append_integer(record: u32, count: u32, input: u32) -> u32 {
-  let number: u32 = input;
-  let output_count: u32 = count;
+  let mut number: u32 = input;
+  let mut output_count: u32 = count;
   if number == 0 {
     return vm_format_append(record, output_count, 48);
   }
-  let divisor: u32 = 1;
+  let mut divisor: u32 = 1;
   while divisor <= number / 10 {
     divisor = divisor * 10;
   }
   while divisor != 0 {
-    let byte: u32 = 48;
+    let mut byte: u32 = 48;
     byte = byte + number / divisor;
     output_count = vm_format_append(record, output_count, byte);
     number = number % divisor;
@@ -1243,28 +1251,28 @@ fn vm_format_append_integer(record: u32, count: u32, input: u32) -> u32 {
 }
 
 fn vm_format_append_float(record: u32, count: u32, input: f64, fixed: u32) -> u32 {
-  let number: f64 = input;
+  let mut number: f64 = input;
   let zero: f64 = f64_from_u32(0);
   let one: f64 = f64_from_u32(1);
   let ten: f64 = f64_from_u32(10);
   let two: f64 = f64_from_u32(2);
-  let negative: u32 = 0;
+  let mut negative: u32 = 0;
   if number < zero {
     negative = negative + 1;
     number = zero - number;
   }
-  let whole: u32 = 0;
+  let mut whole: u32 = 0;
   while number >= one && whole < 1000000 {
     number = number - one;
     whole = whole + 1;
   }
-  let output_count: u32 = count;
+  let mut output_count: u32 = count;
   if negative == 1 {
     output_count = vm_format_append(record, output_count, 45);
   }
   if fixed == 1 {
-    let rounded: f64 = number * ten + one / two;
-    let decimal: u32 = 0;
+    let mut rounded: f64 = number * ten + one / two;
+    let mut decimal: u32 = 0;
     while rounded >= one {
       rounded = rounded - one;
       decimal = decimal + 1;
@@ -1275,7 +1283,7 @@ fn vm_format_append_float(record: u32, count: u32, input: f64, fixed: u32) -> u3
     }
     output_count = vm_format_append_integer(record, output_count, whole);
     output_count = vm_format_append(record, output_count, 46);
-    let decimal_byte: u32 = 48;
+    let mut decimal_byte: u32 = 48;
     decimal_byte = decimal_byte + decimal;
     output_count = vm_format_append(record, output_count, decimal_byte);
     return output_count;
@@ -1285,15 +1293,15 @@ fn vm_format_append_float(record: u32, count: u32, input: f64, fixed: u32) -> u3
     return output_count;
   }
   output_count = vm_format_append(record, output_count, 46);
-  let digits: u32 = 0;
+  let mut digits: u32 = 0;
   while digits < 6 && number != zero {
     number = number * ten;
-    let decimal: u32 = 0;
+    let mut decimal: u32 = 0;
     while number >= one {
       number = number - one;
       decimal = decimal + 1;
     }
-    let decimal_byte: u32 = 48;
+    let mut decimal_byte: u32 = 48;
     decimal_byte = decimal_byte + decimal;
     output_count = vm_format_append(record, output_count, decimal_byte);
     digits = digits + 1;
@@ -1318,7 +1326,7 @@ fn vm_concat_numeric_string(heap: u32, input: u32) -> u32 {
   if record == 0 {
     return 0;
   }
-  let count: u32 = 0;
+  let mut count: u32 = 0;
   if kind == 3 {
     count = vm_format_append_float(record, count, value.value_float_number(input), 0);
   } else {
@@ -1347,7 +1355,7 @@ fn vm_output_string(heap: u32, input: u32) -> u32 {
   if record == 0 {
     return 0;
   }
-  let count: u32 = 0;
+  let mut count: u32 = 0;
   if input == 0 {
     count = vm_format_append(record, count, 110);
     count = vm_format_append(record, count, 105);
@@ -1381,9 +1389,9 @@ fn vm_builtin_format(prototype: u32, heap: u32, stack: u32, argument_base: u32, 
     memory_store_u32(prototype + 28, vm_stack_error());
     return argument_base;
   }
-  let count: u32 = 0;
-  let index: u32 = 0;
-  let argument: u32 = argument_base + 1;
+  let mut count: u32 = 0;
+  let mut index: u32 = 0;
+  let mut argument: u32 = argument_base + 1;
   let format: u32 = format_value;
   let length: u32 = string.lua_string_length(format);
   while index < length {
@@ -1396,9 +1404,9 @@ fn vm_builtin_format(prototype: u32, heap: u32, stack: u32, argument_base: u32, 
         memory_store_u32(prototype + 28, vm_stack_error());
         return argument_base;
       }
-      let verb: u32 = string.string_byte(format, index + 1);
-      let consumed: u32 = 2;
-      let fixed: u32 = 0;
+      let mut verb: u32 = string.string_byte(format, index + 1);
+      let mut consumed: u32 = 2;
+      let mut fixed: u32 = 0;
       if verb == 37 {
         count = vm_format_append(record, count, 37);
       } else {
@@ -1453,7 +1461,7 @@ fn vm_builtin_format(prototype: u32, heap: u32, stack: u32, argument_base: u32, 
                 return argument_base;
               }
             }
-            let integer: u32 = input;
+            let mut integer: u32 = input;
             if input_kind == 2 {
               integer = value.value_payload(input);
             }
@@ -1506,11 +1514,11 @@ fn vm_builtin_dump(prototype: u32, heap: u32, stack: u32, argument_base: u32, ar
   memory_store_u32(record + 12, 68);
   memory_store_u32(record + 16, 1);
   memory_store_u32(record + 20, handle % 256);
-  let second_byte: u32 = handle / 256;
+  let mut second_byte: u32 = handle / 256;
   second_byte = second_byte % 256;
-  let third_byte: u32 = handle / 65536;
+  let mut third_byte: u32 = handle / 65536;
   third_byte = third_byte % 256;
-  let fourth_byte: u32 = handle / 16777216;
+  let mut fourth_byte: u32 = handle / 16777216;
   fourth_byte = fourth_byte % 256;
   memory_store_u32(record + 24, second_byte);
   memory_store_u32(record + 28, third_byte);
@@ -1536,12 +1544,12 @@ fn vm_builtin_load(prototype: u32, heap: u32, stack: u32, argument_base: u32, ar
       return argument_base;
     }
   }
-  let encoded: u32 = input;
+  let mut encoded: u32 = input;
   if value.value_kind(input) == 4 {
     encoded = value.value_payload(input);
   }
   if string.lua_string_length(encoded) == 8 && string.string_byte(encoded, 0) == 87 && string.string_byte(encoded, 1) == 76 && string.string_byte(encoded, 2) == 68 && string.string_byte(encoded, 3) == 1 {
-    let handle: u32 = string.string_byte(encoded, 4);
+    let mut handle: u32 = string.string_byte(encoded, 4);
     handle = handle + string.string_byte(encoded, 5) * 256;
     handle = handle + string.string_byte(encoded, 6) * 65536;
     handle = handle + string.string_byte(encoded, 7) * 16777216;
@@ -1649,7 +1657,7 @@ fn vm_copy_nested_results(prototype: u32, stack: u32, destination: u32) -> u32 {
     return destination;
   }
   let result_prototype: u32 = memory_load_u32(prototype + 60);
-  let result_stack: u32 = 0;
+  let mut result_stack: u32 = 0;
   if result_prototype != 0 {
     result_stack = memory_load_u32(result_prototype + 20);
   }
@@ -1657,7 +1665,7 @@ fn vm_copy_nested_results(prototype: u32, stack: u32, destination: u32) -> u32 {
     memory_store_u32(prototype + 28, vm_stack_error());
     return destination;
   }
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < count {
     let raw: u32 = memory_load_u32(result_stack + index * 4);
     let converted: u32 = vm_result_value(raw);
@@ -1713,8 +1721,8 @@ fn vm_next_apply(stack: u32, argument_base: u32, table_handle: u32, cursor: u32)
     memory_store_u32(stack + argument_base * 4, 0);
     memory_store_u32(stack + cursor_slot * 4, 0);
   } else {
-    let key: u32 = next;
-    let output: u32 = 0;
+    let mut key: u32 = next;
+    let mut output: u32 = 0;
     if next <= 32 {
       output = table.table_get_raw(table_handle, next);
     } else {
@@ -1728,9 +1736,9 @@ fn vm_next_apply(stack: u32, argument_base: u32, table_handle: u32, cursor: u32)
 }
 
 fn vm_capability_marker(heap: u32, kind: u32) -> u32 {
-  let hash: u32 = 410000;
+  let mut hash: u32 = 410000;
   hash = hash + kind;
-  let length: u32 = 0;
+  let mut length: u32 = 0;
   if kind == 1 {
     length = length - length + 12;
   } else {
@@ -1901,7 +1909,7 @@ fn vm_builtin_call(
   depth: u32,
   argument_count: u32,
 ) -> u32 {
-  let actual_count: u32 = argument_count;
+  let mut actual_count: u32 = argument_count;
   if builtin == 1 {
     actual_count = argument_count - argument_count + 2;
   } else {
@@ -1909,7 +1917,7 @@ fn vm_builtin_call(
     actual_count = argument_count - argument_count + 1;
     }
   }
-  let argument_base: u32 = 0;
+  let mut argument_base: u32 = 0;
   if depth >= actual_count {
     argument_base = depth - actual_count;
   }
@@ -1983,7 +1991,7 @@ fn vm_builtin_call(
     }
     if vm_string_is_incremental(mode) == 1 || vm_string_is_generational(mode) == 1 {
       // Changing modes returns the previous mode as a string.
-      let previous: u32 = 0;
+      let mut previous: u32 = 0;
       if gc_state != 0 {
         previous = memory_load_u32(gc_state);
       }
@@ -2013,14 +2021,14 @@ fn vm_builtin_call(
       }
       let param_slot: u32 = argument_base + 1;
       let param_name: u32 = memory_load_u32(stack + param_slot * 4);
-      let has_value: u32 = 0;
-      let new_value: u32 = 0;
+      let mut has_value: u32 = 0;
+      let mut new_value: u32 = 0;
       if actual_count > 2 {
         has_value = has_value + 1;
         let value_slot: u32 = argument_base + 2;
         new_value = vm_builtin_integer(memory_load_u32(stack + value_slot * 4));
       }
-      let field_offset: u32 = 0;
+      let mut field_offset: u32 = 0;
       if vm_string_is_pause(param_name) == 1 {
         field_offset = field_offset - field_offset + 4;
       } else {
@@ -2028,7 +2036,7 @@ fn vm_builtin_call(
           field_offset = field_offset - field_offset + 8;
         }
       }
-      let previous_value: u32 = 100;
+      let mut previous_value: u32 = 100;
       if field_offset != 0 && gc_state != 0 {
         previous_value = memory_load_u32(gc_state + field_offset);
         if has_value == 1 {
@@ -2045,7 +2053,7 @@ fn vm_builtin_call(
   }
   if builtin == 8 || builtin == 9 || builtin == 10 {
     if builtin == 8 || builtin == 9 {
-      let output_index: u32 = 0;
+      let mut output_index: u32 = 0;
       while output_index < actual_count {
         let output_slot: u32 = argument_base + output_index;
         let output: u32 = vm_output_string(
@@ -2064,7 +2072,7 @@ fn vm_builtin_call(
     if actual_count < 1 {
       memory_store_u32(stack + argument_base * 4, string.string_intern(heap, 216613626, 0));
     } else {
-      let input: u32 = memory_load_u32(stack + argument_base * 4);
+      let mut input: u32 = memory_load_u32(stack + argument_base * 4);
       if input < 1024 {
         input = string.string_intern(heap, 216613626, 0);
       } else {
@@ -2123,12 +2131,12 @@ fn vm_builtin_call(
       memory_store_u32(prototype + 28, vm_stack_error());
       return depth;
     }
-    let mode: u32 = 0;
+    let mut mode: u32 = 0;
     if actual_count > 1 {
       let mode_slot: u32 = argument_base + 1;
       mode = memory_load_u32(stack + mode_slot * 4);
     }
-    let capability_kind: u32 = 4;
+    let mut capability_kind: u32 = 4;
     if mode != 0 && vm_is_string_value(mode) == 1 && string.string_byte(mode, 0) == 119 {
       capability_kind = capability_kind - capability_kind + 5;
     }
@@ -2239,19 +2247,19 @@ fn vm_builtin_call(
       return depth;
     }
     let table_handle: u32 = memory_load_u32(stack + argument_base * 4);
-    let first: u32 = 1;
+    let mut first: u32 = 1;
     if actual_count > 1 {
       let first_slot: u32 = argument_base + 1;
       let first_input: u32 = memory_load_u32(stack + first_slot * 4);
       first = vm_builtin_integer(first_input);
     }
-    let finish: u32 = table.table_length(table_handle);
+    let mut finish: u32 = table.table_length(table_handle);
     if actual_count > 2 {
       let finish_slot: u32 = argument_base + 2;
       let finish_input: u32 = memory_load_u32(stack + finish_slot * 4);
       finish = vm_builtin_integer(finish_input);
     }
-    let output_count: u32 = 0;
+    let mut output_count: u32 = 0;
     if first <= finish {
       output_count = finish - first + 1;
     }
@@ -2259,7 +2267,7 @@ fn vm_builtin_call(
       memory_store_u32(prototype + 28, vm_stack_error());
       return depth;
     }
-    let index: u32 = 0;
+    let mut index: u32 = 0;
     while index < output_count {
       let key: u32 = value.value_integer(first + index);
       let unpacked: u32 = table.table_get_raw(table_handle, key);
@@ -2300,7 +2308,7 @@ fn vm_builtin_call(
         return depth;
       }
       // Lua pairs(t) returns next, t, nil.
-      let iterator: u32 = memory.heap_global_get(heap, vm_hash_next());
+      let mut iterator: u32 = memory.heap_global_get(heap, vm_hash_next());
       if iterator == 0 {
         iterator = memory.heap_global_get(heap, vm_hash_pairs());
       }
@@ -2329,7 +2337,7 @@ fn vm_builtin_call(
       memory_store_u32(prototype + 28, vm_stack_error());
       return depth;
     }
-    let cursor: u32 = 0;
+    let mut cursor: u32 = 0;
     if actual_count >= 2 {
       let cursor_slot: u32 = argument_base + 1;
       cursor = memory_load_u32(stack + cursor_slot * 4);
@@ -2369,14 +2377,14 @@ fn vm_builtin_call(
       return depth;
     }
     let module_name: u32 = memory_load_u32(stack + argument_base * 4);
-    let module_table: u32 = 0;
+    let mut module_table: u32 = 0;
     if vm_is_debug_module(module_name) == 1 {
       module_table = memory_load_u32(heap + 60);
     } else {
       if vm_is_tracegc_module(module_name) == 1 {
         module_table = memory.heap_global_get(heap, vm_hash_name(116, 114, 97, 99, 101, 103, 99, 0, 0, 0, 0, 0));
       } else {
-        let loaded: u32 = vm_package_loaded(heap);
+        let mut loaded: u32 = vm_package_loaded(heap);
         if loaded != 0 {
           let cached: u32 = table.table_get_raw(loaded, module_name);
           if cached != 0 {
@@ -2390,7 +2398,7 @@ fn vm_builtin_call(
         if memory_load_u32(prototype + 28) != 0 {
           return depth;
         }
-        let module_result: u32 = vm_invoke_callable(heap, callable, 0, 0, 0, 0, prototype);
+        let mut module_result: u32 = vm_invoke_callable(heap, callable, 0, 0, 0, 0, prototype);
         if memory_load_u32(prototype + 28) != 0 {
           return depth;
         }
@@ -2458,14 +2466,14 @@ fn vm_builtin_call(
       return depth;
     }
     let callable: u32 = memory_load_u32(stack + argument_base * 4);
-    let call_args: u32 = 0;
+    let mut call_args: u32 = 0;
     if actual_count > 1 {
       call_args = actual_count - 1;
     }
-    let first: u32 = 0;
-    let second: u32 = 0;
-    let third: u32 = 0;
-    let arg_slot: u32 = argument_base + 1;
+    let mut first: u32 = 0;
+    let mut second: u32 = 0;
+    let mut third: u32 = 0;
+    let mut arg_slot: u32 = argument_base + 1;
     if call_args > 0 {
       first = memory_load_u32(stack + arg_slot * 4);
     }
@@ -2483,16 +2491,16 @@ fn vm_builtin_call(
       memory_store_u32(prototype + 28, vm_stack_error());
       return depth;
     }
-    let holder_index: u32 = 0;
+    let mut holder_index: u32 = 0;
     while holder_index < 16 {
       memory_store_u32(nested_status_holder + holder_index * 4, 0);
       holder_index = holder_index + 1;
     }
     let handle: u32 = vm_callable_handle(callable);
-    let invoke_ok: u32 = 0;
+    let mut invoke_ok: u32 = 0;
     if handle != 0 {
       if memory_load_u32(handle) == 3 {
-        let bind_args: u32 = call_args;
+        let mut bind_args: u32 = call_args;
         if bind_args > 3 {
           bind_args = call_args - call_args + 3;
         }
@@ -2506,7 +2514,7 @@ fn vm_builtin_call(
       if vm_is_function_record(callable) == 1 {
         let builtin_id: u32 = memory_load_u32(callable + 28);
         if builtin_id >= 3 {
-          let nested_depth: u32 = call_args;
+          let mut nested_depth: u32 = call_args;
           let nested_stack: u32 = memory_alloc(256);
           if nested_stack == 0 {
             memory_store_u32(stack + argument_base * 4, value.value_boolean(0));
@@ -2514,7 +2522,7 @@ fn vm_builtin_call(
             memory_store_u32(stack + err_slot * 4, string.string_intern(heap, 216613626, 0));
             return argument_base + 2;
           }
-          let copy_index: u32 = 0;
+          let mut copy_index: u32 = 0;
           while copy_index < call_args {
             let source_slot: u32 = argument_base + 1 + copy_index;
             memory_store_u32(nested_stack + copy_index * 4, memory_load_u32(stack + source_slot * 4));
@@ -2539,16 +2547,16 @@ fn vm_builtin_call(
     }
     if invoke_ok == 1 {
       memory_store_u32(stack + argument_base * 4, value.value_boolean(1));
-      let pcall_count: u32 = memory_load_u32(nested_status_holder + 56);
+      let mut pcall_count: u32 = memory_load_u32(nested_status_holder + 56);
       let pcall_proto: u32 = memory_load_u32(nested_status_holder + 60);
-      let pcall_stack: u32 = 0;
+      let mut pcall_stack: u32 = 0;
       if pcall_proto != 0 {
         pcall_stack = memory_load_u32(pcall_proto + 20);
       }
       if pcall_stack == 0 {
         pcall_count = pcall_count - pcall_count;
       }
-      let pcall_index: u32 = 0;
+      let mut pcall_index: u32 = 0;
       while pcall_index < pcall_count {
         let converted: u32 = vm_result_value(memory_load_u32(pcall_stack + pcall_index * 4));
         let dest_slot: u32 = argument_base + 1 + pcall_index;
@@ -2579,8 +2587,8 @@ fn vm_builtin_call(
       return depth;
     }
     let best_slot: u32 = argument_base;
-    let best: u32 = memory_load_u32(stack + best_slot * 4);
-    let candidate_index: u32 = 1;
+    let mut best: u32 = memory_load_u32(stack + best_slot * 4);
+    let mut candidate_index: u32 = 1;
     while candidate_index < actual_count {
       let candidate_slot: u32 = argument_base + candidate_index;
       let candidate: u32 = memory_load_u32(stack + candidate_slot * 4);
@@ -2600,12 +2608,12 @@ fn vm_builtin_call(
       return depth;
     }
     let count_slot: u32 = argument_base + 1;
-    let separator: u32 = 0;
+    let mut separator: u32 = 0;
     if actual_count > 2 {
       let separator_slot: u32 = argument_base + 2;
       separator = memory_load_u32(stack + separator_slot * 4);
     }
-    let output: u32 = library_string.library_string_rep_impl(
+    let mut output: u32 = library_string.library_string_rep_impl(
       heap,
       memory_load_u32(stack + argument_base * 4),
       memory_load_u32(stack + count_slot * 4),
@@ -2632,7 +2640,7 @@ fn vm_builtin_call(
       memory_store_u32(prototype + 28, vm_stack_error());
       return depth;
     }
-    let output: u32 = library_string.library_string_gsub_impl(
+    let mut output: u32 = library_string.library_string_gsub_impl(
       heap,
       input,
       pattern,
@@ -2662,14 +2670,14 @@ fn vm_invoke_callable(
   argument_count: u32,
   status_prototype: u32,
 ) -> u32 {
-  callable = vm_callable_handle(callable);
-  if callable == 0 || memory_load_u32(callable) != 3 {
+  let callable_handle: u32 = vm_callable_handle(callable);
+  if callable_handle == 0 || memory_load_u32(callable_handle) != 3 {
     if status_prototype != 0 {
       memory_store_u32(status_prototype + 28, vm_stack_error());
     }
     return 0;
   }
-  let function_record: u32 = closure.closure_function(callable);
+  let function_record: u32 = closure.closure_function(callable_handle);
   if function_record == 0 {
     if status_prototype != 0 {
       memory_store_u32(status_prototype + 28, vm_stack_error());
@@ -2707,14 +2715,14 @@ fn vm_invoke_callable(
   memory_store_u32(prototype + 76, 0);
   memory_store_u32(prototype + 80, 0);
   memory_store_u32(prototype + 84, 0);
-  memory_store_u32(prototype + 88, closure.closure_upvalue(callable));
-  memory_store_u32(prototype + 92, memory_load_u32(callable + 20));
+  memory_store_u32(prototype + 88, closure.closure_upvalue(callable_handle));
+  memory_store_u32(prototype + 92, memory_load_u32(callable_handle + 20));
   vm_clear_locals(local_base);
   memory_store_u32(stack, first);
   memory_store_u32(stack + 4, second);
   memory_store_u32(stack + 8, third);
   let arity: u32 = memory_load_u32(function_record + 16);
-  let bind_count: u32 = argument_count;
+  let mut bind_count: u32 = argument_count;
   if bind_count > arity {
     bind_count = arity;
   }
@@ -2724,7 +2732,7 @@ fn vm_invoke_callable(
     }
     return 0;
   }
-  let vararg_count: u32 = 0;
+  let mut vararg_count: u32 = 0;
   if memory_load_u32(function_record + 24) == 1 && argument_count > arity {
     vararg_count = argument_count - arity;
   }
@@ -2732,7 +2740,8 @@ fn vm_invoke_callable(
   if memory_load_u32(function_record + 28) == 2 {
     vm_publish_dynamic_functions(heap, memory_load_u32(function_record + 20));
   }
-  let invoke_status: u32 = execute(prototype);
+  execute(prototype);
+  let invoke_status: u32 = memory_load_u32(prototype + 28);
   if invoke_status != 0 {
     if status_prototype != 0 {
       memory_store_u32(status_prototype + 28, invoke_status);
@@ -2747,9 +2756,9 @@ fn vm_invoke_callable(
 }
 
 export fn vm_bind_parameters(stack: u32, argument_base: u32, local_base: u32, parameters: u32, count: u32) -> u32 {
-  let current: u32 = parameters;
-  let index: u32 = 0;
-  let status: u32 = 0;
+  let mut current: u32 = parameters;
+  let mut index: u32 = 0;
+  let mut status: u32 = 0;
   while current != 0 && index < count {
     let argument_index: u32 = argument_base + index;
     let argument: u32 = memory_load_u32(stack + argument_index * 4);
@@ -2765,7 +2774,7 @@ export fn vm_bind_parameters(stack: u32, argument_base: u32, local_base: u32, pa
 
 export fn vm_store_varargs(stack: u32, argument_base: u32, count: u32, local_base: u32) -> unit {
   memory_store_u32(vm_local_vararg_count_address(local_base), count);
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < count {
     let argument_index: u32 = argument_base + index;
     let value: u32 = memory_load_u32(stack + argument_index * 4);
@@ -2780,7 +2789,7 @@ export fn vm_push_varargs(prototype: u32, stack: u32, depth: u32, local_base: u3
     memory_store_u32(prototype + 28, vm_stack_error());
     return depth;
   }
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < count {
     let value: u32 = memory_load_u32(vm_local_vararg_value_address(local_base, index));
     let destination: u32 = depth + index;
@@ -2795,7 +2804,7 @@ export fn vm_adjust_results(prototype: u32, stack: u32, depth: u32, expected_cou
     return depth;
   }
   let base: u32 = depth - actual_count;
-  let index: u32 = actual_count;
+  let mut index: u32 = actual_count;
   while index < expected_count {
     let destination: u32 = base + index;
     if destination >= 64 {
@@ -2810,8 +2819,8 @@ export fn vm_adjust_results(prototype: u32, stack: u32, depth: u32, expected_cou
 
 fn vm_integer_number(value: u32) -> f64 {
   let number: f64 = f64_from_u32(value);
-  let boundary: u32 = 2;
-  let steps: u32 = 30;
+  let mut boundary: u32 = 2;
+  let mut steps: u32 = 30;
   while steps != 0 {
     boundary = boundary + boundary;
     steps = steps - 1;
@@ -2823,8 +2832,8 @@ fn vm_integer_number(value: u32) -> f64 {
 }
 
 fn vm_integer_is_negative(value: u32) -> u32 {
-  let boundary: u32 = 2;
-  let steps: u32 = 30;
+  let mut boundary: u32 = 2;
+  let mut steps: u32 = 30;
   while steps != 0 {
     boundary = boundary + boundary;
     steps = steps - 1;
@@ -2848,7 +2857,7 @@ fn vm_integer_floor_division(left: u32, right: u32) -> u32 {
   let right_negative: u32 = vm_integer_is_negative(right);
   let left_absolute: u32 = vm_integer_absolute(left);
   let right_absolute: u32 = vm_integer_absolute(right);
-  let quotient: u32 = left_absolute / right_absolute;
+  let mut quotient: u32 = left_absolute / right_absolute;
   let remainder: u32 = left_absolute % right_absolute;
   if left_negative != right_negative && remainder != 0 {
     quotient = quotient + 1;
@@ -2879,13 +2888,13 @@ fn vm_floor_number(input: u32) -> u32 {
   if kind != 3 {
     return input;
   }
-  let number: f64 = vm_numeric_number(input);
-  let negative: u32 = 0;
+  let mut number: f64 = vm_numeric_number(input);
+  let mut negative: u32 = 0;
   if number < f64_from_u32(0) {
     negative = negative + 1;
     number = f64_from_u32(0) - number;
   }
-  let whole: u32 = 0;
+  let mut whole: u32 = 0;
   while number >= f64_from_u32(1) && whole < 16777216 {
     number = number - f64_from_u32(1);
     whole = whole + 1;
@@ -2907,15 +2916,15 @@ fn vm_is_float(value: u32) -> u32 {
 }
 
 fn vm_float_positive_remainder(left: f64, right: f64) -> f64 {
-  let remainder: f64 = left;
-  let multiple: f64 = right;
+  let mut remainder: f64 = left;
+  let mut multiple: f64 = right;
   let two: f64 = f64_from_u32(2);
-  let scale_steps: u32 = 64;
+  let mut scale_steps: u32 = 64;
   while scale_steps != 0 && multiple + multiple <= remainder {
     multiple = multiple + multiple;
     scale_steps = scale_steps - 1;
   }
-  let reduce_steps: u32 = 64;
+  let mut reduce_steps: u32 = 64;
   while reduce_steps != 0 && multiple >= right {
     if multiple <= remainder {
       remainder = remainder - multiple;
@@ -2923,8 +2932,8 @@ fn vm_float_positive_remainder(left: f64, right: f64) -> f64 {
     multiple = multiple / two;
     reduce_steps = reduce_steps - 1;
   }
-  let tolerance: f64 = right;
-  let tolerance_steps: u32 = 48;
+  let mut tolerance: f64 = right;
+  let mut tolerance_steps: u32 = 48;
   while tolerance_steps != 0 {
     tolerance = tolerance / two;
     tolerance_steps = tolerance_steps - 1;
@@ -2936,17 +2945,19 @@ fn vm_float_positive_remainder(left: f64, right: f64) -> f64 {
 }
 
 fn vm_float_remainder(left: f64, right: f64) -> f64 {
-  let left_negative: u32 = 0;
-  let right_negative: u32 = 0;
-  if left < f64_from_u32(0) {
-    left = f64_from_u32(0) - left;
+  let mut left_value: f64 = left;
+  let mut right_value: f64 = right;
+  let mut left_negative: u32 = 0;
+  let mut right_negative: u32 = 0;
+  if left_value < f64_from_u32(0) {
+    left_value = f64_from_u32(0) - left_value;
     left_negative = left_negative + 1;
   }
-  if right < f64_from_u32(0) {
-    right = f64_from_u32(0) - right;
+  if right_value < f64_from_u32(0) {
+    right_value = f64_from_u32(0) - right_value;
     right_negative = right_negative + 1;
   }
-  let remainder: f64 = vm_float_positive_remainder(left, right);
+  let remainder: f64 = vm_float_positive_remainder(left_value, right_value);
   if remainder == f64_from_u32(0) {
     return remainder;
   }
@@ -2954,7 +2965,7 @@ fn vm_float_remainder(left: f64, right: f64) -> f64 {
     return f64_from_u32(0) - remainder;
   }
   if left_negative == 1 {
-    return right - remainder;
+    return right_value - remainder;
   }
   return remainder;
 }
@@ -2994,15 +3005,15 @@ fn vm_float_arithmetic(opcode: u32, left: f64, right: f64) -> f64 {
 }
 
 fn vm_float_power(left: f64, right: f64) -> f64 {
-  let remaining: f64 = right;
-  let reciprocal: u32 = 0;
+  let mut remaining: f64 = right;
+  let mut reciprocal: u32 = 0;
   let zero: f64 = f64_from_u32(0);
   let one: f64 = f64_from_u32(1);
   if remaining < zero {
     reciprocal = reciprocal + 1;
     remaining = zero - remaining;
   }
-  let power_result: f64 = one;
+  let mut power_result: f64 = one;
   while remaining >= one {
     power_result = power_result * left;
     remaining = remaining - one;
@@ -3048,8 +3059,8 @@ fn vm_float_comparison(opcode: u32, left: f64, right: f64) -> u32 {
 }
 
 fn vm_string_comparison(opcode: u32, left: u32, right: u32) -> u32 {
-  let left_string: u32 = left;
-  let right_string: u32 = right;
+  let mut left_string: u32 = left;
+  let mut right_string: u32 = right;
   if value.value_kind(left) == 4 {
     left_string = value.value_payload(left);
   }
@@ -3139,18 +3150,18 @@ export fn vm_binary_opcode(prototype: u32, opcode: u32, stack: u32, depth: u32) 
     }
     return depth - 1;
   }
-  let metamethod: u32 = vm_table_metafield(left, vm_binary_metafield(opcode));
+  let mut metamethod: u32 = vm_table_metafield(left, vm_binary_metafield(opcode));
   if metamethod == 0 {
     metamethod = vm_table_metafield(right, vm_binary_metafield(opcode));
   }
   if metamethod != 0 && memory_load_u32(metamethod) == 3 {
-    let first: u32 = left;
-    let second: u32 = right;
+    let mut first: u32 = left;
+    let mut second: u32 = right;
     if opcode == 15 || opcode == 19 {
       first = right;
       second = left;
     }
-    let computed: u32 = vm_invoke_callable(heap, metamethod, first, second, 0, 2, 0);
+    let mut computed: u32 = vm_invoke_callable(heap, metamethod, first, second, 0, 2, 0);
     if opcode == 17 {
       if computed == 0 {
         computed = vm_true();
@@ -3161,7 +3172,7 @@ export fn vm_binary_opcode(prototype: u32, opcode: u32, stack: u32, depth: u32) 
     memory_store_u32(vm_stack_address(stack, depth - 2), computed);
     return depth - 1;
   }
-  let float_operation: u32 = 0;
+  let mut float_operation: u32 = 0;
   if opcode == 5 || opcode == 77 {
     float_operation = float_operation + 1;
   } else {
@@ -3169,9 +3180,9 @@ export fn vm_binary_opcode(prototype: u32, opcode: u32, stack: u32, depth: u32) 
       float_operation = float_operation + 1;
     }
   }
-  let computed: u32 = 0;
-  let computed_float: f64 = f64_from_u32(0);
-  let string_operation: u32 = 0;
+  let mut computed: u32 = 0;
+  let mut computed_float: f64 = f64_from_u32(0);
+  let mut string_operation: u32 = 0;
   if opcode == 16 || opcode == 17 {
     if vm_is_string_comparison_value(left) == 1 {
       if vm_is_string_comparison_value(right) == 1 {
@@ -3284,7 +3295,7 @@ export fn vm_binary_opcode(prototype: u32, opcode: u32, stack: u32, depth: u32) 
   }
   if float_operation == 0 {
     if computed == 0 {
-      let should_box_zero: u32 = 0;
+      let mut should_box_zero: u32 = 0;
       if opcode >= 2 {
         if opcode <= 5 {
           should_box_zero = should_box_zero + 1;
@@ -3305,7 +3316,7 @@ export fn vm_binary_opcode(prototype: u32, opcode: u32, stack: u32, depth: u32) 
     return depth;
   }
   if float_operation == 1 {
-    let should_box: u32 = 0;
+    let mut should_box: u32 = 0;
     if opcode >= 2 {
       if opcode <= 5 {
         should_box = should_box + 1;
@@ -3338,9 +3349,9 @@ export fn vm_bitwise_opcode(prototype: u32, opcode: u32, stack: u32, depth: u32)
   }
   let right: u32 = memory_load_u32(vm_stack_address(stack, depth - 1));
   let left: u32 = memory_load_u32(vm_stack_address(stack, depth - 2));
-  let computed: u32 = 0;
-  let computed_float: f64 = f64_from_u32(0);
-  let float_operation: u32 = 0;
+  let mut computed: u32 = 0;
+  let mut computed_float: f64 = f64_from_u32(0);
+  let mut float_operation: u32 = 0;
   if opcode == 26 {
     if vm_is_float(left) == 1 || vm_is_float(right) == 1 {
       float_operation = float_operation + 1;
@@ -3390,27 +3401,87 @@ export fn vm_bitwise_opcode(prototype: u32, opcode: u32, stack: u32, depth: u32)
   return depth - 1;
 }
 
-export fn execute(prototype: u32) -> u32 {
+fn vm_execute_stack_opcode(prototype: u32, heap: u32, stack: u32, local_base: u32, upvalue: u32, capture: u32, scope_depth: u32, stack_depth: u32, opcode: u32, operand: u32) -> u32 {
+  let mut depth: u32 = stack_depth;
+  let mut scope: u32 = scope_depth;
+  if opcode == 1 || opcode == 53 {
+    if depth < 64 {
+      let mut pushed: u32 = operand;
+      if opcode == 53 { pushed = value.value_float_new(heap, memory_load_f64(operand)); }
+      if opcode != 53 || pushed != 0 { memory_store_u32(stack + depth * 4, pushed); depth = depth + 1; }
+      else { memory_store_u32(prototype + 28, vm_stack_error()); }
+    } else { memory_store_u32(prototype + 28, vm_stack_error()); }
+  }
+  if opcode == 20 {
+    if depth < 64 { memory_store_u32(stack + depth * 4, vm_load_local_or_global_with_capture(heap, local_base, scope, upvalue, capture, operand)); depth = depth + 1; }
+    else { memory_store_u32(prototype + 28, vm_stack_error()); }
+  }
+  if opcode == 21 {
+    if depth == 0 { memory_store_u32(prototype + 28, vm_stack_error()); }
+    else { let assigned: u32 = memory_load_u32(vm_stack_address(stack, depth - 1)); depth = depth - 1; memory_store_u32(prototype + 28, vm_store_local_or_global_with_capture(heap, local_base, scope, upvalue, capture, operand, assigned)); }
+  }
+  if opcode == 51 {
+    if depth == 0 { memory_store_u32(prototype + 28, vm_stack_error()); }
+    else { let declared: u32 = memory_load_u32(vm_stack_address(stack, depth - 1)); depth = depth - 1; memory_store_u32(prototype + 28, vm_declare_local_at_scope(local_base, operand, declared, scope)); }
+  }
+  if opcode == 22 { memory_store_u32(prototype + 24, operand - 1); }
+  if opcode == 23 {
+    if depth == 0 { memory_store_u32(prototype + 28, vm_stack_error()); }
+    else { let condition: u32 = memory_load_u32(vm_stack_address(stack, depth - 1)); depth = depth - 1; if condition == 0 { memory_store_u32(prototype + 24, operand - 1); } }
+  }
+  if opcode == 75 {
+    if scope >= 31 { memory_store_u32(prototype + 28, vm_stack_error()); }
+    else { scope = scope + 1; memory_store_u32(vm_scope_stack_address(local_base, scope), operand); }
+  }
+  if opcode == 76 { if scope != 0 { scope = scope - 1; } }
+  memory_store_u32(prototype + 16, depth);
+  return depth + scope * 1000;
+}
+
+fn vm_result_value(input: u32) -> u32 {
+  if input < 1024 || input >= 16777216 { return input; }
+  let kind: u32 = memory_load_u32(input);
+  if kind == 1 { return value.value_table(input); }
+  if kind == 2 { return value.value_string(input); }
+  if kind == 3 { return value.value_function(input); }
+  return input;
+}
+
+export fn execute_result(prototype: u32) -> u32 { return memory_load_u32(prototype + 12); }
+export fn execute_result_count(prototype: u32) -> u32 {
+  if prototype == 0 { return 0; }
+  return memory_load_u32(prototype + 88);
+}
+export fn execute_result_value(prototype: u32, index: u32) -> u32 {
+  if prototype == 0 { return 0; }
+  let count: u32 = memory_load_u32(prototype + 88);
+  if index >= count { return 0; }
+  let stack: u32 = memory_load_u32(prototype + 20);
+  if stack == 0 { return 0; }
+  return vm_result_value(memory_load_u32(stack + index * 4));
+}
+
+export fn execute(prototype: u32) -> unit {
   if prototype == 0 {
-    return vm_stack_error();
+    return;
   }
   let resuming: u32 = memory_load_u32(prototype + 80);
   if resuming == 0 {
     if memory_load_u32(prototype) != 0 {
-      return memory_load_u32(prototype);
+      return;
     }
   }
   let heap: u32 = memory_load_u32(prototype + 48);
-  let code: u32 = memory_load_u32(prototype + 4);
-  let count: u32 = memory_load_u32(prototype + 8);
-  let stack: u32 = memory_load_u32(prototype + 20);
-  let local_base: u32 = stack + 256;
-  let frame: u32 = 0;
-  let upvalue: u32 = memory_load_u32(prototype + 88);
-  let capture: u32 = memory_load_u32(prototype + 92);
-  let scope_depth: u32 = 0;
+  let mut code: u32 = memory_load_u32(prototype + 4);
+  let mut count: u32 = memory_load_u32(prototype + 8);
+  let mut stack: u32 = memory_load_u32(prototype + 20);
+  let mut local_base: u32 = stack + 256;
+  let mut frame: u32 = 0;
+  let mut upvalue: u32 = memory_load_u32(prototype + 88);
+  let mut capture: u32 = memory_load_u32(prototype + 92);
+  let mut scope_depth: u32 = 0;
   let one: u32 = 1;
-  let stack_depth: u32 = 0;
+  let mut stack_depth: u32 = 0;
   if resuming == 1 {
     code = memory_load_u32(prototype + 60);
     count = memory_load_u32(prototype + 64);
@@ -3436,17 +3507,21 @@ export fn execute(prototype: u32) -> u32 {
     memory_store_u32(prototype + 16, stack_depth);
     vm_clear_locals(local_base);
   }
-  while vm_is_running(memory_load_u32(prototype + 24), count, memory_load_u32(prototype + 28)) == 1 {
+  while true {
+    if vm_is_running(memory_load_u32(prototype + 24), count, memory_load_u32(prototype + 28)) != 1 {
+      memory_store_u32(prototype, memory_load_u32(prototype + 28));
+      return;
+    }
     let pc: u32 = memory_load_u32(prototype + 24);
     let instruction_address: u32 = code + pc * 8;
     let opcode: u32 = memory_load_u32(instruction_address);
     let operand: u32 = memory_load_u32(instruction_address + 4);
-    let advance: u32 = 1;
+    let mut advance: u32 = 1;
     if opcode == 47 {
       memory_store_u32(prototype + 52, operand);
     } else {
       if opcode == 6 {
-        let return_value: u32 = 0;
+        let mut return_value: u32 = 0;
         if stack_depth != 0 {
           return_value = memory_load_u32(vm_stack_address(stack, stack_depth - 1));
         }
@@ -3455,7 +3530,7 @@ export fn execute(prototype: u32) -> u32 {
           memory_store_u32(prototype + 88, stack_depth);
           memory_store_u32(prototype + 24, count);
         } else {
-          let saved_frame: u32 = frame;
+          let mut saved_frame: u32 = frame;
           code = memory_load_u32(saved_frame);
           count = memory_load_u32(saved_frame + 4);
           let return_pc: u32 = memory_load_u32(saved_frame + 8);
@@ -3471,84 +3546,11 @@ export fn execute(prototype: u32) -> u32 {
           memory_store_u32(prototype + 24, return_pc);
         }
       } else {
-        if opcode == 1 || opcode == 53 {
-          if stack_depth >= 64 {
-            memory_store_u32(prototype + 28, vm_stack_error());
-          } else {
-            let pushed: u32 = operand;
-            if opcode == 53 {
-              pushed = value.value_float_new(heap, memory_load_f64(operand));
-            }
-            if opcode == 53 && pushed == 0 {
-              memory_store_u32(prototype + 28, vm_stack_error());
-            } else {
-              memory_store_u32(stack + stack_depth * 4, pushed);
-              stack_depth = stack_depth + 1;
-              memory_store_u32(prototype + 16, stack_depth);
-            }
-          }
+        if opcode == 1 || opcode == 53 || opcode == 20 || opcode == 21 || opcode == 51 || opcode == 22 || opcode == 23 || opcode == 75 || opcode == 76 {
+          let packed_state: u32 = vm_execute_stack_opcode(prototype, heap, stack, local_base, upvalue, capture, scope_depth, stack_depth, opcode, operand);
+          stack_depth = packed_state - packed_state / 1000 * 1000;
+          scope_depth = packed_state / 1000;
         } else {
-          if opcode == 20 {
-            if stack_depth >= 64 {
-              memory_store_u32(prototype + 28, vm_stack_error());
-            } else {
-              let loaded: u32 = vm_load_local_or_global_with_capture(heap, local_base, scope_depth, upvalue, capture, operand);
-              memory_store_u32(stack + stack_depth * 4, loaded);
-              stack_depth = stack_depth + 1;
-              memory_store_u32(prototype + 16, stack_depth);
-            }
-          } else {
-            if opcode == 21 {
-              if stack_depth == 0 {
-                memory_store_u32(prototype + 28, vm_stack_error());
-              } else {
-                let value: u32 = memory_load_u32(vm_stack_address(stack, stack_depth - 1));
-                stack_depth = stack_depth - 1;
-                memory_store_u32(prototype + 16, stack_depth);
-                memory_store_u32(
-                  prototype + 28,
-                  vm_store_local_or_global_with_capture(heap, local_base, scope_depth, upvalue, capture, operand, value),
-                );
-              }
-            } else {
-              if opcode == 51 {
-                if stack_depth == 0 {
-                  memory_store_u32(prototype + 28, vm_stack_error());
-                } else {
-                  let value: u32 = memory_load_u32(vm_stack_address(stack, stack_depth - 1));
-                  stack_depth = stack_depth - 1;
-                  memory_store_u32(prototype + 16, stack_depth);
-                  memory_store_u32(prototype + 28, vm_declare_local_at_scope(local_base, operand, value, scope_depth));
-                }
-              } else {
-                if opcode == 22 {
-                  memory_store_u32(prototype + 24, operand - 1);
-                } else {
-                  if opcode == 23 {
-                    if stack_depth == 0 {
-                      memory_store_u32(prototype + 28, vm_stack_error());
-                    } else {
-                      let condition: u32 = memory_load_u32(vm_stack_address(stack, stack_depth - 1));
-                      stack_depth = stack_depth - 1;
-                      memory_store_u32(prototype + 16, stack_depth);
-                      if condition == 0 {
-                        memory_store_u32(prototype + 24, operand - 1);
-                      }
-                    }
-                  } else {
-                    if opcode == 75 {
-                      if scope_depth >= 31 {
-                        memory_store_u32(prototype + 28, vm_stack_error());
-                      } else {
-                        scope_depth = scope_depth + one;
-                        memory_store_u32(vm_scope_stack_address(local_base, scope_depth), operand);
-                      }
-                    } else {
-                    if opcode == 76 {
-                      if scope_depth != 0 {
-                        scope_depth = scope_depth - one;
-                      }
-                    } else {
                     if opcode == 24 {
                       if stack_depth == 0 {
                         memory_store_u32(prototype + 28, vm_stack_error());
@@ -3559,7 +3561,7 @@ export fn execute(prototype: u32) -> u32 {
                     } else {
                       if opcode == 25 || opcode == 66 || opcode == 69 {
                         let argument_count: u32 = memory_load_u32(prototype + 52);
-                        let callable: u32 = 0;
+                        let mut callable: u32 = 0;
                         if opcode == 69 {
                           if stack_depth == 0 || stack_depth <= argument_count {
                             memory_store_u32(prototype + 28, vm_stack_error());
@@ -3568,7 +3570,7 @@ export fn execute(prototype: u32) -> u32 {
                             callable = memory_load_u32(
                               vm_stack_address(stack, callable_index),
                             );
-                            let shifting: u32 = callable_index;
+                            let mut shifting: u32 = callable_index;
                             while shifting + 1 < stack_depth {
                               memory_store_u32(
                                 vm_stack_address(stack, shifting),
@@ -3583,10 +3585,10 @@ export fn execute(prototype: u32) -> u32 {
                           callable = vm_load_local_or_global_with_capture(heap, local_base, scope_depth, upvalue, capture, operand);
                         }
                         callable = vm_callable_handle(callable);
-                        let function_record: u32 = 0;
-                        let callee_upvalue: u32 = 0;
-                        let callee_capture: u32 = 0;
-                        let is_vararg: u32 = 0;
+                        let mut function_record: u32 = 0;
+                        let mut callee_upvalue: u32 = 0;
+                        let mut callee_capture: u32 = 0;
+                        let mut is_vararg: u32 = 0;
                         if callable != 0 {
                           if memory_load_u32(callable) == 3 {
                             function_record = closure.closure_function(callable);
@@ -3617,17 +3619,17 @@ export fn execute(prototype: u32) -> u32 {
                             vm_publish_dynamic_functions(heap, memory_load_u32(function_record + 20));
                           }
                           memory_store_u32(prototype + 56, 0);
-                          let builtin_handled: u32 = 0;
+                          let mut builtin_handled: u32 = 0;
                           if operand == vm_hash_setmetatable() || operand == vm_hash_getmetatable() {
                             builtin_handled = argument_count - argument_count + 1;
-                            let builtin: u32 = argument_count - argument_count;
+                            let mut builtin: u32 = argument_count - argument_count;
                             if operand == vm_hash_setmetatable() {
                               builtin = argument_count - argument_count + 1;
                             }
                             if operand == vm_hash_getmetatable() {
                               builtin = argument_count - argument_count + 2;
                             }
-                            let builtin_base: u32 = 0;
+                            let mut builtin_base: u32 = 0;
                             if stack_depth >= argument_count {
                               builtin_base = stack_depth - argument_count;
                             }
@@ -3646,7 +3648,7 @@ export fn execute(prototype: u32) -> u32 {
                           }
                           if memory_load_u32(function_record + 28) >= 3 {
                             builtin_handled = argument_count - argument_count + 1;
-                            let builtin_base: u32 = 0;
+                            let mut builtin_base: u32 = 0;
                             if stack_depth >= argument_count {
                               builtin_base = stack_depth - argument_count;
                             }
@@ -3672,7 +3674,7 @@ export fn execute(prototype: u32) -> u32 {
                               memory_store_u32(prototype + 28, vm_stack_error());
                             } else {
                               vm_clear_locals(callee_local);
-                              let bind_count: u32 = argument_count;
+                              let mut bind_count: u32 = argument_count;
                               if bind_count > arity {
                                 bind_count = arity;
                               }
@@ -3680,7 +3682,7 @@ export fn execute(prototype: u32) -> u32 {
                               if bind_status != 0 {
                                 memory_store_u32(prototype + 28, bind_status);
                               } else {
-                                let vararg_count: u32 = 0;
+                                let mut vararg_count: u32 = 0;
                                 if is_vararg == 1 {
                                   if argument_count > arity {
                                     vararg_count = argument_count - arity;
@@ -3833,7 +3835,7 @@ export fn execute(prototype: u32) -> u32 {
                                           }
                                         } else {
                                           if opcode == 50 {
-                                            let yield_value: u32 = 0;
+                                            let mut yield_value: u32 = 0;
                                             if stack_depth != 0 {
                                               yield_value = memory_load_u32(vm_stack_address(stack, stack_depth - 1));
                                               stack_depth = stack_depth - 1;
@@ -3852,7 +3854,7 @@ export fn execute(prototype: u32) -> u32 {
                                             memory_store_u32(prototype + 80, 1);
                                             memory_store_u32(prototype + 28, 0);
                                             memory_store_u32(prototype, 5);
-                                            return 5;
+                                            return;
                                           } else {
                                             memory_store_u32(prototype + 28, vm_stack_error());
                                           }
@@ -3882,48 +3884,6 @@ export fn execute(prototype: u32) -> u32 {
     memory_store_u32(prototype + 24, memory_load_u32(prototype + 24) + advance);
   }
   memory_store_u32(prototype, memory_load_u32(prototype + 28));
-  return memory_load_u32(prototype + 28);
+  return;
 }
 
-export fn execute_result(prototype: u32) -> u32 {
-  return memory_load_u32(prototype + 12);
-}
-
-export fn execute_result_count(prototype: u32) -> u32 {
-  if prototype == 0 {
-    return 0;
-  }
-  return memory_load_u32(prototype + 88);
-}
-
-fn vm_result_value(input: u32) -> u32 {
-  if input < 1024 || input >= 16777216 {
-    return input;
-  }
-  let kind: u32 = memory_load_u32(input);
-  if kind == 1 {
-    return value.value_table(input);
-  }
-  if kind == 2 {
-    return value.value_string(input);
-  }
-  if kind == 3 {
-    return value.value_function(input);
-  }
-  return input;
-}
-
-export fn execute_result_value(prototype: u32, index: u32) -> u32 {
-  if prototype == 0 {
-    return 0;
-  }
-  let count: u32 = memory_load_u32(prototype + 88);
-  if index >= count {
-    return 0;
-  }
-  let stack: u32 = memory_load_u32(prototype + 20);
-  if stack == 0 {
-    return 0;
-  }
-  return vm_result_value(memory_load_u32(stack + index * 4));
-}

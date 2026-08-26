@@ -100,7 +100,7 @@ export fn base_setmetatable(input: u32, metatable: u32) -> u32 {
   if metatable_kind != 0 && metatable_kind != 5 {
     return value.value_nil();
   }
-  let metatable_handle: u32 = 0;
+  let mut metatable_handle: u32 = 0;
   if metatable_kind == 5 {
     metatable_handle = value.value_payload(metatable);
   }

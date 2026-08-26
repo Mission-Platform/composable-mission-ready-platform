@@ -23,7 +23,7 @@ export fn emit_table_entries(node: u32, code: u32, index: u32) -> u32 {
     return index;
   }
   let entry_kind: u32 = memory_load_u32(node);
-  let after_key: u32 = index;
+  let mut after_key: u32 = index;
   // Computed/general keys ([expr] = value) evaluate the key expression at
   // runtime; literal keys (positional and name = value) push an immediate.
   if entry_kind == 59 {
@@ -41,7 +41,7 @@ export fn emit_table_entries(node: u32, code: u32, index: u32) -> u32 {
 
 export fn compile_nested_function(node: u32) -> u32 {
   let function_code: u32 = memory_alloc(function_buffer_size());
-  let function_count: u32 = emit_list(memory_load_u32(node + 4), function_code, 0);
+  let mut function_count: u32 = emit_list(memory_load_u32(node + 4), function_code, 0);
   memory_store_u32(function_code + function_count * 8, 6);
   memory_store_u32(function_code + function_count * 8 + 4, 0);
   function_count = function_count + 1;
@@ -57,7 +57,7 @@ export fn compile_nested_function(node: u32) -> u32 {
 }
 
 fn emit_nil_padding(code: u32, index: u32, count: u32) -> u32 {
-  let written: u32 = 0;
+  let mut written: u32 = 0;
   while written < count {
     let destination: u32 = index + written;
     memory_store_u32(code + destination * 8, 1);
@@ -120,7 +120,7 @@ fn emit_break(code: u32, index: u32, loop_ctx: u32) -> u32 {
 }
 
 fn close_loop(code: u32, loop_ctx: u32, end: u32) -> unit {
-  let pending: u32 = memory_load_u32(loop_ctx + 4);
+  let mut pending: u32 = memory_load_u32(loop_ctx + 4);
   while pending != 0 {
     memory_store_u32(code + memory_load_u32(pending) * 8 + 4, end);
     pending = memory_load_u32(pending + 4);
@@ -128,7 +128,7 @@ fn close_loop(code: u32, loop_ctx: u32, end: u32) -> unit {
 }
 
 fn label_find(labels: u32, hash: u32) -> u32 {
-  let current: u32 = labels;
+  let mut current: u32 = labels;
   while current != 0 {
     if memory_load_u32(current) == hash {
       return current;
@@ -144,8 +144,8 @@ fn label_define(code: u32, ctx: u32, hash: u32, pc: u32) -> unit {
   memory_store_u32(entry + 4, pc);
   memory_store_u32(entry + 8, memory_load_u32(ctx));
   memory_store_u32(ctx, entry);
-  let pending: u32 = memory_load_u32(ctx + 4);
-  let remaining: u32 = 0;
+  let mut pending: u32 = memory_load_u32(ctx + 4);
+  let mut remaining: u32 = 0;
   while pending != 0 {
     let next: u32 = memory_load_u32(pending + 8);
     if memory_load_u32(pending) == hash {
@@ -178,7 +178,7 @@ fn emit_goto(code: u32, index: u32, ctx: u32, hash: u32) -> u32 {
 
 export fn emit(node: u32, code: u32, index: u32, expected: u32) -> u32 {
   let kind: u32 = memory_load_u32(node);
-  let after_expression: u32 = index;
+  let mut after_expression: u32 = index;
   if kind == 1 {
     memory_store_u32(code + index * 8, 1);
     memory_store_u32(code + index * 8 + 4, memory_load_u32(node + 4));
@@ -306,7 +306,7 @@ export fn emit(node: u32, code: u32, index: u32, expected: u32) -> u32 {
                             } else {
                             let after_left: u32 = emit(memory_load_u32(node + 4), code, index, 1);
                             let after_right: u32 = emit(memory_load_u32(node + 8), code, after_left, 1);
-                            let opcode: u32 = kind;
+                            let mut opcode: u32 = kind;
                             if kind == 5 {
                               let right: u32 = memory_load_u32(node + 8);
                               if memory_load_u32(right) == 1 {
@@ -356,7 +356,7 @@ export fn emit_arguments(node: u32, code: u32, index: u32, expected: u32) -> u32
     return emit_nil_padding(code, index, expected);
   }
   let next: u32 = memory_load_u32(node + 8);
-  let current_expected: u32 = 1;
+  let mut current_expected: u32 = 1;
   if next == 0 {
     current_expected = expected;
   }
@@ -364,7 +364,7 @@ export fn emit_arguments(node: u32, code: u32, index: u32, expected: u32) -> u32
   if next == 0 {
     return after_argument;
   }
-  let remaining_expected: u32 = expected;
+  let mut remaining_expected: u32 = expected;
   if remaining_expected != 255 {
     if remaining_expected > 0 {
       remaining_expected = remaining_expected - 1;
@@ -471,7 +471,7 @@ fn emit_statement_ctx(node: u32, code: u32, index: u32, ctx: u32, loop_ctx: u32)
     return emit_scope_exit(code, after_body);
   }
   if kind == 34 {
-    let after_expression: u32 = index;
+    let mut after_expression: u32 = index;
     if memory_load_u32(node + 4) == 0 {
       memory_store_u32(code + after_expression * 8, 1);
       memory_store_u32(code + after_expression * 8 + 4, 0);
@@ -499,7 +499,7 @@ fn emit_statement_ctx(node: u32, code: u32, index: u32, ctx: u32, loop_ctx: u32)
   }
   if kind == 53 {
     let target_count: u32 = list_length(memory_load_u32(node + 4));
-    let after_expressions: u32 = index;
+    let mut after_expressions: u32 = index;
     if memory_load_u32(node + 8) == 0 {
       after_expressions = emit_nil_padding(code, after_expressions, target_count);
     } else {
@@ -517,7 +517,7 @@ fn emit_statement_ctx(node: u32, code: u32, index: u32, ctx: u32, loop_ctx: u32)
   }
   if kind == 48 {
     let target: u32 = memory_load_u32(node + 4);
-    let after_target: u32 = emit(memory_load_u32(target + 4), code, index, 1);
+    let mut after_target: u32 = emit(memory_load_u32(target + 4), code, index, 1);
     after_target = emit(memory_load_u32(target + 8), code, after_target, 1);
     let after_expression: u32 = emit(memory_load_u32(node + 8), code, after_target, 1);
     memory_store_u32(code + after_expression * 8, 41);
@@ -538,7 +538,7 @@ fn emit_statement_ctx(node: u32, code: u32, index: u32, ctx: u32, loop_ctx: u32)
     memory_store_u32(code + end_jump * 8 + 4, 0);
     let else_start: u32 = end_jump + 1;
     let else_node: u32 = memory_load_u32(node + 12);
-    let after_else: u32 = else_start;
+    let mut after_else: u32 = else_start;
     if else_node != 0 {
       if memory_load_u32(else_node) == 32 {
         after_else = emit_statement_ctx(else_node, code, else_start, ctx, loop_ctx);
@@ -555,7 +555,7 @@ fn emit_statement_ctx(node: u32, code: u32, index: u32, ctx: u32, loop_ctx: u32)
   }
   if kind == 33 {
     let loop_start: u32 = index;
-    let after_condition: u32 = emit(memory_load_u32(node + 4), code, loop_start, 1);
+    let mut after_condition: u32 = emit(memory_load_u32(node + 4), code, loop_start, 1);
     let false_jump: u32 = after_condition;
     memory_store_u32(code + false_jump * 8, 23);
     memory_store_u32(code + false_jump * 8 + 4, 0);
@@ -577,7 +577,7 @@ fn emit_statement_ctx(node: u32, code: u32, index: u32, ctx: u32, loop_ctx: u32)
     let body_scope: u32 = scope_context_new(ctx);
     let body_start: u32 = emit_scope_enter(code, loop_start, body_scope);
     let after_body: u32 = emit_list_ctx(memory_load_u32(node + 4), code, body_start, ctx, body_ctx);
-    let after_condition: u32 = emit(memory_load_u32(node + 8), code, after_body, 1);
+    let mut after_condition: u32 = emit(memory_load_u32(node + 8), code, after_body, 1);
     after_condition = emit_scope_exit(code, after_condition);
     memory_store_u32(code + after_condition * 8, 23);
     memory_store_u32(code + after_condition * 8 + 4, loop_start);
@@ -699,13 +699,13 @@ fn emit_statement_ctx(node: u32, code: u32, index: u32, ctx: u32, loop_ctx: u32)
 }
 
 export fn compile_functions(node: u32, head: u32) -> u32 {
-  let current: u32 = node;
-  let functions: u32 = head;
+  let mut current: u32 = node;
+  let mut functions: u32 = head;
   while current != 0 {
     let statement: u32 = memory_load_u32(current + 4);
     if memory_load_u32(statement) == 38 {
       let function_code: u32 = memory_alloc(function_buffer_size());
-      let function_count: u32 = emit_list(memory_load_u32(statement + 8), function_code, 0);
+      let mut function_count: u32 = emit_list(memory_load_u32(statement + 8), function_code, 0);
       memory_store_u32(function_code + function_count * 8, 6);
       memory_store_u32(function_code + function_count * 8 + 4, 0);
       function_count = function_count + 1;

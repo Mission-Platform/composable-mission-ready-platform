@@ -4,6 +4,7 @@ import forgeWebScriptPlugin from "@mission-platform/vite-plugin-forge-web-script
 const webScript = forgeWebScriptPlugin({
   root: import.meta.dirname,
   requireExports: false,
+  optimization: "release",
 });
 
 export default [
@@ -20,6 +21,7 @@ export default [
         forgeWebScriptPlugin({
           root: import.meta.dirname,
           requireExports: false,
+          optimization: "release",
         }),
       ],
     },

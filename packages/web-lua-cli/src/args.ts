@@ -47,7 +47,7 @@ function valueFor(
 export function parseWebLuaCliArgs(argv: readonly string[]): WebLuaCliOptions {
   const execute: string[] = [];
   let source: string | undefined;
-  const args: string[] = [];
+  const arguments_: string[] = [];
   let cwd: string | undefined;
   let suite: string | undefined;
   const exclude: string[] = [];
@@ -58,7 +58,7 @@ export function parseWebLuaCliArgs(argv: readonly string[]): WebLuaCliOptions {
     if (argument === undefined) continue;
     if (endOfOptions) {
       if (source === undefined) source = argument;
-      else args.push(argument);
+      else arguments_.push(argument);
       continue;
     }
     if (argument === "--") {
@@ -75,17 +75,15 @@ export function parseWebLuaCliArgs(argv: readonly string[]): WebLuaCliOptions {
       ? argument.slice(argument.indexOf("=") + 1)
       : undefined;
     const optionValue = (description: string): [string, number] => {
-      if (inlineValue !== undefined) {
-        if (inlineValue.length === 0)
-          throw new WebLuaCliUsageError(`Missing ${description}.`);
-        return [inlineValue, index];
-      }
-      return valueFor(argv, index, description);
+      if (inlineValue === undefined) return valueFor(argv, index, description);
+      if (inlineValue.length === 0)
+        throw new WebLuaCliUsageError(`Missing ${description}.`);
+      return [inlineValue, index];
     };
     const executeValue = (): [string, number] =>
-      inlineValue !== undefined
-        ? [inlineValue, index]
-        : valueFor(argv, index, "execute chunk", true);
+      inlineValue === undefined
+        ? valueFor(argv, index, "execute chunk", true)
+        : [inlineValue, index];
 
     if (option === "-e" || option === "--execute") {
       const [value, nextIndex] = executeValue();
@@ -126,13 +124,13 @@ export function parseWebLuaCliArgs(argv: readonly string[]): WebLuaCliOptions {
     }
     if (argument === "-") {
       if (source === undefined) source = argument;
-      else args.push(argument);
+      else arguments_.push(argument);
       continue;
     }
     if (argument.startsWith("-"))
       throw new WebLuaCliUsageError(`Unknown option '${argument}'.`);
     if (source === undefined) source = argument;
-    else args.push(argument);
+    else arguments_.push(argument);
   }
   if (source === undefined)
     throw new WebLuaCliUsageError(
@@ -141,7 +139,7 @@ export function parseWebLuaCliArgs(argv: readonly string[]): WebLuaCliOptions {
   return {
     execute,
     source,
-    args,
+    args: arguments_,
     cwd,
     suite,
     exclude,

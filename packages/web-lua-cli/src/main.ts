@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { readFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -9,6 +9,7 @@ import {
   createWebLuaRuntime,
   WEB_LUA_BUILD_ARTIFACT,
 } from "@mission-platform/web-lua/node";
+
 import {
   WEB_LUA_CLI_USAGE,
   WebLuaCliUsageError,
@@ -125,7 +126,7 @@ async function readSource(source: string, cwd: string): Promise<string> {
 }
 
 function matchesExclusion(file: string, pattern: string): boolean {
-  const escaped = pattern.replace(/[.+^${}()|[\]\\]/gu, "\\$&");
+  const escaped = pattern.replaceAll(/[.+^${}()|[\]\\]/gu, String.raw`\$&`);
   const expression = `^${escaped.replaceAll("*", ".*").replaceAll("?", ".")}$`;
   return new RegExp(expression, "u").test(file);
 }
@@ -133,7 +134,7 @@ function matchesExclusion(file: string, pattern: string): boolean {
 export function stripLuaShebang(source: string): string {
   if (!source.startsWith("#")) return source;
   const lineEnd = source.indexOf("\n");
-  return lineEnd < 0 ? "" : source.slice(lineEnd + 1);
+  return lineEnd === -1 ? "" : source.slice(lineEnd + 1);
 }
 
 export async function runWebLuaCli(

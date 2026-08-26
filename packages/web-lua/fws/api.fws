@@ -31,7 +31,7 @@ export fn api_load(state: u32, source: bytes) -> u32 {
   memory.heap_set_chunk(state, prototype);
   memory_store_u32(prototype + 48, state);
   let compile_error: u32 = codegen.chunk_error(prototype);
-  let compile_status: u32 = memory_load_u32(prototype);
+  let mut compile_status: u32 = memory_load_u32(prototype);
   if compile_error != 0 {
     compile_status = auxlib.status_for_chunk_error(compile_error);
   }
@@ -44,7 +44,8 @@ export fn api_call(state: u32, prototype: u32) -> u32 {
   if api_is_invalid(state, prototype, memory.heap_closed(state)) == 1 {
     return 0;
   }
-  let status: u32 = vm.execute(prototype);
+  vm.execute(prototype);
+  let status: u32 = memory_load_u32(prototype + 28);
   memory.heap_set_status(state, status);
   return vm.execute_result(prototype);
 }
@@ -57,7 +58,8 @@ export fn api_resume(state: u32, prototype: u32) -> u32 {
     memory.heap_set_status(state, auxlib.status_runtime_error());
     return 0;
   }
-  let status: u32 = vm.execute(prototype);
+  vm.execute(prototype);
+  let status: u32 = memory_load_u32(prototype + 28);
   memory.heap_set_status(state, status);
   return vm.execute_result(prototype);
 }

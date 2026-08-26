@@ -150,7 +150,7 @@ const defaultCliRunner: WebLuaSuiteCliRunner = (argv, io, cwd, sourceReader) =>
   runWebLuaCli(argv, io, cwd, undefined, sourceReader);
 
 function matchesExclusion(file: string, pattern: string): boolean {
-  const escaped = pattern.replace(/[.+^${}()|[\]\\]/gu, "\\$&");
+  const escaped = pattern.replaceAll(/[.+^${}()|[\]\\]/gu, String.raw`\$&`);
   const expression = `^${escaped.replaceAll("*", ".*").replaceAll("?", ".")}$`;
   return new RegExp(expression, "u").test(file);
 }

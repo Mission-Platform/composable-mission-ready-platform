@@ -1,8 +1,8 @@
 import {
+  WEB_LUA_CAPABILITIES,
   asWebLuaExports,
   assertMemoryRange,
   WEB_LUA_ABI_MANIFEST,
-  WEB_LUA_CAPABILITIES,
   WEB_LUA_CAPABILITY_POLICIES,
   WEB_LUA_IMPORT_POLICY,
   WEB_LUA_STATUS,
@@ -10,10 +10,10 @@ import {
   type WebLuaValueKind,
 } from "./abi.js";
 import { WEB_LUA_BUILD_ARTIFACT } from "./build-artifact.js";
+
 import type { WebLuaArtifact } from "./compiler.js";
 
-export { WEB_LUA_CAPABILITIES } from "./abi.js";
-export { WEB_LUA_BUILD_ARTIFACT } from "./build-artifact.js";
+export { WEB_LUA_CAPABILITIES, WEB_LUA_BUILD_ARTIFACT };
 
 export type WebLuaCapability = (typeof WEB_LUA_CAPABILITIES)[number];
 
@@ -316,7 +316,7 @@ export async function createWebLuaRuntime(
   options: WebLuaRuntimeOptions = {},
 ): Promise<WebLuaRuntime> {
   const resolvedArtifact = artifact ?? WEB_LUA_BUILD_ARTIFACT;
-  const capabilities = [...new Set(options.capabilities ?? [])];
+  const capabilities = [...new Set(options.capabilities)];
   const hasCapability = (capability: WebLuaCapability): boolean =>
     capabilities.includes(capability);
   const requireCapability = (capability: WebLuaCapability): void => {
@@ -676,7 +676,7 @@ export async function createWebLuaRuntime(
     }
   };
   const dispose = (): void => {
-    for (const state of [...activeStates]) state.close();
+    for (const state of activeStates) state.close();
     bootstrapObjectCounts.clear();
     exports.fws_reset();
   };
@@ -701,26 +701,36 @@ export async function createWebLuaRuntime(
   };
   const valueKind = (value: number): WebLuaValueKind => {
     switch (exports.value_kind_of(value)) {
-      case 0:
+      case 0: {
         return "nil";
-      case 1:
+      }
+      case 1: {
         return "boolean";
-      case 2:
+      }
+      case 2: {
         return "integer";
-      case 3:
+      }
+      case 3: {
         return "float";
-      case 4:
+      }
+      case 4: {
         return "string";
-      case 5:
+      }
+      case 5: {
         return "table";
-      case 6:
+      }
+      case 6: {
         return "function";
-      case 7:
+      }
+      case 7: {
         return "thread";
-      case 8:
+      }
+      case 8: {
         return "userdata";
-      default:
+      }
+      default: {
         return "unknown";
+      }
     }
   };
   return {
@@ -740,7 +750,7 @@ export async function createWebLuaRuntime(
     nilValue: exports.nil_value,
     booleanValue: (value) => exports.boolean_value(value ? 1 : 0),
     integerValue: (value) => {
-      if (!Number.isSafeInteger(value) || value < 0 || value > 0xfffffff)
+      if (!Number.isSafeInteger(value) || value < 0 || value > 0xf_ff_ff_ff)
         throw new RangeError(
           "WebLua integer values must fit the guest unsigned payload range.",
         );

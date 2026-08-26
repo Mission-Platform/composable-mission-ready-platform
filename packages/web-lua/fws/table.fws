@@ -59,7 +59,7 @@ export fn table_new_empty(heap: u32) -> u32 {
   memory_store_u32(at(table, 24), 0);
   memory_store_u32(at(table, 28), 0);
   memory_store_u32(at(table, 32), heap);
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < array_capacity() {
     memory_store_u32(at(table, index * 4 + 36), 0);
     index = index + 1;
@@ -78,7 +78,7 @@ export fn table_new(heap: u32, key: u32, value: u32) -> u32 {
 }
 
 fn table_find_entry(table: u32, key: u32) -> u32 {
-  let current: u32 = memory_load_u32(at(table, 20));
+  let mut current: u32 = memory_load_u32(at(table, 20));
   let target: u32 = normalized_key(key);
   while current != 0 {
     if normalized_key(memory_load_u32(at(current, 12))) == target {
@@ -92,9 +92,9 @@ fn table_find_entry(table: u32, key: u32) -> u32 {
 fn normalized_key(key: u32) -> u32 {
   if key > 1024 && key < 16777216 {
     if memory_load_u32(key) == 2 {
-      let hash: u32 = 216613626;
+      let mut hash: u32 = 216613626;
       let length: u32 = memory_load_u32(key + 16);
-      let index: u32 = 0;
+      let mut index: u32 = 0;
       while index < length {
         hash = hash * 16777619;
         hash = hash + memory_load_u32(key + index * 4 + 24);
@@ -205,7 +205,7 @@ export fn table_next(table: u32, cursor: u32) -> u32 {
   if table == 0 {
     return 0;
   }
-  let position: u32 = 1;
+  let mut position: u32 = 1;
   while position <= array_capacity() {
     if position > cursor && memory_load_u32(array_address(table, position)) != 0 {
       return position;
@@ -224,7 +224,7 @@ export fn table_next_from_key(table: u32, key: u32) -> u32 {
     return 0;
   }
   if key == 0 {
-    let position: u32 = 1;
+    let mut position: u32 = 1;
     while position <= array_capacity() {
       if memory_load_u32(array_address(table, position)) != 0 {
         return position;
@@ -235,7 +235,7 @@ export fn table_next_from_key(table: u32, key: u32) -> u32 {
   }
   let normalized: u32 = normalized_key(key);
   if is_array_key(normalized) == 1 {
-    let position: u32 = integer_key(normalized) + 1;
+    let mut position: u32 = integer_key(normalized) + 1;
     while position <= array_capacity() {
       if memory_load_u32(array_address(table, position)) != 0 {
         return position;
@@ -244,7 +244,7 @@ export fn table_next_from_key(table: u32, key: u32) -> u32 {
     }
     return memory_load_u32(at(table, 20));
   }
-  let current: u32 = memory_load_u32(at(table, 20));
+  let mut current: u32 = memory_load_u32(at(table, 20));
   while current != 0 {
     if normalized_key(memory_load_u32(at(current, 12))) == normalized {
       return memory_load_u32(at(current, 8));

@@ -41,7 +41,7 @@ export fn node_full(kind: u32, first: u32, second: u32, third: u32, fourth: u32)
 }
 
 fn self_identifier_hash() -> u32 {
-  let hash: u32 = 216613626;
+  let mut hash: u32 = 216613626;
   hash = hash * 16777619 + 115;
   hash = hash * 16777619 + 101;
   hash = hash * 16777619 + 108;
@@ -114,8 +114,8 @@ export fn copy_string_literal(source: bytes, position: u32) -> u32 {
   let length: u32 = lexer.lexer_string_content_length(source, position);
   let record: u32 = memory_alloc(length * 4 + 4);
   let end: u32 = start + length;
-  let cursor: u32 = start;
-  let output: u32 = 0;
+  let mut cursor: u32 = start;
+  let mut output: u32 = 0;
   while cursor < end {
     let byte: u32 = bytes_byte_at_u32(source, cursor);
     cursor = cursor + 1;
@@ -126,7 +126,7 @@ export fn copy_string_literal(source: bytes, position: u32) -> u32 {
       if cursor < end {
         let escaped: u32 = bytes_byte_at_u32(source, cursor);
         cursor = cursor + 1;
-        let value: u32 = escaped;
+        let mut value: u32 = escaped;
         if escaped == 97 {
           value = value - value + 7;
         } else {
@@ -164,7 +164,7 @@ export fn copy_string_literal(source: bytes, position: u32) -> u32 {
                         } else {
                           if is_decimal_escape(escaped) == 1 {
                             value = escaped - 48;
-                            let digits: u32 = 1;
+                            let mut digits: u32 = 1;
                             while digits < 3 && cursor < end && is_decimal_escape(bytes_byte_at_u32(source, cursor)) == 1 {
                               value = value * 10 + bytes_byte_at_u32(source, cursor) - 48;
                               cursor = cursor + 1;
@@ -203,7 +203,7 @@ export fn copy_long_string_literal(source: bytes, position: u32) -> u32 {
   let length: u32 = lexer.lexer_long_string_content_length(source, position);
   let record: u32 = memory_alloc(length * 4 + 4);
   memory_store_u32(record, length);
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < length {
     memory_store_u32(record + index * 4 + 4, bytes_byte_at_u32(source, start + index));
     index = index + 1;
@@ -219,7 +219,7 @@ export fn copy_identifier(source: bytes, position: u32) -> u32 {
   let length: u32 = end - start;
   let record: u32 = memory_alloc(length * 4 + 4);
   memory_store_u32(record, length);
-  let index: u32 = 0;
+  let mut index: u32 = 0;
   while index < length {
     memory_store_u32(record + index * 4 + 4, bytes_byte_at_u32(source, start + index));
     index = index + 1;
@@ -331,15 +331,15 @@ fn parse_optional_const_attribute(source: bytes, position: u32) -> u32 {
 }
 
 fn parse_declaration_names_with_flags(source: bytes, position: u32, shared_flags: u32) -> u32 {
-  let current: u32 = lexer.lexer_skip(source, position);
-  let head: u32 = 0;
-  let tail: u32 = 0;
-  let scanning: u32 = 1;
+  let mut current: u32 = lexer.lexer_skip(source, position);
+  let mut head: u32 = 0;
+  let mut tail: u32 = 0;
+  let mut scanning: u32 = 1;
   while scanning == 1 {
     if lexer.lexer_token_kind(source, current) != 20 {
       return result(current, 0, 1);
     }
-    let flags: u32 = shared_flags;
+    let mut flags: u32 = shared_flags;
     let entry: u32 = declaration_name(lexer.identifier_hash(source, current), flags);
     current = lexer.lexer_token_end(source, current);
     let postfix: u32 = parse_optional_const_attribute(source, current);
@@ -376,10 +376,10 @@ fn parse_declaration_names(source: bytes, position: u32) -> u32 {
 }
 
 fn parse_assignment_names(source: bytes, position: u32) -> u32 {
-  let current: u32 = lexer.lexer_skip(source, position);
-  let head: u32 = 0;
-  let tail: u32 = 0;
-  let scanning: u32 = 1;
+  let mut current: u32 = lexer.lexer_skip(source, position);
+  let mut head: u32 = 0;
+  let mut tail: u32 = 0;
+  let mut scanning: u32 = 1;
   while scanning == 1 {
     let target: u32 = parse_factor(source, current);
     if memory_load_u32(target + 8) != 0 {
@@ -411,13 +411,13 @@ fn parse_assignment_names(source: bytes, position: u32) -> u32 {
 }
 
 export fn parse_parameters(source: bytes, position: u32) -> u32 {
-  let current: u32 = lexer.lexer_skip(source, position);
-  let head: u32 = 0;
-  let tail: u32 = 0;
+  let mut current: u32 = lexer.lexer_skip(source, position);
+  let mut head: u32 = 0;
+  let mut tail: u32 = 0;
   if lexer.lexer_token_kind(source, current) == 8 {
     return result(current, 0, 0);
   }
-  let scanning: u32 = 1;
+  let mut scanning: u32 = 1;
   while scanning == 1 {
     if lexer.lexer_token_kind(source, current) == 52 {
       let entry: u32 = node(52, 0, 0);
@@ -453,8 +453,8 @@ export fn parse_parameters(source: bytes, position: u32) -> u32 {
 }
 
 export fn parameter_count(parameters: u32) -> u32 {
-  let current: u32 = parameters;
-  let count: u32 = 0;
+  let mut current: u32 = parameters;
+  let mut count: u32 = 0;
   while current != 0 {
     if memory_load_u32(current) != 52 {
       count = count + 1;
@@ -465,7 +465,7 @@ export fn parameter_count(parameters: u32) -> u32 {
 }
 
 export fn parameters_are_vararg(parameters: u32) -> u32 {
-  let current: u32 = parameters;
+  let mut current: u32 = parameters;
   while current != 0 {
     if memory_load_u32(current) == 52 {
       return 1;
@@ -504,20 +504,20 @@ export fn parse_function_expression(source: bytes, position: u32) -> u32 {
 }
 
 export fn parse_table_entries(source: bytes, position: u32, next_index: u32) -> u32 {
-  let current: u32 = lexer.lexer_skip(source, position);
-  let head: u32 = 0;
-  let tail: u32 = 0;
-  let index: u32 = next_index;
-  let kind: u32 = lexer.lexer_token_kind(source, current);
+  let mut current: u32 = lexer.lexer_skip(source, position);
+  let mut head: u32 = 0;
+  let mut tail: u32 = 0;
+  let mut index: u32 = next_index;
+  let mut kind: u32 = lexer.lexer_token_kind(source, current);
   while kind != 40 {
     if kind == 0 {
       return result(current, 0, 1);
     }
     let key: u32 = index + 1;
-    let value_position: u32 = current;
-    let computed_key: u32 = 0;
-    let is_computed: u32 = 0;
-    let is_positional: u32 = is_computed - is_computed + 1;
+    let mut value_position: u32 = current;
+    let mut computed_key: u32 = 0;
+    let mut is_computed: u32 = 0;
+    let mut is_positional: u32 = is_computed - is_computed + 1;
     if kind == 20 {
       let name_end: u32 = lexer.lexer_token_end(source, current);
       if lexer.lexer_token_kind(source, name_end) == 30 {
@@ -553,7 +553,7 @@ export fn parse_table_entries(source: bytes, position: u32, next_index: u32) -> 
     if memory_load_u32(expression + 8) != 0 {
       return expression;
     }
-    let entry: u32 = node_extra(45, key, memory_load_u32(expression + 4), 0);
+    let mut entry: u32 = node_extra(45, key, memory_load_u32(expression + 4), 0);
     if is_computed == 1 {
       entry = node_extra(59, computed_key, memory_load_u32(expression + 4), 0);
     }
@@ -585,10 +585,10 @@ export fn parse_table_entries(source: bytes, position: u32, next_index: u32) -> 
 }
 
 export fn parse_index_suffix(source: bytes, base: u32, position: u32) -> u32 {
-  let current: u32 = lexer.lexer_skip(source, position);
-  let kind: u32 = lexer.lexer_token_kind(source, current);
-  let value: u32 = base;
-  let scanning: u32 = 1;
+  let mut current: u32 = lexer.lexer_skip(source, position);
+  let mut kind: u32 = lexer.lexer_token_kind(source, current);
+  let mut value: u32 = base;
+  let mut scanning: u32 = 1;
   while scanning == 1 {
     if kind == 41 {
       let key_position: u32 = lexer.lexer_token_end(source, current);
@@ -691,14 +691,14 @@ fn parse_call_arguments(source: bytes, position: u32) -> u32 {
     }
     return result_with_count(open_position, 0, 0, 1);
   }
-  let argument_position: u32 = lexer.lexer_token_end(source, open_position);
-  let arguments: u32 = 0;
-  let tail: u32 = 0;
-  let count: u32 = 0;
+  let mut argument_position: u32 = lexer.lexer_token_end(source, open_position);
+  let mut arguments: u32 = 0;
+  let mut tail: u32 = 0;
+  let mut count: u32 = 0;
   let argument_kind: u32 = lexer.lexer_token_kind(source, argument_position);
   if argument_kind != 8 {
-    let scanning_arguments: u32 = 1;
-    let current_argument: u32 = argument_position;
+    let mut scanning_arguments: u32 = 1;
+    let mut current_argument: u32 = argument_position;
     while scanning_arguments == 1 {
       let argument: u32 = parse_expression(source, current_argument);
       if memory_load_u32(argument + 8) != 0 {
@@ -842,20 +842,20 @@ export fn parse_factor(source: bytes, position: u32) -> u32 {
 
 export fn parse_term(source: bytes, position: u32) -> u32 {
   let left_result: u32 = parse_factor(source, position);
-  let current: u32 = memory_load_u32(left_result);
-  let left: u32 = memory_load_u32(left_result + 4);
+  let mut current: u32 = memory_load_u32(left_result);
+  let mut left: u32 = memory_load_u32(left_result + 4);
   let status: u32 = memory_load_u32(left_result + 8);
   if status != 0 {
     return left_result;
   }
   let kind: u32 = lexer.lexer_token_kind(source, current);
-  let active: u32 = kind;
+  let mut active: u32 = kind;
   while is_term_operator(active) == 1 {
     let right_result: u32 = parse_factor(source, lexer.lexer_token_end(source, current));
     if memory_load_u32(right_result + 8) != 0 {
       return result(memory_load_u32(right_result), 0, 1);
     }
-    let operation: u32 = 5;
+    let mut operation: u32 = 5;
     if active == 5 {
       operation = active - active + 4;
     }
@@ -874,18 +874,18 @@ export fn parse_term(source: bytes, position: u32) -> u32 {
 
 export fn parse_arithmetic(source: bytes, position: u32) -> u32 {
   let left_result: u32 = parse_term(source, position);
-  let current: u32 = memory_load_u32(left_result);
-  let left: u32 = memory_load_u32(left_result + 4);
+  let mut current: u32 = memory_load_u32(left_result);
+  let mut left: u32 = memory_load_u32(left_result + 4);
   if memory_load_u32(left_result + 8) != 0 {
     return left_result;
   }
-  let kind: u32 = lexer.lexer_token_kind(source, current);
+  let mut kind: u32 = lexer.lexer_token_kind(source, current);
   while is_expression_operator(kind) == 1 {
     let right_result: u32 = parse_term(source, lexer.lexer_token_end(source, current));
     if memory_load_u32(right_result + 8) != 0 {
       return result(memory_load_u32(right_result), 0, 1);
     }
-    let operation: u32 = 3;
+    let mut operation: u32 = 3;
     if kind == 3 {
       operation = kind - kind + 2;
     }
@@ -898,18 +898,18 @@ export fn parse_arithmetic(source: bytes, position: u32) -> u32 {
 
 export fn parse_shift(source: bytes, position: u32) -> u32 {
   let left_result: u32 = parse_concat(source, position);
-  let current: u32 = memory_load_u32(left_result);
-  let left: u32 = memory_load_u32(left_result + 4);
+  let mut current: u32 = memory_load_u32(left_result);
+  let mut left: u32 = memory_load_u32(left_result + 4);
   if memory_load_u32(left_result + 8) != 0 {
     return left_result;
   }
-  let kind: u32 = lexer.lexer_token_kind(source, current);
+  let mut kind: u32 = lexer.lexer_token_kind(source, current);
   while is_shift_operator(kind) == 1 {
     let right_result: u32 = parse_concat(source, lexer.lexer_token_end(source, current));
     if memory_load_u32(right_result + 8) != 0 {
       return right_result;
     }
-    let operation: u32 = 30;
+    let mut operation: u32 = 30;
     if kind == 38 {
       operation = operation - operation + 31;
     }
@@ -922,12 +922,12 @@ export fn parse_shift(source: bytes, position: u32) -> u32 {
 
 export fn parse_bitand(source: bytes, position: u32) -> u32 {
   let left_result: u32 = parse_shift(source, position);
-  let current: u32 = memory_load_u32(left_result);
-  let left: u32 = memory_load_u32(left_result + 4);
+  let mut current: u32 = memory_load_u32(left_result);
+  let mut left: u32 = memory_load_u32(left_result + 4);
   if memory_load_u32(left_result + 8) != 0 {
     return left_result;
   }
-  let kind: u32 = lexer.lexer_token_kind(source, current);
+  let mut kind: u32 = lexer.lexer_token_kind(source, current);
   while is_bitand_operator(kind) == 1 {
     let right_result: u32 = parse_shift(source, lexer.lexer_token_end(source, current));
     if memory_load_u32(right_result + 8) != 0 {
@@ -942,12 +942,12 @@ export fn parse_bitand(source: bytes, position: u32) -> u32 {
 
 export fn parse_bitxor(source: bytes, position: u32) -> u32 {
   let left_result: u32 = parse_bitand(source, position);
-  let current: u32 = memory_load_u32(left_result);
-  let left: u32 = memory_load_u32(left_result + 4);
+  let mut current: u32 = memory_load_u32(left_result);
+  let mut left: u32 = memory_load_u32(left_result + 4);
   if memory_load_u32(left_result + 8) != 0 {
     return left_result;
   }
-  let kind: u32 = lexer.lexer_token_kind(source, current);
+  let mut kind: u32 = lexer.lexer_token_kind(source, current);
   while is_bitxor_operator(kind) == 1 {
     let right_result: u32 = parse_bitand(source, lexer.lexer_token_end(source, current));
     if memory_load_u32(right_result + 8) != 0 {
@@ -962,12 +962,12 @@ export fn parse_bitxor(source: bytes, position: u32) -> u32 {
 
 export fn parse_bitor(source: bytes, position: u32) -> u32 {
   let left_result: u32 = parse_bitxor(source, position);
-  let current: u32 = memory_load_u32(left_result);
-  let left: u32 = memory_load_u32(left_result + 4);
+  let mut current: u32 = memory_load_u32(left_result);
+  let mut left: u32 = memory_load_u32(left_result + 4);
   if memory_load_u32(left_result + 8) != 0 {
     return left_result;
   }
-  let kind: u32 = lexer.lexer_token_kind(source, current);
+  let mut kind: u32 = lexer.lexer_token_kind(source, current);
   while is_bitor_operator(kind) == 1 {
     let right_result: u32 = parse_bitxor(source, lexer.lexer_token_end(source, current));
     if memory_load_u32(right_result + 8) != 0 {
@@ -982,12 +982,12 @@ export fn parse_bitor(source: bytes, position: u32) -> u32 {
 
 export fn parse_concat(source: bytes, position: u32) -> u32 {
   let left_result: u32 = parse_arithmetic(source, position);
-  let current: u32 = memory_load_u32(left_result);
-  let left: u32 = memory_load_u32(left_result + 4);
+  let mut current: u32 = memory_load_u32(left_result);
+  let mut left: u32 = memory_load_u32(left_result + 4);
   if memory_load_u32(left_result + 8) != 0 {
     return left_result;
   }
-  let kind: u32 = lexer.lexer_token_kind(source, current);
+  let mut kind: u32 = lexer.lexer_token_kind(source, current);
   while is_concat_operator(kind) == 1 {
     let right_result: u32 = parse_arithmetic(source, lexer.lexer_token_end(source, current));
     if memory_load_u32(right_result + 8) != 0 {
@@ -1006,12 +1006,12 @@ export fn parse_expression(source: bytes, position: u32) -> u32 {
 
 fn parse_comparison(source: bytes, position: u32) -> u32 {
   let left_result: u32 = parse_bitor(source, position);
-  let current: u32 = memory_load_u32(left_result);
-  let left: u32 = memory_load_u32(left_result + 4);
+  let mut current: u32 = memory_load_u32(left_result);
+  let mut left: u32 = memory_load_u32(left_result + 4);
   if memory_load_u32(left_result + 8) != 0 {
     return left_result;
   }
-  let kind: u32 = lexer.lexer_token_kind(source, current);
+  let mut kind: u32 = lexer.lexer_token_kind(source, current);
   while is_comparison_operator(kind) == 1 {
     let right_result: u32 = parse_bitor(source, lexer.lexer_token_end(source, current));
     if memory_load_u32(right_result + 8) != 0 {
@@ -1026,8 +1026,8 @@ fn parse_comparison(source: bytes, position: u32) -> u32 {
 
 fn parse_logical_and(source: bytes, position: u32) -> u32 {
   let left_result: u32 = parse_comparison(source, position);
-  let current: u32 = memory_load_u32(left_result);
-  let left: u32 = memory_load_u32(left_result + 4);
+  let mut current: u32 = memory_load_u32(left_result);
+  let mut left: u32 = memory_load_u32(left_result + 4);
   if memory_load_u32(left_result + 8) != 0 {
     return left_result;
   }
@@ -1044,8 +1044,8 @@ fn parse_logical_and(source: bytes, position: u32) -> u32 {
 
 fn parse_logical_or(source: bytes, position: u32) -> u32 {
   let left_result: u32 = parse_logical_and(source, position);
-  let current: u32 = memory_load_u32(left_result);
-  let left: u32 = memory_load_u32(left_result + 4);
+  let mut current: u32 = memory_load_u32(left_result);
+  let mut left: u32 = memory_load_u32(left_result + 4);
   if memory_load_u32(left_result + 8) != 0 {
     return left_result;
   }
@@ -1061,10 +1061,10 @@ fn parse_logical_or(source: bytes, position: u32) -> u32 {
 }
 
 export fn parse_expression_list(source: bytes, position: u32) -> u32 {
-  let current: u32 = position;
-  let head: u32 = 0;
-  let tail: u32 = 0;
-  let scanning: u32 = 1;
+  let mut current: u32 = position;
+  let mut head: u32 = 0;
+  let mut tail: u32 = 0;
+  let mut scanning: u32 = 1;
   while scanning == 1 {
     let expression: u32 = parse_expression(source, current);
     if memory_load_u32(expression + 8) != 0 {
@@ -1088,7 +1088,7 @@ export fn parse_expression_list(source: bytes, position: u32) -> u32 {
 }
 
 fn parse_if_tail(source: bytes, position: u32, loop_depth: u32) -> u32 {
-  let current: u32 = lexer.lexer_skip(source, position);
+  let mut current: u32 = lexer.lexer_skip(source, position);
   if lexer.lexer_token_kind(source, current) == 64 {
     let condition: u32 = parse_expression(source, lexer.lexer_token_end(source, current));
     if memory_load_u32(condition + 8) != 0 {
@@ -1112,8 +1112,8 @@ fn parse_if_tail(source: bytes, position: u32, loop_depth: u32) -> u32 {
       0,
     );
   }
-  let else_block: u32 = 0;
-  let end_position: u32 = current;
+  let mut else_block: u32 = 0;
+  let mut end_position: u32 = current;
   if lexer.lexer_token_kind(source, current) == 25 {
     let parsed_else: u32 = parse_block_ctx(source, lexer.lexer_token_end(source, current), loop_depth);
     if memory_load_u32(parsed_else + 8) != 0 {
@@ -1133,7 +1133,7 @@ export fn parse_statement(source: bytes, position: u32) -> u32 {
 }
 
 fn parse_statement_ctx(source: bytes, position: u32, loop_depth: u32) -> u32 {
-  let current: u32 = lexer.lexer_skip(source, position);
+  let mut current: u32 = lexer.lexer_skip(source, position);
   let kind: u32 = lexer.lexer_token_kind(source, current);
   if kind == 1 {
     let after_return: u32 = lexer.lexer_token_end(source, current);
@@ -1152,10 +1152,10 @@ fn parse_statement_ctx(source: bytes, position: u32, loop_depth: u32) -> u32 {
     if lexer.lexer_token_kind(source, name_position) != 20 {
       return result(name_position, 0, 1);
     }
-    let target: u32 = node(20, lexer.identifier_hash(source, name_position), 0);
+    let mut target: u32 = node(20, lexer.identifier_hash(source, name_position), 0);
     current = lexer.lexer_token_end(source, name_position);
     current = lexer.lexer_skip(source, current);
-    let has_colon: u32 = 0;
+    let mut has_colon: u32 = 0;
     while lexer.lexer_token_kind(source, current) == 43 {
       let field_position: u32 = lexer.lexer_token_end(source, current);
       if lexer.lexer_token_kind(source, field_position) != 20 {
@@ -1485,8 +1485,8 @@ fn parse_statement_ctx(source: bytes, position: u32, loop_depth: u32) -> u32 {
       if memory_load_u32(finish + 8) != 0 {
         return finish;
       }
-      let after_finish: u32 = lexer.lexer_skip(source, memory_load_u32(finish));
-      let step: u32 = node(1, 1, 0);
+      let mut after_finish: u32 = lexer.lexer_skip(source, memory_load_u32(finish));
+      let mut step: u32 = node(1, 1, 0);
       if lexer.lexer_token_kind(source, after_finish) == 29 {
         let parsed_step: u32 = parse_expression(source, lexer.lexer_token_end(source, after_finish));
         if memory_load_u32(parsed_step + 8) != 0 {
@@ -1589,10 +1589,10 @@ export fn parse_block(source: bytes, position: u32) -> u32 {
 }
 
 fn parse_block_ctx(source: bytes, position: u32, loop_depth: u32) -> u32 {
-  let current: u32 = lexer.lexer_skip(source, position);
-  let head: u32 = 0;
-  let tail: u32 = 0;
-  let kind: u32 = lexer.lexer_token_kind(source, current);
+  let mut current: u32 = lexer.lexer_skip(source, position);
+  let mut head: u32 = 0;
+  let mut tail: u32 = 0;
+  let mut kind: u32 = lexer.lexer_token_kind(source, current);
   while kind != 0 && kind != 24 && kind != 25 && kind != 58 && kind != 64 {
     if kind == 9 {
       let after_semicolon: u32 = lexer.lexer_token_end(source, current);
@@ -1623,10 +1623,10 @@ fn parse_block_ctx(source: bytes, position: u32, loop_depth: u32) -> u32 {
 
 export fn parse_chunk(source: bytes) -> u32 {
   // Lua skips a first line starting with '#' (shebang / special comment).
-  let start: u32 = 0;
+  let mut start: u32 = 0;
   if bytes_length_u32(source) != 0 {
     if bytes_byte_at_u32(source, 0) == 35 {
-      let cursor: u32 = 1;
+      let mut cursor: u32 = 1;
       let length: u32 = bytes_length_u32(source);
       while cursor < length {
         if bytes_byte_at_u32(source, cursor) == 10 {

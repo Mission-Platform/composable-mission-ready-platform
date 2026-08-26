@@ -1,13 +1,13 @@
+import { spawn } from "node:child_process";
 import { access, constants, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { spawn } from "node:child_process";
 
 import { WEB_LUA_STATUS } from "./abi.js";
 import { createWebLuaRuntime, type WebLuaRuntime } from "./runtime.js";
 
 const NATIVE_LUA_ENV = "WEB_LUA_NATIVE_LUA";
-const NATIVE_LUA_TIMEOUT_MS = 5_000;
+const NATIVE_LUA_TIMEOUT_MS = 5000;
 const RESULT_PREFIX = "WEB_LUA_RESULT\t";
 
 export type LuaDifferentialExpected =
@@ -21,25 +21,25 @@ export interface LuaDifferentialFixture {
   readonly expected: LuaDifferentialExpected;
 }
 
-const NATIVE_WRAPPER = `
+const NATIVE_WRAPPER = String.raw`
 local chunk, syntax_error = loadfile(arg[1], "t", _ENV)
 if chunk == nil then
-  io.write("WEB_LUA_RESULT\\tsyntax-error\\n")
+  io.write("WEB_LUA_RESULT\tsyntax-error\n")
   return
 end
 local ok, value = pcall(chunk)
 if not ok then
-  io.write("WEB_LUA_RESULT\\truntime-error\\n")
+  io.write("WEB_LUA_RESULT\truntime-error\n")
   return
 end
 if value == nil then
-  io.write("WEB_LUA_RESULT\\tvalue\\t0\\n")
+  io.write("WEB_LUA_RESULT\tvalue\t0\n")
 elseif type(value) == "boolean" then
-  io.write("WEB_LUA_RESULT\\tvalue\\t", value and "1" or "0", "\\n")
+  io.write("WEB_LUA_RESULT\tvalue\t", value and "1" or "0", "\n")
 elseif type(value) == "number" and math.tointeger(value) ~= nil then
-  io.write("WEB_LUA_RESULT\\tvalue\\t", tostring(math.tointeger(value)), "\\n")
+  io.write("WEB_LUA_RESULT\tvalue\t", tostring(math.tointeger(value)), "\n")
 else
-  io.write("WEB_LUA_RESULT\\tunsupported\\t", type(value), "\\n")
+  io.write("WEB_LUA_RESULT\tunsupported\t", type(value), "\n")
 end
 `;
 

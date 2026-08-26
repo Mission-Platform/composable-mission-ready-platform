@@ -55,7 +55,7 @@ export fn table_insert(input: u32, position: u32, item: u32) -> u32 {
   if position > length + 1 {
     return 2;
   }
-  let index: u32 = length + 1;
+  let mut index: u32 = length + 1;
   while index > position {
     tables.table_set_raw(table, integer_key(index), table_item(table, index - 1));
     index = index - 1;
@@ -74,7 +74,7 @@ export fn table_remove(input: u32, position: u32) -> u32 {
     return value.value_nil();
   }
   let removed: u32 = table_item(table, position);
-  let index: u32 = position;
+  let mut index: u32 = position;
   while index < length {
     tables.table_set_raw(table, integer_key(index), table_item(table, index + 1));
     index = index + 1;
@@ -100,11 +100,11 @@ export fn table_concat(
   if first > last || last > length {
     return value.value_nil();
   }
-  let combined: u32 = strings.string_intern(heap, 0, 0);
+  let mut combined: u32 = strings.string_intern(heap, 0, 0);
   if combined == 0 {
     return value.value_nil();
   }
-  let index: u32 = first;
+  let mut index: u32 = first;
   while index <= last {
     let item: u32 = table_item(table, index);
     if value.value_kind(item) != 4 {

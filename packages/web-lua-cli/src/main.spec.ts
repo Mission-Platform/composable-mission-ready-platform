@@ -5,6 +5,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { runWebLuaCli, stripLuaShebang, type WebLuaCliIo } from "./main.js";
+
 import type {
   WebLuaErrorFrame,
   WebLuaLoadedFrame,
@@ -498,7 +499,7 @@ describe("WebLua CLI execution", () => {
         ["program.lua"],
         messages,
         "/tmp",
-        async (options) => ({
+        async (_options) => ({
           openState: () => ({
             handle: 3,
             closed: false,
