@@ -10,6 +10,7 @@ packages:
   - examples/**
   - scripts
   - mcp/*
+
 catalog:
   "js-yaml": ^4.3.1
   "luxon": ^3.7.2
@@ -25,6 +26,9 @@ catalogs:
     turbo: ^2.10.11
     assemblyscript: ^0.28.20
     husky: ^9.1.7
+    "yaml-language-server": "^1.24.0"
+    "stylelint-lsp": "^2.0.1"
+    "vscode-langservers-extracted": "^4.10.0"
 
   forms:
     ajv: ^8.20.0
@@ -46,7 +50,8 @@ catalogs:
     "highlight.js": ^11.12.0
     "monaco-editor": ^0.55.1
     marked: ^18.0.11
-    mermaid: ^11.17.1
+    mermaid: ^11.17.2
+    dompurify: 3.4.13
     "harper.js": ^2.7.0
 
   eslint:
@@ -158,6 +163,7 @@ catalogs:
     "@types/js-yaml": ^4.0.9
     "@types/node": ^24.13.3
     typescript: ~6.0.3
+    "typescript-language-server": "^6.0.0"
 
   cloudflare:
     rwsdk: ^1.7.2
@@ -171,15 +177,7 @@ catalogs:
 
 trustPolicy: no-downgrade
 
-registries:
-  default: https://registry.npmjs.org/
-
-namedRegistries:
-  gh: https://npm.pkg.github.com/
-
 trustPolicyExclude:
-  #  - tinyexec
-  # vsce's parse-semver dependency predates npm provenance attestations.
   - semver@5.7.2
   - semver@6.3.1
   - "@trickfilm400/rollup-plugin-off-main-thread"
@@ -203,7 +201,6 @@ overrides:
   glob: ^13.0.6
   source-map: ^0.7.6
   beasties: ^0.4.3
-  dompurify: ^3.4.13
   nanoid: ^5.1.16
 
 patchedDependencies:
