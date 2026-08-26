@@ -133,7 +133,8 @@ async function main(): Promise<void> {
         .map((failure) => `- ${failure.category}: ${failure.message}`),
     ].join("\n") + "\n",
   );
-  if (enforceGate && report.performanceGates?.failed === true) process.exitCode = 1;
+  if (enforceGate && report.performanceGates?.failed === true)
+    process.exitCode = 1;
 }
 
 try {

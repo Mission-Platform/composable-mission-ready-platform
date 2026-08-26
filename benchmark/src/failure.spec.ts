@@ -49,7 +49,9 @@ describe("benchmark failure isolation", () => {
     // Force a failure in Chromium launch
     const { vi } = await import("vitest");
     const { chromium } = await import("playwright");
-    vi.spyOn(chromium, "launch").mockRejectedValue(new Error("Chromium launch failed"));
+    vi.spyOn(chromium, "launch").mockRejectedValue(
+      new Error("Chromium launch failed"),
+    );
 
     const { runChromiumBenchmark } = await import("./run-browser.ts");
     const result = await runChromiumBenchmark({

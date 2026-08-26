@@ -482,11 +482,11 @@ function sortPerformanceComparisons(
     const candidateOrder = createBenchmarkKey(left.candidateKey).localeCompare(
       createBenchmarkKey(right.candidateKey),
     );
-    return candidateOrder !== 0
-      ? candidateOrder
-      : left.referenceKey.implementation.localeCompare(
+    return candidateOrder === 0
+      ? left.referenceKey.implementation.localeCompare(
           right.referenceKey.implementation,
-        );
+        )
+      : candidateOrder;
   });
 }
 
@@ -723,11 +723,11 @@ export function createBenchmarkReport(
       const candidateOrder = createBenchmarkKey(
         left.candidateKey,
       ).localeCompare(createBenchmarkKey(right.candidateKey));
-      return candidateOrder !== 0
-        ? candidateOrder
-        : left.referenceKey.implementation.localeCompare(
+      return candidateOrder === 0
+        ? left.referenceKey.implementation.localeCompare(
             right.referenceKey.implementation,
-          );
+          )
+        : candidateOrder;
     }),
     performanceGates: createPerformanceGateReport(
       measuredReport,
@@ -805,13 +805,13 @@ export function compareBenchmarkReports(
     baseline.environment,
   );
   const schemaReason =
-    current.schemaVersion !== baseline.schemaVersion
-      ? `Schema versions differ (${current.schemaVersion} vs ${baseline.schemaVersion}); reports are not comparable.`
-      : undefined;
+    current.schemaVersion === baseline.schemaVersion
+      ? undefined
+      : `Schema versions differ (${current.schemaVersion} vs ${baseline.schemaVersion}); reports are not comparable.`;
   const corpusReason =
-    current.corpusHash !== baseline.corpusHash
-      ? `Corpus hashes differ (${current.corpusHash} vs ${baseline.corpusHash}); workloads are not comparable.`
-      : undefined;
+    current.corpusHash === baseline.corpusHash
+      ? undefined
+      : `Corpus hashes differ (${current.corpusHash} vs ${baseline.corpusHash}); workloads are not comparable.`;
 
   return keys.map((key) => {
     const currentMeasurement = currentByKey.get(key);
@@ -874,7 +874,7 @@ export function compareBenchmarkReports(
 }
 
 export function createRunId(date: Date = new Date()): string {
-  return date.toISOString().replace(/[-:.]/g, "").replace("Z", "Z");
+  return date.toISOString().replaceAll(/[-:.]/g, "").replace("Z", "Z");
 }
 
 export async function writeBenchmarkReport(

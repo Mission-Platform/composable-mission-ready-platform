@@ -1,5 +1,6 @@
-import type { BenchmarkReport } from "./contracts.ts";
 import { renderMarkdown } from "./render-markdown.ts";
+
+import type { BenchmarkReport } from "./contracts.ts";
 
 function escapeHtml(value: string): string {
   return value

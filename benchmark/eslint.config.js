@@ -17,4 +17,11 @@ export default [
       "unicorn/consistent-function-scoping": "off",
     },
   },
+  {
+    files: ["src/report.ts", "src/web-lua-cli.ts"],
+    rules: {
+      // Benchmark adapters use null to represent an unavailable optional result.
+      "unicorn/no-null": "off",
+    },
+  },
 ];

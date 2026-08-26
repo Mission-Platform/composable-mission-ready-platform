@@ -308,7 +308,7 @@ describe("durable benchmark reports", () => {
         expect.objectContaining({
           status: "comparable",
           latencyDeltaPercent: 20,
-          throughputDeltaPercent: expect.closeTo(-16.666666666666666, 10),
+          throughputDeltaPercent: expect.closeTo(-16.666_666_666_666_666, 10),
         }),
         expect.objectContaining({ status: "missing-current" }),
         expect.objectContaining({ status: "missing-baseline" }),
@@ -573,7 +573,7 @@ describe("durable benchmark reports", () => {
           latencyRatio: 3,
           latencyDeltaPercent: 200,
           throughputRatio: expect.closeTo(1 / 3, 10),
-          throughputDeltaPercent: expect.closeTo(-66.66666666666667, 10),
+          throughputDeltaPercent: expect.closeTo(-66.666_666_666_666_67, 10),
         }),
         expect.objectContaining({
           candidateKey: expect.objectContaining({
@@ -587,7 +587,7 @@ describe("durable benchmark reports", () => {
           latencyRatio: 0.75,
           latencyDeltaPercent: -25,
           throughputRatio: expect.closeTo(4 / 3, 10),
-          throughputDeltaPercent: expect.closeTo(33.33333333333333, 10),
+          throughputDeltaPercent: expect.closeTo(33.333_333_333_333_33, 10),
         }),
         expect.objectContaining({
           candidateKey: expect.objectContaining({

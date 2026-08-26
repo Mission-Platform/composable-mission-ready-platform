@@ -53,7 +53,7 @@ describe("benchmark runtime adapters", () => {
         expect(observed, benchmarkCase.id).toEqual(benchmarkCase.expected);
       }
     },
-    10000, // Increased timeout for JIT cache compilation on cold runs
+    10_000, // Increased timeout for JIT cache compilation on cold runs
   );
 
   it("executes native emitted FWS WASM kernels through the pointer-length ABI", async () => {
