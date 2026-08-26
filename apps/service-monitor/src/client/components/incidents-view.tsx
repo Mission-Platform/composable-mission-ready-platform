@@ -3,9 +3,9 @@
 import { ForgeButton } from '@mission-platform/components';
 import { ForgeDialog } from '@mission-platform/float';
 import { ForgeSchemaForm, type FormValues, type SchemaFormDefinition } from '@mission-platform/forms';
-import { ForgeTypography } from '@mission-platform/typography';
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeContainer } from '@mission-platform/layouts';
+import { ForgeTypography } from '@mission-platform/typography';
 import { useState } from 'react';
 
 import { maintenanceStatus, validMaintenanceRange } from '@/monitoring/incidents';

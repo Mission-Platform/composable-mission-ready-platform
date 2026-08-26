@@ -3,8 +3,8 @@
 import { ForgeButton } from '@mission-platform/components';
 import { type FormValues } from '@mission-platform/forms';
 import { useI18n } from '@mission-platform/i18n';
-import { ForgeTypography } from '@mission-platform/typography';
 import { ForgeIconPlus } from '@mission-platform/icons';
+import { ForgeTypography } from '@mission-platform/typography';
 import { useState } from 'react';
 
 import { type MonitorTarget, type ProbeType } from '@/monitoring/types';

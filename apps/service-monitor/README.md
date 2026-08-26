@@ -65,18 +65,18 @@ The app consumes the platform's shared packages instead of bespoke UI. Every one
 `"customConditions": ["mp:react"]`, and `vite.config.ts` prepends `mp:react` to `resolve.conditions` in every
 environment (client, ssr, worker), so each package's `mp:react` export condition wins.
 
-| Package                                       | Used for                                                                                                 |
-| --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `@mission-platform/rxjs`                      | `useObservable` — RxJS streams → React state.                                                            |
-| `@mission-platform/d3`                        | `useD3` + margin helpers powering `TimeSeriesChart`.                                                     |
-| `@mission-platform/components`                | `Badge`, `Button`, `Spinner`, `Card` (re-typed for React children in `src/client/mp.tsx`).               |
-| `@mission-platform/typography`                | `ForgeTypography` text primitive.                                                                        |
-| `@mission-platform/icons`                     | Inline SVG icons (globe, clock, refresh, trash, plus, …).                                                |
-| `@mission-platform/layouts`                   | `Container` page shell.                                                                                  |
-| `@mission-platform/i18n`                      | All UI strings (`createAppI18n`, `useI18n`) under the `mp.service-monitor` namespace.                    |
-| `@mission-platform/seo` (`/meta`, `/json-ld`) | Server `<head>` metadata + Schema.org JSON-LD in `Document.tsx`.                                         |
-| `@mission-platform/tokens`                    | Chart accent colour from the design tokens.                                                              |
-| `@mission-platform/breakpoints/core`          | Responsive chart width via `maxMediaQuery` (framework-neutral entry).                                    |
+| Package                                       | Used for                                                                                   |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `@mission-platform/rxjs`                      | `useObservable` — RxJS streams → React state.                                              |
+| `@mission-platform/d3`                        | `useD3` + margin helpers powering `TimeSeriesChart`.                                       |
+| `@mission-platform/components`                | `Badge`, `Button`, `Spinner`, `Card` (re-typed for React children in `src/client/mp.tsx`). |
+| `@mission-platform/typography`                | `ForgeTypography` text primitive.                                                          |
+| `@mission-platform/icons`                     | Inline SVG icons (globe, clock, refresh, trash, plus, …).                                  |
+| `@mission-platform/layouts`                   | `Container` page shell.                                                                    |
+| `@mission-platform/i18n`                      | All UI strings (`createAppI18n`, `useI18n`) under the `mp.service-monitor` namespace.      |
+| `@mission-platform/seo` (`/meta`, `/json-ld`) | Server `<head>` metadata + Schema.org JSON-LD in `Document.tsx`.                           |
+| `@mission-platform/tokens`                    | Chart accent colour from the design tokens.                                                |
+| `@mission-platform/breakpoints/core`          | Responsive chart width via `maxMediaQuery` (framework-neutral entry).                      |
 
 > The `rxjs`/`d3` React builds are generated from a single write-once source by
 > `@mission-platform/vite-plugin-forge`'s hook-library compiler; the `mp:react`

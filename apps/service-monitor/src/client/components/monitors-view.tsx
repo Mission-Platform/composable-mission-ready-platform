@@ -2,8 +2,8 @@
 
 import { useI18n } from '@mission-platform/i18n';
 import { ForgeContainer } from '@mission-platform/layouts';
-import { ForgeTypography } from '@mission-platform/typography';
 import { useObservable } from '@mission-platform/rxjs';
+import { ForgeTypography } from '@mission-platform/typography';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { createMonitorSession, deleteMonitor, hasMonitorSession, saveMonitor, servicesStream } from '../hooks/streams';
