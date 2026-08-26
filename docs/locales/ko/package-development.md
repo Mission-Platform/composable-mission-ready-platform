@@ -1,22 +1,17 @@
-# 패키지 개발
+# Package Development
 
-정식 영어 원문을 기계 지원으로 번역한 문서입니다. 필요 시 사람이 검수하세요. 패키지 이름, 명령, 경로, 기술 식별자는 그대로 둡니다.
+This guide describes how to create, develop, and publish reusable packages within the Mission Platform monorepo.
+Packages are the foundational building blocks of the platform, residing in the `packages/` directory and managed via
+pnpm workspaces and Turborepo.
 
-> 영어 원문: [docs/package-development.md](../../package-development.md)
-> 언어: 한국어 (ko)
+## Creating a New Package
 
-이 가이드에서는 Mission Platform 모노레포 내에서 재사용 가능한 패키지를 생성, 개발 및 게시하는 방법을 설명합니다.
-패키지는 플랫폼의 기본 구성 요소이며 다음 위치에 있습니다. `packages/` 디렉토리를 통해 관리되며
-pnpm 작업 공간 및 Turborepo.
+The recommended way to create a package is using the Mission Platform Developer MCP tool, which ensures all
+configurations, scripts, and folder structures follow the platform's standards.
 
-## 새 패키지 만들기
+### 1. Scaffold with MCP
 
-패키지를 생성하는 권장 방법은 Mission Platform Developer MCP 도구를 사용하는 것입니다.
-구성, 스크립트 및 폴더 구조는 플랫폼의 표준을 따릅니다.
-
-### 1. MCP를 사용한 비계
-
-사용 `scaffold_package` 뼈대를 생성하는 도구입니다.
+Use the `scaffold_package` tool to generate the skeleton.
 
 ```bash
 # Example: Creating a new 'date-utils' package
@@ -24,18 +19,18 @@ pnpm 작업 공간 및 Turborepo.
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
 ```
 
-이는 규칙 준수를 생성합니다. `packages/date-utils/` 다음을 포함하는 디렉토리:
+This generates a convention-compliant `packages/date-utils/` directory with:
 
-- `package.json` 작업 공간에 즉시 사용 가능한 스크립트 및 공유 구성을 사용합니다.
-- `tsconfig.json` 플랫폼 기본값을 확장합니다.
-- `vite.config.ts` 최적화된 빌드를 위해
-- `src/index.ts` 배럴 파일.
-- `llms.txt` AI 지원 문서용.
+- `package.json` with workspace-ready scripts and shared configurations.
+- `tsconfig.json` extending the platform defaults.
+- `vite.config.ts` for optimized builds.
+- `src/index.ts` barrel file.
+- `llms.txt` for AI-assisted documentation.
 
-### 2. 수동 설정(선택 사항)
+### 2. Manual Setup (Optional)
 
-MCP 도구를 사용하지 않는 경우 다음 사항을 확인하세요. `package.json` 사용 [pnpm 카탈로그](https://pnpm.io/catalogs) 에 대한
-종속성 관리를 수행하고 범위 지정 명명 규칙을 따릅니다.
+If you are not using the MCP tool, ensure your `package.json` uses [pnpm catalogs](https://pnpm.io/catalogs) for
+dependency management and follows the scoped naming convention:
 
 ```json
 {
@@ -55,10 +50,10 @@ MCP 도구를 사용하지 않는 경우 다음 사항을 확인하세요. `pack
 }
 ```
 
-## 패키지 구조
+## Package Structure
 
-각 패키지는 엄격한 내부 레이아웃을 따릅니다. 코드 단위(구성요소, 컴포저블, 저장소 또는 유틸리티)는 다음 위치에 있어야 합니다.
-동일한 위치에 테스트가 있는 자체 명명된 하위 디렉터리.
+Each package follows a strict internal layout. Units of code (components, composables, stores, or utils) MUST live in
+their own named subdirectories with co-located tests.
 
 ```text
 packages/<name>/
@@ -75,6 +70,8 @@ packages/<name>/
 │   │   └── date-validator/         # date-validator.ts + .spec.ts
 │   ├── locales/                    # i18n JSON files
 │   └── index.ts                    # Package public API (barrel)
+├── docs/                           # Package-owned guides and generated API reference
+│   └── reference/generated/        # Regenerated during prebuild
 ├── llms.txt                        # Technical overview for LLMs
 ├── package.json
 ├── tsconfig.json
@@ -82,59 +79,145 @@ packages/<name>/
 └── README.md
 ```
 
-## 개발 워크플로우
+## Stylelint for style-bearing packages
 
-### 저작 규칙
+Packages that contain CSS, SCSS, or Vue style blocks must keep a discoverable Stylelint configuration and lint scripts:
 
-1. **TypeScript Everywhere**: 모든 소스 코드가 있어야 합니다. `.ts` 또는 `.tsx` (사용 `@mission-platform/forge`).
-2. **프레임워크 중립성**: 프레임워크에 구애받지 않는 논리를 선호합니다. Forge JSX에서 대상으로 구성 요소를 한 번 작성해야 합니다.
-   여러 프레임워크.
-3. **격리**: 패키지를 다음에서 가져오면 안 됩니다. `apps/`.
-4. **테스트**: 모든 유닛(컴포저블, 스토어, 유틸리티, 구성 요소)은 같은 위치에 있어야 합니다. `.spec.ts` 파일.
+```text
+packages/<name>/
+├── src/
+│   └── styles/                     # CSS, SCSS, and Vue style sources
+├── stylelint.config.mjs            # Workspace-local ESM configuration
+└── package.json                    # Stylelint scripts and devDependencies
+```
 
-자세한 작성 지침은 다음을 참조하세요.
+Add the shared configuration and its direct syntax/configuration dependencies to `devDependencies`:
 
-- [원자 구성 요소 설계](atomic-component-design.md)
-- [구성 가능한 저작](composable-authoring.md)
-- [스토어 작성](store-authoring.md)
-- [저작 활용](util-authoring.md)
+```json
+{
+  "devDependencies": {
+    "@mission-platform/stylelint-config": "workspace:*",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint"
+  }
+}
+```
 
-### 건물
+Use the shared configuration from `stylelint.config.mjs` instead of duplicating its `extends` entries:
 
-다음을 사용하여 패키지를 빌드합니다. Turbo 종속성이 올바른 순서로 빌드되었는지 확인하려면 다음을 수행하세요.
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
+Add scripts that cover the workspace's actual style sources, then run the check before publishing:
+
+```json
+{
+  "scripts": {
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\""
+  }
+}
+```
+
+```bash
+pnpm exec turbo run lint:style --filter @mission-platform/<name>
+```
+
+## Development Workflow
+
+### Authoring Rules
+
+1. **TypeScript Everywhere**: All source code must be in `.ts` or `.tsx` (using `@mission-platform/forge`).
+2. **Framework Neutrality**: Favor framework-agnostic logic. Components should be authored once in Forge JSX to target
+   multiple frameworks.
+3. **Isolation**: Packages must never import from `apps/`.
+4. **Testing**: Every unit (composable, store, util, component) MUST have a co-located `.spec.ts` file.
+
+For detailed authoring instructions, see:
+
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
+
+### Building
+
+Build the package using Turbo to ensure dependencies are built in the correct order:
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/<name>
 ```
 
-### 테스트
+### Testing
 
-다음을 사용하여 테스트 실행 Vitest:
+Run tests using Vitest:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
 
-## 문서(`llms.txt`)
+### Router packages and Web Components targets
 
-모든 패키지에는 `llms.txt` 루트에 있는 파일입니다. 이 파일은 다음에 대한 간결하고 기술적인 설명을 제공합니다.
-패키지의 API, 구성 요소 및 동작을 분석하여 AI 보조자가 패키지를 더 잘 이해하고 사용할 수 있도록 합니다.
+Use `@mission-platform/router` for structured route targets, pure URL helpers, and neutral compiler markers. Shared
+packages must not define or register application routes. Applications select one Forge router target independently from
+their UI target, retain ownership of native route records and router instances, and bind any target-specific runtime
+context during bootstrap. The initial targets are `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`, and `-web-components`; unsupported capability combinations must remain compiler diagnostics.
 
-- **제목**: 범위가 지정된 패키지 이름을 사용합니다.
-- **구성 요소/API**: 해당 속성 및 책임이 포함된 사용 가능한 기호의 테이블 또는 목록입니다.
-- **예**: 일반적인 사용 사례에 대한 짧은 코드 조각입니다.
+For a framework-free package or app, select the Forge Web Components condition in both build and TypeScript configs:
 
-## 출판
+```ts
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
 
-미션 플랫폼은 [변경 세트](https://github.com/changesets/changesets) 버전 관리 및 게시용.
+export default {
+  resolve: { conditions: frameworkResolveConditions("web-component") },
+};
+```
 
-1. **변경 세트 추가**: 변경 후 다음을 실행합니다.
-```bash
+For Web Components applications, import the runtime from `@mission-platform/forge-router-web-components/runtime`, call
+`registerRouterElements()` once, call `setForgeRouter(appRouter)` after creating the app-owned router, pass structured
+`to` values as DOM properties, and use `MpMemoryHistory` in prerender/tests. A package that adds a reusable router
+element or changes Web Components behavior must add a neutral story under `src/**/*.stories.ts` and include the target in
+the Web Components Storybook workbench.
+
+## Documentation (`llms.txt`)
+
+Every package includes an `llms.txt` file at its root. This file provides a concise, technical description of the
+package's APIs, components, and behavior, enabling AI assistants to better understand and use the package.
+
+- **Title**: Use the scoped package name.
+- **Components/APIs**: Table or list of available symbols with their props and responsibilities.
+- **Examples**: Short code snippets for common use cases.
+
+## Package documentation ownership
+
+Package-specific installation, usage, limitations, contributor workflows, and API reference pages belong in the
+package's `docs/` directory, not in the repository-wide `docs/` tree. The docs site ingests these files directly and
+publishes them under a stable package namespace such as `/packages/barcode/index` or `/configs/eslint-config/index`.
+Project-wide concepts, architecture, workspace workflows, and cross-package troubleshooting remain in root `docs/`.
+
+Generated API pages live under `docs/reference/generated/` and are refreshed by the package `prebuild` hook; do not edit
+those files manually. To preview package documentation through the site, run the docs app build or use the all-workspace
+extractor described in the docs app README.
+
+## Publishing
+
+The Mission Platform uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+
+1. **Add a Changeset**: After making changes, run:
+   ```bash
    pnpm changeset
    ```
-   패키지와 변경 유형(패치, 마이너, 메이저)을 선택합니다.
-2. **변경 세트 커밋**: 생성된 내용을 커밋합니다. `.changeset/*.md` 파일.
-3. **버전 및 게시**: CI/CD는 실제 게시를 처리하지만 다음을 사용하여 로컬에서 버전을 미리 볼 수 있습니다.
-```bash
+   Select the package and the type of change (patch, minor, major).
+2. **Commit the Changeset**: Commit the generated `.changeset/*.md` file.
+3. **Version and Publish**: CI/CD handles the actual publishing, but you can locally preview versions with:
+   ```bash
    pnpm changeset version
    ```
