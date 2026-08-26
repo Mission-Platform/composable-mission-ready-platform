@@ -1,4 +1,3 @@
-
 import { ForgeTable } from '@mission-platform/components';
 
 import type { TableColumn } from './forge-table';

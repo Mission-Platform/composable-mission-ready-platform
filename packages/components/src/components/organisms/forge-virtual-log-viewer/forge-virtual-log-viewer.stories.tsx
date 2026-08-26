@@ -1,4 +1,3 @@
-
 import { ForgeVirtualLogViewer } from '@mission-platform/components';
 
 import type { LogEntry, LogLevel } from './forge-virtual-log-viewer';

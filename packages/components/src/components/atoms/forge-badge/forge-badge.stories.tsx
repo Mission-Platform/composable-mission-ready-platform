@@ -1,4 +1,3 @@
-
 import { ForgeBadge } from '@mission-platform/components';
 
 import type { BadgeProperties } from './forge-badge';

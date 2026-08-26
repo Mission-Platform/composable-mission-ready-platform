@@ -1,4 +1,3 @@
-
 import { ForgeMenubar } from '@mission-platform/components';
 
 import type { MenuNode } from '@/components/molecules/forge-menu';

@@ -1,6 +1,5 @@
 import { ForgeButton } from '@mission-platform/components';
 
-
 import { ForgeTooltip } from './forge-tooltip';
 
 import type { Meta, StoryObj } from '@mission-platform/storybook-framework';

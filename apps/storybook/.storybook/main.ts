@@ -3,7 +3,7 @@ import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overri
 
 import type { StorybookConfig } from '@storybook/vue3-vite';
 
-const visualParityCacheDir = process.env.STORYBOOK_VITE_CACHE_DIR;
+const visualParityCacheDirectory = process.env.STORYBOOK_VITE_CACHE_DIR;
 
 /**
  * The single Mission Platform Storybook app. The renderer, story globs, and
@@ -40,7 +40,7 @@ const config: StorybookConfig = createStorybookConfig({
   ],
   viteFinal: (config) => ({
     ...config,
-    ...(visualParityCacheDir ? { cacheDir: visualParityCacheDir } : {}),
+    ...(visualParityCacheDirectory ? { cacheDir: visualParityCacheDirectory } : {}),
     optimizeDeps: {
       ...config.optimizeDeps,
       ignoreOutdatedRequests: true,

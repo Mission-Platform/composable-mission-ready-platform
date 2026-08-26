@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
+
 import { chromium } from 'playwright';
 
 const root = process.cwd();
@@ -55,26 +56,31 @@ async function auditStory(browser, entry) {
     await page.waitForTimeout(250);
     await page.addScriptTag({ content: axeSource });
     const result = await page.evaluate(async () => {
-      const axeResult = await window.axe.run(document, { resultTypes: ['violations'] });
-      const bodyText = document.body.innerText;
+      const axeResult = await globalThis.axe.run(document, { resultTypes: ['violations'] });
+      const bodyText = document.body.textContent ?? '';
       const root = document.querySelector('#storybook-root, #root');
       return {
         violations: axeResult.violations.map((violation) => ({
           id: violation.id,
           impact: violation.impact,
           help: violation.help,
-          nodes: violation.nodes.map((node) => ({ target: node.target, html: node.html, failureSummary: node.failureSummary })),
+          nodes: violation.nodes.map((node) => ({
+            target: node.target,
+            html: node.html,
+            failureSummary: node.failureSummary,
+          })),
         })),
         bodyText,
-        rootText: root?.innerText ?? '',
+        rootText: root?.textContent ?? '',
       };
     });
     const renderErrorText = `${result.bodyText}\n${result.rootText}`;
-    const renderErrors = errors.concat(
-      /There was an error rendering your story|Couldn't find story|Error rendering story/i.test(renderErrorText)
+    const renderErrors = [
+      ...errors,
+      ...(/There was an error rendering your story|Couldn't find story|Error rendering story/i.test(renderErrorText)
         ? [renderErrorText.slice(0, 1000)]
-        : [],
-    );
+        : []),
+    ];
     return { id: entry.id, title: entry.title, name: entry.name, violations: result.violations, renderErrors };
   } catch (error) {
     return { id: entry.id, title: entry.title, name: entry.name, violations: [], renderErrors: [String(error)] };
@@ -101,7 +107,9 @@ await Promise.all(Array.from({ length: workers }, worker));
 await browser.close();
 await new Promise((resolve) => server.close(resolve));
 results.sort((left, right) => left.id.localeCompare(right.id));
-const allViolations = results.flatMap((result) => result.violations.map((violation) => ({ ...violation, storyId: result.id })));
+const allViolations = results.flatMap((result) =>
+  result.violations.map((violation) => ({ ...violation, storyId: result.id })),
+);
 const componentViolations = allViolations.filter((violation) => !pageShellRules.has(violation.id));
 const pageShellViolations = allViolations.filter((violation) => pageShellRules.has(violation.id));
 const renderErrors = results.filter((result) => result.renderErrors.length);
@@ -118,5 +126,5 @@ const output = {
   pageShellViolations,
   targetResults: results.filter((result) => targets.has(result.id)),
 };
-process.stdout.write(`${JSON.stringify(output, null, 2)}\n`);
-process.exitCode = renderErrors.length || componentViolations.length ? 1 : 0;
+process.stdout.write(`${JSON.stringify(output, undefined, 2)}\n`);
+process.exitCode = renderErrors.length > 0 || componentViolations.length > 0 ? 1 : 0;

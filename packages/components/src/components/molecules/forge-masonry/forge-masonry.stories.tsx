@@ -1,4 +1,3 @@
-
 import { ForgeMasonry } from '@mission-platform/components';
 
 import styles from './forge-masonry.module.scss';

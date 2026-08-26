@@ -1,4 +1,3 @@
-
 import { ForgeMenu } from '@mission-platform/components';
 
 import type { MenuNode } from './forge-menu';

@@ -50,9 +50,7 @@ describe('ForgeMenubar authors the same component for React and Vue', () => {
   });
 
   it('renders the default slot when no items are provided on both frameworks', async () => {
-    const react = renderToStaticMarkup(
-      createElement(ReactMenubar, { children: h('span', {}, 'Custom bar') }),
-    );
+    const react = renderToStaticMarkup(createElement(ReactMenubar, { children: h('span', {}, 'Custom bar') }));
     const vue = await renderToString(
       createSSRApp({
         render: () => vueH(VueMenubar, {}, { default: () => vueH('span', {}, 'Custom bar') }),

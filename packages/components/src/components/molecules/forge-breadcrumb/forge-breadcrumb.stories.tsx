@@ -1,4 +1,3 @@
-
 import { ForgeBreadcrumb } from '@mission-platform/components';
 
 import type { BreadcrumbItem } from './forge-breadcrumb';

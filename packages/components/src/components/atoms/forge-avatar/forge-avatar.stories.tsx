@@ -1,4 +1,3 @@
-
 import { ForgeAvatar } from '@mission-platform/components';
 
 import styles from './forge-avatar.module.scss';

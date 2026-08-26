@@ -1,4 +1,3 @@
-
 import { ForgeContainer } from '@mission-platform/layouts';
 
 import styles from './forge-container.module.scss';

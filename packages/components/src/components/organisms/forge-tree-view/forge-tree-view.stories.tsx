@@ -1,4 +1,3 @@
-
 import { ForgeTreeView } from '@mission-platform/components';
 
 import type { TreeViewNode } from './forge-tree-view';

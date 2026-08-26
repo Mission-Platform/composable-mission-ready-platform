@@ -1,4 +1,3 @@
-
 import { ForgeInView } from '@mission-platform/components';
 
 import styles from './forge-in-view.module.scss';

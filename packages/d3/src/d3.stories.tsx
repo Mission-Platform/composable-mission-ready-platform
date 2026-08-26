@@ -1,4 +1,3 @@
-import { h } from '@mission-platform/forge';
 import { scaleBand, scaleLinear } from 'd3';
 
 import { innerDimensions, useD3 } from '@mission-platform/d3';

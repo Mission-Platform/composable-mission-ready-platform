@@ -24,7 +24,9 @@ describe('ForgeCommandPalette authors the same component for React and Vue', () 
       createElement(ReactCommandPalette, { commands, modelValue: true, open: true, label: 'Commands' }),
     );
     const vue = await renderToString(
-      createSSRApp({ render: () => vueH(VueCommandPalette, { commands, modelValue: true, open: true, label: 'Commands' }) }),
+      createSSRApp({
+        render: () => vueH(VueCommandPalette, { commands, modelValue: true, open: true, label: 'Commands' }),
+      }),
     );
 
     for (const html of [react, vue]) {

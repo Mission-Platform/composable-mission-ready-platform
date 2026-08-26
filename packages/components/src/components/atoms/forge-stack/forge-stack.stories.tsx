@@ -1,4 +1,3 @@
-
 import { ForgeStack } from '@mission-platform/components';
 
 import styles from './forge-stack.module.scss';

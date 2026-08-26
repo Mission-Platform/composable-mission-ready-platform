@@ -1,4 +1,3 @@
-
 import { ForgeVirtualTreeView } from '@mission-platform/components';
 
 import type { TreeNode } from './forge-virtual-tree-view';

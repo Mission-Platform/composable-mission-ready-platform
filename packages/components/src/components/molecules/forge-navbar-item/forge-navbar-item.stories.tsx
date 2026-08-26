@@ -1,4 +1,3 @@
-
 import { ForgeNavbarItem } from '@mission-platform/components';
 
 import type { NavbarItemChild } from './forge-navbar-item';
