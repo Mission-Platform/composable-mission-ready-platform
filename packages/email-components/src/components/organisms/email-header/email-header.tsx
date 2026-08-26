@@ -16,9 +16,7 @@ export interface EmailHeaderProperties {
 export function EmailHeader(properties: Readonly<EmailHeaderProperties>): MpElement {
   const { children, logoSrc, logoAlt, logoWidth, brandName } = properties;
   return (
-    <header
-      style={{ backgroundColor: colorValue('bg.surface'), padding: spacingValue('md') }}
-    >
+    <header style={{ backgroundColor: colorValue('bg.surface'), padding: spacingValue('md') }}>
       <EmailRow spacing="sm">
         <EmailColumn>
           {logoSrc ? (

@@ -11,9 +11,7 @@ export interface EmailSectionProperties {
 
 export function EmailSection(properties: Readonly<EmailSectionProperties>): MpElement {
   return (
-    <section
-      style={{ margin: 0 }}
-    >
+    <section style={{ margin: 0 }}>
       <table
         role="presentation"
         width="100%"
