@@ -26,7 +26,7 @@ Optionen, die die AssemblyScript-Kompilierung und Codegenerierung steuern.
 **Art:** Funktion
 
 ```typescript
-function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>
+function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>;
 ```
 
 Kompilieren Sie einen AssemblyScript-Eintrag in WebAssembly und geben Sie einen einzelnen aus
@@ -38,9 +38,9 @@ Inline-Binärdatei anstelle einer `.wasm`-URL.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | AssemblyScriptCompileOptions |  |
+| Name     | Geben Sie                    | ein Beschreibung |
+| -------- | ---------------------------- | ---------------- |
+| Optionen | AssemblyScriptCompileOptions |                  |
 
 ## `src/generate`
 
@@ -49,7 +49,7 @@ Inline-Binärdatei anstelle einer `.wasm`-URL.
 **Art:** Funktion
 
 ```typescript
-function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string
+function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string;
 ```
 
 Erstellen Sie das eigenständige generierte Modul: die als Base64 eingebundene Wasm-Binärdatei,
@@ -59,17 +59,17 @@ ein umgebungsübergreifender Base64-Decoder, die extrahierte `instantiate`-Funkt
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| wasmBase64 | Zeichenfolge |  |
-| instanziierteQuelle | Zeichenfolge |  |
+| Name                | Geben Sie    | ein Beschreibung |
+| ------------------- | ------------ | ---------------- |
+| wasmBase64          | Zeichenfolge |                  |
+| instanziierteQuelle | Zeichenfolge |                  |
 
 ### extractInstantiate
 
 **Art:** Funktion
 
 ```typescript
-function extractInstantiate(bindingsSource: string): string
+function extractInstantiate(bindingsSource: string): string;
 ```
 
 Die AssemblyScript ESM-Bindungsdatei wird automatisch von einer `.wasm`-URL über instanziiert
@@ -79,9 +79,9 @@ Instanziierung aus einer Inline-Binärdatei (Base64) anstelle einer URL.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| bindingsSource | Zeichenfolge |  |
+| Name           | Geben Sie    | ein Beschreibung |
+| -------------- | ------------ | ---------------- |
+| bindingsSource | Zeichenfolge |                  |
 
 ## `src/index`
 
@@ -90,7 +90,7 @@ Instanziierung aus einer Inline-Binärdatei (Base64) anstelle einer URL.
 **Art:** Funktion
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Vite-Plugin, das ein AssemblyScript kompiliert (https://www.assemblyscript.org/)
@@ -103,9 +103,9 @@ Die Kompilierung wird im Rollup-Hook `buildStart` ausgeführt, also das generier
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | AssemblyScriptPluginOptions |  |
+| Name     | Geben Sie                   | ein Beschreibung |
+| -------- | --------------------------- | ---------------- |
+| Optionen | AssemblyScriptPluginOptions |                  |
 
 ### AssemblyScriptPluginOptions
 
@@ -122,7 +122,7 @@ Optionen für {@linkassemblyScriptPlugin}.
 **Art:** Funktion
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Vite-Plugin, das ein AssemblyScript kompiliert (https://www.assemblyscript.org/)
@@ -135,6 +135,6 @@ Die Kompilierung wird im Rollup-Hook `buildStart` ausgeführt, also das generier
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | AssemblyScriptPluginOptions |  |
+| Name     | Geben Sie                   | ein Beschreibung |
+| -------- | --------------------------- | ---------------- |
+| Optionen | AssemblyScriptPluginOptions |                  |

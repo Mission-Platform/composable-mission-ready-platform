@@ -16,7 +16,7 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/api-pro
 **Soort:** constant
 
 ```typescript
-export const ALLOWED_METHODS
+export const ALLOWED_METHODS;
 ```
 
 Houd de proxy alleen-lezen en beperkt tot de gedocumenteerde API-routes.
@@ -26,7 +26,7 @@ Houd de proxy alleen-lezen en beperkt tot de gedocumenteerde API-routes.
 **Soort:** constant
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES
+export const ALLOWED_ROUTE_PREFIXES;
 ```
 
 Geen beschrijving opgegeven.
@@ -36,13 +36,13 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function isAllowedProxyRequest(request: Request): boolean
+function isAllowedProxyRequest(request: Request): boolean;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| verzoek | Verzoek |  |
+| Naam    | Typ     | Beschrijving |
+| ------- | ------- | ------------ |
+| verzoek | Verzoek |              |

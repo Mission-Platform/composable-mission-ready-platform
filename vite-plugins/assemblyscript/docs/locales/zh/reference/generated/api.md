@@ -26,7 +26,7 @@ export interface AssemblyScriptCompileOptions
 **种类：**功能
 
 ```typescript
-function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>
+function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>;
 ```
 
 将 AssemblyScript 条目编译为 WebAssembly 并发出单个
@@ -38,9 +38,9 @@ function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<v
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | AssemblyScript 编译选项 |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 选项 | AssemblyScript 编译选项 |      |
 
 ## `src/generate`
 
@@ -49,7 +49,7 @@ function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<v
 **种类：**功能
 
 ```typescript
-function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string
+function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string;
 ```
 
 构建独立的生成模块：wasm 二进制文件内联为 base64，
@@ -59,17 +59,17 @@ function buildGeneratedModule(wasmBase64: string, instantiateSource: string): st
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|瓦斯姆Base64 |字符串|  |
-|实例化源 |字符串|  |
+| 名称         | 类型   | 描述 |
+| ------------ | ------ | ---- |
+| 瓦斯姆Base64 | 字符串 |      |
+| 实例化源     | 字符串 |      |
 
 ### 提取实例化
 
 **种类：**功能
 
 ```typescript
-function extractInstantiate(bindingsSource: string): string
+function extractInstantiate(bindingsSource: string): string;
 ```
 
 AssemblyScript ESM 绑定文件通过 `.wasm` URL 自动实例化
@@ -79,9 +79,9 @@ AssemblyScript ESM 绑定文件通过 `.wasm` URL 自动实例化
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|绑定来源 |字符串|  |
+| 名称     | 类型   | 描述 |
+| -------- | ------ | ---- |
+| 绑定来源 | 字符串 |      |
 
 ## `src/index`
 
@@ -90,7 +90,7 @@ AssemblyScript ESM 绑定文件通过 `.wasm` URL 自动实例化
 **种类：**功能
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Vite 编译 AssemblyScript 的插件 (https://www.assemblyscript.org/)
@@ -103,9 +103,9 @@ wasm 二进制内联为 base64（加上记忆的 `loadModule()` 工厂）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | AssemblyScript 插件选项 |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 选项 | AssemblyScript 插件选项 |      |
 
 ### AssemblyScript插件选项
 
@@ -122,7 +122,7 @@ export type AssemblyScriptPluginOptions = AssemblyScriptCompileOptions;
 **种类：**功能
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Vite 编译 AssemblyScript 的插件 (https://www.assemblyscript.org/)
@@ -135,6 +135,6 @@ wasm 二进制内联为 base64（加上记忆的 `loadModule()` 工厂）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | AssemblyScript 插件选项 |  |
+| 名称 | 类型                    | 描述 |
+| ---- | ----------------------- | ---- |
+| 选项 | AssemblyScript 插件选项 |      |

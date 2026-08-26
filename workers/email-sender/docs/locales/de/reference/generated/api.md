@@ -36,15 +36,15 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>
+function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Anfrage | Anfrage |  |
-| Umwelt | Env |  |
-| Lieferung | Lieferung |  |
+| Name      | Geben Sie | ein Beschreibung |
+| --------- | --------- | ---------------- |
+| Anfrage   | Anfrage   |                  |
+| Umwelt    | Env       |                  |
+| Lieferung | Lieferung |                  |

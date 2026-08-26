@@ -26,7 +26,7 @@ Opzioni che controllano la compilazione AssemblyScript e la generazione del codi
 **Tipo:** funzione
 
 ```typescript
-function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>
+function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>;
 ```
 
 Compila una voce AssemblyScript in WebAssembly ed emetti un singolo
@@ -38,9 +38,9 @@ binario incorporato anziché un URL `.wasm`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | AssemblyScriptCompileOptions |  |
+| Nome    | Digitare                     | Descrizione |
+| ------- | ---------------------------- | ----------- |
+| opzioni | AssemblyScriptCompileOptions |             |
 
 ## `src/generate`
 
@@ -49,7 +49,7 @@ binario incorporato anziché un URL `.wasm`.
 **Tipo:** funzione
 
 ```typescript
-function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string
+function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string;
 ```
 
 Costruisci il modulo generato autonomo: il binario wasm incorporato come base64,
@@ -59,17 +59,17 @@ un decodificatore base64 cross-environment, la funzione `instantiate` estratta
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| wasmBase64 | stringa |  |
-| instantiateSource | stringa |  |
+| Nome              | Digitare | Descrizione |
+| ----------------- | -------- | ----------- |
+| wasmBase64        | stringa  |             |
+| instantiateSource | stringa  |             |
 
 ### extractInstantiate
 
 **Tipo:** funzione
 
 ```typescript
-function extractInstantiate(bindingsSource: string): string
+function extractInstantiate(bindingsSource: string): string;
 ```
 
 Il file di bind AssemblyScript ESM crea automaticamente un'istanza da un URL `.wasm` tramite
@@ -79,9 +79,9 @@ istanziazione da un binario inline (base64) anziché da un URL.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| attacchiFonte | stringa |  |
+| Nome          | Digitare | Descrizione |
+| ------------- | -------- | ----------- |
+| attacchiFonte | stringa  |             |
 
 ## `src/index`
 
@@ -90,7 +90,7 @@ istanziazione da un binario inline (base64) anziché da un URL.
 **Tipo:** funzione
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Plug-in Vite che compila un AssemblyScript (https://www.assemblyscript.org/)
@@ -103,9 +103,9 @@ La compilazione viene eseguita nell'hook rollup `buildStart`, quindi il modulo g
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | AssemblyScriptPluginOptions |  |
+| Nome    | Digitare                    | Descrizione |
+| ------- | --------------------------- | ----------- |
+| opzioni | AssemblyScriptPluginOptions |             |
 
 ### AssemblyScriptPluginOptions
 
@@ -122,7 +122,7 @@ Opzioni per {@link assemblyScriptPlugin}.
 **Tipo:** funzione
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Plug-in Vite che compila un AssemblyScript (https://www.assemblyscript.org/)
@@ -135,6 +135,6 @@ La compilazione viene eseguita nell'hook rollup `buildStart`, quindi il modulo g
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | AssemblyScriptPluginOptions |  |
+| Nome    | Digitare                    | Descrizione |
+| ------- | --------------------------- | ----------- |
+| opzioni | AssemblyScriptPluginOptions |             |

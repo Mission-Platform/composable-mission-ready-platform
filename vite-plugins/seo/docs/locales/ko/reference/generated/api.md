@@ -16,7 +16,7 @@
 **종류:** 기능
 
 ```typescript
-function seoPlugin(options: SeoPluginOptions): Plugin
+function seoPlugin(options: SeoPluginOptions): Plugin;
 ```
 
 `robots.txt` 및 `sitemap.xml`을 작성하는 Vite 플러그인을 생성합니다.
@@ -25,24 +25,25 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | Seo플러그인옵션 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 옵션 | Seo플러그인옵션 |      |
 
 #### 계약
 
 - **@예:** ```ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+  import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 
 export default defineConfig({
-  plugins: [
-    seoPlugin({
-      sitemap: { urls: [{ loc: 'https://example.com/' }] },
-      robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-    }),
-  ],
+plugins: [
+seoPlugin({
+sitemap: { urls: [{ loc: 'https://example.com/' }] },
+robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+}),
+],
 });
-```
+
+````
 
 ### seo플러그인
 
@@ -50,7 +51,7 @@ export default defineConfig({
 
 ```typescript
 function seoPlugin(options: SeoPluginOptions): Plugin
-```
+````
 
 `robots.txt` 및 `sitemap.xml`을 작성하는 Vite 플러그인을 생성합니다.
 프로젝트의 `publicDir`(또는 {@link SeoPluginOptions.outDir}) 시작 시
@@ -58,24 +59,25 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | Seo플러그인옵션 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 옵션 | Seo플러그인옵션 |      |
 
 #### 계약
 
 - **@예:** ```ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+  import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 
 export default defineConfig({
-  plugins: [
-    seoPlugin({
-      sitemap: { urls: [{ loc: 'https://example.com/' }] },
-      robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-    }),
-  ],
+plugins: [
+seoPlugin({
+sitemap: { urls: [{ loc: 'https://example.com/' }] },
+robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+}),
+],
 });
-```
+
+````
 
 ### Seo플러그인옵션
 
@@ -83,6 +85,6 @@ export default defineConfig({
 
 ```typescript
 export interface SeoPluginOptions
-```
+````
 
 {@link seoPlugin} 옵션.

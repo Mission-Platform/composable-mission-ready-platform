@@ -26,7 +26,7 @@ Opties die AssemblyScript-compilatie en het genereren van code regelen.
 **Soort:** functie
 
 ```typescript
-function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>
+function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>;
 ```
 
 Compileer een AssemblyScript-item naar WebAssembly en verzend er een single
@@ -38,9 +38,9 @@ inline binair bestand in plaats van een `.wasm`-URL.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | AssemblyScriptCompileOptions |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| opties | AssemblyScriptCompileOptions |              |
 
 ## `src/generate`
 
@@ -49,7 +49,7 @@ inline binair bestand in plaats van een `.wasm`-URL.
 **Soort:** functie
 
 ```typescript
-function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string
+function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string;
 ```
 
 Bouw de op zichzelf staande gegenereerde module: de wasm binaire inline als base64,
@@ -59,17 +59,17 @@ een base64-decoder voor meerdere omgevingen, de geëxtraheerde `instantiate`-fun
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| wasmBase64 | tekenreeks |  |
-| instantiateSource | tekenreeks |  |
+| Naam              | Typ        | Beschrijving |
+| ----------------- | ---------- | ------------ |
+| wasmBase64        | tekenreeks |              |
+| instantiateSource | tekenreeks |              |
 
 ### extractInstantiëren
 
 **Soort:** functie
 
 ```typescript
-function extractInstantiate(bindingsSource: string): string
+function extractInstantiate(bindingsSource: string): string;
 ```
 
 Het AssemblyScript ESM-bindingsbestand wordt automatisch geïnstantieerd vanaf een `.wasm`-URL via
@@ -79,9 +79,9 @@ instantiatie vanuit een inline (base64) binair bestand in plaats van een URL.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bindingenBron | tekenreeks |  |
+| Naam          | Typ        | Beschrijving |
+| ------------- | ---------- | ------------ |
+| bindingenBron | tekenreeks |              |
 
 ## `src/index`
 
@@ -90,7 +90,7 @@ instantiatie vanuit een inline (base64) binair bestand in plaats van een URL.
 **Soort:** functie
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Vite-plug-in die een AssemblyScript compileert (https://www.assemblyscript.org/)
@@ -103,9 +103,9 @@ De compilatie wordt uitgevoerd in de rollup-hook `buildStart`, dus de gegenereer
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | AssemblyScriptPluginOpties |  |
+| Naam   | Typ                        | Beschrijving |
+| ------ | -------------------------- | ------------ |
+| opties | AssemblyScriptPluginOpties |              |
 
 ### AssemblyScriptPluginOpties
 
@@ -122,7 +122,7 @@ Opties voor {@link assemblyScriptPlugin}.
 **Soort:** functie
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Vite-plug-in die een AssemblyScript compileert (https://www.assemblyscript.org/)
@@ -135,6 +135,6 @@ De compilatie wordt uitgevoerd in de rollup-hook `buildStart`, dus de gegenereer
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | AssemblyScriptPluginOpties |  |
+| Naam   | Typ                        | Beschrijving |
+| ------ | -------------------------- | ------------ |
+| opties | AssemblyScriptPluginOpties |              |

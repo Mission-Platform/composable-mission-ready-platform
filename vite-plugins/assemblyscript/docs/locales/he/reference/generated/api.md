@@ -26,7 +26,7 @@ export interface AssemblyScriptCompileOptions
 פונקציה **סוג:**
 
 ```typescript
-function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>
+function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>;
 ```
 
 הרכיב ערך AssemblyScript ל-WebAssembly ופלוט סינגל
@@ -38,9 +38,9 @@ function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<v
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | AssemblyScriptCompileOptions |  |
+| שם       | הקלד                         | תיאור |
+| -------- | ---------------------------- | ----- |
+| אפשרויות | AssemblyScriptCompileOptions |       |
 
 ## `src/generate`
 
@@ -49,7 +49,7 @@ function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<v
 פונקציה **סוג:**
 
 ```typescript
-function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string
+function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string;
 ```
 
 בנה את המודול שנוצר בעצמו: ה-wasm הבינארי המוטבע כ-base64,
@@ -59,17 +59,17 @@ function buildGeneratedModule(wasmBase64: string, instantiateSource: string): st
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| wasmBase64 | מחרוזת |  |
-| instantiateSource | מחרוזת |  |
+| שם                | הקלד   | תיאור |
+| ----------------- | ------ | ----- |
+| wasmBase64        | מחרוזת |       |
+| instantiateSource | מחרוזת |       |
 
 ### extractInstantiate
 
 פונקציה **סוג:**
 
 ```typescript
-function extractInstantiate(bindingsSource: string): string
+function extractInstantiate(bindingsSource: string): string;
 ```
 
 קובץ ה-AssemblyScript ESM מקשר אוטומטית מכתובת `.wasm` דרך
@@ -79,9 +79,9 @@ function extractInstantiate(bindingsSource: string): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| bindingsSource | מחרוזת |  |
+| שם             | הקלד   | תיאור |
+| -------------- | ------ | ----- |
+| bindingsSource | מחרוזת |       |
 
 ## `src/index`
 
@@ -90,7 +90,7 @@ function extractInstantiate(bindingsSource: string): string
 פונקציה **סוג:**
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 תוסף Vite שמרכיב AssemblyScript (https://www.assemblyscript.org/)
@@ -103,9 +103,9 @@ wasm בינארי מוטבע כ-base64 (בתוספת מפעל `loadModule()` מ�
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | AssemblyScriptPluginOptions |  |
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| אפשרויות | AssemblyScriptPluginOptions |       |
 
 ### AssemblyScriptPluginOptions
 
@@ -122,7 +122,7 @@ export type AssemblyScriptPluginOptions = AssemblyScriptCompileOptions;
 פונקציה **סוג:**
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 תוסף Vite שמרכיב AssemblyScript (https://www.assemblyscript.org/)
@@ -135,6 +135,6 @@ wasm בינארי מוטבע כ-base64 (בתוספת מפעל `loadModule()` מ�
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | AssemblyScriptPluginOptions |  |
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| אפשרויות | AssemblyScriptPluginOptions |       |

@@ -16,7 +16,7 @@
 **種類:** 定数
 
 ```typescript
-export const ALLOWED_METHODS
+export const ALLOWED_METHODS;
 ```
 
 プロキシを読み取り専用にし、文書化された API ルートに限定します。
@@ -26,7 +26,7 @@ export const ALLOWED_METHODS
 **種類:** 定数
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES
+export const ALLOWED_ROUTE_PREFIXES;
 ```
 
 説明はありません。
@@ -36,13 +36,13 @@ export const ALLOWED_ROUTE_PREFIXES
 **種類:** 関数
 
 ```typescript
-function isAllowedProxyRequest(request: Request): boolean
+function isAllowedProxyRequest(request: Request): boolean;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|リクエスト |リクエスト |  |
+| 名前       | タイプ     | 説明 |
+| ---------- | ---------- | ---- |
+| リクエスト | リクエスト |      |

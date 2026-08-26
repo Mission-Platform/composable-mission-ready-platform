@@ -36,15 +36,15 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>
+function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| verzoek | Verzoek |  |
-| omgeving | Env |  |
-| levering | Levering |  |
+| Naam     | Typ      | Beschrijving |
+| -------- | -------- | ------------ |
+| verzoek  | Verzoek  |              |
+| omgeving | Env      |              |
+| levering | Levering |              |

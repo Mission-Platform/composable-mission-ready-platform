@@ -16,15 +16,15 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/vite-pl
 **Soort:** functie
 
 ```typescript
-function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin
+function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Vite-plug-in die automatisch het design-token *override* stylesheet van een app genereert.
+Vite-plug-in die automatisch het design-token _override_ stylesheet van een app genereert.
 
 Het leest een overschrijvingsdocument in DTCG-stijl (`options.source`) en transformeert het met
 {@link buildTokenOverrideScss}, en schrijft de resulterende `:root { --<prefix>-*: … }`
 SCSS gedeeltelijk volgens `options.outFile`. Importeer dat gegenereerde bestand uit uw
-stylesheet *na* `@mission-platform/tokens` zodat de overschrijvingen de cascade winnen.
+stylesheet _na_ `@mission-platform/tokens` zodat de overschrijvingen de cascade winnen.
 
 Het genereren wordt uitgevoerd in de rollup-hook `buildStart` (dus omvat `vite build`,
 `vite build --watch` en dev-server starten op dezelfde manier) en worden opnieuw uitgevoerd wanneer de source
@@ -33,40 +33,41 @@ artefact — voeg het toe aan `.gitignore`/`.prettierignore` in plaats van het v
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TokenOverridesPluginOptions |  |
+| Naam   | Typ                         | Beschrijving |
+| ------ | --------------------------- | ------------ |
+| opties | TokenOverridesPluginOptions |              |
 
 #### Contract
 
 - **@voorbeeld:** ```ts
-// vite.config.ts
-import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
+  // vite.config.ts
+  import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
 
 export default defineConfig({
-  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
 });
-```
+
+````
 ```scss
 // styles.css / styles.scss
 - **@import:** '@mission-platform/tokens';
 - **@import:** '../design-tokens/overrides.generated.scss';
-```
+````
 
 ### tokenOverridesPlugin
 
 **Soort:** functie
 
 ```typescript
-function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin
+function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Vite-plug-in die automatisch het design-token *override* stylesheet van een app genereert.
+Vite-plug-in die automatisch het design-token _override_ stylesheet van een app genereert.
 
 Het leest een overschrijvingsdocument in DTCG-stijl (`options.source`) en transformeert het met
 {@link buildTokenOverrideScss}, en schrijft de resulterende `:root { --<prefix>-*: … }`
 SCSS gedeeltelijk volgens `options.outFile`. Importeer dat gegenereerde bestand uit uw
-stylesheet *na* `@mission-platform/tokens` zodat de overschrijvingen de cascade winnen.
+stylesheet _na_ `@mission-platform/tokens` zodat de overschrijvingen de cascade winnen.
 
 Het genereren wordt uitgevoerd in de rollup-hook `buildStart` (dus omvat `vite build`,
 `vite build --watch` en dev-server starten op dezelfde manier) en worden opnieuw uitgevoerd wanneer de source
@@ -75,25 +76,26 @@ artefact — voeg het toe aan `.gitignore`/`.prettierignore` in plaats van het v
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TokenOverridesPluginOptions |  |
+| Naam   | Typ                         | Beschrijving |
+| ------ | --------------------------- | ------------ |
+| opties | TokenOverridesPluginOptions |              |
 
 #### Contract
 
 - **@voorbeeld:** ```ts
-// vite.config.ts
-import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
+  // vite.config.ts
+  import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
 
 export default defineConfig({
-  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
 });
-```
+
+````
 ```scss
 // styles.css / styles.scss
 - **@import:** '@mission-platform/tokens';
 - **@import:** '../design-tokens/overrides.generated.scss';
-```
+````
 
 ### TokenOverridesPluginOpties
 
@@ -112,19 +114,19 @@ Opties voor {@link tokenOverridesPlugin}.
 **Soort:** functie
 
 ```typescript
-function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverrideScssOptions = {}): string
+function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverrideScssOptions = {}): string;
 ```
 
 Bouw een gedeeltelijke SCSS/CSS-overschrijving: een enkel `:root { … }`-blok van
-Aangepaste eigenschappen `--<prefix>-*` afgevlakt van `document_`. Importeer het *na*
+Aangepaste eigenschappen `--<prefix>-*` afgevlakt van `document_`. Importeer het _na_
 de basis `@mission-platform/tokens`, zodat de declaraties de cascade winnen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| document_ | OverrideGroep |  |
-| opties | TokenOverrideScssOptions |  |
+| Naam      | Typ                      | Beschrijving |
+| --------- | ------------------------ | ------------ |
+| document_ | OverrideGroep            |              |
+| opties    | TokenOverrideScssOptions |              |
 
 ### FlatOverride
 
@@ -141,22 +143,23 @@ Een afgevlakte overschrijving die klaar is om te worden verzonden als één enke
 **Soort:** functie
 
 ```typescript
-function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride[]
+function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride[];
 ```
 
 Maak een overschrijvingsdocument recursief plat in {@link FlatOverride}s. Sleutels dat
 beginnen met `Maak een overschrijvingsdocument recursief plat in {@link FlatOverride}s. Sleutels dat
 beginnen met  (DTCG-metagegevens) worden overgeslagen; elk overgebleven blad wordt een
-`--<prefix>-<path-joined-by-dashes>` aangepaste eigenschap. Onderdrukking van componenten
-paden behouden hun `component.*` DTCG-wrapper, maar gegenereerde CSS laat dat weg
-wrapper (`component.button.*` wordt `--<prefix>-button-*`).
+`--<prefix>-<path-joined-by-dashes>`aangepaste eigenschap. Onderdrukking van componenten
+paden behouden hun`component._` DTCG-wrapper, maar gegenereerde CSS laat dat weg
+wrapper (`component.button._`wordt`--<prefix>-button-*`).
  `$`
+
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| document_ | OverrideGroep |  |
-| voorvoegsel |  |  |
+| Naam        | Typ           | Beschrijving |
+| ----------- | ------------- | ------------ |
+| document_   | OverrideGroep |              |
+| voorvoegsel |               |              |
 
 ### LichtDonkerWaarde
 
@@ -178,6 +181,7 @@ export type OverrideGroup = Record<string, unknown>;
 
 Een overschrijvingsgroep node in DTCG-stijl (geneste groepen/tokens plus optionele `Een overschrijvingsgroep node in DTCG-stijl (geneste groepen/tokens plus optionele -metadata).
  `$`
+
 ### OverschrijfToken
 
 **Soort:** interface

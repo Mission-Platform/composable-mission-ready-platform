@@ -26,7 +26,7 @@ AssemblyScript のコンパイルとコード生成を制御するオプショ�
 **種類:** 関数
 
 ```typescript
-function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>
+function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>;
 ```
 
 AssemblyScript エントリを WebAssembly にコンパイルし、単一のエントリを出力します。
@@ -38,9 +38,9 @@ AssemblyScript コンパイラーをプログラムで実行します (外部 CL
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | AssemblyScriptCompileOptions |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| オプション | AssemblyScriptCompileOptions |      |
 
 ## `src/generate`
 
@@ -49,7 +49,7 @@ AssemblyScript コンパイラーをプログラムで実行します (外部 CL
 **種類:** 関数
 
 ```typescript
-function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string
+function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string;
 ```
 
 自己完結型の生成モジュールをビルドします。base64 としてインライン化された wasm バイナリ、
@@ -59,17 +59,17 @@ function buildGeneratedModule(wasmBase64: string, instantiateSource: string): st
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| wasmBase64 |文字列 |  |
-|インスタンス化ソース |文字列 |  |
+| 名前                 | タイプ | 説明 |
+| -------------------- | ------ | ---- |
+| wasmBase64           | 文字列 |      |
+| インスタンス化ソース | 文字列 |      |
 
 ### 抽出インスタンス化
 
 **種類:** 関数
 
 ```typescript
-function extractInstantiate(bindingsSource: string): string
+function extractInstantiate(bindingsSource: string): string;
 ```
 
 AssemblyScript ESM バインディング ファイルは、`.wasm` URL から次のように自動インスタンス化されます。
@@ -79,9 +79,9 @@ URL ではなくインライン (base64) バイナリからインスタンス化
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バインディングソース |文字列 |  |
+| 名前                 | タイプ | 説明 |
+| -------------------- | ------ | ---- |
+| バインディングソース | 文字列 |      |
 
 ## `src/index`
 
@@ -90,7 +90,7 @@ URL ではなくインライン (base64) バイナリからインスタンス化
 **種類:** 関数
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 AssemblyScript をコンパイルする Vite プラグイン (https://www.assemblyscript.org/)
@@ -103,9 +103,9 @@ Base64 としてインライン化された wasm バイナリ (およびメモ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | AssemblyScriptPluginOptions |  |
+| 名前       | タイプ                      | 説明 |
+| ---------- | --------------------------- | ---- |
+| オプション | AssemblyScriptPluginOptions |      |
 
 ### AssemblyScriptPluginオプション
 
@@ -122,7 +122,7 @@ export type AssemblyScriptPluginOptions = AssemblyScriptCompileOptions;
 **種類:** 関数
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 AssemblyScript をコンパイルする Vite プラグイン (https://www.assemblyscript.org/)
@@ -135,6 +135,6 @@ Base64 としてインライン化された wasm バイナリ (およびメモ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | AssemblyScriptPluginOptions |  |
+| 名前       | タイプ                      | 説明 |
+| ---------- | --------------------------- | ---- |
+| オプション | AssemblyScriptPluginOptions |      |

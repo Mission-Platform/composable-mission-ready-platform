@@ -16,7 +16,7 @@
 **种类：**功能
 
 ```typescript
-function seoPlugin(options: SeoPluginOptions): Plugin
+function seoPlugin(options: SeoPluginOptions): Plugin;
 ```
 
 创建一个 Vite 插件，将 `robots.txt` 和 `sitemap.xml` 写入
@@ -25,24 +25,25 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | SeoPlugin选项 |  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 选项 | SeoPlugin选项 |      |
 
 #### 合同
 
 - **@例子：** ```ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+  import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 
 export default defineConfig({
-  plugins: [
-    seoPlugin({
-      sitemap: { urls: [{ loc: 'https://example.com/' }] },
-      robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-    }),
-  ],
+plugins: [
+seoPlugin({
+sitemap: { urls: [{ loc: 'https://example.com/' }] },
+robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+}),
+],
 });
-```
+
+````
 
 ### seo插件
 
@@ -50,7 +51,7 @@ export default defineConfig({
 
 ```typescript
 function seoPlugin(options: SeoPluginOptions): Plugin
-```
+````
 
 创建一个 Vite 插件，将 `robots.txt` 和 `sitemap.xml` 写入
 项目开头的 `publicDir` （或 {@link SeoPluginOptions.outDir}）
@@ -58,24 +59,25 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | SeoPlugin选项 |  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 选项 | SeoPlugin选项 |      |
 
 #### 合同
 
 - **@例子：** ```ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+  import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 
 export default defineConfig({
-  plugins: [
-    seoPlugin({
-      sitemap: { urls: [{ loc: 'https://example.com/' }] },
-      robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-    }),
-  ],
+plugins: [
+seoPlugin({
+sitemap: { urls: [{ loc: 'https://example.com/' }] },
+robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+}),
+],
 });
-```
+
+````
 
 ### Seo插件选项
 
@@ -83,6 +85,6 @@ export default defineConfig({
 
 ```typescript
 export interface SeoPluginOptions
-```
+````
 
 {@link seoPlugin} 的选项。

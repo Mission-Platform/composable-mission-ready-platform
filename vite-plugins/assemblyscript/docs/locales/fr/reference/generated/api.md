@@ -26,7 +26,7 @@ Options contrôlant la compilation AssemblyScript et la génération de code.
 **Genre :** fonction
 
 ```typescript
-function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>
+function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>;
 ```
 
 Compilez une entrée AssemblyScript dans WebAssembly et émettez un seul
@@ -38,9 +38,9 @@ binaire en ligne plutôt qu'une URL `.wasm`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | AssemblyScriptCompileOptions |  |
+| Nom     | Tapez                        | Descriptif |
+| ------- | ---------------------------- | ---------- |
+| options | AssemblyScriptCompileOptions |            |
 
 ## `src/generate`
 
@@ -49,7 +49,7 @@ binaire en ligne plutôt qu'une URL `.wasm`.
 **Genre :** fonction
 
 ```typescript
-function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string
+function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string;
 ```
 
 Construisez le module généré autonome : le binaire wasm intégré en base64,
@@ -59,17 +59,17 @@ un décodeur base64 multi-environnements, la fonction `instantiate` extraite
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| wasmBase64 | chaîne |  |
-| instancierSource | chaîne |  |
+| Nom              | Tapez  | Descriptif |
+| ---------------- | ------ | ---------- |
+| wasmBase64       | chaîne |            |
+| instancierSource | chaîne |            |
 
 ### extraireInstancier
 
 **Genre :** fonction
 
 ```typescript
-function extractInstantiate(bindingsSource: string): string
+function extractInstantiate(bindingsSource: string): string;
 ```
 
 Le fichier de liaisons AssemblyScript ESM s'instancie automatiquement à partir d'une URL `.wasm` via
@@ -79,9 +79,9 @@ instanciation à partir d'un binaire en ligne (base64) au lieu d'une URL.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| liaisonsSource | chaîne |  |
+| Nom            | Tapez  | Descriptif |
+| -------------- | ------ | ---------- |
+| liaisonsSource | chaîne |            |
 
 ## `src/index`
 
@@ -90,7 +90,7 @@ instanciation à partir d'un binaire en ligne (base64) au lieu d'une URL.
 **Genre :** fonction
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Plugin Vite qui compile un AssemblyScript (https://www.assemblyscript.org/)
@@ -103,9 +103,9 @@ La compilation s'exécute dans le hook de rollup `buildStart`, le module génér
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | AssemblyScriptPluginOptions |  |
+| Nom     | Tapez                       | Descriptif |
+| ------- | --------------------------- | ---------- |
+| options | AssemblyScriptPluginOptions |            |
 
 ### Options du plugin AssemblyScript
 
@@ -122,7 +122,7 @@ Options pour {@link assemblyScriptPlugin}.
 **Genre :** fonction
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 Plugin Vite qui compile un AssemblyScript (https://www.assemblyscript.org/)
@@ -135,6 +135,6 @@ La compilation s'exécute dans le hook de rollup `buildStart`, le module génér
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | AssemblyScriptPluginOptions |  |
+| Nom     | Tapez                       | Descriptif |
+| ------- | --------------------------- | ---------- |
+| options | AssemblyScriptPluginOptions |            |

@@ -26,7 +26,7 @@ AssemblyScript 컴파일 및 코드 생성을 제어하는 ​​옵션입니다
 **종류:** 기능
 
 ```typescript
-function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>
+function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>;
 ```
 
 AssemblyScript 항목을 WebAssembly로 컴파일하고 단일 항목을 내보냅니다.
@@ -38,9 +38,9 @@ AssemblyScript 컴파일러를 프로그래밍 방식으로 실행합니다(외�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | AssemblyScript컴파일 옵션 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 옵션 | AssemblyScript컴파일 옵션 |      |
 
 ## `src/generate`
 
@@ -49,7 +49,7 @@ AssemblyScript 컴파일러를 프로그래밍 방식으로 실행합니다(외�
 **종류:** 기능
 
 ```typescript
-function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string
+function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string;
 ```
 
 자체 포함 생성 모듈 빌드: base64로 인라인된 wasm 바이너리,
@@ -59,17 +59,17 @@ function buildGeneratedModule(wasmBase64: string, instantiateSource: string): st
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| wasmBase64 | 문자열 |  |
-| 인스턴스화소스 | 문자열 |  |
+| 이름           | 유형   | 설명 |
+| -------------- | ------ | ---- |
+| wasmBase64     | 문자열 |      |
+| 인스턴스화소스 | 문자열 |      |
 
 ### 추출인스턴스화하다
 
 **종류:** 기능
 
 ```typescript
-function extractInstantiate(bindingsSource: string): string
+function extractInstantiate(bindingsSource: string): string;
 ```
 
 AssemblyScript ESM 바인딩 파일은 다음을 통해 `.wasm` URL에서 자동으로 인스턴스화됩니다.
@@ -79,9 +79,9 @@ URL 대신 인라인(base64) 바이너리에서 인스턴스화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 바인딩소스 | 문자열 |  |
+| 이름       | 유형   | 설명 |
+| ---------- | ------ | ---- |
+| 바인딩소스 | 문자열 |      |
 
 ## `src/index`
 
@@ -90,7 +90,7 @@ URL 대신 인라인(base64) 바이너리에서 인스턴스화합니다.
 **종류:** 기능
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 AssemblyScript(https://www.assemblyscript.org/)를 컴파일하는 Vite 플러그인
@@ -103,9 +103,9 @@ base64로 인라인된 wasm 바이너리(추가로 메모된 `loadModule()` 팩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | AssemblyScriptPlugin옵션 |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 옵션 | AssemblyScriptPlugin옵션 |      |
 
 ### AssemblyScript플러그인옵션
 
@@ -122,7 +122,7 @@ export type AssemblyScriptPluginOptions = AssemblyScriptCompileOptions;
 **종류:** 기능
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 AssemblyScript(https://www.assemblyscript.org/)를 컴파일하는 Vite 플러그인
@@ -135,6 +135,6 @@ base64로 인라인된 wasm 바이너리(추가로 메모된 `loadModule()` 팩�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | AssemblyScriptPlugin옵션 |  |
+| 이름 | 유형                     | 설명 |
+| ---- | ------------------------ | ---- |
+| 옵션 | AssemblyScriptPlugin옵션 |      |

@@ -16,7 +16,7 @@
 **種類:** 関数
 
 ```typescript
-function seoPlugin(options: SeoPluginOptions): Plugin
+function seoPlugin(options: SeoPluginOptions): Plugin;
 ```
 
 を作成します Vite 書き込むプラグイン `robots.txt` そして `sitemap.xml` に
@@ -25,24 +25,25 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | SeoPluginオプション |  |
+| 名前       | タイプ              | 説明 |
+| ---------- | ------------------- | ---- |
+| オプション | SeoPluginオプション |      |
 
 #### 契約
 
 - **@例：** ```ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+  import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 
 export default defineConfig({
-  plugins: [
-    seoPlugin({
-      sitemap: { urls: [{ loc: 'https://example.com/' }] },
-      robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-    }),
-  ],
+plugins: [
+seoPlugin({
+sitemap: { urls: [{ loc: 'https://example.com/' }] },
+robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+}),
+],
 });
-```
+
+````
 
 ### seoプラグイン
 
@@ -50,7 +51,7 @@ export default defineConfig({
 
 ```typescript
 function seoPlugin(options: SeoPluginOptions): Plugin
-```
+````
 
 を作成します Vite 書き込むプラグイン `robots.txt` そして `sitemap.xml` に
 プロジェクトの `publicDir` (または {@link SeoPluginOptions.outDir}) の開始時に
@@ -58,24 +59,25 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | SeoPluginオプション |  |
+| 名前       | タイプ              | 説明 |
+| ---------- | ------------------- | ---- |
+| オプション | SeoPluginオプション |      |
 
 #### 契約
 
 - **@例：** ```ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+  import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 
 export default defineConfig({
-  plugins: [
-    seoPlugin({
-      sitemap: { urls: [{ loc: 'https://example.com/' }] },
-      robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-    }),
-  ],
+plugins: [
+seoPlugin({
+sitemap: { urls: [{ loc: 'https://example.com/' }] },
+robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+}),
+],
 });
-```
+
+````
 
 ### SeoPluginオプション
 
@@ -83,6 +85,6 @@ export default defineConfig({
 
 ```typescript
 export interface SeoPluginOptions
-```
+````
 
 {@link seoPlugin} のオプション。

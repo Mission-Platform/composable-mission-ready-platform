@@ -36,15 +36,15 @@ export interface EmailRequest
 פונקציה **סוג:**
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>
+function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בקשה | בקשה |  |
-| סביבה | Env |  |
-| משלוח | משלוח |  |
+| שם    | הקלד  | תיאור |
+| ----- | ----- | ----- |
+| בקשה  | בקשה  |       |
+| סביבה | Env   |       |
+| משלוח | משלוח |       |

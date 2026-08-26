@@ -16,7 +16,7 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/api-proxy`.
 **Art:** konstant
 
 ```typescript
-export const ALLOWED_METHODS
+export const ALLOWED_METHODS;
 ```
 
 Halten Sie den Proxy schreibgeschützt und auf die dokumentierten API-Routen beschränkt.
@@ -26,7 +26,7 @@ Halten Sie den Proxy schreibgeschützt und auf die dokumentierten API-Routen bes
 **Art:** konstant
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES
+export const ALLOWED_ROUTE_PREFIXES;
 ```
 
 Keine Beschreibung angegeben.
@@ -36,13 +36,13 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function isAllowedProxyRequest(request: Request): boolean
+function isAllowedProxyRequest(request: Request): boolean;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Anfrage | Anfrage |  |
+| Name    | Geben Sie | ein Beschreibung |
+| ------- | --------- | ---------------- |
+| Anfrage | Anfrage   |                  |

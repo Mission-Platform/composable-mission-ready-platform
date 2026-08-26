@@ -16,40 +16,40 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/vite-pl
 **Soort:** functie
 
 ```typescript
-function aliasToCssVariable(alias: string, prefix: string): string
+function aliasToCssVariable(alias: string, prefix: string): string;
 ```
 
 Converteer een DTCG-alias (`{font.size.4xl}`) naar een `var(--<prefix>-font-size-4xl)`-referentie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| alias | tekenreeks |  |
-| voorvoegsel | tekenreeks |  |
+| Naam        | Typ        | Beschrijving |
+| ----------- | ---------- | ------------ |
+| alias       | tekenreeks |              |
+| voorvoegsel | tekenreeks |              |
 
 ### kameelGeval
 
 **Soort:** functie
 
 ```typescript
-function camelCase(dashed: string): string
+function camelCase(dashed: string): string;
 ```
 
 camelCase een streepjesreeks (`border-width` → `borderWidth`, `z-index` → `zIndex`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| gestippeld | tekenreeks |  |
+| Naam       | Typ        | Beschrijving |
+| ---------- | ---------- | ------------ |
+| gestippeld | tekenreeks |              |
 
 ### kameelCaseName
 
 **Soort:** constant
 
 ```typescript
-export const camelCaseName
+export const camelCaseName;
 ```
 
 camelCase-ID voor een token (`border-width-heavy` → `borderWidthHeavy`).
@@ -59,7 +59,7 @@ camelCase-ID voor een token (`border-width-heavy` → `borderWidthHeavy`).
 **Soort:** constant
 
 ```typescript
-export const compareTokens
+export const compareTokens;
 ```
 
 Stabiele ASCII-vergelijking van twee tokens op basis van hun gestippelde naam.
@@ -69,7 +69,7 @@ Stabiele ASCII-vergelijking van twee tokens op basis van hun gestippelde naam.
 **Soort:** constant
 
 ```typescript
-export const dashedName
+export const dashedName;
 ```
 
 Gestippelde tokennaam (`color-alert-100`) gebruikt voor SCSS/CSS-variabelenamen en sortering.
@@ -94,6 +94,7 @@ export type DtcgGroup = Record<string, unknown>;
 
 Een DTCG-groep node (een object van geneste groepen/tokens plus `Een DTCG-groep node (een object van geneste groepen/tokens plus -metadata).
  `$`
+
 ### DtcgToken
 
 **Soort:** interface
@@ -109,7 +110,7 @@ Een DTCG-bladtoken (`{ $value, $type?, $description? }`).
 **Soort:** functie
 
 ```typescript
-function flattenTokens(document_: DtcgGroup): TokenRecord[]
+function flattenTokens(document_: DtcgGroup): TokenRecord[];
 ```
 
 Maak een DTCG-document recursief plat in {@link TokenRecord}s, met de
@@ -117,64 +118,64 @@ dichtstbijzijnde voorouder `$type` tot aan elk bladfiche.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| document_ | DtcgGroep |  |
+| Naam      | Typ       | Beschrijving |
+| --------- | --------- | ------------ |
+| document_ | DtcgGroep |              |
 
 ### formaatKleurWaarde
 
 **Soort:** functie
 
 ```typescript
-function formatColorValue(value: DtcgColorValue): string
+function formatColorValue(value: DtcgColorValue): string;
 ```
 
 Formatteer een DTCG-kleurwaarde als een CSS `oklab()`-tekenreeks (of een andere kleurruimte), niet afgerond.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | DtcgColorWaarde |  |
+| Naam   | Typ             | Beschrijving |
+| ------ | --------------- | ------------ |
+| waarde | DtcgColorWaarde |              |
 
 ### formaatCssColor
 
 **Soort:** functie
 
 ```typescript
-function formatCssColor(value: DtcgColorValue): string
+function formatCssColor(value: DtcgColorValue): string;
 ```
 
 Rond een OKLab/andere kleurruimtewaarde af op vier significante cijfers per onderdeel.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | DtcgColorWaarde |  |
+| Naam   | Typ             | Beschrijving |
+| ------ | --------------- | ------------ |
+| waarde | DtcgColorWaarde |              |
 
 ### formatCssWaarde
 
 **Soort:** functie
 
 ```typescript
-function formatCssValue(value: unknown): string
+function formatCssValue(value: unknown): string;
 ```
 
 Formatteer een token `$value` als een letterlijke CSS/SCSS (kleuren afgerond; al het andere woordelijk).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | onbekend |  |
+| Naam   | Typ      | Beschrijving |
+| ------ | -------- | ------------ |
+| waarde | onbekend |              |
 
 ### groepLabel
 
 **Soort:** constant
 
 ```typescript
-export const groupLabel
+export const groupLabel;
 ```
 
 Hoofdlettergebruik: een groepssleutel voor SCSS-sectiekoppen (`border-width` → `Border Width`).
@@ -184,24 +185,24 @@ Hoofdlettergebruik: een groepssleutel voor SCSS-sectiekoppen (`border-width` →
 **Soort:** functie
 
 ```typescript
-function resolveAlias(alias: string, document_: DtcgGroup): unknown
+function resolveAlias(alias: string, document_: DtcgGroup): unknown;
 ```
 
 Een DTCG-alias (`{font.size.4xl}`) omzetten in de letterlijke `$value` in een document.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| alias | tekenreeks |  |
-| document_ | DtcgGroep |  |
+| Naam      | Typ        | Beschrijving |
+| --------- | ---------- | ------------ |
+| alias     | tekenreeks |              |
+| document_ | DtcgGroep  |              |
 
 ### solveTsWaarde
 
 **Soort:** functie
 
 ```typescript
-function resolveTsValue(value: unknown): string | number
+function resolveTsValue(value: unknown): string | number;
 ```
 
 Resolveer een DTCG `$value` naar de letterlijke JavaScript-waarde die wordt gebruikt in het gegenereerde bestand
@@ -210,9 +211,9 @@ getallen, en al het andere (afmetingen, lettertypefamiliestapels, ...) blijft ee
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | onbekend |  |
+| Naam   | Typ      | Beschrijving |
+| ------ | -------- | ------------ |
+| waarde | onbekend |              |
 
 ### TokenRecord
 
@@ -231,23 +232,23 @@ Eén opgelost DTCG-token, afgevlakt uit de geneste groep.
 **Soort:** functie
 
 ```typescript
-function generateTokens(options: TokensPluginOptions): void
+function generateTokens(options: TokensPluginOptions): void;
 ```
 
 Genereer elk verbruikbaar tokenartefact uit de DTCG-bronnen:
-  • `scss/_<file>.scss` — één op zichzelf staand SCSS-deel per niet-themabron
-  • `scss/_theme.scss` — het gecombineerde gedeeltelijke `light-dark()`-thema
-  • `ts/<file>.ts` — één geneste `as const` TypeScript-module per bron
-  • `_tokens.scss` — SCSS-loop `@forward`ing van elk deel (incl. thema)
-  • `tokens.ts` — TypeScript-vat dat elke module per bestand opnieuw exporteert
+• `scss/_<file>.scss` — één op zichzelf staand SCSS-deel per niet-themabron
+• `scss/_theme.scss` — het gecombineerde gedeeltelijke `light-dark()`-thema
+• `ts/<file>.ts` — één geneste `as const` TypeScript-module per bron
+• `_tokens.scss` — SCSS-loop `@forward`ing van elk deel (incl. thema)
+• `tokens.ts` — TypeScript-vat dat elke module per bestand opnieuw exporteert
 
 Alles wordt geproduceerd door de op maat gemaakte zenders; er is geen externe CLI.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TokensPluginOpties |  |
+| Naam   | Typ                | Beschrijving |
+| ------ | ------------------ | ------------ |
+| opties | TokensPluginOpties |              |
 
 ### TokensPluginOpties
 
@@ -275,7 +276,7 @@ staan ernaast geschreven.
 **Soort:** functie
 
 ```typescript
-function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string
+function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string;
 ```
 
 Bouw het enkele gecombineerde thema gedeeltelijk. De lichte en donkere semantische kleur
@@ -289,24 +290,24 @@ Het gedeeltelijke zendt ook de opt-in `[data-theme]`/`.theme-*`-schemapinnen uit
 rechtstreeks, dus het importeren van `scss/tokens` is voldoende om een subboom (of het geheel) vast te zetten
 document) naar één schema — er is geen afzonderlijke `scss/themes/{light,dark}`-import
 vereist en het gedrag is niet langer afhankelijk van de importvolgorde. Omdat de
-`light-dark()` kleurfiches hierboven lossen op tegen de *gebruikte* `color-scheme`,
+`light-dark()` kleurfiches hierboven lossen op tegen de _gebruikte_ `color-scheme`,
 Door het op een `[data-theme]`-element te plaatsen, wordt dat element en al zijn elementen opnieuw van thema voorzien
 afstammelingen zonder een aangepaste eigenschap met één kleur opnieuw te definiëren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| lichtDocument | DtcgGroep |  |
-| donkerDocument | DtcgGroep |  |
-| voorvoegsel |  |  |
+| Naam           | Typ       | Beschrijving |
+| -------------- | --------- | ------------ |
+| lichtDocument  | DtcgGroep |              |
+| donkerDocument | DtcgGroep |              |
+| voorvoegsel    |           |              |
 
 ### buildPropertyRule
 
 **Soort:** functie
 
 ```typescript
-function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string
+function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string;
 ```
 
 Bouw de CSS `@property`-registratie voor één aangepaste eigenschap.
@@ -331,117 +332,123 @@ Een niet-universele `@property` vereist een rekenonafhankelijke
 de universele `*`-syntaxis laat deze weg. Alles waarvan de waarde een `var()`-referentie is
 (de typografievelden) of een niet-typeerbare letterlijke tekst (schaduwen, versoepelingscurven,
 font-family stacks) registreert zich daarom onder `*` zonder een `initial-value`.
- `$`
+`$`
+
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opnemen | TokenRecord |  |
-| voorvoegsel | tekenreeks |  |
-| gebruikScssVariabele |  |  |
-| cssNaamruimte | tekenreeks |  |
+| Naam                 | Typ         | Beschrijving |
+| -------------------- | ----------- | ------------ |
+| opnemen              | TokenRecord |              |
+| voorvoegsel          | tekenreeks  |              |
+| gebruikScssVariabele |             |              |
+| cssNaamruimte        | tekenreeks  |              |
 
 ### buildScssVariabelen
 
 **Soort:** functie
 
 ```typescript
-function buildScssVariables(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariables(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| records | TokenRecord[] |  |
-| voorvoegsel |  |  |
-| cssNaamruimte | tekenreeks |  |
-| componentNaamruimten | Alleen-lezenSet<string> |  |
+| Naam                 | Typ                     | Beschrijving |
+| -------------------- | ----------------------- | ------------ |
+| records              | TokenRecord[]           |              |
+| voorvoegsel          |                         |              |
+| cssNaamruimte        | tekenreeks              |              |
+| componentNaamruimten | Alleen-lezenSet<string> |              |
 
 ### buildScssVariabelenScss
 
 **Soort:** functie
 
 ```typescript
-function buildScssVariablesScss(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariablesScss(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 Bouw een CSS-vrije `Bouw een CSS-vrije -variabelen-only gedeeltelijke (header + de {@link buildScssVariables}
-body, geen `:root`/`@property` CSS). Uitgezonden als `scss/_<file>-vars.scss` dus intern
-consumenten (bijvoorbeeld `scss/_mixins.scss`) kunnen de `Bouw een CSS-vrije `Bouw een CSS-vrije -variabelen-only gedeeltelijke (header + de {@link buildScssVariables}
-body, geen `:root`/`@property` CSS). Uitgezonden als `scss/_<file>-vars.scss` dus intern
-consumenten (bijvoorbeeld `scss/_mixins.scss`) kunnen de -waarde van een token lezen tijdens het compileren
-zonder `@use`-ing van het volledige gedeeltelijke - wat de `:root`/`@property` CSS zou lekken
+body, geen `:root`/`@property`CSS). Uitgezonden als`scss/_<file>-vars.scss`dus intern
+consumenten (bijvoorbeeld`scss/_mixins.scss`) kunnen de `Bouw een CSS-vrije `Bouw een CSS-vrije -variabelen-only gedeeltelijke (header + de {@link buildScssVariables}
+body, geen `:root`/`@property`CSS). Uitgezonden als`scss/_<file>-vars.scss`dus intern
+consumenten (bijvoorbeeld`scss/_mixins.scss`) kunnen de -waarde van een token lezen tijdens het compileren
+zonder `@use`-ing van het volledige gedeeltelijke - wat de `:root`/`@property`CSS zou lekken
 in elk consumerend stylesheet.
- `$`
+`$`
+
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| records | TokenRecord[] |  |
-| voorvoegsel |  |  |
-| cssNaamruimte | tekenreeks |  |
-| componentNaamruimten | Alleen-lezenSet<string> |  |
+| Naam                 | Typ                     | Beschrijving |
+| -------------------- | ----------------------- | ------------ |
+| records              | TokenRecord[]           |              |
+| voorvoegsel          |                         |              |
+| cssNaamruimte        | tekenreeks              |              |
+| componentNaamruimten | Alleen-lezenSet<string> |              |
 
 ### buildStructureleScss
 
 **Soort:** functie
 
 ```typescript
-function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string
+function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string;
 ```
 
 Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`
 en een bijpassende `@property`-registratie voor elk token (met `initial-value`s
-omgezet in de overeenkomende `Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`
-en een bijpassende `@property`-registratie voor elk token (met `initial-value`s
+omgezet in de overeenkomende `Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`en een bijpassende`@property`-registratie voor elk token (met `initial-value`s
 omgezet in de overeenkomende -variabele), beide verpakt in de `mp.tokens`-cascade
 laag. De `Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`
 en een bijpassende `@property`-registratie voor elk token (met `initial-value`s
-omgezet in de overeenkomende `Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`
-en een bijpassende `@property`-registratie voor elk token (met `initial-value`s
+omgezet in de overeenkomende `Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`en een bijpassende`@property`-registratie voor elk token (met `initial-value`s
 omgezet in de overeenkomende -variabele), beide verpakt in de `mp.tokens`-cascade
 laag. De -variabelen zelf leven zonder CSS in de bijbehorende begeleidende versie
-`_<file>-vars.scss` gedeeltelijk (zie {@link buildScssVariablesScss}); dit gedeeltelijk
-`@use`s it (om de waarden in de `:root`/`@property`-blokken te interpoleren) en
-`@forward`s (dus stroomafwaartse consumenten van `_<file>.scss` zien nog steeds de
-`Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`
+`_<file>-vars.scss`gedeeltelijk (zie {@link buildScssVariablesScss}); dit gedeeltelijk`@use`s it (om de waarden in de `:root`/`@property`-blokken te interpoleren) en
+`@forward`s (dus stroomafwaartse consumenten van `_<file>.scss`zien nog steeds de`Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`
 en een bijpassende `@property`-registratie voor elk token (met `initial-value`s
-omgezet in de overeenkomende `Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`
-en een bijpassende `@property`-registratie voor elk token (met `initial-value`s
+omgezet in de overeenkomende `Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`en een bijpassende`@property`-registratie voor elk token (met `initial-value`s
 omgezet in de overeenkomende -variabele), beide verpakt in de `mp.tokens`-cascade
 laag. De `Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`
 en een bijpassende `@property`-registratie voor elk token (met `initial-value`s
-omgezet in de overeenkomende `Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`
-en een bijpassende `@property`-registratie voor elk token (met `initial-value`s
+omgezet in de overeenkomende `Bouw een structureel SCSS-deel: de aangepaste eigenschappen `:root { --<prefix>-* }`en een bijpassende`@property`-registratie voor elk token (met `initial-value`s
 omgezet in de overeenkomende -variabele), beide verpakt in de `mp.tokens`-cascade
 laag. De -variabelen zelf leven zonder CSS in de bijbehorende begeleidende versie
-`_<file>-vars.scss` gedeeltelijk (zie {@link buildScssVariablesScss}); dit gedeeltelijk
-`@use`s it (om de waarden in de `:root`/`@property`-blokken te interpoleren) en
+`_<file>-vars.scss`gedeeltelijk (zie {@link buildScssVariablesScss}); dit gedeeltelijk`@use`s it (om de waarden in de `:root`/`@property`-blokken te interpoleren) en
 `@forward`s (dus stroomafwaartse consumenten van `_<file>.scss` zien nog steeds de
 -variabelen). Het kleurenpalet en de samengestelde typografie komen beide naar voren
 via dit pad.
 
 `file` is de bron-/uitvoerbasisnaam (bijvoorbeeld `'radius'`), die wordt gebruikt om te verwijzen naar
 metgezel `'<file>-vars'` gedeeltelijk.
- `$`
+`$`
+
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| records | TokenRecord[] |  |
-| voorvoegsel |  |  |
-| bestand |  |  |
-| cssNaamruimte | tekenreeks |  |
+| Naam          | Typ           | Beschrijving |
+| ------------- | ------------- | ------------ |
+| records       | TokenRecord[] |              |
+| voorvoegsel   |               |              |
+| bestand       |               |              |
+| cssNaamruimte | tekenreeks    |              |
 
 ### bouwTypografieRecords
 
 **Soort:** functie
 
 ```typescript
-function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[]
+function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[];
 ```
 
 Maak een samengestelde DTCG-typografiegroep plat in {@link TokenRecord}s per veld.
@@ -454,26 +461,26 @@ Elk veld wordt een `typography-<variant>-<field>`-token waarvan de waarde de is
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| typografieGroep | DtcgGroep |  |
-| voorvoegsel |  |  |
+| Naam            | Typ       | Beschrijving |
+| --------------- | --------- | ------------ |
+| typografieGroep | DtcgGroep |              |
+| voorvoegsel     |           |              |
 
 ### typografieInzendingen
 
 **Soort:** functie
 
 ```typescript
-function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>
+function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>;
 ```
 
 Retourneer `[variant, value]`-items voor een samengestelde DTCG-typografiegroep.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| groep | DtcgGroep |  |
+| Naam  | Typ       | Beschrijving |
+| ----- | --------- | ------------ |
+| groep | DtcgGroep |              |
 
 ## `src/generators/typescript`
 
@@ -482,23 +489,28 @@ Retourneer `[variant, value]`-items voor een samengestelde DTCG-typografiegroep.
 **Soort:** functie
 
 ```typescript
-function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string
+function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronnen | Array<string \| TokenModuleDescriptor> |  |
+| Naam    | Typ                                    | Beschrijving |
+| ------- | -------------------------------------- | ------------ |
+| bronnen | Array<string \| TokenModuleDescriptor> |              |
 
 ### buildTokenModule
 
 **Soort:** functie
 
 ```typescript
-function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?: DtcgGroup, exportName = camelCase(basename)): string
+function buildTokenModule(
+  basename: string,
+  document_: DtcgGroup,
+  aliasDocument?: DtcgGroup,
+  exportName = camelCase(basename),
+): string;
 ```
 
 Bouw een TypeScript-module per bestand, waarbij één genest `as const`-object met de naam wordt geëxporteerd
@@ -512,12 +524,12 @@ samengestelde `typography`-bron lost de `{font.*}`-referenties ertegen op).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| basisnaam | tekenreeks |  |
-| document_ | DtcgGroep |  |
-| aliasDocument | DtcgGroep |  |
-| exportNaam |  |  |
+| Naam          | Typ        | Beschrijving |
+| ------------- | ---------- | ------------ |
+| basisnaam     | tekenreeks |              |
+| document_     | DtcgGroep  |              |
+| aliasDocument | DtcgGroep  |              |
+| exportNaam    |            |              |
 
 ## `src/index`
 
@@ -526,7 +538,7 @@ samengestelde `typography`-bron lost de `{font.*}`-referenties ertegen op).
 **Soort:** functie
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Vite-plug-in die de Mission Platform-ontwerptoken-artefacten genereert uit de
@@ -534,27 +546,27 @@ DTCG (https://www.designtokens.org/) bronnen die een op zichzelf staande gewoont
 generator — er is geen externe CLI bij betrokken. Elke `*.tokens.json`-bron levert a
 overeenkomende `generated/scss/<file>.scss` (op zichzelf staande `Vite-plug-in die de Mission Platform-ontwerptoken-artefacten genereert uit de
 DTCG (https://www.designtokens.org/) bronnen die een op zichzelf staande gewoonte gebruiken
-generator — er is geen externe CLI bij betrokken. Elke `*.tokens.json`-bron levert a
-overeenkomende `generated/scss/<file>.scss` (op zichzelf staande -variabelen, `--mp-*`
-aangepaste eigenschappen en hun `@property`-registraties) en een geneste `as const`
-`generated/ts/<file>.ts`-module, naast de `generated/_tokens.scss` (SCSS
-vat) en `generated/tokens.ts` (TypeScript vat) aggregaten.
+generator — er is geen externe CLI bij betrokken. Elke `_.tokens.json`-bron levert a
+overeenkomende `generated/scss/<file>.scss`(op zichzelf staande -variabelen,`--mp-_`aangepaste eigenschappen en hun`@property`-registraties) en een geneste `as const`
+`generated/ts/<file>.ts`-module, naast de `generated/_tokens.scss`(SCSS
+vat) en`generated/tokens.ts` (TypeScript vat) aggregaten.
 
 Het genereren wordt uitgevoerd in de rollup-haak `buildStart`, zodat de artefacten worden geproduceerd
 voor `vite build`, `vite build --watch` en de ontwikkelaarsserver.
- `$`
+`$`
+
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TokensPluginOpties |  |
+| Naam   | Typ                | Beschrijving |
+| ------ | ------------------ | ------------ |
+| opties | TokensPluginOpties |              |
 
 ### tokensPlugin
 
 **Soort:** functie
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Vite-plug-in die de Mission Platform-ontwerptoken-artefacten genereert uit de
@@ -562,20 +574,20 @@ DTCG (https://www.designtokens.org/) bronnen die een op zichzelf staande gewoont
 generator — er is geen externe CLI bij betrokken. Elke `*.tokens.json`-bron levert a
 overeenkomende `generated/scss/<file>.scss` (op zichzelf staande `Vite-plug-in die de Mission Platform-ontwerptoken-artefacten genereert uit de
 DTCG (https://www.designtokens.org/) bronnen die een op zichzelf staande gewoonte gebruiken
-generator — er is geen externe CLI bij betrokken. Elke `*.tokens.json`-bron levert a
-overeenkomende `generated/scss/<file>.scss` (op zichzelf staande -variabelen, `--mp-*`
-aangepaste eigenschappen en hun `@property`-registraties) en een geneste `as const`
-`generated/ts/<file>.ts`-module, naast de `generated/_tokens.scss` (SCSS
-vat) en `generated/tokens.ts` (TypeScript vat) aggregaten.
+generator — er is geen externe CLI bij betrokken. Elke `_.tokens.json`-bron levert a
+overeenkomende `generated/scss/<file>.scss`(op zichzelf staande -variabelen,`--mp-_`aangepaste eigenschappen en hun`@property`-registraties) en een geneste `as const`
+`generated/ts/<file>.ts`-module, naast de `generated/_tokens.scss`(SCSS
+vat) en`generated/tokens.ts` (TypeScript vat) aggregaten.
 
 Het genereren wordt uitgevoerd in de rollup-haak `buildStart`, zodat de artefacten worden geproduceerd
 voor `vite build`, `vite build --watch` en de ontwikkelaarsserver.
- `$`
+`$`
+
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TokensPluginOpties |  |
+| Naam   | Typ                | Beschrijving |
+| ------ | ------------------ | ------------ |
+| opties | TokensPluginOpties |              |
 
 ## `src/reachability`
 
@@ -584,16 +596,16 @@ voor `vite build`, `vite build --watch` en de ontwikkelaarsserver.
 **Soort:** functie
 
 ```typescript
-function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport
+function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport;
 ```
 
 Verzamel een deterministisch conservatief bereikbaarheidsrapport zonder de tokenbronnen te wijzigen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TokenReachabilityOptions |  |
+| Naam   | Typ                      | Beschrijving |
+| ------ | ------------------------ | ------------ |
+| opties | TokenReachabilityOptions |              |
 
 ### TokenAliasEdge
 
@@ -630,7 +642,7 @@ Stabiele, controleerbare uitvoer van {@link collectTokenReachability}.
 **Soort:** type
 
 ```typescript
-export type TokenUsageEvidence = | 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
+export type TokenUsageEvidence = 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
 ```
 
 Bewijs verzameld voor één symbolisch blad.
@@ -660,14 +672,14 @@ Classificatie toegekend door de conservatieve bereikbaarheidsaudit.
 **Soort:** functie
 
 ```typescript
-function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void
+function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void;
 ```
 
 Schrijf een rapport met stabiele opmaak, geschikt voor beoordeling en broncontrole.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| rapport | TokenReachabilityReport |  |
-| bestandspad | tekenreeks |  |
+| Naam        | Typ                     | Beschrijving |
+| ----------- | ----------------------- | ------------ |
+| rapport     | TokenReachabilityReport |              |
+| bestandspad | tekenreeks              |              |

@@ -36,15 +36,15 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>
+function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| solicitud | Solicitar |  |
-| medio ambiente | sobre |  |
-| entrega | Entrega |  |
+| Nombre         | Tipo      | Descripción |
+| -------------- | --------- | ----------- |
+| solicitud      | Solicitar |             |
+| medio ambiente | sobre     |             |
+| entrega        | Entrega   |             |

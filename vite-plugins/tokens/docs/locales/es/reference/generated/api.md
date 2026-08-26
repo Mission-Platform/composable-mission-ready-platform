@@ -16,40 +16,40 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/vite
 **Tipo:** función
 
 ```typescript
-function aliasToCssVariable(alias: string, prefix: string): string
+function aliasToCssVariable(alias: string, prefix: string): string;
 ```
 
 Convierta un alias DTCG (`{font.size.4xl}`) en una referencia `var(--<prefix>-font-size-4xl)`.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| alias | cadena |  |
-| prefijo | cadena |  |
+| Nombre  | Tipo   | Descripción |
+| ------- | ------ | ----------- |
+| alias   | cadena |             |
+| prefijo | cadena |             |
 
 ### camelloCaso
 
 **Tipo:** función
 
 ```typescript
-function camelCase(dashed: string): string
+function camelCase(dashed: string): string;
 ```
 
 camelCase una cadena de puntos (`border-width` → `borderWidth`, `z-index` → `zIndex`).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| discontinuo | cadena |  |
+| Nombre      | Tipo   | Descripción |
+| ----------- | ------ | ----------- |
+| discontinuo | cadena |             |
 
 ### camelloNombre del caso
 
 **Tipo:** constante
 
 ```typescript
-export const camelCaseName
+export const camelCaseName;
 ```
 
 Identificador camelCase para un token (`border-width-heavy` → `borderWidthHeavy`).
@@ -59,7 +59,7 @@ Identificador camelCase para un token (`border-width-heavy` → `borderWidthHeav
 **Tipo:** constante
 
 ```typescript
-export const compareTokens
+export const compareTokens;
 ```
 
 Comparación ASCII estable de dos tokens por su nombre discontinuo.
@@ -69,7 +69,7 @@ Comparación ASCII estable de dos tokens por su nombre discontinuo.
 **Tipo:** constante
 
 ```typescript
-export const dashedName
+export const dashedName;
 ```
 
 Nombre del token discontinuo (`color-alert-100`) utilizado para nombres de variables SCSS/CSS + clasificación.
@@ -94,6 +94,7 @@ export type DtcgGroup = Record<string, unknown>;
 
 Un grupo DTCG node (un objeto de grupos/tokens anidados más metadatos `Un grupo DTCG node (un objeto de grupos/tokens anidados más metadatos ).
  `$`
+
 ### DtcgToken
 
 **Tipo:** interfaz
@@ -109,7 +110,7 @@ Un token de hoja DTCG (`{ $value, $type?, $description? }`).
 **Tipo:** función
 
 ```typescript
-function flattenTokens(document_: DtcgGroup): TokenRecord[]
+function flattenTokens(document_: DtcgGroup): TokenRecord[];
 ```
 
 Aplana recursivamente un documento DTCG en {@link TokenRecord}, llevando el
@@ -117,64 +118,64 @@ ancestro más cercano `$type` hasta cada token de hoja.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| documento_ | Grupo Dtcg |  |
+| Nombre     | Tipo       | Descripción |
+| ---------- | ---------- | ----------- |
+| documento_ | Grupo Dtcg |             |
 
 ### formatoColorValor
 
 **Tipo:** función
 
 ```typescript
-function formatColorValue(value: DtcgColorValue): string
+function formatColorValue(value: DtcgColorValue): string;
 ```
 
 Formatee un valor de color DTCG como una cadena CSS `oklab()` (u otro espacio de color), sin redondear.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | DtcgColorValor |  |
+| Nombre | Tipo           | Descripción |
+| ------ | -------------- | ----------- |
+| valor  | DtcgColorValor |             |
 
 ### formatoCssColor
 
 **Tipo:** función
 
 ```typescript
-function formatCssColor(value: DtcgColorValue): string
+function formatCssColor(value: DtcgColorValue): string;
 ```
 
 Redondee un valor de OKLab/otro espacio de color a cuatro cifras significativas por componente.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | DtcgColorValor |  |
+| Nombre | Tipo           | Descripción |
+| ------ | -------------- | ----------- |
+| valor  | DtcgColorValor |             |
 
 ### formatoCssValor
 
 **Tipo:** función
 
 ```typescript
-function formatCssValue(value: unknown): string
+function formatCssValue(value: unknown): string;
 ```
 
 Formatee un token `$value` como un literal CSS/SCSS (colores redondeados; todo lo demás palabra por palabra).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | desconocido |  |
+| Nombre | Tipo        | Descripción |
+| ------ | ----------- | ----------- |
+| valor  | desconocido |             |
 
 ### etiqueta de grupo
 
 **Tipo:** constante
 
 ```typescript
-export const groupLabel
+export const groupLabel;
 ```
 
 Coloque en mayúsculas y minúsculas una clave de grupo para los encabezados de sección SCSS (`border-width` → `Border Width`).
@@ -184,24 +185,24 @@ Coloque en mayúsculas y minúsculas una clave de grupo para los encabezados de 
 **Tipo:** función
 
 ```typescript
-function resolveAlias(alias: string, document_: DtcgGroup): unknown
+function resolveAlias(alias: string, document_: DtcgGroup): unknown;
 ```
 
 Resuelva un alias DTCG (`{font.size.4xl}`) en su literal `$value` en un documento.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| alias | cadena |  |
-| documento_ | Grupo Dtcg |  |
+| Nombre     | Tipo       | Descripción |
+| ---------- | ---------- | ----------- |
+| alias      | cadena     |             |
+| documento_ | Grupo Dtcg |             |
 
 ### resolverTsValue
 
 **Tipo:** función
 
 ```typescript
-function resolveTsValue(value: unknown): string | number
+function resolveTsValue(value: unknown): string | number;
 ```
 
 Resuelva un DTCG `$value` al valor literal de JavaScript utilizado en el archivo generado.
@@ -210,9 +211,9 @@ los números y todo lo demás (dimensiones, pilas de familias de fuentes,…) si
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | desconocido |  |
+| Nombre | Tipo        | Descripción |
+| ------ | ----------- | ----------- |
+| valor  | desconocido |             |
 
 ### Registro de tokens
 
@@ -231,23 +232,23 @@ Un único token DTCG resuelto, aplanado fuera de su grupo anidado.
 **Tipo:** función
 
 ```typescript
-function generateTokens(options: TokensPluginOptions): void
+function generateTokens(options: TokensPluginOptions): void;
 ```
 
 Genere todos los artefactos simbólicos consumibles de las fuentes DTCG:
-  • `scss/_<file>.scss`: un SCSS parcial autónomo por fuente no temática
-  • `scss/_theme.scss`: el tema parcial combinado `light-dark()`
-  • `ts/<file>.ts`: un módulo `as const` TypeScript anidado por fuente
-  • `_tokens.scss` — Barril SCSS `@forward`ing cada parcial (incluido el tema)
-  • `tokens.ts`: barril TypeScript que reexporta cada módulo por archivo
+• `scss/_<file>.scss`: un SCSS parcial autónomo por fuente no temática
+• `scss/_theme.scss`: el tema parcial combinado `light-dark()`
+• `ts/<file>.ts`: un módulo `as const` TypeScript anidado por fuente
+• `_tokens.scss` — Barril SCSS `@forward`ing cada parcial (incluido el tema)
+• `tokens.ts`: barril TypeScript que reexporta cada módulo por archivo
 
 Todo es producido por emisores personalizados; no hay CLI externa.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de complemento de tokens |  |
+| Nombre   | Tipo                              | Descripción |
+| -------- | --------------------------------- | ----------- |
+| opciones | Opciones de complemento de tokens |             |
 
 ### TokensPluginOptions
 
@@ -275,7 +276,7 @@ están escritos junto a ellos.
 **Tipo:** función
 
 ```typescript
-function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string
+function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string;
 ```
 
 Construya el tema combinado único parcial. El color semántico claro y oscuro.
@@ -289,24 +290,24 @@ El parcial también emite los pines del esquema `[data-theme]`/`.theme-*`.
 directamente, por lo que importar `scss/tokens` es suficiente para anclar un subárbol (o todo el
 documento) a un esquema: no se realiza ninguna importación `scss/themes/{light,dark}` por separado.
 requerido y el comportamiento ya no depende del orden de importación. porque el
-Los tokens de color `light-dark()` anteriores se resuelven contra el `color-scheme` *usado*,
+Los tokens de color `light-dark()` anteriores se resuelven contra el `color-scheme` _usado_,
 configurarlo en un elemento `[data-theme]` cambia el tema de ese elemento y todos sus
 descendientes sin redefinir una propiedad personalizada de un solo color.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| luzDocumento | Grupo Dtcg |  |
-| documento oscuro | Grupo Dtcg |  |
-| prefijo |  |  |
+| Nombre           | Tipo       | Descripción |
+| ---------------- | ---------- | ----------- |
+| luzDocumento     | Grupo Dtcg |             |
+| documento oscuro | Grupo Dtcg |             |
+| prefijo          |            |             |
 
 ### construir regla de propiedad
 
 **Tipo:** función
 
 ```typescript
-function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string
+function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string;
 ```
 
 Cree el registro CSS `@property` para una única propiedad personalizada.
@@ -331,117 +332,116 @@ Un `@property` no universal requiere un computacionalmente independiente
 La sintaxis universal `*` lo omite. Todo cuyo valor sea una referencia `var()`
 (los campos de tipografía) o un literal que no se puede escribir (sombras, curvas suavizadas,
 pilas de familias de fuentes) por lo tanto se registra en `*` sin un `initial-value`.
- `$`
+`$`
+
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| registro | Registro de tokens |  |
-| prefijo | cadena |  |
-| utilizarScssVariable |  |  |
-| cssEspacio de nombres | cadena |  |
+| Nombre                | Tipo               | Descripción |
+| --------------------- | ------------------ | ----------- |
+| registro              | Registro de tokens |             |
+| prefijo               | cadena             |             |
+| utilizarScssVariable  |                    |             |
+| cssEspacio de nombres | cadena             |             |
 
 ### construirVariablesScss
 
 **Tipo:** función
 
 ```typescript
-function buildScssVariables(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariables(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| registros | Registro de tokens[] |  |
-| prefijo |  |  |
-| cssEspacio de nombres | cadena |  |
-| espacios de nombres de componentes | Sólo lecturaSet<string> |  |
+| Nombre                             | Tipo                    | Descripción |
+| ---------------------------------- | ----------------------- | ----------- |
+| registros                          | Registro de tokens[]    |             |
+| prefijo                            |                         |             |
+| cssEspacio de nombres              | cadena                  |             |
+| espacios de nombres de componentes | Sólo lecturaSet<string> |             |
 
 ### construirScssVariablesScss
 
 **Tipo:** función
 
 ```typescript
-function buildScssVariablesScss(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariablesScss(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 Cree un `Cree un  parcial sin CSS solo con variables (encabezado + {@link buildScssVariables}
-cuerpo, sin `:root`/`@property` CSS). Emitido como `scss/_<file>-vars.scss` de forma interna.
-los consumidores (por ejemplo, `scss/_mixins.scss`) pueden leer el valor `Cree un `Cree un  parcial sin CSS solo con variables (encabezado + {@link buildScssVariables}
-cuerpo, sin `:root`/`@property` CSS). Emitido como `scss/_<file>-vars.scss` de forma interna.
-los consumidores (por ejemplo, `scss/_mixins.scss`) pueden leer el valor  de un token en el momento de la compilación
-sin `@use`-ing el parcial completo, lo que filtraría su CSS `:root`/`@property`
-en cada hoja de estilo consumidora.
- `$`
+cuerpo, sin `:root`/`@property`CSS). Emitido como`scss/_<file>-vars.scss`de forma interna.
+los consumidores (por ejemplo,`scss/_mixins.scss`) pueden leer el valor `Cree un `Cree un  parcial sin CSS solo con variables (encabezado + {@link buildScssVariables}
+cuerpo, sin `:root`/`@property`CSS). Emitido como`scss/_<file>-vars.scss`de forma interna.
+los consumidores (por ejemplo,`scss/_mixins.scss`) pueden leer el valor  de un token en el momento de la compilación
+sin `@use`-ing el parcial completo, lo que filtraría su CSS `:root`/`@property`en cada hoja de estilo consumidora.
+`$`
+
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| registros | Registro de tokens[] |  |
-| prefijo |  |  |
-| cssEspacio de nombres | cadena |  |
-| espacios de nombres de componentes | Sólo lecturaSet<string> |  |
+| Nombre                             | Tipo                    | Descripción |
+| ---------------------------------- | ----------------------- | ----------- |
+| registros                          | Registro de tokens[]    |             |
+| prefijo                            |                         |             |
+| cssEspacio de nombres              | cadena                  |             |
+| espacios de nombres de componentes | Sólo lecturaSet<string> |             |
 
 ### construirStructuralScss
 
 **Tipo:** función
 
 ```typescript
-function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string
+function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string;
 ```
 
 Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
 y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
+resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`y un registro`@property`coincidente para cada token (con`initial-value`s
+resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`capa. Las propias variables`Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
 y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`
-capa. Las propias variables `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
+resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`y un registro`@property`coincidente para cada token (con`initial-value`s
+resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`capa. Las propias variables  viven en el complemento libre de CSS.`_<file>-vars.scss`parcial (ver {@link buildScssVariablesScss}); este parcial`@use`s lo (para interpolar los valores en los bloques `:root`/`@property`) y
+`@forward`s así (por lo que los consumidores intermedios de `_<file>.scss`todavía ven el`Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
 y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
+resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`y un registro`@property`coincidente para cada token (con`initial-value`s
+resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`capa. Las propias variables`Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
 y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`
-capa. Las propias variables  viven en el complemento libre de CSS.
-`_<file>-vars.scss` parcial (ver {@link buildScssVariablesScss}); este parcial
-`@use`s lo (para interpolar los valores en los bloques `:root`/`@property`) y
-`@forward`s así (por lo que los consumidores intermedios de `_<file>.scss` todavía ven el
-`Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
-y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
-y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`
-capa. Las propias variables `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
-y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`
-y un registro `@property` coincidente para cada token (con `initial-value`s
-resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`
-capa. Las propias variables  viven en el complemento libre de CSS.
-`_<file>-vars.scss` parcial (ver {@link buildScssVariablesScss}); este parcial
-`@use`s lo (para interpolar los valores en los bloques `:root`/`@property`) y
+resuelto en la variable `Construya un SCSS estructural parcial: las propiedades personalizadas `:root { --<prefix>-* }`y un registro`@property`coincidente para cada token (con`initial-value`s
+resuelto en la variable  coincidente), ambos envueltos en la cascada `mp.tokens`capa. Las propias variables  viven en el complemento libre de CSS.`_<file>-vars.scss`parcial (ver {@link buildScssVariablesScss}); este parcial`@use`s lo (para interpolar los valores en los bloques `:root`/`@property`) y
 `@forward`s así (por lo que los consumidores intermedios de `_<file>.scss` todavía ven el
 -variables). La paleta de colores y la tipografía compuesta se emiten.
 por este camino.
 
 `file` es el nombre base de origen/salida (por ejemplo, `'radius'`), utilizado para hacer referencia al
 compañero `'<file>-vars'` parcial.
- `$`
+`$`
+
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| registros | Registro de tokens[] |  |
-| prefijo |  |  |
-| archivo |  |  |
-| cssEspacio de nombres | cadena |  |
+| Nombre                | Tipo                 | Descripción |
+| --------------------- | -------------------- | ----------- |
+| registros             | Registro de tokens[] |             |
+| prefijo               |                      |             |
+| archivo               |                      |             |
+| cssEspacio de nombres | cadena               |             |
 
 ### construirTipografíaRegistros
 
 **Tipo:** función
 
 ```typescript
-function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[]
+function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[];
 ```
 
 Aplane un grupo de tipografía compuesta DTCG en {@link TokenRecord} por campo.
@@ -454,26 +454,26 @@ Cada campo se convierte en un token `typography-<variant>-<field>` cuyo valor es
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| tipografíaGrupo | Grupo Dtcg |  |
-| prefijo |  |  |
+| Nombre          | Tipo       | Descripción |
+| --------------- | ---------- | ----------- |
+| tipografíaGrupo | Grupo Dtcg |             |
+| prefijo         |            |             |
 
 ### tipografíaEntradas
 
 **Tipo:** función
 
 ```typescript
-function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>
+function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>;
 ```
 
 Devuelve entradas `[variant, value]` para un grupo de tipografía compuesta DTCG.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| grupo | Grupo Dtcg |  |
+| Nombre | Tipo       | Descripción |
+| ------ | ---------- | ----------- |
+| grupo  | Grupo Dtcg |             |
 
 ## `src/generators/typescript`
 
@@ -482,23 +482,28 @@ Devuelve entradas `[variant, value]` para un grupo de tipografía compuesta DTCG
 **Tipo:** función
 
 ```typescript
-function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string
+function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fuentes | Matriz<string \| TokenModuleDescriptor> |  |
+| Nombre  | Tipo                                    | Descripción |
+| ------- | --------------------------------------- | ----------- |
+| fuentes | Matriz<string \| TokenModuleDescriptor> |             |
 
 ### módulo buildToken
 
 **Tipo:** función
 
 ```typescript
-function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?: DtcgGroup, exportName = camelCase(basename)): string
+function buildTokenModule(
+  basename: string,
+  document_: DtcgGroup,
+  aliasDocument?: DtcgGroup,
+  exportName = camelCase(basename),
+): string;
 ```
 
 Cree un módulo TypeScript por archivo exportando un objeto `as const` anidado denominado
@@ -512,12 +517,12 @@ fuente compuesta `typography` resuelve sus referencias `{font.*}` en su contra).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| nombre base | cadena |  |
-| documento_ | Grupo Dtcg |  |
-| aliasDocumento | Grupo Dtcg |  |
-| nombre de exportación |  |  |
+| Nombre                | Tipo       | Descripción |
+| --------------------- | ---------- | ----------- |
+| nombre base           | cadena     |             |
+| documento_            | Grupo Dtcg |             |
+| aliasDocumento        | Grupo Dtcg |             |
+| nombre de exportación |            |             |
 
 ## `src/index`
 
@@ -526,7 +531,7 @@ fuente compuesta `typography` resuelve sus referencias `{font.*}` en su contra).
 **Tipo:** función
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Complemento Vite que genera los artefactos de token de diseño de Mission Platform a partir del
@@ -534,27 +539,26 @@ Fuentes DTCG (https://www.designtokens.org/) que utilizan una interfaz personali
 generador: no interviene ninguna CLI externa. Cada fuente `*.tokens.json` produce un
 `generated/scss/<file>.scss` coincidente (variables `Complemento Vite que genera los artefactos de token de diseño de Mission Platform a partir del
 Fuentes DTCG (https://www.designtokens.org/) que utilizan una interfaz personalizada
-generador: no interviene ninguna CLI externa. Cada fuente `*.tokens.json` produce un
-`generated/scss/<file>.scss` coincidente (variables  autónomas, `--mp-*`
-propiedades personalizadas y sus registros `@property`) y un `as const` anidado
-Módulo `generated/ts/<file>.ts`, junto con el módulo `generated/_tokens.scss` (SCSS
-barril) y agregados `generated/tokens.ts` (barril TypeScript).
+generador: no interviene ninguna CLI externa. Cada fuente `_.tokens.json`produce un`generated/scss/<file>.scss`coincidente (variables  autónomas,`--mp-_`propiedades personalizadas y sus registros`@property`) y un `as const`anidado
+Módulo`generated/ts/<file>.ts`, junto con el módulo `generated/_tokens.scss`(SCSS
+barril) y agregados`generated/tokens.ts` (barril TypeScript).
 
 La generación se ejecuta en el gancho `buildStart`, por lo que se producen los artefactos.
 para `vite build`, `vite build --watch` y el servidor de desarrollo por igual.
- `$`
+`$`
+
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de complemento de tokens |  |
+| Nombre   | Tipo                              | Descripción |
+| -------- | --------------------------------- | ----------- |
+| opciones | Opciones de complemento de tokens |             |
 
 ### tokensPlugin
 
 **Tipo:** función
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Complemento Vite que genera los artefactos de token de diseño de Mission Platform a partir del
@@ -562,20 +566,19 @@ Fuentes DTCG (https://www.designtokens.org/) que utilizan una interfaz personali
 generador: no interviene ninguna CLI externa. Cada fuente `*.tokens.json` produce un
 `generated/scss/<file>.scss` coincidente (variables `Complemento Vite que genera los artefactos de token de diseño de Mission Platform a partir del
 Fuentes DTCG (https://www.designtokens.org/) que utilizan una interfaz personalizada
-generador: no interviene ninguna CLI externa. Cada fuente `*.tokens.json` produce un
-`generated/scss/<file>.scss` coincidente (variables  autónomas, `--mp-*`
-propiedades personalizadas y sus registros `@property`) y un `as const` anidado
-Módulo `generated/ts/<file>.ts`, junto con el módulo `generated/_tokens.scss` (SCSS
-barril) y agregados `generated/tokens.ts` (barril TypeScript).
+generador: no interviene ninguna CLI externa. Cada fuente `_.tokens.json`produce un`generated/scss/<file>.scss`coincidente (variables  autónomas,`--mp-_`propiedades personalizadas y sus registros`@property`) y un `as const`anidado
+Módulo`generated/ts/<file>.ts`, junto con el módulo `generated/_tokens.scss`(SCSS
+barril) y agregados`generated/tokens.ts` (barril TypeScript).
 
 La generación se ejecuta en el gancho `buildStart`, por lo que se producen los artefactos.
 para `vite build`, `vite build --watch` y el servidor de desarrollo por igual.
- `$`
+`$`
+
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de complemento de tokens |  |
+| Nombre   | Tipo                              | Descripción |
+| -------- | --------------------------------- | ----------- |
+| opciones | Opciones de complemento de tokens |             |
 
 ## `src/reachability`
 
@@ -584,16 +587,16 @@ para `vite build`, `vite build --watch` y el servidor de desarrollo por igual.
 **Tipo:** función
 
 ```typescript
-function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport
+function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport;
 ```
 
 Recopile un informe de accesibilidad conservador determinista sin cambiar las fuentes de tokens.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | Opciones de accesibilidad de token |  |
+| Nombre   | Tipo                               | Descripción |
+| -------- | ---------------------------------- | ----------- |
+| opciones | Opciones de accesibilidad de token |             |
 
 ### TokenAliasEdge
 
@@ -630,7 +633,7 @@ Salida estable y revisable de {@link CollectTokenReachability}.
 **Tipo:** tipo
 
 ```typescript
-export type TokenUsageEvidence = | 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
+export type TokenUsageEvidence = 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
 ```
 
 Evidencia recopilada para una hoja simbólica.
@@ -660,14 +663,14 @@ Clasificación asignada por la auditoría conservadora de accesibilidad.
 **Tipo:** función
 
 ```typescript
-function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void
+function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void;
 ```
 
 Escriba un informe con un formato estable adecuado para revisión y control de fuentes.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| informe | Informe de accesibilidad del token |  |
-| rutadelarchivo | cadena |  |
+| Nombre         | Tipo                               | Descripción |
+| -------------- | ---------------------------------- | ----------- |
+| informe        | Informe de accesibilidad del token |             |
+| rutadelarchivo | cadena                             |             |

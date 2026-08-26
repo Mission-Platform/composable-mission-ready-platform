@@ -16,40 +16,40 @@
 **النوع:** الوظيفة
 
 ```typescript
-function aliasToCssVariable(alias: string, prefix: string): string
+function aliasToCssVariable(alias: string, prefix: string): string;
 ```
 
 تحويل الاسم المستعار DTCG (`{font.size.4xl}`) إلى مرجع `var(--<prefix>-font-size-4xl)`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم المستعار | سلسلة |  |
-| البادئة | سلسلة |  |
+| الاسم          | اكتب  | الوصف |
+| -------------- | ----- | ----- |
+| الاسم المستعار | سلسلة |       |
+| البادئة        | سلسلة |       |
 
 ### com.camelCase
 
 **النوع:** الوظيفة
 
 ```typescript
-function camelCase(dashed: string): string
+function camelCase(dashed: string): string;
 ```
 
 CamelCase سلسلة متقطعة (`border-width` → `borderWidth`، `z-index` → `zIndex`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| متقطع | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| متقطع | سلسلة |       |
 
 ### com.camelCaseName
 
 **النوع:** ثابت
 
 ```typescript
-export const camelCaseName
+export const camelCaseName;
 ```
 
 معرف CamelCase للرمز المميز (`border-width-heavy` → `borderWidthHeavy`).
@@ -59,7 +59,7 @@ export const camelCaseName
 **النوع:** ثابت
 
 ```typescript
-export const compareTokens
+export const compareTokens;
 ```
 
 مقارنة ASCII مستقرة بين رمزين مميزين باسمهما المتقطع.
@@ -69,7 +69,7 @@ export const compareTokens
 **النوع:** ثابت
 
 ```typescript
-export const dashedName
+export const dashedName;
 ```
 
 اسم الرمز المميز المتقطع (`color-alert-100`) المستخدم لأسماء متغيرات SCSS/CSS + الفرز.
@@ -94,6 +94,7 @@ export type DtcgGroup = Record<string, unknown>;
 
 مجموعة DTCG node (كائن من مجموعات/رموز متداخلة بالإضافة إلى بيانات التعريف `مجموعة DTCG node (كائن من مجموعات/رموز متداخلة بالإضافة إلى بيانات التعريف ).
  `$`
+
 ### DtcgToken
 
 **النوع:** الواجهة
@@ -109,7 +110,7 @@ export interface DtcgToken
 **النوع:** الوظيفة
 
 ```typescript
-function flattenTokens(document_: DtcgGroup): TokenRecord[]
+function flattenTokens(document_: DtcgGroup): TokenRecord[];
 ```
 
 قم بتسوية مستند DTCG بشكل متكرر في ملفات {@link TokenRecord}، التي تحمل ملف
@@ -117,64 +118,64 @@ function flattenTokens(document_: DtcgGroup): TokenRecord[]
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| وثيقة_ | دتكججروب |  |
+| الاسم  | اكتب     | الوصف |
+| ------ | -------- | ----- |
+| وثيقة_ | دتكججروب |       |
 
 ### formatColorValue
 
 **النوع:** الوظيفة
 
 ```typescript
-function formatColorValue(value: DtcgColorValue): string
+function formatColorValue(value: DtcgColorValue): string;
 ```
 
 قم بتنسيق قيمة لون DTCG كسلسلة CSS `oklab()` (أو أي مساحة لون أخرى)، بدون تقريب.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | دتكجكولورفاليو |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| القيمة | دتكجكولورفاليو |       |
 
 ### formatCssColor
 
 **النوع:** الوظيفة
 
 ```typescript
-function formatCssColor(value: DtcgColorValue): string
+function formatCssColor(value: DtcgColorValue): string;
 ```
 
 قم بتقريب قيمة OKLab/مساحة ألوان أخرى إلى أربعة أرقام مهمة لكل مكون.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | دتكجكولورفاليو |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| القيمة | دتكجكولورفاليو |       |
 
 ### formatCssValue
 
 **النوع:** الوظيفة
 
 ```typescript
-function formatCssValue(value: unknown): string
+function formatCssValue(value: unknown): string;
 ```
 
 قم بتنسيق الرمز المميز `$value` كرمز CSS/SCSS حرفي (الألوان مستديرة، وكل شيء آخر حرفي).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | غير معروف |  |
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| القيمة | غير معروف |       |
 
 ### groupLabel
 
 **النوع:** ثابت
 
 ```typescript
-export const groupLabel
+export const groupLabel;
 ```
 
 حالة العنوان هي مفتاح مجموعة لرؤوس أقسام SCSS (`border-width` → `Border Width`).
@@ -184,24 +185,24 @@ export const groupLabel
 **النوع:** الوظيفة
 
 ```typescript
-function resolveAlias(alias: string, document_: DtcgGroup): unknown
+function resolveAlias(alias: string, document_: DtcgGroup): unknown;
 ```
 
 قم بحل الاسم المستعار DTCG (`{font.size.4xl}`) إلى `$value` الحرفي في مستند.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم المستعار | سلسلة |  |
-| وثيقة_ | دتكججروب |  |
+| الاسم          | اكتب     | الوصف |
+| -------------- | -------- | ----- |
+| الاسم المستعار | سلسلة    |       |
+| وثيقة_         | دتكججروب |       |
 
 ### ResolveTsValue
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveTsValue(value: unknown): string | number
+function resolveTsValue(value: unknown): string | number;
 ```
 
 قم بحل DTCG `$value` إلى قيمة JavaScript الحرفية المستخدمة في الملف الذي تم إنشاؤه
@@ -210,9 +211,9 @@ function resolveTsValue(value: unknown): string | number
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | غير معروف |  |
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| القيمة | غير معروف |       |
 
 ### سجل الرمز المميز
 
@@ -231,23 +232,23 @@ export interface TokenRecord
 **النوع:** الوظيفة
 
 ```typescript
-function generateTokens(options: TokensPluginOptions): void
+function generateTokens(options: TokensPluginOptions): void;
 ```
 
 قم بإنشاء كل قطعة أثرية رمزية قابلة للاستهلاك من مصادر DTCG:
-  • `scss/_<file>.scss` — جزء SCSS مستقل بذاته لكل مصدر غير موضوعي
-  • `scss/_theme.scss` — موضوع `light-dark()` المدمج جزئيًا
-  • `ts/<file>.ts` — وحدة `as const` TypeScript واحدة متداخلة لكل مصدر
-  • `_tokens.scss` - برميل SCSS `@forward` لكل جزء (بما في ذلك السمة)
-  • `tokens.ts` — TypeScript يقوم بإعادة تصدير كل وحدة لكل ملف
+• `scss/_<file>.scss` — جزء SCSS مستقل بذاته لكل مصدر غير موضوعي
+• `scss/_theme.scss` — موضوع `light-dark()` المدمج جزئيًا
+• `ts/<file>.ts` — وحدة `as const` TypeScript واحدة متداخلة لكل مصدر
+• `_tokens.scss` - برميل SCSS `@forward` لكل جزء (بما في ذلك السمة)
+• `tokens.ts` — TypeScript يقوم بإعادة تصدير كل وحدة لكل ملف
 
 يتم إنتاج كل شيء بواسطة بواعث مخصصة. لا يوجد CLI خارجي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | TokensPluginOptions |  |
+| الاسم  | اكتب                | الوصف |
+| ------ | ------------------- | ----- |
+| خيارات | TokensPluginOptions |       |
 
 ### TokensPluginOptions
 
@@ -275,7 +276,7 @@ export interface TokensPluginOptions
 **النوع:** الوظيفة
 
 ```typescript
-function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string
+function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string;
 ```
 
 قم ببناء السمة المجمعة الفردية جزئيًا. اللون الدلالي الفاتح والغامق
@@ -289,24 +290,24 @@ function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGro
 مباشرةً، لذا فإن استيراد `scss/tokens` يكفي لتثبيت شجرة فرعية (أو المجموعة الكاملة
 document) لنظام واحد - لا يوجد استيراد منفصل لـ `scss/themes/{light,dark}`
 مطلوب ولم يعد السلوك يعتمد على أمر الاستيراد. لأن
-يتم حل رموز الألوان `light-dark()` المذكورة أعلاه مقابل *المستخدمة* `color-scheme`،
+يتم حل رموز الألوان `light-dark()` المذكورة أعلاه مقابل _المستخدمة_ `color-scheme`،
 يؤدي تعيينه على عنصر `[data-theme]` إلى إعادة سمات هذا العنصر وكل عناصره
 أحفاد دون إعادة تعريف خاصية مخصصة للون واحد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| لايتدوكومنت | دتكججروب |  |
-| darkDocument | دتكججروب |  |
-| البادئة |  |  |
+| الاسم        | اكتب     | الوصف |
+| ------------ | -------- | ----- |
+| لايتدوكومنت  | دتكججروب |       |
+| darkDocument | دتكججروب |       |
+| البادئة      |          |       |
 
 ### buildPropertyRule
 
 **النوع:** الوظيفة
 
 ```typescript
-function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string
+function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string;
 ```
 
 قم بإنشاء تسجيل CSS `@property` لخاصية مخصصة واحدة.
@@ -315,14 +316,14 @@ function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable 
 المتغير `قم بإنشاء تسجيل CSS `@property` لخاصية مخصصة واحدة.
 
 عند تعيين `useScssVariable`، يتحلل `initial-value` إلى المطابقة
-المتغير  المحلي (`$<token>`) المنبعث في نفس الملف، مع الحفاظ على
+المتغير المحلي (`$<token>`) المنبعث في نفس الملف، مع الحفاظ على
 التسجيل متزامن مع مصدر الحقيقة المتغير `قم بإنشاء تسجيل CSS `@property` لخاصية مخصصة واحدة.
 
 عند تعيين `useScssVariable`، يتحلل `initial-value` إلى المطابقة
 المتغير `قم بإنشاء تسجيل CSS `@property` لخاصية مخصصة واحدة.
 
 عند تعيين `useScssVariable`، يتحلل `initial-value` إلى المطابقة
-المتغير  المحلي (`$<token>`) المنبعث في نفس الملف، مع الحفاظ على
+المتغير المحلي (`$<token>`) المنبعث في نفس الملف، مع الحفاظ على
 التسجيل متزامن مع مصدر الحقيقة المتغير ؛ وإلا فإن
 `$value` الحرفي مضمن.
 
@@ -331,117 +332,117 @@ function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable 
 بناء الجملة العالمي `*` يحذفه. كل ما قيمته مرجع `var()`
 (حقول الطباعة) أو حرفي غير قابل للكتابة (الظلال، منحنيات التخفيف،
 مكدسات عائلة الخطوط) يتم تسجيلها ضمن `*` بدون `initial-value`.
- `$`
+`$`
+
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| سجل | سجل الرمز المميز |  |
-| البادئة | سلسلة |  |
-| استخدامScssVariable |  |  |
-| مساحة الاسم المغلق | سلسلة |  |
+| الاسم               | اكتب             | الوصف |
+| ------------------- | ---------------- | ----- |
+| سجل                 | سجل الرمز المميز |       |
+| البادئة             | سلسلة            |       |
+| استخدامScssVariable |                  |       |
+| مساحة الاسم المغلق  | سلسلة            |       |
 
 ### buildScssVariables
 
 **النوع:** الوظيفة
 
 ```typescript
-function buildScssVariables(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariables(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| السجلات | سجل الرمز[] |  |
-| البادئة |  |  |
-| مساحة الاسم المغلق | سلسلة |  |
-| مساحات أسماء المكونات | ReadonlySet<string> |  |
+| الاسم                 | اكتب                | الوصف |
+| --------------------- | ------------------- | ----- |
+| السجلات               | سجل الرمز[]         |       |
+| البادئة               |                     |       |
+| مساحة الاسم المغلق    | سلسلة               |       |
+| مساحات أسماء المكونات | ReadonlySet<string> |       |
 
 ### buildScssVariablesScss
 
 **النوع:** الوظيفة
 
 ```typescript
-function buildScssVariablesScss(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariablesScss(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 قم بإنشاء `قم بإنشاء -متغيرات جزئية فقط خالية من CSS (الرأس + {@link buildScssVariables}
-الجسم، بدون `:root`/`@property` CSS). تنبعث كـ `scss/_<file>-vars.scss` داخليًا جدًا
-يمكن للمستهلكين (على سبيل المثال `scss/_mixins.scss`) قراءة قيمة `قم بإنشاء `قم بإنشاء -متغيرات جزئية فقط خالية من CSS (الرأس + {@link buildScssVariables}
-الجسم، بدون `:root`/`@property` CSS). تنبعث كـ `scss/_<file>-vars.scss` داخليًا جدًا
-يمكن للمستهلكين (على سبيل المثال `scss/_mixins.scss`) قراءة قيمة  للرمز المميز في وقت الترجمة
-بدون `@use`-ing الجزء الكامل - والذي قد يؤدي إلى تسرب `:root`/`@property` CSS
+الجسم، بدون `:root`/`@property`CSS). تنبعث كـ`scss/_<file>-vars.scss`داخليًا جدًا
+يمكن للمستهلكين (على سبيل المثال`scss/_mixins.scss`) قراءة قيمة `قم بإنشاء `قم بإنشاء -متغيرات جزئية فقط خالية من CSS (الرأس + {@link buildScssVariables}
+الجسم، بدون `:root`/`@property`CSS). تنبعث كـ`scss/_<file>-vars.scss`داخليًا جدًا
+يمكن للمستهلكين (على سبيل المثال`scss/_mixins.scss`) قراءة قيمة  للرمز المميز في وقت الترجمة
+بدون `@use`-ing الجزء الكامل - والذي قد يؤدي إلى تسرب `:root`/`@property`CSS
 في كل ورقة أنماط مستهلكة.
- `$`
+`$`
+
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| السجلات | سجل الرمز[] |  |
-| البادئة |  |  |
-| مساحة الاسم المغلق | سلسلة |  |
-| مساحات أسماء المكونات | ReadonlySet<string> |  |
+| الاسم                 | اكتب                | الوصف |
+| --------------------- | ------------------- | ----- |
+| السجلات               | سجل الرمز[]         |       |
+| البادئة               |                     |       |
+| مساحة الاسم المغلق    | سلسلة               |       |
+| مساحات أسماء المكونات | ReadonlySet<string> |       |
 
 ### buildStructuralScss
 
 **النوع:** الوظيفة
 
 ```typescript
-function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string
+function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string;
 ```
 
 إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
 وتسجيل `@property` مطابق لكل رمز مميز (مع `initial-value`s
-تم حلها إلى المتغير `إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
+تم حلها إلى المتغير `إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`وتسجيل`@property`مطابق لكل رمز مميز (مع`initial-value`s
+تم حلها إلى المتغير  المطابق)، وكلاهما ملفوف في سلسلة `mp.tokens`طبقة. تعيش متغيرات`إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
 وتسجيل `@property` مطابق لكل رمز مميز (مع `initial-value`s
-تم حلها إلى المتغير  المطابق)، وكلاهما ملفوف في سلسلة `mp.tokens`
-طبقة. تعيش متغيرات `إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
+تم حلها إلى المتغير `إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`وتسجيل`@property`مطابق لكل رمز مميز (مع`initial-value`s
+تم حلها إلى المتغير  المطابق)، وكلاهما ملفوف في سلسلة `mp.tokens`طبقة. تعيش متغيرات  نفسها في بيئة خالية من CSS`_<file>-vars.scss`جزئي (راجع {@link buildScssVariablesScss})؛ هذا الجزئي`@use`s (لاستكمال القيم في كتل `:root`/`@property`) و
+`@forward`s (لذلك لا يزال مستهلكو `_<file>.scss`يرون`إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
 وتسجيل `@property` مطابق لكل رمز مميز (مع `initial-value`s
-تم حلها إلى المتغير `إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
+تم حلها إلى المتغير `إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`وتسجيل`@property`مطابق لكل رمز مميز (مع`initial-value`s
+تم حلها إلى المتغير  المطابق)، وكلاهما ملفوف في سلسلة `mp.tokens`طبقة. تعيش متغيرات`إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
 وتسجيل `@property` مطابق لكل رمز مميز (مع `initial-value`s
-تم حلها إلى المتغير  المطابق)، وكلاهما ملفوف في سلسلة `mp.tokens`
-طبقة. تعيش متغيرات  نفسها في بيئة خالية من CSS
-`_<file>-vars.scss` جزئي (راجع {@link buildScssVariablesScss})؛ هذا الجزئي
-`@use`s (لاستكمال القيم في كتل `:root`/`@property`) و
-`@forward`s (لذلك لا يزال مستهلكو `_<file>.scss` يرون
-`إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
-وتسجيل `@property` مطابق لكل رمز مميز (مع `initial-value`s
-تم حلها إلى المتغير `إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
-وتسجيل `@property` مطابق لكل رمز مميز (مع `initial-value`s
-تم حلها إلى المتغير  المطابق)، وكلاهما ملفوف في سلسلة `mp.tokens`
-طبقة. تعيش متغيرات `إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
-وتسجيل `@property` مطابق لكل رمز مميز (مع `initial-value`s
-تم حلها إلى المتغير `إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`
-وتسجيل `@property` مطابق لكل رمز مميز (مع `initial-value`s
-تم حلها إلى المتغير  المطابق)، وكلاهما ملفوف في سلسلة `mp.tokens`
-طبقة. تعيش متغيرات  نفسها في بيئة خالية من CSS
-`_<file>-vars.scss` جزئي (راجع {@link buildScssVariablesScss})؛ هذا الجزئي
-`@use`s (لاستكمال القيم في كتل `:root`/`@property`) و
+تم حلها إلى المتغير `إنشاء جزء SCSS بنيوي: الخصائص المخصصة `:root { --<prefix>-* }`وتسجيل`@property`مطابق لكل رمز مميز (مع`initial-value`s
+تم حلها إلى المتغير  المطابق)، وكلاهما ملفوف في سلسلة `mp.tokens`طبقة. تعيش متغيرات  نفسها في بيئة خالية من CSS`_<file>-vars.scss`جزئي (راجع {@link buildScssVariablesScss})؛ هذا الجزئي`@use`s (لاستكمال القيم في كتل `:root`/`@property`) و
 `@forward`s (لذلك لا يزال مستهلكو `_<file>.scss` يرون
 -المتغيرات). يتم إصدار كل من لوحة الألوان والطباعة المركبة
 من خلال هذا المسار.
 
 `file` هو الاسم الأساسي للمصدر/الإخراج (على سبيل المثال `'radius'`)، ويستخدم للإشارة إلى
 رفيق `'<file>-vars'` جزئي.
- `$`
+`$`
+
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| السجلات | سجل الرمز[] |  |
-| البادئة |  |  |
-| ملف |  |  |
-| مساحة الاسم المغلق | سلسلة |  |
+| الاسم              | اكتب        | الوصف |
+| ------------------ | ----------- | ----- |
+| السجلات            | سجل الرمز[] |       |
+| البادئة            |             |       |
+| ملف                |             |       |
+| مساحة الاسم المغلق | سلسلة       |       |
 
 ### buildTypographyRecords
 
 **النوع:** الوظيفة
 
 ```typescript
-function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[]
+function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[];
 ```
 
 قم بتسوية مجموعة الطباعة المركبة DTCG في {@link TokenRecord} لكل حقل.
@@ -454,26 +455,26 @@ function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): Toke
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مجموعة الطباعة | دتكججروب |  |
-| البادئة |  |  |
+| الاسم          | اكتب     | الوصف |
+| -------------- | -------- | ----- |
+| مجموعة الطباعة | دتكججروب |       |
+| البادئة        |          |       |
 
 ### إدخالات الطباعة
 
 **النوع:** الوظيفة
 
 ```typescript
-function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>
+function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>;
 ```
 
 قم بإرجاع إدخالات `[variant, value]` لمجموعة الطباعة المركبة DTCG.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المجموعة | دتكججروب |  |
+| الاسم    | اكتب     | الوصف |
+| -------- | -------- | ----- |
+| المجموعة | دتكججروب |       |
 
 ## `src/generators/typescript`
 
@@ -482,23 +483,28 @@ function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>
 **النوع:** الوظيفة
 
 ```typescript
-function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string
+function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصادر | صفيف<string \| TokenModuleDescriptor> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| مصادر | صفيف<string \| TokenModuleDescriptor> |       |
 
 ### buildTokenModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?: DtcgGroup, exportName = camelCase(basename)): string
+function buildTokenModule(
+  basename: string,
+  document_: DtcgGroup,
+  aliasDocument?: DtcgGroup,
+  exportName = camelCase(basename),
+): string;
 ```
 
 قم بإنشاء وحدة TypeScript لكل ملف لتصدير كائن `as const` متداخل يسمى
@@ -512,12 +518,12 @@ function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم الأساسي | سلسلة |  |
-| وثيقة_ | دتكججروب |  |
-| الاسم المستعار للمستند | دتكججروب |  |
-| اسم التصدير |  |  |
+| الاسم                  | اكتب     | الوصف |
+| ---------------------- | -------- | ----- |
+| الاسم الأساسي          | سلسلة    |       |
+| وثيقة_                 | دتكججروب |       |
+| الاسم المستعار للمستند | دتكججروب |       |
+| اسم التصدير            |          |       |
 
 ## `src/index`
 
@@ -526,7 +532,7 @@ function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?
 **النوع:** الوظيفة
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 البرنامج الإضافي Vite الذي يُنشئ عناصر تصميم رمز المهمة من
@@ -534,27 +540,27 @@ function tokensPlugin(options: TokensPluginOptions): Plugin
 المولد — لا يوجد واجهة سطر أوامر (CLI) خارجية. ينتج عن كل مصدر `*.tokens.json` أ
 مطابقة `generated/scss/<file>.scss` (متغيرات `البرنامج الإضافي Vite الذي يُنشئ عناصر تصميم رمز المهمة من
 مصادر DTCG (https://www.designtokens.org/) تستخدم تخصيصًا قائمًا بذاته
-المولد — لا يوجد واجهة سطر أوامر (CLI) خارجية. ينتج عن كل مصدر `*.tokens.json` أ
-مطابقة `generated/scss/<file>.scss` (متغيرات  المستقلة، `--mp-*`
-الخصائص المخصصة وتسجيلاتها `@property`) و`as const` المتداخلة
-وحدة `generated/ts/<file>.ts`، إلى جانب وحدة `generated/_tokens.scss` (SCSS
+المولد — لا يوجد واجهة سطر أوامر (CLI) خارجية. ينتج عن كل مصدر `_.tokens.json`أ
+مطابقة`generated/scss/<file>.scss`(متغيرات  المستقلة،`--mp-_`الخصائص المخصصة وتسجيلاتها`@property`) و`as const`المتداخلة
+وحدة`generated/ts/<file>.ts`، إلى جانب وحدة `generated/_tokens.scss` (SCSS
 برميل) و`generated/tokens.ts` (TypeScript برميل) المجاميع.
 
 يتم تشغيل الإنشاء في الخطاف `buildStart` المجمع، لذلك يتم إنتاج المصنوعات اليدوية
 لـ `vite build` و`vite build --watch` وخادم التطوير على حدٍ سواء.
- `$`
+`$`
+
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | TokensPluginOptions |  |
+| الاسم  | اكتب                | الوصف |
+| ------ | ------------------- | ----- |
+| خيارات | TokensPluginOptions |       |
 
 ### tokensPlugin
 
 **النوع:** الوظيفة
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 البرنامج الإضافي Vite الذي يُنشئ عناصر تصميم رمز المهمة من
@@ -562,20 +568,20 @@ function tokensPlugin(options: TokensPluginOptions): Plugin
 المولد — لا يوجد واجهة سطر أوامر (CLI) خارجية. ينتج عن كل مصدر `*.tokens.json` أ
 مطابقة `generated/scss/<file>.scss` (متغيرات `البرنامج الإضافي Vite الذي يُنشئ عناصر تصميم رمز المهمة من
 مصادر DTCG (https://www.designtokens.org/) تستخدم تخصيصًا قائمًا بذاته
-المولد — لا يوجد واجهة سطر أوامر (CLI) خارجية. ينتج عن كل مصدر `*.tokens.json` أ
-مطابقة `generated/scss/<file>.scss` (متغيرات  المستقلة، `--mp-*`
-الخصائص المخصصة وتسجيلاتها `@property`) و`as const` المتداخلة
-وحدة `generated/ts/<file>.ts`، إلى جانب وحدة `generated/_tokens.scss` (SCSS
+المولد — لا يوجد واجهة سطر أوامر (CLI) خارجية. ينتج عن كل مصدر `_.tokens.json`أ
+مطابقة`generated/scss/<file>.scss`(متغيرات  المستقلة،`--mp-_`الخصائص المخصصة وتسجيلاتها`@property`) و`as const`المتداخلة
+وحدة`generated/ts/<file>.ts`، إلى جانب وحدة `generated/_tokens.scss` (SCSS
 برميل) و`generated/tokens.ts` (TypeScript برميل) المجاميع.
 
 يتم تشغيل الإنشاء في الخطاف `buildStart` المجمع، لذلك يتم إنتاج المصنوعات اليدوية
 لـ `vite build` و`vite build --watch` وخادم التطوير على حدٍ سواء.
- `$`
+`$`
+
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | TokensPluginOptions |  |
+| الاسم  | اكتب                | الوصف |
+| ------ | ------------------- | ----- |
+| خيارات | TokensPluginOptions |       |
 
 ## `src/reachability`
 
@@ -584,16 +590,16 @@ function tokensPlugin(options: TokensPluginOptions): Plugin
 **النوع:** الوظيفة
 
 ```typescript
-function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport
+function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport;
 ```
 
 قم بتجميع تقرير قابلية الوصول المحافظ الحتمي دون تغيير مصادر الرمز المميز.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات الوصول إلى الرمز المميز |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| خيارات | خيارات الوصول إلى الرمز المميز |       |
 
 ### TokenAliasEdge
 
@@ -630,7 +636,7 @@ export interface TokenReachabilityReport
 **النوع:** النوع
 
 ```typescript
-export type TokenUsageEvidence = | 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
+export type TokenUsageEvidence = 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
 ```
 
 تم جمع الأدلة لورقة رمزية واحدة.
@@ -660,14 +666,14 @@ export type TokenUsageStatus = 'active' | 'protected' | 'ambiguous' | 'candidate
 **النوع:** الوظيفة
 
 ```typescript
-function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void
+function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void;
 ```
 
 كتابة تقرير بتنسيق ثابت مناسب للمراجعة والتحكم بالمصادر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| تقرير | تقرير قابلية الوصول للرمز |  |
-| مسار الملف | سلسلة |  |
+| الاسم      | اكتب                      | الوصف |
+| ---------- | ------------------------- | ----- |
+| تقرير      | تقرير قابلية الوصول للرمز |       |
+| مسار الملف | سلسلة                     |       |

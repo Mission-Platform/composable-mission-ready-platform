@@ -16,15 +16,15 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin
+function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Plugin Vite qui génère automatiquement la feuille de style *override* du jeton de conception d'une application.
+Plugin Vite qui génère automatiquement la feuille de style _override_ du jeton de conception d'une application.
 
 Il lit un document de substitution de type DTCG (`options.source`), le transforme avec
 {@link buildTokenOverrideScss} et écrit le `:root { --<prefix>-*: … }` résultant
 SCSS partiel à `options.outFile`. Importez ce fichier généré depuis votre
-feuille de style *après* `@mission-platform/tokens` pour que les remplacements remportent la cascade.
+feuille de style _après_ `@mission-platform/tokens` pour que les remplacements remportent la cascade.
 
 La génération s'exécute dans le hook de cumul `buildStart` (elle couvre donc `vite build`,
 `vite build --watch` et le serveur de développement démarrent de la même manière) et se réexécute lorsque la source
@@ -33,40 +33,41 @@ artefact — ajoutez-le à `.gitignore`/`.prettierignore` plutôt que de le vali
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | TokenOverridesPluginOptions |  |
+| Nom     | Tapez                       | Descriptif |
+| ------- | --------------------------- | ---------- |
+| options | TokenOverridesPluginOptions |            |
 
 #### Contracter
 
 - **@exemple:** ```ts
-// vite.config.ts
-import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
+  // vite.config.ts
+  import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
 
 export default defineConfig({
-  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
 });
-```
+
+````
 ```scss
 // styles.css / styles.scss
 - **@import:** '@mission-platform/tokens';
 - **@import:** '../design-tokens/overrides.generated.scss';
-```
+````
 
 ### tokenOverridesPlugin
 
 **Genre :** fonction
 
 ```typescript
-function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin
+function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Plugin Vite qui génère automatiquement la feuille de style *override* du jeton de conception d'une application.
+Plugin Vite qui génère automatiquement la feuille de style _override_ du jeton de conception d'une application.
 
 Il lit un document de substitution de type DTCG (`options.source`), le transforme avec
 {@link buildTokenOverrideScss} et écrit le `:root { --<prefix>-*: … }` résultant
 SCSS partiel à `options.outFile`. Importez ce fichier généré depuis votre
-feuille de style *après* `@mission-platform/tokens` pour que les remplacements remportent la cascade.
+feuille de style _après_ `@mission-platform/tokens` pour que les remplacements remportent la cascade.
 
 La génération s'exécute dans le hook de cumul `buildStart` (elle couvre donc `vite build`,
 `vite build --watch` et le serveur de développement démarrent de la même manière) et se réexécute lorsque la source
@@ -75,25 +76,26 @@ artefact — ajoutez-le à `.gitignore`/`.prettierignore` plutôt que de le vali
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| options | TokenOverridesPluginOptions |  |
+| Nom     | Tapez                       | Descriptif |
+| ------- | --------------------------- | ---------- |
+| options | TokenOverridesPluginOptions |            |
 
 #### Contracter
 
 - **@exemple:** ```ts
-// vite.config.ts
-import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
+  // vite.config.ts
+  import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
 
 export default defineConfig({
-  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
 });
-```
+
+````
 ```scss
 // styles.css / styles.scss
 - **@import:** '@mission-platform/tokens';
 - **@import:** '../design-tokens/overrides.generated.scss';
-```
+````
 
 ### TokenOverridesPluginOptions
 
@@ -112,19 +114,19 @@ Options pour {@link tokenOverridesPlugin}.
 **Genre :** fonction
 
 ```typescript
-function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverrideScssOptions = {}): string
+function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverrideScssOptions = {}): string;
 ```
 
 Construire un remplacement partiel SCSS/CSS : un seul bloc `:root { … }` de
-Propriétés personnalisées `--<prefix>-*` aplaties à partir de `document_`. Importez-le *après*
+Propriétés personnalisées `--<prefix>-*` aplaties à partir de `document_`. Importez-le _après_
 la base `@mission-platform/tokens` donc les déclarations gagnent la cascade.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| document_ | RemplacerGroupe |  |
-| options | TokenOverrideScssOptions |  |
+| Nom       | Tapez                    | Descriptif |
+| --------- | ------------------------ | ---------- |
+| document_ | RemplacerGroupe          |            |
+| options   | TokenOverrideScssOptions |            |
 
 ### Remplacement à plat
 
@@ -141,22 +143,23 @@ Un remplacement aplati prêt à être émis sous la forme d'une seule déclarati
 **Genre :** fonction
 
 ```typescript
-function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride[]
+function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride[];
 ```
 
 Aplatissez de manière récursive un document de remplacement en {@link FlatOverride}. Des clés qui
 commencer par `Aplatissez de manière récursive un document de remplacement en {@link FlatOverride}. Des clés qui
 commencer par  (métadonnées DTCG) sont ignorés ; chaque feuille restante devient un
 Propriété personnalisée `--<prefix>-<path-joined-by-dashes>`. Remplacement de composant
-les chemins conservent leur wrapper DTCG `component.*`, mais le CSS généré omet cela
-wrapper (`component.button.*` devient `--<prefix>-button-*`).
+les chemins conservent leur wrapper DTCG `component._`, mais le CSS généré omet cela
+wrapper (`component.button._`devient`--<prefix>-button-*`).
  `$`
+
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| document_ | RemplacerGroupe |  |
-| préfixe |  |  |
+| Nom       | Tapez           | Descriptif |
+| --------- | --------------- | ---------- |
+| document_ | RemplacerGroupe |            |
+| préfixe   |                 |            |
 
 ### Valeur LumièreSombre
 
@@ -178,6 +181,7 @@ export type OverrideGroup = Record<string, unknown>;
 
 Un groupe de remplacement de style DTCG node (groupes/jetons imbriqués plus métadonnées `Un groupe de remplacement de style DTCG node (groupes/jetons imbriqués plus métadonnées  facultatives).
  `$`
+
 ### RemplacerToken
 
 **Genre :** interface

@@ -26,7 +26,7 @@ export interface AssemblyScriptCompileOptions
 **النوع:** الوظيفة
 
 ```typescript
-function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>
+function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<void>;
 ```
 
 قم بتجميع إدخال AssemblyScript إلى WebAssembly وأصدر إدخالاً واحدًا
@@ -38,9 +38,9 @@ function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<v
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | أسمبلي سكريبت كومبيليوبشنس |  |
+| الاسم  | اكتب                       | الوصف |
+| ------ | -------------------------- | ----- |
+| خيارات | أسمبلي سكريبت كومبيليوبشنس |       |
 
 ## `src/generate`
 
@@ -49,7 +49,7 @@ function compileAssemblyScript(options: AssemblyScriptCompileOptions): Promise<v
 **النوع:** الوظيفة
 
 ```typescript
-function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string
+function buildGeneratedModule(wasmBase64: string, instantiateSource: string): string;
 ```
 
 قم ببناء الوحدة المولدة المستقلة بذاتها: تم إدراج ثنائي Wasm كـ base64،
@@ -59,17 +59,17 @@ function buildGeneratedModule(wasmBase64: string, instantiateSource: string): st
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| WasmBase64 | سلسلة |  |
-| المصدر الفوري | سلسلة |  |
+| الاسم         | اكتب  | الوصف |
+| ------------- | ----- | ----- |
+| WasmBase64    | سلسلة |       |
+| المصدر الفوري | سلسلة |       |
 
 ### extractInstantinate
 
 **النوع:** الوظيفة
 
 ```typescript
-function extractInstantiate(bindingsSource: string): string
+function extractInstantiate(bindingsSource: string): string;
 ```
 
 يتم إنشاء مثيل لملف روابط AssemblyScript ESM تلقائيًا من عنوان URL `.wasm` عبر
@@ -79,9 +79,9 @@ function extractInstantiate(bindingsSource: string): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصدر الارتباطات | سلسلة |  |
+| الاسم           | اكتب  | الوصف |
+| --------------- | ----- | ----- |
+| مصدر الارتباطات | سلسلة |       |
 
 ## `src/index`
 
@@ -90,7 +90,7 @@ function extractInstantiate(bindingsSource: string): string
 **النوع:** الوظيفة
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 البرنامج المساعد Vite الذي يجمع برنامج AssemblyScript (https://www.assemblyscript.org/)
@@ -99,13 +99,14 @@ function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
 
 يتم تشغيل التجميع في الخطاف `buildStart` المجمع، لذا فإن الوحدة النمطية التي تم إنشاؤها هي
 (إعادة) إنتاجها لـ `vite build` و`vite build --watch` وخادم التطوير على حدٍ سواء
+
 - جعل `vite build` نقطة الدخول الوحيدة لبناء AssemblyScript.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات التجميع سكربت |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | خيارات التجميع سكربت |       |
 
 ### AssemblyScriptPluginOptions
 
@@ -122,7 +123,7 @@ export type AssemblyScriptPluginOptions = AssemblyScriptCompileOptions;
 **النوع:** الوظيفة
 
 ```typescript
-function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
+function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin;
 ```
 
 البرنامج المساعد Vite الذي يجمع برنامج AssemblyScript (https://www.assemblyscript.org/)
@@ -131,10 +132,11 @@ function assemblyScriptPlugin(options: AssemblyScriptPluginOptions): Plugin
 
 يتم تشغيل التجميع في الخطاف `buildStart` المجمع، لذا فإن الوحدة النمطية التي تم إنشاؤها هي
 (إعادة) إنتاجها لـ `vite build` و`vite build --watch` وخادم التطوير على حدٍ سواء
+
 - جعل `vite build` نقطة الدخول الوحيدة لبناء AssemblyScript.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | خيارات التجميع سكربت |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | خيارات التجميع سكربت |       |

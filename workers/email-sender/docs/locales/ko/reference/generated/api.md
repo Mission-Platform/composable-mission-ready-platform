@@ -36,7 +36,7 @@ export interface EmailRequest
 **종류:** 기능
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>
+function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -44,7 +44,7 @@ function handleRequest(request: Request, environment: Env, delivery: Delivery = 
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 요청 | 요청 |  |
-| 환경 | 환경 |  |
-| 배달 | 배달 |  |
+| ---- | ---- | ---- |
+| 요청 | 요청 |      |
+| 환경 | 환경 |      |
+| 배달 | 배달 |      |

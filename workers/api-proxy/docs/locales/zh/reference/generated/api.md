@@ -16,7 +16,7 @@
 **种类：**常数
 
 ```typescript
-export const ALLOWED_METHODS
+export const ALLOWED_METHODS;
 ```
 
 保持代理只读并仅限于记录的 API 路由。
@@ -26,7 +26,7 @@ export const ALLOWED_METHODS
 **种类：**常数
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES
+export const ALLOWED_ROUTE_PREFIXES;
 ```
 
 没有提供描述。
@@ -36,13 +36,13 @@ export const ALLOWED_ROUTE_PREFIXES
 **种类：**功能
 
 ```typescript
-function isAllowedProxyRequest(request: Request): boolean
+function isAllowedProxyRequest(request: Request): boolean;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|请求|请求|  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 请求 | 请求 |      |

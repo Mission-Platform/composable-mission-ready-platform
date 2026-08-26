@@ -586,7 +586,7 @@ Stable, reviewable output of {@link collectTokenReachability}.
 **Kind:** type
 
 ```typescript
-export type TokenUsageEvidence = | 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
+export type TokenUsageEvidence = 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
 ```
 
 Evidence collected for one token leaf.

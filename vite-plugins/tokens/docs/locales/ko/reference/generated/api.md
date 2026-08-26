@@ -16,40 +16,40 @@
 **종류:** 기능
 
 ```typescript
-function aliasToCssVariable(alias: string, prefix: string): string
+function aliasToCssVariable(alias: string, prefix: string): string;
 ```
 
 DTCG 별칭(`{font.size.4xl}`)을 `var(--<prefix>-font-size-4xl)` 참조로 변환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 별칭 | 문자열 |  |
-| 접두사 | 문자열 |  |
+| 이름   | 유형   | 설명 |
+| ------ | ------ | ---- |
+| 별칭   | 문자열 |      |
+| 접두사 | 문자열 |      |
 
 ### 낙타 케이스
 
 **종류:** 기능
 
 ```typescript
-function camelCase(dashed: string): string
+function camelCase(dashed: string): string;
 ```
 
 camelCase는 점선 문자열입니다(`border-width` → `borderWidth`, `z-index` → `zIndex`).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 점선 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 점선 | 문자열 |      |
 
 ### 낙타 케이스 이름
 
 **종류:** 상수
 
 ```typescript
-export const camelCaseName
+export const camelCaseName;
 ```
 
 토큰의 camelCase 식별자(`border-width-heavy` → `borderWidthHeavy`).
@@ -59,7 +59,7 @@ export const camelCaseName
 **종류:** 상수
 
 ```typescript
-export const compareTokens
+export const compareTokens;
 ```
 
 대시 이름으로 두 토큰을 안정적으로 ASCII로 비교합니다.
@@ -69,7 +69,7 @@ export const compareTokens
 **종류:** 상수
 
 ```typescript
-export const dashedName
+export const dashedName;
 ```
 
 SCSS/CSS 변수 이름 + 정렬에 사용되는 대시 토큰 이름(`color-alert-100`)입니다.
@@ -94,6 +94,7 @@ export type DtcgGroup = Record<string, unknown>;
 
 DTCG 그룹 node(중첩된 그룹/토큰과 `DTCG 그룹 node(중첩된 그룹/토큰과 -메타데이터의 개체)
  `$`
+
 ### Dtcg토큰
 
 **종류:** 인터페이스
@@ -109,7 +110,7 @@ DTCG 리프 토큰(`{ $value, $type?, $description? }`).
 **종류:** 기능
 
 ```typescript
-function flattenTokens(document_: DtcgGroup): TokenRecord[]
+function flattenTokens(document_: DtcgGroup): TokenRecord[];
 ```
 
 DTCG 문서를 {@link TokenRecord}로 반복적으로 평면화하여
@@ -117,64 +118,64 @@ DTCG 문서를 {@link TokenRecord}로 반복적으로 평면화하여
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 문서_ | Dtcg그룹 |  |
+| 이름  | 유형     | 설명 |
+| ----- | -------- | ---- |
+| 문서_ | Dtcg그룹 |      |
 
 ### 형식색상값
 
 **종류:** 기능
 
 ```typescript
-function formatColorValue(value: DtcgColorValue): string
+function formatColorValue(value: DtcgColorValue): string;
 ```
 
 DTCG 색상 값을 반올림되지 않은 CSS `oklab()`(또는 기타 색상 공간) 문자열로 형식화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | DtcgColor값 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 가치 | DtcgColor값 |      |
 
 ### 형식Css색상
 
 **종류:** 기능
 
 ```typescript
-function formatCssColor(value: DtcgColorValue): string
+function formatCssColor(value: DtcgColorValue): string;
 ```
 
 OKLab/기타 색 공간 값을 구성 요소당 유효 숫자 4자리로 반올림합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | DtcgColor값 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 가치 | DtcgColor값 |      |
 
 ### formatCss값
 
 **종류:** 기능
 
 ```typescript
-function formatCssValue(value: unknown): string
+function formatCssValue(value: unknown): string;
 ```
 
 토큰 `$value`을 CSS/SCSS 리터럴로 형식화합니다(색상은 반올림됨, 그 외 모든 내용은 그대로).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 알 수 없음 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 가치 | 알 수 없음 |      |
 
 ### 그룹 라벨
 
 **종류:** 상수
 
 ```typescript
-export const groupLabel
+export const groupLabel;
 ```
 
 SCSS 섹션 헤더에 대한 그룹 키의 제목을 대소문자로 구분합니다(`border-width` → `Border Width`).
@@ -184,24 +185,24 @@ SCSS 섹션 헤더에 대한 그룹 키의 제목을 대소문자로 구분합�
 **종류:** 기능
 
 ```typescript
-function resolveAlias(alias: string, document_: DtcgGroup): unknown
+function resolveAlias(alias: string, document_: DtcgGroup): unknown;
 ```
 
 문서에서 DTCG 별칭(`{font.size.4xl}`)을 해당 리터럴 `$value`로 확인합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 별칭 | 문자열 |  |
-| 문서_ | Dtcg그룹 |  |
+| 이름  | 유형     | 설명 |
+| ----- | -------- | ---- |
+| 별칭  | 문자열   |      |
+| 문서_ | Dtcg그룹 |      |
 
 ### 해결Ts값
 
 **종류:** 기능
 
 ```typescript
-function resolveTsValue(value: unknown): string | number
+function resolveTsValue(value: unknown): string | number;
 ```
 
 DTCG `$value`을 생성된 텍스트에 사용된 리터럴 JavaScript 값으로 해석합니다.
@@ -210,9 +211,9 @@ TypeScript 모듈: 색상은 `oklab(...)` 문자열이 되고 숫자는 그대�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 알 수 없음 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 가치 | 알 수 없음 |      |
 
 ### 토큰 레코드
 
@@ -231,23 +232,23 @@ export interface TokenRecord
 **종류:** 기능
 
 ```typescript
-function generateTokens(options: TokensPluginOptions): void
+function generateTokens(options: TokensPluginOptions): void;
 ```
 
 DTCG 소스에서 모든 소모성 토큰 아티팩트를 생성합니다.
-  • `scss/_<file>.scss` — 테마가 아닌 소스당 하나의 독립형 SCSS 부분
-  • `scss/_theme.scss` — 결합된 `light-dark()` 테마 부분
-  • `ts/<file>.ts` — 소스당 하나의 중첩된 `as const` TypeScript 모듈
-  • `_tokens.scss` — SCSS 배럴 `@forward`은 모든 부분(테마 포함)을 처리합니다.
-  • `tokens.ts` — TypeScript 배럴은 모든 파일별 모듈을 다시 내보냅니다.
+• `scss/_<file>.scss` — 테마가 아닌 소스당 하나의 독립형 SCSS 부분
+• `scss/_theme.scss` — 결합된 `light-dark()` 테마 부분
+• `ts/<file>.ts` — 소스당 하나의 중첩된 `as const` TypeScript 모듈
+• `_tokens.scss` — SCSS 배럴 `@forward`은 모든 부분(테마 포함)을 처리합니다.
+• `tokens.ts` — TypeScript 배럴은 모든 파일별 모듈을 다시 내보냅니다.
 
 모든 것은 맞춤형 이미터에 의해 생성됩니다. 외부 CLI가 없습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 토큰플러그인옵션 |  |
+| 이름 | 유형             | 설명 |
+| ---- | ---------------- | ---- |
+| 옵션 | 토큰플러그인옵션 |      |
 
 ### 토큰플러그인옵션
 
@@ -275,7 +276,7 @@ export interface TokensPluginOptions
 **종류:** 기능
 
 ```typescript
-function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string
+function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string;
 ```
 
 단일 결합 테마 부분을 빌드합니다. 밝고 어두운 의미 색상
@@ -289,24 +290,24 @@ function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGro
 직접적으로 `scss/tokens`를 가져오는 것만으로도 하위 트리(또는 전체)를 고정하는 데 충분합니다.
 문서)를 하나의 구성표로 — 별도의 `scss/themes/{light,dark}` 가져오기가 없습니다.
 필수이며 동작은 더 이상 가져오기 순서에 따라 달라지지 않습니다. 왜냐하면
-위의 `light-dark()` 컬러 토큰은 *사용된* `color-scheme`에 대해 해결됩니다.
+위의 `light-dark()` 컬러 토큰은 _사용된_ `color-scheme`에 대해 해결됩니다.
 `[data-theme]` 요소에 설정하면 해당 요소와 모든 요소의 테마가 다시 지정됩니다.
 단일 색상 사용자 정의 속성을 재정의하지 않고 하위 항목을 생성합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가벼운문서 | Dtcg그룹 |  |
-| 어두운문서 | Dtcg그룹 |  |
-| 접두사 |  |  |
+| 이름       | 유형     | 설명 |
+| ---------- | -------- | ---- |
+| 가벼운문서 | Dtcg그룹 |      |
+| 어두운문서 | Dtcg그룹 |      |
+| 접두사     |          |      |
 
 ### buildPropertyRule
 
 **종류:** 기능
 
 ```typescript
-function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string
+function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string;
 ```
 
 단일 사용자 정의 특성에 대한 CSS `@property` 등록을 빌드하십시오.
@@ -315,15 +316,15 @@ function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable 
 로컬 `단일 사용자 정의 특성에 대한 CSS `@property` 등록을 빌드하십시오.
 
 `useScssVariable`이 설정되면 `initial-value`는 일치하는 것으로 확인됩니다.
-로컬  변수(`$<token>`)가 동일한 파일에서 방출되어
+로컬 변수(`$<token>`)가 동일한 파일에서 방출되어
 `단일 사용자 정의 특성에 대한 CSS `@property` 등록을 빌드하십시오.
 
 `useScssVariable`이 설정되면 `initial-value`는 일치하는 것으로 확인됩니다.
 로컬 `단일 사용자 정의 특성에 대한 CSS `@property` 등록을 빌드하십시오.
 
 `useScssVariable`이 설정되면 `initial-value`는 일치하는 것으로 확인됩니다.
-로컬  변수(`$<token>`)가 동일한 파일에서 방출되어
- 변수 진실 소스와 동기화된 등록; 그렇지 않으면
+로컬 변수(`$<token>`)가 동일한 파일에서 방출되어
+변수 진실 소스와 동기화된 등록; 그렇지 않으면
 리터럴 `$value`이 인라인됩니다.
 
 비범용 `@property`에는 계산적으로 독립적인 것이 필요합니다.
@@ -331,117 +332,124 @@ function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable 
 universal `*` 구문에서는 이를 생략합니다. 값이 `var()` 참조인 모든 것
 (타이포그래피 필드) 또는 입력할 수 없는 리터럴(그림자, 이징 곡선,
 글꼴 모음 스택)은 `initial-value` 없이 `*`에 등록됩니다.
- `$`
+`$`
+
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기록 | 토큰기록 |  |
-| 접두사 | 문자열 |  |
-| useScss변수 |  |  |
-| CSS네임스페이스 | 문자열 |  |
+| 이름            | 유형     | 설명 |
+| --------------- | -------- | ---- |
+| 기록            | 토큰기록 |      |
+| 접두사          | 문자열   |      |
+| useScss변수     |          |      |
+| CSS네임스페이스 | 문자열   |      |
 
 ### buildScss변수
 
 **종류:** 기능
 
 ```typescript
-function buildScssVariables(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariables(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기록 | 토큰레코드[] |  |
-| 접두사 |  |  |
-| CSS네임스페이스 | 문자열 |  |
-| 컴포넌트네임스페이스 | 읽기전용Set<string> |  |
+| 이름                 | 유형                | 설명 |
+| -------------------- | ------------------- | ---- |
+| 기록                 | 토큰레코드[]        |      |
+| 접두사               |                     |      |
+| CSS네임스페이스      | 문자열              |      |
+| 컴포넌트네임스페이스 | 읽기전용Set<string> |      |
 
 ### buildScss변수Scss
 
 **종류:** 기능
 
 ```typescript
-function buildScssVariablesScss(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariablesScss(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 CSS가 없는 `CSS가 없는  변수 전용 부분(헤더 + {@link buildScssVariables})을 빌드합니다.
-본문, `:root`/`@property` CSS 없음). 내부적으로 `scss/_<file>-vars.scss`으로 방출됨
+본문, `:root`/`@property`CSS 없음). 내부적으로`scss/_<file>-vars.scss`으로 방출됨
 소비자(예: `scss/_mixins.scss`)는 컴파일 타임에 토큰의 `CSS가 없는 `CSS가 없는  변수 전용 부분(헤더 + {@link buildScssVariables})을 빌드합니다.
-본문, `:root`/`@property` CSS 없음). 내부적으로 `scss/_<file>-vars.scss`으로 방출됨
+본문, `:root`/`@property`CSS 없음). 내부적으로`scss/_<file>-vars.scss`으로 방출됨
 소비자(예: `scss/_mixins.scss`)는 컴파일 타임에 토큰의  값을 읽을 수 있습니다.
-전체 부분을 `@use` 처리하지 않으면 `:root`/`@property` CSS가 유출됩니다.
+전체 부분을 `@use`처리하지 않으면`:root`/`@property`CSS가 유출됩니다.
 모든 소비 스타일시트에 포함됩니다.
- `$`
+`$`
+
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기록 | 토큰레코드[] |  |
-| 접두사 |  |  |
-| CSS네임스페이스 | 문자열 |  |
-| 컴포넌트네임스페이스 | 읽기전용Set<string> |  |
+| 이름                 | 유형                | 설명 |
+| -------------------- | ------------------- | ---- |
+| 기록                 | 토큰레코드[]        |      |
+| 접두사               |                     |      |
+| CSS네임스페이스      | 문자열              |      |
+| 컴포넌트네임스페이스 | 읽기전용Set<string> |      |
 
 ### buildStructuralScss
 
 **종류:** 기능
 
 ```typescript
-function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string
+function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string;
 ```
 
 구조적 SCSS 부분 빌드: `:root { --<prefix>-* }` 사용자 정의 속성
 모든 토큰에 대해 일치하는 `@property` 등록(`initial-value`s 사용)
-일치하는 `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }` 사용자 정의 속성
+일치하는 `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }`사용자 정의 속성
+모든 토큰에 대해 일치하는`@property` 등록(`initial-value`s 사용)
+일치하는  변수로 확인됨), 둘 다 `mp.tokens`캐스케이드에 래핑됨
+레이어.`구조적 SCSS 부분 빌드: `:root { --<prefix>-* }` 사용자 정의 속성
 모든 토큰에 대해 일치하는 `@property` 등록(`initial-value`s 사용)
-일치하는  변수로 확인됨), 둘 다 `mp.tokens` 캐스케이드에 래핑됨
-레이어. `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }` 사용자 정의 속성
-모든 토큰에 대해 일치하는 `@property` 등록(`initial-value`s 사용)
-일치하는 `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }` 사용자 정의 속성
-모든 토큰에 대해 일치하는 `@property` 등록(`initial-value`s 사용)
-일치하는  변수로 확인됨), 둘 다 `mp.tokens` 캐스케이드에 래핑됨
-레이어.  변수 자체는 CSS가 없는 컴패니언에 있습니다.
-`_<file>-vars.scss` 부분({@link buildScssVariablesScss} 참조) 이 부분
-`@use`s(값을 `:root`/`@property` 블록에 보간하기 위해) 및
-`@forward`s입니다(따라서 `_<file>.scss`의 다운스트림 소비자는 여전히
+일치하는 `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }`사용자 정의 속성
+모든 토큰에 대해 일치하는`@property` 등록(`initial-value`s 사용)
+일치하는  변수로 확인됨), 둘 다 `mp.tokens`캐스케이드에 래핑됨
+레이어.  변수 자체는 CSS가 없는 컴패니언에 있습니다.`_<file>-vars.scss`부분({@link buildScssVariablesScss} 참조) 이 부분`@use`s(값을 `:root`/`@property`블록에 보간하기 위해) 및`@forward`s입니다(따라서 `_<file>.scss`의 다운스트림 소비자는 여전히
 `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }` 사용자 정의 속성
 모든 토큰에 대해 일치하는 `@property` 등록(`initial-value`s 사용)
-일치하는 `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }` 사용자 정의 속성
+일치하는 `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }`사용자 정의 속성
+모든 토큰에 대해 일치하는`@property` 등록(`initial-value`s 사용)
+일치하는  변수로 확인됨), 둘 다 `mp.tokens`캐스케이드에 래핑됨
+레이어.`구조적 SCSS 부분 빌드: `:root { --<prefix>-* }` 사용자 정의 속성
 모든 토큰에 대해 일치하는 `@property` 등록(`initial-value`s 사용)
-일치하는  변수로 확인됨), 둘 다 `mp.tokens` 캐스케이드에 래핑됨
-레이어. `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }` 사용자 정의 속성
-모든 토큰에 대해 일치하는 `@property` 등록(`initial-value`s 사용)
-일치하는 `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }` 사용자 정의 속성
-모든 토큰에 대해 일치하는 `@property` 등록(`initial-value`s 사용)
-일치하는  변수로 확인됨), 둘 다 `mp.tokens` 캐스케이드에 래핑됨
-레이어.  변수 자체는 CSS가 없는 컴패니언에 있습니다.
-`_<file>-vars.scss` 부분({@link buildScssVariablesScss} 참조) 이 부분
-`@use`s(값을 `:root`/`@property` 블록에 보간하기 위해) 및
-`@forward`s입니다(따라서 `_<file>.scss`의 다운스트림 소비자는 여전히
+일치하는 `구조적 SCSS 부분 빌드: `:root { --<prefix>-* }`사용자 정의 속성
+모든 토큰에 대해 일치하는`@property` 등록(`initial-value`s 사용)
+일치하는  변수로 확인됨), 둘 다 `mp.tokens`캐스케이드에 래핑됨
+레이어.  변수 자체는 CSS가 없는 컴패니언에 있습니다.`_<file>-vars.scss`부분({@link buildScssVariablesScss} 참조) 이 부분`@use`s(값을 `:root`/`@property`블록에 보간하기 위해) 및`@forward`s입니다(따라서 `_<file>.scss`의 다운스트림 소비자는 여전히
 -변수). 색상 팔레트와 복합 타이포그래피가 모두 방출됩니다.
 이 길을 통해.
 
 `file`은 소스/출력 기본 이름(예: `'radius'`)이며,
 동반자 `'<file>-vars'` 부분.
- `$`
+`$`
+
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기록 | 토큰레코드[] |  |
-| 접두사 |  |  |
-| 파일 |  |  |
-| CSS네임스페이스 | 문자열 |  |
+| 이름            | 유형         | 설명 |
+| --------------- | ------------ | ---- |
+| 기록            | 토큰레코드[] |      |
+| 접두사          |              |      |
+| 파일            |              |      |
+| CSS네임스페이스 | 문자열       |      |
 
 ### 빌드타이포그래피레코드
 
 **종류:** 기능
 
 ```typescript
-function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[]
+function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[];
 ```
 
 DTCG 복합 타이포그래피 그룹을 필드별 {@link TokenRecord}로 평면화합니다.
@@ -454,26 +462,26 @@ DTCG 복합 타이포그래피 그룹을 필드별 {@link TokenRecord}로 평면
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 타이포그래피그룹 | Dtcg그룹 |  |
-| 접두사 |  |  |
+| 이름             | 유형     | 설명 |
+| ---------------- | -------- | ---- |
+| 타이포그래피그룹 | Dtcg그룹 |      |
+| 접두사           |          |      |
 
 ### 타이포그래피항목
 
 **종류:** 기능
 
 ```typescript
-function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>
+function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>;
 ```
 
 DTCG 복합 타이포그래피 그룹에 대한 `[variant, value]` 항목을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 그룹 | Dtcg그룹 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 그룹 | Dtcg그룹 |      |
 
 ## `src/generators/typescript`
 
@@ -482,23 +490,28 @@ DTCG 복합 타이포그래피 그룹에 대한 `[variant, value]` 항목을 반
 **종류:** 기능
 
 ```typescript
-function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string
+function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스 | 어레이<string \| TokenModuleDescriptor> |  |
+| 이름 | 유형                                    | 설명 |
+| ---- | --------------------------------------- | ---- |
+| 소스 | 어레이<string \| TokenModuleDescriptor> |      |
 
 ### buildToken모듈
 
 **종류:** 기능
 
 ```typescript
-function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?: DtcgGroup, exportName = camelCase(basename)): string
+function buildTokenModule(
+  basename: string,
+  document_: DtcgGroup,
+  aliasDocument?: DtcgGroup,
+  exportName = camelCase(basename),
+): string;
 ```
 
 이름이 지정된 하나의 중첩된 `as const` 개체를 내보내는 파일별 TypeScript 모듈을 빌드합니다.
@@ -512,12 +525,12 @@ function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기지 이름 | 문자열 |  |
-| 문서_ | Dtcg그룹 |  |
-| 별칭문서 | Dtcg그룹 |  |
-| 수출이름 |  |  |
+| 이름      | 유형     | 설명 |
+| --------- | -------- | ---- |
+| 기지 이름 | 문자열   |      |
+| 문서_     | Dtcg그룹 |      |
+| 별칭문서  | Dtcg그룹 |      |
+| 수출이름  |          |      |
 
 ## `src/index`
 
@@ -526,7 +539,7 @@ function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?
 **종류:** 기능
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Vite 플러그인은 Mission Platform 디자인 토큰 아티팩트를 생성합니다.
@@ -534,27 +547,26 @@ Vite 플러그인은 Mission Platform 디자인 토큰 아티팩트를 생성합
 생성기 - 외부 CLI가 포함되지 않습니다. 각 `*.tokens.json` 소스는
 `generated/scss/<file>.scss` 일치(자체 포함 `Vite 플러그인은 Mission Platform 디자인 토큰 아티팩트를 생성합니다.
 자체 포함된 사용자 정의를 사용하는 DTCG(https://www.designtokens.org/) 소스
-생성기 - 외부 CLI가 포함되지 않습니다. 각 `*.tokens.json` 소스는
-`generated/scss/<file>.scss` 일치(자체 포함  변수, `--mp-*`
-사용자 정의 속성 및 해당 `@property` 등록) 및 중첩된 `as const`
-`generated/ts/<file>.ts` 모듈, `generated/_tokens.scss`(SCSS)과 함께
+생성기 - 외부 CLI가 포함되지 않습니다. 각 `_.tokens.json`소스는`generated/scss/<file>.scss`일치(자체 포함  변수,`--mp-_`사용자 정의 속성 및 해당`@property`등록) 및 중첩된`as const`
+`generated/ts/<file>.ts`모듈,`generated/_tokens.scss`(SCSS)과 함께
 배럴) 및 `generated/tokens.ts`(TypeScript 배럴) 집합체입니다.
 
 생성은 롤업 `buildStart` 후크에서 실행되므로 아티팩트가 생성됩니다.
 `vite build`, `vite build --watch` 및 개발 서버 모두에 대해.
- `$`
+`$`
+
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 토큰플러그인옵션 |  |
+| 이름 | 유형             | 설명 |
+| ---- | ---------------- | ---- |
+| 옵션 | 토큰플러그인옵션 |      |
 
 ### 토큰플러그인
 
 **종류:** 기능
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Vite 플러그인은 Mission Platform 디자인 토큰 아티팩트를 생성합니다.
@@ -562,20 +574,19 @@ Vite 플러그인은 Mission Platform 디자인 토큰 아티팩트를 생성합
 생성기 - 외부 CLI가 포함되지 않습니다. 각 `*.tokens.json` 소스는
 `generated/scss/<file>.scss` 일치(자체 포함 `Vite 플러그인은 Mission Platform 디자인 토큰 아티팩트를 생성합니다.
 자체 포함된 사용자 정의를 사용하는 DTCG(https://www.designtokens.org/) 소스
-생성기 - 외부 CLI가 포함되지 않습니다. 각 `*.tokens.json` 소스는
-`generated/scss/<file>.scss` 일치(자체 포함  변수, `--mp-*`
-사용자 정의 속성 및 해당 `@property` 등록) 및 중첩된 `as const`
-`generated/ts/<file>.ts` 모듈, `generated/_tokens.scss`(SCSS)과 함께
+생성기 - 외부 CLI가 포함되지 않습니다. 각 `_.tokens.json`소스는`generated/scss/<file>.scss`일치(자체 포함  변수,`--mp-_`사용자 정의 속성 및 해당`@property`등록) 및 중첩된`as const`
+`generated/ts/<file>.ts`모듈,`generated/_tokens.scss`(SCSS)과 함께
 배럴) 및 `generated/tokens.ts`(TypeScript 배럴) 집합체입니다.
 
 생성은 롤업 `buildStart` 후크에서 실행되므로 아티팩트가 생성됩니다.
 `vite build`, `vite build --watch` 및 개발 서버 모두에 대해.
- `$`
+`$`
+
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 토큰플러그인옵션 |  |
+| 이름 | 유형             | 설명 |
+| ---- | ---------------- | ---- |
+| 옵션 | 토큰플러그인옵션 |      |
 
 ## `src/reachability`
 
@@ -584,16 +595,16 @@ Vite 플러그인은 Mission Platform 디자인 토큰 아티팩트를 생성합
 **종류:** 기능
 
 ```typescript
-function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport
+function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport;
 ```
 
 토큰 소스를 변경하지 않고 결정적이고 보수적인 도달 가능성 보고서를 수집합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | TokenReachability옵션 |  |
+| 이름 | 유형                  | 설명 |
+| ---- | --------------------- | ---- |
+| 옵션 | TokenReachability옵션 |      |
 
 ### 토큰별칭Edge
 
@@ -630,7 +641,7 @@ export interface TokenReachabilityReport
 **종류:** 유형
 
 ```typescript
-export type TokenUsageEvidence = | 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
+export type TokenUsageEvidence = 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
 ```
 
 하나의 토큰 리프에 대해 수집된 증거입니다.
@@ -660,14 +671,14 @@ export type TokenUsageStatus = 'active' | 'protected' | 'ambiguous' | 'candidate
 **종류:** 기능
 
 ```typescript
-function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void
+function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void;
 ```
 
 검토 및 소스 제어에 적합한 안정적인 형식으로 보고서를 작성합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 보고 | 토큰 도달성 보고서 |  |
-| 파일 경로 | 문자열 |  |
+| 이름      | 유형               | 설명 |
+| --------- | ------------------ | ---- |
+| 보고      | 토큰 도달성 보고서 |      |
+| 파일 경로 | 문자열             |      |

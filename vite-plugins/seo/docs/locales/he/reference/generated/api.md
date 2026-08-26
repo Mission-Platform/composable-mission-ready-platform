@@ -16,7 +16,7 @@
 פונקציה **סוג:**
 
 ```typescript
-function seoPlugin(options: SeoPluginOptions): Plugin
+function seoPlugin(options: SeoPluginOptions): Plugin;
 ```
 
 צור תוסף Vite שכותב `robots.txt` ו-`sitemap.xml` לתוך
@@ -25,24 +25,25 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | SeoPluginOptions |  |
+| שם       | הקלד             | תיאור |
+| -------- | ---------------- | ----- |
+| אפשרויות | SeoPluginOptions |       |
 
 #### חוֹזֶה
 
 - **@example:** ```ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+  import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 
 export default defineConfig({
-  plugins: [
-    seoPlugin({
-      sitemap: { urls: [{ loc: 'https://example.com/' }] },
-      robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-    }),
-  ],
+plugins: [
+seoPlugin({
+sitemap: { urls: [{ loc: 'https://example.com/' }] },
+robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+}),
+],
 });
-```
+
+````
 
 ### seoPlugin
 
@@ -50,7 +51,7 @@ export default defineConfig({
 
 ```typescript
 function seoPlugin(options: SeoPluginOptions): Plugin
-```
+````
 
 צור תוסף Vite שכותב `robots.txt` ו-`sitemap.xml` לתוך
 `publicDir` של הפרויקט (או {@link SeoPluginOptions.outDir}) בתחילת
@@ -58,24 +59,25 @@ function seoPlugin(options: SeoPluginOptions): Plugin
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | SeoPluginOptions |  |
+| שם       | הקלד             | תיאור |
+| -------- | ---------------- | ----- |
+| אפשרויות | SeoPluginOptions |       |
 
 #### חוֹזֶה
 
 - **@example:** ```ts
-import { seoPlugin } from '@mission-platform/vite-plugin-seo';
+  import { seoPlugin } from '@mission-platform/vite-plugin-seo';
 
 export default defineConfig({
-  plugins: [
-    seoPlugin({
-      sitemap: { urls: [{ loc: 'https://example.com/' }] },
-      robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
-    }),
-  ],
+plugins: [
+seoPlugin({
+sitemap: { urls: [{ loc: 'https://example.com/' }] },
+robots: { groups: [{ userAgent: '*', allow: ['/'] }] },
+}),
+],
 });
-```
+
+````
 
 ### SeoPluginOptions
 
@@ -83,6 +85,6 @@ export default defineConfig({
 
 ```typescript
 export interface SeoPluginOptions
-```
+````
 
 אפשרויות עבור {@link seoPlugin}.

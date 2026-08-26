@@ -36,15 +36,15 @@ export interface EmailRequest
 **النوع:** الوظيفة
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>
+function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| طلب | طلب |  |
-| بيئة | البيئة |  |
-| تسليم | التسليم |  |
+| الاسم | اكتب    | الوصف |
+| ----- | ------- | ----- |
+| طلب   | طلب     |       |
+| بيئة  | البيئة  |       |
+| تسليم | التسليم |       |

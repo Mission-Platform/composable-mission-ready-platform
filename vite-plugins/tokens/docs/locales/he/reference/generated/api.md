@@ -16,40 +16,40 @@
 פונקציה **סוג:**
 
 ```typescript
-function aliasToCssVariable(alias: string, prefix: string): string
+function aliasToCssVariable(alias: string, prefix: string): string;
 ```
 
 המר כינוי DTCG (`{font.size.4xl}`) להפניה `var(--<prefix>-font-size-4xl)`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כינוי | מחרוזת |  |
-| קידומת | מחרוזת |  |
+| שם     | הקלד   | תיאור |
+| ------ | ------ | ----- |
+| כינוי  | מחרוזת |       |
+| קידומת | מחרוזת |       |
 
 ### camelCase
 
 פונקציה **סוג:**
 
 ```typescript
-function camelCase(dashed: string): string
+function camelCase(dashed: string): string;
 ```
 
 camelCase מחרוזת מקווקו (`border-width` → `borderWidth`, `z-index` → `zIndex`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקווקו | מחרוזת |  |
+| שם     | הקלד   | תיאור |
+| ------ | ------ | ----- |
+| מקווקו | מחרוזת |       |
 
 ### camelCaseName
 
 **סוג:** קבוע
 
 ```typescript
-export const camelCaseName
+export const camelCaseName;
 ```
 
 מזהה camelCase עבור אסימון (`border-width-heavy` → `borderWidthHeavy`).
@@ -59,7 +59,7 @@ export const camelCaseName
 **סוג:** קבוע
 
 ```typescript
-export const compareTokens
+export const compareTokens;
 ```
 
 השוואה יציבה ASCII של שני אסימונים לפי שמם המקווקו.
@@ -69,7 +69,7 @@ export const compareTokens
 **סוג:** קבוע
 
 ```typescript
-export const dashedName
+export const dashedName;
 ```
 
 שם אסימון מקווקו (`color-alert-100`) משמש עבור שמות משתני SCSS/CSS + מיון.
@@ -94,6 +94,7 @@ export type DtcgGroup = Record<string, unknown>;
 
 קבוצת DTCG node (אובייקט של קבוצות/אסימונים מקוננים בתוספת מטא נתונים של `קבוצת DTCG node (אובייקט של קבוצות/אסימונים מקוננים בתוספת מטא נתונים של ).
  `$`
+
 ### DtcgToken
 
 **סוג:** ממשק
@@ -109,7 +110,7 @@ export interface DtcgToken
 פונקציה **סוג:**
 
 ```typescript
-function flattenTokens(document_: DtcgGroup): TokenRecord[]
+function flattenTokens(document_: DtcgGroup): TokenRecord[];
 ```
 
 השטח באופן רקורסיבי מסמך DTCG לתוך {@link TokenRecord}, הנושא את ה
@@ -117,64 +118,64 @@ function flattenTokens(document_: DtcgGroup): TokenRecord[]
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסמך_ | DtcgGroup |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| מסמך_ | DtcgGroup |       |
 
 ### formatColorValue
 
 פונקציה **סוג:**
 
 ```typescript
-function formatColorValue(value: DtcgColorValue): string
+function formatColorValue(value: DtcgColorValue): string;
 ```
 
 עיצוב ערך צבע DTCG כמחרוזת CSS `oklab()` (או מרחב צבע אחר), לא מעוגל.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | DtcgColorValue |  |
+| שם  | הקלד           | תיאור |
+| --- | -------------- | ----- |
+| ערך | DtcgColorValue |       |
 
 ### formatCssColor
 
 פונקציה **סוג:**
 
 ```typescript
-function formatCssColor(value: DtcgColorValue): string
+function formatCssColor(value: DtcgColorValue): string;
 ```
 
 עיגל ערך OKLab/מרחב צבע אחר לארבע דמויות משמעותיות לכל רכיב.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | DtcgColorValue |  |
+| שם  | הקלד           | תיאור |
+| --- | -------------- | ----- |
+| ערך | DtcgColorValue |       |
 
 ### formatCssValue
 
 פונקציה **סוג:**
 
 ```typescript
-function formatCssValue(value: unknown): string
+function formatCssValue(value: unknown): string;
 ```
 
 עצב אסימון `$value` בתור CSS/SCSS מילולי (צבעים מעוגלים; כל השאר מילולית).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | לא ידוע |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| ערך | לא ידוע |       |
 
 ### groupLabel
 
 **סוג:** קבוע
 
 ```typescript
-export const groupLabel
+export const groupLabel;
 ```
 
 כותרת-רישיות מפתח קבוצה עבור כותרות מקטע SCSS (`border-width` → `Border Width`).
@@ -184,24 +185,24 @@ export const groupLabel
 פונקציה **סוג:**
 
 ```typescript
-function resolveAlias(alias: string, document_: DtcgGroup): unknown
+function resolveAlias(alias: string, document_: DtcgGroup): unknown;
 ```
 
 פתור כינוי DTCG (`{font.size.4xl}`) ל-`$value` המילולי שלו במסמך.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| כינוי | מחרוזת |  |
-| מסמך_ | DtcgGroup |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| כינוי | מחרוזת    |       |
+| מסמך_ | DtcgGroup |       |
 
 ### resolveTsValue
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveTsValue(value: unknown): string | number
+function resolveTsValue(value: unknown): string | number;
 ```
 
 פתרו DTCG `$value` לערך ה-JavaScript המילולי בשימוש בקובץ שנוצר
@@ -210,9 +211,9 @@ function resolveTsValue(value: unknown): string | number
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | לא ידוע |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| ערך | לא ידוע |       |
 
 ### TokenRecord
 
@@ -231,23 +232,23 @@ export interface TokenRecord
 פונקציה **סוג:**
 
 ```typescript
-function generateTokens(options: TokensPluginOptions): void
+function generateTokens(options: TokensPluginOptions): void;
 ```
 
 הפק כל חפץ אסימון מתכלה ממקורות ה-DTCG:
-  • `scss/_<file>.scss` - חלקי SCSS עצמאי אחד לכל מקור שאינו נושא
-  • `scss/_theme.scss` — ערכת הנושא המשולבת `light-dark()` חלקית
-  • `ts/<file>.ts` - מודול `as const` TypeScript מקונן אחד לכל מקור
-  • `_tokens.scss` — חבית SCSS `@forward` המשלבת כל חלק (כולל נושא)
-  • `tokens.ts` — חבית TypeScript מייצאת מחדש כל מודול לכל קובץ
+• `scss/_<file>.scss` - חלקי SCSS עצמאי אחד לכל מקור שאינו נושא
+• `scss/_theme.scss` — ערכת הנושא המשולבת `light-dark()` חלקית
+• `ts/<file>.ts` - מודול `as const` TypeScript מקונן אחד לכל מקור
+• `_tokens.scss` — חבית SCSS `@forward` המשלבת כל חלק (כולל נושא)
+• `tokens.ts` — חבית TypeScript מייצאת מחדש כל מודול לכל קובץ
 
 הכל מיוצר על ידי הפולטות המותאמות אישית; אין CLI חיצוני.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | TokensPluginOptions |  |
+| שם       | הקלד                | תיאור |
+| -------- | ------------------- | ----- |
+| אפשרויות | TokensPluginOptions |       |
 
 ### TokensPluginOptions
 
@@ -275,7 +276,7 @@ export interface TokensPluginOptions
 פונקציה **סוג:**
 
 ```typescript
-function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string
+function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string;
 ```
 
 בנה את הנושא המשולב היחיד חלקי. הצבע הסמנטי הבהיר והכהה
@@ -289,24 +290,24 @@ function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGro
 ישירות, אז ייבוא `scss/tokens` מספיק כדי להצמיד תת-עץ (או את כולו
 מסמך) לתכנית אחת - אין ייבוא נפרד של `scss/themes/{light,dark}`
 נדרש וההתנהגות אינה תלויה עוד בהזמנת הייבוא. כי ה
-אסימוני צבע `light-dark()` לעיל נפתרים כנגד ה-`color-scheme` *משומש*,
+אסימוני צבע `light-dark()` לעיל נפתרים כנגד ה-`color-scheme` _משומש_,
 הגדרת אותו על אלמנט `[data-theme]` ערכות נושא מחדש של האלמנט הזה וכל שלו
 צאצאים מבלי להגדיר מחדש מאפיין מותאם אישית בצבע אחד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| lightDocument | DtcgGroup |  |
-| darkDocument | DtcgGroup |  |
-| קידומת |  |  |
+| שם            | הקלד      | תיאור |
+| ------------- | --------- | ----- |
+| lightDocument | DtcgGroup |       |
+| darkDocument  | DtcgGroup |       |
+| קידומת        |           |       |
 
 ### buildPropertyRule
 
 פונקציה **סוג:**
 
 ```typescript
-function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string
+function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string;
 ```
 
 בנו את הרישום CSS `@property` עבור נכס מותאם אישית יחיד.
@@ -315,14 +316,14 @@ function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable 
 משתנה `בנו את הרישום CSS `@property` עבור נכס מותאם אישית יחיד.
 
 כאשר `useScssVariable` מוגדר, ה-`initial-value` מסתדר להתאמה
-משתנה  מקומי (`$<token>`) הנפלט באותו קובץ, תוך שמירה על
+משתנה מקומי (`$<token>`) הנפלט באותו קובץ, תוך שמירה על
 רישום מסונכרן עם מקור האמת המשתנה `בנו את הרישום CSS `@property` עבור נכס מותאם אישית יחיד.
 
 כאשר `useScssVariable` מוגדר, ה-`initial-value` מסתדר להתאמה
 משתנה `בנו את הרישום CSS `@property` עבור נכס מותאם אישית יחיד.
 
 כאשר `useScssVariable` מוגדר, ה-`initial-value` מסתדר להתאמה
-משתנה  מקומי (`$<token>`) הנפלט באותו קובץ, תוך שמירה על
+משתנה מקומי (`$<token>`) הנפלט באותו קובץ, תוך שמירה על
 רישום מסונכרן עם מקור האמת המשתנה ; אחרת את
 מילולי `$value` מוטבע.
 
@@ -331,117 +332,117 @@ function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable 
 תחביר `*` אוניברסלי משמיט אותו. כל מה שהערך שלו הוא הפניה `var()`
 (שדות הטיפוגרפיה) או מילולית שאינה ניתנת להקלדה (צללים, עיקולים מקלים,
 font-family stacks) לכן נרשם תחת `*` ללא `initial-value`.
- `$`
+`$`
+
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שיא | TokenRecord |  |
-| קידומת | מחרוזת |  |
-| useScssVariable |  |  |
-| cssNamespace | מחרוזת |  |
+| שם              | הקלד        | תיאור |
+| --------------- | ----------- | ----- |
+| שיא             | TokenRecord |       |
+| קידומת          | מחרוזת      |       |
+| useScssVariable |             |       |
+| cssNamespace    | מחרוזת      |       |
 
 ### buildScssVariables
 
 פונקציה **סוג:**
 
 ```typescript
-function buildScssVariables(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariables(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רשומות | TokenRecord[] |  |
-| קידומת |  |  |
-| cssNamespace | מחרוזת |  |
-| מרחבי רכיבים | ReadonlySet<string> |  |
+| שם           | הקלד                | תיאור |
+| ------------ | ------------------- | ----- |
+| רשומות       | TokenRecord[]       |       |
+| קידומת       |                     |       |
+| cssNamespace | מחרוזת              |       |
+| מרחבי רכיבים | ReadonlySet<string> |       |
 
 ### buildScssVariablesScss
 
 פונקציה **סוג:**
 
 ```typescript
-function buildScssVariablesScss(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariablesScss(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 בנו חלקי `בנו חלקי -variables-only ללא CSS (כותרת + ה-{@link buildScssVariables}
-גוף, ללא `:root`/`@property` CSS). נפלט כ-`scss/_<file>-vars.scss` כל כך פנימי
-צרכנים (למשל `scss/_mixins.scss`) יכולים לקרוא את ערך `בנו חלקי `בנו חלקי -variables-only ללא CSS (כותרת + ה-{@link buildScssVariables}
-גוף, ללא `:root`/`@property` CSS). נפלט כ-`scss/_<file>-vars.scss` כל כך פנימי
-צרכנים (למשל `scss/_mixins.scss`) יכולים לקרוא את ערך  של אסימון בזמן הידור
-בלי `@use`-לבצע את החלק המלא - מה שידלוף את `:root`/`@property` CSS שלו
+גוף, ללא `:root`/`@property` CSS). נפלט כ-`scss/_<file>-vars.scss`כל כך פנימי
+צרכנים (למשל`scss/_mixins.scss`) יכולים לקרוא את ערך `בנו חלקי `בנו חלקי -variables-only ללא CSS (כותרת + ה-{@link buildScssVariables}
+גוף, ללא `:root`/`@property` CSS). נפלט כ-`scss/_<file>-vars.scss`כל כך פנימי
+צרכנים (למשל`scss/_mixins.scss`) יכולים לקרוא את ערך  של אסימון בזמן הידור
+בלי `@use`-לבצע את החלק המלא - מה שידלוף את `:root`/`@property`CSS שלו
 לכל גיליון סגנונות צורך.
- `$`
+`$`
+
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רשומות | TokenRecord[] |  |
-| קידומת |  |  |
-| cssNamespace | מחרוזת |  |
-| מרחבי רכיבים | ReadonlySet<string> |  |
+| שם           | הקלד                | תיאור |
+| ------------ | ------------------- | ----- |
+| רשומות       | TokenRecord[]       |       |
+| קידומת       |                     |       |
+| cssNamespace | מחרוזת              |       |
+| מרחבי רכיבים | ReadonlySet<string> |       |
 
 ### buildStructuralScss
 
 פונקציה **סוג:**
 
 ```typescript
-function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string
+function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string;
 ```
 
 בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
 ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
+נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`ורישום`@property`תואם לכל אסימון (עם`initial-value`s
+נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`שכבה. משתני`בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
 ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`
-שכבה. משתני `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
+נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`ורישום`@property`תואם לכל אסימון (עם`initial-value`s
+נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`שכבה. משתני  עצמם חיים ב-CSS הנלווה ללא`_<file>-vars.scss`חלקי (ראה {@link buildScssVariablesScss}); החלקי הזה`@use`s it (כדי לשלב את הערכים לתוך בלוקים `:root`/`@property`) ו
+`@forward`s זה (כך שצרכנים במורד הזרם של `_<file>.scss`עדיין רואים את`בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
 ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
+נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`ורישום`@property`תואם לכל אסימון (עם`initial-value`s
+נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`שכבה. משתני`בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
 ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`
-שכבה. משתני  עצמם חיים ב-CSS הנלווה ללא
-`_<file>-vars.scss` חלקי (ראה {@link buildScssVariablesScss}); החלקי הזה
-`@use`s it (כדי לשלב את הערכים לתוך בלוקים `:root`/`@property`) ו
-`@forward`s זה (כך שצרכנים במורד הזרם של `_<file>.scss` עדיין רואים את
-`בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
-ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
-ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`
-שכבה. משתני `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
-ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`
-ורישום `@property` תואם לכל אסימון (עם `initial-value`s
-נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`
-שכבה. משתני  עצמם חיים ב-CSS הנלווה ללא
-`_<file>-vars.scss` חלקי (ראה {@link buildScssVariablesScss}); החלקי הזה
-`@use`s it (כדי לשלב את הערכים לתוך בלוקים `:root`/`@property`) ו
+נפתרו למשתנה `בניית חלקי SCSS מבני: המאפיינים המותאמים אישית של `:root { --<prefix>-* }`ורישום`@property`תואם לכל אסימון (עם`initial-value`s
+נפתרו למשתנה  התואם), שניהם עטופים במפל `mp.tokens`שכבה. משתני  עצמם חיים ב-CSS הנלווה ללא`_<file>-vars.scss`חלקי (ראה {@link buildScssVariablesScss}); החלקי הזה`@use`s it (כדי לשלב את הערכים לתוך בלוקים `:root`/`@property`) ו
 `@forward`s זה (כך שצרכנים במורד הזרם של `_<file>.scss` עדיין רואים את
 -משתנים). פלטת הצבעים והטיפוגרפיה המרוכבת נפלטים שניהם
 דרך השביל הזה.
 
 `file` הוא שם בסיס המקור/פלט (למשל `'radius'`), המשמש להפניה ל-
 נלווה `'<file>-vars'` חלקי.
- `$`
+`$`
+
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רשומות | TokenRecord[] |  |
-| קידומת |  |  |
-| קובץ |  |  |
-| cssNamespace | מחרוזת |  |
+| שם           | הקלד          | תיאור |
+| ------------ | ------------- | ----- |
+| רשומות       | TokenRecord[] |       |
+| קידומת       |               |       |
+| קובץ         |               |       |
+| cssNamespace | מחרוזת        |       |
 
 ### buildTypographyRecords
 
 פונקציה **סוג:**
 
 ```typescript
-function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[]
+function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[];
 ```
 
 שטח קבוצת טיפוגרפיה מורכבת DTCG ל-{@link TokenRecord} לכל שדה.
@@ -454,26 +455,26 @@ function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): Toke
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| טיפוגרפיהקבוצה | DtcgGroup |  |
-| קידומת |  |  |
+| שם             | הקלד      | תיאור |
+| -------------- | --------- | ----- |
+| טיפוגרפיהקבוצה | DtcgGroup |       |
+| קידומת         |           |       |
 
 ### טיפוגרפיה ערכים
 
 פונקציה **סוג:**
 
 ```typescript
-function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>
+function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>;
 ```
 
 החזר ערכי `[variant, value]` עבור קבוצת טיפוגרפיה מורכבת של DTCG.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קבוצה | DtcgGroup |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| קבוצה | DtcgGroup |       |
 
 ## `src/generators/typescript`
 
@@ -482,23 +483,28 @@ function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>
 פונקציה **סוג:**
 
 ```typescript
-function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string
+function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקורות | מערך<string \| TokenModuleDescriptor> |  |
+| שם     | הקלד                                  | תיאור |
+| ------ | ------------------------------------- | ----- |
+| מקורות | מערך<string \| TokenModuleDescriptor> |       |
 
 ### buildTokenModule
 
 פונקציה **סוג:**
 
 ```typescript
-function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?: DtcgGroup, exportName = camelCase(basename)): string
+function buildTokenModule(
+  basename: string,
+  document_: DtcgGroup,
+  aliasDocument?: DtcgGroup,
+  exportName = camelCase(basename),
+): string;
 ```
 
 בנה מודול TypeScript לכל קובץ מייצא אובייקט `as const` מקונן אחד בשם
@@ -512,12 +518,12 @@ function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| basename | מחרוזת |  |
-| מסמך_ | DtcgGroup |  |
-| aliasDocument | DtcgGroup |  |
-| ייצואשם |  |  |
+| שם            | הקלד      | תיאור |
+| ------------- | --------- | ----- |
+| basename      | מחרוזת    |       |
+| מסמך_         | DtcgGroup |       |
+| aliasDocument | DtcgGroup |       |
+| ייצואשם       |           |       |
 
 ## `src/index`
 
@@ -526,7 +532,7 @@ function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?
 פונקציה **סוג:**
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 תוסף Vite שמייצר את חפצי האמנות העיצוביים של פלטפורמת המשימה מה-
@@ -534,27 +540,27 @@ function tokensPlugin(options: TokensPluginOptions): Plugin
 מחולל - לא מעורב CLI חיצוני. כל מקור `*.tokens.json` מניב א
 תואם `generated/scss/<file>.scss` (משתני `תוסף Vite שמייצר את חפצי האמנות העיצוביים של פלטפורמת המשימה מה-
 מקורות DTCG (https://www.designtokens.org/) תוך שימוש במנהג עצמאי
-מחולל - לא מעורב CLI חיצוני. כל מקור `*.tokens.json` מניב א
-תואם `generated/scss/<file>.scss` (משתני  עצמאיים, `--mp-*`
-מאפיינים מותאמים אישית, והרישומים שלהם `@property`) ו-`as const` מקונן
-מודול `generated/ts/<file>.ts`, לצד `generated/_tokens.scss` (SCSS
-חבית) ואגרגטים `generated/tokens.ts` (TypeScript חבית).
+מחולל - לא מעורב CLI חיצוני. כל מקור `_.tokens.json`מניב א
+תואם`generated/scss/<file>.scss`(משתני  עצמאיים,`--mp-_`מאפיינים מותאמים אישית, והרישומים שלהם`@property`) ו-`as const`מקונן
+מודול`generated/ts/<file>.ts`, לצד `generated/_tokens.scss`(SCSS
+חבית) ואגרגטים`generated/tokens.ts` (TypeScript חבית).
 
 הדור פועל בהוק `buildStart` הרולאפ, כך שהחפצים מיוצרים
 עבור `vite build`, `vite build --watch` ושרת הפיתוח כאחד.
- `$`
+`$`
+
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | TokensPluginOptions |  |
+| שם       | הקלד                | תיאור |
+| -------- | ------------------- | ----- |
+| אפשרויות | TokensPluginOptions |       |
 
 ### tokensPlugin
 
 פונקציה **סוג:**
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 תוסף Vite שמייצר את חפצי האמנות העיצוביים של פלטפורמת המשימה מה-
@@ -562,20 +568,20 @@ function tokensPlugin(options: TokensPluginOptions): Plugin
 מחולל - לא מעורב CLI חיצוני. כל מקור `*.tokens.json` מניב א
 תואם `generated/scss/<file>.scss` (משתני `תוסף Vite שמייצר את חפצי האמנות העיצוביים של פלטפורמת המשימה מה-
 מקורות DTCG (https://www.designtokens.org/) תוך שימוש במנהג עצמאי
-מחולל - לא מעורב CLI חיצוני. כל מקור `*.tokens.json` מניב א
-תואם `generated/scss/<file>.scss` (משתני  עצמאיים, `--mp-*`
-מאפיינים מותאמים אישית, והרישומים שלהם `@property`) ו-`as const` מקונן
-מודול `generated/ts/<file>.ts`, לצד `generated/_tokens.scss` (SCSS
-חבית) ואגרגטים `generated/tokens.ts` (TypeScript חבית).
+מחולל - לא מעורב CLI חיצוני. כל מקור `_.tokens.json`מניב א
+תואם`generated/scss/<file>.scss`(משתני  עצמאיים,`--mp-_`מאפיינים מותאמים אישית, והרישומים שלהם`@property`) ו-`as const`מקונן
+מודול`generated/ts/<file>.ts`, לצד `generated/_tokens.scss`(SCSS
+חבית) ואגרגטים`generated/tokens.ts` (TypeScript חבית).
 
 הדור פועל בהוק `buildStart` הרולאפ, כך שהחפצים מיוצרים
 עבור `vite build`, `vite build --watch` ושרת הפיתוח כאחד.
- `$`
+`$`
+
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | TokensPluginOptions |  |
+| שם       | הקלד                | תיאור |
+| -------- | ------------------- | ----- |
+| אפשרויות | TokensPluginOptions |       |
 
 ## `src/reachability`
 
@@ -584,16 +590,16 @@ function tokensPlugin(options: TokensPluginOptions): Plugin
 פונקציה **סוג:**
 
 ```typescript
-function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport
+function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport;
 ```
 
 אסוף דוח גישה שמרני דטרמיניסטי מבלי לשנות מקורות אסימונים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | TokenReachabilityOptions |  |
+| שם       | הקלד                     | תיאור |
+| -------- | ------------------------ | ----- |
+| אפשרויות | TokenReachabilityOptions |       |
 
 ### TokenAliasEdge
 
@@ -630,7 +636,7 @@ export interface TokenReachabilityReport
 **סוג:** סוג
 
 ```typescript
-export type TokenUsageEvidence = | 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
+export type TokenUsageEvidence = 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
 ```
 
 עדויות שנאספו עבור עלה סמלי אחד.
@@ -660,14 +666,14 @@ export type TokenUsageStatus = 'active' | 'protected' | 'ambiguous' | 'candidate
 פונקציה **סוג:**
 
 ```typescript
-function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void
+function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void;
 ```
 
 כתוב דוח עם עיצוב יציב המתאים לסקירה ובקרת מקור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| דיווח | TokenReachabilityReport |  |
-| filePath | מחרוזת |  |
+| שם       | הקלד                    | תיאור |
+| -------- | ----------------------- | ----- |
+| דיווח    | TokenReachabilityReport |       |
+| filePath | מחרוזת                  |       |

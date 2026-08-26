@@ -16,15 +16,15 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/vite
 **Tipo:** función
 
 ```typescript
-function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin
+function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Complemento Vite que genera automáticamente la hoja de estilo *anulación* del token de diseño de una aplicación.
+Complemento Vite que genera automáticamente la hoja de estilo _anulación_ del token de diseño de una aplicación.
 
 Lee un documento de anulación de estilo DTCG (`options.source`), lo transforma con
 {@link buildTokenOverrideScss} y escribe el `:root { --<prefix>-*: … }` resultante
 SCSS parcial a `options.outFile`. Importa ese archivo generado desde tu
-hoja de estilo *después* de `@mission-platform/tokens` para que las anulaciones ganen la cascada.
+hoja de estilo _después_ de `@mission-platform/tokens` para que las anulaciones ganen la cascada.
 
 La generación se ejecuta en el gancho acumulativo `buildStart` (por lo que cubre `vite build`,
 `vite build --watch` y dev-server se inician por igual) y se vuelve a ejecutar cuando la fuente
@@ -33,40 +33,41 @@ artefacto: agréguelo a `.gitignore`/`.prettierignore` en lugar de confirmarlo.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | TokenOverridesPluginOptions |  |
+| Nombre   | Tipo                        | Descripción |
+| -------- | --------------------------- | ----------- |
+| opciones | TokenOverridesPluginOptions |             |
 
 #### Contrato
 
 - **@ejemplo:** ```ts
-// vite.config.ts
-import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
+  // vite.config.ts
+  import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
 
 export default defineConfig({
-  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
 });
-```
+
+````
 ```scss
 // styles.css / styles.scss
 - **@import:** '@mission-platform/tokens';
 - **@import:** '../design-tokens/overrides.generated.scss';
-```
+````
 
 ### tokenOverridesPlugin
 
 **Tipo:** función
 
 ```typescript
-function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin
+function tokenOverridesPlugin(options: TokenOverridesPluginOptions): Plugin;
 ```
 
-Complemento Vite que genera automáticamente la hoja de estilo *anulación* del token de diseño de una aplicación.
+Complemento Vite que genera automáticamente la hoja de estilo _anulación_ del token de diseño de una aplicación.
 
 Lee un documento de anulación de estilo DTCG (`options.source`), lo transforma con
 {@link buildTokenOverrideScss} y escribe el `:root { --<prefix>-*: … }` resultante
 SCSS parcial a `options.outFile`. Importa ese archivo generado desde tu
-hoja de estilo *después* de `@mission-platform/tokens` para que las anulaciones ganen la cascada.
+hoja de estilo _después_ de `@mission-platform/tokens` para que las anulaciones ganen la cascada.
 
 La generación se ejecuta en el gancho acumulativo `buildStart` (por lo que cubre `vite build`,
 `vite build --watch` y dev-server se inician por igual) y se vuelve a ejecutar cuando la fuente
@@ -75,25 +76,26 @@ artefacto: agréguelo a `.gitignore`/`.prettierignore` en lugar de confirmarlo.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | TokenOverridesPluginOptions |  |
+| Nombre   | Tipo                        | Descripción |
+| -------- | --------------------------- | ----------- |
+| opciones | TokenOverridesPluginOptions |             |
 
 #### Contrato
 
 - **@ejemplo:** ```ts
-// vite.config.ts
-import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
+  // vite.config.ts
+  import { tokenOverridesPlugin } from '@mission-platform/vite-plugin-token-overrides';
 
 export default defineConfig({
-  plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
+plugins: [tokenOverridesPlugin({ source: 'design-tokens/overrides.tokens.json' })],
 });
-```
+
+````
 ```scss
 // styles.css / styles.scss
 - **@import:** '@mission-platform/tokens';
 - **@import:** '../design-tokens/overrides.generated.scss';
-```
+````
 
 ### TokenOverridesPluginOptions
 
@@ -112,19 +114,19 @@ Opciones para {@link tokenOverridesPlugin}.
 **Tipo:** función
 
 ```typescript
-function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverrideScssOptions = {}): string
+function buildTokenOverrideScss(document_: OverrideGroup, options: TokenOverrideScssOptions = {}): string;
 ```
 
 Cree una anulación parcial de SCSS/CSS: un único bloque `:root { … }` de
-`--<prefix>-*` propiedades personalizadas aplanadas de `document_`. Importarlo *después*
+`--<prefix>-*` propiedades personalizadas aplanadas de `document_`. Importarlo _después_
 la base `@mission-platform/tokens` para que las declaraciones ganen la cascada.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| documento_ | Anular grupo |  |
-| opciones | TokenOverrideScssOptions |  |
+| Nombre     | Tipo                     | Descripción |
+| ---------- | ------------------------ | ----------- |
+| documento_ | Anular grupo             |             |
+| opciones   | TokenOverrideScssOptions |             |
 
 ### Anulación plana
 
@@ -141,22 +143,23 @@ Una anulación aplanada lista para emitir como una única declaración de propie
 **Tipo:** función
 
 ```typescript
-function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride[]
+function flattenOverrides(document_: OverrideGroup, prefix = 'mp'): FlatOverride[];
 ```
 
 Aplana recursivamente un documento anulado en {@link FlatOverride}. Claves que
 que comienzan con `Aplana recursivamente un documento anulado en {@link FlatOverride}. Claves que
 que comienzan con  (metadatos DTCG) se omiten; cada hoja restante se convierte en
-`--<prefix>-<path-joined-by-dashes>` propiedad personalizada. Anulación de componente
-Las rutas conservan su contenedor DTCG `component.*`, pero el CSS generado omite ese
-contenedor (`component.button.*` se convierte en `--<prefix>-button-*`).
+`--<prefix>-<path-joined-by-dashes>`propiedad personalizada. Anulación de componente
+Las rutas conservan su contenedor DTCG`component._`, pero el CSS generado omite ese
+contenedor (`component.button._`se convierte en`--<prefix>-button-*`).
  `$`
+
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| documento_ | Anular grupo |  |
-| prefijo |  |  |
+| Nombre     | Tipo         | Descripción |
+| ---------- | ------------ | ----------- |
+| documento_ | Anular grupo |             |
+| prefijo    |              |             |
 
 ### Valor clarooscuro
 
@@ -178,6 +181,7 @@ export type OverrideGroup = Record<string, unknown>;
 
 Un grupo de anulación de estilo DTCG node (grupos/tokens anidados más metadatos `Un grupo de anulación de estilo DTCG node (grupos/tokens anidados más metadatos  opcionales).
  `$`
+
 ### Anular token
 
 **Tipo:** interfaz

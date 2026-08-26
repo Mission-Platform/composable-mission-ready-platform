@@ -36,15 +36,15 @@ export interface EmailRequest
 **种类：**功能
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>
+function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|请求|请求|  |
-|环境 |环境|  |
-|交货 |交货|  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 请求 | 请求 |      |
+| 环境 | 环境 |      |
+| 交货 | 交货 |      |

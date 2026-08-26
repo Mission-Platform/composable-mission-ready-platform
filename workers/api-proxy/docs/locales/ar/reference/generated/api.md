@@ -16,7 +16,7 @@
 **النوع:** ثابت
 
 ```typescript
-export const ALLOWED_METHODS
+export const ALLOWED_METHODS;
 ```
 
 احتفظ بالوكيل للقراءة فقط ومقتصرًا على مسارات واجهة برمجة التطبيقات الموثقة.
@@ -26,7 +26,7 @@ export const ALLOWED_METHODS
 **النوع:** ثابت
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES
+export const ALLOWED_ROUTE_PREFIXES;
 ```
 
 لم يتم تقديم أي وصف.
@@ -36,7 +36,7 @@ export const ALLOWED_ROUTE_PREFIXES
 **النوع:** الوظيفة
 
 ```typescript
-function isAllowedProxyRequest(request: Request): boolean
+function isAllowedProxyRequest(request: Request): boolean;
 ```
 
 لم يتم تقديم أي وصف.
@@ -44,5 +44,5 @@ function isAllowedProxyRequest(request: Request): boolean
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| طلب | طلب |  |
+| ----- | ---- | ----- |
+| طلب   | طلب  |       |

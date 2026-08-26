@@ -16,7 +16,7 @@
 **סוג:** קבוע
 
 ```typescript
-export const ALLOWED_METHODS
+export const ALLOWED_METHODS;
 ```
 
 שמור את ה-proxy לקריאה בלבד ומוגבל למסלולי ה-API המתועדים.
@@ -26,7 +26,7 @@ export const ALLOWED_METHODS
 **סוג:** קבוע
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES
+export const ALLOWED_ROUTE_PREFIXES;
 ```
 
 לא סופק תיאור.
@@ -36,13 +36,13 @@ export const ALLOWED_ROUTE_PREFIXES
 פונקציה **סוג:**
 
 ```typescript
-function isAllowedProxyRequest(request: Request): boolean
+function isAllowedProxyRequest(request: Request): boolean;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בקשה | בקשה |  |
+| שם   | הקלד | תיאור |
+| ---- | ---- | ----- |
+| בקשה | בקשה |       |

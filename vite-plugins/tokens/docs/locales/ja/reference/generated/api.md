@@ -16,40 +16,40 @@
 **種類:** 関数
 
 ```typescript
-function aliasToCssVariable(alias: string, prefix: string): string
+function aliasToCssVariable(alias: string, prefix: string): string;
 ```
 
 DTCG エイリアス (`{font.size.4xl}`) を `var(--<prefix>-font-size-4xl)` 参照に変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|別名 |文字列 |  |
-|接頭語 |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| 別名   | 文字列 |      |
+| 接頭語 | 文字列 |      |
 
 ### キャメルケース
 
 **種類:** 関数
 
 ```typescript
-function camelCase(dashed: string): string
+function camelCase(dashed: string): string;
 ```
 
 キャメルケースのダッシュ文字列 (`border-width` → `borderWidth`、`z-index` → `zIndex`)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|破線 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 破線 | 文字列 |      |
 
 ### キャメルケース名
 
 **種類:** 定数
 
 ```typescript
-export const camelCaseName
+export const camelCaseName;
 ```
 
 トークンのキャメルケース識別子 (`border-width-heavy` → `borderWidthHeavy`)。
@@ -59,7 +59,7 @@ export const camelCaseName
 **種類:** 定数
 
 ```typescript
-export const compareTokens
+export const compareTokens;
 ```
 
 ダッシュ名による 2 つのトークンの安定した ASCII 比較。
@@ -69,7 +69,7 @@ export const compareTokens
 **種類:** 定数
 
 ```typescript
-export const dashedName
+export const dashedName;
 ```
 
 SCSS/CSS 変数名 + 並べ替えに使用される破線のトークン名 (`color-alert-100`)。
@@ -94,6 +94,7 @@ export type DtcgGroup = Record<string, unknown>;
 
 DTCG グループ node (ネストされたグループ/トークンと `DTCG グループ node (ネストされたグループ/トークンと  メタデータのオブジェクト)。
  `$`
+
 ### Dtcgトークン
 
 **種類:** インターフェース
@@ -109,7 +110,7 @@ DTCG リーフ トークン (`{ $value, $type?, $description? }`)。
 **種類:** 関数
 
 ```typescript
-function flattenTokens(document_: DtcgGroup): TokenRecord[]
+function flattenTokens(document_: DtcgGroup): TokenRecord[];
 ```
 
 DTCG ドキュメントを再帰的に {@link TokenRecord} にフラット化し、
@@ -117,64 +118,64 @@ DTCG ドキュメントを再帰的に {@link TokenRecord} にフラット化し
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ドキュメント_ | Dtcgグループ |  |
+| 名前          | タイプ       | 説明 |
+| ------------- | ------------ | ---- |
+| ドキュメント_ | Dtcgグループ |      |
 
 ### フォーマットカラー値
 
 **種類:** 関数
 
 ```typescript
-function formatColorValue(value: DtcgColorValue): string
+function formatColorValue(value: DtcgColorValue): string;
 ```
 
 DTCG カラー値を、丸められていない CSS `oklab()` (または他のカラースペース) 文字列としてフォーマットします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 | DtcgColorValue |  |
+| 名前 | タイプ         | 説明 |
+| ---- | -------------- | ---- |
+| 値   | DtcgColorValue |      |
 
 ### 形式Css色
 
 **種類:** 関数
 
 ```typescript
-function formatCssColor(value: DtcgColorValue): string
+function formatCssColor(value: DtcgColorValue): string;
 ```
 
 OKLab/その他の色空間値は、コンポーネントごとに有効数字 4 桁に丸められます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 | DtcgColorValue |  |
+| 名前 | タイプ         | 説明 |
+| ---- | -------------- | ---- |
+| 値   | DtcgColorValue |      |
 
 ### formatCssValue
 
 **種類:** 関数
 
 ```typescript
-function formatCssValue(value: unknown): string
+function formatCssValue(value: unknown): string;
 ```
 
 トークン `$value` を CSS/SCSS リテラルとしてフォーマットします (色は四捨五入、その他はすべてそのまま)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |不明 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 不明   |      |
 
 ### グループラベル
 
 **種類:** 定数
 
 ```typescript
-export const groupLabel
+export const groupLabel;
 ```
 
 SCSS セクション ヘッダーのタイトルケースのグループ キー (`border-width` → `Border Width`)。
@@ -184,24 +185,24 @@ SCSS セクション ヘッダーのタイトルケースのグループ キー 
 **種類:** 関数
 
 ```typescript
-function resolveAlias(alias: string, document_: DtcgGroup): unknown
+function resolveAlias(alias: string, document_: DtcgGroup): unknown;
 ```
 
 ドキュメント内の DTCG エイリアス (`{font.size.4xl}`) をリテラルの `$value` に解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|別名 |文字列 |  |
-|ドキュメント_ | Dtcgグループ |  |
+| 名前          | タイプ       | 説明 |
+| ------------- | ------------ | ---- |
+| 別名          | 文字列       |      |
+| ドキュメント_ | Dtcgグループ |      |
 
 ### 解決TsValue
 
 **種類:** 関数
 
 ```typescript
-function resolveTsValue(value: unknown): string | number
+function resolveTsValue(value: unknown): string | number;
 ```
 
 DTCG `$value` を、生成されたファイルで使用されるリテラル JavaScript 値に解決します。
@@ -210,9 +211,9 @@ TypeScript モジュール: 色は `oklab(...)` 文字列になり、数字は�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |不明 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 不明   |      |
 
 ### トークンレコード
 
@@ -231,23 +232,23 @@ export interface TokenRecord
 **種類:** 関数
 
 ```typescript
-function generateTokens(options: TokensPluginOptions): void
+function generateTokens(options: TokensPluginOptions): void;
 ```
 
 DTCG ソースからすべての消費可能なトークン アーティファクトを生成します。
-  • `scss/_<file>.scss` — 非テーマ ソースごとに 1 つの自己完結型 SCSS パーシャル
-  • `scss/_theme.scss` — 結合された `light-dark()` テーマの部分
-  • `ts/<file>.ts` — ソースごとに 1 つのネストされた `as const` TypeScript モジュール
-  • `_tokens.scss` — SCSS バレル `@forward` すべてのパーシャル (テーマを含む) を作成
-  • `tokens.ts` — TypeScript バレルはすべてのファイルごとのモジュールを再エクスポートします
+• `scss/_<file>.scss` — 非テーマ ソースごとに 1 つの自己完結型 SCSS パーシャル
+• `scss/_theme.scss` — 結合された `light-dark()` テーマの部分
+• `ts/<file>.ts` — ソースごとに 1 つのネストされた `as const` TypeScript モジュール
+• `_tokens.scss` — SCSS バレル `@forward` すべてのパーシャル (テーマを含む) を作成
+• `tokens.ts` — TypeScript バレルはすべてのファイルごとのモジュールを再エクスポートします
 
 すべてはカスタム エミッターによって生成されます。外部 CLI はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション |トークンプラグインオプション |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| オプション | トークンプラグインオプション |      |
 
 ### トークンプラグインオプション
 
@@ -275,7 +276,7 @@ export interface TokensPluginOptions
 **種類:** 関数
 
 ```typescript
-function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string
+function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGroup, prefix = 'mp'): string;
 ```
 
 単一の結合テーマ部分を構築します。明暗のセマンティックカラー
@@ -289,24 +290,24 @@ function buildLightDarkThemeScss(lightDocument: DtcgGroup, darkDocument: DtcgGro
 直接インポートするので、 `scss/tokens` サブツリー (または全体) を固定するには十分です。
 ドキュメント) を 1 つのスキームにまとめます - 別個のスキームはありません `scss/themes/{light,dark}` 輸入は
 が必須となり、動作はインポート順序に依存しなくなります。なぜなら、
-`light-dark()` 上記のカラー トークンは *used* に対して解決されます `color-scheme`、
+`light-dark()` 上記のカラー トークンは _used_ に対して解決されます `color-scheme`、
 に設定する `[data-theme]` 要素はその要素とそのすべてのテーマを再設定します
 単一色のカスタム プロパティを再定義せずに子孫を追加できます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ライトドキュメント | Dtcgグループ |  |
-|ダークドキュメント | Dtcgグループ |  |
-|接頭語 |  |  |
+| 名前               | タイプ       | 説明 |
+| ------------------ | ------------ | ---- |
+| ライトドキュメント | Dtcgグループ |      |
+| ダークドキュメント | Dtcgグループ |      |
+| 接頭語             |              |      |
 
 ### buildPropertyRule
 
 **種類:** 関数
 
 ```typescript
-function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string
+function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable = false, cssNamespace?: string): string;
 ```
 
 単一のカスタム プロパティの CSS `@property` 登録を構築します。
@@ -315,15 +316,15 @@ function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable 
 ローカルの `単一のカスタム プロパティの CSS `@property` 登録を構築します。
 
 `useScssVariable` が設定されている場合、`initial-value` は一致するものに解決されます。
-ローカルの  変数 (`$<token>`) が同じファイル内に出力され、
+ローカルの 変数 (`$<token>`) が同じファイル内に出力され、
 `単一のカスタム プロパティの CSS `@property` 登録を構築します。
 
 `useScssVariable` が設定されている場合、`initial-value` は一致するものに解決されます。
 ローカルの `単一のカスタム プロパティの CSS `@property` 登録を構築します。
 
 `useScssVariable` が設定されている場合、`initial-value` は一致するものに解決されます。
-ローカルの  変数 (`$<token>`) が同じファイル内に出力され、
- 変数の信頼できる情報源と同期して登録。それ以外の場合は
+ローカルの 変数 (`$<token>`) が同じファイル内に出力され、
+変数の信頼できる情報源と同期して登録。それ以外の場合は
 リテラル `$value` はインライン化されます。
 
 非ユニバーサル `@property` には、計算的に独立した
@@ -331,117 +332,122 @@ function buildPropertyRule(record: TokenRecord, prefix: string, useScssVariable 
 ユニバーサル `*` 構文では省略されます。値が `var()` 参照であるすべてのもの
 (タイポグラフィ フィールド) または入力不可能なリテラル (シャドウ、イージング カーブ、
 font-family スタック) は、`initial-value` なしで `*` の下に登録されます。
- `$`
+`$`
+
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記録 |トークンレコード |  |
-|接頭語 |文字列 |  |
-| useScss変数 |  |  |
-| css名前空間 |文字列 |  |
+| 名前        | タイプ           | 説明 |
+| ----------- | ---------------- | ---- |
+| 記録        | トークンレコード |      |
+| 接頭語      | 文字列           |      |
+| useScss変数 |                  |      |
+| css名前空間 | 文字列           |      |
 
 ### buildScss変数
 
 **種類:** 関数
 
 ```typescript
-function buildScssVariables(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariables(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記録 |トークンレコード[] |  |
-|接頭語 |  |  |
-| css名前空間 |文字列 |  |
-|コンポーネント名前空間 | ReadonlySet<string> |  |
+| 名前                   | タイプ              | 説明 |
+| ---------------------- | ------------------- | ---- |
+| 記録                   | トークンレコード[]  |      |
+| 接頭語                 |                     |      |
+| css名前空間            | 文字列              |      |
+| コンポーネント名前空間 | ReadonlySet<string> |      |
 
 ### buildScss変数Scss
 
 **種類:** 関数
 
 ```typescript
-function buildScssVariablesScss(records: TokenRecord[], prefix = 'mp', cssNamespace?: string, componentNamespaces?: ReadonlySet<string>): string
+function buildScssVariablesScss(
+  records: TokenRecord[],
+  prefix = 'mp',
+  cssNamespace?: string,
+  componentNamespaces?: ReadonlySet<string>,
+): string;
 ```
 
 CSS フリーの `CSS フリーの  変数のみの部分を構築します (ヘッダー + {@link buildScssVariables}
-本文、`:root`/`@property` CSS なし）。 `scss/_<file>-vars.scss` として発行されるため内部的
-コンシューマ (`scss/_mixins.scss` など) はコンパイル時にトークンの `CSS フリーの `CSS フリーの  変数のみの部分を構築します (ヘッダー + {@link buildScssVariables}
-本文、`:root`/`@property` CSS なし）。 `scss/_<file>-vars.scss` として発行されるため内部的
-コンシューマ (`scss/_mixins.scss` など) はコンパイル時にトークンの  値を読み取ることができます
-`@use` を部分全体に適用しないと、`:root`/`@property` CSS が漏洩してしまいます。
+本文、`:root`/`@property`CSS なし）。`scss/_<file>-vars.scss` として発行されるため内部的
+コンシューマ (`scss/_mixins.scss`など) はコンパイル時にトークンの`CSS フリーの `CSS フリーの  変数のみの部分を構築します (ヘッダー + {@link buildScssVariables}
+本文、`:root`/`@property`CSS なし）。`scss/_<file>-vars.scss` として発行されるため内部的
+コンシューマ (`scss/_mixins.scss`など) はコンパイル時にトークンの  値を読み取ることができます`@use` を部分全体に適用しないと、`:root`/`@property`CSS が漏洩してしまいます。
 使用するすべてのスタイルシートに追加します。
- `$`
+`$`
+
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記録 |トークンレコード[] |  |
-|接頭語 |  |  |
-| css名前空間 |文字列 |  |
-|コンポーネント名前空間 | ReadonlySet<string> |  |
+| 名前                   | タイプ              | 説明 |
+| ---------------------- | ------------------- | ---- |
+| 記録                   | トークンレコード[]  |      |
+| 接頭語                 |                     |      |
+| css名前空間            | 文字列              |      |
+| コンポーネント名前空間 | ReadonlySet<string> |      |
 
 ### buildStructuralScss
 
 **種類:** 関数
 
 ```typescript
-function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string
+function buildStructuralScss(records: TokenRecord[], prefix = 'mp', file = '', cssNamespace?: string): string;
 ```
 
 構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
 およびすべてのトークンに対応する `@property` 登録 (`initial-value` を使用)
-一致する `構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
+一致する `構造的な SCSS 部分を構築します: `:root { --<prefix>-* }`カスタム プロパティ
+およびすべてのトークンに対応する`@property` 登録 (`initial-value`を使用)
+一致する  変数に解決されます)、両方とも`mp.tokens`カスケードにラップされます
+層。`構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
 およびすべてのトークンに対応する `@property` 登録 (`initial-value` を使用)
-一致する  変数に解決されます)、両方とも `mp.tokens` カスケードにラップされます
-層。 `構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
+一致する `構造的な SCSS 部分を構築します: `:root { --<prefix>-* }`カスタム プロパティ
+およびすべてのトークンに対応する`@property` 登録 (`initial-value`を使用)
+一致する  変数に解決されます)、両方とも`mp.tokens`カスケードにラップされます
+層。  変数自体は CSS なしのコンパニオンに存在します`_<file>-vars.scss`部分的 ({@link buildScssVariablesScss} を参照)。この部分的な`@use`s (値を `:root`/`@property`ブロックに補間するため)`@forward` がそれを送信します (したがって、`_<file>.scss`の下流のコンシューマーには引き続き`構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
 およびすべてのトークンに対応する `@property` 登録 (`initial-value` を使用)
-一致する `構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
+一致する `構造的な SCSS 部分を構築します: `:root { --<prefix>-* }`カスタム プロパティ
+およびすべてのトークンに対応する`@property` 登録 (`initial-value`を使用)
+一致する  変数に解決されます)、両方とも`mp.tokens`カスケードにラップされます
+層。`構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
 およびすべてのトークンに対応する `@property` 登録 (`initial-value` を使用)
-一致する  変数に解決されます)、両方とも `mp.tokens` カスケードにラップされます
-層。  変数自体は CSS なしのコンパニオンに存在します
-`_<file>-vars.scss` 部分的 ({@link buildScssVariablesScss} を参照)。この部分的な
-`@use`s (値を `:root`/`@property` ブロックに補間するため)
-`@forward` がそれを送信します (したがって、`_<file>.scss` の下流のコンシューマーには引き続き
-`構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
-およびすべてのトークンに対応する `@property` 登録 (`initial-value` を使用)
-一致する `構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
-およびすべてのトークンに対応する `@property` 登録 (`initial-value` を使用)
-一致する  変数に解決されます)、両方とも `mp.tokens` カスケードにラップされます
-層。 `構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
-およびすべてのトークンに対応する `@property` 登録 (`initial-value` を使用)
-一致する `構造的な SCSS 部分を構築します: `:root { --<prefix>-* }` カスタム プロパティ
-およびすべてのトークンに対応する `@property` 登録 (`initial-value` を使用)
-一致する  変数に解決されます)、両方とも `mp.tokens` カスケードにラップされます
-層。  変数自体は CSS なしのコンパニオンに存在します
-`_<file>-vars.scss` 部分的 ({@link buildScssVariablesScss} を参照)。この部分的な
-`@use`s (値を `:root`/`@property` ブロックに補間するため)
-`@forward` がそれを送信します (したがって、`_<file>.scss` の下流のコンシューマーには引き続き
- 変数)。カラーパレットと複合タイポグラフィーの両方が出力されます
+一致する `構造的な SCSS 部分を構築します: `:root { --<prefix>-* }`カスタム プロパティ
+およびすべてのトークンに対応する`@property` 登録 (`initial-value`を使用)
+一致する  変数に解決されます)、両方とも`mp.tokens`カスケードにラップされます
+層。  変数自体は CSS なしのコンパニオンに存在します`_<file>-vars.scss`部分的 ({@link buildScssVariablesScss} を参照)。この部分的な`@use`s (値を `:root`/`@property`ブロックに補間するため)`@forward` がそれを送信します (したがって、`_<file>.scss` の下流のコンシューマーには引き続き
+変数)。カラーパレットと複合タイポグラフィーの両方が出力されます
 この道を通って。
 
 `file` はソース/出力ベース名 (`'radius'` など) であり、
 コンパニオン `'<file>-vars'` の一部。
- `$`
+`$`
+
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|記録 |トークンレコード[] |  |
-|接頭語 |  |  |
-|ファイル |  |  |
-| css名前空間 |文字列 |  |
+| 名前        | タイプ             | 説明 |
+| ----------- | ------------------ | ---- |
+| 記録        | トークンレコード[] |      |
+| 接頭語      |                    |      |
+| ファイル    |                    |      |
+| css名前空間 | 文字列             |      |
 
 ### ビルドタイポグラフィーレコード
 
 **種類:** 関数
 
 ```typescript
-function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[]
+function buildTypographyRecords(typographyGroup: DtcgGroup, prefix = 'mp'): TokenRecord[];
 ```
 
 DTCG 複合タイポグラフィ グループをフィールドごとの {@link TokenRecord} にフラット化します。
@@ -454,26 +460,26 @@ DTCG 複合タイポグラフィ グループをフィールドごとの {@link 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|タイポグラフィーグループ | Dtcgグループ |  |
-|接頭語 |  |  |
+| 名前                     | タイプ       | 説明 |
+| ------------------------ | ------------ | ---- |
+| タイポグラフィーグループ | Dtcgグループ |      |
+| 接頭語                   |              |      |
 
 ### タイポグラフィエントリー
 
 **種類:** 関数
 
 ```typescript
-function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>
+function typographyEntries(group: DtcgGroup): Array<[string, TypographyValue]>;
 ```
 
 DTCG コンポジット タイポグラフィ グループの `[variant, value]` エントリを返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|グループ | Dtcgグループ |  |
+| 名前     | タイプ       | 説明 |
+| -------- | ------------ | ---- |
+| グループ | Dtcgグループ |      |
 
 ## `src/generators/typescript`
 
@@ -482,23 +488,28 @@ DTCG コンポジット タイポグラフィ グループの `[variant, value]`
 **種類:** 関数
 
 ```typescript
-function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string
+function buildBarrelModule(sources: Array<string | TokenModuleDescriptor>): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |配列<string \| TokenModuleDescriptor> |  |
+| 名前   | タイプ                                | 説明 |
+| ------ | ------------------------------------- | ---- |
+| ソース | 配列<string \| TokenModuleDescriptor> |      |
 
 ### ビルドトークンモジュール
 
 **種類:** 関数
 
 ```typescript
-function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?: DtcgGroup, exportName = camelCase(basename)): string
+function buildTokenModule(
+  basename: string,
+  document_: DtcgGroup,
+  aliasDocument?: DtcgGroup,
+  exportName = camelCase(basename),
+): string;
 ```
 
 ファイルごとにビルドする TypeScript ネストされたモジュールをエクスポートするモジュール `as const` という名前のオブジェクト
@@ -512,12 +523,12 @@ function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベース名 |文字列 |  |
-|ドキュメント_ | Dtcgグループ |  |
-|エイリアスドキュメント | Dtcgグループ |  |
-|エクスポート名 |  |  |
+| 名前                   | タイプ       | 説明 |
+| ---------------------- | ------------ | ---- |
+| ベース名               | 文字列       |      |
+| ドキュメント_          | Dtcgグループ |      |
+| エイリアスドキュメント | Dtcgグループ |      |
+| エクスポート名         |              |      |
 
 ## `src/index`
 
@@ -526,7 +537,7 @@ function buildTokenModule(basename: string, document_: DtcgGroup, aliasDocument?
 **種類:** 関数
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Vite プラグインは、ミッション プラットフォームのデザイン トークン アーティファクトを生成します。
@@ -534,27 +545,27 @@ Vite プラグインは、ミッション プラットフォームのデザイ�
 ジェネレーター — 外部 CLI は関係しません。各 `*.tokens.json` ソースは、
 `generated/scss/<file>.scss` の一致 (自己完結型の `Vite プラグインは、ミッション プラットフォームのデザイン トークン アーティファクトを生成します。
 自己完結型カスタムを使用した DTCG (https://www.designtokens.org/) ソース
-ジェネレーター — 外部 CLI は関係しません。各 `*.tokens.json` ソースは、
-`generated/scss/<file>.scss` の一致 (自己完結型の  変数、`--mp-*`)
-カスタム プロパティとその `@property` 登録) およびネストされた `as const`
-`generated/ts/<file>.ts` モジュール、`generated/_tokens.scss` (SCSS) と並行
-バレル) および `generated/tokens.ts` (TypeScript バレル) 集約。
+ジェネレーター — 外部 CLI は関係しません。各 `_.tokens.json`ソースは、`generated/scss/<file>.scss` の一致 (自己完結型の  変数、`--mp-_`)
+カスタム プロパティとその `@property`登録) およびネストされた`as const`
+`generated/ts/<file>.ts` モジュール、`generated/_tokens.scss`(SCSS) と並行
+バレル) および`generated/tokens.ts` (TypeScript バレル) 集約。
 
 生成はロールアップ `buildStart` フックで実行されるため、アーティファクトが生成されます
 `vite build`、`vite build --watch`、および開発サーバーの場合も同様です。
- `$`
+`$`
+
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション |トークンプラグインオプション |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| オプション | トークンプラグインオプション |      |
 
 ### トークンプラグイン
 
 **種類:** 関数
 
 ```typescript
-function tokensPlugin(options: TokensPluginOptions): Plugin
+function tokensPlugin(options: TokensPluginOptions): Plugin;
 ```
 
 Vite プラグインは、ミッション プラットフォームのデザイン トークン アーティファクトを生成します。
@@ -562,20 +573,20 @@ Vite プラグインは、ミッション プラットフォームのデザイ�
 ジェネレーター — 外部 CLI は関係しません。各 `*.tokens.json` ソースは、
 `generated/scss/<file>.scss` の一致 (自己完結型の `Vite プラグインは、ミッション プラットフォームのデザイン トークン アーティファクトを生成します。
 自己完結型カスタムを使用した DTCG (https://www.designtokens.org/) ソース
-ジェネレーター — 外部 CLI は関係しません。各 `*.tokens.json` ソースは、
-`generated/scss/<file>.scss` の一致 (自己完結型の  変数、`--mp-*`)
-カスタム プロパティとその `@property` 登録) およびネストされた `as const`
-`generated/ts/<file>.ts` モジュール、`generated/_tokens.scss` (SCSS) と並行
-バレル) および `generated/tokens.ts` (TypeScript バレル) 集約。
+ジェネレーター — 外部 CLI は関係しません。各 `_.tokens.json`ソースは、`generated/scss/<file>.scss` の一致 (自己完結型の  変数、`--mp-_`)
+カスタム プロパティとその `@property`登録) およびネストされた`as const`
+`generated/ts/<file>.ts` モジュール、`generated/_tokens.scss`(SCSS) と並行
+バレル) および`generated/tokens.ts` (TypeScript バレル) 集約。
 
 生成はロールアップ `buildStart` フックで実行されるため、アーティファクトが生成されます
 `vite build`、`vite build --watch`、および開発サーバーの場合も同様です。
- `$`
+`$`
+
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション |トークンプラグインオプション |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| オプション | トークンプラグインオプション |      |
 
 ## `src/reachability`
 
@@ -584,16 +595,16 @@ Vite プラグインは、ミッション プラットフォームのデザイ�
 **種類:** 関数
 
 ```typescript
-function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport
+function collectTokenReachability(options: TokenReachabilityOptions): TokenReachabilityReport;
 ```
 
 トークン ソースを変更せずに、決定論的な保守的な到達可能性レポートを収集します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション |トークン到達可能性オプション |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| オプション | トークン到達可能性オプション |      |
 
 ### トークンエイリアスエッジ
 
@@ -630,7 +641,7 @@ export interface TokenReachabilityReport
 **種類：**タイプ
 
 ```typescript
-export type TokenUsageEvidence = | 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
+export type TokenUsageEvidence = 'css' | 'scss' | 'typescript' | 'alias' | 'override' | 'mcp' | 'docs' | 'public-api';
 ```
 
 1 つのトークン リーフについて収集された証拠。
@@ -660,14 +671,14 @@ export type TokenUsageStatus = 'active' | 'protected' | 'ambiguous' | 'candidate
 **種類:** 関数
 
 ```typescript
-function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void
+function writeTokenReachabilityReport(report: TokenReachabilityReport, filePath: string): void;
 ```
 
 レビューやソース管理に適した安定した形式でレポートを作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|レポート |トークン到達可能性レポート |  |
-|ファイルパス |文字列 |  |
+| 名前         | タイプ                     | 説明 |
+| ------------ | -------------------------- | ---- |
+| レポート     | トークン到達可能性レポート |      |
+| ファイルパス | 文字列                     |      |

@@ -36,15 +36,15 @@ export interface EmailRequest
 **種類:** 関数
 
 ```typescript
-function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>
+function handleRequest(request: Request, environment: Env, delivery: Delivery = defaultDelivery): Promise<Response>;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|リクエスト |リクエスト |  |
-|環境 |環境 |  |
-|配送 |配送 |  |
+| 名前       | タイプ     | 説明 |
+| ---------- | ---------- | ---- |
+| リクエスト | リクエスト |      |
+| 環境       | 環境       |      |
+| 配送       | 配送       |      |

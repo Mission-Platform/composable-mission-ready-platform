@@ -16,7 +16,7 @@
 **종류:** 상수
 
 ```typescript
-export const ALLOWED_METHODS
+export const ALLOWED_METHODS;
 ```
 
 프록시를 읽기 전용으로 유지하고 문서화된 API 경로로 제한합니다.
@@ -26,7 +26,7 @@ export const ALLOWED_METHODS
 **종류:** 상수
 
 ```typescript
-export const ALLOWED_ROUTE_PREFIXES
+export const ALLOWED_ROUTE_PREFIXES;
 ```
 
 설명이 제공되지 않았습니다.
@@ -36,7 +36,7 @@ export const ALLOWED_ROUTE_PREFIXES
 **종류:** 기능
 
 ```typescript
-function isAllowedProxyRequest(request: Request): boolean
+function isAllowedProxyRequest(request: Request): boolean;
 ```
 
 설명이 제공되지 않았습니다.
@@ -44,5 +44,5 @@ function isAllowedProxyRequest(request: Request): boolean
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 요청 | 요청 |  |
+| ---- | ---- | ---- |
+| 요청 | 요청 |      |
