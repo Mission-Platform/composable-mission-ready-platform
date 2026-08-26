@@ -13,10 +13,7 @@
     "verbatimModuleSyntax": false,
     "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
-    "types": [
-      "vite/client",
-      "vitest/globals"
-    ],
+    "types": ["vite/client", "vitest/globals"],
     "jsx": "react-jsx",
     "jsxImportSource": "@mission-platform/forge"
   },
