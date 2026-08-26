@@ -2,6 +2,9 @@
   "$schema": "https://turborepo.com/schema.json",
   "extends": ["//"],
   "tasks": {
+    "lint": {
+      "env": ["PLAYWRIGHT_BASE_URL"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".output/**", ".vite/**", "public/sitemap.xml", "public/robots.txt"]

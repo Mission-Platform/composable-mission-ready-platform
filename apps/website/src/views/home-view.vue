@@ -13,8 +13,6 @@
     ForgeNavbarItem,
     ForgeStack,
   } from '@mission-platform/components';
-  import { ForgeThemeToggle } from '@mission-platform/theme';
-  import { ForgeTypography } from '@mission-platform/typography';
   import { useI18n } from '@mission-platform/i18n';
   import {
     ForgeIconCloud,
@@ -30,6 +28,8 @@
   import { ForgeQrCode } from '@mission-platform/qr-code';
   import { ForgeLanguageSwitcher, ForgeTag } from '@mission-platform/select';
   import { organizationId, useSeo, webPage, webSiteId } from '@mission-platform/seo';
+  import { ForgeThemeToggle } from '@mission-platform/theme';
+  import { ForgeTypography } from '@mission-platform/typography';
   import { type Component, computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
 
