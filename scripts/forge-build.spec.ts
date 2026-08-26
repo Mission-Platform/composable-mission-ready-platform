@@ -13,14 +13,13 @@ import { generateFrameworkSources } from '../vite-plugins/forge/src/generate';
 
 import {
   deriveForgeStagePath,
+  type ForgeBuildCommandContext,
   normalizeForgeBuildTarget,
   promoteAggregate,
   promoteTarget,
   runForgeBuild,
   type ForgeStageManifest,
 } from './forge-build.ts';
-
-import type { ForgeBuildCommandContext } from './forge-build.ts';
 
 async function fixturePackage(): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), 'mission-platform-forge-build-'));

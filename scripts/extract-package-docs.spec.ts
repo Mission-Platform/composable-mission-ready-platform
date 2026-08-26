@@ -2,13 +2,10 @@ import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+
 import { afterEach, describe, expect, it } from 'vitest';
 
-import {
-  extractFwsSymbols,
-  extractTypeScriptSymbols,
-  renderReferenceMarkdown,
-} from './extract-package-docs.ts';
+import { extractFwsSymbols, extractTypeScriptSymbols, renderReferenceMarkdown } from './extract-package-docs.ts';
 
 const temporaryDirectories: string[] = [];
 
@@ -43,9 +40,7 @@ describe('package API documentation extraction', () => {
 
     const identity = symbols.find(({ name }) => name === 'FORGE_WEB_SCRIPT_STDLIB_IDENTITY');
     expect(identity?.signature).toBe('export const FORGE_WEB_SCRIPT_STDLIB_IDENTITY');
-    expect(identity?.signature).not.toContain(
-      'FORGE_WEB_SCRIPT_STDLIB_IDENTITY FORGE_WEB_SCRIPT_STDLIB_IDENTITY',
-    );
+    expect(identity?.signature).not.toContain('FORGE_WEB_SCRIPT_STDLIB_IDENTITY FORGE_WEB_SCRIPT_STDLIB_IDENTITY');
   });
 
   it('extracts documented public FWS declarations through the real parser', async () => {

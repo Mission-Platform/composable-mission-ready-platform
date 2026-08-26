@@ -1,6 +1,7 @@
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+
 import { afterEach, describe, expect, it } from 'vitest';
 
 import {
@@ -37,12 +38,7 @@ describe('doc locale protectInline / fences', () => {
     expect(text).not.toContain('../guides/usage.md');
     expect(text).toContain('[guide](');
     expect(protectedParts.map((part) => part.value)).toEqual(
-      expect.arrayContaining([
-        '`@mission-platform/barcode`',
-        'pnpm',
-        '../guides/usage.md',
-        '<https://example.com>',
-      ]),
+      expect.arrayContaining(['`@mission-platform/barcode`', 'pnpm', '../guides/usage.md', '<https://example.com>']),
     );
     // Restoring placeholders round-trips technical tokens.
     let restored = text;
@@ -51,9 +47,15 @@ describe('doc locale protectInline / fences', () => {
   });
 
   it('keeps fenced code out of prose segments', () => {
-    const source = ['Intro text', '', '```ts', "import { x } from '@mission-platform/barcode';", '```', '', 'Outro'].join(
-      '\n',
-    );
+    const source = [
+      'Intro text',
+      '',
+      '```ts',
+      "import { x } from '@mission-platform/barcode';",
+      '```',
+      '',
+      'Outro',
+    ].join('\n');
     const segments = splitFenceSegments(source);
     expect(segments.map((segment) => segment.kind)).toEqual(['text', 'fence', 'text']);
     expect(segments[1]?.text).toContain('import { x }');
@@ -164,9 +166,9 @@ token files into an application.
 
     const issues = assessTranslationQuality('zh', english, fabricatedZh);
     expect(issues.some((issue) => issue.code === 'fabrication-marker')).toBe(true);
-    expect(issues.some((issue) => issue.code === 'low-non-latin-density' || issue.code === 'english-content-retention')).toBe(
-      true,
-    );
+    expect(
+      issues.some((issue) => issue.code === 'low-non-latin-density' || issue.code === 'english-content-retention'),
+    ).toBe(true);
   });
 
   it('accepts a genuinely translated Latin page while preserving technical tokens', () => {

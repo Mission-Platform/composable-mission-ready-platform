@@ -6,10 +6,11 @@
  *   node --experimental-strip-types scripts/extract-package-docs.ts --package .
  *   node --experimental-strip-types scripts/extract-package-docs.ts --all
  */
-import { readFile, readdir, mkdir, rm, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
+import { readFile, readdir, mkdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, extname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+
 import ts from 'typescript';
 
 export type ExtractedSymbolKind = 'function' | 'class' | 'interface' | 'type' | 'constant' | 'component' | 'fws-export';
@@ -64,8 +65,9 @@ async function fileExists(path: string): Promise<boolean> {
 async function walk(directory: string, predicate: (path: string) => boolean): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });
   const paths: string[] = [];
-  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
-    if (entry.isSymbolicLink() || entry.name === 'node_modules' || entry.name === 'dist' || entry.name.startsWith('.')) continue;
+  for (const entry of entries.toSorted((left, right) => left.name.localeCompare(right.name))) {
+    if (entry.isSymbolicLink() || entry.name === 'node_modules' || entry.name === 'dist' || entry.name.startsWith('.'))
+      continue;
     const path = resolve(directory, entry.name);
     if (entry.isDirectory()) paths.push(...(await walk(path, predicate)));
     else if (entry.isFile() && predicate(path)) paths.push(path);
@@ -84,12 +86,16 @@ export async function discoverPackageRoots(repoRoot: string): Promise<readonly s
   const roots: string[] = [];
   for (const directory of packageDirectories) {
     const base = resolve(repoRoot, directory);
-    if (!(await fileExists(resolve(base, 'package.json')))) {
+    if (await fileExists(resolve(base, 'package.json'))) {
+      const manifest = await readManifest(base);
+      if (manifest?.name !== undefined) roots.push(base);
+    } else {
       const manifests = await walk(base, (path) => path.endsWith(`${sep}package.json`));
       for (const manifestPath of manifests) {
-        if ((await readManifest(dirname(manifestPath)))?.name !== undefined) roots.push(dirname(manifestPath));
+        const manifest = await readManifest(dirname(manifestPath));
+        if (manifest?.name !== undefined) roots.push(dirname(manifestPath));
       }
-    } else if ((await readManifest(base))?.name !== undefined) roots.push(base);
+    }
   }
   return roots.sort();
 }
@@ -113,8 +119,11 @@ function exportTargets(value: unknown, targets: string[]): void {
 function sourceCandidates(packageRoot: string, target: string): string[] {
   const normalized = target.replaceAll('\\', '/').replace(/^\.\//u, '');
   const sourceTarget = normalized.startsWith('dist/') ? `src/${normalized.slice('dist/'.length)}` : normalized;
-  const withoutDeclaration = sourceTarget.replace(/\.d\.(?:mts|cts|ts)$/u, '').replace(/\.(?:m|c)?js$/u, '');
-  const candidates = [withoutDeclaration, sourceTarget].flatMap((candidate) => [candidate, ...sourceExtensions.map((extension) => `${candidate}${extension}`)]);
+  const withoutDeclaration = sourceTarget.replace(/\.d\.(?:mts|cts|ts)$/u, '').replace(/\.[mc]?js$/u, '');
+  const candidates = [withoutDeclaration, sourceTarget].flatMap((candidate) => [
+    candidate,
+    ...sourceExtensions.map((extension) => `${candidate}${extension}`),
+  ]);
   return candidates.map((candidate) => resolve(packageRoot, candidate));
 }
 
@@ -127,35 +136,37 @@ async function typeScriptEntries(packageRoot: string, manifest: PackageManifest)
   const entries: string[] = [];
   for (const target of targets) {
     for (const candidate of sourceCandidates(packageRoot, target)) {
-      if (sourceExtensions.some((extension) => candidate.endsWith(extension)) && (await fileExists(candidate))) entries.push(candidate);
+      if (sourceExtensions.some((extension) => candidate.endsWith(extension)) && (await fileExists(candidate)))
+        entries.push(candidate);
     }
   }
-  return entries.sort().filter((entry, index, all) => all.indexOf(entry) === index);
-}
-
-function displayText(parts: readonly ts.SymbolDisplayPart[] | undefined): string {
-  return parts === undefined ? '' : ts.displayPartsToString([...parts]).trim();
+  return entries.toSorted().filter((entry, index, all) => all.indexOf(entry) === index);
 }
 
 function jsDocTags(node: ts.Node): readonly { readonly name: string; readonly text: string }[] {
   return ts.getJSDocTags(node).map((tag) => ({
     name: tag.tagName.text,
-    text: typeof tag.comment === 'string' ? tag.comment.trim() : ts.getTextOfJSDocComment(tag.comment)?.trim() ?? '',
+    text: typeof tag.comment === 'string' ? tag.comment.trim() : (ts.getTextOfJSDocComment(tag.comment)?.trim() ?? ''),
   }));
 }
 
 function jsDocDescription(node: ts.Node): string {
   const documentation = ts.getJSDocCommentsAndTags(node).find((entry): entry is ts.JSDoc => ts.isJSDoc(entry));
   if (documentation === undefined) return '';
-  const text = typeof documentation.comment === 'string' ? documentation.comment : ts.getTextOfJSDocComment(documentation.comment);
+  const text =
+    typeof documentation.comment === 'string' ? documentation.comment : ts.getTextOfJSDocComment(documentation.comment);
   return text?.trim() ?? '';
 }
 
 function declarationFor(checker: ts.TypeChecker, symbol: ts.Symbol, packageRoot: string): ts.Declaration | undefined {
-  const resolved = (symbol.flags & ts.SymbolFlags.Alias) !== 0 ? checker.getAliasedSymbol(symbol) : symbol;
+  const resolved = (symbol.flags & ts.SymbolFlags.Alias) === 0 ? symbol : checker.getAliasedSymbol(symbol);
   return resolved.declarations?.find((declaration) => {
     const path = resolve(declaration.getSourceFile().fileName);
-    return path.startsWith(`${resolve(packageRoot)}${sep}`) && !path.includes(`${sep}test${sep}`) && !path.endsWith('.spec.ts');
+    return (
+      path.startsWith(`${resolve(packageRoot)}${sep}`) &&
+      !path.includes(`${sep}test${sep}`) &&
+      !path.endsWith('.spec.ts')
+    );
   });
 }
 
@@ -177,24 +188,32 @@ function declarationSignature(node: ts.Declaration): string {
   if (ts.isVariableDeclaration(node)) {
     const list = node.parent;
     const flags = ts.isVariableDeclarationList(list) ? list.flags : 0;
-    const keyword =
-      (flags & ts.NodeFlags.Const) !== 0 ? 'const' : (flags & ts.NodeFlags.Let) !== 0 ? 'let' : 'var';
+    const keyword = (flags & ts.NodeFlags.Const) === 0 ? ((flags & ts.NodeFlags.Let) === 0 ? 'var' : 'let') : 'const';
     const name = node.name.getText();
     const type = node.type === undefined ? '' : `: ${node.type.getText()}`;
     return `export ${keyword} ${name}${type}`;
   }
-  const text = node.getText().replace(/\s+/gu, ' ').trim();
+  const text = node.getText().replaceAll(/\s+/gu, ' ').trim();
   const bodyStart = text.indexOf('{');
-  return bodyStart < 0 ? text : text.slice(0, bodyStart).trim();
+  return bodyStart === -1 ? text : text.slice(0, bodyStart).trim();
 }
 
-function parametersFor(node: ts.Declaration, tags: readonly { readonly name: string; readonly text: string }[]): readonly ExtractedParameter[] {
+function parametersFor(
+  node: ts.Declaration,
+  tags: readonly { readonly name: string; readonly text: string }[],
+): readonly ExtractedParameter[] {
   if (!('parameters' in node) || !Array.isArray(node.parameters)) return [];
-  const parameterTags = new Map(tags.filter(({ name }) => ['param', 'parameter', 'arg', 'argument'].includes(name)).map((tag) => [tag.name, tag.text]));
+  const parameterTags = new Map(
+    tags
+      .filter(({ name }) => ['param', 'parameter', 'arg', 'argument'].includes(name))
+      .map((tag) => [tag.name, tag.text]),
+  );
   return node.parameters.map((parameter) => ({
     name: parameter.name.getText(),
     ...(parameter.type === undefined ? {} : { type: parameter.type.getText() }),
-    ...(parameterTags.get(parameter.name.getText()) === undefined ? {} : { description: parameterTags.get(parameter.name.getText()) }),
+    ...(parameterTags.get(parameter.name.getText()) === undefined
+      ? {}
+      : { description: parameterTags.get(parameter.name.getText()) }),
   }));
 }
 
@@ -207,21 +226,28 @@ function extractSourceFile(sourceFile: ts.SourceFile, checker: ts.TypeChecker, p
     if (declaration === undefined || kind === undefined) return [];
     const tags = jsDocTags(declaration);
     const description = jsDocDescription(declaration) || 'No description provided.';
-    const sourceModule = relative(packageRoot, declaration.getSourceFile().fileName).replaceAll(sep, '/').replace(/\.[^.]+$/u, '');
-    return [{
-      name: exported.name,
-      kind: (declaration as ts.NamedDeclaration).name?.getText().startsWith('Mp') === true ? 'component' : kind,
-      signature: declarationSignature(declaration),
-      description,
-      parameters: parametersFor(declaration, tags),
-      tags,
-      sourceModule,
-    }];
+    const sourceModule = relative(packageRoot, declaration.getSourceFile().fileName)
+      .replaceAll(sep, '/')
+      .replace(/\.[^.]+$/u, '');
+    return [
+      {
+        name: exported.name,
+        kind: (declaration as ts.NamedDeclaration).name?.getText().startsWith('Mp') === true ? 'component' : kind,
+        signature: declarationSignature(declaration),
+        description,
+        parameters: parametersFor(declaration, tags),
+        tags,
+        sourceModule,
+      },
+    ];
   });
 }
 
 /** Extract exported declarations from the package's TypeScript entrypoints. */
-export async function extractTypeScriptSymbols(packageRoot: string, manifest: PackageManifest): Promise<readonly ExtractedSymbol[]> {
+export async function extractTypeScriptSymbols(
+  packageRoot: string,
+  manifest: PackageManifest,
+): Promise<readonly ExtractedSymbol[]> {
   const entries = await typeScriptEntries(packageRoot, manifest);
   if (entries.length === 0) return [];
   const options: ts.CompilerOptions = {
@@ -234,11 +260,13 @@ export async function extractTypeScriptSymbols(packageRoot: string, manifest: Pa
     target: ts.ScriptTarget.ES2022,
   };
   const host = ts.createCompilerHost(options);
-  host.resolveModuleNames = (moduleNames, containingFile) => moduleNames.map((moduleName) => {
-    const resolved = ts.resolveModuleName(moduleName, containingFile, options, host).resolvedModule;
-    if (resolved === undefined || !resolve(resolved.resolvedFileName).startsWith(`${resolve(packageRoot)}${sep}`)) return undefined;
-    return resolved;
-  });
+  host.resolveModuleNames = (moduleNames, containingFile) =>
+    moduleNames.map((moduleName) => {
+      const resolved = ts.resolveModuleName(moduleName, containingFile, options, host).resolvedModule;
+      if (resolved === undefined || !resolve(resolved.resolvedFileName).startsWith(`${resolve(packageRoot)}${sep}`))
+        return;
+      return resolved;
+    });
   const program = ts.createProgram(entries, options, host);
   const checker = program.getTypeChecker();
   const symbols = entries.flatMap((entry) => {
@@ -246,14 +274,15 @@ export async function extractTypeScriptSymbols(packageRoot: string, manifest: Pa
     return sourceFile === undefined ? [] : extractSourceFile(sourceFile, checker, packageRoot);
   });
   const seen = new Set<string>();
-  return symbols
-    .sort((left, right) => `${left.sourceModule}:${left.name}`.localeCompare(`${right.sourceModule}:${right.name}`))
-    .filter((symbol) => {
-      const key = `${symbol.sourceModule}:${symbol.name}:${symbol.kind}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
+  const sortedSymbols = symbols.toSorted((left, right) =>
+    `${left.sourceModule}:${left.name}`.localeCompare(`${right.sourceModule}:${right.name}`),
+  );
+  return sortedSymbols.filter((symbol) => {
+    const key = `${symbol.sourceModule}:${symbol.name}:${symbol.kind}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 interface FwsDocumentation {
@@ -275,12 +304,10 @@ function fwsTypeNameToString(type: unknown): string {
   if (typeof type === 'string') return type;
   if (!isRecord(type)) return 'unknown';
   const name =
-    typeof type.reference === 'string'
-      ? type.reference
-      : typeof type.name === 'string'
-        ? type.name
-        : 'unknown';
-  const argumentsList = Array.isArray(type.arguments) ? `<${type.arguments.map(fwsTypeNameToString).join(', ')}>` : '';
+    typeof type.reference === 'string' ? type.reference : typeof type.name === 'string' ? type.name : 'unknown';
+  const argumentsList = Array.isArray(type.arguments)
+    ? `<${type.arguments.map((argument) => fwsTypeNameToString(argument)).join(', ')}>`
+    : '';
   const length = typeof type.length === 'number' ? `[${type.length}]` : '';
   return `${name}${argumentsList}${length}`;
 }
@@ -289,8 +316,13 @@ function fwsParameters(parameters: readonly { readonly name: string; readonly ty
   return parameters.map((parameter) => `${parameter.name}: ${fwsTypeNameToString(parameter.type)}`).join(', ');
 }
 
-function fwsDocumentationTags(documentation: FwsDocumentation): readonly { readonly name: string; readonly text: string }[] {
-  return documentation.tags.map(({ name, subject, text }) => ({ name, text: subject === undefined ? text : `${subject} ${text}`.trim() }));
+function fwsDocumentationTags(
+  documentation: FwsDocumentation,
+): readonly { readonly name: string; readonly text: string }[] {
+  return documentation.tags.map(({ name, subject, text }) => ({
+    name,
+    text: subject === undefined ? text : `${subject} ${text}`.trim(),
+  }));
 }
 
 function fwsSignature(declaration: FwsSymbolLike): string {
@@ -369,7 +401,9 @@ export async function extractFwsSymbols(
       );
     }
     if (parserResult.module === undefined) continue;
-    const sourceModule = relative(packageRoot, file).replaceAll(sep, '/').replace(/\.fws$/u, '');
+    const sourceModule = relative(packageRoot, file)
+      .replaceAll(sep, '/')
+      .replace(/\.fws$/u, '');
     for (const declaration of documentedFwsDeclarations(parserResult.module)) {
       const docs = declaration.documentation;
       if (docs === undefined) continue;
@@ -385,7 +419,9 @@ export async function extractFwsSymbols(
                 type: fwsTypeNameToString(type),
                 ...Object.fromEntries(
                   docs.tags
-                    .filter((tag) => ['param', 'parameter', 'arg', 'argument'].includes(tag.name) && tag.subject === name)
+                    .filter(
+                      (tag) => ['param', 'parameter', 'arg', 'argument'].includes(tag.name) && tag.subject === name,
+                    )
                     .map((tag) => ['description', tag.text] as const),
                 ),
               }))
@@ -417,7 +453,7 @@ type ForgeWebScriptParseFunction = (
 ) => ForgeWebScriptParseResult;
 
 function markdownTableCell(value: string): string {
-  return value.replaceAll('|', '\\|').replaceAll('\n', ' ');
+  return value.replaceAll('|', String.raw`\|`).replaceAll('\n', ' ');
 }
 
 /** Render deterministic generated Markdown for a package. */
@@ -436,10 +472,24 @@ export function renderReferenceMarkdown(documentation: PackageDocumentation): st
       currentModule = symbol.sourceModule;
       lines.push('## `' + currentModule + '`', '');
     }
-    lines.push(`### ${symbol.name}`, '', `**Kind:** ${symbol.kind}`, '', '```typescript', symbol.signature, '```', '', symbol.description, '');
+    lines.push(
+      `### ${symbol.name}`,
+      '',
+      `**Kind:** ${symbol.kind}`,
+      '',
+      '```typescript',
+      symbol.signature,
+      '```',
+      '',
+      symbol.description,
+      '',
+    );
     if (symbol.parameters.length > 0) {
       lines.push('#### Parameters', '', '| Name | Type | Description |', '| --- | --- | --- |');
-      for (const parameter of symbol.parameters) lines.push(`| ${markdownTableCell(parameter.name)} | ${markdownTableCell(parameter.type ?? '')} | ${markdownTableCell(parameter.description ?? '')} |`);
+      for (const parameter of symbol.parameters)
+        lines.push(
+          `| ${markdownTableCell(parameter.name)} | ${markdownTableCell(parameter.type ?? '')} | ${markdownTableCell(parameter.description ?? '')} |`,
+        );
       lines.push('');
     }
     if (symbol.tags.length > 0) {
@@ -453,7 +503,8 @@ export function renderReferenceMarkdown(documentation: PackageDocumentation): st
 
 async function extractPackage(packageRoot: string, repoRoot: string): Promise<PackageDocumentation> {
   const manifest = await readManifest(packageRoot);
-  if (manifest?.name === undefined) throw new Error(`Missing package name in ${relative(repoRoot, packageRoot)}/package.json`);
+  if (manifest?.name === undefined)
+    throw new Error(`Missing package name in ${relative(repoRoot, packageRoot)}/package.json`);
   const symbols = [
     ...(await extractTypeScriptSymbols(packageRoot, manifest)),
     ...(await extractFwsSymbols(packageRoot, { repoRoot })),
@@ -480,9 +531,12 @@ export async function extractPackageDocs(repoRoot: string, packageRoot: string):
 
 async function main(): Promise<void> {
   const repoRoot = resolve(import.meta.dirname, '..');
-  const inlinePackageArgument = process.argv.find((argument) => argument.startsWith('--package='))?.slice('--package='.length);
+  const inlinePackageArgument = process.argv
+    .find((argument) => argument.startsWith('--package='))
+    ?.slice('--package='.length);
   const packageFlagIndex = process.argv.indexOf('--package');
-  const packageArgument = inlinePackageArgument ?? (packageFlagIndex < 0 ? undefined : process.argv[packageFlagIndex + 1]);
+  const packageArgument =
+    inlinePackageArgument ?? (packageFlagIndex === -1 ? undefined : process.argv[packageFlagIndex + 1]);
   if (packageArgument === undefined) {
     const scriptPath = fileURLToPath(import.meta.url);
     for (const packageRoot of await discoverPackageRoots(repoRoot)) {

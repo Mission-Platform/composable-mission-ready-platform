@@ -94,7 +94,7 @@ async function removeStage(packageRoot: string, stageRoot: string): Promise<void
 }
 
 const STAGE_MANIFEST = '.forge-build-manifest.json';
-const ENTRY_NAMES = ['index.js', 'index.mjs', 'index.cjs', 'index.ts', 'index.tsx', 'index.d.ts'];
+const ENTRY_NAMES = new Set(['index.js', 'index.mjs', 'index.cjs', 'index.ts', 'index.tsx', 'index.d.ts']);
 
 function fileHash(contents: Buffer): string {
   return createHash('sha256').update(contents).digest('hex');
@@ -117,9 +117,8 @@ async function collectStageFiles(directory: string, prefix = ''): Promise<ForgeS
 }
 
 async function validateForgeArtifactManifests(stageRoot: string, target: ForgeBuildSelection): Promise<void> {
-  const manifests = (await collectStageFiles(stageRoot)).filter((artifact) =>
-    artifact.fileName.endsWith('.forge-artifact-manifest.json'),
-  );
+  const artifacts = await collectStageFiles(stageRoot);
+  const manifests = artifacts.filter((artifact) => artifact.fileName.endsWith('.forge-artifact-manifest.json'));
   for (const artifact of manifests) {
     const manifestPath = path.join(stageRoot, artifact.fileName);
     const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as {
@@ -152,15 +151,14 @@ async function assertCompleteStage(stageRoot: string, target: ForgeBuildSelectio
     throw new Error(`Forge build stage is missing expected target output "${target}": ${expectedRoot}`);
   }
   if (target !== 'all') {
-    const hasEntry = expectedEntries.some((entry) => !entry.isDirectory() && ENTRY_NAMES.includes(entry.name));
+    const hasEntry = expectedEntries.some((entry) => !entry.isDirectory() && ENTRY_NAMES.has(entry.name));
     if (!hasEntry) {
       throw new Error(`Forge build stage is missing the expected ${target} entry (index.*): ${expectedRoot}`);
     }
   }
   if (target === 'all') {
-    const hasEntry = (await collectStageFiles(stagedDist)).some((artifact) =>
-      ENTRY_NAMES.includes(path.basename(artifact.fileName)),
-    );
+    const artifacts = await collectStageFiles(stagedDist);
+    const hasEntry = artifacts.some((artifact) => ENTRY_NAMES.has(path.basename(artifact.fileName)));
     if (!hasEntry) throw new Error(`Forge aggregate stage has no generated entry: ${stagedDist}`);
   }
   await validateForgeArtifactManifests(stagedDist, target);
@@ -170,11 +168,11 @@ async function assertCompleteStage(stageRoot: string, target: ForgeBuildSelectio
     target,
     complete: true,
     entries: artifacts
-      .filter((artifact) => ENTRY_NAMES.includes(path.basename(artifact.fileName)))
+      .filter((artifact) => ENTRY_NAMES.has(path.basename(artifact.fileName)))
       .map((artifact) => artifact.fileName),
     artifacts,
   };
-  await fs.writeFile(path.join(stagedDist, STAGE_MANIFEST), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+  await fs.writeFile(path.join(stagedDist, STAGE_MANIFEST), `${JSON.stringify(manifest, undefined, 2)}\n`, 'utf8');
   const parsed = JSON.parse(await fs.readFile(path.join(stagedDist, STAGE_MANIFEST), 'utf8')) as ForgeStageManifest;
   if (parsed.version !== 1 || parsed.target !== target || parsed.complete !== true || parsed.entries.length === 0) {
     throw new Error(`Forge build stage manifest is incomplete: ${path.join(stagedDist, STAGE_MANIFEST)}`);
@@ -340,7 +338,7 @@ async function executeCommand(context: ForgeBuildCommandContext): Promise<void> 
     };
     const abort = (): void => {
       child.kill('SIGTERM');
-      killTimer = setTimeout(() => child.kill('SIGKILL'), 2_000);
+      killTimer = setTimeout(() => child.kill('SIGKILL'), 2000);
       if (settled) return;
       settled = true;
       context.signal.removeEventListener('abort', abort);

@@ -30,11 +30,7 @@ import {
   splitFenceSegments,
   type DocumentationLocale,
 } from './doc-locales-lib.ts';
-import {
-  discoverDocumentationRoots,
-  qualifiedSlug,
-  type DocumentationSourceRoot,
-} from './documentation-sources.ts';
+import { discoverDocumentationRoots, qualifiedSlug, type DocumentationSourceRoot } from './documentation-sources.ts';
 
 /** Line-buffered logging so redirected resume runs remain observable. */
 function logLine(message: string): void {
@@ -91,13 +87,16 @@ const onlyPackage = args.find((value) => value.startsWith('--package='))?.slice(
 const resume = args.includes('--resume');
 const force = args.includes('--force');
 
+// eslint-disable-next-line turbo/no-undeclared-env-vars -- These CLI switches are intentionally read at runtime.
 const remoteEnabled = process.env.DOCS_TRANSLATE_REMOTE === '1';
+// eslint-disable-next-line turbo/no-undeclared-env-vars -- These CLI switches are intentionally read at runtime.
 const offlineEnabled = process.env.DOCS_TRANSLATE_OFFLINE === '1';
 
 const sleep = (ms: number) => new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
 
 const cacheDirectory = join(root, 'node_modules', '.cache', 'doc-locales');
 const cacheFilePath =
+  // eslint-disable-next-line turbo/no-undeclared-env-vars -- This optional path configures the local translation cache.
   process.env.DOCS_TRANSLATE_CACHE_FILE ??
   join(cacheDirectory, onlyLocale ? `translation-cache-${onlyLocale}.json` : 'translation-cache.json');
 const memoryCache = new Map<string, string>();
@@ -156,13 +155,15 @@ let cacheDirty = false;
 async function persistDiskCache(): Promise<void> {
   if (!cacheDirty) return;
   await mkdir(cacheDirectory, { recursive: true });
-  const payload = Object.fromEntries([...memoryCache.entries()].toSorted(([left], [right]) => left.localeCompare(right)));
+  const payload = Object.fromEntries(
+    [...memoryCache.entries()].toSorted(([left], [right]) => left.localeCompare(right)),
+  );
   await writeFile(cacheFilePath, `${JSON.stringify(payload)}\n`, 'utf8');
   cacheDirty = false;
 }
 
 function cacheKey(locale: Locale, text: string): string {
-  return `${locale}:${createHash('sha1').update(text).digest('hex')}`;
+  return `${locale}:${createHash('sha256').update(text).digest('hex')}`;
 }
 
 async function collectMarkdown(directory: string): Promise<string[]> {
@@ -184,7 +185,9 @@ interface DocumentationPage {
   readonly qualifiedSlug: string;
 }
 
-async function collectDocumentationPages(documentationRoots: readonly DocumentationSourceRoot[]): Promise<DocumentationPage[]> {
+async function collectDocumentationPages(
+  documentationRoots: readonly DocumentationSourceRoot[],
+): Promise<DocumentationPage[]> {
   const pages: DocumentationPage[] = [];
   for (const sourceRoot of documentationRoots) {
     for (const sourcePath of await collectMarkdown(sourceRoot.rootDirectory)) {
@@ -320,7 +323,9 @@ async function translateViaMyMemory(text: string, locale: Locale): Promise<strin
     }
     const translated = data.responseData.translatedText;
     if (translated.trim() === text.trim() && /[A-Za-z]{4,}/.test(text)) {
-      const error = new Error(`MyMemory returned untranslated text for locale=${locale}`) as Error & { status?: number };
+      const error = new Error(`MyMemory returned untranslated text for locale=${locale}`) as Error & {
+        status?: number;
+      };
       error.status = 502;
       throw error;
     }
@@ -361,7 +366,8 @@ async function translateRawRemote(text: string, locale: Locale, attempt = 1): Pr
     cacheDirty = true;
     return result;
   } catch (error) {
-    const status = typeof error === 'object' && error && 'status' in error ? Number((error as { status?: number }).status) : 0;
+    const status =
+      typeof error === 'object' && error && 'status' in error ? Number((error as { status?: number }).status) : 0;
     const retryable = status === 429 || status >= 500 || status === 0;
     if (retryable && attempt < 12) {
       consecutiveFailures += 1;
@@ -575,11 +581,7 @@ function isGeneratedReference(sourcePath: string): boolean {
   return sourcePath.includes(`${join('reference', 'generated')}`);
 }
 
-async function shouldSkipExisting(
-  outputPath: string,
-  canonical: string,
-  locale: Locale,
-): Promise<boolean> {
+async function shouldSkipExisting(outputPath: string, canonical: string, locale: Locale): Promise<boolean> {
   if (force || !resume || !existsSync(outputPath)) return false;
   try {
     const existing = await readFile(outputPath, 'utf8');
@@ -722,7 +724,9 @@ async function main(): Promise<void> {
     logLine('Offline placeholders include UNSHIPPABLE_OFFLINE_TRANSLATION and will fail validate-doc-locales.');
   }
   if (failures.length > 0) {
-    throw new Error(`Locale generation completed with ${failures.length} failure(s):\n${failures.slice(0, 50).join('\n')}`);
+    throw new Error(
+      `Locale generation completed with ${failures.length} failure(s):\n${failures.slice(0, 50).join('\n')}`,
+    );
   }
 }
 

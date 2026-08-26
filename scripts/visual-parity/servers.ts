@@ -6,7 +6,6 @@ import path from 'node:path';
 import { createProcessRegistry, terminateProcessTree } from '../runtime-validation/cleanup.ts';
 import { parseStorybookIndex } from '../runtime-validation/storybook-index.ts';
 
-import type { StorybookIndex } from '../runtime-validation/types.ts';
 import {
   createRendererDefinitions,
   type StorybookRendererServer,
@@ -14,6 +13,8 @@ import {
   type VisualParityRendererDefinition,
   type VisualParityServerOptions,
 } from './types.ts';
+
+import type { StorybookIndex } from '../runtime-validation/types.ts';
 
 const STORYBOOK_PACKAGE = '@mission-platform/storybook';
 const CERTIFICATE_DIRECTORY = path.join('apps', 'storybook', '.storybook', 'certs');
@@ -138,7 +139,7 @@ function fetchStorybookIndex(url: string): Promise<StorybookIndex> {
       });
     });
     request.once('error', reject);
-    request.setTimeout(1_000, () => request.destroy(new Error('Storybook index request timed out.')));
+    request.setTimeout(1000, () => request.destroy(new Error('Storybook index request timed out.')));
   });
 }
 

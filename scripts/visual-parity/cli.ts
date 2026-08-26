@@ -41,6 +41,10 @@ const DEFAULT_MAX_MISMATCH_RATIO = 0;
 const DEFAULT_WORKERS = 1;
 const DEFAULT_OUTPUT_DIRECTORY = '.artifacts/visual-parity';
 
+function compactSelector(value: string): string {
+  return value.replaceAll(/[^a-z0-9]+/g, '');
+}
+
 function repositoryRoot(): string {
   return path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 }
@@ -140,12 +144,11 @@ export function matchesStorySelector(storyId: string, selector?: string): boolea
   if (!selector) return true;
   if (storyId === selector) return true;
   const id = storyId.toLowerCase();
-  const sel = selector.toLowerCase().trim().replace(/\s+/g, '-');
+  const sel = selector.toLowerCase().trim().replaceAll(/\s+/g, '-');
   if (!sel) return true;
   if (id === sel || id.endsWith(sel) || id.endsWith(`--${sel}`)) return true;
-  const compact = (value: string) => value.replace(/[^a-z0-9]+/g, '');
-  const compactId = compact(id);
-  const compactSel = compact(sel);
+  const compactId = compactSelector(id);
+  const compactSel = compactSelector(sel);
   return compactSel.length > 0 && (compactId === compactSel || compactId.endsWith(compactSel));
 }
 

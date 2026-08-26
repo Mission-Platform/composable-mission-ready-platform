@@ -77,7 +77,9 @@ async function canonicalPages(documentationRoots: readonly DocumentationSourceRo
   }
   return pages.toSorted((left, right) => {
     const leftSlug = left.sourceRoot.routePrefix ? `${left.sourceRoot.routePrefix}/${left.pageSlug}` : left.pageSlug;
-    const rightSlug = right.sourceRoot.routePrefix ? `${right.sourceRoot.routePrefix}/${right.pageSlug}` : right.pageSlug;
+    const rightSlug = right.sourceRoot.routePrefix
+      ? `${right.sourceRoot.routePrefix}/${right.pageSlug}`
+      : right.pageSlug;
     return leftSlug.localeCompare(rightSlug);
   });
 }
@@ -127,7 +129,10 @@ async function main(): Promise<void> {
         let canonical: string;
         let localized: string;
         try {
-          [canonical, localized] = await Promise.all([readFile(canonicalFile, 'utf8'), readFile(localizedFile, 'utf8')]);
+          [canonical, localized] = await Promise.all([
+            readFile(canonicalFile, 'utf8'),
+            readFile(localizedFile, 'utf8'),
+          ]);
         } catch {
           continue;
         }
@@ -168,7 +173,11 @@ async function main(): Promise<void> {
               target === localeRoot || target.startsWith(`${localeRoot}/`) || target.startsWith(`${localeRoot}\\`);
             if (underLocaleTree) {
               const expectedLocaleRoot = join(localeRoot, locale);
-              if (!target.startsWith(`${expectedLocaleRoot}/`) && target !== expectedLocaleRoot && !target.startsWith(`${expectedLocaleRoot}\\`)) {
+              if (
+                !target.startsWith(`${expectedLocaleRoot}/`) &&
+                target !== expectedLocaleRoot &&
+                !target.startsWith(`${expectedLocaleRoot}\\`)
+              ) {
                 failures.push(`${locale}/${pageSlug}: cross-root link points to a different locale: ${href}`);
               }
             }

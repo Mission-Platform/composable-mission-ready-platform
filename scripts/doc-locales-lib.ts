@@ -220,25 +220,29 @@ export function rewriteRelativeLinks(
   return splitFenceSegments(markdown)
     .map((segment) => {
       if (segment.kind === 'fence') return segment.text;
-      return segment.text.replaceAll(/(!?\[[^\]]*\]\()([^)]+)(\))/g, (full, label: string, href: string, close: string) => {
-        if (/^(https?:|mailto:|#)/.test(href)) return full;
-        const hashIndex = href.indexOf('#');
-        const pathPart = hashIndex === -1 ? href : href.slice(0, hashIndex);
-        const anchor = hashIndex === -1 ? '' : href.slice(hashIndex);
-        if (!pathPart) return full;
-        const target = resolve(dirname(sourcePath), pathPart);
-        let rewrittenTarget = target;
-        const targetRoot = target.endsWith('.md') ? rootForPath(target, documentationRoots) : undefined;
-        if (targetRoot !== undefined) {
-          const localeRoot = join(targetRoot.rootDirectory, 'locales');
-          const alreadyLocalized = target === localeRoot || target.startsWith(`${localeRoot}${target.includes('\\') ? '\\' : '/'}`);
-          if (!alreadyLocalized) {
-            rewrittenTarget = join(localeRoot, locale, relative(targetRoot.rootDirectory, target));
+      return segment.text.replaceAll(
+        /(!?\[[^\]]*\]\()([^)]+)(\))/g,
+        (full, label: string, href: string, close: string) => {
+          if (/^(https?:|mailto:|#)/.test(href)) return full;
+          const hashIndex = href.indexOf('#');
+          const pathPart = hashIndex === -1 ? href : href.slice(0, hashIndex);
+          const anchor = hashIndex === -1 ? '' : href.slice(hashIndex);
+          if (!pathPart) return full;
+          const target = resolve(dirname(sourcePath), pathPart);
+          let rewrittenTarget = target;
+          const targetRoot = target.endsWith('.md') ? rootForPath(target, documentationRoots) : undefined;
+          if (targetRoot !== undefined) {
+            const localeRoot = join(targetRoot.rootDirectory, 'locales');
+            const alreadyLocalized =
+              target === localeRoot || target.startsWith(`${localeRoot}${target.includes('\\') ? '\\' : '/'}`);
+            if (!alreadyLocalized) {
+              rewrittenTarget = join(localeRoot, locale, relative(targetRoot.rootDirectory, target));
+            }
           }
-        }
-        const newPath = relative(dirname(outputPath), rewrittenTarget).replaceAll('\\', '/');
-        return `${label}${newPath}${anchor}${close}`;
-      });
+          const newPath = relative(dirname(outputPath), rewrittenTarget).replaceAll('\\', '/');
+          return `${label}${newPath}${anchor}${close}`;
+        },
+      );
     })
     .join('');
 }
@@ -267,8 +271,8 @@ export function stripGeneratedApiChrome(markdown: string): string {
     .replaceAll(/^\|\s*Name\s*\|\s*Type\s*\|\s*Description\s*\|.*$/gim, ' ')
     .replaceAll(/^\|[\s:-|]+\|$/gm, ' ')
     .replaceAll(/^\|.*\|$/gm, ' ')
-    .replaceAll(/\b[A-Z][A-Za-z0-9]+(?:[A-Z][A-Za-z0-9]+)+\b/g, ' ')
-    .replaceAll(/\b[a-z]+(?:[A-Z][A-Za-z0-9]+)+\b/g, ' ')
+    .replaceAll(/\b[A-Z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*\b/g, ' ')
+    .replaceAll(/\b[a-z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*\b/g, ' ')
     .replaceAll(/\b[A-Z][A-Z0-9_]{2,}\b/g, ' ')
     .replaceAll(/\{@link\s+[^}]+\}/g, ' ');
 }

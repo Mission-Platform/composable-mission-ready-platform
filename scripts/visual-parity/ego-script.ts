@@ -45,7 +45,7 @@ const PAGE_ERROR_SOURCE = `
 /** Browser-side readiness probe. `timeoutMs` is injected by the generated script. */
 export function buildStoryReadinessSource(timeoutMs = 15_000): string {
   // Keep readiness inside a bounded slice of the overall capture budget so retries remain possible.
-  const budgetMs = Math.max(2_000, Math.min(20_000, Math.floor(timeoutMs * 0.5)));
+  const budgetMs = Math.max(2000, Math.min(20_000, Math.floor(timeoutMs * 0.5)));
   return String.raw`(async () => {
   const root = document.querySelector('#storybook-root');
   const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -383,7 +383,7 @@ export function egoProcessTimeoutMs(captureCount: number, perCaptureTimeoutMs = 
   const count = Math.max(1, captureCount);
   // Process budget is independent of the generous per-story readiness timeout: real captures
   // average well under a few seconds, with headroom for retries and first-load compilation.
-  const perCaptureBudget = Math.max(6_000, Math.min(15_000, Math.floor(perCaptureTimeoutMs / 3)));
+  const perCaptureBudget = Math.max(6000, Math.min(15_000, Math.floor(perCaptureTimeoutMs / 3)));
   return Math.max(perCaptureTimeoutMs, 90_000 + count * perCaptureBudget);
 }
 
@@ -461,7 +461,7 @@ async function mapPool<T, R>(
   worker: (item: T, index: number) => Promise<R>,
 ): Promise<R[]> {
   const limit = Math.max(1, Math.floor(concurrency));
-  const results = new Array<R>(items.length);
+  const results = Array.from({ length: items.length });
   let next = 0;
   const run = async (): Promise<void> => {
     while (next < items.length) {

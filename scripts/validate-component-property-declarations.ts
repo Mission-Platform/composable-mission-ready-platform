@@ -65,7 +65,9 @@ const declarationPattern = /@property\s+(--forge-[a-z0-9_-]+(?:#\{\$[a-z0-9_-]+\
 const usePattern = /@(use|forward|import)\s+['"](\.[^'"]+)['"]\s*;?/g;
 
 function withoutComments(source: string): string {
-  return source.replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' ')).replace(/\/\/.*$/gm, '');
+  return source
+    .replaceAll(/\/\*[\s\S]*?\*\//g, (comment) => comment.replaceAll(/[^\n]/g, ' '))
+    .replaceAll(/\/\/.*$/gm, '');
 }
 
 function withoutPropertyDeclarations(source: string): string {
@@ -102,16 +104,42 @@ function splitTopLevel(value: string, separator: string): string[] {
       if (character === quote && value[index - 1] !== '\\') quote = undefined;
       continue;
     }
-    if (character === "'" || character === '"') quote = character;
-    else if (character === '(') parentheses += 1;
-    else if (character === ')') parentheses -= 1;
-    else if (character === '[') brackets += 1;
-    else if (character === ']') brackets -= 1;
-    else if (character === '{') braces += 1;
-    else if (character === '}') braces -= 1;
-    else if (character === separator && parentheses === 0 && brackets === 0 && braces === 0) {
-      parts.push(value.slice(start, index).trim());
-      start = index + 1;
+    switch (character) {
+      case "'":
+      case '"': {
+        quote = character;
+        break;
+      }
+      case '(': {
+        parentheses += 1;
+        break;
+      }
+      case ')': {
+        parentheses -= 1;
+        break;
+      }
+      case '[': {
+        brackets += 1;
+        break;
+      }
+      case ']': {
+        brackets -= 1;
+        break;
+      }
+      case '{': {
+        braces += 1;
+        break;
+      }
+      case '}': {
+        braces -= 1;
+        break;
+      }
+      default: {
+        if (character === separator && parentheses === 0 && brackets === 0 && braces === 0) {
+          parts.push(value.slice(start, index).trim());
+          start = index + 1;
+        }
+      }
     }
   }
   parts.push(value.slice(start).trim());
@@ -119,12 +147,12 @@ function splitTopLevel(value: string, separator: string): string[] {
 }
 
 function scalar(value: string): string | undefined {
-  const normalized = value.trim().replace(/^['"]|['"]$/g, '');
+  const normalized = value.trim().replaceAll(/^['"]|['"]$/g, '');
   return /^[a-z0-9_-]+$/i.test(normalized) ? normalized : undefined;
 }
 
 function parseLoopValues(header: string, variables: readonly string[]): Readonly<Record<string, readonly string[]>> {
-  const expression = header.trim().replace(/^\(|\)$/g, '');
+  const expression = header.trim().replaceAll(/^\(|\)$/g, '');
   if (variables.length === 2) {
     const values: Record<string, string[]> = { [variables[0]]: [], [variables[1]]: [] };
     for (const pair of splitTopLevel(expression, ',')) {
@@ -139,13 +167,14 @@ function parseLoopValues(header: string, variables: readonly string[]): Readonly
     return values;
   }
   const values = splitTopLevel(expression, ',')
-    .map(scalar)
+    .map((value) => scalar(value))
     .filter((value): value is string => value !== undefined);
   return variables.length === 1 ? { [variables[0]]: values } : {};
 }
 
 function loopContexts(source: string): LoopContext[] {
   const contexts: LoopContext[] = [];
+  // eslint-disable-next-line sonarjs/slow-regex -- This bounded source parser accepts the SCSS loop grammar.
   const loopPattern = /@each\s+((?:\$[a-z0-9_-]+\s*,?\s*)+)in\s+/gi;
   for (const match of source.matchAll(loopPattern)) {
     const variables = [...match[1].matchAll(/\$[a-z0-9_-]+/gi)].map((item) => item[0]);
@@ -173,13 +202,13 @@ function mixinContexts(source: string, loops: readonly LoopContext[]): MixinCont
     const parameters = [...match[2].matchAll(/\$[a-z0-9_-]+/gi)].map((item) => item[0]);
     const name = match[1];
     const invocations: Readonly<Record<string, string>>[] = [];
-    const invocationPattern = new RegExp(`@include\\s+${name}\\s*\\(([^)]*)\\)`, 'gi');
+    const invocationPattern = new RegExp(String.raw`@include\s+${name}\s*\(([^)]*)\)`, 'gi');
     for (const invocation of source.matchAll(invocationPattern)) {
       const args = splitTopLevel(invocation[1], ',');
       const values: Record<string, string> = {};
-      parameters.forEach((parameter, index) => {
+      for (const [index, parameter] of parameters.entries()) {
         const argument = args[index]?.trim();
-        if (!argument) return;
+        if (!argument) continue;
         if (argument.startsWith('$')) {
           const containingLoop = loops
             .filter((loop) => (invocation.index ?? 0) >= loop.start && (invocation.index ?? 0) < loop.end)
@@ -190,7 +219,7 @@ function mixinContexts(source: string, loops: readonly LoopContext[]): MixinCont
           const value = scalar(argument);
           if (value) values[parameter] = value;
         }
-      });
+      }
       if (Object.keys(values).length === parameters.length) invocations.push(values);
     }
     contexts.push({ start: match.index ?? 0, end: closing + 1, name, parameters, invocations });
@@ -247,7 +276,7 @@ function extractUsages(source: string): { usages: ExtractedUsage[]; unresolved: 
   const usages: ExtractedUsage[] = [];
   const unresolved: string[] = [];
   for (const match of cleanSource.matchAll(propertyPattern)) {
-    const token = match[0].replace(/-+(?=#)/g, '-');
+    const token = match[0].replaceAll(/-+(?=#)/g, '-');
     const index = match.index ?? 0;
     const mixin = mixins
       .filter((context) => index >= context.start && index < context.end)

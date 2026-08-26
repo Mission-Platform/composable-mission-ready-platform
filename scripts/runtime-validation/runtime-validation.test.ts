@@ -47,6 +47,32 @@ import type { RepositoryInventory, RuntimeManifest, RuntimeResult } from './type
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
+function makeStorybookIndex(framework: string) {
+  return parseStorybookIndex({
+    entries: {
+      button: {
+        id: 'components-button--default',
+        importPath: '../../packages/components/src/button.stories.tsx',
+        title: 'Button',
+        name: 'Default',
+      },
+      framework: {
+        id: 'storybook-i18n--default',
+        importPath: '../../apps/storybook/src/components/i18n/i18n.vue.stories.tsx',
+        title: 'i18n',
+      },
+      ...(framework === 'web-component'
+        ? {
+            onlyHere: {
+              id: `${framework}-only--default`,
+              importPath: '../../packages/components/src/only-here.stories.tsx',
+            },
+          }
+        : {}),
+    },
+  });
+}
+
 describe('repository inventory', () => {
   it('discovers all deployable apps, Storybook package roots, and package stories', () => {
     const inventory = discoverInventory(repositoryRoot);
@@ -303,34 +329,10 @@ describe('manifest and index contracts', () => {
       stories: [neutralStory, frameworkStory, onlyHereStory],
       storybookPackages: [],
     } satisfies RepositoryInventory;
-    const makeIndex = (framework: string) =>
-      parseStorybookIndex({
-        entries: {
-          button: {
-            id: 'components-button--default',
-            importPath: '../../packages/components/src/button.stories.tsx',
-            title: 'Button',
-            name: 'Default',
-          },
-          framework: {
-            id: 'storybook-i18n--default',
-            importPath: '../../apps/storybook/src/components/i18n/i18n.vue.stories.tsx',
-            title: 'i18n',
-          },
-          ...(framework === 'web-component'
-            ? {
-                onlyHere: {
-                  id: `${framework}-only--default`,
-                  importPath: '../../packages/components/src/only-here.stories.tsx',
-                },
-              }
-            : {}),
-        },
-      });
     const pairing = pairStorybookIndexes(repositoryRoot, inventory, {
-      'web-component': makeIndex('web-component'),
-      react: makeIndex('react'),
-      vue: makeIndex('vue'),
+      'web-component': makeStorybookIndex('web-component'),
+      react: makeStorybookIndex('react'),
+      vue: makeStorybookIndex('vue'),
     });
 
     expect(pairing.pairs).toHaveLength(1);
@@ -539,8 +541,8 @@ describe('visual parity renderer definitions', () => {
     expect(script).toContain('net::ERR_ABORTED|canceled');
     expect(script).not.toContain('http://storybook');
     expect(script).toContain('/iframe.html?id=');
-    expect(buildStoryReadinessSource(8_000)).toContain('Date.now() + 4000');
-    expect(buildStoryReadinessSource(8_000)).toContain("phase === 'finished'");
+    expect(buildStoryReadinessSource(8000)).toContain('Date.now() + 4000');
+    expect(buildStoryReadinessSource(8000)).toContain("phase === 'finished'");
     expect(VISUAL_PARITY_CAPTURE_CHUNK_SIZE).toBeGreaterThan(0);
     expect(egoProcessTimeoutMs(1, 30_000)).toBeGreaterThanOrEqual(30_000);
     expect(egoProcessTimeoutMs(120, 120_000)).toBeGreaterThan(120_000);
@@ -820,7 +822,7 @@ describe('visual parity diffing and CLI options', () => {
         viewport: { name: 'md', width: 1024, height: 768, deviceScaleFactor: 1 },
         theme: 'light',
         workers: 1,
-        timeoutMs: 1_000,
+        timeoutMs: 1000,
         pixelThreshold: 0.1,
         maxMismatchRatio: 0,
         outputDirectory: path.join(repositoryRoot, '.artifacts/visual-parity'),
@@ -843,7 +845,7 @@ describe('visual parity diffing and CLI options', () => {
           viewport: { name: 'md', width: 1024, height: 768, deviceScaleFactor: 1 },
           theme: 'light',
           workers: 1,
-          timeoutMs: 1_000,
+          timeoutMs: 1000,
           pixelThreshold: 0.1,
           maxMismatchRatio: 0,
           outputDirectory: directory,

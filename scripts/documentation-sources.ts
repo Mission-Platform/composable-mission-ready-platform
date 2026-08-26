@@ -61,7 +61,8 @@ function packageRoots(repoRoot: string): DocumentationSourceRoot[] {
           const workspaceDirectory = path.relative(repoRoot, directory).split(path.sep).join('/');
           let packageName: string | undefined;
           try {
-            packageName = (JSON.parse(readFileSync(path.join(directory, 'package.json'), 'utf8')) as { name?: string }).name;
+            packageName = (JSON.parse(readFileSync(path.join(directory, 'package.json'), 'utf8')) as { name?: string })
+              .name;
           } catch {
             // Malformed package manifests are reported by package validation.
           }

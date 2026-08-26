@@ -114,7 +114,7 @@ export function pairStorybookIndexes(
       }),
     ) as Partial<Record<StorybookParityFramework, StorybookIndexEntry>>;
     const missingFrameworks = STORYBOOK_PARITY_FRAMEWORKS.filter((framework) => !entries[framework]);
-    if (missingFrameworks.length) missing.push({ storyId, sourceImport, missingFrameworks, entries });
+    if (missingFrameworks.length > 0) missing.push({ storyId, sourceImport, missingFrameworks, entries });
     else pairs.push({ storyId, sourceImport, entries });
   }
 
