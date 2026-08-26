@@ -1,11 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import {
-  createReactRouterCapabilities,
-  resolveMpLink,
-  toMpLocationFromReact,
-  toReactHref,
-} from '../runtime';
+import { createReactRouterCapabilities, resolveMpLink, toMpLocationFromReact, toReactHref } from '../runtime';
+
 import { forgeRouterReact } from './forge-router-react';
 
 import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
@@ -85,7 +81,10 @@ describe('forgeRouterReact', () => {
     await capabilities.navigate({ path: '/users/7', query: { tab: 'edit' }, hash: 'form' }, { replace: true });
     expect(navigate).toHaveBeenCalledWith(
       { pathname: '/users/7', search: '?tab=edit', hash: '#form' },
-      { replace: true, state: undefined },
+      {
+        replace: true,
+        state: undefined,
+      },
     );
 
     expect(capabilities.resolve('/docs?q=router#api')).toMatchObject({

@@ -16,39 +16,39 @@
 **种类：**功能
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement
+function HtmlContent(properties: HtmlContentProperties): ReactElement;
 ```
 
 使用 `dangerouslySetInnerHTML` 将受信任的 HTML 渲染到 React 主机中。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | Html 内容属性 |  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 属性 | Html 内容属性 |      |
 
 ### 渲染到反应
 
 **种类：**功能
 
 ```typescript
-function renderToReact(element: MpElement): ReactElement
+function renderToReact(element: MpElement): ReactElement;
 ```
 
 将中性的 {@link MpElement} 树渲染为 React 元素。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|元素| Mp元素 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 元素 | Mp元素 |      |
 
 ### 传送
 
 **种类：**功能
 
 ```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode
+function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
 ```
 
 中性 `<Teleport>` 原语的 React 构建 - 一个薄包装
@@ -75,9 +75,9 @@ race，离开面板 `display:none`（未显示的 UA 默认值
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| { to = 'body', 禁用 = false, 儿童 } |传送属性 |  |
+| 名称                                | 类型     | 描述 |
+| ----------------------------------- | -------- | ---- |
+| { to = 'body', 禁用 = false, 儿童 } | 传送属性 |      |
 
 ### 传送属性
 
@@ -94,7 +94,7 @@ React {@link Teleport} 组件接受的属性。
 **种类：**功能
 
 ```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>
+function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
 ```
 
 将中性组件包装为一级React功能组件，准备
@@ -102,23 +102,17 @@ function toReactComponent(component: MpComponent<P>, displayName?: string): Func
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件| MpComponent<P> |  |
-|显示名称 |字符串|  |
+| 名称     | 类型           | 描述 |
+| -------- | -------------- | ---- |
+| 组件     | MpComponent<P> |      |
+| 显示名称 | 字符串         |      |
 
 ### 过渡
 
 **种类：**功能
 
 ```typescript
-function Transition({
-  name = 'v',
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionProperties): ReactNode
+function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
 ```
 
 中性 `<Transition>` 原语的 React 构建 - 一个小型 CSS 类
@@ -134,9 +128,9 @@ function Transition({
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| { name = 'v'，appear = false，持续时间，子项，...覆盖 } |过渡属性 |  |
+| 名称                                                    | 类型     | 描述 |
+| ------------------------------------------------------- | -------- | ---- |
+| { name = 'v'，appear = false，持续时间，子项，...覆盖 } | 过渡属性 |      |
 
 ### 过渡集团
 
@@ -151,7 +145,7 @@ function TransitionGroup({
   duration,
   children,
   ...overrides
-}: TransitionGroupProperties): ReactNode
+}: TransitionGroupProperties): ReactNode;
 ```
 
 中性 `<TransitionGroup>` 原语的 React 构建 — CSS 类
@@ -172,9 +166,9 @@ React 目标。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| { name = 'v'、tag、moveClass、appear = false、duration、children、...overrides } |过渡组属性 |  |
+| 名称                                                                             | 类型       | 描述 |
+| -------------------------------------------------------------------------------- | ---------- | ---- |
+| { name = 'v'、tag、moveClass、appear = false、duration、children、...overrides } | 过渡组属性 |      |
 
 ### 过渡组属性
 
@@ -203,7 +197,7 @@ React {@link Transition} 组件接受的属性。
 **种类：**功能
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element
+function HtmlContent(properties: HtmlContentProperties): JSX.Element;
 ```
 
 中性 `<HtmlContent>` 原语的 Solid 版本。 Solid 的
@@ -211,16 +205,16 @@ function HtmlContent(properties: HtmlContentProperties): JSX.Element
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | Html 内容属性 |  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 属性 | Html 内容属性 |      |
 
 ### 传送
 
 **种类：**功能
 
 ```typescript
-function Teleport(properties: TeleportProperties): JSX.Element
+function Teleport(properties: TeleportProperties): JSX.Element;
 ```
 
 中性 `<Teleport>` 原语的 Solid 构建 - 一个薄包装
@@ -236,9 +230,9 @@ Solid 的{@link 门户}。 `@mission-platform/vite-plugin-forge` 重写
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |传送属性 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 属性 | 传送属性 |      |
 
 ### 传送属性
 
@@ -255,7 +249,7 @@ Solid {@link Teleport} 组件接受的属性。
 **种类：**功能
 
 ```typescript
-function Transition(properties: TransitionProperties): JSX.Element
+function Transition(properties: TransitionProperties): JSX.Element;
 ```
 
 中性 `<Transition>` 原语的 Solid 版本。最小正确
@@ -272,16 +266,16 @@ Solid 目标。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |过渡属性 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 属性 | 过渡属性 |      |
 
 ### 过渡集团
 
 **种类：**功能
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element
+function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
 ```
 
 中性 `<TransitionGroup>` 原语的 Solid 版本。喜欢
@@ -298,9 +292,9 @@ Solid 目标。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |过渡组属性 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 属性 | 过渡组属性 |      |
 
 ### 过渡组属性
 
@@ -329,7 +323,7 @@ Solid {@link Transition} 组件接受的属性。
 **种类：**功能
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet
+function HtmlContent(properties: HtmlContentProperties): Snippet;
 ```
 
 Svelte 适配器的原始内容实现。 `createRawSnippet` 是
@@ -338,25 +332,25 @@ Svelte 的 `{@html}` 操作的运行时形式及其设置回调保留
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | Html 内容属性 |  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 属性 | Html 内容属性 |      |
 
 ### 传送
 
 **种类：**功能
 
 ```typescript
-function Teleport(properties: TeleportProperties): Snippet
+function Teleport(properties: TeleportProperties): Snippet;
 ```
 
 为 Svelte SSR 和客户端奇偶校验渲染 Forge 子代码片段。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |传送属性 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 属性 | 传送属性 |      |
 
 ### 传送属性
 
@@ -373,32 +367,32 @@ Svelte {@link Teleport} 原语接受的属性。
 **种类：**功能
 
 ```typescript
-function Transition(properties: TransitionProperties): Snippet
+function Transition(properties: TransitionProperties): Snippet;
 ```
 
 渲染单个过渡子项；动画由本机 Svelte 标记提供。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |过渡属性 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 属性 | 过渡属性 |      |
 
 ### 过渡集团
 
 **种类：**功能
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet
+function TransitionGroup(properties: TransitionGroupProperties): Snippet;
 ```
 
 为原生 Svelte 键控块渲染过渡组子级。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |过渡组属性 |  |
+| 名称 | 类型       | 描述 |
+| ---- | ---------- | ---- |
+| 属性 | 过渡组属性 |      |
 
 ### 过渡组属性
 
@@ -427,7 +421,7 @@ Svelte {@link Transition} 原语接受的属性。
 **种类：**功能
 
 ```typescript
-function createContext(defaultValue: T): VueContext<T>
+function createContext(defaultValue: T): VueContext<T>;
 ```
 
 中性 `createContext` 原语的 Vue 版本。返回一个句柄，其
@@ -439,48 +433,48 @@ function createContext(defaultValue: T): VueContext<T>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|默认值 | T |  |
+| 名称   | 类型 | 描述 |
+| ------ | ---- | ---- |
+| 默认值 | T    |      |
 
 ### HTML内容
 
 **种类：**功能
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode
+function HtmlContent(properties: HtmlContentProperties): VNode;
 ```
 
 使用渲染函数 `innerHTML` 绑定将可信 HTML 渲染到 Vue 主机中。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | Html 内容属性 |  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 属性 | Html 内容属性 |      |
 
 ### 渲染到Vue
 
 **种类：**功能
 
 ```typescript
-function renderToVue(element: MpElement): VNode
+function renderToVue(element: MpElement): VNode;
 ```
 
 将中性 {@link MpElement} 树渲染为 Vue `VNode`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|元素| Mp元素 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 元素 | Mp元素 |      |
 
 ### 到Vue组件
 
 **种类：**功能
 
 ```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 将中性组件包装为 Vue 功能组件。传入属性
@@ -491,17 +485,17 @@ function toVueComponent(component: MpComponent<P>, name?: string): FunctionalCom
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|组件| MpComponent<P> |  |
-|名称 |字符串|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 组件 | MpComponent<P> |      |
+| 名称 | 字符串         |      |
 
 ### 使用上下文
 
 **种类：**功能
 
 ```typescript
-function useContext(context: VueContext<T>): T
+function useContext(context: VueContext<T>): T;
 ```
 
 中性 `useContext` 原语的 Vue 构建 - 一个薄包装
@@ -510,9 +504,9 @@ function useContext(context: VueContext<T>): T
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|背景 | VueContext<T> |  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 背景 | VueContext<T> |      |
 
 ### Vue上下文
 
@@ -531,7 +525,7 @@ Vue 上下文句柄：`provide()` 支持的 `Provider` 加上 `inject()` 密钥�
 **种类：**常数
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 内部是无害的能力门控；表单关联仍处于选择加入状态。
@@ -541,7 +535,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 **种类：**常数
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 当生成的类不覆盖策略时使用兼容性默认值。
@@ -561,18 +555,22 @@ export class DomTemplateResult
 **种类：**功能
 
 ```typescript
-function dynamicElement(tag: unknown, properties: Readonly<Record<string, unknown>>, ...children: readonly unknown[]): DynamicElementResult
+function dynamicElement(
+  tag: unknown,
+  properties: Readonly<Record<string, unknown>>,
+  ...children: readonly unknown[]
+): DynamicElementResult;
 ```
 
 构建一个本机 Web 组件元素，其标签在运行时选择。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|标签|未知 |  |
-|属性 |只读<Record<string, unknown>> |  |
-|儿童 |只读未知[] |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 标签 | 未知                          |      |
+| 属性 | 只读<Record<string, unknown>> |      |
+| 儿童 | 只读未知[]                    |      |
 
 ### 动态元素结果
 
@@ -631,7 +629,7 @@ export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
 **种类：**功能
 
 ```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement
+function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
 ```
 
 将 Forge 的独立于主机的运行时添加到本机元素构造函数中。
@@ -640,9 +638,9 @@ function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|基地|数据库 |  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 基地 | 数据库 |      |
 
 ### ForgeSlotMarker
 
@@ -659,7 +657,7 @@ Web 组件编译器针对不明确的槽发出的运行时标记。
 **种类：**功能
 
 ```typescript
-function hasSlotContent(host: Element, name?: string): boolean
+function hasSlotContent(host: Element, name?: string): boolean;
 ```
 
 是否为 `host` 提供了其插槽之一的内容 - 本机目标的
@@ -685,17 +683,17 @@ root**，这意味着消费者项目的内容保留在主机中
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|主持人|元素|  |
-|名称 |字符串|  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 主持人 | 元素   |      |
+| 名称   | 字符串 |      |
 
 ### html
 
 **种类：**功能
 
 ```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult
+function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
 ```
 
 标记模板工厂。捕获调用站点的静态字符串和动态字符串
@@ -703,26 +701,26 @@ function html(strings: TemplateStringsArray, ...values: readonly unknown[]): Tem
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|字符串|模板字符串数组 |  |
-|价值观 |只读未知[] |  |
+| 名称   | 类型           | 描述 |
+| ------ | -------------- | ---- |
+| 字符串 | 模板字符串数组 |      |
+| 价值观 | 只读未知[]     |      |
 
 ### HTML内容
 
 **种类：**功能
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult
+function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
 ```
 
 构建本机 Web 组件原始内容结果，无需转义 `html`。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | Html 内容属性 |  |
+| 名称 | 类型          | 描述 |
+| ---- | ------------- | ---- |
+| 属性 | Html 内容属性 |      |
 
 ### Html内容属性
 
@@ -749,7 +747,7 @@ export class HtmlContentResult
 **种类：**常数
 
 ```typescript
-export const nothing: unique symbol
+export const nothing: unique symbol;
 ```
 
 Sentinel 呈现为“无值”：在子位置它不产生任何内容，在
@@ -781,7 +779,10 @@ export class RawHtml
 **种类：**功能
 
 ```typescript
-function render(result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult, container: ParentNode): void
+function render(
+  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
+  container: ParentNode,
+): void;
 ```
 
 使用持久模板实例将结果渲染到 `container` 中。静态
@@ -790,17 +791,22 @@ function render(result: TemplateResult | DomTemplateResult | DynamicElementResul
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|结果|模板结果 \| DomTemplateResult \|动态元素结果 \| Html内容结果 |  |
-|集装箱|父节点 |  |
+| 名称   | 类型                                                         | 描述 |
+| ------ | ------------------------------------------------------------ | ---- |
+| 结果   | 模板结果 \| DomTemplateResult \|动态元素结果 \| Html内容结果 |      |
+| 集装箱 | 父节点                                                       |      |
 
 ### 解析ForgeSlotMarkers
 
 **种类：**功能
 
 ```typescript
-function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceChildren: readonly Node[], destinationRoot: ShadowRoot): void
+function resolveForgeSlotMarkers(
+  root: ParentNode,
+  owner: ForgeElement,
+  sourceChildren: readonly Node[],
+  destinationRoot: ShadowRoot,
+): void;
 ```
 
 解析渲染片段中编译器发出的运行时槽标记。
@@ -815,12 +821,12 @@ function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceCh
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|根 |父节点 |  |
-|业主|锻造元素 |  |
-|来源儿童|只读 Node[] |  |
-|目的地根 |影子根 |  |
+| 名称     | 类型        | 描述 |
+| -------- | ----------- | ---- |
+| 根       | 父节点      |      |
+| 业主     | 锻造元素    |      |
+| 来源儿童 | 只读 Node[] |      |
+| 目的地根 | 影子根      |      |
 
 ### 模板结果
 
@@ -837,23 +843,23 @@ export class TemplateResult
 **种类：**功能
 
 ```typescript
-function unsafeHtml(value: string): RawHtml
+function unsafeHtml(value: string): RawHtml;
 ```
 
 将字符串标记为本机 Web 组件路径的受信任子标记。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 价值 | 字符串 |      |
 
 ### 用户ID
 
 **种类：**功能
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 本机目标替换 React 的 `useId`。
@@ -900,7 +906,7 @@ export interface WebComponentsShadowPolicy
 **种类：**功能
 
 ```typescript
-function classNames(...values: readonly ClassValue[]): string
+function classNames(...values: readonly ClassValue[]): string;
 ```
 
 将任意数量的 {@link ClassValue} 合并到一个以空格分隔的类中
@@ -909,9 +915,9 @@ function classNames(...values: readonly ClassValue[]): string
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值观 |只读 ClassValue[] |  |
+| 名称   | 类型              | 描述 |
+| ------ | ----------------- | ---- |
+| 价值观 | 只读 ClassValue[] |      |
 
 ### 类值
 
@@ -930,7 +936,7 @@ export type ClassValue = | string | number | bigint | null | undefined | boolean
 **种类：**功能
 
 ```typescript
-function createContext(defaultValue: T): MpContext<T>
+function createContext(defaultValue: T): MpContext<T>;
 ```
 
 使用给定的默认值创建一个框架中立的上下文。返回一个
@@ -939,32 +945,32 @@ function createContext(defaultValue: T): MpContext<T>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|默认值 | T |  |
+| 名称   | 类型 | 描述 |
+| ------ | ---- | ---- |
+| 默认值 | T    |      |
 
 ### isContextProvider
 
 **种类：**功能
 
 ```typescript
-function isContextProvider(value: unknown): value is MpContextProvider<unknown>
+function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 ```
 
 值是否是上下文{@link MpContext.Provider}函数。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|未知 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 价值 | 未知 |      |
 
 ### MP_上下文
 
 **种类：**常数
 
 ```typescript
-export const MP_CONTEXT: unique symbol
+export const MP_CONTEXT: unique symbol;
 ```
 
 运行时适配器用于识别上下文的属性{@link MpContext.Provider}
@@ -1005,7 +1011,7 @@ export interface MpContextProviderProperties<T>
 **种类：**功能
 
 ```typescript
-function useContext(context: MpContext<T>): T
+function useContext(context: MpContext<T>): T;
 ```
 
 读取上下文的当前值：最近的封闭值
@@ -1013,9 +1019,9 @@ function useContext(context: MpContext<T>): T
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|背景 | MpContext<T> |  |
+| 名称 | 类型         | 描述 |
+| ---- | ------------ | ---- |
+| 背景 | MpContext<T> |      |
 
 ## `src/runtime/dynamic`
 
@@ -1024,7 +1030,7 @@ function useContext(context: MpContext<T>): T
 **种类：**常数
 
 ```typescript
-export const Dynamic: MpComponent<MpDynamicProperties>
+export const Dynamic: MpComponent<MpDynamicProperties>;
 ```
 
 用作动态组件的元素 `type` 的标记
@@ -1059,7 +1065,11 @@ export interface MpDynamicProperties extends MpPropertyBag
 **种类：**功能
 
 ```typescript
-function h(type: MpElementType | ((properties: P) => MpElement), properties?: P | null, ...children: MpChild[]): MpElement
+function h(
+  type: MpElementType | ((properties: P) => MpElement),
+  properties?: P | null,
+  ...children: MpChild[]
+): MpElement;
 ```
 
 经典的 JSX 工厂 (`jsxFactory: 'h'`)。
@@ -1071,11 +1081,11 @@ function h(type: MpElementType | ((properties: P) => MpElement), properties?: P 
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|类型 | MpElementType \| ((属性：P) => MpElement) |  |
-|属性 | P |空 |  |
-|儿童 | MpChild[]|  |
+| 名称 | 类型                                      | 描述 |
+| ---- | ----------------------------------------- | ---- |
+| 类型 | MpElementType \| ((属性：P) => MpElement) |      |
+| 属性 | P                                         | 空   |     |
+| 儿童 | MpChild[]                                 |      |
 
 ## `src/runtime/hooks`
 
@@ -1134,24 +1144,24 @@ export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
 **种类：**功能
 
 ```typescript
-function useCallback(callback: T, _dependencies?: MpDependencyList): T
+function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 ```
 
 中立 `useCallback`。返回渲染时未更改的回调。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|回调 | T |  |
-| _依赖关系 | MpDependencyList | MpDependencyList |  |
+| 名称      | 类型             | 描述             |
+| --------- | ---------------- | ---------------- |
+| 回调      | T                |                  |
+| _依赖关系 | MpDependencyList | MpDependencyList |     |
 
 ### 使用效果
 
 **种类：**功能
 
 ```typescript
-function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void
+function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void;
 ```
 
 中立 `useEffect`。无操作：效果模型渲染后副作用，其中
@@ -1159,17 +1169,17 @@ function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList):
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-| _效果 | MpEffectCallback | MpEffectCallback |  |
-| _依赖关系 | MpDependencyList | MpDependencyList |  |
+| 名称      | 类型             | 描述             |
+| --------- | ---------------- | ---------------- |
+| _效果     | MpEffectCallback | MpEffectCallback |     |
+| _依赖关系 | MpDependencyList | MpDependencyList |     |
 
 ### 用户ID
 
 **种类：**功能
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 中立 `useId`。镜像 React 和 Vue 的 `useId`：返回稳定、独特的
@@ -1185,24 +1195,24 @@ function useId(): string
 **种类：**功能
 
 ```typescript
-function useMemo(factory: () => T, _dependencies?: MpDependencyList): T
+function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 ```
 
 中立 `useMemo`。为渲染计算一次值。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|工厂 | () => T |  |
-| _依赖关系 | MpDependencyList | MpDependencyList |  |
+| 名称      | 类型             | 描述             |
+| --------- | ---------------- | ---------------- |
+| 工厂      | () => T          |                  |
+| _依赖关系 | MpDependencyList | MpDependencyList |     |
 
 ### 使用引用
 
 **种类：**功能
 
 ```typescript
-function useRef(initial: T): MpRef<T>
+function useRef(initial: T): MpRef<T>;
 ```
 
 中立 `useRef`。返回单个的新 `{ current }` 容器
@@ -1210,16 +1220,16 @@ function useRef(initial: T): MpRef<T>
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|初始| T |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 初始 | T    |      |
 
 ### 使用状态
 
 **种类：**功能
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>]
+function useState(initial: T | (() => T)): [T, MpSetState<T>];
 ```
 
 中立 `useState`。基线实现返回初始值并
@@ -1228,9 +1238,9 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>]
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|初始| T | (() => T) |  |
+| 名称 | 类型 | 描述      |
+| ---- | ---- | --------- |
+| 初始 | T    | (() => T) |     |
 
 ## `src/runtime/html-content`
 
@@ -1239,7 +1249,7 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>]
 **种类：**常数
 
 ```typescript
-export const HtmlContent: MpComponent<HtmlContentProperties>
+export const HtmlContent: MpComponent<HtmlContentProperties>;
 ```
 
 标记用作受信任的原始 HTML 内容的元素类型。
@@ -1268,7 +1278,7 @@ bag 而不是枚举整个 DOM 属性表面。
 **种类：**功能
 
 ```typescript
-function hasSlot(name?: string): boolean
+function hasSlot(name?: string): boolean;
 ```
 
 封闭组件是否被赋予槽的内容 - 中性
@@ -1276,7 +1286,13 @@ Vue 的 `$slots.x` / React `properties.x != null` 检查的对应项。安
 省略（或 `'default'`）名称以默认插槽（`children`）为目标：
 
 ```tsx
-{hasSlot('footer') ? <footer><Slot name="footer" /></footer> : undefined}
+{
+  hasSlot('footer') ? (
+    <footer>
+      <Slot name="footer" />
+    </footer>
+  ) : undefined;
+}
 ```
 
 `@mission-platform/vite-plugin-forge` 将调用直接重写为每个
@@ -1288,9 +1304,9 @@ Vue 的 `$slots.x` / React `properties.x != null` 检查的对应项。安
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|名称 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 名称 | 字符串 |      |
 
 ### Mp渲染属性
 
@@ -1338,7 +1354,7 @@ export interface MpSlotProperties extends MpPropertyBag
 **种类：**功能
 
 ```typescript
-function popSlotScope(): void
+function popSlotScope(): void;
 ```
 
 扩展组件的子树后，弹出当前槽范围。
@@ -1348,23 +1364,23 @@ function popSlotScope(): void
 **种类：**功能
 
 ```typescript
-function pushSlotScope(properties: MpPropertyBag): void
+function pushSlotScope(properties: MpPropertyBag): void;
 ```
 
 将要扩展的组件的 props 推到插槽范围上。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | MpPropertyBag | MpPropertyBag |  |
+| 名称 | 类型          | 描述          |
+| ---- | ------------- | ------------- |
+| 属性 | MpPropertyBag | MpPropertyBag |     |
 
 ### 解析槽位
 
 **种类：**功能
 
 ```typescript
-function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[]
+function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[];
 ```
 
 根据封闭的内容解析 `<Slot name="…" />` 的内容
@@ -1374,10 +1390,10 @@ slot 元素的剩余（非 `name`）属性。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | MpSlot 属性 |  |
-|后备|只读 MpChild[] |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 属性 | MpSlot 属性    |      |
+| 后备 | 只读 MpChild[] |      |
 
 ## `src/runtime/teleport`
 
@@ -1396,7 +1412,7 @@ export interface MpTeleportProperties
 **种类：**常数
 
 ```typescript
-export const Teleport: MpComponent<MpTeleportProperties>
+export const Teleport: MpComponent<MpTeleportProperties>;
 ```
 
 用作门户 (`<Teleport to="…">…</Teleport>`) 元素 `type` 的标记。
@@ -1433,7 +1449,7 @@ export interface MpTransitionProperties
 **种类：**常数
 
 ```typescript
-export const Transition: MpComponent<MpTransitionProperties>
+export const Transition: MpComponent<MpTransitionProperties>;
 ```
 
 用作进入/离开转换的元素 `type` 的标记
@@ -1449,7 +1465,7 @@ export const Transition: MpComponent<MpTransitionProperties>
 **种类：**常数
 
 ```typescript
-export const TransitionGroup: MpComponent<MpTransitionGroupProperties>
+export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 ```
 
 用作**列表**进入/离开/移动转换的元素 `type` 的标记
@@ -1471,7 +1487,7 @@ SSR 的孩子就位）和 `@mission-platform/vite-plugin-forge` 重新映射其
 **种类：**常数
 
 ```typescript
-export const Fragment: MpFragment
+export const Fragment: MpFragment;
 ```
 
 用作片段元素 `type` 的标记 (`<>…</>`)，即经典
@@ -1492,16 +1508,16 @@ TS2604（“没有任何构造或调用签名”）。从来都不是
 **种类：**功能
 
 ```typescript
-function isMpElement(value: unknown): value is MpElement
+function isMpElement(value: unknown): value is MpElement;
 ```
 
 将任意值缩小为 {@link MpElement}。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|未知 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 价值 | 未知 |      |
 
 ### 儿童MP
 
@@ -1588,7 +1604,7 @@ export interface MpReservedProperties
   `"default"`) 表示默认插槽。
 
 两者都不是组件自己的 props 合约的一部分——两者都由组件读取
-*父级*（协调器、槽路由器），绝不是由组件本身 -
+_父级_（协调器、槽路由器），绝不是由组件本身 -
 所以这里的每个元素都接受它们，而不是在每个元素上声明它们
 道具界面。
 
@@ -1597,7 +1613,7 @@ export interface MpReservedProperties
 **种类：**常数
 
 ```typescript
-export const Slot: MpComponent
+export const Slot: MpComponent;
 ```
 
 用作命名槽 (`<Slot name="…" />`) 的元素 `type` 的标记。

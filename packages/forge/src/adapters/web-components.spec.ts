@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { createContext, useContext } from '../runtime/context';
 
+
 import {
   dynamicElement,
   domTemplate,
@@ -20,6 +21,41 @@ import {
 import { TemplateInstance } from './web-components-renderer';
 
 import type { DomRenderResult, DomTemplateDefinition, TemplateResult } from './web-components';
+import type { MpContext } from '../runtime/context';
+
+function contextReader<T>(context: MpContext<T>): () => TemplateResult {
+  return (): TemplateResult => html`
+    <span>${useContext(context)}</span>
+  `;
+}
+
+function conditionalRangeView(visible: boolean): TemplateResult {
+  return html`
+    <section>
+      ${
+        visible
+          ? html`
+              <span class="visible">shown</span>
+            `
+          : nothing
+      }
+    </section>
+  `;
+}
+
+function directDefinition(): DomTemplateDefinition {
+  return {
+    create: (ownerDocument) => {
+      const section = ownerDocument.createElement('section');
+      const marker = ownerDocument.createComment('slot');
+      section.append(marker);
+      return {
+        nodes: [section],
+        parts: [{ kind: 'node', id: 0, start: marker }],
+      };
+    },
+  };
+}
 
 /**
  * A representative generated-style element: a reactive `state` count, an
@@ -595,9 +631,7 @@ describe('the native `html` tagged template + `render`', () => {
 
   it('renders computed component functions and context providers', () => {
     const context = createContext('default');
-    const Reader = (): TemplateResult => html`
-      <span>${useContext(context)}</span>
-    `;
+    const Reader = contextReader(context);
     const container = document.createElement('div');
 
     render(
@@ -613,9 +647,7 @@ describe('the native `html` tagged template + `render`', () => {
 
   it('updates dynamic providers and components in place with the active context', () => {
     const context = createContext('default');
-    const Reader = (): TemplateResult => html`
-      <span>${useContext(context)}</span>
-    `;
+    const Reader = contextReader(context);
     const container = document.createElement('div');
     const view = (value: string): DomRenderResult =>
       dynamicElement(context.Provider, { '~value': value }, dynamicElement(Reader, {}));
@@ -776,20 +808,9 @@ describe('the native `html` tagged template + `render`', () => {
 
   it('updates a conditional range when its marker is the final child', () => {
     const container = document.createElement('div');
-    const view = (visible: boolean): TemplateResult => html`
-      <section>
-        ${
-          visible
-            ? html`
-                <span class="visible">shown</span>
-              `
-            : nothing
-        }
-      </section>
-    `;
 
-    render(view(false), container);
-    render(view(true), container);
+    render(conditionalRangeView(false), container);
+    render(conditionalRangeView(true), container);
 
     expect(container.querySelector('.visible')?.textContent).toBe('shown');
   });
@@ -906,20 +927,6 @@ describe('the native `html` tagged template + `render`', () => {
 });
 
 describe('direct DOM template results', () => {
-  function directDefinition(): DomTemplateDefinition {
-    return {
-      create: (ownerDocument) => {
-        const section = ownerDocument.createElement('section');
-        const marker = ownerDocument.createComment('slot');
-        section.append(marker);
-        return {
-          nodes: [section],
-          parts: [{ kind: 'node', id: 0, start: marker }],
-        };
-      },
-    };
-  }
-
   it('constructs direct DOM once and updates the existing node range', () => {
     const container = document.createElement('div');
     const definition = directDefinition();

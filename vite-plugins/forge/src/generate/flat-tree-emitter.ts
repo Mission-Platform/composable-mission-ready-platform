@@ -25,12 +25,7 @@ export interface ForgeFlatTreeEmitter {
 
   writeModule: (dir: string, fileName: string, code: string, sourceId?: string) => void;
   copyAsset: (dir: string, fileName: string, sourcePath: string, sourceId?: string) => void;
-  writeCompiledModule: (
-    dir: string,
-    fileName: string,
-    compiled: GeneratedModule,
-    sourceId?: string,
-  ) => void;
+  writeCompiledModule: (dir: string, fileName: string, compiled: GeneratedModule, sourceId?: string) => void;
 }
 
 export function createFlatTreeEmitter(input: {
@@ -108,12 +103,7 @@ export function createFlatTreeEmitter(input: {
     }
   };
 
-  const writeCompiledModule = (
-    dir: string,
-    fileName: string,
-    compiled: GeneratedModule,
-    sourceId?: string,
-  ): void => {
+  const writeCompiledModule = (dir: string, fileName: string, compiled: GeneratedModule, sourceId?: string): void => {
     writeModule(dir, `${fileName}.${compiled.lang}`, compiled.code, sourceId);
     for (const extra of compiled.extraModules ?? []) {
       writeModule(dir, `${extra.name}.${extra.lang}`, extra.code);

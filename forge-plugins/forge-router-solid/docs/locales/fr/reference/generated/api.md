@@ -21,44 +21,39 @@ function createSolidRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: SolidNavigate;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Créez des fonctionnalités neutres à partir des primitives du routeur Solid (sans framework pour les tests).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| entrée | { emplacement : { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } ;   paramètres ? : Record<string, string \| undefined> ;   naviguer : SolidNavigate ;   point de vente ? : inconnu ; } |  |
+| Nom    | Tapez                                                                                                                                                                                        | Descriptif |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| entrée | { emplacement : { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } ; paramètres ? : Record<string, string \| undefined> ; naviguer : SolidNavigate ; point de vente ? : inconnu ; } |            |
 
 ### MpLink
 
 **Genre :** composant
 
 ```typescript
-function MpLink(properties: {
-  href?: string;
-  to?: MpRouteLocationRaw;
-  children?: unknown;
-  replace?: boolean;
-}): unknown
+function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
 ```
 
 Proxy du composant d'ancrage Solid lié via {@link setForgeSolidRouter}.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | { href? : chaîne ;   vers ? : MpRouteLocationRaw ;   enfants ? : inconnu ;   remplacer ? : booléen ; } |  |
+| Nom        | Tapez                                                                                            | Descriptif |
+| ---------- | ------------------------------------------------------------------------------------------------ | ---------- |
+| propriétés | { href? : chaîne ; vers ? : MpRouteLocationRaw ; enfants ? : inconnu ; remplacer ? : booléen ; } |            |
 
 ### MpRouterView
 
 **Genre :** composant
 
 ```typescript
-function MpRouterView(): unknown
+function MpRouterView(): unknown;
 ```
 
 Proxy de sortie Solid lié via {@link setForgeSolidRouter}.
@@ -68,23 +63,23 @@ Proxy de sortie Solid lié via {@link setForgeSolidRouter}.
 **Genre :** fonction
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Résolvez une cible neutre en une chaîne href.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| à | MpRouteLocationRaw |  |
+| Nom | Tapez              | Descriptif |
+| --- | ------------------ | ---------- |
+| à   | MpRouteLocationRaw |            |
 
 ### setForgeSolidRouter
 
 **Genre :** fonction
 
 ```typescript
-function setForgeSolidRouter(surface: SolidRouterSurface): void
+function setForgeSolidRouter(surface: SolidRouterSurface): void;
 ```
 
 Liez le module de routeur Solid appartenant à l'application afin que les packages compilés conservent la neutralité
@@ -92,9 +87,9 @@ formes de crochet/appel (`useMpRouter().navigate`, `useMpRoute().query`, …).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| surfaces | SolidRouterSurface |  |
+| Nom      | Tapez              | Descriptif |
+| -------- | ------------------ | ---------- |
+| surfaces | SolidRouterSurface |            |
 
 ### SolidRouterSurface
 
@@ -111,40 +106,43 @@ Surface minimale du routeur Solid utilisée par la cale d'exécution.
 **Genre :** fonction
 
 ```typescript
-function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromSolid(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 Créez un emplacement neutre à partir des instantanés d'emplacement/paramètres du routeur Solid.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| emplacement | { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } |  |
-| paramètres | Enregistrement<string, string \| undefined> |  |
+| Nom         | Tapez                                                       | Descriptif |
+| ----------- | ----------------------------------------------------------- | ---------- |
+| emplacement | { chemin : chaîne ; recherche : chaîne ; hachage : chaîne } |            |
+| paramètres  | Enregistrement<string, string \| undefined>                 |            |
 
 ### versSolideHref
 
 **Genre :** fonction
 
 ```typescript
-function toSolidHref(to: MpRouteLocationRaw): string
+function toSolidHref(to: MpRouteLocationRaw): string;
 ```
 
 Sérialisez une cible neutre pour la navigation du routeur Solid.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| à | MpRouteLocationRaw |  |
+| Nom | Tapez              | Descriptif |
+| --- | ------------------ | ---------- |
+| à   | MpRouteLocationRaw |            |
 
 ### useMpNavigation
 
 **Genre :** fonction
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Lecture seule des capacités impératives de navigation/résolution.
@@ -154,7 +152,7 @@ Lecture seule des capacités impératives de navigation/résolution.
 **Genre :** fonction
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lisez l'itinéraire actuel appartenant à l'application sous le nom {@link MpResolvedLocation}.
@@ -164,7 +162,7 @@ Lisez l'itinéraire actuel appartenant à l'application sous le nom {@link MpRes
 **Genre :** fonction
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lisez l'objet de capacité neutre soutenu par le routeur Solid.
@@ -176,7 +174,7 @@ Lisez l'objet de capacité neutre soutenu par le routeur Solid.
 **Genre :** constante
 
 ```typescript
-export const forgeRouterSolid
+export const forgeRouterSolid;
 ```
 
 Cible de routeur Forge pour une instance de routeur SolidJS appartenant à une application.

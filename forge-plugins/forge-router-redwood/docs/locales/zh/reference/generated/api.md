@@ -22,39 +22,39 @@ function createRedwoodRouterCapabilities(input: {
   navigate: RedwoodRouterSurface['navigate'];
   routes?: RedwoodRouterSurface['routes'];
   link?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 从 Redwood 原语构建中性功能（无需框架进行测试）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | { 位置：{ 路径名：字符串；搜索：字符串；哈希？：字符串}；   参数？：MpRouteParameters；   导航：RedwoodRouterSurface['导航'];   路线？：RedwoodRouterSurface['路线'];   链接？： 未知； } |  |
+| 名称 | 类型                                                                                                                                                                              | 描述 |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 输入 | { 位置：{ 路径名：字符串；搜索：字符串；哈希？：字符串}； 参数？：MpRouteParameters； 导航：RedwoodRouterSurface['导航']; 路线？：RedwoodRouterSurface['路线']; 链接？： 未知； } |      |
 
 ### 普联
 
 **种类：**组件
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown
+function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
 ```
 
 链接组件代理；应用程序绑定原生 Redwood `Link` 通过{@link setForgeRedwoodRouter}。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | { 至：MpRouteLocationRaw；替换？：布尔值；孩子？：未知 } |  |
+| 名称 | 类型                                                     | 描述 |
+| ---- | -------------------------------------------------------- | ---- |
+| 属性 | { 至：MpRouteLocationRaw；替换？：布尔值；孩子？：未知 } |      |
 
 ### MpRouterView
 
 **种类：**组件
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Redwood没有便携式插座；编译器报告 `view` 作为不支持的。
@@ -74,23 +74,23 @@ export interface RedwoodRouterSurface
 **种类：**功能
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 将中性目标解析为 href 字符串。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### setForgeRedwoodRouter
 
 **种类：**功能
 
 ```typescript
-function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
+function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void;
 ```
 
 绑定应用程序拥有的 Redwood 路由器模块。编译好的包代码读通
@@ -98,50 +98,53 @@ function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|表面|红木路由器表面|  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 表面 | 红木路由器表面 |      |
 
 ### toMp位置FromRedwood
 
 **种类：**功能
 
 ```typescript
-function toMpLocationFromRedwood(location: { pathname: string; search: string; hash?: string }, params: MpRouteParameters = {}): MpResolvedLocation
+function toMpLocationFromRedwood(
+  location: { pathname: string; search: string; hash?: string },
+  params: MpRouteParameters = {},
+): MpResolvedLocation;
 ```
 
 从红木位置快照构建一个中立位置。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地点 | { 路径名：字符串；搜索：字符串；哈希？：字符串 } |  |
-|参数| MpRoute 参数 |  |
+| 名称 | 类型                                             | 描述 |
+| ---- | ------------------------------------------------ | ---- |
+| 地点 | { 路径名：字符串；搜索：字符串；哈希？：字符串 } |      |
+| 参数 | MpRoute 参数                                     |      |
 
 ### 到红木参考
 
 **种类：**功能
 
 ```typescript
-function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string
+function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string;
 ```
 
 序列化 Redwood 导航的中性目标。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
-|路线 | RedwoodRouterSurface['路线'] | RedwoodRouterSurface['路线'] |  |
+| 名称 | 类型                         | 描述                         |
+| ---- | ---------------------------- | ---------------------------- |
+| 至   | MpRouteLocation原始          |                              |
+| 路线 | RedwoodRouterSurface['路线'] | RedwoodRouterSurface['路线'] |     |
 
 ### 使用Mp导航
 
 **种类：**功能
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 只读命令式导航/解析功能。
@@ -151,7 +154,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **种类：**功能
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 将当前应用拥有的路线读取为 {@link MpResolvedLocation}。
@@ -161,7 +164,7 @@ function useMpRoute(): MpResolvedLocation | null
 **种类：**功能
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 读取 Redwood Router 支持的中立功能对象。
@@ -173,7 +176,7 @@ function useMpRouter(): MpRouterCapabilities
 **种类：**常数
 
 ```typescript
-export const forgeRouterRedwood
+export const forgeRouterRedwood;
 ```
 
 RedwoodSDK 应用程序拥有的路由器上下文的 Forge 路由器目标。

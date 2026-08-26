@@ -14,14 +14,14 @@
 
 אוסף Forge חוצה מספר חבילות, שלכל אחת יש אחריות צרה במתכוון:
 
-| שכבה | בעל | אינו בעל |
-| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| `@mission-platform/vite-plugin-forge` | ניתוח, נורמליזציה, ניתוח ניטרלי, IR סמנטי, אופטימיזציה משותפת, מטמון/גילוי, שיגור ותזמור Vite/tsdown גנרי | React, Vue, Solid, Svelte, רכיבי אינטרנט או פולטי מקור CMS |
-| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin`, חוזי יעד סמנטיים, סוגי מודול שנוצר, מטא נתונים של יעד וסוגי מתאמים Vite/tsdown | רישום יישום מסגרת או בחירת יעד |
-| חבילות `@mission-platform/forge-plugin-*` מובנות | הורדת יעדים, אופטימיזציה של יעדים, יצירת מקור, אבחון יעדים, מטא נתונים של זמן ריצה ומתאמי בנייה מקוריים | ניתוח ניטרלי ותזמור חוצה יעדים |
-| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`, מודל התוכן הנייטרלי, מנהל ההתקן של discover→analyse→emit→write, יצירת משותף באי, ועוזרים לבנות CMS | כל סכימה, תבנית או צורת מניפסט ספציפיים לפלטפורמה |
-| חבילות `@mission-platform/forge-cms-*` | פלטפורמת תוכן אחת כל אחת: מיפוי שדות, ניב תבנית, צורת מניפסט ואבחון פלטפורמה | סיווג אבזר ניטרלי או תזמור חוצה מטרות |
-| חבילת קבצי `tsdown.config.ts` | בחירת מופעי הפלאגין היעד ועקיפות ספציפיות לחבילה | יישום מחדש של שלבי מהדר או טבלאות מתג מסגרת |
+| שכבה                                             | בעל                                                                                                                   | אינו בעל                                                   |
+| :----------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge`            | ניתוח, נורמליזציה, ניתוח ניטרלי, IR סמנטי, אופטימיזציה משותפת, מטמון/גילוי, שיגור ותזמור Vite/tsdown גנרי             | React, Vue, Solid, Svelte, רכיבי אינטרנט או פולטי מקור CMS |
+| `@mission-platform/forge-plugin-api`             | `FrameworkOutputPlugin`, חוזי יעד סמנטיים, סוגי מודול שנוצר, מטא נתונים של יעד וסוגי מתאמים Vite/tsdown               | רישום יישום מסגרת או בחירת יעד                             |
+| חבילות `@mission-platform/forge-plugin-*` מובנות | הורדת יעדים, אופטימיזציה של יעדים, יצירת מקור, אבחון יעדים, מטא נתונים של זמן ריצה ומתאמי בנייה מקוריים               | ניתוח ניטרלי ותזמור חוצה יעדים                             |
+| `@mission-platform/forge-cms-plugin-api`         | `CmsOutputPlugin`, מודל התוכן הנייטרלי, מנהל ההתקן של discover→analyse→emit→write, יצירת משותף באי, ועוזרים לבנות CMS | כל סכימה, תבנית או צורת מניפסט ספציפיים לפלטפורמה          |
+| חבילות `@mission-platform/forge-cms-*`           | פלטפורמת תוכן אחת כל אחת: מיפוי שדות, ניב תבנית, צורת מניפסט ואבחון פלטפורמה                                          | סיווג אבזר ניטרלי או תזמור חוצה מטרות                      |
+| חבילת קבצי `tsdown.config.ts`                    | בחירת מופעי הפלאגין היעד ועקיפות ספציפיות לחבילה                                                                      | יישום מחדש של שלבי מהדר או טבלאות מתג מסגרת                |
 
 כיוון התלות הוא מפורש: חבילה מייבאת את תוסף היעד שהיא רוצה, מעבירה את המופע הזה לנייטרלי
 מנהל התקן, ומקבל תצורת בנייה ספציפית ליעד. הדרייבר לעולם אינו בונה יעד ממחרוזת או מייבא
@@ -134,12 +134,12 @@ node סמנטי במקום לפלוט בשקט סגירת זמן ריצה גנר
 יעדים שהוא מפרסם:
 
 ```ts
-import { defineTsdownForgeComponents } from "@mission-platform/vite-plugin-forge";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeSolidFramework } from "@mission-platform/forge-plugin-solid";
-import { forgeSvelteFramework } from "@mission-platform/forge-plugin-svelte";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
-import { forgeWebComponentsFramework } from "@mission-platform/forge-plugin-web-components";
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
 export default defineTsdownForgeComponents({
   rootDir: import.meta.dirname,
@@ -151,7 +151,7 @@ export default defineTsdownForgeComponents({
     forgeWebComponentsFramework(),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: "MissionPlatformComponents",
+  name: 'MissionPlatformComponents',
 });
 ```
 
@@ -227,7 +227,7 @@ flowchart LR
 
 ## הקרנת CMS
 
-הקרנת רכיבים על גבי *פלטפורמת תוכן* היא ציר אורתוגונלי להורדת המסגרת, לא מסגרת
+הקרנת רכיבים על גבי _פלטפורמת תוכן_ היא ציר אורתוגונלי להורדת המסגרת, לא מסגרת
 יישום מוסתר בתוך הדרייבר הראשי. רכיב הופך לבלוק של Storyblok, לאי אסטרו, לחלקי רפאים, א
 Jekyll כוללים, או רכיב קוד Webflow - וכל אחד מאלה ניתן לשיוך עם **כל** תוסף פלט מסגרת.
 לכן `storyblok × vue`, `astro × solid` ו-`ghost × web-components` הם תצורה ולא קוד חדש.
@@ -240,7 +240,7 @@ Jekyll כוללים, או רכיב קוד Webflow - וכל אחד מאלה ני�
    ואיגוד מערבב מחרוזת מילולית עם `string`/`number` מתדרדר ל-`text` - הוחלט פעם אחת, אז כל פלטפורמה
    מסכים. כאשר ה-IR הסמנטי מסופק, `ContentComponent.interactive` מדווח אם הרכיב נושא מצב,
    שופטים, אפקטים או אירועים.
-2. **חוזה יעד.** `CmsOutputPlugin` *מרכיב* `FrameworkOutputPlugin` במקום להיות אחד, ומצהיר על
+2. **חוזה יעד.** `CmsOutputPlugin` _מרכיב_ `FrameworkOutputPlugin` במקום להיות אחד, ומצהיר על
    פולטים `emitSchema`, `emitTemplate`, `emitManifest` ו-`emitEntry`. `defineForgeCmsPlugin` מאמת אותו ב
    זמן הגדרה, כולל הגבלת `supportedFrameworks` של יעד.
 3. **נהג גנרי ועוזרים לבנות.** `generateCmsArtifacts` מגלה את החבית הניטרלית, משיג את כל רכיב
@@ -252,23 +252,23 @@ Jekyll כוללים, או רכיב קוד Webflow - וכל אחד מאלה ני�
 תוספי מסגרת:
 
 ```ts
-import { defineTsdownForgeCmsAll } from "@mission-platform/forge-cms-plugin-api";
-import { forgeStoryblokCms } from "@mission-platform/forge-cms-storyblok";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
 export default defineTsdownForgeCmsAll({
   rootDir: import.meta.dirname,
   targets: [
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeReactFramework(),
-      storyblokRuntime: "@storyblok/react",
+      storyblokRuntime: '@storyblok/react',
     }),
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeVueFramework(),
-      storyblokRuntime: "@storyblok/vue",
+      storyblokRuntime: '@storyblok/vue',
     }),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
@@ -290,13 +290,13 @@ flowchart TD
 
 ### המטרות
 
-| חבילה | מפעל | פולט |
-| :----------------------------------------- | :-------------------- | :---------------------------------------------------------------------------- |
+| חבילה                                   | מפעל                | פולט                                                                  |
+| :-------------------------------------- | :------------------ | :-------------------------------------------------------------------- |
 | `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | אובייקט רכיב לכל רכיב, מעטפת בלוק מסגרת, `components.json`, ערך מודפס |
-| `@mission-platform/forge-cms-astro` | `forgeAstroCms` | `.astro` סטטי או אי `client:load`, בתוספת זוד `content.config.ts` |
-| `@mission-platform/forge-cms-ghost` | `forgeGhostCms` | חלקי כידון בתוספת קטע נושא `config.custom` |
-| `@mission-platform/forge-cms-jekyll` | `forgeJekyllCms` | נוזל כולל בתוספת `_data/forge-components.yml` ושבר `_config.yml` |
-| `@mission-platform/forge-cms-webflow` | `forgeWebflowCms` | הצהרות רכיבי קוד `declareComponent` בתוספת קטע ספריית `webflow.json` |
+| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | `.astro` סטטי או אי `client:load`, בתוספת זוד `content.config.ts`     |
+| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | חלקי כידון בתוספת קטע נושא `config.custom`                            |
+| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | נוזל כולל בתוספת `_data/forge-components.yml` ושבר `_config.yml`      |
+| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | הצהרות רכיבי קוד `declareComponent` בתוספת קטע ספריית `webflow.json`  |
 
 כל מיפוי לא נתמך מייצר `CompilerDiagnostic` עם שלב, קוד וסיבה ניתנת לפעולה ולא עם
 השמטה שקטה - Ghost מתריע על שדות מספריים ועל חריגה מהמכסה של ~20 הגדרות, Webflow מזהיר כאשר מספר

@@ -14,14 +14,14 @@
 
 تتقاطع مجموعة Forge مع العديد من الحزم، ولكل منها مسؤولية محدودة عن عمد:
 
-| طبقة | يملك | لا يملك |
-| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| `@mission-platform/vite-plugin-forge` | التحليل والتطبيع والتحليل المحايد والأشعة تحت الحمراء الدلالية والتحسين المشترك وذاكرة التخزين المؤقت/الاكتشاف والإرسال والتنسيق العام Vite/tsdown | React، Vue، Solid، Svelte، Web Components، أو بواعث مصدر CMS |
-| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin`، العقود المستهدفة الدلالية، أنواع الوحدات التي تم إنشاؤها، البيانات التعريفية المستهدفة، وأنواع المحولات Vite/tsdown | تنفيذ الإطار أو تسجيل اختيار الهدف |
-| حزم `@mission-platform/forge-plugin-*` المدمجة | خفض الهدف، وتحسين الهدف، وإنشاء المصدر، وتشخيص الهدف، وبيانات تعريف وقت التشغيل، ومحولات البناء الأصلية | التحليل المحايد والتنسيق عبر الأهداف |
-| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`، نموذج المحتوى المحايد، اكتشاف → تحليل → إرسال → محرك الكتابة، التوليد المشترك للجزيرة، ومساعدي بناء CMS | أي مخطط أو قالب أو شكل بيان خاص بالمنصة |
-| حزم `@mission-platform/forge-cms-*` | منصة محتوى واحدة لكل منها: رسم الخرائط الميدانية ولهجة القالب وشكل البيان وتشخيص النظام الأساسي | تصنيف الدعامة المحايدة أو التنسيق عبر الأهداف |
-| حزمة ملفات `tsdown.config.ts` | تحديد مثيلات البرنامج المساعد الهدف والتجاوزات الخاصة بالحزمة | إعادة تنفيذ مراحل المترجم أو جداول تبديل الإطار |
+| طبقة                                           | يملك                                                                                                                                               | لا يملك                                                      |
+| :--------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge`          | التحليل والتطبيع والتحليل المحايد والأشعة تحت الحمراء الدلالية والتحسين المشترك وذاكرة التخزين المؤقت/الاكتشاف والإرسال والتنسيق العام Vite/tsdown | React، Vue، Solid، Svelte، Web Components، أو بواعث مصدر CMS |
+| `@mission-platform/forge-plugin-api`           | `FrameworkOutputPlugin`، العقود المستهدفة الدلالية، أنواع الوحدات التي تم إنشاؤها، البيانات التعريفية المستهدفة، وأنواع المحولات Vite/tsdown       | تنفيذ الإطار أو تسجيل اختيار الهدف                           |
+| حزم `@mission-platform/forge-plugin-*` المدمجة | خفض الهدف، وتحسين الهدف، وإنشاء المصدر، وتشخيص الهدف، وبيانات تعريف وقت التشغيل، ومحولات البناء الأصلية                                            | التحليل المحايد والتنسيق عبر الأهداف                         |
+| `@mission-platform/forge-cms-plugin-api`       | `CmsOutputPlugin`، نموذج المحتوى المحايد، اكتشاف → تحليل → إرسال → محرك الكتابة، التوليد المشترك للجزيرة، ومساعدي بناء CMS                         | أي مخطط أو قالب أو شكل بيان خاص بالمنصة                      |
+| حزم `@mission-platform/forge-cms-*`            | منصة محتوى واحدة لكل منها: رسم الخرائط الميدانية ولهجة القالب وشكل البيان وتشخيص النظام الأساسي                                                    | تصنيف الدعامة المحايدة أو التنسيق عبر الأهداف                |
+| حزمة ملفات `tsdown.config.ts`                  | تحديد مثيلات البرنامج المساعد الهدف والتجاوزات الخاصة بالحزمة                                                                                      | إعادة تنفيذ مراحل المترجم أو جداول تبديل الإطار              |
 
 اتجاه التبعية واضح: تستورد الحزمة المكون الإضافي المستهدف الذي تريده، وتمرر هذا المثيل إلى الحياد
 برنامج التشغيل، ويتلقى تكوين بناء خاص بالهدف. لا يقوم برنامج التشغيل أبدًا بإنشاء هدف من سلسلة أو عمليات استيراد
@@ -134,12 +134,12 @@ node الدلالي بدلاً من إصدار إغلاق وقت تشغيل عا
 الأهداف التي ينشرها:
 
 ```ts
-import { defineTsdownForgeComponents } from "@mission-platform/vite-plugin-forge";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeSolidFramework } from "@mission-platform/forge-plugin-solid";
-import { forgeSvelteFramework } from "@mission-platform/forge-plugin-svelte";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
-import { forgeWebComponentsFramework } from "@mission-platform/forge-plugin-web-components";
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
 export default defineTsdownForgeComponents({
   rootDir: import.meta.dirname,
@@ -151,7 +151,7 @@ export default defineTsdownForgeComponents({
     forgeWebComponentsFramework(),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: "MissionPlatformComponents",
+  name: 'MissionPlatformComponents',
 });
 ```
 
@@ -227,7 +227,7 @@ flowchart LR
 
 ## إسقاط CMS
 
-يعد عرض المكونات على *منصة المحتوى* محورًا متعامدًا لخفض إطار العمل، وليس إطار عمل
+يعد عرض المكونات على _منصة المحتوى_ محورًا متعامدًا لخفض إطار العمل، وليس إطار عمل
 تنفيذ مخفي داخل برنامج التشغيل الرئيسي. يصبح المكون عبارة عن Storyblok blok، أو Astro Island، أو Ghost جزئيًا، أو a
 يتضمن Jekyll، أو مكون كود Webflow - ويمكن إقران كل منهما مع ** أي ** مكون إضافي لإخراج إطار العمل.
 وبالتالي فإن `storyblok × vue` و`astro × solid` و`ghost × web-components` هي تكوينات وليست تعليمات برمجية جديدة.
@@ -240,7 +240,7 @@ flowchart LR
    ويتحلل اتحاد سلسلة المزج الحرفي مع `string`/`number` إلى `text` - يتم تحديده مرة واحدة، لذلك كل منصة
    يوافق. عندما يتم توفير IR الدلالي، يقوم `ContentComponent.interactive` بالإبلاغ عما إذا كان المكون يحمل الحالة،
    المراجع أو التأثيرات أو الأحداث.
-2. **عقد مستهدف.** `CmsOutputPlugin` *يؤلف* `FrameworkOutputPlugin` بدلاً من أن يكون واحدًا، ويعلن عن
+2. **عقد مستهدف.** `CmsOutputPlugin` _يؤلف_ `FrameworkOutputPlugin` بدلاً من أن يكون واحدًا، ويعلن عن
    بواعث `emitSchema`، `emitTemplate`، `emitManifest`، و`emitEntry`. `defineForgeCmsPlugin` يتحقق من صحة ذلك في
    وقت التكوين، بما في ذلك تقييد `supportedFrameworks` الخاص بالهدف.
 3. ** برنامج تشغيل عام ومساعدي بناء. ** يكتشف `generateCmsArtifacts` البرميل المحايد، ويحصل على معلومات كل مكون
@@ -252,23 +252,23 @@ flowchart LR
 ملحقات الإطار:
 
 ```ts
-import { defineTsdownForgeCmsAll } from "@mission-platform/forge-cms-plugin-api";
-import { forgeStoryblokCms } from "@mission-platform/forge-cms-storyblok";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
 export default defineTsdownForgeCmsAll({
   rootDir: import.meta.dirname,
   targets: [
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeReactFramework(),
-      storyblokRuntime: "@storyblok/react",
+      storyblokRuntime: '@storyblok/react',
     }),
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeVueFramework(),
-      storyblokRuntime: "@storyblok/vue",
+      storyblokRuntime: '@storyblok/vue',
     }),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
@@ -290,13 +290,13 @@ flowchart TD
 
 ### الأهداف
 
-| Package                                    | مصنع | ينبعث |
-| :----------------------------------------- | :-------------------- | :---------------------------------------------------------------------------- |
-| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | كائن مكون لكل مكون، مجمع كتلة الإطار، `components.json`، إدخال مكتوب |
-| `@mission-platform/forge-cms-astro` | `forgeAstroCms` | `.astro` ثابت أو جزيرة `client:load`، بالإضافة إلى zod `content.config.ts` |
-| `@mission-platform/forge-cms-ghost` | `forgeGhostCms` | أجزاء المقاود بالإضافة إلى جزء سمة `config.custom` |
-| `@mission-platform/forge-cms-jekyll` | `forgeJekyllCms` | يتضمن السائل بالإضافة إلى `_data/forge-components.yml` وجزء `_config.yml` |
-| `@mission-platform/forge-cms-webflow` | `forgeWebflowCms` | إعلانات مكونات التعليمات البرمجية `declareComponent` بالإضافة إلى جزء مكتبة `webflow.json` |
+| Package                                 | مصنع                | ينبعث                                                                                      |
+| :-------------------------------------- | :------------------ | :----------------------------------------------------------------------------------------- |
+| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | كائن مكون لكل مكون، مجمع كتلة الإطار، `components.json`، إدخال مكتوب                       |
+| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | `.astro` ثابت أو جزيرة `client:load`، بالإضافة إلى zod `content.config.ts`                 |
+| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | أجزاء المقاود بالإضافة إلى جزء سمة `config.custom`                                         |
+| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | يتضمن السائل بالإضافة إلى `_data/forge-components.yml` وجزء `_config.yml`                  |
+| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | إعلانات مكونات التعليمات البرمجية `declareComponent` بالإضافة إلى جزء مكتبة `webflow.json` |
 
 ينتج عن كل تعيين غير مدعوم `CompilerDiagnostic` بمرحلة ورمز وسبب قابل للتنفيذ بدلاً من
 الإغفال الصامت - يحذر Ghost من الحقول الرقمية وعند تجاوز الحد الأقصى البالغ 20 إعدادًا، يحذر Webflow عندما يكون هناك رقم

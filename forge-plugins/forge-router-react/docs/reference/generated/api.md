@@ -48,7 +48,7 @@ Resolve a neutral target to an href string.
 **Kind:** function
 
 ```typescript
-function toMpLocationFromReact(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromReact(location: { pathname: string; search: string; hash: string }, parameters: Record<string, string | undefined> = {}): MpResolvedLocation
 ```
 
 Build a neutral location from React Router location/params snapshots.
@@ -58,7 +58,7 @@ Build a neutral location from React Router location/params snapshots.
 | Name | Type | Description |
 | --- | --- | --- |
 | location | { pathname: string; search: string; hash: string } |  |
-| params | Record<string, string \| undefined> |  |
+| parameters | Record<string, string \| undefined> |  |
 
 ### toReactHref
 

@@ -102,7 +102,7 @@ this seam so hook/call shapes match the neutral contract.
 **Kind:** function
 
 ```typescript
-function toMpLocationFromRedwood(location: { pathname: string; search: string; hash?: string }, params: MpRouteParameters = {}): MpResolvedLocation
+function toMpLocationFromRedwood(location: { pathname: string; search: string; hash?: string }, parameters: MpRouteParameters = {}): MpResolvedLocation
 ```
 
 Build a neutral location from a Redwood location snapshot.
@@ -112,7 +112,7 @@ Build a neutral location from a Redwood location snapshot.
 | Name | Type | Description |
 | --- | --- | --- |
 | location | { pathname: string; search: string; hash?: string } |  |
-| params | MpRouteParameters |  |
+| parameters | MpRouteParameters |  |
 
 ### toRedwoodHref
 

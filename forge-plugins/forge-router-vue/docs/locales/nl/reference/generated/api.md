@@ -16,49 +16,49 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/forge-r
 **Soort:** functie
 
 ```typescript
-function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities
+function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities;
 ```
 
 Bouw neutrale mogelijkheden op basis van een Vue Router-instantie die eigendom is van een app.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| router | Router |  |
-| huidig ​​|  |  |
+| Naam      | Typ    | Beschrijving |
+| --------- | ------ | ------------ |
+| router    | Router |              |
+| huidig ​​ |        |              |
 
 ### oplossingMpLink
 
 **Soort:** functie
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Los een neutraal doelwit op via de Vue-router van de app.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| naar | MpRouteLocationRaw |              |
 
 ### solvePathTarget
 
 **Soort:** functie
 
 ```typescript
-function resolvePathTarget(to: MpRouteLocationRaw): string
+function resolvePathTarget(to: MpRouteLocationRaw): string;
 ```
 
 Alleen pad-fallback gebruikt wanneer een Vue Router-instantie niet beschikbaar is (SSR/tests).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| naar | MpRouteLocationRaw |              |
 
 ### naarMpLocation
 
@@ -73,39 +73,39 @@ function toMpLocation(route: {
   hash: string;
   name?: string | symbol | null;
   meta?: Record<string, unknown>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 Converteer de oorspronkelijke Vue-routestatus naar de neutrale, opgeloste locatie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| route | {pad: tekenreeks;   volledig pad: tekenreeks;   parameters: Record<string, unknown>;   vraag: LocationQuery;   hash: tekenreeks;   naam?: tekenreeks \| symbool \| nul;   meta?: Record<string, unknown>; } |  |
+| Naam  | Typ                                                                                                                                                                                             | Beschrijving |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| route | {pad: tekenreeks; volledig pad: tekenreeks; parameters: Record<string, unknown>; vraag: LocationQuery; hash: tekenreeks; naam?: tekenreeks \| symbool \| nul; meta?: Record<string, unknown>; } |              |
 
 ### naarVueLocation
 
 **Soort:** functie
 
 ```typescript
-function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw
+function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 ```
 
 Vertaal een neutraal doel naar een Vue Router-locatie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| naar | MpRouteLocationRaw |              |
 
 ### gebruik MpNavigatie
 
 **Soort:** functie
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
@@ -115,7 +115,7 @@ Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
 **Soort:** functie
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lees de huidige route van de app als {@link MpResolvedLocation}.
@@ -125,7 +125,7 @@ Lees de huidige route van de app als {@link MpResolvedLocation}.
 **Soort:** functie
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lees het neutrale capaciteitsobject ondersteund door Vue Router.
@@ -137,7 +137,7 @@ Lees het neutrale capaciteitsobject ondersteund door Vue Router.
 **Soort:** constant
 
 ```typescript
-export const forgeRouterVue
+export const forgeRouterVue;
 ```
 
 Smeed een routerdoel voor een Vue Router-instantie die eigendom is van de applicatie.

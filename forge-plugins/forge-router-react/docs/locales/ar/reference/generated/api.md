@@ -21,88 +21,91 @@ function createReactRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: NavigateFunction;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 بناء قدرات محايدة من React أساسيات جهاز التوجيه (خالية من الخطاف للاختبارات).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | { الموقع: { اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة };   المعلمات؟: سجل<string, string \| undefined>;   التنقل: NavigateFunction؛   المنفذ؟: غير معروف؛ } |  |
+| الاسم   | اكتب                                                                                                                                                        | الوصف |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| الإدخال | { الموقع: { اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة }; المعلمات؟: سجل<string, string \| undefined>; التنقل: NavigateFunction؛ المنفذ؟: غير معروف؛ } |       |
 
 ### ResolveMpLink
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 حل هدف محايد إلى سلسلة href.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### toMpLocationFromReact
 
 **النوع:** الوظيفة
 
 ```typescript
-function toMpLocationFromReact(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromReact(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 بناء موقع محايد من React موقع جهاز التوجيه/لقطات المعلمات.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الموقع | {اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة } |  |
-| المعلمات | سِجِلّ<string, string \| undefined> |  |
+| الاسم    | اكتب                                               | الوصف |
+| -------- | -------------------------------------------------- | ----- |
+| الموقع   | {اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة } |       |
+| المعلمات | سِجِلّ<string, string \| undefined>                |       |
 
 ### toReactHref
 
 **النوع:** الوظيفة
 
 ```typescript
-function toReactHref(to: MpRouteLocationRaw): string
+function toReactHref(to: MpRouteLocationRaw): string;
 ```
 
 إجراء تسلسل لهدف محايد إلى سلسلة href.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### toReactTo
 
 **النوع:** الوظيفة
 
 ```typescript
-function toReactTo(to: MpRouteLocationRaw): To
+function toReactTo(to: MpRouteLocationRaw): To;
 ```
 
 تحويل هدف محايد إلى أ React جهاز التوجيه `To` قيمة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### useMpNavigation
 
 **النوع:** الوظيفة
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 اقرأ فقط إمكانيات التنقل/الحل الضرورية.
@@ -112,7 +115,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 اقرأ المسار الحالي المملوك للتطبيق باسم {@link MpResolvedLocation}.
@@ -122,7 +125,7 @@ function useMpRoute(): MpResolvedLocation | null
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 اقرأ كائن القدرة المحايدة المدعوم بـ React جهاز التوجيه.
@@ -134,7 +137,7 @@ function useMpRouter(): MpRouterCapabilities
 **النوع:** ثابت
 
 ```typescript
-export const forgeRouterReact
+export const forgeRouterReact;
 ```
 
 صياغة هدف جهاز التوجيه لتطبيق مملوك React مثيل جهاز التوجيه.

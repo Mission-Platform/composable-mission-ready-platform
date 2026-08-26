@@ -16,49 +16,49 @@
 פונקציה **סוג:**
 
 ```typescript
-function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities
+function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities;
 ```
 
 בנה יכולות ניטרליות ממופע Vue נתב בבעלות אפליקציה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נתב | נתב |  |
-| נוכחי |  |  |
+| שם    | הקלד | תיאור |
+| ----- | ---- | ----- |
+| נתב   | נתב  |       |
+| נוכחי |      |       |
 
 ### resolveMpLink
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 פתרו יעד ניטרלי באמצעות הנתב Vue שבבעלות האפליקציה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### resolvePathTarget
 
 פונקציה **סוג:**
 
 ```typescript
-function resolvePathTarget(to: MpRouteLocationRaw): string
+function resolvePathTarget(to: MpRouteLocationRaw): string;
 ```
 
 החזרה לנתיב בלבד בשימוש כאשר מופע Vue נתב אינו זמין (SSR/בדיקות).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### toMpLocation
 
@@ -73,39 +73,39 @@ function toMpLocation(route: {
   hash: string;
   name?: string | symbol | null;
   meta?: Record<string, unknown>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 המר מצב נתיב Vue מקורי למיקום הנייטרלי שנקבע.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסלול | { נתיב: מחרוזת;   fullPath: מחרוזת;   פרמטרים: Record<string, unknown>;   query: LocationQuery;   hash: מחרוזת;   שם?: מחרוזת \| סמל \| בָּטֵל;   meta?: Record<string, unknown>; } |  |
+| שם    | הקלד                                                                                                                                                                    | תיאור |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| מסלול | { נתיב: מחרוזת; fullPath: מחרוזת; פרמטרים: Record<string, unknown>; query: LocationQuery; hash: מחרוזת; שם?: מחרוזת \| סמל \| בָּטֵל; meta?: Record<string, unknown>; } |       |
 
 ### toVueLocation
 
 פונקציה **סוג:**
 
 ```typescript
-function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw
+function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 ```
 
 תרגם יעד ניטרלי למיקום נתב Vue.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### השתמש ב-MpNavigation
 
 פונקציה **סוג:**
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 קרא רק יכולות הניווט/פתרון הכרחי.
@@ -115,7 +115,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 פונקציה **סוג:**
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 קרא את המסלול הנוכחי בבעלות האפליקציה בשם {@link MpResolvedLocation}.
@@ -125,7 +125,7 @@ function useMpRoute(): MpResolvedLocation | null
 פונקציה **סוג:**
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 קרא את אובייקט היכולת הנייטרלית המגובה על ידי נתב Vue.
@@ -137,7 +137,7 @@ function useMpRouter(): MpRouterCapabilities
 **סוג:** קבוע
 
 ```typescript
-export const forgeRouterVue
+export const forgeRouterVue;
 ```
 
 זיוף יעד נתב עבור מופע Vue נתב בבעלות אפליקציה.

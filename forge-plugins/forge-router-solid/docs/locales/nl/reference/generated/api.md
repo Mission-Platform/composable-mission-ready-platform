@@ -21,44 +21,39 @@ function createSolidRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: SolidNavigate;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Bouw neutrale mogelijkheden op basis van Solid Router-primitieven (frameworkvrij voor tests).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash: tekenreeks };   parameters?: Record<string, string \| undefined>;   navigeren: SolidNavigate;   stopcontact?: onbekend; } |  |
+| Naam   | Typ                                                                                                                                                                         | Beschrijving |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash: tekenreeks }; parameters?: Record<string, string \| undefined>; navigeren: SolidNavigate; stopcontact?: onbekend; } |              |
 
 ### MpLink
 
 **Soort:** component
 
 ```typescript
-function MpLink(properties: {
-  href?: string;
-  to?: MpRouteLocationRaw;
-  children?: unknown;
-  replace?: boolean;
-}): unknown
+function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
 ```
 
 Solid-proxy voor ankercomponent gebonden via {@link setForgeSolidRouter}.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | { href?: tekenreeks;   naar?: MpRouteLocationRaw;   kinderen?: onbekend;   vervangen?: boolean; } |  |
+| Naam          | Typ                                                                                         | Beschrijving |
+| ------------- | ------------------------------------------------------------------------------------------- | ------------ |
+| eigenschappen | { href?: tekenreeks; naar?: MpRouteLocationRaw; kinderen?: onbekend; vervangen?: boolean; } |              |
 
 ### MpRouterView
 
 **Soort:** component
 
 ```typescript
-function MpRouterView(): unknown
+function MpRouterView(): unknown;
 ```
 
 Solid outlet-proxy gebonden via {@link setForgeSolidRouter}.
@@ -68,23 +63,23 @@ Solid outlet-proxy gebonden via {@link setForgeSolidRouter}.
 **Soort:** functie
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Een neutraal doel omzetten in een href-tekenreeks.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| naar | MpRouteLocationRaw |              |
 
 ### setForgeSolidRouter
 
 **Soort:** functie
 
 ```typescript
-function setForgeSolidRouter(surface: SolidRouterSurface): void
+function setForgeSolidRouter(surface: SolidRouterSurface): void;
 ```
 
 Bind de Solid-routermodule van de app, zodat gecompileerde pakketten de neutrale waarde behouden
@@ -92,9 +87,9 @@ hook/call-vormen (`useMpRouter().navigate`, `useMpRoute().query`, …).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| oppervlak | SolidRouterSurface |  |
+| Naam      | Typ                | Beschrijving |
+| --------- | ------------------ | ------------ |
+| oppervlak | SolidRouterSurface |              |
 
 ### SolidRouterSurface
 
@@ -111,40 +106,43 @@ Minimaal Solid Routeroppervlak gebruikt door de runtime-shim.
 **Soort:** functie
 
 ```typescript
-function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromSolid(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 Bouw een neutrale locatie op basis van Solid Routerlocatie/params-snapshots.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| locatie | { padnaam: string; zoeken: tekenreeks; hash: tekenreeks } |  |
-| params | Record<string, string \| undefined> |  |
+| Naam    | Typ                                                       | Beschrijving |
+| ------- | --------------------------------------------------------- | ------------ |
+| locatie | { padnaam: string; zoeken: tekenreeks; hash: tekenreeks } |              |
+| params  | Record<string, string \| undefined>                       |              |
 
 ### naarSolidHref
 
 **Soort:** functie
 
 ```typescript
-function toSolidHref(to: MpRouteLocationRaw): string
+function toSolidHref(to: MpRouteLocationRaw): string;
 ```
 
 Serialiseer een neutraal doel voor Solid Routernavigatie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| naar | MpRouteLocationRaw |              |
 
 ### gebruik MpNavigatie
 
 **Soort:** functie
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
@@ -154,7 +152,7 @@ Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
 **Soort:** functie
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lees de huidige route van de app als {@link MpResolvedLocation}.
@@ -164,7 +162,7 @@ Lees de huidige route van de app als {@link MpResolvedLocation}.
 **Soort:** functie
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lees het neutrale capaciteitsobject ondersteund door Solid Router.
@@ -176,7 +174,7 @@ Lees het neutrale capaciteitsobject ondersteund door Solid Router.
 **Soort:** constant
 
 ```typescript
-export const forgeRouterSolid
+export const forgeRouterSolid;
 ```
 
 Smeed een routerdoel voor een SolidJS Router-instantie die eigendom is van de applicatie.

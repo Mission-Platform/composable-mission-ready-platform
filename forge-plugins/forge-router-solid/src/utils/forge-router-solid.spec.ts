@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { createSolidRouterCapabilities, resolveMpLink, toMpLocationFromSolid } from '../runtime';
+
 import { forgeRouterSolid } from './forge-router-solid';
 
 import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';

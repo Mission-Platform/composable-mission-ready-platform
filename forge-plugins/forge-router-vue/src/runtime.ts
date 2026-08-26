@@ -1,6 +1,5 @@
 import { parseLocation, stringifyLocation } from '@mission-platform/router';
 import {
-  RouterLink,
   RouterView,
   useRoute,
   useRouter,
@@ -142,4 +141,4 @@ export function resolvePathTarget(to: MpRouteLocationRaw): string {
   throw new Error('Named Vue route targets require an installed Vue Router instance.');
 }
 
-export { RouterLink as MpLink, RouterView as MpRouterView };
+export { RouterLink as MpLink, RouterView as MpRouterView } from 'vue-router';

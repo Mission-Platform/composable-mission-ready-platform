@@ -16,18 +16,22 @@
 **種類:** 関数
 
 ```typescript
-function createForgeArtifactManifest(targetId: string, artifacts: readonly ForgeArtifactRecord[], complete = true): ForgeArtifactManifest
+function createForgeArtifactManifest(
+  targetId: string,
+  artifacts: readonly ForgeArtifactRecord[],
+  complete = true,
+): ForgeArtifactManifest;
 ```
 
 生成された出力にタイムスタンプを導入せずに、安定したマニフェストを構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ターゲットID |文字列 |  |
-|アーティファクト |読み取り専用 ForgeArtifactRecord[] |  |
-|完了 |  |  |
+| 名前             | タイプ                             | 説明 |
+| ---------------- | ---------------------------------- | ---- |
+| ターゲットID     | 文字列                             |      |
+| アーティファクト | 読み取り専用 ForgeArtifactRecord[] |      |
+| 完了             |                                    |      |
 
 ### 鍛造アーティファクトの種類
 
@@ -66,17 +70,17 @@ export interface ForgeArtifactRecord
 **種類:** 関数
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter
+function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|アウトディレクトリ |文字列 |  |
-|ターゲットID |文字列 |  |
+| 名前               | タイプ | 説明 |
+| ------------------ | ------ | ---- |
+| アウトディレクトリ | 文字列 |      |
+| ターゲットID       | 文字列 |      |
 
 ### フォージアーティファクトライター
 
@@ -95,7 +99,7 @@ export interface ForgeArtifactWriter
 **種類:** 定数
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 クラス名管理を推進する中立的な JSX 属性。著者は書いています
@@ -117,16 +121,16 @@ Vue エミッタを呼び出す (ニュートラル `classNames` インポート
 **種類:** 関数
 
 ```typescript
-function collectSlotNames(sourceFile: ts.SourceFile): Set<string>
+function collectSlotNames(sourceFile: ts.SourceFile): Set<string>;
 ```
 
 モジュール内の `<Slot name="…" />` 要素によって宣言されたすべての静的スロット名を収集します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| ソースファイル | ts.ソースファイル |      |
 
 ### コンポーネントインポート
 
@@ -143,7 +147,7 @@ export interface ComponentImport
 **種類:** 定数
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 追記型 **コンポーネント ライブラリ** ワークスペース パッケージ:
@@ -160,25 +164,35 @@ export const COMPONENTS_JSX_MODULES
 **種類:** 関数
 
 ```typescript
-function createReactHasSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined): ts.Expression
+function createReactHasSlotExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+): ts.Expression;
 ```
 
 `<props>.<name> != null` — `hasSlot('name')` の React のプレゼンスが読み取られます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-|プロパティパラメータ名 |文字列 |  |
-|名前 |文字列 \|未定義 |  |
+| 名前                   | タイプ          | 説明 |
+| ---------------------- | --------------- | ---- |
+| 工場                   | ts.NodeFactory  |      |
+| プロパティパラメータ名 | 文字列          |      |
+| 名前                   | 文字列 \|未定義 |      |
 
 ### createReactSlotCallExpression
 
 **種類:** 関数
 
 ```typescript
-function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
+function createReactSlotCallExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+  fallback: readonly ts.Expression[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
@@ -187,20 +201,26 @@ function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-|プロパティパラメータ名 |文字列 |  |
-|名前 |文字列 \|未定義 |  |
-|フォールバック |読み取り専用 ts.Expression[] |  |
-|範囲 | ts.式 |  |
+| 名前                   | タイプ                       | 説明 |
+| ---------------------- | ---------------------------- | ---- |
+| 工場                   | ts.NodeFactory               |      |
+| プロパティパラメータ名 | 文字列                       |      |
+| 名前                   | 文字列 \|未定義              |      |
+| フォールバック         | 読み取り専用 ts.Expression[] |      |
+| 範囲                   | ts.式                        |      |
 
 ### createReactSlotExpression
 
 **種類:** 関数
 
 ```typescript
-function createReactSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
+function createReactSlotExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+  fallback: readonly ts.JsxChild[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `<props>.<name>` (スロットがフォールバックを宣言する場合は `?? <fallback>` を使用)
@@ -210,20 +230,20 @@ render-prop 関数、または React node の場合は直接評価されます�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-|プロパティパラメータ名 |文字列 |  |
-|名前 |文字列 \|未定義 |  |
-|フォールバック |読み取り専用 ts.JsxChild[] |  |
-|範囲 | ts.式 |  |
+| 名前                   | タイプ                     | 説明 |
+| ---------------------- | -------------------------- | ---- |
+| 工場                   | ts.NodeFactory             |      |
+| プロパティパラメータ名 | 文字列                     |      |
+| 名前                   | 文字列 \|未定義            |      |
+| フォールバック         | 読み取り専用 ts.JsxChild[] |      |
+| 範囲                   | ts.式                      |      |
 
 ### createReferenceRewriter
 
 **種類:** 関数
 
 ```typescript
-function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>
+function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
 ```
 
 コンポーネント本体内の参照を書き換える TS トランスフォーマーを構築します。
@@ -233,16 +253,16 @@ Vue ターゲット: `properties.children` → `slots.default?.()`、構造化�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|範囲 |リライトスコープ |  |
+| 名前 | タイプ           | 説明 |
+| ---- | ---------------- | ---- |
+| 範囲 | リライトスコープ |      |
 
 ### createStateSnapshotHoister
 
 **種類:** 関数
 
 ```typescript
-function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>
+function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
 ```
 
 `useState` / `useMemo` 値の TypeScript 制御フローの絞り込みを保持します。
@@ -258,7 +278,7 @@ TypeScript を絞り込むと、ネストされた関数に入ると破棄され
 `a[sortKey.value]` / `draft.value.uid` は型チェックに失敗します。
 
 ブロック本体の関数ごとに、このパスは読み取られたすべての値のスナップショットを渡します。
-*ネストされたクロージャ内* を先頭の `const <name>$ = <name>.value;` に挿入し、
+_ネストされたクロージャ内_ を先頭の `const <name>$ = <name>.value;` に挿入し、
 内の値 **reads** (`<name>.value = …` 書き込みターゲットではない) を書き換えます。
 この関数を `const` エイリアスに追加します。スナップショットは元の `const` を復元します。
 セマンティクス — フローを再びネストされたクロージャに絞り込みます — 一方、`.value`
@@ -266,33 +286,38 @@ TypeScript を絞り込むと、ネストされた関数に入ると破棄され
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|範囲 |リライトスコープ |  |
+| 名前 | タイプ           | 説明 |
+| ---- | ---------------- | ---- |
+| 範囲 | リライトスコープ |      |
 
 ### createVueHasSlotExpression
 
 **種類:** 関数
 
 ```typescript
-function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression
+function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression;
 ```
 
 `slots.<name>` — `hasSlot('name')` (`!!slots.x`) の Vue の `useSlots()` プレゼンスが読み取られます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-|名前 |文字列 \|未定義 |  |
+| 名前 | タイプ          | 説明 |
+| ---- | --------------- | ---- |
+| 工場 | ts.NodeFactory  |      |
+| 名前 | 文字列 \|未定義 |      |
 
 ### createVueSlotCallExpression
 
 **種類:** 関数
 
 ```typescript
-function createVueSlotCallExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
+function createVueSlotCallExpression(
+  factory: ts.NodeFactory,
+  name: string | undefined,
+  fallback: readonly ts.Expression[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `slots.<name>?.(scope) ?? <fallback>` — `h(Slot, …)` の Vue 翻訳
@@ -301,19 +326,24 @@ function createVueSlotCallExpression(factory: ts.NodeFactory, name: string | und
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-|名前 |文字列 \|未定義 |  |
-|フォールバック |読み取り専用 ts.Expression[] |  |
-|範囲 | ts.式 |  |
+| 名前           | タイプ                       | 説明 |
+| -------------- | ---------------------------- | ---- |
+| 工場           | ts.NodeFactory               |      |
+| 名前           | 文字列 \|未定義              |      |
+| フォールバック | 読み取り専用 ts.Expression[] |      |
+| 範囲           | ts.式                        |      |
 
 ### createVueSlotExpression
 
 **種類:** 関数
 
 ```typescript
-function createVueSlotExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
+function createVueSlotExpression(
+  factory: ts.NodeFactory,
+  name: string | undefined,
+  fallback: readonly ts.JsxChild[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `slots.<name>?.(scope)` (スロットがフォールバックを宣言する場合は `?? <fallback>` を使用)
@@ -322,12 +352,12 @@ Vue **スコープ付き** スロット呼び出し。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-|名前 |文字列 \|未定義 |  |
-|フォールバック |読み取り専用 ts.JsxChild[] |  |
-|範囲 | ts.式 |  |
+| 名前           | タイプ                     | 説明 |
+| -------------- | -------------------------- | ---- |
+| 工場           | ts.NodeFactory             |      |
+| 名前           | 文字列 \|未定義            |      |
+| フォールバック | 読み取り専用 ts.JsxChild[] |      |
+| 範囲           | ts.式                      |      |
 
 ### 構造化されたプロパティ
 
@@ -344,7 +374,13 @@ export interface DestructuredProperty
 **種類:** 関数
 
 ```typescript
-function dynamicToHCall(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visitExpression: (expression: ts.Expression) => ts.Expression, aliasAttribute: (name: string) => string = (name) => name, variadicChildren = false): ts.CallExpression
+function dynamicToHCall(
+  factory: ts.NodeFactory,
+  node: ts.JsxSelfClosingElement | ts.JsxElement,
+  visitExpression: (expression: ts.Expression) => ts.Expression,
+  aliasAttribute: (name: string) => string = (name) => name,
+  variadicChildren = false,
+): ts.CallExpression;
 ```
 
 `<Dynamic is={X} a={…} …>children</Dynamic>` 要素を次のように書き換えます。
@@ -359,37 +395,37 @@ function dynamicToHCall(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-| node | ts.JsxSelfClosingElement \| ts.Jsx要素 |  |
-|訪問表現 | (式: ts.Expression) => ts.Expression |  |
-|別名属性 | (名前: 文字列) => 文字列 |  |
-|バリアディック子供たち |  |  |
+| 名前                   | タイプ                                 | 説明 |
+| ---------------------- | -------------------------------------- | ---- |
+| 工場                   | ts.NodeFactory                         |      |
+| node                   | ts.JsxSelfClosingElement \| ts.Jsx要素 |      |
+| 訪問表現               | (式: ts.Expression) => ts.Expression   |      |
+| 別名属性               | (名前: 文字列) => 文字列               |      |
+| バリアディック子供たち |                                        |      |
 
 ### ensureI18nHookInComponent
 
 **種類:** 関数
 
 ```typescript
-function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile
+function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile;
 ```
 
 `i18next.t(...)` を呼び出すコンポーネント関数にトップレベルの `const { t } = useI18n();` ステートメントがあることを確認してください。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-|ソースファイル | ts.ソースファイル |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| 工場           | ts.NodeFactory    |      |
+| ソースファイル | ts.ソースファイル |      |
 
 ### プロパティのイベント名
 
 **種類:** 関数
 
 ```typescript
-function eventNameForProperty(propName: string): string
+function eventNameForProperty(propName: string): string;
 ```
 
 `on<Event>` プロパティの Vue イベント名を導出します。`on` プレフィックスを削除し、
@@ -398,9 +434,9 @@ function eventNameForProperty(propName: string): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロップ名 |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| プロップ名 | 文字列 |      |
 
 ### イベント署名
 
@@ -420,7 +456,7 @@ export interface EventSignature
 **種類:** 関数
 
 ```typescript
-function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[]
+function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[];
 ```
 
 props インターフェイスによって宣言された (独自の) **イベント** シグネチャを抽出します — メンバー
@@ -432,17 +468,17 @@ props インターフェイスによって宣言された (独自の) **イベ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|インターフェース名 |文字列 |  |
+| 名前               | タイプ            | 説明 |
+| ------------------ | ----------------- | ---- |
+| ソースファイル     | ts.ソースファイル |      |
+| インターフェース名 | 文字列            |      |
 
 ### 抽出モデル署名
 
 **種類:** 関数
 
 ```typescript
-function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[]
+function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[];
 ```
 
 `@model <onEvent>` とマークされた props-interface メンバー (props とそのプロパティ) を抽出します。
@@ -452,34 +488,34 @@ Vue エミッターが単一の `defineModel` に融合するペア変更イベ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|インターフェース名 |文字列 |  |
+| 名前               | タイプ            | 説明 |
+| ------------------ | ----------------- | ---- |
+| ソースファイル     | ts.ソースファイル |      |
+| インターフェース名 | 文字列            |      |
 
 ### 抽出プロパティ名
 
 **種類:** 関数
 
 ```typescript
-function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[]
+function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[];
 ```
 
 `children` を除く、props インターフェイスによって宣言された (独自の) プロパティ名を抽出します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|インターフェース名 |文字列 |  |
+| 名前               | タイプ            | 説明 |
+| ------------------ | ----------------- | ---- |
+| ソースファイル     | ts.ソースファイル |      |
+| インターフェース名 | 文字列            |      |
 
 ### 抽出プロパティ署名
 
 **種類:** 関数
 
 ```typescript
-function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[]
+function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[];
 ```
 
 props インターフェイスによって宣言された (独自の) プロパティ シグネチャを抽出します。
@@ -491,27 +527,27 @@ props インターフェイスによって宣言された (独自の) プロパ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|インターフェース名 |文字列 |  |
+| 名前               | タイプ            | 説明 |
+| ------------------ | ----------------- | ---- |
+| ソースファイル     | ts.ソースファイル |      |
+| インターフェース名 | 文字列            |      |
 
 ### findコンポーネント関数
 
 **種類:** 関数
 
 ```typescript
-function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined
+function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined;
 ```
 
 ニュートラルコンポーネントのエクスポートされた関数宣言を名前で検索します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|名前 |文字列 |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| ソースファイル | ts.ソースファイル |      |
+| 名前           | 文字列            |      |
 
 ### ForgeExportFact
 
@@ -558,23 +594,23 @@ export interface ForgeSourceSpan
 **種類:** 関数
 
 ```typescript
-function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean
+function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean;
 ```
 
 親の子のいずれかが `slot="…"` マーカーを持っているかどうか。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|子供たち |読み取り専用 ts.JsxChild[] |  |
+| 名前     | タイプ                     | 説明 |
+| -------- | -------------------------- | ---- |
+| 子供たち | 読み取り専用 ts.JsxChild[] |      |
 
 ### ICONS_JSX_MODULE
 
 **種類:** 定数
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 ライトワンスアイコンライブラリ`@mission-platform/icons`のベア指定子。
@@ -582,7 +618,7 @@ export const ICONS_JSX_MODULE
 フレームワークごとのソースは、フレームワーク分割ごとにその正確な指定子を保持します。
 `@mission-platform/*` パッケージは `mp:vue` / `mp:react` / `mp:solid` / を宣言します
 `mp:web-component` カスタム エクスポート条件は、そのベア `.` エントリに適用されるため、
-*消費者* `resolve.conditions` (および一致する
+_消費者_ `resolve.conditions` (および一致する
 `customConditions` tsconfig プリセット) 適切なビルドを選択します。ありません
 再マッピング先のフレームワークごとのサブパス。
 
@@ -591,24 +627,24 @@ export const ICONS_JSX_MODULE
 **種類:** 関数
 
 ```typescript
-function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts
+function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
 ```
 
 解析されたモジュールから静的なインポート、エクスポート、型のみのエッジ、およびフレームワーク ファクトを抽出します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|ソース |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ファイル名 | 文字列 |      |
+| ソース     | 文字列 |      |
 
 ### isコンポーネントタグ名
 
 **種類:** 関数
 
 ```typescript
-function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean
+function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean;
 ```
 
 JSX タグ名が **コンポーネント** (次のように大文字で始まる識別子) を参照しているかどうか。
@@ -620,16 +656,16 @@ JSX タグ名が **コンポーネント** (次のように大文字で始まる
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|タグ名 | ts.Jsxタグ名式 |  |
+| 名前   | タイプ         | 説明 |
+| ------ | -------------- | ---- |
+| タグ名 | ts.Jsxタグ名式 |      |
 
 ### isDynamicElement
 
 **種類:** 関数
 
 ```typescript
-function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 node が中立的な動的コンポーネント要素であるかどうか — `<Dynamic is={…} />`
@@ -637,16 +673,16 @@ node が中立的な動的コンポーネント要素であるかどうか — `
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node | ts.Node |  |
+| 名前 | タイプ  | 説明 |
+| ---- | ------- | ---- |
+| node | ts.Node |      |
 
 ### isFragmentElement
 
 **種類:** 関数
 
 ```typescript
-function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 node がニュートラル `<Fragment>` 要素であるかどうか — 自己終了要素であるかどうか
@@ -654,16 +690,16 @@ node がニュートラル `<Fragment>` 要素であるかどうか — 自己�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node | ts.Node |  |
+| 名前 | タイプ  | 説明 |
+| ---- | ------- | ---- |
+| node | ts.Node |      |
 
 ### isHasSlotCall
 
 **種類:** 関数
 
 ```typescript
-function isHasSlotCall(node: ts.Node): node is ts.CallExpression
+function isHasSlotCall(node: ts.Node): node is ts.CallExpression;
 ```
 
 node が `hasSlot('name')` / `hasSlot()` 呼び出しであるかどうか - 中立
@@ -672,16 +708,16 @@ node が `hasSlot('name')` / `hasSlot()` 呼び出しであるかどうか - 中
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node | ts.Node |  |
+| 名前 | タイプ  | 説明 |
+| ---- | ------- | ---- |
+| node | ts.Node |      |
 
 ### isSlotElement
 
 **種類:** 関数
 
 ```typescript
-function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 node がニュートラルな名前付きスロット要素であるかどうか (`<Slot … />` または)
@@ -689,16 +725,16 @@ node がニュートラルな名前付きスロット要素であるかどうか
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node | ts.Node |  |
+| 名前 | タイプ  | 説明 |
+| ---- | ------- | ---- |
+| node | ts.Node |      |
 
 ### isSlotHCall
 
 **種類:** 関数
 
 ```typescript
-function isSlotHCall(node: ts.Node): node is ts.CallExpression
+function isSlotHCall(node: ts.Node): node is ts.CallExpression;
 ```
 
 node が名前付きスロット マーカー — `h(Slot, …)` — の **呼び出し形式** であるかどうか
@@ -709,16 +745,16 @@ JSX ではなく。どちらの形式も、各フレームワークのネイテ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node | ts.Node |  |
+| 名前 | タイプ  | 説明 |
+| ---- | ------- | ---- |
+| node | ts.Node |      |
 
 ### JSX_ATTRIBUTE_RENAMES
 
 **種類:** 定数
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 作成者向けのキャメルケース スペルを下げる必要があるネイティブ JSX 属性
@@ -731,7 +767,7 @@ Vue の JSX 組み込み要素タイプが期待する HTML スペルに準拠�
 **種類:** 定数
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 ローカル エフェクト ヘルパー モジュールのファイル名 (拡張子付き) は、生成されたフラット ツリーのように記述されます。
@@ -741,7 +777,7 @@ export const LOCAL_EFFECT_FILE
 **種類:** 定数
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 生成された Vue {@link LOCAL_EFFECT_MODULE} がインポートされる相対指定子。
@@ -751,7 +787,7 @@ export const LOCAL_EFFECT_MODULE
 **種類:** 定数
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 単一のファーストクラス フレームワークに相当するものが存在しない中立 **タイプ** インポート
@@ -773,7 +809,7 @@ render-prop **type** インポートはまったくありません。
 **種類:** 定数
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 ローカル JSX タイプ モジュールのファイル名 (拡張子付き) は、生成されたフラット ツリーのように記述されます。
@@ -783,7 +819,7 @@ export const LOCAL_JSX_TYPES_FILE
 **種類:** 定数
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 生成されたフレームワークごとの {@link LOCAL_JSX_TYPES_MODULE} がインポートされる相対指定子。
@@ -793,7 +829,7 @@ export const LOCAL_JSX_TYPES_MODULE
 **種類:** 関数
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 ターゲットの同じ場所にある {@link LOCAL_EFFECT_MODULE} のソース
@@ -815,16 +851,16 @@ Vue のネイティブ上に構築された単一の汎用ウォッチャー (`m
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フレームワーク | Jsxフレームワーク |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| フレームワーク | Jsxフレームワーク |      |
 
 ### localJsxTypesモジュールソース
 
 **種類:** 関数
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 ターゲットの同じ場所にある {@link LOCAL_JSX_TYPES_MODULE} のソース
@@ -841,9 +877,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|フレームワーク | Jsxフレームワーク |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| フレームワーク | Jsxフレームワーク |      |
 
 ### モデル署名
 
@@ -864,7 +900,7 @@ prop と `defineEmits` エントリ) — prop の読み取りは `<local>.value`
 **種類:** 関数
 
 ```typescript
-function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean
+function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
 ```
 
 `framework` に対してモジュールを発行するかどうか。フレームワークに依存しないモジュール
@@ -873,18 +909,18 @@ function moduleTargetsFramework(fileName: string, source: string, framework: str
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|ソース |文字列 |  |
-|フレームワーク |文字列 |  |
+| 名前           | タイプ | 説明 |
+| -------------- | ------ | ---- |
+| ファイル名     | 文字列 |      |
+| ソース         | 文字列 |      |
+| フレームワーク | 文字列 |      |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 純粋なコンパイル時マーカーである中立 **値** インポート - これらはのみ存在します
@@ -902,7 +938,7 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
 コンテキスト プリミティブである中立 **値** インポート。 React では、それらは * です*
@@ -916,7 +952,7 @@ React 自体 (`createContext`/`useContext`) であるため、これらは
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 実際のフレームワークごとの **コンポーネント**である中立的な **値** インポート
@@ -938,7 +974,7 @@ Vue の場合は `import { TransitionGroup } from 'vue'`)。
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 コンポーネントがプリミティブをインポートするニュートラル パッケージ。
@@ -948,7 +984,7 @@ export const NEUTRAL_MODULE
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 フレームワークに依存しないランタイム ユーティリティである中立 **値** インポート -
@@ -961,7 +997,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 同じ名前のネイティブ対応物を持つ中立 **値** フック
@@ -986,7 +1022,7 @@ export interface NeutralImports
 **種類:** 関数
 
 ```typescript
-function parseTsx(fileName: string, source: string): ts.SourceFile
+function parseTsx(fileName: string, source: string): ts.SourceFile;
 ```
 
 を解析する `.tsx` ソース文字列を TypeScript によって使用される SourceFile ブリッジ
@@ -995,10 +1031,10 @@ function parseTsx(fileName: string, source: string): ts.SourceFile
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|ソース |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ファイル名 | 文字列 |      |
+| ソース     | 文字列 |      |
 
 ### パーティション化されたスロット
 
@@ -1015,49 +1051,49 @@ export interface PartitionedSlots
 **種類:** 関数
 
 ```typescript
-function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots
+function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots;
 ```
 
 コンポーネント要素の子を名前付きスロット グループとデフォルトの子に分割します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|子供たち |読み取り専用 ts.JsxChild[] |  |
+| 名前     | タイプ                     | 説明 |
+| -------- | -------------------------- | ---- |
+| 子供たち | 読み取り専用 ts.JsxChild[] |      |
 
 ### プリントノード
 
 **種類:** 関数
 
 ```typescript
-function printNode(node: ts.Node, sourceFile: ts.SourceFile): string
+function printNode(node: ts.Node, sourceFile: ts.SourceFile): string;
 ```
 
 単一の node をソース ファイルにアンカーされたソース テキストに出力します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node | ts.Node |  |
-|ソースファイル | ts.ソースファイル |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| node           | ts.Node           |      |
+| ソースファイル | ts.ソースファイル |      |
 
 ### ソースファイルの印刷
 
 **種類:** 関数
 
 ```typescript
-function printSourceFile(sourceFile: ts.SourceFile): string
+function printSourceFile(sourceFile: ts.SourceFile): string;
 ```
 
 (変換された可能性がある) ソース ファイル全体をソース テキストに戻して出力します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| ソースファイル | ts.ソースファイル |      |
 
 ### プロパティ署名
 
@@ -1074,7 +1110,7 @@ props インターフェイスの単一の (独自の) プロパティ — そ�
 **種類:** 定数
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 React フレームワーク コンポーネントのインポート元の `@mission-platform/forge/react` サブパス。
@@ -1084,7 +1120,7 @@ React フレームワーク コンポーネントのインポート元の `@miss
 **種類:** 定数
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 ファーストクラス React と同等の中立 **タイプ** 輸入品。
@@ -1111,7 +1147,7 @@ React 名 (React エミッタを参照)。ニュートラルフック/レンダ�
 **種類:** 関数
 
 ```typescript
-function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression
+function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression;
 ```
 
 `className={…}` 属性値を **React** `className` に折りたたむ
@@ -1125,17 +1161,17 @@ function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-|値 | ts.式 |  |
+| 名前 | タイプ         | 説明 |
+| ---- | -------------- | ---- |
+| 工場 | ts.NodeFactory |      |
+| 値   | ts.式          |      |
 
 ### readChildSlotName
 
 **種類:** 関数
 
 ```typescript
-function readChildSlotName(child: ts.JsxChild): string | undefined
+function readChildSlotName(child: ts.JsxChild): string | undefined;
 ```
 
 JSX **child** 要素の静的 `slot="…"` マーカー (属性) を読み取ります。
@@ -1145,33 +1181,33 @@ JSX **child** 要素の静的 `slot="…"` マーカー (属性) を読み取り
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|子供 | ts.JsxChild |  |
+| 名前 | タイプ      | 説明 |
+| ---- | ----------- | ---- |
+| 子供 | ts.JsxChild |      |
 
 ### readComponentImports
 
 **種類:** 関数
 
 ```typescript
-function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[]
+function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[];
 ```
 
 モジュールから相対 (兄弟コンポーネント) 値 + 型インポートを収集します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|ソースルート |文字列 |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| ソースファイル | ts.ソースファイル |      |
+| ソースルート   | 文字列            |      |
 
 ### read外部インポート
 
 **種類:** 関数
 
 ```typescript
-function readExternalImports(fileName: string, source: string): string[]
+function readExternalImports(fileName: string, source: string): string[];
 ```
 
 モジュールの **外部** (ベア パッケージ) インポートを収集します - すべて
@@ -1192,17 +1228,17 @@ function readExternalImports(fileName: string, source: string): string[]
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|ソース |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ファイル名 | 文字列 |      |
+| ソース     | 文字列 |      |
 
 ### readFrameworkディレクティブ
 
 **種類:** 関数
 
 ```typescript
-function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined
+function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined;
 ```
 
 モジュールの `"use <framework>";` ディレクティブがある場合は、それを読み取ります。
@@ -1219,66 +1255,70 @@ function readFrameworkDirective(fileName: string, source: string): 'react' | 'vu
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|ソース |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ファイル名 | 文字列 |      |
+| ソース     | 文字列 |      |
 
 ### readHasスロット名
 
 **種類:** 関数
 
 ```typescript
-function readHasSlotName(call: ts.CallExpression): string | undefined
+function readHasSlotName(call: ts.CallExpression): string | undefined;
 ```
 
 `hasSlot('name')` 呼び出しの静的スロット名を読み取ります (`undefined` → デフォルト スロット)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|電話 | ts.CallExpression |  |
+| 名前 | タイプ            | 説明 |
+| ---- | ----------------- | ---- |
+| 電話 | ts.CallExpression |      |
 
 ### readNeutralImports
 
 **種類:** 関数
 
 ```typescript
-function readNeutralImports(fileName: string, source: string): NeutralImports
+function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
 モジュールの `import … from '@mission-platform/forge'` バインディングを検査します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|ソース |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ファイル名 | 文字列 |      |
+| ソース     | 文字列 |      |
 
 ### readSlotHCallName
 
 **種類:** 関数
 
 ```typescript
-function readSlotHCallName(call: ts.CallExpression): string | undefined
+function readSlotHCallName(call: ts.CallExpression): string | undefined;
 ```
 
 `h(Slot, { name: 'x' }, …)` 呼び出しから静的 `name` を読み取ります (`undefined` → デフォルト スロット)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|電話 | ts.CallExpression |  |
+| 名前 | タイプ            | 説明 |
+| ---- | ----------------- | ---- |
+| 電話 | ts.CallExpression |      |
 
 ### readSlotHCallScope
 
 **種類:** 関数
 
 ```typescript
-function readSlotHCallScope(factory: ts.NodeFactory, call: ts.CallExpression, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
+function readSlotHCallScope(
+  factory: ts.NodeFactory,
+  call: ts.CallExpression,
+  visit: ts.Visitor,
+): ts.ObjectLiteralExpression | undefined;
 ```
 
 `h(Slot, props, …)` の **スコープ** (`name` 以外のすべてのプロパティ) を読み取ります。
@@ -1289,34 +1329,38 @@ function readSlotHCallScope(factory: ts.NodeFactory, call: ts.CallExpression, vi
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-|電話 | ts.CallExpression |  |
-|訪問 | ts.訪問者 |  |
+| 名前 | タイプ            | 説明 |
+| ---- | ----------------- | ---- |
+| 工場 | ts.NodeFactory    |      |
+| 電話 | ts.CallExpression |      |
+| 訪問 | ts.訪問者         |      |
 
 ### 読み取りスロット名
 
 **種類:** 関数
 
 ```typescript
-function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined
+function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined;
 ```
 
 `<Slot>` 要素の静的な `name="…"` を読み取ります (`undefined` → デフォルト スロット)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node | ts.JsxSelfClosingElement \| ts.Jsx要素 |  |
+| 名前 | タイプ                                 | 説明 |
+| ---- | -------------------------------------- | ---- |
+| node | ts.JsxSelfClosingElement \| ts.Jsx要素 |      |
 
 ### readSlotScope
 
 **種類:** 関数
 
 ```typescript
-function readSlotScope(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
+function readSlotScope(
+  factory: ts.NodeFactory,
+  node: ts.JsxSelfClosingElement | ts.JsxElement,
+  visit: ts.Visitor,
+): ts.ObjectLiteralExpression | undefined;
 ```
 
 `<Slot>` 要素の **スコープ** (`name` 以外のすべての属性) を読み取ります。
@@ -1329,18 +1373,18 @@ function readSlotScope(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement |
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-| node | ts.JsxSelfClosingElement \| ts.Jsx要素 |  |
-|訪問 | ts.訪問者 |  |
+| 名前 | タイプ                                 | 説明 |
+| ---- | -------------------------------------- | ---- |
+| 工場 | ts.NodeFactory                         |      |
+| node | ts.JsxSelfClosingElement \| ts.Jsx要素 |      |
+| 訪問 | ts.訪問者                              |      |
 
 ### readStyleImports
 
 **種類:** 関数
 
 ```typescript
-function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[]
+function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
 ```
 
 モジュールの相対スタイルシート インポートを収集します (CSS モジュールとベア CSS)
@@ -1350,18 +1394,22 @@ function readStyleImports(fileName: string, source: string, sourceRoot?: string)
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|ソース |文字列 |  |
-|ソースルート |文字列 |  |
+| 名前         | タイプ | 説明 |
+| ------------ | ------ | ---- |
+| ファイル名   | 文字列 |      |
+| ソース       | 文字列 |      |
+| ソースルート | 文字列 |      |
 
 ### 解決ワークスペースローカルインポート
 
 **種類:** 関数
 
 ```typescript
-function resolveWorkspaceLocalImport(specifier: string, sourceFileName: string, sourceRoot: string | undefined): string | undefined
+function resolveWorkspaceLocalImport(
+  specifier: string,
+  sourceFileName: string,
+  sourceRoot: string | undefined,
+): string | undefined;
 ```
 
 ワークスペースローカルの `@/` インポートを、その所有ソースに相対的なパスに解決します。
@@ -1370,11 +1418,11 @@ function resolveWorkspaceLocalImport(specifier: string, sourceFileName: string, 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|指定子 |文字列 |  |
-|ソースファイル名 |文字列 |  |
-|ソースルート |文字列 \|未定義 |  |
+| 名前             | タイプ          | 説明 |
+| ---------------- | --------------- | ---- |
+| 指定子           | 文字列          |      |
+| ソースファイル名 | 文字列          |      |
+| ソースルート     | 文字列 \|未定義 |      |
 
 ### リライトスコープ
 
@@ -1392,56 +1440,56 @@ Vue ターゲットの場合。
 **種類:** 関数
 
 ```typescript
-function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile
+function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile;
 ```
 
 フレームワーク固有の発行の前に、ワークスペース ローカルの `@/` インポートを書き換えます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|ソースルート |文字列 |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| ソースファイル | ts.ソースファイル |      |
+| ソースルート   | 文字列            |      |
 
 ### スロットフォールバック子供
 
 **種類:** 関数
 
 ```typescript
-function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[]
+function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[];
 ```
 
 `<Slot>…</Slot>` のフォールバック子 (自動終了スロットの場合は空)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node | ts.JsxSelfClosingElement \| ts.Jsx要素 |  |
+| 名前 | タイプ                                 | 説明 |
+| ---- | -------------------------------------- | ---- |
+| node | ts.JsxSelfClosingElement \| ts.Jsx要素 |      |
 
 ### スロットHCallフォールバック
 
 **種類:** 関数
 
 ```typescript
-function slotHCallFallback(call: ts.CallExpression): ts.Expression[]
+function slotHCallFallback(call: ts.CallExpression): ts.Expression[];
 ```
 
 `h(Slot, props, …fallback)` 呼び出しのフォールバック子 (小道具の後の引数)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|電話 | ts.CallExpression |  |
+| 名前 | タイプ            | 説明 |
+| ---- | ----------------- | ---- |
+| 電話 | ts.CallExpression |      |
 
 ### ストリップフレームワークディレクティブ
 
 **種類:** 関数
 
 ```typescript
-function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile
+function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile;
 ```
 
 先頭に `"use react"` / `"use vue"` ディレクティブが付いているソース ファイルを返します
@@ -1450,26 +1498,26 @@ function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| ソースファイル | ts.ソースファイル |      |
 
 ### ストリップスロット属性
 
 **種類:** 関数
 
 ```typescript
-function stripSlotAttribute(factory: ts.NodeFactory, element: T): T
+function stripSlotAttribute(factory: ts.NodeFactory, element: T): T;
 ```
 
 `slot="…"` マーカー属性が削除された JSX 要素/自己終了要素のコピー。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-|要素 |た |  |
+| 名前 | タイプ         | 説明 |
+| ---- | -------------- | ---- |
+| 工場 | ts.NodeFactory |      |
+| 要素 | た             |      |
 
 ### スタイルインポート
 
@@ -1486,24 +1534,24 @@ export interface StyleImport
 **種類:** 関数
 
 ```typescript
-function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node
+function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node;
 ```
 
 `i18next.t(...)` の呼び出し式を `t(...)` に書き換えます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | ts.NodeFactory |  |
-| node | ts.Node |  |
+| 名前 | タイプ         | 説明 |
+| ---- | -------------- | ---- |
+| 工場 | ts.NodeFactory |      |
+| node | ts.Node        |      |
 
 ### usesClassNamesArrayAttribute
 
 **種類:** 関数
 
 ```typescript
-function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
+function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean;
 ```
 
 モジュールが値が次の `className={[…]}` 属性を保持しているかどうか
@@ -1513,16 +1561,16 @@ React ターゲットを呼び出すため、エミッターはニュートラ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| ソースファイル | ts.ソースファイル |      |
 
 ### usesComponentSelfReference
 
 **種類:** 関数
 
 ```typescript
-function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean
+function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean;
 ```
 
 コンポーネントが **それ自体** を JSX タグとして参照するかどうか (`<ForgeTreeView …>`)
@@ -1532,49 +1580,49 @@ function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: st
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
-|コンポーネント名 |文字列 |  |
+| 名前             | タイプ            | 説明 |
+| ---------------- | ----------------- | ---- |
+| ソースファイル   | ts.ソースファイル |      |
+| コンポーネント名 | 文字列            |      |
 
 ### HFactoryCall を使用する
 
 **種類:** 関数
 
 ```typescript
-function usesHFactoryCall(sourceFile: ts.SourceFile): boolean
+function usesHFactoryCall(sourceFile: ts.SourceFile): boolean;
 ```
 
 モジュールが呼び出し式として `h` を参照するかどうか (明示的な `h(...)`)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソースファイル | ts.ソースファイル |  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| ソースファイル | ts.ソースファイル |      |
 
 ### I18nextT を使用
 
 **種類:** 関数
 
 ```typescript
-function usesI18nextT(node: OxcNode): boolean
+function usesI18nextT(node: OxcNode): boolean;
 ```
 
 Oxc モジュールまたは node が `i18next.t(...)` を呼び出すかどうか。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| node | OxcNode |  |
+| 名前 | タイプ  | 説明 |
+| ---- | ------- | ---- |
+| node | OxcNode |      |
 
 ### VUE_ADAPTER_MODULE
 
 **種類:** 定数
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 Vue コンテキスト プリミティブのインポート元の `@mission-platform/forge/vue` サブパス。
@@ -1584,7 +1632,7 @@ Vue コンテキスト プリミティブのインポート元の `@mission-plat
 **種類:** 定数
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 中立フレームワーク コンポーネントのインポート Vue は、`vue` ランタイムから直接解決されます。
@@ -1594,7 +1642,7 @@ export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
 **種類:** 定数
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 ニュートラルなレンダー/プロップ タイプの名前は **Vue** ビルドにリダイレクトされます。
@@ -1615,7 +1663,7 @@ Vue ネイティブ型はローカル モジュール経由で使用されるた
 **種類:** 関数
 
 ```typescript
-function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>
+function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 Vue の `v-model` 更新イベントには `update:<model>` という名前が付けられ、子はコンパイルされます。
@@ -1637,7 +1685,7 @@ Vue の `v-model` 更新イベントには `update:<model>` という名前が�
 **種類:** 関数
 
 ```typescript
-function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>
+function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 Vue - 名前付きスロット **受け渡し** フォームを書き換えるターゲット トランスフォーマー —
@@ -1656,7 +1704,7 @@ Vue - 名前付きスロット **受け渡し** フォームを書き換える�
 **種類:** 関数
 
 ```typescript
-function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>
+function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 Vue - React スタイルのマルチワード DOM の大文字と小文字を修正するターゲット トランスフォーマ
@@ -1676,7 +1724,7 @@ Vue - React スタイルのマルチワード DOM の大文字と小文字を修
 **種類:** 関数
 
 ```typescript
-function createEmptyForgeCacheStats(): ForgeCacheStats
+function createEmptyForgeCacheStats(): ForgeCacheStats;
 ```
 
 説明はありません。
@@ -1686,7 +1734,7 @@ function createEmptyForgeCacheStats(): ForgeCacheStats
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>
+export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>;
 ```
 
 説明はありません。
@@ -1718,7 +1766,7 @@ export interface ForgeCacheStats
 **種類:** 関数
 
 ```typescript
-function compileComponentModule(source: string, options: CompileOptions): CompiledModule
+function compileComponentModule(source: string, options: CompileOptions): CompiledModule;
 ```
 
 1 つのニュートラル (またはフレームワークゲート型) コンポーネント モジュールをフレームワークごとにコンパイルします
@@ -1731,10 +1779,10 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|オプション |コンパイルオプション |  |
+| 名前       | タイプ               | 説明 |
+| ---------- | -------------------- | ---- |
+| ソース     | 文字列               |      |
+| オプション | コンパイルオプション |      |
 
 ### コンパイル済みモジュール
 
@@ -1751,7 +1799,7 @@ export interface CompiledModule
 **種類:** 関数
 
 ```typescript
-function compileHookModule(source: string, options: CompileHookOptions): CompiledModule
+function compileHookModule(source: string, options: CompileHookOptions): CompiledModule;
 ```
 
 1 つのニュートラル **フック モジュール** (に対して作成された追記型コンポーザブル) をコンパイルします。
@@ -1760,10 +1808,10 @@ function compileHookModule(source: string, options: CompileHookOptions): Compile
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|オプション |コンパイルフックオプション |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| ソース     | 文字列                     |      |
+| オプション | コンパイルフックオプション |      |
 
 ### コンパイルフックオプション
 
@@ -1780,7 +1828,7 @@ export interface CompileHookOptions
 **種類:** 関数
 
 ```typescript
-function compileModule(source: string, options: CompileModuleOptions): CompiledModule
+function compileModule(source: string, options: CompileModuleOptions): CompiledModule;
 ```
 
 呼び出し元が提供する出力プラグインを介して 1 つのニュートラル モジュールをコンパイルします。
@@ -1791,10 +1839,10 @@ Astro などのスタンドアロン ターゲット パッケージで使用さ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
-|オプション |コンパイルモジュールオプション |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| ソース     | 文字列                         |      |
+| オプション | コンパイルモジュールオプション |      |
 
 ### コンパイルモジュールオプション
 
@@ -1823,7 +1871,7 @@ export interface CompileOptions
 **種類:** 関数
 
 ```typescript
-function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[]
+function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[];
 ```
 
 バレルがエクスポートするコンポーネントを発見し、その公開形状を導き出します。それぞれ
@@ -1833,27 +1881,27 @@ in (再エクスポートのモジュールベース名)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バレルソース |文字列 |  |
-|ストリッププレフィックス |  |  |
+| 名前                     | タイプ | 説明 |
+| ------------------------ | ------ | ---- |
+| バレルソース             | 文字列 |      |
+| ストリッププレフィックス |        |      |
 
 ### グラフからコンポーネントを発見する
 
 **種類:** 関数
 
 ```typescript
-function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[]
+function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[];
 ```
 
 従来の結果の形状を保持しながら、プロジェクトのパブリック コンポーネントを標準グラフからエクスポートします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|グラフ |フォージファイルグラフ |  |
-|ストリッププレフィックス |  |  |
+| 名前                     | タイプ                 | 説明 |
+| ------------------------ | ---------------------- | ---- |
+| グラフ                   | フォージファイルグラフ |      |
+| ストリッププレフィックス |                        |      |
 
 ### 発見されたコンポーネント
 
@@ -1882,7 +1930,7 @@ export interface DiscoveredHelperExport
 **種類:** 関数
 
 ```typescript
-function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
+function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[];
 ```
 
 バレルが再エクスポートする **ヘルパー モジュール** を発見してください — すべての `export { … }
@@ -1894,27 +1942,30 @@ Vue パッケージの `useToast` コンポーザブルの）生成されたエ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|バレルソース |文字列 |  |
-|コンポーネントフォルダー | ReadonlySet<string> |  |
+| 名前                     | タイプ              | 説明 |
+| ------------------------ | ------------------- | ---- |
+| バレルソース             | 文字列              |      |
+| コンポーネントフォルダー | ReadonlySet<string> |      |
 
 ### DiscoverHelperExportsFromGraph
 
 **種類:** 関数
 
 ```typescript
-function discoverHelperExportsFromGraph(graph: ForgeFileGraph, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
+function discoverHelperExportsFromGraph(
+  graph: ForgeFileGraph,
+  componentFolders: ReadonlySet<string>,
+): DiscoveredHelperExport[];
 ```
 
 正規グラフから非コンポーネントのパブリック エクスポートをプロジェクトします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|グラフ |フォージファイルグラフ |  |
-|コンポーネントフォルダー | ReadonlySet<string> |  |
+| 名前                     | タイプ                 | 説明 |
+| ------------------------ | ---------------------- | ---- |
+| グラフ                   | フォージファイルグラフ |      |
+| コンポーネントフォルダー | ReadonlySet<string>    |      |
 
 ## `src/compiler/frontends`
 
@@ -1923,7 +1974,7 @@ function discoverHelperExportsFromGraph(graph: ForgeFileGraph, componentFolders:
 **種類:** 関数
 
 ```typescript
-function parseForgeSource(fileName: string, source: string): OxcParsedModule
+function parseForgeSource(fileName: string, source: string): OxcParsedModule;
 ```
 
 Oxc を介して Forge ソースをシリアル化可能なモジュールに解析し、ニュートラルにする
@@ -1932,29 +1983,34 @@ Oxc を介して Forge ソースをシリアル化可能なモジュールに解
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|ソース |文字列 |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| ファイル名 | 文字列 |      |
+| ソース     | 文字列 |      |
 
 ### フロントエンドモジュールの解析
 
 **種類:** 関数
 
 ```typescript
-function parseFrontendModule(fileName: string, source: string, moduleKind: 'component' | 'composable', componentName?: string): FrontendModule
+function parseFrontendModule(
+  fileName: string,
+  source: string,
+  moduleKind: 'component' | 'composable',
+  componentName?: string,
+): FrontendModule;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ファイル名 |文字列 |  |
-|ソース |文字列 |  |
-|モジュールの種類 | 'コンポーネント' \| 'コンポーザブル' |  |
-|コンポーネント名 |文字列 |  |
+| 名前             | タイプ                               | 説明 |
+| ---------------- | ------------------------------------ | ---- |
+| ファイル名       | 文字列                               |      |
+| ソース           | 文字列                               |      |
+| モジュールの種類 | 'コンポーネント' \| 'コンポーザブル' |      |
+| コンポーネント名 | 文字列                               |      |
 
 ## `src/compiler/generation-context`
 
@@ -1963,16 +2019,16 @@ function parseFrontendModule(fileName: string, source: string, moduleKind: 'comp
 **種類:** 関数
 
 ```typescript
-function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext
+function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeGenerationContextOptions |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| オプション | ForgeGenerationContextOptions |      |
 
 ### ForgeGenerationContext
 
@@ -2001,16 +2057,16 @@ export interface ForgeGenerationContextOptions
 **種類:** 関数
 
 ```typescript
-function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph
+function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph;
 ```
 
 構成された 1 つのエントリ モジュールから正規のソース グラフを構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | ForgeFileGraphOptions |  |
+| 名前       | タイプ                | 説明 |
+| ---------- | --------------------- | ---- |
+| オプション | ForgeFileGraphOptions |      |
 
 ### フォージファイルエッジ
 
@@ -2047,7 +2103,8 @@ export interface ForgeFileGraphOptions
 **種類：**タイプ
 
 ```typescript
-export type ForgeFileKind = 'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
+export type ForgeFileKind =
+  'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
 ```
 
 説明はありません。
@@ -2077,7 +2134,13 @@ export interface ForgeGraphDiagnostic
 **種類：**タイプ
 
 ```typescript
-export type ForgeGraphDiagnosticCode = | 'missing-entry' | 'missing-file' | 'unsupported-extension' | 'ambiguous-export' | 'unsupported-authoring-form' | 'cycle';
+export type ForgeGraphDiagnosticCode =
+  | 'missing-entry'
+  | 'missing-file'
+  | 'unsupported-extension'
+  | 'ambiguous-export'
+  | 'unsupported-authoring-form'
+  | 'cycle';
 ```
 
 説明はありません。
@@ -2089,7 +2152,11 @@ export type ForgeGraphDiagnosticCode = | 'missing-entry' | 'missing-file' | 'uns
 **種類:** 関数
 
 ```typescript
-function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'composable' = 'component', componentName?: string): GenericHoistResult
+function hoistStaticJsx(
+  module: OxcParsedModule,
+  moduleKind: 'component' | 'composable' = 'component',
+  componentName?: string,
+): GenericHoistResult;
 ```
 
 次に、静的マークは Oxc で解析されたモジュールのレンダー ツリーをホイストし、
@@ -2098,11 +2165,11 @@ function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'comp
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | OxcParsedモジュール |  |
-|モジュールの種類 | 'コンポーネント' \| 'コンポーザブル' |  |
-|コンポーネント名 |文字列 |  |
+| 名前             | タイプ                               | 説明 |
+| ---------------- | ------------------------------------ | ---- |
+| モジュール       | OxcParsedモジュール                  |      |
+| モジュールの種類 | 'コンポーネント' \| 'コンポーザブル' |      |
+| コンポーネント名 | 文字列                               |      |
 
 ## `src/compiler/optimize`
 
@@ -2111,7 +2178,7 @@ function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'comp
 **種類:** 関数
 
 ```typescript
-function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule
+function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule;
 ```
 
 ソースレベルのステージ 1 最適化パス (デッドブランチ プルーニングと
@@ -2123,17 +2190,17 @@ function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions =
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モジュール | OxcParsedモジュール |  |
-|オプション |最適化オプション |  |
+| 名前       | タイプ              | 説明 |
+| ---------- | ------------------- | ---- |
+| モジュール | OxcParsedモジュール |      |
+| オプション | 最適化オプション    |      |
 
 ### ソースファイルの最適化
 
 **種類:** 定数
 
 ```typescript
-export const optimizeSourceFile
+export const optimizeSourceFile;
 ```
 
 互換性エイリアスは、古い名前を使用したコンパイラ統合のために保持されます。
@@ -2145,7 +2212,10 @@ export const optimizeSourceFile
 **種類:** 関数
 
 ```typescript
-function analyzeForgeModule(input: CompilerInput, service: ForgeCompilerService = defaultCompilerService): SemanticModule
+function analyzeForgeModule(
+  input: CompilerInput,
+  service: ForgeCompilerService = defaultCompilerService,
+): SemanticModule;
 ```
 
 ターゲット中立のセマンティック モジュールを解析、正規化、推論します。
@@ -2157,10 +2227,10 @@ function analyzeForgeModule(input: CompilerInput, service: ForgeCompilerService 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 |コンパイラ入力 |  |
-|サービス | ForgeCompilerService |  |
+| 名前     | タイプ               | 説明 |
+| -------- | -------------------- | ---- |
+| 入力     | コンパイラ入力       |      |
+| サービス | ForgeCompilerService |      |
 
 ### コンパイラ入力
 
@@ -2187,16 +2257,16 @@ export interface CompilerPipeline
 **種類:** 関数
 
 ```typescript
-function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline
+function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline;
 ```
 
 コンパイラのエントリ ポイントで使用されるフェーズ ディスパッチャを作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|サービス | ForgeCompilerService |  |
+| 名前     | タイプ               | 説明 |
+| -------- | -------------------- | ---- |
+| サービス | ForgeCompilerService |      |
 
 ## `src/compiler/report`
 
@@ -2217,39 +2287,41 @@ export interface ForgeCompilationReport
 **種類:** 関数
 
 ```typescript
-function analyzeRouterCapabilities(input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>): RouterCapabilityModule
+function analyzeRouterCapabilities(
+  input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>,
+): RouterCapabilityModule;
 ```
 
 ニュートラル ルーターのインポートを解析し、ネイティブ ルーターをインポートせずに使用します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |  |
+| 名前 | タイプ                                                            | 説明 |
+| ---- | ----------------------------------------------------------------- | ---- |
+| 入力 | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |      |
 
 ### コンパイルルーターモジュール
 
 **種類:** 関数
 
 ```typescript
-function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult
+function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult;
 ```
 
 選択したネイティブ ターゲット アダプターを通じてニュートラル ルーターの使用状況をコンパイルします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | RouterCompiler入力 |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| 入力 | RouterCompiler入力 |      |
 
 ### createRouterCompilerPipeline
 
 **種類:** 関数
 
 ```typescript
-function createRouterCompilerPipeline()
+function createRouterCompilerPipeline();
 ```
 
 Forge コンパイラおよびスタンドアロン ターゲット フィクスチャによって使用されるディスパッチャ フォーム。
@@ -2271,16 +2343,16 @@ GeneratedModule 自体を変更せずに、出力とサービス メタデータ
 **種類:** 関数
 
 ```typescript
-function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService
+function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|限界 | ForgeCacheLimits |  |
+| 名前 | タイプ           | 説明 |
+| ---- | ---------------- | ---- |
+| 限界 | ForgeCacheLimits |      |
 
 ### ForgeCompileRequest
 
@@ -2349,7 +2421,7 @@ export class PersistentForgeCompilerService implements ForgeCompilerService
 **種類:** 関数
 
 ```typescript
-function reactJsxPlugin(): Plugin
+function reactJsxPlugin(): Plugin;
 ```
 
 説明はありません。
@@ -2359,32 +2431,32 @@ function reactJsxPlugin(): Plugin
 **種類:** 関数
 
 ```typescript
-function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig
+function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | JsxHookLibraryConfigOptions |  |
+| 名前       | タイプ                      | 説明 |
+| ---------- | --------------------------- | ---- |
+| オプション | JsxHookLibraryConfigOptions |      |
 
 ### 定義JsxLibraryConfig
 
 **種類:** 関数
 
 ```typescript
-function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig
+function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | JsxLibraryConfigOptions |  |
+| 名前       | タイプ                  | 説明 |
+| ---------- | ----------------------- | ---- |
+| オプション | JsxLibraryConfigOptions |      |
 
 ### JsxHookLibraryConfigOptions
 
@@ -2411,7 +2483,7 @@ export interface JsxLibraryConfigOptions
 **種類:** 関数
 
 ```typescript
-function reactJsxPlugin(): Plugin
+function reactJsxPlugin(): Plugin;
 ```
 
 説明はありません。
@@ -2421,7 +2493,7 @@ function reactJsxPlugin(): Plugin
 **種類:** 関数
 
 ```typescript
-function solidJsxPlugin(): Plugin[]
+function solidJsxPlugin(): Plugin[];
 ```
 
 生成された Solid `.tsx` をコンパイルする `vite-plugin-solid` プラグイン
@@ -2441,7 +2513,7 @@ SolidJS のきめ細かい DOM 操作。再輸出されたため手巻き
 **種類:** 関数
 
 ```typescript
-function solidJsxTsdownPlugin(): Plugin
+function solidJsxTsdownPlugin(): Plugin;
 ```
 
 Rolldown/tsdown 互換の Solid JSX プラグイン。 `vite-plugin-solid` のデリゲート
@@ -2454,7 +2526,7 @@ Solid JSX を React に書き換えないでください。
 **種類:** 関数
 
 ```typescript
-function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[]
+function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[];
 ```
 
 **tsdown** (ロールダウン) で構築される forge フレームワークのステージ 2 プラグイン。
@@ -2464,16 +2536,16 @@ Vite の解決された構成が必要です。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プラグイン |フレームワーク出力プラグイン |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| プラグイン | フレームワーク出力プラグイン |      |
 
 ### svelteプラグイン
 
 **種類:** 関数
 
 ```typescript
-function sveltePlugin(): Plugin[]
+function sveltePlugin(): Plugin[];
 ```
 
 生成された Svelte コンポーネントをコンパイルするための Vite プラグイン。
@@ -2483,7 +2555,7 @@ function sveltePlugin(): Plugin[]
 **種類:** 関数
 
 ```typescript
-function svelteTsdownPlugin(): Plugin
+function svelteTsdownPlugin(): Plugin;
 ```
 
 Rolldown/tsdown 互換の Svelte コンパイラ プラグイン。 `.svelte` SFC をコンパイルします。
@@ -2497,7 +2569,7 @@ tsdown でビルドする場合は、これ (または {@link stagePluginsForTsd
 **種類:** 関数
 
 ```typescript
-function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string
+function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string;
 ```
 
 ニュートラル フック ライブラリをフレームワークごとのソース ツリーにコンパイルします (ステージ 1)。
@@ -2505,9 +2577,9 @@ function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions):
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | GenerateHookLibrarySourcesOptions |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| オプション | GenerateHookLibrarySourcesOptions |      |
 
 ### フックライブラリの生成ソースオプション
 
@@ -2534,7 +2606,7 @@ export interface HookLibraryDtsOptions
 **種類:** 関数
 
 ```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
+function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
 ```
 
 **本物のフレームワークごと**の宣言を発行するビルド後の Vite プラグイン
@@ -2542,7 +2614,7 @@ function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
 
 各フレームワークのビルド ({@link generatedHookLibrarySources} + フレームワークの
 ステージ 2 バンドラー) は JS を生成しますが、生成されたツリーは
-`tsc` で認識できるソース ファイルではありません。単一の *共通* を再エクスポートするのではなく
+`tsc` で認識できるソース ファイルではありません。単一の _共通_ を再エクスポートするのではなく
 すべてのフレームワークに対する中立宣言では、このプラグインは TypeScript を実行します。
 `closeBundle` で生成されたツリーに対するコンパイラ API (ビルド後のステップ)、および
 結果の `.d.ts` ファイル (`index.d.ts` + モジュールごとに 1 つ) を
@@ -2554,9 +2626,9 @@ return Vue `Ref`s — 各フレームワークは独自のタイプです。タ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション |フックライブラリDtsオプション |  |
+| 名前       | タイプ                        | 説明 |
+| ---------- | ----------------------------- | ---- |
+| オプション | フックライブラリDtsオプション |      |
 
 ## `src/generate`
 
@@ -2565,16 +2637,16 @@ return Vue `Ref`s — 各フレームワークは独自のタイプです。タ�
 **種類:** 関数
 
 ```typescript
-function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget
+function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget;
 ```
 
 明示的な出力プラグインからソースツリー記述子を作成します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プラグイン |フレームワーク出力プラグイン |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| プラグイン | フレームワーク出力プラグイン |      |
 
 ### フレームワークソースターゲット
 
@@ -2591,7 +2663,7 @@ export interface FrameworkSourceTarget
 **種類:** 関数
 
 ```typescript
-function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string
+function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string;
 ```
 
 ニュートラル コンポーネント パッケージをフレームワークごとのソース ツリーにコンパイルします (ステージ 1)。
@@ -2599,9 +2671,9 @@ function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): str
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | GenerateFrameworkSourcesオプション |  |
+| 名前       | タイプ                             | 説明 |
+| ---------- | ---------------------------------- | ---- |
+| オプション | GenerateFrameworkSourcesオプション |      |
 
 ### GenerateFrameworkSourcesオプション
 
@@ -2618,7 +2690,7 @@ export interface GenerateFrameworkSourcesOptions
 **種類:** 関数
 
 ```typescript
-function jsxComponentsCssImportPlugin(): Plugin
+function jsxComponentsCssImportPlugin(): Plugin;
 ```
 
 コンポーネントごとの CSS をその JS チャンクに再リンクします。
@@ -2651,7 +2723,7 @@ Vite 独自の CSS プラグインによって `importedCss` が設定されて�
 最後に、各 CSS モジュール スタイルシートは **source** 名で出力されます。
 `foo.module.css` — クラス名のハッシュがすでに適用されており、
 解決された名前は兄弟 `foo.module.js` クラス マップに焼き付けられます。発送する
-`.module.css` サフィックスが付いたものはトラップです。すべての *ダウンストリーム* バンドラー (例:
+`.module.css` サフィックスが付いたものはトラップです。すべての _ダウンストリーム_ バンドラー (例:
 React Storybook 自体の Vite) は、`*.module.css` を CSS モジュールとして認識し、
 CSS モジュール変換を **2 回目**実行し、
 セレクターを使用して、焼き付けられた（すでにハッシュされた）クラス名と一致しなくなるようにします。
@@ -2676,7 +2748,7 @@ export interface JsxComponentsDtsOptions
 **種類:** 関数
 
 ```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
+function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
 ```
 
 **本物のフレームワークごと**の宣言を発行するビルド後の Vite プラグイン
@@ -2717,9 +2789,9 @@ props タイプが **共有ニュートラル** から再インポートされ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | JsxコンポーネントDtsオプション |  |
+| 名前       | タイプ                         | 説明 |
+| ---------- | ------------------------------ | ---- |
+| オプション | JsxコンポーネントDtsオプション |      |
 
 ### JsxComponentsEntryDtsOptions
 
@@ -2736,7 +2808,7 @@ export interface JsxComponentsEntryDtsOptions
 **種類:** 関数
 
 ```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin
+function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
 ```
 
 の合成された宣言 (`<declarationFileName>.d.ts`) を出力します。
@@ -2745,9 +2817,9 @@ function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plu
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | JsxComponentsEntryDtsOptions |  |
+| 名前       | タイプ                       | 説明 |
+| ---------- | ---------------------------- | ---- |
+| オプション | JsxComponentsEntryDtsOptions |      |
 
 ## `src/tsdown`
 
@@ -2756,7 +2828,7 @@ function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plu
 **種類:** 関数
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[]
+function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
 ```
 
 tsdown で構築された 1 つの Archetype-C **コンポーネント** フレームワークを再現します。
@@ -2765,35 +2837,35 @@ tsdown で構築された 1 つの Archetype-C **コンポーネント** フレ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | TsdownForgeコンポーネントオプション |  |
+| 名前       | タイプ                              | 説明 |
+| ---------- | ----------------------------------- | ---- |
+| オプション | TsdownForgeコンポーネントオプション |      |
 
 ### 定義TsdownForgeEmailコンポーネント
 
 **種類:** 関数
 
 ```typescript
-function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig
+function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig;
 ```
 
 サーバー専用の中立的な Forge 電子メール コンポーネント エントリを構築します。
 
- Forge ツリーを保存するので、
+Forge ツリーを保存するので、
 `@mission-platform/email-renderer` はサーバー上でシリアル化できます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | TsdownForgeEmailコンポーネントオプション |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| オプション | TsdownForgeEmailコンポーネントオプション |      |
 
 ### 定義TsdownForgeフック
 
 **種類:** 関数
 
 ```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
 ```
 
 tsdown で構築された 1 つの Archetype-C **フック** フレームワークを再現します。
@@ -2802,16 +2874,16 @@ tsdown で構築された 1 つの Archetype-C **フック** フレームワー�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | TsdownForgeHooksオプション |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| オプション | TsdownForgeHooksオプション |      |
 
 ### 定義TsdownForgeHooksAll
 
 **種類:** 関数
 
 ```typescript
-function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[]
+function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[];
 ```
 
 要求されたすべての forge フック フレームワークの tsdown 構成の配列を構築する
@@ -2820,9 +2892,9 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | TsdownForgeHooksAllOptions |  |
+| 名前       | タイプ                     | 説明 |
+| ---------- | -------------------------- | ---- |
+| オプション | TsdownForgeHooksAllOptions |      |
 
 ### TsdownForgeコンポーネントオプション
 

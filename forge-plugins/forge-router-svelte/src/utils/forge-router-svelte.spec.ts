@@ -1,6 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import { unsupportedRouterCapabilities } from '@mission-platform/forge-router-plugin-api';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   createSvelteKitRouterCapabilities,
@@ -9,6 +8,7 @@ import {
   useMpNavigation,
   useMpRoute,
 } from '../runtime';
+
 import { forgeRouterSvelte } from './forge-router-svelte';
 
 import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
@@ -82,7 +82,7 @@ describe('forgeRouterSvelte', () => {
   });
 
   it('preserves navigate/route/resolve shapes through the bound SvelteKit surface', async () => {
-    const goto = vi.fn(async () => undefined);
+    const goto = vi.fn(async () => {});
     setForgeSvelteKitRouter({
       goto,
       getPage: () => ({

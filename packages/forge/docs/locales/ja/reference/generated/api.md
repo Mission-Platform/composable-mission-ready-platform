@@ -16,39 +16,39 @@
 **種類:** 関数
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement
+function HtmlContent(properties: HtmlContentProperties): ReactElement;
 ```
 
 `dangerouslySetInnerHTML` を使用して、信頼された HTML を React ホストにレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | HtmlContentProperties |  |
+| 名前       | タイプ                | 説明 |
+| ---------- | --------------------- | ---- |
+| プロパティ | HtmlContentProperties |      |
 
 ### レンダリングして反応する
 
 **種類:** 関数
 
 ```typescript
-function renderToReact(element: MpElement): ReactElement
+function renderToReact(element: MpElement): ReactElement;
 ```
 
 ニュートラルな {@link MpElement} ツリーを React 要素にレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|要素 |エムピーエレメント |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| 要素 | エムピーエレメント |      |
 
 ### テレポート
 
 **種類:** 関数
 
 ```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode
+function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
 ```
 
 ニュートラル `<Teleport>` プリミティブの React ビルド - 薄いラッパー
@@ -75,9 +75,9 @@ Popover API を使用してブラウザの最上位層に自身を昇格させ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| { to = 'body'、無効 = false、子 } |テレポートのプロパティ |  |
+| 名前                              | タイプ                 | 説明 |
+| --------------------------------- | ---------------------- | ---- |
+| { to = 'body'、無効 = false、子 } | テレポートのプロパティ |      |
 
 ### テレポートのプロパティ
 
@@ -94,7 +94,7 @@ React {@link Teleport} コンポーネントで受け入れられるプロパテ
 **種類:** 関数
 
 ```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>
+function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
 ```
 
 ニュートラルコンポーネントをファーストクラスの React 関数コンポーネントとしてラップし、すぐに使用できるようにします。
@@ -102,23 +102,17 @@ function toReactComponent(component: MpComponent<P>, displayName?: string): Func
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント | MpComponent<P> |  |
-|表示名 |文字列 |  |
+| 名前           | タイプ         | 説明 |
+| -------------- | -------------- | ---- |
+| コンポーネント | MpComponent<P> |      |
+| 表示名         | 文字列         |      |
 
 ### 遷移
 
 **種類:** 関数
 
 ```typescript
-function Transition({
-  name = 'v',
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionProperties): ReactNode
+function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
 ```
 
 中立的な `<Transition>` プリミティブの React ビルド — 小さな CSS クラス
@@ -134,9 +128,9 @@ Vue の SSR 出力と一致する位置に配置され、アニメーション�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| { 名前 = 'v'、表示 = false、期間、子、...オーバーライド } |遷移プロパティ |  |
+| 名前                                                      | タイプ         | 説明 |
+| --------------------------------------------------------- | -------------- | ---- |
+| { 名前 = 'v'、表示 = false、期間、子、...オーバーライド } | 遷移プロパティ |      |
 
 ### 移行グループ
 
@@ -151,7 +145,7 @@ function TransitionGroup({
   duration,
   children,
   ...overrides
-}: TransitionGroupProperties): ReactNode
+}: TransitionGroupProperties): ReactNode;
 ```
 
 ニュートラル `<TransitionGroup>` プリミティブの React ビルド - CSS クラス
@@ -172,9 +166,9 @@ SSR セーフです。サーバー レンダー (および最初のクライア�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| { 名前 = 'v'、タグ、moveClass、表示 = false、期間、子、...オーバーライド } |遷移グループのプロパティ |  |
+| 名前                                                                       | タイプ                   | 説明 |
+| -------------------------------------------------------------------------- | ------------------------ | ---- |
+| { 名前 = 'v'、タグ、moveClass、表示 = false、期間、子、...オーバーライド } | 遷移グループのプロパティ |      |
 
 ### 遷移グループのプロパティ
 
@@ -203,7 +197,7 @@ React {@link Transition} コンポーネントで受け入れられるプロパ�
 **種類:** 関数
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element
+function HtmlContent(properties: HtmlContentProperties): JSX.Element;
 ```
 
 ニュートラル `<HtmlContent>` プリミティブの Solid ビルド。 Solid さん
@@ -211,16 +205,16 @@ function HtmlContent(properties: HtmlContentProperties): JSX.Element
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | HtmlContentProperties |  |
+| 名前       | タイプ                | 説明 |
+| ---------- | --------------------- | ---- |
+| プロパティ | HtmlContentProperties |      |
 
 ### テレポート
 
 **種類:** 関数
 
 ```typescript
-function Teleport(properties: TeleportProperties): JSX.Element
+function Teleport(properties: TeleportProperties): JSX.Element;
 ```
 
 ニュートラル `<Teleport>` プリミティブの Solid ビルド - 薄いラッパー
@@ -236,9 +230,9 @@ Solid の {@link ポータル}。 `@mission-platform/vite-plugin-forge` は、
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |テレポートのプロパティ |  |
+| 名前       | タイプ                 | 説明 |
+| ---------- | ---------------------- | ---- |
+| プロパティ | テレポートのプロパティ |      |
 
 ### テレポートのプロパティ
 
@@ -255,7 +249,7 @@ Solid {@link Teleport} コンポーネントで受け入れられるプロパテ
 **種類:** 関数
 
 ```typescript
-function Transition(properties: TransitionProperties): JSX.Element
+function Transition(properties: TransitionProperties): JSX.Element;
 ```
 
 ニュートラル `<Transition>` プリミティブの Solid ビルド。最低限の正解
@@ -272,16 +266,16 @@ Solid ターゲット。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |遷移プロパティ |  |
+| 名前       | タイプ         | 説明 |
+| ---------- | -------------- | ---- |
+| プロパティ | 遷移プロパティ |      |
 
 ### 移行グループ
 
 **種類:** 関数
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element
+function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
 ```
 
 ニュートラル `<TransitionGroup>` プリミティブの Solid ビルド。好き
@@ -298,9 +292,9 @@ Solid ターゲット。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |遷移グループのプロパティ |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| プロパティ | 遷移グループのプロパティ |      |
 
 ### 遷移グループのプロパティ
 
@@ -329,7 +323,7 @@ Solid {@link Transition} コンポーネントで受け入れられるプロパ�
 **種類:** 関数
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet
+function HtmlContent(properties: HtmlContentProperties): Snippet;
 ```
 
 Svelte アダプターの raw コンテンツ実装。 `createRawSnippet` は
@@ -338,25 +332,25 @@ Svelte の `{@html}` 操作の実行時形式とそのセットアップ コー�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | HtmlContentProperties |  |
+| 名前       | タイプ                | 説明 |
+| ---------- | --------------------- | ---- |
+| プロパティ | HtmlContentProperties |      |
 
 ### テレポート
 
 **種類:** 関数
 
 ```typescript
-function Teleport(properties: TeleportProperties): Snippet
+function Teleport(properties: TeleportProperties): Snippet;
 ```
 
 Svelte SSR とクライアント パリティの適切な場所に Forge 子スニペットをレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |テレポートのプロパティ |  |
+| 名前       | タイプ                 | 説明 |
+| ---------- | ---------------------- | ---- |
+| プロパティ | テレポートのプロパティ |      |
 
 ### テレポートのプロパティ
 
@@ -373,32 +367,32 @@ Svelte {@link Teleport} プリミティブによって受け入れられるプ�
 **種類:** 関数
 
 ```typescript
-function Transition(properties: TransitionProperties): Snippet
+function Transition(properties: TransitionProperties): Snippet;
 ```
 
 単一の遷移の子をレンダリングします。アニメーションはネイティブ Svelte マークアップによって提供されます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |遷移プロパティ |  |
+| 名前       | タイプ         | 説明 |
+| ---------- | -------------- | ---- |
+| プロパティ | 遷移プロパティ |      |
 
 ### 移行グループ
 
 **種類:** 関数
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet
+function TransitionGroup(properties: TransitionGroupProperties): Snippet;
 ```
 
 ネイティブ Svelte キー付きブロックの所定の位置に遷移グループの子をレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |遷移グループのプロパティ |  |
+| 名前       | タイプ                   | 説明 |
+| ---------- | ------------------------ | ---- |
+| プロパティ | 遷移グループのプロパティ |      |
 
 ### 遷移グループのプロパティ
 
@@ -427,7 +421,7 @@ Svelte {@link Transition} プリミティブによって受け入れられるプ
 **種類:** 関数
 
 ```typescript
-function createContext(defaultValue: T): VueContext<T>
+function createContext(defaultValue: T): VueContext<T>;
 ```
 
 ニュートラル `createContext` プリミティブの Vue ビルド。ハンドルを返します。
@@ -439,48 +433,48 @@ function createContext(defaultValue: T): VueContext<T>
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|デフォルト値 |た |  |
+| 名前         | タイプ | 説明 |
+| ------------ | ------ | ---- |
+| デフォルト値 | た     |      |
 
 ### HTMLコンテンツ
 
 **種類:** 関数
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode
+function HtmlContent(properties: HtmlContentProperties): VNode;
 ```
 
 レンダリング関数 `innerHTML` バインディングを使用して、信頼された HTML を Vue ホストにレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | HtmlContentProperties |  |
+| 名前       | タイプ                | 説明 |
+| ---------- | --------------------- | ---- |
+| プロパティ | HtmlContentProperties |      |
 
 ### renderToVue
 
 **種類:** 関数
 
 ```typescript
-function renderToVue(element: MpElement): VNode
+function renderToVue(element: MpElement): VNode;
 ```
 
 ニュートラルな {@link MpElement} ツリーを Vue `VNode` にレンダリングします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|要素 |エムピーエレメント |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| 要素 | エムピーエレメント |      |
 
 ### toVueコンポーネント
 
 **種類:** 関数
 
 ```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 ニュートラルコンポーネントを Vue 機能コンポーネントとしてラップします。受信属性
@@ -491,17 +485,17 @@ function toVueComponent(component: MpComponent<P>, name?: string): FunctionalCom
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンポーネント | MpComponent<P> |  |
-|名前 |文字列 |  |
+| 名前           | タイプ         | 説明 |
+| -------------- | -------------- | ---- |
+| コンポーネント | MpComponent<P> |      |
+| 名前           | 文字列         |      |
 
 ### useContext
 
 **種類:** 関数
 
 ```typescript
-function useContext(context: VueContext<T>): T
+function useContext(context: VueContext<T>): T;
 ```
 
 ニュートラル `useContext` プリミティブの Vue ビルド - 薄いラッパー
@@ -510,9 +504,9 @@ function useContext(context: VueContext<T>): T
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンテキスト | VueContext<T> |  |
+| 名前         | タイプ        | 説明 |
+| ------------ | ------------- | ---- |
+| コンテキスト | VueContext<T> |      |
 
 ### VueContext
 
@@ -531,7 +525,7 @@ Vue コンテキスト ハンドル: `provide()` に基づく `Provider` と `in
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 内部は無害に機能ゲート化されています。フォームの関連付けはオプトインのままです。
@@ -541,7 +535,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 **種類:** 定数
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 生成されたクラスがポリシーをオーバーライドしない場合に使用される互換性のデフォルト。
@@ -561,18 +555,22 @@ export class DomTemplateResult
 **種類:** 関数
 
 ```typescript
-function dynamicElement(tag: unknown, properties: Readonly<Record<string, unknown>>, ...children: readonly unknown[]): DynamicElementResult
+function dynamicElement(
+  tag: unknown,
+  properties: Readonly<Record<string, unknown>>,
+  ...children: readonly unknown[]
+): DynamicElementResult;
 ```
 
 実行時にタグが選択されるネイティブ Web コンポーネント要素を構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|タグ |不明 |  |
-|プロパティ |読み取り専用<Record<string, unknown>> |  |
-|子供たち |読み取り専用 不明[] |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| タグ       | 不明                                  |      |
+| プロパティ | 読み取り専用<Record<string, unknown>> |      |
+| 子供たち   | 読み取り専用 不明[]                   |      |
 
 ### 動的要素結果
 
@@ -631,7 +629,7 @@ export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
 **種類:** 関数
 
 ```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement
+function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
 ```
 
 Forge のホストに依存しないランタイムをネイティブ要素コンストラクターに追加します。
@@ -640,9 +638,9 @@ Forge のホストに依存しないランタイムをネイティブ要素コ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ベース | Tベース |  |
+| 名前   | タイプ  | 説明 |
+| ------ | ------- | ---- |
+| ベース | Tベース |      |
 
 ### スロットマーカーを鍛造する
 
@@ -659,7 +657,7 @@ export interface ForgeSlotMarker extends HTMLElement
 **種類:** 関数
 
 ```typescript
-function hasSlotContent(host: Element, name?: string): boolean
+function hasSlotContent(host: Element, name?: string): boolean;
 ```
 
 `host` にそのスロットの 1 つ (ネイティブ ターゲットのコンテンツ) にコンテンツが与えられたかどうか
@@ -685,17 +683,17 @@ CSS エスケープが必要ないため、裸のテキストの子 (どのセ�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ホスト |要素 |  |
-|名前 |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ホスト | 要素   |      |
+| 名前   | 文字列 |      |
 
 ### html
 
 **種類:** 関数
 
 ```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult
+function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
 ```
 
 タグ付きテンプレートファクトリー。呼び出しサイトの静的文字列と動的文字列をキャプチャします。
@@ -703,26 +701,26 @@ function html(strings: TemplateStringsArray, ...values: readonly unknown[]): Tem
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|文字列 |テンプレート文字列配列 |  |
-|値 |読み取り専用 不明[] |  |
+| 名前   | タイプ                 | 説明 |
+| ------ | ---------------------- | ---- |
+| 文字列 | テンプレート文字列配列 |      |
+| 値     | 読み取り専用 不明[]    |      |
 
 ### HTMLコンテンツ
 
 **種類:** 関数
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult
+function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
 ```
 
 `html` をエスケープせずに、ネイティブ Web コンポーネントの生コンテンツの結果を構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | HtmlContentProperties |  |
+| 名前       | タイプ                | 説明 |
+| ---------- | --------------------- | ---- |
+| プロパティ | HtmlContentProperties |      |
 
 ### HtmlContentProperties
 
@@ -749,7 +747,7 @@ export class HtmlContentResult
 **種類:** 定数
 
 ```typescript
-export const nothing: unique symbol
+export const nothing: unique symbol;
 ```
 
 Sentinel は「値なし」としてレンダリングされます。子の位置では何も生成されません。
@@ -781,7 +779,10 @@ export class RawHtml
 **種類:** 関数
 
 ```typescript
-function render(result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult, container: ParentNode): void
+function render(
+  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
+  container: ParentNode,
+): void;
 ```
 
 永続的なテンプレート インスタンスを使用して、結果を `container` にレンダリングします。静的
@@ -790,17 +791,22 @@ DOM とネイティブ フォームの状態は保持され、変更されたバ
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|結果 |テンプレート結果 \| DomTemplateResult \|動的要素結果 \| HTMLコンテンツ結果 |  |
-|コンテナ |親ノード |  |
+| 名前     | タイプ                                                                     | 説明 |
+| -------- | -------------------------------------------------------------------------- | ---- |
+| 結果     | テンプレート結果 \| DomTemplateResult \|動的要素結果 \| HTMLコンテンツ結果 |      |
+| コンテナ | 親ノード                                                                   |      |
 
 ### 解決フォージスロットマーカー
 
 **種類:** 関数
 
 ```typescript
-function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceChildren: readonly Node[], destinationRoot: ShadowRoot): void
+function resolveForgeSlotMarkers(
+  root: ParentNode,
+  owner: ForgeElement,
+  sourceChildren: readonly Node[],
+  destinationRoot: ShadowRoot,
+): void;
 ```
 
 レンダー フラグメント内のコンパイラが発行したランタイム スロット マーカーを解決します。
@@ -815,12 +821,12 @@ function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceCh
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルート |親ノード |  |
-|オーナー |フォージエレメント |  |
-|ソースチルドレン |読み取り専用 Node[] |  |
-|宛先ルート |シャドウルート |  |
+| 名前             | タイプ              | 説明 |
+| ---------------- | ------------------- | ---- |
+| ルート           | 親ノード            |      |
+| オーナー         | フォージエレメント  |      |
+| ソースチルドレン | 読み取り専用 Node[] |      |
+| 宛先ルート       | シャドウルート      |      |
 
 ### テンプレート結果
 
@@ -837,23 +843,23 @@ export class TemplateResult
 **種類:** 関数
 
 ```typescript
-function unsafeHtml(value: string): RawHtml
+function unsafeHtml(value: string): RawHtml;
 ```
 
 文字列をネイティブ Web コンポーネント パスの信頼できる子マークアップとしてマークします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 文字列 |      |
 
 ### useId
 
 **種類:** 関数
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 React の `useId` のネイティブ ターゲットの置き換え。
@@ -900,7 +906,7 @@ export interface WebComponentsShadowPolicy
 **種類:** 関数
 
 ```typescript
-function classNames(...values: readonly ClassValue[]): string
+function classNames(...values: readonly ClassValue[]): string;
 ```
 
 任意の数の {@link ClassValue} をスペースで区切られた単一のクラスにマージします
@@ -909,9 +915,9 @@ function classNames(...values: readonly ClassValue[]): string
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |読み取り専用 ClassValue[] |  |
+| 名前 | タイプ                    | 説明 |
+| ---- | ------------------------- | ---- |
+| 値   | 読み取り専用 ClassValue[] |      |
 
 ### クラス値
 
@@ -930,7 +936,7 @@ export type ClassValue = | string | number | bigint | null | undefined | boolean
 **種類:** 関数
 
 ```typescript
-function createContext(defaultValue: T): MpContext<T>
+function createContext(defaultValue: T): MpContext<T>;
 ```
 
 指定されたデフォルト値を使用して、フレームワークに依存しないコンテキストを作成します。を返します
@@ -939,32 +945,32 @@ function createContext(defaultValue: T): MpContext<T>
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|デフォルト値 |た |  |
+| 名前         | タイプ | 説明 |
+| ------------ | ------ | ---- |
+| デフォルト値 | た     |      |
 
 ### isContextProvider
 
 **種類:** 関数
 
 ```typescript
-function isContextProvider(value: unknown): value is MpContextProvider<unknown>
+function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 ```
 
 値がコンテキスト {@link MpContext.Provider} 関数であるかどうか。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |不明 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 不明   |      |
 
 ### MP_CONTEXT
 
 **種類:** 定数
 
 ```typescript
-export const MP_CONTEXT: unique symbol
+export const MP_CONTEXT: unique symbol;
 ```
 
 ランタイム アダプターがコンテキストを認識するために使用するプロパティ {@link MpContext.Provider}
@@ -1005,7 +1011,7 @@ export interface MpContextProviderProperties<T>
 **種類:** 関数
 
 ```typescript
-function useContext(context: MpContext<T>): T
+function useContext(context: MpContext<T>): T;
 ```
 
 コンテキストの現在の値を読み取ります: 最も近い囲み値
@@ -1013,9 +1019,9 @@ function useContext(context: MpContext<T>): T
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コンテキスト | MpContext<T> |  |
+| 名前         | タイプ       | 説明 |
+| ------------ | ------------ | ---- |
+| コンテキスト | MpContext<T> |      |
 
 ## `src/runtime/dynamic`
 
@@ -1024,7 +1030,7 @@ function useContext(context: MpContext<T>): T
 **種類:** 定数
 
 ```typescript
-export const Dynamic: MpComponent<MpDynamicProperties>
+export const Dynamic: MpComponent<MpDynamicProperties>;
 ```
 
 動的コンポーネントの要素 `type` として使用されるマーカー
@@ -1049,7 +1055,7 @@ export interface MpDynamicProperties extends MpPropertyBag
 これは、**オープンバッグ**を合法的に保持する数少ない宣言の 1 つです。
 `is` 以外のすべてのプロパティは要素 `is` にそのまま転送されます。
 に解決され、その要素は実行時にのみ認識されるため、その属性は
-ここでは受け入れることはできません。コンポーネント props インターフェイスは *してはなりません*
+ここでは受け入れることはできません。コンポーネント props インターフェイスは _してはなりません_
 このパターンに従ってください — {@link MpPropertyBag} を参照してください。
 
 ## `src/runtime/h`
@@ -1059,7 +1065,11 @@ export interface MpDynamicProperties extends MpPropertyBag
 **種類:** 関数
 
 ```typescript
-function h(type: MpElementType | ((properties: P) => MpElement), properties?: P | null, ...children: MpChild[]): MpElement
+function h(
+  type: MpElementType | ((properties: P) => MpElement),
+  properties?: P | null,
+  ...children: MpChild[]
+): MpElement;
 ```
 
 古典的な JSX ファクトリー (`jsxFactory: 'h'`)。
@@ -1071,11 +1081,11 @@ function h(type: MpElementType | ((properties: P) => MpElement), properties?: P 
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|タイプ | MpElementType \| ((プロパティ: P) => MpElement) |  |
-|プロパティ | P \|ヌル |  |
-|子供たち | MpChild[] |  |
+| 名前       | タイプ                                          | 説明 |
+| ---------- | ----------------------------------------------- | ---- |
+| タイプ     | MpElementType \| ((プロパティ: P) => MpElement) |      |
+| プロパティ | P \|ヌル                                        |      |
+| 子供たち   | MpChild[]                                       |      |
 
 ## `src/runtime/hooks`
 
@@ -1134,24 +1144,24 @@ export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
 **種類:** 関数
 
 ```typescript
-function useCallback(callback: T, _dependencies?: MpDependencyList): T
+function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 ```
 
 ニュートラル `useCallback`。レンダリング用にコールバックを変更せずに返します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|コールバック |た |  |
-| _依存関係 | MpDependencyList |  |
+| 名前         | タイプ           | 説明 |
+| ------------ | ---------------- | ---- |
+| コールバック | た               |      |
+| _依存関係    | MpDependencyList |      |
 
 ### useEffect
 
 **種類:** 関数
 
 ```typescript
-function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void
+function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void;
 ```
 
 ニュートラル `useEffect`。 no-op: エフェクト モデルのレンダリング後の副作用。
@@ -1159,17 +1169,17 @@ function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList):
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-| _効果 | MpEffectコールバック |  |
-| _依存関係 | MpDependencyList |  |
+| 名前      | タイプ               | 説明 |
+| --------- | -------------------- | ---- |
+| _効果     | MpEffectコールバック |      |
+| _依存関係 | MpDependencyList     |      |
 
 ### useId
 
 **種類:** 関数
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 ニュートラル `useId`。 React と Vue の `useId` をミラーリングします: 安定した一意の値を返します。
@@ -1185,24 +1195,24 @@ function useId(): string
 **種類:** 関数
 
 ```typescript
-function useMemo(factory: () => T, _dependencies?: MpDependencyList): T
+function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 ```
 
 ニュートラル `useMemo`。レンダリングのために値を 1 回計算します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|工場 | () => T |  |
-| _依存関係 | MpDependencyList |  |
+| 名前      | タイプ           | 説明 |
+| --------- | ---------------- | ---- |
+| 工場      | () => T          |      |
+| _依存関係 | MpDependencyList |      |
 
 ### useRef
 
 **種類:** 関数
 
 ```typescript
-function useRef(initial: T): MpRef<T>
+function useRef(initial: T): MpRef<T>;
 ```
 
 ニュートラル `useRef`。単一の新しい `{ current }` コンテナを返します。
@@ -1210,16 +1220,16 @@ function useRef(initial: T): MpRef<T>
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イニシャル |た |  |
+| 名前       | タイプ | 説明 |
+| ---------- | ------ | ---- |
+| イニシャル | た     |      |
 
 ### 使用状態
 
 **種類:** 関数
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>]
+function useState(initial: T | (() => T)): [T, MpSetState<T>];
 ```
 
 ニュートラル `useState`。ベースライン実装は初期値を返し、
@@ -1228,9 +1238,9 @@ no-op セッター (フレームワークを再レンダリングしない限り
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|イニシャル | T \| (() => T) |  |
+| 名前       | タイプ         | 説明 |
+| ---------- | -------------- | ---- |
+| イニシャル | T \| (() => T) |      |
 
 ## `src/runtime/html-content`
 
@@ -1239,7 +1249,7 @@ no-op セッター (フレームワークを再レンダリングしない限り
 **種類:** 定数
 
 ```typescript
-export const HtmlContent: MpComponent<HtmlContentProperties>
+export const HtmlContent: MpComponent<HtmlContentProperties>;
 ```
 
 信頼できる生の HTML コンテンツの要素タイプとして使用されるマーカー。
@@ -1268,7 +1278,7 @@ DOM 属性表面全体を列挙するのではなく、バッグに入れます�
 **種類:** 関数
 
 ```typescript
-function hasSlot(name?: string): boolean
+function hasSlot(name?: string): boolean;
 ```
 
 囲んでいるコンポーネントにスロットのコンテンツが与えられているかどうか - ニュートラル
@@ -1276,7 +1286,13 @@ Vue の `$slots.x` / React `properties.x != null` チェックに相当します
 省略された (または `'default'`) 名前は、デフォルトのスロット (`children`) をターゲットとします。
 
 ```tsx
-{hasSlot('footer') ? <footer><Slot name="footer" /></footer> : undefined}
+{
+  hasSlot('footer') ? (
+    <footer>
+      <Slot name="footer" />
+    </footer>
+  ) : undefined;
+}
 ```
 
 `@mission-platform/vite-plugin-forge` は、それぞれの呼び出しを直接書き換えます。
@@ -1288,9 +1304,9 @@ Vue の `$slots.x` / React `properties.x != null` チェックに相当します
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|名前 |文字列 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 名前 | 文字列 |      |
 
 ### MpRenderProperty
 
@@ -1338,7 +1354,7 @@ export interface MpSlotProperties extends MpPropertyBag
 **種類:** 関数
 
 ```typescript
-function popSlotScope(): void
+function popSlotScope(): void;
 ```
 
 コンポーネントのサブツリーが展開されたら、現在のスロット スコープをポップします。
@@ -1348,23 +1364,23 @@ function popSlotScope(): void
 **種類:** 関数
 
 ```typescript
-function pushSlotScope(properties: MpPropertyBag): void
+function pushSlotScope(properties: MpPropertyBag): void;
 ```
 
 展開しようとしているコンポーネントのプロパティをスロット スコープに押し込みます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | MpPropertyBag |  |
+| 名前       | タイプ        | 説明 |
+| ---------- | ------------- | ---- |
+| プロパティ | MpPropertyBag |      |
 
 ### スロットの解決
 
 **種類:** 関数
 
 ```typescript
-function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[]
+function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[];
 ```
 
 `<Slot name="…" />` の内容を、それを囲んでいる内容に対して解決します。
@@ -1374,10 +1390,10 @@ function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[])
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | MpSlot プロパティ |  |
-|フォールバック |読み取り専用  |
+| 名前           | タイプ            | 説明 |
+| -------------- | ----------------- | ---- |
+| プロパティ     | MpSlot プロパティ |      |
+| フォールバック | 読み取り専用      |
 
 ## `src/runtime/teleport`
 
@@ -1396,7 +1412,7 @@ export interface MpTeleportProperties
 **種類:** 定数
 
 ```typescript
-export const Teleport: MpComponent<MpTeleportProperties>
+export const Teleport: MpComponent<MpTeleportProperties>;
 ```
 
 ポータルの要素 `type` として使用されるマーカー (`<Teleport to="…">…</Teleport>`)。
@@ -1433,7 +1449,7 @@ export interface MpTransitionProperties
 **種類:** 定数
 
 ```typescript
-export const Transition: MpComponent<MpTransitionProperties>
+export const Transition: MpComponent<MpTransitionProperties>;
 ```
 
 開始/終了遷移の要素 `type` として使用されるマーカー
@@ -1449,7 +1465,7 @@ export const Transition: MpComponent<MpTransitionProperties>
 **種類:** 定数
 
 ```typescript
-export const TransitionGroup: MpComponent<MpTransitionGroupProperties>
+export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 ```
 
 **リスト**の開始/終了/移動トランジションの要素 `type` として使用されるマーカー
@@ -1471,7 +1487,7 @@ SSR 用に子を配置)、`@mission-platform/vite-plugin-forge` がそのマッ�
 **種類:** 定数
 
 ```typescript
-export const Fragment: MpFragment
+export const Fragment: MpFragment;
 ```
 
 フラグメントの要素 `type` として使用されるマーカー (`<>…</>`)、つまり古典
@@ -1492,16 +1508,16 @@ TS2604 (「構成署名または呼び出し署名がありません」)。そ�
 **種類:** 関数
 
 ```typescript
-function isMpElement(value: unknown): value is MpElement
+function isMpElement(value: unknown): value is MpElement;
 ```
 
 任意の値を {@link MpElement} に絞り込みます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |不明 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 不明   |      |
 
 ### mpチャイルド
 
@@ -1561,7 +1577,7 @@ export type MpPropertyBag = Record<string, unknown>;
 
 これは意図的にプレーンで型付けされていないレコードです。これは JSX ファクトリの内容です。
 中立的なツリーをたどる際に、アダプターが何をビルドするか、そして何にインデックスを付けるか。それは
-*ではありません* コンポーネントの props の基本型 — コンポーネントは正確に宣言します
+_ではありません_ コンポーネントの props の基本型 — コンポーネントは正確に宣言します
 受け入れるプロパティ (`children?: MpChild | readonly MpChild[]` を含む)
 それらをレンダリングするとき)、過剰なプロパティのチェックと `keyof` が維持されるようにする
 コンパイルされたすべてのターゲットで意味があります。各要素の少数の属性
@@ -1588,7 +1604,7 @@ export interface MpReservedProperties
   `"default"`) はデフォルトのスロットを意味します。
 
 どちらもコンポーネント自身の props コントラクトの一部ではありません。両方ともコンポーネントによって読み取られます。
-*親* (リコンサイラー、スロットルーター)、決してコンポーネント自体によるものではありません —
+_親_ (リコンサイラー、スロットルーター)、決してコンポーネント自体によるものではありません —
 したがって、各要素で宣言されるのではなく、ここのすべての要素で受け入れられます。
 小道具インターフェイス。
 
@@ -1597,7 +1613,7 @@ export interface MpReservedProperties
 **種類:** 定数
 
 ```typescript
-export const Slot: MpComponent
+export const Slot: MpComponent;
 ```
 
 名前付きスロット (`<Slot name="…" />`) の要素 `type` として使用されるマーカー。

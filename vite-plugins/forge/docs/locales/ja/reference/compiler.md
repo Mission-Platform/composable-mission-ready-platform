@@ -14,14 +14,14 @@ Vite プラグイン。 Forge には中立的なコンパイラ ドライバー�
 
 Forge のコンパイルは複数のパッケージにまたがっており、それぞれのパッケージの責任は意図的に限定されています。
 
-|レイヤー |所有 |所有していない |
-| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| `@mission-platform/vite-plugin-forge` |解析、正規化、中立分析、セマンティック IR、共有最適化、キャッシュ/検出、ディスパッチ、および汎用 Vite/tsdown オーケストレーション | React、Vue、Solid、Svelte、Web コンポーネント、または CMS ソース エミッター |
-| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin`、セマンティック ターゲット コントラクト、生成されたモジュール タイプ、ターゲット メタデータ、および Vite/tsdown アダプター タイプ |フレームワーク実装またはターゲット選択レジストリ |
-|組み込みの `@mission-platform/forge-plugin-*` パッケージ |ターゲットの引き下げ、ターゲットの最適化、ソース生成、ターゲット診断、ランタイム メタデータ、ネイティブ ビルド アダプター |中立的な解析とターゲット間のオーケストレーション |
-| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`、ニュートラル コンテンツ モデル、discover→analyse→emit→write ドライバー、アイランド コジェネレーション、および CMS ビルド ヘルパー |プラットフォーム固有のスキーマ、テンプレート、またはマニフェスト形状 |
-| `@mission-platform/forge-cms-*` パッケージ |それぞれ 1 つのコンテンツ プラットフォーム: フィールド マッピング、テンプレートダイアレクト、マニフェスト形状、プラットフォーム診断 |中立的なプロップ分類またはターゲット間のオーケストレーション |
-| `tsdown.config.ts` ファイルをパッケージ化する |ターゲットのプラグイン インスタンスとパッケージ固有のオーバーライドの選択 |コンパイラ ステージまたはフレームワーク スイッチ テーブルの再実装 |
+| レイヤー                                                 | 所有                                                                                                                                                      | 所有していない                                                              |
+| :------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge`                    | 解析、正規化、中立分析、セマンティック IR、共有最適化、キャッシュ/検出、ディスパッチ、および汎用 Vite/tsdown オーケストレーション                         | React、Vue、Solid、Svelte、Web コンポーネント、または CMS ソース エミッター |
+| `@mission-platform/forge-plugin-api`                     | `FrameworkOutputPlugin`、セマンティック ターゲット コントラクト、生成されたモジュール タイプ、ターゲット メタデータ、および Vite/tsdown アダプター タイプ | フレームワーク実装またはターゲット選択レジストリ                            |
+| 組み込みの `@mission-platform/forge-plugin-*` パッケージ | ターゲットの引き下げ、ターゲットの最適化、ソース生成、ターゲット診断、ランタイム メタデータ、ネイティブ ビルド アダプター                                 | 中立的な解析とターゲット間のオーケストレーション                            |
+| `@mission-platform/forge-cms-plugin-api`                 | `CmsOutputPlugin`、ニュートラル コンテンツ モデル、discover→analyse→emit→write ドライバー、アイランド コジェネレーション、および CMS ビルド ヘルパー      | プラットフォーム固有のスキーマ、テンプレート、またはマニフェスト形状        |
+| `@mission-platform/forge-cms-*` パッケージ               | それぞれ 1 つのコンテンツ プラットフォーム: フィールド マッピング、テンプレートダイアレクト、マニフェスト形状、プラットフォーム診断                       | 中立的なプロップ分類またはターゲット間のオーケストレーション                |
+| `tsdown.config.ts` ファイルをパッケージ化する            | ターゲットのプラグイン インスタンスとパッケージ固有のオーバーライドの選択                                                                                 | コンパイラ ステージまたはフレームワーク スイッチ テーブルの再実装           |
 
 依存関係の方向は明示的です。パッケージは必要なターゲット プラグインをインポートし、そのインスタンスをニュートラル プラグインに渡します。
 ドライバーを取得し、ターゲット固有のビルド構成を受け取ります。ドライバーは文字列からターゲットを構築したり、インポートしたりすることはありません。
@@ -134,12 +134,12 @@ Vite および tsdown ヘルパーは、ビルド セッションの存続期間
 公開するターゲット:
 
 ```ts
-import { defineTsdownForgeComponents } from "@mission-platform/vite-plugin-forge";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeSolidFramework } from "@mission-platform/forge-plugin-solid";
-import { forgeSvelteFramework } from "@mission-platform/forge-plugin-svelte";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
-import { forgeWebComponentsFramework } from "@mission-platform/forge-plugin-web-components";
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
 export default defineTsdownForgeComponents({
   rootDir: import.meta.dirname,
@@ -151,7 +151,7 @@ export default defineTsdownForgeComponents({
     forgeWebComponentsFramework(),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: "MissionPlatformComponents",
+  name: 'MissionPlatformComponents',
 });
 ```
 
@@ -227,7 +227,7 @@ React 互換のインポートと Vue フック ビルドを使用して、Vue `
 
 ## CMS プロジェクション
 
-コンポーネントを *コンテンツ プラットフォーム* に投影することは、フレームワークの降下に直交する軸であり、フレームワークではありません
+コンポーネントを _コンテンツ プラットフォーム_ に投影することは、フレームワークの降下に直交する軸であり、フレームワークではありません
 メインドライバー内に隠された実装。コンポーネントは、Storyblok ブロック、Astro アイランド、Ghost パーシャル、
 Jekyll には、Webflow コード コンポーネントが含まれており、これらのそれぞれは、**任意** のフレームワーク出力プラグインと組み合わせることができます。
 したがって、`storyblok × vue`、`astro × solid`、および `ghost × web-components` は、新しいコードではなく構成です。
@@ -252,23 +252,23 @@ Jekyll には、Webflow コード コンポーネントが含まれており、�
 フレームワークプラグイン:
 
 ```ts
-import { defineTsdownForgeCmsAll } from "@mission-platform/forge-cms-plugin-api";
-import { forgeStoryblokCms } from "@mission-platform/forge-cms-storyblok";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
 export default defineTsdownForgeCmsAll({
   rootDir: import.meta.dirname,
   targets: [
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeReactFramework(),
-      storyblokRuntime: "@storyblok/react",
+      storyblokRuntime: '@storyblok/react',
     }),
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeVueFramework(),
-      storyblokRuntime: "@storyblok/vue",
+      storyblokRuntime: '@storyblok/vue',
     }),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
@@ -290,13 +290,13 @@ flowchart TD
 
 ### ターゲット
 
-|パッケージ |工場 |排出 |
-| :----------------------------------------- | :-------------------- | :---------------------------------------------------------------------------- |
-| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` |コンポーネントごとのコンポーネント オブジェクト、フレームワーク ブロック ラッパー、`components.json`、型付きエントリ |
-| `@mission-platform/forge-cms-astro` | `forgeAstroCms` | static `.astro` または `client:load` アイランド、および zod `content.config.ts` |
-| `@mission-platform/forge-cms-ghost` | `forgeGhostCms` |ハンドルバーの部分と `config.custom` テーマのフラグメント |
-| `@mission-platform/forge-cms-jekyll` | `forgeJekyllCms` |液体には、`_data/forge-components.yml` および `_config.yml` フラグメントが含まれています。
-| `@mission-platform/forge-cms-webflow` | `forgeWebflowCms` | `declareComponent` コードコンポーネント宣言と `webflow.json` ライブラリ フラグメント |
+| パッケージ                              | 工場                | 排出                                                                                                                 |
+| :-------------------------------------- | :------------------ | :------------------------------------------------------------------------------------------------------------------- |
+| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | コンポーネントごとのコンポーネント オブジェクト、フレームワーク ブロック ラッパー、`components.json`、型付きエントリ |
+| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | static `.astro` または `client:load` アイランド、および zod `content.config.ts`                                      |
+| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | ハンドルバーの部分と `config.custom` テーマのフラグメント                                                            |
+| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | 液体には、`_data/forge-components.yml` および `_config.yml` フラグメントが含まれています。                           |
+| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | `declareComponent` コードコンポーネント宣言と `webflow.json` ライブラリ フラグメント                                 |
 
 サポートされていないマッピングはすべて、フェーズ、コード、および実用的な理由を含む `CompilerDiagnostic` を生成します。
 サイレント省略 — Ghost は数値フィールドと最大 20 設定の上限を超えると警告し、Webflow は数値が入力された場合に警告します。

@@ -21,44 +21,39 @@ function createSolidRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: SolidNavigate;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Solid 라우터 기본 요소에서 중립 기능을 구축합니다(테스트용 프레임워크 없음).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | { 위치: { 경로명: 문자열; 검색: 문자열; 해시: 문자열 };   params?: Record<string, string \| undefined>;   탐색: SolidNavigate;   콘센트?: 알 수 없음; } |  |
+| 이름 | 유형                                                                                                                                              | 설명 |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 입력 | { 위치: { 경로명: 문자열; 검색: 문자열; 해시: 문자열 }; params?: Record<string, string \| undefined>; 탐색: SolidNavigate; 콘센트?: 알 수 없음; } |      |
 
 ### MP링크
 
 **종류:** 구성요소
 
 ```typescript
-function MpLink(properties: {
-  href?: string;
-  to?: MpRouteLocationRaw;
-  children?: unknown;
-  replace?: boolean;
-}): unknown
+function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
 ```
 
 {@link setForgeSolidRouter}를 통해 바인딩된 Solid 앵커 구성 요소 프록시입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | { href?: 문자열;   to?: MpRouteLocationRaw;   아이들?: 알 수 없음;   교체?: 부울; } |  |
+| 이름 | 유형                                                                          | 설명 |
+| ---- | ----------------------------------------------------------------------------- | ---- |
+| 속성 | { href?: 문자열; to?: MpRouteLocationRaw; 아이들?: 알 수 없음; 교체?: 부울; } |      |
 
 ### MpRouterView
 
 **종류:** 구성요소
 
 ```typescript
-function MpRouterView(): unknown
+function MpRouterView(): unknown;
 ```
 
 {@link setForgeSolidRouter}를 통해 바인딩된 Solid 아웃렛 프록시.
@@ -68,23 +63,23 @@ function MpRouterView(): unknown
 **종류:** 기능
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 중립 대상을 href 문자열로 해결합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 에 | MpRouteLocationRaw |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 에   | MpRouteLocationRaw |      |
 
 ### setForgeSolidRouter
 
 **종류:** 기능
 
 ```typescript
-function setForgeSolidRouter(surface: SolidRouterSurface): void
+function setForgeSolidRouter(surface: SolidRouterSurface): void;
 ```
 
 컴파일된 패키지가 중립을 유지하도록 앱 소유의 Solid 라우터 모듈을 바인딩합니다.
@@ -92,9 +87,9 @@ function setForgeSolidRouter(surface: SolidRouterSurface): void
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 표면 | SolidRouterSurface |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 표면 | SolidRouterSurface |      |
 
 ### SolidRouterSurface
 
@@ -111,40 +106,43 @@ export interface SolidRouterSurface
 **종류:** 기능
 
 ```typescript
-function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromSolid(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 Solid 라우터 위치/매개변수 스냅샷에서 중립 위치를 구축합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위치 | { 경로명: 문자열; 검색: 문자열; 해시: 문자열 } |  |
-| 매개변수 | 기록<string, string \| undefined> |  |
+| 이름     | 유형                                           | 설명 |
+| -------- | ---------------------------------------------- | ---- |
+| 위치     | { 경로명: 문자열; 검색: 문자열; 해시: 문자열 } |      |
+| 매개변수 | 기록<string, string \| undefined>              |      |
 
 ### toSolidHref
 
 **종류:** 기능
 
 ```typescript
-function toSolidHref(to: MpRouteLocationRaw): string
+function toSolidHref(to: MpRouteLocationRaw): string;
 ```
 
 Solid 라우터 탐색을 위해 중립 대상을 직렬화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 에 | MpRouteLocationRaw |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 에   | MpRouteLocationRaw |      |
 
 ### useMpNavigation
 
 **종류:** 기능
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 읽기 전용 필수 탐색/해결 기능입니다.
@@ -154,7 +152,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **종류:** 기능
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 현재 앱 소유 경로를 {@link MpResolvedLocation}으로 읽습니다.
@@ -164,7 +162,7 @@ function useMpRoute(): MpResolvedLocation | null
 **종류:** 기능
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Solid 라우터가 지원하는 중립 기능 개체를 읽습니다.
@@ -176,7 +174,7 @@ Solid 라우터가 지원하는 중립 기능 개체를 읽습니다.
 **종류:** 상수
 
 ```typescript
-export const forgeRouterSolid
+export const forgeRouterSolid;
 ```
 
 애플리케이션 소유 SolidJS 라우터 인스턴스에 대한 Forge 라우터 대상입니다.

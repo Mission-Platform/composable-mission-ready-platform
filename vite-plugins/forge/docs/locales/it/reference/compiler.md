@@ -14,14 +14,14 @@ costruire adattatori.
 
 La compilazione di Forge attraversa diversi pacchetti, ciascuno con una responsabilità volutamente ristretta:
 
-| Strato | Possiede | Non possiede |
-| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| `@mission-platform/vite-plugin-forge` | Analisi, normalizzazione, analisi neutra, IR semantico, ottimizzazione condivisa, cache/discovery, invio e orchestrazione Vite/tsdown generica | React, Vue, Solid, Svelte, Componenti Web o emettitori di origini CMS |
-| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin`, contratti di destinazione semantica, tipi di moduli generati, metadati di destinazione e tipi di adattatori Vite/tsdown | Un'implementazione del framework o un registro di selezione degli obiettivi |
-| Pacchetti `@mission-platform/forge-plugin-*` integrati | Riduzione del target, ottimizzazione del target, generazione di sorgenti, diagnostica del target, metadati di runtime e adattatori di build nativi | Analisi neutra e orchestrazione cross-target |
-| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`, il modello di contenuto neutro, il driver scopri→analizza→emetti→scrivi, la cogenerazione dell'isola e gli aiutanti di creazione CMS | Qualsiasi schema, modello o forma manifest specifica della piattaforma |
-| `@mission-platform/forge-cms-*` pacchetti | Una piattaforma di contenuti ciascuna: mappatura dei campi, dialetto del modello, forma del manifest e diagnostica della piattaforma | Classificazione dell'elica neutra o orchestrazione tra target |
-| Pacchetto file `tsdown.config.ts` | La selezione delle istanze del plug-in di destinazione e le sostituzioni specifiche del pacchetto | Reimplementazione delle fasi del compilatore o delle tabelle di commutazione del framework |
+| Strato                                                 | Possiede                                                                                                                                                | Non possiede                                                                               |
+| :----------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge`                  | Analisi, normalizzazione, analisi neutra, IR semantico, ottimizzazione condivisa, cache/discovery, invio e orchestrazione Vite/tsdown generica          | React, Vue, Solid, Svelte, Componenti Web o emettitori di origini CMS                      |
+| `@mission-platform/forge-plugin-api`                   | `FrameworkOutputPlugin`, contratti di destinazione semantica, tipi di moduli generati, metadati di destinazione e tipi di adattatori Vite/tsdown        | Un'implementazione del framework o un registro di selezione degli obiettivi                |
+| Pacchetti `@mission-platform/forge-plugin-*` integrati | Riduzione del target, ottimizzazione del target, generazione di sorgenti, diagnostica del target, metadati di runtime e adattatori di build nativi      | Analisi neutra e orchestrazione cross-target                                               |
+| `@mission-platform/forge-cms-plugin-api`               | `CmsOutputPlugin`, il modello di contenuto neutro, il driver scopri→analizza→emetti→scrivi, la cogenerazione dell'isola e gli aiutanti di creazione CMS | Qualsiasi schema, modello o forma manifest specifica della piattaforma                     |
+| `@mission-platform/forge-cms-*` pacchetti              | Una piattaforma di contenuti ciascuna: mappatura dei campi, dialetto del modello, forma del manifest e diagnostica della piattaforma                    | Classificazione dell'elica neutra o orchestrazione tra target                              |
+| Pacchetto file `tsdown.config.ts`                      | La selezione delle istanze del plug-in di destinazione e le sostituzioni specifiche del pacchetto                                                       | Reimplementazione delle fasi del compilatore o delle tabelle di commutazione del framework |
 
 La direzione della dipendenza è esplicita: un pacchetto importa il plugin di destinazione che desidera, passa quell'istanza al neutro
 driver e riceve una configurazione di build specifica per la destinazione. Il driver non costruisce mai una destinazione da una stringa né importa
@@ -134,12 +134,12 @@ Le destinazioni integrate sono costruite dai propri pacchetti, ad esempio `forge
 obiettivi che pubblica:
 
 ```ts
-import { defineTsdownForgeComponents } from "@mission-platform/vite-plugin-forge";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeSolidFramework } from "@mission-platform/forge-plugin-solid";
-import { forgeSvelteFramework } from "@mission-platform/forge-plugin-svelte";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
-import { forgeWebComponentsFramework } from "@mission-platform/forge-plugin-web-components";
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
 export default defineTsdownForgeComponents({
   rootDir: import.meta.dirname,
@@ -151,7 +151,7 @@ export default defineTsdownForgeComponents({
     forgeWebComponentsFramework(),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: "MissionPlatformComponents",
+  name: 'MissionPlatformComponents',
 });
 ```
 
@@ -227,7 +227,7 @@ tutti i consumatori del framework hanno gli stessi tipi di hook.
 
 ## Proiezione CMS
 
-Proiettare elementi su una *piattaforma di contenuti* è un asse ortogonale all'abbassamento del quadro, non un quadro
+Proiettare elementi su una _piattaforma di contenuti_ è un asse ortogonale all'abbassamento del quadro, non un quadro
 implementazione nascosta all'interno del driver principale. Un componente diventa un blocco Storyblok, un'isola Astro, un parziale Ghost, a
 Jekyll include o un componente di codice Webflow e ognuno di questi può essere abbinato a **qualsiasi** plugin di output del framework.
 `storyblok × vue`, `astro × solid` e `ghost × web-components` sono quindi configurazioni anziché un nuovo codice.
@@ -240,7 +240,7 @@ Jekyll include o un componente di codice Webflow e ognuno di questi può essere 
    e un'unione che mescola valori letterali stringa con `string`/`number` degrada a `text`: decisa una volta, quindi ogni piattaforma
    è d'accordo. Quando viene fornito l'IR semantico, `ContentComponent.interactive` segnala se il componente trasporta lo stato,
    riferimenti, effetti o eventi.
-2. **Un contratto target.** `CmsOutputPlugin` *compone* un `FrameworkOutputPlugin` anziché essere uno solo e dichiara il
+2. **Un contratto target.** `CmsOutputPlugin` _compone_ un `FrameworkOutputPlugin` anziché essere uno solo e dichiara il
    emettitori `emitSchema`, `emitTemplate`, `emitManifest` e `emitEntry`. `defineForgeCmsPlugin` lo convalida su
    tempo di configurazione, inclusa la restrizione `supportedFrameworks` di una destinazione.
 3. **Un driver generico e aiutanti di creazione.** `generateCmsArtifacts` scopre il cilindro neutro, ottiene i dati di ciascun componente
@@ -252,23 +252,23 @@ Il driver non mappa mai un ID stringa su un target: i consumatori costruiscono e
 plugin del quadro:
 
 ```ts
-import { defineTsdownForgeCmsAll } from "@mission-platform/forge-cms-plugin-api";
-import { forgeStoryblokCms } from "@mission-platform/forge-cms-storyblok";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
 export default defineTsdownForgeCmsAll({
   rootDir: import.meta.dirname,
   targets: [
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeReactFramework(),
-      storyblokRuntime: "@storyblok/react",
+      storyblokRuntime: '@storyblok/react',
     }),
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeVueFramework(),
-      storyblokRuntime: "@storyblok/vue",
+      storyblokRuntime: '@storyblok/vue',
     }),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
@@ -290,13 +290,13 @@ flowchart TD
 
 ### Gli obiettivi
 
-| Pacchetto | Fabbrica | Emette |
-| :----------------------------------------- | :-------------------- | :---------------------------------------------------------------------------- |
+| Pacchetto                               | Fabbrica            | Emette                                                                                                      |
+| :-------------------------------------- | :------------------ | :---------------------------------------------------------------------------------------------------------- |
 | `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | un oggetto componente per componente, un wrapper del blocco framework, `components.json`, una voce digitata |
-| `@mission-platform/forge-cms-astro` | `forgeAstroCms` | `.astro` statico o un'isola `client:load`, più un zod `content.config.ts` |
-| `@mission-platform/forge-cms-ghost` | `forgeGhostCms` | Parziali del manubrio più un frammento del tema `config.custom` |
-| `@mission-platform/forge-cms-jekyll` | `forgeJekyllCms` | Il liquido include più `_data/forge-components.yml` e un frammento `_config.yml` |
-| `@mission-platform/forge-cms-webflow` | `forgeWebflowCms` | Dichiarazioni del componente codice `declareComponent` più un frammento della libreria `webflow.json` |
+| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | `.astro` statico o un'isola `client:load`, più un zod `content.config.ts`                                   |
+| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | Parziali del manubrio più un frammento del tema `config.custom`                                             |
+| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | Il liquido include più `_data/forge-components.yml` e un frammento `_config.yml`                            |
+| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | Dichiarazioni del componente codice `declareComponent` più un frammento della libreria `webflow.json`       |
 
 Ogni mappatura non supportata produce un `CompilerDiagnostic` con una fase, un codice e un motivo utilizzabile anziché un
 omissione silenziosa: Ghost avvisa sui campi numerici e al superamento del limite di ~ 20 impostazioni, Webflow avvisa quando un numero

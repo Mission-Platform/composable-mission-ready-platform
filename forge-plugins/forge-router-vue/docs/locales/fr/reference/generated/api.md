@@ -16,49 +16,49 @@ Généré à partir des déclarations de source publique dans `@mission-platform
 **Genre :** fonction
 
 ```typescript
-function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities
+function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities;
 ```
 
 Créez des fonctionnalités neutres à partir d’une instance de routeur Vue appartenant à une application.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| routeur | Routeur |  |
-| actuel |  |  |
+| Nom     | Tapez   | Descriptif |
+| ------- | ------- | ---------- |
+| routeur | Routeur |            |
+| actuel  |         |            |
 
 ### résoudreMpLink
 
 **Genre :** fonction
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Résolvez une cible neutre via le routeur Vue appartenant à l'application.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| à | MpRouteLocationRaw |  |
+| Nom | Tapez              | Descriptif |
+| --- | ------------------ | ---------- |
+| à   | MpRouteLocationRaw |            |
 
 ### résoudrePathTarget
 
 **Genre :** fonction
 
 ```typescript
-function resolvePathTarget(to: MpRouteLocationRaw): string
+function resolvePathTarget(to: MpRouteLocationRaw): string;
 ```
 
 Repli de chemin uniquement utilisé lorsqu'une instance de routeur Vue est indisponible (SSR/tests).
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| à | MpRouteLocationRaw |  |
+| Nom | Tapez              | Descriptif |
+| --- | ------------------ | ---------- |
+| à   | MpRouteLocationRaw |            |
 
 ### toMpEmplacement
 
@@ -73,39 +73,39 @@ function toMpLocation(route: {
   hash: string;
   name?: string | symbol | null;
   meta?: Record<string, unknown>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 Convertissez l’état de la route Vue natif en emplacement résolu neutre.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| itinéraire | { chemin : chaîne ;   chemin complet : chaîne ;   paramètres : Record<string, unknown> ;   requête : LocationQuery ;   hachage : chaîne ;   nom ? : chaîne \| symbole \| nul;   méta ? : Record<string, unknown> ; } |  |
+| Nom        | Tapez                                                                                                                                                                                                    | Descriptif |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| itinéraire | { chemin : chaîne ; chemin complet : chaîne ; paramètres : Record<string, unknown> ; requête : LocationQuery ; hachage : chaîne ; nom ? : chaîne \| symbole \| nul; méta ? : Record<string, unknown> ; } |            |
 
 ### toVueEmplacement
 
 **Genre :** fonction
 
 ```typescript
-function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw
+function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 ```
 
 Traduisez une cible neutre en un emplacement de routeur Vue.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| à | MpRouteLocationRaw |  |
+| Nom | Tapez              | Descriptif |
+| --- | ------------------ | ---------- |
+| à   | MpRouteLocationRaw |            |
 
 ### useMpNavigation
 
 **Genre :** fonction
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Lecture seule des capacités impératives de navigation/résolution.
@@ -115,7 +115,7 @@ Lecture seule des capacités impératives de navigation/résolution.
 **Genre :** fonction
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lisez l'itinéraire actuel appartenant à l'application sous le nom {@link MpResolvedLocation}.
@@ -125,7 +125,7 @@ Lisez l'itinéraire actuel appartenant à l'application sous le nom {@link MpRes
 **Genre :** fonction
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lisez l'objet de capacité neutre soutenu par le routeur Vue.
@@ -137,7 +137,7 @@ Lisez l'objet de capacité neutre soutenu par le routeur Vue.
 **Genre :** constante
 
 ```typescript
-export const forgeRouterVue
+export const forgeRouterVue;
 ```
 
 Cible de routeur Forge pour une instance de routeur Vue appartenant à une application.

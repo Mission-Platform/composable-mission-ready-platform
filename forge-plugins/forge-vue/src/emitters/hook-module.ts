@@ -252,15 +252,19 @@ function emitStatement(
       ? `const result = (${callbackText})(); if (typeof result === "function") onCleanup(result);`
       : `(${callbackText})();`;
     if (dependencies === undefined) {
+      vueImports.add("watchEffect");
       return hasCleanup
         ? `watchEffect((onCleanup) => { ${invoke} });`
         : `watchEffect(${callbackText});`;
     }
     if (dependencies.replace(/\s/g, "") === "[]") {
+      vueImports.add("onMounted");
+      if (hasCleanup) vueImports.add("onUnmounted");
       return hasCleanup
         ? `(() => { let cleanup: (() => void) | undefined; onMounted(() => { const result = (${callbackText})(); cleanup = typeof result === "function" ? result : undefined; }); onUnmounted(() => cleanup?.()); })();`
         : `onMounted(${callbackText});`;
     }
+    vueImports.add("watch");
     const source = rewriteExpression(dependencies, scope);
     return hasCleanup
       ? `watch(() => ${source}, (_value, _oldValue, onCleanup) => { ${invoke} }, { immediate: true });`

@@ -20,23 +20,23 @@ function createSvelteKitRouterCapabilities(input: {
   page: { url: Pick<URL, 'pathname' | 'search' | 'hash'>; params: Record<string, string> };
   goto: SvelteKitRouterSurface['goto'];
   resolvePath?: (path: string) => string;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 SvelteKit プリミティブから中立的な機能を構築します (テスト用のフレームワークは不要)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | { ページ: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>;パラメータ: Record<string, string> };   goto: SvelteKitRouterSurface['goto'];   solvePath?: (パス: 文字列) => 文字列; } |  |
+| 名前 | タイプ                                                                                                                                                                           | 説明 |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 入力 | { ページ: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>;パラメータ: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; solvePath?: (パス: 文字列) => 文字列; } |      |
 
 ### エムピーリンク
 
 **種類:** コンポーネント
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 SvelteKit はリンクに通常のアンカーを使用します。コンパイラはこのマーカーを保持するので、
@@ -47,7 +47,7 @@ Svelte 出力は、パッケージ作成者の中立的な `MpLink` の使用法
 **種類:** コンポーネント
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 アウトレットは SvelteKit のアプリケーションによって所有されます。機能診断は `view` を拒否します。
@@ -57,23 +57,23 @@ export const MpRouterView
 **種類:** 関数
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 ニュートラル ターゲットを href 文字列に解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| へ   | MpRouteLocationRaw |      |
 
 ### setForgeSvelteKitRouter
 
 **種類:** 関数
 
 ```typescript
-function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
+function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 ```
 
 コンパイルされたパッケージ機能のために SvelteKit ページ/ナビゲーション API をバインドします。
@@ -81,9 +81,9 @@ function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|表面 | SvelteKitRouterSurface |  |
+| 名前 | タイプ                 | 説明 |
+| ---- | ---------------------- | ---- |
+| 表面 | SvelteKitRouterSurface |      |
 
 ### SvelteKitRouterSurface
 
@@ -103,40 +103,40 @@ export interface SvelteKitRouterSurface
 function toMpLocationFromSvelte(page: {
   url: Pick<URL, 'pathname' | 'search' | 'hash'>;
   params: Record<string, string>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 SvelteKit ページのスナップショットから中立的な場所を構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ページ | { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>;   パラメータ: Record<string, string>; } |  |
+| 名前   | タイプ                                                                                    | 説明 |
+| ------ | ----------------------------------------------------------------------------------------- | ---- |
+| ページ | { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>; パラメータ: Record<string, string>; } |      |
 
 ### toSvelteHref
 
 **種類:** 関数
 
 ```typescript
-function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string
+function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string;
 ```
 
 SvelteKit ナビゲーションのニュートラル ターゲットをシリアル化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
-|解決パス | (パス: 文字列) => 文字列 |  |
+| 名前     | タイプ                   | 説明 |
+| -------- | ------------------------ | ---- |
+| へ       | MpRouteLocationRaw       |      |
+| 解決パス | (パス: 文字列) => 文字列 |      |
 
 ### useMpNavigation
 
 **種類:** 関数
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 読み取り専用の命令型ナビゲーション/解決機能。
@@ -146,7 +146,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **種類:** 関数
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 ルート読み取りは、パッケージのナビゲート/解決のためにバインドされたページ表面を通じてサポートされます。
@@ -156,7 +156,7 @@ function useMpRoute(): MpResolvedLocation | null
 **種類:** 関数
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 SvelteKit ナビゲーションに裏付けられた中立的な機能オブジェクトを読み取ります。
@@ -168,7 +168,7 @@ SvelteKit ナビゲーションに裏付けられた中立的な機能オブジ�
 **種類:** 定数
 
 ```typescript
-export const forgeRouterSvelte
+export const forgeRouterSvelte;
 ```
 
 SvelteKit のアプリケーション所有のページ/ナビゲーション API のルーター ターゲットをフォージします。

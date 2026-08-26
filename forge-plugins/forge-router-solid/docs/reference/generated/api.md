@@ -106,7 +106,7 @@ Minimal Solid Router surface used by the runtime shim.
 **Kind:** function
 
 ```typescript
-function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, parameters: Record<string, string | undefined> = {}): MpResolvedLocation
 ```
 
 Build a neutral location from Solid Router location/params snapshots.
@@ -116,7 +116,7 @@ Build a neutral location from Solid Router location/params snapshots.
 | Name | Type | Description |
 | --- | --- | --- |
 | location | { pathname: string; search: string; hash: string } |  |
-| params | Record<string, string \| undefined> |  |
+| parameters | Record<string, string \| undefined> |  |
 
 ### toSolidHref
 

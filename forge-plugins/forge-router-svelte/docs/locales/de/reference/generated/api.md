@@ -20,23 +20,23 @@ function createSvelteKitRouterCapabilities(input: {
   page: { url: Pick<URL, 'pathname' | 'search' | 'hash'>; params: Record<string, string> };
   goto: SvelteKitRouterSurface['goto'];
   resolvePath?: (path: string) => string;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Erstellen Sie neutrale Funktionen aus SvelteKit-Primitiven (Framework-frei für Tests).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | { page: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> };   goto: SvelteKitRouterSurface['goto'];   Auflösungspfad?: (Pfad: Zeichenfolge) => Zeichenfolge; } |  |
+| Name    | Geben Sie                                                                                                                                                                                    | ein Beschreibung |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| Eingabe | { page: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; Auflösungspfad?: (Pfad: Zeichenfolge) => Zeichenfolge; } |                  |
 
 ### MpLink
 
 **Art:** Komponente
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 SvelteKit verwendet normale Anker für Links. Der Compiler behält diese Markierung bei
@@ -47,7 +47,7 @@ Mit der Ausgabe von Svelte kann die neutrale Verwendung von `MpLink` durch Paket
 **Art:** Komponente
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Outlet ist in SvelteKit Eigentum der Anwendung; Fähigkeitsdiagnose lehnt `view` ab.
@@ -57,23 +57,23 @@ Outlet ist in SvelteKit Eigentum der Anwendung; Fähigkeitsdiagnose lehnt `view`
 **Art:** Funktion
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Ein neutrales Ziel in eine href-Zeichenfolge auflösen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zu | MpRouteLocationRaw |  |
+| Name | Geben Sie          | ein Beschreibung |
+| ---- | ------------------ | ---------------- |
+| zu   | MpRouteLocationRaw |                  |
 
 ### setForgeSvelteKitRouter
 
 **Art:** Funktion
 
 ```typescript
-function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
+function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 ```
 
 Binden Sie SvelteKit-Seiten-/Navigations-APIs für kompilierte Paketfunktionen.
@@ -81,9 +81,9 @@ Apps rufen dies normalerweise einmal von einem Root-Layout mit `$app`-Modulen au
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Oberfläche | SvelteKitRouterSurface |  |
+| Name       | Geben Sie              | ein Beschreibung |
+| ---------- | ---------------------- | ---------------- |
+| Oberfläche | SvelteKitRouterSurface |                  |
 
 ### SvelteKitRouterSurface
 
@@ -103,40 +103,40 @@ Minimale SvelteKit-Oberfläche, die vom Laufzeit-Shim verwendet wird.
 function toMpLocationFromSvelte(page: {
   url: Pick<URL, 'pathname' | 'search' | 'hash'>;
   params: Record<string, string>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 Erstellen Sie einen neutralen Standort aus einem SvelteKit-Seiten-Snapshot.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Seite | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>;   Parameter: Record<string, string>; } |  |
+| Name  | Geben Sie                                                                                | ein Beschreibung |
+| ----- | ---------------------------------------------------------------------------------------- | ---------------- |
+| Seite | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; Parameter: Record<string, string>; } |                  |
 
 ### toSvelteHref
 
 **Art:** Funktion
 
 ```typescript
-function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string
+function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string;
 ```
 
 Serialisieren Sie ein neutrales Ziel für die SvelteKit-Navigation.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zu | MpRouteLocationRaw |  |
-| Auflösungspfad | (Pfad: Zeichenfolge) => Zeichenfolge |  |
+| Name           | Geben Sie                            | ein Beschreibung |
+| -------------- | ------------------------------------ | ---------------- |
+| zu             | MpRouteLocationRaw                   |                  |
+| Auflösungspfad | (Pfad: Zeichenfolge) => Zeichenfolge |                  |
 
 ### useMpNavigation
 
 **Art:** Funktion
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Nur zwingende Navigations-/Auflösungsfunktionen lesen.
@@ -146,7 +146,7 @@ Nur zwingende Navigations-/Auflösungsfunktionen lesen.
 **Art:** Funktion
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Routenlesevorgänge werden über die gebundene Seitenoberfläche für Navigations-/Auflösungspakete unterstützt.
@@ -156,7 +156,7 @@ Routenlesevorgänge werden über die gebundene Seitenoberfläche für Navigation
 **Art:** Funktion
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lesen Sie das neutrale Fähigkeitsobjekt, das von der SvelteKit-Navigation unterstützt wird.
@@ -168,7 +168,7 @@ Lesen Sie das neutrale Fähigkeitsobjekt, das von der SvelteKit-Navigation unter
 **Art:** konstant
 
 ```typescript
-export const forgeRouterSvelte
+export const forgeRouterSvelte;
 ```
 
 Forge-Router-Ziel für die anwendungseigenen Seiten-/Navigations-APIs von SvelteKit.

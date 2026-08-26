@@ -16,49 +16,49 @@
 **种类：**功能
 
 ```typescript
-function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities
+function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities;
 ```
 
 从应用程序拥有的 Vue 路由器实例构建中立功能。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路由器|路由器|  |
-|当前|  |  |
+| 名称   | 类型   | 描述 |
+| ------ | ------ | ---- |
+| 路由器 | 路由器 |      |
+| 当前   |        |      |
 
 ### 解析Mp链接
 
 **种类：**功能
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 通过应用程序拥有的 Vue 路由器解析中立目标。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### 解析路径目标
 
 **种类：**功能
 
 ```typescript
-function resolvePathTarget(to: MpRouteLocationRaw): string
+function resolvePathTarget(to: MpRouteLocationRaw): string;
 ```
 
 当 Vue 路由器实例不可用时使用仅路径回退（SSR/测试）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### 目标位置
 
@@ -73,39 +73,39 @@ function toMpLocation(route: {
   hash: string;
   name?: string | symbol | null;
   meta?: Record<string, unknown>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 将本机 Vue 路由状态转换为中立解析位置。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路线 | { 路径：字符串；   完整路径：字符串；   参数：Record<string, unknown>；   查询：位置查询；   哈希：字符串；   名称？：字符串\|符号\|无效的;   元？：Record<string, unknown>； } |  |
+| 名称 | 类型                                                                                                                                                                | 描述 |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 路线 | { 路径：字符串； 完整路径：字符串； 参数：Record<string, unknown>； 查询：位置查询； 哈希：字符串； 名称？：字符串\|符号\|无效的; 元？：Record<string, unknown>； } |      |
 
 ### 到Vue位置
 
 **种类：**功能
 
 ```typescript
-function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw
+function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 ```
 
 将中立目标转换为 Vue 路由器位置。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### 使用Mp导航
 
 **种类：**功能
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 只读命令式导航/解析功能。
@@ -115,7 +115,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **种类：**功能
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 将当前应用拥有的路线读取为 {@link MpResolvedLocation}。
@@ -125,7 +125,7 @@ function useMpRoute(): MpResolvedLocation | null
 **种类：**功能
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 读取 Vue 路由器支持的中立功能对象。
@@ -137,7 +137,7 @@ function useMpRouter(): MpRouterCapabilities
 **种类：**常数
 
 ```typescript
-export const forgeRouterVue
+export const forgeRouterVue;
 ```
 
 为应用程序拥有的 Vue 路由器实例伪造路由器目标。

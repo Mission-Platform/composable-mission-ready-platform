@@ -16,49 +16,49 @@ Generado a partir de declaraciones de fuente pública en `@mission-platform/forg
 **Tipo:** función
 
 ```typescript
-function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities
+function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities;
 ```
 
 Cree capacidades neutrales a partir de una instancia de enrutador Vue propiedad de la aplicación.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| enrutador | Enrutador |  |
-| actual |  |  |
+| Nombre    | Tipo      | Descripción |
+| --------- | --------- | ----------- |
+| enrutador | Enrutador |             |
+| actual    |           |             |
 
 ### resolverMpLink
 
 **Tipo:** función
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Resuelva un objetivo neutral a través del enrutador Vue propiedad de la aplicación.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nombre | Tipo               | Descripción |
+| ------ | ------------------ | ----------- |
+| a      | MpRouteLocationRaw |             |
 
 ### resolverPathTarget
 
 **Tipo:** función
 
 ```typescript
-function resolvePathTarget(to: MpRouteLocationRaw): string
+function resolvePathTarget(to: MpRouteLocationRaw): string;
 ```
 
 Se utiliza un respaldo de solo ruta cuando una instancia de enrutador Vue no está disponible (SSR/pruebas).
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nombre | Tipo               | Descripción |
+| ------ | ------------------ | ----------- |
+| a      | MpRouteLocationRaw |             |
 
 ### toMpUbicación
 
@@ -73,39 +73,39 @@ function toMpLocation(route: {
   hash: string;
   name?: string | symbol | null;
   meta?: Record<string, unknown>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 Convierta el estado de ruta nativo Vue en la ubicación neutral resuelta.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ruta | { ruta: cadena;   ruta completa: cadena;   parámetros: Record<string, unknown>;   consulta: Consulta de ubicación;   hash: cadena;   ¿nombre?: cadena \| símbolo \| nulo;   meta?: Registro<string, unknown>; } |  |
+| Nombre | Tipo                                                                                                                                                                                                | Descripción |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| ruta   | { ruta: cadena; ruta completa: cadena; parámetros: Record<string, unknown>; consulta: Consulta de ubicación; hash: cadena; ¿nombre?: cadena \| símbolo \| nulo; meta?: Registro<string, unknown>; } |             |
 
 ### aVueUbicación
 
 **Tipo:** función
 
 ```typescript
-function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw
+function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 ```
 
 Traduzca un objetivo neutral a una ubicación de enrutador Vue.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nombre | Tipo               | Descripción |
+| ------ | ------------------ | ----------- |
+| a      | MpRouteLocationRaw |             |
 
 ### utilizarMpNavigation
 
 **Tipo:** función
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Capacidades de navegación/resolución imperativas de solo lectura.
@@ -115,7 +115,7 @@ Capacidades de navegación/resolución imperativas de solo lectura.
 **Tipo:** función
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lea la ruta actual propiedad de la aplicación como {@link MpResolvedLocation}.
@@ -125,7 +125,7 @@ Lea la ruta actual propiedad de la aplicación como {@link MpResolvedLocation}.
 **Tipo:** función
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lea el objeto de capacidad neutral respaldado por el enrutador Vue.
@@ -137,7 +137,7 @@ Lea el objeto de capacidad neutral respaldado por el enrutador Vue.
 **Tipo:** constante
 
 ```typescript
-export const forgeRouterVue
+export const forgeRouterVue;
 ```
 
 Forge el destino del enrutador para una instancia de enrutador Vue propiedad de la aplicación.

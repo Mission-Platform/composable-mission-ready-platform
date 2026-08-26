@@ -21,88 +21,91 @@ function createReactRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: NavigateFunction;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 建立中立能力 React 路由器原语（无钩子测试）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | { 位置：{ 路径名：字符串；搜索：字符串；哈希：字符串}；   params?: 记录<string, string \| undefined>;   导航：NavigateFunction；   出口？： 未知； } |  |
+| 名称 | 类型                                                                                                                                           | 描述 |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 输入 | { 位置：{ 路径名：字符串；搜索：字符串；哈希：字符串}； params?: 记录<string, string \| undefined>; 导航：NavigateFunction； 出口？： 未知； } |      |
 
 ### 解析Mp链接
 
 **种类：**功能
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 将中性目标解析为 href 字符串。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### toMpLocationFromReact
 
 **种类：**功能
 
 ```typescript
-function toMpLocationFromReact(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromReact(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 建立一个中立位置 React 路由器位置/参数快照。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地点 | { 路径名：字符串；搜索：字符串；哈希：字符串 } |  |
-|参数|记录<string, string \| undefined> |  |
+| 名称 | 类型                                           | 描述 |
+| ---- | ---------------------------------------------- | ---- |
+| 地点 | { 路径名：字符串；搜索：字符串；哈希：字符串 } |      |
+| 参数 | 记录<string, string \| undefined>              |      |
 
 ### 反应参考
 
 **种类：**功能
 
 ```typescript
-function toReactHref(to: MpRouteLocationRaw): string
+function toReactHref(to: MpRouteLocationRaw): string;
 ```
 
 将中性目标序列化为 href 字符串。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### 反应到
 
 **种类：**功能
 
 ```typescript
-function toReactTo(to: MpRouteLocationRaw): To
+function toReactTo(to: MpRouteLocationRaw): To;
 ```
 
 将中立目标转换为 React 路由器 `To` 价值。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### 使用Mp导航
 
 **种类：**功能
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 只读命令式导航/解析功能。
@@ -112,7 +115,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **种类：**功能
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 将当前应用拥有的路线读取为 {@link MpResolvedLocation}。
@@ -122,7 +125,7 @@ function useMpRoute(): MpResolvedLocation | null
 **种类：**功能
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 读取由以下内容支持的中立能力对象 React 路由器。
@@ -134,7 +137,7 @@ function useMpRouter(): MpRouterCapabilities
 **种类：**常数
 
 ```typescript
-export const forgeRouterReact
+export const forgeRouterReact;
 ```
 
 为应用程序拥有的 Forge 路由器目标 React 路由器实例。

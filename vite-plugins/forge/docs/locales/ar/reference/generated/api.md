@@ -16,18 +16,22 @@
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeArtifactManifest(targetId: string, artifacts: readonly ForgeArtifactRecord[], complete = true): ForgeArtifactManifest
+function createForgeArtifactManifest(
+  targetId: string,
+  artifacts: readonly ForgeArtifactRecord[],
+  complete = true,
+): ForgeArtifactManifest;
 ```
 
 أنشئ بيانًا مستقرًا دون إدخال طوابع زمنية في المخرجات التي تم إنشاؤها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| معرف الهدف | سلسلة |  |
-| التحف | للقراءة فقط ForgeArtifactRecord[] |  |
-| كاملة |  |  |
+| الاسم      | اكتب                              | الوصف |
+| ---------- | --------------------------------- | ----- |
+| معرف الهدف | سلسلة                             |       |
+| التحف      | للقراءة فقط ForgeArtifactRecord[] |       |
+| كاملة      |                                   |       |
 
 ### ForgeArtifactKind
 
@@ -66,17 +70,17 @@ export interface ForgeArtifactRecord
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter
+function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أوتدير | سلسلة |  |
-| معرف الهدف | سلسلة |  |
+| الاسم      | اكتب  | الوصف |
+| ---------- | ----- | ----- |
+| أوتدير     | سلسلة |       |
+| معرف الهدف | سلسلة |       |
 
 ### ForgeArtifactWriter
 
@@ -95,7 +99,7 @@ export interface ForgeArtifactWriter
 **النوع:** ثابت
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 سمة JSX المحايدة التي تقود إدارة اسم الفئة. المؤلفون يكتبون
@@ -117,16 +121,16 @@ export const CLASS_NAME_ATTRIBUTE
 **النوع:** الوظيفة
 
 ```typescript
-function collectSlotNames(sourceFile: ts.SourceFile): Set<string>
+function collectSlotNames(sourceFile: ts.SourceFile): Set<string>;
 ```
 
 اجمع كل اسم فتحة ثابتة تم الإعلان عنه بواسطة عناصر `<Slot name="…" />` في الوحدة النمطية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
+| الاسم      | اكتب          | الوصف |
+| ---------- | ------------- | ----- |
+| ملف المصدر | ts.SourceFile |       |
 
 ### استيراد المكونات
 
@@ -143,7 +147,7 @@ export interface ComponentImport
 **النوع:** ثابت
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 حزم مساحة العمل للكتابة مرة واحدة **component-library**: مثل
@@ -160,25 +164,35 @@ export const COMPONENTS_JSX_MODULES
 **النوع:** الوظيفة
 
 ```typescript
-function createReactHasSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined): ts.Expression
+function createReactHasSlotExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+): ts.Expression;
 ```
 
 `<props>.<name> != null` — قراءة حضور React لـ `hasSlot('name')`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| الدعائمParamName | سلسلة |  |
-| الاسم | سلسلة \| غير محدد |  |
+| الاسم            | اكتب              | الوصف |
+| ---------------- | ----------------- | ----- |
+| مصنع             | ts.NodeFactory    |       |
+| الدعائمParamName | سلسلة             |       |
+| الاسم            | سلسلة \| غير محدد |       |
 
 ### createReactSlotCallExpression
 
 **النوع:** الوظيفة
 
 ```typescript
-function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
+function createReactSlotCallExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+  fallback: readonly ts.Expression[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
@@ -187,20 +201,26 @@ function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| الدعائمParamName | سلسلة |  |
-| الاسم | سلسلة \| غير محدد |  |
-| احتياطي | للقراءة فقط ts.Expression[] |  |
-| النطاق | ts.Expression |  |
+| الاسم            | اكتب                        | الوصف |
+| ---------------- | --------------------------- | ----- |
+| مصنع             | ts.NodeFactory              |       |
+| الدعائمParamName | سلسلة                       |       |
+| الاسم            | سلسلة \| غير محدد           |       |
+| احتياطي          | للقراءة فقط ts.Expression[] |       |
+| النطاق           | ts.Expression               |       |
 
 ### createReactSlotExpression
 
 **النوع:** الوظيفة
 
 ```typescript
-function createReactSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
+function createReactSlotExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+  fallback: readonly ts.JsxChild[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `<props>.<name>` (مع `?? <fallback>` عندما تعلن الفتحة عن الرجوع
@@ -210,20 +230,20 @@ function createReactSlotExpression(factory: ts.NodeFactory, propsParamName: stri
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| الدعائمParamName | سلسلة |  |
-| الاسم | سلسلة \| غير محدد |  |
-| احتياطي | للقراءة فقط ts.JsxChild[] |  |
-| النطاق | ts.Expression |  |
+| الاسم            | اكتب                      | الوصف |
+| ---------------- | ------------------------- | ----- |
+| مصنع             | ts.NodeFactory            |       |
+| الدعائمParamName | سلسلة                     |       |
+| الاسم            | سلسلة \| غير محدد         |       |
+| احتياطي          | للقراءة فقط ts.JsxChild[] |       |
+| النطاق           | ts.Expression             |       |
 
 ### createReferenceRewriter
 
 **النوع:** الوظيفة
 
 ```typescript
-function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>
+function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
 ```
 
 قم ببناء محول TS الذي يعيد كتابة المراجع داخل جسم المكون
@@ -233,16 +253,16 @@ function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| النطاق | إعادة كتابة النطاق |  |
+| الاسم  | اكتب               | الوصف |
+| ------ | ------------------ | ----- |
+| النطاق | إعادة كتابة النطاق |       |
 
 ### createStateSnapshotHoister
 
 **النوع:** الوظيفة
 
 ```typescript
-function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>
+function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
 ```
 
 الحفاظ على تضييق تدفق التحكم TypeScript لقيم `useState` / `useMemo`
@@ -258,7 +278,7 @@ function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<
 فشل `a[sortKey.value]` / `draft.value.uid` في التحقق من النوع.
 
 بالنسبة لكل وظيفة مجسمة، يقوم هذا التمرير بأخذ لقطات لكل قيمة يتم قراءتها
-*داخل إغلاق متداخل* في `const <name>$ = <name>.value;` الرائدة، و
+_داخل إغلاق متداخل_ في `const <name>$ = <name>.value;` الرائدة، و
 يعيد كتابة القيمة **القراءات** (وليس أهداف الكتابة `<name>.value = …`) داخلها
 الوظيفة إلى الاسم المستعار `const`. تستعيد اللقطة ملف `const` الأصلي
 الدلالات - يتدفق التضييق إلى الإغلاقات المتداخلة مرة أخرى - بينما يتم استخدام `.value`
@@ -266,33 +286,38 @@ function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| النطاق | إعادة كتابة النطاق |  |
+| الاسم  | اكتب               | الوصف |
+| ------ | ------------------ | ----- |
+| النطاق | إعادة كتابة النطاق |       |
 
 ### createVueHasSlotExpression
 
 **النوع:** الوظيفة
 
 ```typescript
-function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression
+function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression;
 ```
 
 `slots.<name>` — قراءة وجود Vue الخاص بـ `useSlots()` لـ `hasSlot('name')` (`!!slots.x`).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| الاسم | سلسلة \| غير محدد |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| مصنع  | ts.NodeFactory    |       |
+| الاسم | سلسلة \| غير محدد |       |
 
 ### createVueSlotCallExpression
 
 **النوع:** الوظيفة
 
 ```typescript
-function createVueSlotCallExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
+function createVueSlotCallExpression(
+  factory: ts.NodeFactory,
+  name: string | undefined,
+  fallback: readonly ts.Expression[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `slots.<name>?.(scope) ?? <fallback>` — ترجمة Vue لـ `h(Slot, …)`
@@ -301,19 +326,24 @@ function createVueSlotCallExpression(factory: ts.NodeFactory, name: string | und
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| الاسم | سلسلة \| غير محدد |  |
-| احتياطي | للقراءة فقط ts.Expression[] |  |
-| النطاق | ts.Expression |  |
+| الاسم   | اكتب                        | الوصف |
+| ------- | --------------------------- | ----- |
+| مصنع    | ts.NodeFactory              |       |
+| الاسم   | سلسلة \| غير محدد           |       |
+| احتياطي | للقراءة فقط ts.Expression[] |       |
+| النطاق  | ts.Expression               |       |
 
 ### createVueSlotExpression
 
 **النوع:** الوظيفة
 
 ```typescript
-function createVueSlotExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
+function createVueSlotExpression(
+  factory: ts.NodeFactory,
+  name: string | undefined,
+  fallback: readonly ts.JsxChild[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `slots.<name>?.(scope)` (مع `?? <fallback>` عندما تعلن الفتحة عن الرجوع
@@ -322,12 +352,12 @@ Vue **استدعاء فتحة محدد النطاق**.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| الاسم | سلسلة \| غير محدد |  |
-| احتياطي | للقراءة فقط ts.JsxChild[] |  |
-| النطاق | ts.Expression |  |
+| الاسم   | اكتب                      | الوصف |
+| ------- | ------------------------- | ----- |
+| مصنع    | ts.NodeFactory            |       |
+| الاسم   | سلسلة \| غير محدد         |       |
+| احتياطي | للقراءة فقط ts.JsxChild[] |       |
+| النطاق  | ts.Expression             |       |
 
 ### الملكية المدمرة
 
@@ -344,7 +374,13 @@ export interface DestructuredProperty
 **النوع:** الوظيفة
 
 ```typescript
-function dynamicToHCall(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visitExpression: (expression: ts.Expression) => ts.Expression, aliasAttribute: (name: string) => string = (name) => name, variadicChildren = false): ts.CallExpression
+function dynamicToHCall(
+  factory: ts.NodeFactory,
+  node: ts.JsxSelfClosingElement | ts.JsxElement,
+  visitExpression: (expression: ts.Expression) => ts.Expression,
+  aliasAttribute: (name: string) => string = (name) => name,
+  variadicChildren = false,
+): ts.CallExpression;
 ```
 
 أعد كتابة عنصر `<Dynamic is={X} a={…} …>children</Dynamic>` إلى ملف
@@ -359,37 +395,37 @@ function dynamicToHCall(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
-| زيارة التعبير | (التعبير: ts.Expression) => ts.Expression |  |
-| السمة المستعارة | (الاسم: سلسلة) => سلسلة |  |
-| أطفال متنوعون |  |  |
+| الاسم           | اكتب                                      | الوصف |
+| --------------- | ----------------------------------------- | ----- |
+| مصنع            | ts.NodeFactory                            |       |
+| node            | ts.JsxSelfClosingElement \| ts.JsxElement |       |
+| زيارة التعبير   | (التعبير: ts.Expression) => ts.Expression |       |
+| السمة المستعارة | (الاسم: سلسلة) => سلسلة                   |       |
+| أطفال متنوعون   |                                           |       |
 
 ### تأكدI18nHookInComponent
 
 **النوع:** الوظيفة
 
 ```typescript
-function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile
+function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile;
 ```
 
 تأكد من أن وظائف المكونات التي تستدعي `i18next.t(...)` تحتوي على عبارة `const { t } = useI18n();` ذات المستوى الأعلى.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| ملف المصدر | ts.SourceFile |  |
+| الاسم      | اكتب           | الوصف |
+| ---------- | -------------- | ----- |
+| مصنع       | ts.NodeFactory |       |
+| ملف المصدر | ts.SourceFile  |       |
 
 ### EventNameForProperty
 
 **النوع:** الوظيفة
 
 ```typescript
-function eventNameForProperty(propName: string): string
+function eventNameForProperty(propName: string): string;
 ```
 
 اشتق اسم الحدث Vue لخاصية `on<Event>`: قم بإزالة البادئة `on` و
@@ -398,9 +434,9 @@ function eventNameForProperty(propName: string): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الدعامة | سلسلة |  |
+| الاسم       | اكتب  | الوصف |
+| ----------- | ----- | ----- |
+| اسم الدعامة | سلسلة |       |
 
 ### توقيع الحدث
 
@@ -420,7 +456,7 @@ export interface EventSignature
 **النوع:** الوظيفة
 
 ```typescript
-function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[]
+function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[];
 ```
 
 قم باستخراج توقيعات **الحدث** (الخاصة) المعلنة بواسطة واجهة الدعائم - الأعضاء
@@ -432,17 +468,17 @@ function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| اسم الواجهة | سلسلة |  |
+| الاسم       | اكتب          | الوصف |
+| ----------- | ------------- | ----- |
+| ملف المصدر  | ts.SourceFile |       |
+| اسم الواجهة | سلسلة         |       |
 
 ### extractModelSignatures
 
 **النوع:** الوظيفة
 
 ```typescript
-function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[]
+function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[];
 ```
 
 قم باستخراج أعضاء واجهة الدعائم المميزة بـ `@model <onEvent>` - الدعامة وخصائصها
@@ -452,34 +488,34 @@ function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| اسم الواجهة | سلسلة |  |
+| الاسم       | اكتب          | الوصف |
+| ----------- | ------------- | ----- |
+| ملف المصدر  | ts.SourceFile |       |
+| اسم الواجهة | سلسلة         |       |
 
 ### extractorPropertyNames
 
 **النوع:** الوظيفة
 
 ```typescript
-function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[]
+function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[];
 ```
 
 قم باستخراج أسماء الخصائص (الخاصة) المعلنة بواسطة واجهة الدعائم، باستثناء `children`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| اسم الواجهة | سلسلة |  |
+| الاسم       | اكتب          | الوصف |
+| ----------- | ------------- | ----- |
+| ملف المصدر  | ts.SourceFile |       |
+| اسم الواجهة | سلسلة         |       |
 
 ### extractPropertySignatures
 
 **النوع:** الوظيفة
 
 ```typescript
-function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[]
+function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[];
 ```
 
 قم باستخراج توقيعات الخاصية (الخاصة) المعلنة بواسطة واجهة الدعائم، باستثناء
@@ -491,27 +527,27 @@ function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: str
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| اسم الواجهة | سلسلة |  |
+| الاسم       | اكتب          | الوصف |
+| ----------- | ------------- | ----- |
+| ملف المصدر  | ts.SourceFile |       |
+| اسم الواجهة | سلسلة         |       |
 
 ### findComponentFunction
 
 **النوع:** الوظيفة
 
 ```typescript
-function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined
+function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined;
 ```
 
 ابحث عن إعلان الوظيفة المصدرة لمكون محايد بالاسم.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| الاسم | سلسلة |  |
+| الاسم      | اكتب          | الوصف |
+| ---------- | ------------- | ----- |
+| ملف المصدر | ts.SourceFile |       |
+| الاسم      | سلسلة         |       |
 
 ### ForgeExportFact
 
@@ -558,23 +594,23 @@ export interface ForgeSourceSpan
 **النوع:** الوظيفة
 
 ```typescript
-function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean
+function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean;
 ```
 
 ما إذا كان أي من أطفال أحد الوالدين يحمل علامة `slot="…"`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أطفال | للقراءة فقط ts.JsxChild[] |  |
+| الاسم | اكتب                      | الوصف |
+| ----- | ------------------------- | ----- |
+| أطفال | للقراءة فقط ts.JsxChild[] |       |
 
 ### ICONS_JSX_MODULE
 
 **النوع:** ثابت
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 المحدد العاري لمكتبة الأيقونات القابلة للكتابة مرة واحدة `@mission-platform/icons`.
@@ -582,7 +618,7 @@ export const ICONS_JSX_MODULE
 تحتفظ المصادر لكل إطار عمل بالمحدد الدقيق: كل إطار عمل مقسم
 تعلن الحزمة `@mission-platform/*` عن `mp:vue` / `mp:react` / `mp:solid` /
 شروط التصدير المخصصة `mp:web-component` عند إدخالها العاري `.`، وبالتالي فإن
-*المستهلك* `resolve.conditions` (والمطابقة
+_المستهلك_ `resolve.conditions` (والمطابقة
 `customConditions` tsconfig المسبق) حدد الإصدار الصحيح. لا يوجد
 المسار الفرعي لكل إطار لإعادة التعيين إليه.
 
@@ -591,24 +627,24 @@ export const ICONS_JSX_MODULE
 **النوع:** الوظيفة
 
 ```typescript
-function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts
+function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
 ```
 
 قم باستخراج الواردات الثابتة والصادرات وحواف الكتابة فقط وحقائق الإطار من الوحدة النمطية التي تم تحليلها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| المصدر | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| اسم الملف | سلسلة |       |
+| المصدر    | سلسلة |       |
 
 ### isComponentTagName
 
 **النوع:** الوظيفة
 
 ```typescript
-function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean
+function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean;
 ```
 
 ما إذا كان اسم علامة JSX يشير إلى **مكون** (معرف كبير مثل
@@ -620,16 +656,16 @@ function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم العلامة | ts.JsxTagNameExpression |  |
+| الاسم       | اكتب                    | الوصف |
+| ----------- | ----------------------- | ----- |
+| اسم العلامة | ts.JsxTagNameExpression |       |
 
 ### isDynamicElement
 
 **النوع:** الوظيفة
 
 ```typescript
-function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 ما إذا كان node عنصرًا ديناميكيًا محايدًا - `<Dynamic is={…} />`
@@ -637,16 +673,16 @@ function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | ts.Node |  |
+| الاسم | اكتب    | الوصف |
+| ----- | ------- | ----- |
+| node  | ts.Node |       |
 
 ### isFragmentElement
 
 **النوع:** الوظيفة
 
 ```typescript
-function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 ما إذا كان node هو عنصر `<Fragment>` محايد - إما الإغلاق الذاتي
@@ -654,16 +690,16 @@ function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | ts.Node |  |
+| الاسم | اكتب    | الوصف |
+| ----- | ------- | ----- |
+| node  | ts.Node |       |
 
 ### isHasSlotCall
 
 **النوع:** الوظيفة
 
 ```typescript
-function isHasSlotCall(node: ts.Node): node is ts.CallExpression
+function isHasSlotCall(node: ts.Node): node is ts.CallExpression;
 ```
 
 ما إذا كان node عبارة عن استدعاء `hasSlot('name')` / `hasSlot()` — الخيار المحايد
@@ -672,16 +708,16 @@ function isHasSlotCall(node: ts.Node): node is ts.CallExpression
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | ts.Node |  |
+| الاسم | اكتب    | الوصف |
+| ----- | ------- | ----- |
+| node  | ts.Node |       |
 
 ### isSlotElement
 
 **النوع:** الوظيفة
 
 ```typescript
-function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 ما إذا كان node عبارة عن عنصر محايد ذو فتحة مسماة — `<Slot … />` أو
@@ -689,16 +725,16 @@ function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.Jsx
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | ts.Node |  |
+| الاسم | اكتب    | الوصف |
+| ----- | ------- | ----- |
+| node  | ts.Node |       |
 
 ### isSlotHCall
 
 **النوع:** الوظيفة
 
 ```typescript
-function isSlotHCall(node: ts.Node): node is ts.CallExpression
+function isSlotHCall(node: ts.Node): node is ts.CallExpression;
 ```
 
 ما إذا كان node هو **نموذج الاتصال** لعلامة الفتحة المسماة — `h(Slot, …)` —
@@ -709,16 +745,16 @@ function isSlotHCall(node: ts.Node): node is ts.CallExpression
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | ts.Node |  |
+| الاسم | اكتب    | الوصف |
+| ----- | ------- | ----- |
+| node  | ts.Node |       |
 
 ### JSX_ATTRIBUTE_RENAMES
 
 **النوع:** ثابت
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 سمات JSX الأصلية التي يجب تقليل تهجئة حالة الجمل التي تواجه المؤلف
@@ -731,7 +767,7 @@ export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
 **النوع:** ثابت
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 تتم كتابة اسم الملف (مع الامتداد) لوحدة مساعد التأثير المحلي كما هو الحال في الشجرة المولدة المسطحة.
@@ -741,7 +777,7 @@ export const LOCAL_EFFECT_FILE
 **النوع:** ثابت
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 المحدد النسبي الذي تم إنشاؤه Vue {@link LOCAL_EFFECT_MODULE} يتم استيراده ضمنه.
@@ -751,7 +787,7 @@ export const LOCAL_EFFECT_MODULE
 **النوع:** ثابت
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 واردات **النوع** المحايدة التي ليس لها إطار عمل مكافئ واحد من الدرجة الأولى
@@ -773,7 +809,7 @@ render-prop **type** استيراد على الإطلاق.
 **النوع:** ثابت
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 تتم كتابة اسم الملف (مع الامتداد) لوحدة أنواع JSX المحلية كما هو الحال في الشجرة المولدة المسطحة.
@@ -783,7 +819,7 @@ export const LOCAL_JSX_TYPES_FILE
 **النوع:** ثابت
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 المحدد النسبي الذي تم إنشاؤه لكل إطار عمل {@link LOCAL_JSX_TYPES_MODULE} يتم استيراده ضمنه.
@@ -793,7 +829,7 @@ export const LOCAL_JSX_TYPES_MODULE
 **النوع:** الوظيفة
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 مصدر {@link LOCAL_EFFECT_MODULE} الموجود في الموقع المشترك للهدف
@@ -815,16 +851,16 @@ function localEffectModuleSource(framework: JsxFramework): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإطار | JsxFramework |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| الإطار | JsxFramework |       |
 
 ### localJsxTypesModuleSource
 
 **النوع:** الوظيفة
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 مصدر {@link LOCAL_JSX_TYPES_MODULE} الموجود في الموقع المشترك للهدف
@@ -841,9 +877,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإطار | JsxFramework |  |
+| الاسم  | اكتب         | الوصف |
+| ------ | ------------ | ----- |
+| الإطار | JsxFramework |       |
 
 ### توقيع النموذج
 
@@ -864,7 +900,7 @@ export interface ModelSignature
 **النوع:** الوظيفة
 
 ```typescript
-function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean
+function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
 ```
 
 ما إذا كان ينبغي إصدار وحدة نمطية لـ `framework`. وحدة محايدة للإطار
@@ -873,18 +909,18 @@ function moduleTargetsFramework(fileName: string, source: string, framework: str
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| المصدر | سلسلة |  |
-| الإطار | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| اسم الملف | سلسلة |       |
+| المصدر    | سلسلة |       |
+| الإطار    | سلسلة |       |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 واردات **القيمة** المحايدة التي تمثل علامات وقت الترجمة الخالصة - فهي موجودة فقط
@@ -902,7 +938,7 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
 واردات **القيمة** المحايدة التي تمثل أساسيات السياق. على React هم * هم *
@@ -916,7 +952,7 @@ React الخاص (`createContext`/`useContext`)، لذلك يقعون في
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 واردات **القيمة** المحايدة الحقيقية، **المكونات** لكل إطار عمل بدلاً من ذلك
@@ -938,7 +974,7 @@ export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 الحزمة المحايدة التي تستورد المكونات العناصر الأولية منها.
@@ -948,7 +984,7 @@ export const NEUTRAL_MODULE
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 واردات **القيمة** المحايدة التي تعتبر أدوات مساعدة لوقت التشغيل غير محددة لإطار العمل - فهي
@@ -961,7 +997,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 خطافات **قيمة** محايدة لها نظير أصلي يحمل نفس الاسم
@@ -986,7 +1022,7 @@ export interface NeutralImports
 **النوع:** الوظيفة
 
 ```typescript
-function parseTsx(fileName: string, source: string): ts.SourceFile
+function parseTsx(fileName: string, source: string): ts.SourceFile;
 ```
 
 تحليل سلسلة مصدر `.tsx` في جسر TypeScript SourceFile المستخدم بواسطة
@@ -995,10 +1031,10 @@ function parseTsx(fileName: string, source: string): ts.SourceFile
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| المصدر | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| اسم الملف | سلسلة |       |
+| المصدر    | سلسلة |       |
 
 ### فتحات مقسمة
 
@@ -1015,49 +1051,49 @@ export interface PartitionedSlots
 **النوع:** الوظيفة
 
 ```typescript
-function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots
+function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots;
 ```
 
 قم بتقسيم العناصر الفرعية للعنصر المكون إلى مجموعات ذات فتحات مسماة + العناصر الفرعية الافتراضية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| أطفال | للقراءة فقط ts.JsxChild[] |  |
+| الاسم | اكتب                      | الوصف |
+| ----- | ------------------------- | ----- |
+| أطفال | للقراءة فقط ts.JsxChild[] |       |
 
 ### printNode
 
 **النوع:** الوظيفة
 
 ```typescript
-function printNode(node: ts.Node, sourceFile: ts.SourceFile): string
+function printNode(node: ts.Node, sourceFile: ts.SourceFile): string;
 ```
 
 قم بطباعة node مرة أخرى إلى النص المصدر، مرتبطًا بملفه المصدر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | ts.Node |  |
-| ملف المصدر | ts.SourceFile |  |
+| الاسم      | اكتب          | الوصف |
+| ---------- | ------------- | ----- |
+| node       | ts.Node       |       |
+| ملف المصدر | ts.SourceFile |       |
 
 ### printSourceFile
 
 **النوع:** الوظيفة
 
 ```typescript
-function printSourceFile(sourceFile: ts.SourceFile): string
+function printSourceFile(sourceFile: ts.SourceFile): string;
 ```
 
 قم بطباعة ملف مصدر كامل (ربما تم تحويله) مرة أخرى إلى النص المصدر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
+| الاسم      | اكتب          | الوصف |
+| ---------- | ------------- | ----- |
+| ملف المصدر | ts.SourceFile |       |
 
 ### توقيع الملكية
 
@@ -1074,7 +1110,7 @@ export interface PropertySignature
 **النوع:** ثابت
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 المسار الفرعي `@mission-platform/forge/react` الذي يتم استيراد مكونات إطار عمل React منه.
@@ -1084,7 +1120,7 @@ export const REACT_ADAPTER_MODULE
 **النوع:** ثابت
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 واردات **النوع** المحايدة التي لها مكافئ React من الدرجة الأولى يتم شحنها بواسطة
@@ -1111,12 +1147,12 @@ export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
 **النوع:** الوظيفة
 
 ```typescript
-function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression
+function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression;
 ```
 
 قم بطي قيمة سمة `className={…}` في **React** `className`
 قيمة. يقبل `className` الخاص بـ React سلسلة فقط، وبالتالي فإن الشرط/array/
-يجب تقليل أشكال الكائنات *قبل* أن تصل إلى العنصر. ** مصفوفة
+يجب تقليل أشكال الكائنات _قبل_ أن تصل إلى العنصر. ** مصفوفة
 الحرفي** (الصيغة المتعارف عليها — `className={['base', { active }]}`) هو
 ينتشر إلى استدعاء وقت التشغيل `classNames(…)` (`classNames('base', { active })`)،
 مطابقة التوقيع المساعد المتغير؛ أي تعبير آخر هو بالفعل
@@ -1125,17 +1161,17 @@ function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| القيمة | ts.Expression |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| مصنع   | ts.NodeFactory |       |
+| القيمة | ts.Expression  |       |
 
 ### readChildSlotName
 
 **النوع:** الوظيفة
 
 ```typescript
-function readChildSlotName(child: ts.JsxChild): string | undefined
+function readChildSlotName(child: ts.JsxChild): string | undefined;
 ```
 
 اقرأ علامة `slot="…"` الثابتة لعنصر JSX **child** — السمة
@@ -1145,33 +1181,33 @@ function readChildSlotName(child: ts.JsxChild): string | undefined
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| طفل | ts.JsxChild |  |
+| الاسم | اكتب        | الوصف |
+| ----- | ----------- | ----- |
+| طفل   | ts.JsxChild |       |
 
 ### readComponentImports
 
 **النوع:** الوظيفة
 
 ```typescript
-function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[]
+function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[];
 ```
 
 جمع القيمة النسبية (المكون الشقيق) + استيراد النوع من الوحدة النمطية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| المصدر الجذر | سلسلة |  |
+| الاسم        | اكتب          | الوصف |
+| ------------ | ------------- | ----- |
+| ملف المصدر   | ts.SourceFile |       |
+| المصدر الجذر | سلسلة         |       |
 
 ### readExternalImports
 
 **النوع:** الوظيفة
 
 ```typescript
-function readExternalImports(fileName: string, source: string): string[]
+function readExternalImports(fileName: string, source: string): string[];
 ```
 
 اجمع الواردات **الخارجية** (الحزمة العارية) للوحدة - كل
@@ -1192,17 +1228,17 @@ function readExternalImports(fileName: string, source: string): string[]
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| المصدر | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| اسم الملف | سلسلة |       |
+| المصدر    | سلسلة |       |
 
 ### readFrameworkDirective
 
 **النوع:** الوظيفة
 
 ```typescript
-function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined
+function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined;
 ```
 
 اقرأ توجيه `"use <framework>";` الخاص بالوحدة، إن وجد.
@@ -1219,66 +1255,70 @@ function readFrameworkDirective(fileName: string, source: string): 'react' | 'vu
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| المصدر | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| اسم الملف | سلسلة |       |
+| المصدر    | سلسلة |       |
 
 ### readHasSlotName
 
 **النوع:** الوظيفة
 
 ```typescript
-function readHasSlotName(call: ts.CallExpression): string | undefined
+function readHasSlotName(call: ts.CallExpression): string | undefined;
 ```
 
 اقرأ اسم الفتحة الثابتة لمكالمة `hasSlot('name')` (`undefined` → الفتحة الافتراضية).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اتصل | ts.CallExpression |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| اتصل  | ts.CallExpression |       |
 
 ### readNeutralImports
 
 **النوع:** الوظيفة
 
 ```typescript
-function readNeutralImports(fileName: string, source: string): NeutralImports
+function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
 افحص روابط `import … from '@mission-platform/forge'` الخاصة بالوحدة النمطية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| المصدر | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| اسم الملف | سلسلة |       |
+| المصدر    | سلسلة |       |
 
 ### readSlotHCallName
 
 **النوع:** الوظيفة
 
 ```typescript
-function readSlotHCallName(call: ts.CallExpression): string | undefined
+function readSlotHCallName(call: ts.CallExpression): string | undefined;
 ```
 
 اقرأ `name` الثابت من مكالمة `h(Slot, { name: 'x' }, …)` (`undefined` → الفتحة الافتراضية).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اتصل | ts.CallExpression |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| اتصل  | ts.CallExpression |       |
 
 ### readSlotHCallScope
 
 **النوع:** الوظيفة
 
 ```typescript
-function readSlotHCallScope(factory: ts.NodeFactory, call: ts.CallExpression, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
+function readSlotHCallScope(
+  factory: ts.NodeFactory,
+  call: ts.CallExpression,
+  visit: ts.Visitor,
+): ts.ObjectLiteralExpression | undefined;
 ```
 
 اقرأ **النطاق** (كل دعامة بخلاف `name`) لـ `h(Slot, props, …)`
@@ -1289,58 +1329,63 @@ function readSlotHCallScope(factory: ts.NodeFactory, call: ts.CallExpression, vi
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| اتصل | ts.CallExpression |  |
-| زيارة | ts.زائر |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| مصنع  | ts.NodeFactory    |       |
+| اتصل  | ts.CallExpression |       |
+| زيارة | ts.زائر           |       |
 
 ### readSlotName
 
 **النوع:** الوظيفة
 
 ```typescript
-function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined
+function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined;
 ```
 
 اقرأ `name="…"` الثابت لعنصر `<Slot>` (`undefined` → الفتحة الافتراضية).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
+| الاسم | اكتب                                      | الوصف |
+| ----- | ----------------------------------------- | ----- |
+| node  | ts.JsxSelfClosingElement \| ts.JsxElement |       |
 
 ### readSlotScope
 
 **النوع:** الوظيفة
 
 ```typescript
-function readSlotScope(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
+function readSlotScope(
+  factory: ts.NodeFactory,
+  node: ts.JsxSelfClosingElement | ts.JsxElement,
+  visit: ts.Visitor,
+): ts.ObjectLiteralExpression | undefined;
 ```
 
 اقرأ **النطاق** لعنصر `<Slot>` — كل سمة بخلاف `name`
+
 - إلى تعبير كائن حرفي (`<Slot name="row" item={item} index={i}/>`
-→ `{ item: item, index: i }`)، أو `undefined` عندما لا تمر الفتحة بأي نطاق.
-تتم إعادة كتابة تعبيرات قيمة السمة باستخدام `visit` المرفق
-(على سبيل المثال، يتم حل الدعامة أو قراءة الحالة التي تم تدميرها بشكل صحيح في Vue
-الهدف). هذا هو ما يتيح لمكون الكتابة مرة واحدة تشغيل **فتحة محددة**:
-يصدر المترجم Vue `slots.x?.(scope)` وReact `properties.x?.(scope)`.
+  → `{ item: item, index: i }`)، أو `undefined` عندما لا تمر الفتحة بأي نطاق.
+  تتم إعادة كتابة تعبيرات قيمة السمة باستخدام `visit` المرفق
+  (على سبيل المثال، يتم حل الدعامة أو قراءة الحالة التي تم تدميرها بشكل صحيح في Vue
+  الهدف). هذا هو ما يتيح لمكون الكتابة مرة واحدة تشغيل **فتحة محددة**:
+  يصدر المترجم Vue `slots.x?.(scope)` وReact `properties.x?.(scope)`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
-| زيارة | ts.زائر |  |
+| الاسم | اكتب                                      | الوصف |
+| ----- | ----------------------------------------- | ----- |
+| مصنع  | ts.NodeFactory                            |       |
+| node  | ts.JsxSelfClosingElement \| ts.JsxElement |       |
+| زيارة | ts.زائر                                   |       |
 
 ### readStyleImports
 
 **النوع:** الوظيفة
 
 ```typescript
-function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[]
+function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
 ```
 
 قم بتجميع واردات ورقة الأنماط النسبية لوحدة نمطية (وحدات CSS وCSS العارية).
@@ -1350,18 +1395,22 @@ function readStyleImports(fileName: string, source: string, sourceRoot?: string)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| المصدر | سلسلة |  |
-| المصدر الجذر | سلسلة |  |
+| الاسم        | اكتب  | الوصف |
+| ------------ | ----- | ----- |
+| اسم الملف    | سلسلة |       |
+| المصدر       | سلسلة |       |
+| المصدر الجذر | سلسلة |       |
 
 ### ResolveWorkspaceLocalImport
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveWorkspaceLocalImport(specifier: string, sourceFileName: string, sourceRoot: string | undefined): string | undefined
+function resolveWorkspaceLocalImport(
+  specifier: string,
+  sourceFileName: string,
+  sourceRoot: string | undefined,
+): string | undefined;
 ```
 
 حل استيراد `@/` لمساحة العمل المحلية إلى مسار نسبة إلى المصدر الخاص به
@@ -1370,11 +1419,11 @@ file. لا تتم معالجة عمليات استيراد الحزم العار
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| محدد | سلسلة |  |
-| اسم الملف المصدر | سلسلة |  |
-| المصدر الجذر | سلسلة \| غير محدد |  |
+| الاسم            | اكتب              | الوصف |
+| ---------------- | ----------------- | ----- |
+| محدد             | سلسلة             |       |
+| اسم الملف المصدر | سلسلة             |       |
+| المصدر الجذر     | سلسلة \| غير محدد |       |
 
 ### RewriteScope
 
@@ -1392,56 +1441,56 @@ export interface RewriteScope
 **النوع:** الوظيفة
 
 ```typescript
-function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile
+function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile;
 ```
 
 أعد كتابة عمليات استيراد `@/` المحلية لمساحة العمل قبل الإصدار الخاص بإطار العمل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| المصدر الجذر | سلسلة |  |
+| الاسم        | اكتب          | الوصف |
+| ------------ | ------------- | ----- |
+| ملف المصدر   | ts.SourceFile |       |
+| المصدر الجذر | سلسلة         |       |
 
 ### slotFallbackChildren
 
 **النوع:** الوظيفة
 
 ```typescript
-function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[]
+function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[];
 ```
 
 العناصر الفرعية الاحتياطية لـ `<Slot>…</Slot>` (فارغة لفتحة الإغلاق الذاتي).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
+| الاسم | اكتب                                      | الوصف |
+| ----- | ----------------------------------------- | ----- |
+| node  | ts.JsxSelfClosingElement \| ts.JsxElement |       |
 
 ### slotHCallFallback
 
 **النوع:** الوظيفة
 
 ```typescript
-function slotHCallFallback(call: ts.CallExpression): ts.Expression[]
+function slotHCallFallback(call: ts.CallExpression): ts.Expression[];
 ```
 
 الأطفال الاحتياطيين (الوسائط بعد الدعائم) لاستدعاء `h(Slot, props, …fallback)`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اتصل | ts.CallExpression |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| اتصل  | ts.CallExpression |       |
 
 ### stripFrameworkDirective
 
 **النوع:** الوظيفة
 
 ```typescript
-function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile
+function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile;
 ```
 
 قم بإرجاع الملف المصدر باستخدام أي توجيه `"use react"` / `"use vue"`
@@ -1450,26 +1499,26 @@ function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
+| الاسم      | اكتب          | الوصف |
+| ---------- | ------------- | ----- |
+| ملف المصدر | ts.SourceFile |       |
 
 ### stripSlotAttribute
 
 **النوع:** الوظيفة
 
 ```typescript
-function stripSlotAttribute(factory: ts.NodeFactory, element: T): T
+function stripSlotAttribute(factory: ts.NodeFactory, element: T): T;
 ```
 
 نسخة من عنصر JSX / عنصر الإغلاق الذاتي مع إزالة سمة العلامة `slot="…"` الخاصة به.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| عنصر | ت |  |
+| الاسم | اكتب           | الوصف |
+| ----- | -------------- | ----- |
+| مصنع  | ts.NodeFactory |       |
+| عنصر  | ت              |       |
 
 ### StyleImport
 
@@ -1486,24 +1535,24 @@ export interface StyleImport
 **النوع:** الوظيفة
 
 ```typescript
-function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node
+function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node;
 ```
 
 أعد كتابة تعبيرات الاتصال `i18next.t(...)` إلى `t(...)`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | ts.NodeFactory |  |
-| node | ts.Node |  |
+| الاسم | اكتب           | الوصف |
+| ----- | -------------- | ----- |
+| مصنع  | ts.NodeFactory |       |
+| node  | ts.Node        |       |
 
 ### يستخدمClassNamesArrayAttribute
 
 **النوع:** الوظيفة
 
 ```typescript
-function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
+function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean;
 ```
 
 ما إذا كانت الوحدة تحمل سمة `className={[…]}` التي تكون قيمتها
@@ -1513,16 +1562,16 @@ function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
+| الاسم      | اكتب          | الوصف |
+| ---------- | ------------- | ----- |
+| ملف المصدر | ts.SourceFile |       |
 
 ### يستخدمComponentSelfReference
 
 **النوع:** الوظيفة
 
 ```typescript
-function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean
+function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean;
 ```
 
 ما إذا كان أحد المكونات يشير إلى **نفسه** كعلامة JSX (`<ForgeTreeView …>`
@@ -1532,49 +1581,49 @@ function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: st
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
-| اسم المكون | سلسلة |  |
+| الاسم      | اكتب          | الوصف |
+| ---------- | ------------- | ----- |
+| ملف المصدر | ts.SourceFile |       |
+| اسم المكون | سلسلة         |       |
 
 ### يستخدمHFactoryCall
 
 **النوع:** الوظيفة
 
 ```typescript
-function usesHFactoryCall(sourceFile: ts.SourceFile): boolean
+function usesHFactoryCall(sourceFile: ts.SourceFile): boolean;
 ```
 
 ما إذا كانت الوحدة تشير إلى `h` كتعبير اتصال (`h(...)` صريح).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| ملف المصدر | ts.SourceFile |  |
+| الاسم      | اكتب          | الوصف |
+| ---------- | ------------- | ----- |
+| ملف المصدر | ts.SourceFile |       |
 
 ### يستخدمI18nextT
 
 **النوع:** الوظيفة
 
 ```typescript
-function usesI18nextT(node: OxcNode): boolean
+function usesI18nextT(node: OxcNode): boolean;
 ```
 
 ما إذا كانت وحدة Oxc أو node تستدعي `i18next.t(...)`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| node | أوكسكنود |  |
+| الاسم | اكتب     | الوصف |
+| ----- | -------- | ----- |
+| node  | أوكسكنود |       |
 
 ### VUE_ADAPTER_MODULE
 
 **النوع:** ثابت
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 المسار الفرعي `@mission-platform/forge/vue` الذي يتم استيراد أساسيات السياق Vue منه.
@@ -1584,7 +1633,7 @@ export const VUE_ADAPTER_MODULE
 **النوع:** ثابت
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 يقوم مكون إطار العمل المحايد باستيراد Vue مباشرة من وقت تشغيل `vue`.
@@ -1594,7 +1643,7 @@ export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
 **النوع:** ثابت
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 يُسمي نوع العرض/الدعائم المحايد البنية **Vue** التي تعيد التوجيه إلى ملفها
@@ -1615,7 +1664,7 @@ Vue's `VNodeChild` / `VNode`. تحت `jsxImportSource: 'vue'` أ
 **النوع:** الوظيفة
 
 ```typescript
-function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>
+function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 تمت تسمية أحداث تحديث Vue الخاصة بـ `v-model` باسم `update:<model>`: تم تجميع الطفل
@@ -1637,7 +1686,7 @@ function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>
 **النوع:** الوظيفة
 
 ```typescript
-function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>
+function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 Vue-المحول المستهدف الذي يعيد كتابة نموذج الفتحة المسماة **التمرير** — أ
@@ -1656,7 +1705,7 @@ Vue-المحول المستهدف الذي يعيد كتابة نموذج الف
 **النوع:** الوظيفة
 
 ```typescript
-function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>
+function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 محول الهدف Vue الذي يعمل على إصلاح غلاف DOM متعدد الكلمات بنمط React
@@ -1676,7 +1725,7 @@ function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>
 **النوع:** الوظيفة
 
 ```typescript
-function createEmptyForgeCacheStats(): ForgeCacheStats
+function createEmptyForgeCacheStats(): ForgeCacheStats;
 ```
 
 لم يتم تقديم أي وصف.
@@ -1686,7 +1735,7 @@ function createEmptyForgeCacheStats(): ForgeCacheStats
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>
+export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -1718,7 +1767,7 @@ export interface ForgeCacheStats
 **النوع:** الوظيفة
 
 ```typescript
-function compileComponentModule(source: string, options: CompileOptions): CompiledModule
+function compileComponentModule(source: string, options: CompileOptions): CompiledModule;
 ```
 
 قم بتجميع وحدة مكونة محايدة (أو ذات إطار عمل) لكل إطار عمل خاص بها
@@ -1731,10 +1780,10 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| خيارات | ترجمة الخيارات |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| المصدر | سلسلة          |       |
+| خيارات | ترجمة الخيارات |       |
 
 ### CompiledModule
 
@@ -1751,19 +1800,19 @@ export interface CompiledModule
 **النوع:** الوظيفة
 
 ```typescript
-function compileHookModule(source: string, options: CompileHookOptions): CompiledModule
+function compileHookModule(source: string, options: CompileHookOptions): CompiledModule;
 ```
 
 قم بتجميع ** وحدة ربط ** محايدة واحدة (تم تأليف وحدة قابلة للكتابة مرة واحدة مقابل
-خطافات `@mission-platform/forge` ذات النمط React، *ليست* مكون واجهة المستخدم) إلى
+خطافات `@mission-platform/forge` ذات النمط React، _ليست_ مكون واجهة المستخدم) إلى
 مصدر لكل إطار (المرحلة 1).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| خيارات | ترجمة هوكوبشنز |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| المصدر | سلسلة          |       |
+| خيارات | ترجمة هوكوبشنز |       |
 
 ### ترجمة هوكخيارات
 
@@ -1780,7 +1829,7 @@ export interface CompileHookOptions
 **النوع:** الوظيفة
 
 ```typescript
-function compileModule(source: string, options: CompileModuleOptions): CompiledModule
+function compileModule(source: string, options: CompileModuleOptions): CompiledModule;
 ```
 
 قم بتجميع وحدة محايدة واحدة من خلال مكون إضافي للإخراج يوفره المتصل.
@@ -1791,10 +1840,10 @@ function compileModule(source: string, options: CompileModuleOptions): CompiledM
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
-| خيارات | كومبيليمودوليوبتيونس |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| المصدر | سلسلة                |       |
+| خيارات | كومبيليمودوليوبتيونس |       |
 
 ### CompileModuleOptions
 
@@ -1823,7 +1872,7 @@ export interface CompileOptions
 **النوع:** الوظيفة
 
 ```typescript
-function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[]
+function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[];
 ```
 
 اكتشف المكونات التي يصدرها البرميل واستنتج شكلها العام. كل
@@ -1833,27 +1882,27 @@ function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): Discov
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصدر البرميل | سلسلة |  |
-| قطاع بادئة |  |  |
+| الاسم        | اكتب  | الوصف |
+| ------------ | ----- | ----- |
+| مصدر البرميل | سلسلة |       |
+| قطاع بادئة   |       |       |
 
 ### اكتشاف المكونات من الرسم البياني
 
 **النوع:** الوظيفة
 
 ```typescript
-function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[]
+function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[];
 ```
 
 يتم تصدير المكون العام للمشروع من الرسم البياني الأساسي مع الاحتفاظ بالشكل الناتج القديم.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رسم بياني | فورجيفيليغراف |  |
-| قطاع بادئة |  |  |
+| الاسم      | اكتب          | الوصف |
+| ---------- | ------------- | ----- |
+| رسم بياني  | فورجيفيليغراف |       |
+| قطاع بادئة |               |       |
 
 ### تم اكتشافه
 
@@ -1882,39 +1931,42 @@ export interface DiscoveredHelperExport
 **النوع:** الوظيفة
 
 ```typescript
-function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
+function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[];
 ```
 
 اكتشف **الوحدات المساعدة** التي يُعاد تصديرها للبرميل — كل `تصدير { … }
 من عبارة './...'' التي لا يعد الاسم الأساسي للوحدة ** واحدًا من الوحدات المكتشفة
 مجلدات المكونات. يُستخدم لإعادة توجيه واجهات برمجة التطبيقات (APIs) المشتركة غير الإطارية (مثل
-`toast-store` الأمر الحتمي `useToast`/`showToast`/... المساعدون، النظير
+`toast-store`الأمر الحتمي`useToast`/`showToast`/... المساعدون، النظير
 من حزمة Vue `useToast` القابلة للتركيب) من خلال الإدخال الذي تم إنشاؤه، لذلك
 يقود المستهلكون نفس المفردة لكل إطار الذي تستخدمه المكونات.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصدر البرميل | سلسلة |  |
-| مجلدات المكونات | ReadonlySet<string> |  |
+| الاسم           | اكتب                | الوصف |
+| --------------- | ------------------- | ----- |
+| مصدر البرميل    | سلسلة               |       |
+| مجلدات المكونات | ReadonlySet<string> |       |
 
 ### اكتشافHelperExportsFromGraph
 
 **النوع:** الوظيفة
 
 ```typescript
-function discoverHelperExportsFromGraph(graph: ForgeFileGraph, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
+function discoverHelperExportsFromGraph(
+  graph: ForgeFileGraph,
+  componentFolders: ReadonlySet<string>,
+): DiscoveredHelperExport[];
 ```
 
 مشروع الصادرات العامة غير المكونة من الرسم البياني الأساسي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رسم بياني | فورجيفيليغراف |  |
-| مجلدات المكونات | ReadonlySet<string> |  |
+| الاسم           | اكتب                | الوصف |
+| --------------- | ------------------- | ----- |
+| رسم بياني       | فورجيفيليغراف       |       |
+| مجلدات المكونات | ReadonlySet<string> |       |
 
 ## `src/compiler/frontends`
 
@@ -1923,7 +1975,7 @@ function discoverHelperExportsFromGraph(graph: ForgeFileGraph, componentFolders:
 **النوع:** الوظيفة
 
 ```typescript
-function parseForgeSource(fileName: string, source: string): OxcParsedModule
+function parseForgeSource(fileName: string, source: string): OxcParsedModule;
 ```
 
 قم بتحليل المصدر من خلال Oxc في الوحدة القابلة للتسلسل المحايدة
@@ -1932,29 +1984,34 @@ function parseForgeSource(fileName: string, source: string): OxcParsedModule
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| المصدر | سلسلة |  |
+| الاسم     | اكتب  | الوصف |
+| --------- | ----- | ----- |
+| اسم الملف | سلسلة |       |
+| المصدر    | سلسلة |       |
 
 ### parseFrontendModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function parseFrontendModule(fileName: string, source: string, moduleKind: 'component' | 'composable', componentName?: string): FrontendModule
+function parseFrontendModule(
+  fileName: string,
+  source: string,
+  moduleKind: 'component' | 'composable',
+  componentName?: string,
+): FrontendModule;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اسم الملف | سلسلة |  |
-| المصدر | سلسلة |  |
-| نوع الوحدة | 'المكون' \| "قابل للتركيب" |  |
-| اسم المكون | سلسلة |  |
+| الاسم      | اكتب                       | الوصف |
+| ---------- | -------------------------- | ----- |
+| اسم الملف  | سلسلة                      |       |
+| المصدر     | سلسلة                      |       |
+| نوع الوحدة | 'المكون' \| "قابل للتركيب" |       |
+| اسم المكون | سلسلة                      |       |
 
 ## `src/compiler/generation-context`
 
@@ -1963,16 +2020,16 @@ function parseFrontendModule(fileName: string, source: string, moduleKind: 'comp
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext
+function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجيجينيراتيونكونتيكستوبتيونس |  |
+| الاسم  | اكتب                           | الوصف |
+| ------ | ------------------------------ | ----- |
+| خيارات | فورجيجينيراتيونكونتيكستوبتيونس |       |
 
 ### ForgeGenerationContext
 
@@ -2001,16 +2058,16 @@ export interface ForgeGenerationContextOptions
 **النوع:** الوظيفة
 
 ```typescript
-function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph
+function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph;
 ```
 
 قم ببناء الرسم البياني المصدر الأساسي من وحدة إدخال واحدة تم تكوينها.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | فورجيفيليجرافوبتيونس |  |
+| الاسم  | اكتب                 | الوصف |
+| ------ | -------------------- | ----- |
+| خيارات | فورجيفيليجرافوبتيونس |       |
 
 ### ForgeFileEdge
 
@@ -2047,7 +2104,8 @@ export interface ForgeFileGraphOptions
 **النوع:** النوع
 
 ```typescript
-export type ForgeFileKind = 'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
+export type ForgeFileKind =
+  'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
 ```
 
 لم يتم تقديم أي وصف.
@@ -2077,7 +2135,13 @@ export interface ForgeGraphDiagnostic
 **النوع:** النوع
 
 ```typescript
-export type ForgeGraphDiagnosticCode = | 'missing-entry' | 'missing-file' | 'unsupported-extension' | 'ambiguous-export' | 'unsupported-authoring-form' | 'cycle';
+export type ForgeGraphDiagnosticCode =
+  | 'missing-entry'
+  | 'missing-file'
+  | 'unsupported-extension'
+  | 'ambiguous-export'
+  | 'unsupported-authoring-form'
+  | 'cycle';
 ```
 
 لم يتم تقديم أي وصف.
@@ -2089,7 +2153,11 @@ export type ForgeGraphDiagnosticCode = | 'missing-entry' | 'missing-file' | 'uns
 **النوع:** الوظيفة
 
 ```typescript
-function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'composable' = 'component', componentName?: string): GenericHoistResult
+function hoistStaticJsx(
+  module: OxcParsedModule,
+  moduleKind: 'component' | 'composable' = 'component',
+  componentName?: string,
+): GenericHoistResult;
 ```
 
 تقوم العلامة الثابتة بعد ذلك برفع شجرة العرض الخاصة بوحدة Oxc-parsed، مما يؤدي إلى إرجاع ملف
@@ -2098,11 +2166,11 @@ function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'comp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | OxcParsedModule |  |
-| نوع الوحدة | 'المكون' \| "قابل للتركيب" |  |
-| اسم المكون | سلسلة |  |
+| الاسم          | اكتب                       | الوصف |
+| -------------- | -------------------------- | ----- |
+| الوحدة النمطية | OxcParsedModule            |       |
+| نوع الوحدة     | 'المكون' \| "قابل للتركيب" |       |
+| اسم المكون     | سلسلة                      |       |
 
 ## `src/compiler/optimize`
 
@@ -2111,7 +2179,7 @@ function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'comp
 **النوع:** الوظيفة
 
 ```typescript
-function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule
+function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule;
 ```
 
 قم بتشغيل تمريرات تحسين المرحلة 1 على مستوى المصدر (تقليم الفرع الميت و
@@ -2123,17 +2191,17 @@ function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions =
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الوحدة النمطية | OxcParsedModule |  |
-| خيارات | خيارات التحسين |  |
+| الاسم          | اكتب            | الوصف |
+| -------------- | --------------- | ----- |
+| الوحدة النمطية | OxcParsedModule |       |
+| خيارات         | خيارات التحسين  |       |
 
 ### optimSourceFile
 
 **النوع:** ثابت
 
 ```typescript
-export const optimizeSourceFile
+export const optimizeSourceFile;
 ```
 
 تم الاحتفاظ بالاسم المستعار للتوافق لعمليات تكامل برنامج التحويل البرمجي باستخدام الاسم القديم.
@@ -2145,7 +2213,10 @@ export const optimizeSourceFile
 **النوع:** الوظيفة
 
 ```typescript
-function analyzeForgeModule(input: CompilerInput, service: ForgeCompilerService = defaultCompilerService): SemanticModule
+function analyzeForgeModule(
+  input: CompilerInput,
+  service: ForgeCompilerService = defaultCompilerService,
+): SemanticModule;
 ```
 
 تحليل وتطبيع واستنتاج الوحدة الدلالية المحايدة للهدف.
@@ -2157,10 +2228,10 @@ function analyzeForgeModule(input: CompilerInput, service: ForgeCompilerService 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | إدخال المترجم |  |
-| خدمة | فورجكومبيلرسيرفيس |  |
+| الاسم   | اكتب              | الوصف |
+| ------- | ----------------- | ----- |
+| الإدخال | إدخال المترجم     |       |
+| خدمة    | فورجكومبيلرسيرفيس |       |
 
 ### CompilerInput
 
@@ -2187,16 +2258,16 @@ export interface CompilerPipeline
 **النوع:** الوظيفة
 
 ```typescript
-function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline
+function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline;
 ```
 
 قم بإنشاء مرسل الطور الذي تستخدمه نقاط دخول المترجم.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خدمة | فورجكومبيلرسيرفيس |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| خدمة  | فورجكومبيلرسيرفيس |       |
 
 ## `src/compiler/report`
 
@@ -2217,39 +2288,41 @@ export interface ForgeCompilationReport
 **النوع:** الوظيفة
 
 ```typescript
-function analyzeRouterCapabilities(input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>): RouterCapabilityModule
+function analyzeRouterCapabilities(
+  input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>,
+): RouterCapabilityModule;
 ```
 
 تحليل عمليات استيراد واستخدام جهاز التوجيه المحايد دون استيراد أي جهاز توجيه أصلي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | يختار<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |  |
+| الاسم   | اكتب                                                               | الوصف |
+| ------- | ------------------------------------------------------------------ | ----- |
+| الإدخال | يختار<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |       |
 
 ### compileRouterModule
 
 **النوع:** الوظيفة
 
 ```typescript
-function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult
+function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult;
 ```
 
 تجميع استخدام جهاز التوجيه المحايد من خلال محول هدف أصلي محدد.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | راوتركومبيليرإدخال |  |
+| الاسم   | اكتب               | الوصف |
+| ------- | ------------------ | ----- |
+| الإدخال | راوتركومبيليرإدخال |       |
 
 ### createRouterCompilerPipeline
 
 **النوع:** الوظيفة
 
 ```typescript
-function createRouterCompilerPipeline()
+function createRouterCompilerPipeline();
 ```
 
 نموذج المرسل المستخدم بواسطة برنامج التحويل البرمجي Forge والتركيبات المستهدفة المستقلة.
@@ -2271,16 +2344,16 @@ export interface CompiledArtifact
 **النوع:** الوظيفة
 
 ```typescript
-function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService
+function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| حدود | فورج كاش ليميتس |  |
+| الاسم | اكتب            | الوصف |
+| ----- | --------------- | ----- |
+| حدود  | فورج كاش ليميتس |       |
 
 ### طلب فورجيكومبيلي
 
@@ -2349,7 +2422,7 @@ export class PersistentForgeCompilerService implements ForgeCompilerService
 **النوع:** الوظيفة
 
 ```typescript
-function reactJsxPlugin(): Plugin
+function reactJsxPlugin(): Plugin;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2359,32 +2432,32 @@ function reactJsxPlugin(): Plugin
 **النوع:** الوظيفة
 
 ```typescript
-function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig
+function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | JsxHookLibraryConfigOptions |  |
+| الاسم  | اكتب                        | الوصف |
+| ------ | --------------------------- | ----- |
+| خيارات | JsxHookLibraryConfigOptions |       |
 
 ### تعريفJsxLibraryConfig
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig
+function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | JsxLibraryConfigOptions |  |
+| الاسم  | اكتب                    | الوصف |
+| ------ | ----------------------- | ----- |
+| خيارات | JsxLibraryConfigOptions |       |
 
 ### JsxHookLibraryConfigOptions
 
@@ -2411,7 +2484,7 @@ export interface JsxLibraryConfigOptions
 **النوع:** الوظيفة
 
 ```typescript
-function reactJsxPlugin(): Plugin
+function reactJsxPlugin(): Plugin;
 ```
 
 لم يتم تقديم أي وصف.
@@ -2421,7 +2494,7 @@ function reactJsxPlugin(): Plugin
 **النوع:** الوظيفة
 
 ```typescript
-function solidJsxPlugin(): Plugin[]
+function solidJsxPlugin(): Plugin[];
 ```
 
 البرنامج المساعد `vite-plugin-solid` الذي يجمع Solid `.tsx`
@@ -2441,7 +2514,7 @@ function solidJsxPlugin(): Plugin[]
 **النوع:** الوظيفة
 
 ```typescript
-function solidJsxTsdownPlugin(): Plugin
+function solidJsxTsdownPlugin(): Plugin;
 ```
 
 المكوّن الإضافي Solid JSX المتوافق مع Rolldown/tsdown. المندوبون إلى `vite-plugin-solid`
@@ -2454,7 +2527,7 @@ function solidJsxTsdownPlugin(): Plugin
 **النوع:** الوظيفة
 
 ```typescript
-function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[]
+function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[];
 ```
 
 تم إنشاء المكونات الإضافية للمرحلة الثانية لإطار عمل Forge ضمن **tsdown** (Rolldown).
@@ -2464,16 +2537,16 @@ function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[]
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| البرنامج المساعد | FrameworkOutputPlugin |  |
+| الاسم            | اكتب                  | الوصف |
+| ---------------- | --------------------- | ----- |
+| البرنامج المساعد | FrameworkOutputPlugin |       |
 
 ### sveltePlugin
 
 **النوع:** الوظيفة
 
 ```typescript
-function sveltePlugin(): Plugin[]
+function sveltePlugin(): Plugin[];
 ```
 
 البرنامج المساعد Vite لتجميع مكونات Svelte التي تم إنشاؤها.
@@ -2483,7 +2556,7 @@ function sveltePlugin(): Plugin[]
 **النوع:** الوظيفة
 
 ```typescript
-function svelteTsdownPlugin(): Plugin
+function svelteTsdownPlugin(): Plugin;
 ```
 
 البرنامج المساعد للمترجم Svelte المتوافق مع Rolldown/tsdown. يجمع `.svelte` SFCs عبر
@@ -2497,7 +2570,7 @@ function svelteTsdownPlugin(): Plugin
 **النوع:** الوظيفة
 
 ```typescript
-function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string
+function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string;
 ```
 
 تجميع مكتبة ربط محايدة إلى الشجرة المصدر لكل إطار عمل (المرحلة 1)،
@@ -2505,9 +2578,9 @@ function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions):
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | إنشاء هوكليبراريسورسيسوبتيونس |  |
+| الاسم  | اكتب                          | الوصف |
+| ------ | ----------------------------- | ----- |
+| خيارات | إنشاء هوكليبراريسورسيسوبتيونس |       |
 
 ### إنشاءHookLibrarySourcesOptions
 
@@ -2534,7 +2607,7 @@ export interface HookLibraryDtsOptions
 **النوع:** الوظيفة
 
 ```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
+function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
 ```
 
 مكون إضافي Vite لمرحلة ما بعد البناء يصدر إعلانات **حقيقية لكل إطار عمل**
@@ -2542,7 +2615,7 @@ function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
 
 كل بناء إطار عمل ({@link generatorHookLibrarySources} + إطار العمل
 حزمة المرحلة 2) تنتج JS ولكن لا توجد إعلانات، لأن الشجرة التي تم إنشاؤها هي
-ليس ملف مصدر مرئي `tsc`. بدلاً من إعادة تصدير ملف *مشترك* واحد
+ليس ملف مصدر مرئي `tsc`. بدلاً من إعادة تصدير ملف _مشترك_ واحد
 إعلان محايد لكل إطار عمل، يقوم هذا البرنامج المساعد بتشغيل TypeScript
 واجهة برمجة تطبيقات المترجم فوق الشجرة التي تم إنشاؤها في `closeBundle` (خطوة ما بعد الإنشاء) و
 يكتب ملفات `.d.ts` الناتجة (`index.d.ts` + ملف واحد لكل وحدة) في
@@ -2554,9 +2627,9 @@ function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | هوكليبراري دتسوبتيونس |  |
+| الاسم  | اكتب                  | الوصف |
+| ------ | --------------------- | ----- |
+| خيارات | هوكليبراري دتسوبتيونس |       |
 
 ## `src/generate`
 
@@ -2565,16 +2638,16 @@ function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
 **النوع:** الوظيفة
 
 ```typescript
-function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget
+function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget;
 ```
 
 قم بإنشاء واصف شجرة المصدر من مكون إضافي واضح للإخراج.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| البرنامج المساعد | FrameworkOutputPlugin |  |
+| الاسم            | اكتب                  | الوصف |
+| ---------------- | --------------------- | ----- |
+| البرنامج المساعد | FrameworkOutputPlugin |       |
 
 ### FrameworkSourceTarget
 
@@ -2591,7 +2664,7 @@ export interface FrameworkSourceTarget
 **النوع:** الوظيفة
 
 ```typescript
-function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string
+function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string;
 ```
 
 تجميع حزمة المكونات المحايدة إلى شجرة المصدر لكل إطار عمل (المرحلة 1)،
@@ -2599,9 +2672,9 @@ function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): str
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | إنشاء خياراتFrameworkSources |  |
+| الاسم  | اكتب                         | الوصف |
+| ------ | ---------------------------- | ----- |
+| خيارات | إنشاء خياراتFrameworkSources |       |
 
 ### إنشاء خيارات إطار العمل
 
@@ -2618,7 +2691,7 @@ export interface GenerateFrameworkSourcesOptions
 **النوع:** الوظيفة
 
 ```typescript
-function jsxComponentsCssImportPlugin(): Plugin
+function jsxComponentsCssImportPlugin(): Plugin;
 ```
 
 أعد ربط CSS لكل مكون بمجموعة JS الخاصة به.
@@ -2651,7 +2724,7 @@ JS بدون أنماطها. يستعيد هذا البرنامج المساعد 
 وأخيرًا، يتم إصدار كل ورقة أنماط لوحدة CSS تحت اسم **المصدر** الخاص بها —
 `foo.module.css` - مع تجزئة اسم الفئة المطبقة بالفعل و
 تم حل الأسماء المخبوزة في خريطة فئة الأخوة `foo.module.js`. شحنها
-مع هذه اللاحقة `.module.css` هي فخ: كل مُجمِّع *مصب* (على سبيل المثال
+مع هذه اللاحقة `.module.css` هي فخ: كل مُجمِّع _مصب_ (على سبيل المثال
 React (Vite) الخاص بـ Storybook يتعرف على `*.module.css` كوحدة CSS و
 يقوم بتشغيل تحويل وحدات CSS فوقها ** مرة ثانية **، مع إعادة تجزئة ملف
 المحددات بحيث لم تعد تتطابق مع أسماء الفئات (المجزأة بالفعل) المخبأة فيها
@@ -2676,7 +2749,7 @@ export interface JsxComponentsDtsOptions
 **النوع:** الوظيفة
 
 ```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
+function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
 ```
 
 مكون إضافي Vite لمرحلة ما بعد البناء يصدر إعلانات **حقيقية لكل إطار عمل**
@@ -2717,9 +2790,9 @@ function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | JsxComponentsDtsOptions |  |
+| الاسم  | اكتب                    | الوصف |
+| ------ | ----------------------- | ----- |
+| خيارات | JsxComponentsDtsOptions |       |
 
 ### JsxComponentsEntryDtsOptions
 
@@ -2736,7 +2809,7 @@ export interface JsxComponentsEntryDtsOptions
 **النوع:** الوظيفة
 
 ```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin
+function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
 ```
 
 قم بإصدار الإعلان المركب (`<declarationFileName>.d.ts`) لـ
@@ -2745,9 +2818,9 @@ function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plu
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | JsxComponentsEntryDtsOptions |  |
+| الاسم  | اكتب                         | الوصف |
+| ------ | ---------------------------- | ----- |
+| خيارات | JsxComponentsEntryDtsOptions |       |
 
 ## `src/tsdown`
 
@@ -2756,7 +2829,7 @@ function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plu
 **النوع:** الوظيفة
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[]
+function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
 ```
 
 إعادة إنتاج إطار عمل Archetype-C **component** ضمن tsdown:
@@ -2765,35 +2838,35 @@ function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): Use
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | تسداونفورجكومبونينتسأوبتيونس |  |
+| الاسم  | اكتب                         | الوصف |
+| ------ | ---------------------------- | ----- |
+| خيارات | تسداونفورجكومبونينتسأوبتيونس |       |
 
 ### تعريفTsdownForgeEmailComponents
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig
+function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig;
 ```
 
 أنشئ إدخال مكون البريد الإلكتروني Forge المحايد للخادم فقط.
 
- إنه يحافظ على شجرة Forge هكذا
+إنه يحافظ على شجرة Forge هكذا
 يمكن لـ `@mission-platform/email-renderer` إجراء تسلسل لها على الخادم.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | تسداونفورجيميميلكومبونينتسأوبتيونس |  |
+| الاسم  | اكتب                               | الوصف |
+| ------ | ---------------------------------- | ----- |
+| خيارات | تسداونفورجيميميلكومبونينتسأوبتيونس |       |
 
 ### تعريفTsdownForgeHooks
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
 ```
 
 إعادة إنتاج إطار عمل Archetype-C **hook** واحد ضمن tsdown:
@@ -2802,16 +2875,16 @@ function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | تسداونفورجهوكسوبشن |  |
+| الاسم  | اكتب               | الوصف |
+| ------ | ------------------ | ----- |
+| خيارات | تسداونفورجهوكسوبشن |       |
 
 ### تعريفTsdownForgeHooksAll
 
 **النوع:** الوظيفة
 
 ```typescript
-function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[]
+function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[];
 ```
 
 أنشئ مصفوفة من تكوينات tsdown لكل إطار عمل خطاف مطلوب
@@ -2820,9 +2893,9 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | تسداونفورجهوكسالوبتيونس |  |
+| الاسم  | اكتب                    | الوصف |
+| ------ | ----------------------- | ----- |
+| خيارات | تسداونفورجهوكسالوبتيونس |       |
 
 ### TsdownForgeComponentsOptions
 

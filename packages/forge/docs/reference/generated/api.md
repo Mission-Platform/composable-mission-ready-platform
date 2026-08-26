@@ -693,7 +693,7 @@ root can load the compiled sidecars that document-level styles cannot reach.
 **Kind:** type
 
 ```typescript
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
+export type ForgeElementHostConstructor = new (...arguments_: any[]) => HTMLElement;
 ```
 
 A constructable native element class accepted by {@link ForgeElementMixin}.

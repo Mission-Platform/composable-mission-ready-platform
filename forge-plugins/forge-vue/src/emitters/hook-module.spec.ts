@@ -32,7 +32,7 @@ describe("the Vue hook-module emitter compiles a neutral composable", () => {
 
     const code = emitVueHookModule(module);
 
-    expect(code).toContain("import { ref, type Ref } from 'vue';");
+    expect(code).toContain("import { ref, watch, type Ref } from 'vue';");
     expect(code).toContain(
       "export function useCounter(initial: number): Ref<number> {",
     );
@@ -42,6 +42,35 @@ describe("the Vue hook-module emitter compiles a neutral composable", () => {
     );
     expect(code).toContain("count.value = initial;");
     expect(code).toContain("return count as Ref<number>;");
+  });
+
+  it("imports lifecycle APIs used by every translated effect form", () => {
+    const module = semanticModule({
+      moduleKind: "composable",
+      fileName: "use-effects.ts",
+      imports: [NEUTRAL_IMPORT],
+      declarations: [
+        statement(
+          `export function useEffects(value: number) {
+  useEffect(() => { observe(value); }, [value]);
+  useEffect(() => { observe(value); });
+  useEffect(() => { subscribe(); return () => unsubscribe(); }, []);
+}`,
+          "function",
+          { name: "useEffects", exported: true },
+        ),
+      ],
+    });
+
+    const code = emitVueHookModule(module);
+
+    expect(code).toContain(
+      "import { watch, watchEffect, onMounted, onUnmounted } from 'vue';",
+    );
+    expect(code).toContain("watch(() => [value]");
+    expect(code).toContain("watchEffect");
+    expect(code).toContain("onMounted");
+    expect(code).toContain("onUnmounted");
   });
 
   it("maps `useMemo` to `computed` and `useRef` to `shallowRef`", () => {

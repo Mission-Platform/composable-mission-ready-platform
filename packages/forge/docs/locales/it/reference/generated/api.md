@@ -16,39 +16,39 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge`.
 **Tipo:** funzione
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement
+function HtmlContent(properties: HtmlContentProperties): ReactElement;
 ```
 
 Eseguire il rendering di HTML attendibile in un host React utilizzando `dangerouslySetInnerHTML`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | ProprietàContenutoHtml |  |
+| Nome      | Digitare               | Descrizione |
+| --------- | ---------------------- | ----------- |
+| proprietà | ProprietàContenutoHtml |             |
 
 ### renderToReact
 
 **Tipo:** funzione
 
 ```typescript
-function renderToReact(element: MpElement): ReactElement
+function renderToReact(element: MpElement): ReactElement;
 ```
 
 Rendere un albero {@link MpElement} neutro in un elemento React.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| elemento | MpElemento |  |
+| Nome     | Digitare   | Descrizione |
+| -------- | ---------- | ----------- |
+| elemento | MpElemento |             |
 
 ### Teletrasporto
 
 **Tipo:** funzione
 
 ```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode
+function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
 ```
 
 La build React della primitiva neutra `<Teleport>`: un sottile involucro attorno
@@ -75,9 +75,9 @@ bambini sul posto) e `createPortal` viene eseguito solo quando esiste una destin
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| { a = 'corpo', disabilitato = falso, bambini } | Proprietà Teletrasporto |  |
+| Nome                                           | Digitare                | Descrizione |
+| ---------------------------------------------- | ----------------------- | ----------- |
+| { a = 'corpo', disabilitato = falso, bambini } | Proprietà Teletrasporto |             |
 
 ### Proprietà di teletrasporto
 
@@ -94,7 +94,7 @@ Le proprietà accettate dal componente React {@link Teleport}.
 **Tipo:** funzione
 
 ```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>
+function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
 ```
 
 Avvolgi un componente neutro come componente funzione React di prima classe, pronto per
@@ -102,23 +102,17 @@ essere renderizzato da `react-dom` o composto all'interno di altri componenti Re
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | MpComponent<P> |  |
-| displayNome | stringa |  |
+| Nome        | Digitare       | Descrizione |
+| ----------- | -------------- | ----------- |
+| componente  | MpComponent<P> |             |
+| displayNome | stringa        |             |
 
 ### Transizione
 
 **Tipo:** funzione
 
 ```typescript
-function Transition({
-  name = 'v',
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionProperties): ReactNode
+function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
 ```
 
 La build React della primitiva neutrale `<Transition>` — una piccola classe CSS
@@ -134,9 +128,9 @@ sul posto, corrispondente all'output SSR di Vue, e l'animazione viene eseguita s
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| { nome = 'v', appare = false, durata, figli, ...override } | Proprietà di transizione |  |
+| Nome                                                       | Digitare                 | Descrizione |
+| ---------------------------------------------------------- | ------------------------ | ----------- |
+| { nome = 'v', appare = false, durata, figli, ...override } | Proprietà di transizione |             |
 
 ### Gruppo di transizione
 
@@ -151,7 +145,7 @@ function TransitionGroup({
   duration,
   children,
   ...overrides
-}: TransitionGroupProperties): ReactNode
+}: TransitionGroupProperties): ReactNode;
 ```
 
 La build React della primitiva neutrale `<TransitionGroup>`: una classe CSS
@@ -172,9 +166,9 @@ correttamente ma non riceve alcuna classe (corrispondente alla linea di base neu
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| { nome = 'v', tag, moveClass, appare = false, durata, bambini, ...override } | ProprietàTransitionGroup |  |
+| Nome                                                                         | Digitare                 | Descrizione |
+| ---------------------------------------------------------------------------- | ------------------------ | ----------- |
+| { nome = 'v', tag, moveClass, appare = false, durata, bambini, ...override } | ProprietàTransitionGroup |             |
 
 ### Proprietà del gruppo di transizione
 
@@ -203,7 +197,7 @@ Le proprietà accettate dal componente React {@link Transition}.
 **Tipo:** funzione
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element
+function HtmlContent(properties: HtmlContentProperties): JSX.Element;
 ```
 
 La build Solid della primitiva `<HtmlContent>` neutra. Solid
@@ -211,16 +205,16 @@ La proprietà `innerHTML` è l'operazione di contenuto non elaborato basata sull
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | ProprietàContenutoHtml |  |
+| Nome      | Digitare               | Descrizione |
+| --------- | ---------------------- | ----------- |
+| proprietà | ProprietàContenutoHtml |             |
 
 ### Teletrasporto
 
 **Tipo:** funzione
 
 ```typescript
-function Teleport(properties: TeleportProperties): JSX.Element
+function Teleport(properties: TeleportProperties): JSX.Element;
 ```
 
 La build Solid della primitiva neutra `<Teleport>`: un sottile involucro attorno
@@ -236,9 +230,9 @@ si monta una volta che è disponibile un bersaglio reale.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Proprietà Teletrasporto |  |
+| Nome      | Digitare                | Descrizione |
+| --------- | ----------------------- | ----------- |
+| proprietà | Proprietà Teletrasporto |             |
 
 ### Proprietà di teletrasporto
 
@@ -255,7 +249,7 @@ Le proprietà accettate dal componente Solid {@link Teleport}.
 **Tipo:** funzione
 
 ```typescript
-function Transition(properties: TransitionProperties): JSX.Element
+function Transition(properties: TransitionProperties): JSX.Element;
 ```
 
 La build Solid della primitiva `<Transition>` neutra. Una minima correzione
@@ -272,16 +266,16 @@ destinazione Solid.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Proprietà di transizione |  |
+| Nome      | Digitare                 | Descrizione |
+| --------- | ------------------------ | ----------- |
+| proprietà | Proprietà di transizione |             |
 
 ### Gruppo di transizione
 
 **Tipo:** funzione
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element
+function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
 ```
 
 La build Solid della primitiva `<TransitionGroup>` neutra. Mi piace
@@ -298,9 +292,9 @@ destinazione Solid.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | ProprietàTransitionGroup |  |
+| Nome      | Digitare                 | Descrizione |
+| --------- | ------------------------ | ----------- |
+| proprietà | ProprietàTransitionGroup |             |
 
 ### Proprietà del gruppo di transizione
 
@@ -329,7 +323,7 @@ Le proprietà accettate dal componente Solid {@link Transition}.
 **Tipo:** funzione
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet
+function HtmlContent(properties: HtmlContentProperties): Snippet;
 ```
 
 Implementazione del contenuto non elaborato dell'adattatore Svelte. `createRawSnippet` è il
@@ -338,25 +332,25 @@ riferimenti host e inoltro eventi per l'utilizzo dell'adattatore scritto a mano.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | ProprietàContenutoHtml |  |
+| Nome      | Digitare               | Descrizione |
+| --------- | ---------------------- | ----------- |
+| proprietà | ProprietàContenutoHtml |             |
 
 ### Teletrasporto
 
 **Tipo:** funzione
 
 ```typescript
-function Teleport(properties: TeleportProperties): Snippet
+function Teleport(properties: TeleportProperties): Snippet;
 ```
 
 Eseguire il rendering di uno snippet figlio Forge sul posto per Svelte SSR e parità client.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Proprietà Teletrasporto |  |
+| Nome      | Digitare                | Descrizione |
+| --------- | ----------------------- | ----------- |
+| proprietà | Proprietà Teletrasporto |             |
 
 ### Proprietà di teletrasporto
 
@@ -373,32 +367,32 @@ Le proprietà accettate dalla primitiva Svelte {@link Teleport}.
 **Tipo:** funzione
 
 ```typescript
-function Transition(properties: TransitionProperties): Snippet
+function Transition(properties: TransitionProperties): Snippet;
 ```
 
 Renderizzare un singolo figlio di transizione; l'animazione è fornita dal markup nativo Svelte.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Proprietà di transizione |  |
+| Nome      | Digitare                 | Descrizione |
+| --------- | ------------------------ | ----------- |
+| proprietà | Proprietà di transizione |             |
 
 ### Gruppo di transizione
 
 **Tipo:** funzione
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet
+function TransitionGroup(properties: TransitionGroupProperties): Snippet;
 ```
 
 Eseguire il rendering dei figli del gruppo di transizione sul posto per i blocchi con chiave Svelte nativi.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | ProprietàTransitionGroup |  |
+| Nome      | Digitare                 | Descrizione |
+| --------- | ------------------------ | ----------- |
+| proprietà | ProprietàTransitionGroup |             |
 
 ### Proprietà del gruppo di transizione
 
@@ -427,7 +421,7 @@ Le proprietà accettate dalla primitiva Svelte {@link Transition}.
 **Tipo:** funzione
 
 ```typescript
-function createContext(defaultValue: T): VueContext<T>
+function createContext(defaultValue: T): VueContext<T>;
 ```
 
 La build Vue della primitiva `createContext` neutra. Restituisce un handle di cui
@@ -439,48 +433,48 @@ per importarli sulla destinazione Vue.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore predefinito | T|  |
+| Nome               | Digitare | Descrizione |
+| ------------------ | -------- | ----------- |
+| valore predefinito | T        |             |
 
 ### Contenuto Html
 
 **Tipo:** funzione
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode
+function HtmlContent(properties: HtmlContentProperties): VNode;
 ```
 
 Eseguire il rendering di HTML affidabile in un host Vue utilizzando l'associazione `innerHTML` della funzione di rendering.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | ProprietàContenutoHtml |  |
+| Nome      | Digitare               | Descrizione |
+| --------- | ---------------------- | ----------- |
+| proprietà | ProprietàContenutoHtml |             |
 
 ### renderToVue
 
 **Tipo:** funzione
 
 ```typescript
-function renderToVue(element: MpElement): VNode
+function renderToVue(element: MpElement): VNode;
 ```
 
 Restituisci un albero {@link MpElement} neutro in un Vue `VNode`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| elemento | MpElemento |  |
+| Nome     | Digitare   | Descrizione |
+| -------- | ---------- | ----------- |
+| elemento | MpElemento |             |
 
 ### toVueComponent
 
 **Tipo:** funzione
 
 ```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 Racchiudere un componente neutro come componente funzionale Vue. Attributi in entrata
@@ -491,17 +485,17 @@ il risultato può essere utilizzato come qualsiasi altro componente Vue.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| componente | MpComponent<P> |  |
-| nome | stringa |  |
+| Nome       | Digitare       | Descrizione |
+| ---------- | -------------- | ----------- |
+| componente | MpComponent<P> |             |
+| nome       | stringa        |             |
 
 ### useContext
 
 **Tipo:** funzione
 
 ```typescript
-function useContext(context: VueContext<T>): T
+function useContext(context: VueContext<T>): T;
 ```
 
 La build Vue della primitiva neutra `useContext`: un sottile involucro attorno
@@ -510,9 +504,9 @@ Il fornitore ne ha fornito uno.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| contesto | VueContext<T> |  |
+| Nome     | Digitare      | Descrizione |
+| -------- | ------------- | ----------- |
+| contesto | VueContext<T> |             |
 
 ### VueContext
 
@@ -531,7 +525,7 @@ Un handle di contesto Vue: un `Provider` supportato da `provide()` più la chiav
 **Genere:** costante
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 I componenti interni sono innocuamente controllati dalle capacità; l'associazione del modulo rimane attiva.
@@ -541,7 +535,7 @@ I componenti interni sono innocuamente controllati dalle capacità; l'associazio
 **Genere:** costante
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 Impostazioni predefinite di compatibilità utilizzate quando una classe generata non sovrascrive la politica.
@@ -561,18 +555,22 @@ Un risultato generato dal DOM diretto con un'identità di definizione stabile.
 **Tipo:** funzione
 
 ```typescript
-function dynamicElement(tag: unknown, properties: Readonly<Record<string, unknown>>, ...children: readonly unknown[]): DynamicElementResult
+function dynamicElement(
+  tag: unknown,
+  properties: Readonly<Record<string, unknown>>,
+  ...children: readonly unknown[]
+): DynamicElementResult;
 ```
 
 Crea un elemento Web-Components nativo il cui tag è selezionato in fase di runtime.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| etichetta | sconosciuto |  |
-| proprietà | Sola lettura<Record<string, unknown>> |  |
-| bambini | sola lettura sconosciuta[] |  |
+| Nome      | Digitare                              | Descrizione |
+| --------- | ------------------------------------- | ----------- |
+| etichetta | sconosciuto                           |             |
+| proprietà | Sola lettura<Record<string, unknown>> |             |
+| bambini   | sola lettura sconosciuta[]            |             |
 
 ### RisultatoElementoDinamico
 
@@ -631,7 +629,7 @@ Una classe di elementi nativi costruibili accettata da {@link ForgeElementMixin}
 **Tipo:** funzione
 
 ```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement
+function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
 ```
 
 Aggiungi il runtime indipendente dall'host di Forge a un costruttore di elementi nativi.
@@ -640,9 +638,9 @@ questo mixin copia il comportamento preservando la catena del prototipo nativo.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| Fondo | TBase |  |
+| Nome  | Digitare | Descrizione |
+| ----- | -------- | ----------- |
+| Fondo | TBase    |             |
 
 ### ForgeSlotMarker
 
@@ -659,7 +657,7 @@ Marker di runtime emesso dal compilatore Web-Components per slot ambigui.
 **Tipo:** funzione
 
 ```typescript
-function hasSlotContent(host: Element, name?: string): boolean
+function hasSlotContent(host: Element, name?: string): boolean;
 ```
 
 Se a `host` è stato assegnato il contenuto per uno dei suoi slot: quello di destinazione nativo
@@ -685,17 +683,17 @@ attraverso il consueto percorso reattivo.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ospite | Elemento |  |
-| nome | stringa |  |
+| Nome   | Digitare | Descrizione |
+| ------ | -------- | ----------- |
+| ospite | Elemento |             |
+| nome   | stringa  |             |
 
 ### html
 
 **Tipo:** funzione
 
 ```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult
+function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
 ```
 
 Factory di modelli con tag. Cattura le stringhe statiche e dinamiche del sito di chiamata
@@ -703,26 +701,26 @@ valori in un {@link TemplateResult} per {@link render} da realizzare nel DOM.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| stringhe | TemplateStringsArray |  |
-| valori | sola lettura sconosciuta[] |  |
+| Nome     | Digitare                   | Descrizione |
+| -------- | -------------------------- | ----------- |
+| stringhe | TemplateStringsArray       |             |
+| valori   | sola lettura sconosciuta[] |             |
 
 ### Contenuto Html
 
 **Tipo:** funzione
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult
+function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
 ```
 
 Crea un risultato di contenuto non elaborato di componenti Web nativi senza eseguire l'escape di `html`.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | ProprietàContenutoHtml |  |
+| Nome      | Digitare               | Descrizione |
+| --------- | ---------------------- | ----------- |
+| proprietà | ProprietàContenutoHtml |             |
 
 ### HtmlContentProperties
 
@@ -749,7 +747,7 @@ Un host nativo più markup figlio non elaborato attendibile, reso da {@link rend
 **Genere:** costante
 
 ```typescript
-export const nothing: unique symbol
+export const nothing: unique symbol;
 ```
 
 Sentinella resa come "nessun valore": in posizione di bambino non produce nulla, in
@@ -781,7 +779,10 @@ Un valore HTML raw attendibile utilizzato dall'adattatore Web-Components nativo.
 **Tipo:** funzione
 
 ```typescript
-function render(result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult, container: ParentNode): void
+function render(
+  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
+  container: ParentNode,
+): void;
 ```
 
 Eseguire il rendering di un risultato in `container` utilizzando un'istanza di modello persistente. Statico
@@ -790,17 +791,22 @@ aggiornato; i tipi di modello incompatibili sostituiscono il contenuto di propri
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| risultato | TemplateResult \| DomTemplateResult \| RisultatoElementoDinamico\| RisultatoContenutoHtml |  |
-| contenitore | Nodo Genitore |  |
+| Nome        | Digitare                                                                                  | Descrizione |
+| ----------- | ----------------------------------------------------------------------------------------- | ----------- |
+| risultato   | TemplateResult \| DomTemplateResult \| RisultatoElementoDinamico\| RisultatoContenutoHtml |             |
+| contenitore | Nodo Genitore                                                                             |             |
 
 ### risolvereForgeSlotMarkers
 
 **Tipo:** funzione
 
 ```typescript
-function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceChildren: readonly Node[], destinationRoot: ShadowRoot): void
+function resolveForgeSlotMarkers(
+  root: ParentNode,
+  owner: ForgeElement,
+  sourceChildren: readonly Node[],
+  destinationRoot: ShadowRoot,
+): void;
 ```
 
 Risolvi i marcatori di slot di runtime emessi dal compilatore in un frammento di rendering.
@@ -815,12 +821,12 @@ il valore si materializza come ultima risorsa.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| radice | Nodo Genitore |  |
-| proprietario | Elemento Forge |  |
-| fonteBambini | sola lettura Node[] |  |
-| destinazioneRoot | RadiceOmbra |  |
+| Nome             | Digitare            | Descrizione |
+| ---------------- | ------------------- | ----------- |
+| radice           | Nodo Genitore       |             |
+| proprietario     | Elemento Forge      |             |
+| fonteBambini     | sola lettura Node[] |             |
+| destinazioneRoot | RadiceOmbra         |             |
 
 ### TemplateResult
 
@@ -837,23 +843,23 @@ Un risultato `html\`…\`` analizzato: le stringhe statiche più i valori interp
 **Tipo:** funzione
 
 ```typescript
-function unsafeHtml(value: string): RawHtml
+function unsafeHtml(value: string): RawHtml;
 ```
 
 Contrassegnare una stringa come markup figlio attendibile per il percorso dei componenti Web nativi.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore | stringa |  |
+| Nome   | Digitare | Descrizione |
+| ------ | -------- | ----------- |
+| valore | stringa  |             |
 
 ### useId
 
 **Tipo:** funzione
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 La sostituzione della destinazione nativa per `useId` di React.
@@ -900,7 +906,7 @@ Opzioni shadow-root digitate accettate dagli elementi Forge generati.
 **Tipo:** funzione
 
 ```typescript
-function classNames(...values: readonly ClassValue[]): string
+function classNames(...values: readonly ClassValue[]): string;
 ```
 
 Unisci un numero qualsiasi di {@link ClassValue} in un'unica classe separata da spazi
@@ -909,9 +915,9 @@ vince la prima occorrenza). Restituisce una stringa vuota quando non è attivo n
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valori | sola lettura ClassValue[] |  |
+| Nome   | Digitare                  | Descrizione |
+| ------ | ------------------------- | ----------- |
+| valori | sola lettura ClassValue[] |             |
 
 ### ValoreClasse
 
@@ -930,7 +936,7 @@ Un singolo valore accettato da {@link classNames}.
 **Tipo:** funzione
 
 ```typescript
-function createContext(defaultValue: T): MpContext<T>
+function createContext(defaultValue: T): MpContext<T>;
 ```
 
 Crea un contesto neutro dal framework con il valore predefinito specificato. Restituisce a
@@ -939,32 +945,32 @@ con {@link useContext}.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore predefinito | T|  |
+| Nome               | Digitare | Descrizione |
+| ------------------ | -------- | ----------- |
+| valore predefinito | T        |             |
 
 ### isContextProvider
 
 **Tipo:** funzione
 
 ```typescript
-function isContextProvider(value: unknown): value is MpContextProvider<unknown>
+function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 ```
 
 Indica se un valore è una funzione di contesto {@link MpContext.Provider}.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore | sconosciuto |  |
+| Nome   | Digitare    | Descrizione |
+| ------ | ----------- | ----------- |
+| valore | sconosciuto |             |
 
 ### MP_CONTEXT
 
 **Genere:** costante
 
 ```typescript
-export const MP_CONTEXT: unique symbol
+export const MP_CONTEXT: unique symbol;
 ```
 
 La proprietà utilizzata dagli adattatori runtime per riconoscere un contesto {@link MpContext.Provider}
@@ -1005,7 +1011,7 @@ Le proprietà accettate da un elemento {@link MpContext.Provider}.
 **Tipo:** funzione
 
 ```typescript
-function useContext(context: MpContext<T>): T
+function useContext(context: MpContext<T>): T;
 ```
 
 Legge il valore corrente di un contesto: l'involucro più vicino
@@ -1013,9 +1019,9 @@ Legge il valore corrente di un contesto: l'involucro più vicino
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| contesto | MpContext<T> |  |
+| Nome     | Digitare     | Descrizione |
+| -------- | ------------ | ----------- |
+| contesto | MpContext<T> |             |
 
 ## `src/runtime/dynamic`
 
@@ -1024,7 +1030,7 @@ Legge il valore corrente di un contesto: l'involucro più vicino
 **Genere:** costante
 
 ```typescript
-export const Dynamic: MpComponent<MpDynamicProperties>
+export const Dynamic: MpComponent<MpDynamicProperties>;
 ```
 
 Marker utilizzato come elemento `type` per un componente dinamico
@@ -1049,7 +1055,7 @@ Le proprietà accettate dall'elemento {@link Dynamic}.
 Questa è una delle poche dichiarazioni che mantiene legittimamente la **borsa aperta**:
 ogni proprietà diversa da `is` viene inoltrata parola per parola all'elemento `is`
 si risolve in e quell'elemento è noto solo in fase di esecuzione, quindi lo attribuisce
-accetta non possono essere elencati qui. Le interfacce degli oggetti di scena dei componenti devono *non*
+accetta non possono essere elencati qui. Le interfacce degli oggetti di scena dei componenti devono _non_
 segui questo schema: vedi {@link MpPropertyBag}.
 
 ## `src/runtime/h`
@@ -1059,7 +1065,11 @@ segui questo schema: vedi {@link MpPropertyBag}.
 **Tipo:** funzione
 
 ```typescript
-function h(type: MpElementType | ((properties: P) => MpElement), properties?: P | null, ...children: MpChild[]): MpElement
+function h(
+  type: MpElementType | ((properties: P) => MpElement),
+  properties?: P | null,
+  ...children: MpChild[]
+): MpElement;
 ```
 
 La classica fabbrica JSX (`jsxFactory: 'h'`).
@@ -1071,11 +1081,11 @@ sia come argomenti variadici finali (la trasformazione classica) o via
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| digitare | MpElementType \| ((proprietà: P) => MpElement) |  |
-| proprietà | P\| nullo |  |
-| bambini | MpChild[] |  |
+| Nome      | Digitare                                       | Descrizione |
+| --------- | ---------------------------------------------- | ----------- |
+| digitare  | MpElementType \| ((proprietà: P) => MpElement) |             |
+| proprietà | P\| nullo                                      |             |
+| bambini   | MpChild[]                                      |             |
 
 ## `src/runtime/hooks`
 
@@ -1134,24 +1144,24 @@ Aggiorna una parte di stato, con un nuovo valore o tramite una funzione di aggio
 **Tipo:** funzione
 
 ```typescript
-function useCallback(callback: T, _dependencies?: MpDependencyList): T
+function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 ```
 
 `useCallback` neutro. Restituisce la richiamata invariata per il rendering.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| richiamata | T|  |
-| _dipendenze | MpDependencyList |  |
+| Nome        | Digitare         | Descrizione |
+| ----------- | ---------------- | ----------- |
+| richiamata  | T                |             |
+| _dipendenze | MpDependencyList |             |
 
 ### useEffect
 
 **Tipo:** funzione
 
 ```typescript
-function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void
+function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void;
 ```
 
 `useEffect` neutro. A no-op: effetti collaterali post-rendering del modello di effetti, che
@@ -1159,17 +1169,17 @@ non eseguire durante un singolo rendering SSR/adattatore.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| _effetto | MpEffectCallback |  |
-| _dipendenze | MpDependencyList |  |
+| Nome        | Digitare         | Descrizione |
+| ----------- | ---------------- | ----------- |
+| _effetto    | MpEffectCallback |             |
+| _dipendenze | MpDependencyList |             |
 
 ### useId
 
 **Tipo:** funzione
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 `useId` neutro. Esegue il mirroring di React e Vue di `useId`: restituisce un valore stabile, univoco
@@ -1185,24 +1195,24 @@ rimane stabile (e identico in entrambi i framework).
 **Tipo:** funzione
 
 ```typescript
-function useMemo(factory: () => T, _dependencies?: MpDependencyList): T
+function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 ```
 
 `useMemo` neutro. Calcola il valore una volta per il rendering.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| fabbrica | () => T |  |
-| _dipendenze | MpDependencyList |  |
+| Nome        | Digitare         | Descrizione |
+| ----------- | ---------------- | ----------- |
+| fabbrica    | () => T          |             |
+| _dipendenze | MpDependencyList |             |
 
 ### usoRif
 
 **Tipo:** funzione
 
 ```typescript
-function useRef(initial: T): MpRef<T>
+function useRef(initial: T): MpRef<T>;
 ```
 
 `useRef` neutro. Restituisce un nuovo contenitore `{ current }` per il singolo
@@ -1210,16 +1220,16 @@ rendere; i runtime del framework lo preservano durante i rendering.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| iniziale | T|  |
+| Nome     | Digitare | Descrizione |
+| -------- | -------- | ----------- |
+| iniziale | T        |             |
 
 ### useState
 
 **Tipo:** funzione
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>]
+function useState(initial: T | (() => T)): [T, MpSetState<T>];
 ```
 
 `useState` neutro. L'implementazione di base restituisce il valore iniziale e
@@ -1228,9 +1238,9 @@ il comportamento corretto per un singolo rendering SSR/adattatore.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| iniziale | T\| (() => T) |  |
+| Nome     | Digitare      | Descrizione |
+| -------- | ------------- | ----------- |
+| iniziale | T\| (() => T) |             |
 
 ## `src/runtime/html-content`
 
@@ -1239,7 +1249,7 @@ il comportamento corretto per un singolo rendering SSR/adattatore.
 **Genere:** costante
 
 ```typescript
-export const HtmlContent: MpComponent<HtmlContentProperties>
+export const HtmlContent: MpComponent<HtmlContentProperties>;
 ```
 
 Indicatore utilizzato come tipo di elemento per contenuto HTML non elaborato attendibile.
@@ -1268,7 +1278,7 @@ bag anziché enumerare l'intera superficie degli attributi DOM.
 **Tipo:** funzione
 
 ```typescript
-function hasSlot(name?: string): boolean
+function hasSlot(name?: string): boolean;
 ```
 
 Se al componente di contenimento è stato fornito il contenuto per uno slot: il neutro
@@ -1276,7 +1286,13 @@ controparte del controllo `$slots.x` / React `properties.x != null` di Vue. An
 il nome omesso (o `'default'`) è destinato allo slot predefinito (`children`):
 
 ```tsx
-{hasSlot('footer') ? <footer><Slot name="footer" /></footer> : undefined}
+{
+  hasSlot('footer') ? (
+    <footer>
+      <Slot name="footer" />
+    </footer>
+  ) : undefined;
+}
 ```
 
 `@mission-platform/vite-plugin-forge` riscrive la chiamata direttamente su ciascuno
@@ -1289,8 +1305,8 @@ leggendo l'ambito dello slot del componente corrente.
 #### Parametri
 
 | Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| nome | stringa |  |
+| ---- | -------- | ----------- |
+| nome | stringa  |             |
 
 ### MpRenderProperty
 
@@ -1338,7 +1354,7 @@ open bag rather than enumerating properties it cannot know.
 **Tipo:** funzione
 
 ```typescript
-function popSlotScope(): void
+function popSlotScope(): void;
 ```
 
 ### pushSlotScope
@@ -1346,23 +1362,23 @@ function popSlotScope(): void
 **Tipo:** funzione
 
 ```typescript
-function pushSlotScope(properties: MpPropertyBag): void
+function pushSlotScope(properties: MpPropertyBag): void;
 ```
 
 Spingi i puntelli del componente che sta per essere espanso sul mirino dello slot.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | MpPropertyBag |  |
+| Nome      | Digitare      | Descrizione |
+| --------- | ------------- | ----------- |
+| proprietà | MpPropertyBag |             |
 
 ### risolvereSlot
 
 **Tipo:** funzione
 
 ```typescript
-function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[]
+function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[];
 ```
 
 Risolvere il contenuto di un `<Slot name="…" />` rispetto all'allegato
@@ -1372,10 +1388,10 @@ le restanti proprietà dell'elemento slot (non `name`).
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | Proprietà MpSlot |  |
-| ripiego | sola lettura MpChild[] |  |
+| Nome      | Digitare               | Descrizione |
+| --------- | ---------------------- | ----------- |
+| proprietà | Proprietà MpSlot       |             |
+| ripiego   | sola lettura MpChild[] |             |
 
 ## `src/runtime/teleport`
 
@@ -1394,7 +1410,7 @@ Le proprietà accettate dall'elemento {@link Teleport}.
 **Genere:** costante
 
 ```typescript
-export const Teleport: MpComponent<MpTeleportProperties>
+export const Teleport: MpComponent<MpTeleportProperties>;
 ```
 
 Marker utilizzato come elemento `type` per un portale (`<Teleport to="…">…</Teleport>`).
@@ -1431,7 +1447,7 @@ Le proprietà accettate dall'elemento {@link Transition}.
 **Genere:** costante
 
 ```typescript
-export const Transition: MpComponent<MpTransitionProperties>
+export const Transition: MpComponent<MpTransitionProperties>;
 ```
 
 Marker utilizzato come elemento `type` per una transizione di entrata/uscita
@@ -1447,7 +1463,7 @@ e il compilatore riassocia la sua importazione alla transizione del framework di
 **Genere:** costante
 
 ```typescript
-export const TransitionGroup: MpComponent<MpTransitionGroupProperties>
+export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 ```
 
 Marker utilizzato come elemento `type` per una transizione **elenco** entrata/uscita/spostamento
@@ -1469,7 +1485,7 @@ importare nella transizione del gruppo nativo di ciascun framework: Vue integrat
 **Genere:** costante
 
 ```typescript
-export const Fragment: MpFragment
+export const Fragment: MpFragment;
 ```
 
 Marker utilizzato come elemento `type` per i frammenti (`<>…</>`), ovvero il classico
@@ -1490,16 +1506,16 @@ proprio modulo (`<>` di React, figli incorporati di Vue). Chiamarlo direttamente
 **Tipo:** funzione
 
 ```typescript
-function isMpElement(value: unknown): value is MpElement
+function isMpElement(value: unknown): value is MpElement;
 ```
 
 Restringi un valore arbitrario a un {@link MpElement}.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| valore | sconosciuto |  |
+| Nome   | Digitare    | Descrizione |
+| ------ | ----------- | ----------- |
+| valore | sconosciuto |             |
 
 ### MpChild
 
@@ -1559,7 +1575,7 @@ Il pacchetto **runtime** di attributi/props trasportato da un {@link MpElement}.
 
 Si tratta volutamente di un documento semplice e non digitato: è ciò che fabbrica la JSX
 build e in cosa indicizzano gli adattatori mentre percorrono un albero neutro. Lo è
-*non* un tipo base per gli oggetti di scena di un componente: un componente dichiara esattamente il
+_non_ un tipo base per gli oggetti di scena di un componente: un componente dichiara esattamente il
 proprietà che accetta (incluso `children?: MpChild | readonly MpChild[]`
 quando li visualizza), in modo che il controllo delle proprietà in eccesso e `keyof` rimangano
 significativo in ogni target compilato. La manciata di attributi ogni elemento
@@ -1586,7 +1602,7 @@ si dichiara, collegato come `JSX.IntrinsicAttributes` dall'opt-in
   `"default"`) indica lo slot predefinito.
 
 Nessuno dei due fa parte del contratto degli oggetti di scena del componente: entrambi vengono letti dal file
-*genitore* (il riconciliatore, lo slot router), mai dal componente stesso —
+_genitore_ (il riconciliatore, lo slot router), mai dal componente stesso —
 quindi sono accettati per ogni elemento qui piuttosto che dichiarati su ciascuno
 interfaccia degli oggetti di scena.
 
@@ -1595,7 +1611,7 @@ interfaccia degli oggetti di scena.
 **Genere:** costante
 
 ```typescript
-export const Slot: MpComponent
+export const Slot: MpComponent;
 ```
 
 Marker utilizzato come elemento `type` per uno slot denominato (`<Slot name="…" />`).

@@ -46,6 +46,12 @@ const ATTRIBUTE_TAIL = /([.?@~]?)([\w-]+)=$/u;
 const PROPERTY_BOUND_NAMES = new Set(['value', 'checked', 'selected', 'disabled']);
 const NO_VALUE = Symbol('forge-renderer:no-value');
 
+function hideChildAnchors(children: readonly { hideAnchors(): void }[]): void {
+  for (const child of children) {
+    child.hideAnchors();
+  }
+}
+
 /** A compiler-provided slot in a direct-DOM template blueprint. */
 export type RuntimePart = DomTemplateRuntimePart;
 
@@ -234,7 +240,7 @@ class AttributePart {
     return this.part.name;
   }
 
-  update(value: unknown): void {
+  update(value?: unknown): void {
     const { prefix, name } = this.part;
     if (name === 'ref') {
       this.updateReference(value);
@@ -308,16 +314,18 @@ class AttributePart {
       this.listener = undefined;
       this.eventNames = [];
     }
-    this.updateReference(undefined);
+    this.updateReference();
   }
 
-  private updateReference(value: unknown): void {
+  private updateReference(value?: unknown): void {
     if (this.reference === value) {
       return;
     }
     if (typeof this.reference === 'function') {
+      // eslint-disable-next-line unicorn/no-null -- DOM ref callbacks use null to signal detachment.
       this.reference(null);
     } else if (typeof this.reference === 'object' && this.reference !== null && 'current' in this.reference) {
+      // eslint-disable-next-line unicorn/no-null -- DOM refs use null to signal detachment.
       (this.reference as { current: Element | null }).current = null;
     }
     this.reference = value;
@@ -355,16 +363,16 @@ class AttributePart {
         this.element.removeEventListener(eventName, this.listener);
       }
     }
-    if (next !== undefined) {
+    if (next === undefined) {
+      this.eventNames = [];
+    } else {
       this.eventNames = [
         this.part.name,
-        this.part.name.replace(/-([a-z])/gu, (_match, character: string) => character.toUpperCase()),
+        this.part.name.replaceAll(/-([a-z])/gu, (_match, character: string) => character.toUpperCase()),
       ];
       for (const eventName of new Set(this.eventNames)) {
         this.element.addEventListener(eventName, next);
       }
-    } else {
-      this.eventNames = [];
     }
     this.listener = next;
     this.previous = value;
@@ -430,7 +438,7 @@ function spreadPropertyPart(key: string): Extract<Part, { kind: 'attr' }> {
     const event = eventName.includes(':')
       ? eventName.charAt(0).toLowerCase() + eventName.slice(1)
       : eventName.charAt(0).toLowerCase() +
-        eventName.slice(1).replace(/[A-Z]/gu, (character) => `-${character.toLowerCase()}`);
+        eventName.slice(1).replaceAll(/[A-Z]/gu, (character) => `-${character.toLowerCase()}`);
     return { kind: 'attr', id: -1, prefix: '@', name: event };
   }
   return { kind: 'attr', id: -1, prefix: '~', name: key === 'className' ? 'class' : key === 'htmlFor' ? 'for' : key };
@@ -529,7 +537,7 @@ export function materializeTree(value: unknown): MaterializedTree {
     return materializeTree([...collection]);
   }
   if (value instanceof Node) {
-    return new OwnedMaterializedTree([value], () => undefined);
+    return new OwnedMaterializedTree([value], () => {});
   }
   return new OwnedMaterializedTree([document.createTextNode(String(value))]);
 }
@@ -771,14 +779,25 @@ class NodePart {
   }
 
   private disposeValue(value: MountedValue): void {
-    if (value.kind === 'template') {
-      value.instance.dispose();
-    } else if (value.kind === 'dom-render') {
-      value.instance.dispose();
-    } else if (value.kind === 'array') {
-      for (const entry of value.entries) {
-        this.disposeValue(entry);
+    switch (value.kind) {
+      case 'template': {
+        value.instance.dispose();
+
+        break;
       }
+      case 'dom-render': {
+        value.instance.dispose();
+
+        break;
+      }
+      case 'array': {
+        for (const entry of value.entries) {
+          this.disposeValue(entry);
+        }
+
+        break;
+      }
+      // No default
     }
     for (const node of value.nodes) {
       removeNode(node);
@@ -858,10 +877,10 @@ export class DomDynamicInstance implements DomRenderInstance {
     if (!isDomDynamicResult(result) || !this.isCompatible(result)) {
       throw new TypeError('A DomDynamicInstance can only update a compatible dynamic result.');
     }
-    if (this.element !== undefined) {
-      this.updateElement(result);
-    } else {
+    if (this.element === undefined) {
       this.updateRange(result);
+    } else {
+      this.updateElement(result);
     }
   }
 
@@ -939,7 +958,7 @@ export class DomDynamicInstance implements DomRenderInstance {
     }
     for (const [name, part] of this.attributes) {
       if (!Object.prototype.hasOwnProperty.call(result.properties, name)) {
-        part.update(undefined);
+        part.update();
         part.dispose();
         this.attributes.delete(name);
       }
@@ -1074,9 +1093,7 @@ export class TemplateInstance {
   }
 
   hideAnchors(): void {
-    for (const child of this.children) {
-      child.hideAnchors();
-    }
+    hideChildAnchors(this.children);
   }
 
   private prepare(root: DocumentFragment): void {
@@ -1225,9 +1242,7 @@ export class DomTemplateInstance implements DomRenderInstance {
   }
 
   hideAnchors(): void {
-    for (const child of this.children) {
-      child.hideAnchors();
-    }
+    hideChildAnchors(this.children);
   }
 
   private instantiate(): DocumentFragment {
@@ -1334,7 +1349,7 @@ class HtmlContentInstance {
     }
     const reference = this.parts.get('ref');
     if (reference !== undefined && !activeNames.has('ref')) {
-      reference.update(undefined);
+      reference.update();
     }
   }
 

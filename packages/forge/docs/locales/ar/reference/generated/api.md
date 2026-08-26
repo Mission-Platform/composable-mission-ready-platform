@@ -16,39 +16,39 @@
 **النوع:** الوظيفة
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement
+function HtmlContent(properties: HtmlContentProperties): ReactElement;
 ```
 
 قم بعرض HTML الموثوق به في مضيف React باستخدام `dangerouslySetInnerHTML`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | HtmlContentProperties |  |
+| الاسم | اكتب                  | الوصف |
+| ----- | --------------------- | ----- |
+| خصائص | HtmlContentProperties |       |
 
 ### renderToReact
 
 **النوع:** الوظيفة
 
 ```typescript
-function renderToReact(element: MpElement): ReactElement
+function renderToReact(element: MpElement): ReactElement;
 ```
 
 قم بعرض شجرة {@link MpElement} محايدة في عنصر React.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| عنصر | مب إليمنت |  |
+| الاسم | اكتب      | الوصف |
+| ----- | --------- | ----- |
+| عنصر  | مب إليمنت |       |
 
 ### النقل الفوري
 
 **النوع:** الوظيفة
 
 ```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode
+function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
 ```
 
 بناء React للبدائي `<Teleport>` المحايد - غلاف رقيق حوله
@@ -75,9 +75,9 @@ Popover) وبالتالي غير مرئية.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| { إلى = 'الجسم'، معطل = خطأ، أطفال } | خصائص النقل الفضائي |  |
+| الاسم                                | اكتب                | الوصف |
+| ------------------------------------ | ------------------- | ----- |
+| { إلى = 'الجسم'، معطل = خطأ، أطفال } | خصائص النقل الفضائي |       |
 
 ### خصائص النقل الآني
 
@@ -94,7 +94,7 @@ export interface TeleportProperties
 **النوع:** الوظيفة
 
 ```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>
+function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
 ```
 
 قم بتغليف مكون محايد كمكون دالة React من الدرجة الأولى، وجاهز لذلك
@@ -102,23 +102,17 @@ function toReactComponent(component: MpComponent<P>, displayName?: string): Func
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | MpComponent<P> |  |
-| اسم العرض | سلسلة |  |
+| الاسم     | اكتب           | الوصف |
+| --------- | -------------- | ----- |
+| المكون    | MpComponent<P> |       |
+| اسم العرض | سلسلة          |       |
 
 ### انتقال
 
 **النوع:** الوظيفة
 
 ```typescript
-function Transition({
-  name = 'v',
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionProperties): ReactNode
+function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
 ```
 
 بناء React للبدائي `<Transition>` المحايد - فئة CSS صغيرة
@@ -134,9 +128,9 @@ Classes (وبالتالي فإن نفس ورقة الأنماط تدفع كلا 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| { الاسم = 'v'، يظهر = خطأ، المدة، الأطفال، ...تجاوزات } | خصائص الانتقال |  |
+| الاسم                                                   | اكتب           | الوصف |
+| ------------------------------------------------------- | -------------- | ----- |
+| { الاسم = 'v'، يظهر = خطأ، المدة، الأطفال، ...تجاوزات } | خصائص الانتقال |       |
 
 ### TransitionGroup
 
@@ -151,7 +145,7 @@ function TransitionGroup({
   duration,
   children,
   ...overrides
-}: TransitionGroupProperties): ReactNode
+}: TransitionGroupProperties): ReactNode;
 ```
 
 بناء React للبدائي `<TransitionGroup>` المحايد - فئة CSS
@@ -172,9 +166,9 @@ function TransitionGroup({
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| { الاسم = 'v'، العلامة، moveClass، تظهر = خطأ، المدة، الأطفال، ...تجاوزات } | TransitionGroupProperties |  |
+| الاسم                                                                       | اكتب                      | الوصف |
+| --------------------------------------------------------------------------- | ------------------------- | ----- |
+| { الاسم = 'v'، العلامة، moveClass، تظهر = خطأ، المدة، الأطفال، ...تجاوزات } | TransitionGroupProperties |       |
 
 ### TransitionGroupProperties
 
@@ -203,7 +197,7 @@ export interface TransitionProperties extends TransitionClassOverrides
 **النوع:** الوظيفة
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element
+function HtmlContent(properties: HtmlContentProperties): JSX.Element;
 ```
 
 بناء Solid للبدائي `<HtmlContent>` المحايد. Solid
@@ -211,16 +205,16 @@ function HtmlContent(properties: HtmlContentProperties): JSX.Element
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | هتملكونتينتبروبيرتيز |  |
+| الاسم | اكتب                 | الوصف |
+| ----- | -------------------- | ----- |
+| خصائص | هتملكونتينتبروبيرتيز |       |
 
 ### النقل الفوري
 
 **النوع:** الوظيفة
 
 ```typescript
-function Teleport(properties: TeleportProperties): JSX.Element
+function Teleport(properties: TeleportProperties): JSX.Element;
 ```
 
 بناء Solid للبدائي `<Teleport>` المحايد - غلاف رقيق حوله
@@ -236,9 +230,9 @@ Solid's {@link Portal}. `@mission-platform/vite-plugin-forge` يعيد كتاب�
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | خصائص النقل الفضائي |  |
+| الاسم | اكتب                | الوصف |
+| ----- | ------------------- | ----- |
+| خصائص | خصائص النقل الفضائي |       |
 
 ### خصائص النقل الآني
 
@@ -255,7 +249,7 @@ export interface TeleportProperties
 **النوع:** الوظيفة
 
 ```typescript
-function Transition(properties: TransitionProperties): JSX.Element
+function Transition(properties: TransitionProperties): JSX.Element;
 ```
 
 بناء Solid للبدائي `<Transition>` المحايد. الحد الأدنى الصحيح
@@ -272,16 +266,16 @@ function Transition(properties: TransitionProperties): JSX.Element
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | خصائص الانتقال |  |
+| الاسم | اكتب           | الوصف |
+| ----- | -------------- | ----- |
+| خصائص | خصائص الانتقال |       |
 
 ### TransitionGroup
 
 **النوع:** الوظيفة
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element
+function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
 ```
 
 بناء Solid للبدائي `<TransitionGroup>` المحايد. مثل
@@ -298,9 +292,9 @@ function TransitionGroup(properties: TransitionGroupProperties): JSX.Element
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | TransitionGroupProperties |  |
+| الاسم | اكتب                      | الوصف |
+| ----- | ------------------------- | ----- |
+| خصائص | TransitionGroupProperties |       |
 
 ### TransitionGroupProperties
 
@@ -329,7 +323,7 @@ export interface TransitionProperties extends TransitionClassOverrides
 **النوع:** الوظيفة
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet
+function HtmlContent(properties: HtmlContentProperties): Snippet;
 ```
 
 تنفيذ المحتوى الأولي للمحول Svelte. `createRawSnippet` هو
@@ -338,25 +332,25 @@ function HtmlContent(properties: HtmlContentProperties): Snippet
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | هتملكونتينتبروبيرتيز |  |
+| الاسم | اكتب                 | الوصف |
+| ----- | -------------------- | ----- |
+| خصائص | هتملكونتينتبروبيرتيز |       |
 
 ### النقل الفوري
 
 **النوع:** الوظيفة
 
 ```typescript
-function Teleport(properties: TeleportProperties): Snippet
+function Teleport(properties: TeleportProperties): Snippet;
 ```
 
 قم بعرض مقتطف Forge التابع في مكانه لـ Svelte SSR وتكافؤ العميل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | خصائص النقل الفضائي |  |
+| الاسم | اكتب                | الوصف |
+| ----- | ------------------- | ----- |
+| خصائص | خصائص النقل الفضائي |       |
 
 ### خصائص النقل الآني
 
@@ -373,32 +367,32 @@ export interface TeleportProperties
 **النوع:** الوظيفة
 
 ```typescript
-function Transition(properties: TransitionProperties): Snippet
+function Transition(properties: TransitionProperties): Snippet;
 ```
 
 تقديم طفل انتقالي واحد؛ يتم توفير الرسوم المتحركة بواسطة ترميز Svelte الأصلي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | خصائص الانتقال |  |
+| الاسم | اكتب           | الوصف |
+| ----- | -------------- | ----- |
+| خصائص | خصائص الانتقال |       |
 
 ### TransitionGroup
 
 **النوع:** الوظيفة
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet
+function TransitionGroup(properties: TransitionGroupProperties): Snippet;
 ```
 
 قم بعرض أطفال المجموعة الانتقالية في مكانهم للكتل ذات المفاتيح الأصلية Svelte.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | TransitionGroupProperties |  |
+| الاسم | اكتب                      | الوصف |
+| ----- | ------------------------- | ----- |
+| خصائص | TransitionGroupProperties |       |
 
 ### TransitionGroupProperties
 
@@ -427,7 +421,7 @@ export interface TransitionProperties
 **النوع:** الوظيفة
 
 ```typescript
-function createContext(defaultValue: T): VueContext<T>
+function createContext(defaultValue: T): VueContext<T>;
 ```
 
 بناء Vue للبدائي `createContext` المحايد. إرجاع المقبض الذي
@@ -439,48 +433,48 @@ function createContext(defaultValue: T): VueContext<T>
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة الافتراضية | ت |  |
+| الاسم             | اكتب | الوصف |
+| ----------------- | ---- | ----- |
+| القيمة الافتراضية | ت    |       |
 
 ### محتوى HTML
 
 **النوع:** الوظيفة
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode
+function HtmlContent(properties: HtmlContentProperties): VNode;
 ```
 
 قم بعرض HTML الموثوق به في مضيف Vue باستخدام ربط وظيفة العرض `innerHTML` الخاص به.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | هتملكونتينتبروبيرتيز |  |
+| الاسم | اكتب                 | الوصف |
+| ----- | -------------------- | ----- |
+| خصائص | هتملكونتينتبروبيرتيز |       |
 
 ### renderToVue
 
 **النوع:** الوظيفة
 
 ```typescript
-function renderToVue(element: MpElement): VNode
+function renderToVue(element: MpElement): VNode;
 ```
 
 قم بعرض شجرة {@link MpElement} محايدة في Vue `VNode`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| عنصر | مب إليمنت |  |
+| الاسم | اكتب      | الوصف |
+| ----- | --------- | ----- |
+| عنصر  | مب إليمنت |       |
 
 ### toVueComponent
 
 **النوع:** الوظيفة
 
 ```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 لف مكونًا محايدًا كمكون وظيفي Vue. الصفات الواردة
@@ -491,17 +485,17 @@ function toVueComponent(component: MpComponent<P>, name?: string): FunctionalCom
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المكون | MpComponent<P> |  |
-| الاسم | سلسلة |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| المكون | MpComponent<P> |       |
+| الاسم  | سلسلة          |       |
 
 ### useContext
 
 **النوع:** الوظيفة
 
 ```typescript
-function useContext(context: VueContext<T>): T
+function useContext(context: VueContext<T>): T;
 ```
 
 بناء Vue للبدائي `useContext` المحايد - غلاف رقيق حوله
@@ -510,9 +504,9 @@ function useContext(context: VueContext<T>): T
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| السياق | فيوكونتيكست<T> |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| السياق | فيوكونتيكست<T> |       |
 
 ### VueContext
 
@@ -531,7 +525,7 @@ export interface VueContext<T>
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 الأجزاء الداخلية مقيدة بالقدرات بشكل غير ضار. يظل اقتران النموذج اختياريًا.
@@ -541,7 +535,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 **النوع:** ثابت
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 يتم استخدام إعدادات التوافق الافتراضية عندما لا تتجاوز الفئة التي تم إنشاؤها السياسة.
@@ -561,18 +555,22 @@ export class DomTemplateResult
 **النوع:** الوظيفة
 
 ```typescript
-function dynamicElement(tag: unknown, properties: Readonly<Record<string, unknown>>, ...children: readonly unknown[]): DynamicElementResult
+function dynamicElement(
+  tag: unknown,
+  properties: Readonly<Record<string, unknown>>,
+  ...children: readonly unknown[]
+): DynamicElementResult;
 ```
 
 قم ببناء عنصر Web-Components الأصلي الذي تم تحديد علامته في وقت التشغيل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| العلامة | غير معروف |  |
-| خصائص | للقراءة فقط<Record<string, unknown>> |  |
-| أطفال | للقراءة فقط غير معروف[] |  |
+| الاسم   | اكتب                                 | الوصف |
+| ------- | ------------------------------------ | ----- |
+| العلامة | غير معروف                            |       |
+| خصائص   | للقراءة فقط<Record<string, unknown>> |       |
+| أطفال   | للقراءة فقط غير معروف[]              |       |
 
 ### DynamicElementResult
 
@@ -631,7 +629,7 @@ export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement
+function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
 ```
 
 أضف وقت تشغيل Forge المستقل عن المضيف إلى مُنشئ العنصر الأصلي.
@@ -641,8 +639,8 @@ function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement
 #### حدود
 
 | الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| قاعدة | تبيس |  |
+| ----- | ---- | ----- |
+| قاعدة | تبيس |       |
 
 ### ForgeSlotMarker
 
@@ -659,7 +657,7 @@ export interface ForgeSlotMarker extends HTMLElement
 **النوع:** الوظيفة
 
 ```typescript
-function hasSlotContent(host: Element, name?: string): boolean
+function hasSlotContent(host: Element, name?: string): boolean;
 ```
 
 ما إذا كان `host` قد تم منحه محتوى لإحدى فتحاته - الهدف الأصلي
@@ -685,17 +683,17 @@ function hasSlotContent(host: Element, name?: string): boolean
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المضيف | العنصر |  |
-| الاسم | سلسلة |  |
+| الاسم  | اكتب   | الوصف |
+| ------ | ------ | ----- |
+| المضيف | العنصر |       |
+| الاسم  | سلسلة  |       |
 
 ### أتش تي أم أل
 
 **النوع:** الوظيفة
 
 ```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult
+function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
 ```
 
 مصنع القوالب الموسومة. يلتقط السلاسل الثابتة والديناميكية لموقع الاتصال
@@ -703,26 +701,26 @@ function html(strings: TemplateStringsArray, ...values: readonly unknown[]): Tem
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| سلاسل | سلاسل القالب |  |
-| القيم | للقراءة فقط غير معروف[] |  |
+| الاسم | اكتب                    | الوصف |
+| ----- | ----------------------- | ----- |
+| سلاسل | سلاسل القالب            |       |
+| القيم | للقراءة فقط غير معروف[] |       |
 
 ### محتوى HTML
 
 **النوع:** الوظيفة
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult
+function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
 ```
 
 أنشئ نتيجة محتوى أولي لمكونات Web-Components الأصلية دون الهروب من `html`.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | هتملكونتينتبروبيرتيز |  |
+| الاسم | اكتب                 | الوصف |
+| ----- | -------------------- | ----- |
+| خصائص | هتملكونتينتبروبيرتيز |       |
 
 ### HTMLContentProperties
 
@@ -749,7 +747,7 @@ export class HtmlContentResult
 **النوع:** ثابت
 
 ```typescript
-export const nothing: unique symbol
+export const nothing: unique symbol;
 ```
 
 تم تقديم Sentinel كـ "بلا قيمة": في الموضع الفرعي لا ينتج شيئًا، في
@@ -781,7 +779,10 @@ export class RawHtml
 **النوع:** الوظيفة
 
 ```typescript
-function render(result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult, container: ParentNode): void
+function render(
+  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
+  container: ParentNode,
+): void;
 ```
 
 قم بتقديم نتيجة إلى `container` باستخدام مثيل القالب المستمر. ثابت
@@ -790,17 +791,22 @@ function render(result: TemplateResult | DomTemplateResult | DynamicElementResul
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| النتيجة | نتيجة القالب \| دومتيمبليتريسولت \| DynamicElementResult \| هتملكونتينتريسولت |  |
-| حاوية | عقدة الوالدين |  |
+| الاسم   | اكتب                                                                          | الوصف |
+| ------- | ----------------------------------------------------------------------------- | ----- |
+| النتيجة | نتيجة القالب \| دومتيمبليتريسولت \| DynamicElementResult \| هتملكونتينتريسولت |       |
+| حاوية   | عقدة الوالدين                                                                 |       |
 
 ### ResolveForgeSlotMarkers
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceChildren: readonly Node[], destinationRoot: ShadowRoot): void
+function resolveForgeSlotMarkers(
+  root: ParentNode,
+  owner: ForgeElement,
+  sourceChildren: readonly Node[],
+  destinationRoot: ShadowRoot,
+): void;
 ```
 
 حل علامات فتحة وقت التشغيل المنبعثة من برنامج التحويل البرمجي في جزء العرض.
@@ -815,12 +821,12 @@ function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceCh
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الجذر | عقدة الوالدين |  |
-| مالك | فورج إليمينت |  |
-| المصدرالأطفال | للقراءة فقط Node[] |  |
-| الوجهة الجذر | جذر الظل |  |
+| الاسم         | اكتب               | الوصف |
+| ------------- | ------------------ | ----- |
+| الجذر         | عقدة الوالدين      |       |
+| مالك          | فورج إليمينت       |       |
+| المصدرالأطفال | للقراءة فقط Node[] |       |
+| الوجهة الجذر  | جذر الظل           |       |
 
 ### نتيجة القالب
 
@@ -837,23 +843,23 @@ export class TemplateResult
 **النوع:** الوظيفة
 
 ```typescript
-function unsafeHtml(value: string): RawHtml
+function unsafeHtml(value: string): RawHtml;
 ```
 
 قم بوضع علامة على سلسلة كعلامة فرعية موثوقة لمسار مكونات الويب الأصلي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| القيمة | سلسلة |       |
 
 ### معرف الاستخدام
 
 **النوع:** الوظيفة
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 استبدال الهدف الأصلي لـ React's `useId`.
@@ -900,7 +906,7 @@ export interface WebComponentsShadowPolicy
 **النوع:** الوظيفة
 
 ```typescript
-function classNames(...values: readonly ClassValue[]): string
+function classNames(...values: readonly ClassValue[]): string;
 ```
 
 دمج أي عدد من {@link ClassValue} في فئة واحدة مفصولة بمسافات
@@ -909,9 +915,9 @@ function classNames(...values: readonly ClassValue[]): string
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيم | للقراءة فقط ClassValue[] |  |
+| الاسم | اكتب                     | الوصف |
+| ----- | ------------------------ | ----- |
+| القيم | للقراءة فقط ClassValue[] |       |
 
 ### قيمة الفئة
 
@@ -930,7 +936,7 @@ export type ClassValue = | string | number | bigint | null | undefined | boolean
 **النوع:** الوظيفة
 
 ```typescript
-function createContext(defaultValue: T): MpContext<T>
+function createContext(defaultValue: T): MpContext<T>;
 ```
 
 قم بإنشاء سياق محايد لإطار العمل بالقيمة الافتراضية المحددة. يعود أ
@@ -939,32 +945,32 @@ function createContext(defaultValue: T): MpContext<T>
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة الافتراضية | ت |  |
+| الاسم             | اكتب | الوصف |
+| ----------------- | ---- | ----- |
+| القيمة الافتراضية | ت    |       |
 
 ### isContextProvider
 
 **النوع:** الوظيفة
 
 ```typescript
-function isContextProvider(value: unknown): value is MpContextProvider<unknown>
+function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 ```
 
 ما إذا كانت القيمة عبارة عن وظيفة سياق {@link MpContext.Provider}.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | غير معروف |  |
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| القيمة | غير معروف |       |
 
 ### MP_CONTEXT
 
 **النوع:** ثابت
 
 ```typescript
-export const MP_CONTEXT: unique symbol
+export const MP_CONTEXT: unique symbol;
 ```
 
 الخاصية التي تستخدمها محولات وقت التشغيل للتعرف على السياق {@link MpContext.Provider}
@@ -1005,7 +1011,7 @@ export interface MpContextProviderProperties<T>
 **النوع:** الوظيفة
 
 ```typescript
-function useContext(context: MpContext<T>): T
+function useContext(context: MpContext<T>): T;
 ```
 
 اقرأ القيمة الحالية للسياق: أقرب مرفق
@@ -1013,9 +1019,9 @@ function useContext(context: MpContext<T>): T
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| السياق | مبكونتيكست<T> |  |
+| الاسم  | اكتب          | الوصف |
+| ------ | ------------- | ----- |
+| السياق | مبكونتيكست<T> |       |
 
 ## `src/runtime/dynamic`
 
@@ -1024,7 +1030,7 @@ function useContext(context: MpContext<T>): T
 **النوع:** ثابت
 
 ```typescript
-export const Dynamic: MpComponent<MpDynamicProperties>
+export const Dynamic: MpComponent<MpDynamicProperties>;
 ```
 
 العلامة المستخدمة كعنصر `type` لمكون ديناميكي
@@ -1049,7 +1055,7 @@ export interface MpDynamicProperties extends MpPropertyBag
 هذا أحد التصريحات القليلة التي تحافظ بشكل شرعي على **حقيبة مفتوحة**:
 يتم إعادة توجيه كل خاصية بخلاف `is` حرفيًا إلى العنصر `is`
 يحل، وهذا العنصر معروف فقط في وقت التشغيل، وبالتالي فإن سماته
-لا يمكن تعداد القبول هنا. يجب أن تكون واجهات عناصر المكونات *لا*
+لا يمكن تعداد القبول هنا. يجب أن تكون واجهات عناصر المكونات _لا_
 اتبع هذا النمط — راجع {@link MpPropertyBag}.
 
 ## `src/runtime/h`
@@ -1059,7 +1065,11 @@ export interface MpDynamicProperties extends MpPropertyBag
 **النوع:** الوظيفة
 
 ```typescript
-function h(type: MpElementType | ((properties: P) => MpElement), properties?: P | null, ...children: MpChild[]): MpElement
+function h(
+  type: MpElementType | ((properties: P) => MpElement),
+  properties?: P | null,
+  ...children: MpChild[]
+): MpElement;
 ```
 
 مصنع JSX الكلاسيكي (`jsxFactory: 'h'`).
@@ -1071,11 +1081,11 @@ function h(type: MpElementType | ((properties: P) => MpElement), properties?: P 
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| اكتب | مبElementType \| ((الخصائص: P) => MpElement) |  |
-| خصائص | ف \| فارغة |  |
-| أطفال | مبتشايلد[] |  |
+| الاسم | اكتب                                         | الوصف |
+| ----- | -------------------------------------------- | ----- |
+| اكتب  | مبElementType \| ((الخصائص: P) => MpElement) |       |
+| خصائص | ف \| فارغة                                   |       |
+| أطفال | مبتشايلد[]                                   |       |
 
 ## `src/runtime/hooks`
 
@@ -1134,24 +1144,24 @@ export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
 **النوع:** الوظيفة
 
 ```typescript
-function useCallback(callback: T, _dependencies?: MpDependencyList): T
+function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 ```
 
 `useCallback` محايد. يُرجع رد الاتصال دون تغيير للعرض.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| رد الاتصال | ت |  |
-| _التبعيات | قائمة التبعيات |  |
+| الاسم      | اكتب           | الوصف |
+| ---------- | -------------- | ----- |
+| رد الاتصال | ت              |       |
+| _التبعيات  | قائمة التبعيات |       |
 
 ### useEffect
 
 **النوع:** الوظيفة
 
 ```typescript
-function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void
+function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void;
 ```
 
 `useEffect` محايد. no-op: تأثيرات نموذجية للآثار الجانبية لما بعد العرض، والتي
@@ -1159,17 +1169,17 @@ function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList):
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| _تأثير | MpEffectCallback |  |
-| _التبعيات | قائمة التبعيات |  |
+| الاسم     | اكتب             | الوصف |
+| --------- | ---------------- | ----- |
+| _تأثير    | MpEffectCallback |       |
+| _التبعيات | قائمة التبعيات   |       |
 
 ### معرف الاستخدام
 
 **النوع:** الوظيفة
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 `useId` محايد. المرايا React's وVue's `useId`: إرجاع مستقرة وفريدة من نوعها
@@ -1185,24 +1195,24 @@ function useId(): string
 **النوع:** الوظيفة
 
 ```typescript
-function useMemo(factory: () => T, _dependencies?: MpDependencyList): T
+function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 ```
 
 `useMemo` محايد. يحسب القيمة مرة واحدة للعرض.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| مصنع | () => ت |  |
-| _التبعيات | قائمة التبعيات |  |
+| الاسم     | اكتب           | الوصف |
+| --------- | -------------- | ----- |
+| مصنع      | () => ت        |       |
+| _التبعيات | قائمة التبعيات |       |
 
 ### استخدامالمرجع
 
 **النوع:** الوظيفة
 
 ```typescript
-function useRef(initial: T): MpRef<T>
+function useRef(initial: T): MpRef<T>;
 ```
 
 `useRef` محايد. إرجاع حاوية `{ current }` جديدة للفرد
@@ -1210,16 +1220,16 @@ function useRef(initial: T): MpRef<T>
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأولي | ت |  |
+| الاسم  | اكتب | الوصف |
+| ------ | ---- | ----- |
+| الأولي | ت    |       |
 
 ### useState
 
 **النوع:** الوظيفة
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>]
+function useState(initial: T | (() => T)): [T, MpSetState<T>];
 ```
 
 `useState` محايد. يُرجع تنفيذ خط الأساس القيمة الأولية و
@@ -1228,9 +1238,9 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>]
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الأولي | ت \| (() => ت) |  |
+| الاسم  | اكتب           | الوصف |
+| ------ | -------------- | ----- |
+| الأولي | ت \| (() => ت) |       |
 
 ## `src/runtime/html-content`
 
@@ -1239,7 +1249,7 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>]
 **النوع:** ثابت
 
 ```typescript
-export const HtmlContent: MpComponent<HtmlContentProperties>
+export const HtmlContent: MpComponent<HtmlContentProperties>;
 ```
 
 العلامة المستخدمة كنوع العنصر لمحتوى HTML الخام الموثوق به.
@@ -1268,7 +1278,7 @@ export interface HtmlContentProperties extends MpPropertyBag
 **النوع:** الوظيفة
 
 ```typescript
-function hasSlot(name?: string): boolean
+function hasSlot(name?: string): boolean;
 ```
 
 ما إذا كان المكون المتضمن قد تم منحه محتوى للفتحة - المحايد
@@ -1276,7 +1286,13 @@ function hasSlot(name?: string): boolean
 الاسم المحذوف (أو `'default'`) يستهدف الفتحة الافتراضية (`children`):
 
 ```tsx
-{hasSlot('footer') ? <footer><Slot name="footer" /></footer> : undefined}
+{
+  hasSlot('footer') ? (
+    <footer>
+      <Slot name="footer" />
+    </footer>
+  ) : undefined;
+}
 ```
 
 يقوم `@mission-platform/vite-plugin-forge` بإعادة كتابة المكالمة مباشرة إلى كل منهما
@@ -1288,9 +1304,9 @@ function hasSlot(name?: string): boolean
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الاسم | سلسلة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| الاسم | سلسلة |       |
 
 ### MpRenderProperty
 
@@ -1338,7 +1354,7 @@ export interface MpSlotProperties extends MpPropertyBag
 **النوع:** الوظيفة
 
 ```typescript
-function popSlotScope(): void
+function popSlotScope(): void;
 ```
 
 افتح نطاق الفتحة الحالي بمجرد توسيع الشجرة الفرعية للمكون.
@@ -1348,23 +1364,23 @@ function popSlotScope(): void
 **النوع:** الوظيفة
 
 ```typescript
-function pushSlotScope(properties: MpPropertyBag): void
+function pushSlotScope(properties: MpPropertyBag): void;
 ```
 
 ادفع دعائم المكون الذي سيتم توسيعه على نطاق الفتحة.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | مبروبرتي باج |  |
+| الاسم | اكتب         | الوصف |
+| ----- | ------------ | ----- |
+| خصائص | مبروبرتي باج |       |
 
 ### ResolveSlot
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[]
+function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[];
 ```
 
 قم بحل محتوى `<Slot name="…" />` مقابل التضمين
@@ -1374,10 +1390,10 @@ function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[])
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | MpSlotProperties |  |
-| احتياطي | للقراءة فقط MpChild[] |  |
+| الاسم   | اكتب                  | الوصف |
+| ------- | --------------------- | ----- |
+| خصائص   | MpSlotProperties      |       |
+| احتياطي | للقراءة فقط MpChild[] |       |
 
 ## `src/runtime/teleport`
 
@@ -1396,7 +1412,7 @@ export interface MpTeleportProperties
 **النوع:** ثابت
 
 ```typescript
-export const Teleport: MpComponent<MpTeleportProperties>
+export const Teleport: MpComponent<MpTeleportProperties>;
 ```
 
 العلامة المستخدمة كعنصر `type` للبوابة (`<Teleport to="…">…</Teleport>`).
@@ -1433,7 +1449,7 @@ export interface MpTransitionProperties
 **النوع:** ثابت
 
 ```typescript
-export const Transition: MpComponent<MpTransitionProperties>
+export const Transition: MpComponent<MpTransitionProperties>;
 ```
 
 العلامة المستخدمة كعنصر `type` لانتقال الإدخال/المغادرة
@@ -1449,7 +1465,7 @@ export const Transition: MpComponent<MpTransitionProperties>
 **النوع:** ثابت
 
 ```typescript
-export const TransitionGroup: MpComponent<MpTransitionGroupProperties>
+export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 ```
 
 العلامة المستخدمة كعنصر `type` للانتقال **قائمة** إدخال/مغادرة/نقل
@@ -1471,7 +1487,7 @@ Vue المدمج في `<TransitionGroup>` يفعل ذلك. مثل {@link Transit
 **النوع:** ثابت
 
 ```typescript
-export const Fragment: MpFragment
+export const Fragment: MpFragment;
 ```
 
 العلامة المستخدمة كعنصر `type` للأجزاء (`<>…</>`)، أي الكلاسيكية
@@ -1492,16 +1508,16 @@ TS2604 ("ليس لديه أي توقيعات إنشاء أو اتصال"). لم 
 **النوع:** الوظيفة
 
 ```typescript
-function isMpElement(value: unknown): value is MpElement
+function isMpElement(value: unknown): value is MpElement;
 ```
 
 تضييق قيمة عشوائية إلى {@link MpElement}.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | غير معروف |  |
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| القيمة | غير معروف |       |
 
 ### MpChild
 
@@ -1561,7 +1577,7 @@ export type MpPropertyBag = Record<string, unknown>;
 
 هذا سجل عادي وغير مكتوب عمدًا: هذا هو ما يفعله مصنع JSX
 يبني وما يتم فهرسه المحولات أثناء المشي على شجرة محايدة. إنه كذلك
-*ليس* نوعًا أساسيًا لدعائم المكون - يُعلن المكون تمامًا عن
+_ليس_ نوعًا أساسيًا لدعائم المكون - يُعلن المكون تمامًا عن
 الخصائص التي يقبلها (بما في ذلك `children?: MpChild | readonly MpChild[]`
 عندما يعرضها)، بحيث يبقى التحقق من الخاصية الزائدة و`keyof`
 ذات معنى في كل هدف تم تجميعه. حفنة من السمات كل عنصر
@@ -1588,7 +1604,7 @@ export interface MpReservedProperties
   `"default"`) يعني الفتحة الافتراضية.
 
 لا يعد أي منهما جزءًا من عقد الدعائم الخاص بالمكون - فكلاهما تتم قراءته بواسطة
-*الوالد* (المُصلح، وجهاز توجيه الفتحة)، وليس بواسطة المكون نفسه —
+_الوالد_ (المُصلح، وجهاز توجيه الفتحة)، وليس بواسطة المكون نفسه —
 لذلك يتم قبولها لكل عنصر هنا بدلاً من الإعلان عنها في كل عنصر
 واجهة الدعائم.
 
@@ -1597,7 +1613,7 @@ export interface MpReservedProperties
 **النوع:** ثابت
 
 ```typescript
-export const Slot: MpComponent
+export const Slot: MpComponent;
 ```
 
 العلامة المستخدمة كعنصر `type` للفتحة المسماة (`<Slot name="…" />`).

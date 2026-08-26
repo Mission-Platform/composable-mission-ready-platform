@@ -38,16 +38,16 @@ Node, 문자열 또는 `route.component`의 DOM 팩토리가 직접 렌더링됩
 **종류:** 기능
 
 ```typescript
-function registerRouterElements(options: RegisterRouterElementsOptions = {}): void
+function registerRouterElements(options: RegisterRouterElementsOptions = {}): void;
 ```
 
 라우터 프리미티브를 한 번 등록하십시오. 수분 공급 및 테스트를 통해 전화해도 안전합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | RouterElementsOptions 등록 |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 옵션 | RouterElementsOptions 등록 |      |
 
 ## `src/runtime/history`
 
@@ -56,7 +56,7 @@ function registerRouterElements(options: RegisterRouterElementsOptions = {}): vo
 **종류:** 기능
 
 ```typescript
-function createBrowserHistory(win?: Window): MpBrowserHistory
+function createBrowserHistory(win?: Window): MpBrowserHistory;
 ```
 
 설명이 제공되지 않았습니다.
@@ -64,31 +64,31 @@ function createBrowserHistory(win?: Window): MpBrowserHistory
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 승리 | 창 |  |
+| ---- | ---- | ---- |
+| 승리 | 창   |      |
 
 ### 메모리 히스토리 생성
 
 **종류:** 기능
 
 ```typescript
-function createMemoryHistory(initialUrl = '/'): MpMemoryHistory
+function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 초기 URL |  |  |
+| 이름     | 유형 | 설명 |
+| -------- | ---- | ---- |
+| 초기 URL |      |      |
 
 ### 웹히스토리 생성
 
 **종류:** 기능
 
 ```typescript
-function createWebHistory(): MpHistory
+function createWebHistory(): MpHistory;
 ```
 
 설명이 제공되지 않았습니다.
@@ -120,7 +120,7 @@ export class MpMemoryHistory implements MpHistory
 **종류:** 상수
 
 ```typescript
-export const ForgeRouterLink
+export const ForgeRouterLink;
 ```
 
 설명이 제공되지 않았습니다.
@@ -134,7 +134,7 @@ export const ForgeRouterLink
 **종류:** 상수
 
 ```typescript
-export const ForgeRouterOutlet
+export const ForgeRouterOutlet;
 ```
 
 설명이 제공되지 않았습니다.
@@ -148,7 +148,7 @@ export const ForgeRouterOutlet
 **종류:** 구성요소
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 컴파일된 중립 링크에 사용되는 맞춤 요소 태그입니다.
@@ -158,7 +158,7 @@ export const MpLink
 **종류:** 구성요소
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 컴파일된 중립 콘센트에 사용되는 맞춤 요소 태그입니다.
@@ -168,7 +168,7 @@ export const MpRouterView
 **종류:** 상수
 
 ```typescript
-export const resolveForgeLink
+export const resolveForgeLink;
 ```
 
 설명이 제공되지 않았습니다.
@@ -182,39 +182,39 @@ export const resolveForgeLink
 **종류:** 기능
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 바인딩된 웹 구성 요소 라우터를 통해 중립 대상을 확인합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 에 | MpRouteLocationRaw |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 에   | MpRouteLocationRaw |      |
 
 ### setForgeRouter
 
 **종류:** 기능
 
 ```typescript
-function setForgeRouter(router: MpWebComponentsRouter<View>): void
+function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
 컴파일된 프레임워크 없는 패키지 기능을 위해 앱 소유 라우터를 바인딩합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 라우터 | MpWebComponentsRouter<View> |  |
+| 이름   | 유형                        | 설명 |
+| ------ | --------------------------- | ---- |
+| 라우터 | MpWebComponentsRouter<View> |      |
 
 ### useForgeNavigation
 
 **종류:** 상수
 
 ```typescript
-export const useForgeNavigation
+export const useForgeNavigation;
 ```
 
 설명이 제공되지 않았습니다.
@@ -228,7 +228,7 @@ export const useForgeNavigation
 **종류:** 상수
 
 ```typescript
-export const useForgeRoute
+export const useForgeRoute;
 ```
 
 설명이 제공되지 않았습니다.
@@ -242,7 +242,7 @@ export const useForgeRoute
 **종류:** 상수
 
 ```typescript
-export const useForgeRouter
+export const useForgeRouter;
 ```
 
 설명이 제공되지 않았습니다.
@@ -256,7 +256,7 @@ export const useForgeRouter
 **종류:** 기능
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 읽기 전용 필수 탐색/해결 기능입니다.
@@ -266,7 +266,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **종류:** 기능
 
 ```typescript
-function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
+function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'];
 ```
 
 현재 앱 소유 경로를 중립 위치로 읽습니다.
@@ -276,7 +276,7 @@ function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
 **종류:** 기능
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 웹 구성 요소 런타임이 지원하는 중립 기능 개체를 읽습니다.
@@ -288,7 +288,7 @@ function useMpRouter(): MpRouterCapabilities
 **종류:** 기능
 
 ```typescript
-function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>
+function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>;
 ```
 
 프레임워크가 필요 없는 완전한 라우터 런타임을 만듭니다. 경로 일치 및 URL
@@ -297,9 +297,9 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | MpWebComponentsRouterOptions<View> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 옵션 | MpWebComponentsRouterOptions<View> |      |
 
 ### MpWebComponents라우터
 
@@ -326,17 +326,17 @@ export interface MpWebComponentsRouterOptions<View = unknown>
 **종류:** 기능
 
 ```typescript
-function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
+function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 라우터 | MPRouterAdapter |  |
-| 에 | MpRouteLocationRaw |  |
+| 이름   | 유형               | 설명 |
+| ------ | ------------------ | ---- |
+| 라우터 | MPRouterAdapter    |      |
+| 에     | MpRouteLocationRaw |      |
 
 ## `src/utils/forge-router-web-components`
 
@@ -345,7 +345,7 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
 **종류:** 상수
 
 ```typescript
-export const forgeRouterWebComponents
+export const forgeRouterWebComponents;
 ```
 
 프레임워크가 필요 없는 기록/아웃렛 런타임이 지원되는 Forge 라우터 대상입니다.

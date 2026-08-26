@@ -38,7 +38,6 @@ import { CLASS_NAMES_HELPER } from "../runtime/markers.js";
 import {
   I18N_MODULE,
   I18NEXT_MODULE,
-  SOLID_ADAPTER_MODULE,
   SOLID_HYPERSCRIPT_MODULE,
   SOLID_MODULE,
 } from "../runtime/modules.js";

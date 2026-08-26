@@ -14,14 +14,14 @@ Vite 插件。 Forge 有一个中立的编译器驱动程序、一个明确的�
 
 Forge 编译跨越多个包，每个包都有一个故意缩小的职责：
 
-|层|拥有 |不拥有 |
-| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| `@mission-platform/vite-plugin-forge` |解析、规范化、中性分析、语义 IR、共享优化、缓存/发现、调度和通用 Vite/tsdown 编排 | React、Vue、Solid、Svelte、Web 组件或 CMS 源发射器 |
-| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin`、语义目标契约、生成模块类型、目标元数据和 Vite/tsdown 适配器类型 |框架实现或目标选择注册表|
-|内置`@mission-platform/forge-plugin-*`包|目标降低、目标优化、源代码生成、目标诊断、运行时元数据和本机构建适配器中性解析和跨目标编排 |
-| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`，中性内容模型，发现→分析→发出→编写驱动程序，岛屿联合发电和 CMS 构建助手 |任何特定于平台的架构、模板或清单形状 |
-| `@mission-platform/forge-cms-*` 包 |每个内容平台：其字段映射、模板方言、清单形状和平台诊断 |中性 prop 分类或跨目标编排 |
-|打包 `tsdown.config.ts` 文件 |选择目标插件实例和特定于包的覆盖 |重新实现编译器阶段或框架切换表|
+| 层                                       | 拥有                                                                                       | 不拥有                                             |
+| :--------------------------------------- | :----------------------------------------------------------------------------------------- | :------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge`    | 解析、规范化、中性分析、语义 IR、共享优化、缓存/发现、调度和通用 Vite/tsdown 编排          | React、Vue、Solid、Svelte、Web 组件或 CMS 源发射器 |
+| `@mission-platform/forge-plugin-api`     | `FrameworkOutputPlugin`、语义目标契约、生成模块类型、目标元数据和 Vite/tsdown 适配器类型   | 框架实现或目标选择注册表                           |
+| 内置`@mission-platform/forge-plugin-*`包 | 目标降低、目标优化、源代码生成、目标诊断、运行时元数据和本机构建适配器中性解析和跨目标编排 |
+| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`，中性内容模型，发现→分析→发出→编写驱动程序，岛屿联合发电和 CMS 构建助手  | 任何特定于平台的架构、模板或清单形状               |
+| `@mission-platform/forge-cms-*` 包       | 每个内容平台：其字段映射、模板方言、清单形状和平台诊断                                     | 中性 prop 分类或跨目标编排                         |
+| 打包 `tsdown.config.ts` 文件             | 选择目标插件实例和特定于包的覆盖                                                           | 重新实现编译器阶段或框架切换表                     |
 
 依赖方向是明确的：包导入它想要的目标插件，将该实例传递给中立的
 驱动程序，并接收特定于目标的构建配置。驱动程序从不从字符串构造目标或导入
@@ -134,12 +134,12 @@ Vite 和 tsdown 帮助程序在构建会话的生命周期内使用一个进程�
 它发布的目标：
 
 ```ts
-import { defineTsdownForgeComponents } from "@mission-platform/vite-plugin-forge";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeSolidFramework } from "@mission-platform/forge-plugin-solid";
-import { forgeSvelteFramework } from "@mission-platform/forge-plugin-svelte";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
-import { forgeWebComponentsFramework } from "@mission-platform/forge-plugin-web-components";
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
 export default defineTsdownForgeComponents({
   rootDir: import.meta.dirname,
@@ -151,7 +151,7 @@ export default defineTsdownForgeComponents({
     forgeWebComponentsFramework(),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: "MissionPlatformComponents",
+  name: 'MissionPlatformComponents',
 });
 ```
 
@@ -201,12 +201,7 @@ flowchart LR
 组件包通常通过中性组件桶针对 `@mission-platform/forge` 创建中性模块。
 `defineTsdownForgeComponents` 为每个提供的插件创建一个目标构建。对于每个目标：
 
-1.对中性组件模块进行解析、规范化和分析；
-2. 运行中性通道并创建语义模块；
-3. 调用所选插件的降低、优化和生成阶段；
-4. 将目标源和辅助模块写入目标特定的缓存；
-5. 调用插件的 tsdown/Vite 适配器；
-6. 发出目标目录、声明、运行时外部和包入口工件。
+1.对中性组件模块进行解析、规范化和分析；2. 运行中性通道并创建语义模块；3. 调用所选插件的降低、优化和生成阶段；4. 将目标源和辅助模块写入目标特定的缓存；5. 调用插件的 tsdown/Vite 适配器；6. 发出目标目录、声明、运行时外部和包入口工件。
 
 中立源是共享的，但生成的树和声明是特定于目标的。因此，Vue 版本可以使用 Vue
 SFC 和 Vue 声明工具，而 React 构建可以使用 React JSX 和 React 本机类型。套餐配置即可
@@ -252,23 +247,23 @@ Jekyll 包含或 Webflow 代码组件 - 其中每一个都可以与**任何**框
 框架插件：
 
 ```ts
-import { defineTsdownForgeCmsAll } from "@mission-platform/forge-cms-plugin-api";
-import { forgeStoryblokCms } from "@mission-platform/forge-cms-storyblok";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
 export default defineTsdownForgeCmsAll({
   rootDir: import.meta.dirname,
   targets: [
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeReactFramework(),
-      storyblokRuntime: "@storyblok/react",
+      storyblokRuntime: '@storyblok/react',
     }),
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeVueFramework(),
-      storyblokRuntime: "@storyblok/vue",
+      storyblokRuntime: '@storyblok/vue',
     }),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
@@ -290,13 +285,13 @@ flowchart TD
 
 ### 目标
 
-|套餐 |工厂|发出 |
-| :----------------------------------------- | :-------------------- | :---------------------------------------------------------------------------- |
-| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` |每个组件一个组件对象、一个框架块包装器、`components.json`、一个类型化条目 |
-| `@mission-platform/forge-cms-astro` | `forgeAstroCms` |静态 `.astro` 或 `client:load` 岛，加上 zod `content.config.ts` |
-| `@mission-platform/forge-cms-ghost` | `forgeGhostCms` |车把部分加上 `config.custom` 主题片段 |
-| `@mission-platform/forge-cms-jekyll` | `forgeJekyllCms` | Liquid 包括 `_data/forge-components.yml` 和 `_config.yml` 片段 |
-| `@mission-platform/forge-cms-webflow` | `forgeWebflowCms` | `declareComponent` 代码组件声明以及 `webflow.json` 库片段 |
+| 套餐                                    | 工厂                | 发出                                                                      |
+| :-------------------------------------- | :------------------ | :------------------------------------------------------------------------ |
+| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | 每个组件一个组件对象、一个框架块包装器、`components.json`、一个类型化条目 |
+| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | 静态 `.astro` 或 `client:load` 岛，加上 zod `content.config.ts`           |
+| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | 车把部分加上 `config.custom` 主题片段                                     |
+| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | Liquid 包括 `_data/forge-components.yml` 和 `_config.yml` 片段            |
+| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | `declareComponent` 代码组件声明以及 `webflow.json` 库片段                 |
 
 每个不受支持的映射都会生成一个 `CompilerDiagnostic`，其中包含阶段、代码和可操作的原因，而不是
 无声遗漏 — Ghost 对数字字段以及超过其 ~20 设置上限发出警告，Webflow 在数字字段出现警告时发出警告
@@ -342,12 +337,12 @@ flowchart TD
 要添加框架目标而不重新引入中央所有权：
 
 1. 创建一个 `forge-plugin-*` 包，其中工厂返回 `FrameworkOutputPlugin`；
-2.实施从`SemanticModule`降低到目标意图；
-3.添加目标优化和源生成，包括辅助模块和诊断；
-4. 提供目标源元数据、运行时外部名称和 Vite/tsdown 适配器；
-5. 添加针对语义边缘情况和生成工件的重点测试；
-6. 在发布目标的每个包中添加插件作为直接依赖项；
-7. 在该包的构建配置中传递新的插件实例。
+   2.实施从`SemanticModule`降低到目标意图；
+   3.添加目标优化和源生成，包括辅助模块和诊断；
+2. 提供目标源元数据、运行时外部名称和 Vite/tsdown 适配器；
+3. 添加针对语义边缘情况和生成工件的重点测试；
+4. 在发布目标的每个包中添加插件作为直接依赖项；
+5. 在该包的构建配置中传递新的插件实例。
 
 不要将框架 ID 添加到 `vite-plugin-forge` 中的注册表、从中性驱动程序导入框架包或添加
 通用解析和输出编排的特定目标分支。合同是有意开放的，因此目标
@@ -359,18 +354,13 @@ flowchart TD
 
 1.根据`@mission-platform/forge-cms-plugin-api`创建`forge-cms-*`包；
 2.导出返回`defineForgeCmsPlugin({ id, framework, packageName, … })`的工厂，采用框架插件
-   来自呼叫者而不是选择一个；
-3. 实施 `emitTemplate` 以及平台需要的 `emitSchema`、`emitManifest` 和 `emitEntry` 中的一个 —
-   仅模板平台（例如 Ghost 或 Jekyll）仅实现前两个，并且驱动程序编写占位符
-   进入；
-4. 将中立的 `ContentFieldKind` 映射到平台的字段词汇表中的一处，并推送
-   `CompilerDiagnostic` 对于平台无法忠实代表的每个映射；
-5. 如果平台需要水合运行时，则设置 `island: 'framework'`，如果仅接受，则设置 `supportedFrameworks`
-   一些框架插件；
-6. 在从 `@mission-platform/forge-cms-plugin-api/fixtures` 导出的共享灯具上添加规范，因此新的
-   目标的执行与其他输入完全相同；
-7. 将包添加为发布目标的每个使用者的直接依赖项，并将新实例传递给
-   `defineTsdownForgeCms`。
+来自呼叫者而不是选择一个；3. 实施 `emitTemplate` 以及平台需要的 `emitSchema`、`emitManifest` 和 `emitEntry` 中的一个 —
+仅模板平台（例如 Ghost 或 Jekyll）仅实现前两个，并且驱动程序编写占位符
+进入；4. 将中立的 `ContentFieldKind` 映射到平台的字段词汇表中的一处，并推送
+`CompilerDiagnostic` 对于平台无法忠实代表的每个映射；5. 如果平台需要水合运行时，则设置 `island: 'framework'`，如果仅接受，则设置 `supportedFrameworks`
+一些框架插件；6. 在从 `@mission-platform/forge-cms-plugin-api/fixtures` 导出的共享灯具上添加规范，因此新的
+目标的执行与其他输入完全相同；7. 将包添加为发布目标的每个使用者的直接依赖项，并将新实例传递给
+`defineTsdownForgeCms`。
 
 不要向目标添加属性分类逻辑：对 union、JSDoc、默认值或槽处理的修复属于
 共享内容模型，让每个平台都能同时受益。

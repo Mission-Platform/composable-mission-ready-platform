@@ -21,88 +21,91 @@ function createReactRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: NavigateFunction;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Bouw neutrale mogelijkheden van React Router-primitieven (haakvrij voor tests).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash: tekenreeks };   parameters?: Record<string, string \| undefined>;   navigeren: NavigeerFunctie;   stopcontact?: onbekend; } |  |
+| Naam   | Typ                                                                                                                                                                           | Beschrijving |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash: tekenreeks }; parameters?: Record<string, string \| undefined>; navigeren: NavigeerFunctie; stopcontact?: onbekend; } |              |
 
 ### oplossingMpLink
 
 **Soort:** functie
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Een neutraal doel omzetten in een href-tekenreeks.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| naar | MpRouteLocationRaw |              |
 
 ### toMpLocationFromReact
 
 **Soort:** functie
 
 ```typescript
-function toMpLocationFromReact(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromReact(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 Bouw een neutrale locatie op basis van React Routerlocatie/params-snapshots.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| locatie | { padnaam: string; zoeken: tekenreeks; hash: tekenreeks } |  |
-| params | Record<string, string \| undefined> |  |
+| Naam    | Typ                                                       | Beschrijving |
+| ------- | --------------------------------------------------------- | ------------ |
+| locatie | { padnaam: string; zoeken: tekenreeks; hash: tekenreeks } |              |
+| params  | Record<string, string \| undefined>                       |              |
 
 ### naarReactHref
 
 **Soort:** functie
 
 ```typescript
-function toReactHref(to: MpRouteLocationRaw): string
+function toReactHref(to: MpRouteLocationRaw): string;
 ```
 
 Serialiseer een neutraal doel naar een href-tekenreeks.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| naar | MpRouteLocationRaw |              |
 
 ### naarReactTo
 
 **Soort:** functie
 
 ```typescript
-function toReactTo(to: MpRouteLocationRaw): To
+function toReactTo(to: MpRouteLocationRaw): To;
 ```
 
 Converteer een neutraal doel naar een React Router `To`-waarde.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| naar | MpRouteLocationRaw |              |
 
 ### gebruik MpNavigatie
 
 **Soort:** functie
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
@@ -112,7 +115,7 @@ Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
 **Soort:** functie
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lees de huidige route van de app als {@link MpResolvedLocation}.
@@ -122,7 +125,7 @@ Lees de huidige route van de app als {@link MpResolvedLocation}.
 **Soort:** functie
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lees het neutrale capaciteitsobject ondersteund door React Router.
@@ -134,7 +137,7 @@ Lees het neutrale capaciteitsobject ondersteund door React Router.
 **Soort:** constant
 
 ```typescript
-export const forgeRouterReact
+export const forgeRouterReact;
 ```
 
 Smeed een routerdoel voor een React Router-instantie die eigendom is van de applicatie.

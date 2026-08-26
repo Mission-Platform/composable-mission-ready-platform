@@ -16,49 +16,49 @@
 **種類:** 関数
 
 ```typescript
-function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities
+function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities;
 ```
 
 アプリ所有の Vue Router インスタンスから中立的な機能を構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルーター |ルーター |  |
-|現在 |  |  |
+| 名前     | タイプ   | 説明 |
+| -------- | -------- | ---- |
+| ルーター | ルーター |      |
+| 現在     |          |      |
 
 ### 解決MpLink
 
 **種類:** 関数
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 アプリが所有する Vue ルーターを通じて中立ターゲットを解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| へ   | MpRouteLocationRaw |      |
 
 ### 解決パスターゲット
 
 **種類:** 関数
 
 ```typescript
-function resolvePathTarget(to: MpRouteLocationRaw): string
+function resolvePathTarget(to: MpRouteLocationRaw): string;
 ```
 
 Vue ルーター インスタンスが利用できない場合に使用されるパスのみのフォールバック (SSR/テスト)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| へ   | MpRouteLocationRaw |      |
 
 ### 目的地
 
@@ -73,39 +73,39 @@ function toMpLocation(route: {
   hash: string;
   name?: string | symbol | null;
   meta?: Record<string, unknown>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 ネイティブの Vue ルート状態を中立的な解決された場所に変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルート | { パス: 文字列;   フルパス: 文字列;   パラメータ: Record<string, unknown>;   クエリ: LocationQuery;   ハッシュ: 文字列;   名前?: 文字列 \|記号 \| null;   メタ?: レコード<string, unknown>; } |  |
+| 名前   | タイプ                                                                                                                                                                            | 説明 |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| ルート | { パス: 文字列; フルパス: 文字列; パラメータ: Record<string, unknown>; クエリ: LocationQuery; ハッシュ: 文字列; 名前?: 文字列 \|記号 \| null; メタ?: レコード<string, unknown>; } |      |
 
 ### toVueLocation
 
 **種類:** 関数
 
 ```typescript
-function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw
+function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 ```
 
 中立ターゲットを Vue ルーターの場所に変換します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| へ   | MpRouteLocationRaw |      |
 
 ### useMpNavigation
 
 **種類:** 関数
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 読み取り専用の命令型ナビゲーション/解決機能。
@@ -115,7 +115,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **種類:** 関数
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 現在のアプリが所有するルートを {@link MpResolvedLocation} として読み取ります。
@@ -125,7 +125,7 @@ function useMpRoute(): MpResolvedLocation | null
 **種類:** 関数
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Vue ルーターによってサポートされるニュートラル機能オブジェクトを読み取ります。
@@ -137,7 +137,7 @@ Vue ルーターによってサポートされるニュートラル機能オブ�
 **種類:** 定数
 
 ```typescript
-export const forgeRouterVue
+export const forgeRouterVue;
 ```
 
 アプリケーション所有の Vue Router インスタンスのルーター ターゲットを鍛造します。

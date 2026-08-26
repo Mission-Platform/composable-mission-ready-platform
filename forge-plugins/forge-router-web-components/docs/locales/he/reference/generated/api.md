@@ -38,16 +38,16 @@ Node, מחרוזת או DOM במפעל `route.component` מעובד ישירות
 פונקציה **סוג:**
 
 ```typescript
-function registerRouterElements(options: RegisterRouterElementsOptions = {}): void
+function registerRouterElements(options: RegisterRouterElementsOptions = {}): void;
 ```
 
 רשום את הפרימיטיבים של הנתב פעם אחת; בטוח להתקשר מהידרציה ובדיקות.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | RegisterRouterElementsOptions |  |
+| שם       | הקלד                          | תיאור |
+| -------- | ----------------------------- | ----- |
+| אפשרויות | RegisterRouterElementsOptions |       |
 
 ## `src/runtime/history`
 
@@ -56,39 +56,39 @@ function registerRouterElements(options: RegisterRouterElementsOptions = {}): vo
 פונקציה **סוג:**
 
 ```typescript
-function createBrowserHistory(win?: Window): MpBrowserHistory
+function createBrowserHistory(win?: Window): MpBrowserHistory;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| לנצח | חלון |  |
+| שם   | הקלד | תיאור |
+| ---- | ---- | ----- |
+| לנצח | חלון |       |
 
 ### createMemoryHistory
 
 פונקציה **סוג:**
 
 ```typescript
-function createMemoryHistory(initialUrl = '/'): MpMemoryHistory
+function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| initialUrl |  |  |
+| שם         | הקלד | תיאור |
+| ---------- | ---- | ----- |
+| initialUrl |      |       |
 
 ### createWebHistory
 
 פונקציה **סוג:**
 
 ```typescript
-function createWebHistory(): MpHistory
+function createWebHistory(): MpHistory;
 ```
 
 לא סופק תיאור.
@@ -120,7 +120,7 @@ export class MpMemoryHistory implements MpHistory
 **סוג:** קבוע
 
 ```typescript
-export const ForgeRouterLink
+export const ForgeRouterLink;
 ```
 
 לא סופק תיאור.
@@ -134,7 +134,7 @@ export const ForgeRouterLink
 **סוג:** קבוע
 
 ```typescript
-export const ForgeRouterOutlet
+export const ForgeRouterOutlet;
 ```
 
 לא סופק תיאור.
@@ -148,7 +148,7 @@ export const ForgeRouterOutlet
 **סוג:** רכיב
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 תג אלמנט מותאם אישית המשמש עבור קישורים ניטרליים שהורכבו.
@@ -158,7 +158,7 @@ export const MpLink
 **סוג:** רכיב
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 תג אלמנט מותאם אישית המשמש לשקעים ניטרליים שהורכבו.
@@ -168,7 +168,7 @@ export const MpRouterView
 **סוג:** קבוע
 
 ```typescript
-export const resolveForgeLink
+export const resolveForgeLink;
 ```
 
 לא סופק תיאור.
@@ -182,39 +182,39 @@ export const resolveForgeLink
 פונקציה **סוג:**
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 פתרו יעד ניטרלי דרך נתב רכיבי הרשת המחוברים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### setForgeRouter
 
 פונקציה **סוג:**
 
 ```typescript
-function setForgeRouter(router: MpWebComponentsRouter<View>): void
+function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
 אגד את הנתב בבעלות האפליקציה לקבלת יכולות חבילה ללא מסגרת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נתב | MpWebComponentsRouter<View> |  |
+| שם  | הקלד                        | תיאור |
+| --- | --------------------------- | ----- |
+| נתב | MpWebComponentsRouter<View> |       |
 
 ### useForgeNavigation
 
 **סוג:** קבוע
 
 ```typescript
-export const useForgeNavigation
+export const useForgeNavigation;
 ```
 
 לא סופק תיאור.
@@ -228,7 +228,7 @@ export const useForgeNavigation
 **סוג:** קבוע
 
 ```typescript
-export const useForgeRoute
+export const useForgeRoute;
 ```
 
 לא סופק תיאור.
@@ -242,7 +242,7 @@ export const useForgeRoute
 **סוג:** קבוע
 
 ```typescript
-export const useForgeRouter
+export const useForgeRouter;
 ```
 
 לא סופק תיאור.
@@ -256,7 +256,7 @@ export const useForgeRouter
 פונקציה **סוג:**
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 קרא רק יכולות הניווט/פתרון הכרחי.
@@ -266,7 +266,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 פונקציה **סוג:**
 
 ```typescript
-function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
+function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'];
 ```
 
 קרא את המסלול הנוכחי בבעלות האפליקציה כמיקום ניטרלי.
@@ -276,7 +276,7 @@ function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
 פונקציה **סוג:**
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 קרא את אובייקט היכולת הנייטרלית המגובה על ידי זמן הריצה של רכיבי האינטרנט.
@@ -288,7 +288,7 @@ function useMpRouter(): MpRouterCapabilities
 פונקציה **סוג:**
 
 ```typescript
-function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>
+function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>;
 ```
 
 צור את זמן הריצה המלא של הנתב ללא מסגרת. התאמת מסלול וכתובת אתר
@@ -297,9 +297,9 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | MpWebComponentsRouterOptions<View> |  |
+| שם       | הקלד                               | תיאור |
+| -------- | ---------------------------------- | ----- |
+| אפשרויות | MpWebComponentsRouterOptions<View> |       |
 
 ### MpWebComponentsRouter
 
@@ -326,17 +326,17 @@ export interface MpWebComponentsRouterOptions<View = unknown>
 פונקציה **סוג:**
 
 ```typescript
-function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
+function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נתב | MpRouterAdapter |  |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| נתב | MpRouterAdapter    |       |
+| ל   | MpRouteLocationRaw |       |
 
 ## `src/utils/forge-router-web-components`
 
@@ -345,7 +345,7 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
 **סוג:** קבוע
 
 ```typescript
-export const forgeRouterWebComponents
+export const forgeRouterWebComponents;
 ```
 
 זיוף יעד נתב מגובה בהיסטוריה/זמן ריצה ללא מסגרת.

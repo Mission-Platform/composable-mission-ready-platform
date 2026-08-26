@@ -20,23 +20,23 @@ function createSvelteKitRouterCapabilities(input: {
   page: { url: Pick<URL, 'pathname' | 'search' | 'hash'>; params: Record<string, string> };
   goto: SvelteKitRouterSurface['goto'];
   resolvePath?: (path: string) => string;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 从 SvelteKit 原语构建中性功能（无需框架即可进行测试）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | { 页面：{ url：Pick<URL, 'pathname' \| 'search' \| 'hash'>;参数：Record<string, string> };   转到：SvelteKitRouterSurface['转到'];   解析路径？：（路径：字符串）=>字符串； } |  |
+| 名称 | 类型                                                                                                                                                                      | 描述 |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 输入 | { 页面：{ url：Pick<URL, 'pathname' \| 'search' \| 'hash'>;参数：Record<string, string> }; 转到：SvelteKitRouterSurface['转到']; 解析路径？：（路径：字符串）=>字符串； } |      |
 
 ### 普联
 
 **种类：**组件
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 SvelteKit 使用普通锚点作为链接。编译器保留这个标记
@@ -47,7 +47,7 @@ Svelte 输出可以对包作者的中性 `MpLink` 用法进行类型检查。
 **种类：**组件
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Outlet 在 SvelteKit 中是应用程序拥有的；功能诊断拒绝 `view`。
@@ -57,23 +57,23 @@ Outlet 在 SvelteKit 中是应用程序拥有的；功能诊断拒绝 `view`。
 **种类：**功能
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 将中性目标解析为 href 字符串。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### setForgeSvelteKitRouter
 
 **种类：**功能
 
 ```typescript
-function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
+function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 ```
 
 绑定 SvelteKit 页面/导航 API 以实现编译包功能。
@@ -81,9 +81,9 @@ function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|表面| SvelteKitRouterSurface | SvelteKitRouterSurface |  |
+| 名称 | 类型                   | 描述                   |
+| ---- | ---------------------- | ---------------------- |
+| 表面 | SvelteKitRouterSurface | SvelteKitRouterSurface |     |
 
 ### SvelteKitRouterSurface
 
@@ -103,40 +103,40 @@ export interface SvelteKitRouterSurface
 function toMpLocationFromSvelte(page: {
   url: Pick<URL, 'pathname' | 'search' | 'hash'>;
   params: Record<string, string>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 从 SvelteKit 页面快照构建一个中立位置。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|页 | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>;   参数：Record<string, string>； } |  |
+| 名称 | 类型                                                                                 | 描述 |
+| ---- | ------------------------------------------------------------------------------------ | ---- |
+| 页   | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; 参数：Record<string, string>； } |      |
 
 ### toSvelteHref
 
 **种类：**功能
 
 ```typescript
-function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string
+function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string;
 ```
 
 序列化 SvelteKit 导航的中性目标。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
-|解析路径 | （路径：字符串）=> 字符串 |  |
+| 名称     | 类型                      | 描述 |
+| -------- | ------------------------- | ---- |
+| 至       | MpRouteLocation原始       |      |
+| 解析路径 | （路径：字符串）=> 字符串 |      |
 
 ### 使用Mp导航
 
 **种类：**功能
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 只读命令式导航/解析功能。
@@ -146,7 +146,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **种类：**功能
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 通过导航/解析包的绑定页面表面支持路由读取。
@@ -156,7 +156,7 @@ function useMpRoute(): MpResolvedLocation | null
 **种类：**功能
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 阅读 SvelteKit 导航支持的中立功能对象。
@@ -168,7 +168,7 @@ function useMpRouter(): MpRouterCapabilities
 **种类：**常数
 
 ```typescript
-export const forgeRouterSvelte
+export const forgeRouterSvelte;
 ```
 
 为 SvelteKit 的应用程序拥有的页面/导航 API 打造路由器目标。

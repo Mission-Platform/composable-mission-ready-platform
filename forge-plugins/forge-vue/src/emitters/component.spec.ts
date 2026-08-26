@@ -267,6 +267,36 @@ describe("the Vue component emitter builds an SFC from the generic AST", () => {
     expect(code).not.toContain("onUpdated");
   });
 
+  it("does not emit callback-local cleanup outside its lexical scope", () => {
+    const module = semanticModule({
+      component: component({
+        name: "OwnedResource",
+        parameter: "properties",
+        body: [
+          statement(
+            "useEffect(() => { const instance = create(); return () => instance.remove(); }, []);",
+            "expression",
+          ),
+        ],
+        returnNode: element("div", { selfClosing: true }),
+      }),
+      effects: [
+        effect("() => { const instance = create(); return () => instance.remove(); }", {
+          cleanup: "() => instance.remove()",
+          dependencies: [],
+        }),
+      ],
+    });
+
+    const code = emitVueModule(module, "OwnedResource").code;
+
+    expect(code).toContain(
+      '__vueCleanup0 = typeof result === "function" ? result : undefined;',
+    );
+    expect(code).not.toContain("else onCleanup(() => instance.remove())");
+    expect(code).not.toContain("? result : () => instance.remove()");
+  });
+
   it("binds an element ref as a string template ref", () => {
     const module = semanticModule({
       component: component({

@@ -1,6 +1,6 @@
 import { h } from './h';
 import {
-  Fragment,
+  
   type MpChild,
   type MpElement,
   type MpElementType,
@@ -14,8 +14,8 @@ import {
  * accepting the automatic transform's `props.children` and separate `key`.
  */
 export function jsx(type: MpElementType, properties?: MpPropertyBag | null, key?: string | number): MpElement {
-  const props = key === undefined ? properties : { ...properties, key };
-  return h(type, props);
+  const properties_ = key === undefined ? properties : { ...properties, key };
+  return h(type, properties_);
 }
 
 /** Static JSX uses the same neutral element construction as dynamic JSX. */
@@ -33,7 +33,7 @@ export function jsxDEV(
   return jsx(type, properties, key);
 }
 
-export { Fragment };
+
 
 /** JSX types used when TypeScript is configured with this automatic runtime. */
 export namespace JSX {
@@ -50,3 +50,5 @@ export namespace JSX {
     };
   }
 }
+
+export {Fragment} from './types';

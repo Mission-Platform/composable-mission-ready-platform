@@ -38,16 +38,16 @@ Node, string of DOM-fabriek in `route.component` wordt rechtstreeks weergegeven.
 **Soort:** functie
 
 ```typescript
-function registerRouterElements(options: RegisterRouterElementsOptions = {}): void
+function registerRouterElements(options: RegisterRouterElementsOptions = {}): void;
 ```
 
 Registreer de routerprimitieven één keer; veilig om te bellen vanwege hydratatie en tests.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | RegistrerenRouterElementsOptions |  |
+| Naam   | Typ                              | Beschrijving |
+| ------ | -------------------------------- | ------------ |
+| opties | RegistrerenRouterElementsOptions |              |
 
 ## `src/runtime/history`
 
@@ -56,39 +56,39 @@ Registreer de routerprimitieven één keer; veilig om te bellen vanwege hydratat
 **Soort:** functie
 
 ```typescript
-function createBrowserHistory(win?: Window): MpBrowserHistory
+function createBrowserHistory(win?: Window): MpBrowserHistory;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| winnen | Venster |  |
+| Naam   | Typ     | Beschrijving |
+| ------ | ------- | ------------ |
+| winnen | Venster |              |
 
 ### maak GeheugenGeschiedenis
 
 **Soort:** functie
 
 ```typescript
-function createMemoryHistory(initialUrl = '/'): MpMemoryHistory
+function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| initiëleUrl |  |  |
+| Naam        | Typ | Beschrijving |
+| ----------- | --- | ------------ |
+| initiëleUrl |     |              |
 
 ### maak WebGeschiedenis
 
 **Soort:** functie
 
 ```typescript
-function createWebHistory(): MpHistory
+function createWebHistory(): MpHistory;
 ```
 
 Geen beschrijving opgegeven.
@@ -120,7 +120,7 @@ Een deterministische geschiedenisimplementatie voor tests, SSR en pre-rendering.
 **Soort:** constant
 
 ```typescript
-export const ForgeRouterLink
+export const ForgeRouterLink;
 ```
 
 Geen beschrijving opgegeven.
@@ -134,7 +134,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const ForgeRouterOutlet
+export const ForgeRouterOutlet;
 ```
 
 Geen beschrijving opgegeven.
@@ -148,7 +148,7 @@ Geen beschrijving opgegeven.
 **Soort:** component
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 Aangepaste elementtag die wordt gebruikt voor gecompileerde neutrale links.
@@ -158,7 +158,7 @@ Aangepaste elementtag die wordt gebruikt voor gecompileerde neutrale links.
 **Soort:** component
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Aangepaste elementtag die wordt gebruikt voor samengestelde neutrale verkooppunten.
@@ -168,7 +168,7 @@ Aangepaste elementtag die wordt gebruikt voor samengestelde neutrale verkooppunt
 **Soort:** constant
 
 ```typescript
-export const resolveForgeLink
+export const resolveForgeLink;
 ```
 
 Geen beschrijving opgegeven.
@@ -182,39 +182,39 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Los een neutraal doel op via de gebonden Web Components-router.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| naar | MpRouteLocationRaw |              |
 
 ### setForgeRouter
 
 **Soort:** functie
 
 ```typescript
-function setForgeRouter(router: MpWebComponentsRouter<View>): void
+function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
 Bind de router van de app voor gecompileerde raamwerkvrije pakketmogelijkheden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| router | MpWebComponentsRouter<View> |  |
+| Naam   | Typ                         | Beschrijving |
+| ------ | --------------------------- | ------------ |
+| router | MpWebComponentsRouter<View> |              |
 
 ### gebruikForgeNavigatie
 
 **Soort:** constant
 
 ```typescript
-export const useForgeNavigation
+export const useForgeNavigation;
 ```
 
 Geen beschrijving opgegeven.
@@ -228,7 +228,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const useForgeRoute
+export const useForgeRoute;
 ```
 
 Geen beschrijving opgegeven.
@@ -242,7 +242,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const useForgeRouter
+export const useForgeRouter;
 ```
 
 Geen beschrijving opgegeven.
@@ -256,7 +256,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
@@ -266,7 +266,7 @@ Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
 **Soort:** functie
 
 ```typescript
-function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
+function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'];
 ```
 
 Lees de huidige route van de app als neutrale locatie.
@@ -276,7 +276,7 @@ Lees de huidige route van de app als neutrale locatie.
 **Soort:** functie
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lees het neutrale capaciteitsobject dat wordt ondersteund door de Web Components-runtime.
@@ -288,7 +288,7 @@ Lees het neutrale capaciteitsobject dat wordt ondersteund door de Web Components
 **Soort:** functie
 
 ```typescript
-function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>
+function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>;
 ```
 
 Creëer de volledige raamwerkvrije routerruntime. Routematching en URL
@@ -297,9 +297,9 @@ geschiedenis, bewakers, omleidingen, abonnementen en browserscrollgedrag.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | MpWebComponentenRouteropties<View> |  |
+| Naam   | Typ                                | Beschrijving |
+| ------ | ---------------------------------- | ------------ |
+| opties | MpWebComponentenRouteropties<View> |              |
 
 ### MpWebComponentsRouter
 
@@ -326,17 +326,17 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
+function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| router | MpRouterAdapter |  |
-| naar | MpRouteLocationRaw |  |
+| Naam   | Typ                | Beschrijving |
+| ------ | ------------------ | ------------ |
+| router | MpRouterAdapter    |              |
+| naar   | MpRouteLocationRaw |              |
 
 ## `src/utils/forge-router-web-components`
 
@@ -345,7 +345,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const forgeRouterWebComponents
+export const forgeRouterWebComponents;
 ```
 
 Forge-routerdoel ondersteund door de raamwerkvrije geschiedenis/outlet-runtime.

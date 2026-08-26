@@ -22,39 +22,39 @@ function createRedwoodRouterCapabilities(input: {
   navigate: RedwoodRouterSurface['navigate'];
   routes?: RedwoodRouterSurface['routes'];
   link?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 قم ببناء قدرات محايدة من بدايات Redwood (بدون إطار عمل للاختبارات).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | { الموقع: { اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة ؟: سلسلة };   المعلمات ؟: MpRouteParameters;   التنقل: RedwoodRouterSurface['navigate'];   الطرق ؟: RedwoodRouterSurface['routes'];   الرابط؟: غير معروف؛ } |  |
+| الاسم   | اكتب                                                                                                                                                                                                     | الوصف |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| الإدخال | { الموقع: { اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة ؟: سلسلة }; المعلمات ؟: MpRouteParameters; التنقل: RedwoodRouterSurface['navigate']; الطرق ؟: RedwoodRouterSurface['routes']; الرابط؟: غير معروف؛ } |       |
 
 ### مبلينك
 
 **النوع:** مكون
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown
+function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
 ```
 
 وكيل مكون الارتباط؛ تطبيقات ربط الخشب الأحمر الأصلي `Link` من خلال {@link setForgeRedwoodRouter}.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | { إلى: MpRouteLocationRaw; استبدال؟: منطقي؛ أطفال ؟: غير معروف } |  |
+| الاسم | اكتب                                                             | الوصف |
+| ----- | ---------------------------------------------------------------- | ----- |
+| خصائص | { إلى: MpRouteLocationRaw; استبدال؟: منطقي؛ أطفال ؟: غير معروف } |       |
 
 ### MpRouterView
 
 **النوع:** مكون
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 ريدوود ليس لديه منفذ محمول. تقارير المترجم `view` باعتبارها غير مدعومة.
@@ -74,23 +74,23 @@ export interface RedwoodRouterSurface
 **النوع:** الوظيفة
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 حل هدف محايد إلى سلسلة href.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### setForgeRedwoodRouter
 
 **النوع:** الوظيفة
 
 ```typescript
-function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
+function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void;
 ```
 
 قم بربط وحدة توجيه Redwood المملوكة للتطبيق. يقرأ رمز الحزمة المترجمة
@@ -98,50 +98,53 @@ function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| سطح | ريدوود راوترسورفيس |  |
+| الاسم | اكتب               | الوصف |
+| ----- | ------------------ | ----- |
+| سطح   | ريدوود راوترسورفيس |       |
 
 ### toMpLocationFromRedwood
 
 **النوع:** الوظيفة
 
 ```typescript
-function toMpLocationFromRedwood(location: { pathname: string; search: string; hash?: string }, params: MpRouteParameters = {}): MpResolvedLocation
+function toMpLocationFromRedwood(
+  location: { pathname: string; search: string; hash?: string },
+  params: MpRouteParameters = {},
+): MpResolvedLocation;
 ```
 
 أنشئ موقعًا محايدًا من لقطة موقع Redwood.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الموقع | {اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة ؟: سلسلة } |  |
-| المعلمات | مبرووتباراميترات |  |
+| الاسم    | اكتب                                                 | الوصف |
+| -------- | ---------------------------------------------------- | ----- |
+| الموقع   | {اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة ؟: سلسلة } |       |
+| المعلمات | مبرووتباراميترات                                     |       |
 
 ### إلى RedwoodHref
 
 **النوع:** الوظيفة
 
 ```typescript
-function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string
+function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string;
 ```
 
 قم بإجراء تسلسل لهدف محايد للملاحة في Redwood.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
-| الطرق | RedwoodRouterSurface['الطرق'] |  |
+| الاسم | اكتب                          | الوصف |
+| ----- | ----------------------------- | ----- |
+| إلى   | مبرووتلوكيشن راو              |       |
+| الطرق | RedwoodRouterSurface['الطرق'] |       |
 
 ### useMpNavigation
 
 **النوع:** الوظيفة
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 اقرأ فقط إمكانيات التنقل/الحل الضرورية.
@@ -151,7 +154,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 اقرأ المسار الحالي المملوك للتطبيق باسم {@link MpResolvedLocation}.
@@ -161,7 +164,7 @@ function useMpRoute(): MpResolvedLocation | null
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 اقرأ كائن القدرة المحايدة المدعوم بواسطة Redwood Router.
@@ -173,7 +176,7 @@ function useMpRouter(): MpRouterCapabilities
 **النوع:** ثابت
 
 ```typescript
-export const forgeRouterRedwood
+export const forgeRouterRedwood;
 ```
 
 صياغة هدف جهاز التوجيه لسياق جهاز التوجيه المملوك للتطبيق الخاص بـ RedwoodSDK.

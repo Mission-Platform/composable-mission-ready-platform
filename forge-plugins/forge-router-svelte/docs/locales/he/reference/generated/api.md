@@ -20,23 +20,23 @@ function createSvelteKitRouterCapabilities(input: {
   page: { url: Pick<URL, 'pathname' | 'search' | 'hash'>; params: Record<string, string> };
   goto: SvelteKitRouterSurface['goto'];
   resolvePath?: (path: string) => string;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 בנה יכולות ניטרליות מהפרימיטיבים של SvelteKit (ללא מסגרת לבדיקות).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | { page: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> };   goto: SvelteKitRouterSurface['goto'];   resolvePath?: (נתיב: מחרוזת) => מחרוזת; } |  |
+| שם  | הקלד                                                                                                                                                                          | תיאור |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| קלט | { page: { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; resolvePath?: (נתיב: מחרוזת) => מחרוזת; } |       |
 
 ### MpLink
 
 **סוג:** רכיב
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 SvelteKit משתמש בעוגנים רגילים לקישורים. המהדר שומר על הסמן הזה כך
@@ -47,7 +47,7 @@ SvelteKit משתמש בעוגנים רגילים לקישורים. המהדר ש
 **סוג:** רכיב
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Outlet נמצאת בבעלות האפליקציה ב-SvelteKit; אבחון יכולת דוחה `view`.
@@ -57,23 +57,23 @@ Outlet נמצאת בבעלות האפליקציה ב-SvelteKit; אבחון יכ�
 פונקציה **סוג:**
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 פתור יעד ניטרלי למחרוזת href.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### setForgeSvelteKitRouter
 
 פונקציה **סוג:**
 
 ```typescript
-function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
+function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 ```
 
 אגד את ממשקי ה-API של דף/ניווט SvelteKit עבור יכולות חבילה הידור.
@@ -81,9 +81,9 @@ function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| משטח | SvelteKitRouterSurface |  |
+| שם   | הקלד                   | תיאור |
+| ---- | ---------------------- | ----- |
+| משטח | SvelteKitRouterSurface |       |
 
 ### SvelteKitRouterSurface
 
@@ -103,40 +103,40 @@ export interface SvelteKitRouterSurface
 function toMpLocationFromSvelte(page: {
   url: Pick<URL, 'pathname' | 'search' | 'hash'>;
   params: Record<string, string>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 בנה מיקום ניטרלי מתמונת מצב של עמוד SvelteKit.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| עמוד | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>;   פרמטרים: Record<string, string>; } |  |
+| שם   | הקלד                                                                                   | תיאור |
+| ---- | -------------------------------------------------------------------------------------- | ----- |
+| עמוד | { url: Pick<URL, 'pathname' \| 'search' \| 'hash'>; פרמטרים: Record<string, string>; } |       |
 
 ### לSvelteHref
 
 פונקציה **סוג:**
 
 ```typescript
-function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string
+function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string;
 ```
 
 הסדר יעד ניטרלי עבור ניווט SvelteKit.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
-| resolvePath | (נתיב: מחרוזת) => מחרוזת |  |
+| שם          | הקלד                     | תיאור |
+| ----------- | ------------------------ | ----- |
+| ל           | MpRouteLocationRaw       |       |
+| resolvePath | (נתיב: מחרוזת) => מחרוזת |       |
 
 ### השתמש ב-MpNavigation
 
 פונקציה **סוג:**
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 קרא רק יכולות הניווט/פתרון הכרחי.
@@ -146,7 +146,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 פונקציה **סוג:**
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 קריאת מסלול נתמכת דרך משטח הדף המחובר עבור ניווט/פתרון חבילות.
@@ -156,7 +156,7 @@ function useMpRoute(): MpResolvedLocation | null
 פונקציה **סוג:**
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 קרא את אובייקט היכולת הנייטרלית המגובה על ידי ניווט SvelteKit.
@@ -168,7 +168,7 @@ function useMpRouter(): MpRouterCapabilities
 **סוג:** קבוע
 
 ```typescript
-export const forgeRouterSvelte
+export const forgeRouterSvelte;
 ```
 
 זיוף יעד נתב עבור ממשקי API של דף/ניווט בבעלות האפליקציה של SvelteKit.

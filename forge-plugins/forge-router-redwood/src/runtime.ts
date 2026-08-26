@@ -15,7 +15,7 @@ export interface RedwoodRouterSurface {
   Link: unknown;
   navigate: (to: string, options?: { replace?: boolean }) => void | Promise<void>;
   useLocation: () => { pathname: string; search: string; hash?: string };
-  routes?: Record<string, (...args: never[]) => string>;
+  routes?: Record<string, (...arguments_: never[]) => string>;
 }
 
 let boundSurface: RedwoodRouterSurface | undefined;
@@ -36,7 +36,10 @@ function requireSurface(): RedwoodRouterSurface {
 }
 
 /** Serialize a neutral target for Redwood navigation. */
-export function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string {
+export function toRedwoodHref(
+  to: MpRouteLocationRaw,
+  routes: RedwoodRouterSurface['routes'] = boundSurface?.routes,
+): string {
   if (typeof to === 'string') return to;
   if ('path' in to) return stringifyLocation(to);
   const named = routes?.[to.name];
@@ -59,14 +62,14 @@ export function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurfa
 /** Build a neutral location from a Redwood location snapshot. */
 export function toMpLocationFromRedwood(
   location: { pathname: string; search: string; hash?: string },
-  params: MpRouteParameters = {},
+  parameters: MpRouteParameters = {},
 ): MpResolvedLocation {
   const hash = location.hash ?? '';
   const query = parseQuery(location.search) as MpQueryParameters;
   return {
     path: location.pathname,
     fullPath: `${location.pathname}${location.search}${hash}`,
-    params,
+    params: parameters,
     query,
     hash,
   };

@@ -22,39 +22,39 @@ function createRedwoodRouterCapabilities(input: {
   navigate: RedwoodRouterSurface['navigate'];
   routes?: RedwoodRouterSurface['routes'];
   link?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 בנה יכולות ניטרליות מהפרימיטיבים של Redwood (ללא מסגרת לבדיקות).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | { מיקום: { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash?: מחרוזת };   params?: MpRouteParameters;   לנווט: RedwoodRouterSurface['נווט'];   routes?: RedwoodRouterSurface['routes'];   קישור?: לא ידוע; } |  |
+| שם  | הקלד                                                                                                                                                                                     | תיאור |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| קלט | { מיקום: { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash?: מחרוזת }; params?: MpRouteParameters; לנווט: RedwoodRouterSurface['נווט']; routes?: RedwoodRouterSurface['routes']; קישור?: לא ידוע; } |       |
 
 ### MpLink
 
 **סוג:** רכיב
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown
+function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
 ```
 
 קישור רכיב proxy; אפליקציות מחייבות את רדווד המקומי `Link` דרך {@link setForgeRedwoodRouter}.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | { ל: MpRouteLocationRaw; להחליף?: בוליאן; ילדים?: לא ידוע } |  |
+| שם    | הקלד                                                        | תיאור |
+| ----- | ----------------------------------------------------------- | ----- |
+| נכסים | { ל: MpRouteLocationRaw; להחליף?: בוליאן; ילדים?: לא ידוע } |       |
 
 ### MpRouterView
 
 **סוג:** רכיב
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 לרדווד אין שקע נייד; המהדר מדווח `view` כבלתי נתמך.
@@ -74,23 +74,23 @@ export interface RedwoodRouterSurface
 פונקציה **סוג:**
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 פתור יעד ניטרלי למחרוזת href.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### setForgeRedwoodRouter
 
 פונקציה **סוג:**
 
 ```typescript
-function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
+function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void;
 ```
 
 אגד את מודול הנתב Redwood שבבעלות האפליקציה. קוד חבילה מהודרת עובר דרך
@@ -98,50 +98,53 @@ function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| משטח | RedwoodRouterSurface |  |
+| שם   | הקלד                 | תיאור |
+| ---- | -------------------- | ----- |
+| משטח | RedwoodRouterSurface |       |
 
 ### toMpLocationFromRedwood
 
 פונקציה **סוג:**
 
 ```typescript
-function toMpLocationFromRedwood(location: { pathname: string; search: string; hash?: string }, params: MpRouteParameters = {}): MpResolvedLocation
+function toMpLocationFromRedwood(
+  location: { pathname: string; search: string; hash?: string },
+  params: MpRouteParameters = {},
+): MpResolvedLocation;
 ```
 
 בנה מיקום ניטרלי מתמונת מיקום Redwood.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מיקום | { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash?: מחרוזת } |  |
-| פרמס | MpRouteParameters |  |
+| שם    | הקלד                                              | תיאור |
+| ----- | ------------------------------------------------- | ----- |
+| מיקום | { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash?: מחרוזת } |       |
+| פרמס  | MpRouteParameters                                 |       |
 
 ### toRedwoodHref
 
 פונקציה **סוג:**
 
 ```typescript
-function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string
+function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string;
 ```
 
 הסדר יעד נייטרלי עבור ניווט רדווד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
-| מסלולים | RedwoodRouterSurface['מסלולים'] |  |
+| שם      | הקלד                            | תיאור |
+| ------- | ------------------------------- | ----- |
+| ל       | MpRouteLocationRaw              |       |
+| מסלולים | RedwoodRouterSurface['מסלולים'] |       |
 
 ### השתמש ב-MpNavigation
 
 פונקציה **סוג:**
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 קרא רק יכולות הניווט/פתרון הכרחי.
@@ -151,7 +154,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 פונקציה **סוג:**
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 קרא את המסלול הנוכחי בבעלות האפליקציה בשם {@link MpResolvedLocation}.
@@ -161,7 +164,7 @@ function useMpRoute(): MpResolvedLocation | null
 פונקציה **סוג:**
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 קרא את אובייקט היכולת הנייטרלית המגובה על ידי Redwood Router.
@@ -173,7 +176,7 @@ function useMpRouter(): MpRouterCapabilities
 **סוג:** קבוע
 
 ```typescript
-export const forgeRouterRedwood
+export const forgeRouterRedwood;
 ```
 
 זיוף יעד נתב עבור הקשר הנתב בבעלות האפליקציה של RedwoodSDK.

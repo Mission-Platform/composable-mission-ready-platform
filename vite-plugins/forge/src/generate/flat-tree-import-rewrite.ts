@@ -16,7 +16,15 @@ export function createFlatImportRewriter(input: {
   readonly moduleBase: (fileName: string) => string;
   readonly relSpecifier: (fromDir: string, targetDir: string, fileName: string) => string;
 }): RewriteFlatImports {
-  const { graphs, components, moduleRegistry, moduleRegistryCollisions, sourceModuleRegistry, moduleBase, relSpecifier } = input;
+  const {
+    graphs,
+    components,
+    moduleRegistry,
+    moduleRegistryCollisions,
+    sourceModuleRegistry,
+    moduleBase,
+    relSpecifier,
+  } = input;
   const graphForSource = (sourceId: string): ForgeFileGraph | undefined =>
     graphs.find((candidate) => candidate.nodes.has(path.resolve(sourceId)));
 
@@ -31,9 +39,7 @@ export function createFlatImportRewriter(input: {
           : (graphForSource(sourceId)?.edges ?? [])
               .filter((edge) => edge.from === path.resolve(sourceId) && edge.resolved && edge.to !== undefined)
               .map((edge) => ({ edge, node: graphForSource(sourceId)?.nodes.get(edge.to as string) }))
-              .filter(({ node }) =>
-                node !== undefined && moduleBase(path.basename(node.id)) === moduleBase(fileName),
-              );
+              .filter(({ node }) => node !== undefined && moduleBase(path.basename(node.id)) === moduleBase(fileName));
 
       const graphTarget =
         graphTargets.length === 1

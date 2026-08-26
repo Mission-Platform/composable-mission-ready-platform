@@ -16,39 +16,39 @@
 **종류:** 기능
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement
+function HtmlContent(properties: HtmlContentProperties): ReactElement;
 ```
 
 `dangerouslySetInnerHTML`을 사용하여 신뢰할 수 있는 HTML을 React 호스트로 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | HtmlContent속성 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 속성 | HtmlContent속성 |      |
 
 ### renderToReact
 
 **종류:** 기능
 
 ```typescript
-function renderToReact(element: MpElement): ReactElement
+function renderToReact(element: MpElement): ReactElement;
 ```
 
 중립 {@link MpElement} 트리를 React 요소로 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 요소 | Mp요소 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 요소 | Mp요소 |      |
 
 ### 텔레포트
 
 **종류:** 기능
 
 ```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode
+function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
 ```
 
 중립 `<Teleport>` 프리미티브의 React 빌드 — 주변의 얇은 래퍼
@@ -75,9 +75,9 @@ Popover API를 사용하여 브라우저 최상위 계층으로 승격됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| { to = '본체', 비활성화 = false, 어린이 } | 텔레포트속성 |  |
+| 이름                                      | 유형         | 설명 |
+| ----------------------------------------- | ------------ | ---- |
+| { to = '본체', 비활성화 = false, 어린이 } | 텔레포트속성 |      |
 
 ### 텔레포트속성
 
@@ -94,7 +94,7 @@ React {@link Teleport} 구성 요소에서 허용하는 속성입니다.
 **종류:** 기능
 
 ```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>
+function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
 ```
 
 중립 구성 요소를 일류 React 기능 구성 요소로 래핑하여
@@ -102,23 +102,17 @@ function toReactComponent(component: MpComponent<P>, displayName?: string): Func
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | MpComponent<P> |  |
-| 표시이름 | 문자열 |  |
+| 이름     | 유형           | 설명 |
+| -------- | -------------- | ---- |
+| 구성요소 | MpComponent<P> |      |
+| 표시이름 | 문자열         |      |
 
 ### 이행
 
 **종류:** 기능
 
 ```typescript
-function Transition({
-  name = 'v',
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionProperties): ReactNode
+function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
 ```
 
 중립 `<Transition>` 프리미티브의 React 빌드 — 작은 CSS 클래스
@@ -134,9 +128,9 @@ Vue의 SSR 출력과 일치하며 애니메이션은 이후에만 실행됩니�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| { 이름 = 'v', 표시 = false, 기간, 하위, ...재정의 } | 전환속성 |  |
+| 이름                                                | 유형     | 설명 |
+| --------------------------------------------------- | -------- | ---- |
+| { 이름 = 'v', 표시 = false, 기간, 하위, ...재정의 } | 전환속성 |      |
 
 ### 전환 그룹
 
@@ -151,7 +145,7 @@ function TransitionGroup({
   duration,
   children,
   ...overrides
-}: TransitionGroupProperties): ReactNode
+}: TransitionGroupProperties): ReactNode;
 ```
 
 중립 `<TransitionGroup>` 프리미티브의 React 빌드 - CSS 클래스
@@ -172,9 +166,9 @@ Vue의 SSR 출력과 일치하는 어린이가 제자리에 있고 애니메이�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| { 이름 = 'v', 태그, moveClass, 표시 = false, 기간, 하위, ...재정의 } | 전환그룹속성 |  |
+| 이름                                                                 | 유형         | 설명 |
+| -------------------------------------------------------------------- | ------------ | ---- |
+| { 이름 = 'v', 태그, moveClass, 표시 = false, 기간, 하위, ...재정의 } | 전환그룹속성 |      |
 
 ### 전환 그룹 속성
 
@@ -203,7 +197,7 @@ React {@link Transition} 구성요소에서 허용하는 속성입니다.
 **종류:** 기능
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element
+function HtmlContent(properties: HtmlContentProperties): JSX.Element;
 ```
 
 중립 `<HtmlContent>` 프리미티브의 Solid 빌드입니다. Solid의
@@ -211,16 +205,16 @@ function HtmlContent(properties: HtmlContentProperties): JSX.Element
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | HtmlContent속성 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 속성 | HtmlContent속성 |      |
 
 ### 텔레포트
 
 **종류:** 기능
 
 ```typescript
-function Teleport(properties: TeleportProperties): JSX.Element
+function Teleport(properties: TeleportProperties): JSX.Element;
 ```
 
 중립 `<Teleport>` 프리미티브의 Solid 빌드 — 주변의 얇은 래퍼
@@ -236,9 +230,9 @@ Solid의 {@link Portal}입니다. `@mission-platform/vite-plugin-forge`은
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 텔레포트속성 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 속성 | 텔레포트속성 |      |
 
 ### 텔레포트속성
 
@@ -255,7 +249,7 @@ Solid {@link Teleport} 구성 요소에서 허용하는 속성입니다.
 **종류:** 기능
 
 ```typescript
-function Transition(properties: TransitionProperties): JSX.Element
+function Transition(properties: TransitionProperties): JSX.Element;
 ```
 
 중립 `<Transition>` 프리미티브의 Solid 빌드입니다. 최소한의 정답
@@ -272,16 +266,16 @@ Solid 대상입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 전환속성 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 속성 | 전환속성 |      |
 
 ### 전환 그룹
 
 **종류:** 기능
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element
+function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
 ```
 
 중립 `<TransitionGroup>` 프리미티브의 Solid 빌드입니다. 좋아요
@@ -298,9 +292,9 @@ Solid 대상입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 전환그룹속성 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 속성 | 전환그룹속성 |      |
 
 ### 전환 그룹 속성
 
@@ -329,7 +323,7 @@ Solid {@link Transition} 구성요소에서 허용하는 속성입니다.
 **종류:** 기능
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet
+function HtmlContent(properties: HtmlContentProperties): Snippet;
 ```
 
 Svelte 어댑터의 원시 콘텐츠 구현입니다. `createRawSnippet`은
@@ -338,25 +332,25 @@ Svelte의 `{@html}` 작업의 런타임 형식과 해당 설정 콜백은 다음
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | HtmlContent속성 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 속성 | HtmlContent속성 |      |
 
 ### 텔레포트
 
 **종류:** 기능
 
 ```typescript
-function Teleport(properties: TeleportProperties): Snippet
+function Teleport(properties: TeleportProperties): Snippet;
 ```
 
 Svelte SSR 및 클라이언트 패리티를 위해 Forge 하위 조각을 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 텔레포트속성 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 속성 | 텔레포트속성 |      |
 
 ### 텔레포트속성
 
@@ -373,32 +367,32 @@ Svelte {@link Teleport} 프리미티브가 허용하는 속성입니다.
 **종류:** 기능
 
 ```typescript
-function Transition(properties: TransitionProperties): Snippet
+function Transition(properties: TransitionProperties): Snippet;
 ```
 
 단일 전환 자식을 렌더링합니다. 애니메이션은 기본 Svelte 마크업으로 제공됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 전환속성 |  |
+| 이름 | 유형     | 설명 |
+| ---- | -------- | ---- |
+| 속성 | 전환속성 |      |
 
 ### 전환 그룹
 
 **종류:** 기능
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet
+function TransitionGroup(properties: TransitionGroupProperties): Snippet;
 ```
 
 기본 Svelte 키 블록에 대해 전환 그룹 하위를 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 전환그룹속성 |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 속성 | 전환그룹속성 |      |
 
 ### 전환 그룹 속성
 
@@ -427,7 +421,7 @@ Svelte {@link Transition} 프리미티브가 허용하는 속성입니다.
 **종류:** 기능
 
 ```typescript
-function createContext(defaultValue: T): VueContext<T>
+function createContext(defaultValue: T): VueContext<T>;
 ```
 
 중립 `createContext` 프리미티브의 Vue 빌드입니다. 핸들을 반환합니다.
@@ -439,48 +433,48 @@ Vue 대상에서 이를 가져옵니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기본값 | 티 |  |
+| 이름   | 유형 | 설명 |
+| ------ | ---- | ---- |
+| 기본값 | 티   |      |
 
 ### Html콘텐츠
 
 **종류:** 기능
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode
+function HtmlContent(properties: HtmlContentProperties): VNode;
 ```
 
 렌더링 기능 `innerHTML` 바인딩을 사용하여 신뢰할 수 있는 HTML을 Vue 호스트로 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | HtmlContent속성 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 속성 | HtmlContent속성 |      |
 
 ### renderToVue
 
 **종류:** 기능
 
 ```typescript
-function renderToVue(element: MpElement): VNode
+function renderToVue(element: MpElement): VNode;
 ```
 
 중립 {@link MpElement} 트리를 Vue `VNode`으로 렌더링합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 요소 | Mp요소 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 요소 | Mp요소 |      |
 
 ### toVueComponent
 
 **종류:** 기능
 
 ```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 중립 구성 요소를 Vue 기능 구성 요소로 래핑합니다. 들어오는 속성
@@ -491,17 +485,17 @@ function toVueComponent(component: MpComponent<P>, name?: string): FunctionalCom
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 구성요소 | MpComponent<P> |  |
-| 이름 | 문자열 |  |
+| 이름     | 유형           | 설명 |
+| -------- | -------------- | ---- |
+| 구성요소 | MpComponent<P> |      |
+| 이름     | 문자열         |      |
 
 ### useContext
 
 **종류:** 기능
 
 ```typescript
-function useContext(context: VueContext<T>): T
+function useContext(context: VueContext<T>): T;
 ```
 
 중립 `useContext` 프리미티브의 Vue 빌드 — 주변의 얇은 래퍼
@@ -510,9 +504,9 @@ function useContext(context: VueContext<T>): T
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 맥락 | VueContext<T> |  |
+| 이름 | 유형          | 설명 |
+| ---- | ------------- | ---- |
+| 맥락 | VueContext<T> |      |
 
 ### VueContext
 
@@ -531,7 +525,7 @@ Vue 컨텍스트 핸들: `provide()` 지원 `Provider` 및 `inject()` 키.
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 내부는 무해하게 기능에 따라 제한되어 있습니다. 양식 연결은 선택적으로 유지됩니다.
@@ -541,7 +535,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 생성된 클래스가 정책을 재정의하지 않을 때 사용되는 호환성 기본값입니다.
@@ -561,18 +555,22 @@ export class DomTemplateResult
 **종류:** 기능
 
 ```typescript
-function dynamicElement(tag: unknown, properties: Readonly<Record<string, unknown>>, ...children: readonly unknown[]): DynamicElementResult
+function dynamicElement(
+  tag: unknown,
+  properties: Readonly<Record<string, unknown>>,
+  ...children: readonly unknown[]
+): DynamicElementResult;
 ```
 
 런타임 시 태그가 선택되는 기본 웹 구성 요소 요소를 빌드합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 태그 | 알 수 없음 |  |
-| 속성 | 읽기전용<Record<string, unknown>> |  |
-| 어린이 | 읽기 전용 알 수 없음[] |  |
+| 이름   | 유형                              | 설명 |
+| ------ | --------------------------------- | ---- |
+| 태그   | 알 수 없음                        |      |
+| 속성   | 읽기전용<Record<string, unknown>> |      |
+| 어린이 | 읽기 전용 알 수 없음[]            |      |
 
 ### 동적요소결과
 
@@ -631,7 +629,7 @@ export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
 **종류:** 기능
 
 ```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement
+function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
 ```
 
 Forge의 호스트 독립적 런타임을 기본 요소 생성자에 추가합니다.
@@ -640,9 +638,9 @@ Forge의 호스트 독립적 런타임을 기본 요소 생성자에 추가합�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 베이스 | 티베이스 |  |
+| 이름   | 유형     | 설명 |
+| ------ | -------- | ---- |
+| 베이스 | 티베이스 |      |
 
 ### ForgeSlotMarker
 
@@ -659,7 +657,7 @@ export interface ForgeSlotMarker extends HTMLElement
 **종류:** 기능
 
 ```typescript
-function hasSlotContent(host: Element, name?: string): boolean
+function hasSlotContent(host: Element, name?: string): boolean;
 ```
 
 `host`에 해당 슬롯 중 하나에 대한 콘텐츠가 제공되었는지 여부(기본 대상의
@@ -685,17 +683,17 @@ CSS 이스케이프가 필요하지 않으므로 베어 텍스트 하위 항목(
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 호스트 | 요소 |  |
-| 이름 | 문자열 |  |
+| 이름   | 유형   | 설명 |
+| ------ | ------ | ---- |
+| 호스트 | 요소   |      |
+| 이름   | 문자열 |      |
 
 ### HTML
 
 **종류:** 기능
 
 ```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult
+function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
 ```
 
 태그된 템플릿 팩토리. 호출 사이트의 정적 문자열과 동적을 캡처합니다.
@@ -703,26 +701,26 @@ DOM으로 구현하기 위해 {@link render}에 대한 값을 {@link TemplateRes
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 문자열 | 템플릿문자열배열 |  |
-| 가치 | 읽기 전용 알 수 없음[] |  |
+| 이름   | 유형                   | 설명 |
+| ------ | ---------------------- | ---- |
+| 문자열 | 템플릿문자열배열       |      |
+| 가치   | 읽기 전용 알 수 없음[] |      |
 
 ### Html콘텐츠
 
 **종류:** 기능
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult
+function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
 ```
 
 `html`을 이스케이프하지 않고 기본 웹 구성 요소 원시 콘텐츠 결과를 빌드합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | HtmlContent속성 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 속성 | HtmlContent속성 |      |
 
 ### HtmlContent속성
 
@@ -749,7 +747,7 @@ export class HtmlContentResult
 **종류:** 상수
 
 ```typescript
-export const nothing: unique symbol
+export const nothing: unique symbol;
 ```
 
 "값 없음"으로 렌더링된 Sentinel: 하위 위치에서는 아무것도 생성하지 않습니다.
@@ -781,7 +779,10 @@ export class RawHtml
 **종류:** 기능
 
 ```typescript
-function render(result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult, container: ParentNode): void
+function render(
+  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
+  container: ParentNode,
+): void;
 ```
 
 영구 템플릿 인스턴스를 사용하여 결과를 `container`으로 렌더링합니다. 정적
@@ -790,17 +791,22 @@ DOM 및 기본 양식 상태는 유지되며 변경된 바인딩 범위만 유�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 결과 | 템플릿결과 \| DomTemplateResult \| 동적요소결과 \| HtmlContentResult |  |
-| 컨테이너 | 상위 노드 |  |
+| 이름     | 유형                                                                 | 설명 |
+| -------- | -------------------------------------------------------------------- | ---- |
+| 결과     | 템플릿결과 \| DomTemplateResult \| 동적요소결과 \| HtmlContentResult |      |
+| 컨테이너 | 상위 노드                                                            |      |
 
 ### 해결ForgeSlotMarkers
 
 **종류:** 기능
 
 ```typescript
-function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceChildren: readonly Node[], destinationRoot: ShadowRoot): void
+function resolveForgeSlotMarkers(
+  root: ParentNode,
+  owner: ForgeElement,
+  sourceChildren: readonly Node[],
+  destinationRoot: ShadowRoot,
+): void;
 ```
 
 렌더링 조각에서 컴파일러에서 내보낸 런타임 슬롯 마커를 확인합니다.
@@ -815,12 +821,12 @@ function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceCh
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 루트 | 상위 노드 |  |
-| 소유자 | ForgeElement |  |
-| 출처어린이 | 읽기 전용 Node[] |  |
-| 목적지루트 | 섀도우루트 |  |
+| 이름       | 유형             | 설명 |
+| ---------- | ---------------- | ---- |
+| 루트       | 상위 노드        |      |
+| 소유자     | ForgeElement     |      |
+| 출처어린이 | 읽기 전용 Node[] |      |
+| 목적지루트 | 섀도우루트       |      |
 
 ### 템플릿결과
 
@@ -837,23 +843,23 @@ export class TemplateResult
 **종류:** 기능
 
 ```typescript
-function unsafeHtml(value: string): RawHtml
+function unsafeHtml(value: string): RawHtml;
 ```
 
 문자열을 기본 웹 구성 요소 경로에 대한 신뢰할 수 있는 하위 마크업으로 표시합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 가치 | 문자열 |      |
 
 ### 사용ID
 
 **종류:** 기능
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 React의 `useId`을 기본 대상으로 대체합니다.
@@ -900,7 +906,7 @@ export interface WebComponentsShadowPolicy
 **종류:** 기능
 
 ```typescript
-function classNames(...values: readonly ClassValue[]): string
+function classNames(...values: readonly ClassValue[]): string;
 ```
 
 여러 개의 {@link ClassValue}를 공백으로 구분된 단일 클래스로 병합합니다.
@@ -909,9 +915,9 @@ function classNames(...values: readonly ClassValue[]): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 읽기 전용 ClassValue[] |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 가치 | 읽기 전용 ClassValue[] |      |
 
 ### 클래스값
 
@@ -930,7 +936,7 @@ export type ClassValue = | string | number | bigint | null | undefined | boolean
 **종류:** 기능
 
 ```typescript
-function createContext(defaultValue: T): MpContext<T>
+function createContext(defaultValue: T): MpContext<T>;
 ```
 
 지정된 기본값을 사용하여 프레임워크 중립적 컨텍스트를 만듭니다. 다음을 반환합니다.
@@ -939,32 +945,32 @@ function createContext(defaultValue: T): MpContext<T>
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 기본값 | 티 |  |
+| 이름   | 유형 | 설명 |
+| ------ | ---- | ---- |
+| 기본값 | 티   |      |
 
 ### isContextProvider
 
 **종류:** 기능
 
 ```typescript
-function isContextProvider(value: unknown): value is MpContextProvider<unknown>
+function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 ```
 
 값이 컨텍스트 {@link MpContext.Provider} 함수인지 여부입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 알 수 없음 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 가치 | 알 수 없음 |      |
 
 ### MP_CONTEXT
 
 **종류:** 상수
 
 ```typescript
-export const MP_CONTEXT: unique symbol
+export const MP_CONTEXT: unique symbol;
 ```
 
 런타임 어댑터가 컨텍스트를 인식하기 위해 사용하는 속성입니다. {@link MpContext.Provider}
@@ -1005,7 +1011,7 @@ export interface MpContextProviderProperties<T>
 **종류:** 기능
 
 ```typescript
-function useContext(context: MpContext<T>): T
+function useContext(context: MpContext<T>): T;
 ```
 
 컨텍스트의 현재 값 읽기: 가장 가까운 엔클로저
@@ -1013,9 +1019,9 @@ function useContext(context: MpContext<T>): T
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 맥락 | MpContext<T> |  |
+| 이름 | 유형         | 설명 |
+| ---- | ------------ | ---- |
+| 맥락 | MpContext<T> |      |
 
 ## `src/runtime/dynamic`
 
@@ -1024,7 +1030,7 @@ function useContext(context: MpContext<T>): T
 **종류:** 상수
 
 ```typescript
-export const Dynamic: MpComponent<MpDynamicProperties>
+export const Dynamic: MpComponent<MpDynamicProperties>;
 ```
 
 동적 구성 요소의 `type` 요소로 사용되는 마커
@@ -1059,7 +1065,11 @@ export interface MpDynamicProperties extends MpPropertyBag
 **종류:** 기능
 
 ```typescript
-function h(type: MpElementType | ((properties: P) => MpElement), properties?: P | null, ...children: MpChild[]): MpElement
+function h(
+  type: MpElementType | ((properties: P) => MpElement),
+  properties?: P | null,
+  ...children: MpChild[]
+): MpElement;
 ```
 
 클래식 JSX 팩토리(`jsxFactory: 'h'`).
@@ -1071,11 +1081,11 @@ function h(type: MpElementType | ((properties: P) => MpElement), properties?: P 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 유형 | MpElement 유형 \| ((속성: P) => MpElement) |  |
-| 속성 | 피\| null |  |
-| 어린이 | MpChild[] |  |
+| 이름   | 유형                                       | 설명 |
+| ------ | ------------------------------------------ | ---- |
+| 유형   | MpElement 유형 \| ((속성: P) => MpElement) |      |
+| 속성   | 피\| null                                  |      |
+| 어린이 | MpChild[]                                  |      |
 
 ## `src/runtime/hooks`
 
@@ -1134,24 +1144,24 @@ export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
 **종류:** 기능
 
 ```typescript
-function useCallback(callback: T, _dependencies?: MpDependencyList): T
+function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 ```
 
 중립 `useCallback`. 렌더링에 대해 변경되지 않은 콜백을 반환합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 콜백 | 티 |  |
-| _종속성 | MpDependencyList |  |
+| 이름    | 유형             | 설명 |
+| ------- | ---------------- | ---- |
+| 콜백    | 티               |      |
+| _종속성 | MpDependencyList |      |
 
 ### 사용효과
 
 **종류:** 기능
 
 ```typescript
-function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void
+function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void;
 ```
 
 중립 `useEffect`. 무작동: 효과 모델 렌더링 후 부작용
@@ -1159,17 +1169,17 @@ function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList):
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| _효과 | MpEffectCallback |  |
-| _종속성 | MpDependencyList |  |
+| 이름    | 유형             | 설명 |
+| ------- | ---------------- | ---- |
+| _효과   | MpEffectCallback |      |
+| _종속성 | MpDependencyList |      |
 
 ### 사용ID
 
 **종류:** 기능
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 중립 `useId`. React 및 Vue의 `useId`을 미러링합니다. 안정적이고 고유한 값을 반환합니다.
@@ -1185,24 +1195,24 @@ function useId(): string
 **종류:** 기능
 
 ```typescript
-function useMemo(factory: () => T, _dependencies?: MpDependencyList): T
+function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 ```
 
 중립 `useMemo`. 렌더링에 대해 값을 한 번 계산합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | () => 티 |  |
-| _종속성 | MpDependencyList |  |
+| 이름    | 유형             | 설명 |
+| ------- | ---------------- | ---- |
+| 공장    | () => 티         |      |
+| _종속성 | MpDependencyList |      |
 
 ### useRef
 
 **종류:** 기능
 
 ```typescript
-function useRef(initial: T): MpRef<T>
+function useRef(initial: T): MpRef<T>;
 ```
 
 중립 `useRef`. 단일에 대한 새로운 `{ current }` 컨테이너를 반환합니다.
@@ -1211,15 +1221,15 @@ function useRef(initial: T): MpRef<T>
 #### 매개변수
 
 | 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 초기 | 티 |  |
+| ---- | ---- | ---- |
+| 초기 | 티   |      |
 
 ### 사용 상태
 
 **종류:** 기능
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>]
+function useState(initial: T | (() => T)): [T, MpSetState<T>];
 ```
 
 중립 `useState`. 기본 구현은 초기 값을 반환하고
@@ -1228,9 +1238,9 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>]
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 초기 | 티\| (() => 티) |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 초기 | 티\| (() => 티) |      |
 
 ## `src/runtime/html-content`
 
@@ -1239,7 +1249,7 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>]
 **종류:** 상수
 
 ```typescript
-export const HtmlContent: MpComponent<HtmlContentProperties>
+export const HtmlContent: MpComponent<HtmlContentProperties>;
 ```
 
 신뢰할 수 있는 원시 HTML 콘텐츠의 요소 유형으로 사용되는 마커입니다.
@@ -1268,7 +1278,7 @@ export interface HtmlContentProperties extends MpPropertyBag
 **종류:** 기능
 
 ```typescript
-function hasSlot(name?: string): boolean
+function hasSlot(name?: string): boolean;
 ```
 
 둘러싸는 구성 요소에 슬롯에 대한 콘텐츠가 제공되었는지 여부 - 중립
@@ -1276,7 +1286,13 @@ Vue의 `$slots.x` / React `properties.x != null` 검사에 해당합니다. 안
 생략된(또는 `'default'`) 이름은 기본 슬롯(`children`)을 대상으로 합니다.
 
 ```tsx
-{hasSlot('footer') ? <footer><Slot name="footer" /></footer> : undefined}
+{
+  hasSlot('footer') ? (
+    <footer>
+      <Slot name="footer" />
+    </footer>
+  ) : undefined;
+}
 ```
 
 `@mission-platform/vite-plugin-forge`은 각각에 직접 호출을 다시 작성합니다.
@@ -1288,9 +1304,9 @@ Vue의 `$slots.x` / React `properties.x != null` 검사에 해당합니다. 안
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 이름 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 이름 | 문자열 |      |
 
 ### MpRender속성
 
@@ -1338,7 +1354,7 @@ export interface MpSlotProperties extends MpPropertyBag
 **종류:** 기능
 
 ```typescript
-function popSlotScope(): void
+function popSlotScope(): void;
 ```
 
 구성 요소의 하위 트리가 확장되면 현재 슬롯 범위를 팝합니다.
@@ -1348,23 +1364,23 @@ function popSlotScope(): void
 **종류:** 기능
 
 ```typescript
-function pushSlotScope(properties: MpPropertyBag): void
+function pushSlotScope(properties: MpPropertyBag): void;
 ```
 
 확장하려는 구성 요소의 소품을 슬롯 범위에 밀어 넣습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | MpPropertyBag |  |
+| 이름 | 유형          | 설명 |
+| ---- | ------------- | ---- |
+| 속성 | MpPropertyBag |      |
 
 ### 해결슬롯
 
 **종류:** 기능
 
 ```typescript
-function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[]
+function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[];
 ```
 
 포함된 항목에 대해 `<Slot name="…" />`의 콘텐츠를 확인합니다.
@@ -1374,10 +1390,10 @@ function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[])
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | MpSlot속성 |  |
-| 대체 | 읽기 전용 MpChild[] |  |
+| 이름 | 유형                | 설명 |
+| ---- | ------------------- | ---- |
+| 속성 | MpSlot속성          |      |
+| 대체 | 읽기 전용 MpChild[] |      |
 
 ## `src/runtime/teleport`
 
@@ -1396,7 +1412,7 @@ export interface MpTeleportProperties
 **종류:** 상수
 
 ```typescript
-export const Teleport: MpComponent<MpTeleportProperties>
+export const Teleport: MpComponent<MpTeleportProperties>;
 ```
 
 포털(`<Teleport to="…">…</Teleport>`)의 `type` 요소로 사용되는 마커입니다.
@@ -1433,7 +1449,7 @@ export interface MpTransitionProperties
 **종류:** 상수
 
 ```typescript
-export const Transition: MpComponent<MpTransitionProperties>
+export const Transition: MpComponent<MpTransitionProperties>;
 ```
 
 Enter/Leave 전환을 위해 `type` 요소로 사용되는 마커
@@ -1449,7 +1465,7 @@ Enter/Leave 전환을 위해 `type` 요소로 사용되는 마커
 **종류:** 상수
 
 ```typescript
-export const TransitionGroup: MpComponent<MpTransitionGroupProperties>
+export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 ```
 
 **목록** 입력/나가기/이동 전환에 대한 요소 `type`으로 사용되는 마커
@@ -1471,7 +1487,7 @@ SSR을 위한 하위 위치) 및 `@mission-platform/vite-plugin-forge`가 다시
 **종류:** 상수
 
 ```typescript
-export const Fragment: MpFragment
+export const Fragment: MpFragment;
 ```
 
 조각(`<>…</>`)에 대한 요소 `type`으로 사용되는 마커, 즉 클래식
@@ -1492,16 +1508,16 @@ TS2604("구조나 호출 서명이 없습니다"). 결코 그렇지 않다
 **종류:** 기능
 
 ```typescript
-function isMpElement(value: unknown): value is MpElement
+function isMpElement(value: unknown): value is MpElement;
 ```
 
 임의의 값을 {@link MpElement}로 좁힙니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 알 수 없음 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 가치 | 알 수 없음 |      |
 
 ### MPChild
 
@@ -1561,7 +1577,7 @@ export type MpPropertyBag = Record<string, unknown>;
 
 이것은 의도적으로 단순하고 유형이 지정되지 않은 레코드입니다. JSX 팩토리에서 사용하는 레코드입니다.
 빌드 및 중립 트리를 탐색하는 동안 어댑터가 색인화하는 항목입니다. 그것은
-구성 요소 소품의 기본 유형이 *아닙니다* — 구성 요소는
+구성 요소 소품의 기본 유형이 _아닙니다_ — 구성 요소는
 허용되는 속성(`children?: MpChild | readonly MpChild[]` 포함)
 렌더링할 때) 초과 속성 검사 및 `keyof`이 유지되도록 합니다.
 컴파일된 모든 타겟에서 의미가 있습니다. 모든 요소마다 소수의 속성
@@ -1588,7 +1604,7 @@ export interface MpReservedProperties
   `"default"`)은 기본 슬롯을 의미합니다.
 
 둘 다 구성 요소 자체 props 계약의 일부가 아닙니다. 둘 다
-*상위*(조정자, 슬롯 라우터), 구성 요소 자체가 아닌 —
+_상위_(조정자, 슬롯 라우터), 구성 요소 자체가 아닌 —
 따라서 각 요소에 선언되지 않고 여기의 모든 요소에 대해 허용됩니다.
 소품 인터페이스.
 
@@ -1597,7 +1613,7 @@ export interface MpReservedProperties
 **종류:** 상수
 
 ```typescript
-export const Slot: MpComponent
+export const Slot: MpComponent;
 ```
 
 명명된 슬롯(`<Slot name="…" />`)에 대한 `type` 요소로 사용되는 마커입니다.

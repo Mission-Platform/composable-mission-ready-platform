@@ -121,7 +121,8 @@ export interface WebComponentsInternalsPolicy {
 }
 
 /** A constructable native element class accepted by {@link ForgeElementMixin}. */
-export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixins require an any[] rest constructor.
+export type ForgeElementHostConstructor = new (...arguments_: any[]) => HTMLElement;
 
 /** Compatibility defaults used when a generated class does not override policy. */
 export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy = {
@@ -181,14 +182,14 @@ function internalsPropertyName(name: string): string {
   if (!name.startsWith('aria-')) {
     return name;
   }
-  return `aria${name.slice(5).replace(/(^|-)([a-z])/g, (_match, _separator, letter: string) => letter.toUpperCase())}`;
+  return `aria${name.slice(5).replaceAll(/(^|-)([a-z])/g, (_match, _separator, letter: string) => letter.toUpperCase())}`;
 }
 
 function ariaAttributeName(name: string): string {
   if (name === 'role' || name.startsWith('aria-')) {
     return name;
   }
-  return `aria-${name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`;
+  return `aria-${name.replaceAll(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`;
 }
 
 /**
@@ -648,7 +649,7 @@ class ForgeSlotOutlet implements LiveSlotOutlet {
   }
 
   private shouldUseNative(): boolean {
-    if (this.marker.hasAttribute('data-mp-forge-nested')) {
+    if (Object.hasOwn(this.marker.dataset, 'mpForgeNested')) {
       return false;
     }
     if (!hasMarkerContent(this.marker)) {
@@ -682,7 +683,7 @@ class ForgeSlotOutlet implements LiveSlotOutlet {
     for (const node of outputNodes) {
       const sourceOwner = projectionOwners.get(node) ?? this.owner;
       const output =
-        this.repeated || this.marker.hasAttribute('data-mp-forge-nested') || usedNodes.has(node)
+        this.repeated || Object.hasOwn(this.marker.dataset, 'mpForgeNested') || usedNodes.has(node)
           ? cloneProjectedNode(node)
           : node;
       usedNodes.add(node);
@@ -694,7 +695,7 @@ class ForgeSlotOutlet implements LiveSlotOutlet {
       before.parentNode?.insertBefore(output, before);
       this.rendered.push(output);
       this.renderedTrees.push(
-        output === node && contentTree !== undefined ? contentTree : { nodes: [output], dispose: () => undefined },
+        output === node && contentTree !== undefined ? contentTree : { nodes: [output], dispose: () => {} },
       );
     }
     if (contentTree !== undefined && this.renderedTrees.every((tree) => tree !== contentTree)) {
@@ -1124,16 +1125,16 @@ export class ForgeElement extends ForgeHTMLElement {
     const result = this.render();
     const domResult = result instanceof TemplateResult ? undefined : result;
     const incompatible =
-      domResult !== undefined
+      domResult === undefined
         ? !(
-            this.mpRenderInstance !== undefined &&
-            !(this.mpRenderInstance instanceof TemplateInstance) &&
-            this.mpRenderInstance.isCompatible(domResult)
-          )
-        : !(
             this.mpRenderInstance instanceof TemplateInstance &&
             result instanceof TemplateResult &&
             this.mpRenderInstance.isCompatible(result)
+          )
+        : !(
+            this.mpRenderInstance !== undefined &&
+            !(this.mpRenderInstance instanceof TemplateInstance) &&
+            this.mpRenderInstance.isCompatible(domResult)
           );
     if (incompatible) {
       for (const outlet of this.mpSlotOutlets) {
@@ -1142,11 +1143,11 @@ export class ForgeElement extends ForgeHTMLElement {
       this.mpSlotOutlets = [];
       this.mpRenderInstance?.dispose();
       this.mpRenderInstance =
-        domResult !== undefined
-          ? domResult.kind === 'template'
+        domResult === undefined
+          ? new TemplateInstance(result as TemplateResult)
+          : domResult.kind === 'template'
             ? new DomTemplateInstance(domResult)
-            : new DomDynamicInstance(domResult)
-          : new TemplateInstance(result as TemplateResult);
+            : new DomDynamicInstance(domResult);
       this.mpRenderInstance.mount(this.mpRoot);
       this.mpSlotOutlets = mountLiveForgeSlotMarkers(this.mpRoot, this, this.mpChildren ?? []);
     } else {
@@ -1234,7 +1235,7 @@ export class ForgeElement extends ForgeHTMLElement {
       const onlyProjectionMoves = mutations.every(
         (mutation) =>
           [...mutation.addedNodes, ...mutation.removedNodes].length > 0 &&
-          [...mutation.addedNodes, ...mutation.removedNodes].every(isProjectionNode),
+          [...mutation.addedNodes, ...mutation.removedNodes].every((node) => isProjectionNode(node)),
       );
       if (onlyProjectionMoves) {
         return;
@@ -1254,8 +1255,9 @@ export class ForgeElement extends ForgeHTMLElement {
  */
 export function ForgeElementMixin<TBase extends ForgeElementHostConstructor>(Base: TBase): TBase & typeof ForgeElement {
   class MixedForgeElement extends Base {
-    constructor(...args: any[]) {
-      super(...args);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TypeScript mixins require an any[] rest constructor.
+    constructor(...arguments_: any[]) {
+      super(...arguments_);
       (this as unknown as { initializeForgeElement: () => void }).initializeForgeElement();
     }
   }

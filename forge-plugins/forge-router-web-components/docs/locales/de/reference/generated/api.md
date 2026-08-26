@@ -38,16 +38,16 @@ Node, String oder DOM-Factory in `route.component` wird direkt gerendert.
 **Art:** Funktion
 
 ```typescript
-function registerRouterElements(options: RegisterRouterElementsOptions = {}): void
+function registerRouterElements(options: RegisterRouterElementsOptions = {}): void;
 ```
 
 Registrieren Sie die Router-Grundelemente einmal. sicher, vor Flüssigkeitszufuhr und Tests zu rufen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | RegisterRouterElementsOptions |  |
+| Name     | Geben Sie                     | ein Beschreibung |
+| -------- | ----------------------------- | ---------------- |
+| Optionen | RegisterRouterElementsOptions |                  |
 
 ## `src/runtime/history`
 
@@ -56,39 +56,39 @@ Registrieren Sie die Router-Grundelemente einmal. sicher, vor Flüssigkeitszufuh
 **Art:** Funktion
 
 ```typescript
-function createBrowserHistory(win?: Window): MpBrowserHistory
+function createBrowserHistory(win?: Window): MpBrowserHistory;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| gewinnen | Fenster |  |
+| Name     | Geben Sie | ein Beschreibung |
+| -------- | --------- | ---------------- |
+| gewinnen | Fenster   |                  |
 
 ### createMemoryHistory
 
 **Art:** Funktion
 
 ```typescript
-function createMemoryHistory(initialUrl = '/'): MpMemoryHistory
+function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| initialUrl |  |  |
+| Name       | Geben Sie | ein Beschreibung |
+| ---------- | --------- | ---------------- |
+| initialUrl |           |                  |
 
 ### createWebHistory
 
 **Art:** Funktion
 
 ```typescript
-function createWebHistory(): MpHistory
+function createWebHistory(): MpHistory;
 ```
 
 Keine Beschreibung angegeben.
@@ -120,7 +120,7 @@ Eine deterministische Verlaufsimplementierung für Tests, SSR und Prerendering.
 **Art:** konstant
 
 ```typescript
-export const ForgeRouterLink
+export const ForgeRouterLink;
 ```
 
 Keine Beschreibung angegeben.
@@ -134,7 +134,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const ForgeRouterOutlet
+export const ForgeRouterOutlet;
 ```
 
 Keine Beschreibung angegeben.
@@ -148,7 +148,7 @@ Keine Beschreibung angegeben.
 **Art:** Komponente
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 Benutzerdefiniertes Element-Tag, das für kompilierte neutrale Links verwendet wird.
@@ -158,7 +158,7 @@ Benutzerdefiniertes Element-Tag, das für kompilierte neutrale Links verwendet w
 **Art:** Komponente
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Benutzerdefiniertes Element-Tag, das für kompilierte neutrale Steckdosen verwendet wird.
@@ -168,7 +168,7 @@ Benutzerdefiniertes Element-Tag, das für kompilierte neutrale Steckdosen verwen
 **Art:** konstant
 
 ```typescript
-export const resolveForgeLink
+export const resolveForgeLink;
 ```
 
 Keine Beschreibung angegeben.
@@ -182,39 +182,39 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Lösen Sie ein neutrales Ziel über den gebundenen Web Components-Router auf.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zu | MpRouteLocationRaw |  |
+| Name | Geben Sie          | ein Beschreibung |
+| ---- | ------------------ | ---------------- |
+| zu   | MpRouteLocationRaw |                  |
 
 ### setForgeRouter
 
 **Art:** Funktion
 
 ```typescript
-function setForgeRouter(router: MpWebComponentsRouter<View>): void
+function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
 Binden Sie den App-eigenen Router für kompilierte Framework-freie Paketfunktionen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Router | MpWebComponentsRouter<View> |  |
+| Name   | Geben Sie                   | ein Beschreibung |
+| ------ | --------------------------- | ---------------- |
+| Router | MpWebComponentsRouter<View> |                  |
 
 ### Verwenden Sie ForgeNavigation
 
 **Art:** konstant
 
 ```typescript
-export const useForgeNavigation
+export const useForgeNavigation;
 ```
 
 Keine Beschreibung angegeben.
@@ -228,7 +228,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const useForgeRoute
+export const useForgeRoute;
 ```
 
 Keine Beschreibung angegeben.
@@ -242,7 +242,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const useForgeRouter
+export const useForgeRouter;
 ```
 
 Keine Beschreibung angegeben.
@@ -256,7 +256,7 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Nur zwingende Navigations-/Auflösungsfunktionen lesen.
@@ -266,7 +266,7 @@ Nur zwingende Navigations-/Auflösungsfunktionen lesen.
 **Art:** Funktion
 
 ```typescript
-function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
+function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'];
 ```
 
 Lesen Sie die aktuelle App-eigene Route als neutralen Standort.
@@ -276,7 +276,7 @@ Lesen Sie die aktuelle App-eigene Route als neutralen Standort.
 **Art:** Funktion
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lesen Sie das neutrale Fähigkeitsobjekt, das von der Web Components-Laufzeit unterstützt wird.
@@ -288,7 +288,7 @@ Lesen Sie das neutrale Fähigkeitsobjekt, das von der Web Components-Laufzeit un
 **Art:** Funktion
 
 ```typescript
-function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>
+function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>;
 ```
 
 Erstellen Sie die vollständige Framework-freie Router-Laufzeitumgebung. Routenabgleich und URL
@@ -297,9 +297,9 @@ Verlauf, Wächter, Weiterleitungen, Abonnements und Browser-Scroll-Verhalten.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Optionen | MpWebComponentsRouterOptions<View> |  |
+| Name     | Geben Sie                          | ein Beschreibung |
+| -------- | ---------------------------------- | ---------------- |
+| Optionen | MpWebComponentsRouterOptions<View> |                  |
 
 ### MpWebComponentsRouter
 
@@ -326,17 +326,17 @@ Keine Beschreibung angegeben.
 **Art:** Funktion
 
 ```typescript
-function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
+function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 ```
 
 Keine Beschreibung angegeben.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Router | MpRouterAdapter |  |
-| zu | MpRouteLocationRaw |  |
+| Name   | Geben Sie          | ein Beschreibung |
+| ------ | ------------------ | ---------------- |
+| Router | MpRouterAdapter    |                  |
+| zu     | MpRouteLocationRaw |                  |
 
 ## `src/utils/forge-router-web-components`
 
@@ -345,7 +345,7 @@ Keine Beschreibung angegeben.
 **Art:** konstant
 
 ```typescript
-export const forgeRouterWebComponents
+export const forgeRouterWebComponents;
 ```
 
 Forge-Router-Ziel, unterstützt durch die Framework-freie History/Outlet-Laufzeit.

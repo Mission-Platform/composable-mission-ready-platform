@@ -9,14 +9,14 @@ build adapters.
 
 Forge compilation crosses several packages, each with a deliberately narrow responsibility:
 
-| Layer                                                | Owns                                                                                                                                         | Does not own                                                            |
-| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| `@mission-platform/vite-plugin-forge`                | Parsing, normalization, neutral analysis, semantic IR, shared optimization, cache/discovery, dispatch, and generic Vite/tsdown orchestration | React, Vue, Solid, Svelte, Web Components, or CMS source emitters       |
-| `@mission-platform/forge-plugin-api`                 | `FrameworkOutputPlugin`, semantic target contracts, generated-module types, target metadata, and Vite/tsdown adapter types                   | A framework implementation or target selection registry                 |
-| Built-in `@mission-platform/forge-plugin-*` packages | Target lowering, target optimization, source generation, target diagnostics, runtime metadata, and native build adapters                     | Neutral parsing and cross-target orchestration                          |
-| `@mission-platform/forge-cms-plugin-api`             | `CmsOutputPlugin`, the neutral content model, the discover→analyse→emit→write driver, island co-generation, and the CMS build helpers        | Any platform-specific schema, template, or manifest shape               |
-| `@mission-platform/forge-cms-*` packages             | One content platform each: its field mapping, template dialect, manifest shape, and platform diagnostics                                     | Neutral prop classification or cross-target orchestration               |
-| Package `tsdown.config.ts` files                     | Selecting the target plugin instances and package-specific overrides                                                                         | Reimplementing compiler stages or framework switch tables               |
+| Layer                                                | Owns                                                                                                                                         | Does not own                                                      |
+| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge`                | Parsing, normalization, neutral analysis, semantic IR, shared optimization, cache/discovery, dispatch, and generic Vite/tsdown orchestration | React, Vue, Solid, Svelte, Web Components, or CMS source emitters |
+| `@mission-platform/forge-plugin-api`                 | `FrameworkOutputPlugin`, semantic target contracts, generated-module types, target metadata, and Vite/tsdown adapter types                   | A framework implementation or target selection registry           |
+| Built-in `@mission-platform/forge-plugin-*` packages | Target lowering, target optimization, source generation, target diagnostics, runtime metadata, and native build adapters                     | Neutral parsing and cross-target orchestration                    |
+| `@mission-platform/forge-cms-plugin-api`             | `CmsOutputPlugin`, the neutral content model, the discover→analyse→emit→write driver, island co-generation, and the CMS build helpers        | Any platform-specific schema, template, or manifest shape         |
+| `@mission-platform/forge-cms-*` packages             | One content platform each: its field mapping, template dialect, manifest shape, and platform diagnostics                                     | Neutral prop classification or cross-target orchestration         |
+| Package `tsdown.config.ts` files                     | Selecting the target plugin instances and package-specific overrides                                                                         | Reimplementing compiler stages or framework switch tables         |
 
 The dependency direction is explicit: a package imports the target plugin it wants, passes that instance to the neutral
 driver, and receives a target-specific build configuration. The driver never constructs a target from a string or imports
@@ -129,12 +129,12 @@ Built-in targets are constructed by their own packages, for example `forgeReactF
 targets it publishes:
 
 ```ts
-import { defineTsdownForgeComponents } from "@mission-platform/vite-plugin-forge";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeSolidFramework } from "@mission-platform/forge-plugin-solid";
-import { forgeSvelteFramework } from "@mission-platform/forge-plugin-svelte";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
-import { forgeWebComponentsFramework } from "@mission-platform/forge-plugin-web-components";
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
 export default defineTsdownForgeComponents({
   rootDir: import.meta.dirname,
@@ -146,7 +146,7 @@ export default defineTsdownForgeComponents({
     forgeWebComponentsFramework(),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: "MissionPlatformComponents",
+  name: 'MissionPlatformComponents',
 });
 ```
 
@@ -222,7 +222,7 @@ all framework consumers have the same hook types.
 
 ## CMS projection
 
-Projecting components onto a *content platform* is an axis orthogonal to framework lowering, not a framework
+Projecting components onto a _content platform_ is an axis orthogonal to framework lowering, not a framework
 implementation hidden inside the main driver. A component becomes a Storyblok blok, an Astro island, a Ghost partial, a
 Jekyll include, or a Webflow code component — and each of those can be paired with **any** framework output plugin.
 `storyblok × vue`, `astro × solid`, and `ghost × web-components` are therefore configuration rather than new code.
@@ -235,7 +235,7 @@ Jekyll include, or a Webflow code component — and each of those can be paired 
    and a union mixing string literals with `string`/`number` degrades to `text` — decided once, so every platform
    agrees. When the semantic IR is supplied, `ContentComponent.interactive` reports whether the component carries state,
    refs, effects, or events.
-2. **A target contract.** `CmsOutputPlugin` *composes* a `FrameworkOutputPlugin` rather than being one, and declares the
+2. **A target contract.** `CmsOutputPlugin` _composes_ a `FrameworkOutputPlugin` rather than being one, and declares the
    emitters `emitSchema`, `emitTemplate`, `emitManifest`, and `emitEntry`. `defineForgeCmsPlugin` validates it at
    configuration time, including a target's `supportedFrameworks` restriction.
 3. **A generic driver and build helpers.** `generateCmsArtifacts` discovers the neutral barrel, obtains each component's
@@ -247,23 +247,23 @@ The driver never maps a string id onto a target — consumers construct and pass
 framework plugins:
 
 ```ts
-import { defineTsdownForgeCmsAll } from "@mission-platform/forge-cms-plugin-api";
-import { forgeStoryblokCms } from "@mission-platform/forge-cms-storyblok";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
 export default defineTsdownForgeCmsAll({
   rootDir: import.meta.dirname,
   targets: [
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeReactFramework(),
-      storyblokRuntime: "@storyblok/react",
+      storyblokRuntime: '@storyblok/react',
     }),
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeVueFramework(),
-      storyblokRuntime: "@storyblok/vue",
+      storyblokRuntime: '@storyblok/vue',
     }),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
@@ -285,13 +285,13 @@ flowchart TD
 
 ### The targets
 
-| Package                                    | Factory              | Emits                                                                        |
-| :----------------------------------------- | :-------------------- | :---------------------------------------------------------------------------- |
-| `@mission-platform/forge-cms-storyblok`    | `forgeStoryblokCms`   | a component object per component, a framework blok wrapper, `components.json`, a typed entry |
-| `@mission-platform/forge-cms-astro`        | `forgeAstroCms`       | static `.astro` or a `client:load` island, plus a zod `content.config.ts`     |
-| `@mission-platform/forge-cms-ghost`        | `forgeGhostCms`       | Handlebars partials plus a `config.custom` theme fragment                     |
-| `@mission-platform/forge-cms-jekyll`       | `forgeJekyllCms`      | Liquid includes plus `_data/forge-components.yml` and a `_config.yml` fragment |
-| `@mission-platform/forge-cms-webflow`      | `forgeWebflowCms`     | `declareComponent` code-component declarations plus a `webflow.json` library fragment |
+| Package                                 | Factory             | Emits                                                                                        |
+| :-------------------------------------- | :------------------ | :------------------------------------------------------------------------------------------- |
+| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | a component object per component, a framework blok wrapper, `components.json`, a typed entry |
+| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | static `.astro` or a `client:load` island, plus a zod `content.config.ts`                    |
+| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | Handlebars partials plus a `config.custom` theme fragment                                    |
+| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | Liquid includes plus `_data/forge-components.yml` and a `_config.yml` fragment               |
+| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | `declareComponent` code-component declarations plus a `webflow.json` library fragment        |
 
 Every unsupported mapping produces a `CompilerDiagnostic` with a phase, a code, and an actionable reason rather than a
 silent omission — Ghost warns on numeric fields and on exceeding its ~20-setting cap, Webflow warns when a number

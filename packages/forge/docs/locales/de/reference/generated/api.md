@@ -16,39 +16,39 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge`.
 **Art:** Funktion
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement
+function HtmlContent(properties: HtmlContentProperties): ReactElement;
 ```
 
 Rendern Sie vertrauenswürdiges HTML mit `dangerouslySetInnerHTML` in einen React-Host.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | HtmlContentProperties |  |
+| Name          | Geben Sie             | ein Beschreibung |
+| ------------- | --------------------- | ---------------- |
+| Eigenschaften | HtmlContentProperties |                  |
 
 ### renderToReact
 
 **Art:** Funktion
 
 ```typescript
-function renderToReact(element: MpElement): ReactElement
+function renderToReact(element: MpElement): ReactElement;
 ```
 
 Rendern Sie einen neutralen {@link MpElement}-Baum in ein React-Element.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Element | MpElement |  |
+| Name    | Geben Sie | ein Beschreibung |
+| ------- | --------- | ---------------- |
+| Element | MpElement |                  |
 
 ### Teleportieren
 
 **Art:** Funktion
 
 ```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode
+function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
 ```
 
 Der React-Build des neutralen `<Teleport>`-Grundelements – eine dünne Hülle
@@ -75,9 +75,9 @@ Kinder vorhanden) und `createPortal` wird nur ausgeführt, wenn ein DOM-Ziel vor
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| { to = 'body',disabled = false,children } | TeleportProperties |  |
+| Name                                      | Geben Sie          | ein Beschreibung |
+| ----------------------------------------- | ------------------ | ---------------- |
+| { to = 'body',disabled = false,children } | TeleportProperties |                  |
 
 ### TeleportProperties
 
@@ -94,7 +94,7 @@ Die von der React {@link Teleport}-Komponente akzeptierten Eigenschaften.
 **Art:** Funktion
 
 ```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>
+function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
 ```
 
 Wickeln Sie eine neutrale Komponente als erstklassige React-Funktionskomponente ein und fertig
@@ -102,23 +102,17 @@ von `react-dom` gerendert oder in anderen React-Komponenten komponiert werden.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | MpComponent<P> |  |
-| Anzeigename | Zeichenfolge |  |
+| Name        | Geben Sie      | ein Beschreibung |
+| ----------- | -------------- | ---------------- |
+| Komponente  | MpComponent<P> |                  |
+| Anzeigename | Zeichenfolge   |                  |
 
 ### Übergang
 
 **Art:** Funktion
 
 ```typescript
-function Transition({
-  name = 'v',
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionProperties): ReactNode
+function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
 ```
 
 Der React-Build des neutralen `<Transition>`-Grundelements – eine kleine CSS-Klasse
@@ -134,9 +128,9 @@ an Ort und Stelle – passend zur SSR-Ausgabe von Vue – und die Animation wird
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| { name = 'v', erscheinen = false, Dauer, Kinder, ...overrides } | Übergangseigenschaften |  |
+| Name                                                            | Geben Sie              | ein Beschreibung |
+| --------------------------------------------------------------- | ---------------------- | ---------------- |
+| { name = 'v', erscheinen = false, Dauer, Kinder, ...overrides } | Übergangseigenschaften |                  |
 
 ### Übergangsgruppe
 
@@ -151,7 +145,7 @@ function TransitionGroup({
   duration,
   children,
   ...overrides
-}: TransitionGroupProperties): ReactNode
+}: TransitionGroupProperties): ReactNode;
 ```
 
 Der React-Build des neutralen `<TransitionGroup>`-Grundelements – eine CSS-Klasse
@@ -172,9 +166,9 @@ korrekt, erhält aber keine Klasse (entspricht der neutralen SSR-in-Place-Basisl
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| { name = 'v', tag, moveClass, erscheinen = false, Dauer, Kinder, ...overrides } | TransitionGroupProperties |  |
+| Name                                                                            | Geben Sie                 | ein Beschreibung |
+| ------------------------------------------------------------------------------- | ------------------------- | ---------------- |
+| { name = 'v', tag, moveClass, erscheinen = false, Dauer, Kinder, ...overrides } | TransitionGroupProperties |                  |
 
 ### TransitionGroupProperties
 
@@ -203,7 +197,7 @@ Die von der React {@link Transition}-Komponente akzeptierten Eigenschaften.
 **Art:** Funktion
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element
+function HtmlContent(properties: HtmlContentProperties): JSX.Element;
 ```
 
 Der Solid-Build des neutralen `<HtmlContent>`-Grundelements. Solid
@@ -211,16 +205,16 @@ Die Eigenschaft `innerHTML` ist der native, auf Ersetzungen basierende Rohinhalt
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | HtmlContentProperties |  |
+| Name          | Geben Sie             | ein Beschreibung |
+| ------------- | --------------------- | ---------------- |
+| Eigenschaften | HtmlContentProperties |                  |
 
 ### Teleportieren
 
 **Art:** Funktion
 
 ```typescript
-function Teleport(properties: TeleportProperties): JSX.Element
+function Teleport(properties: TeleportProperties): JSX.Element;
 ```
 
 Der Solid-Build des neutralen `<Teleport>`-Grundelements – eine dünne Hülle
@@ -236,9 +230,9 @@ Wird montiert, sobald ein echtes Ziel verfügbar ist.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | TeleportProperties |  |
+| Name          | Geben Sie          | ein Beschreibung |
+| ------------- | ------------------ | ---------------- |
+| Eigenschaften | TeleportProperties |                  |
 
 ### TeleportProperties
 
@@ -255,7 +249,7 @@ Die von der Solid {@link Teleport}-Komponente akzeptierten Eigenschaften.
 **Art:** Funktion
 
 ```typescript
-function Transition(properties: TransitionProperties): JSX.Element
+function Transition(properties: TransitionProperties): JSX.Element;
 ```
 
 Der Solid-Build des neutralen `<Transition>`-Grundelements. Eine minimale Richtigkeit
@@ -272,16 +266,16 @@ Solid Ziel.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Übergangseigenschaften |  |
+| Name          | Geben Sie              | ein Beschreibung |
+| ------------- | ---------------------- | ---------------- |
+| Eigenschaften | Übergangseigenschaften |                  |
 
 ### Übergangsgruppe
 
 **Art:** Funktion
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element
+function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
 ```
 
 Der Solid-Build des neutralen `<TransitionGroup>`-Grundelements. Wie
@@ -298,9 +292,9 @@ Solid Ziel.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | TransitionGroupProperties |  |
+| Name          | Geben Sie                 | ein Beschreibung |
+| ------------- | ------------------------- | ---------------- |
+| Eigenschaften | TransitionGroupProperties |                  |
 
 ### TransitionGroupProperties
 
@@ -329,7 +323,7 @@ Die von der Solid {@link Transition}-Komponente akzeptierten Eigenschaften.
 **Art:** Funktion
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet
+function HtmlContent(properties: HtmlContentProperties): Snippet;
 ```
 
 Die Rohinhaltsimplementierung des Svelte-Adapters. `createRawSnippet` ist das
@@ -338,25 +332,25 @@ Host-Referenzen und Ereignisweiterleitung für die handschriftliche Adapternutzu
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | HtmlContentProperties |  |
+| Name          | Geben Sie             | ein Beschreibung |
+| ------------- | --------------------- | ---------------- |
+| Eigenschaften | HtmlContentProperties |                  |
 
 ### Teleportieren
 
 **Art:** Funktion
 
 ```typescript
-function Teleport(properties: TeleportProperties): Snippet
+function Teleport(properties: TeleportProperties): Snippet;
 ```
 
 Rendern Sie ein untergeordnetes Forge-Snippet für Svelte SSR und Clientparität.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | TeleportProperties |  |
+| Name          | Geben Sie          | ein Beschreibung |
+| ------------- | ------------------ | ---------------- |
+| Eigenschaften | TeleportProperties |                  |
 
 ### TeleportProperties
 
@@ -373,32 +367,32 @@ Die vom Grundelement Svelte {@link Teleport} akzeptierten Eigenschaften.
 **Art:** Funktion
 
 ```typescript
-function Transition(properties: TransitionProperties): Snippet
+function Transition(properties: TransitionProperties): Snippet;
 ```
 
 Rendern Sie ein einzelnes untergeordnetes Übergangselement. Die Animation wird durch das native Svelte-Markup bereitgestellt.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | Übergangseigenschaften |  |
+| Name          | Geben Sie              | ein Beschreibung |
+| ------------- | ---------------------- | ---------------- |
+| Eigenschaften | Übergangseigenschaften |                  |
 
 ### Übergangsgruppe
 
 **Art:** Funktion
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet
+function TransitionGroup(properties: TransitionGroupProperties): Snippet;
 ```
 
 Rendern Sie untergeordnete Übergangsgruppen für native Svelte-Schlüsselblöcke.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | TransitionGroupProperties |  |
+| Name          | Geben Sie                 | ein Beschreibung |
+| ------------- | ------------------------- | ---------------- |
+| Eigenschaften | TransitionGroupProperties |                  |
 
 ### TransitionGroupProperties
 
@@ -427,7 +421,7 @@ Die vom Grundelement Svelte {@link Transition} akzeptierten Eigenschaften.
 **Art:** Funktion
 
 ```typescript
-function createContext(defaultValue: T): VueContext<T>
+function createContext(defaultValue: T): VueContext<T>;
 ```
 
 Der Vue-Build des neutralen `createContext`-Grundelements. Gibt ein Handle zurück, dessen
@@ -439,48 +433,48 @@ um diese auf das Ziel Vue zu importieren.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Standardwert | T |  |
+| Name         | Geben Sie | ein Beschreibung |
+| ------------ | --------- | ---------------- |
+| Standardwert | T         |                  |
 
 ### HTML-Inhalt
 
 **Art:** Funktion
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode
+function HtmlContent(properties: HtmlContentProperties): VNode;
 ```
 
 Rendern Sie vertrauenswürdiges HTML in einen Vue-Host mithilfe der Renderfunktions-`innerHTML`-Bindung.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | HtmlContentProperties |  |
+| Name          | Geben Sie             | ein Beschreibung |
+| ------------- | --------------------- | ---------------- |
+| Eigenschaften | HtmlContentProperties |                  |
 
 ### renderToVue
 
 **Art:** Funktion
 
 ```typescript
-function renderToVue(element: MpElement): VNode
+function renderToVue(element: MpElement): VNode;
 ```
 
 Rendern Sie einen neutralen {@link MpElement}-Baum in einen Vue `VNode`.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Element | MpElement |  |
+| Name    | Geben Sie | ein Beschreibung |
+| ------- | --------- | ---------------- |
+| Element | MpElement |                  |
 
 ### toVueComponent
 
 **Art:** Funktion
 
 ```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 Verpacken Sie eine neutrale Komponente als Vue-Funktionskomponente. Eingehende Attribute
@@ -491,17 +485,17 @@ Das Ergebnis kann wie jede andere Vue-Komponente verwendet werden.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Komponente | MpComponent<P> |  |
-| Name | Zeichenfolge |  |
+| Name       | Geben Sie      | ein Beschreibung |
+| ---------- | -------------- | ---------------- |
+| Komponente | MpComponent<P> |                  |
+| Name       | Zeichenfolge   |                  |
 
 ### useContext
 
 **Art:** Funktion
 
 ```typescript
-function useContext(context: VueContext<T>): T
+function useContext(context: VueContext<T>): T;
 ```
 
 Der Vue-Build des neutralen `useContext`-Grundelements – eine dünne Hülle
@@ -510,9 +504,9 @@ Der Anbieter hat eines bereitgestellt.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Kontext | VueContext<T> |  |
+| Name    | Geben Sie     | ein Beschreibung |
+| ------- | ------------- | ---------------- |
+| Kontext | VueContext<T> |                  |
 
 ### VueContext
 
@@ -531,7 +525,7 @@ Ein Vue-Kontexthandle: ein von `provide()` unterstütztes `Provider` plus der Sc
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 Interna sind harmlos fähigkeitsabhängig; Formularzuordnung bleibt Opt-in.
@@ -541,7 +535,7 @@ Interna sind harmlos fähigkeitsabhängig; Formularzuordnung bleibt Opt-in.
 **Art:** konstant
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 Kompatibilitätsstandards werden verwendet, wenn eine generierte Klasse die Richtlinie nicht überschreibt.
@@ -561,18 +555,22 @@ Ein direkt im DOM generiertes Ergebnis mit einer stabilen Definitionsidentität.
 **Art:** Funktion
 
 ```typescript
-function dynamicElement(tag: unknown, properties: Readonly<Record<string, unknown>>, ...children: readonly unknown[]): DynamicElementResult
+function dynamicElement(
+  tag: unknown,
+  properties: Readonly<Record<string, unknown>>,
+  ...children: readonly unknown[]
+): DynamicElementResult;
 ```
 
 Erstellen Sie ein natives Web-Components-Element, dessen Tag zur Laufzeit ausgewählt wird.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Tag | unbekannt |  |
-| Eigenschaften | Schreibgeschützt<Record<string, unknown>> |  |
-| Kinder | schreibgeschützt unbekannt[] |  |
+| Name          | Geben Sie                                 | ein Beschreibung |
+| ------------- | ----------------------------------------- | ---------------- |
+| Tag           | unbekannt                                 |                  |
+| Eigenschaften | Schreibgeschützt<Record<string, unknown>> |                  |
+| Kinder        | schreibgeschützt unbekannt[]              |                  |
 
 ### DynamicElementResult
 
@@ -631,7 +629,7 @@ Eine konstruierbare native Elementklasse, die von {@link ForgeElementMixin} akze
 **Art:** Funktion
 
 ```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement
+function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
 ```
 
 Fügen Sie die hostunabhängige Laufzeit von Forge zu einem nativen Elementkonstruktor hinzu.
@@ -640,9 +638,9 @@ Dieses Mixin kopiert das Verhalten und behält gleichzeitig die native Prototype
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Basis | TBase |  |
+| Name  | Geben Sie | ein Beschreibung |
+| ----- | --------- | ---------------- |
+| Basis | TBase     |                  |
 
 ### ForgeSlotMarker
 
@@ -659,7 +657,7 @@ Vom Web-Components-Compiler ausgegebener Laufzeitmarker für mehrdeutige Slots.
 **Art:** Funktion
 
 ```typescript
-function hasSlotContent(host: Element, name?: string): boolean
+function hasSlotContent(host: Element, name?: string): boolean;
 ```
 
 Ob `host` Inhalte für einen seiner Slots erhalten hat – den des nativen Ziels
@@ -685,17 +683,17 @@ läuft, bevor sie angehängt werden. Später projizierter Inhalt rendert das Ele
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Gastgeber | Element |  |
-| Name | Zeichenfolge |  |
+| Name      | Geben Sie    | ein Beschreibung |
+| --------- | ------------ | ---------------- |
+| Gastgeber | Element      |                  |
+| Name      | Zeichenfolge |                  |
 
 ### html
 
 **Art:** Funktion
 
 ```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult
+function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
 ```
 
 Tagged-Template-Fabrik. Erfasst die statischen und dynamischen Zeichenfolgen der Anrufseite
@@ -703,26 +701,26 @@ Werte in ein {@link TemplateResult} für {@link render} zur Umsetzung in DOM.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Saiten | TemplateStringsArray |  |
-| Werte | schreibgeschützt unbekannt[] |  |
+| Name   | Geben Sie                    | ein Beschreibung |
+| ------ | ---------------------------- | ---------------- |
+| Saiten | TemplateStringsArray         |                  |
+| Werte  | schreibgeschützt unbekannt[] |                  |
 
 ### HTML-Inhalt
 
 **Art:** Funktion
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult
+function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
 ```
 
 Erstellen Sie ein natives Web-Components-Rohinhaltsergebnis, ohne `html` zu umgehen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | HtmlContentProperties |  |
+| Name          | Geben Sie             | ein Beschreibung |
+| ------------- | --------------------- | ---------------- |
+| Eigenschaften | HtmlContentProperties |                  |
 
 ### HtmlContentProperties
 
@@ -749,7 +747,7 @@ Ein nativer Host plus vertrauenswürdiges unformatiertes untergeordnetes Markup,
 **Art:** konstant
 
 ```typescript
-export const nothing: unique symbol
+export const nothing: unique symbol;
 ```
 
 Sentinel wird als „kein Wert“ dargestellt: In der untergeordneten Position produziert es nichts, in
@@ -781,7 +779,10 @@ Ein vertrauenswürdiger Roh-HTML-Wert, der vom nativen Web-Components-Adapter ve
 **Art:** Funktion
 
 ```typescript
-function render(result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult, container: ParentNode): void
+function render(
+  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
+  container: ParentNode,
+): void;
 ```
 
 Rendern Sie ein Ergebnis mithilfe einer persistenten Vorlageninstanz in `container`. Statisch
@@ -790,17 +791,22 @@ aktualisiert; Inkompatible Vorlagenarten ersetzen den Renderer-eigenen Inhalt.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Ergebnis | TemplateResult \| DomTemplateResult \| DynamicElementResult \| HtmlContentResult |  |
-| Behälter | ParentNode |  |
+| Name     | Geben Sie                                                                        | ein Beschreibung |
+| -------- | -------------------------------------------------------------------------------- | ---------------- |
+| Ergebnis | TemplateResult \| DomTemplateResult \| DynamicElementResult \| HtmlContentResult |                  |
+| Behälter | ParentNode                                                                       |                  |
 
 ### auflösenForgeSlotMarkers
 
 **Art:** Funktion
 
 ```typescript
-function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceChildren: readonly Node[], destinationRoot: ShadowRoot): void
+function resolveForgeSlotMarkers(
+  root: ParentNode,
+  owner: ForgeElement,
+  sourceChildren: readonly Node[],
+  destinationRoot: ShadowRoot,
+): void;
 ```
 
 Lösen Sie vom Compiler ausgegebene Laufzeitslotmarkierungen in einem Renderfragment auf.
@@ -815,12 +821,12 @@ Der Wert wird als letztes Mittel realisiert.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wurzel | ParentNode |  |
-| Eigentümer | ForgeElement |  |
-| QuelleKinder | schreibgeschützt Node[] |  |
-| ZielRoot | ShadowRoot |  |
+| Name         | Geben Sie               | ein Beschreibung |
+| ------------ | ----------------------- | ---------------- |
+| Wurzel       | ParentNode              |                  |
+| Eigentümer   | ForgeElement            |                  |
+| QuelleKinder | schreibgeschützt Node[] |                  |
+| ZielRoot     | ShadowRoot              |                  |
 
 ### TemplateResult
 
@@ -837,23 +843,23 @@ Ein geparstes `html\`…\``-Ergebnis: die statischen Zeichenfolgen plus die inte
 **Art:** Funktion
 
 ```typescript
-function unsafeHtml(value: string): RawHtml
+function unsafeHtml(value: string): RawHtml;
 ```
 
 Markieren Sie eine Zeichenfolge als vertrauenswürdiges untergeordnetes Markup für den nativen Webkomponentenpfad.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Wert | Zeichenfolge |                  |
 
 ### useId
 
 **Art:** Funktion
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 Der Ersatz des nativen Ziels für `useId` von React.
@@ -900,7 +906,7 @@ Typisierte Shadow-Root-Optionen, die von generierten Forge-Elementen akzeptiert 
 **Art:** Funktion
 
 ```typescript
-function classNames(...values: readonly ClassValue[]): string
+function classNames(...values: readonly ClassValue[]): string;
 ```
 
 Führen Sie eine beliebige Anzahl von {@link ClassValue}s in einer einzigen durch Leerzeichen getrennten Klasse zusammen
@@ -909,9 +915,9 @@ das erste Vorkommen gewinnt). Gibt eine leere Zeichenfolge zurück, wenn nichts 
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Werte | schreibgeschützter Klassenwert[] |  |
+| Name  | Geben Sie                        | ein Beschreibung |
+| ----- | -------------------------------- | ---------------- |
+| Werte | schreibgeschützter Klassenwert[] |                  |
 
 ### Klassenwert
 
@@ -930,7 +936,7 @@ Ein einzelner Wert, der von {@link classNames} akzeptiert wird.
 **Art:** Funktion
 
 ```typescript
-function createContext(defaultValue: T): MpContext<T>
+function createContext(defaultValue: T): MpContext<T>;
 ```
 
 Erstellen Sie einen Framework-neutralen Kontext mit dem angegebenen Standardwert. Gibt a zurück
@@ -939,16 +945,16 @@ mit {@link useContext}.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Standardwert | T |  |
+| Name         | Geben Sie | ein Beschreibung |
+| ------------ | --------- | ---------------- |
+| Standardwert | T         |                  |
 
 ### isContextProvider
 
 **Art:** Funktion
 
 ```typescript
-function isContextProvider(value: unknown): value is MpContextProvider<unknown>
+function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 ```
 
 Ob ein Wert eine Kontextfunktion {@link MpContext.Provider} ist.
@@ -956,15 +962,15 @@ Ob ein Wert eine Kontextfunktion {@link MpContext.Provider} ist.
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | unbekannt |  |
+| ---- | --------- | ---------------- |
+| Wert | unbekannt |                  |
 
 ### MP_CONTEXT
 
 **Art:** konstant
 
 ```typescript
-export const MP_CONTEXT: unique symbol
+export const MP_CONTEXT: unique symbol;
 ```
 
 Die Eigenschaft, die die Laufzeitadapter verwenden, um einen Kontext zu erkennen {@link MpContext.Provider}
@@ -1005,7 +1011,7 @@ Die von einem {@link MpContext.Provider}-Element akzeptierten Eigenschaften.
 **Art:** Funktion
 
 ```typescript
-function useContext(context: MpContext<T>): T
+function useContext(context: MpContext<T>): T;
 ```
 
 Lesen Sie den aktuellen Wert eines Kontexts: den nächsten Einschluss
@@ -1013,9 +1019,9 @@ Lesen Sie den aktuellen Wert eines Kontexts: den nächsten Einschluss
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Kontext | MpContext<T> |  |
+| Name    | Geben Sie    | ein Beschreibung |
+| ------- | ------------ | ---------------- |
+| Kontext | MpContext<T> |                  |
 
 ## `src/runtime/dynamic`
 
@@ -1024,7 +1030,7 @@ Lesen Sie den aktuellen Wert eines Kontexts: den nächsten Einschluss
 **Art:** konstant
 
 ```typescript
-export const Dynamic: MpComponent<MpDynamicProperties>
+export const Dynamic: MpComponent<MpDynamicProperties>;
 ```
 
 Marker, der als Element `type` für eine dynamische Komponente verwendet wird
@@ -1049,7 +1055,7 @@ Die vom Element {@link Dynamic} akzeptierten Eigenschaften.
 Dies ist eine der wenigen Erklärungen, die einen **offenen Beutel** rechtmäßig aufrechterhält:
 Jede Eigenschaft außer `is` wird wörtlich an das Element `is` weitergeleitet
 wird aufgelöst, und dieses Element ist nur zur Laufzeit bekannt, daher wird es mit Attributen versehen
-akzeptiert können hier nicht aufgezählt werden. Komponenten-Requisiten-Schnittstellen dürfen *nicht*
+akzeptiert können hier nicht aufgezählt werden. Komponenten-Requisiten-Schnittstellen dürfen _nicht_
 Folgen Sie diesem Muster – siehe {@link MpPropertyBag}.
 
 ## `src/runtime/h`
@@ -1059,7 +1065,11 @@ Folgen Sie diesem Muster – siehe {@link MpPropertyBag}.
 **Art:** Funktion
 
 ```typescript
-function h(type: MpElementType | ((properties: P) => MpElement), properties?: P | null, ...children: MpChild[]): MpElement
+function h(
+  type: MpElementType | ((properties: P) => MpElement),
+  properties?: P | null,
+  ...children: MpChild[]
+): MpElement;
 ```
 
 Die klassische JSX-Fabrik (`jsxFactory: 'h'`).
@@ -1071,11 +1081,11 @@ entweder als nachgestellte variadische Argumente (die klassische Transformation)
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Typ | MpElementType \| ((Eigenschaften: P) => MpElement) |  |
-| Eigenschaften | P \| null |  |
-| Kinder | MpChild[] |  |
+| Name          | Geben Sie                                          | ein Beschreibung |
+| ------------- | -------------------------------------------------- | ---------------- |
+| Typ           | MpElementType \| ((Eigenschaften: P) => MpElement) |                  |
+| Eigenschaften | P \| null                                          |                  |
+| Kinder        | MpChild[]                                          |                  |
 
 ## `src/runtime/hooks`
 
@@ -1134,24 +1144,24 @@ Aktualisieren Sie einen Zustand, entweder auf einen neuen Wert oder über eine U
 **Art:** Funktion
 
 ```typescript
-function useCallback(callback: T, _dependencies?: MpDependencyList): T
+function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 ```
 
 Neutrales `useCallback`. Gibt den Rückruf für das Rendern unverändert zurück.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Rückruf | T |  |
-| _Abhängigkeiten | MpDependencyList |  |
+| Name            | Geben Sie        | ein Beschreibung |
+| --------------- | ---------------- | ---------------- |
+| Rückruf         | T                |                  |
+| _Abhängigkeiten | MpDependencyList |                  |
 
 ### useEffect
 
 **Art:** Funktion
 
 ```typescript
-function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void
+function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void;
 ```
 
 Neutrales `useEffect`. Ein No-Op: Effekte modellieren Nebenwirkungen nach dem Rendern, die
@@ -1159,17 +1169,17 @@ Nicht während eines einzelnen SSR-/Adapterrenderings ausführen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| _Effekt | MpEffectCallback |  |
-| _Abhängigkeiten | MpDependencyList |  |
+| Name            | Geben Sie        | ein Beschreibung |
+| --------------- | ---------------- | ---------------- |
+| _Effekt         | MpEffectCallback |                  |
+| _Abhängigkeiten | MpDependencyList |                  |
 
 ### useId
 
 **Art:** Funktion
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 Neutrales `useId`. Spiegelt React und Vue. `useId`: Gibt ein stabiles, eindeutiges Ergebnis zurück
@@ -1185,24 +1195,24 @@ bleibt stabil (und in beiden Frameworks identisch).
 **Art:** Funktion
 
 ```typescript
-function useMemo(factory: () => T, _dependencies?: MpDependencyList): T
+function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 ```
 
 Neutrales `useMemo`. Berechnet den Wert einmalig für das Rendering.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Fabrik | () => T |  |
-| _Abhängigkeiten | MpDependencyList |  |
+| Name            | Geben Sie        | ein Beschreibung |
+| --------------- | ---------------- | ---------------- |
+| Fabrik          | () => T          |                  |
+| _Abhängigkeiten | MpDependencyList |                  |
 
 ### useRef
 
 **Art:** Funktion
 
 ```typescript
-function useRef(initial: T): MpRef<T>
+function useRef(initial: T): MpRef<T>;
 ```
 
 Neutrales `useRef`. Gibt einen neuen `{ current }`-Container für die Single zurück
@@ -1210,16 +1220,16 @@ rendern; Die Framework-Laufzeiten behalten es über alle Renderings hinweg bei.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Initiale | T |  |
+| Name     | Geben Sie | ein Beschreibung |
+| -------- | --------- | ---------------- |
+| Initiale | T         |                  |
 
 ### useState
 
 **Art:** Funktion
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>]
+function useState(initial: T | (() => T)): [T, MpSetState<T>];
 ```
 
 Neutrales `useState`. Die Basisimplementierung gibt den Anfangswert und zurück
@@ -1228,9 +1238,9 @@ das richtige Verhalten für ein einzelnes SSR/Adapter-Rendering.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Initiale | T \| (() => T) |  |
+| Name     | Geben Sie      | ein Beschreibung |
+| -------- | -------------- | ---------------- |
+| Initiale | T \| (() => T) |                  |
 
 ## `src/runtime/html-content`
 
@@ -1239,7 +1249,7 @@ das richtige Verhalten für ein einzelnes SSR/Adapter-Rendering.
 **Art:** konstant
 
 ```typescript
-export const HtmlContent: MpComponent<HtmlContentProperties>
+export const HtmlContent: MpComponent<HtmlContentProperties>;
 ```
 
 Markierung, die als Elementtyp für vertrauenswürdige Roh-HTML-Inhalte verwendet wird.
@@ -1268,7 +1278,7 @@ bag anstatt die gesamte DOM-Attributoberfläche aufzuzählen.
 **Art:** Funktion
 
 ```typescript
-function hasSlot(name?: string): boolean
+function hasSlot(name?: string): boolean;
 ```
 
 Ob die umschließende Komponente Inhalt für einen Slot erhalten hat – die Neutralität
@@ -1276,7 +1286,13 @@ Gegenstück zum `$slots.x` / React `properties.x != null`-Check von Vue. Ein
 Der weggelassene Name (oder `'default'`) zielt auf den Standard-Slot (`children`) ab:
 
 ```tsx
-{hasSlot('footer') ? <footer><Slot name="footer" /></footer> : undefined}
+{
+  hasSlot('footer') ? (
+    <footer>
+      <Slot name="footer" />
+    </footer>
+  ) : undefined;
+}
 ```
 
 `@mission-platform/vite-plugin-forge` schreibt den Aufruf jeweils direkt um
@@ -1288,9 +1304,9 @@ Lesen des Slot-Bereichs der aktuellen Komponente.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Name | Zeichenfolge |  |
+| Name | Geben Sie    | ein Beschreibung |
+| ---- | ------------ | ---------------- |
+| Name | Zeichenfolge |                  |
 
 ### MpRenderProperty
 
@@ -1338,7 +1354,7 @@ Offene Tasche, anstatt Eigenschaften aufzuzählen, die es nicht kennen kann.
 **Art:** Funktion
 
 ```typescript
-function popSlotScope(): void
+function popSlotScope(): void;
 ```
 
 Öffnen Sie den aktuellen Slot-Bereich, sobald der Teilbaum einer Komponente erweitert wurde.
@@ -1348,23 +1364,23 @@ function popSlotScope(): void
 **Art:** Funktion
 
 ```typescript
-function pushSlotScope(properties: MpPropertyBag): void
+function pushSlotScope(properties: MpPropertyBag): void;
 ```
 
 Schieben Sie die Stützen der zu erweiternden Komponente auf den Slot-Scope.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | MpPropertyBag |  |
+| Name          | Geben Sie     | ein Beschreibung |
+| ------------- | ------------- | ---------------- |
+| Eigenschaften | MpPropertyBag |                  |
 
 ### AuflösungSlot
 
 **Art:** Funktion
 
 ```typescript
-function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[]
+function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[];
 ```
 
 Lösen Sie den Inhalt eines `<Slot name="…" />` anhand der Einfügung auf
@@ -1374,10 +1390,10 @@ Die verbleibenden (nicht `name`) Eigenschaften des Slot-Elements.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | MpSlotProperties |  |
-| Rückfall | schreibgeschützt MpChild[] |  |
+| Name          | Geben Sie                  | ein Beschreibung |
+| ------------- | -------------------------- | ---------------- |
+| Eigenschaften | MpSlotProperties           |                  |
+| Rückfall      | schreibgeschützt MpChild[] |                  |
 
 ## `src/runtime/teleport`
 
@@ -1396,7 +1412,7 @@ Die vom Element {@link Teleport} akzeptierten Eigenschaften.
 **Art:** konstant
 
 ```typescript
-export const Teleport: MpComponent<MpTeleportProperties>
+export const Teleport: MpComponent<MpTeleportProperties>;
 ```
 
 Marker, der als Element `type` für ein Portal (`<Teleport to="…">…</Teleport>`) verwendet wird.
@@ -1433,7 +1449,7 @@ Die vom Element {@link Transition} akzeptierten Eigenschaften.
 **Art:** konstant
 
 ```typescript
-export const Transition: MpComponent<MpTransitionProperties>
+export const Transition: MpComponent<MpTransitionProperties>;
 ```
 
 Marker, der als Element `type` für einen Ein-/Ausstiegsübergang verwendet wird
@@ -1449,7 +1465,7 @@ und der Compiler ordnet seinen Import dem Übergang des Ziel-Frameworks neu zu.
 **Art:** konstant
 
 ```typescript
-export const TransitionGroup: MpComponent<MpTransitionGroupProperties>
+export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 ```
 
 Markierung, die als Element `type` für einen **Listen**-Übergang zum Betreten/Verlassen/Verschieben verwendet wird
@@ -1471,7 +1487,7 @@ Import in den nativen Gruppenübergang jedes Frameworks – Vue ist integriert
 **Art:** konstant
 
 ```typescript
-export const Fragment: MpFragment
+export const Fragment: MpFragment;
 ```
 
 Marker, der als Element `type` für Fragmente (`<>…</>`) verwendet wird, also der Klassiker
@@ -1492,7 +1508,7 @@ eigenes Formular (React's `<>`, Vue's eingebundene Kinder). Der direkte Aufruf i
 **Art:** Funktion
 
 ```typescript
-function isMpElement(value: unknown): value is MpElement
+function isMpElement(value: unknown): value is MpElement;
 ```
 
 Schränken Sie einen beliebigen Wert auf ein {@link MpElement} ein.
@@ -1500,8 +1516,8 @@ Schränken Sie einen beliebigen Wert auf ein {@link MpElement} ein.
 #### Parameter
 
 | Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Wert | unbekannt |  |
+| ---- | --------- | ---------------- |
+| Wert | unbekannt |                  |
 
 ### MpChild
 
@@ -1561,7 +1577,7 @@ Die **Laufzeit**-Tasche mit Attributen/Requisiten, die von einem {@link MpElemen
 
 Dies ist absichtlich ein einfacher, untypisierter Datensatz: Es handelt sich um die JSX-Fabrik
 Builds und was die Adapter indizieren, während sie einen neutralen Baum durchlaufen. Es ist
-*kein* Basistyp für die Requisiten einer Komponente – eine Komponente deklariert genau das
+_kein_ Basistyp für die Requisiten einer Komponente – eine Komponente deklariert genau das
 Eigenschaften, die es akzeptiert (einschließlich `children?: MpChild | readonly MpChild[]`
 wenn sie gerendert werden), so dass die Überprüfung überschüssiger Eigenschaften und `keyof` bestehen bleiben
 in jedem kompilierten Ziel sinnvoll. Die Handvoll Attribute jedes Elements
@@ -1580,15 +1596,15 @@ Es deklariert sich selbst und ist durch das Opt-In als `JSX.IntrinsicAttributes`
 `@mission-platform/forge/jsx-globals`-Eingaben.
 
 – `key` identifiziert einen Eintrag in einer gerenderten Liste, damit das Ziel-Framework dies tun kann
-  Gleichen Sie es über Updates hinweg ab (React's `key`, Vue's `:key`).
+Gleichen Sie es über Updates hinweg ab (React's `key`, Vue's `:key`).
 – `slot` leitet dieses Element in einen **benannten Slot** seiner übergeordneten Komponente weiter
-  (`<ForgeIcon slot="start" />`). Der Compiler wandelt es in ein Vue um
-  `<template #start>`-Block / eine React `start`-Requisite und die Laufzeitadapter
-  Falten Sie es in die Requisiten des Elternteils (siehe `collectSlottedChildren`). Weggelassen (bzw
-  `"default"`) bezeichnet den Standardsteckplatz.
+(`<ForgeIcon slot="start" />`). Der Compiler wandelt es in ein Vue um
+`<template #start>`-Block / eine React `start`-Requisite und die Laufzeitadapter
+Falten Sie es in die Requisiten des Elternteils (siehe `collectSlottedChildren`). Weggelassen (bzw
+`"default"`) bezeichnet den Standardsteckplatz.
 
 Keiner von beiden ist Teil des Props-Vertrags einer Komponente – beide werden von gelesen
-*übergeordnetes* (der Reconciler, der Slot-Router), niemals von der Komponente selbst –
+_übergeordnetes_ (der Reconciler, der Slot-Router), niemals von der Komponente selbst –
 Daher werden sie hier für jedes Element akzeptiert und nicht für jedes Element deklariert
 Requisiten-Schnittstelle.
 
@@ -1597,7 +1613,7 @@ Requisiten-Schnittstelle.
 **Art:** konstant
 
 ```typescript
-export const Slot: MpComponent
+export const Slot: MpComponent;
 ```
 
 Marker, der als Element `type` für einen benannten Slot (`<Slot name="…" />`) verwendet wird.

@@ -22,39 +22,39 @@ function createRedwoodRouterCapabilities(input: {
   navigate: RedwoodRouterSurface['navigate'];
   routes?: RedwoodRouterSurface['routes'];
   link?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Bouw neutrale mogelijkheden op basis van Redwood-primitieven (framework-vrij voor tests).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash?: tekenreeks };   parameters?: MpRouteParameters;   navigeren: RedwoodRouterSurface['navigeren'];   routes?: RedwoodRouterSurface['routes'];   link?: onbekend; } |  |
+| Naam   | Typ                                                                                                                                                                                                              | Beschrijving |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| invoer | { locatie: { padnaam: string; zoeken: tekenreeks; hash?: tekenreeks }; parameters?: MpRouteParameters; navigeren: RedwoodRouterSurface['navigeren']; routes?: RedwoodRouterSurface['routes']; link?: onbekend; } |              |
 
 ### MpLink
 
 **Soort:** component
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown
+function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
 ```
 
 Proxy voor koppelingscomponenten; apps binden de native Redwood `Link` via {@link setForgeRedwoodRouter}.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | { naar: MpRouteLocationRaw; vervangen?: boolean; kinderen?: onbekend } |  |
+| Naam          | Typ                                                                    | Beschrijving |
+| ------------- | ---------------------------------------------------------------------- | ------------ |
+| eigenschappen | { naar: MpRouteLocationRaw; vervangen?: boolean; kinderen?: onbekend } |              |
 
 ### MpRouterView
 
 **Soort:** component
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Redwood heeft geen draagbaar stopcontact; de compiler rapporteert `view` als niet-ondersteund.
@@ -74,23 +74,23 @@ Minimaal Redwood/routeroppervlak gebruikt door de runtime-shim.
 **Soort:** functie
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Een neutraal doel omzetten in een href-tekenreeks.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
+| Naam | Typ                | Beschrijving |
+| ---- | ------------------ | ------------ |
+| naar | MpRouteLocationRaw |              |
 
 ### setForgeRedwoodRouter
 
 **Soort:** functie
 
 ```typescript
-function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
+function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void;
 ```
 
 Koppel de Redwood-routermodule van de app. Gecompileerde pakketcode wordt doorgelezen
@@ -98,50 +98,53 @@ deze naad zodat de haak-/roepvormen overeenkomen met het neutrale contract.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| oppervlak | RedwoodRouterSurface |  |
+| Naam      | Typ                  | Beschrijving |
+| --------- | -------------------- | ------------ |
+| oppervlak | RedwoodRouterSurface |              |
 
 ### naarMpLocatieVanRedwood
 
 **Soort:** functie
 
 ```typescript
-function toMpLocationFromRedwood(location: { pathname: string; search: string; hash?: string }, params: MpRouteParameters = {}): MpResolvedLocation
+function toMpLocationFromRedwood(
+  location: { pathname: string; search: string; hash?: string },
+  params: MpRouteParameters = {},
+): MpResolvedLocation;
 ```
 
 Bouw een neutrale locatie op basis van een momentopname van de Redwood-locatie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| locatie | { padnaam: string; zoeken: tekenreeks; hash?: string } |  |
-| params | MpRouteParameters |  |
+| Naam    | Typ                                                    | Beschrijving |
+| ------- | ------------------------------------------------------ | ------------ |
+| locatie | { padnaam: string; zoeken: tekenreeks; hash?: string } |              |
+| params  | MpRouteParameters                                      |              |
 
 ### naarRedwoodHref
 
 **Soort:** functie
 
 ```typescript
-function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string
+function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string;
 ```
 
 Serialiseer een neutraal doelwit voor Redwood-navigatie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| naar | MpRouteLocationRaw |  |
-| trajecten | RedwoodRouterSurface['routes'] |  |
+| Naam      | Typ                            | Beschrijving |
+| --------- | ------------------------------ | ------------ |
+| naar      | MpRouteLocationRaw             |              |
+| trajecten | RedwoodRouterSurface['routes'] |              |
 
 ### gebruik MpNavigatie
 
 **Soort:** functie
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
@@ -151,7 +154,7 @@ Alleen noodzakelijke navigatie-/oplosmogelijkheden lezen.
 **Soort:** functie
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lees de huidige route van de app als {@link MpResolvedLocation}.
@@ -161,7 +164,7 @@ Lees de huidige route van de app als {@link MpResolvedLocation}.
 **Soort:** functie
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lees het neutrale capaciteitsobject ondersteund door Redwood Router.
@@ -173,7 +176,7 @@ Lees het neutrale capaciteitsobject ondersteund door Redwood Router.
 **Soort:** constant
 
 ```typescript
-export const forgeRouterRedwood
+export const forgeRouterRedwood;
 ```
 
 Smeed een routerdoel voor RedwoodSDK's routercontext die eigendom is van de applicatie.

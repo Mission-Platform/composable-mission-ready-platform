@@ -16,18 +16,22 @@
 **종류:** 기능
 
 ```typescript
-function createForgeArtifactManifest(targetId: string, artifacts: readonly ForgeArtifactRecord[], complete = true): ForgeArtifactManifest
+function createForgeArtifactManifest(
+  targetId: string,
+  artifacts: readonly ForgeArtifactRecord[],
+  complete = true,
+): ForgeArtifactManifest;
 ```
 
 생성된 출력에 타임스탬프를 도입하지 않고 안정적인 매니페스트를 구축합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 타겟ID | 문자열 |  |
-| 유물 | 읽기 전용 ForgeArtifactRecord[] |  |
-| 완료 |  |  |
+| 이름   | 유형                            | 설명 |
+| ------ | ------------------------------- | ---- |
+| 타겟ID | 문자열                          |      |
+| 유물   | 읽기 전용 ForgeArtifactRecord[] |      |
+| 완료   |                                 |      |
 
 ### ForgeArtifact종류
 
@@ -66,17 +70,17 @@ export interface ForgeArtifactRecord
 **종류:** 기능
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter
+function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 아웃디렉터 | 문자열 |  |
-| 타겟ID | 문자열 |  |
+| 이름       | 유형   | 설명 |
+| ---------- | ------ | ---- |
+| 아웃디렉터 | 문자열 |      |
+| 타겟ID     | 문자열 |      |
 
 ### ForgeArtifactWriter
 
@@ -95,7 +99,7 @@ export interface ForgeArtifactWriter
 **종류:** 상수
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 클래스 이름 관리를 구동하는 중립 JSX 속성입니다. 저자는 쓴다
@@ -117,16 +121,16 @@ React 이미터는 배열 형식을 `className={classNames(…)}` 문자열로 �
 **종류:** 기능
 
 ```typescript
-function collectSlotNames(sourceFile: ts.SourceFile): Set<string>
+function collectSlotNames(sourceFile: ts.SourceFile): Set<string>;
 ```
 
 모듈의 `<Slot name="…" />` 요소에 의해 선언된 모든 정적 슬롯 이름을 수집합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| 소스파일 | ts.소스파일 |      |
 
 ### 구성요소가져오기
 
@@ -143,7 +147,7 @@ export interface ComponentImport
 **종류:** 상수
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 한 번만 쓸 수 있는 **컴포넌트 라이브러리** 작업 공간 패키지:
@@ -160,25 +164,35 @@ export const COMPONENTS_JSX_MODULES
 **종류:** 기능
 
 ```typescript
-function createReactHasSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined): ts.Expression
+function createReactHasSlotExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+): ts.Expression;
 ```
 
 `<props>.<name> != null` — `hasSlot('name')`에 대한 React의 존재를 읽었습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| propsParamName | 문자열 |  |
-| 이름 | 문자열 \| 정의되지 않음 |  |
+| 이름           | 유형                    | 설명 |
+| -------------- | ----------------------- | ---- |
+| 공장           | ts.NodeFactory          |      |
+| propsParamName | 문자열                  |      |
+| 이름           | 문자열 \| 정의되지 않음 |      |
 
 ### createReactSlotCallExpression
 
 **종류:** 기능
 
 ```typescript
-function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
+function createReactSlotCallExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+  fallback: readonly ts.Expression[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
@@ -187,20 +201,26 @@ function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| propsParamName | 문자열 |  |
-| 이름 | 문자열 \| 정의되지 않음 |  |
-| 대체 | 읽기 전용 ts.Expression[] |  |
-| 범위 | ts.표현식 |  |
+| 이름           | 유형                      | 설명 |
+| -------------- | ------------------------- | ---- |
+| 공장           | ts.NodeFactory            |      |
+| propsParamName | 문자열                    |      |
+| 이름           | 문자열 \| 정의되지 않음   |      |
+| 대체           | 읽기 전용 ts.Expression[] |      |
+| 범위           | ts.표현식                 |      |
 
 ### createReactSlotExpression
 
 **종류:** 기능
 
 ```typescript
-function createReactSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
+function createReactSlotExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+  fallback: readonly ts.JsxChild[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `<props>.<name>`(슬롯이 폴백을 선언하는 경우 `?? <fallback>` 포함)
@@ -210,20 +230,20 @@ render-prop 함수이거나 React node인 경우 직접 평가됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| propsParamName | 문자열 |  |
-| 이름 | 문자열 \| 정의되지 않음 |  |
-| 대체 | 읽기 전용 ts.JsxChild[] |  |
-| 범위 | ts.표현식 |  |
+| 이름           | 유형                    | 설명 |
+| -------------- | ----------------------- | ---- |
+| 공장           | ts.NodeFactory          |      |
+| propsParamName | 문자열                  |      |
+| 이름           | 문자열 \| 정의되지 않음 |      |
+| 대체           | 읽기 전용 ts.JsxChild[] |      |
+| 범위           | ts.표현식               |      |
 
 ### createReferenceRewriter
 
 **종류:** 기능
 
 ```typescript
-function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>
+function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
 ```
 
 구성요소 본체 내부의 참조를 다시 작성하는 TS 변환기를 구축합니다.
@@ -233,16 +253,16 @@ Vue 대상: `properties.children` → `slots.default?.()`, 구조화되지 않�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 범위 | 재작성범위 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 범위 | 재작성범위 |      |
 
 ### createStateSnapshot호이스터
 
 **종류:** 기능
 
 ```typescript
-function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>
+function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
 ```
 
 `useState` / `useMemo` 값의 TypeScript 제어 흐름 축소를 유지합니다.
@@ -258,7 +278,7 @@ TypeScript 축소는 중첩된 함수를 입력할 때 삭제됩니다. 따라�
 `a[sortKey.value]` / `draft.value.uid`가 유형 검사에 실패했습니다.
 
 각 블록 본문 함수에 대해 이 패스는 읽은 값마다 스냅샷을 찍습니다.
-*중첩 클로저 내부* 내부에 있는 `const <name>$ = <name>.value;` 및
+_중첩 클로저 내부_ 내부에 있는 `const <name>$ = <name>.value;` 및
 내에서 **읽기**(`<name>.value = …` 쓰기 대상 아님) 값을 다시 씁니다.
 해당 `const` 별칭에 대한 함수입니다. 스냅샷은 원본 `const`을 복원합니다.
 의미론 - 다시 중첩된 클로저로 흐름을 좁히는 것 - `.value`
@@ -266,33 +286,38 @@ TypeScript 축소는 중첩된 함수를 입력할 때 삭제됩니다. 따라�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 범위 | 재작성 범위 |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 범위 | 재작성 범위 |      |
 
 ### createVueHasSlotExpression
 
 **종류:** 기능
 
 ```typescript
-function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression
+function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression;
 ```
 
 `slots.<name>` — `hasSlot('name')`(`!!slots.x`)에 대한 Vue의 `useSlots()` 존재를 읽었습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| 이름 | 문자열 \| 정의되지 않음 |  |
+| 이름 | 유형                    | 설명 |
+| ---- | ----------------------- | ---- |
+| 공장 | ts.NodeFactory          |      |
+| 이름 | 문자열 \| 정의되지 않음 |      |
 
 ### createVueSlotCallExpression
 
 **종류:** 기능
 
 ```typescript
-function createVueSlotCallExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
+function createVueSlotCallExpression(
+  factory: ts.NodeFactory,
+  name: string | undefined,
+  fallback: readonly ts.Expression[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `slots.<name>?.(scope) ?? <fallback>` — `h(Slot, …)`의 Vue 번역
@@ -301,19 +326,24 @@ function createVueSlotCallExpression(factory: ts.NodeFactory, name: string | und
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| 이름 | 문자열 \| 정의되지 않음 |  |
-| 대체 | 읽기 전용 ts.Expression[] |  |
-| 범위 | ts.표현식 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 공장 | ts.NodeFactory            |      |
+| 이름 | 문자열 \| 정의되지 않음   |      |
+| 대체 | 읽기 전용 ts.Expression[] |      |
+| 범위 | ts.표현식                 |      |
 
 ### createVueSlotExpression
 
 **종류:** 기능
 
 ```typescript
-function createVueSlotExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
+function createVueSlotExpression(
+  factory: ts.NodeFactory,
+  name: string | undefined,
+  fallback: readonly ts.JsxChild[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `slots.<name>?.(scope)`(슬롯이 폴백을 선언하는 경우 `?? <fallback>` 포함)
@@ -322,12 +352,12 @@ Vue **범위** 슬롯 호출.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| 이름 | 문자열 \| 정의되지 않음 |  |
-| 대체 | 읽기 전용 ts.JsxChild[] |  |
-| 범위 | ts.표현식 |  |
+| 이름 | 유형                    | 설명 |
+| ---- | ----------------------- | ---- |
+| 공장 | ts.NodeFactory          |      |
+| 이름 | 문자열 \| 정의되지 않음 |      |
+| 대체 | 읽기 전용 ts.JsxChild[] |      |
+| 범위 | ts.표현식               |      |
 
 ### 구조화되지 않은 속성
 
@@ -344,7 +374,13 @@ export interface DestructuredProperty
 **종류:** 기능
 
 ```typescript
-function dynamicToHCall(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visitExpression: (expression: ts.Expression) => ts.Expression, aliasAttribute: (name: string) => string = (name) => name, variadicChildren = false): ts.CallExpression
+function dynamicToHCall(
+  factory: ts.NodeFactory,
+  node: ts.JsxSelfClosingElement | ts.JsxElement,
+  visitExpression: (expression: ts.Expression) => ts.Expression,
+  aliasAttribute: (name: string) => string = (name) => name,
+  variadicChildren = false,
+): ts.CallExpression;
 ```
 
 `<Dynamic is={X} a={…} …>children</Dynamic>` 요소를
@@ -359,37 +395,37 @@ function dynamicToHCall(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| node | ts.JsxSelfClosingElement \| ts.Jsx요소 |  |
-| 방문표현 | (표현식: ts.Expression) => ts.Expression |  |
-| 별칭속성 | (이름: 문자열) => 문자열 |  |
-| variadic어린이 |  |  |
+| 이름           | 유형                                     | 설명 |
+| -------------- | ---------------------------------------- | ---- |
+| 공장           | ts.NodeFactory                           |      |
+| node           | ts.JsxSelfClosingElement \| ts.Jsx요소   |      |
+| 방문표현       | (표현식: ts.Expression) => ts.Expression |      |
+| 별칭속성       | (이름: 문자열) => 문자열                 |      |
+| variadic어린이 |                                          |      |
 
 ### I18nHookInComponent 보장
 
 **종류:** 기능
 
 ```typescript
-function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile
+function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile;
 ```
 
 `i18next.t(...)`을 호출하는 구성요소 함수에 최상위 레벨 `const { t } = useI18n();` 문이 있는지 확인하십시오.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| 소스파일 | ts.소스파일 |  |
+| 이름     | 유형           | 설명 |
+| -------- | -------------- | ---- |
+| 공장     | ts.NodeFactory |      |
+| 소스파일 | ts.소스파일    |      |
 
 ### eventNameForProperty
 
 **종류:** 기능
 
 ```typescript
-function eventNameForProperty(propName: string): string
+function eventNameForProperty(propName: string): string;
 ```
 
 `on<Event>` prop에 대한 Vue 이벤트 이름 파생: `on` 접두사를 제거하고
@@ -398,9 +434,9 @@ function eventNameForProperty(propName: string): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소품 이름 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 소품 이름 | 문자열 |      |
 
 ### 이벤트서명
 
@@ -420,7 +456,7 @@ export interface EventSignature
 **종류:** 기능
 
 ```typescript
-function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[]
+function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[];
 ```
 
 props 인터페이스(멤버)에 의해 선언된 (자체) **이벤트** 시그니처를 추출합니다.
@@ -432,17 +468,17 @@ props 인터페이스(멤버)에 의해 선언된 (자체) **이벤트** 시그�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 인터페이스이름 | 문자열 |  |
+| 이름           | 유형        | 설명 |
+| -------------- | ----------- | ---- |
+| 소스파일       | ts.소스파일 |      |
+| 인터페이스이름 | 문자열      |      |
 
 ### extractModelSignatures
 
 **종류:** 기능
 
 ```typescript
-function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[]
+function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[];
 ```
 
 `@model <onEvent>`으로 표시된 props 인터페이스 멤버를 추출합니다.
@@ -452,34 +488,34 @@ Vue 이미터가 단일 `defineModel`로 융합되는 쌍 변경 이벤트
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 인터페이스이름 | 문자열 |  |
+| 이름           | 유형        | 설명 |
+| -------------- | ----------- | ---- |
+| 소스파일       | ts.소스파일 |      |
+| 인터페이스이름 | 문자열      |      |
 
 ### extractPropertyNames
 
 **종류:** 기능
 
 ```typescript
-function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[]
+function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[];
 ```
 
 `children`을 제외하고 props 인터페이스에 의해 선언된 (자체) 속성 이름을 추출합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 인터페이스이름 | 문자열 |  |
+| 이름           | 유형        | 설명 |
+| -------------- | ----------- | ---- |
+| 소스파일       | ts.소스파일 |      |
+| 인터페이스이름 | 문자열      |      |
 
 ### extractPropertySignatures
 
 **종류:** 기능
 
 ```typescript
-function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[]
+function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[];
 ```
 
 props 인터페이스에 의해 선언된 (자신의) 속성 서명을 추출합니다.
@@ -491,27 +527,27 @@ props 인터페이스에 의해 선언된 (자신의) 속성 서명을 추출합
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 인터페이스이름 | 문자열 |  |
+| 이름           | 유형        | 설명 |
+| -------------- | ----------- | ---- |
+| 소스파일       | ts.소스파일 |      |
+| 인터페이스이름 | 문자열      |      |
 
 ### findComponent함수
 
 **종류:** 기능
 
 ```typescript
-function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined
+function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined;
 ```
 
 이름으로 중립 구성 요소에 대해 내보낸 함수 선언을 찾습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 이름 | 문자열 |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| 소스파일 | ts.소스파일 |      |
+| 이름     | 문자열      |      |
 
 ### ForgeExportFact
 
@@ -558,23 +594,23 @@ export interface ForgeSourceSpan
 **종류:** 기능
 
 ```typescript
-function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean
+function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean;
 ```
 
 부모의 자녀가 `slot="…"` 마커를 가지고 있는지 여부.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 어린이 | 읽기 전용 ts.JsxChild[] |  |
+| 이름   | 유형                    | 설명 |
+| ------ | ----------------------- | ---- |
+| 어린이 | 읽기 전용 ts.JsxChild[] |      |
 
 ### ICONS_JSX_MODULE
 
 **종류:** 상수
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 한 번 쓰기 아이콘 라이브러리 `@mission-platform/icons`의 기본 지정자입니다.
@@ -582,7 +618,7 @@ export const ICONS_JSX_MODULE
 프레임워크별 소스는 정확한 지정자를 유지합니다. 모든 프레임워크 분할
 `@mission-platform/*` 패키지는 `mp:vue` / `mp:react` / `mp:solid` /를 선언합니다.
 기본 `.` 항목에 대한 `mp:web-component` 사용자 정의 내보내기 조건이므로
-*소비자* `resolve.conditions`(및 매칭
+_소비자_ `resolve.conditions`(및 매칭
 `customConditions` tsconfig 사전 설정) 올바른 빌드를 선택합니다. 없다
 다시 매핑할 프레임워크별 하위 경로입니다.
 
@@ -591,24 +627,24 @@ export const ICONS_JSX_MODULE
 **종류:** 기능
 
 ```typescript
-function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts
+function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
 ```
 
 구문 분석된 모듈에서 정적 가져오기, 내보내기, 유형 전용 에지 및 프레임워크 사실을 추출합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 출처 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
+| 출처      | 문자열 |      |
 
 ### isComponent태그 이름
 
 **종류:** 기능
 
 ```typescript
-function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean
+function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean;
 ```
 
 JSX 태그 이름이 **구성요소**(대문자로 표시된 식별자)를 참조하는지 여부
@@ -620,16 +656,16 @@ JSX 태그 이름이 **구성요소**(대문자로 표시된 식별자)를 참�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 태그이름 | ts.JsxTagNameExpression |  |
+| 이름     | 유형                    | 설명 |
+| -------- | ----------------------- | ---- |
+| 태그이름 | ts.JsxTagNameExpression |      |
 
 ### isDynamicElement
 
 **종류:** 기능
 
 ```typescript
-function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 node이 중립 동적 구성 요소인지 여부 - `<Dynamic is={…} />`
@@ -637,16 +673,16 @@ node이 중립 동적 구성 요소인지 여부 - `<Dynamic is={…} />`
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | ts.Node |  |
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | ts.Node |      |
 
 ### isFragmentElement
 
 **종류:** 기능
 
 ```typescript
-function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 node이 중립 `<Fragment>` 요소인지 여부 — 자체 폐쇄형 요소 또는
@@ -654,16 +690,16 @@ node이 중립 `<Fragment>` 요소인지 여부 — 자체 폐쇄형 요소 또�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | ts.Node |  |
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | ts.Node |      |
 
 ### isHasSlotCall
 
 **종류:** 기능
 
 ```typescript
-function isHasSlotCall(node: ts.Node): node is ts.CallExpression
+function isHasSlotCall(node: ts.Node): node is ts.CallExpression;
 ```
 
 node가 `hasSlot('name')` / `hasSlot()` 호출인지 여부 — 중립
@@ -672,16 +708,16 @@ node가 `hasSlot('name')` / `hasSlot()` 호출인지 여부 — 중립
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | ts.Node |  |
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | ts.Node |      |
 
 ### isSlot요소
 
 **종류:** 기능
 
 ```typescript
-function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 node이 중립 명명된 슬롯 요소인지 여부 - `<Slot … />` 또는
@@ -689,16 +725,16 @@ node이 중립 명명된 슬롯 요소인지 여부 - `<Slot … />` 또는
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | ts.Node |  |
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | ts.Node |      |
 
 ### isSlotHCall
 
 **종류:** 기능
 
 ```typescript
-function isSlotHCall(node: ts.Node): node is ts.CallExpression
+function isSlotHCall(node: ts.Node): node is ts.CallExpression;
 ```
 
 node가 명명된 슬롯 마커(`h(Slot, …)`)의 **호출 형식**인지 여부
@@ -709,16 +745,16 @@ JSX보다는; 두 형식 모두 각 프레임워크의 기본 슬롯 읽기에 �
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | ts.Node |  |
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | ts.Node |      |
 
 ### JSX_ATTRIBUTE_RENAMES
 
 **종류:** 상수
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 작성자에게 표시되는 camelCase 철자를 낮춰야 하는 기본 JSX 속성
@@ -731,7 +767,7 @@ HTML 철자 Vue의 JSX 내장 요소 유형이 필요합니다. Vue 유형
 **종류:** 상수
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 로컬 효과 도우미 모듈의 파일 이름(확장자 포함)은 플랫 생성 트리에 기록됩니다.
@@ -741,7 +777,7 @@ export const LOCAL_EFFECT_FILE
 **종류:** 상수
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 생성된 Vue {@link LOCAL_EFFECT_MODULE}을 가져오는 상대 지정자입니다.
@@ -751,7 +787,7 @@ export const LOCAL_EFFECT_MODULE
 **종류:** 상수
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 상응하는 단일 최고급 프레임워크가 없는 중립 **유형** 가져오기
@@ -773,7 +809,7 @@ render-prop **type** 가져오기를 전혀 수행하지 않습니다.
 **종류:** 상수
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 로컬 JSX 유형 모듈의 파일 이름(확장자 포함)은 플랫 생성 트리에 작성됩니다.
@@ -783,7 +819,7 @@ export const LOCAL_JSX_TYPES_FILE
 **종류:** 상수
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 생성된 프레임워크별 {@link LOCAL_JSX_TYPES_MODULE}을 가져오는 상대 지정자입니다.
@@ -793,7 +829,7 @@ export const LOCAL_JSX_TYPES_MODULE
 **종류:** 기능
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 대상에 대해 함께 배치된 {@link LOCAL_EFFECT_MODULE}의 소스
@@ -815,16 +851,16 @@ Vue의 기본 기반으로 구축된 단일 일반화 감시자(`mpEffect`)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프레임워크 | Jsx프레임워크 |  |
+| 이름       | 유형          | 설명 |
+| ---------- | ------------- | ---- |
+| 프레임워크 | Jsx프레임워크 |      |
 
 ### localJsxTypesModuleSource
 
 **종류:** 기능
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 대상에 대해 함께 배치된 {@link LOCAL_JSX_TYPES_MODULE}의 소스
@@ -841,9 +877,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 프레임워크 | Jsx프레임워크 |  |
+| 이름       | 유형          | 설명 |
+| ---------- | ------------- | ---- |
+| 프레임워크 | Jsx프레임워크 |      |
 
 ### 모델서명
 
@@ -864,7 +900,7 @@ prop 및 `defineEmits` 항목) - prop 읽기는 `<local>.value`이 됩니다.
 **종류:** 기능
 
 ```typescript
-function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean
+function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
 ```
 
 `framework`에 대해 모듈을 내보내야 하는지 여부입니다. 프레임워크 중립적인 모듈
@@ -873,18 +909,18 @@ function moduleTargetsFramework(fileName: string, source: string, framework: str
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 출처 | 문자열 |  |
-| 프레임워크 | 문자열 |  |
+| 이름       | 유형   | 설명 |
+| ---------- | ------ | ---- |
+| 파일 이름  | 문자열 |      |
+| 출처       | 문자열 |      |
+| 프레임워크 | 문자열 |      |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 순수한 컴파일 시간 표시자인 중립 **값** 가져오기 — 이는 오직 존재합니다.
@@ -902,10 +938,10 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
-컨텍스트 프리미티브인 중립 **값** 가져오기입니다. React에서는 *그렇습니다*
+컨텍스트 프리미티브인 중립 **값** 가져오기입니다. React에서는 _그렇습니다_
 React 자신의 것(`createContext`/`useContext`)이므로
 `react` 값 가져오기; Vue에서 해당 가져오기는
 `@mission-platform/forge/vue` 어댑터(`provide`/`inject` 지원
@@ -916,7 +952,7 @@ React 자신의 것(`createContext`/`useContext`)이므로
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 실제 프레임워크별 **구성 요소**인 중립 **값** 가져오기
@@ -938,7 +974,7 @@ Vue에 대한 `import { TransitionGroup } from 'vue'`).
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 구성 요소가 기본 요소를 가져오는 중립 패키지입니다.
@@ -948,7 +984,7 @@ export const NEUTRAL_MODULE
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 프레임워크에 구애받지 않는 런타임 유틸리티인 중립 **값** 가져오기 —
@@ -961,7 +997,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 동일한 이름의 네이티브 대응 항목이 있는 중립 **값** 후크
@@ -986,7 +1022,7 @@ export interface NeutralImports
 **종류:** 기능
 
 ```typescript
-function parseTsx(fileName: string, source: string): ts.SourceFile
+function parseTsx(fileName: string, source: string): ts.SourceFile;
 ```
 
 `.tsx` 소스 문자열을 TypeScript SourceFile 브리지로 구문 분석합니다.
@@ -995,10 +1031,10 @@ function parseTsx(fileName: string, source: string): ts.SourceFile
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 출처 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
+| 출처      | 문자열 |      |
 
 ### 분할된 슬롯
 
@@ -1015,49 +1051,49 @@ export interface PartitionedSlots
 **종류:** 기능
 
 ```typescript
-function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots
+function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots;
 ```
 
 구성요소 요소의 하위 항목을 명명된 슬롯 그룹 + 기본 하위 항목으로 분할합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 어린이 | 읽기 전용 ts.JsxChild[] |  |
+| 이름   | 유형                    | 설명 |
+| ------ | ----------------------- | ---- |
+| 어린이 | 읽기 전용 ts.JsxChild[] |      |
 
 ### printNode
 
 **종류:** 기능
 
 ```typescript
-function printNode(node: ts.Node, sourceFile: ts.SourceFile): string
+function printNode(node: ts.Node, sourceFile: ts.SourceFile): string;
 ```
 
 단일 node을 소스 파일에 고정된 소스 텍스트로 다시 인쇄합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | ts.Node |  |
-| 소스파일 | ts.소스파일 |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| node     | ts.Node     |      |
+| 소스파일 | ts.소스파일 |      |
 
 ### 인쇄 소스 파일
 
 **종류:** 기능
 
 ```typescript
-function printSourceFile(sourceFile: ts.SourceFile): string
+function printSourceFile(sourceFile: ts.SourceFile): string;
 ```
 
 전체(변환 가능) 소스 파일을 다시 소스 텍스트로 인쇄합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| 소스파일 | ts.소스파일 |      |
 
 ### 재산서명
 
@@ -1074,7 +1110,7 @@ props 인터페이스의 단일(자체) 속성 — 이름, 선언된 유형 텍�
 **종류:** 상수
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 React 프레임워크 구성 요소를 가져오는 `@mission-platform/forge/react` 하위 경로입니다.
@@ -1084,7 +1120,7 @@ React 프레임워크 구성 요소를 가져오는 `@mission-platform/forge/rea
 **종류:** 상수
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 일류 React와 동등한 중립 **유형** 수입품이 배송됩니다.
@@ -1111,12 +1147,12 @@ React 이름(React 이미터 참조) 중립 후크/렌더 프리미티브는 각
 **종류:** 기능
 
 ```typescript
-function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression
+function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression;
 ```
 
 `className={…}` 속성 값을 **React** `className`로 축소합니다.
 가치. React의 `className`는 문자열만 허용하므로 조건부/배열/
-객체 형태는 요소에 도달하기 *전에* 축소되어야 합니다. **배열
+객체 형태는 요소에 도달하기 _전에_ 축소되어야 합니다. **배열
 리터럴**(표준 형식 — `className={['base', { active }]}`)은
 `classNames(…)` 런타임 호출(`classNames('base', { active })`)로 확산됩니다.
 가변 도우미 서명과 일치합니다. 다른 표현식은 이미
@@ -1125,17 +1161,17 @@ function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| 가치 | ts.표현식 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 공장 | ts.NodeFactory |      |
+| 가치 | ts.표현식      |      |
 
 ### readChildSlotName
 
 **종류:** 기능
 
 ```typescript
-function readChildSlotName(child: ts.JsxChild): string | undefined
+function readChildSlotName(child: ts.JsxChild): string | undefined;
 ```
 
 JSX **자식** 요소의 정적 `slot="…"` 마커 읽기 - 속성
@@ -1145,33 +1181,33 @@ JSX **자식** 요소의 정적 `slot="…"` 마커 읽기 - 속성
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 아이 | ts.JsxChild |  |
+| 이름 | 유형        | 설명 |
+| ---- | ----------- | ---- |
+| 아이 | ts.JsxChild |      |
 
 ### readComponentImports
 
 **종류:** 기능
 
 ```typescript
-function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[]
+function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[];
 ```
 
 모듈에서 상대(형제 구성 요소) 값 + 유형 가져오기를 수집합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 소스루트 | 문자열 |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| 소스파일 | ts.소스파일 |      |
+| 소스루트 | 문자열      |      |
 
 ### readExternalImports
 
 **종류:** 기능
 
 ```typescript
-function readExternalImports(fileName: string, source: string): string[]
+function readExternalImports(fileName: string, source: string): string[];
 ```
 
 모듈의 **외부**(베어 패키지) 가져오기를 수집합니다.
@@ -1192,17 +1228,17 @@ function readExternalImports(fileName: string, source: string): string[]
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 출처 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
+| 출처      | 문자열 |      |
 
 ### readFramework 지시어
 
 **종류:** 기능
 
 ```typescript
-function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined
+function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined;
 ```
 
 모듈의 `"use <framework>";` 지시문을 읽으십시오(있는 경우).
@@ -1219,66 +1255,70 @@ function readFrameworkDirective(fileName: string, source: string): 'react' | 'vu
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 출처 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
+| 출처      | 문자열 |      |
 
 ### readHasSlotName
 
 **종류:** 기능
 
 ```typescript
-function readHasSlotName(call: ts.CallExpression): string | undefined
+function readHasSlotName(call: ts.CallExpression): string | undefined;
 ```
 
 `hasSlot('name')` 호출의 정적 슬롯 이름을 읽습니다(`undefined` → 기본 슬롯).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 전화 | ts.CallExpression |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 전화 | ts.CallExpression |      |
 
 ### 읽기NeutralImports
 
 **종류:** 기능
 
 ```typescript
-function readNeutralImports(fileName: string, source: string): NeutralImports
+function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
 모듈의 `import … from '@mission-platform/forge'` 바인딩을 검사합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 출처 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
+| 출처      | 문자열 |      |
 
 ### readSlotHCallName
 
 **종류:** 기능
 
 ```typescript
-function readSlotHCallName(call: ts.CallExpression): string | undefined
+function readSlotHCallName(call: ts.CallExpression): string | undefined;
 ```
 
 `h(Slot, { name: 'x' }, …)` 호출에서 정적 `name`을 읽습니다(`undefined` → 기본 슬롯).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 전화 | ts.CallExpression |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 전화 | ts.CallExpression |      |
 
 ### readSlotHCallScope
 
 **종류:** 기능
 
 ```typescript
-function readSlotHCallScope(factory: ts.NodeFactory, call: ts.CallExpression, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
+function readSlotHCallScope(
+  factory: ts.NodeFactory,
+  call: ts.CallExpression,
+  visit: ts.Visitor,
+): ts.ObjectLiteralExpression | undefined;
 ```
 
 `h(Slot, props, …)`의 **범위**(`name`을 제외한 모든 소품)를 읽습니다.
@@ -1289,34 +1329,38 @@ function readSlotHCallScope(factory: ts.NodeFactory, call: ts.CallExpression, vi
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| 전화 | ts.CallExpression |  |
-| 방문 | ts.방문자 |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 공장 | ts.NodeFactory    |      |
+| 전화 | ts.CallExpression |      |
+| 방문 | ts.방문자         |      |
 
 ### 읽기슬롯 이름
 
 **종류:** 기능
 
 ```typescript
-function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined
+function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined;
 ```
 
 `<Slot>` 요소의 정적 `name="…"`을 읽습니다(`undefined` → 기본 슬롯).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | ts.JsxSelfClosingElement \| ts.Jsx요소 |  |
+| 이름 | 유형                                   | 설명 |
+| ---- | -------------------------------------- | ---- |
+| node | ts.JsxSelfClosingElement \| ts.Jsx요소 |      |
 
 ### readSlotScope
 
 **종류:** 기능
 
 ```typescript
-function readSlotScope(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
+function readSlotScope(
+  factory: ts.NodeFactory,
+  node: ts.JsxSelfClosingElement | ts.JsxElement,
+  visit: ts.Visitor,
+): ts.ObjectLiteralExpression | undefined;
 ```
 
 `<Slot>` 요소의 **범위** 읽기 - `name`을 제외한 모든 속성
@@ -1329,18 +1373,18 @@ function readSlotScope(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement |
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| node | ts.JsxSelfClosingElement \| ts.Jsx요소 |  |
-| 방문 | ts.방문자 |  |
+| 이름 | 유형                                   | 설명 |
+| ---- | -------------------------------------- | ---- |
+| 공장 | ts.NodeFactory                         |      |
+| node | ts.JsxSelfClosingElement \| ts.Jsx요소 |      |
+| 방문 | ts.방문자                              |      |
 
 ### readStyleImports
 
 **종류:** 기능
 
 ```typescript
-function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[]
+function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
 ```
 
 모듈(CSS 모듈 및 기본 CSS)의 관련 스타일시트 가져오기를 수집합니다.
@@ -1350,18 +1394,22 @@ function readStyleImports(fileName: string, source: string, sourceRoot?: string)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 출처 | 문자열 |  |
-| 소스루트 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
+| 출처      | 문자열 |      |
+| 소스루트  | 문자열 |      |
 
 ### 해결WorkspaceLocalImport
 
 **종류:** 기능
 
 ```typescript
-function resolveWorkspaceLocalImport(specifier: string, sourceFileName: string, sourceRoot: string | undefined): string | undefined
+function resolveWorkspaceLocalImport(
+  specifier: string,
+  sourceFileName: string,
+  sourceRoot: string | undefined,
+): string | undefined;
 ```
 
 작업공간-로컬 `@/` 가져오기를 소유 소스에 상대적인 경로로 확인합니다.
@@ -1370,11 +1418,11 @@ function resolveWorkspaceLocalImport(specifier: string, sourceFileName: string, 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 지정자 | 문자열 |  |
-| 소스파일이름 | 문자열 |  |
-| 소스루트 | 문자열 \| 정의되지 않음 |  |
+| 이름         | 유형                    | 설명 |
+| ------------ | ----------------------- | ---- |
+| 지정자       | 문자열                  |      |
+| 소스파일이름 | 문자열                  |      |
+| 소스루트     | 문자열 \| 정의되지 않음 |      |
 
 ### RewriteScope
 
@@ -1392,56 +1440,56 @@ Vue 대상의 경우.
 **종류:** 기능
 
 ```typescript
-function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile
+function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile;
 ```
 
 프레임워크별 내보내기 전에 작업공간-로컬 `@/` 가져오기를 다시 작성합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 소스루트 | 문자열 |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| 소스파일 | ts.소스파일 |      |
+| 소스루트 | 문자열      |      |
 
 ### SlotFallbackChildren
 
 **종류:** 기능
 
 ```typescript
-function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[]
+function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[];
 ```
 
 `<Slot>…</Slot>`의 대체 하위 항목(자체 닫힘 슬롯의 경우 비어 있음)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | ts.JsxSelfClosingElement \| ts.Jsx요소 |  |
+| 이름 | 유형                                   | 설명 |
+| ---- | -------------------------------------- | ---- |
+| node | ts.JsxSelfClosingElement \| ts.Jsx요소 |      |
 
 ### SlotHCall대체
 
 **종류:** 기능
 
 ```typescript
-function slotHCallFallback(call: ts.CallExpression): ts.Expression[]
+function slotHCallFallback(call: ts.CallExpression): ts.Expression[];
 ```
 
 `h(Slot, props, …fallback)` 호출의 대체 하위 요소(props 뒤의 인수)입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 전화 | ts.CallExpression |  |
+| 이름 | 유형              | 설명 |
+| ---- | ----------------- | ---- |
+| 전화 | ts.CallExpression |      |
 
 ### 스트립프레임워크 지시어
 
 **종류:** 기능
 
 ```typescript
-function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile
+function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile;
 ```
 
 선행 `"use react"` / `"use vue"` 지시문을 사용하여 소스 파일을 반환합니다.
@@ -1450,26 +1498,26 @@ function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| 소스파일 | ts.소스파일 |      |
 
 ### 스트립슬롯속성
 
 **종류:** 기능
 
 ```typescript
-function stripSlotAttribute(factory: ts.NodeFactory, element: T): T
+function stripSlotAttribute(factory: ts.NodeFactory, element: T): T;
 ```
 
 `slot="…"` 마커 속성이 제거된 JSX 요소/자체 닫힘 요소의 복사본입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| 요소 | 티 |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 공장 | ts.NodeFactory |      |
+| 요소 | 티             |      |
 
 ### 스타일가져오기
 
@@ -1486,24 +1534,24 @@ export interface StyleImport
 **종류:** 기능
 
 ```typescript
-function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node
+function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node;
 ```
 
 `i18next.t(...)` 호출 표현식을 `t(...)`로 다시 작성합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 공장 | ts.NodeFactory |  |
-| node | ts.Node |  |
+| 이름 | 유형           | 설명 |
+| ---- | -------------- | ---- |
+| 공장 | ts.NodeFactory |      |
+| node | ts.Node        |      |
 
 ### 사용ClassNamesArrayAttribute
 
 **종류:** 기능
 
 ```typescript
-function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
+function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean;
 ```
 
 모듈이 값이 다음과 같은 `className={[…]}` 속성을 전달하는지 여부
@@ -1513,16 +1561,16 @@ React 타겟을 호출하므로 이미터는 중립을 (재)주입해야 합니�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| 소스파일 | ts.소스파일 |      |
 
 ### ComponentSelfReference를 사용합니다.
 
 **종류:** 기능
 
 ```typescript
-function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean
+function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean;
 ```
 
 구성 요소가 **자체**를 JSX 태그(`<ForgeTreeView …>`)로 참조하는지 여부
@@ -1532,49 +1580,49 @@ function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: st
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
-| 구성 요소 이름 | 문자열 |  |
+| 이름           | 유형        | 설명 |
+| -------------- | ----------- | ---- |
+| 소스파일       | ts.소스파일 |      |
+| 구성 요소 이름 | 문자열      |      |
 
 ### HFactoryCall을 사용합니다.
 
 **종류:** 기능
 
 ```typescript
-function usesHFactoryCall(sourceFile: ts.SourceFile): boolean
+function usesHFactoryCall(sourceFile: ts.SourceFile): boolean;
 ```
 
 모듈이 `h`을 호출 표현식(명시적 `h(...)`)으로 참조하는지 여부입니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 소스파일 | ts.소스파일 |  |
+| 이름     | 유형        | 설명 |
+| -------- | ----------- | ---- |
+| 소스파일 | ts.소스파일 |      |
 
 ### I18nextT를 사용합니다.
 
 **종류:** 기능
 
 ```typescript
-function usesI18nextT(node: OxcNode): boolean
+function usesI18nextT(node: OxcNode): boolean;
 ```
 
 Oxc 모듈 또는 node이 `i18next.t(...)`을 호출하는지 여부.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| node | Oxc노드 |  |
+| 이름 | 유형    | 설명 |
+| ---- | ------- | ---- |
+| node | Oxc노드 |      |
 
 ### VUE_ADAPTER_MODULE
 
 **종류:** 상수
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 Vue 컨텍스트 프리미티브를 가져오는 `@mission-platform/forge/vue` 하위 경로입니다.
@@ -1584,7 +1632,7 @@ Vue 컨텍스트 프리미티브를 가져오는 `@mission-platform/forge/vue` �
 **종류:** 상수
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 중립 프레임워크 구성 요소 가져오기 Vue은 `vue` 런타임에서 바로 확인됩니다.
@@ -1594,7 +1642,7 @@ export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
 **종류:** 상수
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 중립 렌더링/속성 유형은 **Vue** 빌드의 이름을 해당 빌드로 리디렉션합니다.
@@ -1615,7 +1663,7 @@ Vue의 `VNodeChild` / `VNode`. `jsxImportSource: 'vue'`에서
 **종류:** 기능
 
 ```typescript
-function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>
+function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 Vue의 `v-model` 업데이트 이벤트 이름은 `update:<model>`로 지정됩니다. 하위 컴파일됨
@@ -1637,7 +1685,7 @@ Vue의 `v-model` 업데이트 이벤트 이름은 `update:<model>`로 지정됩�
 **종류:** 기능
 
 ```typescript
-function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>
+function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 명명된 슬롯 **통과** 형식을 다시 작성하는 Vue-대상 변환기 —
@@ -1656,7 +1704,7 @@ function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>
 **종류:** 기능
 
 ```typescript
-function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>
+function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 React 스타일 다중 단어 DOM의 케이싱을 수정하는 Vue 대상 변환기
@@ -1676,7 +1724,7 @@ React 스타일 다중 단어 DOM의 케이싱을 수정하는 Vue 대상 변환
 **종류:** 기능
 
 ```typescript
-function createEmptyForgeCacheStats(): ForgeCacheStats
+function createEmptyForgeCacheStats(): ForgeCacheStats;
 ```
 
 설명이 제공되지 않았습니다.
@@ -1686,7 +1734,7 @@ function createEmptyForgeCacheStats(): ForgeCacheStats
 **종류:** 상수
 
 ```typescript
-export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>
+export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -1718,7 +1766,7 @@ export interface ForgeCacheStats
 **종류:** 기능
 
 ```typescript
-function compileComponentModule(source: string, options: CompileOptions): CompiledModule
+function compileComponentModule(source: string, options: CompileOptions): CompiledModule;
 ```
 
 하나의 중립(또는 프레임워크 게이트) 구성 요소 모듈을 프레임워크별로 컴파일합니다.
@@ -1731,10 +1779,10 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 옵션 | 컴파일옵션 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 출처 | 문자열     |      |
+| 옵션 | 컴파일옵션 |      |
 
 ### 컴파일된 모듈
 
@@ -1751,19 +1799,19 @@ Stage-1 결과: 방출된 소스와 이를 작성해야 하는 확장명입니�
 **종류:** 기능
 
 ```typescript
-function compileHookModule(source: string, options: CompileHookOptions): CompiledModule
+function compileHookModule(source: string, options: CompileHookOptions): CompiledModule;
 ```
 
 하나의 중립 **후크 모듈**(1회 쓰기 컴포저블)을 컴파일합니다.
-`@mission-platform/forge`의 React 스타일 후크(UI 구성 요소 *아님*)를 해당 항목에 연결합니다.
+`@mission-platform/forge`의 React 스타일 후크(UI 구성 요소 _아님_)를 해당 항목에 연결합니다.
 프레임워크별 소스(1단계)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 옵션 | CompileHook옵션 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 출처 | 문자열          |      |
+| 옵션 | CompileHook옵션 |      |
 
 ### CompileHook옵션
 
@@ -1780,7 +1828,7 @@ export interface CompileHookOptions
 **종류:** 기능
 
 ```typescript
-function compileModule(source: string, options: CompileModuleOptions): CompiledModule
+function compileModule(source: string, options: CompileModuleOptions): CompiledModule;
 ```
 
 호출자가 제공하는 출력 플러그인을 통해 하나의 중립 모듈을 컴파일합니다.
@@ -1791,10 +1839,10 @@ Astro와 같은 독립형 대상 패키지에서 사용되는 공유 이음새�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
-| 옵션 | 컴파일모듈 옵션 |  |
+| 이름 | 유형            | 설명 |
+| ---- | --------------- | ---- |
+| 출처 | 문자열          |      |
+| 옵션 | 컴파일모듈 옵션 |      |
 
 ### 컴파일모듈 옵션
 
@@ -1823,7 +1871,7 @@ export interface CompileOptions
 **종류:** 기능
 
 ```typescript
-function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[]
+function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[];
 ```
 
 배럴이 내보내는 구성 요소를 발견하고 공개 형태를 파생시킵니다. 각각
@@ -1833,27 +1881,27 @@ in(재내보내기의 모듈 기본 이름).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 배럴소스 | 문자열 |  |
-| 스트립접두사 |  |  |
+| 이름         | 유형   | 설명 |
+| ------------ | ------ | ---- |
+| 배럴소스     | 문자열 |      |
+| 스트립접두사 |        |      |
 
 ### discoverComponentsFromGraph
 
 **종류:** 기능
 
 ```typescript
-function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[]
+function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[];
 ```
 
 레거시 결과 형태를 유지하면서 프로젝트 공개 구성 요소를 표준 그래프에서 내보냅니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 그래프 | Forge파일 그래프 |  |
-| 스트립접두사 |  |  |
+| 이름         | 유형             | 설명 |
+| ------------ | ---------------- | ---- |
+| 그래프       | Forge파일 그래프 |      |
+| 스트립접두사 |                  |      |
 
 ### 발견된 구성요소
 
@@ -1882,7 +1930,7 @@ export interface DiscoveredHelperExport
 **종류:** 기능
 
 ```typescript
-function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
+function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[];
 ```
 
 배럴이 다시 내보내는 **헬퍼 모듈**을 찾아보세요 — 매 `export { ... }
@@ -1894,27 +1942,30 @@ Vue 패키지의 `useToast` 컴포저블)을 생성된 항목을 통해
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 배럴소스 | 문자열 |  |
-| 구성요소폴더 | 읽기전용Set<string> |  |
+| 이름         | 유형                | 설명 |
+| ------------ | ------------------- | ---- |
+| 배럴소스     | 문자열              |      |
+| 구성요소폴더 | 읽기전용Set<string> |      |
 
 ### discoverHelperExportsFromGraph
 
 **종류:** 기능
 
 ```typescript
-function discoverHelperExportsFromGraph(graph: ForgeFileGraph, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
+function discoverHelperExportsFromGraph(
+  graph: ForgeFileGraph,
+  componentFolders: ReadonlySet<string>,
+): DiscoveredHelperExport[];
 ```
 
 표준 그래프에서 비구성요소 공개 내보내기를 프로젝트합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 그래프 | Forge파일 그래프 |  |
-| 구성요소폴더 | 읽기전용Set<string> |  |
+| 이름         | 유형                | 설명 |
+| ------------ | ------------------- | ---- |
+| 그래프       | Forge파일 그래프    |      |
+| 구성요소폴더 | 읽기전용Set<string> |      |
 
 ## `src/compiler/frontends`
 
@@ -1923,7 +1974,7 @@ function discoverHelperExportsFromGraph(graph: ForgeFileGraph, componentFolders:
 **종류:** 기능
 
 ```typescript
-function parseForgeSource(fileName: string, source: string): OxcParsedModule
+function parseForgeSource(fileName: string, source: string): OxcParsedModule;
 ```
 
 Oxc를 통해 Forge 소스를 중립 모듈로 구문 분석합니다.
@@ -1932,29 +1983,34 @@ Oxc를 통해 Forge 소스를 중립 모듈로 구문 분석합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 출처 | 문자열 |  |
+| 이름      | 유형   | 설명 |
+| --------- | ------ | ---- |
+| 파일 이름 | 문자열 |      |
+| 출처      | 문자열 |      |
 
 ### 파싱프런트엔드모듈
 
 **종류:** 기능
 
 ```typescript
-function parseFrontendModule(fileName: string, source: string, moduleKind: 'component' | 'composable', componentName?: string): FrontendModule
+function parseFrontendModule(
+  fileName: string,
+  source: string,
+  moduleKind: 'component' | 'composable',
+  componentName?: string,
+): FrontendModule;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 파일 이름 | 문자열 |  |
-| 출처 | 문자열 |  |
-| 모듈 종류 | '구성요소' \| '구성 가능' |  |
-| 구성 요소 이름 | 문자열 |  |
+| 이름           | 유형                      | 설명 |
+| -------------- | ------------------------- | ---- |
+| 파일 이름      | 문자열                    |      |
+| 출처           | 문자열                    |      |
+| 모듈 종류      | '구성요소' \| '구성 가능' |      |
+| 구성 요소 이름 | 문자열                    |      |
 
 ## `src/compiler/generation-context`
 
@@ -1963,16 +2019,16 @@ function parseFrontendModule(fileName: string, source: string, moduleKind: 'comp
 **종류:** 기능
 
 ```typescript
-function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext
+function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeGenerationContextOptions |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 옵션 | ForgeGenerationContextOptions |      |
 
 ### ForgeGenerationContext
 
@@ -2001,16 +2057,16 @@ export interface ForgeGenerationContextOptions
 **종류:** 기능
 
 ```typescript
-function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph
+function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph;
 ```
 
 구성된 하나의 입력 모듈에서 표준 소스 그래프를 빌드합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | ForgeFileGraph옵션 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 옵션 | ForgeFileGraph옵션 |      |
 
 ### ForgeFileEdge
 
@@ -2047,7 +2103,8 @@ export interface ForgeFileGraphOptions
 **종류:** 유형
 
 ```typescript
-export type ForgeFileKind = 'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
+export type ForgeFileKind =
+  'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
 ```
 
 설명이 제공되지 않았습니다.
@@ -2077,7 +2134,13 @@ export interface ForgeGraphDiagnostic
 **종류:** 유형
 
 ```typescript
-export type ForgeGraphDiagnosticCode = | 'missing-entry' | 'missing-file' | 'unsupported-extension' | 'ambiguous-export' | 'unsupported-authoring-form' | 'cycle';
+export type ForgeGraphDiagnosticCode =
+  | 'missing-entry'
+  | 'missing-file'
+  | 'unsupported-extension'
+  | 'ambiguous-export'
+  | 'unsupported-authoring-form'
+  | 'cycle';
 ```
 
 설명이 제공되지 않았습니다.
@@ -2089,7 +2152,11 @@ export type ForgeGraphDiagnosticCode = | 'missing-entry' | 'missing-file' | 'uns
 **종류:** 기능
 
 ```typescript
-function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'composable' = 'component', componentName?: string): GenericHoistResult
+function hoistStaticJsx(
+  module: OxcParsedModule,
+  moduleKind: 'component' | 'composable' = 'component',
+  componentName?: string,
+): GenericHoistResult;
 ```
 
 그런 다음 Static-mark는 Oxc 구문 분석 모듈의 렌더링 트리를 끌어올려 다음을 반환합니다.
@@ -2098,11 +2165,11 @@ function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'comp
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | OxcParsed모듈 |  |
-| 모듈 종류 | '구성요소' \| '구성 가능' |  |
-| 구성 요소 이름 | 문자열 |  |
+| 이름           | 유형                      | 설명 |
+| -------------- | ------------------------- | ---- |
+| 모듈           | OxcParsed모듈             |      |
+| 모듈 종류      | '구성요소' \| '구성 가능' |      |
+| 구성 요소 이름 | 문자열                    |      |
 
 ## `src/compiler/optimize`
 
@@ -2111,7 +2178,7 @@ function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'comp
 **종류:** 기능
 
 ```typescript
-function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule
+function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule;
 ```
 
 소스 수준의 1단계 최적화 패스(죽은 가지 가지치기 및
@@ -2123,17 +2190,17 @@ Oxc 구문 분석 모듈에 대한 안정적인 키 추론), 다시 구문 분�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모듈 | OxcParsed모듈 |  |
-| 옵션 | 최적화 옵션 |  |
+| 이름 | 유형          | 설명 |
+| ---- | ------------- | ---- |
+| 모듈 | OxcParsed모듈 |      |
+| 옵션 | 최적화 옵션   |      |
 
 ### 최적화소스파일
 
 **종류:** 상수
 
 ```typescript
-export const optimizeSourceFile
+export const optimizeSourceFile;
 ```
 
 이전 이름을 사용하는 컴파일러 통합을 위해 호환성 별칭이 유지됩니다.
@@ -2145,7 +2212,10 @@ export const optimizeSourceFile
 **종류:** 기능
 
 ```typescript
-function analyzeForgeModule(input: CompilerInput, service: ForgeCompilerService = defaultCompilerService): SemanticModule
+function analyzeForgeModule(
+  input: CompilerInput,
+  service: ForgeCompilerService = defaultCompilerService,
+): SemanticModule;
 ```
 
 대상 중립 의미 체계 모듈을 구문 분석하고 정규화하고 추론합니다.
@@ -2157,10 +2227,10 @@ function analyzeForgeModule(input: CompilerInput, service: ForgeCompilerService 
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 컴파일러 입력 |  |
-| 서비스 | Forge컴파일러서비스 |  |
+| 이름   | 유형                | 설명 |
+| ------ | ------------------- | ---- |
+| 입력   | 컴파일러 입력       |      |
+| 서비스 | Forge컴파일러서비스 |      |
 
 ### 컴파일러 입력
 
@@ -2187,16 +2257,16 @@ export interface CompilerPipeline
 **종류:** 기능
 
 ```typescript
-function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline
+function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline;
 ```
 
 컴파일러 진입점에서 사용되는 단계 디스패처를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 서비스 | Forge컴파일러서비스 |  |
+| 이름   | 유형                | 설명 |
+| ------ | ------------------- | ---- |
+| 서비스 | Forge컴파일러서비스 |      |
 
 ## `src/compiler/report`
 
@@ -2217,39 +2287,41 @@ export interface ForgeCompilationReport
 **종류:** 기능
 
 ```typescript
-function analyzeRouterCapabilities(input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>): RouterCapabilityModule
+function analyzeRouterCapabilities(
+  input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>,
+): RouterCapabilityModule;
 ```
 
 기본 라우터를 가져오지 않고 중립 라우터 가져오기 및 사용을 구문 분석합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |  |
+| 이름 | 유형                                                              | 설명 |
+| ---- | ----------------------------------------------------------------- | ---- |
+| 입력 | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |      |
 
 ### 컴파일라우터모듈
 
 **종류:** 기능
 
 ```typescript
-function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult
+function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult;
 ```
 
 선택한 기본 대상 어댑터를 통해 중립 라우터 사용을 컴파일합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | 라우터컴파일러입력 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 입력 | 라우터컴파일러입력 |      |
 
 ### createRouter컴파일러파이프라인
 
 **종류:** 기능
 
 ```typescript
-function createRouterCompilerPipeline()
+function createRouterCompilerPipeline();
 ```
 
 Forge 컴파일러와 독립형 대상 고정 장치에서 사용되는 디스패처 형식입니다.
@@ -2271,16 +2343,16 @@ export interface CompiledArtifact
 **종류:** 기능
 
 ```typescript
-function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService
+function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 한도 | ForgeCacheLimits |  |
+| 이름 | 유형             | 설명 |
+| ---- | ---------------- | ---- |
+| 한도 | ForgeCacheLimits |      |
 
 ### Forge컴파일 요청
 
@@ -2349,7 +2421,7 @@ export class PersistentForgeCompilerService implements ForgeCompilerService
 **종류:** 기능
 
 ```typescript
-function reactJsxPlugin(): Plugin
+function reactJsxPlugin(): Plugin;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2359,32 +2431,32 @@ function reactJsxPlugin(): Plugin
 **종류:** 기능
 
 ```typescript
-function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig
+function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | JsxHookLibraryConfigOptions |  |
+| 이름 | 유형                        | 설명 |
+| ---- | --------------------------- | ---- |
+| 옵션 | JsxHookLibraryConfigOptions |      |
 
 ### 정의JsxLibraryConfig
 
 **종류:** 기능
 
 ```typescript
-function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig
+function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | JsxLibraryConfigOptions |  |
+| 이름 | 유형                    | 설명 |
+| ---- | ----------------------- | ---- |
+| 옵션 | JsxLibraryConfigOptions |      |
 
 ### JsxHookLibraryConfigOptions
 
@@ -2411,7 +2483,7 @@ export interface JsxLibraryConfigOptions
 **종류:** 기능
 
 ```typescript
-function reactJsxPlugin(): Plugin
+function reactJsxPlugin(): Plugin;
 ```
 
 설명이 제공되지 않았습니다.
@@ -2421,7 +2493,7 @@ function reactJsxPlugin(): Plugin
 **종류:** 기능
 
 ```typescript
-function solidJsxPlugin(): Plugin[]
+function solidJsxPlugin(): Plugin[];
 ```
 
 생성된 Solid `.tsx`을 컴파일하는 `vite-plugin-solid` 플러그인
@@ -2441,7 +2513,7 @@ SolidJS의 세분화된 DOM 작업. 손으로 말아서 재수출함
 **종류:** 기능
 
 ```typescript
-function solidJsxTsdownPlugin(): Plugin
+function solidJsxTsdownPlugin(): Plugin;
 ```
 
 롤다운/tsdown 호환 Solid JSX 플러그인. `vite-plugin-solid`의 대리인
@@ -2454,7 +2526,7 @@ Solid JSX를 React로 다시 작성하지 마세요.
 **종류:** 기능
 
 ```typescript
-function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[]
+function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[];
 ```
 
 **tsdown**(롤다운) 아래의 Forge 프레임워크 빌드용 Stage-2 플러그인입니다.
@@ -2464,16 +2536,16 @@ Vite의 해결된 구성이 필요합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 플러그인 | 프레임워크출력플러그인 |  |
+| 이름     | 유형                   | 설명 |
+| -------- | ---------------------- | ---- |
+| 플러그인 | 프레임워크출력플러그인 |      |
 
 ### svelte플러그인
 
 **종류:** 기능
 
 ```typescript
-function sveltePlugin(): Plugin[]
+function sveltePlugin(): Plugin[];
 ```
 
 생성된 Svelte 구성 요소를 컴파일하기 위한 Vite 플러그인입니다.
@@ -2483,7 +2555,7 @@ function sveltePlugin(): Plugin[]
 **종류:** 기능
 
 ```typescript
-function svelteTsdownPlugin(): Plugin
+function svelteTsdownPlugin(): Plugin;
 ```
 
 롤다운/tsdown 호환 Svelte 컴파일러 플러그인. 다음을 통해 `.svelte` SFC를 컴파일합니다.
@@ -2497,7 +2569,7 @@ tsdown으로 빌드할 때 이 방법(또는 {@link stagePluginsForTsdown})을 �
 **종류:** 기능
 
 ```typescript
-function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string
+function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string;
 ```
 
 중립 후크 라이브러리를 프레임워크별 소스 트리로 컴파일합니다(1단계).
@@ -2505,9 +2577,9 @@ function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions):
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 생성HookLibrarySources옵션 |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 옵션 | 생성HookLibrarySources옵션 |      |
 
 ### 생성HookLibrarySources옵션
 
@@ -2534,7 +2606,7 @@ export interface HookLibraryDtsOptions
 **종류:** 기능
 
 ```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
+function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
 ```
 
 **진짜, 프레임워크별** 선언을 내보내는 빌드 후 Vite 플러그인
@@ -2554,9 +2626,9 @@ Vue `Ref`s를 반환합니다. 각 프레임워크에는 고유한 유형이 있
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | HookLibraryDts옵션 |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 옵션 | HookLibraryDts옵션 |      |
 
 ## `src/generate`
 
@@ -2565,16 +2637,16 @@ Vue `Ref`s를 반환합니다. 각 프레임워크에는 고유한 유형이 있
 **종류:** 기능
 
 ```typescript
-function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget
+function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget;
 ```
 
 명시적 출력 플러그인에서 소스 트리 설명자를 만듭니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 플러그인 | 프레임워크출력플러그인 |  |
+| 이름     | 유형                   | 설명 |
+| -------- | ---------------------- | ---- |
+| 플러그인 | 프레임워크출력플러그인 |      |
 
 ### FrameworkSourceTarget
 
@@ -2591,7 +2663,7 @@ export interface FrameworkSourceTarget
 **종류:** 기능
 
 ```typescript
-function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string
+function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string;
 ```
 
 중립 구성 요소 패키지를 프레임워크별 소스 트리로 컴파일합니다(1단계).
@@ -2599,9 +2671,9 @@ function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): str
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | 생성프레임워크소스옵션 |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 옵션 | 생성프레임워크소스옵션 |      |
 
 ### 프레임워크 소스 생성옵션
 
@@ -2618,7 +2690,7 @@ export interface GenerateFrameworkSourcesOptions
 **종류:** 기능
 
 ```typescript
-function jsxComponentsCssImportPlugin(): Plugin
+function jsxComponentsCssImportPlugin(): Plugin;
 ```
 
 구성 요소별 CSS를 JS 청크에 다시 연결합니다.
@@ -2651,7 +2723,7 @@ Vite의 자체 CSS 플러그인이 `importedCss`를 채웠습니다. 그렇지 �
 마지막으로 각 CSS 모듈 스타일시트는 해당 **소스** 이름으로 내보내집니다.
 `foo.module.css` — 클래스 이름 해싱이 이미 적용되어 있고
 형제 `foo.module.js` 클래스 맵에 구워진 확인된 이름입니다. 배송
-`.module.css` 접미사를 사용하는 것은 함정입니다. 모든 *다운스트림* 번들러(예:
+`.module.css` 접미사를 사용하는 것은 함정입니다. 모든 _다운스트림_ 번들러(예:
 React Storybook 자체 Vite)은 `*.module.css`를 CSS 모듈로 인식하고
 CSS 모듈 변환을 **두 번째로** 실행하여
 선택기로 구운 (이미 해시된) 클래스 이름과 더 이상 일치하지 않습니다.
@@ -2676,7 +2748,7 @@ export interface JsxComponentsDtsOptions
 **종류:** 기능
 
 ```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
+function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
 ```
 
 **진짜, 프레임워크별** 선언을 내보내는 빌드 후 Vite 플러그인
@@ -2717,9 +2789,9 @@ Stage-2 번들러)는 JS를 생성하지만 생성된 트리는 다음과 같으
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | JsxComponentsDts옵션 |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 옵션 | JsxComponentsDts옵션 |      |
 
 ### JsxComponentsEntryDts옵션
 
@@ -2736,7 +2808,7 @@ export interface JsxComponentsEntryDtsOptions
 **종류:** 기능
 
 ```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin
+function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
 ```
 
 다음에 대한 합성 선언(`<declarationFileName>.d.ts`)을 내보냅니다.
@@ -2745,9 +2817,9 @@ function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plu
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | JsxComponentsEntryDtsOptions |  |
+| 이름 | 유형                         | 설명 |
+| ---- | ---------------------------- | ---- |
+| 옵션 | JsxComponentsEntryDtsOptions |      |
 
 ## `src/tsdown`
 
@@ -2756,7 +2828,7 @@ function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plu
 **종류:** 기능
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[]
+function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
 ```
 
 tsdown에서 하나의 Archetype-C **컴포넌트** 프레임워크 빌드를 재현합니다.
@@ -2765,35 +2837,35 @@ tsdown에서 하나의 Archetype-C **컴포넌트** 프레임워크 빌드를 �
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | TsdownForgeComponents옵션 |  |
+| 이름 | 유형                      | 설명 |
+| ---- | ------------------------- | ---- |
+| 옵션 | TsdownForgeComponents옵션 |      |
 
 ### 정의TsdownForgeEmailComponents
 
 **종류:** 기능
 
 ```typescript
-function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig
+function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig;
 ```
 
 서버 전용 중립 Forge 이메일 구성 요소 항목을 빌드합니다.
 
- 그것은 Forge 나무를 이렇게 보존합니다.
+그것은 Forge 나무를 이렇게 보존합니다.
 `@mission-platform/email-renderer`은 서버에서 이를 직렬화할 수 있습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | TsdownForgeEmailComponents옵션 |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 옵션 | TsdownForgeEmailComponents옵션 |      |
 
 ### 정의TsdownForgeHooks
 
 **종류:** 기능
 
 ```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
 ```
 
 tsdown에서 하나의 Archetype-C **hook** 프레임워크 빌드를 재현합니다.
@@ -2802,16 +2874,16 @@ tsdown에서 하나의 Archetype-C **hook** 프레임워크 빌드를 재현합�
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | TsdownForgeHooks옵션 |  |
+| 이름 | 유형                 | 설명 |
+| ---- | -------------------- | ---- |
+| 옵션 | TsdownForgeHooks옵션 |      |
 
 ### 정의TsdownForgeHooks모두
 
 **종류:** 기능
 
 ```typescript
-function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[]
+function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[];
 ```
 
 요청된 모든 Forge Hooks 프레임워크에 대한 tsdown 구성 배열을 구축합니다.
@@ -2820,9 +2892,9 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 옵션 | TsdownForgeHooksAllOptions |  |
+| 이름 | 유형                       | 설명 |
+| ---- | -------------------------- | ---- |
+| 옵션 | TsdownForgeHooksAllOptions |      |
 
 ### TsdownForgeComponents옵션
 

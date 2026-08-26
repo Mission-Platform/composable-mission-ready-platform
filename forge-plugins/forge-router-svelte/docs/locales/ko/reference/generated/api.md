@@ -20,23 +20,23 @@ function createSvelteKitRouterCapabilities(input: {
   page: { url: Pick<URL, 'pathname' | 'search' | 'hash'>; params: Record<string, string> };
   goto: SvelteKitRouterSurface['goto'];
   resolvePath?: (path: string) => string;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 SvelteKit 기본 요소에서 중립 기능을 구축합니다(테스트용 프레임워크 없음).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | { 페이지: { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> };   goto: SvelteKitRouterSurface['goto'];   해결 경로?: (경로: 문자열) => 문자열; } |  |
+| 이름 | 유형                                                                                                                                                                          | 설명 |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 입력 | { 페이지: { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>; params: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; 해결 경로?: (경로: 문자열) => 문자열; } |      |
 
 ### MP링크
 
 **종류:** 구성요소
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 SvelteKit은 링크에 일반 앵커를 사용합니다. 컴파일러는 이 마커를 다음과 같이 유지합니다.
@@ -47,7 +47,7 @@ Svelte 출력은 패키지 작성자의 중립 `MpLink` 사용을 유형 확인�
 **종류:** 구성요소
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Outlet은 SvelteKit에서 애플리케이션 소유입니다. 기능 진단에서는 `view`을 거부합니다.
@@ -57,23 +57,23 @@ Outlet은 SvelteKit에서 애플리케이션 소유입니다. 기능 진단에�
 **종류:** 기능
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 중립 대상을 href 문자열로 해결합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 에 | MpRouteLocationRaw |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 에   | MpRouteLocationRaw |      |
 
 ### setForgeSvelteKitRouter
 
 **종류:** 기능
 
 ```typescript
-function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
+function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 ```
 
 컴파일된 패키지 기능을 위해 SvelteKit 페이지/탐색 API를 바인딩합니다.
@@ -81,9 +81,9 @@ function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 표면 | SvelteKitRouterSurface |  |
+| 이름 | 유형                   | 설명 |
+| ---- | ---------------------- | ---- |
+| 표면 | SvelteKitRouterSurface |      |
 
 ### SvelteKitRouterSurface
 
@@ -103,40 +103,40 @@ export interface SvelteKitRouterSurface
 function toMpLocationFromSvelte(page: {
   url: Pick<URL, 'pathname' | 'search' | 'hash'>;
   params: Record<string, string>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 SvelteKit 페이지 스냅샷에서 중립 위치를 구축하세요.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 페이지 | { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>;   매개변수: Record<string, string>; } |  |
+| 이름   | 유형                                                                                    | 설명 |
+| ------ | --------------------------------------------------------------------------------------- | ---- |
+| 페이지 | { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>; 매개변수: Record<string, string>; } |      |
 
 ### toSvelteHref
 
 **종류:** 기능
 
 ```typescript
-function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string
+function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string;
 ```
 
 SvelteKit 탐색을 위한 중립 대상을 직렬화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 에 | MpRouteLocationRaw |  |
-| 해결 경로 | (경로: 문자열) => 문자열 |  |
+| 이름      | 유형                     | 설명 |
+| --------- | ------------------------ | ---- |
+| 에        | MpRouteLocationRaw       |      |
+| 해결 경로 | (경로: 문자열) => 문자열 |      |
 
 ### useMpNavigation
 
 **종류:** 기능
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 읽기 전용 필수 탐색/해결 기능입니다.
@@ -146,7 +146,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **종류:** 기능
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 경로 읽기는 패키지 탐색/해결을 위해 바인딩된 페이지 표면을 통해 지원됩니다.
@@ -156,7 +156,7 @@ function useMpRoute(): MpResolvedLocation | null
 **종류:** 기능
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 SvelteKit 탐색이 지원하는 중립 기능 개체를 읽어보세요.
@@ -168,7 +168,7 @@ SvelteKit 탐색이 지원하는 중립 기능 개체를 읽어보세요.
 **종류:** 상수
 
 ```typescript
-export const forgeRouterSvelte
+export const forgeRouterSvelte;
 ```
 
 SvelteKit의 애플리케이션 소유 페이지/탐색 API에 대한 Forge 라우터 대상입니다.

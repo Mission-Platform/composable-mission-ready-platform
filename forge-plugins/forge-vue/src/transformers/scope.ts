@@ -457,10 +457,24 @@ function emitEffect(
     effect?.cleanup === undefined
       ? undefined
       : rewriteExpression(effect.cleanup.text, scope);
+  const callbackReturnsCleanup = (() => {
+    if (cleanup === undefined) return false;
+    const arrow = indexOfTopLevel(callbackText, "=>");
+    if (arrow === -1) return false;
+    const body = callbackText.slice(arrow + 2).trim();
+    return (
+      body.startsWith("{") &&
+      body.endsWith("}") &&
+      indexOfTopLevel(body.slice(1, -1), "return") !== -1
+    );
+  })();
+  const cleanupFallback = callbackReturnsCleanup ? undefined : cleanup;
   const invoke =
     cleanup === undefined
       ? `(${callbackText})();`
-      : `const result = (${callbackText})(); if (typeof result === "function") onCleanup(result); else onCleanup(${cleanup});`;
+      : cleanupFallback === undefined
+        ? `const result = (${callbackText})(); if (typeof result === "function") onCleanup(result);`
+        : `const result = (${callbackText})(); if (typeof result === "function") onCleanup(result); else onCleanup(${cleanupFallback});`;
   if (dependencies === undefined) {
     return cleanup === undefined
       ? `watchEffect(${callbackText});`
@@ -471,9 +485,10 @@ function emitEffect(
       return `onMounted(${callbackText});`;
     }
     const cleanupName = `__vueCleanup${index}`;
+    const cleanupExpression = cleanupFallback ?? "undefined";
     return [
       `let ${cleanupName}: (() => void) | undefined;`,
-      `onMounted(() => { const result = (${callbackText})(); ${cleanupName} = typeof result === "function" ? result : ${cleanup}; });`,
+      `onMounted(() => { const result = (${callbackText})(); ${cleanupName} = typeof result === "function" ? result : ${cleanupExpression}; });`,
       `onUnmounted(() => ${cleanupName}?.());`,
     ].join("\n");
   }

@@ -13,8 +13,10 @@ export function validateForgeBuildPlugin(plugin: FrameworkOutputPlugin, adapter:
 }
 
 /** Validate all selected targets before environment filtering or native builds. */
-export function validateForgeBuildSelection(plugins: readonly FrameworkOutputPlugin[], adapter: 'vite' | 'tsdown'):
-  readonly FrameworkOutputPlugin[] {
+export function validateForgeBuildSelection(
+  plugins: readonly FrameworkOutputPlugin[],
+  adapter: 'vite' | 'tsdown',
+): readonly FrameworkOutputPlugin[] {
   const validated = validateForgeOutputPluginSelection(plugins);
   for (const plugin of validated) validateForgeBuildPlugin(plugin, adapter);
   return validated;

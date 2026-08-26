@@ -38,16 +38,16 @@ Node、文字列、または `route.component` の DOM ファクトリは直接�
 **種類:** 関数
 
 ```typescript
-function registerRouterElements(options: RegisterRouterElementsOptions = {}): void
+function registerRouterElements(options: RegisterRouterElementsOptions = {}): void;
 ```
 
 ルーター プリミティブを一度登録します。水分補給や検査から電話しても安全です。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | RegisterRouterElementsオプション |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| オプション | RegisterRouterElementsオプション |      |
 
 ## `src/runtime/history`
 
@@ -56,39 +56,39 @@ function registerRouterElements(options: RegisterRouterElementsOptions = {}): vo
 **種類:** 関数
 
 ```typescript
-function createBrowserHistory(win?: Window): MpBrowserHistory
+function createBrowserHistory(win?: Window): MpBrowserHistory;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|勝つ |ウィンドウ |  |
+| 名前 | タイプ     | 説明 |
+| ---- | ---------- | ---- |
+| 勝つ | ウィンドウ |      |
 
 ### メモリ履歴の作成
 
 **種類:** 関数
 
 ```typescript
-function createMemoryHistory(initialUrl = '/'): MpMemoryHistory
+function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|初期URL |  |  |
+| 名前    | タイプ | 説明 |
+| ------- | ------ | ---- |
+| 初期URL |        |      |
 
 ### ウェブ履歴の作成
 
 **種類:** 関数
 
 ```typescript
-function createWebHistory(): MpHistory
+function createWebHistory(): MpHistory;
 ```
 
 説明はありません。
@@ -120,7 +120,7 @@ export class MpMemoryHistory implements MpHistory
 **種類:** 定数
 
 ```typescript
-export const ForgeRouterLink
+export const ForgeRouterLink;
 ```
 
 説明はありません。
@@ -134,7 +134,7 @@ export const ForgeRouterLink
 **種類:** 定数
 
 ```typescript
-export const ForgeRouterOutlet
+export const ForgeRouterOutlet;
 ```
 
 説明はありません。
@@ -148,7 +148,7 @@ export const ForgeRouterOutlet
 **種類:** コンポーネント
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 コンパイルされたニュートラル リンクに使用されるカスタム要素タグ。
@@ -158,7 +158,7 @@ export const MpLink
 **種類:** コンポーネント
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 コンパイルされたニュートラル アウトレットに使用されるカスタム要素タグ。
@@ -168,7 +168,7 @@ export const MpRouterView
 **種類:** 定数
 
 ```typescript
-export const resolveForgeLink
+export const resolveForgeLink;
 ```
 
 説明はありません。
@@ -182,39 +182,39 @@ export const resolveForgeLink
 **種類:** 関数
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 バインドされた Web コンポーネント ルーターを通じてニュートラル ターゲットを解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| へ   | MpRouteLocationRaw |      |
 
 ### setForgeRouter
 
 **種類:** 関数
 
 ```typescript
-function setForgeRouter(router: MpWebComponentsRouter<View>): void
+function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
 コンパイルされたフレームワークフリーのパッケージ機能のために、アプリ所有のルーターをバインドします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルーター | MpWebComponentsRou​​ter<View> |  |
+| 名前     | タイプ                        | 説明 |
+| -------- | ----------------------------- | ---- |
+| ルーター | MpWebComponentsRou​​ter<View> |      |
 
 ### useForgeNavigation
 
 **種類:** 定数
 
 ```typescript
-export const useForgeNavigation
+export const useForgeNavigation;
 ```
 
 説明はありません。
@@ -228,7 +228,7 @@ export const useForgeNavigation
 **種類:** 定数
 
 ```typescript
-export const useForgeRoute
+export const useForgeRoute;
 ```
 
 説明はありません。
@@ -242,7 +242,7 @@ export const useForgeRoute
 **種類:** 定数
 
 ```typescript
-export const useForgeRouter
+export const useForgeRouter;
 ```
 
 説明はありません。
@@ -256,7 +256,7 @@ export const useForgeRouter
 **種類:** 関数
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 読み取り専用の命令型ナビゲーション/解決機能。
@@ -266,7 +266,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **種類:** 関数
 
 ```typescript
-function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
+function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'];
 ```
 
 現在のアプリが所有するルートを中立的な場所として読み取ります。
@@ -276,7 +276,7 @@ function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
 **種類:** 関数
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Web コンポーネント ランタイムによってサポートされる中立機能オブジェクトを読み取ります。
@@ -288,7 +288,7 @@ Web コンポーネント ランタイムによってサポートされる中立
 **種類:** 関数
 
 ```typescript
-function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>
+function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>;
 ```
 
 フレームワークフリーの完全なルーター ランタイムを作成します。ルートマッチングとURL
@@ -297,9 +297,9 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|オプション | MpWebComponentsRou​​terOptions<View> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| オプション | MpWebComponentsRou​​terOptions<View> |      |
 
 ### MpWebコンポーネントルーター
 
@@ -326,17 +326,17 @@ export interface MpWebComponentsRouterOptions<View = unknown>
 **種類:** 関数
 
 ```typescript
-function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
+function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ルーター | MpRouterAdapter |  |
-|へ | MpRouteLocationRaw |  |
+| 名前     | タイプ             | 説明 |
+| -------- | ------------------ | ---- |
+| ルーター | MpRouterAdapter    |      |
+| へ       | MpRouteLocationRaw |      |
 
 ## `src/utils/forge-router-web-components`
 
@@ -345,7 +345,7 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
 **種類:** 定数
 
 ```typescript
-export const forgeRouterWebComponents
+export const forgeRouterWebComponents;
 ```
 
 フレームワークフリーのヒストリー/アウトレット ランタイムをサポートする Forge ルーター ターゲット。

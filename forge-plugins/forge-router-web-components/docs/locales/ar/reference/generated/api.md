@@ -38,16 +38,16 @@ export class MpRouterOutletElement extends HTMLElement
 **النوع:** الوظيفة
 
 ```typescript
-function registerRouterElements(options: RegisterRouterElementsOptions = {}): void
+function registerRouterElements(options: RegisterRouterElementsOptions = {}): void;
 ```
 
 قم بتسجيل أساسيات جهاز التوجيه مرة واحدة؛ آمن للاستدعاء من الترطيب والاختبارات.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | تسجيل خيارات RouterElements |  |
+| الاسم  | اكتب                        | الوصف |
+| ------ | --------------------------- | ----- |
+| خيارات | تسجيل خيارات RouterElements |       |
 
 ## `src/runtime/history`
 
@@ -56,39 +56,39 @@ function registerRouterElements(options: RegisterRouterElementsOptions = {}): vo
 **النوع:** الوظيفة
 
 ```typescript
-function createBrowserHistory(win?: Window): MpBrowserHistory
+function createBrowserHistory(win?: Window): MpBrowserHistory;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| فوز | نافذة |  |
+| الاسم | اكتب  | الوصف |
+| ----- | ----- | ----- |
+| فوز   | نافذة |       |
 
 ### createMemoryHistory
 
 **النوع:** الوظيفة
 
 ```typescript
-function createMemoryHistory(initialUrl = '/'): MpMemoryHistory
+function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| عنوان URL الأولي |  |  |
+| الاسم            | اكتب | الوصف |
+| ---------------- | ---- | ----- |
+| عنوان URL الأولي |      |       |
 
 ### createWebHistory
 
 **النوع:** الوظيفة
 
 ```typescript
-function createWebHistory(): MpHistory
+function createWebHistory(): MpHistory;
 ```
 
 لم يتم تقديم أي وصف.
@@ -120,7 +120,7 @@ export class MpMemoryHistory implements MpHistory
 **النوع:** ثابت
 
 ```typescript
-export const ForgeRouterLink
+export const ForgeRouterLink;
 ```
 
 لم يتم تقديم أي وصف.
@@ -134,7 +134,7 @@ export const ForgeRouterLink
 **النوع:** ثابت
 
 ```typescript
-export const ForgeRouterOutlet
+export const ForgeRouterOutlet;
 ```
 
 لم يتم تقديم أي وصف.
@@ -148,7 +148,7 @@ export const ForgeRouterOutlet
 **النوع:** مكون
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 علامة العنصر المخصص المستخدمة للارتباطات المحايدة المجمعة.
@@ -158,7 +158,7 @@ export const MpLink
 **النوع:** مكون
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 علامة العنصر المخصص المستخدمة للمنافذ المحايدة المجمعة.
@@ -168,7 +168,7 @@ export const MpRouterView
 **النوع:** ثابت
 
 ```typescript
-export const resolveForgeLink
+export const resolveForgeLink;
 ```
 
 لم يتم تقديم أي وصف.
@@ -182,39 +182,39 @@ export const resolveForgeLink
 **النوع:** الوظيفة
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 قم بحل هدف محايد من خلال جهاز توجيه Web Components المرتبط.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### setForgeRouter
 
 **النوع:** الوظيفة
 
 ```typescript
-function setForgeRouter(router: MpWebComponentsRouter<View>): void
+function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
 قم بربط جهاز التوجيه المملوك للتطبيق للحصول على إمكانات الحزمة المترجمة الخالية من إطار العمل.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| راوتر | MpWebComponentsRouter<View> |  |
+| الاسم | اكتب                        | الوصف |
+| ----- | --------------------------- | ----- |
+| راوتر | MpWebComponentsRouter<View> |       |
 
 ### useForgeNavigation
 
 **النوع:** ثابت
 
 ```typescript
-export const useForgeNavigation
+export const useForgeNavigation;
 ```
 
 لم يتم تقديم أي وصف.
@@ -228,7 +228,7 @@ export const useForgeNavigation
 **النوع:** ثابت
 
 ```typescript
-export const useForgeRoute
+export const useForgeRoute;
 ```
 
 لم يتم تقديم أي وصف.
@@ -242,7 +242,7 @@ export const useForgeRoute
 **النوع:** ثابت
 
 ```typescript
-export const useForgeRouter
+export const useForgeRouter;
 ```
 
 لم يتم تقديم أي وصف.
@@ -256,7 +256,7 @@ export const useForgeRouter
 **النوع:** الوظيفة
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 اقرأ فقط إمكانيات التنقل/الحل الضرورية.
@@ -266,7 +266,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
+function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'];
 ```
 
 اقرأ المسار الحالي المملوك للتطبيق كموقع محايد.
@@ -276,7 +276,7 @@ function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 اقرأ كائن القدرة المحايدة المدعوم بوقت تشغيل Web Components.
@@ -288,7 +288,7 @@ function useMpRouter(): MpRouterCapabilities
 **النوع:** الوظيفة
 
 ```typescript
-function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>
+function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>;
 ```
 
 قم بإنشاء وقت تشغيل كامل لجهاز التوجيه بدون إطار عمل. مطابقة المسار وعنوان URL
@@ -297,9 +297,9 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خيارات | MpWebComponentsRouterOptions<View> |  |
+| الاسم  | اكتب                               | الوصف |
+| ------ | ---------------------------------- | ----- |
+| خيارات | MpWebComponentsRouterOptions<View> |       |
 
 ### MpWebComponentsRouter
 
@@ -326,17 +326,17 @@ export interface MpWebComponentsRouterOptions<View = unknown>
 **النوع:** الوظيفة
 
 ```typescript
-function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
+function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| راوتر | م راوتر أدابتر |  |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| راوتر | م راوتر أدابتر   |       |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ## `src/utils/forge-router-web-components`
 
@@ -345,7 +345,7 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
 **النوع:** ثابت
 
 ```typescript
-export const forgeRouterWebComponents
+export const forgeRouterWebComponents;
 ```
 
 صياغة هدف جهاز التوجيه مدعومًا بوقت تشغيل/منفذ خالٍ من الإطار.

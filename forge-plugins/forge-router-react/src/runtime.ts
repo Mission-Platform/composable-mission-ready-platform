@@ -1,5 +1,5 @@
 import { parseLocation, parseQuery, stringifyLocation, stringifyQuery } from '@mission-platform/router';
-import { Link, Outlet, useLocation, useNavigate, useParams, type NavigateFunction, type To } from 'react-router';
+import { Outlet, useLocation, useNavigate, useParams, type NavigateFunction, type To } from 'react-router';
 
 import type {
   MpLinkOptions,
@@ -34,11 +34,11 @@ export function toReactHref(to: MpRouteLocationRaw): string {
 /** Build a neutral location from React Router location/params snapshots. */
 export function toMpLocationFromReact(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation {
   const query = parseQuery(location.search) as MpQueryParameters;
-  const normalizedParams: MpRouteParameters = Object.fromEntries(
-    Object.entries(params)
+  const normalizedParameters: MpRouteParameters = Object.fromEntries(
+    Object.entries(parameters)
       .filter((entry): entry is [string, string] => entry[1] !== undefined)
       .map(([key, value]) => [key, value]),
   );
@@ -46,7 +46,7 @@ export function toMpLocationFromReact(
   return {
     path: location.pathname,
     fullPath,
-    params: normalizedParams,
+    params: normalizedParameters,
     query,
     hash: location.hash,
   };
@@ -105,4 +105,4 @@ export function resolveMpLink(to: MpRouteLocationRaw): string {
   return toReactHref(to);
 }
 
-export { Link as MpLink, Outlet as MpRouterView };
+export { Link as MpLink, Outlet as MpRouterView } from 'react-router';

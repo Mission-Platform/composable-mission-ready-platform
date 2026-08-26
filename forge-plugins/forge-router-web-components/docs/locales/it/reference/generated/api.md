@@ -38,16 +38,16 @@ Node, stringa o factory DOM in `route.component` viene visualizzato direttamente
 **Tipo:** funzione
 
 ```typescript
-function registerRouterElements(options: RegisterRouterElementsOptions = {}): void
+function registerRouterElements(options: RegisterRouterElementsOptions = {}): void;
 ```
 
 Registrare le primitive del router una volta; sicuro da chiamare per idratazione e test.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | RegisterRouterElementsOptions |  |
+| Nome    | Digitare                      | Descrizione |
+| ------- | ----------------------------- | ----------- |
+| opzioni | RegisterRouterElementsOptions |             |
 
 ## `src/runtime/history`
 
@@ -56,39 +56,39 @@ Registrare le primitive del router una volta; sicuro da chiamare per idratazione
 **Tipo:** funzione
 
 ```typescript
-function createBrowserHistory(win?: Window): MpBrowserHistory
+function createBrowserHistory(win?: Window): MpBrowserHistory;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| vincere | Finestra |  |
+| Nome    | Digitare | Descrizione |
+| ------- | -------- | ----------- |
+| vincere | Finestra |             |
 
 ### creareMemoryHistory
 
 **Tipo:** funzione
 
 ```typescript
-function createMemoryHistory(initialUrl = '/'): MpMemoryHistory
+function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| URLiniziale |  |  |
+| Nome        | Digitare | Descrizione |
+| ----------- | -------- | ----------- |
+| URLiniziale |          |             |
 
 ### creareWebHistory
 
 **Tipo:** funzione
 
 ```typescript
-function createWebHistory(): MpHistory
+function createWebHistory(): MpHistory;
 ```
 
 Nessuna descrizione fornita.
@@ -120,7 +120,7 @@ Un'implementazione deterministica della cronologia per test, SSR e prerendering.
 **Genere:** costante
 
 ```typescript
-export const ForgeRouterLink
+export const ForgeRouterLink;
 ```
 
 Nessuna descrizione fornita.
@@ -134,7 +134,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const ForgeRouterOutlet
+export const ForgeRouterOutlet;
 ```
 
 Nessuna descrizione fornita.
@@ -148,7 +148,7 @@ Nessuna descrizione fornita.
 **Tipo:** componente
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 Tag di elemento personalizzato utilizzato per collegamenti neutri compilati.
@@ -158,7 +158,7 @@ Tag di elemento personalizzato utilizzato per collegamenti neutri compilati.
 **Tipo:** componente
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Tag con elemento personalizzato utilizzato per prese neutre compilate.
@@ -168,7 +168,7 @@ Tag con elemento personalizzato utilizzato per prese neutre compilate.
 **Genere:** costante
 
 ```typescript
-export const resolveForgeLink
+export const resolveForgeLink;
 ```
 
 Nessuna descrizione fornita.
@@ -182,39 +182,39 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Risolvere una destinazione neutrale tramite il router Web Components associato.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nome | Digitare           | Descrizione |
+| ---- | ------------------ | ----------- |
+| a    | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
 **Tipo:** funzione
 
 ```typescript
-function setForgeRouter(router: MpWebComponentsRouter<View>): void
+function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
 Associa il router di proprietà dell'app per funzionalità del pacchetto compilato senza framework.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| router | MpWebComponentsRouter<View> |  |
+| Nome   | Digitare                    | Descrizione |
+| ------ | --------------------------- | ----------- |
+| router | MpWebComponentsRouter<View> |             |
 
 ### utilizzareForgeNavigation
 
 **Genere:** costante
 
 ```typescript
-export const useForgeNavigation
+export const useForgeNavigation;
 ```
 
 Nessuna descrizione fornita.
@@ -228,7 +228,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const useForgeRoute
+export const useForgeRoute;
 ```
 
 Nessuna descrizione fornita.
@@ -242,7 +242,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const useForgeRouter
+export const useForgeRouter;
 ```
 
 Nessuna descrizione fornita.
@@ -256,7 +256,7 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Capacità di navigazione/risoluzione imperativa di sola lettura.
@@ -266,7 +266,7 @@ Capacità di navigazione/risoluzione imperativa di sola lettura.
 **Tipo:** funzione
 
 ```typescript
-function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
+function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'];
 ```
 
 Leggi il percorso corrente di proprietà dell'app come posizione neutra.
@@ -276,7 +276,7 @@ Leggi il percorso corrente di proprietà dell'app come posizione neutra.
 **Tipo:** funzione
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Leggere l'oggetto funzionalità neutrale supportato dal runtime Web Components.
@@ -288,7 +288,7 @@ Leggere l'oggetto funzionalità neutrale supportato dal runtime Web Components.
 **Tipo:** funzione
 
 ```typescript
-function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>
+function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>;
 ```
 
 Crea il runtime completo del router senza framework. Corrispondenza del percorso e URL
@@ -297,9 +297,9 @@ cronologia, protezioni, reindirizzamenti, abbonamenti e comportamento di scorrim
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| opzioni | MpWebComponentsRouterOptions<View> |  |
+| Nome    | Digitare                           | Descrizione |
+| ------- | ---------------------------------- | ----------- |
+| opzioni | MpWebComponentsRouterOptions<View> |             |
 
 ### MpWebComponentsRouter
 
@@ -326,17 +326,17 @@ Nessuna descrizione fornita.
 **Tipo:** funzione
 
 ```typescript
-function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
+function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 ```
 
 Nessuna descrizione fornita.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| router | Adattatore MpRouter |  |
-| a | MpRouteLocationRaw |  |
+| Nome   | Digitare            | Descrizione |
+| ------ | ------------------- | ----------- |
+| router | Adattatore MpRouter |             |
+| a      | MpRouteLocationRaw  |             |
 
 ## `src/utils/forge-router-web-components`
 
@@ -345,7 +345,7 @@ Nessuna descrizione fornita.
 **Genere:** costante
 
 ```typescript
-export const forgeRouterWebComponents
+export const forgeRouterWebComponents;
 ```
 
 Forgia destinazione del router supportata dal runtime di cronologia/outlet senza framework.

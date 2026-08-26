@@ -183,8 +183,7 @@ function graphExportTarget(
   visited.add(start.id);
 
   const fact = start.exports.find(
-    (entryExport) =>
-      entryExport.typeOnly === typeOnly && entryExport.exportedName === exportedName,
+    (entryExport) => entryExport.typeOnly === typeOnly && entryExport.exportedName === exportedName,
   );
   if (fact?.specifier !== undefined) {
     const targetId = graph.edges.find(
@@ -230,7 +229,11 @@ interface ResolvedGraphExport {
  * how many local barrels sit between the package entry and the source.
  */
 function resolveGraphExports(graph: ForgeFileGraph, entry: ForgeFileNode): ResolvedGraphExport[] {
-  const resolve = (node: ForgeFileNode, inheritedTypeOnly: boolean, visited: ReadonlySet<string>): ResolvedGraphExport[] => {
+  const resolve = (
+    node: ForgeFileNode,
+    inheritedTypeOnly: boolean,
+    visited: ReadonlySet<string>,
+  ): ResolvedGraphExport[] => {
     if (visited.has(node.id)) {
       return [];
     }
@@ -412,9 +415,7 @@ export function discoverExternalExportsFromGraph(graph: ForgeFileGraph): Discove
     if (entryExport.specifier === undefined || entryExport.specifier.startsWith('.')) {
       return [];
     }
-    const external = graph.edges.some(
-      (edge) => edge.specifier === entryExport.specifier && edge.external === true,
-    );
+    const external = graph.edges.some((edge) => edge.specifier === entryExport.specifier && edge.external === true);
     if (!external) {
       return [];
     }

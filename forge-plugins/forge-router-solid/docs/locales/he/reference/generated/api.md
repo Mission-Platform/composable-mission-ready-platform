@@ -21,44 +21,39 @@ function createSolidRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: SolidNavigate;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 בנה יכולות ניטרליות מהפרימיטיבים של נתב Solid (ללא מסגרת לבדיקות).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | { מיקום: { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת };   params?: Record<string, string \| undefined>;   לנווט: SolidNavigate;   outlet?: לא ידוע; } |  |
+| שם  | הקלד                                                                                                                                               | תיאור |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| קלט | { מיקום: { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת }; params?: Record<string, string \| undefined>; לנווט: SolidNavigate; outlet?: לא ידוע; } |       |
 
 ### MpLink
 
 **סוג:** רכיב
 
 ```typescript
-function MpLink(properties: {
-  href?: string;
-  to?: MpRouteLocationRaw;
-  children?: unknown;
-  replace?: boolean;
-}): unknown
+function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
 ```
 
 Solid פרוקסי של רכיב עוגן מאוגד דרך {@link setForgeSolidRouter}.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | { href?: מחרוזת;   ל?: MpRouteLocationRaw;   ילדים?: לא ידוע;   להחליף?: בוליאן; } |  |
+| שם    | הקלד                                                                         | תיאור |
+| ----- | ---------------------------------------------------------------------------- | ----- |
+| נכסים | { href?: מחרוזת; ל?: MpRouteLocationRaw; ילדים?: לא ידוע; להחליף?: בוליאן; } |       |
 
 ### MpRouterView
 
 **סוג:** רכיב
 
 ```typescript
-function MpRouterView(): unknown
+function MpRouterView(): unknown;
 ```
 
 שרת proxy Solid מאוגד דרך {@link setForgeSolidRouter}.
@@ -68,23 +63,23 @@ function MpRouterView(): unknown
 פונקציה **סוג:**
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 פתור יעד ניטרלי למחרוזת href.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### setForgeSolidRouter
 
 פונקציה **סוג:**
 
 ```typescript
-function setForgeSolidRouter(surface: SolidRouterSurface): void
+function setForgeSolidRouter(surface: SolidRouterSurface): void;
 ```
 
 אגד את מודול הנתב Solid שבבעלות האפליקציה כך שהחבילות המורכבות ישמרו על הנייטרלי
@@ -92,9 +87,9 @@ function setForgeSolidRouter(surface: SolidRouterSurface): void
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| משטח | SolidRouterSurface |  |
+| שם   | הקלד               | תיאור |
+| ---- | ------------------ | ----- |
+| משטח | SolidRouterSurface |       |
 
 ### SolidRouterSurface
 
@@ -111,40 +106,43 @@ export interface SolidRouterSurface
 פונקציה **סוג:**
 
 ```typescript
-function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromSolid(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 בנה מיקום ניטרלי מ-Solid תמונות מצב של מיקום/פראמים של נתב.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מיקום | { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת } |  |
-| פרמס | שיא<string, string \| undefined> |  |
+| שם    | הקלד                                             | תיאור |
+| ----- | ------------------------------------------------ | ----- |
+| מיקום | { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת } |       |
+| פרמס  | שיא<string, string \| undefined>                 |       |
 
 ### לSolidHref
 
 פונקציה **סוג:**
 
 ```typescript
-function toSolidHref(to: MpRouteLocationRaw): string
+function toSolidHref(to: MpRouteLocationRaw): string;
 ```
 
 הסדר יעד ניטרלי עבור ניווט Solid נתב.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### השתמש ב-MpNavigation
 
 פונקציה **סוג:**
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 קרא רק יכולות הניווט/פתרון הכרחי.
@@ -154,7 +152,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 פונקציה **סוג:**
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 קרא את המסלול הנוכחי בבעלות האפליקציה בשם {@link MpResolvedLocation}.
@@ -164,7 +162,7 @@ function useMpRoute(): MpResolvedLocation | null
 פונקציה **סוג:**
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 קרא את אובייקט היכולת הנייטרלית המגובה על ידי נתב Solid.
@@ -176,7 +174,7 @@ function useMpRouter(): MpRouterCapabilities
 **סוג:** קבוע
 
 ```typescript
-export const forgeRouterSolid
+export const forgeRouterSolid;
 ```
 
 זיוף יעד נתב עבור מופע SolidJS נתב בבעלות יישום.

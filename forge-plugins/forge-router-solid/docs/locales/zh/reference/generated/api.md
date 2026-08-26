@@ -21,44 +21,39 @@ function createSolidRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: SolidNavigate;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 从 Solid 路由器原语构建中立功能（无需框架进行测试）。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|输入 | { 位置：{ 路径名：字符串；搜索：字符串；哈希：字符串}；   参数？：Record<string, string \| undefined>；   导航：SolidNavigate；   出口？： 未知； } |  |
+| 名称 | 类型                                                                                                                                          | 描述 |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 输入 | { 位置：{ 路径名：字符串；搜索：字符串；哈希：字符串}； 参数？：Record<string, string \| undefined>； 导航：SolidNavigate； 出口？： 未知； } |      |
 
 ### 普联
 
 **种类：**组件
 
 ```typescript
-function MpLink(properties: {
-  href?: string;
-  to?: MpRouteLocationRaw;
-  children?: unknown;
-  replace?: boolean;
-}): unknown
+function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
 ```
 
 Solid 通过 {@link setForgeSolidRouter} 绑定锚组件代理。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 | { href?: 字符串;   到？：MpRouteLocationRaw；   孩子？： 未知；   替换？：布尔值； } |  |
+| 名称 | 类型                                                                           | 描述 |
+| ---- | ------------------------------------------------------------------------------ | ---- |
+| 属性 | { href?: 字符串; 到？：MpRouteLocationRaw； 孩子？： 未知； 替换？：布尔值； } |      |
 
 ### MpRouterView
 
 **种类：**组件
 
 ```typescript
-function MpRouterView(): unknown
+function MpRouterView(): unknown;
 ```
 
 Solid 出口代理通过 {@link setForgeSolidRouter} 绑定。
@@ -68,23 +63,23 @@ Solid 出口代理通过 {@link setForgeSolidRouter} 绑定。
 **种类：**功能
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 将中性目标解析为 href 字符串。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### setForgeSolidRouter
 
 **种类：**功能
 
 ```typescript
-function setForgeSolidRouter(surface: SolidRouterSurface): void
+function setForgeSolidRouter(surface: SolidRouterSurface): void;
 ```
 
 绑定应用程序拥有的 Solid Router 模块，以便编译的包保持中立
@@ -92,9 +87,9 @@ function setForgeSolidRouter(surface: SolidRouterSurface): void
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|表面|实体路由器表面 |  |
+| 名称 | 类型           | 描述 |
+| ---- | -------------- | ---- |
+| 表面 | 实体路由器表面 |      |
 
 ### 实体路由器表面
 
@@ -111,40 +106,43 @@ export interface SolidRouterSurface
 **种类：**功能
 
 ```typescript
-function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromSolid(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 从 Solid 路由器位置/参数快照构建中立位置。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|地点 | { 路径名：字符串；搜索：字符串；哈希：字符串 } |  |
-|参数|记录<string, string \| undefined> |  |
+| 名称 | 类型                                           | 描述 |
+| ---- | ---------------------------------------------- | ---- |
+| 地点 | { 路径名：字符串；搜索：字符串；哈希：字符串 } |      |
+| 参数 | 记录<string, string \| undefined>              |      |
 
 ### 到SolidHref
 
 **种类：**功能
 
 ```typescript
-function toSolidHref(to: MpRouteLocationRaw): string
+function toSolidHref(to: MpRouteLocationRaw): string;
 ```
 
 序列化 Solid 路由器导航的中性目标。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### 使用Mp导航
 
 **种类：**功能
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 只读命令式导航/解析功能。
@@ -154,7 +152,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **种类：**功能
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 将当前应用拥有的路线读取为 {@link MpResolvedLocation}。
@@ -164,7 +162,7 @@ function useMpRoute(): MpResolvedLocation | null
 **种类：**功能
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 读取 Solid 路由器支持的中立功能对象。
@@ -176,7 +174,7 @@ function useMpRouter(): MpRouterCapabilities
 **种类：**常数
 
 ```typescript
-export const forgeRouterSolid
+export const forgeRouterSolid;
 ```
 
 Forge 路由器目标用于应用程序拥有的 SolidJS Router 实例。

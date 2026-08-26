@@ -21,44 +21,39 @@ function createSolidRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: SolidNavigate;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Crea funzionalità neutre dalle primitive del router Solid (senza framework per i test).
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ingresso | { posizione: { percorso: stringa; cerca: stringa; hash: stringa };   parametri?: Record<string, string \| undefined>;   navigare: SolidNavigate;   sbocco?: sconosciuto; } |  |
+| Nome     | Digitare                                                                                                                                                             | Descrizione |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| ingresso | { posizione: { percorso: stringa; cerca: stringa; hash: stringa }; parametri?: Record<string, string \| undefined>; navigare: SolidNavigate; sbocco?: sconosciuto; } |             |
 
 ### MpLink
 
 **Tipo:** componente
 
 ```typescript
-function MpLink(properties: {
-  href?: string;
-  to?: MpRouteLocationRaw;
-  children?: unknown;
-  replace?: boolean;
-}): unknown
+function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
 ```
 
 Solid proxy del componente di ancoraggio associato tramite {@link setForgeSolidRouter}.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | { href?: stringa;   a?: MpRouteLocationRaw;   bambini?: sconosciuto;   sostituire?: booleano; } |  |
+| Nome      | Digitare                                                                                  | Descrizione |
+| --------- | ----------------------------------------------------------------------------------------- | ----------- |
+| proprietà | { href?: stringa; a?: MpRouteLocationRaw; bambini?: sconosciuto; sostituire?: booleano; } |             |
 
 ### MpRouterView
 
 **Tipo:** componente
 
 ```typescript
-function MpRouterView(): unknown
+function MpRouterView(): unknown;
 ```
 
 Proxy di uscita Solid associato tramite {@link setForgeSolidRouter}.
@@ -68,23 +63,23 @@ Proxy di uscita Solid associato tramite {@link setForgeSolidRouter}.
 **Tipo:** funzione
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Risolvi un obiettivo neutro in una stringa href.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nome | Digitare           | Descrizione |
+| ---- | ------------------ | ----------- |
+| a    | MpRouteLocationRaw |             |
 
 ### setForgeSolidRouter
 
 **Tipo:** funzione
 
 ```typescript
-function setForgeSolidRouter(surface: SolidRouterSurface): void
+function setForgeSolidRouter(surface: SolidRouterSurface): void;
 ```
 
 Associa il modulo router Solid di proprietà dell'app in modo che i pacchetti compilati mantengano la neutralità
@@ -92,9 +87,9 @@ forme di aggancio/chiamata (`useMpRouter().navigate`, `useMpRoute().query`, …)
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| superficie | SolidRouterSuperficie |  |
+| Nome       | Digitare              | Descrizione |
+| ---------- | --------------------- | ----------- |
+| superficie | SolidRouterSuperficie |             |
 
 ### SolidRouterSurface
 
@@ -111,40 +106,43 @@ Solid Superficie minima del router utilizzata dallo spessore di runtime.
 **Tipo:** funzione
 
 ```typescript
-function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromSolid(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 Crea una posizione neutra dagli snapshot della posizione/parametri del router Solid.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| posizione | { percorso: stringa; cerca: stringa; hash: stringa } |  |
-| parametri | Registra<string, string \| undefined> |  |
+| Nome      | Digitare                                             | Descrizione |
+| --------- | ---------------------------------------------------- | ----------- |
+| posizione | { percorso: stringa; cerca: stringa; hash: stringa } |             |
+| parametri | Registra<string, string \| undefined>                |             |
 
 ### toSolidHref
 
 **Tipo:** funzione
 
 ```typescript
-function toSolidHref(to: MpRouteLocationRaw): string
+function toSolidHref(to: MpRouteLocationRaw): string;
 ```
 
 Serializza una destinazione neutra per la navigazione del router Solid.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nome | Digitare           | Descrizione |
+| ---- | ------------------ | ----------- |
+| a    | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 
 **Tipo:** funzione
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Capacità di navigazione/risoluzione imperativa di sola lettura.
@@ -154,7 +152,7 @@ Capacità di navigazione/risoluzione imperativa di sola lettura.
 **Tipo:** funzione
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Leggi il percorso corrente di proprietà dell'app come {@link MpResolvedLocation}.
@@ -164,7 +162,7 @@ Leggi il percorso corrente di proprietà dell'app come {@link MpResolvedLocation
 **Tipo:** funzione
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Leggere l'oggetto capacità neutrale supportato dal router Solid.
@@ -176,7 +174,7 @@ Leggere l'oggetto capacità neutrale supportato dal router Solid.
 **Genere:** costante
 
 ```typescript
-export const forgeRouterSolid
+export const forgeRouterSolid;
 ```
 
 Forgia destinazione del router per un'istanza del router SolidJS di proprietà dell'applicazione.

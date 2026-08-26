@@ -38,16 +38,16 @@ Node, cadena o fábrica DOM en `route.component` se representa directamente.
 **Tipo:** función
 
 ```typescript
-function registerRouterElements(options: RegisterRouterElementsOptions = {}): void
+function registerRouterElements(options: RegisterRouterElementsOptions = {}): void;
 ```
 
 Registre las primitivas del enrutador una vez; Es seguro llamar desde hidratación y pruebas.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | RegistrarRouterElementsOptions |  |
+| Nombre   | Tipo                           | Descripción |
+| -------- | ------------------------------ | ----------- |
+| opciones | RegistrarRouterElementsOptions |             |
 
 ## `src/runtime/history`
 
@@ -56,39 +56,39 @@ Registre las primitivas del enrutador una vez; Es seguro llamar desde hidrataci�
 **Tipo:** función
 
 ```typescript
-function createBrowserHistory(win?: Window): MpBrowserHistory
+function createBrowserHistory(win?: Window): MpBrowserHistory;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| ganar | Ventana |  |
+| Nombre | Tipo    | Descripción |
+| ------ | ------- | ----------- |
+| ganar  | Ventana |             |
 
 ### crearMemoriaHistorial
 
 **Tipo:** función
 
 ```typescript
-function createMemoryHistory(initialUrl = '/'): MpMemoryHistory
+function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| URL inicial |  |  |
+| Nombre      | Tipo | Descripción |
+| ----------- | ---- | ----------- |
+| URL inicial |      |             |
 
 ### crearHistorialWeb
 
 **Tipo:** función
 
 ```typescript
-function createWebHistory(): MpHistory
+function createWebHistory(): MpHistory;
 ```
 
 No se proporciona descripción.
@@ -120,7 +120,7 @@ Una implementación de historial determinista para pruebas, SSR y prerenderizado
 **Tipo:** constante
 
 ```typescript
-export const ForgeRouterLink
+export const ForgeRouterLink;
 ```
 
 No se proporciona descripción.
@@ -134,7 +134,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const ForgeRouterOutlet
+export const ForgeRouterOutlet;
 ```
 
 No se proporciona descripción.
@@ -148,7 +148,7 @@ No se proporciona descripción.
 **Tipo:** componente
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 Etiqueta de elemento personalizado utilizada para enlaces neutrales compilados.
@@ -158,7 +158,7 @@ Etiqueta de elemento personalizado utilizada para enlaces neutrales compilados.
 **Tipo:** componente
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Etiqueta de elemento personalizado utilizada para salidas neutrales compiladas.
@@ -168,7 +168,7 @@ Etiqueta de elemento personalizado utilizada para salidas neutrales compiladas.
 **Tipo:** constante
 
 ```typescript
-export const resolveForgeLink
+export const resolveForgeLink;
 ```
 
 No se proporciona descripción.
@@ -182,39 +182,39 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Resuelva un objetivo neutral a través del enrutador de componentes web vinculado.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nombre | Tipo               | Descripción |
+| ------ | ------------------ | ----------- |
+| a      | MpRouteLocationRaw |             |
 
 ### setForgeRouter
 
 **Tipo:** función
 
 ```typescript
-function setForgeRouter(router: MpWebComponentsRouter<View>): void
+function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
 Vincule el enrutador propiedad de la aplicación para obtener capacidades de paquetes compilados sin marco.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| enrutador | MpWebComponentsEnrutador<View> |  |
+| Nombre    | Tipo                           | Descripción |
+| --------- | ------------------------------ | ----------- |
+| enrutador | MpWebComponentsEnrutador<View> |             |
 
 ### utilizarForgeNavegación
 
 **Tipo:** constante
 
 ```typescript
-export const useForgeNavigation
+export const useForgeNavigation;
 ```
 
 No se proporciona descripción.
@@ -228,7 +228,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const useForgeRoute
+export const useForgeRoute;
 ```
 
 No se proporciona descripción.
@@ -242,7 +242,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const useForgeRouter
+export const useForgeRouter;
 ```
 
 No se proporciona descripción.
@@ -256,7 +256,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Capacidades de navegación/resolución imperativas de solo lectura.
@@ -266,7 +266,7 @@ Capacidades de navegación/resolución imperativas de solo lectura.
 **Tipo:** función
 
 ```typescript
-function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
+function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'];
 ```
 
 Lea la ruta actual propiedad de la aplicación como una ubicación neutral.
@@ -276,7 +276,7 @@ Lea la ruta actual propiedad de la aplicación como una ubicación neutral.
 **Tipo:** función
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lea el objeto de capacidad neutral respaldado por el tiempo de ejecución de componentes web.
@@ -288,7 +288,7 @@ Lea el objeto de capacidad neutral respaldado por el tiempo de ejecución de com
 **Tipo:** función
 
 ```typescript
-function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>
+function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>;
 ```
 
 Cree el tiempo de ejecución completo del enrutador sin marco. Coincidencia de rutas y URL
@@ -297,9 +297,9 @@ historial, guardias, redirecciones, suscripciones y comportamiento de desplazami
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| opciones | MpWebComponentsOpciones de enrutador<View> |  |
+| Nombre   | Tipo                                       | Descripción |
+| -------- | ------------------------------------------ | ----------- |
+| opciones | MpWebComponentsOpciones de enrutador<View> |             |
 
 ### MpWebComponentsEnrutador
 
@@ -326,17 +326,17 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
+function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| enrutador | Adaptador MpRouter |  |
-| a | MpRouteLocationRaw |  |
+| Nombre    | Tipo               | Descripción |
+| --------- | ------------------ | ----------- |
+| enrutador | Adaptador MpRouter |             |
+| a         | MpRouteLocationRaw |             |
 
 ## `src/utils/forge-router-web-components`
 
@@ -345,7 +345,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const forgeRouterWebComponents
+export const forgeRouterWebComponents;
 ```
 
 Objetivo de enrutador Forge respaldado por el tiempo de ejecución de historial/salida sin marco.

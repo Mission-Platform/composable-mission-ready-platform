@@ -34,7 +34,9 @@ describe('generateHookLibrarySources', () => {
       generateHookLibrarySources(options);
       expect(statSync(hookPath).mtimeMs).toBe(firstMtime);
       expect(service.report().cache.semanticHits).toBeGreaterThan(0);
-      expect(JSON.parse(readFileSync(path.join(outputDirectory, '.forge-artifact-manifest.json'), 'utf8'))).toMatchObject({
+      expect(
+        JSON.parse(readFileSync(path.join(outputDirectory, '.forge-artifact-manifest.json'), 'utf8')),
+      ).toMatchObject({
         targetId: 'vue',
         complete: true,
       });

@@ -20,23 +20,23 @@ function createSvelteKitRouterCapabilities(input: {
   page: { url: Pick<URL, 'pathname' | 'search' | 'hash'>; params: Record<string, string> };
   goto: SvelteKitRouterSurface['goto'];
   resolvePath?: (path: string) => string;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 قم ببناء قدرات محايدة من أساسيات SvelteKit (بدون إطار عمل للاختبارات).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | { الصفحة: { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>؛ المعلمات: Record<string, string> };   goto: SvelteKitRouterSurface['goto'];   ResolvePath ؟: (path: string) => string; } |  |
+| الاسم   | اكتب                                                                                                                                                                               | الوصف |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| الإدخال | { الصفحة: { URL: Pick<URL, 'pathname' \| 'search' \| 'hash'>؛ المعلمات: Record<string, string> }; goto: SvelteKitRouterSurface['goto']; ResolvePath ؟: (path: string) => string; } |       |
 
 ### مبلينك
 
 **النوع:** مكون
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 يستخدم SvelteKit نقاط ارتساء عادية للروابط. المترجم يحافظ على هذه العلامة هكذا
@@ -47,7 +47,7 @@ export const MpLink
 **النوع:** مكون
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Outlet مملوك للتطبيق في SvelteKit؛ ترفض تشخيصات القدرة `view`.
@@ -57,23 +57,23 @@ Outlet مملوك للتطبيق في SvelteKit؛ ترفض تشخيصات الق
 **النوع:** الوظيفة
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 حل هدف محايد إلى سلسلة href.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### setForgeSvelteKitRouter
 
 **النوع:** الوظيفة
 
 ```typescript
-function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
+function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void;
 ```
 
 ربط واجهات برمجة التطبيقات للصفحة/التنقل في SvelteKit لإمكانيات الحزمة المترجمة.
@@ -81,9 +81,9 @@ function setForgeSvelteKitRouter(surface: SvelteKitRouterSurface): void
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| سطح | SvelteKitRouterSurface |  |
+| الاسم | اكتب                   | الوصف |
+| ----- | ---------------------- | ----- |
+| سطح   | SvelteKitRouterSurface |       |
 
 ### SvelteKitRouterSurface
 
@@ -103,40 +103,40 @@ export interface SvelteKitRouterSurface
 function toMpLocationFromSvelte(page: {
   url: Pick<URL, 'pathname' | 'search' | 'hash'>;
   params: Record<string, string>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 أنشئ موقعًا محايدًا من لقطة صفحة SvelteKit.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| صفحة | { رابط: Pick<URL, 'pathname' \| 'search' \| 'hash'>؛   المعلمات: Record<string, string>; } |  |
+| الاسم | اكتب                                                                                     | الوصف |
+| ----- | ---------------------------------------------------------------------------------------- | ----- |
+| صفحة  | { رابط: Pick<URL, 'pathname' \| 'search' \| 'hash'>؛ المعلمات: Record<string, string>; } |       |
 
 ### إلىSvelteHref
 
 **النوع:** الوظيفة
 
 ```typescript
-function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string
+function toSvelteHref(to: MpRouteLocationRaw, resolvePath?: (path: string) => string): string;
 ```
 
 إجراء تسلسل لهدف محايد للملاحة SvelteKit.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
-| مسار العزم | (المسار: سلسلة) => سلسلة |  |
+| الاسم      | اكتب                     | الوصف |
+| ---------- | ------------------------ | ----- |
+| إلى        | مبرووتلوكيشن راو         |       |
+| مسار العزم | (المسار: سلسلة) => سلسلة |       |
 
 ### useMpNavigation
 
 **النوع:** الوظيفة
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 اقرأ فقط إمكانيات التنقل/الحل الضرورية.
@@ -146,7 +146,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 يتم دعم قراءات المسار من خلال سطح الصفحة المرتبطة لحزم التنقل/الحل.
@@ -156,7 +156,7 @@ function useMpRoute(): MpResolvedLocation | null
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 اقرأ كائن القدرة المحايدة المدعوم بملاحة SvelteKit.
@@ -168,7 +168,7 @@ function useMpRouter(): MpRouterCapabilities
 **النوع:** ثابت
 
 ```typescript
-export const forgeRouterSvelte
+export const forgeRouterSvelte;
 ```
 
 قم بصياغة هدف جهاز التوجيه لواجهات برمجة تطبيقات الصفحة/التنقل المملوكة للتطبيق في SvelteKit.

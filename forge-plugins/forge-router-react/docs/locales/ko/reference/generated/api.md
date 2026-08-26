@@ -21,88 +21,91 @@ function createReactRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: NavigateFunction;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 중립적 역량 구축 React 라우터 프리미티브(테스트용 후크 없음).
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 입력 | { 위치: { 경로명: 문자열; 검색: 문자열; 해시: 문자열 };   params?: 기록<string, string \| undefined>;   탐색: NavigateFunction;   콘센트?: 알 수 없음; } |  |
+| 이름 | 유형                                                                                                                                               | 설명 |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 입력 | { 위치: { 경로명: 문자열; 검색: 문자열; 해시: 문자열 }; params?: 기록<string, string \| undefined>; 탐색: NavigateFunction; 콘센트?: 알 수 없음; } |      |
 
 ### 해결MpLink
 
 **종류:** 기능
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 중립 대상을 href 문자열로 해결합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 에 | MpRouteLocationRaw |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 에   | MpRouteLocationRaw |      |
 
 ### toMpLocationFromReact
 
 **종류:** 기능
 
 ```typescript
-function toMpLocationFromReact(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromReact(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 다음에서 중립 위치를 구축하세요. React 라우터 위치/매개변수 스냅샷.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 위치 | { 경로명: 문자열; 검색: 문자열; 해시: 문자열 } |  |
-| 매개변수 | 기록<string, string \| undefined> |  |
+| 이름     | 유형                                           | 설명 |
+| -------- | ---------------------------------------------- | ---- |
+| 위치     | { 경로명: 문자열; 검색: 문자열; 해시: 문자열 } |      |
+| 매개변수 | 기록<string, string \| undefined>              |      |
 
 ### toReactHref
 
 **종류:** 기능
 
 ```typescript
-function toReactHref(to: MpRouteLocationRaw): string
+function toReactHref(to: MpRouteLocationRaw): string;
 ```
 
 중립 대상을 href 문자열로 직렬화합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 에 | MpRouteLocationRaw |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 에   | MpRouteLocationRaw |      |
 
 ### 반응하다
 
 **종류:** 기능
 
 ```typescript
-function toReactTo(to: MpRouteLocationRaw): To
+function toReactTo(to: MpRouteLocationRaw): To;
 ```
 
 중립 타겟을 React 라우터 `To` 값.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 에 | MpRouteLocationRaw |  |
+| 이름 | 유형               | 설명 |
+| ---- | ------------------ | ---- |
+| 에   | MpRouteLocationRaw |      |
 
 ### useMpNavigation
 
 **종류:** 기능
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 읽기 전용 필수 탐색/해결 기능입니다.
@@ -112,7 +115,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **종류:** 기능
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 현재 앱 소유 경로를 {@link MpResolvedLocation}으로 읽습니다.
@@ -122,7 +125,7 @@ function useMpRoute(): MpResolvedLocation | null
 **종류:** 기능
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 지원되는 중립 기능 개체를 읽습니다. React 라우터.
@@ -134,7 +137,7 @@ function useMpRouter(): MpRouterCapabilities
 **종류:** 상수
 
 ```typescript
-export const forgeRouterReact
+export const forgeRouterReact;
 ```
 
 애플리케이션 소유의 Forge 라우터 대상 React 라우터 인스턴스.

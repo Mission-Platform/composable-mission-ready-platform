@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
+
 import { createVueRouterCapabilities, toMpLocation, toVueLocation } from '../runtime';
+
 import { forgeRouterVue } from './forge-router-vue';
 
 import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
@@ -43,9 +45,9 @@ describe('forgeRouterVue', () => {
   });
 
   it('maps Vue locations and navigation onto the neutral capability contract', async () => {
-    const push = vi.fn(async () => undefined);
-    const replace = vi.fn(async () => undefined);
-    const resolve = vi.fn((to: unknown) => ({
+    const push = vi.fn(async () => {});
+    const replace = vi.fn(async () => {});
+    const resolve = vi.fn(() => ({
       path: '/users/42',
       fullPath: '/users/42?tab=profile',
       params: { id: '42' },

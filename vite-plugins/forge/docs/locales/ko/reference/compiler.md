@@ -14,14 +14,14 @@ Vite 플러그인. Forge에는 중립 컴파일러 드라이버, 명시적 대�
 
 Forge 컴파일은 의도적으로 제한된 책임을 맡은 여러 패키지에 걸쳐 있습니다.
 
-| 레이어 | 소유 | 소유하지 않음 |
-| :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| `@mission-platform/vite-plugin-forge` | 구문 분석, 정규화, 중립 분석, 의미적 IR, 공유 최적화, 캐시/검색, 디스패치 및 일반 Vite/tsdown 오케스트레이션 | React, Vue, Solid, Svelte, 웹 구성 요소 또는 CMS 소스 이미터 |
-| `@mission-platform/forge-plugin-api` | `FrameworkOutputPlugin`, 의미 체계 대상 계약, 생성된 모듈 유형, 대상 메타데이터 및 Vite/tsdown 어댑터 유형 | 프레임워크 구현 또는 대상 선택 레지스트리 |
-| 내장형 `@mission-platform/forge-plugin-*` 패키지 | 대상 낮추기, 대상 최적화, 소스 생성, 대상 진단, 런타임 메타데이터 및 기본 빌드 어댑터 | 중립 구문 분석 및 교차 대상 오케스트레이션 |
-| `@mission-platform/forge-cms-plugin-api` | `CmsOutputPlugin`, 중립 콘텐츠 모델, 발견→분석→발산→쓰기 드라이버, 아일랜드 공동 생성 및 CMS 빌드 도우미 | 플랫폼별 스키마, 템플릿 또는 매니페스트 형태 |
-| `@mission-platform/forge-cms-*` 패키지 | 각각 하나의 콘텐츠 플랫폼: 필드 매핑, 템플릿 방언, 매니페스트 형태 및 플랫폼 진단 | 중립 소품 분류 또는 교차 대상 오케스트레이션 |
-| `tsdown.config.ts` 파일 패키지 | 대상 플러그인 인스턴스 및 패키지별 재정의 선택 | 컴파일러 단계 또는 프레임워크 스위치 테이블 재구현 |
+| 레이어                                           | 소유                                                                                                         | 소유하지 않음                                                |
+| :----------------------------------------------- | :----------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------- |
+| `@mission-platform/vite-plugin-forge`            | 구문 분석, 정규화, 중립 분석, 의미적 IR, 공유 최적화, 캐시/검색, 디스패치 및 일반 Vite/tsdown 오케스트레이션 | React, Vue, Solid, Svelte, 웹 구성 요소 또는 CMS 소스 이미터 |
+| `@mission-platform/forge-plugin-api`             | `FrameworkOutputPlugin`, 의미 체계 대상 계약, 생성된 모듈 유형, 대상 메타데이터 및 Vite/tsdown 어댑터 유형   | 프레임워크 구현 또는 대상 선택 레지스트리                    |
+| 내장형 `@mission-platform/forge-plugin-*` 패키지 | 대상 낮추기, 대상 최적화, 소스 생성, 대상 진단, 런타임 메타데이터 및 기본 빌드 어댑터                        | 중립 구문 분석 및 교차 대상 오케스트레이션                   |
+| `@mission-platform/forge-cms-plugin-api`         | `CmsOutputPlugin`, 중립 콘텐츠 모델, 발견→분석→발산→쓰기 드라이버, 아일랜드 공동 생성 및 CMS 빌드 도우미     | 플랫폼별 스키마, 템플릿 또는 매니페스트 형태                 |
+| `@mission-platform/forge-cms-*` 패키지           | 각각 하나의 콘텐츠 플랫폼: 필드 매핑, 템플릿 방언, 매니페스트 형태 및 플랫폼 진단                            | 중립 소품 분류 또는 교차 대상 오케스트레이션                 |
+| `tsdown.config.ts` 파일 패키지                   | 대상 플러그인 인스턴스 및 패키지별 재정의 선택                                                               | 컴파일러 단계 또는 프레임워크 스위치 테이블 재구현           |
 
 종속성 방향은 명시적입니다. 패키지는 원하는 대상 플러그인을 가져오고 해당 인스턴스를 중립에 전달합니다.
 드라이버를 받고 타겟별 빌드 구성을 받습니다. 드라이버는 문자열에서 대상을 구성하거나 가져오지 않습니다.
@@ -134,12 +134,12 @@ Vite 및 tsdown 도우미는 빌드 세션의 수명 동안 프로세스 내 `Fo
 게시 대상:
 
 ```ts
-import { defineTsdownForgeComponents } from "@mission-platform/vite-plugin-forge";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeSolidFramework } from "@mission-platform/forge-plugin-solid";
-import { forgeSvelteFramework } from "@mission-platform/forge-plugin-svelte";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
-import { forgeWebComponentsFramework } from "@mission-platform/forge-plugin-web-components";
+import { defineTsdownForgeComponents } from '@mission-platform/vite-plugin-forge';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeSolidFramework } from '@mission-platform/forge-plugin-solid';
+import { forgeSvelteFramework } from '@mission-platform/forge-plugin-svelte';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
+import { forgeWebComponentsFramework } from '@mission-platform/forge-plugin-web-components';
 
 export default defineTsdownForgeComponents({
   rootDir: import.meta.dirname,
@@ -151,7 +151,7 @@ export default defineTsdownForgeComponents({
     forgeWebComponentsFramework(),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
-  name: "MissionPlatformComponents",
+  name: 'MissionPlatformComponents',
 });
 ```
 
@@ -252,23 +252,23 @@ Jekyll 포함 또는 Webflow 코드 구성 요소 — 그리고 각각은 **모�
 프레임워크 플러그인:
 
 ```ts
-import { defineTsdownForgeCmsAll } from "@mission-platform/forge-cms-plugin-api";
-import { forgeStoryblokCms } from "@mission-platform/forge-cms-storyblok";
-import { forgeReactFramework } from "@mission-platform/forge-plugin-react";
-import { forgeVueFramework } from "@mission-platform/forge-plugin-vue";
+import { defineTsdownForgeCmsAll } from '@mission-platform/forge-cms-plugin-api';
+import { forgeStoryblokCms } from '@mission-platform/forge-cms-storyblok';
+import { forgeReactFramework } from '@mission-platform/forge-plugin-react';
+import { forgeVueFramework } from '@mission-platform/forge-plugin-vue';
 
 export default defineTsdownForgeCmsAll({
   rootDir: import.meta.dirname,
   targets: [
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeReactFramework(),
-      storyblokRuntime: "@storyblok/react",
+      storyblokRuntime: '@storyblok/react',
     }),
     forgeStoryblokCms({
-      packageName: "@mission-platform/components",
+      packageName: '@mission-platform/components',
       plugin: forgeVueFramework(),
-      storyblokRuntime: "@storyblok/vue",
+      storyblokRuntime: '@storyblok/vue',
     }),
   ],
   componentsModule: `${import.meta.dirname}/src/components/index.ts`,
@@ -290,13 +290,13 @@ flowchart TD
 
 ### 목표
 
-| 패키지 | 공장 | 방출 |
-| :----------------------------------------- | :-------------------- | :---------------------------------------------------------------------------- |
-| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | 구성 요소당 구성 요소 개체, 프레임워크 블록 래퍼, `components.json`, 입력된 항목 |
-| `@mission-platform/forge-cms-astro` | `forgeAstroCms` | 정적 `.astro` 또는 `client:load` 섬 및 zod `content.config.ts` |
-| `@mission-platform/forge-cms-ghost` | `forgeGhostCms` | 핸들바 부분과 `config.custom` 테마 조각 |
-| `@mission-platform/forge-cms-jekyll` | `forgeJekyllCms` | Liquid에는 `_data/forge-components.yml` 및 `_config.yml` 조각이 포함되어 있습니다.
-| `@mission-platform/forge-cms-webflow` | `forgeWebflowCms` | `declareComponent` 코드 구성 요소 선언 및 `webflow.json` 라이브러리 조각 |
+| 패키지                                  | 공장                | 방출                                                                               |
+| :-------------------------------------- | :------------------ | :--------------------------------------------------------------------------------- |
+| `@mission-platform/forge-cms-storyblok` | `forgeStoryblokCms` | 구성 요소당 구성 요소 개체, 프레임워크 블록 래퍼, `components.json`, 입력된 항목   |
+| `@mission-platform/forge-cms-astro`     | `forgeAstroCms`     | 정적 `.astro` 또는 `client:load` 섬 및 zod `content.config.ts`                     |
+| `@mission-platform/forge-cms-ghost`     | `forgeGhostCms`     | 핸들바 부분과 `config.custom` 테마 조각                                            |
+| `@mission-platform/forge-cms-jekyll`    | `forgeJekyllCms`    | Liquid에는 `_data/forge-components.yml` 및 `_config.yml` 조각이 포함되어 있습니다. |
+| `@mission-platform/forge-cms-webflow`   | `forgeWebflowCms`   | `declareComponent` 코드 구성 요소 선언 및 `webflow.json` 라이브러리 조각           |
 
 지원되지 않는 모든 매핑은 단계, 코드 및 실행 가능한 이유가 포함된 `CompilerDiagnostic`을 생성합니다.
 자동 누락 — Ghost는 숫자 필드에 대해 경고하고 최대 20개 설정 한도를 초과하면 Webflow는 숫자가 입력될 때 경고합니다.

@@ -21,88 +21,91 @@ function createReactRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: NavigateFunction;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Crea funzionalità neutre dalle primitive del router React (senza hook per i test).
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ingresso | { posizione: { percorso: stringa; cerca: stringa; hash: stringa };   parametri?: Record<string, string \| undefined>;   navigare: NavigaFunction;   sbocco?: sconosciuto; } |  |
+| Nome     | Digitare                                                                                                                                                              | Descrizione |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| ingresso | { posizione: { percorso: stringa; cerca: stringa; hash: stringa }; parametri?: Record<string, string \| undefined>; navigare: NavigaFunction; sbocco?: sconosciuto; } |             |
 
 ### risolvereMpLink
 
 **Tipo:** funzione
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Risolvi un obiettivo neutro in una stringa href.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nome | Digitare           | Descrizione |
+| ---- | ------------------ | ----------- |
+| a    | MpRouteLocationRaw |             |
 
 ### toMpLocationFromReact
 
 **Tipo:** funzione
 
 ```typescript
-function toMpLocationFromReact(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromReact(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 Crea una posizione neutra dagli snapshot della posizione/parametri del router React.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| posizione | { percorso: stringa; cerca: stringa; hash: stringa } |  |
-| parametri | Registra<string, string \| undefined> |  |
+| Nome      | Digitare                                             | Descrizione |
+| --------- | ---------------------------------------------------- | ----------- |
+| posizione | { percorso: stringa; cerca: stringa; hash: stringa } |             |
+| parametri | Registra<string, string \| undefined>                |             |
 
 ### toReactHref
 
 **Tipo:** funzione
 
 ```typescript
-function toReactHref(to: MpRouteLocationRaw): string
+function toReactHref(to: MpRouteLocationRaw): string;
 ```
 
 Serializza un target neutro in una stringa href.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nome | Digitare           | Descrizione |
+| ---- | ------------------ | ----------- |
+| a    | MpRouteLocationRaw |             |
 
 ### toReactTo
 
 **Tipo:** funzione
 
 ```typescript
-function toReactTo(to: MpRouteLocationRaw): To
+function toReactTo(to: MpRouteLocationRaw): To;
 ```
 
 Converti un bersaglio neutrale in a React Router `To` valore.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nome | Digitare           | Descrizione |
+| ---- | ------------------ | ----------- |
+| a    | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 
 **Tipo:** funzione
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Capacità di navigazione/risoluzione imperativa di sola lettura.
@@ -112,7 +115,7 @@ Capacità di navigazione/risoluzione imperativa di sola lettura.
 **Tipo:** funzione
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Leggi il percorso corrente di proprietà dell'app come {@link MpResolvedLocation}.
@@ -122,7 +125,7 @@ Leggi il percorso corrente di proprietà dell'app come {@link MpResolvedLocation
 **Tipo:** funzione
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Leggere l'oggetto capacità neutrale supportato dal router React.
@@ -134,7 +137,7 @@ Leggere l'oggetto capacità neutrale supportato dal router React.
 **Genere:** costante
 
 ```typescript
-export const forgeRouterReact
+export const forgeRouterReact;
 ```
 
 Forgia la destinazione del router per un'istanza del router React di proprietà dell'applicazione.

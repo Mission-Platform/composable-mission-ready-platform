@@ -21,88 +21,91 @@ function createReactRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: NavigateFunction;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 中立的な機能を構築する React ルーター プリミティブ (テスト用のフックなし)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | { 場所: { パス名: 文字列;検索: 文字列;ハッシュ: 文字列 };   params?: 記録<string, string \| undefined>;   ナビゲート: NavigateFunction;   アウトレット?: 不明。 } |  |
+| 名前 | タイプ                                                                                                                                                      | 説明 |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 入力 | { 場所: { パス名: 文字列;検索: 文字列;ハッシュ: 文字列 }; params?: 記録<string, string \| undefined>; ナビゲート: NavigateFunction; アウトレット?: 不明。 } |      |
 
 ### 解決MpLink
 
 **種類:** 関数
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 ニュートラル ターゲットを href 文字列に解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| へ   | MpRouteLocationRaw |      |
 
 ### toMpLocationFromReact
 
 **種類:** 関数
 
 ```typescript
-function toMpLocationFromReact(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromReact(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 ～から中立的な場所を構築する React ルーターの場所/パラメータのスナップショット。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|場所 | { パス名: 文字列;検索: 文字列;ハッシュ: 文字列 } |  |
-|パラメータ |記録<string, string \| undefined> |  |
+| 名前       | タイプ                                           | 説明 |
+| ---------- | ------------------------------------------------ | ---- |
+| 場所       | { パス名: 文字列;検索: 文字列;ハッシュ: 文字列 } |      |
+| パラメータ | 記録<string, string \| undefined>                |      |
 
 ### toReactHref
 
 **種類:** 関数
 
 ```typescript
-function toReactHref(to: MpRouteLocationRaw): string
+function toReactHref(to: MpRouteLocationRaw): string;
 ```
 
 ニュートラル ターゲットを href 文字列にシリアル化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| へ   | MpRouteLocationRaw |      |
 
 ### 反応する
 
 **種類:** 関数
 
 ```typescript
-function toReactTo(to: MpRouteLocationRaw): To
+function toReactTo(to: MpRouteLocationRaw): To;
 ```
 
 中立ターゲットを React ルーター `To` 価値。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| へ   | MpRouteLocationRaw |      |
 
 ### useMpNavigation
 
 **種類:** 関数
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 読み取り専用の命令型ナビゲーション/解決機能。
@@ -112,7 +115,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **種類:** 関数
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 現在のアプリが所有するルートを {@link MpResolvedLocation} として読み取ります。
@@ -122,7 +125,7 @@ function useMpRoute(): MpResolvedLocation | null
 **種類:** 関数
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 に裏付けられたニュートラル機能オブジェクトを読み取ります。 React ルーター。
@@ -134,7 +137,7 @@ function useMpRouter(): MpRouterCapabilities
 **種類:** 定数
 
 ```typescript
-export const forgeRouterReact
+export const forgeRouterReact;
 ```
 
 アプリケーション所有のルーターターゲットを鍛造する React ルーターインスタンス。

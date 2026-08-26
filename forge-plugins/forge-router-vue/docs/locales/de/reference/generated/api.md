@@ -16,49 +16,49 @@ Generiert aus öffentlichen Quelldeklarationen in `@mission-platform/forge-route
 **Art:** Funktion
 
 ```typescript
-function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities
+function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities;
 ```
 
 Erstellen Sie neutrale Funktionen aus einer anwendungseigenen Vue-Router-Instanz.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Router | Router |  |
-| aktuell |  |  |
+| Name    | Geben Sie | ein Beschreibung |
+| ------- | --------- | ---------------- |
+| Router  | Router    |                  |
+| aktuell |           |                  |
 
 ### auflösenMpLink
 
 **Art:** Funktion
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Lösen Sie ein neutrales Ziel über den App-eigenen Vue-Router auf.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zu | MpRouteLocationRaw |  |
+| Name | Geben Sie          | ein Beschreibung |
+| ---- | ------------------ | ---------------- |
+| zu   | MpRouteLocationRaw |                  |
 
 ### „resolvePathTarget“.
 
 **Art:** Funktion
 
 ```typescript
-function resolvePathTarget(to: MpRouteLocationRaw): string
+function resolvePathTarget(to: MpRouteLocationRaw): string;
 ```
 
 Nur Pfad-Fallback, das verwendet wird, wenn eine Vue-Router-Instanz nicht verfügbar ist (SSR/Tests).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zu | MpRouteLocationRaw |  |
+| Name | Geben Sie          | ein Beschreibung |
+| ---- | ------------------ | ---------------- |
+| zu   | MpRouteLocationRaw |                  |
 
 ### toMpLocation
 
@@ -73,39 +73,39 @@ function toMpLocation(route: {
   hash: string;
   name?: string | symbol | null;
   meta?: Record<string, unknown>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 Konvertieren Sie den nativen Vue-Routenstatus in den neutral aufgelösten Standort.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Route | { Pfad: string;   fullPath: string;   Parameter: Record<string, unknown>;   Abfrage: LocationQuery;   Hash: Zeichenfolge;   Name?: Zeichenfolge \| Symbol \| null;   meta?: Record<string, unknown>; } |  |
+| Name  | Geben Sie                                                                                                                                                                                  | ein Beschreibung |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
+| Route | { Pfad: string; fullPath: string; Parameter: Record<string, unknown>; Abfrage: LocationQuery; Hash: Zeichenfolge; Name?: Zeichenfolge \| Symbol \| null; meta?: Record<string, unknown>; } |                  |
 
 ### toVueLocation
 
 **Art:** Funktion
 
 ```typescript
-function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw
+function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 ```
 
 Übersetzen Sie ein neutrales Ziel in einen Vue-Routerstandort.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zu | MpRouteLocationRaw |  |
+| Name | Geben Sie          | ein Beschreibung |
+| ---- | ------------------ | ---------------- |
+| zu   | MpRouteLocationRaw |                  |
 
 ### useMpNavigation
 
 **Art:** Funktion
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Nur zwingende Navigations-/Auflösungsfunktionen lesen.
@@ -115,7 +115,7 @@ Nur zwingende Navigations-/Auflösungsfunktionen lesen.
 **Art:** Funktion
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lesen Sie die aktuelle App-eigene Route als {@link MpResolvedLocation}.
@@ -125,7 +125,7 @@ Lesen Sie die aktuelle App-eigene Route als {@link MpResolvedLocation}.
 **Art:** Funktion
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lesen Sie das neutrale Fähigkeitsobjekt, das vom Vue-Router unterstützt wird.
@@ -137,7 +137,7 @@ Lesen Sie das neutrale Fähigkeitsobjekt, das vom Vue-Router unterstützt wird.
 **Art:** konstant
 
 ```typescript
-export const forgeRouterVue
+export const forgeRouterVue;
 ```
 
 Forge-Router-Ziel für eine anwendungseigene Vue-Router-Instanz.

@@ -16,18 +16,22 @@ Gegenereerd op basis van openbare bronverklaringen in `@mission-platform/vite-pl
 **Soort:** functie
 
 ```typescript
-function createForgeArtifactManifest(targetId: string, artifacts: readonly ForgeArtifactRecord[], complete = true): ForgeArtifactManifest
+function createForgeArtifactManifest(
+  targetId: string,
+  artifacts: readonly ForgeArtifactRecord[],
+  complete = true,
+): ForgeArtifactManifest;
 ```
 
 Bouw een stabiel manifest zonder tijdstempels in de gegenereerde uitvoer te introduceren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| doelID | tekenreeks |  |
-| artefacten | alleen-lezen ForgeArtifactRecord[] |  |
-| compleet |  |  |
+| Naam       | Typ                                | Beschrijving |
+| ---------- | ---------------------------------- | ------------ |
+| doelID     | tekenreeks                         |              |
+| artefacten | alleen-lezen ForgeArtifactRecord[] |              |
+| compleet   |                                    |              |
 
 ### ForgeArtefactSoort
 
@@ -66,17 +70,17 @@ Eén deterministische uitvoer vastgelegd door een artefactmanifest met doelberei
 **Soort:** functie
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter
+function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| uitDir | tekenreeks |  |
-| doelID | tekenreeks |  |
+| Naam   | Typ        | Beschrijving |
+| ------ | ---------- | ------------ |
+| uitDir | tekenreeks |              |
+| doelID | tekenreeks |              |
 
 ### ForgeArtefactWriter
 
@@ -95,7 +99,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 Het neutrale JSX-attribuut dat het beheer van klassennamen aanstuurt. Auteurs schrijven
@@ -117,16 +121,16 @@ de array-/objectvormen.
 **Soort:** functie
 
 ```typescript
-function collectSlotNames(sourceFile: ts.SourceFile): Set<string>
+function collectSlotNames(sourceFile: ts.SourceFile): Set<string>;
 ```
 
 Verzamel elke statische slotnaam die is gedeclareerd door `<Slot name="…" />`-elementen in de module.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bronbestand | ts.Bronbestand |              |
 
 ### ComponentImporteren
 
@@ -143,7 +147,7 @@ Een relatieve import van een zustercomponent, b.v. `import { ForgeBadge } from '
 **Soort:** constant
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 De eenmalig beschrijfbare werkruimtepakketten **component-bibliotheek**: like
@@ -160,25 +164,35 @@ de exportvoorwaarde `mp:<framework>` van het pakket, niet via een subpad.
 **Soort:** functie
 
 ```typescript
-function createReactHasSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined): ts.Expression
+function createReactHasSlotExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+): ts.Expression;
 ```
 
 `<props>.<name> != null`: de aanwezigheid van React wordt gelezen voor `hasSlot('name')`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| rekwisietenParamName | tekenreeks |  |
-| naam | tekenreeks \| ongedefinieerd |  |
+| Naam                 | Typ                          | Beschrijving |
+| -------------------- | ---------------------------- | ------------ |
+| fabriek              | ts.NodeFactory               |              |
+| rekwisietenParamName | tekenreeks                   |              |
+| naam                 | tekenreeks \| ongedefinieerd |              |
 
 ### createReactSlotCallExpression
 
 **Soort:** functie
 
 ```typescript
-function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
+function createReactSlotCallExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+  fallback: readonly ts.Expression[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
@@ -187,20 +201,26 @@ function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: 
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| rekwisietenParamName | tekenreeks |  |
-| naam | tekenreeks \| ongedefinieerd |  |
-| terugval | alleen-lezen ts.Expressie[] |  |
-| reikwijdte | ts.Expressie |  |
+| Naam                 | Typ                          | Beschrijving |
+| -------------------- | ---------------------------- | ------------ |
+| fabriek              | ts.NodeFactory               |              |
+| rekwisietenParamName | tekenreeks                   |              |
+| naam                 | tekenreeks \| ongedefinieerd |              |
+| terugval             | alleen-lezen ts.Expressie[]  |              |
+| reikwijdte           | ts.Expressie                 |              |
 
 ### createReactSlotExpressie
 
 **Soort:** functie
 
 ```typescript
-function createReactSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
+function createReactSlotExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+  fallback: readonly ts.JsxChild[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `<props>.<name>` (met `?? <fallback>` wanneer het slot fallback declareert
@@ -210,20 +230,20 @@ render-prop-functie, of direct geëvalueerd als het een React node is
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| rekwisietenParamName | tekenreeks |  |
-| naam | tekenreeks \| ongedefinieerd |  |
-| terugval | alleen-lezen ts.JsxChild[] |  |
-| reikwijdte | ts.Expressie |  |
+| Naam                 | Typ                          | Beschrijving |
+| -------------------- | ---------------------------- | ------------ |
+| fabriek              | ts.NodeFactory               |              |
+| rekwisietenParamName | tekenreeks                   |              |
+| naam                 | tekenreeks \| ongedefinieerd |              |
+| terugval             | alleen-lezen ts.JsxChild[]   |              |
+| reikwijdte           | ts.Expressie                 |              |
 
 ### createReferenceRewriter
 
 **Soort:** functie
 
 ```typescript
-function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>
+function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
 ```
 
 Bouw een TS-transformator die referenties in een componentbody herschrijft
@@ -233,16 +253,16 @@ oproepen → toewijzingen, en `useRef`'s `.current` → `.value`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| reikwijdte | Herschrijfbereik |  |
+| Naam       | Typ              | Beschrijving |
+| ---------- | ---------------- | ------------ |
+| reikwijdte | Herschrijfbereik |              |
 
 ### createStateSnapshotHoister
 
 **Soort:** functie
 
 ```typescript
-function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>
+function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
 ```
 
 TypeScript-controlestroomvernauwing van `useState`-/`useMemo`-waarden behouden
@@ -258,7 +278,7 @@ het verkleinen van TypeScript gooit weg bij het betreden van een geneste functie
 `a[sortKey.value]` / `draft.value.uid` kan geen typecontrole uitvoeren.
 
 Voor elke blokfunctie maakt deze pass een momentopname van elke gelezen waarde
-*in een geneste afsluiting* in een leidende `const <name>$ = <name>.value;`, en
+_in een geneste afsluiting_ in een leidende `const <name>$ = <name>.value;`, en
 herschrijft de waarde **reads** (niet de `<name>.value = …`-schrijfdoelen) binnenin
 de functie naar die `const`-alias. De momentopname herstelt de oorspronkelijke `const`
 semantiek — vernauwing stroomt weer in de geneste sluitingen — terwijl de `.value`
@@ -266,33 +286,38 @@ toegang bovenaan houdt het lezen reactief (een `computed` volgt het nog steeds o
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| reikwijdte | Herschrijfbereik |  |
+| Naam       | Typ              | Beschrijving |
+| ---------- | ---------------- | ------------ |
+| reikwijdte | Herschrijfbereik |              |
 
 ### createVueHasSlotExpression
 
 **Soort:** functie
 
 ```typescript
-function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression
+function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression;
 ```
 
 `slots.<name>` — Vue's aanwezigheid `useSlots()` gelezen voor `hasSlot('name')` (`!!slots.x`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| naam | tekenreeks \| ongedefinieerd |  |
+| Naam    | Typ                          | Beschrijving |
+| ------- | ---------------------------- | ------------ |
+| fabriek | ts.NodeFactory               |              |
+| naam    | tekenreeks \| ongedefinieerd |              |
 
 ### createVueSlotCallExpression
 
 **Soort:** functie
 
 ```typescript
-function createVueSlotCallExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
+function createVueSlotCallExpression(
+  factory: ts.NodeFactory,
+  name: string | undefined,
+  fallback: readonly ts.Expression[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `slots.<name>?.(scope) ?? <fallback>` — de Vue vertaling van de `h(Slot, …)`
@@ -301,19 +326,24 @@ terugval hier zijn de onderliggende **expressies** van de oproep in plaats van J
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| naam | tekenreeks \| ongedefinieerd |  |
-| terugval | alleen-lezen ts.Expressie[] |  |
-| reikwijdte | ts.Expressie |  |
+| Naam       | Typ                          | Beschrijving |
+| ---------- | ---------------------------- | ------------ |
+| fabriek    | ts.NodeFactory               |              |
+| naam       | tekenreeks \| ongedefinieerd |              |
+| terugval   | alleen-lezen ts.Expressie[]  |              |
+| reikwijdte | ts.Expressie                 |              |
 
 ### createVueSlotExpression
 
 **Soort:** functie
 
 ```typescript
-function createVueSlotExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
+function createVueSlotExpression(
+  factory: ts.NodeFactory,
+  name: string | undefined,
+  fallback: readonly ts.JsxChild[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `slots.<name>?.(scope)` (met `?? <fallback>` wanneer het slot fallback declareert
@@ -322,12 +352,12 @@ Vue **gescopede** slotoproep.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| naam | tekenreeks \| ongedefinieerd |  |
-| terugval | alleen-lezen ts.JsxChild[] |  |
-| reikwijdte | ts.Expressie |  |
+| Naam       | Typ                          | Beschrijving |
+| ---------- | ---------------------------- | ------------ |
+| fabriek    | ts.NodeFactory               |              |
+| naam       | tekenreeks \| ongedefinieerd |              |
+| terugval   | alleen-lezen ts.JsxChild[]   |              |
+| reikwijdte | ts.Expressie                 |              |
 
 ### Gedestructureerd eigendom
 
@@ -344,7 +374,13 @@ Een binding die uit een `const { … } = properties`-destructuring is getrokken.
 **Soort:** functie
 
 ```typescript
-function dynamicToHCall(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visitExpression: (expression: ts.Expression) => ts.Expression, aliasAttribute: (name: string) => string = (name) => name, variadicChildren = false): ts.CallExpression
+function dynamicToHCall(
+  factory: ts.NodeFactory,
+  node: ts.JsxSelfClosingElement | ts.JsxElement,
+  visitExpression: (expression: ts.Expression) => ts.Expression,
+  aliasAttribute: (name: string) => string = (name) => name,
+  variadicChildren = false,
+): ts.CallExpression;
 ```
 
 Herschrijf een `<Dynamic is={X} a={…} …>children</Dynamic>`-element in een
@@ -359,37 +395,37 @@ prop-sleutels voor het doel (identiteit op Vue, de DOM-aliassen op React).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
-| bezoekExpressie | (expressie: ts.Expressie) => ts.Expressie |  |
-| aliasAttribuut | (naam: tekenreeks) => tekenreeks |  |
-| variadicKinderen |  |  |
+| Naam             | Typ                                       | Beschrijving |
+| ---------------- | ----------------------------------------- | ------------ |
+| fabriek          | ts.NodeFactory                            |              |
+| node             | ts.JsxSelfClosingElement \| ts.JsxElement |              |
+| bezoekExpressie  | (expressie: ts.Expressie) => ts.Expressie |              |
+| aliasAttribuut   | (naam: tekenreeks) => tekenreeks          |              |
+| variadicKinderen |                                           |              |
 
 ### sureI18nHookInComponent
 
 **Soort:** functie
 
 ```typescript
-function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile
+function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile;
 ```
 
 Zorg ervoor dat componentfuncties die `i18next.t(...)` aanroepen een `const { t } = useI18n();`-instructie op het hoogste niveau hebben.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| bronbestand | ts.Bronbestand |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| fabriek     | ts.NodeFactory |              |
+| bronbestand | ts.Bronbestand |              |
 
 ### gebeurtenisNaamForProperty
 
 **Soort:** functie
 
 ```typescript
-function eventNameForProperty(propName: string): string
+function eventNameForProperty(propName: string): string;
 ```
 
 Leid de gebeurtenisnaam Vue af voor een prop `on<Event>`: verwijder het voorvoegsel `on` en
@@ -398,9 +434,9 @@ de eerste overgebleven letter in kleine letters zetten (`onChange` → `change`,
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| propName | tekenreeks |  |
+| Naam     | Typ        | Beschrijving |
+| -------- | ---------- | ------------ |
+| propName | tekenreeks |              |
 
 ### EvenementHandtekening
 
@@ -420,7 +456,7 @@ gedeclareerde type is een inline functietype (bijvoorbeeld `onChange?: (openIds:
 **Soort:** functie
 
 ```typescript
-function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[]
+function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[];
 ```
 
 Extraheer de (eigen) **gebeurtenis**-handtekeningen die zijn gedeclareerd door een rekwisieteninterface: leden
@@ -432,17 +468,17 @@ dan ze als runtime-rekwisieten te dragen. Een callback-prop getypt via een benoe
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
-| interfaceNaam | tekenreeks |  |
+| Naam          | Typ            | Beschrijving |
+| ------------- | -------------- | ------------ |
+| bronbestand   | ts.Bronbestand |              |
+| interfaceNaam | tekenreeks     |              |
 
 ### extractModelSignatures
 
 **Soort:** functie
 
 ```typescript
-function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[]
+function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[];
 ```
 
 Pak de leden van de rekwisieteninterface gemarkeerd met `@model <onEvent>` uit: een rekwisiet en zijn
@@ -452,34 +488,34 @@ tweezijdige binding. De modelnaam is de propnaam, behalve de canonieke
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
-| interfaceNaam | tekenreeks |  |
+| Naam          | Typ            | Beschrijving |
+| ------------- | -------------- | ------------ |
+| bronbestand   | ts.Bronbestand |              |
+| interfaceNaam | tekenreeks     |              |
 
 ### extractPropertyNames
 
 **Soort:** functie
 
 ```typescript
-function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[]
+function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[];
 ```
 
 Extraheer de (eigen) eigenschapsnamen die zijn gedeclareerd door een rekwisieteninterface, met uitzondering van `children`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
-| interfaceNaam | tekenreeks |  |
+| Naam          | Typ            | Beschrijving |
+| ------------- | -------------- | ------------ |
+| bronbestand   | ts.Bronbestand |              |
+| interfaceNaam | tekenreeks     |              |
 
 ### extractPropertySignatures
 
 **Soort:** functie
 
 ```typescript
-function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[]
+function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[];
 ```
 
 Extraheer de (eigen) eigendomshandtekeningen die zijn gedeclareerd door een rekwisieteninterface, exclusief
@@ -491,27 +527,27 @@ terugvallen op `unknown`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
-| interfaceNaam | tekenreeks |  |
+| Naam          | Typ            | Beschrijving |
+| ------------- | -------------- | ------------ |
+| bronbestand   | ts.Bronbestand |              |
+| interfaceNaam | tekenreeks     |              |
 
 ### findComponentFunctie
 
 **Soort:** functie
 
 ```typescript
-function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined
+function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined;
 ```
 
 Zoek de geëxporteerde functiedeclaratie voor een neutraal onderdeel op naam.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
-| naam | tekenreeks |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bronbestand | ts.Bronbestand |              |
+| naam        | tekenreeks     |              |
 
 ### ForgeExportFact
 
@@ -558,23 +594,23 @@ Een bronlocatie die wordt gebruikt voor grafiekdiagnostiek en import-/exportfeit
 **Soort:** functie
 
 ```typescript
-function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean
+function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean;
 ```
 
 Of een van de kinderen van een ouder een `slot="…"`-marker draagt.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kinderen | alleen-lezen ts.JsxChild[] |  |
+| Naam     | Typ                        | Beschrijving |
+| -------- | -------------------------- | ------------ |
+| kinderen | alleen-lezen ts.JsxChild[] |              |
 
 ### ICONS_JSX_MODULE
 
 **Soort:** constant
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 De kale specificatie van de eenmalige beschrijfbare pictogrambibliotheek `@mission-platform/icons`.
@@ -582,7 +618,7 @@ Neutrale auteurs importeren hun iconen vanuit deze root en de gegenereerde
 bronnen per raamwerk behouden die exacte specificatie: elke raamwerksplitsing
 `@mission-platform/*`-pakket declareert `mp:vue` / `mp:react` / `mp:solid` /
 `mp:web-component` aangepaste exportvoorwaarden op de kale `.`-invoer, zodat de
-*consumenten* `resolve.conditions` (en het bijbehorende
+_consumenten_ `resolve.conditions` (en het bijbehorende
 `customConditions` tsconfig preset) selecteert u de juiste build. Er is geen
 subpad per raamwerk waarnaar opnieuw moet worden toegewezen.
 
@@ -591,24 +627,24 @@ subpad per raamwerk waarnaar opnieuw moet worden toegewezen.
 **Soort:** functie
 
 ```typescript
-function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts
+function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
 ```
 
 Extraheer statische import, export, type-only randen en raamwerkfeiten uit een geparseerde module.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| bron | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
+| bron         | tekenreeks |              |
 
 ### isComponentTagName
 
 **Soort:** functie
 
 ```typescript
-function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean
+function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean;
 ```
 
 Of een JSX-tagnaam verwijst naar een **component** (een identificatie met hoofdletters, zoals
@@ -620,16 +656,16 @@ alleen kinderen bij het uitbreiden van een component (`typeof type === 'function
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| tagNaam | ts.JsxTagNameExpressie |  |
+| Naam    | Typ                    | Beschrijving |
+| ------- | ---------------------- | ------------ |
+| tagNaam | ts.JsxTagNameExpressie |              |
 
 ### isDynamicElement
 
 **Soort:** functie
 
 ```typescript
-function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 Of een node een neutraal dynamisch componentelement is — `<Dynamic is={…} />`
@@ -637,16 +673,16 @@ of `<Dynamic is={…}>…</Dynamic>` — geproduceerd met de `Dynamic`-markering
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | ts.Node |  |
+| Naam | Typ     | Beschrijving |
+| ---- | ------- | ------------ |
+| node | ts.Node |              |
 
 ### isFragmentElement
 
 **Soort:** functie
 
 ```typescript
-function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 Of een node een neutraal `<Fragment>`-element is – ofwel het zelfsluitende
@@ -654,16 +690,16 @@ Of een node een neutraal `<Fragment>`-element is – ofwel het zelfsluitende
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | ts.Node |  |
+| Naam | Typ     | Beschrijving |
+| ---- | ------- | ------------ |
+| node | ts.Node |              |
 
 ### isHasSlotCall
 
 **Soort:** functie
 
 ```typescript
-function isHasSlotCall(node: ts.Node): node is ts.CallExpression
+function isHasSlotCall(node: ts.Node): node is ts.CallExpression;
 ```
 
 Of een node een `hasSlot('name')` / `hasSlot()`-oproep is: de neutrale
@@ -672,16 +708,16 @@ aanwezigheidscontrole, zodat deze nooit als runtime-oproep wordt verzonden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | ts.Node |  |
+| Naam | Typ     | Beschrijving |
+| ---- | ------- | ------------ |
+| node | ts.Node |              |
 
 ### isSlotElement
 
 **Soort:** functie
 
 ```typescript
-function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 Of een node een neutraal benoemd-slot-element is — `<Slot … />` of
@@ -689,16 +725,16 @@ Of een node een neutraal benoemd-slot-element is — `<Slot … />` of
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | ts.Node |  |
+| Naam | Typ     | Beschrijving |
+| ---- | ------- | ------------ |
+| node | ts.Node |              |
 
 ### isSlotHCall
 
 **Soort:** functie
 
 ```typescript
-function isSlotHCall(node: ts.Node): node is ts.CallExpression
+function isSlotHCall(node: ts.Node): node is ts.CallExpression;
 ```
 
 Of een node het **aanroepformulier** is van de benoemde slotmarkering — `h(Slot, …)` —
@@ -709,16 +745,16 @@ in plaats van JSX; beide formulieren moeten herschrijven naar de eigen slot-read
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | ts.Node |  |
+| Naam | Typ     | Beschrijving |
+| ---- | ------- | ------------ |
+| node | ts.Node |              |
 
 ### JSX_ATTRIBUTE_RENAMES
 
 **Soort:** constant
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 Native JSX-kenmerken waarvan de naar de auteur gerichte camelCase-spelling moet worden verlaagd
@@ -731,7 +767,7 @@ aan de HTML-spelling die de JSX-types met intrinsieke elementen van Vue verwacht
 **Soort:** constant
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 De bestandsnaam (met extensie) van de lokale effecthelpermodule wordt geschreven zoals in de plat gegenereerde boom.
@@ -741,7 +777,7 @@ De bestandsnaam (met extensie) van de lokale effecthelpermodule wordt geschreven
 **Soort:** constant
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 De relatieve specificatie waaronder de gegenereerde Vue {@link LOCAL_EFFECT_MODULE} wordt geïmporteerd.
@@ -751,7 +787,7 @@ De relatieve specificatie waaronder de gegenereerde Vue {@link LOCAL_EFFECT_MODU
 **Soort:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 Neutrale import van het **type** die geen enkel eersteklas raamwerk-equivalent heeft
@@ -773,7 +809,7 @@ render-prop **type** helemaal niet importeren.
 **Soort:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 De bestandsnaam (met extensie) van de lokale JSX-typenmodule wordt geschreven zoals in de plat gegenereerde boom.
@@ -783,7 +819,7 @@ De bestandsnaam (met extensie) van de lokale JSX-typenmodule wordt geschreven zo
 **Soort:** constant
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 De relatieve specificatie waaronder het gegenereerde per-framework {@link LOCAL_JSX_TYPES_MODULE} wordt geïmporteerd.
@@ -793,7 +829,7 @@ De relatieve specificatie waaronder het gegenereerde per-framework {@link LOCAL_
 **Soort:** functie
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 De bron van de co-located {@link LOCAL_EFFECT_MODULE} voor een doel
@@ -815,16 +851,16 @@ lege string en de schrijver slaat deze over.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kader | JsxFramework |  |
+| Naam  | Typ          | Beschrijving |
+| ----- | ------------ | ------------ |
+| kader | JsxFramework |              |
 
 ### localJsxTypesModuleSource
 
 **Soort:** functie
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 De bron van de co-locatie {@link LOCAL_JSX_TYPES_MODULE} voor een doel
@@ -841,9 +877,9 @@ dat bestaat niet meer in het neutrale dialect.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kader | JsxFramework |  |
+| Naam  | Typ          | Beschrijving |
+| ----- | ------------ | ------------ |
+| kader | JsxFramework |              |
 
 ### ModelHandtekening
 
@@ -864,7 +900,7 @@ en een aanroep van de gepaarde gebeurtenis wordt `<local>.value = …`.
 **Soort:** functie
 
 ```typescript
-function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean
+function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
 ```
 
 Of er een module moet worden uitgezonden voor `framework`. Een raamwerk-neutrale module
@@ -873,22 +909,22 @@ wordt **alleen** uitgezonden voor het raamwerk waarvan de richtlijn wordt genoem
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| bron | tekenreeks |  |
-| kader | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
+| bron         | tekenreeks |              |
+| kader        | tekenreeks |              |
 
 ### NEUTRAAL_COMPILE_TIME_MARKERS
 
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 Neutrale **waarde**-importen die pure markeringen tijdens het compileren zijn: ze bestaan alleen
-dus de geschreven JSX controleert het type en wordt *geconsumeerd* door de emitters (hun JSX
+dus de geschreven JSX controleert het type en wordt _geconsumeerd_ door de emitters (hun JSX
 gebruik wordt herschreven naar het eigen mechanisme van elk raamwerk), dus dat mag nooit zo zijn
 als een echte import naar de gegenereerde bron React of Vue overgebracht. `Slot`
 (`<Slot name="…" />`) is de benoemde slotmarkering, `Dynamic`
@@ -902,10 +938,10 @@ compileert native) en `hasSlot` (`hasSlot('x')`) is de slot-aanwezigheidsmarkeri
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
-Neutrale **waarde**-importen die de contextprimitieven zijn. Op React *zijn*
+Neutrale **waarde**-importen die de contextprimitieven zijn. Op React _zijn_
 React's eigen (`createContext`/`useContext`), dus ze vallen door naar de
 `react` waarde importeren; op Vue wordt hun import opnieuw toegewezen aan de
 `@mission-platform/forge/vue`-adapter (een met `provide`/`inject` ondersteunde
@@ -916,7 +952,7 @@ React's eigen (`createContext`/`useContext`), dus ze vallen door naar de
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 Neutrale **waarde** import die reëel is, in plaats van **componenten** per raamwerk
@@ -938,7 +974,7 @@ enter/leave/move primitief) wordt op dezelfde manier opnieuw toegewezen (de
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 Het neutrale pakket waaruit de componenten hun primitieven importeren.
@@ -948,7 +984,7 @@ Het neutrale pakket waaruit de componenten hun primitieven importeren.
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 Neutrale **waarde**-importen die raamwerkonafhankelijke runtime-hulpprogramma's zijn: zij
@@ -961,7 +997,7 @@ moet woordelijk worden bewaard in de gegenereerde React- en Vue-bronnen.
 **Soort:** constant
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 Neutrale **value** hooks met een identiek genaamde native tegenhanger in
@@ -986,7 +1022,7 @@ De namen die een module importeert uit het neutrale pakket, opgesplitst per bind
 **Soort:** functie
 
 ```typescript
-function parseTsx(fileName: string, source: string): ts.SourceFile
+function parseTsx(fileName: string, source: string): ts.SourceFile;
 ```
 
 Parseer een `.tsx`-brontekenreeks in de TypeScript SourceFile-bridge die wordt gebruikt door de
@@ -995,10 +1031,10 @@ optimizer en oudere transformatiehelpers. Neutraal frontend AST/inferentiegebrui
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| bron | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
+| bron         | tekenreeks |              |
 
 ### Gepartitioneerde slots
 
@@ -1015,49 +1051,49 @@ De onderliggende elementen van een componentelement, gescheiden door hun `slot="
 **Soort:** functie
 
 ```typescript
-function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots
+function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots;
 ```
 
 Verdeel de onderliggende elementen van een componentelement in groepen met benoemde slots + de standaard onderliggende elementen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kinderen | alleen-lezen ts.JsxChild[] |  |
+| Naam     | Typ                        | Beschrijving |
+| -------- | -------------------------- | ------------ |
+| kinderen | alleen-lezen ts.JsxChild[] |              |
 
 ### printNode
 
 **Soort:** functie
 
 ```typescript
-function printNode(node: ts.Node, sourceFile: ts.SourceFile): string
+function printNode(node: ts.Node, sourceFile: ts.SourceFile): string;
 ```
 
 Druk een enkele node terug naar de brontekst, verankerd aan het bronbestand.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | ts.Node |  |
-| bronbestand | ts.Bronbestand |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| node        | ts.Node        |              |
+| bronbestand | ts.Bronbestand |              |
 
 ### printSourceBestand
 
 **Soort:** functie
 
 ```typescript
-function printSourceFile(sourceFile: ts.SourceFile): string
+function printSourceFile(sourceFile: ts.SourceFile): string;
 ```
 
 Druk een geheel (mogelijk getransformeerd) bronbestand terug naar de brontekst.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bronbestand | ts.Bronbestand |              |
 
 ### EigenschapHandtekening
 
@@ -1074,7 +1110,7 @@ Eén enkele (eigen) eigenschap van een rekwisieteninterface: de naam, de gedecla
 **Soort:** constant
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 Het `@mission-platform/forge/react`-subpad waaruit de React-frameworkcomponenten worden geïmporteerd.
@@ -1084,7 +1120,7 @@ Het `@mission-platform/forge/react`-subpad waaruit de React-frameworkcomponenten
 **Soort:** constant
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 Neutrale **type**-importen met een eersteklas React-equivalent verzonden door
@@ -1111,12 +1147,12 @@ hebben een exacte React-tegenhanger:
 **Soort:** functie
 
 ```typescript
-function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression
+function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression;
 ```
 
 Vouw een `className={…}`-kenmerkwaarde samen in de map **React** `className`
 waarde. React's `className` accepteert alleen een string, dus de conditional/array/
-objectvormen moeten worden verkleind *voor* dat ze het element bereiken. Een **array
+objectvormen moeten worden verkleind _voor_ dat ze het element bereiken. Een **array
 letterlijk** (de canonieke vorm — `className={['base', { active }]}`) is
 verspreid in een `classNames(…)` runtime-aanroep (`classNames('base', { active })`),
 het matchen van de variadische helpersignatuur; elke andere uitdrukking is al a
@@ -1125,17 +1161,17 @@ een ternair) en wordt rechtstreeks doorgegeven als de waarde `className`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| waarde | ts.Expressie |  |
+| Naam    | Typ            | Beschrijving |
+| ------- | -------------- | ------------ |
+| fabriek | ts.NodeFactory |              |
+| waarde  | ts.Expressie   |              |
 
 ### readChildSlotName
 
 **Soort:** functie
 
 ```typescript
-function readChildSlotName(child: ts.JsxChild): string | undefined
+function readChildSlotName(child: ts.JsxChild): string | undefined;
 ```
 
 Lees de statische `slot="…"`-markering van een JSX **kind**-element: het attribuut
@@ -1145,33 +1181,33 @@ kind heeft geen bruikbare `slot`-markering (dus behoort tot de standaardsleuf).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| kind | ts.JsxChild |  |
+| Naam | Typ         | Beschrijving |
+| ---- | ----------- | ------------ |
+| kind | ts.JsxChild |              |
 
 ### leesComponentImports
 
 **Soort:** functie
 
 ```typescript
-function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[]
+function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[];
 ```
 
 Verzamel relatieve waarde (broer-/zuscomponent) + type-import uit een module.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
-| bronRoot | tekenreeks |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bronbestand | ts.Bronbestand |              |
+| bronRoot    | tekenreeks     |              |
 
 ### leesExterne import
 
 **Soort:** functie
 
 ```typescript
-function readExternalImports(fileName: string, source: string): string[]
+function readExternalImports(fileName: string, source: string): string[];
 ```
 
 Verzamel de **externe** (basispakket) import van een module: elke
@@ -1192,17 +1228,17 @@ gegenereerde bron die een raamwerk-subpad een naam geeft.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| bron | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
+| bron         | tekenreeks |              |
 
 ### leesFrameworkDirective
 
 **Soort:** functie
 
 ```typescript
-function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined
+function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined;
 ```
 
 Lees de `"use <framework>";`-richtlijn van een module, indien aanwezig.
@@ -1219,66 +1255,70 @@ richtlijnen (bijvoorbeeld `"use strict"`) worden genegeerd.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| bron | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
+| bron         | tekenreeks |              |
 
 ### readHasSlotName
 
 **Soort:** functie
 
 ```typescript
-function readHasSlotName(call: ts.CallExpression): string | undefined
+function readHasSlotName(call: ts.CallExpression): string | undefined;
 ```
 
 Lees de statische slotnaam van een `hasSlot('name')`-aanroep (`undefined` → het standaardslot).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bel | ts.CallExpressie |  |
+| Naam | Typ              | Beschrijving |
+| ---- | ---------------- | ------------ |
+| bel  | ts.CallExpressie |              |
 
 ### lees NeutralImports
 
 **Soort:** functie
 
 ```typescript
-function readNeutralImports(fileName: string, source: string): NeutralImports
+function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
 Inspecteer de `import … from '@mission-platform/forge'`-bindingen van een module.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| bron | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
+| bron         | tekenreeks |              |
 
 ### leesSlotHCallName
 
 **Soort:** functie
 
 ```typescript
-function readSlotHCallName(call: ts.CallExpression): string | undefined
+function readSlotHCallName(call: ts.CallExpression): string | undefined;
 ```
 
 Lees de statische `name` van een `h(Slot, { name: 'x' }, …)`-aanroep (`undefined` → het standaardslot).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bel | ts.CallExpressie |  |
+| Naam | Typ              | Beschrijving |
+| ---- | ---------------- | ------------ |
+| bel  | ts.CallExpressie |              |
 
 ### leesSlotHCallScope
 
 **Soort:** functie
 
 ```typescript
-function readSlotHCallScope(factory: ts.NodeFactory, call: ts.CallExpression, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
+function readSlotHCallScope(
+  factory: ts.NodeFactory,
+  call: ts.CallExpression,
+  visit: ts.Visitor,
+): ts.ObjectLiteralExpression | undefined;
 ```
 
 Lees de **scope** (elke prop behalve `name`) van een `h(Slot, props, …)`
@@ -1289,34 +1329,38 @@ doelkader.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| bel | ts.CallExpressie |  |
-| bezoek | ts.Bezoeker |  |
+| Naam    | Typ              | Beschrijving |
+| ------- | ---------------- | ------------ |
+| fabriek | ts.NodeFactory   |              |
+| bel     | ts.CallExpressie |              |
+| bezoek  | ts.Bezoeker      |              |
 
 ### leesSlotName
 
 **Soort:** functie
 
 ```typescript
-function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined
+function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined;
 ```
 
 Lees de statische `name="…"` van een `<Slot>`-element (`undefined` → het standaardslot).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
+| Naam | Typ                                       | Beschrijving |
+| ---- | ----------------------------------------- | ------------ |
+| node | ts.JsxSelfClosingElement \| ts.JsxElement |              |
 
 ### leesSlotScope
 
 **Soort:** functie
 
 ```typescript
-function readSlotScope(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
+function readSlotScope(
+  factory: ts.NodeFactory,
+  node: ts.JsxSelfClosingElement | ts.JsxElement,
+  visit: ts.Visitor,
+): ts.ObjectLiteralExpression | undefined;
 ```
 
 Lees de **scope** van een `<Slot>`-element: elk attribuut behalve `name`
@@ -1329,18 +1373,18 @@ de compiler zendt Vue `slots.x?.(scope)` en React `properties.x?.(scope)` uit.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
-| bezoek | ts.Bezoeker |  |
+| Naam    | Typ                                       | Beschrijving |
+| ------- | ----------------------------------------- | ------------ |
+| fabriek | ts.NodeFactory                            |              |
+| node    | ts.JsxSelfClosingElement \| ts.JsxElement |              |
+| bezoek  | ts.Bezoeker                               |              |
 
 ### leesStyleImports
 
 **Soort:** functie
 
 ```typescript
-function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[]
+function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
 ```
 
 Verzamel de relatieve stylesheet-importen van een module (CSS-modules en kale CSS
@@ -1350,18 +1394,22 @@ een component kan zijn eigen `.module.scss` bezitten (en verzenden).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| bron | tekenreeks |  |
-| bronRoot | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
+| bron         | tekenreeks |              |
+| bronRoot     | tekenreeks |              |
 
 ### solveWorkspaceLocalImport
 
 **Soort:** functie
 
 ```typescript
-function resolveWorkspaceLocalImport(specifier: string, sourceFileName: string, sourceRoot: string | undefined): string | undefined
+function resolveWorkspaceLocalImport(
+  specifier: string,
+  sourceFileName: string,
+  sourceRoot: string | undefined,
+): string | undefined;
 ```
 
 Een werkruimte-lokale `@/`-import oplossen naar een pad relatief ten opzichte van de bron die er eigenaar van is
@@ -1370,11 +1418,11 @@ binnen de opgegeven werkruimte bezit bronroot de alias `@/`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| specificatie | tekenreeks |  |
-| bronBestandsnaam | tekenreeks |  |
-| bronRoot | tekenreeks \| ongedefinieerd |  |
+| Naam             | Typ                          | Beschrijving |
+| ---------------- | ---------------------------- | ------------ |
+| specificatie     | tekenreeks                   |              |
+| bronBestandsnaam | tekenreeks                   |              |
+| bronRoot         | tekenreeks \| ongedefinieerd |              |
 
 ### Herschrijfbereik
 
@@ -1392,56 +1440,56 @@ voor het doel Vue.
 **Soort:** functie
 
 ```typescript
-function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile
+function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile;
 ```
 
 Herschrijf werkruimte-lokale `@/`-importen vóór raamwerkspecifieke emissie.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
-| bronRoot | tekenreeks |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bronbestand | ts.Bronbestand |              |
+| bronRoot    | tekenreeks     |              |
 
 ### slotFallbackKinderen
 
 **Soort:** functie
 
 ```typescript
-function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[]
+function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[];
 ```
 
 De fallback-kinderen van een `<Slot>…</Slot>` (leeg voor een zelfsluitende sleuf).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
+| Naam | Typ                                       | Beschrijving |
+| ---- | ----------------------------------------- | ------------ |
+| node | ts.JsxSelfClosingElement \| ts.JsxElement |              |
 
 ### slotHCallFallback
 
 **Soort:** functie
 
 ```typescript
-function slotHCallFallback(call: ts.CallExpression): ts.Expression[]
+function slotHCallFallback(call: ts.CallExpression): ts.Expression[];
 ```
 
 De fallback-kinderen (argumenten na de rekwisieten) van een `h(Slot, props, …fallback)`-oproep.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bel | ts.CallExpressie |  |
+| Naam | Typ              | Beschrijving |
+| ---- | ---------------- | ------------ |
+| bel  | ts.CallExpressie |              |
 
 ### stripFrameworkDirective
 
 **Soort:** functie
 
 ```typescript
-function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile
+function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile;
 ```
 
 Retourneer het bronbestand met een eventuele leidende `"use react"` / `"use vue"`-richtlijn
@@ -1450,26 +1498,26 @@ per raamwerkbron. Andere proloogrichtlijnen blijven behouden.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bronbestand | ts.Bronbestand |              |
 
 ### stripSlotAttribuut
 
 **Soort:** functie
 
 ```typescript
-function stripSlotAttribute(factory: ts.NodeFactory, element: T): T
+function stripSlotAttribute(factory: ts.NodeFactory, element: T): T;
 ```
 
 Een kopie van een JSX-element/zelfsluitend element waarvan het markeringsattribuut `slot="…"` is verwijderd.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| onderdeel | T |  |
+| Naam      | Typ            | Beschrijving |
+| --------- | -------------- | ------------ |
+| fabriek   | ts.NodeFactory |              |
+| onderdeel | T              |              |
 
 ### StijlImporteren
 
@@ -1486,24 +1534,24 @@ Een stylesheet-import in een neutrale component, b.v. `import styles from './x.m
 **Soort:** functie
 
 ```typescript
-function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node
+function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node;
 ```
 
 Herschrijf `i18next.t(...)`-oproepexpressies naar `t(...)`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| fabriek | ts.NodeFactory |  |
-| node | ts.Node |  |
+| Naam    | Typ            | Beschrijving |
+| ------- | -------------- | ------------ |
+| fabriek | ts.NodeFactory |              |
+| node    | ts.Node        |              |
 
 ### gebruiktClassNamesArrayAttribute
 
 **Soort:** functie
 
 ```typescript
-function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
+function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean;
 ```
 
 Of de module een `className={[…]}`-attribuut draagt waarvan de waarde an is
@@ -1513,16 +1561,16 @@ doe een beroep op het React-doel, dus de zender moet de nulleider (opnieuw) inje
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bronbestand | ts.Bronbestand |              |
 
 ### gebruiktComponentSelfReference
 
 **Soort:** functie
 
 ```typescript
-function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean
+function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean;
 ```
 
 Of een component naar **zichzelf** verwijst als een JSX-tag (`<ForgeTreeView …>`
@@ -1532,49 +1580,49 @@ sluiting, dus een recursieve component compileert native op beide raamwerken.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
-| componentnaam | tekenreeks |  |
+| Naam          | Typ            | Beschrijving |
+| ------------- | -------------- | ------------ |
+| bronbestand   | ts.Bronbestand |              |
+| componentnaam | tekenreeks     |              |
 
 ### maakt gebruik vanHFactoryCall
 
 **Soort:** functie
 
 ```typescript
-function usesHFactoryCall(sourceFile: ts.SourceFile): boolean
+function usesHFactoryCall(sourceFile: ts.SourceFile): boolean;
 ```
 
 Of de module naar `h` verwijst als een aanroepexpressie (een expliciete `h(...)`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bronbestand | ts.Bronbestand |  |
+| Naam        | Typ            | Beschrijving |
+| ----------- | -------------- | ------------ |
+| bronbestand | ts.Bronbestand |              |
 
 ### gebruiktI18nextT
 
 **Soort:** functie
 
 ```typescript
-function usesI18nextT(node: OxcNode): boolean
+function usesI18nextT(node: OxcNode): boolean;
 ```
 
 Of een Oxc-module of node `i18next.t(...)` aanroept.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| node | OxcNode |  |
+| Naam | Typ     | Beschrijving |
+| ---- | ------- | ------------ |
+| node | OxcNode |              |
 
 ### VUE_ADAPTER_MODULE
 
 **Soort:** constant
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 Het `@mission-platform/forge/vue`-subpad waaruit de Vue-contextprimitieven worden geïmporteerd.
@@ -1584,7 +1632,7 @@ Het `@mission-platform/forge/vue`-subpad waaruit de Vue-contextprimitieven worde
 **Soort:** constant
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 De neutrale raamwerkcomponent importeert Vue en wordt rechtstreeks vanuit de `vue`-runtime opgelost.
@@ -1594,7 +1642,7 @@ De neutrale raamwerkcomponent importeert Vue en wordt rechtstreeks vanuit de `vu
 **Soort:** constant
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 Het neutrale render/props-type noemt de **Vue** build-omleidingen naar zijn
@@ -1615,7 +1663,7 @@ de Vue-native typen via de lokale module, dus het herschrijven van referenties i
 **Soort:** functie
 
 ```typescript
-function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>
+function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 De `v-model`-updategebeurtenissen van Vue heten `update:<model>`: een gecompileerd kind
@@ -1637,7 +1685,7 @@ het is dus idempotent en veilig om universeel toe te passen op het render-sluiti
 **Soort:** functie
 
 ```typescript
-function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>
+function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 Vue-doeltransformator die de **passing**-vorm met het benoemde slot herschrijft — a
@@ -1656,7 +1704,7 @@ nog steeds herschreven naar Vue-reactiviteit (`.value`, enz.).
 **Soort:** functie
 
 ```typescript
-function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>
+function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 Vue-doeltransformator die de behuizing van React-stijl DOM met meerdere woorden repareert
@@ -1676,7 +1724,7 @@ universeel op het render-sluitingspad.
 **Soort:** functie
 
 ```typescript
-function createEmptyForgeCacheStats(): ForgeCacheStats
+function createEmptyForgeCacheStats(): ForgeCacheStats;
 ```
 
 Geen beschrijving opgegeven.
@@ -1686,7 +1734,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>
+export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>;
 ```
 
 Geen beschrijving opgegeven.
@@ -1718,7 +1766,7 @@ Waarneembare cachetellers gedurende één levensduur van de compilerservice.
 **Soort:** functie
 
 ```typescript
-function compileComponentModule(source: string, options: CompileOptions): CompiledModule
+function compileComponentModule(source: string, options: CompileOptions): CompiledModule;
 ```
 
 Compileer één neutrale (of framework-gated) componentmodule naar het per-framework
@@ -1731,10 +1779,10 @@ De build van een niet-overeenkomend raamwerk wordt stroomopwaarts afgehandeld do
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| opties | CompileOpties |  |
+| Naam   | Typ           | Beschrijving |
+| ------ | ------------- | ------------ |
+| bron   | tekenreeks    |              |
+| opties | CompileOpties |              |
 
 ### Gecompileerde module
 
@@ -1751,19 +1799,19 @@ Het resultaat van fase 1: uitgezonden bron en de extensie waaronder deze moet wo
 **Soort:** functie
 
 ```typescript
-function compileHookModule(source: string, options: CompileHookOptions): CompiledModule
+function compileHookModule(source: string, options: CompileHookOptions): CompiledModule;
 ```
 
 Compileer één neutrale **hook-module** (een eenmalige, schrijfbare, geschreven tegen
-`@mission-platform/forge`'s React-stijl hooks, *niet* een UI-component) aan zijn
+`@mission-platform/forge`'s React-stijl hooks, _niet_ een UI-component) aan zijn
 bron per raamwerk (fase 1).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| opties | CompileHookOptions |  |
+| Naam   | Typ                | Beschrijving |
+| ------ | ------------------ | ------------ |
+| bron   | tekenreeks         |              |
+| opties | CompileHookOptions |              |
 
 ### CompileHookOptions
 
@@ -1780,7 +1828,7 @@ Opties voor {@link compileHookModule}.
 **Soort:** functie
 
 ```typescript
-function compileModule(source: string, options: CompileModuleOptions): CompiledModule
+function compileModule(source: string, options: CompileModuleOptions): CompiledModule;
 ```
 
 Compileer één neutrale module via een door de beller geleverde uitvoerplug-in.
@@ -1791,10 +1839,10 @@ gedeelde naad gebruikt door zelfstandige doelpakketten zoals Astro.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
-| opties | CompileModuleOptions |  |
+| Naam   | Typ                  | Beschrijving |
+| ------ | -------------------- | ------------ |
+| bron   | tekenreeks           |              |
+| opties | CompileModuleOptions |              |
 
 ### CompileModuleOptions
 
@@ -1823,7 +1871,7 @@ Opties voor {@link compileComponentModule}.
 **Soort:** functie
 
 ```typescript
-function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[]
+function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[];
 ```
 
 Ontdek de componenten die een vat exporteert en ontleen hun publieke vorm. Elk
@@ -1833,27 +1881,27 @@ in (de modulebasisnaam van de wederexport).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vatBron | tekenreeks |  |
-| stripVoorvoegsel |  |  |
+| Naam             | Typ        | Beschrijving |
+| ---------------- | ---------- | ------------ |
+| vatBron          | tekenreeks |              |
+| stripVoorvoegsel |            |              |
 
 ### ontdekComponentsFromGraph
 
 **Soort:** functie
 
 ```typescript
-function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[]
+function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[];
 ```
 
 Projecteer publieke componentexports vanuit de canonieke grafiek terwijl de oude resultaatvorm behouden blijft.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| grafiek | ForgeFileGraph |  |
-| stripVoorvoegsel |  |  |
+| Naam             | Typ            | Beschrijving |
+| ---------------- | -------------- | ------------ |
+| grafiek          | ForgeFileGraph |              |
+| stripVoorvoegsel |                |              |
 
 ### OntdektComponent
 
@@ -1882,7 +1930,7 @@ Een niet-component **helpermodule** die opnieuw uit het vat wordt geëxporteerd 
 **Soort:** functie
 
 ```typescript
-function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
+function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[];
 ```
 
 Ontdek de **helpermodules** die een vat opnieuw exporteert — elke `export { … }
@@ -1894,27 +1942,30 @@ Consumenten besturen precies hetzelfde per raamwerk, singleton de componenten ge
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| vatBron | tekenreeks |  |
-| componentMappen | Alleen-lezenSet<string> |  |
+| Naam            | Typ                     | Beschrijving |
+| --------------- | ----------------------- | ------------ |
+| vatBron         | tekenreeks              |              |
+| componentMappen | Alleen-lezenSet<string> |              |
 
 ### ontdekHelperExportsFromGraph
 
 **Soort:** functie
 
 ```typescript
-function discoverHelperExportsFromGraph(graph: ForgeFileGraph, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
+function discoverHelperExportsFromGraph(
+  graph: ForgeFileGraph,
+  componentFolders: ReadonlySet<string>,
+): DiscoveredHelperExport[];
 ```
 
 Projecteer niet-component publieke exporten uit de canonieke grafiek.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| grafiek | ForgeFileGraph |  |
-| componentMappen | Alleen-lezenSet<string> |  |
+| Naam            | Typ                     | Beschrijving |
+| --------------- | ----------------------- | ------------ |
+| grafiek         | ForgeFileGraph          |              |
+| componentMappen | Alleen-lezenSet<string> |              |
 
 ## `src/compiler/frontends`
 
@@ -1923,7 +1974,7 @@ Projecteer niet-component publieke exporten uit de canonieke grafiek.
 **Soort:** functie
 
 ```typescript
-function parseForgeSource(fileName: string, source: string): OxcParsedModule
+function parseForgeSource(fileName: string, source: string): OxcParsedModule;
 ```
 
 Parse Forge-bron via Oxc naar de serialiseerbare module, de nulleider
@@ -1932,29 +1983,34 @@ gecreëerd; de geretourneerde module is de enkele, door parser ondersteunde weer
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| bron | tekenreeks |  |
+| Naam         | Typ        | Beschrijving |
+| ------------ | ---------- | ------------ |
+| bestandsnaam | tekenreeks |              |
+| bron         | tekenreeks |              |
 
 ### parseFrontendModule
 
 **Soort:** functie
 
 ```typescript
-function parseFrontendModule(fileName: string, source: string, moduleKind: 'component' | 'composable', componentName?: string): FrontendModule
+function parseFrontendModule(
+  fileName: string,
+  source: string,
+  moduleKind: 'component' | 'composable',
+  componentName?: string,
+): FrontendModule;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bestandsnaam | tekenreeks |  |
-| bron | tekenreeks |  |
-| moduleKind | 'onderdeel' \| 'componeerbaar' |  |
-| componentnaam | tekenreeks |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| bestandsnaam  | tekenreeks                     |              |
+| bron          | tekenreeks                     |              |
+| moduleKind    | 'onderdeel' \| 'componeerbaar' |              |
+| componentnaam | tekenreeks                     |              |
 
 ## `src/compiler/generation-context`
 
@@ -1963,16 +2019,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext
+function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeGenerationContextOptions |  |
+| Naam   | Typ                           | Beschrijving |
+| ------ | ----------------------------- | ------------ |
+| opties | ForgeGenerationContextOptions |              |
 
 ### ForgeGenerationContext
 
@@ -2001,16 +2057,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph
+function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph;
 ```
 
 Bouw de canonieke brongrafiek op basis van één geconfigureerde invoermodule.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | ForgeFileGraphOptions |  |
+| Naam   | Typ                   | Beschrijving |
+| ------ | --------------------- | ------------ |
+| opties | ForgeFileGraphOptions |              |
 
 ### ForgeFileEdge
 
@@ -2047,7 +2103,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeFileKind = 'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
+export type ForgeFileKind =
+  'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
 ```
 
 Geen beschrijving opgegeven.
@@ -2077,7 +2134,13 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ForgeGraphDiagnosticCode = | 'missing-entry' | 'missing-file' | 'unsupported-extension' | 'ambiguous-export' | 'unsupported-authoring-form' | 'cycle';
+export type ForgeGraphDiagnosticCode =
+  | 'missing-entry'
+  | 'missing-file'
+  | 'unsupported-extension'
+  | 'ambiguous-export'
+  | 'unsupported-authoring-form'
+  | 'cycle';
 ```
 
 Geen beschrijving opgegeven.
@@ -2089,7 +2152,11 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'composable' = 'component', componentName?: string): GenericHoistResult
+function hoistStaticJsx(
+  module: OxcParsedModule,
+  moduleKind: 'component' | 'composable' = 'component',
+  componentName?: string,
+): GenericHoistResult;
 ```
 
 Static-mark hijst vervolgens de renderboom van een door Oxc geparseerde module en retourneert de
@@ -2098,11 +2165,11 @@ Fase 1 statische markeringspassage gevolgd door algemeen hijsen.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | OxcParsedModule |  |
-| moduleKind | 'onderdeel' \| 'componeerbaar' |  |
-| componentnaam | tekenreeks |  |
+| Naam          | Typ                            | Beschrijving |
+| ------------- | ------------------------------ | ------------ |
+| module        | OxcParsedModule                |              |
+| moduleKind    | 'onderdeel' \| 'componeerbaar' |              |
+| componentnaam | tekenreeks                     |              |
 
 ## `src/compiler/optimize`
 
@@ -2111,7 +2178,7 @@ Fase 1 statische markeringspassage gevolgd door algemeen hijsen.
 **Soort:** functie
 
 ```typescript
-function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule
+function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule;
 ```
 
 Voer de fase 1-optimalisatiepassen op bronniveau uit (snoeien van dode takken en
@@ -2123,17 +2190,17 @@ Standaard elke doorgang AAN; geef `{ deadBranchPruning: false, … }` door om ui
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| module | OxcParsedModule |  |
-| opties | Optimalisatieopties |  |
+| Naam   | Typ                 | Beschrijving |
+| ------ | ------------------- | ------------ |
+| module | OxcParsedModule     |              |
+| opties | Optimalisatieopties |              |
 
 ### optimizeSourceFile
 
 **Soort:** constant
 
 ```typescript
-export const optimizeSourceFile
+export const optimizeSourceFile;
 ```
 
 Compatibiliteitsalias behouden voor compilerintegraties met de oude naam.
@@ -2145,7 +2212,10 @@ Compatibiliteitsalias behouden voor compilerintegraties met de oude naam.
 **Soort:** functie
 
 ```typescript
-function analyzeForgeModule(input: CompilerInput, service: ForgeCompilerService = defaultCompilerService): SemanticModule
+function analyzeForgeModule(
+  input: CompilerInput,
+  service: ForgeCompilerService = defaultCompilerService,
+): SemanticModule;
 ```
 
 Parseer, normaliseer en leid de doelneutrale semantische module af.
@@ -2157,10 +2227,10 @@ component die voor meerdere doelen in één build wordt geanalyseerd, wordt slec
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | CompilerInvoer |  |
-| dienst | ForgeCompilerService |  |
+| Naam   | Typ                  | Beschrijving |
+| ------ | -------------------- | ------------ |
+| invoer | CompilerInvoer       |              |
+| dienst | ForgeCompilerService |              |
 
 ### CompilerInvoer
 
@@ -2187,16 +2257,16 @@ Pijplijncontract gedeeld door alle ingangspunten van de compiler.
 **Soort:** functie
 
 ```typescript
-function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline
+function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline;
 ```
 
 Maak de faseverzender die wordt gebruikt door de ingangspunten van de compiler.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| dienst | ForgeCompilerService |  |
+| Naam   | Typ                  | Beschrijving |
+| ------ | -------------------- | ------------ |
+| dienst | ForgeCompilerService |              |
 
 ## `src/compiler/report`
 
@@ -2217,39 +2287,41 @@ Diagnostische gegevens en statistieken verzameld tijdens één servicelevensduur
 **Soort:** functie
 
 ```typescript
-function analyzeRouterCapabilities(input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>): RouterCapabilityModule
+function analyzeRouterCapabilities(
+  input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>,
+): RouterCapabilityModule;
 ```
 
 Parseer de import en het gebruik van neutrale routers zonder een native router te importeren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | Kies<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |  |
+| Naam   | Typ                                                               | Beschrijving |
+| ------ | ----------------------------------------------------------------- | ------------ |
+| invoer | Kies<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |              |
 
 ### compileRouterModule
 
 **Soort:** functie
 
 ```typescript
-function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult
+function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult;
 ```
 
 Compileer neutraal routergebruik via een geselecteerde native doeladapter.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| invoer | RouterCompilerInvoer |  |
+| Naam   | Typ                  | Beschrijving |
+| ------ | -------------------- | ------------ |
+| invoer | RouterCompilerInvoer |              |
 
 ### createRouterCompilerPipeline
 
 **Soort:** functie
 
 ```typescript
-function createRouterCompilerPipeline()
+function createRouterCompilerPipeline();
 ```
 
 Dispatcher-formulier gebruikt door de Forge-compiler en door zelfstandige doelarmaturen.
@@ -2271,16 +2343,16 @@ Doeluitvoer plus servicemetagegevens, zonder GeneratedModule zelf te wijzigen.
 **Soort:** functie
 
 ```typescript
-function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService
+function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| grenzen | ForgeCacheLimits |  |
+| Naam    | Typ              | Beschrijving |
+| ------- | ---------------- | ------------ |
+| grenzen | ForgeCacheLimits |              |
 
 ### ForgeCompileRequest
 
@@ -2349,7 +2421,7 @@ Langdurige, synchrone compilerstatus voor één proces-/buildsessie.
 **Soort:** functie
 
 ```typescript
-function reactJsxPlugin(): Plugin
+function reactJsxPlugin(): Plugin;
 ```
 
 Geen beschrijving opgegeven.
@@ -2359,32 +2431,32 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig
+function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | JsxHookLibraryConfigOptions |  |
+| Naam   | Typ                         | Beschrijving |
+| ------ | --------------------------- | ------------ |
+| opties | JsxHookLibraryConfigOptions |              |
 
 ### definieerJsxLibraryConfig
 
 **Soort:** functie
 
 ```typescript
-function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig
+function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | JsxLibraryConfigOptions |  |
+| Naam   | Typ                     | Beschrijving |
+| ------ | ----------------------- | ------------ |
+| opties | JsxLibraryConfigOptions |              |
 
 ### JsxHookLibraryConfigOptions
 
@@ -2411,7 +2483,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function reactJsxPlugin(): Plugin
+function reactJsxPlugin(): Plugin;
 ```
 
 Geen beschrijving opgegeven.
@@ -2421,7 +2493,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function solidJsxPlugin(): Plugin[]
+function solidJsxPlugin(): Plugin[];
 ```
 
 De `vite-plugin-solid`-plug-in die de gegenereerde Solid `.tsx` compileert
@@ -2441,7 +2513,7 @@ bronnen tegen `react/jsx-runtime`, waardoor niet-functionele uitvoer ontstaat.
 **Soort:** functie
 
 ```typescript
-function solidJsxTsdownPlugin(): Plugin
+function solidJsxTsdownPlugin(): Plugin;
 ```
 
 Rolldown/tsdown-compatibele Solid JSX-plug-in. Afgevaardigden naar `vite-plugin-solid`'s
@@ -2454,7 +2526,7 @@ herschrijf Solid JSX niet als React.
 **Soort:** functie
 
 ```typescript
-function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[]
+function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[];
 ```
 
 Fase-2-plug-ins voor een forge-framework gebouwd onder **tsdown** (Rolldown).
@@ -2464,16 +2536,16 @@ ze hebben de opgeloste configuratie van Vite nodig.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plug-in | FrameworkOutputPlugin |  |
+| Naam    | Typ                   | Beschrijving |
+| ------- | --------------------- | ------------ |
+| plug-in | FrameworkOutputPlugin |              |
 
 ### sveltePlugin
 
 **Soort:** functie
 
 ```typescript
-function sveltePlugin(): Plugin[]
+function sveltePlugin(): Plugin[];
 ```
 
 Vite-plug-in voor het compileren van gegenereerde Svelte-componenten.
@@ -2483,7 +2555,7 @@ Vite-plug-in voor het compileren van gegenereerde Svelte-componenten.
 **Soort:** functie
 
 ```typescript
-function svelteTsdownPlugin(): Plugin
+function svelteTsdownPlugin(): Plugin;
 ```
 
 Rolldown/tsdown-compatibele Svelte-compilerplug-in. Compileert `.svelte` SFC's via
@@ -2497,7 +2569,7 @@ Geef de voorkeur aan dit (of {@link stagePluginsForTsdown}) bij het bouwen met t
 **Soort:** functie
 
 ```typescript
-function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string
+function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string;
 ```
 
 Compileer een neutrale hook-bibliotheek naar de bronboom per frame (fase 1),
@@ -2505,9 +2577,9 @@ retourneert het gegenereerde invoermodulepad.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | GenereerHookLibrarySourcesOptions |  |
+| Naam   | Typ                               | Beschrijving |
+| ------ | --------------------------------- | ------------ |
+| opties | GenereerHookLibrarySourcesOptions |              |
 
 ### GenereerHookLibrarySourcesOptions
 
@@ -2534,7 +2606,7 @@ Opties voor {@link hookLibraryDtsPlugin}.
 **Soort:** functie
 
 ```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
+function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
 ```
 
 Een post-build Vite-plug-in die **echte, per-framework**-declaraties verzendt
@@ -2542,7 +2614,7 @@ voor de gegenereerde bronboom van een hookbibliotheek.
 
 Elke framework-build ({@link requireHookLibrarySources} + die van het framework
 Stage-2-bundelaar) produceert JS maar geen declaraties, aangezien de gegenereerde boom dat wel is
-geen `tsc`-zichtbaar bronbestand. In plaats van een enkele *gemeenschappelijke*
+geen `tsc`-zichtbaar bronbestand. In plaats van een enkele _gemeenschappelijke_
 neutrale declaratie voor elk raamwerk, deze plug-in voert de TypeScript uit
 compiler-API via de gegenereerde boom in `closeBundle` (een post-build-stap) en
 schrijft de resulterende `.d.ts`-bestanden (`index.d.ts` + één per module) naar de
@@ -2554,9 +2626,9 @@ geproduceerd.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | HookLibraryDtsOptions |  |
+| Naam   | Typ                   | Beschrijving |
+| ------ | --------------------- | ------------ |
+| opties | HookLibraryDtsOptions |              |
 
 ## `src/generate`
 
@@ -2565,16 +2637,16 @@ geproduceerd.
 **Soort:** functie
 
 ```typescript
-function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget
+function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget;
 ```
 
 Maak een bronboomdescriptor op basis van een expliciete uitvoerplug-in.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| plug-in | FrameworkOutputPlugin |  |
+| Naam    | Typ                   | Beschrijving |
+| ------- | --------------------- | ------------ |
+| plug-in | FrameworkOutputPlugin |              |
 
 ### FrameworkSourceTarget
 
@@ -2591,7 +2663,7 @@ Doelspecifieke bronboomconventies die worden gebruikt door het generieke pakkets
 **Soort:** functie
 
 ```typescript
-function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string
+function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string;
 ```
 
 Compileer een neutraal componentenpakket naar de bronstructuur per raamwerk (fase 1),
@@ -2599,9 +2671,9 @@ retourneert het gegenereerde invoermodulepad.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | GenereerFrameworkSourcesOptions |  |
+| Naam   | Typ                             | Beschrijving |
+| ------ | ------------------------------- | ------------ |
+| opties | GenereerFrameworkSourcesOptions |              |
 
 ### GenereerFrameworkSourcesOptions
 
@@ -2618,7 +2690,7 @@ Opties voor {@link genererenFrameworkSources}.
 **Soort:** functie
 
 ```typescript
-function jsxComponentsCssImportPlugin(): Plugin
+function jsxComponentsCssImportPlugin(): Plugin;
 ```
 
 Koppel CSS per component opnieuw aan het JS-deel ervan.
@@ -2651,7 +2723,7 @@ de `./vue` / `./react` vaten van het pakket trekken dat stuk binnen).
 Ten slotte wordt elk CSS-module-stylesheet verzonden onder de **bron**-naam —
 `foo.module.css` — waarbij de hashing van de klassenaam al is toegepast en de
 opgeloste namen ingebakken in de klassekaart `foo.module.js` van broer of zus. Verzending ervan
-met dat achtervoegsel `.module.css` is een valstrik: elke *downstream* bundelaar (bijvoorbeeld de
+met dat achtervoegsel `.module.css` is een valstrik: elke _downstream_ bundelaar (bijvoorbeeld de
 React Storybook's eigen Vite) herkent `*.module.css` als een CSS-module en
 voert de CSS-Modules-transformatie er **een tweede keer** overheen uit, waarbij de
 selectors zodat ze niet langer overeenkomen met de (reeds gehashte) klassennamen die erin zijn ingebakken
@@ -2676,7 +2748,7 @@ Opties voor {@link jsxComponentsDtsPlugin}.
 **Soort:** functie
 
 ```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
+function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
 ```
 
 Een post-build Vite-plug-in die **echte, per-framework**-declaraties verzendt
@@ -2717,9 +2789,9 @@ Typediagnostiek wordt weergegeven als buildwaarschuwingen in plaats van als fout
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | JsxComponentsDtsOptions |  |
+| Naam   | Typ                     | Beschrijving |
+| ------ | ----------------------- | ------------ |
+| opties | JsxComponentsDtsOptions |              |
 
 ### JsxComponentsEntryDtsOptions
 
@@ -2736,7 +2808,7 @@ Opties voor {@link jsxComponentsEntryDtsPlugin}.
 **Soort:** functie
 
 ```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin
+function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
 ```
 
 Verzend de samengestelde declaratie (`<declarationFileName>.d.ts`) voor de
@@ -2745,9 +2817,9 @@ hoewel het item zelf wordt gegenereerd (en daarom niet wordt gezien door `tsc`).
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | JsxComponentsEntryDtsOptions |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| opties | JsxComponentsEntryDtsOptions |              |
 
 ## `src/tsdown`
 
@@ -2756,7 +2828,7 @@ hoewel het item zelf wordt gegenereerd (en daarom niet wordt gezien door `tsc`).
 **Soort:** functie
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[]
+function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
 ```
 
 Reproduceer één Archetype-C **component** raamwerk gebouwd onder tsdown:
@@ -2765,35 +2837,35 @@ uitzenden naar `dist/<framework>/`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TsdownForgeComponentsOptions |  |
+| Naam   | Typ                          | Beschrijving |
+| ------ | ---------------------------- | ------------ |
+| opties | TsdownForgeComponentsOptions |              |
 
 ### definieerTsdownForgeEmailComponents
 
 **Soort:** functie
 
 ```typescript
-function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig
+function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig;
 ```
 
 Bouw het neutrale Forge-e-mailcomponentitem voor alleen de server.
 
- Het bewaart de Forge-boom zo
+Het bewaart de Forge-boom zo
 `@mission-platform/email-renderer` kan het op de server serialiseren.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TsdownForgeEmailComponentsOptions |  |
+| Naam   | Typ                               | Beschrijving |
+| ------ | --------------------------------- | ------------ |
+| opties | TsdownForgeEmailComponentsOptions |              |
 
 ### definieerTsdownForgeHooks
 
 **Soort:** functie
 
 ```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
 ```
 
 Reproduceer één Archetype-C **hook**-framework dat is gebouwd onder tsdown:
@@ -2802,16 +2874,16 @@ uitzenden naar `dist/<framework>/`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TsdownForgeHooksOptions |  |
+| Naam   | Typ                     | Beschrijving |
+| ------ | ----------------------- | ------------ |
+| opties | TsdownForgeHooksOptions |              |
 
 ### definieerTsdownForgeHooksAll
 
 **Soort:** functie
 
 ```typescript
-function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[]
+function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[];
 ```
 
 Bouw een reeks tsdown-configuraties voor elk aangevraagd forge hooks-framework
@@ -2820,9 +2892,9 @@ Bouw een reeks tsdown-configuraties voor elk aangevraagd forge hooks-framework
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| opties | TsdownForgeHooksAllOptions |  |
+| Naam   | Typ                        | Beschrijving |
+| ------ | -------------------------- | ------------ |
+| opties | TsdownForgeHooksAllOptions |              |
 
 ### TsdownForgeComponentsOptions
 

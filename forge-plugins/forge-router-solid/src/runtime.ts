@@ -48,18 +48,18 @@ export function toSolidHref(to: MpRouteLocationRaw): string {
 /** Build a neutral location from Solid Router location/params snapshots. */
 export function toMpLocationFromSolid(
   location: { pathname: string; search: string; hash: string },
-  params: Record<string, string | undefined> = {},
+  parameters: Record<string, string | undefined> = {},
 ): MpResolvedLocation {
   const query = parseQuery(location.search) as MpQueryParameters;
-  const normalizedParams: MpRouteParameters = Object.fromEntries(
-    Object.entries(params)
+  const normalizedParameters: MpRouteParameters = Object.fromEntries(
+    Object.entries(parameters)
       .filter((entry): entry is [string, string] => entry[1] !== undefined)
       .map(([key, value]) => [key, value]),
   );
   return {
     path: location.pathname,
     fullPath: `${location.pathname}${location.search}${location.hash}`,
-    params: normalizedParams,
+    params: normalizedParameters,
     query,
     hash: location.hash,
   };

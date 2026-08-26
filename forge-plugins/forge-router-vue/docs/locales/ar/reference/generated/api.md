@@ -16,49 +16,49 @@
 **النوع:** الوظيفة
 
 ```typescript
-function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities
+function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities;
 ```
 
 أنشئ إمكانات محايدة من مثيل جهاز التوجيه Vue المملوك للتطبيق.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| راوتر | راوتر |  |
-| الحالي |  |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| راوتر  | راوتر |       |
+| الحالي |       |       |
 
 ### ResolveMpLink
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 قم بحل هدف محايد من خلال جهاز التوجيه Vue المملوك للتطبيق.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### ResolvePathTarget
 
 **النوع:** الوظيفة
 
 ```typescript
-function resolvePathTarget(to: MpRouteLocationRaw): string
+function resolvePathTarget(to: MpRouteLocationRaw): string;
 ```
 
 يتم استخدام المسار الاحتياطي فقط عندما يكون مثيل جهاز التوجيه Vue غير متاح (SSR/الاختبارات).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### toMpLocation
 
@@ -73,39 +73,39 @@ function toMpLocation(route: {
   hash: string;
   name?: string | symbol | null;
   meta?: Record<string, unknown>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 تحويل حالة المسار Vue الأصلية إلى الموقع المحايد الذي تم حله.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الطريق | { المسار: سلسلة؛   مسار كامل: سلسلة؛   المعلمات: Record<string, unknown>;   الاستعلام: استعلام الموقع؛   التجزئة: سلسلة؛   الاسم ؟: سلسلة \| الرمز \| باطل؛   التعريف ؟: Record<string, unknown>; } |  |
+| الاسم  | اكتب                                                                                                                                                                                    | الوصف |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| الطريق | { المسار: سلسلة؛ مسار كامل: سلسلة؛ المعلمات: Record<string, unknown>; الاستعلام: استعلام الموقع؛ التجزئة: سلسلة؛ الاسم ؟: سلسلة \| الرمز \| باطل؛ التعريف ؟: Record<string, unknown>; } |       |
 
 ### toVueLocation
 
 **النوع:** الوظيفة
 
 ```typescript
-function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw
+function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 ```
 
 ترجمة هدف محايد إلى موقع جهاز التوجيه Vue.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### useMpNavigation
 
 **النوع:** الوظيفة
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 اقرأ فقط إمكانيات التنقل/الحل الضرورية.
@@ -115,7 +115,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 اقرأ المسار الحالي المملوك للتطبيق باسم {@link MpResolvedLocation}.
@@ -125,7 +125,7 @@ function useMpRoute(): MpResolvedLocation | null
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 اقرأ كائن القدرة المحايدة المدعوم بجهاز التوجيه Vue.
@@ -137,7 +137,7 @@ function useMpRouter(): MpRouterCapabilities
 **النوع:** ثابت
 
 ```typescript
-export const forgeRouterVue
+export const forgeRouterVue;
 ```
 
 قم بتكوين هدف جهاز التوجيه لمثيل جهاز التوجيه Vue المملوك للتطبيق.

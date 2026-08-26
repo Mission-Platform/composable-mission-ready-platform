@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { domTemplate, dynamicElement, ForgeElement } from './web-components';
+
 import type { DomRenderResult } from './web-components';
 
 describe('ForgeElement without browser globals', () => {

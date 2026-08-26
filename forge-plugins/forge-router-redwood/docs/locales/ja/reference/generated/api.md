@@ -22,39 +22,39 @@ function createRedwoodRouterCapabilities(input: {
   navigate: RedwoodRouterSurface['navigate'];
   routes?: RedwoodRouterSurface['routes'];
   link?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Redwood プリミティブから中立的な機能を構築します (テスト用のフレームワークは不要)。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|入力 | { 場所: { パス名: 文字列;検索: 文字列;ハッシュ?: 文字列 };   パラメータ?: MpRouteパラメータ;   ナビゲート: RedwoodRouterSurface['navigate'];   ルート?: RedwoodRouterSurface['ルート'];   リンク?: 不明。 } |  |
+| 名前 | タイプ                                                                                                                                                                                              | 説明 |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| 入力 | { 場所: { パス名: 文字列;検索: 文字列;ハッシュ?: 文字列 }; パラメータ?: MpRouteパラメータ; ナビゲート: RedwoodRouterSurface['navigate']; ルート?: RedwoodRouterSurface['ルート']; リンク?: 不明。 } |      |
 
 ### エムピーリンク
 
 **種類:** コンポーネント
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown
+function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
 ```
 
 リンクコンポーネントプロキシ。アプリは、{@link setForgeRedwoodRouter} を通じてネイティブ Redwood `Link` をバインドします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ | { から: MpRouteLocationRaw;置き換えますか?: ブール値;子供?: 不明 } |  |
+| 名前       | タイプ                                                             | 説明 |
+| ---------- | ------------------------------------------------------------------ | ---- |
+| プロパティ | { から: MpRouteLocationRaw;置き換えますか?: ブール値;子供?: 不明 } |      |
 
 ### MpRouterView
 
 **種類:** コンポーネント
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 レッドウッドにはポータブルコンセントがありません。コンパイラは、`view` をサポートされていないと報告します。
@@ -74,23 +74,23 @@ export interface RedwoodRouterSurface
 **種類:** 関数
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 ニュートラル ターゲットを href 文字列に解決します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
+| 名前 | タイプ             | 説明 |
+| ---- | ------------------ | ---- |
+| へ   | MpRouteLocationRaw |      |
 
 ### setForgeレッドウッドルーター
 
 **種類:** 関数
 
 ```typescript
-function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
+function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void;
 ```
 
 アプリが所有する Redwood ルーター モジュールをバインドします。コンパイルされたパッケージ コードが読み取られる
@@ -98,50 +98,53 @@ function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|表面 |レッドウッドルーターサーフェス |  |
+| 名前 | タイプ                         | 説明 |
+| ---- | ------------------------------ | ---- |
+| 表面 | レッドウッドルーターサーフェス |      |
 
 ### 目的地レッドウッドから
 
 **種類:** 関数
 
 ```typescript
-function toMpLocationFromRedwood(location: { pathname: string; search: string; hash?: string }, params: MpRouteParameters = {}): MpResolvedLocation
+function toMpLocationFromRedwood(
+  location: { pathname: string; search: string; hash?: string },
+  params: MpRouteParameters = {},
+): MpResolvedLocation;
 ```
 
 Redwood のロケーションのスナップショットから中立的なロケーションを構築します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|場所 | { パス名: 文字列;検索: 文字列;ハッシュ?: 文字列 } |  |
-|パラメータ | MpRouteパラメータ |  |
+| 名前       | タイプ                                            | 説明 |
+| ---------- | ------------------------------------------------- | ---- |
+| 場所       | { パス名: 文字列;検索: 文字列;ハッシュ?: 文字列 } |      |
+| パラメータ | MpRouteパラメータ                                 |      |
 
 ### レッドウッドHrefへ
 
 **種類:** 関数
 
 ```typescript
-function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string
+function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string;
 ```
 
 Redwood ナビゲーションのニュートラル ターゲットをシリアル化します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|へ | MpRouteLocationRaw |  |
-|ルート | RedwoodRouterSurface['ルート'] |  |
+| 名前   | タイプ                         | 説明 |
+| ------ | ------------------------------ | ---- |
+| へ     | MpRouteLocationRaw             |      |
+| ルート | RedwoodRouterSurface['ルート'] |      |
 
 ### useMpNavigation
 
 **種類:** 関数
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 読み取り専用の命令型ナビゲーション/解決機能。
@@ -151,7 +154,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **種類:** 関数
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 現在のアプリが所有するルートを {@link MpResolvedLocation} として読み取ります。
@@ -161,7 +164,7 @@ function useMpRoute(): MpResolvedLocation | null
 **種類:** 関数
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Redwood Router によってサポートされるニュートラル機能オブジェクトを読み取ります。
@@ -173,7 +176,7 @@ Redwood Router によってサポートされるニュートラル機能オブ�
 **種類:** 定数
 
 ```typescript
-export const forgeRouterRedwood
+export const forgeRouterRedwood;
 ```
 
 RedwoodSDK のアプリケーション所有のルーター コンテキストのルーター ターゲットを鍛造します。

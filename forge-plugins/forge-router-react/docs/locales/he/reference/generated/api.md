@@ -21,88 +21,91 @@ function createReactRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: NavigateFunction;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 בנה יכולות ניטרליות מ React פרימיטיבים של נתב (ללא וו לבדיקות).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | { מיקום: { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת };   params?: שיא<string, string \| undefined>;   ניווט: NavigateFunction;   outlet?: לא ידוע; } |  |
+| שם  | הקלד                                                                                                                                               | תיאור |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| קלט | { מיקום: { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת }; params?: שיא<string, string \| undefined>; ניווט: NavigateFunction; outlet?: לא ידוע; } |       |
 
 ### resolveMpLink
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 פתור יעד ניטרלי למחרוזת href.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### toMpLocationFromReact
 
 פונקציה **סוג:**
 
 ```typescript
-function toMpLocationFromReact(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromReact(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 בנה מיקום ניטרלי מ React מיקום הנתב/תמונות מצב של פרמטרים.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מיקום | { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת } |  |
-| פרמס | רְשׁוּמָה<string, string \| undefined> |  |
+| שם    | הקלד                                             | תיאור |
+| ----- | ------------------------------------------------ | ----- |
+| מיקום | { שם נתיב: מחרוזת; חיפוש: מחרוזת; hash: מחרוזת } |       |
+| פרמס  | רְשׁוּמָה<string, string \| undefined>           |       |
 
 ### toReactHref
 
 פונקציה **סוג:**
 
 ```typescript
-function toReactHref(to: MpRouteLocationRaw): string
+function toReactHref(to: MpRouteLocationRaw): string;
 ```
 
 הסדר יעד ניטרלי למחרוזת href.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### toReactTo
 
 פונקציה **סוג:**
 
 ```typescript
-function toReactTo(to: MpRouteLocationRaw): To
+function toReactTo(to: MpRouteLocationRaw): To;
 ```
 
 המר יעד ניטרלי ל-a React נתב `To` עֵרֶך.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ל | MpRouteLocationRaw |  |
+| שם  | הקלד               | תיאור |
+| --- | ------------------ | ----- |
+| ל   | MpRouteLocationRaw |       |
 
 ### השתמש ב-MpNavigation
 
 פונקציה **סוג:**
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 קרא רק יכולות הניווט/פתרון הכרחי.
@@ -112,7 +115,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 פונקציה **סוג:**
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 קרא את המסלול הנוכחי בבעלות האפליקציה בשם {@link MpResolvedLocation}.
@@ -122,7 +125,7 @@ function useMpRoute(): MpResolvedLocation | null
 פונקציה **סוג:**
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 קרא את אובייקט היכולת הנייטרלית המגובה על ידי React נתב.
@@ -134,7 +137,7 @@ function useMpRouter(): MpRouterCapabilities
 **סוג:** קבוע
 
 ```typescript
-export const forgeRouterReact
+export const forgeRouterReact;
 ```
 
 זיוף יעד נתב עבור אפליקציה בבעלות אפליקציה React דוגמה לנתב.

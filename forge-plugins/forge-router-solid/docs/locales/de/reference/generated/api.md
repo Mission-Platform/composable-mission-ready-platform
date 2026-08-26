@@ -21,44 +21,39 @@ function createSolidRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: SolidNavigate;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Erstellen Sie neutrale Funktionen aus Solid-Router-Primitiven (Framework-frei für Tests).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eingabe | { Ort: { Pfadname: Zeichenfolge; Suche: Zeichenfolge; Hash: string };   params?: Record<string, string \| undefined>;   navigieren: SolidNavigate;   Steckdose?: unbekannt; } |  |
+| Name    | Geben Sie                                                                                                                                                               | ein Beschreibung |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| Eingabe | { Ort: { Pfadname: Zeichenfolge; Suche: Zeichenfolge; Hash: string }; params?: Record<string, string \| undefined>; navigieren: SolidNavigate; Steckdose?: unbekannt; } |                  |
 
 ### MpLink
 
 **Art:** Komponente
 
 ```typescript
-function MpLink(properties: {
-  href?: string;
-  to?: MpRouteLocationRaw;
-  children?: unknown;
-  replace?: boolean;
-}): unknown
+function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
 ```
 
 Solid Ankerkomponenten-Proxy, der über {@link setForgeSolidRouter} gebunden ist.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Eigenschaften | { href?: string;   nach?: MpRouteLocationRaw;   Kinder?: unbekannt;   ersetzen?: boolean; } |  |
+| Name          | Geben Sie                                                                             | ein Beschreibung |
+| ------------- | ------------------------------------------------------------------------------------- | ---------------- |
+| Eigenschaften | { href?: string; nach?: MpRouteLocationRaw; Kinder?: unbekannt; ersetzen?: boolean; } |                  |
 
 ### MpRouterView
 
 **Art:** Komponente
 
 ```typescript
-function MpRouterView(): unknown
+function MpRouterView(): unknown;
 ```
 
 Solid Outlet-Proxy über {@link setForgeSolidRouter} gebunden.
@@ -68,23 +63,23 @@ Solid Outlet-Proxy über {@link setForgeSolidRouter} gebunden.
 **Art:** Funktion
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Ein neutrales Ziel in eine href-Zeichenfolge auflösen.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zu | MpRouteLocationRaw |  |
+| Name | Geben Sie          | ein Beschreibung |
+| ---- | ------------------ | ---------------- |
+| zu   | MpRouteLocationRaw |                  |
 
 ### setForgeSolidRouter
 
 **Art:** Funktion
 
 ```typescript
-function setForgeSolidRouter(surface: SolidRouterSurface): void
+function setForgeSolidRouter(surface: SolidRouterSurface): void;
 ```
 
 Binden Sie das App-eigene Solid-Router-Modul, damit kompilierte Pakete neutral bleiben
@@ -92,9 +87,9 @@ Hook-/Call-Formen (`useMpRouter().navigate`, `useMpRoute().query`, …).
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Oberfläche | SolidRouterSurface |  |
+| Name       | Geben Sie          | ein Beschreibung |
+| ---------- | ------------------ | ---------------- |
+| Oberfläche | SolidRouterSurface |                  |
 
 ### SolidRouterSurface
 
@@ -111,40 +106,43 @@ Minimale Solid Router-Oberfläche, die vom Laufzeit-Shim verwendet wird.
 **Art:** Funktion
 
 ```typescript
-function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromSolid(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 Erstellen Sie einen neutralen Standort aus Solid Router-Standort-/Parameter-Snapshots.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| Standort | { Pfadname: string; Suche: Zeichenfolge; Hash: string } |  |
-| Parameter | Record<string, string \| undefined> |  |
+| Name      | Geben Sie                                               | ein Beschreibung |
+| --------- | ------------------------------------------------------- | ---------------- |
+| Standort  | { Pfadname: string; Suche: Zeichenfolge; Hash: string } |                  |
+| Parameter | Record<string, string \| undefined>                     |                  |
 
 ### toSolidHref
 
 **Art:** Funktion
 
 ```typescript
-function toSolidHref(to: MpRouteLocationRaw): string
+function toSolidHref(to: MpRouteLocationRaw): string;
 ```
 
 Serialisieren Sie ein neutrales Ziel für die Router-Navigation Solid.
 
 #### Parameter
 
-| Name | Geben Sie | ein Beschreibung |
-| --- | --- | --- |
-| zu | MpRouteLocationRaw |  |
+| Name | Geben Sie          | ein Beschreibung |
+| ---- | ------------------ | ---------------- |
+| zu   | MpRouteLocationRaw |                  |
 
 ### useMpNavigation
 
 **Art:** Funktion
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Nur zwingende Navigations-/Auflösungsfunktionen lesen.
@@ -154,7 +152,7 @@ Nur zwingende Navigations-/Auflösungsfunktionen lesen.
 **Art:** Funktion
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Lesen Sie die aktuelle App-eigene Route als {@link MpResolvedLocation}.
@@ -164,7 +162,7 @@ Lesen Sie die aktuelle App-eigene Route als {@link MpResolvedLocation}.
 **Art:** Funktion
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Lesen Sie das neutrale Fähigkeitsobjekt, das vom Solid-Router unterstützt wird.
@@ -176,7 +174,7 @@ Lesen Sie das neutrale Fähigkeitsobjekt, das vom Solid-Router unterstützt wird
 **Art:** konstant
 
 ```typescript
-export const forgeRouterSolid
+export const forgeRouterSolid;
 ```
 
 Forge-Router-Ziel für eine anwendungseigene SolidJS-Router-Instanz.

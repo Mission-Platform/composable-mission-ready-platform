@@ -94,10 +94,7 @@ export {
   type ForgeArtifactManifest,
   type ForgeArtifactRecord,
 } from './compiler/artifact-manifest.js';
-export {
-  createForgeArtifactWriter,
-  type ForgeArtifactWriter,
-} from './compiler/artifact-writer.js';
+export { createForgeArtifactWriter, type ForgeArtifactWriter } from './compiler/artifact-writer.js';
 export {
   createForgeGenerationContext,
   type ForgeGenerationContext,

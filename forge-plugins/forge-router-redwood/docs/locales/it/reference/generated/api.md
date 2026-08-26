@@ -22,39 +22,39 @@ function createRedwoodRouterCapabilities(input: {
   navigate: RedwoodRouterSurface['navigate'];
   routes?: RedwoodRouterSurface['routes'];
   link?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 Costruisci capacità neutre dalle primitive Redwood (prive di framework per i test).
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| ingresso | { posizione: { percorso: stringa; cerca: stringa; hash?: stringa };   parametri?: MpRouteParameters;   navigare: RedwoodRouterSurface['navigare'];   rotte?: RedwoodRouterSurface['rotte'];   collegamento?: sconosciuto; } |  |
+| Nome     | Digitare                                                                                                                                                                                                            | Descrizione |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| ingresso | { posizione: { percorso: stringa; cerca: stringa; hash?: stringa }; parametri?: MpRouteParameters; navigare: RedwoodRouterSurface['navigare']; rotte?: RedwoodRouterSurface['rotte']; collegamento?: sconosciuto; } |             |
 
 ### MpLink
 
 **Tipo:** componente
 
 ```typescript
-function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown
+function MpLink(properties: { to: MpRouteLocationRaw; replace?: boolean; children?: unknown }): unknown;
 ```
 
 Proxy del componente di collegamento; le app collegano il Redwood nativo `Link` tramite {@link setForgeRedwoodRouter}.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| proprietà | { a: MpRouteLocationRaw; sostituire?: booleano; bambini?: sconosciuto } |  |
+| Nome      | Digitare                                                                | Descrizione |
+| --------- | ----------------------------------------------------------------------- | ----------- |
+| proprietà | { a: MpRouteLocationRaw; sostituire?: booleano; bambini?: sconosciuto } |             |
 
 ### MpRouterView
 
 **Tipo:** componente
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 Redwood non ha una presa portatile; il compilatore segnala `view` come non supportato.
@@ -74,23 +74,23 @@ Superficie minima di sequoia/router utilizzata dallo spessore di runtime.
 **Tipo:** funzione
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Risolvi un obiettivo neutro in una stringa href.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nome | Digitare           | Descrizione |
+| ---- | ------------------ | ----------- |
+| a    | MpRouteLocationRaw |             |
 
 ### setForgeRedwoodRouter
 
 **Tipo:** funzione
 
 ```typescript
-function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void
+function setForgeRedwoodRouter(surface: RedwoodRouterSurface): void;
 ```
 
 Associa il modulo router Redwood di proprietà dell'app. Il codice del pacchetto compilato viene letto
@@ -98,50 +98,53 @@ questa cucitura in modo che le forme del gancio/chiamata corrispondano al contra
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| superficie | Superficie del router di sequoia |  |
+| Nome       | Digitare                         | Descrizione |
+| ---------- | -------------------------------- | ----------- |
+| superficie | Superficie del router di sequoia |             |
 
 ### toMpLocationFromRedwood
 
 **Tipo:** funzione
 
 ```typescript
-function toMpLocationFromRedwood(location: { pathname: string; search: string; hash?: string }, params: MpRouteParameters = {}): MpResolvedLocation
+function toMpLocationFromRedwood(
+  location: { pathname: string; search: string; hash?: string },
+  params: MpRouteParameters = {},
+): MpResolvedLocation;
 ```
 
 Costruisci una posizione neutrale da un'istantanea della posizione di Redwood.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| posizione | { percorso: stringa; cerca: stringa; hash?: stringa } |  |
-| parametri | MpRouteParametri |  |
+| Nome      | Digitare                                              | Descrizione |
+| --------- | ----------------------------------------------------- | ----------- |
+| posizione | { percorso: stringa; cerca: stringa; hash?: stringa } |             |
+| parametri | MpRouteParametri                                      |             |
 
 ### aRedwoodHref
 
 **Tipo:** funzione
 
 ```typescript
-function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string
+function toRedwoodHref(to: MpRouteLocationRaw, routes: RedwoodRouterSurface['routes'] = boundSurface?.routes): string;
 ```
 
 Serializza un bersaglio neutrale per la navigazione a Redwood.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
-| percorsi | RedwoodRouterSurface['percorsi'] |  |
+| Nome     | Digitare                         | Descrizione |
+| -------- | -------------------------------- | ----------- |
+| a        | MpRouteLocationRaw               |             |
+| percorsi | RedwoodRouterSurface['percorsi'] |             |
 
 ### useMpNavigation
 
 **Tipo:** funzione
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Capacità di navigazione/risoluzione imperativa di sola lettura.
@@ -151,7 +154,7 @@ Capacità di navigazione/risoluzione imperativa di sola lettura.
 **Tipo:** funzione
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Leggi il percorso corrente di proprietà dell'app come {@link MpResolvedLocation}.
@@ -161,7 +164,7 @@ Leggi il percorso corrente di proprietà dell'app come {@link MpResolvedLocation
 **Tipo:** funzione
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Leggi l'oggetto della capacità neutrale supportato da Redwood Router.
@@ -173,7 +176,7 @@ Leggi l'oggetto della capacità neutrale supportato da Redwood Router.
 **Genere:** costante
 
 ```typescript
-export const forgeRouterRedwood
+export const forgeRouterRedwood;
 ```
 
 Forgia la destinazione del router per il contesto del router di proprietà dell'applicazione RedwoodSDK.

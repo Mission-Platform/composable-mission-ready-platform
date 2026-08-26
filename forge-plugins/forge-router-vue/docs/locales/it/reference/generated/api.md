@@ -16,49 +16,49 @@ Generato da dichiarazioni di fonte pubblica in `@mission-platform/forge-router-v
 **Tipo:** funzione
 
 ```typescript
-function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities
+function createVueRouterCapabilities(router: Router, current = router.currentRoute.value): MpRouterCapabilities;
 ```
 
 Crea funzionalità neutre da un'istanza del router Vue di proprietà dell'app.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| router | Router |  |
-| corrente |  |  |
+| Nome     | Digitare | Descrizione |
+| -------- | -------- | ----------- |
+| router   | Router   |             |
+| corrente |          |             |
 
 ### risolvereMpLink
 
 **Tipo:** funzione
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 Risolvi un obiettivo neutrale tramite il router Vue di proprietà dell'app.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nome | Digitare           | Descrizione |
+| ---- | ------------------ | ----------- |
+| a    | MpRouteLocationRaw |             |
 
 ### risolverePathTarget
 
 **Tipo:** funzione
 
 ```typescript
-function resolvePathTarget(to: MpRouteLocationRaw): string
+function resolvePathTarget(to: MpRouteLocationRaw): string;
 ```
 
 Fallback di solo percorso utilizzato quando un'istanza del router Vue non è disponibile (SSR/test).
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nome | Digitare           | Descrizione |
+| ---- | ------------------ | ----------- |
+| a    | MpRouteLocationRaw |             |
 
 ### toMpLocation
 
@@ -73,39 +73,39 @@ function toMpLocation(route: {
   hash: string;
   name?: string | symbol | null;
   meta?: Record<string, unknown>;
-}): MpResolvedLocation
+}): MpResolvedLocation;
 ```
 
 Converte lo stato del percorso Vue nativo nella posizione risolta neutra.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| percorso | { percorso: stringa;   percorso completo: stringa;   parametri: Record<string, unknown>;   query: LocationQuery;   hash: stringa;   nome?: stringa \| simbolo \| nullo;   meta?: Record<string, unknown>; } |  |
+| Nome     | Digitare                                                                                                                                                                                        | Descrizione |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| percorso | { percorso: stringa; percorso completo: stringa; parametri: Record<string, unknown>; query: LocationQuery; hash: stringa; nome?: stringa \| simbolo \| nullo; meta?: Record<string, unknown>; } |             |
 
 ### toVueLocation
 
 **Tipo:** funzione
 
 ```typescript
-function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw
+function toVueLocation(to: MpRouteLocationRaw): RouteLocationRaw;
 ```
 
 Traduci un target neutrale in una posizione del router Vue.
 
 #### Parametri
 
-| Nome | Digitare | Descrizione |
-| --- | --- | --- |
-| a | MpRouteLocationRaw |  |
+| Nome | Digitare           | Descrizione |
+| ---- | ------------------ | ----------- |
+| a    | MpRouteLocationRaw |             |
 
 ### useMpNavigation
 
 **Tipo:** funzione
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 Capacità di navigazione/risoluzione imperativa di sola lettura.
@@ -115,7 +115,7 @@ Capacità di navigazione/risoluzione imperativa di sola lettura.
 **Tipo:** funzione
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 Leggi il percorso corrente di proprietà dell'app come {@link MpResolvedLocation}.
@@ -125,7 +125,7 @@ Leggi il percorso corrente di proprietà dell'app come {@link MpResolvedLocation
 **Tipo:** funzione
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 Leggere l'oggetto capacità neutrale supportato dal router Vue.
@@ -137,7 +137,7 @@ Leggere l'oggetto capacità neutrale supportato dal router Vue.
 **Genere:** costante
 
 ```typescript
-export const forgeRouterVue
+export const forgeRouterVue;
 ```
 
 Forgia la destinazione del router per un'istanza del router Vue di proprietà dell'applicazione.

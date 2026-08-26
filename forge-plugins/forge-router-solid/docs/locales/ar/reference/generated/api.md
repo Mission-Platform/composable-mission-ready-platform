@@ -21,44 +21,39 @@ function createSolidRouterCapabilities(input: {
   params?: Record<string, string | undefined>;
   navigate: SolidNavigate;
   outlet?: unknown;
-}): MpRouterCapabilities
+}): MpRouterCapabilities;
 ```
 
 قم ببناء قدرات محايدة من أساسيات جهاز التوجيه Solid (بدون إطار عمل للاختبارات).
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الإدخال | { الموقع: { اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة };   المعلمات ؟: Record<string, string \| undefined>;   التنقل: SolidNavigate؛   المنفذ؟: غير معروف؛ } |  |
+| الاسم   | اكتب                                                                                                                                                         | الوصف |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| الإدخال | { الموقع: { اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة }; المعلمات ؟: Record<string, string \| undefined>; التنقل: SolidNavigate؛ المنفذ؟: غير معروف؛ } |       |
 
 ### مبلينك
 
 **النوع:** مكون
 
 ```typescript
-function MpLink(properties: {
-  href?: string;
-  to?: MpRouteLocationRaw;
-  children?: unknown;
-  replace?: boolean;
-}): unknown
+function MpLink(properties: { href?: string; to?: MpRouteLocationRaw; children?: unknown; replace?: boolean }): unknown;
 ```
 
 وكيل مكون الربط Solid مرتبط عبر {@link setForgeSolidRouter}.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | { href ؟: سلسلة؛   إلى ؟: MpRouteLocationRaw;   أطفال؟: غير معروف؛   استبدال؟: منطقي؛ } |  |
+| الاسم | اكتب                                                                              | الوصف |
+| ----- | --------------------------------------------------------------------------------- | ----- |
+| خصائص | { href ؟: سلسلة؛ إلى ؟: MpRouteLocationRaw; أطفال؟: غير معروف؛ استبدال؟: منطقي؛ } |       |
 
 ### MpRouterView
 
 **النوع:** مكون
 
 ```typescript
-function MpRouterView(): unknown
+function MpRouterView(): unknown;
 ```
 
 وكيل منفذ Solid مرتبط عبر {@link setForgeSolidRouter}.
@@ -68,23 +63,23 @@ function MpRouterView(): unknown
 **النوع:** الوظيفة
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 حل هدف محايد إلى سلسلة href.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### setForgeSolidRouter
 
 **النوع:** الوظيفة
 
 ```typescript
-function setForgeSolidRouter(surface: SolidRouterSurface): void
+function setForgeSolidRouter(surface: SolidRouterSurface): void;
 ```
 
 قم بربط وحدة التوجيه Solid المملوكة للتطبيق بحيث تحافظ الحزم المجمعة على الحياد
@@ -92,9 +87,9 @@ function setForgeSolidRouter(surface: SolidRouterSurface): void
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| سطح | سوليد راوترسورفيس |  |
+| الاسم | اكتب              | الوصف |
+| ----- | ----------------- | ----- |
+| سطح   | سوليد راوترسورفيس |       |
 
 ### SolidRouterSurface
 
@@ -111,40 +106,43 @@ export interface SolidRouterSurface
 **النوع:** الوظيفة
 
 ```typescript
-function toMpLocationFromSolid(location: { pathname: string; search: string; hash: string }, params: Record<string, string | undefined> = {}): MpResolvedLocation
+function toMpLocationFromSolid(
+  location: { pathname: string; search: string; hash: string },
+  params: Record<string, string | undefined> = {},
+): MpResolvedLocation;
 ```
 
 أنشئ موقعًا محايدًا من لقطات موقع/معلمات جهاز التوجيه Solid.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| الموقع | {اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة } |  |
-| المعلمات | سجل<string, string \| undefined> |  |
+| الاسم    | اكتب                                               | الوصف |
+| -------- | -------------------------------------------------- | ----- |
+| الموقع   | {اسم المسار: سلسلة؛ البحث: سلسلة؛ التجزئة: سلسلة } |       |
+| المعلمات | سجل<string, string \| undefined>                   |       |
 
 ### إلىSolidHref
 
 **النوع:** الوظيفة
 
 ```typescript
-function toSolidHref(to: MpRouteLocationRaw): string
+function toSolidHref(to: MpRouteLocationRaw): string;
 ```
 
 قم بإجراء تسلسل لهدف محايد للتنقل عبر جهاز التوجيه Solid.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| إلى | مبرووتلوكيشن راو |  |
+| الاسم | اكتب             | الوصف |
+| ----- | ---------------- | ----- |
+| إلى   | مبرووتلوكيشن راو |       |
 
 ### useMpNavigation
 
 **النوع:** الوظيفة
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 اقرأ فقط إمكانيات التنقل/الحل الضرورية.
@@ -154,7 +152,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRoute(): MpResolvedLocation | null
+function useMpRoute(): MpResolvedLocation | null;
 ```
 
 اقرأ المسار الحالي المملوك للتطبيق باسم {@link MpResolvedLocation}.
@@ -164,7 +162,7 @@ function useMpRoute(): MpResolvedLocation | null
 **النوع:** الوظيفة
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 اقرأ كائن القدرة المحايدة المدعوم بجهاز التوجيه Solid.
@@ -176,7 +174,7 @@ function useMpRouter(): MpRouterCapabilities
 **النوع:** ثابت
 
 ```typescript
-export const forgeRouterSolid
+export const forgeRouterSolid;
 ```
 
 صياغة هدف جهاز التوجيه لمثيل جهاز SolidJS Router المملوك للتطبيق.

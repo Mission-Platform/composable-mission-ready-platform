@@ -1,6 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import { unsupportedRouterCapabilities } from '@mission-platform/forge-router-plugin-api';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   createRedwoodRouterCapabilities,
@@ -9,6 +8,7 @@ import {
   useMpRoute,
   useMpRouter,
 } from '../runtime';
+
 import { forgeRouterRedwood } from './forge-router-redwood';
 
 import type { RouterCapabilityModule } from '@mission-platform/forge-router-plugin-api';
@@ -74,13 +74,15 @@ describe('forgeRouterRedwood', () => {
   });
 
   it('preserves route/navigation shapes through the bound Redwood surface', async () => {
-    const navigate = vi.fn(async () => undefined);
+    const navigate = vi.fn(async () => {});
     setForgeRedwoodRouter({
       Link: (properties: { to: string }) => properties.to,
       navigate,
       useLocation: () => ({ pathname: '/posts/1', search: '?tab=edit', hash: '#body' }),
       routes: {
-        post: ((parameters?: { id?: string }) => `/posts/${parameters?.id ?? ''}`) as (...args: never[]) => string,
+        post: ((parameters?: { id?: string }) => `/posts/${parameters?.id ?? ''}`) as (
+          ...arguments_: never[]
+        ) => string,
       },
     });
 

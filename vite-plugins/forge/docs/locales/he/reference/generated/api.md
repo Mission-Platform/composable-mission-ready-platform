@@ -16,18 +16,22 @@
 פונקציה **סוג:**
 
 ```typescript
-function createForgeArtifactManifest(targetId: string, artifacts: readonly ForgeArtifactRecord[], complete = true): ForgeArtifactManifest
+function createForgeArtifactManifest(
+  targetId: string,
+  artifacts: readonly ForgeArtifactRecord[],
+  complete = true,
+): ForgeArtifactManifest;
 ```
 
 בנה מניפסט יציב מבלי להכניס חותמות זמן לפלט שנוצר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| targetId | מחרוזת |  |
-| חפצים | לקריאה בלבד ForgeArtifactRecord[] |  |
-| להשלים |  |  |
+| שם       | הקלד                              | תיאור |
+| -------- | --------------------------------- | ----- |
+| targetId | מחרוזת                            |       |
+| חפצים    | לקריאה בלבד ForgeArtifactRecord[] |       |
+| להשלים   |                                   |       |
 
 ### ForgeArtifactKind
 
@@ -66,17 +70,17 @@ export interface ForgeArtifactRecord
 פונקציה **סוג:**
 
 ```typescript
-function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter
+function createForgeArtifactWriter(outDir: string, targetId: string): ForgeArtifactWriter;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| outDir | מחרוזת |  |
-| targetId | מחרוזת |  |
+| שם       | הקלד   | תיאור |
+| -------- | ------ | ----- |
+| outDir   | מחרוזת |       |
+| targetId | מחרוזת |       |
 
 ### ForgeArtifactWriter
 
@@ -95,7 +99,7 @@ export interface ForgeArtifactWriter
 **סוג:** קבוע
 
 ```typescript
-export const CLASS_NAME_ATTRIBUTE
+export const CLASS_NAME_ATTRIBUTE;
 ```
 
 תכונת JSX הנייטרלית שמניעה את ניהול שמות המחלקה. כותבים כותבים
@@ -117,16 +121,16 @@ export const CLASS_NAME_ATTRIBUTE
 פונקציה **סוג:**
 
 ```typescript
-function collectSlotNames(sourceFile: ts.SourceFile): Set<string>
+function collectSlotNames(sourceFile: ts.SourceFile): Set<string>;
 ```
 
 אסוף כל שם חריץ סטטי המוצהר על ידי רכיבי `<Slot name="…" />` במודול.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
 
 ### רכיבייבוא
 
@@ -143,7 +147,7 @@ export interface ComponentImport
 **סוג:** קבוע
 
 ```typescript
-export const COMPONENTS_JSX_MODULES
+export const COMPONENTS_JSX_MODULES;
 ```
 
 חבילות סביבת העבודה **component-library** הכתובה פעם אחת: כמו
@@ -160,25 +164,35 @@ export const COMPONENTS_JSX_MODULES
 פונקציה **סוג:**
 
 ```typescript
-function createReactHasSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined): ts.Expression
+function createReactHasSlotExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+): ts.Expression;
 ```
 
 `<props>.<name> != null` — הנוכחות של React נקראת עבור `hasSlot('name')`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| propsParamName | מחרוזת |  |
-| שם | מחרוזת \| לא מוגדר |  |
+| שם             | הקלד               | תיאור |
+| -------------- | ------------------ | ----- |
+| מפעל           | ts.NodeFactory     |       |
+| propsParamName | מחרוזת             |       |
+| שם             | מחרוזת \| לא מוגדר |       |
 
 ### createReactSlotCallExpression
 
 פונקציה **סוג:**
 
 ```typescript
-function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
+function createReactSlotCallExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+  fallback: readonly ts.Expression[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `typeof <props>.<name> === 'function' ? <props>.<name>(scope) : <props>.<name>`
@@ -187,20 +201,26 @@ function createReactSlotCallExpression(factory: ts.NodeFactory, propsParamName: 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| propsParamName | מחרוזת |  |
-| שם | מחרוזת \| לא מוגדר |  |
-| חזרה | ts.Expression[] לקריאה בלבד |  |
-| היקף | ts.ביטוי |  |
+| שם             | הקלד                        | תיאור |
+| -------------- | --------------------------- | ----- |
+| מפעל           | ts.NodeFactory              |       |
+| propsParamName | מחרוזת                      |       |
+| שם             | מחרוזת \| לא מוגדר          |       |
+| חזרה           | ts.Expression[] לקריאה בלבד |       |
+| היקף           | ts.ביטוי                    |       |
 
 ### createReactSlotExpression
 
 פונקציה **סוג:**
 
 ```typescript
-function createReactSlotExpression(factory: ts.NodeFactory, propsParamName: string, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
+function createReactSlotExpression(
+  factory: ts.NodeFactory,
+  propsParamName: string,
+  name: string | undefined,
+  fallback: readonly ts.JsxChild[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `<props>.<name>` (עם `?? <fallback>` כאשר המשבצת מצהירה על fallback
@@ -210,20 +230,20 @@ function createReactSlotExpression(factory: ts.NodeFactory, propsParamName: stri
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| propsParamName | מחרוזת |  |
-| שם | מחרוזת \| לא מוגדר |  |
-| חזרה | לקריאה בלבד ts.JsxChild[] |  |
-| היקף | ts.ביטוי |  |
+| שם             | הקלד                      | תיאור |
+| -------------- | ------------------------- | ----- |
+| מפעל           | ts.NodeFactory            |       |
+| propsParamName | מחרוזת                    |       |
+| שם             | מחרוזת \| לא מוגדר        |       |
+| חזרה           | לקריאה בלבד ts.JsxChild[] |       |
+| היקף           | ts.ביטוי                  |       |
 
 ### createReferenceRewriter
 
 פונקציה **סוג:**
 
 ```typescript
-function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>
+function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
 ```
 
 בנה שנאי TS המשכתב הפניות בתוך גוף רכיב עבור
@@ -233,16 +253,16 @@ function createReferenceRewriter(scope: RewriteScope): ts.TransformerFactory<ts.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| היקף | RewriteScope |  |
+| שם   | הקלד         | תיאור |
+| ---- | ------------ | ----- |
+| היקף | RewriteScope |       |
 
 ### createStateSnapshotHoister
 
 פונקציה **סוג:**
 
 ```typescript
-function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>
+function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<ts.Node>;
 ```
 
 שמור על צמצום זרימת בקרה של TypeScript של ערכי `useState` / `useMemo`
@@ -258,7 +278,7 @@ function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<
 `a[sortKey.value]` / `draft.value.uid` נכשל בבדיקת הקלדה.
 
 עבור כל פונקציה בעלת גוף בלוק, המעבר הזה מצלם כל ערך כזה שנקרא
-*בתוך סגירה מקוננת* לתוך `const <name>$ = <name>.value;` מוביל, ו
+_בתוך סגירה מקוננת_ לתוך `const <name>$ = <name>.value;` מוביל, ו
 משכתב את הערך **קורא** (לא את יעדי הכתיבה `<name>.value = …`) בתוך
 הפונקציה לכינוי `const` הזה. תמונת המצב משחזרת את ה-`const` המקורי
 סמנטיקה - צמצום זורם שוב לסגירות המקוננות - בעוד ה-`.value`
@@ -266,33 +286,38 @@ function createStateSnapshotHoister(scope: RewriteScope): ts.TransformerFactory<
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| היקף | RewriteScope |  |
+| שם   | הקלד         | תיאור |
+| ---- | ------------ | ----- |
+| היקף | RewriteScope |       |
 
 ### createVueHasSlotExpression
 
 פונקציה **סוג:**
 
 ```typescript
-function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression
+function createVueHasSlotExpression(factory: ts.NodeFactory, name: string | undefined): ts.Expression;
 ```
 
 `slots.<name>` — נוכחות `useSlots()` של Vue נקראה עבור `hasSlot('name')` (`!!slots.x`).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| שם | מחרוזת \| לא מוגדר |  |
+| שם   | הקלד               | תיאור |
+| ---- | ------------------ | ----- |
+| מפעל | ts.NodeFactory     |       |
+| שם   | מחרוזת \| לא מוגדר |       |
 
 ### createVueSlotCallExpression
 
 פונקציה **סוג:**
 
 ```typescript
-function createVueSlotCallExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.Expression[], scope?: ts.Expression): ts.Expression
+function createVueSlotCallExpression(
+  factory: ts.NodeFactory,
+  name: string | undefined,
+  fallback: readonly ts.Expression[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `slots.<name>?.(scope) ?? <fallback>` - התרגום Vue של `h(Slot, …)`
@@ -301,19 +326,24 @@ function createVueSlotCallExpression(factory: ts.NodeFactory, name: string | und
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| שם | מחרוזת \| לא מוגדר |  |
-| חזרה | ts.Expression[] לקריאה בלבד |  |
-| היקף | ts.ביטוי |  |
+| שם   | הקלד                        | תיאור |
+| ---- | --------------------------- | ----- |
+| מפעל | ts.NodeFactory              |       |
+| שם   | מחרוזת \| לא מוגדר          |       |
+| חזרה | ts.Expression[] לקריאה בלבד |       |
+| היקף | ts.ביטוי                    |       |
 
 ### createVueSlotExpression
 
 פונקציה **סוג:**
 
 ```typescript
-function createVueSlotExpression(factory: ts.NodeFactory, name: string | undefined, fallback: readonly ts.JsxChild[], scope?: ts.Expression): ts.Expression
+function createVueSlotExpression(
+  factory: ts.NodeFactory,
+  name: string | undefined,
+  fallback: readonly ts.JsxChild[],
+  scope?: ts.Expression,
+): ts.Expression;
 ```
 
 `slots.<name>?.(scope)` (עם `?? <fallback>` כאשר המשבצת מצהירה על fallback
@@ -322,12 +352,12 @@ Vue שיחת משבצת **בהיקף**.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| שם | מחרוזת \| לא מוגדר |  |
-| חזרה | לקריאה בלבד ts.JsxChild[] |  |
-| היקף | ts.ביטוי |  |
+| שם   | הקלד                      | תיאור |
+| ---- | ------------------------- | ----- |
+| מפעל | ts.NodeFactory            |       |
+| שם   | מחרוזת \| לא מוגדר        |       |
+| חזרה | לקריאה בלבד ts.JsxChild[] |       |
+| היקף | ts.ביטוי                  |       |
 
 ### נכס מפורק
 
@@ -344,7 +374,13 @@ export interface DestructuredProperty
 פונקציה **סוג:**
 
 ```typescript
-function dynamicToHCall(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visitExpression: (expression: ts.Expression) => ts.Expression, aliasAttribute: (name: string) => string = (name) => name, variadicChildren = false): ts.CallExpression
+function dynamicToHCall(
+  factory: ts.NodeFactory,
+  node: ts.JsxSelfClosingElement | ts.JsxElement,
+  visitExpression: (expression: ts.Expression) => ts.Expression,
+  aliasAttribute: (name: string) => string = (name) => name,
+  variadicChildren = false,
+): ts.CallExpression;
 ```
 
 כתוב מחדש אלמנט `<Dynamic is={X} a={…} …>children</Dynamic>` ל- an
@@ -359,37 +395,37 @@ function dynamicToHCall(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
-| visitExpression | (ביטוי: ts.Expression) => ts.Expression |  |
-| aliasAttribute | (שם: מחרוזת) => מחרוזת |  |
-| variadicChildren |  |  |
+| שם               | הקלד                                      | תיאור |
+| ---------------- | ----------------------------------------- | ----- |
+| מפעל             | ts.NodeFactory                            |       |
+| node             | ts.JsxSelfClosingElement \| ts.JsxElement |       |
+| visitExpression  | (ביטוי: ts.Expression) => ts.Expression   |       |
+| aliasAttribute   | (שם: מחרוזת) => מחרוזת                    |       |
+| variadicChildren |                                           |       |
 
 ### sureI18nHookInComponent
 
 פונקציה **סוג:**
 
 ```typescript
-function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile
+function ensureI18nHookInComponent(factory: ts.NodeFactory, sourceFile: ts.SourceFile): ts.SourceFile;
 ```
 
 ודא שלפונקציות רכיבים הקוראות `i18next.t(...)` יש הצהרה `const { t } = useI18n();` ברמה העליונה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| sourceFile | ts.SourceFile |  |
+| שם         | הקלד           | תיאור |
+| ---------- | -------------- | ----- |
+| מפעל       | ts.NodeFactory |       |
+| sourceFile | ts.SourceFile  |       |
 
 ### eventNameForProperty
 
 פונקציה **סוג:**
 
 ```typescript
-function eventNameForProperty(propName: string): string
+function eventNameForProperty(propName: string): string;
 ```
 
 גזר את שם האירוע Vue עבור אבזר `on<Event>`: הסר את הקידומת `on` ו
@@ -398,9 +434,9 @@ function eventNameForProperty(propName: string): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| propName | מחרוזת |  |
+| שם       | הקלד   | תיאור |
+| -------- | ------ | ----- |
+| propName | מחרוזת |       |
 
 ### חתימת אירוע
 
@@ -420,7 +456,7 @@ export interface EventSignature
 פונקציה **סוג:**
 
 ```typescript
-function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[]
+function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string): EventSignature[];
 ```
 
 חלץ את חתימות **האירוע** (שלכם) שהוכרזו על ידי ממשק אביזרים - חברים
@@ -432,17 +468,17 @@ function extractEventSignatures(sourceFile: ts.SourceFile, interfaceName: string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| שם ממשק | מחרוזת |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
+| שם ממשק    | מחרוזת        |       |
 
 ### extractModelSignatures
 
 פונקציה **סוג:**
 
 ```typescript
-function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[]
+function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string): ModelSignature[];
 ```
 
 חלץ את חברי ממשק האביזרים המסומנים `@model <onEvent>` - אביזר ושלו
@@ -452,34 +488,34 @@ function extractModelSignatures(sourceFile: ts.SourceFile, interfaceName: string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| שם ממשק | מחרוזת |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
+| שם ממשק    | מחרוזת        |       |
 
 ### extractPropertyNames
 
 פונקציה **סוג:**
 
 ```typescript
-function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[]
+function extractPropertyNames(sourceFile: ts.SourceFile, interfaceName: string): string[];
 ```
 
 חלץ את שמות המאפיינים (של עצמו) שהוכרזו על ידי ממשק אביזרים, למעט `children`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| שם ממשק | מחרוזת |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
+| שם ממשק    | מחרוזת        |       |
 
 ### extractPropertySignatures
 
 פונקציה **סוג:**
 
 ```typescript
-function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[]
+function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: string): PropertySignature[];
 ```
 
 חלץ את חתימות הנכס (של עצמו) המוצהרות על ידי ממשק אביזרים, למעט
@@ -491,27 +527,27 @@ function extractPropertySignatures(sourceFile: ts.SourceFile, interfaceName: str
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| שם ממשק | מחרוזת |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
+| שם ממשק    | מחרוזת        |       |
 
 ### findComponentFunction
 
 פונקציה **סוג:**
 
 ```typescript
-function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined
+function findComponentFunction(sourceFile: ts.SourceFile, name: string): ts.FunctionDeclaration | undefined;
 ```
 
 מצא את הצהרת הפונקציה המיוצאת עבור רכיב ניטרלי לפי שם.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| שם | מחרוזת |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
+| שם         | מחרוזת        |       |
 
 ### ForgeExportFact
 
@@ -558,23 +594,23 @@ export interface ForgeSourceSpan
 פונקציה **סוג:**
 
 ```typescript
-function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean
+function hasSlottedChildren(children: readonly ts.JsxChild[]): boolean;
 ```
 
 האם מישהו מילדי הורים נושא סמן `slot="…"`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ילדים | לקריאה בלבד ts.JsxChild[] |  |
+| שם    | הקלד                      | תיאור |
+| ----- | ------------------------- | ----- |
+| ילדים | לקריאה בלבד ts.JsxChild[] |       |
 
 ### ICONS_JSX_MODULE
 
 **סוג:** קבוע
 
 ```typescript
-export const ICONS_JSX_MODULE
+export const ICONS_JSX_MODULE;
 ```
 
 המפרט החשוף של ספריית הסמלים של כתוב פעם אחת `@mission-platform/icons`.
@@ -582,7 +618,7 @@ export const ICONS_JSX_MODULE
 מקורות פר-מסגרת שומרים על המפרט המדויק הזה: כל פיצול מסגרת
 חבילת `@mission-platform/*` מכריזה על `mp:vue` / `mp:react` / `mp:solid` /
 תנאי ייצוא מותאמים אישית של `mp:web-component` על הערך החשוף של `.`, כך שה
-*של הצרכן* `resolve.conditions` (וההתאמה
+_של הצרכן_ `resolve.conditions` (וההתאמה
 `customConditions` tsconfig מוגדר מראש) בחר את המבנה הנכון. אין
 נתיב משנה לכל מסגרת למיפוי מחדש.
 
@@ -591,24 +627,24 @@ export const ICONS_JSX_MODULE
 פונקציה **סוג:**
 
 ```typescript
-function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts
+function inspectForgeModule(fileName: string, source: string): ForgeModuleFacts;
 ```
 
 חלץ יבוא סטטי, ייצוא, קצוות מסוגים בלבד ועובדות מסגרת ממודול מנתח.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| מקור | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
 
 ### isComponentTagName
 
 פונקציה **סוג:**
 
 ```typescript
-function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean
+function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean;
 ```
 
 האם שם תג JSX מתייחס ל-**רכיב** (מזהה באותיות רישיות כגון
@@ -620,16 +656,16 @@ function isComponentTagName(tagName: ts.JsxTagNameExpression): boolean
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם תג | ts.JsxTagNameExpression |  |
+| שם    | הקלד                    | תיאור |
+| ----- | ----------------------- | ----- |
+| שם תג | ts.JsxTagNameExpression |       |
 
 ### isDynamicElement
 
 פונקציה **סוג:**
 
 ```typescript
-function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 האם node הוא רכיב דינמי ניטרלי - `<Dynamic is={…} />`
@@ -637,16 +673,16 @@ function isDynamicElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | ts.Node |  |
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | ts.Node |       |
 
 ### isFragmentElement
 
 פונקציה **סוג:**
 
 ```typescript
-function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 בין אם node הוא אלמנט `<Fragment>` ניטרלי - או הסגירה העצמית
@@ -654,16 +690,16 @@ function isFragmentElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | ts.Node |  |
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | ts.Node |       |
 
 ### isHasSlotCall
 
 פונקציה **סוג:**
 
 ```typescript
-function isHasSlotCall(node: ts.Node): node is ts.CallExpression
+function isHasSlotCall(node: ts.Node): node is ts.CallExpression;
 ```
 
 אם node היא שיחת `hasSlot('name')` / `hasSlot()` - הנייטרלי
@@ -672,16 +708,16 @@ function isHasSlotCall(node: ts.Node): node is ts.CallExpression
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | ts.Node |  |
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | ts.Node |       |
 
 ### isSlotElement
 
 פונקציה **סוג:**
 
 ```typescript
-function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement
+function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.JsxElement;
 ```
 
 בין אם node הוא אלמנט נייטרלי בשם-חריץ - `<Slot … />` או
@@ -689,16 +725,16 @@ function isSlotElement(node: ts.Node): node is ts.JsxSelfClosingElement | ts.Jsx
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | ts.Node |  |
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | ts.Node |       |
 
 ### isSlotHCall
 
 פונקציה **סוג:**
 
 ```typescript
-function isSlotHCall(node: ts.Node): node is ts.CallExpression
+function isSlotHCall(node: ts.Node): node is ts.CallExpression;
 ```
 
 אם node הוא **טופס הקריאה** של סמן המשבצת בשם - `h(Slot, …)` -
@@ -709,16 +745,16 @@ function isSlotHCall(node: ts.Node): node is ts.CallExpression
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | ts.Node |  |
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | ts.Node |       |
 
 ### JSX_ATTRIBUTE_RENAMES
 
 **סוג:** קבוע
 
 ```typescript
-export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
+export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>;
 ```
 
 מאפייני JSX מקוריים שיש להנמיך את האיות של camelCase הפונה למחבר
@@ -731,7 +767,7 @@ export const JSX_ATTRIBUTE_RENAMES: ReadonlyMap<string, string>
 **סוג:** קבוע
 
 ```typescript
-export const LOCAL_EFFECT_FILE
+export const LOCAL_EFFECT_FILE;
 ```
 
 שם הקובץ (עם סיומת) מודול עוזר האפקט המקומי כתוב כמו בעץ שנוצר בשטוח.
@@ -741,7 +777,7 @@ export const LOCAL_EFFECT_FILE
 **סוג:** קבוע
 
 ```typescript
-export const LOCAL_EFFECT_MODULE
+export const LOCAL_EFFECT_MODULE;
 ```
 
 המפרט היחסי שתחתיו מיובא Vue {@link LOCAL_EFFECT_MODULE}.
@@ -751,7 +787,7 @@ export const LOCAL_EFFECT_MODULE
 **סוג:** קבוע
 
 ```typescript
-export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 יבוא **סוג** ניטרלי שאין לו מקבילה יחידה למסגרת ממדרגה ראשונה
@@ -773,7 +809,7 @@ render-prop **סוג** ייבוא בכלל.
 **סוג:** קבוע
 
 ```typescript
-export const LOCAL_JSX_TYPES_FILE
+export const LOCAL_JSX_TYPES_FILE;
 ```
 
 שם הקובץ (עם סיומת) מודול סוגי ה-JSX המקומי נכתב כמו בעץ השטוח שנוצר.
@@ -783,7 +819,7 @@ export const LOCAL_JSX_TYPES_FILE
 **סוג:** קבוע
 
 ```typescript
-export const LOCAL_JSX_TYPES_MODULE
+export const LOCAL_JSX_TYPES_MODULE;
 ```
 
 המפרט היחסי שתחתיו מיובא לכל מסגרת {@link LOCAL_JSX_TYPES_MODULE}.
@@ -793,7 +829,7 @@ export const LOCAL_JSX_TYPES_MODULE
 פונקציה **סוג:**
 
 ```typescript
-function localEffectModuleSource(framework: JsxFramework): string
+function localEffectModuleSource(framework: JsxFramework): string;
 ```
 
 המקור של ה-{@link LOCAL_EFFECT_MODULE} המשותף למטרה
@@ -815,16 +851,16 @@ framework, שנוצר פעם אחת לכל עץ פלט בדיוק כמו סוג�
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסגרת | JsxFramework |  |
+| שם    | הקלד         | תיאור |
+| ----- | ------------ | ----- |
+| מסגרת | JsxFramework |       |
 
 ### localJsxTypesModuleSource
 
 פונקציה **סוג:**
 
 ```typescript
-function localJsxTypesModuleSource(framework: JsxFramework): string
+function localJsxTypesModuleSource(framework: JsxFramework): string;
 ```
 
 המקור של ה-{@link LOCAL_JSX_TYPES_MODULE} המשותף למטרה
@@ -841,9 +877,9 @@ function localJsxTypesModuleSource(framework: JsxFramework): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסגרת | JsxFramework |  |
+| שם    | הקלד         | תיאור |
+| ----- | ------------ | ----- |
+| מסגרת | JsxFramework |       |
 
 ### דגם חתימה
 
@@ -864,7 +900,7 @@ prop והערך `defineEmits`) - קריאה של האביזר הופכת ל-`<lo
 פונקציה **סוג:**
 
 ```typescript
-function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean
+function moduleTargetsFramework(fileName: string, source: string, framework: string): boolean;
 ```
 
 האם יש לפלוט מודול עבור `framework`. מודול ניטרלי במסגרת
@@ -873,18 +909,18 @@ function moduleTargetsFramework(fileName: string, source: string, framework: str
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| מקור | מחרוזת |  |
-| מסגרת | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
+| מסגרת   | מחרוזת |       |
 
 ### NEUTRAL_COMPILE_TIME_MARKERS
 
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
+export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>;
 ```
 
 יבוא **ערך** ניטרלי שהם סמנים טהורים של זמן הידור - הם קיימים בלבד
@@ -902,10 +938,10 @@ export const NEUTRAL_COMPILE_TIME_MARKERS: ReadonlySet<string>
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>
+export const NEUTRAL_CONTEXT_VALUES: ReadonlySet<string>;
 ```
 
-ייבוא ​​**ערך** ניטרלי שהם פרימיטיביות ההקשר. ב-React הם *הם*
+ייבוא ​​**ערך** ניטרלי שהם פרימיטיביות ההקשר. ב-React הם _הם_
 React משלו (`createContext`/`useContext`), כך שהם נופלים ל-
 `react` ייבוא ערך; ב-Vue היבוא שלהם מותאם מחדש ל-
 מתאם `@mission-platform/forge/vue` (מגובה `provide`/`inject`
@@ -916,7 +952,7 @@ React משלו (`createContext`/`useContext`), כך שהם נופלים ל-
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>
+export const NEUTRAL_FRAMEWORK_COMPONENTS: ReadonlySet<string>;
 ```
 
 ייבוא **ערך** ניטרלי שהם **רכיבים** אמיתיים לכל מסגרת
@@ -938,7 +974,7 @@ enter/leave/move פרימיטיבי) מותאם מחדש באותו אופן (ה
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_MODULE
+export const NEUTRAL_MODULE;
 ```
 
 החבילה הנייטרלית שממנה הרכיבים מייבאים את הפרימיטיבים שלהם.
@@ -948,7 +984,7 @@ export const NEUTRAL_MODULE
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
+export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>;
 ```
 
 ייבוא **ערך** ניטרלי שהם כלי עזר לזמן ריצה אגנוסטיים למסגרת - הם
@@ -961,7 +997,7 @@ export const NEUTRAL_RUNTIME_VALUES: ReadonlySet<string>
 **סוג:** קבוע
 
 ```typescript
-export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>
+export const NEUTRAL_VUE_RUNTIME_HOOKS: ReadonlySet<string>;
 ```
 
 ווים **ערך** ניטרליים שיש להם מקביל יליד בעל שם זהה
@@ -986,7 +1022,7 @@ export interface NeutralImports
 פונקציה **סוג:**
 
 ```typescript
-function parseTsx(fileName: string, source: string): ts.SourceFile
+function parseTsx(fileName: string, source: string): ts.SourceFile;
 ```
 
 נתח מחרוזת מקור `.tsx` לתוך גשר TypeScript SourceFile המשמש את
@@ -995,10 +1031,10 @@ function parseTsx(fileName: string, source: string): ts.SourceFile
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| מקור | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
 
 ### חריצים מחולקים
 
@@ -1015,49 +1051,49 @@ export interface PartitionedSlots
 פונקציה **סוג:**
 
 ```typescript
-function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots
+function partitionSlottedChildren(children: readonly ts.JsxChild[]): PartitionedSlots;
 ```
 
 חלק את הילדים של רכיב רכיב לקבוצות עם שמות חריצים + ילדי ברירת המחדל.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ילדים | לקריאה בלבד ts.JsxChild[] |  |
+| שם    | הקלד                      | תיאור |
+| ----- | ------------------------- | ----- |
+| ילדים | לקריאה בלבד ts.JsxChild[] |       |
 
 ### printNode
 
 פונקציה **סוג:**
 
 ```typescript
-function printNode(node: ts.Node, sourceFile: ts.SourceFile): string
+function printNode(node: ts.Node, sourceFile: ts.SourceFile): string;
 ```
 
 הדפס node יחיד בחזרה לטקסט המקור, מעוגן לקובץ המקור שלו.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | ts.Node |  |
-| sourceFile | ts.SourceFile |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| node       | ts.Node       |       |
+| sourceFile | ts.SourceFile |       |
 
 ### printSourceFile
 
 פונקציה **סוג:**
 
 ```typescript
-function printSourceFile(sourceFile: ts.SourceFile): string
+function printSourceFile(sourceFile: ts.SourceFile): string;
 ```
 
 הדפס קובץ מקור שלם (ייתכן שהשתנה) בחזרה לטקסט המקור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
 
 ### PropertySignature
 
@@ -1074,7 +1110,7 @@ export interface PropertySignature
 **סוג:** קבוע
 
 ```typescript
-export const REACT_ADAPTER_MODULE
+export const REACT_ADAPTER_MODULE;
 ```
 
 נתיב המשנה `@mission-platform/forge/react` שממנו מיובאים רכיבי המסגרת React.
@@ -1084,7 +1120,7 @@ export const REACT_ADAPTER_MODULE
 **סוג:** קבוע
 
 ```typescript
-export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
+export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>;
 ```
 
 יבוא **סוג** ניטרלי שיש לו מקבילה React ממדרגה ראשונה נשלח על ידי
@@ -1111,12 +1147,12 @@ export const REACT_TYPE_ALIASES: Readonly<Record<string, string>>
 פונקציה **סוג:**
 
 ```typescript
-function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression
+function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.Expression;
 ```
 
 כווץ ערך תכונה `className={…}` לתוך **React** `className`
 ערך. `className` של React מקבל רק מחרוזת, אז המערך המותנה/
-יש לצמצם את צורות האובייקט *לפני* שהם מגיעים לאלמנט. מערך **
+יש לצמצם את צורות האובייקט _לפני_ שהם מגיעים לאלמנט. מערך **
 מילולי** (הצורה הקנונית - `className={['base', { active }]}`) הוא
 התפשט לתוך שיחת זמן ריצה `classNames(…)` (`classNames('base', { active })`),
 התאמת חתימת העוזר הווריאדי; כל ביטוי אחר הוא כבר א
@@ -1125,17 +1161,17 @@ function reactClassNameValue(factory: ts.NodeFactory, value: ts.Expression): ts.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| ערך | ts.ביטוי |  |
+| שם   | הקלד           | תיאור |
+| ---- | -------------- | ----- |
+| מפעל | ts.NodeFactory |       |
+| ערך  | ts.ביטוי       |       |
 
 ### readChildSlotName
 
 פונקציה **סוג:**
 
 ```typescript
-function readChildSlotName(child: ts.JsxChild): string | undefined
+function readChildSlotName(child: ts.JsxChild): string | undefined;
 ```
 
 קרא את הסמן הסטטי `slot="…"` של אלמנט JSX **ילד** - התכונה
@@ -1145,33 +1181,33 @@ name (מחרוזת לא ריקה מלבד `"default"`), או `undefined` כאש�
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ילד | ts.JsxChild |  |
+| שם  | הקלד        | תיאור |
+| --- | ----------- | ----- |
+| ילד | ts.JsxChild |       |
 
 ### readComponentImports
 
 פונקציה **סוג:**
 
 ```typescript
-function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[]
+function readComponentImports(sourceFile: ts.SourceFile, sourceRoot?: string): ComponentImport[];
 ```
 
 אסוף ייבוא ​​של ערך יחסי (רכיב אח-אחי) ממודול.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| sourceRoot | מחרוזת |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
+| sourceRoot | מחרוזת        |       |
 
 ### קראייבוא ​​חיצוני
 
 פונקציה **סוג:**
 
 ```typescript
-function readExternalImports(fileName: string, source: string): string[]
+function readExternalImports(fileName: string, source: string): string[];
 ```
 
 אסוף את היבוא **חיצוני** (חבילה חשופה) של מודול - כל
@@ -1192,17 +1228,17 @@ function readExternalImports(fileName: string, source: string): string[]
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| מקור | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
 
 ### readFrameworkDirective
 
 פונקציה **סוג:**
 
 ```typescript
-function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined
+function readFrameworkDirective(fileName: string, source: string): 'react' | 'vue' | undefined;
 ```
 
 קרא את הוראת `"use <framework>";` של מודול, אם יש.
@@ -1219,66 +1255,70 @@ function readFrameworkDirective(fileName: string, source: string): 'react' | 'vu
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| מקור | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
 
 ### readHasSlotName
 
 פונקציה **סוג:**
 
 ```typescript
-function readHasSlotName(call: ts.CallExpression): string | undefined
+function readHasSlotName(call: ts.CallExpression): string | undefined;
 ```
 
 קרא את שם המשבצת הסטטי של שיחת `hasSlot('name')` (`undefined` → חריץ ברירת המחדל).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| להתקשר | ts.CallExpression |  |
+| שם     | הקלד              | תיאור |
+| ------ | ----------------- | ----- |
+| להתקשר | ts.CallExpression |       |
 
 ### readNeutralImports
 
 פונקציה **סוג:**
 
 ```typescript
-function readNeutralImports(fileName: string, source: string): NeutralImports
+function readNeutralImports(fileName: string, source: string): NeutralImports;
 ```
 
 בדוק את כריכות `import … from '@mission-platform/forge'` של מודול.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| מקור | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
 
 ### readSlotHCallName
 
 פונקציה **סוג:**
 
 ```typescript
-function readSlotHCallName(call: ts.CallExpression): string | undefined
+function readSlotHCallName(call: ts.CallExpression): string | undefined;
 ```
 
 קרא את ה-`name` הסטטי משיחת `h(Slot, { name: 'x' }, …)` (`undefined` → חריץ ברירת המחדל).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| להתקשר | ts.CallExpression |  |
+| שם     | הקלד              | תיאור |
+| ------ | ----------------- | ----- |
+| להתקשר | ts.CallExpression |       |
 
 ### readSlotHCallScope
 
 פונקציה **סוג:**
 
 ```typescript
-function readSlotHCallScope(factory: ts.NodeFactory, call: ts.CallExpression, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
+function readSlotHCallScope(
+  factory: ts.NodeFactory,
+  call: ts.CallExpression,
+  visit: ts.Visitor,
+): ts.ObjectLiteralExpression | undefined;
 ```
 
 קרא את **היקף** (כל אביזר מלבד `name`) של `h(Slot, props, …)`
@@ -1289,58 +1329,63 @@ function readSlotHCallScope(factory: ts.NodeFactory, call: ts.CallExpression, vi
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| להתקשר | ts.CallExpression |  |
-| בקר | ts.מבקר |  |
+| שם     | הקלד              | תיאור |
+| ------ | ----------------- | ----- |
+| מפעל   | ts.NodeFactory    |       |
+| להתקשר | ts.CallExpression |       |
+| בקר    | ts.מבקר           |       |
 
 ### readSlotName
 
 פונקציה **סוג:**
 
 ```typescript
-function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined
+function readSlotName(node: ts.JsxSelfClosingElement | ts.JsxElement): string | undefined;
 ```
 
 קרא את ה-`name="…"` הסטטי של רכיב `<Slot>` (`undefined` → חריץ ברירת המחדל).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
+| שם   | הקלד                                      | תיאור |
+| ---- | ----------------------------------------- | ----- |
+| node | ts.JsxSelfClosingElement \| ts.JsxElement |       |
 
 ### readSlotScope
 
 פונקציה **סוג:**
 
 ```typescript
-function readSlotScope(factory: ts.NodeFactory, node: ts.JsxSelfClosingElement | ts.JsxElement, visit: ts.Visitor): ts.ObjectLiteralExpression | undefined
+function readSlotScope(
+  factory: ts.NodeFactory,
+  node: ts.JsxSelfClosingElement | ts.JsxElement,
+  visit: ts.Visitor,
+): ts.ObjectLiteralExpression | undefined;
 ```
 
 קרא את **ההיקף** של אלמנט `<Slot>` - כל תכונה מלבד `name`
+
 - לביטוי מילולי-אובייקט (`<Slot name="row" item={item} index={i}/>`
-→ `{ item: item, index: i }`), או `undefined` כאשר החריץ לא עובר שום טווח.
-ביטויי ערכי התכונה נכתבים מחדש עם ה-`visit` שסופק
-(לדוגמה, קריאה מפורקת או מצב נפתרת כהלכה ב-Vue
-יעד). זה מה שמאפשר לרכיב של כתיבה חד פעמית להניע **חריץ בהיקף**:
-המהדר פולט Vue `slots.x?.(scope)` ו-React `properties.x?.(scope)`.
+  → `{ item: item, index: i }`), או `undefined` כאשר החריץ לא עובר שום טווח.
+  ביטויי ערכי התכונה נכתבים מחדש עם ה-`visit` שסופק
+  (לדוגמה, קריאה מפורקת או מצב נפתרת כהלכה ב-Vue
+  יעד). זה מה שמאפשר לרכיב של כתיבה חד פעמית להניע **חריץ בהיקף**:
+  המהדר פולט Vue `slots.x?.(scope)` ו-React `properties.x?.(scope)`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
-| בקר | ts.מבקר |  |
+| שם   | הקלד                                      | תיאור |
+| ---- | ----------------------------------------- | ----- |
+| מפעל | ts.NodeFactory                            |       |
+| node | ts.JsxSelfClosingElement \| ts.JsxElement |       |
+| בקר  | ts.מבקר                                   |       |
 
 ### readStyleImports
 
 פונקציה **סוג:**
 
 ```typescript
-function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[]
+function readStyleImports(fileName: string, source: string, sourceRoot?: string): StyleImport[];
 ```
 
 אסוף את ייבוא גיליונות הסגנונות היחסיים של מודול (מודולי CSS ו-CSS חשוף
@@ -1350,18 +1395,22 @@ function readStyleImports(fileName: string, source: string, sourceRoot?: string)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| מקור | מחרוזת |  |
-| sourceRoot | מחרוזת |  |
+| שם         | הקלד   | תיאור |
+| ---------- | ------ | ----- |
+| שם קובץ    | מחרוזת |       |
+| מקור       | מחרוזת |       |
+| sourceRoot | מחרוזת |       |
 
 ### resolveWorkspaceLocalImport
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveWorkspaceLocalImport(specifier: string, sourceFileName: string, sourceRoot: string | undefined): string | undefined
+function resolveWorkspaceLocalImport(
+  specifier: string,
+  sourceFileName: string,
+  sourceRoot: string | undefined,
+): string | undefined;
 ```
 
 פתרון ייבוא `@/` מקומי של סביבת עבודה לנתיב ביחס למקור שבבעלותו
@@ -1370,11 +1419,11 @@ function resolveWorkspaceLocalImport(specifier: string, sourceFileName: string, 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפרט | מחרוזת |  |
-| sourceFileName | מחרוזת |  |
-| sourceRoot | מחרוזת \| לא מוגדר |  |
+| שם             | הקלד               | תיאור |
+| -------------- | ------------------ | ----- |
+| מפרט           | מחרוזת             |       |
+| sourceFileName | מחרוזת             |       |
+| sourceRoot     | מחרוזת \| לא מוגדר |       |
 
 ### RewriteScope
 
@@ -1392,56 +1441,56 @@ export interface RewriteScope
 פונקציה **סוג:**
 
 ```typescript
-function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile
+function rewriteWorkspaceLocalImports(sourceFile: ts.SourceFile, sourceRoot?: string): ts.SourceFile;
 ```
 
 שכתוב סביבת עבודה מקומית של ייבוא ​​`@/` לפני פליטה ספציפית למסגרת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| sourceRoot | מחרוזת |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
+| sourceRoot | מחרוזת        |       |
 
 ### slotFallbackChildren
 
 פונקציה **סוג:**
 
 ```typescript
-function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[]
+function slotFallbackChildren(node: ts.JsxSelfClosingElement | ts.JsxElement): ts.JsxChild[];
 ```
 
 הילדים החלופיים של `<Slot>…</Slot>` (ריק עבור חריץ סגירה עצמית).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | ts.JsxSelfClosingElement \| ts.JsxElement |  |
+| שם   | הקלד                                      | תיאור |
+| ---- | ----------------------------------------- | ----- |
+| node | ts.JsxSelfClosingElement \| ts.JsxElement |       |
 
 ### slotHCallFallback
 
 פונקציה **סוג:**
 
 ```typescript
-function slotHCallFallback(call: ts.CallExpression): ts.Expression[]
+function slotHCallFallback(call: ts.CallExpression): ts.Expression[];
 ```
 
 ילדי ה-fallback (ויכוחים אחרי האביזרים) של שיחת `h(Slot, props, …fallback)`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| להתקשר | ts.CallExpression |  |
+| שם     | הקלד              | תיאור |
+| ------ | ----------------- | ----- |
+| להתקשר | ts.CallExpression |       |
 
 ### stripFrameworkDirective
 
 פונקציה **סוג:**
 
 ```typescript
-function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile
+function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile;
 ```
 
 החזר את קובץ המקור עם כל הוראת `"use react"` / `"use vue"` מובילה
@@ -1450,26 +1499,26 @@ function stripFrameworkDirective(sourceFile: ts.SourceFile): ts.SourceFile
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
 
 ### stripSlotAttribute
 
 פונקציה **סוג:**
 
 ```typescript
-function stripSlotAttribute(factory: ts.NodeFactory, element: T): T
+function stripSlotAttribute(factory: ts.NodeFactory, element: T): T;
 ```
 
 עותק של אלמנט JSX / אלמנט סגירה עצמית עם תכונת הסמן `slot="…"` שלו הוסרה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| אלמנט | ט |  |
+| שם    | הקלד           | תיאור |
+| ----- | -------------- | ----- |
+| מפעל  | ts.NodeFactory |       |
+| אלמנט | ט              |       |
 
 ### StyleIport
 
@@ -1486,24 +1535,24 @@ export interface StyleImport
 פונקציה **סוג:**
 
 ```typescript
-function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node
+function transformI18nextCalls(factory: ts.NodeFactory, node: ts.Node): ts.Node;
 ```
 
 כתוב מחדש את ביטויי הקריאה `i18next.t(...)` ל-`t(...)`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | ts.NodeFactory |  |
-| node | ts.Node |  |
+| שם   | הקלד           | תיאור |
+| ---- | -------------- | ----- |
+| מפעל | ts.NodeFactory |       |
+| node | ts.Node        |       |
 
 ### משתמש ב-ClassNamesArrayAttribute
 
 פונקציה **סוג:**
 
 ```typescript
-function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
+function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean;
 ```
 
 האם המודול נושא תכונה `className={[…]}` שהערך שלה הוא an
@@ -1513,16 +1562,16 @@ function usesClassNamesArrayAttribute(sourceFile: ts.SourceFile): boolean
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
 
 ### משתמש בComponentSelfReference
 
 פונקציה **סוג:**
 
 ```typescript
-function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean
+function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: string): boolean;
 ```
 
 האם רכיב מתייחס ל**עצמו** כתג JSX (`<ForgeTreeView …>`
@@ -1532,49 +1581,49 @@ function usesComponentSelfReference(sourceFile: ts.SourceFile, componentName: st
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
-| שם רכיב | מחרוזת |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
+| שם רכיב    | מחרוזת        |       |
 
 ### משתמש בHFactoryCall
 
 פונקציה **סוג:**
 
 ```typescript
-function usesHFactoryCall(sourceFile: ts.SourceFile): boolean
+function usesHFactoryCall(sourceFile: ts.SourceFile): boolean;
 ```
 
 האם המודול מתייחס ל-`h` כביטוי קריאה (`h(...)` מפורש).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| sourceFile | ts.SourceFile |  |
+| שם         | הקלד          | תיאור |
+| ---------- | ------------- | ----- |
+| sourceFile | ts.SourceFile |       |
 
 ### usesI18nextT
 
 פונקציה **סוג:**
 
 ```typescript
-function usesI18nextT(node: OxcNode): boolean
+function usesI18nextT(node: OxcNode): boolean;
 ```
 
 בין אם מודול Oxc או node קורא `i18next.t(...)`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| node | OxcNode |  |
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| node | OxcNode |       |
 
 ### VUE_ADAPTER_MODULE
 
 **סוג:** קבוע
 
 ```typescript
-export const VUE_ADAPTER_MODULE
+export const VUE_ADAPTER_MODULE;
 ```
 
 נתיב המשנה `@mission-platform/forge/vue` שממנו מיובאים פרימיטיביות ההקשר Vue.
@@ -1584,7 +1633,7 @@ export const VUE_ADAPTER_MODULE
 **סוג:** קבוע
 
 ```typescript
-export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
+export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>;
 ```
 
 יבוא רכיבי המסגרת הנייטרלי Vue פותר ישר מזמן הריצה של `vue`.
@@ -1594,7 +1643,7 @@ export const VUE_BUILTIN_COMPONENTS: ReadonlySet<string>
 **סוג:** קבוע
 
 ```typescript
-export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
+export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>;
 ```
 
 סוג הרינדור/אביזרים הנייטרלי נותן שם ל-**Vue** ה-build מפנה מחדש אל
@@ -1615,7 +1664,7 @@ export const VUE_LOCAL_JSX_TYPE_NAMES: ReadonlySet<string>
 פונקציה **סוג:**
 
 ```typescript
-function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>
+function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 אירועי עדכון `v-model` של Vue נקראים `update:<model>`: ילד הידור
@@ -1637,7 +1686,7 @@ function vueComponentModelListenerTransformer(): ts.TransformerFactory<ts.Node>
 פונקציה **סוג:**
 
 ```typescript
-function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>
+function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 שנאי Vue המשכתב מחדש את הטופס **עובר** בעל השם - א
@@ -1656,7 +1705,7 @@ function vueJsxSlotTransformer(): ts.TransformerFactory<ts.Node>
 פונקציה **סוג:**
 
 ```typescript
-function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>
+function vueNativeEventTransformer(): ts.TransformerFactory<ts.Node>;
 ```
 
 שנאי Vue-מטרה שמתקן את המעטפת של DOM מרובה מילים בסגנון React
@@ -1676,7 +1725,7 @@ render-closure שנערך על ידי `@vitejs/plugin-vue-jsx` מחייב את �
 פונקציה **סוג:**
 
 ```typescript
-function createEmptyForgeCacheStats(): ForgeCacheStats
+function createEmptyForgeCacheStats(): ForgeCacheStats;
 ```
 
 לא סופק תיאור.
@@ -1686,7 +1735,7 @@ function createEmptyForgeCacheStats(): ForgeCacheStats
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>
+export const DEFAULT_FORGE_CACHE_LIMITS: Required<ForgeCacheLimits>;
 ```
 
 לא סופק תיאור.
@@ -1718,7 +1767,7 @@ export interface ForgeCacheStats
 פונקציה **סוג:**
 
 ```typescript
-function compileComponentModule(source: string, options: CompileOptions): CompiledModule
+function compileComponentModule(source: string, options: CompileOptions): CompiledModule;
 ```
 
 הרכיב מודול רכיב נייטרלי (או מוגבל למסגרת) אחד לכל מסגרת שלו
@@ -1731,10 +1780,10 @@ function compileComponentModule(source: string, options: CompileOptions): Compil
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| אפשרויות | CompileOptions |  |
+| שם       | הקלד           | תיאור |
+| -------- | -------------- | ----- |
+| מקור     | מחרוזת         |       |
+| אפשרויות | CompileOptions |       |
 
 ### CompiledModule
 
@@ -1751,19 +1800,19 @@ export interface CompiledModule
 פונקציה **סוג:**
 
 ```typescript
-function compileHookModule(source: string, options: CompileHookOptions): CompiledModule
+function compileHookModule(source: string, options: CompileHookOptions): CompiledModule;
 ```
 
 קומפלו **מודול הוק** ניטרלי אחד (ניתן לכתיבה פעם אחת שנכתב נגד
-ווים בסגנון React של `@mission-platform/forge`, *לא* רכיב ממשק משתמש)
+ווים בסגנון React של `@mission-platform/forge`, _לא_ רכיב ממשק משתמש)
 מקור לכל מסגרת (שלב 1).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| אפשרויות | CompileHookOptions |  |
+| שם       | הקלד               | תיאור |
+| -------- | ------------------ | ----- |
+| מקור     | מחרוזת             |       |
+| אפשרויות | CompileHookOptions |       |
 
 ### CompileHookOptions
 
@@ -1780,7 +1829,7 @@ export interface CompileHookOptions
 פונקציה **סוג:**
 
 ```typescript
-function compileModule(source: string, options: CompileModuleOptions): CompiledModule
+function compileModule(source: string, options: CompileModuleOptions): CompiledModule;
 ```
 
 הידור מודול ניטרלי אחד באמצעות תוסף פלט שסופק על ידי המתקשר.
@@ -1791,10 +1840,10 @@ function compileModule(source: string, options: CompileModuleOptions): CompiledM
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
-| אפשרויות | CompileModuleOptions |  |
+| שם       | הקלד                 | תיאור |
+| -------- | -------------------- | ----- |
+| מקור     | מחרוזת               |       |
+| אפשרויות | CompileModuleOptions |       |
 
 ### CompileModuleOptions
 
@@ -1823,7 +1872,7 @@ export interface CompileOptions
 פונקציה **סוג:**
 
 ```typescript
-function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[]
+function discoverComponents(barrelSource: string, stripPrefix = 'Forge'): DiscoveredComponent[];
 ```
 
 גלה את הרכיבים שחבית מייצאת וקבל את צורתם הציבורית. כל אחד
@@ -1833,27 +1882,27 @@ in (שם בסיס המודול של הייצוא מחדש).
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| barrelSource | מחרוזת |  |
-| stripPrefix |  |  |
+| שם           | הקלד   | תיאור |
+| ------------ | ------ | ----- |
+| barrelSource | מחרוזת |       |
+| stripPrefix  |        |       |
 
 ### DiscoverComponentsFromGraph
 
 פונקציה **סוג:**
 
 ```typescript
-function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[]
+function discoverComponentsFromGraph(graph: ForgeFileGraph, stripPrefix = 'Forge'): DiscoveredComponent[];
 ```
 
 פרויקט ייצוא של רכיבים ציבוריים מהגרף הקנוני תוך שמירה על צורת התוצאה מדור קודם.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| גרף | ForgeFileGraph |  |
-| stripPrefix |  |  |
+| שם          | הקלד           | תיאור |
+| ----------- | -------------- | ----- |
+| גרף         | ForgeFileGraph |       |
+| stripPrefix |                |       |
 
 ### DiscoveredComponent
 
@@ -1882,7 +1931,7 @@ export interface DiscoveredHelperExport
 פונקציה **סוג:**
 
 ```typescript
-function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
+function discoverHelperExports(barrelSource: string, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[];
 ```
 
 גלה את **מודולי העזר** שהחבית מייצאת מחדש - כל `ייצוא { … }
@@ -1894,27 +1943,30 @@ function discoverHelperExports(barrelSource: string, componentFolders: ReadonlyS
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| barrelSource | מחרוזת |  |
-| componentFolders | ReadonlySet<string> |  |
+| שם               | הקלד                | תיאור |
+| ---------------- | ------------------- | ----- |
+| barrelSource     | מחרוזת              |       |
+| componentFolders | ReadonlySet<string> |       |
 
 ### discoverHelperExportsFromGraph
 
 פונקציה **סוג:**
 
 ```typescript
-function discoverHelperExportsFromGraph(graph: ForgeFileGraph, componentFolders: ReadonlySet<string>): DiscoveredHelperExport[]
+function discoverHelperExportsFromGraph(
+  graph: ForgeFileGraph,
+  componentFolders: ReadonlySet<string>,
+): DiscoveredHelperExport[];
 ```
 
 פרויקט יצוא ציבורי שאינו מרכיב מהגרף הקנוני.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| גרף | ForgeFileGraph |  |
-| componentFolders | ReadonlySet<string> |  |
+| שם               | הקלד                | תיאור |
+| ---------------- | ------------------- | ----- |
+| גרף              | ForgeFileGraph      |       |
+| componentFolders | ReadonlySet<string> |       |
 
 ## `src/compiler/frontends`
 
@@ -1923,7 +1975,7 @@ function discoverHelperExportsFromGraph(graph: ForgeFileGraph, componentFolders:
 פונקציה **סוג:**
 
 ```typescript
-function parseForgeSource(fileName: string, source: string): OxcParsedModule
+function parseForgeSource(fileName: string, source: string): OxcParsedModule;
 ```
 
 נתח את המקור של Forge דרך Oxc למודול הניתן לסידרה הנייטרלי
@@ -1932,29 +1984,34 @@ function parseForgeSource(fileName: string, source: string): OxcParsedModule
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| מקור | מחרוזת |  |
+| שם      | הקלד   | תיאור |
+| ------- | ------ | ----- |
+| שם קובץ | מחרוזת |       |
+| מקור    | מחרוזת |       |
 
 ### parseFrontendModule
 
 פונקציה **סוג:**
 
 ```typescript
-function parseFrontendModule(fileName: string, source: string, moduleKind: 'component' | 'composable', componentName?: string): FrontendModule
+function parseFrontendModule(
+  fileName: string,
+  source: string,
+  moduleKind: 'component' | 'composable',
+  componentName?: string,
+): FrontendModule;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם קובץ | מחרוזת |  |
-| מקור | מחרוזת |  |
-| moduleKind | 'רכיב' \| 'ניתן להרכיב' |  |
-| שם רכיב | מחרוזת |  |
+| שם         | הקלד                    | תיאור |
+| ---------- | ----------------------- | ----- |
+| שם קובץ    | מחרוזת                  |       |
+| מקור       | מחרוזת                  |       |
+| moduleKind | 'רכיב' \| 'ניתן להרכיב' |       |
+| שם רכיב    | מחרוזת                  |       |
 
 ## `src/compiler/generation-context`
 
@@ -1963,16 +2020,16 @@ function parseFrontendModule(fileName: string, source: string, moduleKind: 'comp
 פונקציה **סוג:**
 
 ```typescript
-function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext
+function createForgeGenerationContext(options: ForgeGenerationContextOptions): ForgeGenerationContext;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeGenerationContextOptions |  |
+| שם       | הקלד                          | תיאור |
+| -------- | ----------------------------- | ----- |
+| אפשרויות | ForgeGenerationContextOptions |       |
 
 ### ForgeGenerationContext
 
@@ -2001,16 +2058,16 @@ export interface ForgeGenerationContextOptions
 פונקציה **סוג:**
 
 ```typescript
-function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph
+function buildForgeFileGraph(options: ForgeFileGraphOptions): ForgeFileGraph;
 ```
 
 בנה את גרף המקור הקנוני ממודול כניסה מוגדר אחד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | ForgeFileGraphOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| אפשרויות | ForgeFileGraphOptions |       |
 
 ### ForgeFileEdge
 
@@ -2047,7 +2104,8 @@ export interface ForgeFileGraphOptions
 **סוג:** סוג
 
 ```typescript
-export type ForgeFileKind = 'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
+export type ForgeFileKind =
+  'entry' | 'component' | 'composable' | 'code' | 'style' | 'folder' | 'asset' | 'declaration';
 ```
 
 לא סופק תיאור.
@@ -2077,7 +2135,13 @@ export interface ForgeGraphDiagnostic
 **סוג:** סוג
 
 ```typescript
-export type ForgeGraphDiagnosticCode = | 'missing-entry' | 'missing-file' | 'unsupported-extension' | 'ambiguous-export' | 'unsupported-authoring-form' | 'cycle';
+export type ForgeGraphDiagnosticCode =
+  | 'missing-entry'
+  | 'missing-file'
+  | 'unsupported-extension'
+  | 'ambiguous-export'
+  | 'unsupported-authoring-form'
+  | 'cycle';
 ```
 
 לא סופק תיאור.
@@ -2089,7 +2153,11 @@ export type ForgeGraphDiagnosticCode = | 'missing-entry' | 'missing-file' | 'uns
 פונקציה **סוג:**
 
 ```typescript
-function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'composable' = 'component', componentName?: string): GenericHoistResult
+function hoistStaticJsx(
+  module: OxcParsedModule,
+  moduleKind: 'component' | 'composable' = 'component',
+  componentName?: string,
+): GenericHoistResult;
 ```
 
 סימן סטטי ואז להניף את עץ העיבוד של מודול Oxc-מנותח, ולהחזיר את
@@ -2098,11 +2166,11 @@ function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'comp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | OxcParsedModule |  |
-| moduleKind | 'רכיב' \| 'ניתן להרכיב' |  |
-| שם רכיב | מחרוזת |  |
+| שם         | הקלד                    | תיאור |
+| ---------- | ----------------------- | ----- |
+| מודול      | OxcParsedModule         |       |
+| moduleKind | 'רכיב' \| 'ניתן להרכיב' |       |
+| שם רכיב    | מחרוזת                  |       |
 
 ## `src/compiler/optimize`
 
@@ -2111,7 +2179,7 @@ function hoistStaticJsx(module: OxcParsedModule, moduleKind: 'component' | 'comp
 פונקציה **סוג:**
 
 ```typescript
-function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule
+function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions = {}): OxcParsedModule;
 ```
 
 הפעל את מעברי האופטימיזציה של שלב 1 ברמת המקור (גיזום ענפים מתים ו
@@ -2123,17 +2191,17 @@ function optimizeForgeModule(module: OxcParsedModule, options: OptimizeOptions =
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מודול | OxcParsedModule |  |
-| אפשרויות | אופטימיזציה אפשרויות |  |
+| שם       | הקלד                 | תיאור |
+| -------- | -------------------- | ----- |
+| מודול    | OxcParsedModule      |       |
+| אפשרויות | אופטימיזציה אפשרויות |       |
 
 ### optimizeSourceFile
 
 **סוג:** קבוע
 
 ```typescript
-export const optimizeSourceFile
+export const optimizeSourceFile;
 ```
 
 כינוי תאימות נשמר עבור אינטגרציות מהדר באמצעות השם הישן.
@@ -2145,7 +2213,10 @@ export const optimizeSourceFile
 פונקציה **סוג:**
 
 ```typescript
-function analyzeForgeModule(input: CompilerInput, service: ForgeCompilerService = defaultCompilerService): SemanticModule
+function analyzeForgeModule(
+  input: CompilerInput,
+  service: ForgeCompilerService = defaultCompilerService,
+): SemanticModule;
 ```
 
 נתח, נרמל והסיק את המודול הסמנטי נייטרלי היעד.
@@ -2157,10 +2228,10 @@ function analyzeForgeModule(input: CompilerInput, service: ForgeCompilerService 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | קלט מהדר |  |
-| שירות | ForgeCompilerService |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| קלט   | קלט מהדר             |       |
+| שירות | ForgeCompilerService |       |
 
 ### קלט מהדר
 
@@ -2187,16 +2258,16 @@ export interface CompilerPipeline
 פונקציה **סוג:**
 
 ```typescript
-function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline
+function createCompilerPipeline(service: ForgeCompilerService = createForgeCompilerService()): CompilerPipeline;
 ```
 
 צור את משדר השלב המשמש את נקודות הכניסה של המהדר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שירות | ForgeCompilerService |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| שירות | ForgeCompilerService |       |
 
 ## `src/compiler/report`
 
@@ -2217,39 +2288,41 @@ export interface ForgeCompilationReport
 פונקציה **סוג:**
 
 ```typescript
-function analyzeRouterCapabilities(input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>): RouterCapabilityModule
+function analyzeRouterCapabilities(
+  input: Pick<RouterCompilerInput, 'source' | 'fileName' | 'moduleKind'>,
+): RouterCapabilityModule;
 ```
 
 נתח יבוא ושימושים ניטרליים של נתב מבלי לייבא שום נתב מקורי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |  |
+| שם  | הקלד                                                              | תיאור |
+| --- | ----------------------------------------------------------------- | ----- |
+| קלט | Pick<RouterCompilerInput, 'source' \| 'fileName' \| 'moduleKind'> |       |
 
 ### compileRouterModule
 
 פונקציה **סוג:**
 
 ```typescript
-function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult
+function compileRouterModule(input: RouterCompilerInput): RouterCompilationResult;
 ```
 
 הידור שימוש נייטרלי בנתב באמצעות מתאם יעד מקורי נבחר.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| קלט | RouterCompilerInput |  |
+| שם  | הקלד                | תיאור |
+| --- | ------------------- | ----- |
+| קלט | RouterCompilerInput |       |
 
 ### createRouterCompilerPipeline
 
 פונקציה **סוג:**
 
 ```typescript
-function createRouterCompilerPipeline()
+function createRouterCompilerPipeline();
 ```
 
 טופס ה-Dispatcher בשימוש על ידי המהדר Forge ועל ידי גופי יעד עצמאיים.
@@ -2271,16 +2344,16 @@ export interface CompiledArtifact
 פונקציה **סוג:**
 
 ```typescript
-function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService
+function createForgeCompilerService(limits: ForgeCacheLimits = {}): ForgeCompilerService;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| גבולות | ForgeCacheLimits |  |
+| שם     | הקלד             | תיאור |
+| ------ | ---------------- | ----- |
+| גבולות | ForgeCacheLimits |       |
 
 ### ForgeCompileRequest
 
@@ -2349,7 +2422,7 @@ export class PersistentForgeCompilerService implements ForgeCompilerService
 פונקציה **סוג:**
 
 ```typescript
-function reactJsxPlugin(): Plugin
+function reactJsxPlugin(): Plugin;
 ```
 
 לא סופק תיאור.
@@ -2359,32 +2432,32 @@ function reactJsxPlugin(): Plugin
 פונקציה **סוג:**
 
 ```typescript
-function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig
+function defineJsxHookLibraryConfig(options: JsxHookLibraryConfigOptions): UserConfig;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | JsxHookLibraryConfigOptions |  |
+| שם       | הקלד                        | תיאור |
+| -------- | --------------------------- | ----- |
+| אפשרויות | JsxHookLibraryConfigOptions |       |
 
 ### defineJsxLibraryConfig
 
 פונקציה **סוג:**
 
 ```typescript
-function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig
+function defineJsxLibraryConfig(options: JsxLibraryConfigOptions): UserConfig;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | JsxLibraryConfigOptions |  |
+| שם       | הקלד                    | תיאור |
+| -------- | ----------------------- | ----- |
+| אפשרויות | JsxLibraryConfigOptions |       |
 
 ### JsxHookLibraryConfigOptions
 
@@ -2411,7 +2484,7 @@ export interface JsxLibraryConfigOptions
 פונקציה **סוג:**
 
 ```typescript
-function reactJsxPlugin(): Plugin
+function reactJsxPlugin(): Plugin;
 ```
 
 לא סופק תיאור.
@@ -2421,7 +2494,7 @@ function reactJsxPlugin(): Plugin
 פונקציה **סוג:**
 
 ```typescript
-function solidJsxPlugin(): Plugin[]
+function solidJsxPlugin(): Plugin[];
 ```
 
 התוסף `vite-plugin-solid` שמרכיב את Solid `.tsx` שנוצר
@@ -2441,7 +2514,7 @@ function solidJsxPlugin(): Plugin[]
 פונקציה **סוג:**
 
 ```typescript
-function solidJsxTsdownPlugin(): Plugin
+function solidJsxTsdownPlugin(): Plugin;
 ```
 
 תוסף Solid JSX תואם Rolldown/tsdown. נציגים ל-`vite-plugin-solid`'s
@@ -2454,7 +2527,7 @@ function solidJsxTsdownPlugin(): Plugin
 פונקציה **סוג:**
 
 ```typescript
-function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[]
+function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[];
 ```
 
 תוספים שלב 2 ל-Forge framework שנבנה תחת **tsdown** (Rolldown).
@@ -2464,16 +2537,16 @@ function stagePluginsForTsdown(plugin: FrameworkOutputPlugin): Plugin[]
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תוסף | FrameworkOutputPlugin |  |
+| שם   | הקלד                  | תיאור |
+| ---- | --------------------- | ----- |
+| תוסף | FrameworkOutputPlugin |       |
 
 ### sveltePlugin
 
 פונקציה **סוג:**
 
 ```typescript
-function sveltePlugin(): Plugin[]
+function sveltePlugin(): Plugin[];
 ```
 
 תוסף Vite להידור רכיבי Svelte שנוצרו.
@@ -2483,7 +2556,7 @@ function sveltePlugin(): Plugin[]
 פונקציה **סוג:**
 
 ```typescript
-function svelteTsdownPlugin(): Plugin
+function svelteTsdownPlugin(): Plugin;
 ```
 
 תוסף מהדר Svelte תואם Rolldown/tsdown. מרכיב `.svelte` SFCs באמצעות
@@ -2497,7 +2570,7 @@ function svelteTsdownPlugin(): Plugin
 פונקציה **סוג:**
 
 ```typescript
-function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string
+function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions): string;
 ```
 
 הרכיב ספריית הוק נייטרלית לעץ המקור שלה לכל מסגרת (שלב 1),
@@ -2505,9 +2578,9 @@ function generateHookLibrarySources(options: GenerateHookLibrarySourcesOptions):
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | GenerateHookLibrarySourcesOptions |  |
+| שם       | הקלד                              | תיאור |
+| -------- | --------------------------------- | ----- |
+| אפשרויות | GenerateHookLibrarySourcesOptions |       |
 
 ### GenerateHookLibrarySourcesOptions
 
@@ -2534,7 +2607,7 @@ export interface HookLibraryDtsOptions
 פונקציה **סוג:**
 
 ```typescript
-function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
+function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin;
 ```
 
 תוסף Vite לאחר בנייה שפולט הצהרות **מקוריות, לכל מסגרת**
@@ -2542,7 +2615,7 @@ function hookLibraryDtsPlugin(options: HookLibraryDtsOptions): Plugin
 
 כל בניית מסגרת ({@link generateHookLibrarySources} + המסגרת של המסגרת
 Stage-2 bundler) מייצר JS אך ללא הצהרות, מכיוון שהעץ שנוצר הוא
-לא קובץ מקור גלוי ל-`tsc`. במקום לייצא מחדש יחיד *נפוץ*
+לא קובץ מקור גלוי ל-`tsc`. במקום לייצא מחדש יחיד _נפוץ_
 הצהרה ניטרלית עבור כל מסגרת, תוסף זה מריץ את TypeScript
 מהדר API על העץ שנוצר ב-`closeBundle` (שלב לאחר בנייה) ו
 כותב את קבצי `.d.ts` המתקבלים (`index.d.ts` + אחד לכל מודול) לתוך
@@ -2554,9 +2627,9 @@ return Vue `Ref`s - כל מסגרת סוגים משלה. סוג אבחון הם
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | HookLibraryDtsOptions |  |
+| שם       | הקלד                  | תיאור |
+| -------- | --------------------- | ----- |
+| אפשרויות | HookLibraryDtsOptions |       |
 
 ## `src/generate`
 
@@ -2565,16 +2638,16 @@ return Vue `Ref`s - כל מסגרת סוגים משלה. סוג אבחון הם
 פונקציה **סוג:**
 
 ```typescript
-function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget
+function createFrameworkSourceTarget(plugin: FrameworkOutputPlugin): FrameworkSourceTarget;
 ```
 
 צור מתאר עץ מקור מתוך תוסף פלט מפורש.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תוסף | FrameworkOutputPlugin |  |
+| שם   | הקלד                  | תיאור |
+| ---- | --------------------- | ----- |
+| תוסף | FrameworkOutputPlugin |       |
 
 ### FrameworkSourceTarget
 
@@ -2591,7 +2664,7 @@ export interface FrameworkSourceTarget
 פונקציה **סוג:**
 
 ```typescript
-function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string
+function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): string;
 ```
 
 הרכיב חבילת רכיבים ניטרליים לעץ המקור שלה לכל מסגרת (שלב 1),
@@ -2599,9 +2672,9 @@ function generateFrameworkSources(options: GenerateFrameworkSourcesOptions): str
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | GenerateFrameworkSourcesOptions |  |
+| שם       | הקלד                            | תיאור |
+| -------- | ------------------------------- | ----- |
+| אפשרויות | GenerateFrameworkSourcesOptions |       |
 
 ### GenerateFrameworkSourcesOptions
 
@@ -2618,7 +2691,7 @@ export interface GenerateFrameworkSourcesOptions
 פונקציה **סוג:**
 
 ```typescript
-function jsxComponentsCssImportPlugin(): Plugin
+function jsxComponentsCssImportPlugin(): Plugin;
 ```
 
 קשר מחדש CSS לכל רכיב לנתח ה-JS שלו.
@@ -2651,7 +2724,7 @@ chunk it מקדים ייבוא תופעת לוואי של כל קובץ CSS Vite
 לבסוף, כל גיליון סגנונות CSS-Module נפלט תחת השם **מקור** שלו -
 `foo.module.css` - עם הגיבוב של שם המחלקה כבר הוחל וה-
 שמות פתורים שנאפו במפת הכיתה `foo.module.js` אח. שולחים אותו
-עם הסיומת `.module.css` היא מלכודת: כל צרור *בהמשך* (למשל
+עם הסיומת `.module.css` היא מלכודת: כל צרור _בהמשך_ (למשל
 React Vite משלו של Storybook) מזהה את `*.module.css` כמודול CSS ו
 מריץ את הטרנספורמציה של ה-CSS-Modules מעליו **פעם שנייה**, תוך גיבוש מחדש של
 בוררים, כך שהם כבר לא תואמים לשמות המחלקות (שכבר הושטפו) שנאפו בהם
@@ -2676,7 +2749,7 @@ export interface JsxComponentsDtsOptions
 פונקציה **סוג:**
 
 ```typescript
-function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin
+function jsxComponentsDtsPlugin(options: JsxComponentsDtsOptions): Plugin;
 ```
 
 תוסף Vite לאחר בנייה שפולט הצהרות **מקוריות, לכל מסגרת**
@@ -2717,9 +2790,9 @@ Stage-2 bundler) מייצר JS אך ללא הצהרות, מכיוון שהעץ �
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | JsxComponentsDtsOptions |  |
+| שם       | הקלד                    | תיאור |
+| -------- | ----------------------- | ----- |
+| אפשרויות | JsxComponentsDtsOptions |       |
 
 ### JsxComponentsEntryDtsOptions
 
@@ -2736,7 +2809,7 @@ export interface JsxComponentsEntryDtsOptions
 פונקציה **סוג:**
 
 ```typescript
-function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin
+function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plugin;
 ```
 
 שלח את ההצהרה המסונתזת (`<declarationFileName>.d.ts`) עבור ה
@@ -2745,9 +2818,9 @@ function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plu
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | JsxComponentsEntryDtsOptions |  |
+| שם       | הקלד                         | תיאור |
+| -------- | ---------------------------- | ----- |
+| אפשרויות | JsxComponentsEntryDtsOptions |       |
 
 ## `src/tsdown`
 
@@ -2756,7 +2829,7 @@ function jsxComponentsEntryDtsPlugin(options: JsxComponentsEntryDtsOptions): Plu
 פונקציה **סוג:**
 
 ```typescript
-function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[]
+function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): UserConfig[];
 ```
 
 שחזר מסגרת אחת של Archetype-C **component** שנבנתה תחת tsdown:
@@ -2765,35 +2838,35 @@ function defineTsdownForgeComponents(options: TsdownForgeComponentsOptions): Use
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | TsdownForgeComponentsOptions |  |
+| שם       | הקלד                         | תיאור |
+| -------- | ---------------------------- | ----- |
+| אפשרויות | TsdownForgeComponentsOptions |       |
 
 ### defineTsdownForgeEmailComponents
 
 פונקציה **סוג:**
 
 ```typescript
-function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig
+function defineTsdownForgeEmailComponents(options: TsdownForgeEmailComponentsOptions): UserConfig;
 ```
 
 בנה את רכיב האימייל של Forge הנייטרלי לשרת בלבד.
 
- זה משמר את עץ הפורג כך
+זה משמר את עץ הפורג כך
 `@mission-platform/email-renderer` יכול לעשות אותו בסידרה בשרת.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | TsdownForgeEmailComponentsOptions |  |
+| שם       | הקלד                              | תיאור |
+| -------- | --------------------------------- | ----- |
+| אפשרויות | TsdownForgeEmailComponentsOptions |       |
 
 ### defineTsdownForgeHooks
 
 פונקציה **סוג:**
 
 ```typescript
-function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig
+function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig;
 ```
 
 שחזר מסגרת אחת של Archetype-C **hook** שנבנתה תחת tsdown:
@@ -2802,16 +2875,16 @@ function defineTsdownForgeHooks(options: TsdownForgeHooksOptions): UserConfig
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | TsdownForgeHooksOptions |  |
+| שם       | הקלד                    | תיאור |
+| -------- | ----------------------- | ----- |
+| אפשרויות | TsdownForgeHooksOptions |       |
 
 ### defineTsdownForgeHooksAll
 
 פונקציה **סוג:**
 
 ```typescript
-function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[]
+function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserConfig[];
 ```
 
 בנה מערך של תצורות tsdown עבור כל מסגרת מבוקשת של Forge Hooks
@@ -2820,9 +2893,9 @@ function defineTsdownForgeHooksAll(options: TsdownForgeHooksAllOptions): UserCon
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אפשרויות | TsdownForgeHooksAllOptions |  |
+| שם       | הקלד                       | תיאור |
+| -------- | -------------------------- | ----- |
+| אפשרויות | TsdownForgeHooksAllOptions |       |
 
 ### TsdownForgeComponentsOptions
 

@@ -16,39 +16,39 @@
 פונקציה **סוג:**
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): ReactElement
+function HtmlContent(properties: HtmlContentProperties): ReactElement;
 ```
 
 עבד HTML מהימן למארח React באמצעות `dangerouslySetInnerHTML`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | HtmlContentProperties |  |
+| שם    | הקלד                  | תיאור |
+| ----- | --------------------- | ----- |
+| נכסים | HtmlContentProperties |       |
 
 ### renderToReact
 
 פונקציה **סוג:**
 
 ```typescript
-function renderToReact(element: MpElement): ReactElement
+function renderToReact(element: MpElement): ReactElement;
 ```
 
 עיבוד עץ {@link MpElement} ניטרלי לאלמנט React.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אלמנט | MpElement |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| אלמנט | MpElement |       |
 
 ### טלפורט
 
 פונקציה **סוג:**
 
 ```typescript
-function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode
+function Teleport({ to = 'body', disabled = false, children }: TeleportProperties): ReactNode;
 ```
 
 המבנה React של הפרימיטיבי הנייטרלי `<Teleport>` - עטיפה דקה מסביב
@@ -75,9 +75,9 @@ popover) ולכן בלתי נראה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| { to = 'גוף', disabled = false, ילדים } | TeleportProperties |  |
+| שם                                      | הקלד               | תיאור |
+| --------------------------------------- | ------------------ | ----- |
+| { to = 'גוף', disabled = false, ילדים } | TeleportProperties |       |
 
 ### TeleportProperties
 
@@ -94,7 +94,7 @@ export interface TeleportProperties
 פונקציה **סוג:**
 
 ```typescript
-function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>
+function toReactComponent(component: MpComponent<P>, displayName?: string): FunctionComponent<P>;
 ```
 
 לעטוף רכיב ניטרלי כרכיב פונקציה React מהשורה הראשונה, מוכן
@@ -102,23 +102,17 @@ function toReactComponent(component: MpComponent<P>, displayName?: string): Func
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | MpComponent<P> |  |
-| displayName | מחרוזת |  |
+| שם          | הקלד           | תיאור |
+| ----------- | -------------- | ----- |
+| רכיב        | MpComponent<P> |       |
+| displayName | מחרוזת         |       |
 
 ### מַעֲבָר
 
 פונקציה **סוג:**
 
 ```typescript
-function Transition({
-  name = 'v',
-  appear = false,
-  duration,
-  children,
-  ...overrides
-}: TransitionProperties): ReactNode
+function Transition({ name = 'v', appear = false, duration, children, ...overrides }: TransitionProperties): ReactNode;
 ```
 
 המבנה React של הפרימיטיבי הנייטרלי `<Transition>` - מחלקה קטנה של CSS
@@ -134,9 +128,9 @@ function Transition({
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| { name = 'v', appear = false, duration, children, ...overrides } | TransitionProperties |  |
+| שם                                                               | הקלד                 | תיאור |
+| ---------------------------------------------------------------- | -------------------- | ----- |
+| { name = 'v', appear = false, duration, children, ...overrides } | TransitionProperties |       |
 
 ### TransitionGroup
 
@@ -151,7 +145,7 @@ function TransitionGroup({
   duration,
   children,
   ...overrides
-}: TransitionGroupProperties): ReactNode
+}: TransitionGroupProperties): ReactNode;
 ```
 
 המבנה React של הפרימיטיבי הנייטרלי `<TransitionGroup>` - מחלקה של CSS
@@ -172,9 +166,9 @@ function TransitionGroup({
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| { name = 'v', tag, moveClass, appear = false, duration, children, ...overrides } | TransitionGroupProperties |  |
+| שם                                                                               | הקלד                      | תיאור |
+| -------------------------------------------------------------------------------- | ------------------------- | ----- |
+| { name = 'v', tag, moveClass, appear = false, duration, children, ...overrides } | TransitionGroupProperties |       |
 
 ### TransitionGroupProperties
 
@@ -203,7 +197,7 @@ export interface TransitionProperties extends TransitionClassOverrides
 פונקציה **סוג:**
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): JSX.Element
+function HtmlContent(properties: HtmlContentProperties): JSX.Element;
 ```
 
 המבנה Solid של הפרימיטיבי `<HtmlContent>` הנייטרלי. של Solid
@@ -211,16 +205,16 @@ function HtmlContent(properties: HtmlContentProperties): JSX.Element
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | HtmlContentProperties |  |
+| שם    | הקלד                  | תיאור |
+| ----- | --------------------- | ----- |
+| נכסים | HtmlContentProperties |       |
 
 ### טלפורט
 
 פונקציה **סוג:**
 
 ```typescript
-function Teleport(properties: TeleportProperties): JSX.Element
+function Teleport(properties: TeleportProperties): JSX.Element;
 ```
 
 המבנה Solid של הפרימיטיבי הנייטרלי `<Teleport>` - עטיפה דקה מסביב
@@ -236,9 +230,9 @@ function Teleport(properties: TeleportProperties): JSX.Element
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | TeleportProperties |  |
+| שם    | הקלד               | תיאור |
+| ----- | ------------------ | ----- |
+| נכסים | TeleportProperties |       |
 
 ### TeleportProperties
 
@@ -255,7 +249,7 @@ export interface TeleportProperties
 פונקציה **סוג:**
 
 ```typescript
-function Transition(properties: TransitionProperties): JSX.Element
+function Transition(properties: TransitionProperties): JSX.Element;
 ```
 
 המבנה Solid של הפרימיטיבי `<Transition>` הנייטרלי. תקנה מינימלית
@@ -272,16 +266,16 @@ function Transition(properties: TransitionProperties): JSX.Element
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | TransitionProperties |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| נכסים | TransitionProperties |       |
 
 ### TransitionGroup
 
 פונקציה **סוג:**
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): JSX.Element
+function TransitionGroup(properties: TransitionGroupProperties): JSX.Element;
 ```
 
 המבנה Solid של הפרימיטיבי `<TransitionGroup>` הנייטרלי. כאילו
@@ -298,9 +292,9 @@ function TransitionGroup(properties: TransitionGroupProperties): JSX.Element
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | TransitionGroupProperties |  |
+| שם    | הקלד                      | תיאור |
+| ----- | ------------------------- | ----- |
+| נכסים | TransitionGroupProperties |       |
 
 ### TransitionGroupProperties
 
@@ -329,7 +323,7 @@ export interface TransitionProperties extends TransitionClassOverrides
 פונקציה **סוג:**
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): Snippet
+function HtmlContent(properties: HtmlContentProperties): Snippet;
 ```
 
 מימוש התוכן הגולמי של מתאם Svelte. `createRawSnippet` הוא
@@ -338,25 +332,25 @@ function HtmlContent(properties: HtmlContentProperties): Snippet
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | HtmlContentProperties |  |
+| שם    | הקלד                  | תיאור |
+| ----- | --------------------- | ----- |
+| נכסים | HtmlContentProperties |       |
 
 ### טלפורט
 
 פונקציה **סוג:**
 
 ```typescript
-function Teleport(properties: TeleportProperties): Snippet
+function Teleport(properties: TeleportProperties): Snippet;
 ```
 
 עבדו במקום קטע קוד של Forge ילד עבור Svelte SSR ושוויון לקוח.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | TeleportProperties |  |
+| שם    | הקלד               | תיאור |
+| ----- | ------------------ | ----- |
+| נכסים | TeleportProperties |       |
 
 ### TeleportProperties
 
@@ -373,32 +367,32 @@ export interface TeleportProperties
 פונקציה **סוג:**
 
 ```typescript
-function Transition(properties: TransitionProperties): Snippet
+function Transition(properties: TransitionProperties): Snippet;
 ```
 
 עיבוד ילד מעבר יחיד; אנימציה מסופקת על ידי סימון Svelte מקורי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | TransitionProperties |  |
+| שם    | הקלד                 | תיאור |
+| ----- | -------------------- | ----- |
+| נכסים | TransitionProperties |       |
 
 ### TransitionGroup
 
 פונקציה **סוג:**
 
 ```typescript
-function TransitionGroup(properties: TransitionGroupProperties): Snippet
+function TransitionGroup(properties: TransitionGroupProperties): Snippet;
 ```
 
 עבד את הילדים של קבוצת המעבר למקומם עבור בלוקים מקוריים של Svelte.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | TransitionGroupProperties |  |
+| שם    | הקלד                      | תיאור |
+| ----- | ------------------------- | ----- |
+| נכסים | TransitionGroupProperties |       |
 
 ### TransitionGroupProperties
 
@@ -427,7 +421,7 @@ export interface TransitionProperties
 פונקציה **סוג:**
 
 ```typescript
-function createContext(defaultValue: T): VueContext<T>
+function createContext(defaultValue: T): VueContext<T>;
 ```
 
 המבנה Vue של הפרימיטיבי `createContext` הנייטרלי. מחזיר ידית של מי
@@ -439,48 +433,48 @@ function createContext(defaultValue: T): VueContext<T>
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| defaultValue | ט |  |
+| שם           | הקלד | תיאור |
+| ------------ | ---- | ----- |
+| defaultValue | ט    |       |
 
 ### HTMLContent
 
 פונקציה **סוג:**
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): VNode
+function HtmlContent(properties: HtmlContentProperties): VNode;
 ```
 
 עבד HTML מהימן למארח Vue באמצעות כריכת פונקציית הרינדור `innerHTML`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | HtmlContentProperties |  |
+| שם    | הקלד                  | תיאור |
+| ----- | --------------------- | ----- |
+| נכסים | HtmlContentProperties |       |
 
 ### renderToVue
 
 פונקציה **סוג:**
 
 ```typescript
-function renderToVue(element: MpElement): VNode
+function renderToVue(element: MpElement): VNode;
 ```
 
 עיבוד עץ {@link MpElement} ניטרלי ל-Vue `VNode`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| אלמנט | MpElement |  |
+| שם    | הקלד      | תיאור |
+| ----- | --------- | ----- |
+| אלמנט | MpElement |       |
 
 ### toVueComponent
 
 פונקציה **סוג:**
 
 ```typescript
-function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>
+function toVueComponent(component: MpComponent<P>, name?: string): FunctionalComponent<P>;
 ```
 
 עטוף רכיב ניטרלי כרכיב פונקציונלי Vue. תכונות נכנסות
@@ -491,17 +485,17 @@ function toVueComponent(component: MpComponent<P>, name?: string): FunctionalCom
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| רכיב | MpComponent<P> |  |
-| שם | מחרוזת |  |
+| שם   | הקלד           | תיאור |
+| ---- | -------------- | ----- |
+| רכיב | MpComponent<P> |       |
+| שם   | מחרוזת         |       |
 
 ### useContext
 
 פונקציה **סוג:**
 
 ```typescript
-function useContext(context: VueContext<T>): T
+function useContext(context: VueContext<T>): T;
 ```
 
 המבנה Vue של הפרימיטיבי הנייטרלי `useContext` - עטיפה דקה מסביב
@@ -510,9 +504,9 @@ function useContext(context: VueContext<T>): T
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הקשר | VueContext<T> |  |
+| שם   | הקלד          | תיאור |
+| ---- | ------------- | ----- |
+| הקשר | VueContext<T> |       |
 
 ### VueContext
 
@@ -531,7 +525,7 @@ export interface VueContext<T>
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy
+export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolicy;
 ```
 
 פנימיים מוגבלים ללא מזיק ליכולות; שיוך הטופס נשאר בהצטרפות.
@@ -541,7 +535,7 @@ export const DEFAULT_WEBCOMPONENTS_INTERNALS_POLICY: WebComponentsInternalsPolic
 **סוג:** קבוע
 
 ```typescript
-export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy
+export const DEFAULT_WEBCOMPONENTS_SHADOW_POLICY: WebComponentsShadowPolicy;
 ```
 
 ברירת מחדל של תאימות משמשת כאשר מחלקה שנוצרה אינה עוקפת מדיניות.
@@ -561,18 +555,22 @@ export class DomTemplateResult
 פונקציה **סוג:**
 
 ```typescript
-function dynamicElement(tag: unknown, properties: Readonly<Record<string, unknown>>, ...children: readonly unknown[]): DynamicElementResult
+function dynamicElement(
+  tag: unknown,
+  properties: Readonly<Record<string, unknown>>,
+  ...children: readonly unknown[]
+): DynamicElementResult;
 ```
 
 בנו אלמנט Web-Components מקורי שהתג שלו נבחר בזמן הריצה.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תג | לא ידוע |  |
-| נכסים | לקריאה בלבד<Record<string, unknown>> |  |
-| ילדים | לא ידוע לקריאה בלבד[] |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| תג    | לא ידוע                              |       |
+| נכסים | לקריאה בלבד<Record<string, unknown>> |       |
+| ילדים | לא ידוע לקריאה בלבד[]                |       |
 
 ### DynamicElementResult
 
@@ -631,7 +629,7 @@ export type ForgeElementHostConstructor = new (...args: any[]) => HTMLElement;
 פונקציה **סוג:**
 
 ```typescript
-function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement
+function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement;
 ```
 
 הוסף את זמן הריצה הבלתי תלוי של Forge לבונה אלמנטים מקורי.
@@ -640,9 +638,9 @@ function ForgeElementMixin(Base: TBase): TBase & typeof ForgeElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| בסיס | TBase |  |
+| שם   | הקלד  | תיאור |
+| ---- | ----- | ----- |
+| בסיס | TBase |       |
 
 ### ForgeSlotMarker
 
@@ -659,7 +657,7 @@ export interface ForgeSlotMarker extends HTMLElement
 פונקציה **סוג:**
 
 ```typescript
-function hasSlotContent(host: Element, name?: string): boolean
+function hasSlotContent(host: Element, name?: string): boolean;
 ```
 
 האם `host` קיבל תוכן עבור אחד מהמשבצות שלו - היעד המקומי
@@ -685,17 +683,17 @@ root**, כלומר התוכן שצרכן מקרין נשאר אצל המארח
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מארח | אלמנט |  |
-| שם | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| מארח | אלמנט  |       |
+| שם   | מחרוזת |       |
 
 ### html
 
 פונקציה **סוג:**
 
 ```typescript
-function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult
+function html(strings: TemplateStringsArray, ...values: readonly unknown[]): TemplateResult;
 ```
 
 מפעל תבניות מתויג. לוכד את המחרוזות הסטטיות והדינמיות של אתר השיחה
@@ -703,26 +701,26 @@ function html(strings: TemplateStringsArray, ...values: readonly unknown[]): Tem
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מחרוזות | TemplateStringsArray |  |
-| ערכים | לא ידוע לקריאה בלבד[] |  |
+| שם      | הקלד                  | תיאור |
+| ------- | --------------------- | ----- |
+| מחרוזות | TemplateStringsArray  |       |
+| ערכים   | לא ידוע לקריאה בלבד[] |       |
 
 ### HTMLContent
 
 פונקציה **סוג:**
 
 ```typescript
-function HtmlContent(properties: HtmlContentProperties): HtmlContentResult
+function HtmlContent(properties: HtmlContentProperties): HtmlContentResult;
 ```
 
 בנה תוצאת תוכן גולמי מקורי של Web-Components מבלי לברוח מ-`html`.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | HtmlContentProperties |  |
+| שם    | הקלד                  | תיאור |
+| ----- | --------------------- | ----- |
+| נכסים | HtmlContentProperties |       |
 
 ### HtmlContentProperties
 
@@ -749,7 +747,7 @@ export class HtmlContentResult
 **סוג:** קבוע
 
 ```typescript
-export const nothing: unique symbol
+export const nothing: unique symbol;
 ```
 
 זקיף מוצג כ"אין ערך": במצב ילד הוא לא מייצר כלום, ב
@@ -781,7 +779,10 @@ export class RawHtml
 פונקציה **סוג:**
 
 ```typescript
-function render(result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult, container: ParentNode): void
+function render(
+  result: TemplateResult | DomTemplateResult | DynamicElementResult | HtmlContentResult,
+  container: ParentNode,
+): void;
 ```
 
 עבד תוצאה ל-`container` באמצעות מופע תבנית קבוע. סטטי
@@ -790,17 +791,22 @@ DOM ומצב טופס מקורי נשמרים בעוד שרק טווחי איג�
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| תוצאה | תבנית תוצאה \| DomTemplateResult \| DynamicElementResult \| HtmlContentResult |  |
-| מיכל | ParentNode |  |
+| שם    | הקלד                                                                          | תיאור |
+| ----- | ----------------------------------------------------------------------------- | ----- |
+| תוצאה | תבנית תוצאה \| DomTemplateResult \| DynamicElementResult \| HtmlContentResult |       |
+| מיכל  | ParentNode                                                                    |       |
 
 ### resolveForgeSlotMarkers
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceChildren: readonly Node[], destinationRoot: ShadowRoot): void
+function resolveForgeSlotMarkers(
+  root: ParentNode,
+  owner: ForgeElement,
+  sourceChildren: readonly Node[],
+  destinationRoot: ShadowRoot,
+): void;
 ```
 
 פתור סמני משבצת זמן ריצה הנפלטים מהדר בקטע רינדור.
@@ -815,12 +821,12 @@ function resolveForgeSlotMarkers(root: ParentNode, owner: ForgeElement, sourceCh
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שורש | ParentNode |  |
-| בעלים | ForgeElement |  |
-| מקורילדים | לקריאה בלבד Node[] |  |
-| destinationRoot | ShadowRoot |  |
+| שם              | הקלד               | תיאור |
+| --------------- | ------------------ | ----- |
+| שורש            | ParentNode         |       |
+| בעלים           | ForgeElement       |       |
+| מקורילדים       | לקריאה בלבד Node[] |       |
+| destinationRoot | ShadowRoot         |       |
 
 ### תבנית תוצאה
 
@@ -837,23 +843,23 @@ export class TemplateResult
 פונקציה **סוג:**
 
 ```typescript
-function unsafeHtml(value: string): RawHtml
+function unsafeHtml(value: string): RawHtml;
 ```
 
 סמן מחרוזת כסימון צאצא מהימן עבור הנתיב המקורי של Web-Components.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| ערך | מחרוזת |       |
 
 ### useId
 
 פונקציה **סוג:**
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 התחליף של היעד המקורי ל-`useId` של React.
@@ -900,7 +906,7 @@ export interface WebComponentsShadowPolicy
 פונקציה **סוג:**
 
 ```typescript
-function classNames(...values: readonly ClassValue[]): string
+function classNames(...values: readonly ClassValue[]): string;
 ```
 
 מיזוג כל מספר של {@link ClassValue} למחלקה אחת מופרדת ברווחים
@@ -909,9 +915,9 @@ function classNames(...values: readonly ClassValue[]): string
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערכים | ClassValue לקריאה בלבד[] |  |
+| שם    | הקלד                     | תיאור |
+| ----- | ------------------------ | ----- |
+| ערכים | ClassValue לקריאה בלבד[] |       |
 
 ### ClassValue
 
@@ -930,7 +936,7 @@ export type ClassValue = | string | number | bigint | null | undefined | boolean
 פונקציה **סוג:**
 
 ```typescript
-function createContext(defaultValue: T): MpContext<T>
+function createContext(defaultValue: T): MpContext<T>;
 ```
 
 צור הקשר ניטרלי במסגרת עם ערך ברירת המחדל הנתון. מחזיר א
@@ -939,32 +945,32 @@ function createContext(defaultValue: T): MpContext<T>
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| defaultValue | ט |  |
+| שם           | הקלד | תיאור |
+| ------------ | ---- | ----- |
+| defaultValue | ט    |       |
 
 ### isContextProvider
 
 פונקציה **סוג:**
 
 ```typescript
-function isContextProvider(value: unknown): value is MpContextProvider<unknown>
+function isContextProvider(value: unknown): value is MpContextProvider<unknown>;
 ```
 
 האם ערך הוא פונקציית הקשר {@link MpContext.Provider}.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | לא ידוע |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| ערך | לא ידוע |       |
 
 ### MP_CONTEXT
 
 **סוג:** קבוע
 
 ```typescript
-export const MP_CONTEXT: unique symbol
+export const MP_CONTEXT: unique symbol;
 ```
 
 המאפיין שבו מתאמי זמן הריצה משתמשים כדי לזהות הקשר {@link MpContext.Provider}
@@ -1005,7 +1011,7 @@ export interface MpContextProviderProperties<T>
 פונקציה **סוג:**
 
 ```typescript
-function useContext(context: MpContext<T>): T
+function useContext(context: MpContext<T>): T;
 ```
 
 קרא את הערך הנוכחי של הקשר: התוסף הקרוב ביותר
@@ -1013,9 +1019,9 @@ function useContext(context: MpContext<T>): T
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הקשר | MpContext<T> |  |
+| שם   | הקלד         | תיאור |
+| ---- | ------------ | ----- |
+| הקשר | MpContext<T> |       |
 
 ## `src/runtime/dynamic`
 
@@ -1024,7 +1030,7 @@ function useContext(context: MpContext<T>): T
 **סוג:** קבוע
 
 ```typescript
-export const Dynamic: MpComponent<MpDynamicProperties>
+export const Dynamic: MpComponent<MpDynamicProperties>;
 ```
 
 סמן המשמש כאלמנט `type` עבור רכיב דינמי
@@ -1049,7 +1055,7 @@ export interface MpDynamicProperties extends MpPropertyBag
 זו אחת ההצהרות הבודדות ששומרות באופן לגיטימי **תיק פתוח**:
 כל נכס מלבד `is` מועבר מילה במילה לאלמנט `is`
 פותר ל, והאלמנט הזה ידוע רק בזמן ריצה, אז המאפיינים אותו
-לא ניתן למנות כאן מקבל. ממשקי אבזרים של רכיבים חייבים *לא*
+לא ניתן למנות כאן מקבל. ממשקי אבזרים של רכיבים חייבים _לא_
 עקוב אחר דפוס זה - ראה {@link MpPropertyBag}.
 
 ## `src/runtime/h`
@@ -1059,7 +1065,11 @@ export interface MpDynamicProperties extends MpPropertyBag
 פונקציה **סוג:**
 
 ```typescript
-function h(type: MpElementType | ((properties: P) => MpElement), properties?: P | null, ...children: MpChild[]): MpElement
+function h(
+  type: MpElementType | ((properties: P) => MpElement),
+  properties?: P | null,
+  ...children: MpChild[]
+): MpElement;
 ```
 
 מפעל JSX הקלאסי (`jsxFactory: 'h'`).
@@ -1071,11 +1081,11 @@ function h(type: MpElementType | ((properties: P) => MpElement), properties?: P 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| הקלד | MpElementType \| ((מאפיינים: P) => MpElement) |  |
-| נכסים | P \| null |  |
-| ילדים | MpChild[] |  |
+| שם    | הקלד                                          | תיאור |
+| ----- | --------------------------------------------- | ----- |
+| הקלד  | MpElementType \| ((מאפיינים: P) => MpElement) |       |
+| נכסים | P \| null                                     |       |
+| ילדים | MpChild[]                                     |       |
 
 ## `src/runtime/hooks`
 
@@ -1134,24 +1144,24 @@ export type MpSetState<T> = (value: T | ((previous: T) => T)) => void;
 פונקציה **סוג:**
 
 ```typescript
-function useCallback(callback: T, _dependencies?: MpDependencyList): T
+function useCallback(callback: T, _dependencies?: MpDependencyList): T;
 ```
 
 `useCallback` ניטרלי. מחזיר את ההתקשרות חזרה ללא שינוי עבור העיבוד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| התקשרות חזרה | ט |  |
-| _תלות | MpDependencyList |  |
+| שם           | הקלד             | תיאור |
+| ------------ | ---------------- | ----- |
+| התקשרות חזרה | ט                |       |
+| _תלות        | MpDependencyList |       |
 
 ### useEffect
 
 פונקציה **סוג:**
 
 ```typescript
-function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void
+function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList): void;
 ```
 
 `useEffect` ניטרלי. A no-op: אפקטים מודל לאחר עיבוד תופעות לוואי, אשר
@@ -1159,17 +1169,17 @@ function useEffect(_effect: MpEffectCallback, _dependencies?: MpDependencyList):
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| _אפקט | MpEffectCallback |  |
-| _תלות | MpDependencyList |  |
+| שם    | הקלד             | תיאור |
+| ----- | ---------------- | ----- |
+| _אפקט | MpEffectCallback |       |
+| _תלות | MpDependencyList |       |
 
 ### useId
 
 פונקציה **סוג:**
 
 ```typescript
-function useId(): string
+function useId(): string;
 ```
 
 `useId` ניטרלי. מראות את `useId` של React ו-Vue: מחזירה יציב וייחודי
@@ -1185,24 +1195,24 @@ function useId(): string
 פונקציה **סוג:**
 
 ```typescript
-function useMemo(factory: () => T, _dependencies?: MpDependencyList): T
+function useMemo(factory: () => T, _dependencies?: MpDependencyList): T;
 ```
 
 `useMemo` ניטרלי. מחשב את הערך פעם אחת עבור העיבוד.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מפעל | () => T |  |
-| _תלות | MpDependencyList |  |
+| שם    | הקלד             | תיאור |
+| ----- | ---------------- | ----- |
+| מפעל  | () => T          |       |
+| _תלות | MpDependencyList |       |
 
 ### useRef
 
 פונקציה **סוג:**
 
 ```typescript
-function useRef(initial: T): MpRef<T>
+function useRef(initial: T): MpRef<T>;
 ```
 
 `useRef` ניטרלי. מחזיר מיכל `{ current }` טרי עבור הסינגל
@@ -1210,16 +1220,16 @@ render; זמני הריצה של המסגרת משמרים אותו על פני 
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ראשי | ט |  |
+| שם   | הקלד | תיאור |
+| ---- | ---- | ----- |
+| ראשי | ט    |       |
 
 ### useState
 
 פונקציה **סוג:**
 
 ```typescript
-function useState(initial: T | (() => T)): [T, MpSetState<T>]
+function useState(initial: T | (() => T)): [T, MpSetState<T>];
 ```
 
 `useState` ניטרלי. היישום הבסיסי מחזיר את הערך ההתחלתי ו
@@ -1228,9 +1238,9 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>]
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ראשי | T \| (() => T) |  |
+| שם   | הקלד           | תיאור |
+| ---- | -------------- | ----- |
+| ראשי | T \| (() => T) |       |
 
 ## `src/runtime/html-content`
 
@@ -1239,7 +1249,7 @@ function useState(initial: T | (() => T)): [T, MpSetState<T>]
 **סוג:** קבוע
 
 ```typescript
-export const HtmlContent: MpComponent<HtmlContentProperties>
+export const HtmlContent: MpComponent<HtmlContentProperties>;
 ```
 
 סמן המשמש כסוג האלמנט עבור תוכן HTML גולמי מהימן.
@@ -1268,7 +1278,7 @@ export interface HtmlContentProperties extends MpPropertyBag
 פונקציה **סוג:**
 
 ```typescript
-function hasSlot(name?: string): boolean
+function hasSlot(name?: string): boolean;
 ```
 
 האם הרכיב המקיף קיבל תוכן עבור חריץ - הנייטרלי
@@ -1276,7 +1286,13 @@ function hasSlot(name?: string): boolean
 השם שהושמט (או `'default'`) ממקד למשבצת ברירת המחדל (`children`):
 
 ```tsx
-{hasSlot('footer') ? <footer><Slot name="footer" /></footer> : undefined}
+{
+  hasSlot('footer') ? (
+    <footer>
+      <Slot name="footer" />
+    </footer>
+  ) : undefined;
+}
 ```
 
 `@mission-platform/vite-plugin-forge` משכתב את השיחה ישר לכל אחד מהם
@@ -1288,9 +1304,9 @@ function hasSlot(name?: string): boolean
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| שם | מחרוזת |  |
+| שם  | הקלד   | תיאור |
+| --- | ------ | ----- |
+| שם  | מחרוזת |       |
 
 ### MpRenderProperty
 
@@ -1338,7 +1354,7 @@ export interface MpSlotProperties extends MpPropertyBag
 פונקציה **סוג:**
 
 ```typescript
-function popSlotScope(): void
+function popSlotScope(): void;
 ```
 
 פתח את היקף המשבצת הנוכחי לאחר שתת-עץ של רכיב הורחב.
@@ -1348,23 +1364,23 @@ function popSlotScope(): void
 פונקציה **סוג:**
 
 ```typescript
-function pushSlotScope(properties: MpPropertyBag): void
+function pushSlotScope(properties: MpPropertyBag): void;
 ```
 
 דחוף את האביזרים של הרכיב שעומד להתרחב אל היקף החריץ.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | MpPropertyBag |  |
+| שם    | הקלד          | תיאור |
+| ----- | ------------- | ----- |
+| נכסים | MpPropertyBag |       |
 
 ### resolveSlot
 
 פונקציה **סוג:**
 
 ```typescript
-function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[]
+function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[]): MpChild | readonly MpChild[];
 ```
 
 פתרו את התוכן של `<Slot name="…" />` כנגד המצורף
@@ -1374,10 +1390,10 @@ function resolveSlot(properties: MpSlotProperties, fallback: readonly MpChild[])
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | MpSlotProperties |  |
-| חזרה | MpChild לקריאה בלבד[] |  |
+| שם    | הקלד                  | תיאור |
+| ----- | --------------------- | ----- |
+| נכסים | MpSlotProperties      |       |
+| חזרה  | MpChild לקריאה בלבד[] |       |
 
 ## `src/runtime/teleport`
 
@@ -1396,7 +1412,7 @@ export interface MpTeleportProperties
 **סוג:** קבוע
 
 ```typescript
-export const Teleport: MpComponent<MpTeleportProperties>
+export const Teleport: MpComponent<MpTeleportProperties>;
 ```
 
 סמן המשמש כאלמנט `type` עבור פורטל (`<Teleport to="…">…</Teleport>`).
@@ -1433,7 +1449,7 @@ export interface MpTransitionProperties
 **סוג:** קבוע
 
 ```typescript
-export const Transition: MpComponent<MpTransitionProperties>
+export const Transition: MpComponent<MpTransitionProperties>;
 ```
 
 סמן המשמש כאלמנט `type` עבור מעבר כניסה/יציאה
@@ -1449,7 +1465,7 @@ export const Transition: MpComponent<MpTransitionProperties>
 **סוג:** קבוע
 
 ```typescript
-export const TransitionGroup: MpComponent<MpTransitionGroupProperties>
+export const TransitionGroup: MpComponent<MpTransitionGroupProperties>;
 ```
 
 סמן המשמש כאלמנט `type` למעבר **רשימה** הזן/עזוב/הזז
@@ -1471,7 +1487,7 @@ Vueמובנית `<TransitionGroup>` עושה. כמו {@link Transition} זה א�
 **סוג:** קבוע
 
 ```typescript
-export const Fragment: MpFragment
+export const Fragment: MpFragment;
 ```
 
 סמן המשמש כאלמנט `type` עבור שברים (`<>…</>`), כלומר הקלאסי
@@ -1492,16 +1508,16 @@ TS2604 ("אין לו שום מבנה או חתימות שיחה"). זה אף פ�
 פונקציה **סוג:**
 
 ```typescript
-function isMpElement(value: unknown): value is MpElement
+function isMpElement(value: unknown): value is MpElement;
 ```
 
 צמצם ערך שרירותי ל-{@link MpElement}.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | לא ידוע |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| ערך | לא ידוע |       |
 
 ### MpChild
 
@@ -1561,7 +1577,7 @@ export type MpPropertyBag = Record<string, unknown>;
 
 זה בכוונה רשומה פשוטה, לא מודפסת: זה מה שמפעל JSX
 בונה ולמה מתאמים מתאמים תוך כדי הליכה על עץ ניטרלי. זה כן
-*לא* סוג בסיס לאביזרים של רכיב - רכיב מצהיר בדיוק על
+_לא_ סוג בסיס לאביזרים של רכיב - רכיב מצהיר בדיוק על
 נכסים שהוא מקבל (כולל `children?: MpChild | readonly MpChild[]`
 כאשר הוא מעבד אותם), כך שבדיקת עודף נכס ו-`keyof` יישארו
 משמעותי בכל יעד מלוקט. קומץ המאפיינים לכל אלמנט
@@ -1588,7 +1604,7 @@ export interface MpReservedProperties
   `"default"`) פירושו חריץ ברירת המחדל.
 
 אף אחד מהם אינו חלק מחוזה האביזרים של רכיב עצמו - שניהם נקראים על ידי ה-
-*הורה* (המפייס, נתב החריצים), אף פעם לא על ידי הרכיב עצמו -
+_הורה_ (המפייס, נתב החריצים), אף פעם לא על ידי הרכיב עצמו -
 אז הם מתקבלים עבור כל אלמנט כאן ולא מוצהרים על כל אחד
 ממשק אביזרים.
 
@@ -1597,7 +1613,7 @@ export interface MpReservedProperties
 **סוג:** קבוע
 
 ```typescript
-export const Slot: MpComponent
+export const Slot: MpComponent;
 ```
 
 סמן המשמש כאלמנט `type` עבור חריץ בעל שם (`<Slot name="…" />`).

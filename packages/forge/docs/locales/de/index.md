@@ -283,9 +283,9 @@ export function Button({ children }) {
 ## Leistungsüberlegungen
 
 - Die Framework-neutrale Ebene verursacht nur minimalen Overhead (nur ein Tree Walk zur Renderzeit)
-– Hooks werden für eine optimale Leistung zu nativen Framework-Äquivalenten kompiliert
+  – Hooks werden für eine optimale Leistung zu nativen Framework-Äquivalenten kompiliert
 - Es wird keine Laufzeitanalyse oder Codegenerierung durchgeführt
-– Der Speicherbedarf ist vergleichbar mit dem Schreiben separater React- und Vue-Komponenten
+  – Der Speicherbedarf ist vergleichbar mit dem Schreiben separater React- und Vue-Komponenten
 
 ## Lizenz
 

@@ -38,16 +38,16 @@ Node、字符串或 `route.component` 中的 DOM 工厂直接渲染。
 **种类：**功能
 
 ```typescript
-function registerRouterElements(options: RegisterRouterElementsOptions = {}): void
+function registerRouterElements(options: RegisterRouterElementsOptions = {}): void;
 ```
 
 注册一次路由器原语；可以安全地进行水合作用和测试。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 |注册路由器元素选项 |  |
+| 名称 | 类型               | 描述 |
+| ---- | ------------------ | ---- |
+| 选项 | 注册路由器元素选项 |      |
 
 ## `src/runtime/history`
 
@@ -56,39 +56,39 @@ function registerRouterElements(options: RegisterRouterElementsOptions = {}): vo
 **种类：**功能
 
 ```typescript
-function createBrowserHistory(win?: Window): MpBrowserHistory
+function createBrowserHistory(win?: Window): MpBrowserHistory;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|赢 |窗口|  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 赢   | 窗口 |      |
 
 ### 创建内存历史记录
 
 **种类：**功能
 
 ```typescript
-function createMemoryHistory(initialUrl = '/'): MpMemoryHistory
+function createMemoryHistory(initialUrl = '/'): MpMemoryHistory;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|初始网址 |  |  |
+| 名称     | 类型 | 描述 |
+| -------- | ---- | ---- |
+| 初始网址 |      |      |
 
 ### 创建网络历史
 
 **种类：**功能
 
 ```typescript
-function createWebHistory(): MpHistory
+function createWebHistory(): MpHistory;
 ```
 
 没有提供描述。
@@ -120,7 +120,7 @@ export class MpMemoryHistory implements MpHistory
 **种类：**常数
 
 ```typescript
-export const ForgeRouterLink
+export const ForgeRouterLink;
 ```
 
 没有提供描述。
@@ -134,7 +134,7 @@ export const ForgeRouterLink
 **种类：**常数
 
 ```typescript
-export const ForgeRouterOutlet
+export const ForgeRouterOutlet;
 ```
 
 没有提供描述。
@@ -148,7 +148,7 @@ export const ForgeRouterOutlet
 **种类：**组件
 
 ```typescript
-export const MpLink
+export const MpLink;
 ```
 
 用于编译的中性链接的自定义元素标签。
@@ -158,7 +158,7 @@ export const MpLink
 **种类：**组件
 
 ```typescript
-export const MpRouterView
+export const MpRouterView;
 ```
 
 用于编译中性插座的自定义元素标签。
@@ -168,7 +168,7 @@ export const MpRouterView
 **种类：**常数
 
 ```typescript
-export const resolveForgeLink
+export const resolveForgeLink;
 ```
 
 没有提供描述。
@@ -182,39 +182,39 @@ export const resolveForgeLink
 **种类：**功能
 
 ```typescript
-function resolveMpLink(to: MpRouteLocationRaw): string
+function resolveMpLink(to: MpRouteLocationRaw): string;
 ```
 
 通过绑定的 Web 组件路由器解析中立目标。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|至 | MpRouteLocation原始|  |
+| 名称 | 类型                | 描述 |
+| ---- | ------------------- | ---- |
+| 至   | MpRouteLocation原始 |      |
 
 ### 设置ForgeRouter
 
 **种类：**功能
 
 ```typescript
-function setForgeRouter(router: MpWebComponentsRouter<View>): void
+function setForgeRouter(router: MpWebComponentsRouter<View>): void;
 ```
 
 绑定应用程序拥有的路由器以获得编译的无框架包功能。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路由器| MpWebComponentsRou​​ter<View> |  |
+| 名称   | 类型                          | 描述 |
+| ------ | ----------------------------- | ---- |
+| 路由器 | MpWebComponentsRou​​ter<View> |      |
 
 ### 使用ForgeNavigation
 
 **种类：**常数
 
 ```typescript
-export const useForgeNavigation
+export const useForgeNavigation;
 ```
 
 没有提供描述。
@@ -228,7 +228,7 @@ export const useForgeNavigation
 **种类：**常数
 
 ```typescript
-export const useForgeRoute
+export const useForgeRoute;
 ```
 
 没有提供描述。
@@ -242,7 +242,7 @@ export const useForgeRoute
 **种类：**常数
 
 ```typescript
-export const useForgeRouter
+export const useForgeRouter;
 ```
 
 没有提供描述。
@@ -256,7 +256,7 @@ export const useForgeRouter
 **种类：**功能
 
 ```typescript
-function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
+function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>;
 ```
 
 只读命令式导航/解析功能。
@@ -266,7 +266,7 @@ function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'resolve'>
 **种类：**功能
 
 ```typescript
-function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
+function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value'];
 ```
 
 将当前应用程序拥有的路线读取为中立位置。
@@ -276,7 +276,7 @@ function useMpRoute(): MpWebComponentsRouter<unknown>['current']['value']
 **种类：**功能
 
 ```typescript
-function useMpRouter(): MpRouterCapabilities
+function useMpRouter(): MpRouterCapabilities;
 ```
 
 读取 Web 组件运行时支持的中立功能对象。
@@ -288,7 +288,7 @@ function useMpRouter(): MpRouterCapabilities
 **种类：**功能
 
 ```typescript
-function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>
+function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>): MpWebComponentsRouter<View>;
 ```
 
 创建完整的无框架路由器运行时。路由匹配和URL
@@ -297,9 +297,9 @@ function createWebComponentsRouter(options: MpWebComponentsRouterOptions<View>):
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|选项 | MpWebComponentsRou​​terOptions<View> | MpWebComponentsRou​​terOptions<View>  |
+| 名称 | 类型                                 | 描述                                 |
+| ---- | ------------------------------------ | ------------------------------------ |
+| 选项 | MpWebComponentsRou​​terOptions<View> | MpWebComponentsRou​​terOptions<View> |
 
 ### MpWeb组件路由器
 
@@ -326,17 +326,17 @@ export interface MpWebComponentsRouterOptions<View = unknown>
 **种类：**功能
 
 ```typescript
-function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
+function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|路由器| MpRouter适配器|  |
-|至 | MpRouteLocation原始|  |
+| 名称   | 类型                | 描述 |
+| ------ | ------------------- | ---- |
+| 路由器 | MpRouter适配器      |      |
+| 至     | MpRouteLocation原始 |      |
 
 ## `src/utils/forge-router-web-components`
 
@@ -345,7 +345,7 @@ function routeHref(router: MpRouterAdapter, to: MpRouteLocationRaw): string
 **种类：**常数
 
 ```typescript
-export const forgeRouterWebComponents
+export const forgeRouterWebComponents;
 ```
 
 Forge 路由器目标由无框架的历史记录/出口运行时支持。
