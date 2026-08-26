@@ -3,6 +3,12 @@
   "tasks": {
     "bench": {
       "cache": false,
+      "env": [
+        "FORGE_BENCH_RUN",
+        "FORGE_BENCH_IMPLEMENTATION",
+        "FORGE_BENCH_OUTPUT",
+        "FORGE_BENCH_COMMAND"
+      ],
       "outputs": []
     }
   }

@@ -2,8 +2,12 @@
   "$schema": "https://turborepo.com/schema.json",
   "extends": ["//"],
   "tasks": {
+    "storybook": {
+      "env": ["STORYBOOK_FRAMEWORK"]
+    },
     "build-storybook": {
       "dependsOn": ["^build"],
+      "env": ["STORYBOOK_FRAMEWORK", "VITE_*"],
       "outputs": ["storybook-static/**"]
     }
   }

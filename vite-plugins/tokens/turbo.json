@@ -1,0 +1,13 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "test": {
+      "env": [
+        "TOKEN_REACHABILITY_ROOTS",
+        "TOKEN_REACHABILITY_GRAPH_ONLY",
+        "UPDATE_TOKEN_REACHABILITY_FIXTURE"
+      ]
+    }
+  }
+}

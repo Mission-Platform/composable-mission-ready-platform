@@ -1,40 +1,17 @@
 {
   "$schema": "https://turborepo.com/schema.json",
-  "ui": "stream",
   "futureFlags": {
     "experimentalTaskCommand": true
   },
   "globalDependencies": [
     "pnpm-workspace.yaml",
-    "pnpm-lock.yaml",
     ".nvmrc",
-    "tsconfig*.json",
-    "Cargo.toml",
-    "Cargo.lock",
-    ".cargo/config.toml"
+    "tsconfig*.json"
   ],
   "globalEnv": [
     "NODE_ENV",
     "CI",
-    "SSR",
-    "MISSION_REPO_ROOT",
-    "NODE_OPTIONS",
-    "STORYBOOK_FRAMEWORK",
-    "FORGE_FRAMEWORK_TARGET",
-    "FORGE_CMS_STORYBLOK_TARGET",
-    "FORGE_CMS_ARTIFACT_MODE",
-    "FORGE_BENCH_RUN",
-    "FORGE_BENCH_IMPLEMENTATION",
-    "FORGE_BENCH_OUTPUT",
-    "FORGE_BENCH_COMMAND",
-    "FORGE_BUILD_STAGE_ROOT",
-    "TOKEN_REACHABILITY_ROOTS",
-    "TOKEN_REACHABILITY_GRAPH_ONLY",
-    "UPDATE_TOKEN_REACHABILITY_FIXTURE",
-    "PLAYWRIGHT_BASE_URL",
-    "AUDIT_PORT",
-    "AUDIT_WORKERS",
-    "VITE_*"
+    "NODE_OPTIONS"
   ],
   "tasks": {
     "build": {
@@ -45,13 +22,13 @@
         "FORGE_BUILD_TARGET",
         "FORGE_FRAMEWORK_TARGET",
         "FORGE_CMS_STORYBLOK_TARGET",
-        "FORGE_CMS_ARTIFACT_MODE"
+        "FORGE_CMS_ARTIFACT_MODE",
+        "FORGE_BUILD_STAGE_ROOT"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
         "$TURBO_ROOT$/scripts/build-forge.ts",
         "$TURBO_ROOT$/scripts/forge-build.ts",
-        "$TURBO_ROOT$/scripts/extract-package-docs.ts",
         "!**/*.md",
         "!**/dist/**",
         "!**/storybook-static/**",
@@ -62,8 +39,7 @@
       ],
       "outputs": [
         "dist/**",
-        ".vite/**",
-        "docs/reference/generated/**"
+        ".vite/**"
       ]
     },
     "build:check": {
@@ -77,36 +53,19 @@
         "!**/storybook-static/**",
         "!**/.vite/**",
         "!**/coverage/**"
-      ],
-      "outputs": []
-    },
-    "build:neutral": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!**/*.md",
-        "!**/dist/**",
-        "!**/storybook-static/**",
-        "!**/.vite/**",
-        "!**/coverage/**"
-      ],
-      "outputs": [
-        "dist/**",
-        "!dist/vue/**",
-        "!dist/react/**",
-        "!dist/solid/**",
-        "!dist/web-components/**",
-        "!dist/cms/**",
-        "!dist/**/*.d.ts",
-        "!dist/**/*.d.ts.map"
       ]
     },
     "build:bundle": {
       "dependsOn": [
         "^build"
       ],
+      "env": [
+        "FORGE_BUILD_TARGET",
+        "FORGE_FRAMEWORK_TARGET",
+        "FORGE_CMS_STORYBLOK_TARGET",
+        "FORGE_CMS_ARTIFACT_MODE",
+        "FORGE_BUILD_STAGE_ROOT"
+      ],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.md",
@@ -119,6 +78,18 @@
         "dist/**",
         "!dist/**/*.d.ts",
         "!dist/**/*.d.ts.map"
+      ]
+    },
+    "build:types": {
+      "dependsOn": [
+        "^build"
+      ],
+      "env": [
+        "FORGE_BUILD_TARGET",
+        "FORGE_FRAMEWORK_TARGET",
+        "FORGE_CMS_STORYBLOK_TARGET",
+        "FORGE_CMS_ARTIFACT_MODE",
+        "FORGE_BUILD_STAGE_ROOT"
       ]
     },
     "build:forge": {
@@ -256,7 +227,37 @@
     },
     "bench": {
       "cache": false,
-      "outputs": []
+      "env": [
+        "FORGE_BENCH_RUN",
+        "FORGE_BENCH_IMPLEMENTATION",
+        "FORGE_BENCH_OUTPUT",
+        "FORGE_BENCH_COMMAND"
+      ]
+    },
+    "//#docs:generate": {
+      "dependsOn": [
+        "@mission-platform/forge-web-script#build"
+      ],
+      "inputs": [
+        "$TURBO_ROOT$/scripts/extract-package-docs.ts",
+        "packages/**",
+        "configs/**",
+        "forge-plugins/**",
+        "vite-plugins/**",
+        "workers/**",
+        "extensions/**",
+        "!**/dist/**",
+        "!**/node_modules/**",
+        "!**/reference/generated/**"
+      ],
+      "outputs": [
+        "packages/**/docs/reference/generated/**",
+        "configs/**/docs/reference/generated/**",
+        "forge-plugins/**/docs/reference/generated/**",
+        "vite-plugins/**/docs/reference/generated/**",
+        "workers/**/docs/reference/generated/**",
+        "extensions/**/docs/reference/generated/**"
+      ]
     },
     "dev": {
       "dependsOn": [
@@ -276,13 +277,6 @@
       "persistent": true
     },
     "storybook": {
-      "dependsOn": [
-        "^build"
-      ],
-      "cache": false,
-      "persistent": true
-    },
-    "storybook-react": {
       "dependsOn": [
         "^build"
       ],
@@ -309,11 +303,6 @@
       ],
       "outputs": [
         "coverage/**"
-      ]
-    },
-    "test:wasm": {
-      "dependsOn": [
-        "^build"
       ]
     },
     "transit": {
