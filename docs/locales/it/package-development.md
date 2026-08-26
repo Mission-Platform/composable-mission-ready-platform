@@ -1,22 +1,17 @@
-# Sviluppo di pacchetti
+# Package Development
 
-Traduzione assistita da macchina dalla fonte inglese canonica. Da rivedere manualmente se necessario. Nomi di pacchetti, comandi, percorsi e identificatori tecnici restano invariati.
+This guide describes how to create, develop, and publish reusable packages within the Mission Platform monorepo.
+Packages are the foundational building blocks of the platform, residing in the `packages/` directory and managed via
+pnpm workspaces and Turborepo.
 
-> Fonte inglese: [docs/package-development.md](../../package-development.md)
-> Lingua: Italiano (it)
+## Creating a New Package
 
-Questa guida descrive come creare, sviluppare e pubblicare pacchetti riutilizzabili all'interno del monorepo Mission Platform.
-I pacchetti sono gli elementi costitutivi fondamentali della piattaforma, che risiedono nel file `packages/` directory e gestito tramite
-pnpm spazi di lavoro e Turborepo.
+The recommended way to create a package is using the Mission Platform Developer MCP tool, which ensures all
+configurations, scripts, and folder structures follow the platform's standards.
 
-## Creazione di un nuovo pacchetto
+### 1. Scaffold with MCP
 
-Il modo consigliato per creare un pacchetto è utilizzare lo strumento MCP Mission Platform Developer, che garantisce tutto
-configurazioni, script e strutture di cartelle seguono gli standard della piattaforma.
-
-### 1. Impalcatura con MCP
-
-Usa il `scaffold_package` strumento per generare lo scheletro.
+Use the `scaffold_package` tool to generate the skeleton.
 
 ```bash
 # Example: Creating a new 'date-utils' package
@@ -24,18 +19,18 @@ Usa il `scaffold_package` strumento per generare lo scheletro.
 scaffold_package(name="date-utils", description="Shared date manipulation utilities", apply=true)
 ```
 
-Questo genera un file conforme alla convenzione `packages/date-utils/` directory con:
+This generates a convention-compliant `packages/date-utils/` directory with:
 
-- `package.json` con script pronti per l'area di lavoro e configurazioni condivise.
-- `tsconfig.json` estendere le impostazioni predefinite della piattaforma.
-- `vite.config.ts` per build ottimizzate.
-- `src/index.ts` lima a botte.
-- `llms.txt` per la documentazione assistita dall'intelligenza artificiale.
+- `package.json` with workspace-ready scripts and shared configurations.
+- `tsconfig.json` extending the platform defaults.
+- `vite.config.ts` for optimized builds.
+- `src/index.ts` barrel file.
+- `llms.txt` for AI-assisted documentation.
 
-### 2. Configurazione manuale (opzionale)
+### 2. Manual Setup (Optional)
 
-Se non stai utilizzando lo strumento MCP, assicurati che il tuo `package.json` utilizza [pnpm cataloghi](https://pnpm.io/catalogs) per
-gestione delle dipendenze e segue la convenzione di denominazione con ambito:
+If you are not using the MCP tool, ensure your `package.json` uses [pnpm catalogs](https://pnpm.io/catalogs) for
+dependency management and follows the scoped naming convention:
 
 ```json
 {
@@ -55,10 +50,10 @@ gestione delle dipendenze e segue la convenzione di denominazione con ambito:
 }
 ```
 
-## Struttura del pacchetto
+## Package Structure
 
-Ogni confezione segue un rigoroso layout interno. Le unità di codice (componenti, componenti componibili, negozi o utilità) DEVONO convivere
-le proprie sottodirectory denominate con test co-localizzati.
+Each package follows a strict internal layout. Units of code (components, composables, stores, or utils) MUST live in
+their own named subdirectories with co-located tests.
 
 ```text
 packages/<name>/
@@ -75,6 +70,8 @@ packages/<name>/
 │   │   └── date-validator/         # date-validator.ts + .spec.ts
 │   ├── locales/                    # i18n JSON files
 │   └── index.ts                    # Package public API (barrel)
+├── docs/                           # Package-owned guides and generated API reference
+│   └── reference/generated/        # Regenerated during prebuild
 ├── llms.txt                        # Technical overview for LLMs
 ├── package.json
 ├── tsconfig.json
@@ -82,59 +79,145 @@ packages/<name>/
 └── README.md
 ```
 
-## Flusso di lavoro di sviluppo
+## Stylelint for style-bearing packages
 
-### Regole di creazione
+Packages that contain CSS, SCSS, or Vue style blocks must keep a discoverable Stylelint configuration and lint scripts:
 
-1. **TypeScript Ovunque**: tutto il codice sorgente deve essere presente `.ts` O `.tsx` (utilizzando `@mission-platform/forge`).
-2. **Neutralità del framework**: favorire la logica agnostica del framework. I componenti devono essere creati una volta in Forge JSX per essere targetizzati
-   molteplici quadri.
-3. **Isolamento**: i pacchetti non devono mai essere importati da `apps/`.
-4. **Test**: Ogni unità (componibile, negozio, utilità, componente) DEVE avere una co-locazione `.spec.ts` file.
+```text
+packages/<name>/
+├── src/
+│   └── styles/                     # CSS, SCSS, and Vue style sources
+├── stylelint.config.mjs            # Workspace-local ESM configuration
+└── package.json                    # Stylelint scripts and devDependencies
+```
 
-Per istruzioni dettagliate sulla creazione, vedere:
+Add the shared configuration and its direct syntax/configuration dependencies to `devDependencies`:
 
-- [Progettazione di componenti atomici](atomic-component-design.md)
-- [Authoring componibile](composable-authoring.md)
-- [Creazione di archivi](store-authoring.md)
-- [Creazione utile](util-authoring.md)
+```json
+{
+  "devDependencies": {
+    "@mission-platform/stylelint-config": "workspace:*",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint"
+  }
+}
+```
 
-### Edificio
+Use the shared configuration from `stylelint.config.mjs` instead of duplicating its `extends` entries:
 
-Costruisci il pacchetto utilizzando Turbo per garantire che le dipendenze siano create nell'ordine corretto:
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
+Add scripts that cover the workspace's actual style sources, then run the check before publishing:
+
+```json
+{
+  "scripts": {
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\""
+  }
+}
+```
+
+```bash
+pnpm exec turbo run lint:style --filter @mission-platform/<name>
+```
+
+## Development Workflow
+
+### Authoring Rules
+
+1. **TypeScript Everywhere**: All source code must be in `.ts` or `.tsx` (using `@mission-platform/forge`).
+2. **Framework Neutrality**: Favor framework-agnostic logic. Components should be authored once in Forge JSX to target
+   multiple frameworks.
+3. **Isolation**: Packages must never import from `apps/`.
+4. **Testing**: Every unit (composable, store, util, component) MUST have a co-located `.spec.ts` file.
+
+For detailed authoring instructions, see:
+
+- [Atomic Component Design](atomic-component-design.md)
+- [Composable Authoring](composable-authoring.md)
+- [Store Authoring](store-authoring.md)
+- [Util Authoring](util-authoring.md)
+
+### Building
+
+Build the package using Turbo to ensure dependencies are built in the correct order:
 
 ```bash
 pnpm exec turbo run build --filter @mission-platform/<name>
 ```
 
-### Test
+### Testing
 
-Esegui test utilizzando Vitest:
+Run tests using Vitest:
 
 ```bash
 pnpm exec turbo run test --filter @mission-platform/<name>
 ```
 
-## Documentazione (`llms.txt`)
+### Router packages and Web Components targets
 
-Ogni pacchetto include un `llms.txt` file alla radice. Questo file fornisce una descrizione tecnica concisa del file
-le API, i componenti e il comportamento del pacchetto, consentendo agli assistenti AI di comprendere e utilizzare meglio il pacchetto.
+Use `@mission-platform/router` for structured route targets, pure URL helpers, and neutral compiler markers. Shared
+packages must not define or register application routes. Applications select one Forge router target independently from
+their UI target, retain ownership of native route records and router instances, and bind any target-specific runtime
+context during bootstrap. The initial targets are `@mission-platform/forge-router-vue`, `-react`, `-solid`, `-svelte`,
+`-redwood`, and `-web-components`; unsupported capability combinations must remain compiler diagnostics.
 
-- **Titolo**: utilizza il nome del pacchetto con ambito.
-- **Componenti/API**: tabella o elenco di simboli disponibili con i relativi oggetti di scena e responsabilità.
-- **Esempi**: frammenti di codice breve per casi d'uso comuni.
+For a framework-free package or app, select the Forge Web Components condition in both build and TypeScript configs:
 
-## Editoria
+```ts
+import { frameworkResolveConditions } from "@mission-platform/vite-config";
 
-La piattaforma di missione utilizza [Set di modifiche](https://github.com/changesets/changesets) per il controllo delle versioni e la pubblicazione.
+export default {
+  resolve: { conditions: frameworkResolveConditions("web-component") },
+};
+```
 
-1. **Aggiungi un set di modifiche**: dopo aver apportato le modifiche, esegui:
-```bash
+For Web Components applications, import the runtime from `@mission-platform/forge-router-web-components/runtime`, call
+`registerRouterElements()` once, call `setForgeRouter(appRouter)` after creating the app-owned router, pass structured
+`to` values as DOM properties, and use `MpMemoryHistory` in prerender/tests. A package that adds a reusable router
+element or changes Web Components behavior must add a neutral story under `src/**/*.stories.ts` and include the target in
+the Web Components Storybook workbench.
+
+## Documentation (`llms.txt`)
+
+Every package includes an `llms.txt` file at its root. This file provides a concise, technical description of the
+package's APIs, components, and behavior, enabling AI assistants to better understand and use the package.
+
+- **Title**: Use the scoped package name.
+- **Components/APIs**: Table or list of available symbols with their props and responsibilities.
+- **Examples**: Short code snippets for common use cases.
+
+## Package documentation ownership
+
+Package-specific installation, usage, limitations, contributor workflows, and API reference pages belong in the
+package's `docs/` directory, not in the repository-wide `docs/` tree. The docs site ingests these files directly and
+publishes them under a stable package namespace such as `/packages/barcode/index` or `/configs/eslint-config/index`.
+Project-wide concepts, architecture, workspace workflows, and cross-package troubleshooting remain in root `docs/`.
+
+Generated API pages live under `docs/reference/generated/` and are refreshed by the package `prebuild` hook; do not edit
+those files manually. To preview package documentation through the site, run the docs app build or use the all-workspace
+extractor described in the docs app README.
+
+## Publishing
+
+The Mission Platform uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+
+1. **Add a Changeset**: After making changes, run:
+   ```bash
    pnpm changeset
    ```
-   Seleziona il pacchetto e il tipo di modifica (patch, minor, major).
-2. **Conferma il changeset**: conferma il generato `.changeset/*.md` file.
-3. **Versione e pubblicazione**: CI/CD gestisce la pubblicazione effettiva, ma è possibile visualizzare in anteprima localmente le versioni con:
-```bash
+   Select the package and the type of change (patch, minor, major).
+2. **Commit the Changeset**: Commit the generated `.changeset/*.md` file.
+3. **Version and Publish**: CI/CD handles the actual publishing, but you can locally preview versions with:
+   ```bash
    pnpm changeset version
    ```
