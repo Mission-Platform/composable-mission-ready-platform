@@ -30,3 +30,5 @@ packages/tokens/.*-size-verification.css.map
 
 .env.local
 .artifacts/
+
+test-results/
