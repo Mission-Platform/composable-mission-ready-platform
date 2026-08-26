@@ -48,6 +48,7 @@
     "@mission-platform/vite-config": "workspace:*",
     "@mission-platform/vite-plugin-tokens": "workspace:*",
     "eslint": "catalog:eslint",
+    "postcss-html": "catalog:stylelint",
     "postcss-scss": "catalog:stylelint",
     "prettier": "catalog:prettier",
     "stylelint-config-recommended-vue": "catalog:stylelint",

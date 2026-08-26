@@ -11,6 +11,8 @@
     "build:ui": "vite build --mode ui",
     "test": "vitest run",
     "lint": "eslint .",
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\"",
     "format": "prettier --check ."
   },
   "dependencies": {
@@ -21,15 +23,21 @@
   "devDependencies": {
     "@mission-platform/eslint-config": "workspace:*",
     "@mission-platform/prettier-config": "workspace:*",
+    "@mission-platform/stylelint-config": "workspace:*",
     "@mission-platform/typescript-config": "workspace:*",
     "@mission-platform/vite-config": "workspace:*",
     "@vitejs/plugin-vue": "catalog:vue",
     "eslint": "catalog:eslint",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
     "prettier": "catalog:prettier",
     "typescript": "catalog:typescript",
     "vitest": "catalog:testing",
     "vite": "catalog:vite",
     "vue-tsc": "catalog:vue",
-    "sass-embedded": "catalog:vite"
+    "sass-embedded": "catalog:vite",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint"
   }
 }

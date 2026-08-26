@@ -84,6 +84,57 @@ packages/<name>/
 └── README.md
 ```
 
+## 面向包含样式的包的 Stylelint
+
+包含 `CSS`、`SCSS` 或 `Vue` 样式块的包必须提供可发现的 Stylelint 配置和 lint 脚本：
+
+```text
+packages/<name>/
+├── src/
+│   └── styles/                     # CSS, SCSS, and Vue style sources
+├── stylelint.config.mjs            # Workspace-local ESM configuration
+└── package.json                    # Stylelint scripts and devDependencies
+```
+
+将共享配置以及直接的语法和配置依赖添加到 `devDependencies`：
+
+```json
+{
+  "devDependencies": {
+    "@mission-platform/stylelint-config": "workspace:*",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint"
+  }
+}
+```
+
+从 `stylelint.config.mjs` 使用共享配置，而不是重复 `extends` 条目：
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
+添加覆盖工作区实际样式源的脚本，并在发布前运行检查：
+
+```json
+{
+  "scripts": {
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\""
+  }
+}
+```
+
+```bash
+pnpm exec turbo run lint:style --filter @mission-platform/<name>
+```
+
 ## 开发流程
 
 ### 创作规则

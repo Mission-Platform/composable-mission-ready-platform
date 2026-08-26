@@ -88,6 +88,15 @@ export default [
 ];
 ```
 
+Für Stylelint verwenden Sie dasselbe ESM-Import-/Spread-Muster in `stylelint.config.mjs`:
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
 ## Auswahl einer Konfiguration
 
 Verwenden Sie das Paket, dem das Anliegen gehört, anstatt Regeln in einen Arbeitsbereich zu kopieren. Build-Dateien für Anwendungen und Bibliotheken

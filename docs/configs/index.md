@@ -70,7 +70,7 @@ it is authored.
 To use a configuration in a workspace:
 
 1. Add the configuration package as a `devDependency` in `package.json`.
-2. Create a local configuration file (e.g., `eslint.config.js`).
+2. Create a local configuration file (for Stylelint, `stylelint.config.mjs`).
 3. Import and export/extend the base configuration.
 
 ```js
@@ -81,6 +81,15 @@ export default [
   ...baseConfig,
   // local overrides
 ];
+```
+
+For Stylelint, use the same ESM import/spread pattern in `stylelint.config.mjs`:
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
 ```
 
 ## Choosing a configuration

@@ -88,6 +88,15 @@ export default [
 ];
 ```
 
+对于 Stylelint，在 `stylelint.config.mjs` 中使用相同的 ESM 导入/spread 模式：
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
 ## 选择配置
 
 使用拥有关注点的包，而不是将规则复制到工作区中。应用程序和库构建文件

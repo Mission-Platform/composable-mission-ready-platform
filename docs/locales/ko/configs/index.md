@@ -88,6 +88,15 @@ export default [
 ];
 ```
 
+Stylelint의 경우 `stylelint.config.mjs`에서 동일한 ESM 가져오기/spread 패턴을 사용합니다.
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
 ## 구성 선택
 
 규칙을 작업 공간에 복사하는 대신 문제를 소유한 패키지를 사용하십시오. 애플리케이션 및 라이브러리 빌드 파일

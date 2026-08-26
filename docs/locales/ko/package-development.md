@@ -84,6 +84,57 @@ packages/<name>/
 └── README.md
 ```
 
+## 스타일이 있는 패키지의 Stylelint
+
+`CSS`, `SCSS` 또는 `Vue` 스타일 블록을 포함하는 패키지는 Stylelint 구성과 린트 스크립트를 포함해야 합니다.
+
+```text
+packages/<name>/
+├── src/
+│   └── styles/                     # CSS, SCSS, and Vue style sources
+├── stylelint.config.mjs            # Workspace-local ESM configuration
+└── package.json                    # Stylelint scripts and devDependencies
+```
+
+공유 구성과 직접적인 구문 및 구성 종속성을 `devDependencies`에 추가합니다.
+
+```json
+{
+  "devDependencies": {
+    "@mission-platform/stylelint-config": "workspace:*",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint"
+  }
+}
+```
+
+`extends` 항목을 복제하지 말고 `stylelint.config.mjs`에서 공유 구성을 사용합니다.
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
+작업 공간의 실제 스타일 소스를 포함하는 스크립트를 추가하고 게시 전에 검사를 실행합니다.
+
+```json
+{
+  "scripts": {
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\""
+  }
+}
+```
+
+```bash
+pnpm exec turbo run lint:style --filter @mission-platform/<name>
+```
+
 ## 개발 워크플로우
 
 ### 저작 규칙

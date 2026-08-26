@@ -88,6 +88,15 @@ export default [
 ];
 ```
 
+עבור Stylelint, השתמשו באותו דפוס ייבוא והפצת ESM בתוך `stylelint.config.mjs`:
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
 ## בחירת תצורה
 
 השתמש בחבילה שבבעלותה הדאגה במקום להעתיק כללים לסביבת עבודה. קבצי בניית יישומים וספריות

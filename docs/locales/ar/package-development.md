@@ -84,6 +84,57 @@ packages/<name>/
 └── README.md
 ```
 
+## Stylelint للحزم التي تحتوي على أنماط
+
+يجب أن تتضمن الحزم التي تحتوي على `CSS` أو `SCSS` أو كتل أنماط `Vue` إعداد Stylelint وبرامج الفحص التالية:
+
+```text
+packages/<name>/
+├── src/
+│   └── styles/                     # CSS, SCSS, and Vue style sources
+├── stylelint.config.mjs            # Workspace-local ESM configuration
+└── package.json                    # Stylelint scripts and devDependencies
+```
+
+أضف التكوين المشترك وتبعيات بناء الجملة والتكوين المباشرة إلى `devDependencies`:
+
+```json
+{
+  "devDependencies": {
+    "@mission-platform/stylelint-config": "workspace:*",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint"
+  }
+}
+```
+
+استخدم التكوين المشترك من `stylelint.config.mjs` بدلاً من تكرار إدخالات `extends`:
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
+أضف البرامج النصية التي تغطي مصادر الأنماط الفعلية لمساحة العمل، ثم شغّل الفحص قبل النشر:
+
+```json
+{
+  "scripts": {
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\""
+  }
+}
+```
+
+```bash
+pnpm exec turbo run lint:style --filter @mission-platform/<name>
+```
+
 ## سير عمل التطوير
 
 ### قواعد التأليف

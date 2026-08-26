@@ -5,12 +5,9 @@
  *   - stylelint-config-standard-scss   → standard CSS + SCSS rules
  *   - stylelint-config-recommended-vue → Vue SFC <style> block support
  *
- * Usage in .stylelintrc.js (or stylelint.config.js):
+ * Usage in a workspace-local stylelint.config.mjs:
  *   import baseConfig from '@mission-platform/stylelint-config'
  *   export default { ...baseConfig }
- *
- * Or in .stylelintrc.json:
- *   { "extends": ["@mission-platform/stylelint-config"] }
  */
 const config = {
   extends: ['stylelint-config-standard-scss', 'stylelint-config-recommended-vue'],

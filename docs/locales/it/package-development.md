@@ -84,6 +84,57 @@ packages/<name>/
 └── README.md
 ```
 
+## Stylelint per pacchetti con stili
+
+I pacchetti che contengono `CSS`, `SCSS` o blocchi di stile `Vue` devono includere una configurazione Stylelint e script di lint:
+
+```text
+packages/<name>/
+├── src/
+│   └── styles/                     # CSS, SCSS, and Vue style sources
+├── stylelint.config.mjs            # Workspace-local ESM configuration
+└── package.json                    # Stylelint scripts and devDependencies
+```
+
+Aggiungete la configurazione condivisa e le dipendenze dirette di sintassi e configurazione a `devDependencies`:
+
+```json
+{
+  "devDependencies": {
+    "@mission-platform/stylelint-config": "workspace:*",
+    "postcss-html": "catalog:stylelint",
+    "postcss-scss": "catalog:stylelint",
+    "stylelint": "catalog:stylelint",
+    "stylelint-config-recommended-vue": "catalog:stylelint",
+    "stylelint-config-standard-scss": "catalog:stylelint"
+  }
+}
+```
+
+Usate la configurazione condivisa da `stylelint.config.mjs` invece di duplicare le voci `extends`:
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
+Aggiungete script che coprano le sorgenti di stile effettive del workspace ed eseguite il controllo prima della pubblicazione:
+
+```json
+{
+  "scripts": {
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\""
+  }
+}
+```
+
+```bash
+pnpm exec turbo run lint:style --filter @mission-platform/<name>
+```
+
 ## Flusso di lavoro di sviluppo
 
 ### Regole di creazione

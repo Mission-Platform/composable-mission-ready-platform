@@ -88,6 +88,15 @@ export default [
 ];
 ```
 
+Stylelint では、`stylelint.config.mjs` で同じ ESM の import/spread パターンを使用します。
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
 ## 構成の選択
 
 ルールをワークスペースにコピーするのではなく、懸念事項を所有するパッケージを使用します。アプリケーションとライブラリのビルド ファイル

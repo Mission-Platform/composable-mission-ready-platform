@@ -3922,6 +3922,9 @@ importers:
       '@mission-platform/storybook-framework':
         specifier: workspace:*
         version: link:../../configs/storybook-framework
+      '@mission-platform/stylelint-config':
+        specifier: workspace:*
+        version: link:../../configs/stylelint-config
       '@mission-platform/tsdown-config':
         specifier: workspace:*
         version: link:../../configs/tsdown-config
@@ -3958,6 +3961,12 @@ importers:
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
+      postcss-html:
+        specifier: catalog:stylelint
+        version: 1.8.1
+      postcss-scss:
+        specifier: catalog:stylelint
+        version: 4.0.9(postcss@8.5.26)
       prettier:
         specifier: catalog:prettier
         version: 3.9.6
@@ -3976,6 +3985,12 @@ importers:
       stylelint:
         specifier: catalog:stylelint
         version: 17.14.1(supports-color@10.2.2)(typescript@6.0.3)
+      stylelint-config-recommended-vue:
+        specifier: catalog:stylelint
+        version: 1.6.1(postcss-html@1.8.1)(stylelint@17.14.1(supports-color@10.2.2)(typescript@6.0.3))
+      stylelint-config-standard-scss:
+        specifier: catalog:stylelint
+        version: 17.0.0(postcss@8.5.26)(stylelint@17.14.1(supports-color@10.2.2)(typescript@6.0.3))
       svelte:
         specifier: catalog:svelte
         version: 5.56.10(@typescript-eslint/types@8.67.0)
@@ -6371,6 +6386,9 @@ importers:
       '@mission-platform/storybook-framework':
         specifier: workspace:*
         version: link:../../configs/storybook-framework
+      '@mission-platform/stylelint-config':
+        specifier: workspace:*
+        version: link:../../configs/stylelint-config
       '@mission-platform/tsdown-config':
         specifier: workspace:*
         version: link:../../configs/tsdown-config
@@ -6407,6 +6425,12 @@ importers:
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
+      postcss-html:
+        specifier: catalog:stylelint
+        version: 1.8.1
+      postcss-scss:
+        specifier: catalog:stylelint
+        version: 4.0.9(postcss@8.5.26)
       prettier:
         specifier: catalog:prettier
         version: 3.9.6
@@ -6425,6 +6449,12 @@ importers:
       stylelint:
         specifier: catalog:stylelint
         version: 17.14.1(supports-color@10.2.2)(typescript@6.0.3)
+      stylelint-config-recommended-vue:
+        specifier: catalog:stylelint
+        version: 1.6.1(postcss-html@1.8.1)(stylelint@17.14.1(supports-color@10.2.2)(typescript@6.0.3))
+      stylelint-config-standard-scss:
+        specifier: catalog:stylelint
+        version: 17.0.0(postcss@8.5.26)(stylelint@17.14.1(supports-color@10.2.2)(typescript@6.0.3))
       svelte:
         specifier: catalog:svelte
         version: 5.56.10(@typescript-eslint/types@8.67.0)
@@ -6625,6 +6655,9 @@ importers:
       '@mission-platform/storybook-framework':
         specifier: workspace:*
         version: link:../../configs/storybook-framework
+      '@mission-platform/stylelint-config':
+        specifier: workspace:*
+        version: link:../../configs/stylelint-config
       '@mission-platform/tsdown-config':
         specifier: workspace:*
         version: link:../../configs/tsdown-config
@@ -6661,6 +6694,12 @@ importers:
       jsdom:
         specifier: catalog:testing
         version: 29.1.1
+      postcss-html:
+        specifier: catalog:stylelint
+        version: 1.8.1
+      postcss-scss:
+        specifier: catalog:stylelint
+        version: 4.0.9(postcss@8.5.26)
       prettier:
         specifier: catalog:prettier
         version: 3.9.6
@@ -6679,6 +6718,12 @@ importers:
       stylelint:
         specifier: catalog:stylelint
         version: 17.14.1(supports-color@10.2.2)(typescript@6.0.3)
+      stylelint-config-recommended-vue:
+        specifier: catalog:stylelint
+        version: 1.6.1(postcss-html@1.8.1)(stylelint@17.14.1(supports-color@10.2.2)(typescript@6.0.3))
+      stylelint-config-standard-scss:
+        specifier: catalog:stylelint
+        version: 17.0.0(postcss@8.5.26)(stylelint@17.14.1(supports-color@10.2.2)(typescript@6.0.3))
       svelte:
         specifier: catalog:svelte
         version: 5.56.10(@typescript-eslint/types@8.67.0)
@@ -6827,6 +6872,9 @@ importers:
       eslint:
         specifier: catalog:eslint
         version: 10.9.0(jiti@2.7.0)(supports-color@10.2.2)
+      postcss-html:
+        specifier: catalog:stylelint
+        version: 1.8.1
       postcss-scss:
         specifier: catalog:stylelint
         version: 4.0.9(postcss@8.5.26)

@@ -88,6 +88,15 @@ export default [
 ];
 ```
 
+Gebruik voor Stylelint hetzelfde ESM-import-/spreadpatroon in `stylelint.config.mjs`:
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
 ## Een configuratie kiezen
 
 Gebruik het pakket dat eigenaar is van het probleem in plaats van regels naar een werkruimte te kopiëren. Applicatie- en bibliotheekbuildbestanden

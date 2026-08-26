@@ -10,7 +10,28 @@ Compartido Stylelint reglas para CSS y SCSS en Mission Platform.
 ## Instalar y usar
 
 ```bash
-pnpm add --save-dev @mission-platform/stylelint-config
+pnpm add --save-dev @mission-platform/stylelint-config postcss-html postcss-scss \
+  stylelint stylelint-config-recommended-vue stylelint-config-standard-scss
+```
+
+Los espacios de trabajo con estilos usan un archivo ESM local `stylelint.config.mjs`. Importa y distribuye la configuración compartida en lugar de duplicar sus entradas `extends`:
+
+```js
+// stylelint.config.mjs
+import baseConfig from '@mission-platform/stylelint-config';
+
+export default { ...baseConfig };
+```
+
+La configuración compartida extiende `stylelint-config-standard-scss` y `stylelint-config-recommended-vue`. Usa `postcss-html` de forma predeterminada, `postcss-scss` para `**/*.scss` y `postcss-html` para bloques de estilo Vue. Añade las dependencias directas de soporte con versiones `catalog:stylelint` y el paquete de configuración compartida con `workspace:*` en `devDependencies`.
+
+```json
+{
+  "scripts": {
+    "lint:style": "stylelint \"src/**/*.{vue,scss,css}\"",
+    "lint:style:fix": "stylelint --fix \"src/**/*.{vue,scss,css}\""
+  }
+}
 ```
 
 Extender el paquete desde el espacio de trabajo. `stylelint.config.mjs`. Mantener componente
