@@ -17,13 +17,7 @@ export default [
     outDir: "dist-node",
     platform: "node",
     overrides: {
-      plugins: [
-        forgeWebScriptPlugin({
-          root: import.meta.dirname,
-          requireExports: false,
-          optimization: "release",
-        }),
-      ],
+      plugins: [webScript],
     },
   }),
 ];
