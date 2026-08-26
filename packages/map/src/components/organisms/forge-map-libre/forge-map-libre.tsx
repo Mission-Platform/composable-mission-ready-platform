@@ -1,12 +1,4 @@
-import {
-  classNames,
-  type MpChild,
-  type MpElement,
-  Slot,
-  useEffect,
-  useRef,
-  useState,
-} from '@mission-platform/forge';
+import { classNames, type MpChild, type MpElement, Slot, useEffect, useRef, useState } from '@mission-platform/forge';
 import { LngLat, Map, type MapMouseEvent, type MapOptions } from 'maplibre-gl';
 
 import { MapContext } from '@/map-context';
