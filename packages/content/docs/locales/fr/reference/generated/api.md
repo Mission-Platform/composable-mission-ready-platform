@@ -26,7 +26,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const CONTENT_DOCUMENT_VERSION
+export const CONTENT_DOCUMENT_VERSION;
 ```
 
 La version actuelle du format de document de contenu canonique.
@@ -46,7 +46,8 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type ContentBlock = ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
+export type ContentBlock =
+  ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
 ```
 
 Aucune description fournie.
@@ -218,16 +219,16 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function assertContentDocument(value: unknown): asserts value is ContentDocument
+function assertContentDocument(value: unknown): asserts value is ContentDocument;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | inconnu |  |
+| Nom    | Tapez   | Descriptif |
+| ------ | ------- | ---------- |
+| valeur | inconnu |            |
 
 ### ContenuValidationRésultat
 
@@ -244,48 +245,48 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function isContentDocument(value: unknown): value is ContentDocument
+function isContentDocument(value: unknown): value is ContentDocument;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| valeur | inconnu |  |
+| Nom    | Tapez   | Descriptif |
+| ------ | ------- | ---------- |
+| valeur | inconnu |            |
 
 ### normaliserDocument
 
 **Genre :** fonction
 
 ```typescript
-function normalizeDocument(document: ContentDocument): ContentDocument
+function normalizeDocument(document: ContentDocument): ContentDocument;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| documents | ContenuDocument |  |
+| Nom       | Tapez           | Descriptif |
+| --------- | --------------- | ---------- |
+| documents | ContenuDocument |            |
 
 ### validerDocument
 
 **Genre :** fonction
 
 ```typescript
-function validateDocument(document: unknown): ContentValidationResult
+function validateDocument(document: unknown): ContentValidationResult;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| documents | inconnu |  |
+| Nom       | Tapez   | Descriptif |
+| --------- | ------- | ---------- |
+| documents | inconnu |            |
 
 ## `src/builders/serialize`
 
@@ -294,7 +295,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const toHtml: ContentBuilder<string>
+export const toHtml: ContentBuilder<string>;
 ```
 
 Aucune description fournie.
@@ -304,7 +305,7 @@ Aucune description fournie.
 **Genre :** constante
 
 ```typescript
-export const toMarkdown: ContentBuilder<string>
+export const toMarkdown: ContentBuilder<string>;
 ```
 
 Aucune description fournie.
@@ -316,7 +317,24 @@ Aucune description fournie.
 **Genre :** type
 
 ```typescript
-export type CodeBlockLanguage = | 'bash' | 'css' | 'dockerfile' | 'go' | 'ini' | 'javascript' | 'json' | 'markdown' | 'plaintext' | 'python' | 'rust' | 'scss' | 'shell' | 'sql' | 'typescript' | 'xml' | 'yaml';
+export type CodeBlockLanguage =
+  | 'bash'
+  | 'css'
+  | 'dockerfile'
+  | 'go'
+  | 'ini'
+  | 'javascript'
+  | 'json'
+  | 'markdown'
+  | 'plaintext'
+  | 'python'
+  | 'rust'
+  | 'scss'
+  | 'shell'
+  | 'sql'
+  | 'typescript'
+  | 'xml'
+  | 'yaml';
 ```
 
 Langues enregistrées avec le `highlight.js/lib/core` fourni.
@@ -336,7 +354,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
+function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement;
 ```
 
 `ForgeCodeBlock` — un visualiseur de code à mise en évidence de la syntaxe créé une fois dans le
@@ -360,9 +378,9 @@ Les SVG de copie en ligne sont les `@mission-platform/icons` à écriture unique
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<CodeBlockProperties> |  |
+| Nom        | Tapez                              | Descriptif |
+| ---------- | ---------------------------------- | ---------- |
+| propriétés | Lecture seule<CodeBlockProperties> |            |
 
 ## `src/components/atoms/forge-mermaid/forge-mermaid`
 
@@ -371,7 +389,7 @@ Les SVG de copie en ligne sont les `@mission-platform/icons` à écriture unique
 **Genre :** fonction
 
 ```typescript
-function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
+function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement;
 ```
 
 Rend un bloc Mermaid avec une source de secours accessible. La sirène est groupée
@@ -380,9 +398,9 @@ morceau; les API du navigateur sont toujours appelées uniquement à partir de l
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<ForgeMermaidProperties> |  |
+| Nom        | Tapez                                 | Descriptif |
+| ---------- | ------------------------------------- | ---------- |
+| propriétés | Lecture seule<ForgeMermaidProperties> |            |
 
 ### ForgeSirènePropriétés
 
@@ -401,7 +419,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement
+function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbarButton` — un seul contrôle de barre d'outils comportant uniquement des icônes, créé une seule fois
@@ -415,9 +433,9 @@ variante transparente `ghost` afin que la barre d'outils se lit comme une bande 
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<WysiwygToolbarButtonProperties> |  |
+| Nom        | Tapez                                         | Descriptif |
+| ---------- | --------------------------------------------- | ---------- |
+| propriétés | Lecture seule<WysiwygToolbarButtonProperties> |            |
 
 ### WysiwygToolbarButtonPropriétés
 
@@ -436,7 +454,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement
+function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement;
 ```
 
 `ForgeMarkdown` - un moteur de rendu Markdown en lecture seule créé une fois en mode neutre
@@ -455,9 +473,9 @@ style via le module CSS colocalisé `forge-markdown.module.scss`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<MarkdownProperties> |  |
+| Nom        | Tapez                             | Descriptif |
+| ---------- | --------------------------------- | ---------- |
+| propriétés | Lecture seule<MarkdownProperties> |            |
 
 ### Propriétés Markdown
 
@@ -488,7 +506,7 @@ Jeton de taille – échelle canonique 2xs → 2xl.
 **Genre :** fonction
 
 ```typescript
-function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement
+function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockControls` — la superposition d'édition par bloc pour
@@ -504,9 +522,9 @@ vole la sélection de la surface d'édition.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<WysiwygBlockControlsProperties> |  |
+| Nom        | Tapez                                         | Descriptif |
+| ---------- | --------------------------------------------- | ---------- |
+| propriétés | Lecture seule<WysiwygBlockControlsProperties> |            |
 
 ### WysiwygBlockControlsPropriétés
 
@@ -525,7 +543,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement
+function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockMenu` — le sélecteur de style de bloc pour {@link ForgeWysiwygEditor},
@@ -541,9 +559,9 @@ le choix d'un format ne vole jamais la sélection de la surface d'édition.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<WysiwygBlockMenuProperties> |  |
+| Nom        | Tapez                                     | Descriptif |
+| ---------- | ----------------------------------------- | ---------- |
+| propriétés | Lecture seule<WysiwygBlockMenuProperties> |            |
 
 ### WysiwygBlockMenuPropriétés
 
@@ -562,7 +580,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement
+function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement;
 ```
 
 `ForgeWysiwygStatusBar` — la barre d'état de l'éditeur, extraite dans sa propre barre d'état
@@ -579,9 +597,9 @@ via le module CSS colocalisé `forge-wysiwyg-status-bar.module.scss`.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<WysiwygStatusBarProperties> |  |
+| Nom        | Tapez                                     | Descriptif |
+| ---------- | ----------------------------------------- | ---------- |
+| propriétés | Lecture seule<WysiwygStatusBarProperties> |            |
 
 ### WysiwygStatusBarPropriétés
 
@@ -615,7 +633,7 @@ remplace entièrement les segments de mots/caractères intégrés par un ensembl
 **Genre :** fonction
 
 ```typescript
-function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement
+function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbar` — la barre d'outils de formatage pour {@link ForgeWysiwygEditor},
@@ -637,9 +655,9 @@ ne vole jamais la sélection de la surface d'édition.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<WysiwygToolbarProperties> |  |
+| Nom        | Tapez                                   | Descriptif |
+| ---------- | --------------------------------------- | ---------- |
+| propriétés | Lecture seule<WysiwygToolbarProperties> |            |
 
 ### WysiwygToolbarItem
 
@@ -674,7 +692,7 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement
+function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement;
 ```
 
 `ForgeMonacoEditor` — l'éditeur de code de Monaco créé une fois dans le JSX neutre
@@ -703,9 +721,9 @@ WASM pour navigateur uniquement), exactement comme le runtime Monaco lui-même.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<MonacoEditorProperties> |  |
+| Nom        | Tapez                                 | Descriptif |
+| ---------- | ------------------------------------- | ---------- |
+| propriétés | Lecture seule<MonacoEditorProperties> |            |
 
 ### MonacoEditorCompletionItemProvider
 
@@ -754,7 +772,7 @@ Contexte transmis à {@link MonacoEditorProperties.onReady} une fois l'éditeur 
 **Genre :** fonction
 
 ```typescript
-function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement
+function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement;
 ```
 
 `ForgeWysiwygEditor` - un éditeur de texte riche WYSIWYG indépendant du framework créé
@@ -785,9 +803,9 @@ avec `spellCheck` — apportant la relecture Hunspell + Harper au balisage brut.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| propriétés | Lecture seule<WysiwygEditorProperties> |  |
+| Nom        | Tapez                                  | Descriptif |
+| ---------- | -------------------------------------- | ---------- |
+| propriétés | Lecture seule<WysiwygEditorProperties> |            |
 
 ### WysiwygEditorPropriétés
 
@@ -806,25 +824,29 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function attachForgeWebScriptMonaco(editor: monaco.editor.IStandaloneCodeEditor, monacoRuntime: MonacoRuntime, options: ForgeWebScriptMonacoOptions = {}): ForgeWebScriptMonacoHandle
+function attachForgeWebScriptMonaco(
+  editor: monaco.editor.IStandaloneCodeEditor,
+  monacoRuntime: MonacoRuntime,
+  options: ForgeWebScriptMonacoOptions = {},
+): ForgeWebScriptMonacoHandle;
 ```
 
 Attachez les diagnostics, l'achèvement, le survol, la synchronisation du modèle et la tokenisation à un éditeur.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| éditeur | monaco.editor.IStandaloneCodeEditor |  |
-| monacoRuntime | MonacoRuntime |  |
-| options | ForgeWebScriptMonacoOptions |  |
+| Nom           | Tapez                               | Descriptif |
+| ------------- | ----------------------------------- | ---------- |
+| éditeur       | monaco.editor.IStandaloneCodeEditor |            |
+| monacoRuntime | MonacoRuntime                       |            |
+| options       | ForgeWebScriptMonacoOptions         |            |
 
 ### forgeWebScriptLanguageId
 
 **Genre :** constante
 
 ```typescript
-export const forgeWebScriptLanguageId
+export const forgeWebScriptLanguageId;
 ```
 
 Aucune description fournie.
@@ -854,17 +876,20 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId = forgeWebScriptLanguageId): monaco.IDisposable
+function registerForgeWebScriptLanguage(
+  monacoRuntime: MonacoRuntime,
+  languageId = forgeWebScriptLanguageId,
+): monaco.IDisposable;
 ```
 
 Enregistrez le langage Forge Web Script et le fournisseur de jetons lexicaux.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| monacoRuntime | MonacoRuntime |  |
-| identifiant de langue |  |  |
+| Nom                   | Tapez         | Descriptif |
+| --------------------- | ------------- | ---------- |
+| monacoRuntime         | MonacoRuntime |            |
+| identifiant de langue |               |            |
 
 ## `src/parsers/html`
 
@@ -873,16 +898,16 @@ Enregistrez le langage Forge Web Script et le fournisseur de jetons lexicaux.
 **Genre :** fonction
 
 ```typescript
-function parseHtml(source: string): ContentDocument
+function parseHtml(source: string): ContentDocument;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| source | chaîne |            |
 
 ## `src/parsers/markdown`
 
@@ -891,13 +916,13 @@ Aucune description fournie.
 **Genre :** fonction
 
 ```typescript
-function parseMarkdown(source: string): ContentDocument
+function parseMarkdown(source: string): ContentDocument;
 ```
 
 Aucune description fournie.
 
 #### Paramètres
 
-| Nom | Tapez | Descriptif |
-| --- | --- | --- |
-| source | chaîne |  |
+| Nom    | Tapez  | Descriptif |
+| ------ | ------ | ---------- |
+| source | chaîne |            |

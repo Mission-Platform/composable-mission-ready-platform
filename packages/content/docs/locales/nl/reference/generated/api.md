@@ -26,7 +26,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const CONTENT_DOCUMENT_VERSION
+export const CONTENT_DOCUMENT_VERSION;
 ```
 
 De huidige versie van het canonieke inhoudsdocumentformaat.
@@ -46,7 +46,8 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type ContentBlock = ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
+export type ContentBlock =
+  ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
 ```
 
 Geen beschrijving opgegeven.
@@ -218,16 +219,16 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function assertContentDocument(value: unknown): asserts value is ContentDocument
+function assertContentDocument(value: unknown): asserts value is ContentDocument;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | onbekend |  |
+| Naam   | Typ      | Beschrijving |
+| ------ | -------- | ------------ |
+| waarde | onbekend |              |
 
 ### InhoudValidatieResultaat
 
@@ -244,48 +245,48 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function isContentDocument(value: unknown): value is ContentDocument
+function isContentDocument(value: unknown): value is ContentDocument;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| waarde | onbekend |  |
+| Naam   | Typ      | Beschrijving |
+| ------ | -------- | ------------ |
+| waarde | onbekend |              |
 
 ### normaliserenDocument
 
 **Soort:** functie
 
 ```typescript
-function normalizeDocument(document: ContentDocument): ContentDocument
+function normalizeDocument(document: ContentDocument): ContentDocument;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| document | InhoudDocument |  |
+| Naam     | Typ            | Beschrijving |
+| -------- | -------------- | ------------ |
+| document | InhoudDocument |              |
 
 ### valideerDocument
 
 **Soort:** functie
 
 ```typescript
-function validateDocument(document: unknown): ContentValidationResult
+function validateDocument(document: unknown): ContentValidationResult;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| document | onbekend |  |
+| Naam     | Typ      | Beschrijving |
+| -------- | -------- | ------------ |
+| document | onbekend |              |
 
 ## `src/builders/serialize`
 
@@ -294,7 +295,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const toHtml: ContentBuilder<string>
+export const toHtml: ContentBuilder<string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -304,7 +305,7 @@ Geen beschrijving opgegeven.
 **Soort:** constant
 
 ```typescript
-export const toMarkdown: ContentBuilder<string>
+export const toMarkdown: ContentBuilder<string>;
 ```
 
 Geen beschrijving opgegeven.
@@ -316,7 +317,24 @@ Geen beschrijving opgegeven.
 **Soort:** type
 
 ```typescript
-export type CodeBlockLanguage = | 'bash' | 'css' | 'dockerfile' | 'go' | 'ini' | 'javascript' | 'json' | 'markdown' | 'plaintext' | 'python' | 'rust' | 'scss' | 'shell' | 'sql' | 'typescript' | 'xml' | 'yaml';
+export type CodeBlockLanguage =
+  | 'bash'
+  | 'css'
+  | 'dockerfile'
+  | 'go'
+  | 'ini'
+  | 'javascript'
+  | 'json'
+  | 'markdown'
+  | 'plaintext'
+  | 'python'
+  | 'rust'
+  | 'scss'
+  | 'shell'
+  | 'sql'
+  | 'typescript'
+  | 'xml'
+  | 'yaml';
 ```
 
 Talen geregistreerd bij de gebundelde `highlight.js/lib/core`.
@@ -336,7 +354,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
+function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement;
 ```
 
 `ForgeCodeBlock` — een in de syntaxis gemarkeerde codeviewer die ooit in de
@@ -351,18 +369,19 @@ het wereldwijde hljs-tokenthema `forge-code-block.hljs.css`.
 Vervangingen van de originele Vue SFC: de gemarkeerde uitvoer van `v-html`
 wordt een **`useRef` host + `useEffect` `innerHTML`** toewijzing (de
 `ForgeWindowPopout` ontsnappingsluik), aangezien het neutrale dialect geen `v-html` modelleert
+
 - dus de gemarkeerde markup wordt op de client geïnjecteerd en de SSR-markup is dat ook
-de statische schil; de `computed`-markering wordt {@link useMemo}; de kopie
-`ref` + `setTimeout` worden {@link useState} + een {@link useRef} timer; de
-inline kopie-SVG's zijn de eenmalige beschrijfbare `@mission-platform/icons`
-`ForgeIconCopy`/`ForgeIconCheck`; en het mondiale hljs-thema `<style>`
-`@import` wordt de `forge-code-block.hljs.css`-import met het blote neveneffect.
+  de statische schil; de `computed`-markering wordt {@link useMemo}; de kopie
+  `ref` + `setTimeout` worden {@link useState} + een {@link useRef} timer; de
+  inline kopie-SVG's zijn de eenmalige beschrijfbare `@mission-platform/icons`
+  `ForgeIconCopy`/`ForgeIconCheck`; en het mondiale hljs-thema `<style>`
+  `@import` wordt de `forge-code-block.hljs.css`-import met het blote neveneffect.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<CodeBlockProperties> |  |
+| Naam          | Typ                               | Beschrijving |
+| ------------- | --------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<CodeBlockProperties> |              |
 
 ## `src/components/atoms/forge-mermaid/forge-mermaid`
 
@@ -371,7 +390,7 @@ inline kopie-SVG's zijn de eenmalige beschrijfbare `@mission-platform/icons`
 **Soort:** functie
 
 ```typescript
-function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
+function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement;
 ```
 
 Rendert een zeemeerminblok met een toegankelijke bronterugval. Zeemeermin is gebundeld
@@ -380,9 +399,9 @@ stuk; browser-API's worden nog steeds alleen aangeroepen vanuit het clienteffect
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<ForgeMermaidProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<ForgeMermaidProperties> |              |
 
 ### ForgeZeemeermineigenschappen
 
@@ -401,7 +420,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement
+function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbarButton` — een werkbalkbesturingselement met alleen maar pictogrammen, één keer geschreven
@@ -415,9 +434,9 @@ transparante `ghost`-variant zodat de werkbalk leest als een platte strook met p
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<WysiwygToolbarButtonProperties> |  |
+| Naam          | Typ                                          | Beschrijving |
+| ------------- | -------------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<WysiwygToolbarButtonProperties> |              |
 
 ### WysiwygToolbarButtonEigenschappen
 
@@ -436,7 +455,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement
+function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement;
 ```
 
 `ForgeMarkdown` — een alleen-lezen Markdown-renderer die één keer in de neutrale stand is geschreven
@@ -455,9 +474,9 @@ styling via de co-located CSS-module `forge-markdown.module.scss`.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MarkdownProperties> |  |
+| Naam          | Typ                              | Beschrijving |
+| ------------- | -------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<MarkdownProperties> |              |
 
 ### MarkdownEigenschappen
 
@@ -488,7 +507,7 @@ Grootte token - canonieke 2xs → 2xl schaal.
 **Soort:** functie
 
 ```typescript
-function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement
+function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockControls` — de bewerkingsoverlay per blok voor
@@ -504,9 +523,9 @@ steelt de selectie van het bewerkingsoppervlak.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<WysiwygBlockControlsProperties> |  |
+| Naam          | Typ                                          | Beschrijving |
+| ------------- | -------------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<WysiwygBlockControlsProperties> |              |
 
 ### WysiwygBlockControlsEigenschappen
 
@@ -525,7 +544,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement
+function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockMenu` — de blokstijlselector voor {@link ForgeWysiwygEditor},
@@ -541,9 +560,9 @@ Als u een formaat kiest, wordt de selectie nooit van het bewerkingsoppervlak weg
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<WysiwygBlockMenuProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<WysiwygBlockMenuProperties> |              |
 
 ### WysiwygBlockMenuEigenschappen
 
@@ -562,7 +581,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement
+function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement;
 ```
 
 `ForgeWysiwygStatusBar` — de statusbalk van de editor, geëxtraheerd in zijn eigen statusbalk
@@ -579,9 +598,9 @@ via de naast elkaar geplaatste CSS-module `forge-wysiwyg-status-bar.module.scss`
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<WysiwygStatusBarProperties> |  |
+| Naam          | Typ                                      | Beschrijving |
+| ------------- | ---------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<WysiwygStatusBarProperties> |              |
 
 ### WysiwygStatusBarProperties
 
@@ -615,7 +634,7 @@ vervangt de ingebouwde woord-/tekensegmenten volledig door een aangepaste set.
 **Soort:** functie
 
 ```typescript
-function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement
+function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbar` — de opmaakwerkbalk voor {@link ForgeWysiwygEditor},
@@ -637,9 +656,9 @@ steelt nooit de selectie van het bewerkingsoppervlak.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<WysiwygToolbarProperties> |  |
+| Naam          | Typ                                    | Beschrijving |
+| ------------- | -------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<WysiwygToolbarProperties> |              |
 
 ### WysiwygToolbarItem
 
@@ -674,7 +693,7 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement
+function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement;
 ```
 
 `ForgeMonacoEditor` — de Monaco-code-editor die ooit in de neutrale JSX is geschreven
@@ -703,9 +722,9 @@ browser-only WASM), precies zoals de Monaco-runtime zelf.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<MonacoEditorProperties> |  |
+| Naam          | Typ                                  | Beschrijving |
+| ------------- | ------------------------------------ | ------------ |
+| eigenschappen | Alleen-lezen<MonacoEditorProperties> |              |
 
 ### MonacoEditorCompletionItemProvider
 
@@ -754,7 +773,7 @@ Context wordt doorgegeven aan {@link MonacoEditorProperties.onReady} zodra de ed
 **Soort:** functie
 
 ```typescript
-function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement
+function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement;
 ```
 
 `ForgeWysiwygEditor` - een raamwerk-agnostische WYSIWYG rich-text-editor geschreven
@@ -785,9 +804,9 @@ met `spellCheck` — waardoor proeflezen van Hunspell + Harper naar de ruwe mark
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| eigenschappen | Alleen-lezen<WysiwygEditorProperties> |  |
+| Naam          | Typ                                   | Beschrijving |
+| ------------- | ------------------------------------- | ------------ |
+| eigenschappen | Alleen-lezen<WysiwygEditorProperties> |              |
 
 ### WysiwygEditorProperties
 
@@ -806,25 +825,29 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function attachForgeWebScriptMonaco(editor: monaco.editor.IStandaloneCodeEditor, monacoRuntime: MonacoRuntime, options: ForgeWebScriptMonacoOptions = {}): ForgeWebScriptMonacoHandle
+function attachForgeWebScriptMonaco(
+  editor: monaco.editor.IStandaloneCodeEditor,
+  monacoRuntime: MonacoRuntime,
+  options: ForgeWebScriptMonacoOptions = {},
+): ForgeWebScriptMonacoHandle;
 ```
 
 Voeg diagnostiek, voltooiing, hover, modelsynchronisatie en tokenisatie toe aan een editor.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| redacteur | monaco.editor.IStandaloneCodeEditor |  |
-| monacoRuntime | MonacoRuntime |  |
-| opties | ForgeWebScriptMonacoOptions |  |
+| Naam          | Typ                                 | Beschrijving |
+| ------------- | ----------------------------------- | ------------ |
+| redacteur     | monaco.editor.IStandaloneCodeEditor |              |
+| monacoRuntime | MonacoRuntime                       |              |
+| opties        | ForgeWebScriptMonacoOptions         |              |
 
 ### forgeWebScriptLanguageId
 
 **Soort:** constant
 
 ```typescript
-export const forgeWebScriptLanguageId
+export const forgeWebScriptLanguageId;
 ```
 
 Geen beschrijving opgegeven.
@@ -854,17 +877,20 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId = forgeWebScriptLanguageId): monaco.IDisposable
+function registerForgeWebScriptLanguage(
+  monacoRuntime: MonacoRuntime,
+  languageId = forgeWebScriptLanguageId,
+): monaco.IDisposable;
 ```
 
 Registreer de Forge Web Script-taal en de lexicale tokenprovider.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| monacoRuntime | MonacoRuntime |  |
-| taalID |  |  |
+| Naam          | Typ           | Beschrijving |
+| ------------- | ------------- | ------------ |
+| monacoRuntime | MonacoRuntime |              |
+| taalID        |               |              |
 
 ## `src/parsers/html`
 
@@ -873,16 +899,16 @@ Registreer de Forge Web Script-taal en de lexicale tokenprovider.
 **Soort:** functie
 
 ```typescript
-function parseHtml(source: string): ContentDocument
+function parseHtml(source: string): ContentDocument;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| bron | tekenreeks |              |
 
 ## `src/parsers/markdown`
 
@@ -891,13 +917,13 @@ Geen beschrijving opgegeven.
 **Soort:** functie
 
 ```typescript
-function parseMarkdown(source: string): ContentDocument
+function parseMarkdown(source: string): ContentDocument;
 ```
 
 Geen beschrijving opgegeven.
 
 #### Parameters
 
-| Naam | Typ | Beschrijving |
-| --- | --- | --- |
-| bron | tekenreeks |  |
+| Naam | Typ        | Beschrijving |
+| ---- | ---------- | ------------ |
+| bron | tekenreeks |              |

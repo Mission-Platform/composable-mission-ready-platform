@@ -26,7 +26,7 @@ export interface CodeBlock
 **種類:** 定数
 
 ```typescript
-export const CONTENT_DOCUMENT_VERSION
+export const CONTENT_DOCUMENT_VERSION;
 ```
 
 正規コンテンツドキュメント形式の現在のバージョン。
@@ -46,7 +46,8 @@ export type ContentAlign = 'left' | 'center' | 'right' | 'justify';
 **種類：**タイプ
 
 ```typescript
-export type ContentBlock = ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
+export type ContentBlock =
+  ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
 ```
 
 説明はありません。
@@ -218,16 +219,16 @@ export interface TextNode
 **種類:** 関数
 
 ```typescript
-function assertContentDocument(value: unknown): asserts value is ContentDocument
+function assertContentDocument(value: unknown): asserts value is ContentDocument;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |不明 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 不明   |      |
 
 ### コンテンツ検証結果
 
@@ -244,48 +245,48 @@ export interface ContentValidationResult
 **種類:** 関数
 
 ```typescript
-function isContentDocument(value: unknown): value is ContentDocument
+function isContentDocument(value: unknown): value is ContentDocument;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|値 |不明 |  |
+| 名前 | タイプ | 説明 |
+| ---- | ------ | ---- |
+| 値   | 不明   |      |
 
 ### 正規化ドキュメント
 
 **種類:** 関数
 
 ```typescript
-function normalizeDocument(document: ContentDocument): ContentDocument
+function normalizeDocument(document: ContentDocument): ContentDocument;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ドキュメント |コンテンツドキュメント |  |
+| 名前         | タイプ                 | 説明 |
+| ------------ | ---------------------- | ---- |
+| ドキュメント | コンテンツドキュメント |      |
 
 ### 文書を検証する
 
 **種類:** 関数
 
 ```typescript
-function validateDocument(document: unknown): ContentValidationResult
+function validateDocument(document: unknown): ContentValidationResult;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ドキュメント |不明 |  |
+| 名前         | タイプ | 説明 |
+| ------------ | ------ | ---- |
+| ドキュメント | 不明   |      |
 
 ## `src/builders/serialize`
 
@@ -294,7 +295,7 @@ function validateDocument(document: unknown): ContentValidationResult
 **種類:** 定数
 
 ```typescript
-export const toHtml: ContentBuilder<string>
+export const toHtml: ContentBuilder<string>;
 ```
 
 説明はありません。
@@ -304,7 +305,7 @@ export const toHtml: ContentBuilder<string>
 **種類:** 定数
 
 ```typescript
-export const toMarkdown: ContentBuilder<string>
+export const toMarkdown: ContentBuilder<string>;
 ```
 
 説明はありません。
@@ -316,7 +317,24 @@ export const toMarkdown: ContentBuilder<string>
 **種類：**タイプ
 
 ```typescript
-export type CodeBlockLanguage = | 'bash' | 'css' | 'dockerfile' | 'go' | 'ini' | 'javascript' | 'json' | 'markdown' | 'plaintext' | 'python' | 'rust' | 'scss' | 'shell' | 'sql' | 'typescript' | 'xml' | 'yaml';
+export type CodeBlockLanguage =
+  | 'bash'
+  | 'css'
+  | 'dockerfile'
+  | 'go'
+  | 'ini'
+  | 'javascript'
+  | 'json'
+  | 'markdown'
+  | 'plaintext'
+  | 'python'
+  | 'rust'
+  | 'scss'
+  | 'shell'
+  | 'sql'
+  | 'typescript'
+  | 'xml'
+  | 'yaml';
 ```
 
 バンドルされている `highlight.js/lib/core` に登録されている言語。
@@ -336,7 +354,7 @@ export interface CodeBlockProperties
 **種類:** 関数
 
 ```typescript
-function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
+function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement;
 ```
 
 `ForgeCodeBlock` — で一度作成された、構文が強調表示されたコード ビューア
@@ -360,9 +378,9 @@ function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<CodeBlockProperties> |  |
+| 名前       | タイプ                            | 説明 |
+| ---------- | --------------------------------- | ---- |
+| プロパティ | 読み取り専用<CodeBlockProperties> |      |
 
 ## `src/components/atoms/forge-mermaid/forge-mermaid`
 
@@ -371,7 +389,7 @@ function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
 **種類:** 関数
 
 ```typescript
-function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
+function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement;
 ```
 
 アクセス可能なソース フォールバックを使用して Mermaid ブロックをレンダリングします。マーメイドが同梱されています
@@ -380,9 +398,9 @@ function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<ForgeMermaidProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<ForgeMermaidProperties> |      |
 
 ### ForgeMermaidProperties
 
@@ -401,7 +419,7 @@ export interface ForgeMermaidProperties
 **種類:** 関数
 
 ```typescript
-function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement
+function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbarButton` — 一度作成された、単一のアイコンのみのツールバー コントロール
@@ -415,9 +433,9 @@ function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProp
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<WysiwygToolbarButtonProperties> |  |
+| 名前       | タイプ                                       | 説明 |
+| ---------- | -------------------------------------------- | ---- |
+| プロパティ | 読み取り専用<WysiwygToolbarButtonProperties> |      |
 
 ### Wysiwygツールバーボタンプロパティ
 
@@ -436,7 +454,7 @@ export interface WysiwygToolbarButtonProperties
 **種類:** 関数
 
 ```typescript
-function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement
+function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement;
 ```
 
 `ForgeMarkdown` — ニュートラルで一度作成された読み取り専用の Markdown レンダラー
@@ -455,9 +473,9 @@ JSX 方言であり、React または Vue に直接コンパイルされます�
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MarkdownProperties> |  |
+| 名前       | タイプ                           | 説明 |
+| ---------- | -------------------------------- | ---- |
+| プロパティ | 読み取り専用<MarkdownProperties> |      |
 
 ### マークダウンプロパティ
 
@@ -488,7 +506,7 @@ export type MarkdownSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **種類:** 関数
 
 ```typescript
-function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement
+function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockControls` — ブロックごとの編集オーバーレイ
@@ -504,9 +522,9 @@ function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProp
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<WysiwygBlockControlsProperties> |  |
+| 名前       | タイプ                                       | 説明 |
+| ---------- | -------------------------------------------- | ---- |
+| プロパティ | 読み取り専用<WysiwygBlockControlsProperties> |      |
 
 ### WysiwygBlockControlsプロパティ
 
@@ -525,7 +543,7 @@ export interface WysiwygBlockControlsProperties
 **種類:** 関数
 
 ```typescript
-function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement
+function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockMenu` — {@link ForgeWysiwygEditor} のブロック スタイル セレクター、
@@ -541,9 +559,9 @@ function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>)
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<WysiwygBlockMenuProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<WysiwygBlockMenuProperties> |      |
 
 ### WysiwygBlockMenuProperties
 
@@ -562,7 +580,7 @@ export interface WysiwygBlockMenuProperties
 **種類:** 関数
 
 ```typescript
-function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement
+function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement;
 ```
 
 `ForgeWysiwygStatusBar` — 独自のエディターに抽出されたエディターのステータス バー
@@ -579,9 +597,9 @@ JSX 方言であり、Vue 3 と React の両方にコンパイルされます。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<WysiwygStatusBarProperties> |  |
+| 名前       | タイプ                                   | 説明 |
+| ---------- | ---------------------------------------- | ---- |
+| プロパティ | 読み取り専用<WysiwygStatusBarProperties> |      |
 
 ### WysiwygStatusBarProperties
 
@@ -615,7 +633,7 @@ export interface WysiwygStatusItem
 **種類:** 関数
 
 ```typescript
-function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement
+function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbar` — {@link ForgeWysiwygEditor} の書式設定ツールバー
@@ -637,9 +655,9 @@ function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): Mp
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<WysiwygToolbarProperties> |  |
+| 名前       | タイプ                                 | 説明 |
+| ---------- | -------------------------------------- | ---- |
+| プロパティ | 読み取り専用<WysiwygToolbarProperties> |      |
 
 ### Wysiwygツールバー項目
 
@@ -674,7 +692,7 @@ export interface WysiwygToolbarProperties
 **種類:** 関数
 
 ```typescript
-function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement
+function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement;
 ```
 
 `ForgeMonacoEditor` — ニュートラル JSX で一度作成された Monaco コード エディター
@@ -703,9 +721,9 @@ Vue `useHunspellMonaco`/`useHarperMonaco` コンポーザブルは委任先) と
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<MonacoEditorProperties> |  |
+| 名前       | タイプ                               | 説明 |
+| ---------- | ------------------------------------ | ---- |
+| プロパティ | 読み取り専用<MonacoEditorProperties> |      |
 
 ### MonacoEditorCompletionItemProvider
 
@@ -754,7 +772,7 @@ export interface MonacoReadyContext
 **種類:** 関数
 
 ```typescript
-function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement
+function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement;
 ```
 
 `ForgeWysiwygEditor` — フレームワークに依存しない WYSIWYG リッチテキスト エディターが作成されました
@@ -785,9 +803,9 @@ function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpEl
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|プロパティ |読み取り専用<WysiwygEditorProperties> |  |
+| 名前       | タイプ                                | 説明 |
+| ---------- | ------------------------------------- | ---- |
+| プロパティ | 読み取り専用<WysiwygEditorProperties> |      |
 
 ### WysiwygEditorプロパティ
 
@@ -806,25 +824,29 @@ export interface WysiwygEditorProperties
 **種類:** 関数
 
 ```typescript
-function attachForgeWebScriptMonaco(editor: monaco.editor.IStandaloneCodeEditor, monacoRuntime: MonacoRuntime, options: ForgeWebScriptMonacoOptions = {}): ForgeWebScriptMonacoHandle
+function attachForgeWebScriptMonaco(
+  editor: monaco.editor.IStandaloneCodeEditor,
+  monacoRuntime: MonacoRuntime,
+  options: ForgeWebScriptMonacoOptions = {},
+): ForgeWebScriptMonacoHandle;
 ```
 
 診断、完了、ホバー、モデルの同期、およびトークン化をエディターにアタッチします。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|編集者 | monaco.editor.IStandaloneCodeEditor |  |
-|モナコランタイム |モナコランタイム |  |
-|オプション | ForgeWebScriptMonacoオプション |  |
+| 名前             | タイプ                              | 説明 |
+| ---------------- | ----------------------------------- | ---- |
+| 編集者           | monaco.editor.IStandaloneCodeEditor |      |
+| モナコランタイム | モナコランタイム                    |      |
+| オプション       | ForgeWebScriptMonacoオプション      |      |
 
 ### forgeWebScriptLanguageId
 
 **種類:** 定数
 
 ```typescript
-export const forgeWebScriptLanguageId
+export const forgeWebScriptLanguageId;
 ```
 
 説明はありません。
@@ -854,17 +876,20 @@ export interface ForgeWebScriptMonacoOptions
 **種類:** 関数
 
 ```typescript
-function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId = forgeWebScriptLanguageId): monaco.IDisposable
+function registerForgeWebScriptLanguage(
+  monacoRuntime: MonacoRuntime,
+  languageId = forgeWebScriptLanguageId,
+): monaco.IDisposable;
 ```
 
 Forge Web Script 言語と語彙トークン プロバイダーを登録します。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|モナコランタイム |モナコランタイム |  |
-|言語ID |  |  |
+| 名前             | タイプ           | 説明 |
+| ---------------- | ---------------- | ---- |
+| モナコランタイム | モナコランタイム |      |
+| 言語ID           |                  |      |
 
 ## `src/parsers/html`
 
@@ -873,16 +898,16 @@ Forge Web Script 言語と語彙トークン プロバイダーを登録しま�
 **種類:** 関数
 
 ```typescript
-function parseHtml(source: string): ContentDocument
+function parseHtml(source: string): ContentDocument;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ソース | 文字列 |      |
 
 ## `src/parsers/markdown`
 
@@ -891,13 +916,13 @@ function parseHtml(source: string): ContentDocument
 **種類:** 関数
 
 ```typescript
-function parseMarkdown(source: string): ContentDocument
+function parseMarkdown(source: string): ContentDocument;
 ```
 
 説明はありません。
 
 #### パラメータ
 
-|名前 |タイプ |説明 |
-| --- | --- | --- |
-|ソース |文字列 |  |
+| 名前   | タイプ | 説明 |
+| ------ | ------ | ---- |
+| ソース | 文字列 |      |

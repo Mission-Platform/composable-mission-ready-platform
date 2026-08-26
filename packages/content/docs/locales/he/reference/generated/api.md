@@ -26,7 +26,7 @@ export interface CodeBlock
 **סוג:** קבוע
 
 ```typescript
-export const CONTENT_DOCUMENT_VERSION
+export const CONTENT_DOCUMENT_VERSION;
 ```
 
 הגרסה הנוכחית של פורמט מסמך התוכן הקנוני.
@@ -46,7 +46,8 @@ export type ContentAlign = 'left' | 'center' | 'right' | 'justify';
 **סוג:** סוג
 
 ```typescript
-export type ContentBlock = ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
+export type ContentBlock =
+  ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
 ```
 
 לא סופק תיאור.
@@ -218,16 +219,16 @@ export interface TextNode
 פונקציה **סוג:**
 
 ```typescript
-function assertContentDocument(value: unknown): asserts value is ContentDocument
+function assertContentDocument(value: unknown): asserts value is ContentDocument;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | לא ידוע |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| ערך | לא ידוע |       |
 
 ### Content ValidationResult
 
@@ -244,48 +245,48 @@ export interface ContentValidationResult
 פונקציה **סוג:**
 
 ```typescript
-function isContentDocument(value: unknown): value is ContentDocument
+function isContentDocument(value: unknown): value is ContentDocument;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| ערך | לא ידוע |  |
+| שם  | הקלד    | תיאור |
+| --- | ------- | ----- |
+| ערך | לא ידוע |       |
 
 ### לנרמל את המסמך
 
 פונקציה **סוג:**
 
 ```typescript
-function normalizeDocument(document: ContentDocument): ContentDocument
+function normalizeDocument(document: ContentDocument): ContentDocument;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסמך | ContentDocument |  |
+| שם   | הקלד            | תיאור |
+| ---- | --------------- | ----- |
+| מסמך | ContentDocument |       |
 
 ### לאמת את המסמך
 
 פונקציה **סוג:**
 
 ```typescript
-function validateDocument(document: unknown): ContentValidationResult
+function validateDocument(document: unknown): ContentValidationResult;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מסמך | לא ידוע |  |
+| שם   | הקלד    | תיאור |
+| ---- | ------- | ----- |
+| מסמך | לא ידוע |       |
 
 ## `src/builders/serialize`
 
@@ -294,7 +295,7 @@ function validateDocument(document: unknown): ContentValidationResult
 **סוג:** קבוע
 
 ```typescript
-export const toHtml: ContentBuilder<string>
+export const toHtml: ContentBuilder<string>;
 ```
 
 לא סופק תיאור.
@@ -304,7 +305,7 @@ export const toHtml: ContentBuilder<string>
 **סוג:** קבוע
 
 ```typescript
-export const toMarkdown: ContentBuilder<string>
+export const toMarkdown: ContentBuilder<string>;
 ```
 
 לא סופק תיאור.
@@ -316,7 +317,24 @@ export const toMarkdown: ContentBuilder<string>
 **סוג:** סוג
 
 ```typescript
-export type CodeBlockLanguage = | 'bash' | 'css' | 'dockerfile' | 'go' | 'ini' | 'javascript' | 'json' | 'markdown' | 'plaintext' | 'python' | 'rust' | 'scss' | 'shell' | 'sql' | 'typescript' | 'xml' | 'yaml';
+export type CodeBlockLanguage =
+  | 'bash'
+  | 'css'
+  | 'dockerfile'
+  | 'go'
+  | 'ini'
+  | 'javascript'
+  | 'json'
+  | 'markdown'
+  | 'plaintext'
+  | 'python'
+  | 'rust'
+  | 'scss'
+  | 'shell'
+  | 'sql'
+  | 'typescript'
+  | 'xml'
+  | 'yaml';
 ```
 
 שפות הרשומות עם `highlight.js/lib/core` המצורפת.
@@ -336,7 +354,7 @@ export interface CodeBlockProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
+function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement;
 ```
 
 `ForgeCodeBlock` - מציג קוד מודגש תחביר שנכתב פעם אחת ב-
@@ -351,18 +369,19 @@ function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
 החלפות מה-Vue SFC המקורי: הפלט המודגש `v-html`
 הופך למטלה **`useRef` + `useEffect` `innerHTML`** (ה
 `ForgeWindowPopout` פתח בריחה), מכיוון שהדיאלקט הנייטרלי אינו מדגם `v-html`
+
 - כך שהסימון המודגש מוזרק ללקוח וסימון ה-SSR כן
-המעטפת הסטטית; גולת הכותרת `computed` הופכת ל-{@link useMemo}; העותק
-`ref` + `setTimeout` הופכים ל-{@link useState} + טיימר {@link useRef}; את
-SVG עותק מוטבע הם `@mission-platform/icons` לכתיבה חד פעמית
-`ForgeIconCopy`/`ForgeIconCheck`; והנושא הגלובלי hljs `<style>`
-`@import` הופך לייבוא `forge-code-block.hljs.css` החשוף בתופעת הלוואי.
+  המעטפת הסטטית; גולת הכותרת `computed` הופכת ל-{@link useMemo}; העותק
+  `ref` + `setTimeout` הופכים ל-{@link useState} + טיימר {@link useRef}; את
+  SVG עותק מוטבע הם `@mission-platform/icons` לכתיבה חד פעמית
+  `ForgeIconCopy`/`ForgeIconCheck`; והנושא הגלובלי hljs `<style>`
+  `@import` הופך לייבוא `forge-code-block.hljs.css` החשוף בתופעת הלוואי.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<CodeBlockProperties> |  |
+| שם    | הקלד                             | תיאור |
+| ----- | -------------------------------- | ----- |
+| נכסים | לקריאה בלבד<CodeBlockProperties> |       |
 
 ## `src/components/atoms/forge-mermaid/forge-mermaid`
 
@@ -371,7 +390,7 @@ SVG עותק מוטבע הם `@mission-platform/icons` לכתיבה חד פעמ�
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
+function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement;
 ```
 
 מעבד בלוק בת ים עם מקור נגיש. בת הים צרורה
@@ -380,9 +399,9 @@ function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<ForgeMermaidProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<ForgeMermaidProperties> |       |
 
 ### ForgeMermaidProperties
 
@@ -401,7 +420,7 @@ export interface ForgeMermaidProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement
+function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbarButton` - שליטה יחידה בסרגל כלים של סמלים בלבד, שנכתבה פעם אחת
@@ -415,9 +434,9 @@ function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<WysiwygToolbarButtonProperties> |  |
+| שם    | הקלד                                        | תיאור |
+| ----- | ------------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<WysiwygToolbarButtonProperties> |       |
 
 ### WysiwygToolbarButtonProperties
 
@@ -436,7 +455,7 @@ export interface WysiwygToolbarButtonProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement
+function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement;
 ```
 
 `ForgeMarkdown` - מעבד Markdown לקריאה בלבד שנכתב פעם אחת בניוטרל
@@ -455,9 +474,9 @@ function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<MarkdownProperties> |  |
+| שם    | הקלד                            | תיאור |
+| ----- | ------------------------------- | ----- |
+| נכסים | לקריאה בלבד<MarkdownProperties> |       |
 
 ### MarkdownProperties
 
@@ -488,7 +507,7 @@ export type MarkdownSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 פונקציה **סוג:**
 
 ```typescript
-function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement
+function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockControls` - שכבת העל לעריכה לכל בלוק עבור
@@ -504,9 +523,9 @@ function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProp
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<WysiwygBlockControlsProperties> |  |
+| שם    | הקלד                                        | תיאור |
+| ----- | ------------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<WysiwygBlockControlsProperties> |       |
 
 ### WysiwygBlockControlsProperties
 
@@ -525,7 +544,7 @@ export interface WysiwygBlockControlsProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement
+function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockMenu` — הבורר בסגנון בלוק עבור {@link ForgeWysiwygEditor},
@@ -541,9 +560,9 @@ function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<WysiwygBlockMenuProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<WysiwygBlockMenuProperties> |       |
 
 ### WysiwygBlockMenuProperties
 
@@ -562,7 +581,7 @@ export interface WysiwygBlockMenuProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement
+function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement;
 ```
 
 `ForgeWysiwygStatusBar` - שורת המצב של העורך, חולצה לתוכו
@@ -579,9 +598,9 @@ function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>)
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<WysiwygStatusBarProperties> |  |
+| שם    | הקלד                                    | תיאור |
+| ----- | --------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<WysiwygStatusBarProperties> |       |
 
 ### WysiwygStatusBarProperties
 
@@ -615,20 +634,21 @@ export interface WysiwygStatusItem
 פונקציה **סוג:**
 
 ```typescript
-function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement
+function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbar` — סרגל הכלים לעיצוב עבור {@link ForgeWysiwygEditor},
 נכתב פעם אחת בניב JSX הנייטרלי.
 
 כברירת מחדל, הוא מציג **פורמט חסום** ({@link ForgeWysiwygBlockMenu}
+
 - פסקה, כותרות 1-6, ציטוט בלוק, מונו-רווח) ואחריו סמל מקובץ
-לחצנים ({@link ForgeWysiwygToolbarButton}, בעצמו מרכיב את הרכיבים
-`ForgeButton` של החבילה) שהגליפים שלו מגיעים מ-`@mission-platform/icons`.
-הלחצנים פולטים {@link WysiwygCommand} ברמה גבוהה באמצעות `onCommand`; את
-דוחות נפתחים בפורמט בלוק דרך `onSelectBlock`; ובלוק הקוד
-control (המוסיף `ForgeCodeBlock` שאינו ניתן לעריכה) מדווח דרך
-`onInsertCodeBlock`.
+  לחצנים ({@link ForgeWysiwygToolbarButton}, בעצמו מרכיב את הרכיבים
+  `ForgeButton` של החבילה) שהגליפים שלו מגיעים מ-`@mission-platform/icons`.
+  הלחצנים פולטים {@link WysiwygCommand} ברמה גבוהה באמצעות `onCommand`; את
+  דוחות נפתחים בפורמט בלוק דרך `onSelectBlock`; ובלוק הקוד
+  control (המוסיף `ForgeCodeBlock` שאינו ניתן לעריכה) מדווח דרך
+  `onInsertCodeBlock`.
 
 סרגל הכלים הוא גם **ניתן להגדרת משתמש** באופן מלא: העבר מערך של
 {@link WysiwygToolbarItem} מתנגד ל-`items` כדי להחליף את הפקדים המובנים
@@ -637,9 +657,9 @@ control (המוסיף `ForgeCodeBlock` שאינו ניתן לעריכה) מדו�
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<WysiwygToolbarProperties> |  |
+| שם    | הקלד                                  | תיאור |
+| ----- | ------------------------------------- | ----- |
+| נכסים | לקריאה בלבד<WysiwygToolbarProperties> |       |
 
 ### WysiwygToolbarItem
 
@@ -674,7 +694,7 @@ export interface WysiwygToolbarProperties
 פונקציה **סוג:**
 
 ```typescript
-function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement
+function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement;
 ```
 
 `ForgeMonacoEditor` - עורך הקוד של מונקו שחיבר פעם אחת ב-JSX הנייטרלי
@@ -703,9 +723,9 @@ WASM לדפדפן בלבד), בדיוק כמו זמן הריצה של מונקו
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<MonacoEditorProperties> |  |
+| שם    | הקלד                                | תיאור |
+| ----- | ----------------------------------- | ----- |
+| נכסים | לקריאה בלבד<MonacoEditorProperties> |       |
 
 ### MonacoEditorCompletionItemProvider
 
@@ -754,7 +774,7 @@ export interface MonacoReadyContext
 פונקציה **סוג:**
 
 ```typescript
-function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement
+function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement;
 ```
 
 `ForgeWysiwygEditor` - עורך טקסט עשיר WYSIWYG אגנוסט למסגרת שחיבר
@@ -785,9 +805,9 @@ HTML **תצוגת מקור** אופציונלית מחליפה את פני הש�
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| נכסים | לקריאה בלבד<WysiwygEditorProperties> |  |
+| שם    | הקלד                                 | תיאור |
+| ----- | ------------------------------------ | ----- |
+| נכסים | לקריאה בלבד<WysiwygEditorProperties> |       |
 
 ### WysiwygEditorProperties
 
@@ -806,25 +826,29 @@ export interface WysiwygEditorProperties
 פונקציה **סוג:**
 
 ```typescript
-function attachForgeWebScriptMonaco(editor: monaco.editor.IStandaloneCodeEditor, monacoRuntime: MonacoRuntime, options: ForgeWebScriptMonacoOptions = {}): ForgeWebScriptMonacoHandle
+function attachForgeWebScriptMonaco(
+  editor: monaco.editor.IStandaloneCodeEditor,
+  monacoRuntime: MonacoRuntime,
+  options: ForgeWebScriptMonacoOptions = {},
+): ForgeWebScriptMonacoHandle;
 ```
 
 צרף אבחון, השלמה, ריחוף, סנכרון מודל וטוקניזציה לעורך.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| עורך | monaco.editor.IstandaloneCodeEditor |  |
-| monacoRuntime | MonacoRuntime |  |
-| אפשרויות | ForgeWebScriptMonacoOptions |  |
+| שם            | הקלד                                | תיאור |
+| ------------- | ----------------------------------- | ----- |
+| עורך          | monaco.editor.IstandaloneCodeEditor |       |
+| monacoRuntime | MonacoRuntime                       |       |
+| אפשרויות      | ForgeWebScriptMonacoOptions         |       |
 
 ### forgeWebScriptLanguageId
 
 **סוג:** קבוע
 
 ```typescript
-export const forgeWebScriptLanguageId
+export const forgeWebScriptLanguageId;
 ```
 
 לא סופק תיאור.
@@ -854,17 +878,20 @@ export interface ForgeWebScriptMonacoOptions
 פונקציה **סוג:**
 
 ```typescript
-function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId = forgeWebScriptLanguageId): monaco.IDisposable
+function registerForgeWebScriptLanguage(
+  monacoRuntime: MonacoRuntime,
+  languageId = forgeWebScriptLanguageId,
+): monaco.IDisposable;
 ```
 
 רשום את שפת Forge Web Script ואת ספק האסימון המילוני.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| monacoRuntime | MonacoRuntime |  |
-| languageId |  |  |
+| שם            | הקלד          | תיאור |
+| ------------- | ------------- | ----- |
+| monacoRuntime | MonacoRuntime |       |
+| languageId    |               |       |
 
 ## `src/parsers/html`
 
@@ -873,16 +900,16 @@ function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId
 פונקציה **סוג:**
 
 ```typescript
-function parseHtml(source: string): ContentDocument
+function parseHtml(source: string): ContentDocument;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| מקור | מחרוזת |       |
 
 ## `src/parsers/markdown`
 
@@ -891,13 +918,13 @@ function parseHtml(source: string): ContentDocument
 פונקציה **סוג:**
 
 ```typescript
-function parseMarkdown(source: string): ContentDocument
+function parseMarkdown(source: string): ContentDocument;
 ```
 
 לא סופק תיאור.
 
 #### פרמטרים
 
-| שם | הקלד | תיאור |
-| --- | --- | --- |
-| מקור | מחרוזת |  |
+| שם   | הקלד   | תיאור |
+| ---- | ------ | ----- |
+| מקור | מחרוזת |       |

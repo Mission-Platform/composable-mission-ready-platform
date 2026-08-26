@@ -26,7 +26,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const CONTENT_DOCUMENT_VERSION
+export const CONTENT_DOCUMENT_VERSION;
 ```
 
 La versión actual del formato del documento de contenido canónico.
@@ -46,7 +46,8 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type ContentBlock = ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
+export type ContentBlock =
+  ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
 ```
 
 No se proporciona descripción.
@@ -218,16 +219,16 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function assertContentDocument(value: unknown): asserts value is ContentDocument
+function assertContentDocument(value: unknown): asserts value is ContentDocument;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | desconocido |  |
+| Nombre | Tipo        | Descripción |
+| ------ | ----------- | ----------- |
+| valor  | desconocido |             |
 
 ### Resultado de validación de contenido
 
@@ -244,48 +245,48 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function isContentDocument(value: unknown): value is ContentDocument
+function isContentDocument(value: unknown): value is ContentDocument;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| valor | desconocido |  |
+| Nombre | Tipo        | Descripción |
+| ------ | ----------- | ----------- |
+| valor  | desconocido |             |
 
 ### normalizar documento
 
 **Tipo:** función
 
 ```typescript
-function normalizeDocument(document: ContentDocument): ContentDocument
+function normalizeDocument(document: ContentDocument): ContentDocument;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| documento | Documento de contenido |  |
+| Nombre    | Tipo                   | Descripción |
+| --------- | ---------------------- | ----------- |
+| documento | Documento de contenido |             |
 
 ### validarDocumento
 
 **Tipo:** función
 
 ```typescript
-function validateDocument(document: unknown): ContentValidationResult
+function validateDocument(document: unknown): ContentValidationResult;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| documento | desconocido |  |
+| Nombre    | Tipo        | Descripción |
+| --------- | ----------- | ----------- |
+| documento | desconocido |             |
 
 ## `src/builders/serialize`
 
@@ -294,7 +295,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const toHtml: ContentBuilder<string>
+export const toHtml: ContentBuilder<string>;
 ```
 
 No se proporciona descripción.
@@ -304,7 +305,7 @@ No se proporciona descripción.
 **Tipo:** constante
 
 ```typescript
-export const toMarkdown: ContentBuilder<string>
+export const toMarkdown: ContentBuilder<string>;
 ```
 
 No se proporciona descripción.
@@ -316,7 +317,24 @@ No se proporciona descripción.
 **Tipo:** tipo
 
 ```typescript
-export type CodeBlockLanguage = | 'bash' | 'css' | 'dockerfile' | 'go' | 'ini' | 'javascript' | 'json' | 'markdown' | 'plaintext' | 'python' | 'rust' | 'scss' | 'shell' | 'sql' | 'typescript' | 'xml' | 'yaml';
+export type CodeBlockLanguage =
+  | 'bash'
+  | 'css'
+  | 'dockerfile'
+  | 'go'
+  | 'ini'
+  | 'javascript'
+  | 'json'
+  | 'markdown'
+  | 'plaintext'
+  | 'python'
+  | 'rust'
+  | 'scss'
+  | 'shell'
+  | 'sql'
+  | 'typescript'
+  | 'xml'
+  | 'yaml';
 ```
 
 Idiomas registrados con el paquete `highlight.js/lib/core`.
@@ -336,7 +354,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
+function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement;
 ```
 
 `ForgeCodeBlock`: un visor de código resaltado por sintaxis creado una vez en el
@@ -351,18 +369,19 @@ el tema global del token hljs `forge-code-block.hljs.css`.
 Sustituciones del SFC Vue original: el resultado resaltado `v-html`
 se convierte en una asignación **`useRef` host + `useEffect` `innerHTML`** (la
 `ForgeWindowPopout` trampilla de escape), ya que el dialecto neutral no modela `v-html`
+
 - entonces el marcado resaltado se inyecta en el cliente y el marcado SSR es
-el caparazón estático; el resaltado `computed` se convierte en {@link useMemo}; la copia
-`ref` + `setTimeout` se convierten en {@link useState} + un temporizador {@link useRef}; el
-Los SVG de copia en línea son `@mission-platform/icons` de una sola escritura
-`ForgeIconCopy`/`ForgeIconCheck`; y el tema global hljs `<style>`
-`@import` se convierte en la importación `forge-code-block.hljs.css` sin efectos secundarios.
+  el caparazón estático; el resaltado `computed` se convierte en {@link useMemo}; la copia
+  `ref` + `setTimeout` se convierten en {@link useState} + un temporizador {@link useRef}; el
+  Los SVG de copia en línea son `@mission-platform/icons` de una sola escritura
+  `ForgeIconCopy`/`ForgeIconCheck`; y el tema global hljs `<style>`
+  `@import` se convierte en la importación `forge-code-block.hljs.css` sin efectos secundarios.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<CodeBlockProperties> |  |
+| Nombre      | Tipo                              | Descripción |
+| ----------- | --------------------------------- | ----------- |
+| propiedades | Sólo lectura<CodeBlockProperties> |             |
 
 ## `src/components/atoms/forge-mermaid/forge-mermaid`
 
@@ -371,7 +390,7 @@ Los SVG de copia en línea son `@mission-platform/icons` de una sola escritura
 **Tipo:** función
 
 ```typescript
-function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
+function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement;
 ```
 
 Representa un bloque Mermaid con una fuente alternativa accesible. La sirena está empaquetada.
@@ -380,9 +399,9 @@ trozo; Las API del navegador todavía se llaman solo desde el efecto del cliente
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<ForgeMermaidProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<ForgeMermaidProperties> |             |
 
 ### ForjaSirenaPropiedades
 
@@ -401,7 +420,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement
+function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbarButton`: un control de barra de herramientas de un solo icono, creado una vez
@@ -415,9 +434,9 @@ Variante `ghost` transparente para que la barra de herramientas se lea como una 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<WysiwygToolbarButtonProperties> |  |
+| Nombre      | Tipo                                         | Descripción |
+| ----------- | -------------------------------------------- | ----------- |
+| propiedades | Sólo lectura<WysiwygToolbarButtonProperties> |             |
 
 ### Propiedades del botón de la barra de herramientas Wysiwyg
 
@@ -436,7 +455,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement
+function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement;
 ```
 
 `ForgeMarkdown`: un renderizador Markdown de solo lectura creado una vez en neutral
@@ -455,9 +474,9 @@ aplicar estilo a través del módulo CSS `forge-markdown.module.scss` ubicado en
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MarkdownProperties> |  |
+| Nombre      | Tipo                             | Descripción |
+| ----------- | -------------------------------- | ----------- |
+| propiedades | Sólo lectura<MarkdownProperties> |             |
 
 ### Propiedades de rebajas
 
@@ -488,7 +507,7 @@ Ficha de tamaño: escala canónica 2xs → 2xl.
 **Tipo:** función
 
 ```typescript
-function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement
+function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockControls`: la superposición de edición por bloque para
@@ -504,9 +523,9 @@ roba la selección de la superficie de edición.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<WysiwygBlockControlsProperties> |  |
+| Nombre      | Tipo                                         | Descripción |
+| ----------- | -------------------------------------------- | ----------- |
+| propiedades | Sólo lectura<WysiwygBlockControlsProperties> |             |
 
 ### Propiedades de WysiwygBlockControls
 
@@ -525,7 +544,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement
+function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockMenu`: el selector de estilo de bloque para {@link ForgeWysiwygEditor},
@@ -541,9 +560,9 @@ Elegir un formato nunca quita la selección de la superficie de edición.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<WysiwygBlockMenuProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<WysiwygBlockMenuProperties> |             |
 
 ### WysiwygBlockMenuPropiedades
 
@@ -562,7 +581,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement
+function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement;
 ```
 
 `ForgeWysiwygStatusBar`: la barra de estado del editor, extraída en su propia
@@ -579,9 +598,9 @@ a través del módulo CSS `forge-wysiwyg-status-bar.module.scss`, ubicado en el 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<WysiwygStatusBarProperties> |  |
+| Nombre      | Tipo                                     | Descripción |
+| ----------- | ---------------------------------------- | ----------- |
+| propiedades | Sólo lectura<WysiwygStatusBarProperties> |             |
 
 ### WysiwygStatusBarPropiedades
 
@@ -615,7 +634,7 @@ reemplaza completamente los segmentos de palabras/caracteres integrados con un c
 **Tipo:** función
 
 ```typescript
-function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement
+function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbar`: la barra de herramientas de formato para {@link ForgeWysiwygEditor},
@@ -637,9 +656,9 @@ nunca roba la selección de la superficie de edición.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<WysiwygToolbarProperties> |  |
+| Nombre      | Tipo                                   | Descripción |
+| ----------- | -------------------------------------- | ----------- |
+| propiedades | Sólo lectura<WysiwygToolbarProperties> |             |
 
 ### Elemento de barra de herramientas Wysiwyg
 
@@ -674,7 +693,7 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement
+function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement;
 ```
 
 `ForgeMonacoEditor`: el editor de código de Mónaco creado una vez en JSX neutral
@@ -703,9 +722,9 @@ WASM solo para navegador), exactamente igual que el propio tiempo de ejecución 
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<MonacoEditorProperties> |  |
+| Nombre      | Tipo                                 | Descripción |
+| ----------- | ------------------------------------ | ----------- |
+| propiedades | Sólo lectura<MonacoEditorProperties> |             |
 
 ### MónacoEditorCompletionItemProvider
 
@@ -754,7 +773,7 @@ Contexto entregado a {@link MonacoEditorProperties.onReady} una vez que se monta
 **Tipo:** función
 
 ```typescript
-function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement
+function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement;
 ```
 
 `ForgeWysiwygEditor`: un editor de texto enriquecido WYSIWYG independiente del marco creado por
@@ -785,9 +804,9 @@ con `spellCheck`: llevando la revisión de Hunspell + Harper al marcado sin form
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| propiedades | Sólo lectura<WysiwygEditorProperties> |  |
+| Nombre      | Tipo                                  | Descripción |
+| ----------- | ------------------------------------- | ----------- |
+| propiedades | Sólo lectura<WysiwygEditorProperties> |             |
 
 ### WysiwygEditorPropiedades
 
@@ -806,25 +825,29 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function attachForgeWebScriptMonaco(editor: monaco.editor.IStandaloneCodeEditor, monacoRuntime: MonacoRuntime, options: ForgeWebScriptMonacoOptions = {}): ForgeWebScriptMonacoHandle
+function attachForgeWebScriptMonaco(
+  editor: monaco.editor.IStandaloneCodeEditor,
+  monacoRuntime: MonacoRuntime,
+  options: ForgeWebScriptMonacoOptions = {},
+): ForgeWebScriptMonacoHandle;
 ```
 
 Adjunte diagnósticos, finalización, desplazamiento, sincronización de modelos y tokenización a un editor.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| redactor | monaco.editor.IStandaloneCodeEditor |  |
-| mónacoRuntime | MónacoRuntime |  |
-| opciones | Opciones de ForgeWebScriptMonaco |  |
+| Nombre        | Tipo                                | Descripción |
+| ------------- | ----------------------------------- | ----------- |
+| redactor      | monaco.editor.IStandaloneCodeEditor |             |
+| mónacoRuntime | MónacoRuntime                       |             |
+| opciones      | Opciones de ForgeWebScriptMonaco    |             |
 
 ### forgeWebScriptLanguageId
 
 **Tipo:** constante
 
 ```typescript
-export const forgeWebScriptLanguageId
+export const forgeWebScriptLanguageId;
 ```
 
 No se proporciona descripción.
@@ -854,17 +877,20 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId = forgeWebScriptLanguageId): monaco.IDisposable
+function registerForgeWebScriptLanguage(
+  monacoRuntime: MonacoRuntime,
+  languageId = forgeWebScriptLanguageId,
+): monaco.IDisposable;
 ```
 
 Registre el lenguaje Forge Web Script y el proveedor de tokens léxicos.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| mónacoRuntime | MónacoRuntime |  |
-| ID de idioma |  |  |
+| Nombre        | Tipo          | Descripción |
+| ------------- | ------------- | ----------- |
+| mónacoRuntime | MónacoRuntime |             |
+| ID de idioma  |               |             |
 
 ## `src/parsers/html`
 
@@ -873,16 +899,16 @@ Registre el lenguaje Forge Web Script y el proveedor de tokens léxicos.
 **Tipo:** función
 
 ```typescript
-function parseHtml(source: string): ContentDocument
+function parseHtml(source: string): ContentDocument;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fuente | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| fuente | cadena |             |
 
 ## `src/parsers/markdown`
 
@@ -891,13 +917,13 @@ No se proporciona descripción.
 **Tipo:** función
 
 ```typescript
-function parseMarkdown(source: string): ContentDocument
+function parseMarkdown(source: string): ContentDocument;
 ```
 
 No se proporciona descripción.
 
 #### Parámetros
 
-| Nombre | Tipo | Descripción |
-| --- | --- | --- |
-| fuente | cadena |  |
+| Nombre | Tipo   | Descripción |
+| ------ | ------ | ----------- |
+| fuente | cadena |             |

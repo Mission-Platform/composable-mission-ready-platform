@@ -32,8 +32,7 @@
   }
 
   .wysiwyg__surface:focus-visible {
-    box-shadow: inset 0 0 0 var(--mp-editor-wysiwyg-focus-width)
-      var(--mp-editor-wysiwyg-focus-color);
+    box-shadow: inset 0 0 0 var(--mp-editor-wysiwyg-focus-width) var(--mp-editor-wysiwyg-focus-color);
   }
 
   .wysiwyg__surface[data-placeholder]:empty::before {

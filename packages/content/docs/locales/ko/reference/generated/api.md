@@ -26,7 +26,7 @@ export interface CodeBlock
 **종류:** 상수
 
 ```typescript
-export const CONTENT_DOCUMENT_VERSION
+export const CONTENT_DOCUMENT_VERSION;
 ```
 
 표준 콘텐츠 문서 형식의 현재 버전입니다.
@@ -46,7 +46,8 @@ export type ContentAlign = 'left' | 'center' | 'right' | 'justify';
 **종류:** 유형
 
 ```typescript
-export type ContentBlock = ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
+export type ContentBlock =
+  ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
 ```
 
 설명이 제공되지 않았습니다.
@@ -218,16 +219,16 @@ export interface TextNode
 **종류:** 기능
 
 ```typescript
-function assertContentDocument(value: unknown): asserts value is ContentDocument
+function assertContentDocument(value: unknown): asserts value is ContentDocument;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 알 수 없음 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 가치 | 알 수 없음 |      |
 
 ### 콘텐츠 유효성 검사 결과
 
@@ -244,48 +245,48 @@ export interface ContentValidationResult
 **종류:** 기능
 
 ```typescript
-function isContentDocument(value: unknown): value is ContentDocument
+function isContentDocument(value: unknown): value is ContentDocument;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 가치 | 알 수 없음 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 가치 | 알 수 없음 |      |
 
 ### 정규화문서
 
 **종류:** 기능
 
 ```typescript
-function normalizeDocument(document: ContentDocument): ContentDocument
+function normalizeDocument(document: ContentDocument): ContentDocument;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 문서 | 콘텐츠문서 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 문서 | 콘텐츠문서 |      |
 
 ### 문서 유효성 검사
 
 **종류:** 기능
 
 ```typescript
-function validateDocument(document: unknown): ContentValidationResult
+function validateDocument(document: unknown): ContentValidationResult;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 문서 | 알 수 없음 |  |
+| 이름 | 유형       | 설명 |
+| ---- | ---------- | ---- |
+| 문서 | 알 수 없음 |      |
 
 ## `src/builders/serialize`
 
@@ -294,7 +295,7 @@ function validateDocument(document: unknown): ContentValidationResult
 **종류:** 상수
 
 ```typescript
-export const toHtml: ContentBuilder<string>
+export const toHtml: ContentBuilder<string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -304,7 +305,7 @@ export const toHtml: ContentBuilder<string>
 **종류:** 상수
 
 ```typescript
-export const toMarkdown: ContentBuilder<string>
+export const toMarkdown: ContentBuilder<string>;
 ```
 
 설명이 제공되지 않았습니다.
@@ -316,7 +317,24 @@ export const toMarkdown: ContentBuilder<string>
 **종류:** 유형
 
 ```typescript
-export type CodeBlockLanguage = | 'bash' | 'css' | 'dockerfile' | 'go' | 'ini' | 'javascript' | 'json' | 'markdown' | 'plaintext' | 'python' | 'rust' | 'scss' | 'shell' | 'sql' | 'typescript' | 'xml' | 'yaml';
+export type CodeBlockLanguage =
+  | 'bash'
+  | 'css'
+  | 'dockerfile'
+  | 'go'
+  | 'ini'
+  | 'javascript'
+  | 'json'
+  | 'markdown'
+  | 'plaintext'
+  | 'python'
+  | 'rust'
+  | 'scss'
+  | 'shell'
+  | 'sql'
+  | 'typescript'
+  | 'xml'
+  | 'yaml';
 ```
 
 번들 `highlight.js/lib/core`에 등록된 언어입니다.
@@ -336,7 +354,7 @@ export interface CodeBlockProperties
 **종류:** 기능
 
 ```typescript
-function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
+function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement;
 ```
 
 `ForgeCodeBlock` — 한 번 작성된 구문 강조 코드 뷰어입니다.
@@ -360,9 +378,9 @@ function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<CodeBlockProperties> |  |
+| 이름 | 유형                           | 설명 |
+| ---- | ------------------------------ | ---- |
+| 속성 | 읽기 전용<CodeBlockProperties> |      |
 
 ## `src/components/atoms/forge-mermaid/forge-mermaid`
 
@@ -371,7 +389,7 @@ function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
 **종류:** 기능
 
 ```typescript
-function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
+function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement;
 ```
 
 접근 가능한 소스 폴백을 사용하여 인어 블록을 렌더링합니다. 인어가 동봉되어 있습니다
@@ -380,9 +398,9 @@ function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<ForgeMermaidProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<ForgeMermaidProperties> |      |
 
 ### Forge인어속성
 
@@ -401,7 +419,7 @@ export interface ForgeMermaidProperties
 **종류:** 기능
 
 ```typescript
-function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement
+function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbarButton` — 한 번만 작성된 단일 아이콘 전용 도구 모음 컨트롤
@@ -415,9 +433,9 @@ function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProp
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<WysiwygToolbarButtonProperties> |  |
+| 이름 | 유형                                      | 설명 |
+| ---- | ----------------------------------------- | ---- |
+| 속성 | 읽기 전용<WysiwygToolbarButtonProperties> |      |
 
 ### WysiwygToolbarButton속성
 
@@ -436,7 +454,7 @@ export interface WysiwygToolbarButtonProperties
 **종류:** 기능
 
 ```typescript
-function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement
+function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement;
 ```
 
 `ForgeMarkdown` — 중립에서 한 번 작성된 읽기 전용 마크다운 렌더러
@@ -455,9 +473,9 @@ JSX 방언으로 React 또는 Vue로 바로 컴파일됩니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MarkdownProperties> |  |
+| 이름 | 유형                          | 설명 |
+| ---- | ----------------------------- | ---- |
+| 속성 | 읽기 전용<MarkdownProperties> |      |
 
 ### 마크다운 속성
 
@@ -488,7 +506,7 @@ export type MarkdownSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **종류:** 기능
 
 ```typescript
-function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement
+function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockControls` — 블록당 편집 오버레이
@@ -504,9 +522,9 @@ function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProp
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<WysiwygBlockControlsProperties> |  |
+| 이름 | 유형                                      | 설명 |
+| ---- | ----------------------------------------- | ---- |
+| 속성 | 읽기 전용<WysiwygBlockControlsProperties> |      |
 
 ### WysiwygBlockControls속성
 
@@ -525,7 +543,7 @@ export interface WysiwygBlockControlsProperties
 **종류:** 기능
 
 ```typescript
-function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement
+function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockMenu` — {@link ForgeWysiwygEditor}의 블록 스타일 선택기,
@@ -541,9 +559,9 @@ function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>)
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<WysiwygBlockMenuProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<WysiwygBlockMenuProperties> |      |
 
 ### WysiwygBlockMenu속성
 
@@ -562,7 +580,7 @@ export interface WysiwygBlockMenuProperties
 **종류:** 기능
 
 ```typescript
-function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement
+function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement;
 ```
 
 `ForgeWysiwygStatusBar` — 자체적으로 추출된 편집기의 상태 표시줄
@@ -579,9 +597,9 @@ JSX 방언으로 Vue 3 및 React로 컴파일되었습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<WysiwygStatusBarProperties> |  |
+| 이름 | 유형                                  | 설명 |
+| ---- | ------------------------------------- | ---- |
+| 속성 | 읽기 전용<WysiwygStatusBarProperties> |      |
 
 ### WysiwygStatusBar속성
 
@@ -615,7 +633,7 @@ export interface WysiwygStatusItem
 **종류:** 기능
 
 ```typescript
-function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement
+function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbar` — {@link ForgeWysiwygEditor}의 서식 도구 모음,
@@ -637,9 +655,9 @@ function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): Mp
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<WysiwygToolbarProperties> |  |
+| 이름 | 유형                                | 설명 |
+| ---- | ----------------------------------- | ---- |
+| 속성 | 읽기 전용<WysiwygToolbarProperties> |      |
 
 ### WysiwygToolbarItem
 
@@ -674,7 +692,7 @@ export interface WysiwygToolbarProperties
 **종류:** 기능
 
 ```typescript
-function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement
+function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement;
 ```
 
 `ForgeMonacoEditor` — 중립 JSX에서 한 번 작성된 Monaco 코드 편집기
@@ -703,9 +721,9 @@ Vue `useHunspellMonaco`/`useHarperMonaco` 컴포저블 위임) 및 연결
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<MonacoEditorProperties> |  |
+| 이름 | 유형                              | 설명 |
+| ---- | --------------------------------- | ---- |
+| 속성 | 읽기 전용<MonacoEditorProperties> |      |
 
 ### 모나코EditorCompletionItemProvider
 
@@ -754,7 +772,7 @@ export interface MonacoReadyContext
 **종류:** 기능
 
 ```typescript
-function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement
+function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement;
 ```
 
 `ForgeWysiwygEditor` — 프레임워크에 구애받지 않는 WYSIWYG 서식 있는 텍스트 편집기
@@ -785,9 +803,9 @@ function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpEl
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 속성 | 읽기 전용<WysiwygEditorProperties> |  |
+| 이름 | 유형                               | 설명 |
+| ---- | ---------------------------------- | ---- |
+| 속성 | 읽기 전용<WysiwygEditorProperties> |      |
 
 ### WysiwygEditor속성
 
@@ -806,25 +824,29 @@ export interface WysiwygEditorProperties
 **종류:** 기능
 
 ```typescript
-function attachForgeWebScriptMonaco(editor: monaco.editor.IStandaloneCodeEditor, monacoRuntime: MonacoRuntime, options: ForgeWebScriptMonacoOptions = {}): ForgeWebScriptMonacoHandle
+function attachForgeWebScriptMonaco(
+  editor: monaco.editor.IStandaloneCodeEditor,
+  monacoRuntime: MonacoRuntime,
+  options: ForgeWebScriptMonacoOptions = {},
+): ForgeWebScriptMonacoHandle;
 ```
 
 진단, 완료, 마우스 오버, 모델 동기화 및 토큰화를 편집기에 연결합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 편집자 | monaco.editor.IStandaloneCodeEditor |  |
-| 모나코런타임 | 모나코런타임 |  |
-| 옵션 | ForgeWebScriptMonaco옵션 |  |
+| 이름         | 유형                                | 설명 |
+| ------------ | ----------------------------------- | ---- |
+| 편집자       | monaco.editor.IStandaloneCodeEditor |      |
+| 모나코런타임 | 모나코런타임                        |      |
+| 옵션         | ForgeWebScriptMonaco옵션            |      |
 
 ### forgeWebScript언어Id
 
 **종류:** 상수
 
 ```typescript
-export const forgeWebScriptLanguageId
+export const forgeWebScriptLanguageId;
 ```
 
 설명이 제공되지 않았습니다.
@@ -854,17 +876,20 @@ export interface ForgeWebScriptMonacoOptions
 **종류:** 기능
 
 ```typescript
-function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId = forgeWebScriptLanguageId): monaco.IDisposable
+function registerForgeWebScriptLanguage(
+  monacoRuntime: MonacoRuntime,
+  languageId = forgeWebScriptLanguageId,
+): monaco.IDisposable;
 ```
 
 Forge 웹 스크립트 언어와 어휘 토큰 공급자를 등록합니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 모나코런타임 | 모나코런타임 |  |
-| 언어 ID |  |  |
+| 이름         | 유형         | 설명 |
+| ------------ | ------------ | ---- |
+| 모나코런타임 | 모나코런타임 |      |
+| 언어 ID      |              |      |
 
 ## `src/parsers/html`
 
@@ -873,16 +898,16 @@ Forge 웹 스크립트 언어와 어휘 토큰 공급자를 등록합니다.
 **종류:** 기능
 
 ```typescript
-function parseHtml(source: string): ContentDocument
+function parseHtml(source: string): ContentDocument;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 출처 | 문자열 |      |
 
 ## `src/parsers/markdown`
 
@@ -891,13 +916,13 @@ function parseHtml(source: string): ContentDocument
 **종류:** 기능
 
 ```typescript
-function parseMarkdown(source: string): ContentDocument
+function parseMarkdown(source: string): ContentDocument;
 ```
 
 설명이 제공되지 않았습니다.
 
 #### 매개변수
 
-| 이름 | 유형 | 설명 |
-| --- | --- | --- |
-| 출처 | 문자열 |  |
+| 이름 | 유형   | 설명 |
+| ---- | ------ | ---- |
+| 출처 | 문자열 |      |

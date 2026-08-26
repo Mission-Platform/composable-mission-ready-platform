@@ -26,7 +26,7 @@ export interface CodeBlock
 **النوع:** ثابت
 
 ```typescript
-export const CONTENT_DOCUMENT_VERSION
+export const CONTENT_DOCUMENT_VERSION;
 ```
 
 الإصدار الحالي من تنسيق مستند المحتوى الأساسي.
@@ -46,7 +46,8 @@ export type ContentAlign = 'left' | 'center' | 'right' | 'justify';
 **النوع:** النوع
 
 ```typescript
-export type ContentBlock = ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
+export type ContentBlock =
+  ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
 ```
 
 لم يتم تقديم أي وصف.
@@ -218,16 +219,16 @@ export interface TextNode
 **النوع:** الوظيفة
 
 ```typescript
-function assertContentDocument(value: unknown): asserts value is ContentDocument
+function assertContentDocument(value: unknown): asserts value is ContentDocument;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | غير معروف |  |
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| القيمة | غير معروف |       |
 
 ### نتيجة التحقق من صحة المحتوى
 
@@ -244,48 +245,48 @@ export interface ContentValidationResult
 **النوع:** الوظيفة
 
 ```typescript
-function isContentDocument(value: unknown): value is ContentDocument
+function isContentDocument(value: unknown): value is ContentDocument;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| القيمة | غير معروف |  |
+| الاسم  | اكتب      | الوصف |
+| ------ | --------- | ----- |
+| القيمة | غير معروف |       |
 
 ### تطبيع الوثيقة
 
 **النوع:** الوظيفة
 
 ```typescript
-function normalizeDocument(document: ContentDocument): ContentDocument
+function normalizeDocument(document: ContentDocument): ContentDocument;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| وثيقة | مستند المحتوى |  |
+| الاسم | اكتب          | الوصف |
+| ----- | ------------- | ----- |
+| وثيقة | مستند المحتوى |       |
 
 ### validateDocument
 
 **النوع:** الوظيفة
 
 ```typescript
-function validateDocument(document: unknown): ContentValidationResult
+function validateDocument(document: unknown): ContentValidationResult;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| وثيقة | غير معروف |  |
+| الاسم | اكتب      | الوصف |
+| ----- | --------- | ----- |
+| وثيقة | غير معروف |       |
 
 ## `src/builders/serialize`
 
@@ -294,7 +295,7 @@ function validateDocument(document: unknown): ContentValidationResult
 **النوع:** ثابت
 
 ```typescript
-export const toHtml: ContentBuilder<string>
+export const toHtml: ContentBuilder<string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -304,7 +305,7 @@ export const toHtml: ContentBuilder<string>
 **النوع:** ثابت
 
 ```typescript
-export const toMarkdown: ContentBuilder<string>
+export const toMarkdown: ContentBuilder<string>;
 ```
 
 لم يتم تقديم أي وصف.
@@ -316,7 +317,24 @@ export const toMarkdown: ContentBuilder<string>
 **النوع:** النوع
 
 ```typescript
-export type CodeBlockLanguage = | 'bash' | 'css' | 'dockerfile' | 'go' | 'ini' | 'javascript' | 'json' | 'markdown' | 'plaintext' | 'python' | 'rust' | 'scss' | 'shell' | 'sql' | 'typescript' | 'xml' | 'yaml';
+export type CodeBlockLanguage =
+  | 'bash'
+  | 'css'
+  | 'dockerfile'
+  | 'go'
+  | 'ini'
+  | 'javascript'
+  | 'json'
+  | 'markdown'
+  | 'plaintext'
+  | 'python'
+  | 'rust'
+  | 'scss'
+  | 'shell'
+  | 'sql'
+  | 'typescript'
+  | 'xml'
+  | 'yaml';
 ```
 
 اللغات المسجلة مع `highlight.js/lib/core` المجمعة.
@@ -336,7 +354,7 @@ export interface CodeBlockProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
+function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement;
 ```
 
 `ForgeCodeBlock` - عارض التعليمات البرمجية المميز في بناء الجملة والذي تم تأليفه مرة واحدة في ملف
@@ -351,18 +369,19 @@ function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
 بدائل من Vue SFC الأصلي: تم تمييز الإخراج `v-html`
 تصبح مهمة **`useRef` + `useEffect` `innerHTML`** (ال
 `ForgeWindowPopout` escape-hatch)، نظرًا لأن نماذج اللهجة المحايدة لا تحتوي على `v-html`
+
 - لذلك يتم إدخال العلامة المميزة على العميل ويتم وضع علامة SSR
-القشرة الساكنة؛ يصبح التمييز `computed` {@link useMemo}؛ النسخة
-`ref` + `setTimeout` يصبح {@link useState} + مؤقت {@link useRef}؛ ال
-نسخ SVG المضمنة هي `@mission-platform/icons` للكتابة مرة واحدة
-`ForgeIconCopy`/`ForgeIconCheck`; وموضوع hljs العالمي `<style>`
-يصبح `@import` استيراد `forge-code-block.hljs.css` ذو التأثير الجانبي.
+  القشرة الساكنة؛ يصبح التمييز `computed` {@link useMemo}؛ النسخة
+  `ref` + `setTimeout` يصبح {@link useState} + مؤقت {@link useRef}؛ ال
+  نسخ SVG المضمنة هي `@mission-platform/icons` للكتابة مرة واحدة
+  `ForgeIconCopy`/`ForgeIconCheck`; وموضوع hljs العالمي `<style>`
+  يصبح `@import` استيراد `forge-code-block.hljs.css` ذو التأثير الجانبي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<CodeBlockProperties> |  |
+| الاسم | اكتب                             | الوصف |
+| ----- | -------------------------------- | ----- |
+| خصائص | للقراءة فقط<CodeBlockProperties> |       |
 
 ## `src/components/atoms/forge-mermaid/forge-mermaid`
 
@@ -371,7 +390,7 @@ function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
+function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement;
 ```
 
 يعرض كتلة حورية البحر مع مصدر احتياطي يمكن الوصول إليه. حورية البحر مجمعة
@@ -380,9 +399,9 @@ function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<ForgeMermaidProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<ForgeMermaidProperties> |       |
 
 ### ForgeMermaidProperties
 
@@ -401,7 +420,7 @@ export interface ForgeMermaidProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement
+function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbarButton` - عنصر تحكم شريط أدوات ذو رمز واحد فقط، تم تأليفه مرة واحدة
@@ -415,9 +434,9 @@ function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<WysiwygToolbarButtonProperties> |  |
+| الاسم | اكتب                                        | الوصف |
+| ----- | ------------------------------------------- | ----- |
+| خصائص | للقراءة فقط<WysiwygToolbarButtonProperties> |       |
 
 ### WysiwygToolbarButtonProperties
 
@@ -436,7 +455,7 @@ export interface WysiwygToolbarButtonProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement
+function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement;
 ```
 
 `ForgeMarkdown` - عارض Markdown للقراءة فقط تم تأليفه مرة واحدة بشكل محايد
@@ -455,9 +474,9 @@ function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MarkdownProperties> |  |
+| الاسم | اكتب                            | الوصف |
+| ----- | ------------------------------- | ----- |
+| خصائص | للقراءة فقط<MarkdownProperties> |       |
 
 ### خصائص تخفيض السعر
 
@@ -488,7 +507,7 @@ export type MarkdownSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement
+function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockControls` — تراكب التحرير لكل كتلة لـ
@@ -504,9 +523,9 @@ function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<WysiwygBlockControlsProperties> |  |
+| الاسم | اكتب                                        | الوصف |
+| ----- | ------------------------------------------- | ----- |
+| خصائص | للقراءة فقط<WysiwygBlockControlsProperties> |       |
 
 ### WysiwygBlockControlsProperties
 
@@ -525,7 +544,7 @@ export interface WysiwygBlockControlsProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement
+function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockMenu` — محدد نمط الكتلة لـ {@link ForgeWysiwygEditor}،
@@ -541,9 +560,9 @@ function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<WysiwygBlockMenuProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<WysiwygBlockMenuProperties> |       |
 
 ### WysiwygBlockMenuProperties
 
@@ -562,7 +581,7 @@ export interface WysiwygBlockMenuProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement
+function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement;
 ```
 
 `ForgeWysiwygStatusBar` — شريط حالة المحرر، مستخرج في شريطه الخاص
@@ -579,9 +598,9 @@ function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>)
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<WysiwygStatusBarProperties> |  |
+| الاسم | اكتب                                    | الوصف |
+| ----- | --------------------------------------- | ----- |
+| خصائص | للقراءة فقط<WysiwygStatusBarProperties> |       |
 
 ### WysiwygStatusBarProperties
 
@@ -615,7 +634,7 @@ export interface WysiwygStatusItem
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement
+function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbar` — شريط أدوات التنسيق لـ {@link ForgeWysiwygEditor}،
@@ -637,9 +656,9 @@ function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): Mp
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<WysiwygToolbarProperties> |  |
+| الاسم | اكتب                                  | الوصف |
+| ----- | ------------------------------------- | ----- |
+| خصائص | للقراءة فقط<WysiwygToolbarProperties> |       |
 
 ### WysiwygToolbarItem
 
@@ -674,7 +693,7 @@ export interface WysiwygToolbarProperties
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement
+function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement;
 ```
 
 `ForgeMonacoEditor` — تم تأليف محرر أكواد Monaco مرة واحدة في JSX المحايدة
@@ -703,9 +722,9 @@ WASM للمتصفح فقط)، تمامًا مثل وقت تشغيل Monaco نف�
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<MonacoEditorProperties> |  |
+| الاسم | اكتب                                | الوصف |
+| ----- | ----------------------------------- | ----- |
+| خصائص | للقراءة فقط<MonacoEditorProperties> |       |
 
 ### MonacoEditorCompletionItemProvider
 
@@ -754,7 +773,7 @@ export interface MonacoReadyContext
 **النوع:** الوظيفة
 
 ```typescript
-function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement
+function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement;
 ```
 
 `ForgeWysiwygEditor` - محرر نص منسق WYSIWYG لا يلتزم بإطار العمل
@@ -785,9 +804,9 @@ function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpEl
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| خصائص | للقراءة فقط<WysiwygEditorProperties> |  |
+| الاسم | اكتب                                 | الوصف |
+| ----- | ------------------------------------ | ----- |
+| خصائص | للقراءة فقط<WysiwygEditorProperties> |       |
 
 ### WysiwygEditorProperties
 
@@ -806,25 +825,29 @@ export interface WysiwygEditorProperties
 **النوع:** الوظيفة
 
 ```typescript
-function attachForgeWebScriptMonaco(editor: monaco.editor.IStandaloneCodeEditor, monacoRuntime: MonacoRuntime, options: ForgeWebScriptMonacoOptions = {}): ForgeWebScriptMonacoHandle
+function attachForgeWebScriptMonaco(
+  editor: monaco.editor.IStandaloneCodeEditor,
+  monacoRuntime: MonacoRuntime,
+  options: ForgeWebScriptMonacoOptions = {},
+): ForgeWebScriptMonacoHandle;
 ```
 
 قم بإرفاق التشخيصات والإكمال والتحويم ومزامنة النموذج والترميز إلى المحرر.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| محرر | monaco.editor.ISstandaloneCodeEditor |  |
-| موناكو وقت التشغيل | موناكو وقت التشغيل |  |
-| خيارات | فورجي ويب سكريبت موناكو أوبتيونس |  |
+| الاسم              | اكتب                                 | الوصف |
+| ------------------ | ------------------------------------ | ----- |
+| محرر               | monaco.editor.ISstandaloneCodeEditor |       |
+| موناكو وقت التشغيل | موناكو وقت التشغيل                   |       |
+| خيارات             | فورجي ويب سكريبت موناكو أوبتيونس     |       |
 
 ### forgeWebScriptLanguageId
 
 **النوع:** ثابت
 
 ```typescript
-export const forgeWebScriptLanguageId
+export const forgeWebScriptLanguageId;
 ```
 
 لم يتم تقديم أي وصف.
@@ -854,17 +877,20 @@ export interface ForgeWebScriptMonacoOptions
 **النوع:** الوظيفة
 
 ```typescript
-function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId = forgeWebScriptLanguageId): monaco.IDisposable
+function registerForgeWebScriptLanguage(
+  monacoRuntime: MonacoRuntime,
+  languageId = forgeWebScriptLanguageId,
+): monaco.IDisposable;
 ```
 
 قم بتسجيل لغة Forge Web Script وموفر الرمز المعجمي.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| موناكو وقت التشغيل | موناكو وقت التشغيل |  |
-| معرف اللغة |  |  |
+| الاسم              | اكتب               | الوصف |
+| ------------------ | ------------------ | ----- |
+| موناكو وقت التشغيل | موناكو وقت التشغيل |       |
+| معرف اللغة         |                    |       |
 
 ## `src/parsers/html`
 
@@ -873,16 +899,16 @@ function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId
 **النوع:** الوظيفة
 
 ```typescript
-function parseHtml(source: string): ContentDocument
+function parseHtml(source: string): ContentDocument;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المصدر | سلسلة |       |
 
 ## `src/parsers/markdown`
 
@@ -891,13 +917,13 @@ function parseHtml(source: string): ContentDocument
 **النوع:** الوظيفة
 
 ```typescript
-function parseMarkdown(source: string): ContentDocument
+function parseMarkdown(source: string): ContentDocument;
 ```
 
 لم يتم تقديم أي وصف.
 
 #### حدود
 
-| الاسم | اكتب | الوصف |
-| --- | --- | --- |
-| المصدر | سلسلة |  |
+| الاسم  | اكتب  | الوصف |
+| ------ | ----- | ----- |
+| المصدر | سلسلة |       |

@@ -26,7 +26,7 @@ export interface CodeBlock
 **种类：**常数
 
 ```typescript
-export const CONTENT_DOCUMENT_VERSION
+export const CONTENT_DOCUMENT_VERSION;
 ```
 
 规范内容文档格式的当前版本。
@@ -46,7 +46,8 @@ export type ContentAlign = 'left' | 'center' | 'right' | 'justify';
 **种类：**类型
 
 ```typescript
-export type ContentBlock = ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
+export type ContentBlock =
+  ParagraphBlock | HeadingBlock | ListBlock | QuoteBlock | CodeBlock | ImageBlock | RawHtmlBlock;
 ```
 
 没有提供描述。
@@ -218,16 +219,16 @@ export interface TextNode
 **种类：**功能
 
 ```typescript
-function assertContentDocument(value: unknown): asserts value is ContentDocument
+function assertContentDocument(value: unknown): asserts value is ContentDocument;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|未知 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 价值 | 未知 |      |
 
 ### 内容验证结果
 
@@ -244,48 +245,48 @@ export interface ContentValidationResult
 **种类：**功能
 
 ```typescript
-function isContentDocument(value: unknown): value is ContentDocument
+function isContentDocument(value: unknown): value is ContentDocument;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|价值|未知 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 价值 | 未知 |      |
 
 ### 规范化文档
 
 **种类：**功能
 
 ```typescript
-function normalizeDocument(document: ContentDocument): ContentDocument
+function normalizeDocument(document: ContentDocument): ContentDocument;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件 |内容文档 |  |
+| 名称 | 类型     | 描述 |
+| ---- | -------- | ---- |
+| 文件 | 内容文档 |      |
 
 ### 验证文档
 
 **种类：**功能
 
 ```typescript
-function validateDocument(document: unknown): ContentValidationResult
+function validateDocument(document: unknown): ContentValidationResult;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|文件 |未知 |  |
+| 名称 | 类型 | 描述 |
+| ---- | ---- | ---- |
+| 文件 | 未知 |      |
 
 ## `src/builders/serialize`
 
@@ -294,7 +295,7 @@ function validateDocument(document: unknown): ContentValidationResult
 **种类：**常数
 
 ```typescript
-export const toHtml: ContentBuilder<string>
+export const toHtml: ContentBuilder<string>;
 ```
 
 没有提供描述。
@@ -304,7 +305,7 @@ export const toHtml: ContentBuilder<string>
 **种类：**常数
 
 ```typescript
-export const toMarkdown: ContentBuilder<string>
+export const toMarkdown: ContentBuilder<string>;
 ```
 
 没有提供描述。
@@ -316,7 +317,24 @@ export const toMarkdown: ContentBuilder<string>
 **种类：**类型
 
 ```typescript
-export type CodeBlockLanguage = | 'bash' | 'css' | 'dockerfile' | 'go' | 'ini' | 'javascript' | 'json' | 'markdown' | 'plaintext' | 'python' | 'rust' | 'scss' | 'shell' | 'sql' | 'typescript' | 'xml' | 'yaml';
+export type CodeBlockLanguage =
+  | 'bash'
+  | 'css'
+  | 'dockerfile'
+  | 'go'
+  | 'ini'
+  | 'javascript'
+  | 'json'
+  | 'markdown'
+  | 'plaintext'
+  | 'python'
+  | 'rust'
+  | 'scss'
+  | 'shell'
+  | 'sql'
+  | 'typescript'
+  | 'xml'
+  | 'yaml';
 ```
 
 使用捆绑的 `highlight.js/lib/core` 注册的语言。
@@ -336,7 +354,7 @@ export interface CodeBlockProperties
 **种类：**功能
 
 ```typescript
-function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
+function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement;
 ```
 
 `ForgeCodeBlock` — 语法突出显示的代码查看器，在
@@ -351,18 +369,19 @@ function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
 原始 Vue SFC 的替换：`v-html` 突出显示的输出
 成为 **`useRef` 主机 + `useEffect` `innerHTML`** 分配（
 `ForgeWindowPopout` 逃生舱口），自中性方言型号没有 `v-html`
+
 - 因此突出显示的标记被注入到客户端，并且 SSR 标记是
-静态外壳； `computed` 突出显示变为 {@link useMemo}；副本
-`ref` + `setTimeout` 成为 {@link useState} + {@link useRef} 计时器；的
-内联复制 SVG 是一次写入 `@mission-platform/icons`
-`ForgeIconCopy`/`ForgeIconCheck`；和全局 hljs 主题 `<style>`
-`@import` 成为无副作用的 `forge-code-block.hljs.css` 导入。
+  静态外壳； `computed` 突出显示变为 {@link useMemo}；副本
+  `ref` + `setTimeout` 成为 {@link useState} + {@link useRef} 计时器；的
+  内联复制 SVG 是一次写入 `@mission-platform/icons`
+  `ForgeIconCopy`/`ForgeIconCheck`；和全局 hljs 主题 `<style>`
+  `@import` 成为无副作用的 `forge-code-block.hljs.css` 导入。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<CodeBlockProperties> |  |
+| 名称 | 类型                      | 描述 |
+| ---- | ------------------------- | ---- |
+| 属性 | 只读<CodeBlockProperties> |      |
 
 ## `src/components/atoms/forge-mermaid/forge-mermaid`
 
@@ -371,7 +390,7 @@ function ForgeCodeBlock(properties: Readonly<CodeBlockProperties>): MpElement
 **种类：**功能
 
 ```typescript
-function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
+function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement;
 ```
 
 渲染具有可访问源回退的美人鱼块。美人鱼被捆绑了
@@ -380,9 +399,9 @@ function ForgeMermaid(properties: Readonly<ForgeMermaidProperties>): MpElement
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<ForgeMermaidProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<ForgeMermaidProperties> |      |
 
 ### 锻造美人鱼属性
 
@@ -401,7 +420,7 @@ export interface ForgeMermaidProperties
 **种类：**功能
 
 ```typescript
-function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement
+function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbarButton` — 仅包含图标的工具栏控件，创作一次
@@ -415,9 +434,9 @@ function ForgeWysiwygToolbarButton(properties: Readonly<WysiwygToolbarButtonProp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<WysiwygToolbarButtonProperties> |  |
+| 名称 | 类型                                 | 描述 |
+| ---- | ------------------------------------ | ---- |
+| 属性 | 只读<WysiwygToolbarButtonProperties> |      |
 
 ### 所见即所得工具栏按钮属性
 
@@ -436,7 +455,7 @@ export interface WysiwygToolbarButtonProperties
 **种类：**功能
 
 ```typescript
-function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement
+function ForgeMarkdown(properties: Readonly<MarkdownProperties>): MpElement;
 ```
 
 `ForgeMarkdown` — 在中立状态下编写的只读 Markdown 渲染器
@@ -455,9 +474,9 @@ JSX 方言并直接编译为 React 或 Vue
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MarkdownProperties> |  |
+| 名称 | 类型                     | 描述 |
+| ---- | ------------------------ | ---- |
+| 属性 | 只读<MarkdownProperties> |      |
 
 ### Markdown 属性
 
@@ -488,7 +507,7 @@ export type MarkdownSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 **种类：**功能
 
 ```typescript
-function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement
+function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockControls` — 每块编辑覆盖
@@ -504,9 +523,9 @@ function ForgeWysiwygBlockControls(properties: Readonly<WysiwygBlockControlsProp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<WysiwygBlockControlsProperties> |  |
+| 名称 | 类型                                 | 描述 |
+| ---- | ------------------------------------ | ---- |
+| 属性 | 只读<WysiwygBlockControlsProperties> |      |
 
 ### 所见即所得块控件属性
 
@@ -525,7 +544,7 @@ export interface WysiwygBlockControlsProperties
 **种类：**功能
 
 ```typescript
-function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement
+function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>): MpElement;
 ```
 
 `ForgeWysiwygBlockMenu` — {@link ForgeWysiwygEditor} 的块样式选择器，
@@ -541,9 +560,9 @@ function ForgeWysiwygBlockMenu(properties: Readonly<WysiwygBlockMenuProperties>)
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<WysiwygBlockMenuProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<WysiwygBlockMenuProperties> |      |
 
 ### 所见即所得块菜单属性
 
@@ -562,7 +581,7 @@ export interface WysiwygBlockMenuProperties
 **种类：**功能
 
 ```typescript
-function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement
+function ForgeWysiwygStatusBar(properties: Readonly<WysiwygStatusBarProperties>): MpElement;
 ```
 
 `ForgeWysiwygStatusBar` — 编辑器的状态栏，提取到自己的状态栏
@@ -579,9 +598,9 @@ JSX 方言并编译为 Vue 3 和 React
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<WysiwygStatusBarProperties> |  |
+| 名称 | 类型                             | 描述 |
+| ---- | -------------------------------- | ---- |
+| 属性 | 只读<WysiwygStatusBarProperties> |      |
 
 ### WysiwygStatusBar 属性
 
@@ -615,7 +634,7 @@ export interface WysiwygStatusItem
 **种类：**功能
 
 ```typescript
-function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement
+function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): MpElement;
 ```
 
 `ForgeWysiwygToolbar` — {@link ForgeWysiwygEditor} 的格式化工具栏，
@@ -637,9 +656,9 @@ function ForgeWysiwygToolbar(properties: Readonly<WysiwygToolbarProperties>): Mp
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<WysiwygToolbarProperties> |  |
+| 名称 | 类型                           | 描述 |
+| ---- | ------------------------------ | ---- |
+| 属性 | 只读<WysiwygToolbarProperties> |      |
 
 ### 所见即所得工具栏项
 
@@ -674,7 +693,7 @@ export interface WysiwygToolbarProperties
 **种类：**功能
 
 ```typescript
-function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement
+function ForgeMonacoEditor(properties: Readonly<MonacoEditorProperties>): MpElement;
 ```
 
 `ForgeMonacoEditor` — 在中立 JSX 中编写的 Monaco 代码编辑器
@@ -703,9 +722,9 @@ Vue `useHunspellMonaco`/`useHarperMonaco` 可组合项委托给) 和电线
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<MonacoEditorProperties> |  |
+| 名称 | 类型                         | 描述 |
+| ---- | ---------------------------- | ---- |
+| 属性 | 只读<MonacoEditorProperties> |      |
 
 ### MonacoEditorCompletionItemProvider
 
@@ -754,7 +773,7 @@ export interface MonacoReadyContext
 **种类：**功能
 
 ```typescript
-function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement
+function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpElement;
 ```
 
 `ForgeWysiwygEditor` — 编写的与框架无关的 WYSIWYG 富文本编辑器
@@ -785,9 +804,9 @@ function ForgeWysiwygEditor(properties: Readonly<WysiwygEditorProperties>): MpEl
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|属性 |只读<WysiwygEditorProperties> |  |
+| 名称 | 类型                          | 描述 |
+| ---- | ----------------------------- | ---- |
+| 属性 | 只读<WysiwygEditorProperties> |      |
 
 ### 所见即所得编辑器属性
 
@@ -806,25 +825,29 @@ export interface WysiwygEditorProperties
 **种类：**功能
 
 ```typescript
-function attachForgeWebScriptMonaco(editor: monaco.editor.IStandaloneCodeEditor, monacoRuntime: MonacoRuntime, options: ForgeWebScriptMonacoOptions = {}): ForgeWebScriptMonacoHandle
+function attachForgeWebScriptMonaco(
+  editor: monaco.editor.IStandaloneCodeEditor,
+  monacoRuntime: MonacoRuntime,
+  options: ForgeWebScriptMonacoOptions = {},
+): ForgeWebScriptMonacoHandle;
 ```
 
 将诊断、完成、悬停、模型同步和标记化附加到编辑器。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|编辑|摩纳哥.editor.IStandaloneCodeEditor |  |
-|摩纳哥运行时 |摩纳哥运行时 |  |
-|选项 | ForgeWebScriptMonacoOptions | ForgeWebScriptMonacoOptions | ForgeWebScriptMonacoOptions  |
+| 名称         | 类型                                | 描述                        |
+| ------------ | ----------------------------------- | --------------------------- |
+| 编辑         | 摩纳哥.editor.IStandaloneCodeEditor |                             |
+| 摩纳哥运行时 | 摩纳哥运行时                        |                             |
+| 选项         | ForgeWebScriptMonacoOptions         | ForgeWebScriptMonacoOptions | ForgeWebScriptMonacoOptions |
 
 ### forgeWebScriptLanguageId
 
 **种类：**常数
 
 ```typescript
-export const forgeWebScriptLanguageId
+export const forgeWebScriptLanguageId;
 ```
 
 没有提供描述。
@@ -854,17 +877,20 @@ export interface ForgeWebScriptMonacoOptions
 **种类：**功能
 
 ```typescript
-function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId = forgeWebScriptLanguageId): monaco.IDisposable
+function registerForgeWebScriptLanguage(
+  monacoRuntime: MonacoRuntime,
+  languageId = forgeWebScriptLanguageId,
+): monaco.IDisposable;
 ```
 
 注册 Forge Web 脚本语言和词汇标记提供程序。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|摩纳哥运行时 |摩纳哥运行时 |  |
-|语言 ID |  |  |
+| 名称         | 类型         | 描述 |
+| ------------ | ------------ | ---- |
+| 摩纳哥运行时 | 摩纳哥运行时 |      |
+| 语言 ID      |              |      |
 
 ## `src/parsers/html`
 
@@ -873,16 +899,16 @@ function registerForgeWebScriptLanguage(monacoRuntime: MonacoRuntime, languageId
 **种类：**功能
 
 ```typescript
-function parseHtml(source: string): ContentDocument
+function parseHtml(source: string): ContentDocument;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 来源 | 字符串 |      |
 
 ## `src/parsers/markdown`
 
@@ -891,13 +917,13 @@ function parseHtml(source: string): ContentDocument
 **种类：**功能
 
 ```typescript
-function parseMarkdown(source: string): ContentDocument
+function parseMarkdown(source: string): ContentDocument;
 ```
 
 没有提供描述。
 
 #### 参数
 
-|名称 |类型 |描述 |
-| --- | --- | --- |
-|来源 |字符串|  |
+| 名称 | 类型   | 描述 |
+| ---- | ------ | ---- |
+| 来源 | 字符串 |      |
