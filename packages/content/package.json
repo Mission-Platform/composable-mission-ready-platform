@@ -112,7 +112,7 @@
     "@mission-platform/icons": "workspace:*",
     "@mission-platform/tokens": "workspace:*",
     "@mission-platform/typography": "workspace:*",
-    "dompurify": "^3.4.14",
+    "dompurify": "catalog:code",
     "highlight.js": "catalog:code",
     "marked": "catalog:code",
     "mermaid": "catalog:code",
