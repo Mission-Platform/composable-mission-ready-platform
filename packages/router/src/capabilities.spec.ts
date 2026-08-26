@@ -47,7 +47,9 @@ describe('neutral router capabilities', () => {
   });
 
   it('reports unsupported uncompiled navigation deterministically', async () => {
-    const error = await useMpRouter().navigate('/docs').catch((error_: unknown) => error_);
+    const error = await useMpRouter()
+      .navigate('/docs')
+      .catch((error_: unknown) => error_);
 
     expect(error).toBeInstanceOf(MpRouterCapabilityError);
     expect(isMpRouterCapabilityError(error)).toBe(true);

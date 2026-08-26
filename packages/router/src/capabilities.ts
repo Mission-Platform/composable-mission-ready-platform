@@ -150,7 +150,10 @@ export function useMpNavigation(): Pick<MpRouterCapabilities, 'navigate' | 'reso
  * Resolve a target through the app-owned router. The optional capability
  * argument makes the helper deterministic in SSR/tests and target adapters.
  */
-export function resolveMpLink(to: MpRouteLocationRaw, capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter()): string {
+export function resolveMpLink(
+  to: MpRouteLocationRaw,
+  capabilities: Pick<MpRouterCapabilities, 'resolve'> = useMpRouter(),
+): string {
   return capabilities.resolve(to).fullPath;
 }
 
